@@ -11,15 +11,16 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.WeightedEntry;
-import net.minecraft.util.random.WeightedRandom;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     @NotNull
     private final Function<Q, Integer> coolDownSupplier;
     @NotNull
-    private final List<WeightedEntry.Wrapper<ItemStack>> resources;
+    private final List<Weighted<ItemStack>> resources;
     private final RandomSource rng = RandomSource.create();
     @Nullable
     private final Holder<? extends IFaction<?>> faction;
@@ -47,7 +48,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     /**
      * @param faction If given, only available to this faction
      */
-    public CollectResourcesTask(@Nullable Holder<? extends IFaction<?>> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<WeightedEntry.Wrapper<ItemStack>> resources, @NotNull Holder<ISkill<?>> requiredSkill) {
+    public CollectResourcesTask(@Nullable Holder<? extends IFaction<?>> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<Weighted<ItemStack>> resources, @NotNull Holder<ISkill<?>> requiredSkill) {
         super(requiredSkill);
         this.coolDownSupplier = coolDownSupplier;
         this.resources = resources;
@@ -78,8 +79,8 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
 
 
     @Override
-    public @NotNull Desc<Q> readFromNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        return new Desc<>(this, nbt.getInt("cooldown"), nbt.contains("lordid") ? nbt.getUUID("lordid") : null);
+    public @NotNull Desc<Q> load(ValueInput input) {
+        return new Desc<>(this, input);
     }
 
     @Override
@@ -87,7 +88,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
             desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * ModConfig.BALANCE.miResourceCooldownOfflineMult.get());
-            WeightedRandom.getRandomItem(rng, resources).map(WeightedEntry.Wrapper::data).map(ItemStack::copy).ifPresent(s -> data.getInventory().addItemStack(s));
+            WeightedList.of(resources).getRandom(rng).ifPresent(s -> data.getInventory().addItemStack(s));
             List<ItemStack> stacks = Stream.of(data.getInventory().getInventoryArmor(), data.getInventory().getInventoryHands()).flatMap(Collection::stream).filter(stack -> !stack.isEmpty()).toList();
             if (!stacks.isEmpty()) {
                 ItemStack stack = stacks.get(rng.nextInt(stacks.size()));
@@ -115,16 +116,22 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
             this.lordEntityID = lordEntityID;
         }
 
-        @Override
-        public IMinionTask<?, Z> getTask() {
-            return task;
+        private Desc(CollectResourcesTask<Z> task, ValueInput input) {
+            this.task = task;
+            this.coolDown = input.getIntOr("cooldown", 0);
+            this.lordEntityID = input.read("lordid", UUIDUtil.CODEC).orElse(null);
         }
 
         @Override
-        public void writeToNBT(@NotNull CompoundTag nbt) {
-            nbt.putInt("cooldown", coolDown);
-            if (lordEntityID != null) {
-                nbt.putUUID("lordid", lordEntityID);
+        public IMinionTask<?, Z> getTask() {
+            return this.task;
+        }
+
+        @Override
+        public void serialize(@NotNull ValueOutput output) {
+            output.putInt("cooldown", this.coolDown);
+            if (this.lordEntityID != null) {
+                output.store("lordid", UUIDUtil.CODEC, this.lordEntityID);
             }
         }
     }

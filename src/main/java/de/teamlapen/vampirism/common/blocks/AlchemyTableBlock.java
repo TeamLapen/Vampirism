@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -50,12 +49,12 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, ModBlockEntities.ALCHEMICAL_TABLE.get(), AlchemyTableBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModBlockEntities.ALCHEMICAL_TABLE.get(), AlchemyTableBlockEntity::serverTick);
     }
 
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult rayTrace) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         } else {
             if (Helper.isHunter(player)) {
@@ -69,17 +68,6 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
             }
 
             return InteractionResult.CONSUME;
-        }
-    }
-
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof AlchemyTableBlockEntity alchemyTableBlockEntity) {
-                Containers.dropContents(level, pos, alchemyTableBlockEntity);
-            }
-            super.onRemove(state, level, pos, newState, movedByPiston);
         }
     }
 

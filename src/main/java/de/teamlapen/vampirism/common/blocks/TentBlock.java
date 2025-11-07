@@ -213,8 +213,8 @@ public class TentBlock extends Block {
     }
 
     @Override
-    public void fallOn(Level worldIn, BlockState state, BlockPos pos, Entity entityIn, float fallDistance) {
-        super.fallOn(worldIn, state, pos, entityIn, fallDistance * 0.7F);
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, double fallDistance) {
+        super.fallOn(level, state, pos, entity, fallDistance * 0.7f);
     }
 
     @Override
@@ -261,7 +261,7 @@ public class TentBlock extends Block {
     @Override
     public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         //If in creative mode, also destroy the main block. Otherwise, it will be destroyed due to updateShape and an item will drop
-        if (!worldIn.isClientSide && player.isCreative()) {
+        if (!worldIn.isClientSide() && player.isCreative()) {
             Direction thisFacing = state.getValue(FACING);
             int thisPos = state.getValue(POSITION);
             if (thisPos != 0) {

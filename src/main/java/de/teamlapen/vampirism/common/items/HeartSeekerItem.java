@@ -7,13 +7,13 @@ import de.teamlapen.vampirism.common.items.component.PureLevel;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ToolMaterial;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Properties;
+import java.util.function.Consumer;
 
 public class HeartSeekerItem extends VampireSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
@@ -29,11 +29,11 @@ public class HeartSeekerItem extends VampireSwordItem implements IItemWithTier, 
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
 
         if (flagIn.hasAltDown()) {
-            tooltip.add(Component.translatable("Consumes %s blood per hit", getChargeUsage(stack)));
+            tooltip.accept(Component.translatable("Consumes %s blood per hit", getChargeUsage(stack)));
         }
     }
 

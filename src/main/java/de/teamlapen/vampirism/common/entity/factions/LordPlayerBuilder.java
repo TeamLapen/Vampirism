@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.factions.ILordTitleProvider;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 public class LordPlayerBuilder<T extends IFactionPlayer<T>> implements ILordPlayerBuilder<T> {
 
@@ -14,13 +13,13 @@ public class LordPlayerBuilder<T extends IFactionPlayer<T>> implements ILordPlay
     protected ILordTitleProvider lordTitleFunction = (LordTitleProvider) (a, b) -> Component.literal("Lord " + a);
 
     @Override
-    public @NotNull LordPlayerBuilder<T> lordLevel(int level) {
+    public LordPlayerBuilder<T> lordLevel(int level) {
         this.maxLevel = level;
         return this;
     }
 
     @Override
-    public ILordPlayerBuilder<T> lordTitle(@NotNull ILordTitleProvider lordTitleFunction) {
+    public ILordPlayerBuilder<T> lordTitle(ILordTitleProvider lordTitleFunction) {
         this.lordTitleFunction = lordTitleFunction;
         return this;
     }

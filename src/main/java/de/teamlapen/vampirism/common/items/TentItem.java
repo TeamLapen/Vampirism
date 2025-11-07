@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Item used to place a tent
@@ -70,10 +72,10 @@ public class TentItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltipComponents, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipComponents, flagIn);
         if (spawner) {
-            tooltipComponents.add(Component.translatable("tile.vampirism.tent.spawner").withStyle(ChatFormatting.GRAY));
+            tooltipComponents.accept(Component.translatable("tile.vampirism.tent.spawner").withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -82,7 +84,7 @@ public class TentItem extends Item {
         if (context.getClickedFace() != Direction.UP) {
             return InteractionResult.PASS;
         }
-        if (context.getLevel().isClientSide) return InteractionResult.PASS;
+        if (context.getLevel().isClientSide()) return InteractionResult.PASS;
 
         ItemStack stack = context.getItemInHand();
         Player player = context.getPlayer();

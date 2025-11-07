@@ -1,17 +1,25 @@
 package de.teamlapen.vampirism.common.world.saved;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.minion.management.PlayerMinionController;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +31,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public class MinionWorldData extends SavedData {
+public class MinionWorldData extends SavedData implements ValueIOSerializable {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static String ID = "vampirism-minion-data";
+
+    public static final SavedDataType<MinionWorldData> TYPE = new SavedDataType<>(VResourceLocation.modString("minion_data"), MinionWorldData::new, MinionWorldData::makeCodec);
 
     @NotNull
     public static MinionWorldData getData(@NotNull ServerLevel world) {
@@ -34,7 +44,7 @@ public class MinionWorldData extends SavedData {
 
     @NotNull
     public static MinionWorldData getData(final @NotNull MinecraftServer server) {
-        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(new Factory<>(() -> new MinionWorldData(server), (data, provider) -> MinionWorldData.load(server, data, provider)), ID);
+        return server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(TYPE);
     }
 
 
@@ -49,8 +59,45 @@ public class MinionWorldData extends SavedData {
     private final MinecraftServer server;
     private final Object2ObjectOpenHashMap<UUID, PlayerMinionController> controllers = new Object2ObjectOpenHashMap<>();
 
-    public MinionWorldData(MinecraftServer server) {
-        this.server = server;
+    public MinionWorldData(SavedData.Context context) {
+        this.server = context.level().getServer();
+    }
+
+    private static Codec<MinionWorldData> makeCodec(SavedData.Context context) {
+        return CompoundTag.CODEC.flatXmap(tag -> {
+            MinionWorldData minionWorldData = new MinionWorldData(context);
+            ProblemReporter.Collector reporter = new ProblemReporter.Collector();
+
+            minionWorldData.deserialize(TagValueInput.create(reporter, context.level().registryAccess(), tag));
+            return !reporter.isEmpty() ? DataResult.error(() -> "Deserialisation error in minion data: " + reporter.getReport()) : DataResult.success(minionWorldData);
+        }, data -> {
+            ProblemReporter.Collector reporter = new ProblemReporter.Collector();
+            var tag = TagValueOutput.createWithContext(reporter, data.server.registryAccess());
+
+            data.serialize(tag);
+            return !reporter.isEmpty() ? DataResult.error(() -> "Serialisation error in minion data: " + reporter.getReport()) : DataResult.success(tag.buildResult());
+        });
+    }
+
+    @Override
+    public void serialize(ValueOutput output) {
+        var controller = output.childrenList("controller");
+        for (var entry : controllers.object2ObjectEntrySet()) {
+            ValueOutput valueOutput = controller.addChild();
+            valueOutput.store("uuid", UUIDUtil.CODEC, entry.getKey());
+            entry.getValue().serialize(valueOutput);
+        }
+    }
+
+    @Override
+    public void deserialize(ValueInput input) {
+
+        input.childrenList("controller").stream().flatMap(ValueInput.ValueInputList::stream).forEach(x -> {
+            x.read("uuid", UUIDUtil.CODEC).ifPresent(id -> {
+                var controller = controllers.computeIfAbsent(id, (y) -> new PlayerMinionController(server, id));
+                controller.deserialize(x);
+            });
+        });
     }
 
     @Nullable
@@ -84,39 +131,11 @@ public class MinionWorldData extends SavedData {
         controllers.remove(lordID);
     }
 
-    public static @NotNull MinionWorldData load(@NotNull MinecraftServer server, @NotNull CompoundTag nbt, HolderLookup.Provider provider) {
-        MinionWorldData data = new MinionWorldData(server);
-        ListTag all = nbt.getList("controllers", 10);
-        for (Tag inbt : all) {
-            CompoundTag tag = (CompoundTag) inbt;
-            UUID id = tag.getUUID("uuid");
-            PlayerMinionController c = new PlayerMinionController(server, id);
-            c.deserializeNBT(provider, tag);
-            data.controllers.put(id, c);
-        }
-        return data;
-    }
-
     /**
      * Tick server side
      */
     public void tick() {
         controllers.object2ObjectEntrySet().fastForEach(entry -> entry.getValue().tick());
-    }
-
-    @NotNull
-    @Override
-    public CompoundTag save(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        ListTag all = new ListTag();
-        controllers.object2ObjectEntrySet().fastForEach((entry) -> {
-            if (entry.getValue().hasMinions()) {
-                CompoundTag tag = entry.getValue().serializeNBT(provider);
-                tag.putUUID("uuid", entry.getKey());
-                all.add(tag);
-            }
-        });
-        compound.put("controllers", all);
-        return compound;
     }
 
     public Map<UUID, PlayerMinionController> getControllers() {

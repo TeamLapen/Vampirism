@@ -17,6 +17,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ToolMaterial;
 
@@ -25,7 +26,7 @@ import net.minecraft.world.item.ToolMaterial;
  */
 public class StakeItem extends VampirismSwordItem {
 
-    public StakeItem(Properties properties) {
+    public StakeItem(Item.Properties properties) {
         super(ToolMaterial.WOOD, 1, -1, properties.component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE));
     }
 
@@ -43,9 +44,10 @@ public class StakeItem extends VampirismSwordItem {
         return false;
     }
 
+
     @Override
-    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (attacker.getCommandSenderWorld() instanceof ServerLevel level) {
+    public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (attacker.level() instanceof ServerLevel level) {
             if (target instanceof IVampireMob || (target instanceof Player && Helper.isVampire(((Player) target)))) {
                 if (canKillInstantly(target, attacker)) {
                     DamageHandler.hurtModded(level, target, sources -> sources.stake(attacker), 10000F);
@@ -54,12 +56,10 @@ public class StakeItem extends VampirismSwordItem {
                         ModAdvancements.TRIGGER_HUNTER_ACTION.get().trigger(player, HunterActionCriterionTrigger.Action.STAKE);
 
                     }
-                    target.getCommandSenderWorld().playSound(null, target.getX(), target.getY() + 0.5 * target.getEyeHeight(), target.getZ(), ModSounds.STAKE.get(), SoundSource.PLAYERS, 1.5f, 0.7f);
+                    target.level().playSound(null, target.getX(), target.getY() + 0.5 * target.getEyeHeight(), target.getZ(), ModSounds.STAKE.get(), SoundSource.PLAYERS, 1.5f, 0.7f);
                 }
 
             }
         }
-
-        return super.hurtEnemy(stack, target, attacker);
     }
 }

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -16,6 +16,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +52,9 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     default T createCuredEntity(@NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
         T newEntity = newType.create(entity.level(), EntitySpawnReason.CONVERSION);
         assert newEntity != null;
-        newEntity.load(entity.saveWithoutId(new CompoundTag()));
+        TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess());
+        entity.saveWithoutId(output);
+        newEntity.load(TagValueInput.create(ProblemReporter.DISCARDING, entity.registryAccess(), output.buildResult()));
         newEntity.yBodyRot = entity.yBodyRot;
         newEntity.yHeadRot = entity.yHeadRot;
         newEntity.setUUID(UUID.randomUUID());
@@ -72,7 +76,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
         T newEntity = createCuredEntity(entity, newType);
         entity.remove(Entity.RemovalReason.DISCARDED);
         entity.level().addFreshEntity(newEntity);
-        newEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+        newEntity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200, 0));
         if (!entity.isSilent()) {
             world.levelEvent(null, 1027, entity.blockPosition(), 0);
         }
@@ -131,7 +135,7 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
         }
-        if (!entity.level().isClientSide) {
+        if (!entity.level().isClientSide()) {
             this.startConverting(player.getUUID(), entity.getRandom().nextInt(2400) + 2400, entity);
         }
         return InteractionResult.SUCCESS;

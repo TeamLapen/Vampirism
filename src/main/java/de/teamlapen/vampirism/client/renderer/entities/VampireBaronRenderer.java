@@ -10,9 +10,11 @@ import de.teamlapen.vampirism.client.renderer.entities.layers.BaronAttireLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.WingsLayer;
 import de.teamlapen.vampirism.common.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.AnimationState;
 import org.jetbrains.annotations.NotNull;
@@ -42,9 +44,9 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, Vampir
     }
 
     @Override
-    public void render(VampireBaronRenderState state, PoseStack stack, MultiBufferSource bufferSource, int packedLight) {
-        this.model = state.isLady ? baronessModel : baronModel;
-        super.render(state, stack, bufferSource, packedLight);
+    public void submit(VampireBaronRenderState p_433493_, PoseStack p_434615_, SubmitNodeCollector p_433768_, CameraRenderState p_450931_) {
+        this.model = p_433493_.isLady ? baronessModel : baronModel;
+        super.submit(p_433493_, p_434615_, p_433768_, p_450931_);
     }
 
     @Override

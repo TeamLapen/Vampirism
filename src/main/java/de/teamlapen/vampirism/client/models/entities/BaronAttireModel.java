@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.client.models.entities;
 
 
 import de.teamlapen.vampirism.client.renderer.entities.VampireBaronRenderer;
-import net.minecraft.client.animation.AnimationChannel;
-import net.minecraft.client.animation.AnimationDefinition;
-import net.minecraft.client.animation.Keyframe;
-import net.minecraft.client.animation.KeyframeAnimations;
+import net.minecraft.client.animation.*;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -29,6 +26,7 @@ public class BaronAttireModel extends EntityModel<VampireBaronRenderer.VampireBa
     public final @NotNull ModelPart hood;
     public final @NotNull ModelPart cloak;
     private float enragedProgress = 0;
+    private final KeyframeAnimation cloakAnimation;
 
     public static @NotNull LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
@@ -42,6 +40,7 @@ public class BaronAttireModel extends EntityModel<VampireBaronRenderer.VampireBa
         super(part);
         hood = part.getChild(HOOD);
         cloak = hood.getChild(CLOAK);
+        this.cloakAnimation = CLOAK_ANIMATION.bake(part);
     }
 
     @Override
@@ -58,10 +57,10 @@ public class BaronAttireModel extends EntityModel<VampireBaronRenderer.VampireBa
         this.hood.yRot = bodyRotateAngleY;
         this.cloak.yRot = bodyRotateAngleY;
         this.enragedProgress = entityIn.enragedProgress;
-        this.animate(entityIn.cloakState, TEST, entityIn.ageInTicks);
+        this.cloakAnimation.apply(entityIn.cloakState, entityIn.ageInTicks);
     }
 
-    private static final AnimationDefinition TEST = AnimationDefinition.Builder.withLength(2)
+    private static final AnimationDefinition CLOAK_ANIMATION = AnimationDefinition.Builder.withLength(2)
             .addAnimation("cloak",
                     new AnimationChannel(AnimationChannel.Targets.SCALE, new Keyframe(0, KeyframeAnimations.scaleVec(1f,1f,1f), AnimationChannel.Interpolations.LINEAR), new Keyframe(0, KeyframeAnimations.scaleVec(0.6f,0.3f,0.6f), AnimationChannel.Interpolations.LINEAR))
             ).build();

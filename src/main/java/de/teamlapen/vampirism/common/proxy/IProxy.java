@@ -1,15 +1,12 @@
 package de.teamlapen.vampirism.common.proxy;
 
-import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.common.ILifecycleListener;
 import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.common.util.PlayerModelType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * Proxy interface
@@ -84,9 +79,6 @@ public interface IProxy extends ILifecycleListener {
 
     }
 
-    default void obtainPlayerSkins(GameProfile profile, @NotNull Consumer<Pair<ResourceLocation, PlayerModelType>> callback) {
-
-    }
 
     @NotNull
     RecipeMap recipeMap(Level level);

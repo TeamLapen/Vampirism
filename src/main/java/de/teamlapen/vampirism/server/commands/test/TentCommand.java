@@ -28,7 +28,7 @@ public class TentCommand extends BasicCommand {
         HitResult result = UtilLib.getPlayerLookingSpot(asPlayer, 5);
         if (result.getType() == HitResult.Type.BLOCK) {
 
-            BlockEntity tent = asPlayer.getCommandSenderWorld().getBlockEntity(((BlockHitResult) result).getBlockPos());
+            BlockEntity tent = asPlayer.level().getBlockEntity(((BlockHitResult) result).getBlockPos());
             if (tent instanceof TentBlockEntity) {
                 ((TentBlockEntity) tent).setSpawn(true);
                 if (advanced) ((TentBlockEntity) tent).setAdvanced(true);

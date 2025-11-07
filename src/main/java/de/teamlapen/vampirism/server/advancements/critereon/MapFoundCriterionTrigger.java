@@ -46,7 +46,7 @@ public class MapFoundCriterionTrigger extends SimpleCriterionTrigger<MapFoundCri
         }
 
         public boolean matches(Inventory inventory, Level level) {
-            for (ItemStack itemStack : inventory.items) {
+            for (ItemStack itemStack : inventory.getNonEquipmentItems()) {
                 if (mapType.isPresent() && MapUtil.hasDecoration(mapType.get(), itemStack, level)) {
                     return true;
                 }

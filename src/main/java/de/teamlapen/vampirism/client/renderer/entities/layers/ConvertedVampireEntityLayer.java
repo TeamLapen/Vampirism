@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
@@ -27,14 +27,14 @@ public class ConvertedVampireEntityLayer<Z extends LivingEntityRenderState & ICo
     }
 
     @Override
-    public void render(PoseStack stack, MultiBufferSource bufferSource, int packedLight, Z state, float p_117353_, float p_117354_) {
-        if (!state.isInvisible) {
-            ResourceLocation texture = state.vampirism$convertedOverlay();
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, Z renderState, float yRot, float xRot) {
+        if (!renderState.isInvisible) {
+            ResourceLocation texture = renderState.vampirism$convertedOverlay();
             if (texture == null) {
-                texture = state.vampirism$overlay();
+                texture = renderState.vampirism$overlay();
             }
             if (texture != null) {
-                renderColoredCutoutModel(this.getParentModel(), texture, stack, bufferSource, packedLight, state, -1);
+                renderColoredCutoutModel(this.getParentModel(), texture, poseStack, nodeCollector, packedLight, renderState, -1, -1);
             }
         }
     }

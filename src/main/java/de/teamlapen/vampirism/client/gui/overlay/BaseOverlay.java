@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BaseOverlay implements LayeredDraw.Layer {
+public abstract class BaseOverlay implements GuiLayer {
 
     protected final Minecraft mc = Minecraft.getInstance();
 

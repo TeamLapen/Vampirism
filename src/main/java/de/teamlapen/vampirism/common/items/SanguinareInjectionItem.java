@@ -31,7 +31,7 @@ public class SanguinareInjectionItem extends InjectionItem {
             return false;
         }
         if (ModFactions.HUNTER.match(currentFaction)) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 player.openMenu(new SimpleMenuProvider((containerId, playerInventory, player1) -> new RevertBackMenu(containerId, playerInventory, ContainerLevelAccess.create(level, pos)), Component.empty()));
             }
             return false;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.mixin.accessor;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.ProcessorRule;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
@@ -12,9 +11,6 @@ public interface ProcessorRuleAccessor {
 
     @Accessor("inputPredicate")
     RuleTest getInputPredicate();
-
-    @Accessor("outputState")
-    BlockState getOutputState();
 
     @Accessor("blockEntityModifier")
     RuleBlockEntityModifier getBlockEntityModifier();

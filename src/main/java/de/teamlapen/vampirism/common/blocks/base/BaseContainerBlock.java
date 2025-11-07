@@ -7,7 +7,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Vampirism default block container with additional helpful methods
@@ -16,17 +15,6 @@ public abstract class BaseContainerBlock extends BaseEntityBlock {
 
     public BaseContainerBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if ((state.hasBlockEntity() && !state.is(newState.getBlock())) || !newState.hasBlockEntity()) {
-            this.clearContainer(state, level, pos);
-            super.onRemove(state, level, pos, newState, movedByPiston);
-        }
-    }
-
-    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
     }
 
     /**

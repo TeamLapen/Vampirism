@@ -8,17 +8,23 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
-public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity> {
+public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity, TotemRenderer.TotemRenderState> {
 
     private static final ResourceLocation TOTEM_BEAM_LOCATION = VResourceLocation.mod("textures/entity/totem_beam.png");
     private final static int HEIGHT = 100;
@@ -27,27 +33,38 @@ public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity> {
     }
 
     @Override
-    public void render(TotemBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        Level level = blockEntity.getLevel();
-        if (level == null) return;
-        
-        float textureScale = blockEntity.shouldRenderBeam();
-        if (textureScale > 0.0f) {
-            long totalWorldTime = level.getGameTime();
-            int captureProgress = blockEntity.getCaptureProgress();
-            int baseColors = blockEntity.getBaseColor();
+    public void extractRenderState(TotemBlockEntity blockEntity, TotemRenderState renderState, float partialTick, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
+        renderState.textureScale = blockEntity.shouldRenderBeam();
+        renderState.partialTicks = partialTick;
+        renderState.captureColor = blockEntity.getCapturingColors();
+        renderState.baseColor = blockEntity.getBaseColor();
+        renderState.capturingProgress = blockEntity.getCaptureProgress();
+        renderState.faction = blockEntity.getControllingFaction();
+
+    }
+
+    @Override
+    public TotemRenderState createRenderState() {
+        return new TotemRenderState();
+    }
+
+    @Override
+    public void submit(TotemRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (renderState.textureScale > 0.0f) {
+            int captureProgress = renderState.capturingProgress;
+            int baseColors = renderState.baseColor;
             int offset = 0;
             if (captureProgress > 0) {
-                int color = blockEntity.getCapturingColors();
+                int color = renderState.captureColor;
                 offset = (captureProgress * HEIGHT) / 100;
-                BeaconRenderer.renderBeaconBeam(poseStack, bufferSource, TOTEM_BEAM_LOCATION, partialTick, textureScale, totalWorldTime, 0, offset, color, 0.2f, 0.25f);
+                BeaconRenderer.submitBeaconBeam(poseStack, nodeCollector, TOTEM_BEAM_LOCATION, renderState.partialTicks, renderState.time, 0, offset, color, 0.2f, 0.25f);
             }
-            BeaconRenderer.renderBeaconBeam(poseStack, bufferSource, TOTEM_BEAM_LOCATION, partialTick, textureScale, totalWorldTime, offset, HEIGHT - offset, baseColors, 0.2f, 0.25f);
+            BeaconRenderer.submitBeaconBeam(poseStack, nodeCollector, TOTEM_BEAM_LOCATION, renderState.partialTicks, renderState.time, offset, HEIGHT - offset, baseColors, 0.2f, 0.25f);
         } else {
-            Holder<? extends IFaction<?>> faction = blockEntity.getControllingFaction();
-            if (!IFaction.isNeutral(faction)) {
-                renderFactionName(faction.value(), poseStack, bufferSource, packedLight);
-            }
+//            if (!IFaction.isNeutral(renderState.faction)) {
+//                renderFactionName(renderState.faction.value(), poseStack, bufferSource, packedLight);
+//            }
         }
     }
 
@@ -67,12 +84,22 @@ public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity> {
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TotemBlockEntity blockEntity) {
+    public boolean shouldRenderOffScreen() {
         return true;
     }
 
     @Override
     public AABB getRenderBoundingBox(TotemBlockEntity blockEntity) {
         return AABB.INFINITE;
+    }
+
+    public static class TotemRenderState extends BlockEntityRenderState {
+        public float textureScale;
+        public int time;
+        public float partialTicks;
+        public int captureColor;
+        public int baseColor;
+        public int capturingProgress;
+        public Holder<? extends IFaction<?>> faction;
     }
 }

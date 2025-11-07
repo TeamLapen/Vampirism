@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.NameAndId;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
@@ -113,7 +114,7 @@ public class UtilLib {
         }
 
         Vec3 vector2 = vector1.add(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
-        return player.getCommandSenderWorld().clip(new ClipContext(vector1, vector2, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+        return player.level().clip(new ClipContext(vector1, vector2, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
     }
 
     public static @NotNull BlockPos getRandomPosInBox(@NotNull Level w, @NotNull AABB box) {
@@ -181,13 +182,13 @@ public class UtilLib {
     public static <T extends Mob> @Nullable Entity spawnEntityBehindEntity(@NotNull LivingEntity entity, @NotNull EntityType<T> toSpawn, @NotNull EntitySpawnReason reason) {
 
         BlockPos behind = getPositionBehindEntity(entity, 2);
-        Mob e = toSpawn.create(entity.getCommandSenderWorld(), reason);
+        Mob e = toSpawn.create(entity.level(), reason);
         if (e == null) return null;
-        Level level = entity.getCommandSenderWorld();
+        Level level = entity.level();
         e.setPos(behind.getX(), entity.getY(), behind.getZ());
 
         if (e.checkSpawnRules(level, reason) && e.checkSpawnObstruction(level)) {
-            entity.getCommandSenderWorld().addFreshEntity(e);
+            entity.level().addFreshEntity(e);
             return e;
         } else {
             int y = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, behind).getY();
@@ -207,7 +208,7 @@ public class UtilLib {
      */
     private static void onInitialSpawn(@NotNull ServerLevel level, Entity e, @NotNull EntitySpawnReason reason) {
         if (e instanceof Mob mob) {
-            mob.finalizeSpawn(level, e.getCommandSenderWorld().getCurrentDifficultyAt(e.blockPosition()), reason, null);
+            mob.finalizeSpawn(level, e.level().getCurrentDifficultyAt(e.blockPosition()), reason, null);
         }
     }
 
@@ -241,7 +242,7 @@ public class UtilLib {
             if (world.noCollision(new AABB(c))) {
                 if (world.isAreaLoaded(c, 5) && SpawnPlacements.isSpawnPositionOk(e.getType(), world, c)) {//I see no other way
                     e.setPos(c.getX(), c.getY() + 0.2, c.getZ());
-                    if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom()) && !(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.getCommandSenderWorld()))) {
+                    if (SpawnPlacements.checkSpawnRules(e.getType(), world, reason, c, world.getRandom()) && !(e instanceof Mob) || (((Mob) e).checkSpawnRules(world, reason) && ((Mob) e).checkSpawnObstruction(e.level()))) {
                         backupPos = c; //Store the location in case we do not find a better one
                         for (LivingEntity p : avoidedEntities) {
 
@@ -305,11 +306,11 @@ public class UtilLib {
         double ty = y;
 
 
-        if (entity.getCommandSenderWorld().hasChunkAt(blockPos)) {
+        if (entity.level().hasChunkAt(blockPos)) {
             boolean flag1 = false;
 
             while (!flag1 && blockPos.getY() > 0) {
-                BlockState blockState = entity.getCommandSenderWorld().getBlockState(blockPos.below());
+                BlockState blockState = entity.level().getBlockState(blockPos.below());
                 if (blockState.blocksMotion()) {
                     flag1 = true;
                 } else {
@@ -321,7 +322,7 @@ public class UtilLib {
             if (flag1) {
                 entity.setPos(entity.getX(), entity.getY(), entity.getZ());
 
-                if (entity.getCommandSenderWorld().noCollision(entity) && !entity.getCommandSenderWorld().containsAnyLiquid(entity.getBoundingBox())) {
+                if (entity.level().noCollision(entity) && !entity.level().containsAnyLiquid(entity.getBoundingBox())) {
                     flag = true;
                 }
             }
@@ -341,11 +342,11 @@ public class UtilLib {
                 double d7 = d3 + (entity.getX() - d3) * d6 + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth() * 2.0D;
                 double d8 = d4 + (entity.getY() - d4) * d6 + entity.getRandom().nextDouble() * entity.getBbHeight();
                 double d9 = d5 + (entity.getZ() - d5) * d6 + (entity.getRandom().nextDouble() - 0.5D) * entity.getBbWidth() * 2.0D;
-                entity.getCommandSenderWorld().addParticle(ParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
+                entity.level().addParticle(ParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
             }
 
             if (sound) {
-                entity.getCommandSenderWorld().playLocalSound(d3, d4, d5, SoundEvents.ENDERMAN_TELEPORT, SoundSource.NEUTRAL, 1F, 1F, false);
+                entity.level().playLocalSound(d3, d4, d5, SoundEvents.ENDERMAN_TELEPORT, SoundSource.NEUTRAL, 1F, 1F, false);
                 entity.playSound(SoundEvents.ENDERMAN_TELEPORT, 1F, 1F);
             }
 
@@ -381,7 +382,7 @@ public class UtilLib {
             double d7 = e.getX() + (maxDistance) * d6 + (e.getRandom().nextDouble() - 0.5D) * e.getBbWidth() * 2.0D;
             double d8 = e.getY() + (maxDistance / 2) * d6 + e.getRandom().nextDouble() * e.getHealth();
             double d9 = e.getZ() + (maxDistance) * d6 + (e.getRandom().nextDouble() - 0.5D) * e.getBbWidth() * 2.0D;
-            e.getCommandSenderWorld().addParticle(particle, d7, d8, d9, f, f1, f2);
+            e.level().addParticle(particle, d7, d8, d9, f, f1, f2);
         }
     }
 
@@ -423,23 +424,6 @@ public class UtilLib {
     }
 
     /**
-     * Stores the given pos with in the compoundtag using base.
-     * Can be retrieved again with {@link UtilLib#readPos(CompoundTag, String)}
-     */
-    public static void write(@NotNull CompoundTag nbt, String base, @NotNull BlockPos pos) {
-        nbt.putInt(base + "_x", pos.getX());
-        nbt.putInt(base + "_y", pos.getY());
-        nbt.putInt(base + "_z", pos.getZ());
-    }
-
-    /**
-     * Reads a position written by {@link UtilLib#write(CompoundTag, String, BlockPos)}.
-     */
-    public static @NotNull BlockPos readPos(@NotNull CompoundTag nbt, String base) {
-        return new BlockPos(nbt.getInt(base + "_x"), nbt.getInt(base + "_y"), nbt.getInt(base + "_z"));
-    }
-
-    /**
      * Prefixes each of the strings with the given prefix
      */
     public static String @NotNull [] prefix(String prefix, String @NotNull ... strings) {
@@ -474,7 +458,7 @@ public class UtilLib {
     }
 
     public static boolean isPlayerOp(@NotNull Player player) {
-        return ServerLifecycleHooks.getCurrentServer().getPlayerList().getOps().get(player.getGameProfile()) != null;
+        return ServerLifecycleHooks.getCurrentServer().getPlayerList().getOps().get(player.nameAndId()) != null;
     }
 
     public static boolean isSameInstanceAsServer() {
@@ -606,12 +590,12 @@ public class UtilLib {
 
     @Nullable
     public static StructureStart getStructureStartAt(@NotNull Entity entity, @NotNull Structure s) {
-        return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
+        return getStructureStartAt(entity.level(), entity.blockPosition(), s);
     }
 
     @NotNull
     public static Optional<StructureStart> getStructureStartAt(@NotNull Entity entity, @NotNull TagKey<Structure> s) {
-        return getStructureStartAt(entity.getCommandSenderWorld(), entity.blockPosition(), s);
+        return getStructureStartAt(entity.level(), entity.blockPosition(), s);
     }
 
     public static boolean isInsideStructure(Level w, @NotNull BlockPos p, @NotNull Structure s) {
@@ -729,7 +713,7 @@ public class UtilLib {
      * @param replacement To be added
      */
     public static void replaceEntity(@NotNull LivingEntity old, @NotNull LivingEntity replacement) {
-        Level w = old.getCommandSenderWorld();
+        Level w = old.level();
         NeoForge.EVENT_BUS.post(new LivingConversionEvent.Post(old, replacement));
         old.remove(Entity.RemovalReason.DISCARDED);
         w.addFreshEntity(replacement);

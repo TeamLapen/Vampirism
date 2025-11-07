@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens.taskboard;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.client.gui.MultilineTooltip;
 import de.teamlapen.lib.client.gui.components.ContainerObjectSelectionListWithDummy;
 import de.teamlapen.vampirism.api.VampirismRegistries;
@@ -17,19 +16,18 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -83,12 +81,12 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
     public class TaskEntry extends ContainerObjectSelectionListWithDummy<ITaskInstance, TaskEntry, DummyEntry>.ItemEntry {
 
         private final Task task;
-        private final Tooltip tooltip;
+        private final WidgetTooltipHolder tooltipHolder = new WidgetTooltipHolder();
 
         public TaskEntry(ITaskInstance item) {
             super(item);
             this.task = registry.getValue(item.getTask());
-            this.tooltip = generateTaskToolTip();
+            tooltipHolder.set(generateTaskToolTip());
         }
 
         @Override
@@ -97,47 +95,47 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
         }
 
         public void renderBackground(GuiGraphics graphics, Minecraft minecraft, int pTop, int pLeft, int pWidth, int pHeight, int mouseX, int mouseY, float partialTicks) {
+            int color;
             if (menu.isCompleted(this.getItem())) {
-                RenderSystem.setShaderColor(0.4f, 0.4f, 0.4f, 1);
+                color = ARGB.colorFromFloat(1, 0.4f, 0.4f, 0.4f);
             } else {
                 boolean isUnique = this.getItem().isUnique(menu.getRegistry());
                 boolean remainsTime = this.getItem().getTaskTimeStamp() - minecraft.level.getGameTime() > 0;
                 if (menu.canCompleteTask(this.getItem())) {
                     if (isUnique) {
-                        RenderSystem.setShaderColor(1f, 0.855859375f, 0, 1);
+                        color = ARGB.colorFromFloat(1, 1f, 0.855859375f, 0);
                     } else {
-                        RenderSystem.setShaderColor(0, 0.9f, 0, 1);
+                        color = ARGB.colorFromFloat(1, 0, 0.9f, 0);
                     }
                 } else if (menu.isTaskNotAccepted(this.getItem())) {
                     if (isUnique) {
-                        RenderSystem.setShaderColor(0.64f, 0.57f, 0.5f, 1);
+                        color = ARGB.colorFromFloat(1, 0.64f, 0.57f, 0.5f);
                     } else {
-                        RenderSystem.setShaderColor(0.55f, 0.55f, 0.55f, 1);
+                        color = ARGB.colorFromFloat(1, 0.55f, 0.55f, 0.55f);
                     }
                 } else if (!isUnique && !remainsTime) {
-                    RenderSystem.setShaderColor(1f, 85 / 255f, 85 / 255f, 1);
+                    color = ARGB.colorFromFloat(1, 1f, 85 / 255f, 85 / 255f);
                 } else {
                     if (isUnique) {
-                        RenderSystem.setShaderColor(1f, 0.9f, 0.6f, 1f);
+                        color = ARGB.colorFromFloat(1, 1f, 0.9f, 0.6f);
                     } else {
-                        RenderSystem.setShaderColor(0.85f, 1f, 0.85f, 1f);
+                        color = ARGB.colorFromFloat(1, 0.85f, 1f, 0.85f);
                     }
                 }
             }
-            graphics.blitSprite(RenderType::guiTextured, TASK_BACKGROUND, pLeft, pTop, pWidth, pHeight);
-//            graphics.blit(RenderType::guiTextured, TASKMASTER_GUI_TEXTURE, pLeft, pTop, 0, 17, 187, Math.min(pWidth - 1, 135), pHeight, 256, 256);
-//            graphics.blit(RenderType::guiTextured, TASKMASTER_GUI_TEXTURE, pLeft + pWidth - Math.min(pWidth - 1, 135), pTop, 0, 17 + (135 - Math.min(pWidth - 1, 134)), 187, Math.min(pWidth - 1, 135), pHeight, 256, 256);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TASK_BACKGROUND, pLeft, pTop, pWidth, pHeight, color);
         }
 
+
         @Override
-        public void render(GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
+        public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
             Minecraft mc = Minecraft.getInstance();
-            this.renderBackground(graphics, mc, pTop, pLeft, pWidth, pHeight + 4, pMouseX, pMouseY, pPartialTick);
+            int i = TaskList.this.children().indexOf(this);
+            this.renderBackground(guiGraphics, mc, getY(), getRowLeft(), getRowWidth(), getHeight() - getY() + 4, mouseX, mouseY, partialTick);
 
             //render name
             Optional<FormattedCharSequence> text = Optional.ofNullable(mc.font.split(this.task.getTitle(), 131).getFirst());
-            text.ifPresent(t -> graphics.drawString(mc.font, t, pLeft + 2, pTop + 4, 3419941, false));//(6839882 & 16711422) >> 1 //8453920 //4226832
+            text.ifPresent(t -> guiGraphics.drawString(mc.font, t, getRowLeft() + 2, getY() + 4, 3419941, false));//(6839882 & 16711422) >> 1 //8453920 //4226832
 
             //render progress
             if (!menu.isTaskNotAccepted(this.getItem()) && !this.getItem().isUnique(menu.getRegistry())) {
@@ -162,16 +160,16 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                 if (remainingTime < this.getItem().getTaskDuration() / 20F * 0.1F) {
                     color = 16733525;
                 }
-                graphics.drawString(mc.font, msg, pLeft + pWidth - width - 1, pTop + 12, color, true);
+                guiGraphics.drawString(mc.font, msg, getRowLeft() + getRowWidth() - width - 1, getY() + 12, color, true);
             }
 
-            if (isMouseOver(pMouseX, pMouseY + 3)) {
-                renderToolTips(mc, pMouseX, pMouseY);
+            if (isMouseOver(mouseX, mouseY + 3)) {
+                renderToolTips(guiGraphics, mouseX, mouseY);
             }
         }
 
-        protected void renderToolTips(Minecraft minecraft, int mouseX, int mouseY) {
-            minecraft.screen.setTooltipForNextRenderPass(this.tooltip, DefaultTooltipPositioner.INSTANCE, this.isFocused());
+        protected void renderToolTips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+            tooltipHolder.refreshTooltipForNextRenderPass(guiGraphics, mouseX, mouseY, true, false, getRectangle());
         }
 
         @Override
@@ -243,20 +241,16 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
 
 
         @Override
-        public void render(@NotNull GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-            renderBg(graphics, pIndex, pTop, pLeft, pWidth, pHeight + 4, pMouseX, pMouseY, pIsMouseOver, pPartialTick);
-            this.children.forEach(w -> ((MovableWidget) w).setOffset(pLeft, pTop));
-            this.children.forEach(a -> a.render(graphics, pMouseX, pMouseY, pPartialTick));
-            this.children.stream().filter(x -> x.isMouseOver(pMouseX, pMouseY)).findFirst().ifPresent(w -> {
-                if (w.getTooltip() != null) {
-                    minecraft.screen.setTooltipForNextRenderPass(w.getTooltip(), DefaultTooltipPositioner.INSTANCE, w.isFocused());
-                }
+        public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+            renderBg(guiGraphics, getY(), getRowLeft(), getRowWidth(), getHeight() + 4, mouseX, mouseY, isHovering, partialTick);
+            this.children.forEach(w -> ((MovableWidget) w).setOffset(getRowLeft(), getY()));
+            this.children.forEach(a -> a.render(guiGraphics, mouseX, mouseY, partialTick));
+            this.children.stream().filter(x -> x.isMouseOver(mouseX, mouseY)).findFirst().ifPresent(w -> {
             });
-
         }
 
-        protected void renderBg(@NotNull GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-            graphics.blitSprite(RenderType::guiTextured,  TASK_DETAILS_BACKGROUND, pLeft + 2, pTop, pWidth-4, pHeight);
+        protected void renderBg(@NotNull GuiGraphics graphics, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TASK_DETAILS_BACKGROUND, pLeft + 2, pTop, pWidth - 4, pHeight);
         }
 
         @Override
@@ -456,9 +450,9 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
             }
 
             @Override
-            public void onClick(double mouseX, double mouseY) {
-                if (mouseX > this.getX() && mouseX < this.getX() + this.width && mouseY > this.getY() && mouseY < this.getY() + this.height) {
-                    super.onClick(mouseX, mouseY);
+            public void onClick(MouseButtonEvent event, boolean doubleClick) {
+                if (event.x() > this.getX() && event.x() < this.getX() + this.width && event.y() > this.getY() && event.y() < this.getY() + this.height) {
+                    super.onClick(event, doubleClick);
                 }
             }
 
@@ -471,7 +465,7 @@ public class TaskList extends ContainerObjectSelectionListWithDummy<ITaskInstanc
                     default -> ABORT;
                 };
 
-                graphics.blitSprite(RenderType::guiTextured, sprites.get(this.active, this.isHovered), this.getX(), this.getY(), this.width, this.height);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprites.get(this.active, this.isHovered), this.getX(), this.getY(), this.width, this.height);
 
                 if (this.isHovered) {
                     this.setTooltip(Tooltip.create(Component.translatable(action.getTranslationKey())));

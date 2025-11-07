@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.client.models.entities.BaronBaseModel;
 import de.teamlapen.vampirism.client.models.entities.BaronessAttireModel;
 import de.teamlapen.vampirism.client.renderer.entities.VampireBaronRenderer;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -38,15 +38,12 @@ public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBa
         this.predicateFemale = predicateFemale;
     }
 
-
     @Override
-    public void render(@NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn, @NotNull VampireBaronRenderer.VampireBaronRenderState entityIn, float f1, float f2) {
-        if (!entityIn.isInvisible) {
-            boolean female = predicateFemale.test(entityIn);
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, VampireBaronRenderer.VampireBaronRenderState renderState, float yRot, float xRot) {
+        if (!renderState.isInvisible) {
+            boolean female = predicateFemale.test(renderState);
             EntityModel<VampireBaronRenderer.VampireBaronRenderState> model = female ? baroness : baron;
-            coloredCutoutModelCopyLayerRender(model, female ? textureBaroness : textureBaron, matrixStackIn, bufferIn, packedLightIn, entityIn, -1);
+            coloredCutoutModelCopyLayerRender(model, female ? textureBaroness : textureBaron, poseStack, nodeCollector, packedLight, renderState, -1, -1);
         }
     }
-
-
 }

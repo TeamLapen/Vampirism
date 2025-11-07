@@ -5,22 +5,20 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -33,58 +31,53 @@ import java.util.stream.Collectors;
 
 public class VertexUtils {
 
-    public static void renderFluidTank(Holder<Fluid> fluid, @Nullable Integer fluidAmount, int capacity, Vec3 translation, Vec3 scale, float fluidAlpha, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        renderFluidTank(new FluidStack(fluid, fluidAmount == null ? 0 : fluidAmount), capacity, translation, scale, fluidAlpha, poseStack, bufferSource, packedLight, packedOverlay);
-    }
-
     @SuppressWarnings("deprecation")
-    public static void renderFluidTank(@Nullable FluidStack fluidStack, int capacity, Vec3 translation, Vec3 scale, float fluidAlpha, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        if (fluidStack != null && !fluidStack.isEmpty()) {
-            float filled = Mth.clamp((float) fluidStack.getAmount() / capacity, 0f, 1f);
+    public static void renderFluidTank(@Nullable FluidStack fluidStack, int capacity, Vec3 translation, Vec3 scale, float fluidAlpha, PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, int packedOverlay) {
+        if (fluidStack == null || fluidStack.isEmpty()) return;
 
-            poseStack.pushPose();
+        float filled = Mth.clamp((float) fluidStack.getAmount() / capacity, 0f, 1f);
 
-            poseStack.translate(translation);
-            poseStack.scale((float) scale.x, (float) scale.y, (float) scale.z);
+        poseStack.pushPose();
 
-            // The rendered fluid may sometimes appear black because of the packedLight parameter being too dark. Not sure if that's solvable, it occurs on the Minecraft side
-            Material material = new Material(TextureAtlas.LOCATION_BLOCKS, IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack));
-            VertexConsumer vertex = material.buffer(bufferSource, RenderType::entityTranslucent);
-            VertexUtils.addCube(vertex, poseStack, 1, filled, packedLight, packedOverlay, -1, fluidAlpha);
+        poseStack.translate(translation);
+        poseStack.scale((float) scale.x, (float) scale.y, (float) scale.z);
 
-            poseStack.popPose();
-        }
+        var renderType = new Material(TextureAtlas.LOCATION_BLOCKS, IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack)).renderType(RenderType::entityTranslucent);
+        VertexUtils.addCube(poseStack, nodeCollector, renderType, 1, filled, packedLight, packedOverlay, -1, fluidAlpha);
+        // The rendered fluid may sometimes appear black because of the packedLight parameter being too dark. Not sure if that's solvable, it occurs on the Minecraft side
+
+        poseStack.popPose();
     }
 
-    public static void addCube(VertexConsumer builder, PoseStack poseStack,
+    public static void addCube(PoseStack poseStack, SubmitNodeCollector nodeCollector, RenderType renderType,
                                float width, float height, int light, int overlay, int color) {
-        addCube(builder, poseStack, width, height, light, overlay, color, 1f);
+        addCube(poseStack, nodeCollector, renderType, width, height, light, overlay, color, 1f);
     }
 
-    public static void addCube(VertexConsumer builder, PoseStack poseStack,
+    public static void addCube(PoseStack poseStack, SubmitNodeCollector nodeCollector, RenderType renderType,
                                float width, float height, int light, int overlay, int color, float alpha) {
-        addCube(builder, poseStack, 0, 0, width, height, light, overlay, color, alpha, true, true, false);
+        addCube(poseStack, nodeCollector, renderType, 0, 0, width, height, light, overlay, color, alpha, true, true, false);
     }
 
-    public static void addCube(VertexConsumer builder, PoseStack poseStack,
+    public static void addCube(PoseStack poseStack, SubmitNodeCollector nodeCollector, RenderType renderType,
                                float uOff, float vOff,
                                float width, float height, int light, int overlay, int color) {
-        addCube(builder, poseStack, uOff, vOff, width, height, light, overlay, color, 1f, true, true, false);
+        addCube(poseStack, nodeCollector, renderType, uOff, vOff, width, height, light, overlay, color, 1f, true, true, false);
     }
 
     //automatic relative UV
     //invert v axis automatically
-    public static void addCube(VertexConsumer builder, PoseStack poseStack,
+    public static void addCube(PoseStack poseStack, SubmitNodeCollector nodeCollector, RenderType renderType,
                                float uOff, float vOff,
                                float width, float height,
                                int light, int overlay,
                                int color, float alpha,
                                boolean up, boolean down, boolean wrap) {
-        addCube(builder, poseStack, uOff, 1 - (vOff + height), uOff + width, 1 - vOff,
+        addCube(poseStack, nodeCollector, renderType, uOff, 1 - (vOff + height), uOff + width, 1 - vOff,
                 width, height, light, overlay, color, alpha, up, down, wrap);
     }
 
-    public static void addCube(VertexConsumer builder, PoseStack poseStack,
+    public static void addCube(PoseStack poseStack, SubmitNodeCollector nodeCollector, RenderType renderType,
                                float minU, float minV,
                                float maxU, float maxV,
                                float width, float height,
@@ -105,31 +98,34 @@ public class VertexUtils {
 
         float hw = width / 2f;
         float hh = height / 2f;
-        float inc = 0;
 
         poseStack.pushPose();
         poseStack.translate(0, hh, 0);
-        for (var d : Direction.values()) {
-            float v0 = minV;
-            float t = hw;
-            float y0 = -hh;
-            float y1 = hh;
-            float i = inc;
-            if (d.getAxis() == Direction.Axis.Y) {
-                if ((!up && d == Direction.UP) || (!down && d == Direction.DOWN)) continue;
-                t = hh;
-                y0 = -hw;
-                y1 = hw;
-                v0 = minV2;
-            } else if (wrap) {
-                inc += width;
+        nodeCollector.submitCustomGeometry(poseStack, renderType, (pose, vertexBuilder) -> {
+
+            float inc = 0;
+            for (var d : Direction.values()) {
+                float v0 = minV;
+                float t = hw;
+                float y0 = -hh;
+                float y1 = hh;
+                float i = inc;
+                if (d.getAxis() == Direction.Axis.Y) {
+                    if ((!up && d == Direction.UP) || (!down && d == Direction.DOWN)) continue;
+                    t = hh;
+                    y0 = -hw;
+                    y1 = hw;
+                    v0 = minV2;
+                } else if (wrap) {
+                    inc += width;
+                }
+                poseStack.pushPose();
+                poseStack.mulPose(rot(d));
+                poseStack.translate(0, 0, -t);
+                addQuad(vertexBuilder, poseStack, -hw, y0, hw, y1, minU + i, v0, maxU + i, maxV, r, g, b, a, lu, lv, ou, ov);
+                poseStack.popPose();
             }
-            poseStack.pushPose();
-            poseStack.mulPose(rot(d));
-            poseStack.translate(0, 0, -t);
-            addQuad(builder, poseStack, -hw, y0, hw, y1, minU + i, v0, maxU + i, maxV, r, g, b, a, lu, lv, ou, ov);
-            poseStack.popPose();
-        }
+        });
         poseStack.popPose();
     }
 
@@ -227,13 +223,13 @@ public class VertexUtils {
             Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, null
     };
 
-    public static List<BakedQuad> getAllModelQuads(BakedModel model, BlockState state, RandomSource rand) {
-        List<BakedQuad> allQuads = new ArrayList<>();
-        for (var d : DIRS) {
-            allQuads.addAll(model.getQuads(state, d, rand));
-        }
-        return allQuads;
-    }
+//    public static List<BakedQuad> getAllModelQuads(BakedModel model, BlockState state, RandomSource rand) {
+//        List<BakedQuad> allQuads = new ArrayList<>();
+//        for (var d : DIRS) {
+//            allQuads.addAll(model.getQuads(state, d, rand));
+//        }
+//        return allQuads;
+//    }
 
     public static Quaternionf rot(Direction dir) {
         return DIR2ROT.get(dir);
@@ -242,6 +238,5 @@ public class VertexUtils {
     public static final Quaternionf XN90 = Axis.XP.rotationDegrees(-90);
     private static final Map<Direction, Quaternionf> DIR2ROT = Maps.newEnumMap(Arrays.stream(Direction.values())
             .collect(Collectors.toMap(Functions.identity(), d -> d.getOpposite().getRotation().mul(XN90))));
-
 
 }

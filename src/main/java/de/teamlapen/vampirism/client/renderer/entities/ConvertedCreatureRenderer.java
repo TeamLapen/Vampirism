@@ -2,12 +2,14 @@ package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.common.entity.converted.ConvertedCreatureEntity;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Renders a converted creature, by rendering its old creature
@@ -20,18 +22,22 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     }
 
     @Override
-    public void render(ConvertedCreateRenderState state, @NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (state.oldEntity == null) return;
+    public void submit(ConvertedCreateRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (renderState.renderState == null) return;
         renderOverlay = true;
-        this.entityRenderDispatcher.render(state.oldEntity, 0,0,0,0,stack, bufferSource, packedLight);
+        this.entityRenderDispatcher.submit(renderState.renderState, cameraRenderState, 0, 0, 0, poseStack, nodeCollector);
         renderOverlay = false;
-        super.render(state, stack, bufferSource, packedLight);
+
     }
 
     @Override
     public void extractRenderState(@NotNull ConvertedCreatureEntity<?> entity, @NotNull ConvertedCreateRenderState state, float p_362204_) {
         super.extractRenderState(entity, state, p_362204_);
-        state.oldEntity = entity.getOldCreature().orElse(null);
+        state.renderState = entity.getOldCreature().map(oldEntity -> {
+            PathfinderMob pathfinderMob = oldEntity;
+            var renderer = this.entityRenderDispatcher.getRenderer(pathfinderMob);
+            return renderer.createRenderState(pathfinderMob, p_362204_);
+        }).orElse(null);
     }
 
     @Override
@@ -40,6 +46,7 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     }
 
     public static class ConvertedCreateRenderState extends EntityRenderState {
-        public PathfinderMob oldEntity;
+        @Nullable
+        public EntityRenderState renderState;
     }
 }

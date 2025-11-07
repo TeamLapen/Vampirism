@@ -18,6 +18,8 @@ import de.teamlapen.vampirism.misc.sit.SitEntity;
 import de.teamlapen.vampirism.server.advancements.critereon.FactionSubPredicate;
 import de.teamlapen.vampirism.server.advancements.critereon.PlayerFactionSubPredicate;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
+import net.minecraft.core.Holder;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -38,7 +40,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -107,6 +111,8 @@ public class ModEntities {
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<? extends ICondition>> ENTITY_EXISTS = CONDITIONS.register("entity_exists", () -> EntityExistsCondition.CODEC);
 
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Item>> ITEM_DATA = DATA_SERIALIZER.register("item", () -> (EntityDataSerializer.ForValueType<Item>) (() -> ByteBufCodecs.registry(Registries.ITEM)));
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Holder<Item>>> ITEM_HOLDER = DATA_SERIALIZER.register("item_holder", () -> (EntityDataSerializer.ForValueType<Holder<Item>>) (() -> ByteBufCodecs.holderRegistry(Registries.ITEM)));
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Optional<UUID>>> OPTIONAL_UUID = DATA_SERIALIZER.register("optional_uuid", () -> (EntityDataSerializer.ForValueType<Optional<UUID>>) (() -> ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC)));
 
     static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);

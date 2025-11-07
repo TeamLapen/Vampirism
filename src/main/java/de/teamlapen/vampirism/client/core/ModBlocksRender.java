@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.extensions.BlockExtensions;
 import de.teamlapen.vampirism.client.renderer.blockentity.*;
 import de.teamlapen.vampirism.common.blockentity.AlchemicalCauldronBlockEntity;
@@ -11,12 +10,10 @@ import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.core.Holder;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.NotNull;
@@ -74,18 +71,11 @@ public class ModBlocksRender {
     }
 
     private static void registerRenderType() {
-        ItemBlockRenderTypes.setRenderLayer(ModFluids.BLOOD.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModFluids.BLOOD.get(), ChunkSectionLayer.TRANSLUCENT);
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerBlock(BlockExtensions.TENT, ModBlocks.TENT.get(), ModBlocks.TENT_MAIN.get());
     }
 
-    static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
-        for (DyeColor value : DyeColor.values()) {
-            event.register(VResourceLocation.mod("block/coffin/coffin_" + value.getName()));
-            event.register(VResourceLocation.mod("block/coffin/coffin_bottom_" + value.getName()));
-            event.register(VResourceLocation.mod("block/coffin/coffin_top_" + value.getName()));
-        }
-    }
 }

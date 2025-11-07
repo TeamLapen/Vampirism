@@ -27,7 +27,7 @@ public abstract class FleeGoal extends Goal {
         this.theCreature = theCreature;
         this.movementSpeed = movementSpeed;
         this.restrictToHome = restrictToHome;
-        world = theCreature.getCommandSenderWorld();
+        this.world = theCreature.level();
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
@@ -66,9 +66,9 @@ public abstract class FleeGoal extends Goal {
             BlockPos blockpos1 = blockpos.offset(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
 
             if (isPositionAcceptable(world, blockpos1)) {
-                if (restrictToHome && !theCreature.getRestrictCenter().equals(BlockPos.ZERO)) {
+                if (restrictToHome && !theCreature.getHomePosition().equals(BlockPos.ZERO)) {
 
-                    if (!theCreature.isWithinRestriction(blockpos1)) continue;
+                    if (!theCreature.isWithinHome(blockpos1)) continue;
                 }
                 return new Vec3(blockpos1.getX(), blockpos1.getY(), blockpos1.getZ());
             }

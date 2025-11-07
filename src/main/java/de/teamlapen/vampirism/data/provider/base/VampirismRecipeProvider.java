@@ -14,6 +14,7 @@ import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
@@ -295,10 +296,10 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
                 .save(this.output, ResourceKey.create(Registries.RECIPE, packedName));
     }
 
-    protected void netheriteSmithing(Ingredient ingredient, RecipeCategory category, Ingredient material, ItemStack resultItem, String pathSuffix) {
-        ModdedSmithingTransformRecipeBuilder.smithing(Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE), ingredient, material, category, resultItem)
+    protected void netheriteSmithing(Ingredient ingredient, RecipeCategory category, Ingredient material, Item resultItem, DataComponentPatch patch, String pathSuffix) {
+        ModdedSmithingTransformRecipeBuilder.smithing(Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE), ingredient, material, category, resultItem, patch)
                 .unlocks("has_netherite_ingot", this.has(ItemTags.NETHERITE_TOOL_MATERIALS))
-                .save(this.output, ResourceKey.create(Registries.RECIPE, RegUtil.id(resultItem.getItem()).withSuffix(pathSuffix).withSuffix("_smithing")));
+                .save(this.output, ResourceKey.create(Registries.RECIPE, RegUtil.id(resultItem).withSuffix(pathSuffix).withSuffix("_smithing")));
     }
 
     // Original method with added namespace on save.

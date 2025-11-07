@@ -45,11 +45,6 @@ public class GhostRenderer extends MobRenderer<GhostEntity, GhostRenderer.GhostR
     }
 
     @Override
-    public void render(GhostRenderState p_361886_, PoseStack p_115311_, MultiBufferSource p_115312_, int p_115313_) {
-        super.render(p_361886_, p_115311_, p_115312_, p_115313_);
-    }
-
-    @Override
     protected int getModelTint(GhostRenderState state) {
         if (state.aggressive) {
             return super.getModelTint(state);

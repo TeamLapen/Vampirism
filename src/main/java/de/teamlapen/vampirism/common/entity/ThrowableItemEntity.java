@@ -13,6 +13,8 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.HitResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,23 +44,18 @@ public class ThrowableItemEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
         ItemStack stack = getItem();
         if (!stack.isEmpty()) {
-            compound.put("thrownItem", stack.save(this.registryAccess(), new CompoundTag()));
+            output.store("thrownItem", ItemStack.CODEC, stack);
         }
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        ItemStack stack = ItemStack.parseOptional(this.registryAccess(), compound.getCompound("thrownItem"));
-        if (stack.isEmpty()) {
-            this.discard();
-        } else {
-            this.setItem(stack);
-        }
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.read("thrownItem", ItemStack.CODEC).ifPresentOrElse(this::setItem, this::discard);
     }
 
     @Override
@@ -77,12 +74,12 @@ public class ThrowableItemEntity extends ThrowableItemProjectile {
         if (!stack.isEmpty()) {
             Item item = stack.getItem();
             if (item instanceof IVampirismThrowableItem) {
-                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.level().isClientSide);
+                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.level().isClientSide());
             } else {
                 LOGGER.warn("Saved item ({}) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
             }
         }
-        if (!this.level().isClientSide) this.discard();
+        if (!this.level().isClientSide()) this.discard();
     }
 
     /**

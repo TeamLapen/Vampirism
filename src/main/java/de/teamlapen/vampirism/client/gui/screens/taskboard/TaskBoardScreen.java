@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.common.inventory.TaskBoardMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -47,9 +48,9 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        this.list.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
-        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    public boolean mouseDragged(MouseButtonEvent event, double p_97752_, double p_97753_) {
+        this.list.mouseDragged(event, p_97752_, p_97753_);
+        return super.mouseDragged(event, p_97752_, p_97753_);
     }
 
     @Override

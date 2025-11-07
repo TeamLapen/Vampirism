@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.entity;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -14,6 +13,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -76,7 +77,7 @@ public class AreaParticleCloud extends Entity {
         this.dimensions = EntityDimensions.fixed(radius * 2.0F, getBbHeight());
         this.setPos(d0, d1, d2);
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             this.getEntityData().set(RADIUS, radius);
         }
     }
@@ -98,7 +99,7 @@ public class AreaParticleCloud extends Entity {
     }
 
     @Override
-    public boolean save(@NotNull CompoundTag compound) {
+    public boolean save(@NotNull ValueOutput output) {
         return false;
     }
 
@@ -107,7 +108,7 @@ public class AreaParticleCloud extends Entity {
     }
 
     @Override
-    public boolean saveAsPassenger(@NotNull CompoundTag compound) {
+    public boolean saveAsPassenger(@NotNull ValueOutput output) {
         return false;
     }
 
@@ -118,7 +119,7 @@ public class AreaParticleCloud extends Entity {
         this.dimensions = EntityDimensions.fixed(getRadius() * 2, height);
         this.setPos(d0, d1, d2);
 
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             this.getEntityData().set(HEIGHT, height);
         }
     }
@@ -127,7 +128,7 @@ public class AreaParticleCloud extends Entity {
     public void tick() {
         super.tick();
         float radius = this.getRadius();
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             ParticleOptions particle = getParticle();
             float amount = (float) (Math.PI * radius * radius) * getSpawnRate();
             for (int i = 0; i < amount; i++) {
@@ -174,7 +175,7 @@ public class AreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
+    protected void addAdditionalSaveData(@NotNull ValueOutput output) {
 
     }
 
@@ -189,7 +190,7 @@ public class AreaParticleCloud extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
+    protected void readAdditionalSaveData(@NotNull ValueInput input) {
 
     }
 }

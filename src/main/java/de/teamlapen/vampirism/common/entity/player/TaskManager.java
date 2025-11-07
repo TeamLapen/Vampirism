@@ -5,12 +5,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.lib.util.UtilLib;
-import de.teamlapen.sync.common.storage.IDefaultSavable;
+import de.teamlapen.sync.common.storage.IDefaultSaveble;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;
 import de.teamlapen.vampirism.api.entity.player.task.*;
 import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.entity.player.tasks.TaskInstance;
 import de.teamlapen.vampirism.common.entity.player.tasks.req.ItemRequirement;
@@ -38,6 +39,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TaskManager<T extends ITaskPlayer<T>> implements ITaskManager, IDefaultSavable {
+public class TaskManager<T extends ITaskPlayer<T>> implements ITaskManager, IDefaultSaveble {
     private static final String NBT_KEY = "task_manager";
     private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
 
@@ -214,24 +217,22 @@ public class TaskManager<T extends ITaskPlayer<T>> implements ITaskManager, IDef
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag compoundNBT) {
-        if (compoundNBT.contains("taskWrapper")) {
-            ListTag infos = compoundNBT.getList("taskWrapper", 10);
-            for (int i = 0; i < infos.size(); i++) {
-                CompoundTag nbt = infos.getCompound(i);
-                var decode = TaskWrapper.CODEC.decode(NbtOps.INSTANCE, nbt).map(com.mojang.datafixers.util.Pair::getFirst).result();
-                decode.ifPresent(wrapper -> this.taskWrapperMap.put(wrapper.id, wrapper));
-            }
-        }
-        //completed tasks
-        if (compoundNBT.contains("completedTasks")) {
-            compoundNBT.getCompound("completedTasks").getAllKeys().forEach(taskId -> {
-                var key = ResourceKey.create(VampirismRegistries.Keys.TASK, ResourceLocation.parse(taskId));
-                if (this.registry.containsKey(key)) {
-                    this.completedTasks.add(key);
-                }
-            });
-        }
+    public void deserialize(ValueInput input) {
+        this.completedTasks.clear();
+        this.completedTasks.addAll(input.list("completedTasks", ResourceKey.codec(VampirismRegistries.Keys.TASK)).stream().flatMap(ValueInput.TypedInputList::stream).toList());
+
+        this.taskWrapperMap.clear();
+        this.taskWrapperMap.putAll(input.read("taskWrapper", MM).orElseGet(Map::of));
+    }
+
+    private static final Codec<Map<UUID, TaskWrapper>> MM = Codec.unboundedMap(UUIDUtil.CODEC, TaskWrapper.CODEC);
+
+    @Override
+    public void serialize(ValueOutput output) {
+        var completedTasks = output.list("completedTasks", ResourceKey.codec(VampirismRegistries.Keys.TASK));
+        this.completedTasks.forEach(completedTasks::add);
+
+        output.store("taskWrapper", MM, this.taskWrapperMap);
     }
 
     // task actions ----------------------------------------------------------------------------------------------------
@@ -274,7 +275,7 @@ public class TaskManager<T extends ITaskPlayer<T>> implements ITaskManager, IDef
      * updates the task list once per day ({@link #updateTaskLists()}
      */
     public void tick() {
-        if (this.player.getCommandSenderWorld().getGameTime() % 24000 == 0) {
+        if (this.player.level().getGameTime() % 24000 == 0) {
             this.updateTaskLists();
         }
     }
@@ -294,30 +295,6 @@ public class TaskManager<T extends ITaskPlayer<T>> implements ITaskManager, IDef
     @Override
     public boolean wasTaskCompleted(@NotNull ResourceKey<Task> task) {
         return this.completedTasks.contains(task);
-    }
-
-    @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        CompoundTag compoundNBT = new CompoundTag();
-        //completed tasks
-        if (!this.completedTasks.isEmpty()) {
-            CompoundTag tasksNBT = new CompoundTag();
-            this.completedTasks.forEach(key -> {
-                tasksNBT.putBoolean(key.location().toString(), true);
-            });
-            compoundNBT.put("completedTasks", tasksNBT);
-        }
-
-
-        if (!this.taskWrapperMap.isEmpty()) {
-            ListTag infos = new ListTag();
-            this.taskWrapperMap.forEach((a, b) -> {
-                DataResult<Tag> result = TaskWrapper.CODEC.encodeStart(NbtOps.INSTANCE, b);
-                infos.add(result.getOrThrow());
-            });
-            compoundNBT.put("taskWrapper", infos);
-        }
-        return compoundNBT;
     }
 
     /**

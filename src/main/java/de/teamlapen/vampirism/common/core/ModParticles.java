@@ -2,9 +2,7 @@ package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.particles.FlyingBloodEntityParticleOptions;
-import de.teamlapen.vampirism.common.particles.FlyingBloodParticleOptions;
-import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
+import de.teamlapen.vampirism.common.particles.*;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -22,7 +20,11 @@ import org.jetbrains.annotations.NotNull;
 public class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, REFERENCE.MODID);
 
-    public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodParticleOptions>> FLYING_BLOOD = PARTICLE_TYPES.register("flying_blood", () -> create(FlyingBloodParticleOptions.CODEC,  FlyingBloodParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<SwordChargeParticleOptions>> SWORD_CHARGE = PARTICLE_TYPES.register("sword_charge", () -> create(SwordChargeParticleOptions.CODEC, SwordChargeParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<SwordChargedParticleOptions>> SWORD_CHARGED = PARTICLE_TYPES.register("sword_charged", () -> create(SwordChargedParticleOptions.CODEC, SwordChargedParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<PedestalParticleOptions>> PEDESTAL = PARTICLE_TYPES.register("pedestal", () -> create(PedestalParticleOptions.CODEC, PedestalParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<MotherParticleOptions>> MOTHER = PARTICLE_TYPES.register("mother", () -> create(MotherParticleOptions.CODEC, MotherParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<AltarInfusionParticleOptions>> ALTAR_INFUSION = PARTICLE_TYPES.register("altar_infusion", () -> create(AltarInfusionParticleOptions.CODEC, AltarInfusionParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> create(FlyingBloodEntityParticleOptions.CODEC,FlyingBloodEntityParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<GenericParticleOptions>> GENERIC = PARTICLE_TYPES.register("generic", () -> create(GenericParticleOptions.CODEC, GenericParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SANGUINARE = PARTICLE_TYPES.register("sanguinare", () -> new SimpleParticleType(false));

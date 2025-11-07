@@ -77,7 +77,6 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     }
 
     private static void drawActionPart(Entry t, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
-        GuiRenderer.resetColor();
         GuiRenderer.blit(graphics, t.getIconLoc(), posX, posY, 16, 16, 16, 16);
     }
 

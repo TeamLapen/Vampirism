@@ -13,12 +13,19 @@ import de.teamlapen.vampirism.common.mixin.client.accessor.CameraAccessor;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.VampirismEventFactory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -33,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
  */
 @SuppressWarnings("unused")
 public class RenderHandler {
-    @NotNull
     private final Minecraft mc;
 
 
@@ -49,14 +55,17 @@ public class RenderHandler {
 
     private float vampireBiomeFogDistanceMultiplier = 1;
 
-    public RenderHandler(@NotNull Minecraft mc) {
+    public RenderHandler(Minecraft mc) {
         this.mc = mc;
     }
 
     @SubscribeEvent
     public void onCameraSetup(ViewportEvent.@NotNull ComputeCameraAngles event) {
         if (ModConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
-            Minecraft.getInstance().getEntityRenderDispatcher().setRenderHitBoxes(false);
+            DebugScreenEntryStatus status = this.mc.debugEntries.getStatus(DebugScreenEntries.ENTITY_HITBOXES);
+            if (status != DebugScreenEntryStatus.NEVER) {
+                this.mc.debugEntries.setStatus(DebugScreenEntries.ENTITY_HITBOXES, DebugScreenEntryStatus.NEVER);
+            }
         }
         if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
             ((LivingEntity) event.getCamera().getEntity()).getSleepingPos().map(pos -> event.getCamera().getEntity().level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
@@ -100,15 +109,15 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderFog(ViewportEvent.@NotNull RenderFog event) {
-        if (vampireBiomeTicks == 0) return;
-        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) vampireBiomeTicks / 1.5f;
-        f *= vampireBiomeFogDistanceMultiplier;
-        event.setNearPlaneDistance(switch (event.getMode()) {
-            case FOG_TERRAIN -> Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
-            case FOG_SKY -> 0;
-        });
-        event.setFarPlaneDistance(Math.min(event.getFarPlaneDistance(), 50 * f));
-        event.setCanceled(true);
+//        if (vampireBiomeTicks == 0) return;
+//        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) vampireBiomeTicks / 1.5f;
+//        f *= vampireBiomeFogDistanceMultiplier;
+//        event.setNearPlaneDistance(switch (event.getMode()) { TODO
+//            case FOG_TERRAIN -> Math.min(event.getFarPlaneDistance() * 0.75f, 6 * f);
+//            case FOG_SKY -> 0;
+//        });
+//        event.setFarPlaneDistance(Math.min(event.getFarPlaneDistance(), 50 * f));
+//        event.setCanceled(true);
     }
 
     @SubscribeEvent
@@ -119,7 +128,7 @@ public class RenderHandler {
     }
 
     @SubscribeEvent
-    public void onRenderLivingPre(RenderLivingEvent.@NotNull Pre<Player, PlayerRenderState, PlayerModel> event) {
+    public void onRenderLivingPre(RenderLivingEvent.@NotNull Pre<Player, AvatarRenderState, PlayerModel> event) {
         var vampirism = ((IVampirismRenderState) event.getRenderState()).vampirism$attributes();
         if (vampirism != null && vampirism.getHuntSpecial().isDisguised()) {
             double dist = this.mc.player == null ? 0 : event.getRenderState().distanceToCameraSq;
@@ -147,7 +156,7 @@ public class RenderHandler {
     }
 
     @SubscribeEvent
-    public void onRenderPlayer(RenderPlayerEvent.@NotNull Pre event) {
+    public void onRenderPlayer(RenderPlayerEvent.@NotNull Pre<AbstractClientPlayer> event) {
         IVampirismRenderState vampState = (IVampirismRenderState) event.getRenderState();
         VampirePlayerSpecialAttributes vAtt = vampState.vampirism$attributes().getVampSpecial();
         if (vAtt.isDBNO) {
@@ -174,7 +183,7 @@ public class RenderHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onRenderPlayerPreHigh(RenderPlayerEvent.@NotNull Pre event) {
+    public void onRenderPlayerPreHigh(RenderPlayerEvent.@NotNull Pre<AbstractClientPlayer> event) {
         IVampirismRenderState vampState = (IVampirismRenderState) event.getRenderState();
         VampirePlayerSpecialAttributes vAtt = vampState.vampirism$attributes().getVampSpecial();
         if (vAtt.invisible) {
@@ -187,7 +196,9 @@ public class RenderHandler {
 
             bat.tickCount = (int) event.getRenderState().ageInTicks;
             bat.setInvisible(event.getRenderState().isInvisible);
-            mc.getEntityRenderDispatcher().render(bat, 0, 0, 0, partialTicks, event.getPoseStack(), mc.renderBuffers().bufferSource(), mc.getEntityRenderDispatcher().getPackedLightCoords(bat, partialTicks));
+            EntityRenderer<? super Bat, ?> renderer = mc.getEntityRenderDispatcher().getRenderer(bat);
+            EntityRenderState renderState = renderer.createRenderState(bat, partialTicks);
+            mc.getEntityRenderDispatcher().submit(renderState, new CameraRenderState(), 0, 0, 0, event.getPoseStack(), event.getSubmitNodeCollector());
         }
     }
 

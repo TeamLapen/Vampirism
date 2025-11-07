@@ -8,14 +8,14 @@ import de.teamlapen.vampirism.client.renderer.entities.state.TaskMasterRenderSta
 import de.teamlapen.vampirism.common.entity.hunter.HunterTaskMasterEntity;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.client.model.VillagerModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,9 +38,9 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     }
 
     @Override
-    protected void renderNameTag(HunterTaskMasterRenderState state, @NotNull Component name, @NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (state.distanceToCameraSq < 128) {
-            super.renderNameTag(state, name, stack, bufferSource, packedLight);
+    protected void submitNameTag(HunterTaskMasterRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (renderState.distanceToCameraSq <= 128) {
+            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
         }
     }
 
@@ -61,17 +61,18 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
         }
 
         @Override
-        public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int packedLight, HunterTaskMasterRenderState state, float p_117353_, float p_117354_) {
+        public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, HunterTaskMasterRenderState state, float yRot, float xRot) {
             if (!state.headItem.isEmpty()) {
-                stack.pushPose();
-                this.getParentModel().getHead().translateAndRotate(stack);
-                CustomHeadLayer.translateToHead(stack, CustomHeadLayer.Transforms.DEFAULT);
-                stack.translate(0.0F, -0.2F, 0.0F);
-                stack.scale(1.1F, 1.1F, 1.1F);
-                state.headItem.render(stack, bufferSource, packedLight, OverlayTexture.NO_OVERLAY);
-                stack.popPose();
+                poseStack.pushPose();
+                this.getParentModel().getHead().translateAndRotate(poseStack);
+                CustomHeadLayer.translateToHead(poseStack, CustomHeadLayer.Transforms.DEFAULT);
+                poseStack.translate(0.0F, -0.2F, 0.0F);
+                poseStack.scale(1.1F, 1.1F, 1.1F);
+                state.headItem.submit(poseStack, nodeCollector, packedLight, OverlayTexture.NO_OVERLAY, -1);
+                poseStack.popPose();
             }
         }
+
     }
 
 

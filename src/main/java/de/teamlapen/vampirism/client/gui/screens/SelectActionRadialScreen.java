@@ -72,7 +72,6 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
 
     private static void drawActionPart(Holder<IAction<?>> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         var texture = action.unwrapKey().map(ResourceKey::location).map(s -> s.withPath("textures/actions/" + s.getPath() + ".png")).orElseThrow();
-        GuiRenderer.resetColor();
         GuiRenderer.blit(graphics, texture, posX, posY, 16, 16, 16, 16);
     }
 

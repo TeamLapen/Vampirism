@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -48,7 +49,7 @@ public class DirectCursedBarkBlock extends CursedBarkBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier applier, boolean intersects) {
         if (Helper.isVampire(entity) || (entity instanceof Player && ((Player) entity).getAbilities().invulnerable)) return;
         BlockPos targetPos = pos;
         for (Map.Entry<Direction, EnumProperty<Type>> entry : SIDE_MAP.entrySet()) {

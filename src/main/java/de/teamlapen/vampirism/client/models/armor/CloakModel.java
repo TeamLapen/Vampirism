@@ -7,8 +7,8 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
@@ -55,8 +55,8 @@ public class CloakModel extends VampirismArmorModel {
     public void setupAnim(HumanoidRenderState state) {
         super.setupAnim(state);
 
-        float capeLean = state instanceof PlayerRenderState playerState ? playerState.capeLean : 0.0F;
-        float capeFlap = state instanceof PlayerRenderState playerState ? playerState.capeLean2 : 0.0F;
+        float capeLean = state instanceof AvatarRenderState playerState ? playerState.capeLean : 0.0F;
+        float capeFlap = state instanceof AvatarRenderState playerState ? playerState.capeLean2 : 0.0F;
 
         this.cloak.rotateBy(new Quaternionf()
                 .rotateX(Math.max(4.0F + capeLean / 3.0F + capeFlap, 1.0F) * (float) Math.PI / 180.0F)

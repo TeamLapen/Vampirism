@@ -40,7 +40,7 @@ public class ServerEventHandler {
             if (!ModList.get().isLoaded("guideapi_vp")) {
                 if (ModConfig.SERVER.infoAboutGuideAPI.get()) {
                     serverPlayer.sendSystemMessage(Component.translatable("text.vampirism.guideapi_available.first"));
-                    serverPlayer.sendSystemMessage(Component.translatable("text.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.GUIDEAPI_LINK)).withUnderlined(true)));
+                    serverPlayer.sendSystemMessage(Component.translatable("text.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent.OpenUrl(REFERENCE.GUIDEAPI_LINK)).withUnderlined(true)));
 
                     ModConfig.SERVER.infoAboutGuideAPI.set(false);
                 }
@@ -75,7 +75,7 @@ public class ServerEventHandler {
     }
 
     private static void sendRecipes(OnDatapackSyncEvent event) {
-        RecipeManager recipeManager = event.getPlayer().serverLevel().recipeAccess();
+        RecipeManager recipeManager = event.getPlayer().level().recipeAccess();
         List<RecipeHolder<?>> modRecipes = Stream.of(ModRecipes.ALCHEMICAL_CAULDRON_TYPE, ModRecipes.ALCHEMICAL_TABLE_TYPE, ModRecipes.WEAPONTABLE_CRAFTING_TYPE).map(DeferredHolder::get).flatMap(x -> recipeManager.recipeMap().byType((RecipeType<Recipe<RecipeInput>>)x).stream()).collect(Collectors.toUnmodifiableList());
         event.getPlayer().connection.send(new ClientboundRecipesPacket(modRecipes));
     }

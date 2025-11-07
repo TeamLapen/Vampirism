@@ -4,9 +4,13 @@ import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismDataComponents;
 import de.teamlapen.vampirism.api.components.IVampireBook;
+import de.teamlapen.vampirism.common.components.predicates.VampireBookPredicate;
 import de.teamlapen.vampirism.common.items.component.*;
 import de.teamlapen.vampirism.common.items.consume.BloodFoodProperties;
+import de.teamlapen.vampirism.common.util.BlockDescription;
+import de.teamlapen.vampirism.common.util.ShiftDescription;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.predicates.DataComponentPredicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -19,6 +23,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ModDataComponents {
 
     public static final DeferredRegister.DataComponents ITEM_DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, REFERENCE.MODID);
+    public static final DeferredRegister<DataComponentPredicate.Type<?>> ITEM_DATA_COMPONENTS_PREDICATES = DeferredRegister.create(Registries.DATA_COMPONENT_PREDICATE_TYPE, REFERENCE.MODID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<OilContent>> OIL = ITEM_DATA_COMPONENTS.register(VampirismDataComponents.Keys.OIL_CONTENTS.getPath(), () -> DataComponentType.<OilContent>builder().persistent(OilContent.CODEC).networkSynchronized(OilContent.STREAM_CODEC).cacheEncoding().build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<AppliedOilContent>> APPLIED_OIL = ITEM_DATA_COMPONENTS.register(VampirismDataComponents.Keys.APPLIED_OIL.getPath(), () -> DataComponentType.<AppliedOilContent>builder().persistent(AppliedOilContent.CODEC).networkSynchronized(AppliedOilContent.STREAM_CODEC).cacheEncoding().build());
@@ -41,8 +46,13 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<PureLevel>> PURE_LEVEL = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.PURE_LEVEL.getPath(), builder -> builder.persistent(PureLevel.CODEC).networkSynchronized(PureLevel.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<QuarrelPouchContents>> QUARREL_POUCH_CONTENTS = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.QUARREL_POUCH_CONTENTS.getPath(), builder -> builder.persistent(QuarrelPouchContents.CODEC).networkSynchronized(QuarrelPouchContents.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> ACTIVE = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.ACTIVE.getPath(), builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ShiftDescription>> SHIFT_DESCRIPTION = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.SHIFT_DESCRIPTION.getPath(), builder -> builder.persistent(ShiftDescription.CODEC).networkSynchronized(ShiftDescription.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockDescription>> BLOCK_DESCRIPTION = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.BLOCK_DESCRIPTION.getPath(), builder -> builder.persistent(BlockDescription.CODEC).networkSynchronized(BlockDescription.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentPredicate.Type<?>, DataComponentPredicate.Type<VampireBookPredicate>> VAMPIRE_BOOK_PREDICATE = ITEM_DATA_COMPONENTS_PREDICATES.register("vampire_book", () -> new DataComponentPredicate.Type<>(VampireBookPredicate.CODEC));
 
     static void register(IEventBus eventBus) {
         ITEM_DATA_COMPONENTS.register(eventBus);
+        ITEM_DATA_COMPONENTS_PREDICATES.register(eventBus);
     }
 }

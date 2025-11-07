@@ -5,12 +5,13 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO create pickaxe/shovel/axe superclass if necessary
 
@@ -20,7 +21,7 @@ public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO crea
 
     @Override
     public boolean isCorrectTool(ItemStack stack) {
-        return stack.getItem() instanceof PickaxeItem;
+        return stack.is(ItemTags.PICKAXES);
     }
 
     @Override
@@ -39,9 +40,9 @@ public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO crea
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltips) {
-        tooltips.add(Component.empty());
-        tooltips.add(Component.translatable("text.vampirism.oil.smelting_on_pickaxe").withStyle(ChatFormatting.DARK_PURPLE));
-        tooltips.add(Component.literal("- ").append(Component.translatable("text.vampirism.oil.smelting_on_hit")).withStyle(ChatFormatting.GRAY));
+    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
+        tooltips.accept(Component.empty());
+        tooltips.accept(Component.translatable("text.vampirism.oil.smelting_on_pickaxe").withStyle(ChatFormatting.DARK_PURPLE));
+        tooltips.accept(Component.literal("- ").append(Component.translatable("text.vampirism.oil.smelting_on_hit")).withStyle(ChatFormatting.GRAY));
     }
 }

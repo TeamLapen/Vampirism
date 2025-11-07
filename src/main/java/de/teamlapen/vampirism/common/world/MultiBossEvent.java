@@ -1,10 +1,14 @@
 package de.teamlapen.vampirism.common.world;
 
 import com.google.common.collect.Lists;
+import com.mojang.serialization.Codec;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundUpdateMultiBossEventPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -12,12 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class MultiBossEvent {
+public class MultiBossEvent implements ValueIOSerializable {
     private final UUID uniqueId;
     protected Component name;
     protected BossEvent.BossBarOverlay overlay;
     protected List<Color> colors;
     protected Map<Color, Float> entries;
+
+    public static final Codec<Map<Color, Float>> ENTRIES_CODEC = Codec.unboundedMap(Color.CODEC, Codec.FLOAT);
 
     public MultiBossEvent(UUID uniqueIdIn, Component nameIn, BossEvent.BossBarOverlay overlayIn, Color... entries) {
         this.uniqueId = uniqueIdIn;
@@ -33,6 +39,18 @@ public class MultiBossEvent {
         this.colors = operation.colors();
         this.entries = operation.entries();
         this.overlay = operation.overlay();
+    }
+
+    @Override
+    public void serialize(ValueOutput output) {
+        output.store("colors", Color.CODEC.listOf(), colors);
+        output.store("entries", ENTRIES_CODEC, entries);
+    }
+
+    @Override
+    public void deserialize(ValueInput input) {
+        this.colors = input.read("colors", Color.CODEC.listOf()).orElseGet(List::of);
+        this.entries = new HashMap<>(input.read("entries", ENTRIES_CODEC).orElseGet(Map::of));
     }
 
     public void clear() {

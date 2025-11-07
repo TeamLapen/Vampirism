@@ -69,7 +69,7 @@ public class DamageHandler {
         if (entity instanceof Player && ((Player) entity).getAbilities().instabuild) return;
         entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
-            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (multiplier * 20), 1, ambient, false));
+            entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, (int) (multiplier * 20), 1, ambient, false));
             if (strength == EnumStrength.STRONG) {
                 entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
             }
@@ -158,7 +158,7 @@ public class DamageHandler {
         }
         if (vampire) {
             if (strength.isStrongerThan(EnumStrength.WEAK)) {
-                entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, ModConfig.BALANCE.holyWaterNauseaDuration.get(), 2));
+                entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, ModConfig.BALANCE.holyWaterNauseaDuration.get(), 2));
             }
             if (strength.isStrongerThan(EnumStrength.MEDIUM)) {
                 entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, ModConfig.BALANCE.holyWaterBlindnessDuration.get(), 1));

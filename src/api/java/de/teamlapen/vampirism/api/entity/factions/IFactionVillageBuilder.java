@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
-import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.random.Weighted;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -46,7 +47,7 @@ public interface IFactionVillageBuilder {
      * @return this builder
      * @apiNote the entries should only contain entities of this faction
      */
-    IFactionVillageBuilder captureEntities(List<CaptureEntityEntry<?>> captureEntities);
+    IFactionVillageBuilder captureEntities(List<Weighted<Supplier<EntityType<? extends Mob>>>> captureEntities);
 
     /**
      * Supply a faction village profession that should have the totem top as working station
@@ -54,7 +55,7 @@ public interface IFactionVillageBuilder {
      * @param profession the profession
      * @return the builder
      */
-    IFactionVillageBuilder factionVillagerProfession(Supplier<VillagerProfession> profession);
+    IFactionVillageBuilder factionVillagerProfession(ResourceKey<VillagerProfession> profession);
 
     /**
      * Set the superclass for all faction entities in a village

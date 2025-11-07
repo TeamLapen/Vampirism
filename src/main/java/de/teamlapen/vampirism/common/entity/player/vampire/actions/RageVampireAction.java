@@ -49,9 +49,9 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public void onDeactivated(@NotNull IVampirePlayer vampire) {
-        removePotionEffect(vampire, MobEffects.MOVEMENT_SPEED);
-        removePotionEffect(vampire, MobEffects.DAMAGE_BOOST);
-        removePotionEffect(vampire, MobEffects.DIG_SPEED);
+        removePotionEffect(vampire, MobEffects.SPEED);
+        removePotionEffect(vampire, MobEffects.STRENGTH);
+        removePotionEffect(vampire, MobEffects.HASTE);
     }
 
     @Override
@@ -79,8 +79,8 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     protected void applyEffects(IVampirePlayer vampire) {
-        addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 22, 2, false, false));
-        addEffectInstance(vampire, new MobEffectInstance(MobEffects.DAMAGE_BOOST, 22, 0, false, false));
-        addEffectInstance(vampire, new MobEffectInstance(MobEffects.DIG_SPEED, 22, 0, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.SPEED, 22, 2, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.STRENGTH, 22, 0, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.HASTE, 22, 0, false, false));
     }
 }

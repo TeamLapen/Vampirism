@@ -23,10 +23,10 @@ public class VampirismBiomes {
     public static @NotNull Biome createVampireForest(HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
         MobSpawnSettings.Builder mobSpawnBuilder = new MobSpawnSettings.Builder();
         mobSpawnBuilder.creatureGenerationProbability(0.25f);
-        mobSpawnBuilder.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 80, 1, 3));
-        mobSpawnBuilder.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE_BARON.get(), 27, 1, 1));
-        mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 60, 2, 4));
-        mobSpawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 80, 3, 6));
+        mobSpawnBuilder.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 80, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 1, 3));
+        mobSpawnBuilder.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 27, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE_BARON.get(), 1, 1));
+        mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
+        mobSpawnBuilder.addSpawn(MobCategory.CREATURE, 80, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 3, 6));
 
         BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).waterFogColor(0x670717).fogColor(0x171717).skyColor(0x131313).foliageColorOverride(0x101010).grassColorOverride(0x101010)
                 .ambientMoodSound(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D))

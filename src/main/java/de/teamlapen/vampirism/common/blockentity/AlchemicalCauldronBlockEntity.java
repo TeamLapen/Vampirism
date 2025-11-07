@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.blockentity;
 
 import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.common.blocks.AlchemicalCauldronBlock;
@@ -16,10 +17,9 @@ import de.teamlapen.vampirism.common.util.Helper;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
@@ -33,14 +33,13 @@ import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -51,6 +50,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,6 +59,7 @@ import java.util.UUID;
  */
 public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, RecipeCraftingHolder, StackedContentsCompatible {
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final Codec<Map<ResourceKey<Recipe<?>>, Integer>> RECIPES_USED_CODEC = Codec.unboundedMap(Recipe.KEY_CODEC, Codec.INT);
 
     private static final int[] SLOTS_DOWN = new int[] {0, 1, 2};
     private static final int[] SLOTS_UP = new int[] {0};
@@ -119,7 +120,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
         }
     };
 
-    private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
+    private final Object2IntOpenHashMap<ResourceKey<Recipe<?>>> recipesUsed = new Object2IntOpenHashMap<>();
     private final RecipeManager.CachedCheck<AlchemicalCauldronRecipeInput, AlchemicalCauldronRecipe> quickCheck;
 
 
@@ -225,19 +226,22 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
     @NotNull
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider holderProvider) {
-        CompoundTag compound = super.getUpdateTag(holderProvider);
-        if (ownerID != null) compound.putUUID("owner", ownerID);
-        if (ownerName != null) compound.putString("owner_name", ownerName);
-        ContainerHelper.saveAllItems(compound, this.items, holderProvider);
-        return compound;
+        return saveCustomOnly(holderProvider);
     }
 
     @Override
-    public void handleUpdateTag(@NotNull CompoundTag compound, HolderLookup.Provider holderProvider) {
-        super.handleUpdateTag(compound, holderProvider);
-        ownerID = compound.hasUUID("owner") ? compound.getUUID("owner") : null;
-        ownerName = compound.contains("owner_name") ? compound.getString("owner_name") : null;
-        ContainerHelper.loadAllItems(compound, this.items, holderProvider);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.ownerID = input.read("owner", UUIDUtil.CODEC).orElse(null);
+        this.ownerName = input.getString("owner_name").orElse(null);
+        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(input, this.items);
+        this.litTime = input.getIntOr("BurnTime", this.litTime);
+        this.cookingProgress = input.getIntOr("CookTime", this.cookingProgress);
+        this.cookingTotalTime = input.getIntOr("CookTimeTotal", this.cookingTotalTime);
+        this.litDuration = this.getBurnDuration(this.items.get(1));
+        this.recipesUsed.clear();
+        this.recipesUsed.putAll(input.read("RecipesUsed", RECIPES_USED_CODEC).orElse(Map.of()));
     }
 
     protected int getBurnDuration(ItemStack pFuel) {
@@ -248,51 +252,23 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
         }
     }
 
-    @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider holderProvider) {
-        super.loadAdditional(pTag, holderProvider);
-        ownerID = pTag.hasUUID("owner") ? pTag.getUUID("owner") : null;
-        ownerName = pTag.contains("owner_name") ? pTag.getString("owner_name") : null;
-        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(pTag, this.items, holderProvider);
-        this.litTime = pTag.getInt("BurnTime");
-        this.cookingProgress = pTag.getInt("CookTime");
-        this.cookingTotalTime = pTag.getInt("CookTimeTotal");
-        this.litDuration = this.getBurnDuration(this.items.get(1));
-        CompoundTag compoundtag = pTag.getCompound("RecipesUsed");
-
-        for (String s : compoundtag.getAllKeys()) {
-            this.recipesUsed.put(ResourceLocation.parse(s), compoundtag.getInt(s));
-        }
-    }
-
     private boolean isLit() {
         return this.litTime > 0;
     }
 
     @Override
-    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider holderProvider) {
-        CompoundTag nbt = pkt.getTag();
-        if (hasLevel()) {
-            handleUpdateTag(nbt, holderProvider);
-        }
-    }
-
-    @Override
-    public void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider holderProvider) {
-        super.saveAdditional(pTag, holderProvider);
-        pTag.putInt("BurnTime", this.litTime);
-        pTag.putInt("CookTime", this.cookingProgress);
-        pTag.putInt("CookTimeTotal", this.cookingTotalTime);
-        ContainerHelper.saveAllItems(pTag, this.items, holderProvider);
-        CompoundTag compoundtag = new CompoundTag();
-        this.recipesUsed.forEach((p_187449_, p_187450_) -> compoundtag.putInt(p_187449_.toString(), p_187450_));
-        pTag.put("RecipesUsed", compoundtag);
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("BurnTime", this.litTime);
+        output.putInt("CookTime", this.cookingProgress);
+        output.putInt("CookTimeTotal", this.cookingTotalTime);
+        ContainerHelper.saveAllItems(output, this.items);
+        output.store("RecipesUsed", RECIPES_USED_CODEC, this.recipesUsed);
         if (ownerID != null) {
-            pTag.putUUID("owner", ownerID);
+            output.store("owner", UUIDUtil.CODEC, ownerID);
         }
         if (ownerName != null) {
-            pTag.putString("owner_name", ownerName);
+            output.putString("owner_name", ownerName);
 
         }
     }
@@ -333,7 +309,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
 
     public void setOwnerID(@NotNull Player player) {
         ownerID = player.getUUID();
-        ownerName = player.getGameProfile().getName();
+        ownerName = player.getGameProfile().name();
         this.setChanged();
     }
 
@@ -458,7 +434,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
                 itemstackoutput.grow(itemstack1result.getCount());
             }
 
-            if (this.level != null && !this.level.isClientSide) {
+            if (this.level != null && !this.level.isClientSide()) {
                 this.setRecipeUsed(recipe);
             }
 
@@ -532,8 +508,7 @@ public class AlchemicalCauldronBlockEntity extends BaseContainerBlockEntity impl
     @Override
     public void setRecipeUsed(@Nullable RecipeHolder<?> pRecipe) {
         if (pRecipe != null) {
-            ResourceLocation resourcelocation = pRecipe.id().location();
-            this.recipesUsed.addTo(resourcelocation, 1);
+            this.recipesUsed.addTo(pRecipe.id(), 1);
         }
     }
 

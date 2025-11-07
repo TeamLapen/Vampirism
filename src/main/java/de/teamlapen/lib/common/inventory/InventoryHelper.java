@@ -1,21 +1,12 @@
 package de.teamlapen.lib.common.inventory;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.BiPredicate;
 
 public class InventoryHelper {
@@ -59,18 +50,6 @@ public class InventoryHelper {
         for (int i = 0; i < amounts.length; i++) {
             inventory.removeItem(i, amounts[i]);
         }
-    }
-
-    @NotNull
-    public static Optional<Pair<net.neoforged.neoforge.items.IItemHandler, BlockEntity>> tryGetItemHandler(@NotNull Level world, @NotNull BlockPos pos, @Nullable Direction side) {
-        BlockState state = world.getBlockState(pos);
-        if (state.hasBlockEntity()) {
-            BlockEntity tile = world.getBlockEntity(pos);
-            if (tile != null) {
-                return Optional.ofNullable(world.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, tile, side)).map(s -> ImmutablePair.of(s, tile));
-            }
-        }
-        return Optional.empty();
     }
 
 

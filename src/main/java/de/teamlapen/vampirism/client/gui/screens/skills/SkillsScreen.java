@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens.skills;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.lib.common.inventory.InventoryHelper;
 import de.teamlapen.vampirism.REFERENCE;
@@ -24,6 +22,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -139,22 +138,21 @@ public class SkillsScreen extends Screen {
     }
 
     public void renderInside(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
-        PoseStack pose = graphics.pose();
+        var pose = graphics.pose();
         if (this.selectedTab != null) {
             this.selectedTab.drawContents(graphics, x + 9, y + 18, mouseX - 9 - guiLeft, mouseY - 18 - guiTop);
         } else {
-            pose.pushPose();
-            pose.translate(x + 9, y + 18, 0);
+            pose.pushMatrix();
+            pose.translate(x + 9, y + 18);
             graphics.fill(0, 0, SCREEN_WIDTH - 18, SCREEN_HEIGHT - 27, -16777216);
             int i = 117;
             graphics.drawCenteredString(this.font, NO_TABS_LABEL, i, 56 - 9 / 2, -1);
             graphics.drawCenteredString(this.font, VERY_SAD_LABEL, i, 113 - 9, -1);
-            pose.popPose();
+            pose.popMatrix();
         }
     }
 
     public void renderWindow(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
-        GuiRenderer.resetColor();
         GuiRenderer.blit(graphics, WINDOW_LOCATION, x, y, SCREEN_WIDTH, SCREEN_HEIGHT);
         if (this.tabs.size() > 1) {
 
@@ -175,41 +173,39 @@ public class SkillsScreen extends Screen {
 
     public void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int guiLeft, int guiTop) {
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION) != null) return;
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.selectedTab != null) {
-            PoseStack pose = graphics.pose();
-            pose.pushPose();
-            pose.translate((float) (guiLeft + 9), (float) (guiTop + 18), 400.0F);
+            var pose = graphics.pose();
+            pose.pushMatrix();
+            pose.translate((float) (guiLeft + 9), (float) (guiTop + 18)/*, 400.0F TODO*/);
             this.selectedTab.drawTooltips(graphics, mouseX - guiLeft - 9, mouseY - guiTop - 18);
-            pose.popPose();
+            pose.popMatrix();
         }
 
         if (this.tabs.size() > 1) {
             for (SkillsTabScreen tabScreen : this.tabs) {
                 if (tabScreen.isMouseOver(guiLeft, guiTop, mouseX, mouseY)) {
-                    graphics.renderTooltip(this.minecraft.font, tabScreen.getTitle(), mouseX, mouseY);
+                    graphics.setTooltipForNextFrame(this.minecraft.font, tabScreen.getTitle(), mouseX, mouseY);
                 }
             }
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         if (scrolling) {
             scrolling = false;
         }
-        if (button == 0) {
+        if (event.button() == 0) {
             this.clicked = true;
-            this.mousePos = new Vec3(mouseX, mouseY, 0);
+            this.mousePos = new Vec3(event.x(), event.y(), 0);
             for (SkillsTabScreen tab : this.tabs) {
-                if (tab != this.selectedTab && tab.isMouseOver(this.guiLeft, this.guiTop, mouseX, mouseY)) {
+                if (tab != this.selectedTab && tab.isMouseOver(this.guiLeft, this.guiTop, event.x(), event.y())) {
                     this.selectedTab = tab;
                     break;
                 }
             }
         }
-
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
@@ -225,26 +221,27 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (event.button() == 0) {
             if (this.clicked) {
-                if (!this.scrolling || (this.mousePos != null && this.mousePos.distanceTo(new Vec3(mouseX, mouseY, 0)) < 5)) {
-                    unlockSkill(mouseX, mouseY);
+                if (!this.scrolling || (this.mousePos != null && this.mousePos.distanceTo(new Vec3(event.x(), event.y(), 0)) < 5)) {
+                    unlockSkill(event.x(), event.y());
                 }
             }
             this.clicked = false;
         }
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int mouseButton, double xDragged, double yDragged) {
+    public boolean mouseDragged(MouseButtonEvent event, double xDragged, double yDragged) {
         this.scrolling = true;
-        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION) == null && isMouseOverContent(mouseX, mouseY)) {
-            this.selectedTab.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);
+        if (this.selectedTab != null && this.minecraft.player.getEffect(ModEffects.OBLIVION) == null && isMouseOverContent(event.x(), event.y())) {
+            this.selectedTab.mouseDragged(event.x(), event.y(), event.button(), xDragged, yDragged);
         }
-        return super.mouseDragged(mouseX, mouseY, mouseButton, xDragged, yDragged);
+        return super.mouseDragged(event, xDragged, yDragged);
     }
+
 
     private void unlockSkill(double mouseX, double mouseY) {
         Holder<ISkill<?>> selected = selectedTab != null ? selectedTab.getSelected((int) (mouseX - guiLeft - 9), (int) (mouseY - guiTop - 18)) : null;

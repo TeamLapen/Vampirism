@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.common.entity.minion.management;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.common.inventory.InventoryHelper;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -98,26 +98,25 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return ItemStack.EMPTY;
     }
 
-    public void read(HolderLookup.Provider provider, @NotNull ListTag nbtTagListIn) {
+    public void read(ValueInput.TypedInputList<ItemStackWithSlot> input) {
         this.inventory.clear();
         this.inventoryArmor.clear();
         this.inventoryHands.clear();
 
-        for (int i = 0; i < nbtTagListIn.size(); ++i) {
-            CompoundTag compoundTag = nbtTagListIn.getCompound(i);
-            int j = compoundTag.getByte("Slot") & 255;
-            ItemStack itemstack = ItemStack.parse(provider, compoundTag).orElse(ItemStack.EMPTY);
+
+        for (ItemStackWithSlot itemStackWithSlot : input) {
+            int index = itemStackWithSlot.slot();
+            ItemStack itemstack = itemStackWithSlot.stack();
             if (!itemstack.isEmpty()) {
-                if (j < this.inventoryHands.size()) {
-                    this.inventoryHands.set(j, itemstack);
-                } else if (j >= 10 && j < this.inventoryArmor.size() + 10) {
-                    this.inventoryArmor.set(j - 10, itemstack);
-                } else if (j >= 20 && j < this.inventory.size() + 20) {
-                    this.inventory.set(j - 20, itemstack);
+                if (index < this.inventoryHands.size()) {
+                    this.inventoryHands.set(index, itemstack);
+                } else if (index >= 10 && index < this.inventoryArmor.size() + 10) {
+                    this.inventoryArmor.set(index - 10, itemstack);
+                } else if (index >= 20 && index < this.inventory.size() + 20) {
+                    this.inventory.set(index - 20, itemstack);
                 }
             }
         }
-
     }
 
     public boolean isEmpty() {
@@ -181,31 +180,24 @@ public class MinionInventory implements de.teamlapen.vampirism.api.entity.minion
         return true;
     }
 
-    public ListTag write(HolderLookup.Provider provider, @NotNull ListTag nbt) {
+    public void write(ValueOutput.TypedOutputList<ItemStackWithSlot> output) {
         for (int i = 0; i < this.inventoryHands.size(); i++) {
             if (!this.inventoryHands.get(i).isEmpty()) {
-                CompoundTag compoundTag = new CompoundTag();
-                compoundTag.putByte("Slot", (byte) i);
-                nbt.add(this.inventoryHands.get(i).save(provider, compoundTag));
+                output.add(new ItemStackWithSlot(i, this.inventoryHands.get(i)));
             }
         }
 
         for (int i = 0; i < this.inventoryArmor.size(); ++i) {
             if (!this.inventoryArmor.get(i).isEmpty()) {
-                CompoundTag compoundTag = new CompoundTag();
-                compoundTag.putByte("Slot", (byte) (i + 10));
-                nbt.add(this.inventoryArmor.get(i).save(provider, compoundTag));
+                output.add(new ItemStackWithSlot(i + 10, this.inventoryArmor.get(i)));
 
             }
         }
 
         for (int i = 0; i < this.inventory.size(); ++i) {
             if (!this.inventory.get(i).isEmpty()) {
-                CompoundTag compoundTag = new CompoundTag();
-                compoundTag.putByte("Slot", (byte) (i + 20));
-                nbt.add(this.inventory.get(i).save(provider, compoundTag));
+                output.add(new ItemStackWithSlot(i + 20, this.inventory.get(i)));
             }
         }
-        return nbt;
     }
 }

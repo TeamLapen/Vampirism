@@ -15,6 +15,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import java.util.Optional;
 
@@ -127,7 +128,8 @@ public class QuarrelPouch extends Item {
 
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        return !stack.has(DataComponents.HIDE_TOOLTIP) && !stack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP)
+        TooltipDisplay tooltipDisplay = stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT);
+        return tooltipDisplay.shows(ModDataComponents.QUARREL_POUCH_CONTENTS.get())
                 ? Optional.ofNullable(stack.get(ModDataComponents.QUARREL_POUCH_CONTENTS)).map(QuarrelPouchTooltip::new)
                 : Optional.empty();
     }

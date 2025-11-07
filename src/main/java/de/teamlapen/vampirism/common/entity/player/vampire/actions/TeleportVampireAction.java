@@ -45,18 +45,18 @@ public class TeleportVampireAction extends DefaultVampireAction {
         }
         BlockPos pos = null;
         if (target.getType() == HitResult.Type.BLOCK) {
-            if (player.getCommandSenderWorld().getBlockState(((BlockHitResult) target).getBlockPos()).blocksMotion()) {
+            if (player.level().getBlockState(((BlockHitResult) target).getBlockPos()).blocksMotion()) {
                 pos = ((BlockHitResult) target).getBlockPos().above();
             }
         } else {//TODO better solution / remove
-            if (player.getCommandSenderWorld().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).blocksMotion()) {
+            if (player.level().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).blocksMotion()) {
                 pos = ((EntityHitResult) target).getEntity().blockPosition();
             }
         }
 
         if (pos != null) {
             player.setPos(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (player.getCommandSenderWorld().containsAnyLiquid(player.getBoundingBox()) || !player.getCommandSenderWorld().isUnobstructed(player)) { //isEntityColliding
+            if (player.level().containsAnyLiquid(player.getBoundingBox()) || !player.level().isUnobstructed(player)) { //isEntityColliding
                 pos = null;
             }
         }
@@ -71,15 +71,15 @@ public class TeleportVampireAction extends DefaultVampireAction {
             playerMp.disconnect();
             playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
-        AreaParticleCloud particleCloud = new AreaParticleCloud(ModEntities.PARTICLE_CLOUD.get(), player.getCommandSenderWorld());
+        AreaParticleCloud particleCloud = new AreaParticleCloud(ModEntities.PARTICLE_CLOUD.get(), player.level());
         particleCloud.setPos(ox, oy, oz);
         particleCloud.setRadius(0.7F);
         particleCloud.setHeight(player.getBbHeight());
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
-        player.getCommandSenderWorld().addFreshEntity(particleCloud);
-        player.getCommandSenderWorld().playSound(null, ox, oy, oz, ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
-        player.getCommandSenderWorld().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
+        player.level().addFreshEntity(particleCloud);
+        player.level().playSound(null, ox, oy, oz, ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
         return IActionResult.SUCCESS;
     }
 

@@ -3,14 +3,17 @@ package de.teamlapen.vampirism.common.items;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayerSpecialAttribute;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
 
@@ -30,7 +33,7 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
     @Nullable
     public static IItemWithTier.Tier isFullyEquipped(Player player) {
         int minLevel = 1000;
-        for (ItemStack stack : player.getInventory().armor) {
+        for (ItemStack stack : Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).toList()) {
             if (stack.isEmpty() || !(stack.getItem() instanceof HunterCoatItem)) {
                 return null;
             } else {
@@ -46,8 +49,8 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flagIn) {
         addTierInformation(tooltip);
-        super.appendHoverText(stack, context, tooltip, flagIn);
+        super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
     }
 }

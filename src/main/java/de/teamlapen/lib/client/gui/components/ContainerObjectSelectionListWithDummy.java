@@ -3,7 +3,7 @@ package de.teamlapen.lib.client.gui.components;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -34,11 +34,11 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
         super.renderWidget(graphics, p_283242_, p_282891_, p_283683_);
     }
 
-    @Override
-    protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
-        graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getY() + 4, -16777216, 0);
-        graphics.fillGradient(this.getX(), this.getBottom() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
-    }
+//    @Override
+//    protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
+//        graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getY() + 4, -16777216, 0);
+//        graphics.fillGradient(this.getX(), this.getBottom() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
+//    }
 
     @Override
     public int getRowWidth() {
@@ -50,10 +50,10 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
         return super.getRowLeft() - 2;
     }
 
-    @Override
-    protected void renderItem(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
-        super.renderItem(graphics, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
-    }
+//    @Override
+//    protected void renderItem(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
+//        super.renderItem(graphics, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
+//    }
 
     @Override
     protected int scrollBarY() {
@@ -131,12 +131,10 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        public boolean mouseClicked(MouseButtonEvent p_445873_, boolean p_433971_) {
             selectItem(this);
             return true;
         }
-
-
     }
 
     public abstract class DummyEntry extends Entry<Z> {

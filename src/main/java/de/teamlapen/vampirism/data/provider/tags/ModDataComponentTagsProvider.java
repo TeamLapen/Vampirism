@@ -9,12 +9,12 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.KeyTagProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModDataComponentTagsProvider extends TagsProvider<DataComponentType<?>> {
+public class ModDataComponentTagsProvider extends KeyTagProvider<DataComponentType<?>> {
 
     public ModDataComponentTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, Registries.DATA_COMPONENT_TYPE, lookupProvider, REFERENCE.MODID);

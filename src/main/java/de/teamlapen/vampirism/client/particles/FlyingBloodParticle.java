@@ -1,16 +1,12 @@
 package de.teamlapen.vampirism.client.particles;
 
-import de.teamlapen.vampirism.common.mixin.client.accessor.ParticleEngineAccessor;
 import de.teamlapen.vampirism.common.particles.FlyingBloodParticleOptions;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,14 +15,13 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author maxanier
  */
-public class FlyingBloodParticle extends TextureSheetParticle {
-    private final String TAG = "FlyingBloodParticle";
+public class FlyingBloodParticle extends SingleQuadParticle {
     private final double destX, destY, destZ;
     private final boolean direct;
 
 
-    public FlyingBloodParticle(@NotNull ClientLevel world, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, @NotNull ResourceLocation particleId, float scale) {
-        super(world, posX, posY, posZ);
+    public FlyingBloodParticle(@NotNull ClientLevel level, double posX, double posY, double posZ, double destX, double destY, double destZ, int maxage, boolean direct, SpriteSet spriteSet, float scale) {
+        super(level, posX, posY, posZ, spriteSet.first());
         this.lifetime = maxage;
         this.destX = destX;
         this.destY = destY;
@@ -47,17 +42,14 @@ public class FlyingBloodParticle extends TextureSheetParticle {
             this.zd = (this.level.random.nextDouble() / 10 - 0.05) + wayZ / lifetime;
         }
 
-        this.setSprite(((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(particleId));
         this.scale(scale);
         this.hasPhysics = false;
     }
 
-    @NotNull
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    protected @NotNull Layer getLayer() {
+        return Layer.OPAQUE;
     }
-
 
     @Override
     public void tick() {
@@ -83,14 +75,18 @@ public class FlyingBloodParticle extends TextureSheetParticle {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static class Factory implements ParticleProvider<FlyingBloodParticleOptions> {
+    public static class Provider<T extends FlyingBloodParticleOptions> implements ParticleProvider<T> {
 
+        private final SpriteSet spriteSet;
+
+        public Provider(SpriteSet spriteSet) {
+            this.spriteSet = spriteSet;
+        }
 
         @Nullable
         @Override
-        public Particle createParticle(@NotNull FlyingBloodParticleOptions typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new FlyingBloodParticle(worldIn, x, y, z, typeIn.targetX(), typeIn.targetY(), typeIn.targetZ(), typeIn.getMaxAge(), typeIn.direct(), typeIn.texture(), typeIn.scale());
+        public Particle createParticle(@NotNull T typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, @NotNull RandomSource random) {
+            return new FlyingBloodParticle(worldIn, x, y, z, typeIn.targetX(), typeIn.targetY(), typeIn.targetZ(), typeIn.getMaxAge(), typeIn.direct(), this.spriteSet, typeIn.scale());
         }
     }
 }

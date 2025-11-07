@@ -76,7 +76,7 @@ public class PotionTableBlock extends BaseContainerBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide && player instanceof ServerPlayer) {
+        if (!level.isClientSide() && player instanceof ServerPlayer) {
             BlockEntity tile = level.getBlockEntity(pos);
             if (tile instanceof PotionTableBlockEntity potionTable) {
                 if (potionTable.canOpen(player)) {
@@ -87,15 +87,6 @@ public class PotionTableBlock extends BaseContainerBlock {
         }
 
         return InteractionResult.SUCCESS_SERVER;
-    }
-
-    @Override
-    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof PotionTableBlockEntity potionTableBlockEntity) {
-            for (int i = 0; i < 8; ++i) {
-                this.dropItem(level, pos, potionTableBlockEntity.removeItemNoUpdate(i));
-            }
-        }
     }
 
     @Nullable

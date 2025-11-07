@@ -46,7 +46,7 @@ public class VampireHutPieces {
         }
 
         public VampireHutPiece(StructureTemplateManager pStructureTemplateManager, CompoundTag pTag) {
-            super(ModStructures.VAMPIRE_HUT_PIECE.get(), pTag, pStructureTemplateManager, (id) -> makeSettings(Rotation.valueOf(pTag.getString("Rot"))));
+            super(ModStructures.VAMPIRE_HUT_PIECE.get(), pTag, pStructureTemplateManager, (id) -> makeSettings(Rotation.valueOf(pTag.getString("Rot").orElseThrow())));
         }
 
         protected void addAdditionalSaveData(@NotNull StructurePieceSerializationContext pContext, @NotNull CompoundTag pTag) {

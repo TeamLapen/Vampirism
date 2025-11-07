@@ -40,7 +40,7 @@ public class MoveToBiteableVampireGoal<T extends Mob & IVampireMob> extends Goal
             return false;
         }
         if (!vampire.wantsBlood()) return false;
-        List<PathfinderMob> list = vampire.getCommandSenderWorld().getEntitiesOfClass(PathfinderMob.class, vampire.getBoundingBox().inflate(10, 3, 10), EntitySelector.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
+        List<PathfinderMob> list = vampire.level().getEntitiesOfClass(PathfinderMob.class, vampire.getBoundingBox().inflate(10, 3, 10), EntitySelector.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
         for (PathfinderMob o : list) {
             if (ExtendedCreature.getSafe(o).map(creature -> creature.canBeBitten(vampire) && !creature.getEntity().hasCustomName() && !creature.hasPoisonousBlood()).orElse(false)) {
                 this.target = o;

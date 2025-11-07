@@ -49,19 +49,19 @@ public class InfectionStatus {
         } else if (duration / (float) totalTicks < 0.5f) {
             if (this.entity.getEffect(MobEffects.HUNGER) == null) {
                 MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.HUNGER, MobEffectInstance.INFINITE_DURATION);
-                ((EffectInstanceWithSource) mobEffectInstance).vampirism$setSource(ModEffects.SANGUINARE.getId());
+                ((EffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(ModEffects.SANGUINARE.getId());
                 this.entity.addEffect(mobEffectInstance);
             }
         }
         if (this.entity.getRandom().nextFloat() < 0.02f) {
-            this.entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 120));
+            this.entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 120));
         }
         return true;
     }
 
     private void finish() {
         MobEffectInstance effect = this.entity.getEffect(MobEffects.HUNGER);
-        if (effect instanceof EffectInstanceWithSource withSource && withSource.vampirism$getSource() == ModEffects.SANGUINARE.getId()) {
+        if (effect instanceof EffectInstanceWithSource withSource && withSource.vampirism$getProperties().contains(ModEffects.SANGUINARE.getId())) {
             withSource.vampirism$removeEffect();
         }
         if (this.entity instanceof PathfinderMob) {

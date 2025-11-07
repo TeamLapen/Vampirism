@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.common.components.predicates.VampireBookPredicate;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
@@ -15,7 +16,6 @@ import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -184,10 +184,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     InventoryChangeTrigger.TriggerInstance.hasItems(
                             ItemPredicate.Builder.item()
                                     .of(BuiltInRegistries.ITEM, ModItems.VAMPIRE_BOOK)
-                                    .hasComponents(DataComponentPredicate.builder().expect(
-                                            ModDataComponents.VAMPIRE_BOOK.get(),
-                                            vampireBook.value()
-                                    ).build())
+                                    .withComponents(DataComponentMatchers.Builder.components().partial(ModDataComponents.VAMPIRE_BOOK_PREDICATE.get(), new VampireBookPredicate(vampireBook.value().id())).build())
                     )
             );
         }));

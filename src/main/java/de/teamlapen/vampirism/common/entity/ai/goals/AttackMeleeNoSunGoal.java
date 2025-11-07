@@ -46,14 +46,14 @@ public class AttackMeleeNoSunGoal extends MeleeAttackGoal {
                     return false;
                 }
 
-                if (mob.getCommandSenderWorld().canSeeSkyFromBelowWater(new BlockPos(Mth.floor(this.mob.getX()), (int) (this.mob.getBoundingBox().minY + 0.5D), Mth.floor(this.mob.getZ())))) {
+                if (mob.level().canSeeSkyFromBelowWater(new BlockPos(Mth.floor(this.mob.getX()), (int) (this.mob.getBoundingBox().minY + 0.5D), Mth.floor(this.mob.getZ())))) {
                     return false;
                 }
 
                 for (int j = 0; j < path.getNodeCount(); ++j) {
                     Node pathpoint2 = path.getNode(j);
 
-                    if (this.mob.getCommandSenderWorld().canSeeSkyFromBelowWater(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
+                    if (this.mob.level().canSeeSkyFromBelowWater(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
                         path.truncateNodes(Math.max(j - 1, 0));
                         return path.getNodeCount() > 1;
                     }

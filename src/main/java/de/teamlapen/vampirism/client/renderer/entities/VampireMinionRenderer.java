@@ -5,9 +5,10 @@ import de.teamlapen.vampirism.client.renderer.entities.layers.PlayerBodyOverlayL
 import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.world.entity.player.PlayerSkin;
 import org.jetbrains.annotations.NotNull;
 
 public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity, VampireMinionRenderer.VampireMinionRenderState, PlayerBodyOverlayLayer.VisibilityPlayerModel<VampireMinionRenderer.VampireMinionRenderState>> {
@@ -22,7 +23,7 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
         this.minionSpecificTextures = gatherTextures("textures/entity/minion/vampire", false);
 
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_INNER)), new HumanoidModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_ARMOR_OUTER)), context.getEquipmentRenderer()));
+        this.addLayer(new HumanoidArmorLayer<>(this, ArmorModelSet.bake(ModEntitiesRender.GENERIC_BIPED_ARMOR, context.getModelSet(), HumanoidModel::new), context.getEquipmentRenderer()));
     }
 
     public int getMinionSpecificTextureCount() {

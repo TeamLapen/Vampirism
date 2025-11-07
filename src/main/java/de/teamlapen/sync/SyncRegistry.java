@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Register things that should be handled by the library here
  */
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class SyncRegistry {
 
     private static @NotNull Map<ResourceLocation, AttachmentType<IAttachedSyncable>> syncablePlayerCaps = new ConcurrentHashMap<>();

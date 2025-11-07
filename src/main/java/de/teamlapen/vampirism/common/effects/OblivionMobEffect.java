@@ -31,7 +31,7 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
     public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (!(entity instanceof Player player)) return true;
 
-        entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, getTickDuration(amplifier), 5, false, false, false, null));
+        entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, getTickDuration(amplifier), 5, false, false, false, null));
         return FactionPlayerHandler.get(player).<T>getSkillHandler().map(handler -> {
             var nodeOPT = ((SkillHandler<?>) handler).anyLastNode();
             if (nodeOPT.isPresent()) {

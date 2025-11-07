@@ -72,7 +72,7 @@ public class AltarInfusionBlock extends BaseContainerBlock {
         ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         AltarInfusionBlockEntity te = (AltarInfusionBlockEntity) level.getBlockEntity(pos);
         //If empty hand and can start -> StartAdvanced
-        if (level.isClientSide || te == null) return InteractionResult.SUCCESS;
+        if (level.isClientSide() || te == null) return InteractionResult.SUCCESS;
         if (!Helper.isVampire(player)) {
             player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
             return InteractionResult.SUCCESS;
@@ -110,11 +110,6 @@ public class AltarInfusionBlock extends BaseContainerBlock {
         player.openMenu(te);
         player.awardStat(ModStats.INTERACT_WITH_ALTAR_OF_INFUSION.get());
         return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
-        dropInventoryTileEntityItems(level, pos);
     }
 
     @Nullable

@@ -20,23 +20,23 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public IActionResult activate(@NotNull IHunterPlayer player, ActivationContext context) {
+    public @NotNull IActionResult activate(@NotNull IHunterPlayer player, @NotNull ActivationContext context) {
         ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
         return IActionResult.SUCCESS;
     }
 
     @Override
-    public IActionResult canBeUsedBy(@NotNull IHunterPlayer player) {
+    public @NotNull IActionResult canBeUsedBy(@NotNull IHunterPlayer player) {
         return IActionResult.otherAction(player.getActionHandler(), HunterActions.AWARENESS_HUNTER);
     }
 
     @Override
-    public int getCooldown(IHunterPlayer player) {
+    public int getCooldown(@NotNull IHunterPlayer player) {
         return 0;
     }
 
     @Override
-    public int getDuration(IHunterPlayer player) {
+    public int getDuration(@NotNull IHunterPlayer player) {
         return Integer.MAX_VALUE;
     }
 
@@ -70,7 +70,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public boolean showHudDuration(Player player) {
+    public boolean showHudDuration(@NotNull Player player) {
         return true;
     }
 }

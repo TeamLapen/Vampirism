@@ -23,15 +23,13 @@
     "PotionBrewingMixin",
     "PowderSnowBlockMixin",
     "SpawnStateMixin",
-    "ThrowableProjectileMixin",
+    "ThrowablePotionItemMixin",
     "ThrownPotionMixin",
     "VibrationSystemUserMixin",
     "accessor.AttributeInstanceAccessor",
-    "accessor.BeaconBeamSectionMixin",
     "accessor.BlockFamiliesAccessor",
     "accessor.EntityAccessor",
     "accessor.FoodDataAccessor",
-    "accessor.GoalSelectorAccessor",
     "accessor.GroundPathNavigationAccessor",
     "accessor.ItemCombinerMenuAccessor",
     "accessor.LivingEntityAccessor",
@@ -58,9 +56,7 @@
   ],
   "client": [
     "client.CapeLayerMixin",
-    "client.GameRendererMixin",
     "client.HumanoidArmorLayerMixin",
-    "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.LivingEntityRenderStateMixin",
     "client.MinecraftMixin",
@@ -72,13 +68,9 @@
     "client.accessor.BossHealthOverlayAccessor",
     "client.accessor.CameraAccessor",
     "client.accessor.EntityRenderDispatcherAccessor",
-    "client.accessor.GuiGraphicsAccessor",
-    "client.accessor.HumanoidArmorLayerAccessor",
     "client.accessor.ItemInHandRendererAccessor",
     "client.accessor.LivingEntityRendererAccessor",
-    "client.accessor.ParticleEngineAccessor",
-    "client.accessor.StatsScreenAccessor",
-    "client.accessor.VillagerModelAccessor"
+    "client.accessor.StatsScreenAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

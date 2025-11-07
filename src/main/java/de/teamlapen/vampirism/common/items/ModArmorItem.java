@@ -9,11 +9,11 @@ import net.minecraft.world.item.equipment.ArmorType;
 public class ModArmorItem extends Item {
 
     public ModArmorItem(ArmorMaterial armorMaterial, ArmorType armorType, Properties properties) {
-        super(addAttributes(armorMaterial.humanoidProperties(properties, armorType), ItemAttributeModifiers.EMPTY));
+        super(addAttributes(properties.humanoidArmor(armorMaterial, armorType), ItemAttributeModifiers.EMPTY));
     }
 
     public ModArmorItem(ArmorMaterial armorMaterial, ArmorType armorType, Properties properties, ItemAttributeModifiers customModifiers) {
-        super(addAttributes(armorMaterial.humanoidProperties(properties, armorType), customModifiers));
+        super(addAttributes(properties.humanoidArmor(armorMaterial, armorType), customModifiers));
     }
 
     private static Properties addAttributes(Properties properties, ItemAttributeModifiers customModifiers) {

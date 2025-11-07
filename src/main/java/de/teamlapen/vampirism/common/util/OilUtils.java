@@ -4,19 +4,20 @@ import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.api.items.oil.IArmorOil;
 import de.teamlapen.vampirism.common.items.component.AppliedOilContent;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class OilUtils {
 
     public static Collection<IArmorOil> getEquippedArmorOils(Player player) {
-        return StreamSupport.stream(player.getArmorSlots().spliterator(), false).map(OilUtils::getAppliedOil).filter(o -> o.isPresent() && o.get() instanceof IArmorOil).map(iApplicableOil -> (IArmorOil) iApplicableOil.get()).collect(Collectors.toList());
+        return Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).map(OilUtils::getAppliedOil).filter(o -> o.isPresent() && o.get() instanceof IArmorOil).map(iApplicableOil -> (IArmorOil) iApplicableOil.get()).collect(Collectors.toList());
     }
 
     public static @NotNull Optional<IApplicableOil> getAppliedOil(@NotNull ItemStack stack) {

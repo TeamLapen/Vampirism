@@ -7,12 +7,12 @@ import de.teamlapen.vampirism.common.core.ModTasks;
 import de.teamlapen.vampirism.common.tags.ModTaskTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.KeyTagProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModTaskTagsProvider extends TagsProvider<Task> {
+public class ModTaskTagsProvider extends KeyTagProvider<Task> {
 
     public ModTaskTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
         super(output, VampirismRegistries.Keys.TASK, provider, REFERENCE.MODID);

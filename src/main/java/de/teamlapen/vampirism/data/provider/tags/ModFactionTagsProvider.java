@@ -7,12 +7,12 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.KeyTagProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModFactionTagsProvider extends TagsProvider<IFaction<?>> {
+public class ModFactionTagsProvider extends KeyTagProvider<IFaction<?>> {
 
     public ModFactionTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, VampirismRegistries.Keys.FACTION, lookupProvider, REFERENCE.MODID);

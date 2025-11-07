@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.common.entity.vampire;
 
-import com.mojang.authlib.GameProfile;
 import de.teamlapen.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
@@ -15,10 +13,10 @@ import de.teamlapen.vampirism.common.entity.ai.goals.*;
 import de.teamlapen.vampirism.common.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.common.util.IPlayerOverlay;
 import de.teamlapen.vampirism.common.util.PlayerModelType;
+import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.common.util.SupporterManager;
 import de.teamlapen.vampirism.server.config.BalanceMobProps;
-import net.minecraft.Util;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -45,10 +43,9 @@ import net.minecraft.world.entity.monster.PatrollingMonster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.entity.SkullBlockEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,7 +83,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Nullable
     private Pair<ResourceLocation, PlayerModelType> skinDetails;
     @Nullable
-    private Optional<GameProfile> skinProfile;
+    private Optional<PlayerSkinRenderCache.RenderInfo> skinProfile;
     /**
      * If set, the vampire book with this id should be dropped
      */
@@ -106,15 +103,15 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
-        nbt.putInt("level", getEntityLevel());
-        nbt.putInt("type", getEyeType());
-        nbt.putString("texture", getEntityData().get(TEXTURE));
-        nbt.putString("name", getEntityData().get(NAME));
-        nbt.putBoolean("attack", this.attack);
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putInt("level", getEntityLevel());
+        output.putInt("type", getEyeType());
+        output.putString("texture", getEntityData().get(TEXTURE));
+        output.putString("name", getEntityData().get(NAME));
+        output.putBoolean("attack", this.attack);
         if (lootBookId != null) {
-            nbt.putString("lootBookId", lootBookId);
+            output.putString("lootBookId", lootBookId);
         }
     }
 
@@ -167,7 +164,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 1) {
-                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 0, false, false));
+                this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 1000000, 0, false, false));
             }
         }
     }
@@ -189,26 +186,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return "none".equals(senderName) ? super.getName() : Component.literal(senderName);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
-    public @NotNull Optional<Pair<ResourceLocation, PlayerModelType>> getOverlayPlayerProperties() {
-        if (skinDetails == null) {
-            String name = getTextureName();
-            if (name == null) return Optional.empty();
-            VampirismMod.proxy.obtainPlayerSkins(new GameProfile(Util.NIL_UUID, name), p -> this.skinDetails = p);
-            skinDetails = PENDING_PROP;
-        }
-        return Optional.of(skinDetails);
-    }
-
-    @Override
-    public @NotNull Optional<GameProfile> getPlayerOverlay() {
+    public @NotNull Optional<PlayerSkinRenderCache.RenderInfo> getPlayerOverlay() {
         //noinspection OptionalAssignedToNull
         if (this.skinProfile == null) {
-            String name = getTextureName();
-            if (name == null) return Optional.empty();
-            this.skinProfile = Optional.empty();
-            SkullBlockEntity.fetchGameProfile(name).thenAccept(p -> this.skinProfile = p);
+            PlayerSkinHelper.getPlayerRenderInfo(getTextureName(), x -> this.skinProfile = x);
         }
         return this.skinProfile;
     }
@@ -254,22 +236,14 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tagCompund) {
-        super.readAdditionalSaveData(tagCompund);
-        if (tagCompund.contains("level")) {
-            setEntityLevel(tagCompund.getInt("level"));
-        }
-        if (tagCompund.contains("type")) {
-            getEntityData().set(TYPE, tagCompund.getInt("type"));
-            getEntityData().set(NAME, tagCompund.getString("name"));
-            getEntityData().set(TEXTURE, tagCompund.getString("texture"));
-        }
-        if (tagCompund.contains("attack")) {
-            this.attack = tagCompund.getBoolean("attack");
-        }
-        if (tagCompund.contains("lootBookId")) {
-            this.lootBookId = tagCompund.getString("lootBookId");
-        }
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        setEntityLevel(input.getIntOr("level", 0));
+        getEntityData().set(TYPE, input.getIntOr("type", 0));
+        getEntityData().set(NAME, input.getStringOr("name", "none"));
+        getEntityData().set(TEXTURE, input.getStringOr("texture", "none"));
+        this.attack = input.getBooleanOr("attack", false);
+        input.getString("lootBookId").ifPresent(x -> lootBookId = x);
     }
 
     @Override

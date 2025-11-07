@@ -15,6 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -78,8 +79,8 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
         return BuiltInRegistries.VILLAGER_TYPE.getValue(id);
     }
 
-    protected void setBiomeType(@NotNull VillagerType type) {
-        this.entityData.set(BIOME_TYPE, BuiltInRegistries.VILLAGER_TYPE.getKey(type).toString());
+    protected void setBiomeType(@NotNull ResourceKey<VillagerType> type) {
+        this.entityData.set(BIOME_TYPE, BuiltInRegistries.VILLAGER_TYPE.getOrThrow(type).toString());
     }
 
     @NotNull
@@ -102,7 +103,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     @NotNull
     @Override
     protected InteractionResult mobInteract(@NotNull Player playerEntity, @NotNull InteractionHand hand) {
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             return Helper.isVampire(playerEntity) ? InteractionResult.SUCCESS : InteractionResult.PASS;
         }
         if (Helper.isVampire(playerEntity) && interactor == null) {

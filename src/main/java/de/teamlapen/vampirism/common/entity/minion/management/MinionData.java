@@ -8,20 +8,20 @@ import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.entity.minion.MinionEntity;
-import de.teamlapen.vampirism.common.util.RegUtil;
 import de.teamlapen.vampirism.server.config.BalanceMobProps;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,20 +30,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public abstract class MinionData implements INBTSerializable<CompoundTag>, IMinionData {
+public abstract class MinionData implements ValueIOSerializable, IMinionData {
 
 
     public final static int MAX_NAME_LENGTH = 15;
     protected final static Logger LOGGER = LogManager.getLogger();
 
     @Nullable
-    public static <T extends MinionData> T fromNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        ResourceLocation dataType = ResourceLocation.parse(nbt.getString("data_type"));
-        return Optional.ofNullable(ModRegistries.MINIONS.getValue(dataType)).map(IMinionEntry::data).map(Supplier::get).map(s -> {
+    public static <T extends MinionData> T fromNBT(ValueInput input) {
+        return input.read("data_type", ResourceLocation.CODEC).map(ModRegistries.MINIONS::getValue).map(IMinionEntry::data).map(Supplier::get).map(x -> {
             try {
                 @SuppressWarnings("unchecked")
-                T t = (T) s;
-                t.deserializeNBT(provider, nbt);
+                T t = (T) x;
+                t.deserialize(input);
                 return t;
             } catch (ClassCastException ex) {
                 return null;
@@ -71,27 +70,6 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
     protected MinionData() {
         this.inventory = new MinionInventory();
         this.activeTaskDesc = new IMinionTask.NoDesc<>(MinionTasks.NOTHING.get());
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        inventory.read(provider, nbt.getList("inv", Tag.TAG_COMPOUND));
-        inventory.setAvailableSize(nbt.getInt("inv_size"));
-        health = nbt.getFloat("health");
-        name = nbt.getString("name");
-        taskLocked = nbt.getBoolean("locked");
-        if (nbt.contains("task", Tag.TAG_COMPOUND)) {
-            CompoundTag task = nbt.getCompound("task");
-            ResourceLocation id = ResourceLocation.parse(task.getString("id"));
-            //noinspection unchecked
-            IMinionTask<?, MinionData> activeTask = (IMinionTask<?, MinionData>) RegUtil.getMinionTask(id);
-            if (activeTask != null) {
-                activeTaskDesc = activeTask.readFromNBT(provider, task);
-            } else {
-                LOGGER.error("Saved minion task does not exist anymore {}", id);
-            }
-        }
-        entityCaps = nbt.getCompound("caps");
     }
 
     @Override
@@ -169,27 +147,36 @@ public abstract class MinionData implements INBTSerializable<CompoundTag>, IMini
         SyncHelper.sync(entity);
     }
 
+    @MustBeInvokedByOverriders
     @Override
-    public final @NotNull CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        serializeNBT(tag, provider);
-        return tag;
+    public void serialize(ValueOutput output) {
+        output.putInt("inv_size", inventory.getAvailableSize());
+        inventory.write(output.list("inv", ItemStackWithSlot.CODEC));
+        output.putFloat("health", health);
+        output.putString("name", name);
+        output.store("data_type", ResourceLocation.CODEC, getDataType());
+        output.putBoolean("locked", taskLocked);
+        var task = output.child("task");
+        task.store("task", ModRegistries.MINION_TASKS.byNameCodec(), activeTaskDesc.getTask());
+        this.activeTaskDesc.serialize(task.child("desc"));
+        output.store("caps", CompoundTag.CODEC, this.entityCaps);
     }
 
-    public void serializeNBT(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
-        tag.putInt("inv_size", inventory.getAvailableSize());
-        tag.put("inv", inventory.write(provider, new ListTag()));
-        tag.putFloat("health", health);
-        tag.putString("name", name);
-        tag.putString("data_type", getDataType().toString());
-        tag.putBoolean("locked", taskLocked);
-        if (activeTaskDesc != null) {
-            CompoundTag task = new CompoundTag();
-            task.putString("id", RegUtil.id(activeTaskDesc.getTask()).toString());
-            activeTaskDesc.writeToNBT(task);
-            tag.put("task", task);
-        }
-        tag.put("caps", entityCaps);
+    @MustBeInvokedByOverriders
+    @Override
+    public void deserialize(@NotNull ValueInput input) {
+        this.inventory.read(input.listOrEmpty("inv", ItemStackWithSlot.CODEC));
+        input.getInt("inv_size").ifPresent(this.inventory::setAvailableSize);
+        this.health = input.getFloatOr("health", 10);
+        input.getString("name").ifPresent(x -> this.name = x);
+        this.taskLocked = input.getBooleanOr("locked", false);
+
+        input.child("task").ifPresent(tasksum -> {
+            tasksum.read("task", ModRegistries.MINION_TASKS.byNameCodec()).ifPresent(task -> {
+                this.activeTaskDesc = tasksum.child("desc").map(x -> (IMinionTask.IMinionTaskDesc<MinionData>) task.load(x)).orElseGet(() -> new IMinionTask.NoDesc<>(MinionTasks.NOTHING.get()));
+            });
+        });
+        this.entityCaps = input.read("caps", CompoundTag.CODEC).orElse(new CompoundTag());
     }
 
     public boolean setTaskLocked(boolean locked) {

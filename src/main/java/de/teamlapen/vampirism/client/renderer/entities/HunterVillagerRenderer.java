@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.VillagerWithArmsModel;
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.layers.CrossedArmsItemLayer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
@@ -24,8 +24,10 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRender
 
     public HunterVillagerRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerWithArmsModel(context.bakeLayer(ModEntitiesRender.VILLAGER_WITH_ARMS)), 0.5f);
-        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), VillagerRenderer.CUSTOM_HEAD_TRANSFORMS));
-        this.addLayer(new VillagerProfessionLayer<>(this, context.getResourceManager(), "villager"));
+        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getPlayerSkinRenderCache()));
+        this.addLayer(new VillagerProfessionLayer<>(this, context.getResourceManager(), "villager",
+                new VillagerWithArmsModel(context.bakeLayer(ModelLayers.VILLAGER_NO_HAT)),
+                new VillagerWithArmsModel(context.bakeLayer(ModelLayers.VILLAGER_BABY_NO_HAT))));
         this.addLayer(new CrossedArmsItemLayer<>(this));
 
     }

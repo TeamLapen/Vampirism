@@ -9,7 +9,8 @@ public class SleepInMultiplayerModScreen extends InBedChatScreen {
 
     private final String leaveText;
 
-    public SleepInMultiplayerModScreen(String text) {
+    public SleepInMultiplayerModScreen(String text, boolean isDraft) {
+        super(text, isDraft);
         this.leaveText = text;
     }
 

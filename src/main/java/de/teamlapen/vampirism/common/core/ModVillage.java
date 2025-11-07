@@ -12,6 +12,8 @@ import de.teamlapen.vampirism.common.util.MapUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -26,8 +28,10 @@ import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -46,10 +50,10 @@ public class ModVillage {
     public static final DeferredHolder<Schedule, Schedule> CONVERTED_DEFAULT = SCHEDULES.register("converted_default", () ->
             new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build());
 
-    public static final DeferredHolder<VillagerProfession, VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession(REFERENCE.MODID + ":vampire_expert", (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CARTOGRAPHER));
-    public static final DeferredHolder<VillagerProfession, VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession(REFERENCE.MODID + ":hunter_expert", (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(ModBlocks.HUNTER_TABLE.get(), ModBlocks.WEAPON_TABLE.get(), ModBlocks.GARLIC.get()), SoundEvents.VILLAGER_WORK_ARMORER));
+    public static final DeferredHolder<VillagerProfession, VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession(Component.translatable(REFERENCE.MODID + ":vampire_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CARTOGRAPHER));
+    public static final DeferredHolder<VillagerProfession, VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession(Component.translatable(REFERENCE.MODID + ":hunter_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(ModBlocks.HUNTER_TABLE.get(), ModBlocks.WEAPON_TABLE.get(), ModBlocks.GARLIC.get()), SoundEvents.VILLAGER_WORK_ARMORER));
     @SuppressWarnings("ConstantConditions")
-    public static final DeferredHolder<VillagerProfession, VillagerProfession> PRIEST = PROFESSIONS.register("priest", () -> new VillagerProfession(REFERENCE.MODID + ":priest", holder -> holder.is(ALTAR_CLEANSING.getKey()), holder -> holder.is(ALTAR_CLEANSING.getKey()), ImmutableSet.of(), ImmutableSet.of(), ModSounds.BLESSING_MUSIC.get()));
+    public static final DeferredHolder<VillagerProfession, VillagerProfession> PRIEST = PROFESSIONS.register("priest", () -> new VillagerProfession(Component.translatable(REFERENCE.MODID + ":priest"), holder -> holder.is(ALTAR_CLEANSING.getKey()), holder -> holder.is(ALTAR_CLEANSING.getKey()), ImmutableSet.of(), ImmutableSet.of(), ModSounds.BLESSING_MUSIC.get()));
 
     static void register(IEventBus bus) {
         POI_TYPES.register(bus);
@@ -62,15 +66,17 @@ public class ModVillage {
     }
 
     public static void villagerTradeSetup() {
-        addTrades(VAMPIRE_EXPERT.get(), getVampireExpertTrades());
-        addTrades(HUNTER_EXPERT.get(), getHunterExpertTrades());
-        addTrades(PRIEST.get(), getPriestTrades());
+        addTrades(VAMPIRE_EXPERT.getKey(), getVampireExpertTrades());
+        addTrades(HUNTER_EXPERT.getKey(), getHunterExpertTrades());
+        addTrades(PRIEST.getKey(), getPriestTrades());
 
         injectTrades(VillagerProfession.FARMER, getFarmerTrades());
         injectTrades(VillagerProfession.BUTCHER, getButcherTrades());
         injectTrades(VillagerProfession.MASON, getMasonTrades());
 
-        VillagerTrades.WANDERING_TRADER_TRADES.put(1, Stream.concat(Arrays.stream(VillagerTrades.WANDERING_TRADER_TRADES.get(1)), Arrays.stream(getWanderingTraderTrades().get(1))).toArray(VillagerTrades.ItemListing[]::new));
+        ArrayList<Pair<VillagerTrades.ItemListing[], Integer>> pairs = new ArrayList<>(VillagerTrades.WANDERING_TRADER_TRADES);
+        pairs.set(1, Pair.of(Stream.concat(Arrays.stream(pairs.get(1).getLeft()), Arrays.stream(getWanderingTraderTrades().get(1))).toArray(VillagerTrades.ItemListing[]::new), pairs.get(1).getRight()));
+        VillagerTrades.WANDERING_TRADER_TRADES = pairs;
     }
 
     public static Int2ObjectMap<VillagerTrades.ItemListing[]> getVampireExpertTrades() {
@@ -259,11 +265,11 @@ public class ModVillage {
         ));
     }
 
-    public static void addTrades(VillagerProfession profession, Int2ObjectMap<VillagerTrades.ItemListing[]> trades) {
+    public static void addTrades(ResourceKey<VillagerProfession> profession, Int2ObjectMap<VillagerTrades.ItemListing[]> trades) {
         VillagerTrades.TRADES.computeIfAbsent(profession, existingTrades -> new Int2ObjectOpenHashMap<>()).putAll(trades);
     }
 
-    public static void injectTrades(VillagerProfession profession, Int2ObjectMap<VillagerTrades.ItemListing[]> trades) {
+    public static void injectTrades(ResourceKey<VillagerProfession> profession, Int2ObjectMap<VillagerTrades.ItemListing[]> trades) {
         trades.forEach((level, existingTrades) -> VillagerTrades.TRADES.get(profession).put((int) level, Stream.concat(Arrays.stream(VillagerTrades.TRADES.get(profession).get((int) level)), Arrays.stream(trades.get((int) level))).toArray(VillagerTrades.ItemListing[]::new)));
     }
 

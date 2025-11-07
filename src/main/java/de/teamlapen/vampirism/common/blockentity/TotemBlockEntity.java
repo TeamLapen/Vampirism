@@ -4,11 +4,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.collect.Streams;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.*;
+import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
+import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
+import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
+import de.teamlapen.vampirism.api.entity.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -34,6 +36,7 @@ import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundPlaySoundEventPacket;
 import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
+import de.teamlapen.vampirism.common.serialization.ModCodecs;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.tags.ModProfessionTags;
 import de.teamlapen.vampirism.common.util.RegUtil;
@@ -46,10 +49,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -60,7 +60,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.WeightedRandom;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -79,13 +79,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -95,6 +94,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static de.teamlapen.vampirism.common.util.TotemHelper.*;
@@ -217,8 +217,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     @Override
-    public @NotNull Optional<EntityType<? extends Mob>> getCaptureEntityForFaction(@NotNull Holder<? extends IFaction<?>> faction) {
-        return WeightedRandom.getRandomItem(RNG, faction.value().getVillageData().getCaptureEntries()).map(CaptureEntityEntry::getEntity);
+    public Optional<EntityType<? extends Mob>> getCaptureEntityForFaction(Holder<? extends IFaction<?>> faction) {
+        return WeightedList.of(faction.value().getVillageData().getCaptureEntries()).getRandom(RNG).map(Supplier::get);
     }
 
     /**
@@ -263,11 +263,6 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
      */
     public int getSize() {
         return this.village.size();
-    }
-
-    @Override
-    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
-        this.loadCustomOnly(tag, provider);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -331,50 +326,36 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        super.loadAdditional(compound, provider);
-        this.badOmenLevel = compound.getInt("badOmenTriggered");
-        this.isDisabled = compound.getBoolean("isDisabled");
-        this.isComplete = compound.getBoolean("isComplete");
-        this.isInsideVillage = compound.getBoolean("isInsideVillage");
-        if (compound.contains("controllingFaction")) {
-            ModRegistries.FACTIONS.get(ResourceLocation.parse(compound.getString("controllingFaction"))).ifPresentOrElse(this::setControllingFaction, () -> setControllingFaction(ModFactions.NEUTRAL));
-        } else {
-            this.setControllingFaction(ModFactions.NEUTRAL);
-        }
-
-        if (compound.contains("capturingFaction")) {
-            ModRegistries.FACTIONS.get(ResourceLocation.parse(compound.getString("capturingFaction"))).ifPresentOrElse(holder -> {
-                this.setCapturingFaction(holder);
-                this.captureTimer = compound.getInt("captureTimer");
-                this.captureDuration = compound.getInt("captureDuration");
-                this.phase = CAPTURE_PHASE.valueOf(compound.getString("phase"));
-                this.strengthRatio = compound.getFloat("strengthRatio");
-                this.captureAbortTimer = compound.getInt("captureAbortTimer");
-                if (this.phase == CAPTURE_PHASE.PHASE_2) {
-                    this.setupPhase2();
-                }
-            }, () -> this.setCapturingFaction(null));
-        } else {
-            this.setCapturingFaction(null);
-        }
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        this.badOmenLevel = input.getIntOr("badOmenTriggered", 0);
+        this.isDisabled = input.getBooleanOr("isDisabled", false);
+        this.isComplete = input.getBooleanOr("isComplete", false);
+        this.isInsideVillage = input.getBooleanOr("isInsideVillage", false);
+        this.setControllingFaction(input.read("controllingFaction", ModCodecs.faction()).orElse(ModFactions.NEUTRAL));
+        input.read("capturingFaction", ModCodecs.faction()).ifPresentOrElse(faction -> {
+            this.setCapturingFaction(faction);
+            this.captureTimer = input.getIntOr("captureTimer", 0);
+            this.captureDuration = input.getIntOr("captureDuration", 0);
+            this.phase = CAPTURE_PHASE.valueOf(input.getStringOr("phase", CAPTURE_PHASE.PHASE_1_NEUTRAL.name()).toUpperCase(Locale.ROOT));
+            this.strengthRatio = input.getFloatOr("strengthRatio", 0f);
+            this.captureAbortTimer = input.getIntOr("captureAbortTimer", 0);
+            if (this.phase == CAPTURE_PHASE.PHASE_2) {
+                this.setupPhase2();
+            }
+        }, () -> setCapturingFaction(null));
         if (this.level != null) {
-            if (compound.contains("villageArea")) {
-                LevelFog fog = LevelFog.get(this.level);
-                AABB aabb = UtilLib.intToBB(compound.getIntArray("villageArea"));
-                // noinspection UnclearExpression
-                fog.updateArtificialFogBoundingBox(this.worldPosition, IFaction.is(this.controllingFaction, ModFactions.VAMPIRE) ? aabb : null);
-                if (this.isRaidTriggeredByBadOmen() && IFaction.is(this.capturingFaction, ModFactions.VAMPIRE)) {
-                    fog.updateTemporaryArtificialFog(this.worldPosition, aabb);
-                }
+            LevelFog fog = LevelFog.get(this.level);
+
+            var aabb = input.getIntArray("villageArea").map(UtilLib::intToBB).orElse(null);
+            fog.updateArtificialFogBoundingBox(this.worldPosition, IFaction.is(this.controllingFaction, ModFactions.VAMPIRE) ? aabb : null);
+            if (this.isRaidTriggeredByBadOmen() && IFaction.is(this.capturingFaction, ModFactions.VAMPIRE)) {
+                fog.updateTemporaryArtificialFog(this.worldPosition, aabb);
             }
         }
         this.forceVillageUpdate = true;
-        ListTag list = compound.getList("captureInfo", 10);
-        var infors = Streams.stream(list.iterator()).map(inbt -> (CompoundTag) inbt).map(tag -> Triple.of(new Color(tag.getInt("color"), true), tag.getFloat("perc"), tag.getInt("position"))).sorted(Comparator.comparingInt(Triple::getRight)).toList();
-        this.captureInfo.setColors(infors.stream().map(Triple::getLeft).toArray(Color[]::new));
-        infors.forEach(x -> this.captureInfo.setPercentage(x.getLeft(), x.getMiddle()));
-        this.timeSinceLastRaid = compound.getLong("timeSinceLastRaid");
+        this.captureInfo.deserialize(input.childOrEmpty("captureInfo"));
+        this.timeSinceLastRaid = input.getLongOr("timeSinceLastRaid", 0L);
     }
 
     public void notifyNearbyPlayers(@NotNull Component textComponent) {
@@ -422,14 +403,6 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         return this.badOmenLevel >= 0;
     }
 
-    @Override
-    public void onDataPacket(@NotNull Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
-        CompoundTag tag = pkt.getTag();
-        if (hasLevel()) {
-            this.handleUpdateTag(tag, provider);
-        }
-    }
-
     public void ringBell(@NotNull Player playerEntity) {
         if (this.capturingFaction != null) {
             Holder<? extends IPlayableFaction<?>> faction = VampirismPlayerAttributes.get(playerEntity).faction();
@@ -450,38 +423,26 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
-        compound.putBoolean("isDisabled", this.isDisabled);
-        compound.putBoolean("isComplete", this.isComplete);
-        compound.putBoolean("isInsideVillage", this.isInsideVillage);
-        this.controllingFaction.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(faction -> {
-            compound.putString("controllingFaction", faction);
-        });
-        Optional.ofNullable(this.capturingFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(faction -> {
-            compound.putString("capturingFaction", faction);
-            compound.putInt("captureTimer", this.captureTimer);
-            compound.putFloat("strengthRatio", this.strengthRatio);
-            compound.putInt("captureDuration", this.captureDuration);
-            compound.putInt("captureAbortTimer", this.captureAbortTimer);
-            compound.putString("phase", this.phase.name());
-        });
-        if (!village.isEmpty()) {
-            compound.putIntArray("villageArea", UtilLib.bbToInt(this.getVillageArea()));
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putBoolean("isDisabled", this.isDisabled);
+        output.putBoolean("isComplete", this.isComplete);
+        output.putBoolean("isInsideVillage", this.isInsideVillage);
+        output.store("controllingFaction", ModCodecs.faction(), this.controllingFaction);
+        if (this.capturingFaction != null) {
+            output.store("capturingFaction", ModCodecs.faction(), this.capturingFaction);
+            output.putInt("captureTimer", this.captureTimer);
+            output.putFloat("strengthRatio", this.strengthRatio);
+            output.putInt("captureDuration", this.captureDuration);
+            output.putInt("captureAbortTimer", this.captureAbortTimer);
+            output.putString("phase", this.phase.name());
         }
-        ListTag list = new ListTag();
-        int position = 0;
-        for (var entry : this.captureInfo.getColors()) {
-            float percentage = this.captureInfo.getEntries().getOrDefault(entry, 0f);
-            CompoundTag nbt = new CompoundTag();
-            nbt.putInt("color", entry.getRGB());
-            nbt.putFloat("perc", percentage);
-            nbt.putInt("position", position++);
-            list.add(nbt);
-        };
-        compound.put("captureInfo", list);
-        compound.putInt("badOmenTriggered", this.badOmenLevel);
-        compound.putLong("timeSinceLastRaid", this.timeSinceLastRaid);
+        if (!village.isEmpty()) {
+            output.putIntArray("villageArea", UtilLib.bbToInt(this.getVillageArea()));
+        }
+        this.captureInfo.serialize(output.child("captureInfo"));
+        output.putInt("badOmenTriggered", this.badOmenLevel);
+        output.putLong("timeSinceLastRaid", this.timeSinceLastRaid);
     }
 
     @Override
@@ -541,7 +502,6 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     }
 
-    @OnlyIn(Dist.CLIENT)
     public float shouldRenderBeam() {
         if (!this.isComplete || isDisabled || !isInsideVillage) return 0f;
         if (this.capturingFaction == null) return 0f;
@@ -927,7 +887,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         Preconditions.checkArgument(this.capturingFaction != null);
         this.informEntitiesAboutCaptureStop();
         //noinspection ConstantConditions
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             this.updateCreaturesOnCapture(fullConvert);
         }
 
@@ -966,7 +926,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
 
     private void informEntitiesAboutCaptureStop() {
         //noinspection ConstantConditions
-        if (this.level.isClientSide) return;
+        if (this.level.isClientSide()) return;
         List<PathfinderMob> list = this.level.getEntitiesOfClass(PathfinderMob.class, this.getVillageArea());
         for (PathfinderMob e : list) {
             if (e instanceof IVillageCaptureEntity captureEntity) {
@@ -982,7 +942,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
     private void makeAgressive() {
         if (ModConfig.SERVER.disableVillageGuards.get()) return;
         //noinspection ConstantConditions
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             List<Villager> villagerEntities = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea());
             for (Villager villager : villagerEntities) {
                 if (villager instanceof IFactionEntity) continue;
@@ -1135,7 +1095,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         assert !(poisonousBlood && vampire);
         Villager newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level, EntitySpawnReason.EVENT);
         if (oldEntity instanceof Villager) {
-            newVillager.restrictTo(oldEntity.getRestrictCenter(), (int) oldEntity.getRestrictRadius());
+            newVillager.setHomeTo(oldEntity.getHomePosition(), oldEntity.getHomeRadius());
         }
         newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true);
         ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
@@ -1150,7 +1110,7 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         Villager newVillager = (vampire ? ModEntities.VILLAGER_CONVERTED.get() : EntityType.VILLAGER).create(this.level, EntitySpawnReason.EVENT);
         newVillager.copyPosition(oldEntity);
         if (oldEntity instanceof Villager) {
-            newVillager.restrictTo(oldEntity.getRestrictCenter(), (int) oldEntity.getRestrictRadius());
+            newVillager.setHomeTo(oldEntity.getHomePosition(), oldEntity.getHomeRadius());
         }
         newVillager = VampirismEventFactory.fireSpawnNewVillagerEvent(this, oldEntity, newVillager, true);
         ExtendedCreature.getSafe(newVillager).ifPresent(e -> e.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
@@ -1258,8 +1218,8 @@ public class TotemBlockEntity extends BlockEntity implements ITotem {
         villagerEntities = this.level.getEntitiesOfClass(Villager.class, getVillageArea());
 
         for (Villager villager : villagerEntities) {
-            if (BuiltInRegistries.VILLAGER_PROFESSION.wrapAsHolder(villager.getVillagerData().getProfession()).is(ModProfessionTags.HAS_FACTION)) {
-                villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.NONE));
+            if (villager.getVillagerData().profession().is(ModProfessionTags.HAS_FACTION)) {
+                villager.setVillagerData(villager.getVillagerData().withProfession(level.registryAccess(), VillagerProfession.NONE));
             }
         }
         VampirismEventFactory.fireVillagerCaptureEventPost(this, villagerEntities, fullConvert);

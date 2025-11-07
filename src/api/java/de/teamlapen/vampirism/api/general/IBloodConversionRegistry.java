@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.datamaps.IItemBlood;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,6 +34,8 @@ public interface IBloodConversionRegistry {
      * @return {@code true} if the item can be converted
      */
     boolean canBeConverted(@NotNull ItemStack stack);
+
+    boolean canBeConverted(@NotNull ItemResource resource);
 
     /**
      * Gets a blood representation of the given item. This returns an instance of {@link IItemBlood} which can be used to get the blood value of the item.

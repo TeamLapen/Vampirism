@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.common.items.component.BottleBlood;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +18,7 @@ public record BloodFilled() implements RangeSelectItemModelProperty {
     public static final MapCodec<BloodFilled> CODEC = MapCodec.unit(BloodFilled::new);
 
     @Override
-    public float get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int light) {
+    public float get(ItemStack stack, @Nullable ClientLevel level, @Nullable ItemOwner owner, int light) {
         return (float) stack.getOrDefault(ModDataComponents.BOTTLE_BLOOD, BottleBlood.EMPTY).blood() / BottleBlood.MAX_VALUE;
     }
 

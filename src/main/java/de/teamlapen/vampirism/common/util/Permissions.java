@@ -35,7 +35,7 @@ public class Permissions {
     }
 
     public static boolean isPvpEnabled(@NotNull Player player) {
-        if (!player.getCommandSenderWorld().isClientSide) {
+        if (!player.level().isClientSide()) {
             return ServerLifecycleHooks.getCurrentServer().isPvpAllowed();
         }
         return true;

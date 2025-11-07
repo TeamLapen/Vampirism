@@ -5,15 +5,17 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.SmithingTransformRecipe;
+import net.minecraft.world.item.crafting.TransmuteResult;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,21 +26,23 @@ public class ModdedSmithingTransformRecipeBuilder {
     private final Ingredient base;
     private final Ingredient addition;
     private final RecipeCategory category;
-    private final ItemStack result;
+    private final Item result;
+    private final DataComponentPatch patch;
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public ModdedSmithingTransformRecipeBuilder(Ingredient template, Ingredient base, Ingredient addition, RecipeCategory category, ItemStack result) {
+    public ModdedSmithingTransformRecipeBuilder(Ingredient template, Ingredient base, Ingredient addition, RecipeCategory category, Item result, DataComponentPatch patch) {
         this.category = category;
         this.template = template;
         this.base = base;
         this.addition = addition;
         this.result = result;
+        this.patch = patch;
     }
 
     public static ModdedSmithingTransformRecipeBuilder smithing(
-            Ingredient template, Ingredient base, Ingredient addition, RecipeCategory category, ItemStack result
+            Ingredient template, Ingredient base, Ingredient addition, RecipeCategory category, Item result, DataComponentPatch patch
     ) {
-        return new ModdedSmithingTransformRecipeBuilder(template, base, addition, category, result);
+        return new ModdedSmithingTransformRecipeBuilder(template, base, addition, category, result, patch);
     }
 
     public ModdedSmithingTransformRecipeBuilder unlocks(String key, Criterion<?> criterion) {
@@ -58,7 +62,7 @@ public class ModdedSmithingTransformRecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement$builder::addCriterion);
         SmithingTransformRecipe smithingtransformrecipe = new SmithingTransformRecipe(
-                Optional.of(this.template), Optional.of(this.base), Optional.of(this.addition), this.result
+                Optional.of(this.template), this.base, Optional.of(this.addition), new TransmuteResult(this.result.builtInRegistryHolder(), 1, patch)
         );
         output.accept(
                 resourceKey, smithingtransformrecipe, advancement$builder.build(resourceKey.location().withPrefix("recipes/" + this.category.getFolderName() + "/"))

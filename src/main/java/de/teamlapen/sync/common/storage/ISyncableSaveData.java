@@ -1,19 +1,17 @@
 package de.teamlapen.sync.common.storage;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
-public interface ISyncableSaveData extends IDefaultSavable, IStateSyncable {
+public interface ISyncableSaveData extends IDefaultSaveble, IStateSyncable {
 
     @Override
-    default void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        deserializeNBT(provider, nbt);
+    default void deserializeUpdate(ValueInput input) {
+        deserialize(input);
     }
 
     @Override
-    @NotNull
-    default CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
-        return serializeNBT(provider);
+    default void serializeUpdateInternal(ValueOutput output, UpdateParams params) {
+        serialize(output);
     }
 }

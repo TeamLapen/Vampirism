@@ -1,6 +1,5 @@
 package de.teamlapen.sync.server;
 
-import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
 import de.teamlapen.sync.common.packages.ServerboundRequestPlayerUpdatePacket;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -14,11 +13,11 @@ public class ServerPayloadHandler {
 
     public void handleRequestPlayerUpdatePacket(ServerboundRequestPlayerUpdatePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-            ClientboundUpdateEntityPacket update = ClientboundUpdateEntityPacket.createJoinWorldPacket(context.player());
-            if (update != null) {
-                update.markAsPlayerItself();
-                context.reply(update);
-            }
+//            ClientboundUpdateEntityPacket update = ClientboundUpdateEntityPacket.createJoinWorldPacket(context.player()); TODO
+//            if (update != null) {
+//                update.markAsPlayerItself();
+//                context.reply(update);
+//            }
         });
     }
 }

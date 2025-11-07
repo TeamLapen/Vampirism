@@ -76,7 +76,7 @@ public class BlessableItem extends Item {
         if (context.getLevel().getBlockState(context.getClickedPos()).getBlock() == ModBlocks.ALTAR_CLEANSING.get() && context.getPlayer() != null) {
             if (!Helper.isHunter(context.getPlayer())) return InteractionResult.PASS;
             context.getPlayer().startUsingItem(context.getHand());
-            context.getPlayer().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2));
+            context.getPlayer().addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 2));
             context.getPlayer().addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 2));
             return InteractionResult.CONSUME;
         }
@@ -101,7 +101,7 @@ public class BlessableItem extends Item {
                 UtilLib.spawnParticles(livingEntity.level(), ParticleTypes.ENCHANT, pos.x, pos.y, pos.z, 0, 0, 0, 10, 0.4f);
             }
             if (remainingUseDuration > 21) {
-                livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 2));
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 2));
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 2));
             }
         }

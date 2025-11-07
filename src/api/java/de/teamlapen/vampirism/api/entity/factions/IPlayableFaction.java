@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.util.RandomSource;
@@ -62,6 +63,8 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
         UNKNOWN("unknown"),
         MALE("male"),
         FEMALE("female");
+
+        public static final Codec<TitleGender> CODEC = StringRepresentable.fromEnum(TitleGender::values);
 
         private final String name;
 

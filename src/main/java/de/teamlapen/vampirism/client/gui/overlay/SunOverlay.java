@@ -26,10 +26,8 @@ public class SunOverlay extends TextureOverlay {
                 if (player.getAbilities().instabuild || (effect != null && effect.getAmplifier() >= 3)) {
                     progress = Math.min(0.5f, progress);
                 }
-                graphics.pose().pushPose();
                 scaleBy(progress, 1 / 5f, 2F, 1.0F, graphics);
                 renderTextureOverlay(graphics, SUN_TEXTURE, 1.0F);
-                graphics.pose().popPose();
             }
         }
     }

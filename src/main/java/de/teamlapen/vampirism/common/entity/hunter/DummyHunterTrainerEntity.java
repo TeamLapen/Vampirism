@@ -11,7 +11,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
@@ -29,7 +28,7 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         super(type, world);
         saveHome = true;
         hasArms = true;
-        ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
+        this.getNavigation().setCanOpenDoors(true);
 
         this.setDontDropEquipment();
         this.peaceful = true;

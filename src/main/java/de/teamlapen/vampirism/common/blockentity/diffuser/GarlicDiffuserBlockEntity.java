@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.common.inventory.diffuser.GarlicDiffuserMenu;
 import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,6 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,17 +42,17 @@ public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
-        super.saveAdditional(pTag, provider);
-        pTag.putString("garlicStrength", this.strength.getSerializedName());
-        pTag.putInt("garlicRadius", this.radius);
+    protected void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.store("garlicStrength", EnumStrength.CODEC, this.strength);
+        output.putInt("garlicRadius", this.radius);
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
-        super.loadAdditional(pTag, provider);
-        this.strength = EnumStrength.byName(pTag.getString("garlicStrength"));
-        this.radius = pTag.getInt("garlicRadius");
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        this.strength = input.read("garlicStrength", EnumStrength.CODEC).orElse(EnumStrength.NONE);
+        this.radius = input.getIntOr("garlicRadius", 0);
     }
 
     @Override

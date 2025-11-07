@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.KeyTagProvider;
 
 import java.util.concurrent.CompletableFuture;
 
 import static de.teamlapen.vampirism.common.core.ModVampireBooks.*;
 
-public class ModVampireBookTagsProvider extends TagsProvider<IVampireBook> {
+public class ModVampireBookTagsProvider extends KeyTagProvider<IVampireBook> {
 
     public ModVampireBookTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, VampirismRegistries.Keys.VAMPIRE_BOOK, lookupProvider, REFERENCE.MODID);

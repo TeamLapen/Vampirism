@@ -70,7 +70,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
                 if (d0 <= (double) this.maxAttackDistance && this.seeTime >= 20) {
                     attack(target);
                     this.attackTime = attackCooldown;
-                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20));
+                    entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 20));
 
 
                 } else {
@@ -87,7 +87,7 @@ public class AttackRangedDarkBloodGoal extends Goal {
     protected void attack(@NotNull LivingEntity target) {
         Vec3 vec3d = target.position().add(0, target.getBbHeight() * 0.6f, 0).subtract(entity.getEyePosition(1f)).normalize();
 
-        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.getCommandSenderWorld(), entity.getX() + vec3d.x * 0.3f, entity.getY() + entity.getEyeHeight() * 0.9f, entity.getZ() + vec3d.z * 0.3f, vec3d);
+        DarkBloodProjectileEntity projectile = new DarkBloodProjectileEntity(entity.level(), entity.getX() + vec3d.x * 0.3f, entity.getY() + entity.getEyeHeight() * 0.9f, entity.getZ() + vec3d.z * 0.3f, vec3d);
         projectile.setOwner(entity);
         projectile.setDamage(directDamage, indirectDamage);
         if (entity.distanceToSqr(target) > 64) {
@@ -98,6 +98,6 @@ public class AttackRangedDarkBloodGoal extends Goal {
         projectile.setInitialNoClip();
         projectile.excludeShooter();
 
-        entity.getCommandSenderWorld().addFreshEntity(projectile);
+        entity.level().addFreshEntity(projectile);
     }
 }

@@ -22,7 +22,7 @@ public class MakeVillagerAgressiveCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int makeVillagerAgressive(@NotNull ServerPlayer asPlayer) {
-        List<Villager> l = asPlayer.getCommandSenderWorld().getEntitiesOfClass(Villager.class, asPlayer.getBoundingBox().inflate(3, 2, 3));
+        List<Villager> l = asPlayer.level().getEntitiesOfClass(Villager.class, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Villager v : l) {
             if (v instanceof IFactionEntity) continue;
             TotemBlockEntity.makeAgressive(v);

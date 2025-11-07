@@ -3,10 +3,11 @@ package de.teamlapen.vampirism.api.entity.minion;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +55,8 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * Read the task description from NBT.
      * Counterpart to {@link IMinionTaskDesc#writeToNBT(CompoundTag)}
      */
-    T readFromNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt);
+    @NotNull
+    T load(ValueInput input);
 
     /**
      * Tick the task if the minion is loaded.
@@ -92,7 +94,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
         /**
          * Write data to NBT. Counterpart to {@link IMinionTask#readFromNBT(net.minecraft.core.HolderLookup.Provider, net.minecraft.nbt.CompoundTag)}
          */
-        default void writeToNBT(CompoundTag nbt) {
+        default void serialize(@NotNull ValueOutput output) {
         }
 
 

@@ -10,8 +10,10 @@ import de.teamlapen.vampirism.common.entity.vampire.VampireTaskMasterEntity;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -42,9 +44,9 @@ public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEnti
     }
 
     @Override
-    protected void renderNameTag(VampireTaskMasterRenderState state, @NotNull Component name, @NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (state.distanceToCameraSq < 128) {
-            super.renderNameTag(state, name, stack, bufferSource, packedLight);
+    protected void submitNameTag(VampireTaskMasterRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (renderState.distanceToCameraSq <= 128) {
+            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
         }
     }
 

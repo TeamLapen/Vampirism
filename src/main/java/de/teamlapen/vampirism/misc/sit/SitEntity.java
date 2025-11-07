@@ -5,10 +5,10 @@
 
 package de.teamlapen.vampirism.misc.sit;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
@@ -20,9 +20,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SupportType;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SitEntity extends Entity {
 
@@ -88,24 +92,20 @@ public class SitEntity extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
-        if (tag.contains("playerPosX")) {
-            this.playerPos = new Vec3(tag.getDouble("playerPosX"), tag.getDouble("playerPosY"), tag.getDouble("playerPosZ"));
-        }
+    protected void readAdditionalSaveData(ValueInput input) {
+        input.read("playerPos", Codec.DOUBLE.listOf(3, 3)).ifPresent(data -> this.playerPos = new Vec3(data.get(0), data.get(1), data.get(2)));
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
+    protected void addAdditionalSaveData(@NotNull ValueOutput output) {
         if (this.playerPos != null) {
-            tag.putDouble("playerPosX", this.playerPos.x);
-            tag.putDouble("playerPosY", this.playerPos.y);
-            tag.putDouble("playerPosZ", this.playerPos.z);
+            output.store("playerPos", Codec.DOUBLE.listOf(3, 3), List.of(this.playerPos.x, this.playerPos.y, this.playerPos.z));
         }
     }
 
     @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket p_146866_) {
-        super.recreateFromPacket(p_146866_);
+    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
+        super.recreateFromPacket(packet);
     }
 
     public void setPlayerPos(@Nullable Vec3 pos) {

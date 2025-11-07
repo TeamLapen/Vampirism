@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
 import de.teamlapen.vampirism.client.renderer.entities.state.VisibilityPlayerRenderState;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -31,25 +31,25 @@ public class PlayerBodyOverlayLayer<S extends MinionRenderState, M extends Playe
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int packedLight, S state, float p_117353_, float p_117354_) {
-        ResourceLocation texture = state.skin.texture();
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, S state, float yRot, float xRot) {
+        ResourceLocation texture = state.skin.body().texturePath();
         RenderType type = getParentModel().getRenderType(getParentModel(), texture, state);
 
         if (state.renderLordSkin) {
             if (type != null) {
                 getParentModel().setVisibility(VisibilityPlayerModel.Visibility.HEAD);
-                getParentModel().renderToBuffer(stack, bufferSource.getBuffer(type), packedLight, OverlayTexture.NO_OVERLAY, -1);
+                nodeCollector.submitModel(getParentModel(), state, poseStack, type, packedLight, OverlayTexture.NO_OVERLAY, -1, null);
             }
 
-            texture = state.skin.texture();
+            texture = state.skin.body().texturePath();
             RenderType bodyType = getParentModel().getRenderType(this.getParentModel(), texture, state);
             if (bodyType != null) {
                 getParentModel().setVisibility(VisibilityPlayerModel.Visibility.BODY);
-                getParentModel().renderToBuffer(stack, bufferSource.getBuffer(bodyType), packedLight, OverlayTexture.NO_OVERLAY, -1);
+                nodeCollector.submitModel(getParentModel(), state, poseStack, bodyType, packedLight, OverlayTexture.NO_OVERLAY, -1, null);
             }
         } else if (type != null) {
             getParentModel().setVisibility(VisibilityPlayerModel.Visibility.ALL);
-            getParentModel().renderToBuffer(stack, bufferSource.getBuffer(type), packedLight, OverlayTexture.NO_OVERLAY, -1);
+            nodeCollector.submitModel(getParentModel(), state, poseStack, type, packedLight, OverlayTexture.NO_OVERLAY, -1, null);
         }
         getParentModel().setVisibility(VisibilityPlayerModel.Visibility.NONE);
     }
@@ -79,7 +79,7 @@ public class PlayerBodyOverlayLayer<S extends MinionRenderState, M extends Playe
         public RenderType getRenderType(ClothedModel<T> model, ResourceLocation location, T state) {
             boolean pBodyVisible = !state.isInvisible;
             boolean translucent = !pBodyVisible && !state.isInvisibleToPlayer;
-            boolean flag2 = state.appearsGlowing;
+            boolean flag2 = state.appearsGlowing();
             if (translucent) {
                 return RenderType.itemEntityTranslucentCull(location);
             } else if (pBodyVisible) {

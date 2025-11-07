@@ -46,7 +46,7 @@ public class AltarCleansingBlock extends BaseHorizontalBlock {
 
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!world.isClientSide || !player.isAlive()) return InteractionResult.PASS;
+        if (!world.isClientSide() || !player.isAlive()) return InteractionResult.PASS;
         if (FactionPlayerHandler.get(player).isInFaction(ModFactions.VAMPIRE)) {
             VampirismMod.proxy.displayRevertBackScreen();
             return InteractionResult.SUCCESS;

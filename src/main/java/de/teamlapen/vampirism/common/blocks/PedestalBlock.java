@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.common.blocks;
 
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.common.blockentity.PedestalBlockEntity;
 import de.teamlapen.vampirism.common.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.items.VampireSwordItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +27,11 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.PlayerInventoryWrapper;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -76,35 +83,52 @@ public class PedestalBlock extends BaseContainerBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        return getTile(level, pos).filter(s -> player.getMainHandItem().isEmpty()).map(pedestal -> {
-            ItemStack stack2 = pedestal.extractItem(0, 1, false);
-            player.awardStat(ModStats.ITEMS_FILLED_ON_BLOOD_PEDESTAL.get());
-            takeItemPlayer(player, InteractionHand.MAIN_HAND, stack2);
-            return (InteractionResult) InteractionResult.SUCCESS;
-        }).orElse(InteractionResult.PASS);
+        try (var transaction = Transaction.openRoot()) {
+            var resource = Optional.ofNullable(level.getCapability(Capabilities.Item.BLOCK, pos, null)).map(handler -> {
+                var item = ResourceHandlerUtil.extractFirst(handler, x -> true, 1, transaction);
+                if (item == null || item.isEmpty()) {
+                    return null;
+                }
+                return item.resource().toStack(item.amount());
+            }).orElse(ItemStack.EMPTY);
+            if (resource.getItem() instanceof VampireSwordItem vampireSwordItem) {
+                if (vampireSwordItem.isFullyCharged(resource)) {
+                    vampireSwordItem.tryName(resource, player);
+                    player.awardStat(ModStats.ITEMS_FILLED_ON_BLOOD_PEDESTAL.get());
+                }
+            }
+
+            if (resource.isEmpty()) {
+                return InteractionResult.PASS;
+            }
+
+            ItemResource itemResource = ItemResource.of(resource);
+            PlayerInventoryWrapper playerInventoryWrapper = PlayerInventoryWrapper.of(player);
+            int insert = playerInventoryWrapper.getHandSlot(InteractionHand.MAIN_HAND).insert(itemResource, 1, transaction);
+            if (insert == 0) {
+                playerInventoryWrapper.drop(itemResource, 1, true, false, transaction);
+            }
+            transaction.commit();
+            return InteractionResult.SUCCESS;
+        }
     }
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return getTile(level, pos).filter(s -> !s.hasStack()).map(pedestal -> {
-            ItemStack stack2 = ItemStack.EMPTY;
-            if (!pedestal.extractItem(0, 1, true).isEmpty()) {
-                stack2 = pedestal.extractItem(0, 1, false);
-            }
-            if (pedestal.insertItem(0, stack, false).isEmpty()) {
-                if (!stack.isEmpty()) takeItemPlayer(player, hand, stack2);
-            } else {
-                pedestal.insertItem(0, stack2, false);
-            }
-            return (InteractionResult)InteractionResult.SUCCESS;
-        }).orElse(InteractionResult.TRY_WITH_EMPTY_HAND);
-    }
+        try (var transaction = Transaction.openRoot()) {
+            var handler = level.getCapability(Capabilities.Item.BLOCK, pos, null);
+            if (handler == null) return InteractionResult.PASS;
 
-    @Override
-    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
-        PedestalBlockEntity tile = getTileEntity(level, pos);
-        if (tile != null && tile.hasStack()) {
-            dropItem(level, pos, tile.removeStack());
+            if (!ResourceHandlerUtil.isEmpty(handler)) return InteractionResult.TRY_WITH_EMPTY_HAND;
+
+            var count = ResourceHandlerUtil.move(PlayerInventoryWrapper.of(player).getHandSlot(InteractionHand.MAIN_HAND), handler, x -> x.getItem() instanceof IBloodChargeable, 1, transaction);
+
+            if (count > 0) {
+                transaction.commit();
+                return InteractionResult.SUCCESS;
+            } else {
+                return InteractionResult.FAIL;
+            }
         }
     }
 
@@ -137,7 +161,7 @@ public class PedestalBlock extends BaseContainerBlock {
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
         PedestalBlockEntity tile = getTileEntity(level, pos);
         if (tile != null) {
             return tile.getChargedProgress();

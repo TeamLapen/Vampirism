@@ -6,18 +6,18 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Simple interface for tileInventory that exist in different tiers.
  */
 public interface IItemWithTier extends ItemLike {
 
-    default void addTierInformation(@NotNull List<Component> tooltip) {
+    default void addTierInformation(@NotNull Consumer<Component> tooltip) {
         Tier tier = getVampirismTier();
         if (tier != Tier.NORMAL) {
             ChatFormatting format = tier == Tier.ENHANCED ? ChatFormatting.YELLOW : ChatFormatting.AQUA;
-            tooltip.add(Component.translatable("item.vampirism.item.tier." + tier.getSerializedName().toLowerCase()).withStyle(format));
+            tooltip.accept(Component.translatable("item.vampirism.item.tier." + tier.getSerializedName().toLowerCase()).withStyle(format));
         }
     }
 

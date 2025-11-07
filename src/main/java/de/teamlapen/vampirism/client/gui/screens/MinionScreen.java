@@ -11,7 +11,8 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.LockIconButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -41,9 +42,9 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    public boolean mouseDragged(double p_mouseDragged_1_, double p_mouseDragged_3_, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-        this.taskList.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
-        return super.mouseDragged(p_mouseDragged_1_, p_mouseDragged_3_, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+    public boolean mouseDragged(MouseButtonEvent p_446671_, double p_97752_, double p_97753_) {
+        this.taskList.mouseDragged(p_446671_, p_97752_, p_97753_);
+        return super.mouseDragged(p_446671_, p_97752_, p_97753_);
     }
 
     @Override
@@ -69,12 +70,11 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        GuiRenderer.resetColor();
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         GuiRenderer.blit(graphics, BACKGROUND, i, j, this.imageWidth, this.imageHeight);
         for (int k = extraSlots; k < 15; k++) {
-            graphics.blitSprite(RenderType::guiTextured, LOCKED_SPRITE, i + 29 + 18 * (k / 3), j + 44 + 18 * (k % 3), 13, 13);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, LOCKED_SPRITE, i + 29 + 18 * (k / 3), j + 44 + 18 * (k % 3), 13, 13);
         }
     }
 
@@ -100,7 +100,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
 
     private void drawButtonTip(@NotNull GuiGraphics graphics, Component text, int mouseX, int mouseY) {
-        graphics.renderTooltip(this.font, Collections.singletonList(text), Optional.empty(), mouseX, mouseY);
+        graphics.setTooltipForNextFrame(this.font, Collections.singletonList(text), Optional.empty(), mouseX, mouseY);
     }
 
     private Component getActiveTaskName() {

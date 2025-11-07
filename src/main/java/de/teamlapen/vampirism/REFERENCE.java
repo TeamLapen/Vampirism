@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModList;
 
+import java.net.URI;
+
 /**
  * Class to store constants and stuff
  */
@@ -41,7 +43,7 @@ public class REFERENCE {
     // links
     public static final String CURSEFORGE_LINK = "https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire";
     public static final String MODRINTH_LINK = "https://modrinth.com/mod/vampirism";
-    public static final String GUIDEAPI_LINK = "https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage";
+    public static final URI GUIDEAPI_LINK = URI.create("https://www.curseforge.com/minecraft/mc-mods/guide-api-village-and-pillage");
     public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
     public static final String SETTINGS_API = "https://api.vampirism.dev/api/v1";
 }

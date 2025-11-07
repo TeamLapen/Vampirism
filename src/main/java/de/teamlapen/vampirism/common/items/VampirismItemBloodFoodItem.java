@@ -20,7 +20,7 @@ public class VampirismItemBloodFoodItem extends Item {
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
         super.finishUsingItem(stack, level, livingEntity);
         if (!Helper.isVampire(livingEntity)) {
-            livingEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 20 * 20));
+            livingEntity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 20 * 20));
         }
 
         return stack;

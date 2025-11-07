@@ -12,15 +12,17 @@ import de.teamlapen.vampirism.common.core.ModEntities;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerModelType;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,6 +51,7 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation GENERIC_BIPED_SLIM = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "main");
     public static final ModelLayerLocation GENERIC_BIPED_ARMOR_OUTER = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "outer_armor");
     public static final ModelLayerLocation GENERIC_BIPED_ARMOR_INNER = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "inner_armor");
+    public static final ArmorModelSet<ModelLayerLocation> GENERIC_BIPED_ARMOR = createArmorSet(VResourceLocation.mod("generic_biped"));
     public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(VResourceLocation.mod("task_master"), "main");
     public static final ModelLayerLocation REMAINS_DEFENDER = new ModelLayerLocation(VResourceLocation.mod("remains_defender"), "main");
     public static final ModelLayerLocation GHOST = new ModelLayerLocation(VResourceLocation.mod("ghost"), "main");
@@ -63,8 +66,8 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE_IMOB.get(), ConvertedCreatureRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE.get(), (ConvertedCreatureRenderer::new));
         event.registerEntityRenderer(ModEntities.CONVERTED_HORSE.get(), convertedRenderer(context -> new HorseRenderer(context)));
-        event.registerEntityRenderer(ModEntities.CONVERTED_DONKEY.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, ModelLayers.DONKEY, ModelLayers.DONKEY_BABY, false)));
-        event.registerEntityRenderer(ModEntities.CONVERTED_MULE.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, ModelLayers.MULE, ModelLayers.MULE_BABY, true)));
+        event.registerEntityRenderer(ModEntities.CONVERTED_DONKEY.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, DonkeyRenderer.Type.DONKEY)));
+        event.registerEntityRenderer(ModEntities.CONVERTED_MULE.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, DonkeyRenderer.Type.MULE)));
         event.registerEntityRenderer(ModEntities.CONVERTED_SHEEP.get(), convertedRenderer(SheepRenderer::new));
         event.registerEntityRenderer(ModEntities.CONVERTED_COW.get(), convertedRenderer(CowRenderer::new));
         event.registerEntityRenderer(ModEntities.HUNTER.get(), (BasicHunterRenderer::new));
@@ -141,11 +144,15 @@ public class ModEntitiesRender {
         _onAddLayers(event);
     }
 
-    @SuppressWarnings("unchecked")
-    private static <S extends Player, T extends PlayerRenderState, Q extends EntityModel<T>> void _onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
+    private static ArmorModelSet<ModelLayerLocation> createArmorSet(ResourceLocation path) {
+        return new ArmorModelSet<>(new ModelLayerLocation(path, "helmet"), new ModelLayerLocation(path, "chestplate"), new ModelLayerLocation(path, "leggings"), new ModelLayerLocation(path, "boots"));
+    }
 
-        for (PlayerSkin.Model s : event.getSkins()) {
-            LivingEntityRenderer<S, T, Q> renderPlayer = event.getSkin(s);
+    @SuppressWarnings("unchecked")
+    private static <S extends Player, T extends AvatarRenderState, Q extends EntityModel<T>> void _onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
+
+        for (PlayerModelType s : event.getSkins()) {
+            AvatarRenderer<AbstractClientPlayer> renderPlayer = event.getPlayerRenderer(s);
             if (renderPlayer != null && renderPlayer.getModel() instanceof PlayerModel) {
                 LivingEntityRenderer<S, T, PlayerModel> renderPlayer2 = (LivingEntityRenderer<S, T, PlayerModel>) renderPlayer;
                 renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));

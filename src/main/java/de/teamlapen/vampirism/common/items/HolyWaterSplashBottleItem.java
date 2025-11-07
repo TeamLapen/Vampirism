@@ -47,13 +47,13 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
         if (!remote) {
             impactEntities(entity, stack, impact);
             impactBlocks(entity, stack, impact);
-            entity.getCommandSenderWorld().levelEvent(2002, entity.blockPosition(), new PotionContents(Potions.MUNDANE).getColor());
+            entity.level().levelEvent(2002, entity.blockPosition(), new PotionContents(Potions.MUNDANE).getColor());
         }
     }
 
     protected void impactEntities(ThrowableItemEntity bottleEntity, ItemStack stack, HitResult impact) {
         AABB impactArea = bottleEntity.getBoundingBox().inflate(4.0D, 2.0D, 4.0D);
-        List<LivingEntity> list1 = bottleEntity.getCommandSenderWorld().getEntitiesOfClass(LivingEntity.class, impactArea);
+        List<LivingEntity> list1 = bottleEntity.level().getEntitiesOfClass(LivingEntity.class, impactArea);
         @Nullable Entity thrower = bottleEntity.getOwner();
 
         if (!list1.isEmpty()) {
@@ -67,7 +67,7 @@ public class HolyWaterSplashBottleItem extends HolyWaterBottleItem implements Th
     }
 
     protected void impactBlocks(ThrowableItemEntity bottleEntity, ItemStack stack, HitResult impact) {
-        Level level = bottleEntity.getCommandSenderWorld();
+        Level level = bottleEntity.level();
         if (level.getBiome(bottleEntity.blockPosition()).is(ModBiomeTags.HasFaction.IS_FACTION_BIOME)) {
             return;
         }

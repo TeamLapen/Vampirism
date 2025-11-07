@@ -1,14 +1,15 @@
 package de.teamlapen.lib.data;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelOutput;
-import net.minecraft.client.data.models.blockstates.*;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.block.model.VariantMutator;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -20,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -30,14 +30,9 @@ public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
 
     private static final ResourceLocation CUTOUT = ResourceLocation.withDefaultNamespace("cutout");
 
-    public static final List<Pair<Direction, VariantProperties.Rotation>> HORIZONTAL_ROTATION = List.of(
-            Pair.of(Direction.NORTH, VariantProperties.Rotation.R0),
-            Pair.of(Direction.EAST, VariantProperties.Rotation.R90),
-            Pair.of(Direction.SOUTH, VariantProperties.Rotation.R180),
-            Pair.of(Direction.WEST, VariantProperties.Rotation.R270)
-    );
+    public static final PropertyDispatch<VariantMutator> HORIZONTAL_ROTATION = ROTATION_HORIZONTAL_FACING;
 
-    public BaseBlockModelGenerators(Consumer<BlockStateGenerator> blockStateGenerator, ItemModelOutput itemModelOutput, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
+    public BaseBlockModelGenerators(Consumer<BlockModelDefinitionGenerator> blockStateGenerator, ItemModelOutput itemModelOutput, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
         super(blockStateGenerator, itemModelOutput, modelOutput);
     }
 
@@ -90,80 +85,72 @@ public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
     }
 
     /**
-     * The normal methods in the base class don't add the cutout render type, but it must be here so that the texture is rendered in a correct way.
+     * copy from parent with changed cutout render type
      */
     @Override
-    public void createCrossBlock(@NotNull Block block, PlantType type, @NotNull TextureMapping textureMapping) {
-        ResourceLocation resourcelocation = type.getCross().extend().renderType(CUTOUT).build().create(block, textureMapping, this.modelOutput);
-        this.blockStateOutput.accept(createSimpleBlock(block, resourcelocation));
+    public void createCrossBlock(@NotNull Block block, PlantType plantType, @NotNull TextureMapping textureMapping) {
+        MultiVariant multivariant = plainVariant(plantType.getCross().extend().renderType(CUTOUT).build().create(block, textureMapping, this.modelOutput));
+        this.blockStateOutput.accept(createSimpleBlock(block, multivariant));
+    }
+
+    /**
+     * copy from parent with changed cutout render type
+     */
+    @Override
+    public @NotNull MultiVariant createFloorFireModels(@NotNull Block block) {
+        ModelTemplate copy = copy(ModelTemplates.FIRE_FLOOR, CUTOUT);
+        return variants(
+                plainModel(copy.create(ModelLocationUtils.getModelLocation(block, "_floor0"), TextureMapping.fire0(block), this.modelOutput)),
+                plainModel(copy.create(ModelLocationUtils.getModelLocation(block, "_floor1"), TextureMapping.fire1(block), this.modelOutput))
+        );
     }
 
     @Override
-    public @NotNull List<ResourceLocation> createFloorFireModels(@NotNull Block fireBlock) {
-        ModelTemplate fire_floor = copy(ModelTemplates.FIRE_FLOOR, CUTOUT);
-        ResourceLocation resourcelocation = fire_floor
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_floor0"), TextureMapping.fire0(fireBlock), this.modelOutput);
-        ResourceLocation resourcelocation1 = fire_floor
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_floor1"), TextureMapping.fire1(fireBlock), this.modelOutput);
-        return ImmutableList.of(resourcelocation, resourcelocation1);
-    }
-
-    @Override
-    public @NotNull List<ResourceLocation> createSideFireModels(@NotNull Block fireBlock) {
+    public @NotNull MultiVariant createSideFireModels(@NotNull Block block) {
         var fireSide = copy(ModelTemplates.FIRE_SIDE, CUTOUT);
         var fireSideAlt = copy(ModelTemplates.FIRE_SIDE_ALT, CUTOUT);
-        ResourceLocation resourcelocation = fireSide
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_side0"), TextureMapping.fire0(fireBlock), this.modelOutput);
-        ResourceLocation resourcelocation1 = fireSide
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_side1"), TextureMapping.fire1(fireBlock), this.modelOutput);
-        ResourceLocation resourcelocation2 = fireSideAlt
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_side_alt0"), TextureMapping.fire0(fireBlock), this.modelOutput);
-        ResourceLocation resourcelocation3 = fireSideAlt
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_side_alt1"), TextureMapping.fire1(fireBlock), this.modelOutput);
-        return ImmutableList.of(resourcelocation, resourcelocation1, resourcelocation2, resourcelocation3);
+
+        return variants(
+                plainModel(fireSide.create(ModelLocationUtils.getModelLocation(block, "_side0"), TextureMapping.fire0(block), this.modelOutput)),
+                plainModel(fireSide.create(ModelLocationUtils.getModelLocation(block, "_side1"), TextureMapping.fire1(block), this.modelOutput)),
+                plainModel(fireSideAlt.create(ModelLocationUtils.getModelLocation(block, "_side_alt0"), TextureMapping.fire0(block), this.modelOutput)),
+                plainModel(fireSideAlt.create(ModelLocationUtils.getModelLocation(block, "_side_alt1"), TextureMapping.fire1(block), this.modelOutput))
+        );
     }
 
     @Override
-    public @NotNull List<ResourceLocation> createTopFireModels(@NotNull Block fireBlock) {
+    public @NotNull MultiVariant createTopFireModels(@NotNull Block block) {
         var fireUp = copy(ModelTemplates.FIRE_UP, CUTOUT);
         var fireUpAlt = copy(ModelTemplates.FIRE_UP_ALT, CUTOUT);
-        ResourceLocation resourcelocation = fireUp
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_up0"), TextureMapping.fire0(fireBlock), this.modelOutput);
-        ResourceLocation resourcelocation1 = fireUp
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_up1"), TextureMapping.fire1(fireBlock), this.modelOutput);
-        ResourceLocation resourcelocation2 = fireUpAlt
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_up_alt0"), TextureMapping.fire0(fireBlock), this.modelOutput);
-        ResourceLocation resourcelocation3 = fireUpAlt
-                .create(ModelLocationUtils.getModelLocation(fireBlock, "_up_alt1"), TextureMapping.fire1(fireBlock), this.modelOutput);
-        return ImmutableList.of(resourcelocation, resourcelocation1, resourcelocation2, resourcelocation3);
+
+        return variants(
+                plainModel(fireUp.create(ModelLocationUtils.getModelLocation(block, "_up0"), TextureMapping.fire0(block), this.modelOutput)),
+                plainModel(fireUp.create(ModelLocationUtils.getModelLocation(block, "_up1"), TextureMapping.fire1(block), this.modelOutput)),
+                plainModel(fireUpAlt.create(ModelLocationUtils.getModelLocation(block, "_up_alt0"), TextureMapping.fire0(block), this.modelOutput)),
+                plainModel(fireUpAlt.create(ModelLocationUtils.getModelLocation(block, "_up_alt1"), TextureMapping.fire1(block), this.modelOutput))
+        );
     }
 
     @Override
     public void createPlant(@NotNull Block block, @NotNull Block pottedBlock, @NotNull PlantType plantType) {
         this.createCrossBlock(block, plantType);
         TextureMapping texturemapping = plantType.getPlantTextureMapping(block);
-        ResourceLocation resourcelocation = plantType.getCrossPot().extend().renderType(CUTOUT).build().create(pottedBlock, texturemapping, this.modelOutput);
-        this.blockStateOutput.accept(createSimpleBlock(pottedBlock, resourcelocation));
+        MultiVariant multivariant = plainVariant(plantType.getCrossPot().extend().renderType(CUTOUT).build().create(pottedBlock, texturemapping, this.modelOutput));
+        this.blockStateOutput.accept(createSimpleBlock(pottedBlock, multivariant));
     }
 
     @Override
     public void createCropBlock(@NotNull Block cropBlock, Property<Integer> ageProperty, int... ageToVisualStageMapping) {
+        this.registerSimpleFlatItemModel(cropBlock.asItem());
         if (ageProperty.getPossibleValues().size() != ageToVisualStageMapping.length) {
             throw new IllegalArgumentException();
         } else {
             Int2ObjectMap<ResourceLocation> int2objectmap = new Int2ObjectOpenHashMap<>();
-            PropertyDispatch propertydispatch = PropertyDispatch.property(ageProperty)
-                    .generate(
-                            p_388091_ -> {
-                                int i = ageToVisualStageMapping[p_388091_];
-                                ResourceLocation resourcelocation = int2objectmap.computeIfAbsent(
-                                        i, p_387534_ -> this.createSuffixedVariant(cropBlock, "_stage" + i, ModelTemplates.CROP.extend().renderType(CUTOUT).build(), TextureMapping::crop)
-                                );
-                                return Variant.variant().with(VariantProperties.MODEL, resourcelocation);
-                            }
-                    );
-            this.registerSimpleFlatItemModel(cropBlock.asItem());
-            this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(cropBlock).with(propertydispatch));
+            this.blockStateOutput.accept(MultiVariantGenerator.dispatch(cropBlock)
+                    .with(PropertyDispatch.initial(ageProperty).generate(p_408977_ -> {
+                        int i = ageToVisualStageMapping[p_408977_];
+                        return plainVariant(int2objectmap.computeIfAbsent(i, p_387308_ -> this.createSuffixedVariant(cropBlock, "_stage" + p_387308_, ModelTemplates.CROP.extend().renderType(CUTOUT).build(), TextureMapping::crop)));
+                    })));
         }
     }
 
@@ -171,7 +158,4 @@ public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
         return template.extend().renderType(renderType).build();
     }
 
-    protected static <T extends Comparable<T>> Condition.TerminalCondition stateCondition(Property<T> property, T value) {
-        return Condition.condition().term(property, value);
-    }
 }

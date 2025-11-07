@@ -7,15 +7,15 @@ import de.teamlapen.vampirism.common.blockentity.VampireBeaconBlockEntity;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.inventory.VampireBeaconMenu;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSetVampireBeaconPacket;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -26,8 +26,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -116,17 +114,16 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
     }
 
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        GuiRenderer.resetColor();
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         GuiRenderer.blit(pGuiGraphics, BEACON_LOCATION, i, j, this.imageWidth, this.imageHeight);
-        pGuiGraphics.pose().pushPose();
-        pGuiGraphics.pose().translate(0.0F, 0.0F, 100.0F);
+        pGuiGraphics.pose().pushMatrix();
+        pGuiGraphics.pose().translate(0.0F, 0.0F/*, 100.0F*/);
         pGuiGraphics.renderItem(new ItemStack(ModItems.PURE_BLOOD_0.get()), i + 41, j + 109);
         pGuiGraphics.renderItem(new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get()), i + 41 + 22, j + 109);
         pGuiGraphics.renderItem(new ItemStack(ModItems.HUMAN_HEART.get()), i + 42 + 44, j + 109);
         pGuiGraphics.renderItem(new ItemStack(ModItems.WEAK_HUMAN_HEART.get()), i + 42 + 66, j + 109);
-        pGuiGraphics.pose().popPose();
+        pGuiGraphics.pose().popMatrix();
     }
 
     public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
@@ -144,7 +141,9 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
             super(pX, pY, CANCEL_SPRITE, CommonComponents.GUI_CANCEL);
         }
 
-        public void onPress() {
+
+        @Override
+        public void onPress(InputWithModifiers input) {
             VampireBeaconScreen.this.minecraft.player.closeContainer();
         }
 
@@ -152,13 +151,13 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     class BeaconConfirmButton extends BeaconSpriteScreenButton {
         public BeaconConfirmButton(int pX, int pY) {
             super(pX, pY, CONFIRM_SPRITE, CommonComponents.GUI_DONE);
         }
 
-        public void onPress() {
+        @Override
+        public void onPress(InputWithModifiers input) {
             VampirismMod.proxy.sendToServer(new ServerboundSetVampireBeaconPacket(Optional.ofNullable(VampireBeaconScreen.this.primary), Optional.of(VampireBeaconScreen.this.amplifier)));
             VampireBeaconScreen.this.minecraft.player.closeContainer();
         }
@@ -168,12 +167,11 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     class BeaconPowerButton extends BeaconScreenButton {
         protected final int tier;
         private Holder<MobEffect> effect;
         private int effectAmplifier;
-        private TextureAtlasSprite sprite;
+        private ResourceLocation sprite;
 
         public BeaconPowerButton(int pX, int pY, Holder<MobEffect> pEffect, int effectAmplifier, int pTier) {
             super(pX, pY);
@@ -185,7 +183,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         protected void setEffect(Holder<MobEffect> pEffect, int effectAmplifier) {
             this.effect = pEffect;
             this.effectAmplifier = effectAmplifier;
-            this.sprite = Minecraft.getInstance().getMobEffectTextures().get(pEffect);
+            this.sprite = Gui.getMobEffectSprite(pEffect);
             this.updateTooltip();
         }
 
@@ -204,7 +202,8 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
             return Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + amplifier));
         }
 
-        public void onPress() {
+        @Override
+        public void onPress(InputWithModifiers input) {
             if (!this.isSelected()) {
                 VampireBeaconScreen.this.primary = this.effect;
                 VampireBeaconScreen.this.amplifier = this.effectAmplifier;
@@ -214,7 +213,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
 
         protected void renderIcon(GuiGraphics pGuiGraphics) {
-            pGuiGraphics.blitSprite(RenderType::guiTextured, this.sprite,this.getX() + 2, this.getY() + 2, 0, 18, 18);
+            pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX() + 2, this.getY() + 2, 0, 18, 18);
         }
 
         public void updateStatus(int pBeaconTier) {
@@ -227,7 +226,6 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     abstract static class BeaconScreenButton extends AbstractButton implements BeaconButton {
         private boolean selected;
 
@@ -251,7 +249,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
                 resourcelocation = BUTTON_SPRITE;
             }
 
-            pGuiGraphics.blitSprite(RenderType::guiTextured, resourcelocation, this.getX(), this.getY(), this.width, this.height);
+            pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), this.width, this.height);
             this.renderIcon(pGuiGraphics);
         }
 
@@ -270,7 +268,6 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     abstract static class BeaconSpriteScreenButton extends BeaconScreenButton {
         private final ResourceLocation sprite;
 
@@ -281,7 +278,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
 
         protected void renderIcon(GuiGraphics pGuiGraphics) {
-            pGuiGraphics.blitSprite(RenderType::guiTextured, this.sprite, this.getX() + 2, this.getY() + 2, 18, 18);
+            pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX() + 2, this.getY() + 2, 18, 18);
         }
     }
 

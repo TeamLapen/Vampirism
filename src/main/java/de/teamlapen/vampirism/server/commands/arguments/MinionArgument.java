@@ -16,7 +16,6 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.players.GameProfileCache;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
@@ -57,9 +56,11 @@ public class MinionArgument implements ArgumentType<MinionArgument.MinionId> {
 
     private Collection<MinionId> getPlayerMinionIds() {
         MinionWorldData data = MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer());
-        GameProfileCache profileCache = ServerLifecycleHooks.getCurrentServer().getProfileCache();
+
+
+        var cache = ServerLifecycleHooks.getCurrentServer().services().nameToIdCache();
         return data.getControllers().entrySet().stream()
-                .flatMap(entry -> profileCache.get(entry.getKey()).stream().flatMap(k -> entry.getValue().getMinionIdForName(k.getName()).stream())).collect(Collectors.toList());
+                .flatMap(entry -> cache.get(entry.getKey()).stream().flatMap(k -> entry.getValue().getMinionIdForName(k.name()).stream())).collect(Collectors.toList());
     }
 
     @Override

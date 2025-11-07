@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens.skills;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
@@ -16,7 +14,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.locale.Language;
@@ -135,19 +133,19 @@ public class SkillNodeScreen {
     }
 
     public void draw(@NotNull GuiGraphics graphics, int i, int j) {
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
+        var pose = graphics.pose();
+        pose.pushMatrix();
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         int width = getNodeWidth();
 
         // center and in front of the connectors
-        pose.translate(-width / 2f, 0, 50);
+        pose.translate(-width / 2f, 0/*, 50 TODO*/);
 
         int x = i + getNodeStart();
         //draw skill background
         if (this.skillNode.elementCount() > 1) {
-            graphics.blitSprite(RenderType::guiTextured, SKILL_BACKGROUND_SPRITE, x, this.y + j, width, 26);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SKILL_BACKGROUND_SPRITE, x, this.y + j, width, 26);
         }
 
         //draw skills
@@ -156,17 +154,15 @@ public class SkillNodeScreen {
             if (state == SkillNodeState.LOCKED || !skillHandler.isSkillEnabled(this.skillNode.elements().get(i1))) {
                 color = ARGB.colorFromFloat(1, 0.5f, 0.5f, 0.5f);
             }
-            graphics.blitSprite(RenderType::guiTextured, skillNode.isRoot() ? START_SKILL_BACKGROUND_SPRITE : SKILL_BACKGROUND_SPRITE, x, this.y + j, 26, 26, color);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, skillNode.isRoot() ? START_SKILL_BACKGROUND_SPRITE : SKILL_BACKGROUND_SPRITE, x, this.y + j, 26, 26, color);
 
 
-            GuiRenderer.resetColor();
-            RenderSystem.enableBlend();
             GuiRenderer.blit(graphics, getSkillIconLocation(this.skillNode.elements().get(i1).value()), x+5, this.y + j + 5, 16 ,16, 16, 16);
 
             x += 26 + 10;
         }
 
-        pose.popPose();
+        pose.popMatrix();
 
         for (SkillNodeScreen child : this.children) {
             child.draw(graphics, i, j);
@@ -178,11 +174,11 @@ public class SkillNodeScreen {
         if (state == SkillNodeState.HIDDEN) return;
         if (this.parent != null) {
             int color = state.pathColor(outerLine);
-            PoseStack pose = graphics.pose();
+            var pose = graphics.pose();
 
-            pose.pushPose();
+            pose.pushMatrix();
             if (state == SkillNodeState.UNLOCKED) {
-                pose.translate(0, 0, 10);
+                //           pose.translate(0, 0, 10);
             }
             int i = startX + x;
             int i1 = startX + this.parent.x;
@@ -205,7 +201,7 @@ public class SkillNodeScreen {
                 graphics.vLine(i1, j2, j3, color);
                 graphics.vLine(i, j4, j5 + 1, color);
             }
-            pose.popPose();
+            pose.popMatrix();
 
         }
 
@@ -249,7 +245,7 @@ public class SkillNodeScreen {
                     lockingSkills.stream().map(a -> a.value().getName().copy().withStyle(ChatFormatting.DARK_RED)).forEach(text::add);
                 }
                 int width = text.stream().mapToInt(this.minecraft.font::width).max().getAsInt();
-                graphics.blitSprite(RenderType::guiTextured, DESCRIPTION_SPRITE, scrollX + x - 3, scrollY + this.y - 3 - text.size() * 9, width + 8, 10 + text.size() * 10);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DESCRIPTION_SPRITE, scrollX + x - 3, scrollY + this.y - 3 - text.size() * 9, width + 8, 10 + text.size() * 10);
                 int fontY = scrollY + this.y + 1 - text.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
                     graphics.drawString(this.minecraft.font, text.get(i), scrollX + x + 2, fontY + i * 9, -1, true);
@@ -265,7 +261,7 @@ public class SkillNodeScreen {
                 int width = Math.min(this.width[hoveredSkillIndex], text.stream().mapToInt(this.minecraft.font::width).max().getAsInt());
 
                 int yOffset = description.isEmpty() ? 15 : 24;
-                graphics.blitSprite(RenderType::guiTextured, DESCRIPTION_SPRITE, scrollX + x - 3, scrollY + this.y + 3 + 7 + description.size() * 9, width + 8, 10 + text.size() * 10 + yOffset);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DESCRIPTION_SPRITE, scrollX + x - 3, scrollY + this.y + 3 + 7 + description.size() * 9, width + 8, 10 + text.size() * 10 + yOffset);
                 int fontY = scrollY + this.y + 3 + yOffset + 8 + description.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
                     graphics.drawString(this.minecraft.font, text.get(i), scrollX + x + 2, fontY + i * 9, -1, true);
@@ -274,7 +270,7 @@ public class SkillNodeScreen {
 
             //draw description
             if (!description.isEmpty()) {
-                graphics.blitSprite(RenderType::guiTextured, DESCRIPTION_SPRITE, scrollX + x - 5, scrollY + this.y + 3, this.width[hoveredSkillIndex], 30 + description.size() * 9);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DESCRIPTION_SPRITE, scrollX + x - 5, scrollY + this.y + 3, this.width[hoveredSkillIndex], 30 + description.size() * 9);
                 for (int i = 0; i < description.size(); i++) {
                     graphics.drawString(this.minecraft.font, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1, true);
                 }
@@ -285,7 +281,7 @@ public class SkillNodeScreen {
             if (state == SkillNodeState.UNLOCKED && !this.skillHandler.isSkillEnabled(hoveredSkill)) {
                 texture = SkillNodeState.LOCKED.sprite;
             }
-            graphics.blitSprite(RenderType::guiTextured, texture, scrollX + x - 5, scrollY + this.y + 3, this.width[hoveredSkillIndex], 20);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, scrollX + x - 5, scrollY + this.y + 3, this.width[hoveredSkillIndex], 20);
             graphics.drawString(this.minecraft.font, this.titles[hoveredSkillIndex], scrollX + x + 40, scrollY + this.y + 9, -1, true);
 
             //draw skill point cost
@@ -293,14 +289,12 @@ public class SkillNodeScreen {
                 int cost = hoveredSkill.value().getSkillPointCost();
                 int costWidth = this.minecraft.font.width(String.valueOf(cost));
                 int costHeight = this.minecraft.font.lineHeight;
-                graphics.blitSprite(RenderType::guiTextured, DESCRIPTION_SPRITE, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) / 2) - 1, costWidth + 5, costHeight + 4);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DESCRIPTION_SPRITE, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) / 2) - 1, costWidth + 5, costHeight + 4);
                 graphics.drawString(this.minecraft.font, Component.literal(String.valueOf(cost)), scrollX + x + 27, (int) (scrollY + this.y + ((26 - costHeight) / 2f) + 1), -1, true);
             }
 
             //draw skill
-            GuiRenderer.resetColor();
-            graphics.blitSprite(RenderType::guiTextured, skillNode.isRoot() ? START_SKILL_BACKGROUND_SPRITE : SKILL_BACKGROUND_SPRITE, scrollX + x, scrollY + this.y, 26, 26);
-            RenderSystem.enableBlend();
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, skillNode.isRoot() ? START_SKILL_BACKGROUND_SPRITE : SKILL_BACKGROUND_SPRITE, scrollX + x, scrollY + this.y, 26, 26);
             GuiRenderer.blit(graphics, getSkillIconLocation(hoveredSkill.value()), x + scrollX + 5, this.y + scrollY + 5, 16, 16, 16, 16);
         }
     }

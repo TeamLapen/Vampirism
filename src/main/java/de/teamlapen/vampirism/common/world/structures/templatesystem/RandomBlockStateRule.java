@@ -41,7 +41,7 @@ public class RandomBlockStateRule extends ProcessorRule {
         }), RuleTest.CODEC.fieldOf("location_predicate").forGetter(entry -> {
             return ((ProcessorRuleAccessor) entry).getLocPredicate();
         }), PAIR_CODEC.fieldOf("default_state").forGetter(entry -> {
-            return Pair.of(((ProcessorRuleAccessor) entry).getOutputState(), ((ProcessorRuleAccessor) entry).getBlockEntityModifier());
+            return Pair.of((entry.getOutputState()), ((ProcessorRuleAccessor) entry).getBlockEntityModifier());
         }), PAIR_CODEC.listOf().fieldOf("states").forGetter(entry -> {
             return Lists.newArrayList(entry.states);
         })).apply(instance, RandomBlockStateRule::new);
@@ -64,7 +64,7 @@ public class RandomBlockStateRule extends ProcessorRule {
             int type = RNG.nextInt(states.size());
             return states.get(type);
         } else {
-            return Pair.of(((ProcessorRuleAccessor) this).getOutputState(), ((ProcessorRuleAccessor) this).getBlockEntityModifier());
+            return Pair.of(this.getOutputState(), ((ProcessorRuleAccessor) this).getBlockEntityModifier());
         }
     }
 }

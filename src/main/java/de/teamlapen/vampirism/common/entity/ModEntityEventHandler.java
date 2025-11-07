@@ -23,7 +23,6 @@ import de.teamlapen.vampirism.common.items.HunterAxeItem;
 import de.teamlapen.vampirism.common.items.VampireSwordItem;
 import de.teamlapen.vampirism.common.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.items.oil.EvasionOil;
-import de.teamlapen.vampirism.common.mixin.accessor.GoalSelectorAccessor;
 import de.teamlapen.vampirism.common.mixin.accessor.NearestAttackableTargetGoalAccessor;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
@@ -66,6 +65,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -81,7 +81,7 @@ public class ModEntityEventHandler {
 
     public static <T extends Mob, S extends LivingEntity, Q extends NearestAttackableTargetGoal<S>> void makeVampireFriendly(String name, @NotNull T e, @NotNull Class<Q> targetClass, @NotNull Class<S> targetEntityClass, int attackPriority, @NotNull Predicate<EntityType<? extends T>> typeCheck) {
         Goal target = null;
-        for (WrappedGoal t : ((GoalSelectorAccessor) e.targetSelector).getAvailableGoals()) {
+        for (WrappedGoal t : e.targetSelector.getAvailableGoals()) {
             Goal g = t.getGoal();
             if (targetClass.equals(g.getClass()) && t.getPriority() == attackPriority && targetEntityClass.equals(((NearestAttackableTargetGoalAccessor<?>) g).getTargetType())) {
                 target = g;
@@ -187,7 +187,7 @@ public class ModEntityEventHandler {
 
                 Goal mobTarget = null;
 
-                for (WrappedGoal t : ((GoalSelectorAccessor) ((IronGolem) event.getEntity()).targetSelector).getAvailableGoals()) {
+                for (WrappedGoal t : ((IronGolem) event.getEntity()).targetSelector.getAvailableGoals()) {
                     if (t.getGoal() instanceof NearestAttackableTargetGoal && t.getPriority() == 3 && Mob.class.equals(((NearestAttackableTargetGoalAccessor<?>) t.getGoal()).getTargetType())) {
                         mobTarget = t.getGoal();
                         break;
@@ -302,7 +302,7 @@ public class ModEntityEventHandler {
             }
         }
         if (event.getSource().is(ModDamageTypeTags.ENTITY_PHYSICAL) && !event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) {
-            for (ItemStack armorStack : event.getEntity().getArmorSlots()) {
+            for (ItemStack armorStack : Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(x -> event.getEntity().getItemBySlot(x)).toList()) {
                 if (OilUtils.getAppliedOil(armorStack).map(oil -> {
                     if (oil instanceof EvasionOil evasionOil && evasionOil.evasionChance() > Optional.ofNullable(event.getSource().getEntity()).map(entity -> entity.level().random.nextFloat()).orElse(1f)) {
                         event.setAmount(0);

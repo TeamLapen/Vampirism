@@ -25,6 +25,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -37,6 +38,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -81,13 +86,13 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
         if (saveHome && home != null) {
             int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
-            nbt.putIntArray("home", h);
+            output.putIntArray("home", h);
             if (moveTowardsRestrictionAdded && moveTowardsRestrictionPrio > -1) {
-                nbt.putInt("homeMovePrio", moveTowardsRestrictionPrio);
+                output.putInt("homeMovePrio", moveTowardsRestrictionPrio);
             }
         }
     }
@@ -120,36 +125,12 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     @Override
-    public @NotNull BlockPos getHomePosition() {
-        return getRestrictCenter();
-    }
-
-    @Override
-    public boolean isWithinRestriction() {
-        return this.isWithinHomeDistance(getX(), getY(), getZ());
-    }
-
-    @Override
-    public boolean isWithinRestriction(@NotNull BlockPos pos) {
-        return this.isWithinHomeDistance(pos);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
-        if (nbt.contains("home")) {
-            saveHome = true;
-            int[] h = nbt.getIntArray("home");
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.getIntArray("home").ifPresent(h -> {
             this.setHome(new AABB(h[0], h[1], h[2], h[3], h[4], h[5]));
-            if (nbt.contains("homeMovePrio")) {
-                this.setMoveTowardsRestriction(nbt.getInt("moveHomePrio"), true);
-            }
-        }
-    }
-
-    @Override
-    public void restrictTo(@NotNull BlockPos pos, int distance) {
-        this.setHomeArea(pos, distance);
+            input.getInt("homeMovePrio").ifPresent(x -> this.setMoveTowardsRestriction(x, true));
+        });
     }
 
     @Override
@@ -160,9 +141,9 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
             posX = (int) (home.minX + (home.maxX - home.minX) / 2);
             posY = (int) (home.minY + (home.maxY - home.minY) / 2);
             posZ = (int) (home.minZ + (home.maxZ - home.minZ) / 2);
-            super.restrictTo(new BlockPos(posX, posY, posZ), (int) home.getSize());
+            super.setHomeTo(new BlockPos(posX, posY, posZ), (int) home.getSize());
         } else {
-            super.restrictTo(new BlockPos(0, 0, 0), -1);
+            super.setHomeTo(new BlockPos(0, 0, 0), -1);
         }
     }
 
@@ -175,7 +156,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     public void tick() {
         super.tick();
         this.checkImobConversion();
-        if (!this.level().isClientSide && !peaceful && this.level().getDifficulty() == Difficulty.PEACEFUL) {
+        if (!this.level().isClientSide() && !peaceful && this.level().getDifficulty() == Difficulty.PEACEFUL) {
             this.discard();
         }
     }
@@ -279,8 +260,6 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     protected void setDontDropEquipment() {
-        Arrays.fill(this.armorDropChances, 0);
-        Arrays.fill(this.handDropChances, 0);
     }
 
     /**
@@ -323,7 +302,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
     }
 
     private void checkImobConversion() {
-        if (doImobConversion && !this.level().isClientSide) {
+        if (doImobConversion && !this.level().isClientSide()) {
             if (this.tickCount % 256 == 0 && this.isAlive()) {
                 boolean current = this instanceof Enemy;
                 boolean convert = false;
@@ -348,9 +327,9 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
                 if (convert) {
                     EntityType<?> t = getIMobTypeOpt(!current);
                     Helper.createEntity(t, this.level(), EntitySpawnReason.CONVERSION).ifPresent(newEntity -> {
-                        CompoundTag nbt = new CompoundTag();
-                        this.saveWithoutId(nbt);
-                        newEntity.load(nbt);
+                        TagValueOutput withContext = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, this.registryAccess());
+                        this.saveWithoutId(withContext);
+                        newEntity.load(TagValueInput.create(ProblemReporter.DISCARDING, this.registryAccess(), withContext.buildResult()));
                         newEntity.setUUID(Mth.createInsecureUUID(this.random));
                         assert newEntity instanceof LivingEntity;
                         UtilLib.replaceEntity(this, (LivingEntity) newEntity);

@@ -25,13 +25,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.Consumables;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class PureBloodItem extends Item {
 
@@ -63,8 +64,8 @@ public class PureBloodItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (getLevel(stack) + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.accept(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (getLevel(stack) + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
     }
 
     public int getLevel(ItemStack stack) {

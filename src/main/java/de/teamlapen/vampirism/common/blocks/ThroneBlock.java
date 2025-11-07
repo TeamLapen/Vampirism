@@ -7,9 +7,11 @@ import de.teamlapen.vampirism.misc.sit.SitHandler;
 import de.teamlapen.vampirism.misc.sit.SitUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -49,11 +51,12 @@ public class ThroneBlock extends BaseSplitBlock {
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        super.onRemove(state, level, pos, newState, movedByPiston);
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
         SitEntity entity = SitUtil.getSitEntity(level, pos);
         if (entity != null) {
             entity.discard();
         }
     }
+
+
 }

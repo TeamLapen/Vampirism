@@ -91,7 +91,7 @@ public class BaseSplitBlock extends Block {
 
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        if (!level.isClientSide && player.isCreative()) {
+        if (!level.isClientSide() && player.isCreative()) {
             Part part = state.getValue(PART);
             if (part == Part.SUB) {
                 BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
@@ -115,14 +115,13 @@ public class BaseSplitBlock extends Block {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
             BlockState neighborState = state.setValue(PART, Part.SUB);
             if (!this.vertical) {
                 neighborState = neighborState.setValue(FACING, neighborState.getValue(FACING).getOpposite());
             }
-            level.setBlock(blockpos, neighborState, 3);
-            level.blockUpdated(pos, Blocks.AIR);
+            level.setBlockAndUpdate(blockpos, neighborState);
             state.updateNeighbourShapes(level, pos, 3);
         }
     }

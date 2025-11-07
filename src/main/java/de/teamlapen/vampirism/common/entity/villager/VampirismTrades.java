@@ -235,7 +235,7 @@ public class VampirismTrades {
             if (trader instanceof ConvertedVillagerEntity convertedVillager && trader.level() instanceof ServerLevel serverLevel) {
                 //This may block for a short amount of time if the vampire villager has not completed its forest search yet
                 return convertedVillager.getClosestVampireForest(trader.level(), trader.blockPosition()).map(blockPos -> {
-                    ItemStack itemstack = MapItem.create(trader.level(), blockPos.getX(), blockPos.getZ(), (byte) 3, true, true);
+                    ItemStack itemstack = MapItem.create(serverLevel, blockPos.getX(), blockPos.getZ(), (byte) 3, true, true);
                     MapItem.renderBiomePreviewMap(serverLevel, itemstack);
                     MapItemSavedData.addTargetDecoration(itemstack, blockPos, "+", decorationType);
                     itemstack.set(DataComponents.ITEM_NAME, Component.translatable(this.displayName));

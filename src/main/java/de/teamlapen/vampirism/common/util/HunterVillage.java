@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.entity.factions.FactionVillageBuilder;
@@ -12,6 +11,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
+import net.minecraft.util.random.Weighted;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -25,7 +25,6 @@ public class HunterVillage {
     public static @NotNull ItemStack createBanner(HolderLookup.Provider provider) {
         HolderLookup.RegistryLookup<BannerPattern> bannerPattern = provider.lookupOrThrow(Registries.BANNER_PATTERN);
         ItemStack itemStack = new ItemStack(Items.BLUE_BANNER);
-        itemStack.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
         itemStack.set(DataComponents.CUSTOM_NAME, Component.translatable("block.minecraft.ominous_banner").withStyle(ChatFormatting.GOLD));
         BannerPatternLayers.Builder builder = new BannerPatternLayers.Builder();
         builder.add(bannerPattern.getOrThrow(BannerPatterns.STRIPE_SMALL), DyeColor.BLACK)
@@ -41,8 +40,8 @@ public class HunterVillage {
 
     public static IFactionVillageBuilder hunterVillage() {
         return new FactionVillageBuilder().badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
-                .captureEntities(Lists.newArrayList(new CaptureEntityEntry<>(ModEntities.HUNTER, 10), new CaptureEntityEntry<>(ModEntities.ADVANCED_HUNTER, 2)))
-                .factionVillagerProfession(ModVillage.HUNTER_EXPERT)
+                .captureEntities(Lists.newArrayList(new Weighted<>(ModEntities.HUNTER::get, 10), new Weighted<>(ModEntities.ADVANCED_HUNTER::get, 2)))
+                .factionVillagerProfession(ModVillage.HUNTER_EXPERT.getKey())
                 .guardSuperClass(HunterBaseEntity.class)
                 .taskMaster(ModEntities.TASK_MASTER_HUNTER)
                 .banner(HunterVillage::createBanner)

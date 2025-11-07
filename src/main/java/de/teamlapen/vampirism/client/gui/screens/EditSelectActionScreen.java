@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -22,14 +21,17 @@ import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,7 +47,6 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
 
     private static void drawActionPart(@Nullable Holder<IAction<?>> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         if (action == null) return;
-        RenderSystem.disableBlend();
         GuiRenderer.blit(graphics, getActionIcon(action), posX, posY, 16, 16, 16, 16);
     }
 
@@ -95,14 +96,14 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
         super.renderBackground(graphics, p_296369_, p_296477_, p_294317_);
-        RenderSystem.setShaderColor(0.5F, 0.5F, 0.5F, 1.0F);
-        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, this.width - 140, 0, 140, this.height);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.width - 140, 0, 140, this.height, ARGB.colorFromFloat(1, 0.5f, 0.5f, 0.5f));
 
         graphics.drawCenteredString(this.font, Component.translatable("text.vampirism.key_shortcuts"), this.width - 70, 5, -1);
     }
 
     public class KeyBindingList extends ContainerObjectSelectionList<KeyBindingList.KeyBindingSetting> {
+
+        private static final WidgetSprites BUTTON = new WidgetSprites(VResourceLocation.mc("widget/button"), VResourceLocation.mc("widget/button_highlighted"));
 
         public KeyBindingList(int x, int y, int pWidth, int pHeight) {
             super(Minecraft.getInstance(), pWidth, pHeight, y, 20);
@@ -115,10 +116,13 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         protected void renderListBackground(GuiGraphics p_331297_) {
         }
 
-        @Override
-        public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-            return super.mouseClicked(pMouseX, pMouseY, pButton);
-        }
+//        @Override
+//        protected void renderItem(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, KeyBindingSetting item) {
+//            if (movingItem != null) {
+//                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BUTTON.get(true, pIsMouseOver), pLeft, getRowTop(), getRowWidth(), getHeight() + 5);
+//            }
+//            super.renderItem(guiGraphics, mouseX, mouseY, partialTick, item);
+//        }
 
         @Override
         public Optional<GuiEventListener> getChildAt(double pMouseX, double pMouseY) {
@@ -153,7 +157,6 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         private class KeyBindingSetting extends ContainerObjectSelectionList.Entry<KeyBindingSetting> {
 
             private static final WidgetSprites REMOVE_ICON = new WidgetSprites(VResourceLocation.mod("widget/remove"), VResourceLocation.mod("widget/remove_highlighted"));
-            private static final WidgetSprites BUTTON = new WidgetSprites(VResourceLocation.mc("widget/button"), VResourceLocation.mc("widget/button_highlighted"));
 
             private final ActionKeys actionKey;
             private Holder<IAction<?>> action;
@@ -169,8 +172,8 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             }
 
             @Override
-            public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-                if (this.imageButton.mouseClicked(pMouseX - getX(), pMouseY - getY() - ((actionKey.ordinal() - 1) * 20), pButton)) {
+            public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+                if (this.imageButton.mouseClicked(new MouseButtonEvent(event.x() - getX(), event.y() - getY() - ((actionKey.ordinal() - 1) * 20), event.buttonInfo()), doubleClick)) {
                     return true;
                 } else if (movingItem != null) {
                     switchAction(movingItem.get());
@@ -207,20 +210,14 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             }
 
             @Override
-            public void render(GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean p_93531_, float pPartialTick) {
-                pGuiGraphics.pose().pushPose();
-                pGuiGraphics.pose().translate(pLeft, pTop, 0);
-                stringWidget.render(pGuiGraphics, pMouseX - pLeft, pMouseY - pTop, pPartialTick);
-                imageWidget.render(pGuiGraphics, pMouseX - pLeft, pMouseY - pTop, pPartialTick);
-                imageButton.render(pGuiGraphics, pMouseX - pLeft, pMouseY - pTop, pPartialTick);
-                pGuiGraphics.pose().popPose();
-            }
-
-            @Override
-            public void renderBack(@NotNull GuiGraphics pGuiGraphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-                if (movingItem != null) {
-                    pGuiGraphics.blitSprite(RenderType::guiTextured, BUTTON.get(true, pIsMouseOver), pLeft, pTop, pWidth, pHeight + 5);
-                }
+            public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+                Matrix3x2fStack pose = guiGraphics.pose();
+                pose.pushMatrix();
+                pose.translate(getContentX(), getContentY());
+                stringWidget.render(guiGraphics, mouseX - getContentX(), mouseY - getContentY(), partialTick);
+                imageWidget.render(guiGraphics, mouseX - getContentX(), mouseY - getContentY(), partialTick);
+                imageButton.render(guiGraphics, mouseX - getContentX(), mouseY - getContentY(), partialTick);
+                pose.popMatrix();
             }
 
             @Override

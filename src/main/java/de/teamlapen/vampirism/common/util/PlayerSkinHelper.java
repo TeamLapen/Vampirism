@@ -1,34 +1,42 @@
 package de.teamlapen.vampirism.common.util;
 
-import com.mojang.authlib.GameProfile;
+import de.teamlapen.vampirism.api.settings.Supporter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.resources.ResourceLocation;
-import org.apache.commons.lang3.tuple.Pair;
+import net.minecraft.client.renderer.PlayerSkinRenderCache;
+import net.minecraft.world.item.component.ResolvableProfile;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 
 public class PlayerSkinHelper {
 
-    public static void obtainPlayerSkinPropertiesAsync(final GameProfile input, @NotNull Consumer<Pair<ResourceLocation, PlayerModelType>> callback) {
-        Minecraft.getInstance().getSkinManager().getOrLoad(input).thenAccept(opt -> {
-            opt.ifPresent(skin -> callback.accept(Pair.of(skin.texture(), fromVanilla(skin.model()))));
-        });
+    public static void loadPlayerSkins() {
+        PlayerSkinRenderCache playerSkinRenderCache = Minecraft.getInstance().playerSkinRenderCache();
+        List<CompletableFuture<Optional<PlayerSkinRenderCache.RenderInfo>>> list = SupporterManager.getSupporter().map(Supporter::texture).map(ResolvableProfile::createUnresolved).map(playerSkinRenderCache::lookup).toList();
+        CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).thenAccept(v -> list.forEach(CompletableFuture::join));
     }
 
-    public static PlayerSkin.Model toVanilla(PlayerModelType type) {
-        return switch (type) {
-            case WIDE -> PlayerSkin.Model.WIDE;
-            case SLIM -> PlayerSkin.Model.SLIM;
-        };
+
+    public static void getPlayerRenderInfo(@Nullable String name, Consumer<Optional<PlayerSkinRenderCache.RenderInfo>> callback) {
+        callback.accept(Optional.empty());
+        if (name == null) return;
+        resolve(ResolvableProfile.createUnresolved(name), callback);
     }
 
-    public static PlayerModelType fromVanilla(PlayerSkin.Model type) {
-        return switch (type) {
-            case WIDE -> PlayerModelType.WIDE;
-            case SLIM -> PlayerModelType.SLIM;
-        };
+    public static void getPlayerRenderInfo(@Nullable UUID name, Consumer<Optional<PlayerSkinRenderCache.RenderInfo>> callback) {
+        callback.accept(Optional.empty());
+        if (name == null) return;
+        resolve(ResolvableProfile.createUnresolved(name), callback);
     }
+
+    public static void resolve(@NotNull ResolvableProfile profile, Consumer<Optional<PlayerSkinRenderCache.RenderInfo>> callback) {
+        Minecraft.getInstance().playerSkinRenderCache().lookup(profile).thenAccept(callback);
+    }
+
 }

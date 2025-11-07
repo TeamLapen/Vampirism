@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
 import de.teamlapen.vampirism.common.util.DamageHandler;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,6 +19,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -63,13 +64,13 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putFloat("direct_damage", directDamage);
-        compound.putFloat("indirect_damage", indirectDamage);
-        compound.putBoolean("gothrough", gothrough);
-        compound.putInt("max_ticks", maxTicks);
-        compound.putFloat("motion_factor", motionFactor);
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putFloat("direct_damage", directDamage);
+        output.putFloat("indirect_damage", indirectDamage);
+        output.putBoolean("gothrough", gothrough);
+        output.putInt("max_ticks", maxTicks);
+        output.putFloat("motion_factor", motionFactor);
     }
 
     /**
@@ -87,12 +88,12 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
                     continue;
                 }
                 if (e instanceof LivingEntity entity && e.distanceToSqr(this) < distanceSq) {
-                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
+                    entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 200, 1));
                     DamageHandler.hurtVanilla(serverLevel, entity, damageSources -> damageSources.indirectMagic(this, getOwner()), indirectDamage);
 
                 }
             }
-            if (!this.level().isClientSide) {
+            if (!this.level().isClientSide()) {
                 ModParticles.spawnParticlesServer(this.level(), new GenericParticleOptions(VResourceLocation.mc("spell_1"), 7, 0xA01010, 0.2F), this.getX(), this.getY(), this.getZ(), 40, 1, 1, 1, 0);
                 ModParticles.spawnParticlesServer(this.level(), new GenericParticleOptions(VResourceLocation.mc("spell_6"), 10, 0x700505), this.getX(), this.getY(), this.getZ(), 15, 1, 1, 1, 0);
                 this.level().playSound(null, getX(), getY(), getZ(), ModSounds.BLOOD_PROJECTILE_HIT.get(), SoundSource.PLAYERS, 1f, 1f);
@@ -144,19 +145,19 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        this.directDamage = compound.getFloat("direct_damage");
-        this.indirectDamage = compound.getFloat("indirect_damage");
-        this.gothrough = compound.getBoolean("gothrough");
-        this.maxTicks = compound.getInt("max_ticks");
-        this.motionFactor = compound.getFloat("motion_factor");
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.directDamage = input.getFloatOr("direct_damage", 0);
+        this.indirectDamage = input.getFloatOr("indirect_damage", 0);
+        this.gothrough = input.getBooleanOr("gothrough", false);
+        this.maxTicks = input.getIntOr("max_ticks", 20);
+        this.motionFactor = input.getFloatOr("motion_factor", 0f);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             Vec3 center = this.position();
             ModParticles.spawnParticlesClient(this.level(), new GenericParticleOptions(VResourceLocation.mc("spell_4"), 4, 0xA01010, 0f), center.x, center.y, center.z, 5, getPickRadius(), this.random);
 
@@ -195,7 +196,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
 
     @Override
     protected void onHit(@NotNull HitResult result) {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (initialNoClip && this.tickCount > 20) {
                 if (result.getType() == HitResult.Type.BLOCK) {
                     return;
@@ -228,7 +229,7 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
                 if (this.random.nextInt(3) == 0) {
                     ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100));
                     ((LivingEntity) entity).knockback(1f, -this.getDeltaMovement().x, -this.getDeltaMovement().z); //knockback
-                    ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
+                    ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 200, 1));
 
                 }
             }

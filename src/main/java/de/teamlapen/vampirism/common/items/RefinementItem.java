@@ -20,8 +20,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.WeightedEntry;
-import net.minecraft.util.random.WeightedRandom;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -30,10 +29,12 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.util.AttributeUtil;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class RefinementItem extends Item implements IRefinementItem, BaseDisplayItemGenerator.CreativeTabItemProvider {
@@ -49,9 +50,9 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
     }
 
     public static ItemStack getRandomRefinementItem(Holder<? extends IPlayableFaction<?>> faction) {
-        List<WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> IFaction.is(faction, set.getFaction())).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        var sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> IFaction.is(faction, set.getFaction())).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return ItemStack.EMPTY;
-        IRefinementSet s = WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::data).orElseGet(() -> sets.getFirst().data());
+        IRefinementSet s = WeightedList.of(sets).getRandom(RANDOM).orElseGet(() -> sets.getFirst().value());
         AccessorySlotType t = s.getSlotType().orElseGet(() -> switch (RANDOM.nextInt(3)) {
             case 0 -> AccessorySlotType.OBI_BELT;
             case 1 -> AccessorySlotType.RING;
@@ -66,9 +67,9 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
     }
 
     public static @Nullable IRefinementSet getRandomRefinementForItem(@Nullable Holder<? extends IFaction<?>> faction, IRefinementItem stack) {
-        List<WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> faction == null || IFaction.is(faction, set.getFaction())).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
+        var sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream().filter(set -> faction == null || IFaction.is(faction, set.getFaction())).filter(set -> set.getSlotType().map(s -> s == stack.getSlotType()).orElse(true)).map(a -> ((RefinementSet) a).getWeightedRandom()).collect(Collectors.toList());
         if (sets.isEmpty()) return null;
-        return WeightedRandom.getRandomItem(RANDOM, sets).map(WeightedEntry.Wrapper::data).orElse(null);
+        return WeightedList.of(sets).getRandom(RANDOM).orElse(null);
     }
 
     @Override
@@ -77,19 +78,19 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltipComponents, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipComponents, flagIn);
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
-            tooltipComponents.add(Component.empty());
-            tooltipComponents.add(Component.translatable("text.vampirism.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
+            tooltipComponents.accept(Component.empty());
+            tooltipComponents.accept(Component.translatable("text.vampirism.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
             for (Holder<IRefinement> holder : set.getRefinements()) {
                 IRefinement refinement = holder.value();
                 AttributeModifier attributeModifier = refinement.createAttributeModifier(refinement.getModifierValue());
                 if (refinement.getAttribute() != null && attributeModifier != null)  {
-                    stack.addModifierTooltip(tooltipComponents::add, VampirismMod.proxy.getClientPlayer(), refinement.getAttribute(), attributeModifier);
+                    AttributeUtil.addAttributeTooltips(stack, tooltipComponents, tooltipDisplay, net.neoforged.neoforge.common.util.AttributeTooltipContext.of(VampirismMod.proxy.getClientPlayer(), context, tooltipDisplay, flagIn));
                 } else {
-                    tooltipComponents.add(Component.translatable(Util.makeDescriptionId("refinement", ModRegistries.REFINEMENTS.getKey(refinement)) + ".desc").withStyle(ChatFormatting.GRAY));
+                    tooltipComponents.accept(Component.translatable(Util.makeDescriptionId("refinement", ModRegistries.REFINEMENTS.getKey(refinement)) + ".desc").withStyle(ChatFormatting.GRAY));
                 }
             }
         }

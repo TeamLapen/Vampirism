@@ -177,7 +177,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
     }
 
     private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingInput craftMatrixIn, @NotNull ResultContainer craftResultIn) {
-        if (!worldIn.isClientSide && playerIn instanceof ServerPlayer serverPlayer) {
+        if (!worldIn.isClientSide() && playerIn instanceof ServerPlayer serverPlayer) {
             Optional<RecipeHolder<IWeaponTableRecipe>> optional;
             if (worldIn instanceof ServerLevel serverLevel) {
                 optional = quickCheck.getRecipeFor(craftMatrixIn, serverLevel);

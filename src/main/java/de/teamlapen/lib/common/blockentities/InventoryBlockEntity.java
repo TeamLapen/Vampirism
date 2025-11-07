@@ -2,17 +2,18 @@ package de.teamlapen.lib.common.blockentities;
 
 import de.teamlapen.lib.common.inventory.InventoryContainerMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 /**
@@ -77,10 +78,10 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public void loadAdditional(CompoundTag tagCompound, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tagCompound, lookupProvider);
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         inventorySlots.clear();
-        ContainerHelper.loadAllItems(tagCompound, this.inventorySlots, lookupProvider);
+        ContainerHelper.loadAllItems(input, this.inventorySlots);
     }
 
     @Override
@@ -94,9 +95,9 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        ContainerHelper.saveAllItems(pTag, inventorySlots, lookupProvider);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ContainerHelper.saveAllItems(output, inventorySlots);
     }
 
     @Override
@@ -110,7 +111,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
     }
 
     @Override
-    public void startOpen(Player player) {
+    public void startOpen(ContainerUser user) {
     }
 
     @Override
@@ -132,6 +133,7 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
         return true;
     }
 
+    @Deprecated
     public static class SelectorInvWrapper extends InvWrapper {
 
         public SelectorInvWrapper(InventoryBlockEntity inv) {

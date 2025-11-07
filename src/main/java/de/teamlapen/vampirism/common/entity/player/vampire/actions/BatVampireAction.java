@@ -59,7 +59,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.has_umbrella"));
         } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE || vampire.asEntity().hasEffect(ModEffects.GARLIC) && vampire.asEntity().getEffect(ModEffects.GARLIC).getAmplifier() > 0) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.effected_by_garlic"));
-        } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.getCommandSenderWorld().dimension().location().toString())) {
+        } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.level().dimension().location().toString())) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.dimension"));
         } else if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
@@ -104,7 +104,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         Player player = vampire.asEntity();
         setModifier(player, false);
         if (!player.onGround()) {
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 100, false, false));
+            player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 20, 100, false, false));
         }
         //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
         updatePlayer((VampirePlayer) vampire, false);
@@ -131,7 +131,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE && !vampire.isRemote()) {
                 player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_garlic"));
                 return true;
-            } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.getCommandSenderWorld().dimension().location().toString())) {
+            } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.level().dimension().location().toString())) {
                 player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_dimension"));
                 return true;
             } else {

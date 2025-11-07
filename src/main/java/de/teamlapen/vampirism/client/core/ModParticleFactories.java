@@ -5,17 +5,19 @@ import de.teamlapen.vampirism.client.particles.FlyingBloodParticle;
 import de.teamlapen.vampirism.client.particles.GenericParticle;
 import de.teamlapen.vampirism.common.core.ModParticles;
 import net.minecraft.client.particle.SpellParticle;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
 public class ModParticleFactories {
 
     static void registerFactories(@NotNull RegisterParticleProvidersEvent event) {
-        event.registerSpecial(ModParticles.FLYING_BLOOD.get(), new FlyingBloodParticle.Factory());
-        event.registerSpecial(ModParticles.FLYING_BLOOD_ENTITY.get(), new FlyingBloodEntityParticle.Factory());
+        event.registerSpriteSet(ModParticles.SWORD_CHARGE.get(), FlyingBloodParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.SWORD_CHARGED.get(), FlyingBloodParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.PEDESTAL.get(), FlyingBloodParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.MOTHER.get(), FlyingBloodParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.ALTAR_INFUSION.get(), FlyingBloodParticle.Provider::new);
+
+        event.registerSpriteSet(ModParticles.FLYING_BLOOD_ENTITY.get(), FlyingBloodEntityParticle.Provider::new);
         event.registerSpecial(ModParticles.GENERIC.get(), new GenericParticle.Factory());
         event.registerSpriteSet(ModParticles.SANGUINARE.get(), SpellParticle.Provider::new);
     }

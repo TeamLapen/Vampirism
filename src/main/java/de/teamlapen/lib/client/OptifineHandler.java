@@ -21,7 +21,7 @@ public class OptifineHandler {
 
     public static boolean isOptifineLoaded() {
         if (didCheck) return isLoaded;
-        if (!FMLEnvironment.dist.isClient()) { //Only check on client side
+        if (!FMLEnvironment.getDist().isClient()) { //Only check on client side
             isLoaded = false;
             method_isShaders = null;
             didCheck = true;

@@ -6,8 +6,6 @@ import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.util.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -101,14 +99,6 @@ public class BloodGrinderBlock extends BaseEntityBlock {
         }).orElse(InteractionResult.PASS);
     }
 
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if ((state.hasBlockEntity() && !state.is(newState.getBlock())) || !newState.hasBlockEntity()) {
-            getBlockEntity(level, pos).ifPresent(blockEntity -> Containers.dropContents(level, pos, NonNullList.of(ItemStack.EMPTY, blockEntity.inputStack, blockEntity.filterStack)));
-            super.onRemove(state, level, pos, newState, movedByPiston);
-        }
-    }
-
     protected Optional<BloodGrinderBlockEntity> getBlockEntity(BlockGetter level, BlockPos pos) {
         BlockEntity blockEntityOpt = level.getBlockEntity(pos);
         if (blockEntityOpt instanceof BloodGrinderBlockEntity blockEntity) {
@@ -119,7 +109,7 @@ public class BloodGrinderBlock extends BaseEntityBlock {
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
-        if (level.isClientSide) return;
+        if (level.isClientSide()) return;
 
         boolean wasPowered = !level.hasNeighborSignal(pos);
         if (wasPowered != state.getValue(ENABLED)) {

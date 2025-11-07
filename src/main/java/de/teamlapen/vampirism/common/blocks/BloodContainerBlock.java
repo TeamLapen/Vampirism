@@ -9,17 +9,14 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.util.BloodHelper;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -31,12 +28,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Optional;
 
 public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayItemGenerator.CreativeTabItemProvider {
 
@@ -115,13 +113,13 @@ public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayI
         output.accept(stack);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        FluidStack fluidStack = getFluidFromItemStack(stack);
-        if (!fluidStack.isEmpty()) {
-            tooltipComponents.add(Component.translatable(fluidStack.getFluidType().getDescriptionId(fluidStack.copy())).append(Component.literal(": " + fluidStack.getAmount() + "mB")).withStyle(ChatFormatting.DARK_RED));
-        }
-    }
+//    @Override TODO readd
+//    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+//        FluidStack fluidStack = getFluidFromItemStack(stack);
+//        if (!fluidStack.isEmpty()) {
+//            tooltipComponents.add(Component.translatable(fluidStack.getFluidType().getDescriptionId(fluidStack.copy())).append(Component.literal(": " + fluidStack.getAmount() + "mB")).withStyle(ChatFormatting.DARK_RED));
+//        }
+//    }
 
     @Override
     public boolean hasAnalogOutputSignal(BlockState pState) {
@@ -132,8 +130,8 @@ public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayI
      * @return 0-14
      */
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
-        return FluidUtil.getFluidHandler(level, pos, null).map(handler -> (int) ((handler.getFluidInTank(0).getAmount() * 14f) / (float) handler.getTankCapacity(0))).orElse(0);
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
+        return Optional.ofNullable(level.getCapability(Capabilities.Fluid.BLOCK, pos, null)).map(ResourceHandlerUtil::getRedstoneSignalFromResourceHandler).orElse(0);
     }
 
     @Override

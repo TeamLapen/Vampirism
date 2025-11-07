@@ -15,7 +15,7 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundSelectAmm
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +41,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         Player player = Minecraft.getInstance().player;
         ItemStack crossbowStack = player.getMainHandItem();
         if (Helper.isHunter(player) && crossbowStack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack)) {
-            @NotNull Map<Item, @NotNull Integer> list = player.getInventory().items.stream().filter(s -> s.getItem() instanceof QuarrelPouch).map(x -> x.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY)).flatMap(s -> s.items().stream()).collect(Collectors.groupingBy(ItemStack::getItem, Collectors.summingInt(ItemStack::getCount)));
+            @NotNull Map<Item, @NotNull Integer> list = player.getInventory().getNonEquipmentItems().stream().filter(s -> s.getItem() instanceof QuarrelPouch).map(x -> x.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY)).flatMap(s -> s.items().stream()).collect(Collectors.groupingBy(ItemStack::getItem, Collectors.summingInt(ItemStack::getCount)));
             var ammoTypes = CrossbowArrowHandler.getCrossbowArrows().stream().map(item -> new AmmoType(item, player.getInventory().countItem(item) + list.getOrDefault(item, 0))).collect(Collectors.toList());
             ammoTypes.add(new AmmoType(null, 0));
             Minecraft.getInstance().setScreen(new SelectAmmoScreen(ammoTypes));
@@ -60,7 +60,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
             graphics.renderItem(action.renderStack, posX, posY);
             graphics.renderItemDecorations(Minecraft.getInstance().screen.font, action.renderStack, posX, posY, String.valueOf(action.count));
         } else {
-            graphics.blitSprite(RenderType::guiTextured, NO_RESTRICTION, posX, posY, 16, 16);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NO_RESTRICTION, posX, posY, 16, 16);
         }
     }
 

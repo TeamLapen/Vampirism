@@ -2,92 +2,57 @@ package de.teamlapen.vampirism.common.items;
 
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModItems;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.transfer.ItemAccessResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
-public class BloodSyringeFluidHandler implements IFluidHandlerItem {
+public class BloodSyringeFluidHandler extends ItemAccessResourceHandler<FluidResource> {
 
     public static final int LEVELS_PER_FILL = 1;
-    public static final int AMOUNT = 50;
+    public static final int CAPACITY = 50;
 
-    protected ItemStack container;
-
-    public BloodSyringeFluidHandler(ItemStack container) {
-        this.container = container;
-    }
-
-    private boolean isEmptySyringe(ItemStack stack) {
-        return stack.is(ModItems.SYRINGE_EMPTY.get());
-    }
-
-    private boolean isFullSyringe(ItemStack stack) {
-        return stack.is(ModItems.SYRINGE_BLOOD.get());
+    public BloodSyringeFluidHandler(ItemAccess access) {
+        super(access, 1);
     }
 
     @Override
-    public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-        if (resource.isEmpty()) return FluidStack.EMPTY;
-        if (!resource.getFluid().isSame(ModFluids.BLOOD.get())) return FluidStack.EMPTY;
-
-        return drain(resource.getAmount(), action);
+    public boolean isValid(int index, FluidResource resource) {
+        return resource.is(ModFluids.BLOOD);
     }
 
     @Override
-    public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
-        if (!isFullSyringe(container)) return FluidStack.EMPTY;
-        if (maxDrain < AMOUNT) return FluidStack.EMPTY;
-
-        if (action.execute()) {
-            container = new ItemStack(ModItems.SYRINGE_EMPTY.get());
+    protected FluidResource getResourceFrom(ItemResource accessResource, int index) {
+        if (accessResource.is(ModItems.SYRINGE_EMPTY.get())) {
+            return FluidResource.EMPTY;
+        } else if (accessResource.is(ModItems.SYRINGE_BLOOD.get())) {
+            return FluidResource.of(ModFluids.BLOOD.get());
+        } else {
+            return FluidResource.EMPTY;
         }
-
-        return new FluidStack(ModFluids.BLOOD.get(), AMOUNT);
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction action) {
-        if (resource.isEmpty()) return 0;
-        if (!resource.getFluid().isSame(ModFluids.BLOOD.get())) return 0;
+    protected int getAmountFrom(ItemResource accessResource, int index) {
+        var resource = getResourceFrom(accessResource, index);
+        return resource.isEmpty() ? 0 : CAPACITY;
+    }
 
-        if (!isEmptySyringe(container) || resource.getAmount() < AMOUNT) {
-            return 0;
+    @Override
+    protected ItemResource update(ItemResource accessResource, int index, FluidResource newResource, int newAmount) {
+        if (newAmount == 0) {
+            return ItemResource.of(ModItems.SYRINGE_EMPTY.get());
+        } else if (newAmount != CAPACITY) {
+            return ItemResource.EMPTY;
+        } else {
+            return ItemResource.of(ModItems.SYRINGE_BLOOD.get());
         }
-
-        if (action.execute()) {
-            container = new ItemStack(ModItems.SYRINGE_BLOOD.get());
-        }
-
-        return AMOUNT;
     }
 
     @Override
-    public @NotNull ItemStack getContainer() {
-        return container;
+    protected int getCapacity(int index, FluidResource resource) {
+        return CAPACITY;
     }
 
-    @Override
-    public @NotNull FluidStack getFluidInTank(int tank) {
-        if (isFullSyringe(container)) {
-            return new FluidStack(ModFluids.BLOOD.get(), AMOUNT);
-        }
-        return FluidStack.EMPTY;
-    }
-
-    @Override
-    public int getTankCapacity(int tank) {
-        return AMOUNT;
-    }
-
-    @Override
-    public int getTanks() {
-        return 1;
-    }
-
-    @Override
-    public boolean isFluidValid(int tank, FluidStack stack) {
-        return stack.getFluid().isSame(ModFluids.BLOOD.get());
-    }
 }
 

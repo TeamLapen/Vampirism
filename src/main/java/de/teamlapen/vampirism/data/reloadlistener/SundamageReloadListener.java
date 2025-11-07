@@ -50,8 +50,8 @@ public class SundamageReloadListener implements PreparableReloadListener {
     }
 
     @Override
-    public @NotNull CompletableFuture<Void> reload(@NotNull PreparationBarrier pPreparationBarrier, @NotNull ResourceManager pResourceManager, @NotNull Executor pBackgroundExecutor, @NotNull Executor pGameExecutor) {
-        return CompletableFuture.supplyAsync(() -> load(pResourceManager)).thenCompose(pPreparationBarrier::wait).thenAcceptAsync(this::apply, pGameExecutor);
+    public @NotNull CompletableFuture<Void> reload(@NotNull SharedState sharedState, @NotNull Executor exectutor, PreparationBarrier barrier, @NotNull Executor applyExectutor) {
+        return CompletableFuture.supplyAsync(() -> load(sharedState.resourceManager())).thenCompose(barrier::wait).thenAcceptAsync(this::apply, applyExectutor);
     }
 
     private SundamageRegistry.Settings load(@NotNull ResourceManager manager) {

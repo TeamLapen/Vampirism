@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.client.renderer.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.renderer.entities.AdvancedVampireRenderer;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -29,18 +28,17 @@ public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireRenderer
         }
     }
 
-
     @Override
-    public void render(@NotNull PoseStack matrixStack, @NotNull MultiBufferSource iRenderTypeBuffer, int packetLightIn, @NotNull AdvancedVampireRenderer.AdvancedVampireRenderState advancedVampireEntity, float v, float v1) {
-        int type = advancedVampireEntity.eyeType;
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, AdvancedVampireRenderer.AdvancedVampireRenderState renderState, float yRot, float xRot) {
+        int type = renderState.eyeType;
         if (type < 0 || type >= overlays.length) {
             type = 0;
         }
-        VertexConsumer builder = iRenderTypeBuffer.getBuffer(RenderType.entityCutoutNoCull(overlays[type]));
-        boolean showModel = this.getParentModel().head.visible;
-        this.getParentModel().head.visible = true;
-        this.getParentModel().getHead().render(matrixStack, builder, packetLightIn, OverlayTexture.NO_OVERLAY);
-        this.getParentModel().head.visible = showModel;
 
+        boolean showModel = this.getParentModel().head.visible;
+
+        getParentModel().head.visible = true;
+        nodeCollector.submitModel(getParentModel(), renderState, poseStack, RenderType.entityCutoutNoCull(overlays[type]), packedLight, OverlayTexture.NO_OVERLAY, -1, null);
+        getParentModel().head.visible = showModel;
     }
 }

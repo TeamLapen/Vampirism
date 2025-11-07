@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -110,7 +111,7 @@ public class TotemTopBlock extends BaseEntityBlock {
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
-        if (level.isClientSide) return;
+        if (level.isClientSide()) return;
         BlockEntity tile = level.getBlockEntity(pos);
         if (tile instanceof TotemBlockEntity totemBlockEntity) {
             totemBlockEntity.updateTileStatus();
@@ -129,15 +130,8 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!(newState.getBlock() instanceof TotemTopBlock)) {
-            level.removeBlockEntity(pos);
-        }
-    }
-
-    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         TotemBlockEntity blockEntity = getBlockEntity(level, pos);
         if (blockEntity != null && level.getBlockState(pos.below()).getBlock().equals(ModBlocks.TOTEM_BASE.get())) {
@@ -149,14 +143,14 @@ public class TotemTopBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
         TotemBlockEntity blockEntity = getBlockEntity(level, pos);
         if (blockEntity != null) {
             if (!blockEntity.canPlayerRemoveBlock(player)) {
                 return false;
             }
         }
-        if (super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid)) {
+        if (super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid)) {
             if (blockEntity != null && !blockEntity.getControllingFaction().is(ModFactions.NEUTRAL.getId())) {
                 blockEntity.notifyNearbyPlayers(Component.translatable("text.vampirism.village.village_abandoned"));
             }

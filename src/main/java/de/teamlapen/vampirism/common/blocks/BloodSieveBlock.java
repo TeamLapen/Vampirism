@@ -6,8 +6,6 @@ import de.teamlapen.vampirism.common.blockentity.BloodSieveBlockEntity;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -67,7 +65,7 @@ public class BloodSieveBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, ModBlockEntities.BLOOD_SIEVE.get(), BloodSieveBlockEntity::serverTick);
+        return level.isClientSide() ? null : createTickerHelper(type, ModBlockEntities.BLOOD_SIEVE.get(), BloodSieveBlockEntity::serverTick);
     }
 
     @Override
@@ -105,14 +103,6 @@ public class BloodSieveBlock extends BaseEntityBlock {
 
             return (InteractionResult) InteractionResult.SUCCESS;
         }).orElse(InteractionResult.PASS);
-    }
-
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if ((state.hasBlockEntity() && !state.is(newState.getBlock())) || !newState.hasBlockEntity()) {
-            getBlockEntity(level, pos).ifPresent(blockEntity -> Containers.dropContents(level, pos, NonNullList.of(ItemStack.EMPTY, blockEntity.filterStack)));
-            super.onRemove(state, level, pos, newState, movedByPiston);
-        }
     }
 
     protected Optional<BloodSieveBlockEntity> getBlockEntity(BlockGetter level, BlockPos pos) {

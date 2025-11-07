@@ -11,9 +11,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Simple placer item for alchemical fire. Also used in recipes
@@ -27,10 +28,10 @@ public class AlchemicalFireItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
-        tooltip.add(Component.translatable("item.vampirism.item_alchemical_fire.desc1").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.vampirism.item_alchemical_fire.desc2").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
+        tooltip.accept(Component.translatable("item.vampirism.item_alchemical_fire.desc1").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("item.vampirism.item_alchemical_fire.desc2").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

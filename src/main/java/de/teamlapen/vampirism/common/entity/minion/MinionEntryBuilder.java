@@ -30,13 +30,13 @@ public class MinionEntryBuilder<T extends IFactionPlayer<T>, Z extends IMinionDa
     }
 
     @Override
-    public MinionEntryBuilder<T, Z> commandBuilder(@NotNull IMinionCommandBuilder<T, Z> builder) {
+    public @NotNull MinionEntryBuilder<T, Z> commandBuilder(@NotNull IMinionCommandBuilder<T, Z> builder) {
         commandBuilder = builder;
         return this;
     }
 
     @Override
-    public MinionEntry<T, Z> build() {
+    public @NotNull MinionEntry<T, Z> build() {
         return new MinionEntry<>(this);
     }
 
@@ -50,17 +50,17 @@ public class MinionEntryBuilder<T extends IFactionPlayer<T>, Z extends IMinionDa
         }
 
         @Override
-        public Supplier<EntityType<? extends IMinionEntity>> type() {
+        public @NotNull Supplier<EntityType<? extends IMinionEntity>> type() {
             return this.type;
         }
 
         @Override
-        public List<ICommandEntry<Z, ?>> commandArguments() {
+        public @NotNull List<ICommandEntry<Z, ?>> commandArguments() {
             return this.commandArguments;
         }
 
         @Override
-        public <L> IMinionCommandBuilder<T, Z> with(@NotNull String name, L defaultValue, @NotNull ArgumentType<L> type, BiConsumer<Z, L> setter, BiFunction<CommandContext<CommandSourceStack>, String, L> getter) {
+        public <L> @NotNull IMinionCommandBuilder<T, Z> with(@NotNull String name, @NotNull L defaultValue, @NotNull ArgumentType<L> type, @NotNull BiConsumer<Z, L> setter, @NotNull BiFunction<CommandContext<CommandSourceStack>, String, L> getter) {
             this.commandArguments.add(new CommandEntry<>(name, defaultValue, type, setter, getter));
             return this;
         }

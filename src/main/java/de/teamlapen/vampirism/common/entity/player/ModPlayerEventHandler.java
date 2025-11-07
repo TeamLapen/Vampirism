@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.common.blockentity.TotemBlockEntity;
-import de.teamlapen.vampirism.common.blocks.AltarInspirationBlock;
 import de.teamlapen.vampirism.common.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.blocks.mother.MotherBlock;
@@ -42,6 +41,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.TriState;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -64,7 +64,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
@@ -73,8 +72,8 @@ import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -347,17 +346,14 @@ public class ModPlayerEventHandler {
                     if (glassBottle && state.hasBlockEntity()) {
                         BlockEntity entity = event.getLevel().getBlockEntity(event.getPos());
                         if (entity != null) {
-                            convert = Optional.ofNullable(event.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, event.getPos(), state, entity, event.getFace())).map(fluidHandler -> {
+                            convert = Optional.ofNullable(event.getLevel().getCapability(Capabilities.Fluid.BLOCK, event.getPos(), state, entity, event.getFace())).map(fluidHandler -> {
                                 boolean flag = false;
-                                FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.BLOOD.get(), 1000), IFluidHandler.FluidAction.SIMULATE);
-                                if (drain.getAmount() >= IBottleBlood.MULTIPLIER) {
-                                    flag = true;
-                                }
-                                if (flag && block instanceof AltarInspirationBlock) {
-                                    flag = false;
-                                }
-                                if (flag && block instanceof BloodContainerBlock) {
-                                    flag = false;
+                                try (Transaction transaction = Transaction.openRoot()) {
+                                    int drain = fluidHandler.extract(FluidResource.of(ModFluids.BLOOD.get()), 1000, transaction);
+                                    if (drain >= IBottleBlood.MULTIPLIER) {
+                                        flag = true;
+                                        transaction.commit();
+                                    }
                                 }
                                 return flag;
                             }).orElse(false);
@@ -406,7 +402,7 @@ public class ModPlayerEventHandler {
     public void onPlayerTick(PlayerTickEvent.Post event) {
         Level level = event.getEntity().level();
 
-        if (!level.isClientSide && event.getEntity() instanceof ServerPlayer serverPlayer) {
+        if (!level.isClientSide() && event.getEntity() instanceof ServerPlayer serverPlayer) {
             ModAdvancements.TRIGGER_MAP_FOUND.get().trigger(serverPlayer, serverPlayer.getInventory());
         }
     }
@@ -452,7 +448,7 @@ public class ModPlayerEventHandler {
                                 if (zombie && monster instanceof Zombie) return false;
                                 if (skeleton && (monster instanceof Skeleton || monster instanceof Stray)) return false;
                                 if (creeper && (monster instanceof Creeper)) return false;
-                                return monster.isPreventingPlayerRest(event.getEntity().serverLevel(), event.getEntity());
+                                return monster.isPreventingPlayerRest(event.getEntity().level(), event.getEntity());
                             }
                     )) {
                         event.setProblem(Player.BedSleepingProblem.NOT_SAFE);

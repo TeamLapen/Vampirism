@@ -97,7 +97,7 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      * Join the given faction and set the faction level to 1.
      * Only successful if {@link IFactionPlayerHandler#canJoin(net.minecraft.core.Holder)}
      */
-    void joinFaction(@NotNull Holder<? extends IPlayableFaction<?>> faction);
+    void joinFaction(Holder<? extends IPlayableFaction<?>> faction);
 
     /**
      * Should be called if the entity attacked.

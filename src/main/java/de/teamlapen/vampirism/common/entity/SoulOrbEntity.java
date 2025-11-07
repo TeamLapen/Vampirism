@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -22,6 +21,8 @@ import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.NotNull;
@@ -96,7 +97,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
 
     @Override
     public void playerTouch(@NotNull Player entityIn) {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (delayBeforePickup == 0) {
                 if (Helper.isHunter(entityIn)) {
                     if (entityIn.getInventory().add(getSoulItemStack())) {
@@ -172,9 +173,9 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        compound.putString("type", this.getVariant().name());
-        compound.putInt("age", age);
+    protected void addAdditionalSaveData(@NotNull ValueOutput output) {
+        output.putString("type", this.getVariant().name());
+        output.putInt("age", age);
     }
 
     @Override
@@ -190,10 +191,10 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
 
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        this.setVariant(VARIANT.valueOf(compound.getString("type")));
-        this.age = compound.getInt("age");
-        soulItemStack = null;//Reset item just in case an item of a different type has been created beforehand
+    protected void readAdditionalSaveData(@NotNull ValueInput input) {
+        this.setVariant(input.getString("type").map(VARIANT::valueOf).orElse(VARIANT.NONE));
+        this.age = input.getIntOr("age", 0);
+        this.soulItemStack = null;//Reset item just in case an item of a different type has been created beforehand
     }
 
     private @NotNull ItemStack createSoulItemStack() {

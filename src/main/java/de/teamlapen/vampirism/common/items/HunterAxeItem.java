@@ -14,15 +14,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ToolMaterial;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
@@ -33,15 +32,15 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     private final Tier tier;
 
     public HunterAxeItem(ToolMaterial material, Tier tier, Properties properties) {
-        super(material, 3, -2.9f, FactionRestriction.builder(ModFactionTags.IS_HUNTER).minLevel(getMinLevel(tier)).apply(properties).component(ModDataComponents.FACTION_SLAYER, FactionSlayer.create(ModFactionTags.IS_VAMPIRE, getVampireMult(tier))).component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE));
+        super(material, 3, -2.9f, FactionRestriction.builder(ModFactionTags.IS_HUNTER).minLevel(getMinLevel(tier)).apply(properties).component(ModDataComponents.FACTION_SLAYER, FactionSlayer.create(ModFactionTags.IS_VAMPIRE, getVampireMult(tier))).component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE), 5);
         this.tier = tier;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flagIn) {
         addTierInformation(tooltip);
-        tooltip.add(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100), ModFactions.VAMPIRE.value().getNamePlural()).withStyle(ChatFormatting.GRAY));
-        super.appendHoverText(stack, context, tooltip, flagIn);
+        tooltip.accept(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100), ModFactions.VAMPIRE.value().getNamePlural()).withStyle(ChatFormatting.GRAY));
+        super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
     }
 
     @Override
@@ -93,8 +92,4 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
         };
     }
 
-    @Override
-    public boolean canDisableShield(ItemStack stack, ItemStack shield, LivingEntity entity, LivingEntity attacker) {
-        return true;
-    }
 }

@@ -41,7 +41,7 @@ public class EffectExtensions {
         @Override
         public boolean isVisibleInInventory(MobEffectInstance instance) {
             if (instance instanceof EffectInstanceWithSource withSource) {
-                return !withSource.vampirism$hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.vampirism$getSource());
+                return !withSource.vampirism$getProperties().contains(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
             }
             return true;
         }
@@ -49,7 +49,7 @@ public class EffectExtensions {
         @Override
         public boolean isVisibleInGui(MobEffectInstance instance) {
             if (instance instanceof EffectInstanceWithSource withSource) {
-                return !withSource.vampirism$hasSource() || !VReference.PERMANENT_INVISIBLE_MOB_EFFECT.equals(withSource.vampirism$getSource());
+                return !withSource.vampirism$getProperties().contains(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
             }
             return true;
         }

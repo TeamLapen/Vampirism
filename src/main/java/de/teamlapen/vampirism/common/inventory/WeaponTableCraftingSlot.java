@@ -89,7 +89,7 @@ public class WeaponTableCraftingSlot extends Slot {
             }
         }
         worldPos.execute(((world, pos) -> {
-            if (recipe != null && !world.isClientSide) {
+            if (recipe != null && !world.isClientSide()) {
                 world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.WEAPON_TABLE_CRAFTING.get(), SoundSource.PLAYERS, 1f, 1f);
             }
         }));
@@ -109,14 +109,14 @@ public class WeaponTableCraftingSlot extends Slot {
     @Override
     protected void checkTakeAchievements(@NotNull ItemStack stack) {
         if (this.amountCrafted > 0) {
-            stack.onCraftedBy(this.player.getCommandSenderWorld(), this.player, this.amountCrafted);
+            stack.onCraftedBy(this.player, this.amountCrafted);
         }
 
         this.amountCrafted = 0;
     }
 
     protected @Nullable IWeaponTableRecipe findMatchingRecipe(@NotNull Player playerIn, @NotNull IHunterPlayer factionPlayer, int lava) {
-        Optional<RecipeHolder<IWeaponTableRecipe>> optional = VampirismMod.proxy.recipeMap(playerIn.level()).getRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), playerIn.getCommandSenderWorld()).findFirst();
+        Optional<RecipeHolder<IWeaponTableRecipe>> optional = VampirismMod.proxy.recipeMap(playerIn.level()).getRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), playerIn.level()).findFirst();
         if (optional.isPresent()) {
             IWeaponTableRecipe recipe = optional.get().value();
             if (factionPlayer.getLevel() >= recipe.getRequiredLevel() && lava >= recipe.getRequiredLavaUnits() && Helper.areSkillsEnabled(factionPlayer.getSkillHandler(), recipe.getRequiredSkills())) {

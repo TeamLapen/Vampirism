@@ -19,6 +19,8 @@ import de.teamlapen.vampirism.common.items.BloodContainerItem;
 import de.teamlapen.vampirism.common.items.CursedSpruceItem;
 import de.teamlapen.vampirism.common.items.PureLevelBlockItem;
 import de.teamlapen.vampirism.common.items.component.PureLevel;
+import de.teamlapen.vampirism.common.util.BlockDescription;
+import de.teamlapen.vampirism.common.util.ShiftDescription;
 import de.teamlapen.vampirism.common.util.VampirismVoxelShapes;
 import de.teamlapen.vampirism.common.world.features.ModTreeGrower;
 import de.teamlapen.vampirism.data.provider.ModLootTableProvider;
@@ -80,7 +82,7 @@ public class ModBlocks {
     public static final DeferredBlock<LiquidBlock> BLOOD = registerBlock("blood", props -> new LiquidBlock(ModFluids.BLOOD.get(), props), () -> copyProperties(Blocks.WATER).mapColor(MapColor.CRIMSON_HYPHAE));
 
     public static final DeferredBlock<FogDiffuserBlock> FOG_DIFFUSER = registerWithItem("fog_diffuser", FogDiffuserBlock::new, () -> basicProperties().noOcclusion().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE));
-    public static final DeferredBlock<SunscreenBeaconBlock> SUNSCREEN_BEACON = registerWithItem("sunscreen_beacon", SunscreenBeaconBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(-1, 3600000).noOcclusion(), itemProps -> itemProps.rarity(Rarity.RARE));
+    public static final DeferredBlock<SunscreenBeaconBlock> SUNSCREEN_BEACON = registerWithItem("sunscreen_beacon", SunscreenBeaconBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(-1, 3600000).noOcclusion(), itemProps -> itemProps.rarity(Rarity.RARE).component(ModDataComponents.BLOCK_DESCRIPTION, BlockDescription.INSTANCE));
 
     public static final DeferredBlock<HunterTableBlock> HUNTER_TABLE = registerWithItem("hunter_table", HunterTableBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).strength(0.5f).ignitedByLava().noOcclusion());
     public static final DeferredBlock<WeaponTableBlock> WEAPON_TABLE = registerWithItem("weapon_table", WeaponTableBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(3).noOcclusion());
@@ -90,9 +92,9 @@ public class ModBlocks {
     public static final DeferredBlock<MedChairBlock> MED_CHAIR = registerWithItem("med_chair", MedChairBlock::new);
     public static final DeferredBlock<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(0.5f).noOcclusion());
 
-    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = registerWithItem("garlic_diffuser_normal", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.BALANCE.hsGarlicDiffuserNormalDist), () -> basicProperties().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion());
-    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_WEAK = registerWithItem("garlic_diffuser_weak", props -> new GarlicDiffuserBlock(props, EnumStrength.WEAK, ModConfig.BALANCE.hsGarlicDiffuserWeakDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL));
-    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_IMPROVED = registerWithItem("garlic_diffuser_improved", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.BALANCE.hsGarlicDiffuserEnhancedDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL));
+    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = registerWithItem("garlic_diffuser_normal", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.BALANCE.hsGarlicDiffuserNormalDist), () -> basicProperties().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion(), (item) -> item.component(ModDataComponents.SHIFT_DESCRIPTION.get(), ShiftDescription.INSTANCE));
+    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_WEAK = registerWithItem("garlic_diffuser_weak", props -> new GarlicDiffuserBlock(props, EnumStrength.WEAK, ModConfig.BALANCE.hsGarlicDiffuserWeakDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL), (item) -> item.component(ModDataComponents.SHIFT_DESCRIPTION.get(), ShiftDescription.INSTANCE));
+    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_IMPROVED = registerWithItem("garlic_diffuser_improved", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.BALANCE.hsGarlicDiffuserEnhancedDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL), (item) -> item.component(ModDataComponents.SHIFT_DESCRIPTION.get(), ShiftDescription.INSTANCE));
 
     public static final DeferredBlock<VampireBeaconBlock> VAMPIRE_BEACON = registerWithItem("vampire_beacon", VampireBeaconBlock::new, () -> copyProperties(Blocks.BEACON).mapColor(MapColor.CRIMSON_HYPHAE), itemProps -> itemProps.rarity(Rarity.RARE));
 
@@ -105,7 +107,7 @@ public class ModBlocks {
     public static final DeferredBlock<TotemTopBlock> TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED = registerBlock("totem_top_vampirism_hunter_crafted", props -> new TotemTopBlock(props, true, ModFactions.HUNTER), () -> copyProperties(TOTEM_TOP));
 
     // Nature
-    public static final DeferredBlock<LeavesBlock> DARK_SPRUCE_LEAVES = registerWithItem("dark_spruce_leaves", LeavesBlock::new, () -> copyProperties(Blocks.SPRUCE_LEAVES).mapColor(MapColor.COLOR_BLACK));
+    public static final DeferredBlock<LeavesBlock> DARK_SPRUCE_LEAVES = registerWithItem("dark_spruce_leaves", props -> new TintedParticleLeavesBlock(0.01f, props), () -> copyProperties(Blocks.SPRUCE_LEAVES).mapColor(MapColor.COLOR_BLACK));
 
     public static final DeferredBlock<SaplingBlock> DARK_SPRUCE_SAPLING = registerWithItem("dark_spruce_sapling", props -> new DarkSpruceSaplingBlock(ModTreeGrower.DARK_SPRUCE, ModTreeGrower.CURSED_SPRUCE, props), () -> copyProperties(Blocks.SPRUCE_SAPLING).mapColor(MapColor.COLOR_BLACK));
     public static final DeferredBlock<SaplingBlock> CURSED_SPRUCE_SAPLING = registerWithItem("cursed_spruce_sapling", props -> new SaplingBlock(ModTreeGrower.CURSED_SPRUCE, props), () -> copyProperties(DARK_SPRUCE_SAPLING));
@@ -291,7 +293,7 @@ public class ModBlocks {
     public static final DeferredBlock<StandingCandelabraBlock> CANDELABRA_BLACK = registerCandelabra("black", Items.BLACK_CANDLE);
     public static final DeferredBlock<WallCandelabraBlock> WALL_CANDELABRA_BLACK = registerWallCandelabra("black", Items.BLACK_CANDLE, CANDELABRA_BLACK);
 
-    public static final DeferredBlock<ChandelierBlock> CHANDELIER = registerWithItem("chandelier", props -> new ChandelierBlock(null, () -> null, props), () -> basicProperties().mapColor(MapColor.METAL).noOcclusion().strength(4.5f, 5.5f).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY), (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix()));
+    public static final DeferredBlock<ChandelierBlock> CHANDELIER = registerWithItem("chandelier", props -> new ChandelierBlock(null, () -> null, props), () -> basicProperties().mapColor(MapColor.METAL).noOcclusion().strength(4.5f, 5.5f).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY), (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix().component(ModDataComponents.SHIFT_DESCRIPTION, ShiftDescription.INSTANCE)));
 
     public static final DeferredBlock<ChandelierBlock> CHANDELIER_NORMAL = registerChandelier("normal", Items.CANDLE);
     public static final DeferredBlock<ChandelierBlock> CHANDELIER_WHITE = registerChandelier("white", Items.WHITE_CANDLE);
@@ -439,7 +441,7 @@ public class ModBlocks {
             ChandelierBlock block = new ChandelierBlock(CHANDELIER, () -> candle, props);
             CHANDELIER.get().addCandle(BuiltInRegistries.ITEM.getKey(candle), () -> block);
             return block;
-        }, () -> copyProperties(CHANDELIER), (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix()));
+        }, () -> copyProperties(CHANDELIER), (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix().component(ModDataComponents.SHIFT_DESCRIPTION, ShiftDescription.INSTANCE)));
     }
 
     private static BlockBehaviour.Properties basicProperties() {

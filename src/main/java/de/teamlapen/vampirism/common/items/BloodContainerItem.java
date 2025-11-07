@@ -9,7 +9,7 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 public class BloodContainerItem extends BlockItem {
 
     public BloodContainerItem(Block block, Properties properties) {
-        super(block, properties);
+        super(block, properties.component(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.EMPTY));
     }
 
     @Override

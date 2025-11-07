@@ -7,9 +7,7 @@ import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.inventory.AlchemyTableMenu;
 import de.teamlapen.vampirism.common.items.component.OilContent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
@@ -23,6 +21,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -239,7 +239,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             itemstack.shrink(1);
             if (itemstack.isEmpty()) {
                 itemstack = craftingRemainder;
-            } else if (!level.isClientSide) {
+            } else if (!level.isClientSide()) {
                 Containers.dropItemStack(level, blockpos.getX(), blockpos.getY(), blockpos.getZ(), craftingRemainder);
             }
         } else {
@@ -263,7 +263,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         }
     }
 
-    private boolean hasRecipe(@NotNull Level level, @NotNull ItemStack input, @NotNull ItemStack ingredient) {
+    private boolean hasRecipe(@NotNull Level level, ItemStack input, @NotNull ItemStack ingredient) {
         return VampirismMod.proxy.recipeMap(level).byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(input) && recipe.value().isIngredient(ingredient));
     }
 
@@ -280,19 +280,19 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, this.items, lookupProvider);
-        this.brewTime = tag.getShort("BrewTime");
-        this.fuel = tag.getByte("Fuel");
+        ContainerHelper.loadAllItems(input.childOrEmpty("items"), this.items);
+        this.brewTime = input.getShortOr("BrewTime", (short) 0);
+        this.fuel = input.getByteOr("Fuel", (byte) 0);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
-        tag.putShort("BrewTime", (short) this.brewTime);
-        ContainerHelper.saveAllItems(tag, this.items, lookupProvider);
-        tag.putByte("Fuel", (byte) this.fuel);
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putShort("BrewTime", (short) this.brewTime);
+        ContainerHelper.saveAllItems(output.child("items"), this.items);
+        output.putByte("Fuel", (byte) this.fuel);
     }
 }

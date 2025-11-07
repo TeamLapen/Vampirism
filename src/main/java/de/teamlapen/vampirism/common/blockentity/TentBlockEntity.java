@@ -15,6 +15,8 @@ import net.minecraft.tags.StructureTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -39,31 +41,21 @@ public class TentBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag nbt, HolderLookup.Provider provider) {
-        super.loadAdditional(nbt, provider);
-        if (nbt.contains("spawner_logic_1")) {
-            spawnerLogicHunter.readFromNbt(nbt.getCompound("spawner_logic_1"));
-        }
-        if (nbt.contains("spawner_logic_2")) {
-            spawnerLogicAdvancedHunter.readFromNbt(nbt.getCompound("spawner_logic_2"));
-        }
-        if (nbt.contains("advanced")) {
-            advanced = nbt.getBoolean("advanced");
-        }
-        spawn = nbt.getBoolean("spawn");
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        this.spawnerLogicHunter.deserialize(input.childOrEmpty("spawner_logic_1"));
+        this.spawnerLogicAdvancedHunter.deserialize(input.childOrEmpty("spawner_logic_2"));
+        this.advanced = input.getBooleanOr("advanced", false);
+        this.spawn = input.getBooleanOr("spawn", false);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
-        CompoundTag logic1 = new CompoundTag();
-        CompoundTag logic2 = new CompoundTag();
-        this.spawnerLogicHunter.writeToNbt(logic1);
-        this.spawnerLogicAdvancedHunter.writeToNbt(logic2);
-        compound.put("spawner_logic_1", logic1);
-        compound.put("spawner_logic_2", logic2);
-        compound.putBoolean("spawn", this.spawn);
-        compound.putBoolean("advanced", this.advanced);
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        this.spawnerLogicHunter.serialize(output.child("spawn_logic_1"));
+        this.spawnerLogicAdvancedHunter.serialize(output.child("spawn_logic_2"));
+        output.putBoolean("spawn", this.spawn);
+        output.putBoolean("advanced", this.advanced);
     }
 
     public void setAdvanced(boolean advanced) {

@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -28,6 +27,8 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -117,17 +118,17 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        this.setAttachFace(Direction.from3DDataValue(pCompound.getByte("AttachFace")));
-        this.setLightTicksRemaining(pCompound.getInt("LightTicks"));
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.setAttachFace(Direction.from3DDataValue(input.getByteOr("AttachFace", (byte) 0)));
+        this.setLightTicksRemaining(input.getIntOr("LightTicks", 0));
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.putByte("AttachFace", (byte) this.getAttachFace().get3DDataValue());
-        pCompound.putInt("LightTicks", this.getLightTicksRemaining());
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putByte("AttachFace", (byte) this.getAttachFace().get3DDataValue());
+        output.putInt("LightTicks", this.getLightTicksRemaining());
     }
 
     @Override
@@ -186,7 +187,7 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
     }
 
     @Override
-    public boolean canBeCollidedWith() {
+    public boolean canBeCollidedWith(@Nullable Entity entity) {
         return this.isAlive();
     }
 
@@ -203,8 +204,8 @@ public class RemainsDefenderEntity extends Mob implements IRemainsEntity {
     }
 
     @Override
-    public boolean startRiding(Entity pEntity, boolean pForce) {
-        if (super.startRiding(pEntity, pForce)) {
+    public boolean startRiding(Entity pEntity, boolean pForce, boolean sendGameEvent) {
+        if (super.startRiding(pEntity, pForce, sendGameEvent)) {
             this.reapplyPosition();
             return true;
         }

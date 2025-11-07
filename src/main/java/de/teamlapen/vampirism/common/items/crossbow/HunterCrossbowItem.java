@@ -30,6 +30,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
@@ -38,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public abstract class HunterCrossbowItem extends CrossbowItem implements IHunterCrossbow {
@@ -54,13 +56,13 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltips, flag);
-        this.addAmmunitionTypeHoverText(stack, context, tooltips, flag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltips, flag);
+        this.addAmmunitionTypeHoverText(stack, context, tooltipDisplay, tooltips, flag);
     }
 
-    protected void addAmmunitionTypeHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag flag) {
-        getAmmunition(stack).ifPresent(ammunition -> tooltips.add(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY)));
+    protected void addAmmunitionTypeHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flag) {
+        getAmmunition(stack).ifPresent(ammunition -> tooltips.accept(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY)));
     }
 
     @Override
@@ -127,7 +129,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         for (int i = 0; i < projectiles.size(); i++) {
             ItemStack itemstack = projectiles.get(i);
             if (!itemstack.isEmpty()) {
-                crossbowStack.hurtAndBreak(this.getDurabilityUse(itemstack), shooter, LivingEntity.getSlotForHand(hand));
+                crossbowStack.hurtAndBreak(this.getDurabilityUse(itemstack), shooter, hand.asEquipmentSlot());
                 Projectile projectile = this.createProjectile(level, shooter, crossbowStack, itemstack, isPlayer);
                 if(crossbowStack.remove(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED) != null && projectile instanceof AbstractArrow arrow) {
                     arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;

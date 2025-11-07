@@ -18,16 +18,14 @@ import de.teamlapen.vampirism.common.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.entity.villager.VampirismTrades;
 import de.teamlapen.vampirism.common.mixin.accessor.VillagerAccessor;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.util.RegUtil;
 import de.teamlapen.vampirism.common.util.TotemHelper;
 import de.teamlapen.vampirism.common.util.VampirismEventFactory;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -49,6 +47,8 @@ import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -83,9 +83,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        this.addAdditionalSaveDataC(compound);
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        this.addAdditionalSaveDataC(output);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     public boolean doHurtTarget(ServerLevel level, @NotNull Entity entity) {
-        if (!level().isClientSide && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
+        if (!level().isClientSide() && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
             int amt = VampirePlayer.get(player).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION, new DrinkBloodContext(player));
             return true;
@@ -179,7 +179,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     protected @NotNull Component getTypeName() {
-        ResourceLocation profName = RegUtil.id(this.getVillagerData().getProfession());
+        var profName = this.getVillagerData().profession().getKey().location();
         return Component.translatable(EntityType.VILLAGER.getDescriptionId() + '.' + (!"minecraft".equals(profName.getNamespace()) ? profName.getNamespace() + '.' : "") + profName.getPath());
     }
 
@@ -217,9 +217,9 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        this.readAdditionalSaveDataC(compound);
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.readAdditionalSaveDataC(input);
     }
 
     @Override
@@ -263,8 +263,8 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     protected void updateTrades() {
         super.updateTrades();
-        VillagerProfession profession = this.getVillagerData().getProfession();
-        if (!this.getOffers().isEmpty() && profession != ModVillage.VAMPIRE_EXPERT.get() && profession != VillagerProfession.BUTCHER && this.getRandom().nextInt(3) == 0) {
+        Holder<VillagerProfession> profession = this.getVillagerData().profession();
+        if (!this.getOffers().isEmpty() && !profession.is(ModVillage.VAMPIRE_EXPERT) && !profession.is(VillagerProfession.BUTCHER) && this.getRandom().nextInt(3) == 0) {
             this.addOffersFromItemListings(this.getOffers(), VampirismTrades.getConvertedTrades(), 1);
         }
     }

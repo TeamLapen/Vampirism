@@ -142,7 +142,7 @@ public class CoffinBlock extends BaseContainerBlock {
     @Override
     public BlockState playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         //If in creative mode, also destroy the head block. Otherwise, it will be destroyed due to updateShape and an item will drop
-        if (!worldIn.isClientSide && player.isCreative()) {
+        if (!worldIn.isClientSide() && player.isCreative()) {
             CoffinPart part = state.getValue(PART);
             if (part == CoffinPart.FOOT) {
                 BlockPos blockpos = getOtherPos(pos, state);
@@ -160,10 +160,9 @@ public class CoffinBlock extends BaseContainerBlock {
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
         super.setPlacedBy(worldIn, pos, state, entity, itemStack);
-        if (!worldIn.isClientSide) {
+        if (!worldIn.isClientSide()) {
             BlockPos blockpos = getOtherPos(pos, state);
-            worldIn.setBlock(blockpos, state.setValue(PART, CoffinPart.HEAD), 3);
-            worldIn.blockUpdated(pos, Blocks.AIR);
+            worldIn.setBlockAndUpdate(blockpos, state.setValue(PART, CoffinPart.HEAD));
             state.updateNeighbourShapes(worldIn, pos, 3);
         }
     }
@@ -180,7 +179,7 @@ public class CoffinBlock extends BaseContainerBlock {
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hit) {
 
-        if (worldIn.isClientSide) {
+        if (worldIn.isClientSide()) {
             return InteractionResult.SUCCESS;
         } else {
             if (state.getValue(PART) != CoffinPart.HEAD) {

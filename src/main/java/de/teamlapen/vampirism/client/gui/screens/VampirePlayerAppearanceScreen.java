@@ -15,8 +15,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
@@ -47,10 +49,10 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (!this.fangList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
-            if (!this.eyeList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
-                return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    public boolean mouseDragged(@NotNull MouseButtonEvent mouseButtonEvent, double dragX, double dragY) {
+        if (!this.fangList.mouseDragged(mouseButtonEvent, dragX, dragY)) {
+            if (!this.eyeList.mouseDragged(mouseButtonEvent, dragX, dragY)) {
+                return super.mouseDragged(mouseButtonEvent, dragX, dragY);
             }
         }
         return true;
@@ -95,9 +97,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     @Override
     protected void renderGuiBackground(@NotNull GuiGraphics graphics) {
-        RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
-        super.renderGuiBackground(graphics);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        super.renderGuiBackground(graphics, ARGB.colorFromFloat(1, color[0], color[1], color[2]));
     }
 
     private void eye(int eyeType) {

@@ -1,124 +1,125 @@
 package de.teamlapen.lib.common.fluids;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-/**
- * An extension of {@link net.neoforged.neoforge.fluids.capability.templates.FluidTank} with fluid changing handling.
- */
-public class ControllableFluidTank extends FluidTank {
+public class ControllableFluidTank extends DelegatingResourceHandler<FluidResource> implements ValueIOSerializable {
 
-    @Nullable
-    private Consumer<FluidStack> onFluidChanged;
-    private String saveKey = "Fluid";
-    private boolean allowInput = true;
-    private boolean allowOutput = true;
+    private boolean allowInput;
+    private boolean allowOutput;
 
-    public ControllableFluidTank(int capacity) {
-        super(capacity);
+    public ControllableFluidTank(int capacity, Predicate<FluidResource> fluidPredicate, boolean allowInput, boolean allowOutput) {
+        this(capacity, () -> {
+        }, fluidPredicate, allowInput, allowOutput);
     }
 
-    public ControllableFluidTank(int capacity, Predicate<FluidStack> validator) {
-        super(capacity, validator);
-    }
+    public ControllableFluidTank(int capacity, Runnable onContentsChanged, Predicate<FluidResource> fluidPredicate, boolean allowInput, boolean allowOutput) {
+        super(() -> new FluidStacksResourceHandler(1, capacity) {
+            @Override
+            protected void onContentsChanged(int index, FluidStack previousContents) {
+                onContentsChanged.run();
+            }
 
-    public ControllableFluidTank setOnFluidChanged(@Nullable Consumer<FluidStack> onFluidChanged) {
-        this.onFluidChanged = onFluidChanged;
-        return this;
-    }
-
-    public ControllableFluidTank setSaveKey(String saveKey) {
-        this.saveKey = saveKey;
-        return this;
-    }
-
-    public ControllableFluidTank setAllowInput(boolean allowInput) {
+            @Override
+            public boolean isValid(int index, FluidResource resource) {
+                return index == 0 && fluidPredicate.test(resource);
+            }
+        });
         this.allowInput = allowInput;
-        return this;
-    }
-
-    public ControllableFluidTank setAllowOutput(boolean allowOutput) {
         this.allowOutput = allowOutput;
-        return this;
-    }
-
-    public @Nullable Consumer<FluidStack> getOnFluidChanged() {
-        return onFluidChanged;
-    }
-
-    public String getSaveKey() {
-        return saveKey;
-    }
-
-    public boolean isInputAllowed() {
-        return allowInput;
-    }
-
-    public boolean isOutputAllowed() {
-        return allowOutput;
     }
 
     @Override
-    public FluidTank readFromNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        fluid = FluidStack.parseOptional(lookupProvider, nbt.getCompound(getSaveKey()));
-        return this;
+    public void serialize(ValueOutput output) {
+        ((ValueIOSerializable) this.delegate.get()).serialize(output);
     }
 
     @Override
-    public CompoundTag writeToNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        if (!fluid.isEmpty()) {
-            nbt.put(getSaveKey(), fluid.save(lookupProvider));
-        }
-
-        return nbt;
+    public void deserialize(ValueInput input) {
+        ((ValueIOSerializable) this.delegate.get()).deserialize(input);
     }
 
-    public int forceFill(FluidStack resource, FluidAction action) {
-        return super.fill(resource, action);
+    public AccessTransaction beginAccess() {
+        var access = new AccessTransaction(this.allowInput, this.allowOutput);
+        this.allowInput = true;
+        this.allowOutput = true;
+        return access;
     }
 
-    public FluidStack forceDrain(FluidStack resource, FluidAction action) {
-        return super.drain(resource, action);
+    public boolean isEmpty() {
+        return this.delegate.get().getAmountAsInt(0) == 0;
     }
 
-    public FluidStack forceDrain(int maxDrain, FluidAction action) {
-        return super.drain(maxDrain, action);
+    public int getCapacity(FluidResource resource) {
+        return super.getCapacityAsInt(0, resource);
     }
 
-    @Override
-    public int fill(FluidStack resource, FluidAction action) {
-        return isInputAllowed() ? super.fill(resource, action) : 0;
+    public int getAmount() {
+        return getAmountAsInt(0);
     }
 
-    @Override
-    public FluidStack drain(FluidStack resource, FluidAction action) {
-        return isOutputAllowed() ? super.drain(resource, action) : FluidStack.EMPTY;
+    public FluidResource getResource() {
+        return getResource(0);
     }
 
     @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
-        return isOutputAllowed() ? super.drain(maxDrain, action) : FluidStack.EMPTY;
-    }
-
-    @Override
-    protected void onContentsChanged() {
-        super.onContentsChanged();
-        if (this.onFluidChanged != null) {
-            this.onFluidChanged.accept(getFluid());
+    public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        if (this.allowOutput) {
+            return super.extract(index, resource, amount, transaction);
+        } else {
+            return 0;
         }
     }
 
     @Override
-    public void setFluid(FluidStack stack) {
-        super.setFluid(stack);
-        if (this.onFluidChanged != null) {
-            this.onFluidChanged.accept(stack);
+    public int extract(FluidResource resource, int amount, TransactionContext transaction) {
+        if (this.allowOutput) {
+            return super.extract(resource, amount, transaction);
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        if (this.allowInput) {
+            return super.insert(index, resource, amount, transaction);
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int insert(FluidResource resource, int amount, TransactionContext transaction) {
+        if (this.allowInput) {
+            return super.insert(resource, amount, transaction);
+        } else {
+            return 0;
+        }
+    }
+
+    public class AccessTransaction implements AutoCloseable {
+
+        private final boolean allowInput;
+        private final boolean allowOutput;
+
+        public AccessTransaction(boolean allowInput, boolean allowOutput) {
+            this.allowInput = allowInput;
+            this.allowOutput = allowOutput;
+        }
+
+        @Override
+        public void close() {
+            ControllableFluidTank.this.allowInput = allowInput;
+            ControllableFluidTank.this.allowOutput = allowOutput;
         }
     }
 }

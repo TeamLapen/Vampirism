@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import de.teamlapen.vampirism.client.core.ModRenderPipelines;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.ARGB;
@@ -24,7 +25,7 @@ public class CustomBufferSource extends MultiBufferSource.BufferSource {
         if (!entityRenderTypes.contains(renderType.name)) {
             return new NoOpGenerator();
         }
-        return new OutlineGenerator(super.getBuffer(BloodVisionRenderer.SOLID_TRANSPARENCY_ENTITY), teamR, teamG, teamB, teamA);
+        return new OutlineGenerator(super.getBuffer(ModRenderPipelines.solidTransparencyEntity().get()), teamR, teamG, teamB, teamA);
     }
 
     public void setColor(int red, int green, int blue, int alpha) {

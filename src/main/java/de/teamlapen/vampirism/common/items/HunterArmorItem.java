@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.items.component.FactionRestriction;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -32,8 +33,8 @@ public class HunterArmorItem extends ModArmorItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        if (entity.tickCount % 16 == 8 && slotId >= 36 && slotId <= 39 && entity instanceof Player player) {
+    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, EquipmentSlot slot) {
+        if (entity.tickCount % 16 == 8 && slot.isArmor() && entity instanceof Player player) {
             if (!ModFactions.HUNTER.match(VampirismPlayerAttributes.get(player).faction())) {
                 player.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
             }

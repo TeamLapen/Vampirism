@@ -22,7 +22,6 @@ import net.neoforged.neoforge.registries.callback.ClearCallback;
 import net.neoforged.neoforge.registries.callback.RegistryCallback;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -35,7 +34,6 @@ public class FactionRegistry implements IFactionRegistry {
 
     private final MinionEntryCallbacks minionEntryCallbacks = new MinionEntryCallbacks();
 
-    @NotNull
     @Override
     public Holder<? extends IFaction<?>> getFaction(Entity entity) {
         if (entity instanceof Player player) {
@@ -46,7 +44,6 @@ public class FactionRegistry implements IFactionRegistry {
         return ModRegistries.FACTIONS.listElements().map(s -> (Holder<IFaction<?>>)s).filter(s -> s.value().getTag(Registries.ENTITY_TYPE).flatMap(BuiltInRegistries.ENTITY_TYPE::get).filter(tag -> entity.getType().is(tag)).isPresent()).findFirst().orElse((Holder<IFaction<?>>) (Object) ModFactions.NEUTRAL);
     }
 
-    @NotNull
     public Holder<? extends IFaction<?>> getFaction(Player player) {
         return FactionPlayerHandler.get(player).getFaction();
     }
@@ -62,12 +59,12 @@ public class FactionRegistry implements IFactionRegistry {
         return ModRegistries.FACTIONS.listElements().filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> ((Holder<? extends IPlayableFaction<?>>) (Object) s)).collect(Collectors.toList());
     }
 
-    public Predicate<LivingEntity> getPredicate(@NotNull Holder<? extends IFaction<?>> thisFaction, boolean ignoreDisguise) {
+    public Predicate<LivingEntity> getPredicate(Holder<? extends IFaction<?>> thisFaction, boolean ignoreDisguise) {
         return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
     }
 
     @Override
-    public Predicate<LivingEntity> getPredicate(@NotNull Holder<? extends IFaction<?>> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable Holder<? extends IFaction<?>> otherFaction) {
+    public Predicate<LivingEntity> getPredicate(Holder<? extends IFaction<?>> thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, @Nullable Holder<? extends IFaction<?>> otherFaction) {
         var hash = Objects.hash(thisFaction.unwrapKey().orElseThrow(), player, mob, neutralPlayer, ignoreDisguise, otherFaction == null ? null : otherFaction.unwrapKey().orElseThrow());
         return predicateMap.computeIfAbsent(hash, (k) -> new FactionPredicate.Builder(thisFaction).player().nonPlayer(mob).neutral(neutralPlayer).ignoreDisguise(ignoreDisguise).targetFaction(otherFaction).build());
     }

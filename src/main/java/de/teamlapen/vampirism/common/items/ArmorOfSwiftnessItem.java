@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -15,12 +16,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.Equippable;
-import net.minecraft.world.level.Level;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.function.Consumer;
 
 public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTier {
 
@@ -40,9 +42,9 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         addTierInformation(tooltipComponents);
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipComponents, tooltipFlag);
     }
 
     @Override
@@ -51,15 +53,16 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        super.inventoryTick(stack, level, entity, slotId, isSelected);
+    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, EquipmentSlot slot) {
+        super.inventoryTick(stack, level, entity, slot);
 
-        if (entity.tickCount % 45 == 3 && slotId >= 36 && slotId <= 39 && entity instanceof Player player) {
+        if (entity.tickCount % 45 == 3 && slot.isArmor() && entity instanceof Player player) {
             Equippable equippable = components().get(DataComponents.EQUIPPABLE);
             if (equippable != null && equippable.slot() == EquipmentSlot.CHEST) {
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
-                for (ItemStack armorStack : player.getInventory().armor) {
+
+                for (var armorStack : Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).toList()) {
                     if (!armorStack.isEmpty() && armorStack.getItem() instanceof ArmorOfSwiftnessItem) {
                         int b = getJumpBoost(getVampirismTier());
                         if (b < boost) {
@@ -71,7 +74,7 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
                     }
                 }
                 if (flag && boost > -1) {
-                    player.addEffect(new MobEffectInstance(MobEffects.JUMP, 50, boost, false, false));
+                    player.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, 50, boost, false, false));
                 }
             }
         }

@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -21,7 +22,7 @@ public class SyncHelper {
      * Entity has to implement {@link ISyncable}
      */
     public static <T extends Entity & ISyncable> void sync(@NotNull T entity) {
-        if (!entity.getCommandSenderWorld().isClientSide) {
+        if (!entity.level().isClientSide()) {
             ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity);
             sendToAll(entity, m);
         }
@@ -33,9 +34,9 @@ public class SyncHelper {
      * Entity has to implement {@link ISyncable}
      */
     public static <T extends Entity & ISyncable> void sync(@NotNull T entity, CompoundTag data) {
-        if (!entity.getCommandSenderWorld().isClientSide) {
-            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity, data);
-            sendToAll(entity, m);
+        if (!entity.level().isClientSide()) {
+//            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity, data); TODO
+//            sendToAll(entity, m);
         }
 
     }
@@ -48,8 +49,8 @@ public class SyncHelper {
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
      */
     public static void sync(@NotNull IAttachedSyncable cap, @NotNull Entity entity, boolean all) {
-        if (!entity.getCommandSenderWorld().isClientSide) {
-            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity.registryAccess(), cap);
+        if (!entity.level().isClientSide()) {
+            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity, cap);
             if (entity instanceof ServerPlayer player) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {
@@ -65,7 +66,7 @@ public class SyncHelper {
 
     public static void sync(Object object, Entity entity, boolean all) {
         if (!entity.level().isClientSide() && object instanceof IAttachedSyncable cap) {
-            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity.registryAccess(), cap);
+            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity, cap);
             if (entity instanceof ServerPlayer player) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {
@@ -80,8 +81,8 @@ public class SyncHelper {
 
     private static void sendToAll(@NotNull Entity entity, CustomPacketPayload packetPayload) {
         if (entity.level() instanceof ServerLevel level) {
-            ServerChunkCache serverchunkcache = level.getChunkSource();
-            serverchunkcache.broadcast(entity, packetPayload);
+//            ServerChunkCache serverchunkcache = level.getChunkSource(); TODO
+//            serverchunkcache.broadcast(entity, packetPayload);
         }
     }
 
@@ -92,9 +93,9 @@ public class SyncHelper {
      * <p>
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
      */
-    public static void sync(@NotNull IAttachedSyncable cap, @NotNull CompoundTag data, @NotNull Entity entity, boolean allToAll) {
-        if (!entity.getCommandSenderWorld().isClientSide) {
-            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(cap, data);
+    public static void sync(@NotNull IAttachedSyncable cap, CompoundTag data, @NotNull Entity entity, boolean allToAll) {
+        if (!entity.level().isClientSide()) {
+            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity, cap);
             if (entity instanceof ServerPlayer player) {
                 //noinspection ConstantConditions
                 if (player.connection != null) {

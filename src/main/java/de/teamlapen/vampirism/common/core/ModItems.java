@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.common.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.common.items.crossbow.arrow.*;
 import de.teamlapen.vampirism.common.items.dispenser.SyringeDispenseBehavior;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
-import de.teamlapen.vampirism.common.util.DescriptionUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -90,7 +89,7 @@ public class ModItems {
     public static final DeferredItem<ArrowContainer> ARROW_CLIP = ITEMS.registerItem("tech_crossbow_ammo_package",  props -> new ArrowContainer(props.stacksTo(1), 12, (stack) -> stack.is(CROSSBOW_ARROW_NORMAL.get())));
     public static final DeferredItem<Item> QUARREL_POUCH = ITEMS.registerItem("quarrel_pouch",  props -> new QuarrelPouch(props.stacksTo(1)));
 
-    public static final DeferredItem<SwordItem> PITCHFORK = ITEMS.registerItem("pitchfork", props -> new SwordItem(ToolMaterial.IRON, 6, -3, props));
+    public static final DeferredItem<Item> PITCHFORK = ITEMS.registerSimpleItem("pitchfork", props -> props.sword(ToolMaterial.IRON, 6, -3));
     public static final DeferredItem<StakeItem> STAKE = ITEMS.registerItem("stake", StakeItem::new);
 
     public static final DeferredItem<CrucifixItem> CRUCIFIX_NORMAL = ITEMS.registerItem("crucifix_normal",  props -> new CrucifixItem(IItemWithTier.Tier.NORMAL, props));
@@ -192,7 +191,7 @@ public class ModItems {
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_4 = ITEMS.registerItem("pure_blood_4",  props -> new PureBloodItem(4, props));
 
     public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.7F).build()).component(DataComponents.CONSUMABLE, ModConsumables.GARLIC)));
-    public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart",  props -> new Item(props.component(DataComponents.FOOD, new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()).component(ModDataComponents.VAMPIRE_FOOD, new BloodFoodProperties.Builder().blood(20).saturationModifier(1.5F).build()).component(DataComponents.CONSUMABLE, Consumables.defaultFood().onConsume(new FactionBasedConsumeEffect(new NotHolderSet<>(ModRegistries.FACTIONS, HolderSet.direct((Holder<IFaction<?>>) (Object) ModFactions.VAMPIRE)), new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.CONFUSION, 20*20))))).build())));
+    public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.component(DataComponents.FOOD, new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()).component(ModDataComponents.VAMPIRE_FOOD, new BloodFoodProperties.Builder().blood(20).saturationModifier(1.5F).build()).component(DataComponents.CONSUMABLE, Consumables.defaultFood().onConsume(new FactionBasedConsumeEffect(new NotHolderSet<>(ModRegistries.FACTIONS, HolderSet.direct((Holder<IFaction<?>>) (Object) ModFactions.VAMPIRE)), new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.NAUSEA, 20 * 20))))).build())));
     public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new VampirismItemBloodFoodItem(props.food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new BloodFoodProperties.Builder().blood(10).saturationModifier(0.9F).build()));
 
     public static final DeferredItem<Item> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", Item::new);
@@ -289,17 +288,15 @@ public class ModItems {
     public static final DeferredItem<StandingAndWallBlockItem> CANDELABRA_BLACK = ITEMS.registerItem("candelabra_black",  props -> new  StandingAndWallBlockItem(ModBlocks.CANDELABRA_BLACK.get(), ModBlocks.WALL_CANDELABRA_BLACK.get(), Direction.DOWN, props.useBlockDescriptionPrefix()));
 
     // Spawn Eggs
-    public static final DeferredItem<SpawnEggItem> VAMPIRE_SPAWN_EGG = ITEMS.registerItem("vampire_spawn_egg",  props -> new SpawnEggItem(ModEntities.VAMPIRE.get(), props));
-    public static final DeferredItem<SpawnEggItem> ADVANCED_VAMPIRE_SPAWN_EGG = ITEMS.registerItem("advanced_vampire_spawn_egg",  props -> new SpawnEggItem(ModEntities.ADVANCED_VAMPIRE.get(), props));
-    public static final DeferredItem<SpawnEggItem> VAMPIRE_BARON_SPAWN_EGG = ITEMS.registerItem("vampire_baron_spawn_egg",  props -> new SpawnEggItem(ModEntities.VAMPIRE_BARON.get(), props));
-    public static final DeferredItem<SpawnEggItem> TASK_MASTER_VAMPIRE_SPAWN_EGG = ITEMS.registerItem("task_master_vampire_spawn_egg",  props -> new SpawnEggItem(ModEntities.TASK_MASTER_VAMPIRE.get(), props));
-
-    public static final DeferredItem<SpawnEggItem> VAMPIRE_HUNTER_SPAWN_EGG = ITEMS.registerItem("vampire_hunter_spawn_egg",  props -> new SpawnEggItem(ModEntities.HUNTER.get(), props));
-    public static final DeferredItem<SpawnEggItem> ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG = ITEMS.registerItem("advanced_vampire_hunter_spawn_egg",  props -> new SpawnEggItem(ModEntities.ADVANCED_HUNTER.get(), props));
-    public static final DeferredItem<SpawnEggItem> HUNTER_TRAINER_SPAWN_EGG = ITEMS.registerItem("hunter_trainer_spawn_egg",  props -> new SpawnEggItem(ModEntities.HUNTER_TRAINER.get(), props));
-    public static final DeferredItem<SpawnEggItem> TASK_MASTER_HUNTER_SPAWN_EGG = ITEMS.registerItem("task_master_hunter_spawn_egg",  props -> new SpawnEggItem(ModEntities.TASK_MASTER_HUNTER.get(), props));
-
-    public static final DeferredItem<SpawnEggItem> GHOST_SPAWN_EGG = ITEMS.registerItem("ghost_spawn_egg",  props -> new SpawnEggItem(ModEntities.GHOST.get(), props));
+    public static final DeferredItem<SpawnEggItem> VAMPIRE_SPAWN_EGG = ITEMS.registerItem("vampire_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.VAMPIRE.get()));
+    public static final DeferredItem<SpawnEggItem> ADVANCED_VAMPIRE_SPAWN_EGG = ITEMS.registerItem("advanced_vampire_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.ADVANCED_VAMPIRE.get()));
+    public static final DeferredItem<SpawnEggItem> VAMPIRE_BARON_SPAWN_EGG = ITEMS.registerItem("vampire_baron_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.VAMPIRE_BARON.get()));
+    public static final DeferredItem<SpawnEggItem> TASK_MASTER_VAMPIRE_SPAWN_EGG = ITEMS.registerItem("task_master_vampire_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.TASK_MASTER_VAMPIRE.get()));
+    public static final DeferredItem<SpawnEggItem> VAMPIRE_HUNTER_SPAWN_EGG = ITEMS.registerItem("vampire_hunter_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.HUNTER.get()));
+    public static final DeferredItem<SpawnEggItem> ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG = ITEMS.registerItem("advanced_vampire_hunter_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.ADVANCED_HUNTER.get()));
+    public static final DeferredItem<SpawnEggItem> HUNTER_TRAINER_SPAWN_EGG = ITEMS.registerItem("hunter_trainer_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.HUNTER_TRAINER.get()));
+    public static final DeferredItem<SpawnEggItem> TASK_MASTER_HUNTER_SPAWN_EGG = ITEMS.registerItem("task_master_hunter_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.TASK_MASTER_HUNTER.get()));
+    public static final DeferredItem<SpawnEggItem> GHOST_SPAWN_EGG = ITEMS.registerItem("ghost_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.GHOST.get()));
 
 
     @SuppressWarnings("unchecked")
@@ -351,7 +348,7 @@ public class ModItems {
         );
 
         if (descriptionItems.anyMatch(item -> stack.is(item.asItem()))) {
-            DescriptionUtil.addDescriptionTooltip(event.getItemStack().getItem(), event.getToolTip());
+//            DescriptionUtil.addDescriptionTooltip(event.getItemStack().getItem(), event.getContext(), event.getFlags(), event.getToolTip()); TODO
         }
     }
 }

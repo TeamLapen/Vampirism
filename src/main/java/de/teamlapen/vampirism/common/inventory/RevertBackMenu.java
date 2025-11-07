@@ -23,7 +23,7 @@ public class RevertBackMenu extends AbstractContainerMenu {
     public RevertBackMenu(int pContainerId, Inventory container, ContainerLevelAccess pAccess) {
         super(ModMenus.REVERT_BACK.get(), pContainerId);
         this.pAccess = pAccess;
-        this.addSlot(new Slot(container, container.selected, 80, 35));
+        this.addSlot(new Slot(container, container.getSelectedSlot(), 80, 35));
     }
 
     @Override

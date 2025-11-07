@@ -17,7 +17,7 @@ public class SpeedLordAction<T extends ISkillPlayer<T>> extends LordRangeEffectA
     }
 
     @Override
-    public int getCooldown(T player) {
+    public int getCooldown(@NotNull T player) {
         return super.getCooldown(player) + ModConfig.BALANCE.laLordSpeedCooldown.get();
     }
 

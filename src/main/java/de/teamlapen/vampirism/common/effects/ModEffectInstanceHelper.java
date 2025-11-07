@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,13 +24,13 @@ public class ModEffectInstanceHelper {
             }
 
             @Override
-            public boolean tick(LivingEntity entity, Runnable onExpirationRunnable) {
+            public boolean tickServer(ServerLevel level, LivingEntity entity, Runnable onEffectUpdated) {
                 if (this.getDuration() % 10 == 0 && entity instanceof Player) {
                     if (!Helper.canBecomeVampire((Player) entity)) {
                         return false;
                     }
                 }
-                return super.tick(entity, onExpirationRunnable);
+                return super.tickServer(level, entity, onEffectUpdated);
             }
         };
     }
@@ -37,7 +38,7 @@ public class ModEffectInstanceHelper {
     public static MobEffectInstance createNightVision() {
         MobEffectInstance source = new MobEffectInstance(MobEffects.NIGHT_VISION, -1, 0, false, false, false) {
             @Override
-            public boolean tick(LivingEntity entity, Runnable onExpirationRunnable) {
+            public boolean tickServer(ServerLevel level, LivingEntity entity, Runnable onEffectUpdated) {
                 return true;
             }
 

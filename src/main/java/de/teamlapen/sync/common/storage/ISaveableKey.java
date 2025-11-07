@@ -1,6 +1,6 @@
 package de.teamlapen.sync.common.storage;
 
-public interface INBTObject {
+public interface ISaveableKey {
 
     String nbtKey();
 }

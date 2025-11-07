@@ -64,7 +64,7 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
     }
 
     protected void applyEffect(IVampirePlayer vampire) {
-        addEffectInstance(vampire, new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 22, 1, false, false));
+        addEffectInstance(vampire, new MobEffectInstance(MobEffects.SLOWNESS, 22, 1, false, false));
     }
 
     @Override

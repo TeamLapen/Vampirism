@@ -1,8 +1,7 @@
 package de.teamlapen.sync.common.storage;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Some objects should not sync all available date every time.
@@ -10,24 +9,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface IStateSyncable extends ISyncable {
 
-    @NotNull
-    CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params);
+    void serializeUpdateInternal(ValueOutput output, UpdateParams params);
 
     /**
-     * @deprecated Calling is safe, but use {@link #serializeUpdateNBTInternal(HolderLookup.Provider, UpdateParams)} to save data.
+     * @deprecated Calling is safe, but use {@link #serializeUpdateInternal(ValueOutput, UpdateParams)} to save data.
      */
-    @Deprecated
-    @NotNull
-    default CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, UpdateParams params) {
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @ApiStatus.Internal
+    default void serializeUpdate(ValueOutput output, UpdateParams params) {
         if (params.ignoreChanges()) {
-            return serializeUpdateNBTInternal(provider, params);
+            serializeUpdateInternal(output, params);
         } else {
             if (needsUpdate()) {
-                var update = serializeUpdateNBTInternal(provider, params);
+                serializeUpdateInternal(output, params);
                 updateSend();
-                return update;
             }
-            return new CompoundTag();
         }
     }
 

@@ -2,32 +2,35 @@ package de.teamlapen.vampirism.common.blockentity;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModParticles;
-import de.teamlapen.vampirism.common.particles.FlyingBloodParticleOptions;
+import de.teamlapen.vampirism.common.particles.PedestalParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
+public class PedestalBlockEntity extends BlockEntity {
 
     private final Random rand = new Random();
     private final int chargeRate = 30;
@@ -48,39 +51,8 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @NotNull
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        ItemStack stack = this.internalStack;
-        if (slot == 0 && !stack.isEmpty()) {
-            if (!simulate) {
-                this.removeStack();
-                this.markDirtyAndUpdateClient();
-            }
-            return simulate ? stack.copy() : stack;
-        }
-        return ItemStack.EMPTY;
-    }
-
-
-    @Override
-    public int getSlotLimit(int slot) {
-        return 1;
-    }
-
-    @Override
-    public int getSlots() {
-        return 1;
-    }
-
-    @NotNull
     public ItemStack getStackForRender() {
         return internalStack;
-    }
-
-    @NotNull
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return slot == 0 ? internalStack : ItemStack.EMPTY;
     }
 
     public int getTickForRender() {
@@ -103,44 +75,14 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         return !this.internalStack.isEmpty();
     }
 
-    @NotNull
     @Override
-    public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (slot == 0) {
-            if (this.internalStack.isEmpty()) {
-                if (!simulate) {
-                    setStack(stack);
-                    this.markDirtyAndUpdateClient();
-                }
-                return ItemStack.EMPTY;
-            }
-        }
-        return stack;
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.internalStack = input.read("item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        this.bloodStored = input.getIntOr("blood_stored", 0);
+        this.chargingTicks = input.getIntOr("charging_ticks", 0);
     }
 
-    @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        super.loadAdditional(compound, provider);
-        if (compound.contains("item")) {
-            this.internalStack = ItemStack.parseOptional(provider, compound.getCompound("item"));
-        } else {
-            this.internalStack = ItemStack.EMPTY;
-        }
-        this.bloodStored = compound.getInt("blood_stored");
-        this.chargingTicks = compound.getInt("charging_ticks");
-    }
-
-    @Override
-    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
-        if (hasLevel()) handleUpdateTag(pkt.getTag(), provider);
-    }
-
-    @NotNull
     public ItemStack removeStack() {
         ItemStack stack = this.internalStack;
         this.internalStack = ItemStack.EMPTY;
@@ -148,13 +90,13 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
         if (hasStack()) {
-            compound.put("item", this.internalStack.save(provider, new CompoundTag()));
+            output.store("item", ItemStack.CODEC, this.internalStack);
         }
-        compound.putInt("blood_stored", bloodStored);
-        compound.putInt("charging_ticks", chargingTicks);
+        output.putInt("blood_stored", bloodStored);
+        output.putInt("charging_ticks", chargingTicks);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, @NotNull PedestalBlockEntity blockEntity) {
@@ -247,10 +189,80 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
 
     private static void spawnChargedParticle(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull Random rand) {
         Vec3 pos = Vec3.upFromBottomCenterOf(blockPos, 0.8);
-        ModParticles.spawnParticleClient(level, new FlyingBloodParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, VResourceLocation.mc("glitter_1")), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
-        ModParticles.spawnParticleClient(level, new FlyingBloodParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, VResourceLocation.mc("glitter_1")), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
-        ModParticles.spawnParticleClient(level, new FlyingBloodParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, VResourceLocation.mc("glitter_1")), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
-        ModParticles.spawnParticleClient(level, new FlyingBloodParticleOptions((int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, VResourceLocation.mc("glitter_1")), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
+        ModParticles.spawnParticleClient(level, new PedestalParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
+        ModParticles.spawnParticleClient(level, new PedestalParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
+        ModParticles.spawnParticleClient(level, new PedestalParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
+        ModParticles.spawnParticleClient(level, new PedestalParticleOptions((int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
 
+    }
+
+    public class ItemWrapper extends SnapshotJournal<ItemStack> implements ResourceHandler<ItemResource> {
+
+        @Override
+        public int size() {
+            return 1;
+        }
+
+        @Override
+        public ItemResource getResource(int index) {
+            return ItemResource.of(internalStack);
+        }
+
+        @Override
+        public long getAmountAsLong(int index) {
+            return internalStack.getCount();
+        }
+
+        @Override
+        public long getCapacityAsLong(int index, ItemResource resource) {
+            return 1;
+        }
+
+        @Override
+        public boolean isValid(int index, ItemResource resource) {
+            return index == 0 && resource.getMaxStackSize() == 1;
+        }
+
+        @Override
+        public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            if (!internalStack.isEmpty() || amount < 1) {
+                return 0;
+            }
+
+            createSnapshot();
+            internalStack = resource.toStack();
+
+            return 1;
+        }
+
+        @Override
+        public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            if (!internalStack.isEmpty() && amount < 1) {
+                return 0;
+            }
+
+            if (resource.matches(internalStack)) {
+                createSnapshot();
+                return 1;
+            }
+
+            return 0;
+        }
+
+        @Override
+        protected ItemStack createSnapshot() {
+            return internalStack;
+        }
+
+        @Override
+        protected void revertToSnapshot(@Nullable ItemStack snapshot) {
+            internalStack = snapshot == null ? ItemStack.EMPTY : snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(@Nullable ItemStack originalState) {
+            super.onRootCommit(originalState);
+            markDirtyAndUpdateClient();
+        }
     }
 }

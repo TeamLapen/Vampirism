@@ -16,12 +16,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -37,10 +39,10 @@ public class ArrowContainer extends Item implements IArrowContainer {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, List<Component> texts, TooltipFlag flag) {
-        getArrows(stack).stream().map(ItemStack::getItem).collect(Collectors.groupingBy(a -> a)).forEach((item, items) -> texts.add(item.getName(item.getDefaultInstance()).copy().append(" " + items.size())));
-        texts.add(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(ModItems.BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
-        texts.add(Component.translatable("item.vampirism.arrow_clip.right_click").withStyle(ChatFormatting.GRAY));
+    public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> texts, TooltipFlag flag) {
+        getArrows(stack).stream().map(ItemStack::getItem).collect(Collectors.groupingBy(a -> a)).forEach((item, items) -> texts.accept(item.getName(item.getDefaultInstance()).copy().append(" " + items.size())));
+        texts.accept(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(ModItems.BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
+        texts.accept(Component.translatable("item.vampirism.arrow_clip.right_click").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

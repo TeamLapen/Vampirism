@@ -36,7 +36,7 @@ public abstract class MoveToPositionGoal<T extends PathfinderMob> extends Goal {
 
     public MoveToPositionGoal(@NotNull T entity, double followSpeed, float minDist, float maxDist, boolean doTeleport, boolean look) {
         this.entity = entity;
-        this.world = entity.getCommandSenderWorld();
+        this.world = entity.level();
         this.followSpeed = followSpeed;
         this.minDist = minDist;
         this.navigator = entity.getNavigation();
@@ -88,7 +88,7 @@ public abstract class MoveToPositionGoal<T extends PathfinderMob> extends Goal {
                     for (int dX = 0; dX <= 4; ++dX) {
                         for (int dZ = 0; dZ <= 4; ++dZ) {
                             if ((dX < 1 || dZ < 1 || dX > 3 || dZ > 3) && this.canTeleportToBlock(new BlockPos(sX + dX, sY - 1, sZ + dZ))) {
-                                this.entity.moveTo(((float) (sX + dX) + 0.5F), sY, ((float) (sZ + dZ) + 0.5F), this.entity.getYRot(), this.entity.getXRot());
+                                this.entity.moveOrInterpolateTo(new Vec3(((float) (sX + dX) + 0.5F), sY, ((float) (sZ + dZ) + 0.5F)), this.entity.getYRot(), this.entity.getXRot());
                                 this.navigator.stop();
                                 return;
                             }

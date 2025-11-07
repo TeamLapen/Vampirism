@@ -2,14 +2,16 @@ package de.teamlapen.lib.server;
 
 import de.teamlapen.lib.util.UtilLib;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +24,7 @@ import java.util.function.Consumer;
 /**
  * Simple mob spawning logic. More configurable than {@link net.minecraft.world.level.BaseSpawner} but less functional.
  */
-public class SimpleSpawnerLogic<T extends Entity> {
+public class SimpleSpawnerLogic<T extends Entity> implements ValueIOSerializable {
 
     private final static Logger LOGGER = LogManager.getLogger();
     private static final int MOB_COUNT_DIV = (int) Math.pow(17.0D, 2.0D);
@@ -64,13 +66,6 @@ public class SimpleSpawnerLogic<T extends Entity> {
         return level.hasNearbyAlivePlayer(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, this.activateRange);
     }
 
-    public void readFromNbt(@NotNull CompoundTag nbt) {
-        this.spawnDelay = nbt.getInt("delay");
-        this.spawnedToday = nbt.getInt("spawned_today");
-        this.spawnedLast = nbt.getLong("spawned_last");
-        this.flag = nbt.getBoolean("spawner_flag");
-    }
-
     public @NotNull SimpleSpawnerLogic<T> setActivateRange(int activateRange) {
         this.activateRange = activateRange;
         return this;
@@ -82,7 +77,7 @@ public class SimpleSpawnerLogic<T extends Entity> {
     }
 
     public boolean setDelayToMin(int id, @NotNull Level level) {
-        if (id == 1 && (level.isClientSide)) {
+        if (id == 1 && (level.isClientSide())) {
             this.spawnDelay = this.minSpawnDelay;
             return true;
         } else {
@@ -201,11 +196,20 @@ public class SimpleSpawnerLogic<T extends Entity> {
         }
     }
 
-    public void writeToNbt(@NotNull CompoundTag nbt) {
-        nbt.putInt("delay", spawnDelay);
-        nbt.putInt("spawned_today", spawnedToday);
-        nbt.putLong("spawned_last", spawnedLast);
-        nbt.putBoolean("spawner_flag", flag);
+    @Override
+    public void serialize(ValueOutput output) {
+        output.putInt("delay", spawnDelay);
+        output.putInt("spawned_today", spawnedToday);
+        output.putLong("spawned_last", spawnedLast);
+        output.putBoolean("spawner_flag", flag);
+    }
+
+    @Override
+    public void deserialize(ValueInput input) {
+        this.spawnDelay = input.getIntOr("delay", 0);
+        this.spawnedToday = input.getIntOr("spawned_today", 0);
+        this.spawnedLast = input.getLongOr("spawned_last", 0);
+        this.flag = input.getBooleanOr("spawner_flag", false);
     }
 
     protected @NotNull AABB getSpawningBox(@Nullable BlockPos pos) {

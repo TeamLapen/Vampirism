@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.common.blockentity.MotherBlockEntity;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -61,9 +62,9 @@ public class MotherBlock extends Block implements EntityBlock, IRemainsBlock {
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
         if (getBlockEntity(level, pos).map(MotherBlockEntity::isCanBeBroken).orElse(Boolean.TRUE)) {
-            return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+            return super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid);
         }
         return false;
     }

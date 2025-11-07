@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class CoffinModel extends Model {
+public class CoffinModel extends Model<Object> {
 
     private static final String LEFT_PLATE = "left_plate";
     private static final String RIGHT_PLATE = "right_plate";

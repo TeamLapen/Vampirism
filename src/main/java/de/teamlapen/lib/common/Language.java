@@ -8,10 +8,10 @@ import org.jetbrains.annotations.NotNull;
 public class Language {
 
     public static @NotNull String getActiveLanguage() {
-        return FMLEnvironment.dist == Dist.CLIENT ? Client.getActiveLanguage() : "English";
+        return FMLEnvironment.getDist() == Dist.CLIENT ? Client.getActiveLanguage() : "English";
     }
 
     public static String getActiveLanguageCode() {
-        return FMLEnvironment.dist == Dist.CLIENT ? Client.getActiveLanguageCode() : "en_us";
+        return FMLEnvironment.getDist() == Dist.CLIENT ? Client.getActiveLanguageCode() : "en_us";
     }
 }

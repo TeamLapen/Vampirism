@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -68,7 +69,7 @@ public class AlchemicalFireBlock extends Block {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier applier, boolean intersects) {
         if (!entity.fireImmune()) {
             entity.igniteForSeconds(entity.getRemainingFireTicks() + 1);
             if (entity.getRemainingFireTicks() == 0) {
@@ -79,8 +80,8 @@ public class AlchemicalFireBlock extends Block {
                 DamageHandler.hurtVanilla(serverLevel, entity, DamageSources::inFire, 1);
             }
         }
-        
-        super.entityInside(state, level, pos, entity);
+
+        super.entityInside(state, level, pos, entity, applier, intersects);
     }
 
     @Override

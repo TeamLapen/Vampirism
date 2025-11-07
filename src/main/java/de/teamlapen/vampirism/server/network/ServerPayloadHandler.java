@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.server.network;
 import de.teamlapen.lib.common.inventory.InventoryHelper;
 import de.teamlapen.sync.SyncHelper;
 import de.teamlapen.sync.common.storage.Attachment;
-import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
@@ -172,7 +171,7 @@ public class ServerPayloadHandler {
                     if (player.containerMenu instanceof RevertBackMenu menu) {
                         menu.consume(player);
                     }
-                    handler.leaveFaction(!player.server.isHardcore());
+                    handler.leaveFaction(!player.level().getServer().isHardcore());
                 }
                 case TOGGLE_VAMPIRE_VISION -> VampirePlayer.get(player).switchVision();
                 case TRAINER_LEVELUP -> {
@@ -210,7 +209,7 @@ public class ServerPayloadHandler {
             Player player = context.player();
             FactionPlayerHandler.get(player).<T>getActionHandler().ifPresent(handler -> {
                 IAction.ActivationContext activationContext = msg.target() != null ? msg.target().map(entityId -> {
-                    Entity e = player.getCommandSenderWorld().getEntity(entityId);
+                    Entity e = player.level().getEntity(entityId);
                     if (e == null) {
                         LOGGER.warn("Could not find entity {} the player was looking at when toggling action", entityId);
                     }
@@ -251,7 +250,7 @@ public class ServerPayloadHandler {
                         //noinspection unchecked
                         skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill, msg.skillTree());
                         if (factionPlayer instanceof Attachment t) {
-                            t.sync(UpdateParams.all());
+//                            t.sync(UpdateParams.all()); TODO
                         }
 
                     } else {

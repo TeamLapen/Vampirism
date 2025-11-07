@@ -7,15 +7,19 @@ import de.teamlapen.vampirism.common.blockentity.BatCageBlockEntity;
 import de.teamlapen.vampirism.common.blocks.BatCageBlock;
 import net.minecraft.client.model.BatModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.state.BatRenderState;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity> {
+public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity, BatCageRenderer.BatCageRenderState> {
 
     public static final ResourceLocation BAT_LOCATION = VResourceLocation.mc("textures/entity/bat.png");
 
@@ -26,15 +30,24 @@ public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity> 
     }
 
     @Override
-    public void render(BatCageBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        BlockState blockState = blockEntity.getBlockState();
+    public void extractRenderState(BatCageBlockEntity blockEntity, BatCageRenderState renderState, float partialTick, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
+        renderState.containsBat = blockEntity.getBlockState().getValue(BatCageBlock.CONTAINS_BAT);
+    }
 
-        if (blockState.getValue(BatCageBlock.CONTAINS_BAT)) {
-            renderBat(poseStack, bufferSource, packedLight, packedOverlay, blockState.getValue(BatCageBlock.FACING));
+    @Override
+    public BatCageRenderState createRenderState() {
+        return new BatCageRenderState();
+    }
+
+    @Override
+    public void submit(BatCageRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (renderState.containsBat) {
+            renderBat(poseStack, nodeCollector, renderState.lightCoords);
         }
     }
 
-    private void renderBat(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Direction direction) {
+    private void renderBat(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight) {
         poseStack.pushPose();
         poseStack.translate(0.5F, 1F, 0.5F);
         //pPoseStack.mulPose(Axis.YN.rotationDegrees(90 * direction.get2DDataValue()));
@@ -44,7 +57,11 @@ public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity> 
         batRenderState.isResting = true;
         batRenderState.restAnimationState.animateWhen(true, 0);
         this.model.setupAnim(batRenderState);
-        this.model.renderToBuffer(poseStack, bufferSource.getBuffer(this.model.renderType(BAT_LOCATION)), packedLight, packedOverlay, -1);
+        nodeCollector.submitModel(this.model, batRenderState, poseStack, this.model.renderType(BAT_LOCATION), packedLight, OverlayTexture.NO_OVERLAY, -1, null);
         poseStack.popPose();
+    }
+
+    public static class BatCageRenderState extends BlockEntityRenderState {
+        public boolean containsBat;
     }
 }

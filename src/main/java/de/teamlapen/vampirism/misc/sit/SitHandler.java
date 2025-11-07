@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @EventBusSubscriber
 public class SitHandler {
     public static void startSitting(@NotNull Player player, @NotNull Level level, @NotNull BlockPos pos, double offset) {
-        if (!level.isClientSide && !SitUtil.isPlayerSitting(player) && !player.isShiftKeyDown()) {
+        if (!level.isClientSide() && !SitUtil.isPlayerSitting(player) && !player.isShiftKeyDown()) {
             if (isPlayerInRange(player, pos) && !SitUtil.isOccupied(level, pos) && player.getMainHandItem().isEmpty()) //level.getBlockState(pos.above()).isAir(level, pos.above()
             {
 

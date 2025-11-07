@@ -4,15 +4,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.inventory.VampireBeaconMenu;
-import de.teamlapen.vampirism.common.mixin.accessor.BeaconBeamSectionMixin;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -32,10 +33,12 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.entity.BeaconBeamOwner;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -49,9 +52,9 @@ import java.util.stream.Collectors;
 
 import static net.minecraft.world.level.block.entity.BeaconBlockEntity.playSound;
 
-public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvider, Nameable {
+public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvider, Nameable, BeaconBeamOwner {
     private static final int MAX_LEVELS = 3;
-    public static final Holder<MobEffect>[][] BEACON_EFFECTS = new Holder[][] {{MobEffects.MOVEMENT_SPEED, MobEffects.SATURATION}, {MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING}, {MobEffects.REGENERATION, MobEffects.SATURATION}};
+    public static final Holder<MobEffect>[][] BEACON_EFFECTS = new Holder[][]{{MobEffects.SPEED, MobEffects.SATURATION}, {MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING}, {MobEffects.REGENERATION, MobEffects.SATURATION}};
     public static final int[][] BEACON_EFFECTS_AMPLIFIER = new int[][] {{0, 0}, {0, 0}, {0, 1}};
     public static final Set<Holder<MobEffect>> NO_AMPLIFIER_EFFECTS = Set.of(MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING);
     private static final Set<Holder<MobEffect>> VALID_EFFECTS = Arrays.stream(BEACON_EFFECTS).flatMap(Arrays::stream).collect(Collectors.toSet());
@@ -62,8 +65,8 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
     public static final int NUM_DATA_VALUES = 4;
     private static final int BLOCKS_CHECK_PER_TICK = 10;
     private static final Component DEFAULT_NAME = Component.translatable("container.beacon");
-    private List<BeaconBlockEntity.BeaconBeamSection> beamSections = Lists.newArrayList();
-    private List<BeaconBlockEntity.BeaconBeamSection> checkingBeamSections = Lists.newArrayList();
+    private List<BeaconBeamOwner.Section> beamSections = Lists.newArrayList();
+    private List<BeaconBeamOwner.Section> checkingBeamSections = Lists.newArrayList();
     private int levels;
     private int lastCheckY;
     @Nullable
@@ -90,7 +93,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
                     VampireBeaconBlockEntity.this.levels = value;
                     break;
                 case DATA_PRIMARY:
-                    if (!VampireBeaconBlockEntity.this.level.isClientSide && !VampireBeaconBlockEntity.this.beamSections.isEmpty()) {
+                    if (!VampireBeaconBlockEntity.this.level.isClientSide() && !VampireBeaconBlockEntity.this.beamSections.isEmpty()) {
                         playSound(VampireBeaconBlockEntity.this.level, VampireBeaconBlockEntity.this.worldPosition, SoundEvents.BEACON_POWER_SELECT);
                     }
                     VampireBeaconBlockEntity.this.primaryPower = VampireBeaconBlockEntity.getValidEffectById(value);
@@ -127,7 +130,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             blockpos = new BlockPos(i, pBlockEntity.lastCheckY + 1, k);
         }
 
-        BeaconBlockEntity.BeaconBeamSection beaconblockentity$beaconbeamsection = pBlockEntity.checkingBeamSections.isEmpty()
+        BeaconBeamOwner.Section beaconblockentity$beaconbeamsection = pBlockEntity.checkingBeamSections.isEmpty()
                 ? null
                 : pBlockEntity.checkingBeamSections.getLast();
         int l = pLevel.getHeight(Heightmap.Types.WORLD_SURFACE, i, k);
@@ -137,13 +140,13 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             Integer j1 = blockstate.getBeaconColorMultiplier(pLevel, blockpos, pPos);
             if (j1 != null) {
                 if (pBlockEntity.checkingBeamSections.size() <= 1) {
-                    beaconblockentity$beaconbeamsection = new BeaconBlockEntity.BeaconBeamSection(j1);
+                    beaconblockentity$beaconbeamsection = new BeaconBeamOwner.Section(j1);
                     pBlockEntity.checkingBeamSections.add(beaconblockentity$beaconbeamsection);
                 } else if (beaconblockentity$beaconbeamsection != null) {
                     if (j1 == beaconblockentity$beaconbeamsection.getColor()) {
-                        ((BeaconBeamSectionMixin) beaconblockentity$beaconbeamsection).invokeIncreaseHeight();
+                        beaconblockentity$beaconbeamsection.increaseHeight();
                     } else {
-                        beaconblockentity$beaconbeamsection = new BeaconBlockEntity.BeaconBeamSection(
+                        beaconblockentity$beaconbeamsection = new BeaconBeamOwner.Section(
                                 ARGB.average(beaconblockentity$beaconbeamsection.getColor(), j1)
                         );
                         pBlockEntity.checkingBeamSections.add(beaconblockentity$beaconbeamsection);
@@ -156,7 +159,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
                     break;
                 }
 
-                ((BeaconBeamSectionMixin) beaconblockentity$beaconbeamsection).invokeIncreaseHeight();
+                beaconblockentity$beaconbeamsection.increaseHeight();
             }
 
             blockpos = blockpos.above();
@@ -181,7 +184,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
             pBlockEntity.lastCheckY = pLevel.getMinY() - 1;
             boolean flag = k1 > 0;
             pBlockEntity.beamSections = pBlockEntity.checkingBeamSections;
-            if (!pLevel.isClientSide) {
+            if (!pLevel.isClientSide()) {
                 boolean flag1 = pBlockEntity.levels > 0;
                 if (!flag && flag1) {
                     playSound(pLevel, pPos, SoundEvents.BEACON_ACTIVATE);
@@ -199,7 +202,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
     }
 
     protected void applyEffects(Level level, BlockPos pos, int levels, @Nullable Holder<MobEffect> power, int effectAmplifier) {
-        if (!level.isClientSide && power != null) {
+        if (!level.isClientSide() && power != null) {
             if (NO_AMPLIFIER_EFFECTS.contains(power)) {
                 effectAmplifier = 0;
             }
@@ -251,7 +254,7 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
         super.setRemoved();
     }
 
-    public List<BeaconBlockEntity.BeaconBeamSection> getBeamSections() {
+    public List<BeaconBeamOwner.Section> getBeamSections() {
         return this.levels == 0 ? ImmutableList.of() : this.beamSections;
     }
 
@@ -272,30 +275,30 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
-        super.loadAdditional(pTag, provider);
-        this.primaryPower = getValidEffectById(pTag.getInt("Primary"));
-        if (pTag.contains("CustomName", 8)) {
-            this.name = Component.Serializer.fromJson(pTag.getString("CustomName"), provider);
-        }
-        this.effectAmplifier = pTag.getInt("Amplifier");
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        this.primaryPower = input.read("primary_effect", BuiltInRegistries.MOB_EFFECT.holderByNameCodec()).orElse(null);
+        input.read("CustomName", ComponentSerialization.CODEC).ifPresent(this::setCustomName);
+        this.effectAmplifier = input.getIntOr("Amplifier", 0);
 
-        this.lockKey = LockCode.fromTag(pTag, provider);
-        this.isUpgraded = pTag.getBoolean("Upgraded");
+        this.lockKey = LockCode.fromTag(input);
+        this.isUpgraded = input.getBooleanOr("Upgraded", false);
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
-        super.saveAdditional(pTag, provider);
-        pTag.putInt("Primary", BeaconMenu.encodeEffect(this.primaryPower));
-        pTag.putInt("Levels", this.levels);
-        if (this.name != null) {
-            pTag.putString("CustomName", Component.Serializer.toJson(this.name, provider));
+    protected void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        if (this.primaryPower != null) {
+            output.store("primary_effect", BuiltInRegistries.MOB_EFFECT.holderByNameCodec(), this.primaryPower);
         }
-        pTag.putInt("Amplifier", this.effectAmplifier);
+        output.putInt("Levels", this.levels);
+        if (this.name != null) {
+            output.store("CustomName", ComponentSerialization.CODEC, this.name);
+        }
+        output.putInt("Amplifier", this.effectAmplifier);
 
-        this.lockKey.addToTag(pTag, provider);
-        pTag.putBoolean("Upgraded", this.isUpgraded);
+        this.lockKey.addToTag(output);
+        output.putBoolean("Upgraded", this.isUpgraded);
     }
 
     public void setCustomName(@Nullable Component pName) {

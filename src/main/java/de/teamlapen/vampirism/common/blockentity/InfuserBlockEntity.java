@@ -7,8 +7,10 @@ import de.teamlapen.vampirism.common.inventory.InfuserMenu;
 import de.teamlapen.vampirism.common.inventory.InfuserSlots;
 import de.teamlapen.vampirism.common.recipes.InfuserRecipe;
 import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.core.*;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ContainerHelper;
@@ -24,6 +26,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,20 +100,20 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
         this.items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(tag, this.items, registries);
-        this.cookingTimer = tag.getInt("cooking_time_spend");
-        this.totalCookingTime = tag.getInt("cooking_total_time");
+        ContainerHelper.loadAllItems(input, this.items);
+        this.cookingTimer = input.getIntOr("cooking_time_spend", 0);
+        this.totalCookingTime = input.getIntOr("cooking_total_time", 0);
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.putInt("cooking_time_spend", this.cookingTimer);
-        tag.putInt("cooking_total_time", this.totalCookingTime);
-        ContainerHelper.saveAllItems(tag, this.items, registries);
+    protected void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("cooking_time_spend", this.cookingTimer);
+        output.putInt("cooking_total_time", this.totalCookingTime);
+        ContainerHelper.saveAllItems(output, this.items);
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, InfuserBlockEntity blockEntity) {

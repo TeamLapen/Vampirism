@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.gui.screens.radial;
 import de.teamlapen.lib.client.gui.screens.radialmenu.GuiRadialMenu;
 import de.teamlapen.lib.client.gui.screens.radialmenu.RadialMenu;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.input.KeyEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,19 +27,19 @@ public abstract class DualSwitchingRadialMenu<T> extends GuiRadialMenu<T> {
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (this.wasKeyReleased && this.keyMapping != null && this.keyMapping.matches(key, scanCode)) {
+    public boolean keyPressed(KeyEvent event) {
+        if (this.wasKeyReleased && this.keyMapping != null && this.keyMapping.matches(event)) {
             this.rotatingScreens.accept(this.keyMapping);
             return true;
         }
-        return super.keyPressed(key, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
-        if (this.keyMapping != null && this.keyMapping.matches(pKeyCode, pScanCode)) {
+    public boolean keyReleased(KeyEvent event) {
+        if (this.keyMapping != null && this.keyMapping.matches(event)) {
             this.wasKeyReleased = true;
         }
-        return super.keyReleased(pKeyCode, pScanCode, pModifiers);
+        return super.keyReleased(event);
     }
 }

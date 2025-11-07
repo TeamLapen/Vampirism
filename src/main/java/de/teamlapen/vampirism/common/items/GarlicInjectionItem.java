@@ -23,7 +23,7 @@ public class GarlicInjectionItem extends InjectionItem {
     @Override
     public boolean handleInjection(Level level, BlockPos pos, Player player, IFactionPlayerHandler handler, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction) {
         if (handler.canJoin(ModFactions.HUNTER)) {
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 VampirismModClient.getInstance().getOverlay().makeRenderFullColor(4, 30, 0xBBBBBBFF);
             } else {
                 handler.joinFaction(ModFactions.HUNTER);

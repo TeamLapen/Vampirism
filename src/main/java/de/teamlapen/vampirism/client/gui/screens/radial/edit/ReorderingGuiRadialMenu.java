@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.client.gui.components.SimpleList;
 import de.teamlapen.lib.client.gui.screens.radialmenu.DrawCallback;
 import de.teamlapen.lib.client.gui.screens.radialmenu.GuiRadialMenu;
@@ -12,10 +11,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
@@ -66,9 +69,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
-        RenderSystem.setShaderColor(0.5F, 0.5F, 0.5F, 1.0F);
-        graphics.blitSprite(RenderType::guiTextured, BACKGROUND, 0, 0, 143, this.height);
-        RenderSystem.setShaderColor(1,1,1,1);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, 0, 0, 143, this.height, ARGB.colorFromFloat(1, 0.5f, 0.5f, 0.5f));
     }
 
     @Override
@@ -136,9 +137,9 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
         for (GuiEventListener guieventlistener1 : this.children()) {
-            if (guieventlistener1.mouseClicked(mouseX, mouseY, mouseButton)) {
+            if (guieventlistener1.mouseClicked(mouseButtonEvent, isDoubleClick)) {
                 return true;
             }
         }
@@ -171,9 +172,9 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        this.excludedList.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
-        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        this.excludedList.mouseDragged(event, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     private void checkEmpty() {
@@ -205,14 +206,14 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (key == GLFW.GLFW_KEY_ESCAPE) {
+    public boolean keyPressed(KeyEvent keyEvent) {
+        if (keyEvent.key() == GLFW.GLFW_KEY_ESCAPE) {
             this.onClose();
         }
-        return true;
+        return super.keyPressed(keyEvent);
     }
 
-//    @Override
+    //    @Override
 //    protected void processInputEvent(MovementInputUpdateEvent event) {
 //    }
 
@@ -247,14 +248,14 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }
 
         @Override
-        public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-            if (isMouseOver(pMouseX, pMouseY)) {
+        public boolean mouseClicked(MouseButtonEvent event, boolean doubleCLick) {
+            if (isMouseOver(event.x(), event.y())) {
                 if (ReorderingGuiRadialMenu.this.movingItem != null) {
                     ReorderingGuiRadialMenu.this.excludeItem();
                     return true;
                 }
             }
-            return super.mouseClicked(pMouseX, pMouseY, pButton);
+            return super.mouseClicked(event, doubleCLick);
         }
 
         @Override
@@ -263,11 +264,11 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
             if (this.visible && ReorderingGuiRadialMenu.this.movingItem != null) {
                 int i = this.getX();
                 int j = this.getY();
-                guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate(i, j, 200);
+                guiGraphics.pose().pushMatrix();
+                guiGraphics.pose().translate(i, j);
                 guiGraphics.fillGradient(0, 0, this.getWidth(), this.getHeight(), -1072689136, -804253680);
                 guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("text.vampirism.place_exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
-                guiGraphics.pose().popPose();
+                guiGraphics.pose().popMatrix();
             }
         }
     }
@@ -298,9 +299,9 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }
 
         @Override
-        public void onPress() {
+        public void onPress(InputWithModifiers modifier) {
             if (this.isClicked) {
-                super.onPress();
+                super.onPress(modifier);
                 this.isClicked = false;
             } else {
                 this.isClicked = true;
@@ -308,8 +309,8 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            var result = super.mouseClicked(mouseX, mouseY, button);
+        public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+            var result = super.mouseClicked(event, doubleClick);
             if (!result) {
                 this.isClicked = false;
             }

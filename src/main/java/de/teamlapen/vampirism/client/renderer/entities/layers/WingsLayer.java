@@ -9,6 +9,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
@@ -39,20 +40,19 @@ public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource buffer, int packedLight, @NotNull S entity, float f1, float f2) {
-        if (!entity.isInvisible && predicateRender.test(entity)) {
-            this.model.copyRotationFromBody(bodyPartFunction.apply(entity, this.getParentModel()));
-            float s = 1f;
-            if (entity instanceof VampireBaronRenderer.VampireBaronRenderState baron) {
-                s = baron.enragedProgress;
-            }
-            stack.pushPose();
-            stack.translate(0f, 0, 0.02f);
-            stack.scale(s, s, s);
-            coloredCutoutModelCopyLayerRender(model, texture, stack, buffer, packedLight, entity, -1);
-            stack.popPose();
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, S renderState, float yRot, float xRot) {
+        if (renderState.isInvisible) return;
+        if (!predicateRender.test(renderState)) return;
+
+        this.model.copyRotationFromBody(bodyPartFunction.apply(renderState, this.getParentModel()));
+        float s = 1f;
+        if (renderState instanceof VampireBaronRenderer.VampireBaronRenderState baron) {
+            s = baron.enragedProgress;
         }
+        poseStack.pushPose();
+        poseStack.translate(0f, 0, 0.02f);
+        poseStack.scale(s, s, s);
+        coloredCutoutModelCopyLayerRender(model, texture, poseStack, nodeCollector, packedLight, renderState, -1, -1);
+        poseStack.popPose();
     }
-
-
 }

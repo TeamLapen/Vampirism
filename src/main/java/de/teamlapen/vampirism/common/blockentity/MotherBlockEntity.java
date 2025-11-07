@@ -8,14 +8,12 @@ import de.teamlapen.vampirism.common.entity.GhostEntity;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundBossEventSoundPacket;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundPlayEventPacket;
-import de.teamlapen.vampirism.common.particles.FlyingBloodParticleOptions;
+import de.teamlapen.vampirism.common.particles.MotherParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -34,6 +32,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
@@ -65,7 +65,7 @@ public class MotherBlockEntity extends BlockEntity {
                             }
                             BlockPos p = vuls.get(e.level.getRandom().nextInt(vuls.size())).getLeft();
                             player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 5 * 20, 2));
-                            ModParticles.spawnParticlesServer(player.level(), new FlyingBloodParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 0.5f), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 5, 0.1f, 0.1f, 0.1f, 0);
+                            ModParticles.spawnParticlesServer(player.level(), new MotherParticleOptions(100, false, p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5, 0.5f), player.getX(), player.getY() + player.getEyeHeight() / 2, player.getZ(), 5, 0.1f, 0.1f, 0.1f, 0);
                         }
                     }
                 }
@@ -155,21 +155,26 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        this.destructionTimer = tag.getInt("destruction_timer");
-        this.isFrozen = tag.getBoolean("is_frozen");
-        this.freezeTimer = tag.getInt("freeze_timer");
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.destructionTimer = input.getIntOr("destruction_timer", 0);
+        this.isFrozen = input.getBooleanOr("is_frozen", false);
+        this.freezeTimer = input.getIntOr("freeze_timer", 0);
         if (this.isFrozen) {
             this.bossEvent.setColor(BossEvent.BossBarColor.WHITE);
         }
         this.involvedPlayers.clear();
-        if (tag.contains("involved_players", Tag.TAG_LIST)) {
-            ListTag involvedPlayers = tag.getList("involved_players", 11);
-            for (Tag involvedPlayer : involvedPlayers) {
-                this.involvedPlayers.add(NbtUtils.loadUUID(involvedPlayer));
-            }
-        }
+        input.listOrEmpty("involved_players", UUIDUtil.CODEC).forEach(this.involvedPlayers::add);
+    }
+
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("destruction_timer", this.destructionTimer);
+        output.putBoolean("is_frozen", this.isFrozen);
+        output.putInt("freeze_timer", this.freezeTimer);
+        var involvedPlayers = output.list("involved_players", UUIDUtil.CODEC);
+        this.involvedPlayers.forEach(involvedPlayers::add);
     }
 
     /**
@@ -200,7 +205,7 @@ public class MotherBlockEntity extends BlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
         return saveWithoutMetadata(provider);
     }
 
@@ -236,19 +241,6 @@ public class MotherBlockEntity extends BlockEntity {
             this.bossEvent.setProgress(0);
             this.endFight();
         }
-    }
-
-    @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("destruction_timer", this.destructionTimer);
-        tag.putBoolean("is_frozen", this.isFrozen);
-        tag.putInt("freeze_timer", this.freezeTimer);
-        ListTag involvedPlayers = new ListTag();
-        for (UUID involvedPlayer : this.involvedPlayers) {
-            involvedPlayers.add(NbtUtils.createUUID(involvedPlayer));
-        }
-        tag.put("involved_players", involvedPlayers);
     }
 
     private void endFight() {

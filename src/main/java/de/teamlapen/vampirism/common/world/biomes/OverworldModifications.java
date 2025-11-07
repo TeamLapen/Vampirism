@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBiomes;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.TerraBlenderCompat;
-import de.teamlapen.vampirism.common.integration.terrablender.TerraBlenderRegistration;
 import de.teamlapen.vampirism.common.mixin.NoiseGeneratorSettingsMixin;
 import de.teamlapen.vampirism.common.mixin.accessor.MultiNoiseBiomeSourceParameterListPresetAccessor;
 import net.minecraft.core.Holder;

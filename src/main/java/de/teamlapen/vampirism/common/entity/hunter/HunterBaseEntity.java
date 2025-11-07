@@ -71,7 +71,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
      * @return If player was cured
      */
     protected boolean tryCureSanguinare(@NotNull Player entity) {
-        if (!this.level().isClientSide && entity.hasEffect(ModEffects.SANGUINARE)) {
+        if (!this.level().isClientSide() && entity.hasEffect(ModEffects.SANGUINARE)) {
             entity.removeEffect(ModEffects.SANGUINARE);
             entity.displayClientMessage(Component.translatable("text.vampirism.hunter.cured_sanguinare"), true);
             return true;

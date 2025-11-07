@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens.skills;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -114,14 +113,14 @@ public class SkillsTabScreen {
     }
 
     public void drawContents(@NotNull GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
-        PoseStack pose = graphics.pose();
+        var pose = graphics.pose();
 
         graphics.enableScissor(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT);
-        pose.pushPose();
-        pose.translate(x, y, 0);
-        pose.translate(SCREEN_WIDTH / 2d + centerX, 20 + centerY, 0);
+        pose.pushMatrix();
+        pose.translate(x, y);
+        pose.translate((float) (SCREEN_WIDTH / 2d + centerX), (float) (20f + centerY));
 
-        pose.scale((float) this.zoom, (float) this.zoom, 1);
+        pose.scale((float) this.zoom, (float) this.zoom);
 
         for (int i = -(int) (((SCREEN_WIDTH / 2f + centerX) / 16 / zoom)) - 1; i <= (int) (((SCREEN_WIDTH / 2f - centerX) / 16 / zoom)); ++i) {
             for (int j = -(int) ((20 + centerY) / 16 / zoom) - 1; j <= (int) ((SCREEN_HEIGHT - centerY) / 16 / zoom); ++j) {
@@ -132,24 +131,24 @@ public class SkillsTabScreen {
         this.root.drawConnectivity(graphics, 0, 0, true);
         this.root.drawConnectivity(graphics, 0, 0, false);
         this.root.draw(graphics, 0, 0);
-        pose.popPose();
+        pose.popMatrix();
 
         if (this.minecraft.player.getEffect(ModEffects.OBLIVION) != null) {
-            pose.pushPose();
-            pose.translate(0.0F, 0.0F, 200.0F);
+            pose.pushMatrix();
+            pose.translate(0.0F, 0.0F/*, 200.0F TODO*/);
             graphics.fill(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT, Mth.floor(0.5 * 255.0F) << 24);
-            pose.translate(0, 0, 200);
+            pose.translate(0, 0/*, 200 TODO*/);
             this.drawDisableText(graphics, x, y);
-            pose.popPose();
+            pose.popMatrix();
         }
 
         graphics.disableScissor();
     }
 
     public void drawTooltips(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-        PoseStack pose = graphics.pose();
-        pose.pushPose();
-        pose.translate(0.0F, 0.0F, -200.0F);
+        var pose = graphics.pose();
+        pose.pushMatrix();
+        pose.translate(0.0F, 0.0F/*, -200.0F TODO*/);
         graphics.fill(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
         boolean flag = false;
         if (mouseX >= 0 && mouseX < SCREEN_WIDTH && mouseY >= 0 && mouseY < SCREEN_HEIGHT) {
@@ -158,17 +157,17 @@ public class SkillsTabScreen {
             for (SkillNodeScreen nodeScreen : this.nodes.values()) {
                 if (nodeScreen.isMouseOver(scaledMouseX, scaledMouseY, 0, 0)) {
                     flag = true;
-                    pose.pushPose();
-                    pose.translate(SCREEN_WIDTH / 2d + centerX, 20 + centerY, 0);
-                    pose.scale((float) this.zoom, (float) this.zoom, 1);
+                    pose.pushMatrix();
+                    pose.translate((float) (SCREEN_WIDTH / 2d + centerX), (float) (20 + centerY));
+                    pose.scale((float) this.zoom, (float) this.zoom/*,  TODO 1*/);
                     nodeScreen.drawHover(graphics, scaledMouseX, scaledMouseY, this.fade, 0, 0);
-                    pose.popPose();
+                    pose.popMatrix();
                     break;
                 }
             }
         }
 
-        pose.popPose();
+        pose.popMatrix();
         if (flag) {
             this.fade = Mth.clamp(this.fade + 0.02F, 0.0F, 0.3F);
         } else {
@@ -249,11 +248,11 @@ public class SkillsTabScreen {
 //        int borderColorStart = 0x505f0c0c;
 //        int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
 
-        TooltipRenderUtil.renderTooltipBackground(graphics, tooltipX, tooltipY, tooltipTextWidth, tooltipHeight, 400, null);
+        TooltipRenderUtil.renderTooltipBackground(graphics, tooltipX, tooltipY, tooltipTextWidth, tooltipHeight, null);
 
-        graphics.pose().pushPose();
-        graphics.pose().translate(0, 0, 400);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(0, 0/*, 400 TODO*/);
         graphics.drawCenteredString(this.minecraft.font, f, tooltipX + tooltipTextWidth / 2, tooltipY + tooltipHeight / 2 - this.minecraft.font.lineHeight / 2, 15728880);
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 }

@@ -9,14 +9,14 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * ModelBiped with a cloak
  */
-public class BipedCloakedModel<T extends PlayerRenderState> extends ClothedModel<T> {
+public class BipedCloakedModel<T extends AvatarRenderState> extends ClothedModel<T> {
     private static final String CLOAK = "cloak";
     protected final @NotNull ModelPart bipedCloak;
 
@@ -42,8 +42,9 @@ public class BipedCloakedModel<T extends PlayerRenderState> extends ClothedModel
         bipedCloak.visible = visible;
     }
 
+
     @Override
-    public void setupAnim(T state) {
+    public void setupAnim(@NotNull T state) {
         super.setupAnim(state);
         float f = 1.0F;
         if (state.fallFlyingTimeInTicks > 4) {

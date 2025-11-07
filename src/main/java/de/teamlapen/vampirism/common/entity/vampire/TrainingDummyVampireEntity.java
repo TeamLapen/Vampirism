@@ -47,7 +47,7 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
     @NotNull
     @Override
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) { //processInteract
-        if (!this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
+        if (!this.level().isClientSide() && hand == InteractionHand.MAIN_HAND) {
             if (startTicks == 0) {
                 player.displayClientMessage(Component.literal("Start recording"), false);
                 this.startTicks = this.tickCount;

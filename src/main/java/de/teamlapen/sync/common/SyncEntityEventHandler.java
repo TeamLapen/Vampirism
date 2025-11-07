@@ -108,10 +108,10 @@ public class SyncEntityEventHandler {
     @SubscribeEvent
     public static void onStartTracking(PlayerEvent.@NotNull StartTracking event) {
         if ((event.getTarget() instanceof PathfinderMob && !SyncRegistry.getSyncableEntityCaps().isEmpty()) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof Player && !SyncRegistry.getSyncablePlayerCaps().isEmpty())) {
-            ClientboundUpdateEntityPacket packet = ClientboundUpdateEntityPacket.createJoinWorldPacket(event.getTarget());
-            if (packet != null && event.getEntity() instanceof ServerPlayer player) {
-                player.connection.send(packet);
-            }
+//            ClientboundUpdateEntityPacket packet = ClientboundUpdateEntityPacket.createJoinWorldPacket(event.getTarget()); TODO
+//            if (packet != null && event.getEntity() instanceof ServerPlayer player) {
+//                player.connection.send(packet);
+//            }
         }
     }
 }

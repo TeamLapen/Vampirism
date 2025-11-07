@@ -19,7 +19,6 @@ import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.VampirismEventFactory;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -39,6 +38,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -195,14 +196,14 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      */
     @Override
     @SuppressWarnings("JavadocReference")
-    default void readAdditionalSaveDataC(@NotNull CompoundTag compound) {
-        ConvertedCreature.super.readAdditionalSaveDataC(compound);
-        if (compound.contains("ConversionTime", 99) && compound.getInt("ConversionTime") > -1) {
-            this.startConverting(compound.hasUUID("ConversionPlayer") ? compound.getUUID("ConversionPlayer") : null, compound.getInt("ConversionTime"), ((PathfinderMob) this));
-        }
-        if (compound.contains("source_entity", Tag.TAG_STRING)) {
-            getSourceEntityDataParamOpt().ifPresent(s -> this.asEntity().getEntityData().set(s, compound.getString("source_entity")));
-        }
+    default void readAdditionalSaveDataC(@NotNull ValueInput input) {
+        ConvertedCreature.super.readAdditionalSaveDataC(input);
+        input.getInt("ConversionTime").filter(x -> x > -1).ifPresent(time -> {
+            this.startConverting(input.getString("ConversionPlayer").map(UUID::fromString).orElse(null), time, ((PathfinderMob) this));
+        });
+        input.getString("source_entity").ifPresent(source -> {
+            getSourceEntityDataParamOpt().ifPresent(s -> this.asEntity().getEntityData().set(s, source));
+        });
     }
 
     /**
@@ -210,14 +211,14 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      */
     @Override
     @SuppressWarnings("JavadocReference")
-    default void addAdditionalSaveDataC(@NotNull CompoundTag compound) {
-        ConvertedCreature.super.addAdditionalSaveDataC(compound);
-        compound.putInt("ConversionTime", this.isConverting(((PathfinderMob) this)) ? data().conversionTime : -1);
+    default void addAdditionalSaveDataC(@NotNull ValueOutput output) {
+        ConvertedCreature.super.addAdditionalSaveDataC(output);
+        output.putInt("ConversionTime", this.isConverting(((PathfinderMob) this)) ? data().conversionTime : -1);
         if (data().conversationStarter != null) {
-            compound.putUUID("ConversionPlayer", data().conversationStarter);
+            output.putString("ConversionPlayer", data().conversationStarter.toString());
         }
         if (getSourceEntityId() != null) {
-            compound.putString("source_entity", getSourceEntityId());
+            output.putString("source_entity", getSourceEntityId());
         }
     }
 

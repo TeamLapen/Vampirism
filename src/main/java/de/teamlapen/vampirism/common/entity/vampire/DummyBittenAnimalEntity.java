@@ -31,7 +31,7 @@ public class DummyBittenAnimalEntity extends Mob {
     @Override
     public void aiStep() {
         super.aiStep();
-        if (this.tickCount > 4 && !this.getCommandSenderWorld().isClientSide) {
+        if (this.tickCount > 4 && !this.level().isClientSide()) {
             PathfinderMob entity;
             int rand = this.random.nextInt(3);
             entity = switch (rand) {

@@ -11,7 +11,6 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,44 +35,44 @@ public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends Faction
     }
 
     @Override
-    public @NotNull PlayableFactionBuilder<T> highestLevel(int highestLevel) {
+    public PlayableFactionBuilder<T> highestLevel(int highestLevel) {
         this.highestLevel = highestLevel;
         return this;
     }
 
     @Override
-    public PlayableFactionBuilder<T> village(@NotNull IFactionVillage villageBuilder) {
+    public PlayableFactionBuilder<T> village(IFactionVillage villageBuilder) {
         return (PlayableFactionBuilder<T>) super.village(villageBuilder);
     }
 
     @Override
-    public @NotNull PlayableFactionBuilder<T> refinementItem(@NotNull IRefinementItem.AccessorySlotType type, Supplier<IRefinementItem> item) {
+    public PlayableFactionBuilder<T> refinementItem(IRefinementItem.AccessorySlotType type, Supplier<IRefinementItem> item) {
         this.refinementItemBySlot.computeIfAbsent(type, t -> new ArrayList<>()).add(item);
         return this;
     }
 
     @Override
-    public PlayableFactionBuilder<T> chatColor(@NotNull TextColor color) {
+    public PlayableFactionBuilder<T> chatColor(TextColor color) {
         return (PlayableFactionBuilder<T>) super.chatColor(color);
     }
 
     @Override
-    public PlayableFactionBuilder<T> chatColor(@NotNull ChatFormatting color) {
+    public PlayableFactionBuilder<T> chatColor(ChatFormatting color) {
         return (PlayableFactionBuilder<T>) super.chatColor(color);
     }
 
     @Override
-    public PlayableFactionBuilder<T> name(@NotNull String nameKey) {
+    public PlayableFactionBuilder<T> name(String nameKey) {
         return (PlayableFactionBuilder<T>) super.name(nameKey);
     }
 
     @Override
-    public PlayableFactionBuilder<T> namePlural(@NotNull String namePluralKey) {
+    public PlayableFactionBuilder<T> namePlural(String namePluralKey) {
         return (PlayableFactionBuilder<T>) super.namePlural(namePluralKey);
     }
 
     @Override
-    public @NotNull PlayableFactionBuilder<T> lord(ILordPlayerEntry builder) {
+    public PlayableFactionBuilder<T> lord(ILordPlayerEntry builder) {
         this.lord = builder;
         return this;
     }
@@ -84,7 +83,7 @@ public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends Faction
     }
 
     @Override
-    public @NotNull PlayableFaction<T> build() {
+    public PlayableFaction<T> build() {
         return new PlayableFaction<>(this);
     }
 }

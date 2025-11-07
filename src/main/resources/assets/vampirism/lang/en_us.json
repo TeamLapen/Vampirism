@@ -140,6 +140,7 @@
   "text.vampirism.argument.entity.options.level.desc": "Level selector",
   "text.vampirism.action.wrong_faction": "The action can not be used with your faction",
   "text.vampirism.when_equipped": "When equipped:",
+  "narration.vampirism.skill": "Skill",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
   "__comment": "faction item texts",

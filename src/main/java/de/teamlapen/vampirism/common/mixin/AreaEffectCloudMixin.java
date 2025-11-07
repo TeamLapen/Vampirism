@@ -28,7 +28,7 @@ public abstract class AreaEffectCloudMixin extends Entity {
         super(pEntityType, pLevel);
     }
 
-    @ModifyVariable(method = "serverTick", at = @At(value = "STORE", ordinal = 1))
+    @ModifyVariable(method = "serverTick", at = @At(value = "STORE", ordinal = 0))
     private MobEffectInstance replaceEffectForVampires(MobEffectInstance effectInstance, @Local(ordinal = 0) LivingEntity entity) {
         return this.potionContents.potion()
                 .map(Holder::value)

@@ -6,12 +6,17 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.AABB;
 
@@ -71,5 +76,25 @@ public class ModCodecs {
     @SuppressWarnings("unchecked")
     public static Codec<Holder<? extends IFaction<?>>> faction() {
         return (Codec<Holder<? extends IFaction<?>>>) (Object)ModRegistries.FACTIONS.holderByNameCodec();
+    }
+
+    public static <T extends Entity> Codec<EntityType<T>> entityCodec() {
+        return BuiltInRegistries.ENTITY_TYPE.byNameCodec().comapFlatMap(entityType -> {
+            try {
+                return DataResult.success((EntityType<T>) entityType);
+            } catch (Exception e) {
+                return DataResult.error(() -> "Could not find entity type " + entityType);
+            }
+        }, (EntityType<T> x) -> x);
+    }
+
+    public static <T extends ISkillPlayer<T>> Codec<Holder<ISkill<T>>> skills() {
+        return ModRegistries.SKILLS.holderByNameCodec().comapFlatMap(skill -> {
+            try {
+                return DataResult.success((Holder<ISkill<T>>) (Object) skill);
+            } catch (Exception e) {
+                return DataResult.error(() -> "Could not find skill " + skill);
+            }
+        }, (Holder<ISkill<T>> skll) -> (Holder<ISkill<?>>) (Object) skll);
     }
 }

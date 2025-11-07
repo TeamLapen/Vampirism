@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
-import com.mojang.authlib.GameProfile;
+import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,13 +17,6 @@ public interface IPlayerOverlay {
      */
     Pair<ResourceLocation, PlayerModelType> PENDING_PROP = Pair.of(DefaultPlayerSkin.getDefaultTexture(), PlayerModelType.WIDE);
 
-    /**
-     * @return Description of the overlay. Textures loc and boolean (true: slimArms, false: normal)
-     */
-    @Deprecated
     @NotNull
-    Optional<Pair<ResourceLocation, PlayerModelType>> getOverlayPlayerProperties();
-
-    @NotNull
-    Optional<GameProfile> getPlayerOverlay();
+    Optional<PlayerSkinRenderCache.RenderInfo> getPlayerOverlay();
 }

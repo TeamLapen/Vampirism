@@ -11,20 +11,19 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.common.items.component.FactionRestriction;
 import de.teamlapen.vampirism.common.mixin.accessor.AttributeInstanceAccessor;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -112,73 +111,41 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        CompoundTag nbt = new CompoundTag();
-        ListTag refinements = new ListTag();
+    public void serialize(@NotNull ValueOutput output) {
+        var list = output.list("refinement_items", ItemStackWithSlot.CODEC);
         for (int i = 0; i < this.refinementItems.size(); i++) {
-            ItemStack stack = this.refinementItems.get(i);
-            if (!stack.isEmpty()) {
-                CompoundTag stackNbt = new CompoundTag();
-                stackNbt.putInt("slot", i);
-                var tag = stack.save(provider);
-                stackNbt.put("stack", tag);
-                refinements.add(stackNbt);
-            }
+            list.add(new ItemStackWithSlot(i, this.refinementItems.get(i)));
         }
-        nbt.put("refinement_items", refinements);
-        return nbt;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains("refinement_items")) {
-            ListTag refinements = nbt.getList("refinement_items", 10);
-            for (int i = 0; i < refinements.size(); i++) {
-                CompoundTag stackNbt = refinements.getCompound(i);
-                int slot = stackNbt.getInt("slot");
-                ItemStack stack = ItemStack.parseOptional(provider, stackNbt.getCompound("stack"));
-                if (stack.getItem() instanceof IRefinementItem) {
-                    if (FactionRestriction.canUse(player.asEntity(), stack, false)) {
-                        applyRefinementItem(stack, slot);
-                    }
+    public void deserialize(@NotNull ValueInput input) {
+        var list = input.listOrEmpty("refinement_items", ItemStackWithSlot.CODEC);
+        this.refinementItems.clear();
+        list.stream().forEach(itemSlot -> {
+            if (itemSlot.stack().getItem() instanceof IRefinementItem) {
+                if (FactionRestriction.canUse(player.asEntity(), itemSlot.stack(), false)) {
+                    applyRefinementItem(itemSlot.stack(), itemSlot.slot());
                 }
             }
-        }
+        });
     }
 
     @Override
-    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains("refinement_items", Tag.TAG_LIST)) {
-            ListTag refinements = nbt.getList("refinement_items", Tag.TAG_COMPOUND);
-            for (int i = 0; i < refinements.size(); i++) {
-                CompoundTag stackNbt = refinements.getCompound(i);
-                int slot = stackNbt.getInt("slot");
-                ItemStack stack = ItemStack.parseOptional(provider, stackNbt.getCompound("stack"));
-                if (stack.getItem() instanceof IRefinementItem) {
-                    if (FactionRestriction.canUse(this.player.asEntity(), stack, false)) {
-                        applyRefinementItem(stack, slot);
-                    }
-                }
+    public void deserializeUpdate(@NotNull ValueInput input) {
+        input.list("refinement_items", ItemStackWithSlot.CODEC).stream().flatMap(ValueInput.TypedInputList::stream).forEach(itemSlot -> {
+            if (itemSlot.stack().getItem() instanceof IRefinementItem) {
+                applyRefinementItem(itemSlot.stack(), itemSlot.slot());
             }
-        }
+        });
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
-        CompoundTag nbt = new CompoundTag();
-        ListTag refinementItems = new ListTag();
+    public void serializeUpdateInternal(@NotNull ValueOutput output, @NotNull UpdateParams params) {
+        var list = output.list("refinement_items", ItemStackWithSlot.CODEC);
         for (int i = 0; i < this.refinementItems.size(); i++) {
-            ItemStack stack = this.refinementItems.get(i);
-            if (!stack.isEmpty()) {
-                CompoundTag stackNbt = new CompoundTag();
-                stackNbt.putInt("slot", i);
-                var tag = stack.save(provider);
-                stackNbt.put("stack", tag);
-                refinementItems.add(stackNbt);
-            }
+            list.add(new ItemStackWithSlot(i, this.refinementItems.get(i)));
         }
-        nbt.put("refinement_items", refinementItems);
-        return nbt;
     }
 
     @Override
@@ -192,7 +159,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
     }
 
     @Override
-    public String nbtKey() {
+    public @NotNull String nbtKey() {
         return NBT_KEY;
     }
 

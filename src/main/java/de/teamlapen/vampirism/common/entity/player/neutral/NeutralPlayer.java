@@ -1,20 +1,16 @@
 package de.teamlapen.vampirism.common.entity.player.neutral;
 
+import de.teamlapen.sync.common.storage.AttachmentSync;
 import de.teamlapen.vampirism.api.VampirismAttachments;
 import de.teamlapen.vampirism.api.entity.factions.IDisguise;
 import de.teamlapen.vampirism.api.entity.player.neutral.INeutralPlayer;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.entity.player.FactionBasePlayer;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.attachment.IAttachmentHolder;
-import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class NeutralPlayer extends FactionBasePlayer<INeutralPlayer> implements INeutralPlayer {
@@ -32,7 +28,7 @@ public class NeutralPlayer extends FactionBasePlayer<INeutralPlayer> implements 
     }
 
     @Override
-    public ResourceLocation getAttachedKey() {
+    public @NotNull ResourceLocation getAttachedKey() {
         return VampirismAttachments.Keys.NEUTRAL_PLAYER;
     }
 
@@ -41,33 +37,11 @@ public class NeutralPlayer extends FactionBasePlayer<INeutralPlayer> implements 
         return null;
     }
 
-    public static class Serializer implements IAttachmentSerializer<CompoundTag, NeutralPlayer> {
-
+    public static class AttachmentOptions extends AttachmentSync.PlayerOptions<NeutralPlayer> {
         @Override
-        public @NotNull NeutralPlayer read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
-            if (holder instanceof Player player) {
-                var neutral = new NeutralPlayer(player);
-                neutral.deserializeNBT(provider, tag);
-                return neutral;
-            }
-            throw new IllegalArgumentException("Holder is not a player");
+        protected @NotNull NeutralPlayer create(@NotNull Player player) {
+            return new NeutralPlayer(player);
         }
 
-
-        @Override
-        public CompoundTag write(NeutralPlayer attachment, HolderLookup.@NotNull Provider provider) {
-            return attachment.serializeNBT(provider);
-        }
-    }
-
-    public static class Factory implements Function<IAttachmentHolder, NeutralPlayer> {
-
-        @Override
-        public NeutralPlayer apply(IAttachmentHolder holder) {
-            if (holder instanceof Player player) {
-                return new NeutralPlayer(player);
-            }
-            throw new IllegalArgumentException("Cannot create neutral player attachment for holder " + holder.getClass() + ". Expected Player");
-        }
     }
 }

@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.gui.screens.SelectActionRadialScreen;
 import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionTaskRadialScreen;
@@ -54,7 +55,7 @@ public class ModKeys {
      */
     private static final long ACTION_BUTTON_COOLDOWN = 500;
 
-    private static final String CATEGORY = "keys.vampirism.category";
+    public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(VResourceLocation.mod("main"));
 
     public static final KeyMapping SUCK = new KeyMapping("keys.vampirism.suck", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
     public static final KeyMapping ACTION = new KeyMapping("keys.vampirism.action", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);
@@ -79,6 +80,8 @@ public class ModKeys {
     }
 
     static void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
+        event.registerCategory(CATEGORY);
+
         event.register(ACTION);
         event.register(SUCK);
         event.register(VAMPIRISM_MENU);

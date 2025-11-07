@@ -5,14 +5,15 @@ import net.minecraft.Util;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.HumanoidArm;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ClothedModel<T extends PlayerRenderState> extends HumanoidModel<T> {
+public class ClothedModel<T extends AvatarRenderState> extends HumanoidModel<T> {
     private static final String LEFT_SLEEVE = "left_sleeve";
     private static final String RIGHT_SLEEVE = "right_sleeve";
     private static final String LEFT_PANTS = "left_pants";
@@ -65,7 +66,7 @@ public class ClothedModel<T extends PlayerRenderState> extends HumanoidModel<T> 
     }
 
     @Override
-    public void translateToHand(@NotNull HumanoidArm side, @NotNull PoseStack poseStack) {
+    public void translateToHand(@NotNull HumanoidRenderState state, @NotNull HumanoidArm side, @NotNull PoseStack poseStack) {
         this.root().translateAndRotate(poseStack);
         ModelPart modelpart = this.getArm(side);
         if (this.slim) {

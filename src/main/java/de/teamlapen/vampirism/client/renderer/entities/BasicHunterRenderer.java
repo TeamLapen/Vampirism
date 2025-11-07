@@ -5,12 +5,12 @@ import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.BasicHunterModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.CloakLayer;
 import de.teamlapen.vampirism.common.entity.hunter.BasicHunterEntity;
-import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.PlayerSkin;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -26,7 +26,10 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
     public BasicHunterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER_SLIM), true), 0.5F);
-        this.addLayer(new ArmorLayer<HumanoidModel<BasicHunterEntity.BasicHunterRenderState>>(this, new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getEquipmentRenderer()));
+        this.addLayer(new ArmorLayer<HumanoidModel<BasicHunterEntity.BasicHunterRenderState>>(this,
+                ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, true)),
+                ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, false)),
+                context.getEquipmentRenderer()));
         this.addLayer(new CloakLayer<>(this, textureCloak, entity -> entity.entityLevel > 0));
         this.textures = gatherTextures("textures/entity/hunter", true);
     }

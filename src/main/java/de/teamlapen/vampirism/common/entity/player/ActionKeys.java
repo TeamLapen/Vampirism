@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.common.entity.player;
 
+import com.mojang.serialization.Codec;
+
 import java.util.OptionalInt;
 
 public enum ActionKeys {
@@ -12,6 +14,8 @@ public enum ActionKeys {
     ACTION_7,
     ACTION_8,
     ACTION_9;
+
+    public static Codec<ActionKeys> CODEC = Codec.INT.xmap(x -> ActionKeys.values()[x], ActionKeys::ordinal);
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private final OptionalInt defaultKey;

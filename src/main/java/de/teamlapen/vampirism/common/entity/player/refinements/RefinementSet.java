@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.random.WeightedEntry;
+import net.minecraft.util.random.Weighted;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +22,7 @@ public abstract class RefinementSet implements IRefinementSet {
     private final Set<Holder<IRefinement>> refinements;
     private final Rarity rarity;
     private final int color;
-    private final @NotNull WeightedEntry.Wrapper<IRefinementSet> weightedRandom;
+    private final @NotNull Weighted<IRefinementSet> weightedRandom;
     private Component name;
     private Component desc;
     @Nullable
@@ -31,7 +31,7 @@ public abstract class RefinementSet implements IRefinementSet {
     public RefinementSet(Rarity rarity, int color, Set<Holder<IRefinement>> refinements) {
         this.refinements = refinements;
         this.rarity = rarity;
-        this.weightedRandom = WeightedEntry.wrap(this, this.rarity.weight);
+        this.weightedRandom = new Weighted<>(this, this.rarity.weight);
         this.color = color;
     }
 
@@ -68,7 +68,7 @@ public abstract class RefinementSet implements IRefinementSet {
         return Optional.ofNullable(restrictedType);
     }
 
-    public WeightedEntry.@NotNull Wrapper<IRefinementSet> getWeightedRandom() {
+    public @NotNull Weighted<IRefinementSet> getWeightedRandom() {
         return weightedRandom;
     }
 

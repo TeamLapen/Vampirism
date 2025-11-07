@@ -35,7 +35,7 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
      */
     public static @NotNull Optional<ClientboundRequestMinionSelectPacket> createRequestForPlayer(@NotNull ServerPlayer player, Action action) {
         FactionPlayerHandler fp = FactionPlayerHandler.get(player);
-        PlayerMinionController controller = MinionWorldData.getData(player.server).getOrCreateController(fp);
+        PlayerMinionController controller = MinionWorldData.getData(player.level()).getOrCreateController(fp);
         Collection<Integer> ids = controller.getCallableMinions();
         if (!ids.isEmpty()) {
             List<Pair<Integer, Component>> minions = new ArrayList<>(ids.size());

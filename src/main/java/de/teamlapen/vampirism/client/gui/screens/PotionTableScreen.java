@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.inventory.PotionTableMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -36,7 +36,6 @@ public class PotionTableScreen extends AbstractContainerScreen<PotionTableMenu> 
 
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        GuiRenderer.resetColor();
         ResourceLocation texture = this.menu.isExtendedTable() ? BACKGROUND_EXTENDED : BACKGROUND;
 
         int cX = (this.width - this.imageWidth) / 2;
@@ -45,19 +44,19 @@ public class PotionTableScreen extends AbstractContainerScreen<PotionTableMenu> 
         int fuelTime = this.menu.getFuelTime();
         int fuelIconWidth = Mth.clamp((18 * fuelTime + 20 - 1) / 20, 0, 18);
         if (fuelIconWidth > 0) {
-            graphics.blitSprite(RenderType::guiTextured, FUEL_SPRITE, 18, 4, 0, 0, cX + 66, cY + 41, fuelIconWidth, 4);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FUEL_SPRITE, 18, 4, 0, 0, cX + 66, cY + 41, fuelIconWidth, 4);
         }
 
         int brewTime = this.menu.getBrewTime();
         if (brewTime > 0) {
             int brewIconHeight = (int) (28.0F * (1.0F - (float) brewTime / 400.0F));
             if (brewIconHeight > 0) {
-                graphics.blitSprite(RenderType::guiTextured, PROGRESS_SPRITE, 9, 28, 0, 0, cX + 145, cY + 17, 12, brewIconHeight);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS_SPRITE, 9, 28, 0, 0, cX + 145, cY + 17, 12, brewIconHeight);
             }
 
             brewIconHeight = BUBBLELENGTHS[brewTime / 2 % 7];
             if (brewIconHeight > 0) {
-                graphics.blitSprite(RenderType::guiTextured, BUBBLES_SPRITE, 12, 29, 0, 29 - brewIconHeight, cX + 69, cY + 14 + 26 - brewIconHeight, 12, brewIconHeight);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BUBBLES_SPRITE, 12, 29, 0, 29 - brewIconHeight, cX + 69, cY + 14 + 26 - brewIconHeight, 12, brewIconHeight);
             }
         }
     }

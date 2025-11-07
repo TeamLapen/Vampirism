@@ -35,7 +35,7 @@ public abstract class PlayerOwnedMenu extends AbstractContainerMenu {
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        if (!this.player.level().isClientSide && player instanceof ServerPlayer serverPlayer && !lockData.canAccess(serverPlayer)) {
+        if (!this.player.level().isClientSide() && player instanceof ServerPlayer serverPlayer && !lockData.canAccess(serverPlayer)) {
             serverPlayer.closeContainer();
         }
     }

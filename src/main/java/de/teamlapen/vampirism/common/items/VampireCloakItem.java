@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.common.items.component.FactionRestriction;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -15,7 +16,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.Equippable;
-import net.minecraft.world.level.Level;
 
 public class VampireCloakItem extends Item {
 
@@ -29,8 +29,8 @@ public class VampireCloakItem extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        if (entity instanceof LivingEntity living && slotId >= 36 && slotId <= 39) {
+    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, EquipmentSlot equipmentSlot) {
+        if (entity instanceof LivingEntity living && equipmentSlot == EquipmentSlot.CHEST) {
             if (living.tickCount % 16 == 8) {
                 if (!Helper.isVampire(living)) {
                     living.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));

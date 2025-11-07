@@ -9,17 +9,19 @@ import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.util.BloodHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 public class BloodSieveBlockEntity extends BlockEntity {
@@ -34,7 +36,7 @@ public class BloodSieveBlockEntity extends BlockEntity {
     public static final int FILTER_DELAY = 4;
     public static final int PULL_DELAY = 4;
 
-    public final IItemHandler filterItemHandler;
+    public final ResourceHandler<ItemResource> filterItemHandler;
 
     public final ControllableFluidTank inputFluidInventory;
     public final ControllableFluidTank outputFluidInventory;
@@ -48,29 +50,29 @@ public class BloodSieveBlockEntity extends BlockEntity {
             updateFilterState(level, worldPosition);
             setChanged();
         });
-        this.inputFluidInventory = new ControllableFluidTank(CAPACITY, BloodHelper::isConvertibleToBlood).setOnFluidChanged(fluid -> setChanged()).setSaveKey(KEY_INPUT_FLUID).setAllowOutput(false);
-        this.outputFluidInventory = new ControllableFluidTank(CAPACITY, fluid -> fluid.is(ModFluids.BLOOD)).setOnFluidChanged(fluid -> setChanged()).setSaveKey(KEY_OUTPUT_FLUID).setAllowInput(false);
+        this.inputFluidInventory = new ControllableFluidTank(CAPACITY, this::setChanged, BloodHelper::isConvertibleToBlood, true, false);
+        this.outputFluidInventory = new ControllableFluidTank(CAPACITY, this::setChanged, x -> x.is(ModFluids.BLOOD), false, true);
         this.filterStack = ItemStack.EMPTY;
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        inputFluidInventory.readFromNBT(registries, tag);
-        outputFluidInventory.readFromNBT(registries, tag);
-        filterStack = ItemStack.parseOptional(registries, tag.getCompound(KEY_FILTER_STACK));
-        filterCooldownTime = tag.getInt(KEY_FILTER_COOLDOWN_TIME);
-        pullCooldownTime = tag.getInt(KEY_PULL_COOLDOWN_TIME);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.inputFluidInventory.deserialize(input.childOrEmpty("input_fluid"));
+        this.outputFluidInventory.deserialize(input.childOrEmpty("output_fluid"));
+        this.filterStack = input.read(KEY_FILTER_STACK, ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+        this.filterCooldownTime = input.getIntOr(KEY_FILTER_COOLDOWN_TIME, -1);
+        this.pullCooldownTime = input.getIntOr(KEY_PULL_COOLDOWN_TIME, -1);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        inputFluidInventory.writeToNBT(registries, tag);
-        outputFluidInventory.writeToNBT(registries, tag);
-        tag.put(KEY_FILTER_STACK, filterStack.saveOptional(registries));
-        tag.putInt(KEY_FILTER_COOLDOWN_TIME, filterCooldownTime);
-        tag.putInt(KEY_PULL_COOLDOWN_TIME, pullCooldownTime);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        this.inputFluidInventory.serialize(output.child("input_fluid"));
+        this.outputFluidInventory.serialize(output.child("output_fluid"));
+        output.store(KEY_FILTER_STACK, ItemStack.OPTIONAL_CODEC, this.filterStack);
+        output.putInt(KEY_FILTER_COOLDOWN_TIME, this.filterCooldownTime);
+        output.putInt(KEY_PULL_COOLDOWN_TIME, this.pullCooldownTime);
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, BloodSieveBlockEntity blockEntity) {
@@ -84,20 +86,22 @@ public class BloodSieveBlockEntity extends BlockEntity {
             return;
         }
 
-        boolean[] needsChange = new boolean[] { false };
+        boolean needsChange;
 
-        FluidUtil.getFluidHandler(level, pos.above(), Direction.DOWN).ifPresent(fluidHandler -> {
-            FluidStack moved = FluidUtil.tryFluidTransfer(blockEntity.inputFluidInventory, fluidHandler, 100, true);
-            needsChange[0] = !moved.isEmpty();
-        });
+        try (var transaction = Transaction.openRoot()) {
+            var moved = ResourceHandlerUtil.move(level.getCapability(Capabilities.Fluid.BLOCK, pos.above(), Direction.DOWN), blockEntity.inputFluidInventory, BloodHelper::isConvertibleToBlood, 100, transaction);
+            needsChange = moved != 0;
+            transaction.commit();
+        }
 
-        FluidUtil.getFluidHandler(level, pos.below(), Direction.UP).ifPresent(fluidHandler -> {
-            FluidStack moved = FluidUtil.tryFluidTransfer(fluidHandler, blockEntity.outputFluidInventory, 100, true);
-            needsChange[0] = needsChange[0] || !moved.isEmpty();
-        });
+        try (var transaction = Transaction.openRoot()) {
+            var moved = ResourceHandlerUtil.move(blockEntity.outputFluidInventory, level.getCapability(Capabilities.Fluid.BLOCK, pos.below(), Direction.UP), BloodHelper::isConvertibleToBlood, 100, transaction);
+            needsChange = moved != 0 || needsChange;
+            transaction.commit();
+        }
 
         blockEntity.pullCooldownTime = PULL_DELAY;
-        if (needsChange[0]) blockEntity.setChanged();
+        if (needsChange) blockEntity.setChanged();
     }
 
     public static void filterBlood(BloodSieveBlockEntity blockEntity) {
@@ -107,34 +111,37 @@ public class BloodSieveBlockEntity extends BlockEntity {
         }
 
         if (!blockEntity.inputFluidInventory.isEmpty()) {
-            FluidStack inputFluid = blockEntity.inputFluidInventory.getFluid();
-            IFluidBloodConversion bloodConversion = BloodHelper.getBloodConversion(inputFluid);
-            float conversionRate = bloodConversion.conversionRate();
+            try (var transaction = Transaction.openRoot()) {
 
-            ItemStack filterStack = blockEntity.filterStack;
-            int durabilityLeft = filterStack.isDamageableItem() ? (filterStack.getMaxDamage() - filterStack.getDamageValue()) : 0;
+                int extracted;
+                float conversionRate;
+                try (var access = blockEntity.inputFluidInventory.beginAccess()) {
+                    FluidResource resource = blockEntity.inputFluidInventory.getResource(0);
+                    if (resource.isEmpty()) return;
 
-            int inputAmount = Math.min(50, inputFluid.getAmount());
-            int potentialResult = (int) (inputAmount * conversionRate);
+                    IFluidBloodConversion bloodConversion = BloodHelper.getBloodConversion(resource.getFluid());
+                    conversionRate = bloodConversion.conversionRate();
 
-            int allowedByTank = blockEntity.outputFluidInventory.forceFill(new FluidStack(ModFluids.BLOOD.get(), potentialResult), IFluidHandler.FluidAction.SIMULATE);
-            int allowed = Math.min(allowedByTank, durabilityLeft);
+                    int amountAsInt = blockEntity.inputFluidInventory.getAmountAsInt(0);
 
-            if (allowed > 0) {
-                int toDrain = (int) Math.ceil(allowed / conversionRate);
-                FluidStack drained = blockEntity.inputFluidInventory.forceDrain(toDrain, IFluidHandler.FluidAction.EXECUTE);
+                    extracted = blockEntity.inputFluidInventory.extract(resource, Math.min(amountAsInt, 50), transaction);
+                }
 
-                if (!drained.isEmpty()) {
-                    int resultBlood = (int) (drained.getAmount() * conversionRate);
-                    blockEntity.outputFluidInventory.forceFill(new FluidStack(ModFluids.BLOOD.get(), resultBlood), IFluidHandler.FluidAction.EXECUTE);
+                int blood = (int) Math.ceil(extracted * conversionRate);
 
-                    blockEntity.filterStack.setDamageValue(filterStack.getDamageValue() + drained.getAmount());
-                    if (blockEntity.filterStack.isBroken()) {
-                        blockEntity.filterStack = ItemStack.EMPTY;
+                if (blood > 0) {
+                    try (var access = blockEntity.outputFluidInventory.beginAccess()) {
+                        int inserted = blockEntity.outputFluidInventory.insert(FluidResource.of(ModFluids.BLOOD), blood, transaction);
+
+                        if (inserted > 0) {
+                            blockEntity.filterStack.setDamageValue(blockEntity.filterStack.getDamageValue() + inserted);
+                            if (blockEntity.filterStack.isBroken()) {
+                                blockEntity.filterStack = ItemStack.EMPTY;
+                            }
+                            blockEntity.updateFilterState(blockEntity.level, blockEntity.worldPosition);
+                            transaction.commit();
+                        }
                     }
-                    blockEntity.updateFilterState(blockEntity.level, blockEntity.worldPosition);
-
-                    blockEntity.setChanged();
                 }
             }
         }

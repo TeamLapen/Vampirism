@@ -14,7 +14,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
  * PacketDispatcher implementation used by the library mod.
  * ONLY FOR INTERNAL USAGE
  */
-@EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = REFERENCE.MODID)
 public class SyncPacketDispatcher {
 
     private static final String VERSION = "vampirism-sync";

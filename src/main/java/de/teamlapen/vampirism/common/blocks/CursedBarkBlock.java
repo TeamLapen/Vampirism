@@ -26,7 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public abstract class CursedBarkBlock extends Block implements HolyWaterEffectConsumer {
 
     public CursedBarkBlock(Properties properties) {
-        super(properties.noCollission().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking(UtilLib::never));
+        super(properties.noCollision().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking(UtilLib::never));
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
 
@@ -38,7 +38,7 @@ public abstract class CursedBarkBlock extends Block implements HolyWaterEffectCo
         }
         entity.setDeltaMovement(entity.getDeltaMovement().add(thrust));
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (entity instanceof Player player) {
                 VampirePlayer vampire = VampirePlayer.get(player);
                 if (vampire.getRemainingBarkTicks() == 0) {

@@ -23,8 +23,7 @@ import de.teamlapen.vampirism.common.util.VampireVillage;
 import de.teamlapen.vampirism.common.util.VampirismEventFactory;
 import de.teamlapen.vampirism.common.world.saved.MinionWorldData;
 import de.teamlapen.vampirism.server.config.BalanceMobProps;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -33,6 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.StructureTags;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -50,6 +50,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
@@ -99,11 +102,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
-        nbt.putInt("level", getEntityLevel());
-        nbt.putInt("type", getEntityTextureType());
-        nbt.putBoolean("attack", this.attack);
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putInt("level", getEntityLevel());
+        output.putInt("type", getEntityTextureType());
+        output.putBoolean("attack", this.attack);
     }
 
     @Override
@@ -151,7 +154,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     if (IFaction.is(fph.getFaction(), this.getFaction())) {
                         boolean hasIncreasedStats = fph.getSkillHandler().map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE)).orElse(false);
                         VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
-                        data.updateEntityCaps(this.serializeAttachments(lord.registryAccess()));
+                        TagValueOutput withContext = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, lord.registryAccess());
+                        this.serializeAttachments(withContext);
+                        data.updateEntityCaps(withContext.buildResult());
                         int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
                         if (id < 0) {
                             LOGGER.error("Failed to get minion slot");
@@ -297,7 +302,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 2) {
-                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 1, false, false));
+                this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 1000000, 1, false, false));
             }
             if (level == 1) {
                 this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
@@ -330,18 +335,12 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tagCompund) {
-        super.readAdditionalSaveData(tagCompund);
-        if (tagCompund.contains("level")) {
-            setEntityLevel(tagCompund.getInt("level"));
-        }
-        if (tagCompund.contains("attack")) {
-            this.attack = tagCompund.getBoolean("attack");
-        }
-        if (tagCompund.contains("type")) {
-            int t = tagCompund.getInt("type");
-            getEntityData().set(TYPE, t < TYPES && t >= 0 ? t : -1);
-        }
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        setEntityLevel(input.getIntOr("level", 0));
+        this.attack = input.getBooleanOr("attack", false);
+        int type = input.getIntOr("type", 0);
+        getEntityData().set(TYPE, type < TYPES && type >= 0 ? type : -1);
     }
 
     @Override
@@ -404,7 +403,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (this.isAlive() && !player.isShiftKeyDown()) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 FactionPlayerHandler handler = FactionPlayerHandler.get(player);
                 int vampireLevel = handler.getCurrentLevel(ModFactions.VAMPIRE);
                 if (vampireLevel > 0) {
@@ -480,7 +479,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     }
 
-    public static class BasicVampireRenderState extends PlayerRenderState {
+    public static class BasicVampireRenderState extends AvatarRenderState {
         public ResourceLocation texture;
     }
 }

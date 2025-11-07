@@ -1,6 +1,5 @@
 package de.teamlapen.lib.client.gui.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -9,9 +8,10 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,15 +31,12 @@ public class ProgressBar extends AbstractWidget {
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
-        RenderSystem.setShaderColor((color >> 16) / 256f, ((color >> 8) & 0xFF) / 256f, (color & 0xFF) / 256f, this.alpha);
-        graphics.blitSprite(RenderType::guiTextured, SPRITES.get(this.active, progress > 0), this.getX(), this.getY(), this.width, 20);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, progress > 0), this.getX(), this.getY(), this.width, 20, ARGB.color(alpha, color));
 
-        RenderSystem.setShaderColor((color >> 16) / 256f, ((color >> 8) & 0xFF) / 256f, (color & 0xFF) / 256f, this.alpha);
         if (progress > 0) {
-            graphics.blitSprite(RenderType::guiTextured, PROGRESS, this.getX() + 3, this.getY() + 3, (int) ((progress) * (this.width - 6)), 14);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS, this.getX() + 3, this.getY() + 3, (int) ((progress) * (this.width - 6)), 14, ARGB.color(alpha, color));
         }
         int j = getFGColor();
-        RenderSystem.setShaderColor(1, 1, 1, 1);
         graphics.drawCenteredString(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
         setTooltip(Tooltip.create(Component.literal(((int) (progress * 100f)) + "%")));
     }

@@ -13,8 +13,9 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class OilBottleItem extends Item implements IOilItem, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
@@ -41,8 +42,8 @@ public class OilBottleItem extends Item implements IOilItem, BaseDisplayItemGene
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        OilContent.getOil(stack).value().getDescription(stack, context, tooltipComponents);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        OilContent.getOil(stack).value().getDescription(stack, context, tooltipDisplay, tooltipComponents);
     }
 
     @Override

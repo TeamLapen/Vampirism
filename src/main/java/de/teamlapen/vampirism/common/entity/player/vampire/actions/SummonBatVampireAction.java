@@ -32,14 +32,14 @@ public class SummonBatVampireAction extends DefaultVampireAction {
             amount = amount / 2;
         }
         for (int i = 0; i < amount; i++) {
-            BlindingBatEntity e = ModEntities.BLINDING_BAT.get().create(entityPlayer.getCommandSenderWorld(), EntitySpawnReason.TRIGGERED);
+            BlindingBatEntity e = ModEntities.BLINDING_BAT.get().create(entityPlayer.level(), EntitySpawnReason.TRIGGERED);
             e.restrictLiveSpan();
             if (refined) e.setTargeting();
             e.setResting(false);
             e.copyPosition(player.asEntity());
-            player.asEntity().getCommandSenderWorld().addFreshEntity(e);
+            player.asEntity().level().addFreshEntity(e);
         }
-        entityPlayer.getCommandSenderWorld().playSound(null, entityPlayer.getX(), entityPlayer.getY(), entityPlayer.getZ(), ModSounds.BAT_SWARM.get(), SoundSource.PLAYERS, 1.3F, entityPlayer.getCommandSenderWorld().random.nextFloat() * 0.2F + 1.3F);
+        entityPlayer.level().playSound(null, entityPlayer.getX(), entityPlayer.getY(), entityPlayer.getZ(), ModSounds.BAT_SWARM.get(), SoundSource.PLAYERS, 1.3F, entityPlayer.level().random.nextFloat() * 0.2F + 1.3F);
         return IActionResult.SUCCESS;
     }
 

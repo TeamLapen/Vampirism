@@ -20,7 +20,7 @@ public class SpawnTestAnimalCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int spawnTestAnimal(@NotNull ServerPlayer asPlayer) {
-        Cow cow = EntityType.COW.create(asPlayer.getCommandSenderWorld(), EntitySpawnReason.COMMAND);
+        Cow cow = EntityType.COW.create(asPlayer.level(), EntitySpawnReason.COMMAND);
         cow.setHealth(cow.getMaxHealth() / 4.2f);
         cow.copyPosition(asPlayer);
         asPlayer.level().addFreshEntity(cow);

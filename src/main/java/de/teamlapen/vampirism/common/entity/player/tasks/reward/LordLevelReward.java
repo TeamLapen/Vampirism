@@ -21,7 +21,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     public static final MapCodec<LordLevelReward> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
                     Codec.INT.fieldOf("targetLevel").forGetter(i -> i.targetLevel),
-                    ComponentSerialization.FLAT_CODEC.fieldOf("description").forGetter(i -> i.description)
+                    ComponentSerialization.CODEC.fieldOf("description").forGetter(i -> i.description)
             ).apply(inst, LordLevelReward::new));
 
     public final int targetLevel;

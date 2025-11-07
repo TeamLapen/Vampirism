@@ -213,12 +213,12 @@ public class TotemHelper {
      * @return the feedback for the player
      */
     public static @NotNull Component forceFactionCommand(@Nullable Holder<IFaction<?>> faction, @NotNull ServerPlayer player) {
-        Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(player.getCommandSenderWorld().dimension(), key -> new HashMap<>());
-        List<PoiRecord> pointOfInterests = ((ServerLevel) player.getCommandSenderWorld()).getPoiManager().getInRange(point -> true, player.blockPosition(), 25, PoiManager.Occupancy.ANY).sorted(Comparator.comparingInt(point -> (int) (point.getPos()).distSqr(player.blockPosition()))).toList();
+        Map<BlockPos, BlockPos> totemPositions = TotemHelper.totemPositions.computeIfAbsent(player.level().dimension(), key -> new HashMap<>());
+        List<PoiRecord> pointOfInterests = ((ServerLevel) player.level()).getPoiManager().getInRange(point -> true, player.blockPosition(), 25, PoiManager.Occupancy.ANY).sorted(Comparator.comparingInt(point -> (int) (point.getPos()).distSqr(player.blockPosition()))).toList();
         if (pointOfInterests.stream().noneMatch(point -> totemPositions.containsKey(point.getPos()))) {
             return Component.translatable("command.vampirism.test.village.no_village");
         }
-        BlockEntity te = player.getCommandSenderWorld().getBlockEntity(totemPositions.get(pointOfInterests.getFirst().getPos()));
+        BlockEntity te = player.level().getBlockEntity(totemPositions.get(pointOfInterests.getFirst().getPos()));
         if (!(te instanceof TotemBlockEntity tile)) {
             LOGGER.warn("TileEntity at {} is no TotemTileEntity", totemPositions.get(pointOfInterests.getFirst().getPos()));
             return Component.literal("");
@@ -346,7 +346,7 @@ public class TotemHelper {
     }
 
     public static void ringBell(@NotNull Level world, @NotNull Player player) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             Optional<TotemBlockEntity> tile = getTotemNearPos(((ServerLevel) world), player.blockPosition(), false);
             tile.ifPresent(s -> s.ringBell(player));
         }

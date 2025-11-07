@@ -14,14 +14,14 @@ import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.common.items.PureBloodItem;
-import de.teamlapen.vampirism.common.particles.FlyingBloodParticleOptions;
+import de.teamlapen.vampirism.common.particles.AltarInfusionParticleOptions;
 import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,6 +38,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -90,7 +92,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
             return Result.WRONGLEVEL;
-        } else if (player.getCommandSenderWorld().isDay()) {
+        } else if (player.level().isBrightOutside()) {
             return Result.NIGHTONLY;
         } else if (!checkStructureLevel(requiredLevel)) {
             tips = null;
@@ -168,34 +170,24 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tagCompound, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tagCompound, lookupProvider);
-        int tick = tagCompound.getInt("tick");
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        int tick = input.getIntOr("tick", 0);
         //This is used on both client and server side and has to be prepared for the world not being available yet
-        if (tick > 0 && player == null && tagCompound.hasUUID("playerUUID")) {
-            UUID playerID = tagCompound.getUUID("playerUUID");
-            if (!loadRitual(playerID)) {
-                this.playerToLoadUUID = playerID;
+        input.read("playerUUID", UUIDUtil.CODEC).filter(uuid -> tick > 0 && player == null).ifPresent(uuid -> {
+            if (!loadRitual(uuid)) {
+                this.playerToLoadUUID = uuid;
             }
             this.runningTick = tick;
-        }
-
+        });
     }
 
     @Override
-    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = pkt.getTag();
-        if (this.hasLevel()) {
-            this.loadCustomOnly(tag, lookupProvider);
-        }
-    }
-
-    @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(compound, lookupProvider);
-        compound.putInt("tick", runningTick);
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("tick", runningTick);
         if (player != null) {
-            compound.putUUID("playerUUID", player.getUUID());
+            output.store("playerUUID", UUIDUtil.CODEC, player.getUUID());
         }
     }
 
@@ -210,14 +202,14 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         runningTick = DURATION_TICK;
 
         this.setChanged();
-        if (!this.level.isClientSide) {
+        if (!this.level.isClientSide()) {
             for (BlockPos pTip : tips) {
-                ModParticles.spawnParticlesServer(level, new FlyingBloodParticleOptions(60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
+                ModParticles.spawnParticlesServer(level, new AltarInfusionParticleOptions(60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
             }
             BlockState state = this.level.getBlockState(getBlockPos());
             this.level.sendBlockUpdated(getBlockPos(), state, state, 3); //Notify client about started ritual
         }
-        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, DURATION_TICK, 10));
+        player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, DURATION_TICK, 10));
         this.setChanged();
     }
 
@@ -237,12 +229,12 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         }
 
         PHASE phase = getCurrentPhase();
-        if (this.level.isClientSide) {
+        if (this.level.isClientSide()) {
             if (phase.equals(PHASE.PARTICLE_SPREAD)) {
                 if (runningTick % 15 == 0) {
                     BlockPos pos = getBlockPos();
                     for (BlockPos pTip : tips) {
-                        ModParticles.spawnParticlesClient(level, new FlyingBloodParticleOptions(60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, RandomSource.create());
+                        ModParticles.spawnParticlesClient(level, new AltarInfusionParticleOptions(60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 5, 0.1, RandomSource.create());
                     }
                 }
             }
@@ -259,7 +251,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             this.runningTick = 0;
         }
         if (phase.equals(PHASE.LEVELUP)) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 assert player.isAlive();
                 FactionPlayerHandler handler = FactionPlayerHandler.get(player);
                 if (handler.getCurrentLevel(ModFactions.VAMPIRE) != targetLevel - 1) {
@@ -278,7 +270,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
             player.addEffect(new MobEffectInstance(ModEffects.SATURATION, 400, 2));
             player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 400, 2));
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 400, 2));
+            player.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 400, 2));
         }
     }
 
@@ -290,7 +282,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             level.sendBlockUpdated(pos, state, state, 3); //Notify client about started ritual
 
         }
-        if (blockEntity.runningTick == DURATION_TICK && !level.isClientSide) {
+        if (blockEntity.runningTick == DURATION_TICK && !level.isClientSide()) {
             LOGGER.debug("Ritual started");
             blockEntity.consumeItems();
             blockEntity.setChanged();

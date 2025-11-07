@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.entity.hunter;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.ICaptureIgnore;
 import de.teamlapen.vampirism.common.entity.VampirismEntity;
@@ -11,8 +12,6 @@ import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.common.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.common.inventory.HunterTrainerMenu;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -30,6 +29,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,9 +65,9 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull ValueOutput nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putBoolean("createHome", this.shouldCreateHome);
+        nbt.store("createHome", Codec.BOOL, this.shouldCreateHome);
     }
 
     @Override
@@ -87,13 +88,14 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
-        if (nbt.contains("createHome") && (this.shouldCreateHome = nbt.getBoolean("createHome"))) {
-            if (this.getRestrictCenter().equals(BlockPos.ZERO)) {
-                restrictTo(this.blockPosition(), 5);
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.read("createHome", Codec.BOOL).ifPresent(createHome -> {
+            this.shouldCreateHome = createHome;
+            if (!this.hasHome()) {
+                this.setHomeTo(this.blockPosition(), 5);
             }
-        }
+        });
     }
 
     @Nullable
@@ -128,7 +130,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
 
         if (!flag && this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             int lvl = VampirismPlayerAttributes.get(player).hunterLevel;
-            if (!this.level().isClientSide && lvl > 0) {
+            if (!this.level().isClientSide() && lvl > 0) {
                 if (HunterLeveling.getTrainerRequirement(lvl + 1).isPresent()) {
                     if (trainee == null) {
                         player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerMenu(id, playerInventory, this), name));

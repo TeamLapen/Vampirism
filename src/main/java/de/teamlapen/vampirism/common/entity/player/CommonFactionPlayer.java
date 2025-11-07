@@ -6,11 +6,11 @@ import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.ITaskPlayer;
 import de.teamlapen.vampirism.common.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.common.entity.player.skills.SkillHandler;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,7 +92,7 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
         if (!isRemote()) {
             if (newLevel <= 0) {
                 this.onLevelReset(false);
-                this.sync(UpdateParams.all());
+//                this.sync(UpdateParams.all()); TODO
             }
 
         } else {
@@ -123,41 +123,39 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
 
     @MustBeInvokedByOverriders
     @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        CompoundTag tag = super.serializeNBT(provider);
+    public void serialize(@NotNull ValueOutput output) {
+        super.serialize(output);
 
         assert this.taskManager != null;
-        this.taskManager.saveToCompound(provider, tag);
-        this.actionHandler.saveToCompound(provider, tag);
-        this.skillHandler.saveToCompound(provider, tag);
-        return tag;
+        this.taskManager.saveToChild(output);
+        this.actionHandler.saveToChild(output);
+        this.skillHandler.saveToChild(output);
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        super.deserializeNBT(provider, nbt);
+    public void deserialize(@NotNull ValueInput input) {
+        super.deserialize(input);
 
         assert this.taskManager != null;
-        this.taskManager.loadFromCompound(provider, nbt);
-        this.actionHandler.loadFromCompound(provider, nbt);
-        this.skillHandler.loadFromCompound(provider, nbt);
+        this.taskManager.loadFromChild(input);
+        this.actionHandler.loadFromChild(input);
+        this.skillHandler.loadFromChild(input);
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public @NotNull CompoundTag serializeUpdateNBTInternal(@NotNull HolderLookup.Provider provider, UpdateParams params) {
-        var nbt = super.serializeUpdateNBTInternal(provider, params);
-        this.actionHandler.updateToCompound(provider, nbt, params);
-        this.skillHandler.updateToCompound(provider, nbt, params);
-        return nbt;
+    public void serializeUpdateInternal(ValueOutput output, UpdateParams params) {
+        super.serializeUpdateInternal(output, params);
+        this.actionHandler.updateToChild(output, params);
+        this.skillHandler.updateToChild(output, params);
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public void deserializeUpdateNBT(@NotNull HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        super.deserializeUpdateNBT(provider, nbt);
-        this.actionHandler.updateFromCompound(provider, nbt);
-        this.skillHandler.updateFromCompound(provider, nbt);
+    public void deserializeUpdate(@NotNull ValueInput input) {
+        super.deserializeUpdate(input);
+        this.actionHandler.updateFromChild(input);
+        this.skillHandler.updateFromChild(input);
     }
 }

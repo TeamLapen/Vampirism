@@ -9,6 +9,8 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -153,29 +155,29 @@ public class VampireBookScreen extends Screen {
             backgroundTexture = background.texture();
         }
 
-        guiGraphics.blit(RenderType::guiTextured, backgroundTexture, guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
 
         for (IBookContents.IImageEntry entry : images) {
             if (entry.page() == pageNumber || (background.twoPages() && (entry.page() == pageNumber + 1))) {
-                guiGraphics.blit(RenderType::guiTextured, entry.texture(), guiLeft + entry.xOffset(), guiTop + entry.yOffset(), 0, 0, entry.width(), entry.height(), entry.width(), entry.height());
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, entry.texture(), guiLeft + entry.xOffset(), guiTop + entry.yOffset(), 0, 0, entry.width(), entry.height(), entry.width(), entry.height());
             }
         }
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (this.minecraft != null && (keyCode == GLFW.GLFW_KEY_BACKSPACE || keyCode == this.minecraft.options.keyUse.getKey().getValue())) {
+    public boolean keyPressed(KeyEvent keyEvent) {
+        if (this.minecraft != null && (keyEvent.key() == GLFW.GLFW_KEY_BACKSPACE || keyEvent.key() == this.minecraft.options.keyUse.getKey().getValue())) {
             this.minecraft.setScreen(null);
             return true;
-        } else if ((keyCode == GLFW.GLFW_KEY_UP || keyCode == GLFW.GLFW_KEY_RIGHT) && pageNumber + 1 < content.size()) {
+        } else if ((keyEvent.key() == GLFW.GLFW_KEY_UP || keyEvent.key() == GLFW.GLFW_KEY_RIGHT) && pageNumber + 1 < content.size()) {
             pageForward();
             return true;
-        } else if ((keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_LEFT) && pageNumber > 0) {
+        } else if ((keyEvent.key() == GLFW.GLFW_KEY_DOWN || keyEvent.key() == GLFW.GLFW_KEY_LEFT) && pageNumber > 0) {
             pageBack();
             return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 
     public void pageBack() {
@@ -285,7 +287,7 @@ public class VampireBookScreen extends Screen {
                 resourcelocation = this.isHovered() ? PAGE_BACKWARD_HIGHLIGHTED_SPRITE : PAGE_BACKWARD_SPRITE;
             }
 
-            guiGraphics.blitSprite(RenderType::guiTextured, resourcelocation, this.getX(), this.getY(), WIDTH, HEIGHT);
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), WIDTH, HEIGHT);
         }
 
         @Override

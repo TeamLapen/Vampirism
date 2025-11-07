@@ -26,6 +26,8 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
@@ -77,19 +79,19 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (ModKeys.VAMPIRISM_MENU.matches(keyCode, scanCode)) {
+    public boolean keyPressed(KeyEvent keyEvent) {
+        if (ModKeys.VAMPIRISM_MENU.matches(keyEvent)) {
             this.onClose();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        super.mouseDragged(event, dragX, dragY);
         if (!this.isQuickCrafting) {
-            this.list.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            this.list.mouseDragged(event, dragX, dragY);
         }
         return true;
     }
@@ -208,7 +210,6 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
 
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float pPartialTick, int mouseX, int mouseY) {
-        GuiRenderer.resetColor();
         var texture = this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND;
         GuiRenderer.blit(graphics, texture, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
         InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.leftPos + 7, this.topPos + 8, this.leftPos + 56, this.topPos + 78, 30, 0.0625f, mouseX, mouseY, this.minecraft.player);
@@ -221,12 +222,12 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             if (index < list.size() && index >= 0) {
                 if (this.getMenu().getCarried().isEmpty() && !list.get(index).isEmpty()) {
                     if (!this.refinementRemoveButtons.get(this.hoveredSlot.getSlotIndex()).isHoveredOrFocused()) {
-                        graphics.renderTooltip(this.font, list.get(index), mouseX, mouseY);
+                        graphics.setTooltipForNextFrame(this.font, list.get(index), mouseX, mouseY);
 
                     }
                 } else {
                     if (!list.get(index).isEmpty() && this.menu.getSlot(index).mayPlace(this.getMenu().getCarried())) {
-                        graphics.renderTooltip(this.font, Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), mouseX, mouseY);
+                        graphics.setTooltipForNextFrame(this.font, Component.translatable("gui.vampirism.vampirism_menu.destroy_item").withStyle(ChatFormatting.RED), mouseX, mouseY);
                     }
                 }
             }
@@ -267,17 +268,17 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-                if (this.button != null && button.mouseClicked(mouseX, mouseY, mouseButton)) {
+            public boolean mouseClicked(MouseButtonEvent p_445873_, boolean p_433971_) {
+                if (this.button != null && button.mouseClicked(p_445873_, p_433971_)) {
                     return true;
                 }
-                return super.mouseClicked(mouseX, mouseY, mouseButton);
+                return super.mouseClicked(p_445873_, p_433971_);
             }
 
             @Override
-            protected void renderToolTips(Minecraft minecraft, int mouseX, int mouseY) {
+            protected void renderToolTips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
                 if (this.button != null && !button.isMouseOver(mouseX, mouseY)) {
-                    super.renderToolTips(minecraft, mouseX, mouseY);
+                    super.renderToolTips(guiGraphics, mouseX, mouseY);
                 }
             }
 
@@ -286,7 +287,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
                 Component position = ((VampirismMenu) menu).taskWrapper.get(getItem().getTaskBoard()).getLastSeenPos().map(pos -> {
                     int i = Mth.floor(UtilLib.horizontalDistance(player.blockPosition(), pos));
                     MutableComponent itextcomponent = ComponentUtils.wrapInSquareBrackets(Component.translatable("chat.coordinates", pos.getX(), "~", pos.getZ())).withStyle((p_241055_1_) -> {
-                        return p_241055_1_.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.getX() + " ~ " + pos.getZ())).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.coordinates.tooltip")));
+                        return p_241055_1_.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent.SuggestCommand("/tp @s " + pos.getX() + " ~ " + pos.getZ())).withHoverEvent(new HoverEvent.ShowText(Component.translatable("chat.coordinates.tooltip")));
                     });
                     return itextcomponent.append(Component.translatable("gui.vampirism.vampirism_menu.distance", i));
                 }).orElseGet(() -> Component.translatable("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD));
@@ -299,11 +300,11 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
             }
 
             @Override
-            public void render(GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-                super.render(graphics, pIndex, pTop, pLeft, pWidth, pHeight, pMouseX, pMouseY, pIsMouseOver, pPartialTick);
+            public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+                super.renderContent(guiGraphics, mouseX, mouseY, isHovering, partialTick);
                 if (this.button != null) {
-                    this.button.setPosition(pLeft + pWidth - this.button.getWidth() - 1, pTop + 1);
-                    this.button.render(graphics, pMouseX, pMouseY, pPartialTick);
+                    this.button.setPosition(getRowLeft() + getRowWidth() - this.button.getWidth() - 1, getY() + 1);
+                    this.button.render(guiGraphics, mouseX, mouseY, partialTick);
                 }
             }
         }

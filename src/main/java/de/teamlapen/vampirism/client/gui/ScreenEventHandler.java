@@ -32,7 +32,7 @@ public class ScreenEventHandler {
     public void onButtonClicked(ScreenEvent.MouseButtonPressed.@NotNull Pre event) {//InventoryScreen changes layout if recipe book button is clicked. Unfortunately it does not propagate this to the screen children, so we need to use this
         if (event.getScreen() instanceof InventoryScreen && ModConfig.CLIENT.guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
             //Do the same thing MouseHelper would do. However, if GUI returns false on mouseclick it will be called again by MouseHelper
-            if (event.getScreen().mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton())) {
+            if (event.getScreen().mouseClicked(event.getMouseButtonEvent(), event.isDoubleClick())) {
                 event.setCanceled(true);
                 if (button != null) {
                     button.setPosition(((InventoryScreen) event.getScreen()).getGuiLeft() + ModConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + ModConfig.CLIENT.overrideGuiSkillButtonY.get());

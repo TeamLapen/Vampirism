@@ -17,7 +17,7 @@ public class AttackSpeedLordAction<T extends ISkillPlayer<T>> extends LordRangeE
     }
 
     @Override
-    public int getCooldown(T player) {
+    public int getCooldown(@NotNull T player) {
         return super.getCooldown(player) + ModConfig.BALANCE.laLordAttackSpeedCooldown.get();
     }
 

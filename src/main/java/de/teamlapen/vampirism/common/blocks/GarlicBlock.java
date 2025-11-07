@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
@@ -43,7 +44,7 @@ public class GarlicBlock extends CropBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier p_405324_, boolean p_451780_) {
         if (state.getValue(AGE) > 5 && Helper.isVampire(entity)) {
             if (entity instanceof Player player) {
                 DamageHandler.affectVampireGarlicDirect(VampirePlayer.get(player), EnumStrength.WEAK);

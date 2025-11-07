@@ -11,10 +11,11 @@ import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EffectWeaponOil extends WeaponOil {
@@ -52,10 +53,10 @@ public class EffectWeaponOil extends WeaponOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltips) {
-        tooltips.add(Component.empty());
-        tooltips.add(Component.translatable("text.vampirism.oil.weapon_effect_on_hit").withStyle(ChatFormatting.DARK_PURPLE));
-        tooltips.add(getEffectDescriptionWithDash(getEffectInstance(), context));
+    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
+        tooltips.accept(Component.empty());
+        tooltips.accept(Component.translatable("text.vampirism.oil.weapon_effect_on_hit").withStyle(ChatFormatting.DARK_PURPLE));
+        tooltips.accept(getEffectDescriptionWithDash(getEffectInstance(), context));
     }
 
     private Component getEffectDescriptionWithDash(MobEffectInstance instance, @Nullable Item.TooltipContext context) {

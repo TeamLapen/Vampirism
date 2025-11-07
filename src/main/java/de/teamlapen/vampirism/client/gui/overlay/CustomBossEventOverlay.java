@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -11,7 +10,7 @@ import de.teamlapen.vampirism.common.world.MultiBossEvent;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.BossEvent;
@@ -87,9 +86,7 @@ public class CustomBossEventOverlay extends BaseOverlay {
             textureStart += width;
         }
         if (value.getOverlay() != BossEvent.BossBarOverlay.PROGRESS) {
-            RenderSystem.enableBlend();
-            graphics.blitSprite(RenderType::guiTextured, BossHealthOverlayAccessor.getOVERLAY_BACKGROUND_SPRITES()[value.getOverlay().ordinal() - 1], k, j, 182, 5, -1);
-            RenderSystem.disableBlend();
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BossHealthOverlayAccessor.getOVERLAY_BACKGROUND_SPRITES()[value.getOverlay().ordinal() - 1], k, j, 182, 5);
         }
     }
 }

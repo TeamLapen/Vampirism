@@ -96,7 +96,7 @@ public class BloodBottleItem extends Item implements BaseDisplayItemGenerator.Cr
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader levelReader, BlockPos pos, Player player) {
         if (levelReader instanceof Level level) {
-            return level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null) != null;
+            return level.getCapability(Capabilities.Fluid.BLOCK, pos, null) != null;
         }
         return false;
     }

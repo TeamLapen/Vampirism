@@ -12,6 +12,7 @@ import net.minecraft.data.metadata.PackMetadataGenerator;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.util.InclusiveRange;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
@@ -20,7 +21,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = REFERENCE.MODID)
 public class ModDataProvider {
 
     @SuppressWarnings("UnreachableCode")
@@ -48,6 +49,7 @@ public class ModDataProvider {
         generator.addProvider(true, new ModSoundDefinitionsProvider(packOutput));
         generator.addProvider(true, new ModEquipmentAssetProvider(packOutput));
         generator.addProvider(true, new ModBookBackgroundsProvider(packOutput));
-        generator.addProvider(true, new PackMetadataGenerator(packOutput).add(PackMetadataSection.TYPE, new PackMetadataSection(Component.literal("Vampirism resources"), DetectedVersion.BUILT_IN.getPackVersion(PackType.CLIENT_RESOURCES))));
+        generator.addProvider(true, new PackMetadataGenerator(packOutput).add(PackMetadataSection.CLIENT_TYPE, new PackMetadataSection(Component.literal("Vampirism resources"), new InclusiveRange<>(DetectedVersion.BUILT_IN.packVersion(PackType.CLIENT_RESOURCES)))));
+        generator.addProvider(true, new ModAtlasProvider(packOutput));
     }
 }

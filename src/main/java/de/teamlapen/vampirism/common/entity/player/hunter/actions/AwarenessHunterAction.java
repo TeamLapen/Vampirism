@@ -20,12 +20,12 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    public int getCooldown(IHunterPlayer player) {
+    public int getCooldown(@NotNull IHunterPlayer player) {
         return ModConfig.BALANCE.haAwarenessCooldown.get();
     }
 
     @Override
-    public int getDuration(IHunterPlayer player) {
+    public int getDuration(@NotNull IHunterPlayer player) {
         return ModConfig.BALANCE.haAwarenessDuration.get();
     }
 
@@ -54,17 +54,17 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    protected IActionResult activate(IHunterPlayer player, ActivationContext context) {
+    protected @NotNull IActionResult activate(@NotNull IHunterPlayer player, @NotNull ActivationContext context) {
         return IActionResult.SUCCESS;
     }
 
     @Override
-    public boolean showHudCooldown(Player player) {
+    public boolean showHudCooldown(@NotNull Player player) {
         return true;
     }
 
     @Override
-    public boolean showHudDuration(Player player) {
+    public boolean showHudDuration(@NotNull Player player) {
         return true;
     }
 

@@ -1,17 +1,17 @@
 package de.teamlapen.vampirism.common.entity.player;
 
+import com.mojang.logging.LogUtils;
 import de.teamlapen.sync.common.entities.IPlayerEventListener;
 import de.teamlapen.sync.common.storage.Attachment;
 import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 /**
  * Basic class for all of Vampirism's players.
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> extends Attachment implements IFactionPlayer<T>, IPlayerEventListener {
 
-    private static final Logger LOGGER = LogManager.getLogger(FactionBasePlayer.class);
+    protected static final Logger LOGGER = LogUtils.getLogger();
 
     protected final Player player;
 
@@ -44,30 +44,29 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> extends Att
             LOGGER.error("Trying to check if remote, but world is not set yet", new Throwable("World not loaded").fillInStackTrace());
             return false;
         }
-        return player.level().isClientSide;
+        return player.level().isClientSide();
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        return new CompoundTag();
+    public void serialize(@NotNull ValueOutput output) {
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+    public void deserialize(@NotNull ValueInput input) {
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+    public void deserializeUpdate(@NotNull ValueInput input) {
 
     }
 
     @MustBeInvokedByOverriders
     @Override
-    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams sendAllData) {
-        return new CompoundTag();
+    public void serializeUpdateInternal(ValueOutput output, UpdateParams sendAllData) {
     }
+
 
 }

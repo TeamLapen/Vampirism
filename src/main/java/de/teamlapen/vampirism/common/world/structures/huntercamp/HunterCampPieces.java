@@ -46,7 +46,7 @@ public abstract class HunterCampPieces extends StructurePiece {
 
     public HunterCampPieces(@NotNull StructurePieceType structurePieceType, @NotNull CompoundTag nbt) {
         super(structurePieceType, nbt);
-        this.pos = new BlockPos(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"));
+        this.pos = new BlockPos(nbt.getInt("x").orElseThrow(), nbt.getInt("y").orElseThrow(), nbt.getInt("z").orElseThrow());
     }
 
     @Override
@@ -72,8 +72,8 @@ public abstract class HunterCampPieces extends StructurePiece {
 
         public Fireplace(@NotNull CompoundTag nbt) {
             super(ModStructures.HUNTER_CAMP_FIREPLACE.get(), nbt);
-            this.advanced = nbt.getBoolean("advanced");
-            this.specialComponentAdd = nbt.getBoolean("specialComponentAdd");
+            this.advanced = nbt.getBoolean("advanced").orElseThrow();
+            this.specialComponentAdd = nbt.getBoolean("specialComponentAdd").orElseThrow();
         }
 
         @Override
@@ -165,9 +165,9 @@ public abstract class HunterCampPieces extends StructurePiece {
 
         public Tent(@NotNull CompoundTag nbt) {
             super(ModStructures.HUNTER_CAMP_TENT.get(), nbt);
-            this.direction = Direction.from2DDataValue(nbt.getInt("direction"));
-            this.mirror = nbt.getInt("mirror");
-            this.advanced = nbt.getBoolean("advanced");
+            this.direction = Direction.from2DDataValue(nbt.getInt("direction").orElseThrow());
+            this.mirror = nbt.getInt("mirror").orElseThrow();
+            this.advanced = nbt.getBoolean("advanced").orElseThrow();
         }
 
         @Override
@@ -270,8 +270,8 @@ public abstract class HunterCampPieces extends StructurePiece {
 
         public SpecialBlock(@NotNull CompoundTag compoundNBT) {
             super(ModStructures.HUNTER_CAMP_SPECIAL.get(), compoundNBT);
-            this.direction = Direction.from2DDataValue(compoundNBT.getInt("dir"));
-            this.advanced = compoundNBT.getBoolean("advanced");
+            this.direction = Direction.from2DDataValue(compoundNBT.getInt("dir").orElseThrow());
+            this.advanced = compoundNBT.getBoolean("advanced").orElseThrow();
         }
 
         @Override

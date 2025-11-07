@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.entity.player.vampire;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.sync.common.storage.ISyncableSaveData;
 import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
@@ -9,14 +10,14 @@ import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.items.consume.BloodFoodProperties;
 import de.teamlapen.vampirism.common.mixin.accessor.FoodDataAccessor;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -87,12 +88,12 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     public void onUpdate() {
         FoodData foodStats = player.getFoodData();
         foodStats.setFoodLevel(10);
-        Difficulty enumDifficulty = player.getCommandSenderWorld().getDifficulty();
+        Difficulty enumDifficulty = player.level().getDifficulty();
         float exhaustion = ((FoodDataAccessor)foodStats).getExhaustionLevel();
         ((FoodDataAccessor)foodStats).setExhaustionLevel(0);
         addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
-        float bloodExhaustionGate = player.getCommandSenderWorld().getBiome(player.blockPosition()).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME) ? 6f : 4f;
+        float bloodExhaustionGate = player.level().getBiome(player.blockPosition()).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME) ? 6f : 4f;
         if (this.bloodExhaustionLevel > bloodExhaustionGate) {
             this.bloodExhaustionLevel -= bloodExhaustionGate;
             if (bloodSaturationLevel > 0) {
@@ -101,7 +102,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }
-        if (player.getCommandSenderWorld() instanceof ServerLevel level) {
+        if (player.level() instanceof ServerLevel level) {
             boolean regen = level.getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
             if (regen && this.bloodSaturationLevel > 0 && player.isHurt() && this.bloodLevel >= maxBlood) {
                 ++this.bloodTimer;
@@ -138,21 +139,6 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
         }
     }
 
-    @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains("bloodLevel")) {
-            bloodLevel = nbt.getInt("bloodLevel");
-            if (nbt.contains("bloodTimer")) {
-                bloodTimer = nbt.getInt("bloodTimer");
-                bloodSaturationLevel = nbt.getFloat("bloodSaturation");
-                bloodExhaustionLevel = nbt.getFloat("bloodExhaustion");
-            }
-            if (nbt.contains("max_blood")) {
-                maxBlood = nbt.getInt("max_blood");
-            }
-        }
-    }
-
     int addBlood(int amount, float saturationModifier) {
         int add = Math.min(amount, maxBlood - bloodLevel);
         bloodLevel += add;
@@ -185,16 +171,39 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     }
 
     @Override
-    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains("max_blood")) {
-            setMaxBlood(nbt.getInt("max_blood"));
-        }
-        if (nbt.contains("bloodLevel")) {
-            setBloodLevel(nbt.getInt("bloodLevel"));
-        }
-        if (nbt.contains("bloodSaturation")) {
-            bloodSaturationLevel = nbt.getFloat("bloodSaturation");
-        }
+    public void deserialize(@NotNull ValueInput input) {
+        this.bloodLevel = input.getIntOr("bloodLevel", 0);
+        this.bloodTimer = input.getIntOr("bloodTimer", 0);
+        this.bloodSaturationLevel = input.getFloatOr("bloodSaturation", 0);
+        this.bloodExhaustionLevel = input.getFloatOr("bloodExhaustion", 0);
+        this.maxBlood = input.getIntOr("max_blood", 20);
+    }
+
+    @Override
+    public void serialize(@NotNull ValueOutput output) {
+        output.putInt("bloodLevel", bloodLevel);
+        output.putInt("bloodTimer", bloodTimer);
+        output.store("bloodSaturation", Codec.FLOAT, bloodSaturationLevel);
+        output.store("bloodExhaustion", Codec.FLOAT, bloodExhaustionLevel);
+        output.putInt("max_blood", maxBlood);
+    }
+
+    @Override
+    public void deserializeUpdate(ValueInput input) {
+        input.getInt("bloodLevel").ifPresent(x -> this.bloodLevel = x);
+        input.getInt("bloodTimer").ifPresent(x -> this.bloodTimer = x);
+        input.getInt("max_blood").ifPresent(x -> this.maxBlood = x);
+        input.read("bloodSaturation", Codec.FLOAT).ifPresent(x -> this.bloodSaturationLevel = x);
+        input.read("bloodExhaustion", Codec.FLOAT).ifPresent(x -> this.bloodExhaustionLevel = x);
+    }
+
+    @Override
+    public void serializeUpdateInternal(ValueOutput output, @NotNull UpdateParams sendAllData) {
+        output.putInt("bloodLevel", bloodLevel);
+        output.putInt("bloodTimer", bloodTimer);
+        output.store("bloodSaturation", Codec.FLOAT, bloodSaturationLevel);
+        output.store("bloodExhaustion", Codec.FLOAT, bloodExhaustionLevel);
+        output.putInt("max_blood", maxBlood);
     }
 
     boolean removeBlood(int a, boolean allowPartial) {
@@ -210,33 +219,6 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        CompoundTag nbt = new CompoundTag();
-        writeNBTBlood(nbt);
-        nbt.putInt("bloodTimer", bloodTimer);
-        nbt.putFloat("bloodSaturation", bloodSaturationLevel);
-        nbt.putFloat("bloodExhaustion", bloodExhaustionLevel);
-        nbt.putInt("max_blood", maxBlood);
-        return nbt;
-    }
-
-    /**
-     * Write only the blood level to nbt
-     */
-    void writeNBTBlood(@NotNull CompoundTag nbt) {
-        nbt.putInt("bloodLevel", bloodLevel);
-    }
-
-    @Override
-    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams sendAllData) {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putInt("bloodLevel", bloodLevel);
-        nbt.putInt("max_blood", maxBlood);
-        nbt.putFloat("bloodSaturation", bloodSaturationLevel);
-        return nbt;
-    }
-
-    @Override
     public boolean needsUpdate() {
         return this.changed;
     }
@@ -247,7 +229,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     }
 
     @Override
-    public String nbtKey() {
+    public @NotNull String nbtKey() {
         return NBT_KEY;
     }
 }

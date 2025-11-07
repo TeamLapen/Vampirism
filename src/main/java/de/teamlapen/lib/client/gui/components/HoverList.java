@@ -60,9 +60,9 @@ public class HoverList<T extends HoverList.Entry<T>> extends SimpleList<T> {
         }
 
         @Override
-        public void render(@NotNull GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-            super.render(graphics, pIndex, pTop, pLeft, pWidth, pHeight, pMouseX, pMouseY, pIsMouseOver, pPartialTick);
-            boolean newHovered = this.isMouseOver(pMouseX, pMouseY);
+        public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+            super.renderContent(guiGraphics, mouseX, mouseY, isHovering, partialTick);
+            boolean newHovered = this.isMouseOver(mouseX, mouseY);
             if (newHovered != this.hovered) {
                 this.hovered = newHovered;
                 this.onHover.accept(this.hovered);

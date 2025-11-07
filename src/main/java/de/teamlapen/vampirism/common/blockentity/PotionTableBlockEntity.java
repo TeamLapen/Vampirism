@@ -11,10 +11,10 @@ import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.inventory.PotionTableMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
@@ -31,6 +31,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
@@ -209,15 +211,15 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        super.loadAdditional(compound, provider);
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
         this.brewingItemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compound, this.brewingItemStacks, provider);
-        this.brewTime = compound.getShort("BrewTime");
-        this.fuel = compound.getByte("Fuel");
-        this.config.fromByte(compound.getByte("config"));
-        this.ownerID = compound.hasUUID("owner") ? compound.getUUID("owner") : null;
-        this.ownerName = compound.contains("owner_name") ? Component.Serializer.fromJsonLenient(compound.getString("owner_name"), provider) : null;
+        ContainerHelper.loadAllItems(input, this.brewingItemStacks);
+        this.brewTime = input.getShortOr("BrewTime", (short) 0);
+        this.fuel = input.getByteOr("Fuel", (byte) 0);
+        this.config.fromByte(input.getByteOr("config", (byte) 0));
+        this.ownerID = input.read("owner", UUIDUtil.CODEC).orElse(null);
+        this.ownerName = input.read("owner_name", ComponentSerialization.CODEC).orElse(null);
     }
 
     @NotNull
@@ -233,15 +235,17 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
-        compound.putShort("BrewTime", (short) this.brewTime);
-        ContainerHelper.saveAllItems(compound, this.brewingItemStacks, provider);
-        compound.putByte("Fuel", (byte) this.fuel);
-        compound.putByte("config", this.config.toByte());
-        if (ownerID != null) {
-            compound.putUUID("owner", ownerID);
-            compound.putString("owner_name", Component.Serializer.toJson(ownerName, provider));
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putShort("BrewTime", (short) this.brewTime);
+        ContainerHelper.saveAllItems(output, this.brewingItemStacks);
+        output.putByte("Fuel", (byte) this.fuel);
+        output.putByte("config", this.config.toByte());
+        if (this.ownerID != null) {
+            output.store("owner", UUIDUtil.CODEC, ownerID);
+            if (this.ownerName != null) {
+                output.store("owner_name", ComponentSerialization.CODEC, ownerName);
+            }
         }
     }
 
@@ -350,7 +354,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         if (!remainder.isEmpty()) {
             if (ingredientStack.isEmpty()) {
                 ingredientStack = remainder;
-            } else if (!this.level.isClientSide) {
+            } else if (!this.level.isClientSide()) {
                 Containers.dropItemStack(this.level, blockpos.getX(), blockpos.getY(), blockpos.getZ(), remainder);
             }
         }
@@ -358,7 +362,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         if (!remainder.isEmpty()) {
             if (extraIngredient.isEmpty()) {
                 extraIngredient = remainder;
-            } else if (!this.level.isClientSide) {
+            } else if (!this.level.isClientSide()) {
                 Containers.dropItemStack(this.level, blockpos.getX(), blockpos.getY(), blockpos.getZ(), remainder);
             }
         }

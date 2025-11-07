@@ -41,9 +41,9 @@ public class TelemetryCollector {
 
             Map<String, String> params = new HashMap<>();
             params.put("mod_version", REFERENCE.VERSION.toString());
-            params.put("mc_version", DetectedVersion.BUILT_IN.getName());
+            params.put("mc_version", DetectedVersion.BUILT_IN.name());
             params.put("mod_count", Integer.toString(ModList.get().size()));
-            params.put("side", (FMLEnvironment.dist == Dist.CLIENT ? "client" : "server"));
+            params.put("side", (FMLEnvironment.getDist() == Dist.CLIENT ? "client" : "server"));
 
             builder.append("?");
             builder.append(params.entrySet().stream().map(s -> s.getKey() + "=" + URLEncoder.encode(s.getValue(), StandardCharsets.UTF_8)).collect(Collectors.joining("&")));

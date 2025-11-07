@@ -8,12 +8,12 @@ import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.KeyTagProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModSkillTreeTagsProvider extends TagsProvider<ISkillTree> {
+public class ModSkillTreeTagsProvider extends KeyTagProvider<ISkillTree> {
 
     public ModSkillTreeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
         super(output, VampirismRegistries.Keys.SKILL_TREE, provider, REFERENCE.MODID);

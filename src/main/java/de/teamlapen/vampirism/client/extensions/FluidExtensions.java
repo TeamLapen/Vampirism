@@ -3,10 +3,11 @@ package de.teamlapen.vampirism.client.extensions;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogParameters;
-import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.client.renderer.fog.FogData;
+import net.minecraft.client.renderer.fog.environment.FogEnvironment;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
 
 public class FluidExtensions {
@@ -34,8 +35,9 @@ public class FluidExtensions {
         }
 
         @Override
-        public FogParameters modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, FogParameters fogParameters) {
-            return new FogParameters(-1.0F, 5.0F, fogParameters.shape(), fogParameters.red(), fogParameters.green(), fogParameters.blue(), fogParameters.alpha());
+        public void modifyFogRender(Camera camera, @Nullable FogEnvironment environment, float renderDistance, float partialTick, FogData fogData) {
+            fogData.renderDistanceStart = -1;
+            fogData.renderDistanceEnd = 5f;
         }
     };
 }

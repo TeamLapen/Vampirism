@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.common.tags.ModStructureTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.KeyTagProvider;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModStructureTagsProvider extends TagsProvider<Structure> {
+public class ModStructureTagsProvider extends KeyTagProvider<Structure> {
 
     public ModStructureTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
         super(output, Registries.STRUCTURE, provider, REFERENCE.MODID);

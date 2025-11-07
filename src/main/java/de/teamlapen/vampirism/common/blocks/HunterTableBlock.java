@@ -66,7 +66,7 @@ public class HunterTableBlock extends BaseHorizontalBlock {
 
     @Override
     public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(ModStats.INTERACT_WITH_RESEARCH_TABLE.get());
                 if (Helper.isHunter(serverPlayer)) {

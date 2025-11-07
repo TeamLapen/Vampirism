@@ -17,15 +17,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +33,6 @@ import java.util.List;
 /**
  * Handle general client side events
  */
-@OnlyIn(Dist.CLIENT)
 public class ClientEventHandler {
 
     @SubscribeEvent
@@ -76,16 +73,15 @@ public class ClientEventHandler {
         VampirismModClient.getInstance().clearBossBarOverlay();
     }
 
-    static void onModelRegistry(@NotNull ModelEvent.RegisterAdditional event) {
-        for (DyeColor dye : DyeColor.values()) {
-            event.register(VResourceLocation.mod("block/coffin/coffin_bottom_" + dye.getName()));
-            event.register(VResourceLocation.mod("block/coffin/coffin_top_" + dye.getName()));
-            event.register(VResourceLocation.mod("block/coffin/coffin_" + dye.getName()));
-        }
-    }
-
     @SubscribeEvent
     public void onJoined(ClientPlayerNetworkEvent.LoggingOut event) {
         ClientSkillTreeData.reset();
     }
+
+    public static void onModelRegistry(ModelEvent.RegisterStandalone standalone) {
+        for (var cell : ModModels.COFFIN_KEYS.cellSet()) {
+            standalone.register(cell.getValue(), SimpleUnbakedStandaloneModel.blockStateModel(VResourceLocation.mod("block/coffin/coffin" + cell.getRowKey().getModelSuffix() + "_" + cell.getColumnKey().getName())));
+        }
+    }
+
 }

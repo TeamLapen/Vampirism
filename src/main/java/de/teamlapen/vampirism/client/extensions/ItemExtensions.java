@@ -6,10 +6,8 @@ import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.core.ModClientEnums;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.client.models.armor.VampirismArmorModel;
 import de.teamlapen.vampirism.common.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.mixin.client.accessor.ItemInHandRendererAccessor;
-import de.teamlapen.vampirism.common.util.HumanoidArmorLayerData;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -78,15 +76,8 @@ public class ItemExtensions {
         public abstract ModelLayerLocation getArmorModelLocation(ItemStack itemStack);
 
         @Override
-        public Model getGenericArmorModel(ItemStack itemStack, EquipmentClientInfo.LayerType layerType, Model original) {
-            VampirismArmorModel replacement = VampirismModClient.getInstance().getArmorModels().getModel(getArmorModelLocation(itemStack));
-            if (original instanceof HumanoidModel<?> humanoidModel) {
-                replacement.copyFromHumanoid(humanoidModel);
-                if (HumanoidArmorLayerData.getRenderState() != null) {
-                    replacement.setupAnim(HumanoidArmorLayerData.getRenderState());
-                }
-            }
-            return replacement;
+        public Model getHumanoidArmorModel(ItemStack itemStack, EquipmentClientInfo.LayerType layerType, Model original) {
+            return VampirismModClient.getInstance().getArmorModels().getModel(getArmorModelLocation(itemStack));
         }
     }
 

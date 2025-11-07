@@ -7,6 +7,7 @@ import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
@@ -62,14 +63,13 @@ public class VillagerWithArmsModel extends VillagerModel implements ArmedModel {
     }
 
     @Override
-    public void translateToHand(@NotNull HumanoidArm handSide, @NotNull PoseStack matrixStack) {
-        float f = handSide == HumanoidArm.RIGHT ? 1.0F : -1.0F;
-        ModelPart arm = getArmForSide(handSide);
-        arm.x += f;
-        arm.translateAndRotate(matrixStack);
-        arm.x -= f;
+    public void translateToHand(EntityRenderState renderState, HumanoidArm arm, PoseStack poseStack) {
+        float f = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+        ModelPart part = getArmForSide(arm);
+        part.x += f;
+        part.translateAndRotate(poseStack);
+        part.x -= f;
     }
-
 
     protected ModelPart getArmForSide(HumanoidArm side) {
         return side == HumanoidArm.LEFT ? this.leftArm : this.rightArm;

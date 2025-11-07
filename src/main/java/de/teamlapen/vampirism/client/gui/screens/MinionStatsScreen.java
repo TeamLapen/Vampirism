@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.common.inventory.InventoryHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -15,10 +14,11 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
@@ -109,10 +109,8 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         }, Component.translatable("text.vampirism.minion_screen.reset_stats", Component.translatable(ModItems.OBLIVION_POTION.get().getDescriptionId()))) {
             @Override
             public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-                if (!this.active) {
-                    RenderSystem.setShaderColor(0.65f, 0.65f, 0.65f, 1);
-                }
-                super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+                ResourceLocation resourcelocation = this.sprites.get(this.isActive(), this.isHoveredOrFocused());
+                pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), this.width, this.height, this.active ? -1 : ARGB.colorFromFloat(1, 0.65f, 0.65f, 0.65f));
             }
         });
         reset.setTooltip(Tooltip.create(Component.translatable("text.vampirism.minion_screen.reset_stats", Component.translatable(ModItems.OBLIVION_POTION.get().getDescriptionId()))));
@@ -122,7 +120,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected abstract boolean isActive(T data, int i);
 
     protected void renderGuiBackground(@NotNull GuiGraphics graphics) {
-        graphics.blit(RenderType::guiTextured, BACKGROUND, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, 256);
     }
 
     protected void renderLevelRow(@NotNull GuiGraphics graphics, int current, int max) {
@@ -146,7 +144,6 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     }
 
     private void drawTitle(@NotNull GuiGraphics graphics) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         graphics.drawString(this.font, this.title, this.guiLeft + 10, this.guiTop + 10, -1, true);
     }
 

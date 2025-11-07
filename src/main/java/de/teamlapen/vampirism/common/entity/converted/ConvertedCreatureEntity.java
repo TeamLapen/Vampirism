@@ -10,10 +10,8 @@ import de.teamlapen.vampirism.common.mixin.accessor.EntityAccessor;
 import de.teamlapen.vampirism.common.mixin.accessor.WalkAnimationStateAccessor;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -33,6 +31,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,11 +95,11 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        writeOldEntityToNBT(pCompound);
-        pCompound.putBoolean("converter_canDespawn", this.canDespawn);
-        this.addAdditionalSaveDataC(pCompound);
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        writeOldEntityToNBT(output);
+        output.putBoolean("converter_canDespawn", this.canDespawn);
+        this.addAdditionalSaveDataC(output);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     public void tick() {
-        if (!level().isClientSide && this.entityCreature.isEmpty()) {
+        if (!level().isClientSide() && this.entityCreature.isEmpty()) {
             LOGGER.debug("Setting dead, since creature is null");
             this.discard();
         }
@@ -188,9 +188,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             entityCreature.hurtDuration = this.hurtDuration;
             entityCreature.attackAnim = this.attackAnim;
             entityCreature.oAttackAnim = this.oAttackAnim;
-            ((WalkAnimationStateAccessor) entityCreature.walkAnimation).setSpeed(((WalkAnimationStateAccessor) this.walkAnimation).getSpeed());
+            entityCreature.walkAnimation.speed(this.walkAnimation.speed());
             ((WalkAnimationStateAccessor) entityCreature.walkAnimation).setSpeedOld(((WalkAnimationStateAccessor) this.walkAnimation).getSpeedOld());
-            ((WalkAnimationStateAccessor) entityCreature.walkAnimation).setPosition(((WalkAnimationStateAccessor) this.walkAnimation).getPosition());
+            entityCreature.walkAnimation.position(this.walkAnimation.position());
             entityCreature.yBodyRot = this.yBodyRot;
             entityCreature.yBodyRotO = this.yBodyRotO;
             entityCreature.deathTime = this.deathTime;
@@ -217,33 +217,27 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains("entity_old", Tag.TAG_COMPOUND)) {
-            //noinspection unchecked
-            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), getCommandSenderWorld(), EntitySpawnReason.LOAD).orElse(null));
-        }
+    public void deserializeUpdate(@NotNull ValueInput input) {
+        input.child("entity_old").ifPresent(old -> {
+            setEntityCreature((T) EntityType.create(old, level(), EntitySpawnReason.LOAD).orElse(null));
+        });
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
-        this.readAdditionalSaveDataC(nbt);
-        if (nbt.contains("entity_old")) {
-            //noinspection unchecked
-            setEntityCreature((T) EntityType.create(nbt.getCompound("entity_old"), level(), EntitySpawnReason.LOAD).orElse(null));
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.readAdditionalSaveDataC(input);
+        input.child("entity_old").ifPresentOrElse(old -> {
+            setEntityCreature((T) EntityType.create(old, level(), EntitySpawnReason.LOAD).orElse(null));
             if (entityCreature.isEmpty()) {
-                LOGGER.warn("Failed to create old entity {}. Maybe the entity does not exist anymore", nbt.getCompound("entity_old"));
+                LOGGER.warn("Failed to create old entity {}. Maybe the entity does not exist anymore", old);
             }
-        } else {
-            LOGGER.warn("Saved entity did not have a old entity");
-        }
-        if (nbt.contains("converted_canDespawn")) {
-            canDespawn = nbt.getBoolean("converted_canDespawn");
-        }
-        if (nbt.contains("ConversionTime", 99) && nbt.getInt("ConversionTime") > -1) {
-            this.startConverting(nbt.hasUUID("ConversionPlayer") ? nbt.getUUID("ConversionPlayer") : null, nbt.getInt("ConversionTime"), this);
-        }
-        if (!nbt.contains("source_entity")) {
+        }, () -> LOGGER.warn("Saved entity did not have a old entity"));
+
+
+        this.canDespawn = input.getBooleanOr("converted_canDespawn", true);
+        input.getInt("ConversionTime").filter(time -> time > -1).ifPresent(time -> this.startConverting(input.read("ConversionPlayer", UUIDUtil.CODEC).orElse(null), time, this));
+        if (input.child("source_entity").isEmpty()) {
             getSourceEntityDataParamOpt().ifPresent(p -> getOldCreature().ifPresent(old -> this.asEntity().getEntityData().set(p, BuiltInRegistries.ENTITY_TYPE.getKey(old.getType()).toString())));
         }
     }
@@ -304,10 +298,8 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, UpdateParams params) {
-        CompoundTag tag = new CompoundTag();
-        writeOldEntityToNBT(tag);
-        return tag;
+    public void serializeUpdate(ValueOutput output, UpdateParams params) {
+        writeOldEntityToNBT(output);
     }
 
     /**
@@ -344,14 +336,12 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     /**
      * Write the old entity to nbt
      */
-    private void writeOldEntityToNBT(@NotNull CompoundTag nbt) {
+    private void writeOldEntityToNBT(@NotNull ValueOutput output) {
         this.entityCreature.ifPresent(creature -> {
             try {
-                CompoundTag entity = new CompoundTag();
                 creature.revive();
-                creature.save(entity);
+                creature.save(output.child("entity_old"));
                 creature.discard();
-                nbt.put("entity_old", entity);
             } catch (Exception e) {
                 LOGGER.error("Failed to write old entity ({}) to NBT. If this happens more often please report this to the mod author.", creature, e);
                 this.setEntityCreature(null);

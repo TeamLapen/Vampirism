@@ -32,7 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@EventBusSubscriber(value = Dist.CLIENT, modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = REFERENCE.MODID)
 public class ClientConfigHelper {
 
     public static final Gson GSON = new GsonBuilder()

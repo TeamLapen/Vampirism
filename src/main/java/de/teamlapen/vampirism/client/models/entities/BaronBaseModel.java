@@ -11,4 +11,17 @@ public abstract class BaronBaseModel extends EntityModel<VampireBaronRenderer.Va
     }
 
     public abstract ModelPart getBody();
+
+    protected static void copyModelPartProperties(ModelPart original, ModelPart replacement) {
+        replacement.visible = original.visible;
+        replacement.x = original.x;
+        replacement.y = original.y;
+        replacement.z = original.z;
+        replacement.xRot = original.xRot;
+        replacement.yRot = original.yRot;
+        replacement.zRot = original.zRot;
+        replacement.xScale = original.xScale;
+        replacement.yScale = original.yScale;
+        replacement.zScale = original.zScale;
+    }
 }

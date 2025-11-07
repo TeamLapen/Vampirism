@@ -37,7 +37,7 @@ public class BiteNearbyEntityVampireGoal<T extends Mob & IVampireMob> extends Go
     @Override
     public boolean canUse() {
         if (vampire.wantsBlood()) {
-            List<PathfinderMob> list = vampire.getCommandSenderWorld().getEntitiesOfClass(PathfinderMob.class, getBiteBoundingBox(), EntitySelector.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
+            List<PathfinderMob> list = vampire.level().getEntitiesOfClass(PathfinderMob.class, getBiteBoundingBox(), EntitySelector.NO_SPECTATORS.and((entity) -> entity != vampire && entity.isAlive()));
             if (list.size() > 1) {
                 try {
                     list.sort((o1, o2) -> (int) (vampire.distanceToSqr(o1) - vampire.distanceToSqr(o2)));

@@ -9,36 +9,38 @@ import de.teamlapen.vampirism.client.renderer.entities.layers.PlayerFaceOverlayL
 import de.teamlapen.vampirism.client.renderer.entities.state.IOverlayRenderState;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.entity.hunter.AdvancedHunterEntity;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.PlayerSkinRenderCache;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.entity.player.PlayerModelType;
+import net.minecraft.world.entity.player.PlayerSkin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Renderer for the advanced hunter.
  * Similar to {@link BasicHunterRenderer}
  */
-@OnlyIn(Dist.CLIENT)
 public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEntity, AdvancedHunterRenderer.AdvancedHunterRenderState, BasicHunterModel<AdvancedHunterRenderer.AdvancedHunterRenderState>> {
     private static final ResourceLocation textureCloak = VResourceLocation.mod("textures/entity/hunter_cloak.png");
-    private static final PlayerSkin FALLBACK = new PlayerSkin(VResourceLocation.mod("textures/entity/hunter_base1.png"), null, null, null, PlayerSkin.Model.WIDE, false);
+    private static final PlayerSkin FALLBACK = new PlayerSkin(new ClientAsset.ResourceTexture(VResourceLocation.mod("fallback"), VResourceLocation.mod("textures/entity/hunter_base1.png")), null, null, PlayerModelType.WIDE, false);
     private final @NotNull PlayerSkin[] textures;
 
 
     public AdvancedHunterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), true), 0.5F);
         this.addLayer(new CloakLayer<>(this, textureCloak, s -> s.hasCloak));
-        this.addLayer(new ArmorLayer<HumanoidModel<AdvancedHunterRenderState>>(this, new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getEquipmentRenderer()));
+        this.addLayer(new ArmorLayer<HumanoidModel<AdvancedHunterRenderState>>(this,
+                ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, true)),
+                ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, false)),
+                context.getEquipmentRenderer()));
         if (ModConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this));
             this.getModel().head.visible = false;
@@ -55,9 +57,9 @@ public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEnti
     }
 
     @Override
-    protected void renderNameTag(AdvancedHunterRenderState state, @NotNull Component displayName, @NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int packedLightIn) {
-        if (state.distanceToCameraSq <= 256) {
-            super.renderNameTag(state, displayName, stack, bufferSource, packedLightIn);
+    protected void submitNameTag(AdvancedHunterRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (renderState.distanceToCameraSq <= 256) {
+            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
         }
     }
 
@@ -71,11 +73,13 @@ public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEnti
         super.extractRenderState(entity, state, p_363123_);
         state.skin = this.textures.length == 0 ? FALLBACK : textures[entity.getBodyTexture() % textures.length];
         state.hasCloak = entity.hasCloak();
-        state.overlayTexture = entity.getPlayerOverlay().map(p -> Minecraft.getInstance().getSkinManager().getInsecureSkin(p)).map(PlayerSkin::texture).orElseGet(DefaultPlayerSkin::getDefaultTexture);
+        state.overlayTexture = entity.getPlayerOverlay().map(PlayerSkinRenderCache.RenderInfo::playerSkin).map(PlayerSkin::body).map(ClientAsset.Texture::texturePath).orElse(null);
     }
 
-    public static class AdvancedHunterRenderState extends PlayerRenderState implements IOverlayRenderState {
+    public static class AdvancedHunterRenderState extends AvatarRenderState implements IOverlayRenderState {
         public boolean hasCloak;
+
+        @Nullable
         public ResourceLocation overlayTexture;
 
         @Override

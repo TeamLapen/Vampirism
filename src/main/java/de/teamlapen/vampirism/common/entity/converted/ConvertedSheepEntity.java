@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.entity.converted;
 import de.teamlapen.vampirism.common.core.ModAttributes;
 import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -19,10 +18,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 public class ConvertedSheepEntity extends Sheep implements CurableConvertedCreature<Sheep, ConvertedSheepEntity> {
@@ -75,9 +76,9 @@ public class ConvertedSheepEntity extends Sheep implements CurableConvertedCreat
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        this.addAdditionalSaveDataC(pCompound);
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        this.addAdditionalSaveDataC(output);
     }
 
     @Override
@@ -110,9 +111,9 @@ public class ConvertedSheepEntity extends Sheep implements CurableConvertedCreat
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        this.readAdditionalSaveDataC(pCompound);
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.readAdditionalSaveDataC(input);
     }
 
     @Override

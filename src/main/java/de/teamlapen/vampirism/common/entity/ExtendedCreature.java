@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.entity;
 
 import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.sync.common.storage.Attachment;
-import de.teamlapen.sync.common.storage.UpdateParams;
+import de.teamlapen.sync.common.storage.AttachmentSync;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
@@ -18,8 +18,6 @@ import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.server.config.BalanceMobProps;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -29,13 +27,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
-import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * Extended entity property which every {@link PathfinderMob} has
@@ -154,19 +152,6 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         this.blood = blood;
     }
 
-    @Override
-    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains(KEY_BLOOD)) {
-            setBlood(nbt.getInt(KEY_BLOOD));
-        }
-        if (nbt.contains(KEY_MAX_BLOOD)) {
-            setBlood(nbt.getInt(KEY_MAX_BLOOD));
-        }
-        if (nbt.contains(KEY_POISONOUS_BLOOD)) {
-            setPoisonousBlood(nbt.getInt(KEY_POISONOUS_BLOOD));
-        }
-    }
-
     @Nullable
     @Override
     public IConvertedCreature<?> makeVampire() {
@@ -279,7 +264,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
 
     @Override
     public void tick() {
-        if (entity.getCommandSenderWorld() instanceof ServerLevel level) {
+        if (entity.level() instanceof ServerLevel level) {
             /*
              * Make sure all entities with no blood die
              * check for sanguinare as the entity might be converting instead of dying
@@ -290,7 +275,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
             if (blood > 0 && blood < getMaxBlood() && entity.tickCount % 40 == 8) {
                 if (blood < getMaxBlood() * 0.5) {
                     entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 41));
-                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 41, 2));
+                    entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 41, 2));
                 }
                 if (entity.getRandom().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0 && LevelAttributeModifier.calculateModifierValue(blood, getMaxBlood(), 1, 0.8) < entity.getRandom().nextDouble()) {
                     setBlood(getBlood() + 1);
@@ -323,67 +308,36 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        var nbt = new CompoundTag();
-        nbt.putInt(KEY_BLOOD, blood);
-        nbt.putInt(KEY_MAX_BLOOD, maxBlood);
-        if (poisonousBlood > 0) nbt.putInt(KEY_POISONOUS_BLOOD, poisonousBlood);
-        return nbt;
+    public void serialize(@NotNull ValueOutput output) {
+        output.putInt(KEY_BLOOD, this.blood);
+        output.putInt(KEY_MAX_BLOOD, this.maxBlood);
+        if (this.poisonousBlood > 0) output.putInt(KEY_POISONOUS_BLOOD, this.poisonousBlood);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag compound) {
-        if (compound.contains(KEY_MAX_BLOOD)) {
-            setMaxBlood(compound.getInt(KEY_MAX_BLOOD));
-        }
-        if (compound.contains(KEY_BLOOD)) {
-            setBlood(compound.getInt(KEY_BLOOD));
-        }
-        if (compound.contains(KEY_POISONOUS_BLOOD)) {
-            setPoisonousBlood(compound.getInt(KEY_POISONOUS_BLOOD));
-        }
-    }
-
-    @Override
-    public @NotNull CompoundTag serializeUpdateNBT(HolderLookup.@NotNull Provider provider, UpdateParams params) {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putInt(KEY_BLOOD, getBlood());
-        nbt.putInt(KEY_MAX_BLOOD, getBlood());
-        nbt.putInt(KEY_POISONOUS_BLOOD, getPoisonousBloodDuration());
-        return nbt;
+    public void deserialize(@NotNull ValueInput input) {
+        input.getInt(KEY_MAX_BLOOD).ifPresent(this::setMaxBlood);
+        input.getInt(KEY_BLOOD).ifPresent(this::setBlood);
+        input.getInt(KEY_POISONOUS_BLOOD).ifPresent(this::setPoisonousBlood);
     }
 
     @Override
     public void sync() {
-        sync(UpdateParams.forAllPlayer());
+//        sync(UpdateParams.forAllPlayer()); TODO
     }
 
-    public static class Serializer implements IAttachmentSerializer<CompoundTag, ExtendedCreature> {
-
+    public static class AttachmentOptions extends AttachmentSync<ExtendedCreature, PathfinderMob> {
         @Override
-        public @NotNull ExtendedCreature read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
-            if (holder instanceof PathfinderMob mob) {
-                var creature = new ExtendedCreature(mob);
-                creature.deserializeNBT(provider, tag);
-                return creature;
-            }
-            throw new IllegalArgumentException("Expected PathfinderMob, got " + holder.getClass().getSimpleName());
+        protected @NotNull ExtendedCreature create(@NotNull PathfinderMob mob) {
+            return new ExtendedCreature(mob);
         }
-
-        @Override
-        public CompoundTag write(ExtendedCreature attachment, HolderLookup.@NotNull Provider provider) {
-            return attachment.serializeNBT(provider);
-        }
-    }
-
-    public static class Factory implements Function<IAttachmentHolder, ExtendedCreature> {
 
         @Override
         public ExtendedCreature apply(IAttachmentHolder holder) {
             if (holder instanceof PathfinderMob mob) {
-                return new ExtendedCreature(mob);
+                return create(mob);
             }
-            throw new IllegalArgumentException("Cannot create extended creature handler attachment for holder " + holder.getClass() + ". Expected PathfinderMob");
+            throw new IllegalArgumentException("Cannot create attachment for holder " + holder.getClass() + ". Expected PathfinderMob");
         }
     }
 }

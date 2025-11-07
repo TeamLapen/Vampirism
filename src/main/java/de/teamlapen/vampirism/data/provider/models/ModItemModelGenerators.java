@@ -112,6 +112,12 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         this.generateSpawnEgg(ModItems.GHOST_SPAWN_EGG.get(), 0xcecdd1, 0xb5b3ba);
     }
 
+    public void generateSpawnEgg(Item spawnEggItem, int primaryColor, int secondaryColor) {
+        ResourceLocation resourcelocation = ModelLocationUtils.decorateItemModelLocation("template_spawn_egg");
+        this.itemModelOutput
+                .accept(spawnEggItem, ItemModelUtils.tintedModel(resourcelocation, ItemModelUtils.constantTint(primaryColor), ItemModelUtils.constantTint(secondaryColor)));
+    }
+
     protected void generateCrossbows() {
         ResourceLocation basicModel = ModModelTemplates.CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_CROSSBOW.get()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")).put(ModTextureSlots.ARROW, mod("item/crossbow_part_arrow")), this.modelOutput);
         ResourceLocation basicModelUnloaded = ModModelTemplates.CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")), this.modelOutput);

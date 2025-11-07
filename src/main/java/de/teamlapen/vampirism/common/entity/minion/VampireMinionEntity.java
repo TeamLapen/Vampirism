@@ -56,6 +56,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -232,8 +234,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     @Override
-    protected void onMinionDataReceived(HolderLookup.Provider provider, @NotNull VampireMinionData data) {
-        super.onMinionDataReceived(provider, data);
+    protected void onMinionDataReceived(@NotNull VampireMinionData data) {
+        super.onMinionDataReceived(data);
         updateAttributes();
     }
 
@@ -288,17 +290,17 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-            super.deserializeNBT(provider, nbt);
-            type = nbt.getInt("vampire_type");
-            level = nbt.getInt("level");
-            useLordSkin = nbt.getBoolean("use_lord_skin");
-            inventoryLevel = nbt.getInt("l_inv");
-            healthLevel = nbt.getInt("l_he");
-            strengthLevel = nbt.getInt("l_str");
-            speedLevel = nbt.getInt("l_spe");
-            minionSkin = nbt.getBoolean("ms");
-            hasIncreasedStats = nbt.getBoolean("hasIncreasedStats");
+        public void deserialize(@NotNull ValueInput input) {
+            super.deserialize(input);
+            type = input.getIntOr("vampire_type", 0);
+            level = input.getIntOr("level", 0);
+            useLordSkin = input.getBooleanOr("use_lord_skin", false);
+            inventoryLevel = input.getIntOr("l_inv", 0);
+            healthLevel = input.getIntOr("l_he", 0);
+            strengthLevel = input.getIntOr("l_str", 0);
+            speedLevel = input.getIntOr("l_spe", 0);
+            minionSkin = input.getBooleanOr("ms", false);
+            hasIncreasedStats = input.getBooleanOr("hasIncreasedStats", false);
         }
 
         @Override
@@ -356,7 +358,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void resetStats(MinionEntity<?> entity) {
+        public void resetStats(@NotNull MinionEntity<?> entity) {
             assert entity instanceof VampireMinionEntity;
             this.inventoryLevel = 0;
             this.healthLevel = 0;
@@ -368,17 +370,17 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public void serializeNBT(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
-            super.serializeNBT(tag, provider);
-            tag.putInt("vampire_type", type);
-            tag.putInt("level", level);
-            tag.putBoolean("use_lord_skin", useLordSkin);
-            tag.putInt("l_inv", inventoryLevel);
-            tag.putInt("l_he", healthLevel);
-            tag.putInt("l_str", strengthLevel);
-            tag.putInt("l_spe", speedLevel);
-            tag.putBoolean("ms", minionSkin);
-            tag.putBoolean("hasIncreasedStats", hasIncreasedStats);
+        public void serialize(@NotNull ValueOutput output) {
+            super.serialize(output);
+            output.putInt("vampire_type", type);
+            output.putInt("level", level);
+            output.putBoolean("use_lord_skin", useLordSkin);
+            output.putInt("l_inv", inventoryLevel);
+            output.putInt("l_he", healthLevel);
+            output.putInt("l_str", strengthLevel);
+            output.putInt("l_spe", speedLevel);
+            output.putBoolean("ms", minionSkin);
+            output.putBoolean("hasIncreasedStats", hasIncreasedStats);
         }
 
         /**

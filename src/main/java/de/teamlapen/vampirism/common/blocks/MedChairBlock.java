@@ -78,7 +78,7 @@ public class MedChairBlock extends BaseHorizontalBlock {
                     return InteractionResult.SUCCESS_SERVER;
                 }
             }
-        } else if (level.isClientSide) {
+        } else if (level.isClientSide()) {
             player.displayClientMessage(Component.translatable("text.vampirism.need_item_to_use", Component.translatable(ModItems.INJECTION_GARLIC.get().getDescriptionId())), true);
         }
         return InteractionResult.SUCCESS_SERVER;
@@ -149,7 +149,7 @@ public class MedChairBlock extends BaseHorizontalBlock {
 
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        if (!level.isClientSide && player.isCreative()) {
+        if (!level.isClientSide() && player.isCreative()) {
             EnumPart part = state.getValue(PART);
             if (part == EnumPart.TOP) {
                 BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
@@ -167,12 +167,11 @@ public class MedChairBlock extends BaseHorizontalBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.setPlacedBy(level, pos, state, placer, itemStack);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
             BlockState otherState = state.setValue(PART, EnumPart.TOP);
             otherState = otherState.setValue(FACING, otherState.getValue(FACING));
-            level.setBlock(blockpos, otherState, 3);
-            level.blockUpdated(pos, Blocks.AIR);
+            level.setBlockAndUpdate(blockpos, otherState);
             state.updateNeighbourShapes(level, pos, 3);
         }
 

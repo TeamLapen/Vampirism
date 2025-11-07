@@ -12,8 +12,8 @@ public class ScoreboardUtil {
 
 
     public static void updateScoreboard(@NotNull Player player, @NotNull ObjectiveCriteria crit, int value) {
-        if (!player.level().isClientSide) {
-            player.getScoreboard().forAllObjectives(crit, player, (obj) -> obj.set(value));
+        if (!player.level().isClientSide()) {
+//            player.getScoreboard().forAllObjectives(crit, player, (obj) -> obj.set(value)); TODO
         }
     }
 

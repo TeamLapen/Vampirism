@@ -95,7 +95,7 @@ public class ConfigCommand extends BasicCommand {
         AABB axisalignedbb = player.getBoundingBox().expandTowards(vec3d1.scale(d0)).inflate(1);
 
 
-        EntityHitResult result = ProjectileUtil.getEntityHitResult(player.level(), player, vec3d, vec3d2, axisalignedbb, (a) -> !a.isSpectator());
+        EntityHitResult result = ProjectileUtil.getEntityHitResult(player.level(), player, vec3d, vec3d2, axisalignedbb, (a) -> !a.isSpectator(), 5);
         if (result == null) {
             throw NO_SELECTED_ENTITY.create();
         } else {
@@ -110,7 +110,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistBiome(@NotNull ServerPlayer player) {
-        return blacklistBiome(player, player.getCommandSenderWorld().getBiome(player.blockPosition()).unwrap().map(ResourceKey::location, biome -> RegUtil.id(player.getCommandSenderWorld(), biome)));
+        return blacklistBiome(player, player.level().getBiome(player.blockPosition()).unwrap().map(ResourceKey::location, biome -> RegUtil.id(player.level(), biome)));
     }
 
     private static int blacklistBiome(@NotNull ServerPlayer player, @NotNull ResourceLocation biome) {
@@ -118,7 +118,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistDimension(@NotNull ServerPlayer player) {
-        return blacklistDimension(player, player.serverLevel());
+        return blacklistDimension(player, player.level());
     }
 
     private static int blacklistDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dimension) {
@@ -126,7 +126,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int enforceDimension(@NotNull ServerPlayer player) {
-        return enforceDimension(player, player.serverLevel());
+        return enforceDimension(player, player.level());
     }
 
     private static int enforceDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dimension) {

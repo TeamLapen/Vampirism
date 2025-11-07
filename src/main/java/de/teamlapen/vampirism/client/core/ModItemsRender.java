@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.colors.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.colors.OilBottleTint;
@@ -12,6 +11,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3x2fStack;
 
 import java.util.stream.Stream;
 
@@ -31,12 +31,10 @@ public class ModItemsRender {
         Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW).forEach(item -> {
             event.register(item.get(), (graphics, font, stack, xOffset, yOffset) -> {
                 ((IHunterCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
-                    PoseStack posestack = graphics.pose();
-                    posestack.pushPose();
-                    posestack.translate(xOffset, yOffset + 8, 0);
-                    posestack.scale(0.5f, 0.5f, 0.5f);
+                    Matrix3x2fStack posestack = graphics.pose();
+                    posestack.translate(xOffset, yOffset + 8);
+                    posestack.scale(0.5f);
                     graphics.renderItem(ammo.getDefaultInstance(), 0, 0);
-                    posestack.popPose();
                 });
                 return false;
             });

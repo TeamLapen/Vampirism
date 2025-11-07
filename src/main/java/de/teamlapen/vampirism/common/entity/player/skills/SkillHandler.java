@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.entity.player.skills;
 
 import de.teamlapen.lib.util.collections.LiveMap;
 import de.teamlapen.sync.common.storage.ISyncableSaveData;
-import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
@@ -15,21 +14,17 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillPointProvider;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillPointProviders;
 import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.vampirism.common.util.RegUtil;
+import de.teamlapen.vampirism.common.serialization.ModCodecs;
 import de.teamlapen.vampirism.common.util.VampirismEventFactory;
 import de.teamlapen.vampirism.data.reloadlistener.skills.ISkillTreeData;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -235,62 +230,38 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains("skills", Tag.TAG_COMPOUND)) {
-
-            HolderLookup.RegistryLookup<ISkillTree> skillTrees = provider.lookupOrThrow(VampirismRegistries.Keys.SKILL_TREE);
-            CompoundTag skillsTag = nbt.getCompound("skills");
-            for (String id : skillsTag.getAllKeys()) {
-                Optional<Holder.Reference<ISkillTree>> skillTree = skillTrees.get(ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, ResourceLocation.parse(id)));
-                skillTree.ifPresent(tree -> {
-                    ListTag list = skillsTag.getList(id, Tag.TAG_STRING);
-                    list.stream().map(Tag::getAsString).map(ResourceLocation::parse).map(ModRegistries.SKILLS::get).flatMap(Optional::stream).forEach(skill -> {
-                        enableSkill((Holder<ISkill<T>>) (Object) skill, tree, true);
-                    });
+    public void deserialize(ValueInput input) {
+        var skills = input.childrenListOrEmpty("skills");
+        skills.forEach(child -> {
+            child.read("tree", RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_TREE)).ifPresent(tree -> {
+                child.listOrEmpty("skills", ModCodecs.<T>skills()).stream().forEach(skill -> {
+                    enableSkill(skill, tree, true);
                 });
-            }
-        }
-
-        if (nbt.contains("unlocked_trees")) {
-            ListTag unlockedTrees = nbt.getList("unlocked_trees", StringTag.TAG_STRING);
-            this.unlockedTrees.clear();
-            unlockedTrees.stream().map(StringTag.class::cast).forEach(tag -> {
-                this.unlockedTrees.add(RegUtil.getSkillTree(getPlayer().asEntity().level(), tag.getAsString()));
             });
-        }
+        });
+
+        var unlockedTrees = input.listOrEmpty("unlocked_trees", RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_TREE)).stream().toList();
+        this.unlockedTrees.clear();
+        this.unlockedTrees.addAll(unlockedTrees);
     }
 
     @Override
-    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains("skills", Tag.TAG_COMPOUND)) {
-
-            HolderLookup.RegistryLookup<ISkillTree> skillTrees = provider.lookupOrThrow(VampirismRegistries.Keys.SKILL_TREE);
-            var old = enabledSkills.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, x -> new ArrayList<>(x.getValue())));
-            CompoundTag skillsTag = nbt.getCompound("skills");
-            for (String id : skillsTag.getAllKeys()) {
-                Optional<Holder.Reference<ISkillTree>> skillTree = skillTrees.get(ResourceKey.create(VampirismRegistries.Keys.SKILL_TREE, ResourceLocation.parse(id)));
-                skillTree.ifPresent(tree -> {
-                    ArrayList<Holder<ISkill<T>>> oldSkill = old.getOrDefault(tree, new ArrayList<>());
-                    ListTag list = skillsTag.getList(id, Tag.TAG_STRING);
-                    list.stream().map(Tag::getAsString).map(ResourceLocation::parse).map(ModRegistries.SKILLS::get).flatMap(Optional::stream).forEach(skill -> {
-                        if (oldSkill.contains(skill)) {
-                            oldSkill.remove(skill);
-                        } else {
-                            enableSkill((Holder<ISkill<T>>) (Object) skill, tree, true);
-                        }
+    public void deserializeUpdate(ValueInput input) {
+        input.childrenList("skills").ifPresent(list -> {
+            list.forEach(child -> {
+                child.read("tree", RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_TREE)).ifPresent(tree -> {
+                    child.listOrEmpty("skills", ModCodecs.<T>skills()).stream().forEach(skill -> {
+                        enableSkill(skill, tree, true);
                     });
-                    oldSkill.forEach(skill -> disableSkill(skill, tree));
                 });
-            }
-        }
-
-        if (nbt.contains("unlocked_trees", Tag.TAG_LIST)) {
-            ListTag unlockedTrees = nbt.getList("unlocked_trees", StringTag.TAG_STRING);
-            this.unlockedTrees.clear();
-            unlockedTrees.stream().map(StringTag.class::cast).forEach(tag -> {
-                this.unlockedTrees.add(RegUtil.getSkillTree(getPlayer().asEntity().level(), tag.getAsString()));
             });
-        }
+        });
+
+        input.list("unlocked_trees", RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_TREE)).ifPresent(list -> {
+            this.unlockedTrees.clear();
+            this.unlockedTrees.addAll(list.stream().toList());
+
+        });
     }
 
     public void resetSkills() {
@@ -298,43 +269,21 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        CompoundTag nbt = new CompoundTag();
-        CompoundTag skills = new CompoundTag();
-        for (Map.Entry<Holder<ISkillTree>, List<Holder<ISkill<T>>>> entry : enabledSkills.entrySet()) {
-            ListTag list = new ListTag();
-            for (Holder<ISkill<T>> skill : entry.getValue()) {
-                list.add(StringTag.valueOf(skill.getRegisteredName()));
-            }
-            skills.put(entry.getKey().getRegisteredName(), list);
-        }
-        nbt.put("skills", skills);
-        ListTag unlockedTrees = new ListTag();
-        for (Holder<ISkillTree> tree : this.unlockedTrees) {
-            unlockedTrees.add(StringTag.valueOf(tree.getRegisteredName()));
-        }
-        nbt.put("unlocked_trees", unlockedTrees);
-        return nbt;
-    }
+    public void serialize(ValueOutput output) {
 
-    @Override
-    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
-        CompoundTag nbt = new CompoundTag();
-        CompoundTag skills = new CompoundTag();
+        var skillsByTree = output.childrenList("skills");
         for (Map.Entry<Holder<ISkillTree>, List<Holder<ISkill<T>>>> entry : enabledSkills.entrySet()) {
-            ListTag list = new ListTag();
-            for (Holder<ISkill<T>> skill : entry.getValue()) {
-                list.add(StringTag.valueOf(skill.getRegisteredName()));
+            ValueOutput valueOutput = skillsByTree.addChild();
+            valueOutput.store("tree", RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_TREE), entry.getKey());
+            ValueOutput.TypedOutputList<Holder<ISkill<T>>> skills = valueOutput.list("skills", ModCodecs.skills());
+            for (Holder<ISkill<T>> skillHolder : entry.getValue()) {
+                skills.add(skillHolder);
             }
-            skills.put(entry.getKey().getRegisteredName(), list);
         }
-        nbt.put("skills", skills);
-        ListTag unlockedTrees = new ListTag();
+        var unlockedTrees = output.list("unlocked_trees", RegistryFixedCodec.create(VampirismRegistries.Keys.SKILL_TREE));
         for (Holder<ISkillTree> tree : this.unlockedTrees) {
-            unlockedTrees.add(StringTag.valueOf(tree.getRegisteredName()));
+            unlockedTrees.add(tree);
         }
-        nbt.put("unlocked_trees", unlockedTrees);
-        return nbt;
     }
 
     @Override
@@ -348,7 +297,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> impleme
     }
 
     @Override
-    public String nbtKey() {
+    public @NotNull String nbtKey() {
         return NBT_KEY;
     }
 

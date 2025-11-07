@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-@EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = REFERENCE.MODID)
 public class ModConfig {
 
     public static final Logger LOGGER = LogManager.getLogger();

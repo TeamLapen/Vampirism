@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.renderer.entities.layers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
@@ -27,9 +28,9 @@ public class VampireEntityLayer<T extends LivingEntityRenderState, U extends Ent
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int packedLight, T state, float p_117353_, float p_117354_) {
-        if (!state.isInvisible) {
-            renderColoredCutoutModel(this.getParentModel(), this.texture, stack, bufferSource, packedLight, state, -1);
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, T renderState, float yRot, float xRot) {
+        if (!renderState.isInvisible) {
+            renderColoredCutoutModel(this.getParentModel(), this.texture, poseStack, nodeCollector, packedLight, renderState, -1, -1);
         }
     }
 }

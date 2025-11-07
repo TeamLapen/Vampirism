@@ -10,7 +10,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -29,7 +28,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     private final Supplier<AttachmentType<T>> playerCapabilitySupplier;
     private final Map<IRefinementItem.AccessorySlotType, List<Supplier<IRefinementItem>>> refinementItemBySlot;
 
-    PlayableFaction(@NotNull PlayableFactionBuilder<T> builder) {
+    PlayableFaction(PlayableFactionBuilder<T> builder) {
         super(builder);
         this.highestLevel = builder.highestLevel;
         this.lord = builder.lord;
@@ -58,7 +57,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     }
 
     @Override
-    public @NotNull T getPlayerCapability(@NotNull Player player) {
+    public T getPlayerCapability(Player player) {
         return player.getData(playerCapabilitySupplier.get());
     }
 

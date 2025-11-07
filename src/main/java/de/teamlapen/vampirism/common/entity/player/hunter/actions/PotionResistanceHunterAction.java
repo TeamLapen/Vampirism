@@ -22,12 +22,12 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     }
 
     @Override
-    public int getCooldown(IHunterPlayer player) {
+    public int getCooldown(@NotNull IHunterPlayer player) {
         return ModConfig.BALANCE.haPotionResistanceCooldown.get();
     }
 
     @Override
-    public int getDuration(IHunterPlayer player) {
+    public int getDuration(@NotNull IHunterPlayer player) {
         return ModConfig.BALANCE.haPotionResistanceDuration.get();
     }
 
@@ -42,7 +42,7 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     }
 
     @Override
-    public void onDeactivated(IHunterPlayer player) {
+    public void onDeactivated(@NotNull IHunterPlayer player) {
     }
 
     @Override
@@ -60,18 +60,18 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     }
 
     @Override
-    protected IActionResult activate(@NotNull IHunterPlayer player, ActivationContext context) {
+    protected @NotNull IActionResult activate(@NotNull IHunterPlayer player, @NotNull ActivationContext context) {
         onUpdate(player);
         return IActionResult.SUCCESS;
     }
 
     @Override
-    public boolean showHudCooldown(Player player) {
+    public boolean showHudCooldown(@NotNull Player player) {
         return true;
     }
 
     @Override
-    public boolean showHudDuration(Player player) {
+    public boolean showHudDuration(@NotNull Player player) {
         return true;
     }
 }

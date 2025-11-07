@@ -54,7 +54,7 @@ public class VampireBeaconMenu extends BaseContainerMenu {
     @Override
     public void removed(@NotNull Player pPlayer) {
         super.removed(pPlayer);
-        if (pPlayer.level().isClientSide) {
+        if (pPlayer.level().isClientSide()) {
             ItemStack itemStack = this.paymentSlot.remove(this.paymentSlot.getMaxStackSize());
             if (!itemStack.isEmpty()) {
                 pPlayer.drop(itemStack, false);

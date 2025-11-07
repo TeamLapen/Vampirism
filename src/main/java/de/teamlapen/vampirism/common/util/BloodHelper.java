@@ -19,6 +19,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -199,6 +200,10 @@ public class BloodHelper {
     }
 
     public static boolean isConvertibleToBlood(FluidStack fluid) {
+        return isConvertibleToBlood(fluid.getFluid());
+    }
+
+    public static boolean isConvertibleToBlood(FluidResource fluid) {
         return isConvertibleToBlood(fluid.getFluid());
     }
 

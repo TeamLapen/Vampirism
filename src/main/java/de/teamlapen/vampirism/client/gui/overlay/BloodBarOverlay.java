@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,15 +37,15 @@ public class BloodBarOverlay extends BaseOverlay {
                     int x = left - i * 8 - 9;
 
                     // Draw Background
-                    graphics.blitSprite(RenderType::guiTextured, BACKGROUND, x, top, 9, 9);
+                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, x, top, 9, 9);
 
                     if (idx < blood) {
-                        graphics.blitSprite(RenderType::guiTextured, idx < blood2 ? FULL : HALF, x, top, 9, 9);
+                        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, idx < blood2 ? FULL : HALF, x, top, 9, 9);
                         if (idx == blood2) {
-                            graphics.blitSprite(RenderType::guiTextured, THREE_QUARTER, x, top, 9, 9);
+                            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, THREE_QUARTER, x, top, 9, 9);
                         }
                     } else if (idx == blood) {
-                        graphics.blitSprite(RenderType::guiTextured, QUARTER, x, top, 9, 9);
+                        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, QUARTER, x, top, 9, 9);
                     }
                 }
             }

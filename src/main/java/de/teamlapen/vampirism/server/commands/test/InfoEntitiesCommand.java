@@ -23,7 +23,7 @@ public class InfoEntitiesCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int infoEntities(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
-        NaturalSpawner.SpawnState densityManager = asPlayer.serverLevel().getChunkSource().getLastSpawnState();
+        NaturalSpawner.SpawnState densityManager = asPlayer.level().getChunkSource().getLastSpawnState();
         Object2IntMap<MobCategory> object2intmap = densityManager.getMobCategoryCounts();
         commandSource.sendSuccess(() -> Component.literal(String.format("Creature: %d (%d), Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(MobCategory.CREATURE, 0), MobCategory.CREATURE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(MobCategory.MONSTER, 0), MobCategory.MONSTER.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VEnums.HUNTER_CATEGORY.getValue(), 0), VEnums.HUNTER_CATEGORY.getValue().getMaxInstancesPerChunk(), object2intmap.getOrDefault(VEnums.VAMPIRE_CATEGORY.getValue(), 0), VEnums.VAMPIRE_CATEGORY.getValue().getMaxInstancesPerChunk())), true);
         return 0;

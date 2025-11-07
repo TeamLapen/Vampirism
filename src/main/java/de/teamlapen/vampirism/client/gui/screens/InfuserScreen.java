@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.inventory.InfuserMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -34,6 +34,6 @@ public class InfuserScreen extends AbstractContainerScreen<InfuserMenu> {
         GuiRenderer.blit(guiGraphics, BACKGROUND, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
 
         int j = Mth.ceil(this.menu.getBurnProgress() * 24f);
-        guiGraphics.blitSprite(RenderType::guiTextured, BURN_PROGRESS_SPRITE, 24, 16, 0, 0, this.leftPos + 117, this.topPos + 32 + 9, j, 16);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BURN_PROGRESS_SPRITE, 24, 16, 0, 0, this.leftPos + 117, this.topPos + 32 + 9, j, 16);
     }
 }

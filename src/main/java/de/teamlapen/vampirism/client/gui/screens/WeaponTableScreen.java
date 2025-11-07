@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.BelowOrAboveWidgetTooltipPositioner;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -47,22 +48,21 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
 
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        GuiRenderer.resetColor();
         int i = this.leftPos;
         int j = (this.height - this.imageHeight) / 2;
         GuiRenderer.blit(graphics, BACKGROUND, i, j, this.imageWidth, this.imageHeight);
 
-        graphics.blitSprite(RenderType::guiTextured, EMPTY_BUCKET_SPRITE, i + 154, j + 71, 24, 28);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EMPTY_BUCKET_SPRITE, i + 154, j + 71, 24, 28);
         if (menu.hasLava()) {
-            graphics.blitSprite(RenderType::guiTextured, LAVA_SPRITE, i + 154, j + 71, 24, 28);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, LAVA_SPRITE, i + 154, j + 71, 24, 28);
         }
         if (menu.isMissingLava()) {
-            graphics.blitSprite(RenderType::guiTextured, MISSING_LAVA_SPRITE, i + 152, j + 69, 28, 32);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, MISSING_LAVA_SPRITE, i + 152, j + 69, 28, 32);
         }
 
         List<Holder<ISkill<?>>> missingSkills = this.menu.missingSkills().orElse(List.of());
         if (!missingSkills.isEmpty()) {
-            graphics.blitSprite(RenderType::guiTextured, ERROR_SPRITE, i + 110, j + 43, 28, 21);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ERROR_SPRITE, i + 110, j + 43, 28, 21);
         }
     }
 
@@ -73,7 +73,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
         List<Holder<ISkill<?>>> missingSkills = this.menu.missingSkills().orElse(List.of());
         if (pX > i + 110 && pX < i + 110 + 28 && pY > j + 43 && pY < j + 43 + 21 && !missingSkills.isEmpty()) {
             List<Component> components = Stream.concat(Stream.of(Component.translatable("gui.vampirism.weapon_table.missing_skills").withStyle(ChatFormatting.RED)), missingSkills.stream().map(skill -> Component.literal("- ").append(skill.value().getName()).withStyle(ChatFormatting.RED))).collect(Collectors.toUnmodifiableList());
-            setTooltipForNextRenderPass(new MultilineTooltip(components), new BelowOrAboveWidgetTooltipPositioner(new ScreenRectangle(i + 110, j + 43, 28, 21)), false);
+            pGuiGraphics.setComponentTooltipForNextFrame(this.font, components, i + 110, j + 43);
         } else {
             super.renderTooltip(pGuiGraphics, pX, pY);
         }

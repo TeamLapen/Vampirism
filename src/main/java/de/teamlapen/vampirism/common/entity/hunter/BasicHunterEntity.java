@@ -26,15 +26,15 @@ import de.teamlapen.vampirism.common.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.common.util.HunterVillage;
 import de.teamlapen.vampirism.common.world.saved.MinionWorldData;
 import de.teamlapen.vampirism.server.config.BalanceMobProps;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -56,6 +56,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -109,12 +112,12 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
-        nbt.putInt("level", getEntityLevel());
-        nbt.putBoolean("crossbow", isHoldingCrossbow());
-        nbt.putBoolean("attack", attack);
-        nbt.putInt("type", getEntityTextureType());
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putInt("level", getEntityLevel());
+        output.putBoolean("crossbow", isHoldingCrossbow());
+        output.putBoolean("attack", attack);
+        output.putInt("type", getEntityTextureType());
     }
 
     @Override
@@ -129,7 +132,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         if (trainee != null && !(trainee.containerMenu instanceof HunterBasicMenu)) {
             this.trainee = null;
         }
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             LivingEntity target = getTarget();
             int id = target == null ? 0 : target.getId();
             this.updateWatchedId(id);
@@ -152,7 +155,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     if (IFaction.is(fph.getFaction(), this.getFaction())) {
                         boolean hasIncreasedStats = fph.getSkillHandler().map(s -> s.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
                         HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false, hasIncreasedStats);
-                        data.updateEntityCaps(this.serializeAttachments(lord.registryAccess()));
+                        var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registryAccess());
+                        this.serializeAttachments(output);
+                        data.updateEntityCaps(output.buildResult());
                         int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
                         if (id < 0) {
                             LOGGER.error("Failed to get minion slot");
@@ -281,7 +286,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
             getEntityData().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 3) {
-                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 1000000, 1, false, false));
+                this.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 1000000, 1, false, false));
             }
         }
     }
@@ -302,27 +307,18 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tagCompund) {
-        super.readAdditionalSaveData(tagCompund);
-        if (tagCompund.contains("level")) {
-            setEntityLevel(tagCompund.getInt("level"));
-        }
-
-        if (tagCompund.contains("crossbow") && tagCompund.getBoolean("crossbow")) {
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        input.getInt("level").ifPresent(this::setEntityLevel);
+        if (input.getBooleanOr("crossbow", false)) {
             this.setLeftHanded(true);
             this.setItemSlot(EquipmentSlot.MAINHAND, ModItems.BASIC_CROSSBOW.toStack());
         } else {
             this.setLeftHanded(false);
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
-        if (tagCompund.contains("attack")) {
-            this.attack = tagCompund.getBoolean("attack");
-        }
-        if (tagCompund.contains("type")) {
-            int t = tagCompund.getInt("type");
-            getEntityData().set(TYPE, t < TYPES && t >= 0 ? t : -1);
-        }
-
+        this.attack = input.getBooleanOr("attack", false);
+        input.getInt("type").ifPresent(t -> getEntityData().set(TYPE, t < TYPES && t >= 0 ? t : -1));
     }
 
     @Override
@@ -374,7 +370,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         if (hand == InteractionHand.MAIN_HAND && tryCureSanguinare(player)) return InteractionResult.SUCCESS;
         int hunterLevel = VampirismPlayerAttributes.get(player).hunterLevel;
         if (this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 if (HunterLeveling.getBasicHunterRequirement(hunterLevel + 1).isPresent()) {
                     if (trainee == null) {
                         player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterBasicMenu(id, playerInventory, this), name));
@@ -510,7 +506,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     }
 
-    public static class BasicHunterRenderState extends PlayerRenderState {
+    public static class BasicHunterRenderState extends AvatarRenderState {
         public int entityLevel;
     }
 }

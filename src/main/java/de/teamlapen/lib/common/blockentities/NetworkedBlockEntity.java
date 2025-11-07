@@ -1,9 +1,6 @@
 package de.teamlapen.lib.common.blockentities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -24,32 +21,10 @@ public abstract class NetworkedBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        loadMetaData(tag, lookupProvider);
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        loadMetaData(pkt.getTag(), lookupProvider);
-        setChanged();
-    }
-
-    public abstract void loadMetaData(CompoundTag tag, HolderLookup.Provider lookupProvider);
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveMetaData(tag, registries);
-        return tag;
-    }
-
-    public abstract void saveMetaData(CompoundTag tag, HolderLookup.Provider registries);
-
-    @Override
     public void setChanged() {
         super.setChanged();
         if (level != null) {
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 requestModelDataUpdate();
             } else {
                 level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);

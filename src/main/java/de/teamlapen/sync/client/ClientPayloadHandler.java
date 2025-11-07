@@ -3,7 +3,6 @@ package de.teamlapen.sync.client;
 import de.teamlapen.sync.SyncRegistry;
 import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
 import de.teamlapen.sync.common.storage.IAttachedSyncable;
-import de.teamlapen.sync.common.storage.ISyncable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -36,18 +35,18 @@ public class ClientPayloadHandler {
                 }
             }
             if (e != null) {
-                if (pkt.getData() != null) {
-                    if (e instanceof ISyncable syncable) {
-                        syncable.deserializeUpdateNBT(player.registryAccess(), pkt.getData());
-                    } else {
-                        LOGGER.warn("Target entity {} does not implement ISyncable", e);
-                    }
-                }
-                if (pkt.getAttachments() != null) {
-                    for (String key : pkt.getAttachments().getAllKeys()) {
-                        handleCapability(e, ResourceLocation.parse(key), pkt.getAttachments().getCompound(key));
-                    }
-                }
+//                if (pkt.getData() != null) {
+//                    if (e instanceof ISyncable syncable) {
+//                        syncable.deserializeUpdate(player.registryAccess(), pkt.getData());
+//                    } else {
+//                        LOGGER.warn("Target entity {} does not implement ISyncable", e);
+//                    }
+//                }
+//                if (pkt.getAttachments() != null) {
+//                    for (String key : pkt.getAttachments().getAllKeys()) {
+//                        handleCapability(e, ResourceLocation.parse(key), pkt.getAttachments().getCompound(key));
+//                    }
+//                }
             }
         });
     }
@@ -60,7 +59,7 @@ public class ClientPayloadHandler {
         if (cap == null) {
             LOGGER.warn("Capability with key {} is not registered in the HelperRegistry", key);
         } else {
-            e.getData(cap).deserializeUpdateNBT(e.registryAccess(), data);
+//            e.getData(cap).deserializeUpdate(e.registryAccess(), data);
         }
     }
 }

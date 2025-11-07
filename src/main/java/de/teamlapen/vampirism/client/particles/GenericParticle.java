@@ -1,23 +1,19 @@
 package de.teamlapen.vampirism.client.particles;
 
-import de.teamlapen.vampirism.common.mixin.client.accessor.ParticleEngineAccessor;
 import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GenericParticle extends TextureSheetParticle {
+public class GenericParticle extends SingleQuadParticle {
 
     private GenericParticle(@NotNull ClientLevel world, double posX, double posY, double posZ, double speedX, double speedY, double speedZ, @NotNull ResourceLocation texture, int maxAge, int color, float speedModifier) {
-        super(world, posX, posY, posZ, speedX, speedY, speedZ);
+        super(world, posX, posY, posZ, speedX, speedY, speedZ, null);
         this.lifetime = maxAge;
         this.xd *= speedModifier;
         this.yd *= speedModifier;
@@ -28,21 +24,21 @@ public class GenericParticle extends TextureSheetParticle {
         if ((color >> 24 & 255) != 0) { //Only use alpha value if !=0.
             this.alpha = (color >> 24 & 255) / 255.0F;
         }
-        this.setSprite(((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(texture));
+//        this.setSprite(((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getTextureAtlas().getSprite(texture));
     }
 
-    @NotNull
     @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+    protected @NotNull Layer getLayer() {
+        return Layer.OPAQUE;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<GenericParticleOptions> {
-        @Nullable
+
         @Override
-        public Particle createParticle(@NotNull GenericParticleOptions typeIn, @NotNull ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new GenericParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, typeIn.texture(), typeIn.maxAge(), typeIn.color(), typeIn.speed());
+        public @Nullable Particle createParticle(GenericParticleOptions particleType, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
+//            ParticleResources s;
+//            s.
+            return new GenericParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, particleType.texture(), particleType.maxAge(), particleType.color(), particleType.speed());
         }
     }
 }

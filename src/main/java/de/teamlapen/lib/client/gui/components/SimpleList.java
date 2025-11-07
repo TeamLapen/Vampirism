@@ -1,12 +1,11 @@
 package de.teamlapen.lib.client.gui.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.components.WidgetSprites;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -26,16 +25,16 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
     protected void renderListBackground(GuiGraphics guiGraphics) {
     }
 
-    @Override
-    protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
-        graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getBottom() + 4, -16777216, 0);
-        graphics.fillGradient(this.getX(), this.getY() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
-    }
+//    @Override
+//    protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
+//        graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getBottom() + 4, -16777216, 0);
+//        graphics.fillGradient(this.getX(), this.getY() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
+//    }
 
-    @Override
-    protected void renderItem(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
-        super.renderItem(graphics, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
-    }
+//    @Override
+//    protected void renderItem(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
+//        super.renderItem(graphics, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
+//    }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int p_283242_, int p_282891_, float p_283683_) {
@@ -43,10 +42,11 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
         super.renderWidget(guiGraphics, p_283242_, p_282891_, p_283683_);
     }
 
-    @Override
-    protected void renderSelection(GuiGraphics p_283589_, int p_240142_, int p_240143_, int p_240144_, int p_240145_, int p_240146_) {
-//        super.renderSelection(p_283589_, p_240142_,p_240143_ +6, p_240144_, p_240145_, p_240146_);
-    }
+//    @Override
+//    protected void renderSelection(GuiGraphics p_283589_, int p_240142_, int p_240143_, int p_240144_, int p_240145_, int p_240146_) {
+
+    /// /        super.renderSelection(p_283589_, p_240142_,p_240143_ +6, p_240144_, p_240145_, p_240146_);
+//    }
 
     @Override
     protected int scrollBarY() {
@@ -140,22 +140,12 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
         }
 
         @Override
-        public void render(@NotNull GuiGraphics graphics, int pIndex, int pTop, int pLeft, int pWidth, int pHeight, int pMouseX, int pMouseY, boolean pIsMouseOver, float pPartialTick) {
-            Minecraft minecraft = Minecraft.getInstance();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.enableBlend();
-            RenderSystem.enableDepthTest();
-            PoseStack pose = graphics.pose();
-            pose.pushPose();
-            pose.translate(0, 0, pIsMouseOver ? 2 : 1);
-            graphics.blitSprite(RenderType::guiTextured, SPRITES.get(true, pIsMouseOver), pLeft, pTop, pWidth, pHeight + 5);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            graphics.drawCenteredString(minecraft.font, this.component, pLeft + pWidth / 2, pTop + 5, 0xFFFFFF);
-            pose.popPose();
+        public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(true, isHovering), getContentX(), getContentY(), getContentWidth(), getContentHeight());
         }
 
         @Override
-        public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
             this.onClick.run();
             return true;
         }

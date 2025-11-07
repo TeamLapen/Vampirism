@@ -2,21 +2,24 @@ package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.mixin.client.accessor.HumanoidArmorLayerAccessor;
 import de.teamlapen.vampirism.common.util.TextureComparator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.PlayerModelType;
+import net.minecraft.world.entity.player.PlayerSkin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,7 +28,7 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 
 
-public abstract class DualBipedRenderer<T extends Mob, S extends PlayerRenderState, M extends HumanoidModel<S>> extends HumanoidMobRenderer<T, S, M> {
+public abstract class DualBipedRenderer<T extends Mob, S extends AvatarRenderState, M extends HumanoidModel<S>> extends HumanoidMobRenderer<T, S, M> {
     private final @NotNull M modelA;
     private final M modelB;
 
@@ -39,16 +42,16 @@ public abstract class DualBipedRenderer<T extends Mob, S extends PlayerRenderSta
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(S renderState) {
-        return renderState.skin.texture();
+        return renderState.skin.body().texturePath();
     }
 
     @Override
-    public final void render(@NotNull S entityIn, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        this.model = switch (entityIn.skin.model()) {
+    public void submit(S renderState, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodeCollector, @NotNull CameraRenderState cameraRenderState) {
+        this.model = switch (renderState.skin.model()) {
             case SLIM -> modelB;
             case WIDE -> modelA;
         };
-        super.render(entityIn, matrixStackIn, bufferIn, packedLightIn);
+        super.submit(renderState, poseStack, nodeCollector, cameraRenderState);
     }
 
     /**
@@ -61,8 +64,8 @@ public abstract class DualBipedRenderer<T extends Mob, S extends PlayerRenderSta
      */
     protected @NotNull PlayerSkin[] separateSlimTextures(@NotNull Stream<ResourceLocation> set) {
         return set.map(r -> {
-            PlayerSkin.Model b = r.getPath().endsWith("slim.png") ? PlayerSkin.Model.SLIM : PlayerSkin.Model.WIDE;
-            return new PlayerSkin(r, null, null, null, b, false);
+            PlayerModelType b = r.getPath().endsWith("slim.png") ? PlayerModelType.SLIM : PlayerModelType.WIDE;
+            return new PlayerSkin(new ClientAsset.ResourceTexture(r, r), null, null, b, false);
         }).sorted(alphaNumericComparator()).toArray(PlayerSkin[]::new);
     }
 
@@ -83,47 +86,27 @@ public abstract class DualBipedRenderer<T extends Mob, S extends PlayerRenderSta
     }
 
     protected Comparator<PlayerSkin> alphaNumericComparator() {
-        return (o1, o2) -> TextureComparator.alphaNumericComparator().compare(o1.texture(), o2.texture());
+        return (o1, o2) -> TextureComparator.alphaNumericComparator().compare(o1.body().texturePath(), o2.body().texturePath());
     }
 
     protected class ArmorLayer<A extends HumanoidModel<S>> extends HumanoidArmorLayer<S, M, A> {
 
-        private final A pInnerModel;
-        private final A pInnerModelSlim;
-        private final A pOuterModel;
-        private final A pOuterModelSlim;
+        private final ArmorModelSet<A> slimModelSet;
+        private final ArmorModelSet<A> wideModelSet;
 
-        public ArmorLayer(RenderLayerParent<S, M> pRenderer, A pInnerModel, A pInnerModelSlim, A pOuterModel, A pOuterModelSlim, EquipmentLayerRenderer pModelManager) {
-            super(pRenderer, pInnerModel, pOuterModel, pModelManager);
-            this.pInnerModel = pInnerModel;
-            this.pInnerModelSlim = pInnerModelSlim;
-            this.pOuterModel = pOuterModel;
-            this.pOuterModelSlim = pOuterModelSlim;
+        public ArmorLayer(RenderLayerParent<S, M> renderer, ArmorModelSet<A> slimModelSet, ArmorModelSet<A> wideModelSet, EquipmentLayerRenderer equipmentRenderer) {
+            super(renderer, slimModelSet, equipmentRenderer);
+            this.slimModelSet = slimModelSet;
+            this.wideModelSet = wideModelSet;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
-        public void render(@NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, @NotNull S pLivingEntity, float f1, float f2) {
-            PlayerSkin b = determineTextureAndModel(pLivingEntity);
-
-            A innerModel = switch (b.model()) {
-                case SLIM -> pInnerModelSlim;
-                case WIDE -> pInnerModel;
-            };
-            A outerModel = switch (b.model()) {
-                case SLIM -> pOuterModelSlim;
-                case WIDE -> pOuterModel;
-            };
-
-            ((HumanoidArmorLayerAccessor<S, A>) this).invokeRenderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.chestEquipment, EquipmentSlot.CHEST, pPackedLight, this.getArmorModel(EquipmentSlot.CHEST, innerModel, outerModel));
-            ((HumanoidArmorLayerAccessor<S, A>) this).invokeRenderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.legsEquipment, EquipmentSlot.LEGS, pPackedLight, this.getArmorModel(EquipmentSlot.LEGS, innerModel, outerModel));
-            ((HumanoidArmorLayerAccessor<S, A>) this).invokeRenderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.feetEquipment, EquipmentSlot.FEET, pPackedLight, this.getArmorModel(EquipmentSlot.FEET, innerModel, outerModel));
-            ((HumanoidArmorLayerAccessor<S, A>) this).invokeRenderArmorPiece(pMatrixStack, pBuffer, pLivingEntity.headEquipment, EquipmentSlot.HEAD, pPackedLight, this.getArmorModel(EquipmentSlot.HEAD, innerModel, outerModel));
-        }
-
-        private A getArmorModel(EquipmentSlot slot, A innerModel, A outerModel) {
-            //noinspection rawtypes
-            return ((HumanoidArmorLayerAccessor) this).invokeUsesInnerModel(slot) ? innerModel : outerModel;
+        public @NotNull A getArmorModel(@NotNull S renderState, @NotNull EquipmentSlot slot) {
+            PlayerSkin b = determineTextureAndModel(renderState);
+            return (switch (b.model()) {
+                case SLIM -> slimModelSet;
+                case WIDE -> wideModelSet;
+            }).get(slot);
         }
     }
 

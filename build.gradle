@@ -1,6 +1,5 @@
 plugins {
-    id 'net.neoforged.gradle.userdev' version '7.0.192'
-    id "net.neoforged.gradle.mixin" version "7.0.192"
+    id 'net.neoforged.gradle.userdev' version '7.1.4'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id "com.modrinth.minotaur" version "2.4.5"
     id 'de.undercouch.download' version '3.3.0'
@@ -21,7 +20,6 @@ base {
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-
 
 sourceSets {
     api {
@@ -87,7 +85,7 @@ tasks.named('processResources', ProcessResources).configure {
     inputs.properties replaceProperties
 
     filesMatching(['META-INF/neoforge.mods.toml']) {
-        expand replaceProperties + [project: project]
+        expand replaceProperties
     }
 }
 

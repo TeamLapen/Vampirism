@@ -58,7 +58,7 @@ public class SyringeDispenseBehavior extends DefaultDispenseItemBehavior {
             return stack;
         }
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             level.playSound(null, target, ModSounds.VAMPIRE_BITE.get(), SoundSource.PLAYERS, 1.0f,  1.0f);
         }
 

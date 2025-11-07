@@ -37,6 +37,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -88,10 +90,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
-        nbt.putInt("level", getEntityLevel());
-        nbt.putBoolean("lady", isLady());
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putInt("level", getEntityLevel());
+        output.putBoolean("lady", isLady());
     }
 
     @Override
@@ -107,11 +109,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             updateEntityAttributes(false);
         }
 
-        if (!this.level().isClientSide && this.isGettingSundamage(level())) {
+        if (!this.level().isClientSide() && this.isGettingSundamage(level())) {
             this.teleportAway();
 
         }
-        if (!this.level().isClientSide && this.getTarget() != null && this.tickCount % 128 == 0) {
+        if (!this.level().isClientSide() && this.getTarget() != null && this.tickCount % 128 == 0) {
             if (rangedAttack) {
                 if (this.random.nextInt(2) == 0 && this.navigation.createPath(this.getTarget(), 0) != null) {
                     rangedAttack = false;
@@ -165,10 +167,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
                 }
             }
             if (entity instanceof VampireBaronEntity) {
-                ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 5));
+                ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.STRENGTH, 40, 5));
             }
             ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (200 * tm), random.nextInt(mr)));
-            ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (100 * tm), random.nextInt(mr)));
+            ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.SLOWNESS, (int) (100 * tm), random.nextInt(mr)));
             attackDecisionCounter = 0;
         }
         return flag;
@@ -267,8 +269,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean killedEntity(@NotNull ServerLevel world, @NotNull LivingEntity entity) {
-        boolean result = super.killedEntity(world, entity);
+    public boolean killedEntity(@NotNull ServerLevel world, @NotNull LivingEntity entity, @NotNull DamageSource damageSource) {
+        boolean result = super.killedEntity(world, entity, damageSource);
         if (entity instanceof VampireBaronEntity) {
             this.setHealth(this.getMaxHealth());
         }
@@ -276,10 +278,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
-        setEntityLevel(nbt.contains("level") ? Mth.clamp(nbt.getInt("level"), 0, MAX_LEVEL) : -1);
-        this.getEntityData().set(LADY, nbt.getBoolean("lady"));
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        setEntityLevel(input.getInt("level").map(x -> Mth.clamp(x, 0, MAX_LEVEL)).orElse(-1));
+        this.getEntityData().set(LADY, input.getBooleanOr("lady", false));
     }
 
     @Override

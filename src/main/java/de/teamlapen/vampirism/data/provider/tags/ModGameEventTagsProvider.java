@@ -5,13 +5,13 @@ import de.teamlapen.vampirism.common.tags.ModGameEventTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.KeyTagProvider;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModGameEventTagsProvider extends TagsProvider<GameEvent> {
+public class ModGameEventTagsProvider extends KeyTagProvider<GameEvent> {
 
     public ModGameEventTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, Registries.GAME_EVENT, lookupProvider, REFERENCE.MODID);

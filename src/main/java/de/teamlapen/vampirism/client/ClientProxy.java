@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client;
 
-import com.mojang.authlib.GameProfile;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.common.blocks.CoffinBlock;
@@ -8,8 +7,6 @@ import de.teamlapen.vampirism.common.blocks.TentBlock;
 import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.proxy.CommonProxy;
-import de.teamlapen.vampirism.common.util.PlayerModelType;
-import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -18,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -31,12 +27,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 import static de.teamlapen.vampirism.common.blocks.TentBlock.FACING;
 import static de.teamlapen.vampirism.common.blocks.TentBlock.POSITION;
@@ -81,10 +75,6 @@ public class ClientProxy extends CommonProxy {
         openScreen(new HunterMinionStatsScreen(entity, Minecraft.getInstance().screen));
     }
 
-    @Override
-    public void obtainPlayerSkins(GameProfile profile, @NotNull Consumer<Pair<ResourceLocation, PlayerModelType>> callback) {
-        PlayerSkinHelper.obtainPlayerSkinPropertiesAsync(profile, callback);
-    }
 
     @Nullable
     @Override

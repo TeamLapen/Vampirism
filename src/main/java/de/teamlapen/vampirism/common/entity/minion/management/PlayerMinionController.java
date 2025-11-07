@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.entity.minion.management;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
@@ -10,19 +11,14 @@ import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.common.entity.player.lord.skills.LordSkills;
+import de.teamlapen.vampirism.common.serialization.ModCodecs;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.util.RegUtil;
 import de.teamlapen.vampirism.server.commands.arguments.MinionArgument;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -30,7 +26,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +62,7 @@ import java.util.stream.Collectors;
  * - Checkin minion slot if entity is removed from world {@link PlayerMinionController#checkInMinion(int, int)}
  * - Release minion slot if minion dies {@link PlayerMinionController#markDeadAndReleaseMinionSlot(int, int)}
  */
-public class PlayerMinionController implements INBTSerializable<CompoundTag> {
+public class PlayerMinionController implements ValueIOSerializable {
 
     private final static Logger LOGGER = LogManager.getLogger();
 
@@ -197,7 +195,7 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
         if (type == null) {
             LOGGER.warn("Cannot create minion because type does not exist");
         } else {
-            return Helper.createEntity(type, p.getCommandSenderWorld(), EntitySpawnReason.LOAD).map(m -> {
+            return Helper.createEntity(type, p.level(), EntitySpawnReason.LOAD).map(m -> {
                 if (faction == null || !VampirismAPI.factionRegistry().isEntityOfFaction(m, faction)) {
                     LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
                     m.discard();
@@ -233,72 +231,6 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
             return i;
         }
         return -1;
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        //noinspection unchecked,RedundantCast
-        Optional<? extends Holder<? extends IPlayableFaction<?>>> faction = ModRegistries.FACTIONS.get(ResourceLocation.parse(nbt.getString("faction"))).filter(s -> s.value() instanceof IPlayableFaction<?>).map(s -> (Holder<? extends IPlayableFaction<?>>) (Object) s);
-        if (faction.isEmpty()) {
-            this.maxMinions = 0;
-            return;
-        }
-        this.faction = faction.get();
-        this.maxMinions = nbt.getInt("max_minions");
-        ListTag data = nbt.getList("data", 10);
-        MinionInfo[] infos = new MinionInfo[data.size()];
-        //noinspection unchecked
-        Optional<Integer>[] tokens = new Optional[data.size()];
-        Set<Integer> removedData = new HashSet<>();
-        for (Tag n : data) {
-            CompoundTag tag = (CompoundTag) n;
-            int id = tag.getInt("id");
-            MinionData d = MinionData.fromNBT(provider, tag);
-            if (d == null) {
-                removedData.add(id);
-                continue;
-            }
-            ResourceLocation entityTypeID = ResourceLocation.parse(tag.getString("entity_type"));
-            if (!BuiltInRegistries.ENTITY_TYPE.containsKey(entityTypeID)) {
-                LOGGER.warn("Cannot find saved minion type {}. Continue without entry", entityTypeID);
-                removedData.add(id);
-                continue;
-            }
-
-            //noinspection unchecked
-            EntityType<? extends MinionEntity<?>> type = (EntityType<? extends MinionEntity<?>>) BuiltInRegistries.ENTITY_TYPE.getValue(entityTypeID);
-
-            MinionInfo i = new MinionInfo(id, d, type);
-            i.deathCooldown = tag.getInt("death_timer");
-            infos[id] = i;
-            if (tag.contains("token", 99)) {
-                tokens[id] = Optional.of(tag.getInt("token"));
-            } else {
-                tokens[id] = Optional.empty();
-            }
-
-        }
-
-        if (!removedData.isEmpty()) {
-            MinionInfo[] newInfos = new MinionInfo[infos.length - removedData.size()];
-            //noinspection unchecked
-            Optional<Integer>[] newTokens = new Optional[tokens.length - removedData.size()];
-            int im = 0;
-            for (int i = 0; i < infos.length; i++) {
-                MinionInfo info = infos[i];
-                if (info != null) {
-                    newInfos[i - im] = info;
-                    newTokens[i - im] = tokens[i];
-                } else {
-                    im++;
-                }
-            }
-            infos = newInfos;
-            tokens = newTokens;
-        }
-
-        this.minions = infos;
-        this.minionTokens = tokens;
     }
 
     public @NotNull Collection<Integer> getCallableMinions() {
@@ -405,23 +337,68 @@ public class PlayerMinionController implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putInt("max_minions", maxMinions);
+    public void serialize(ValueOutput output) {
+        output.putInt("max_minions", maxMinions);
         if (faction != null) {
-            nbt.putString("faction", faction.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow());
+            //noinspection unchecked
+            output.store("faction", ModRegistries.FACTIONS.holderByNameCodec(), (Holder<IFaction<?>>) (Object) faction);
         }
-        ListTag data = new ListTag();
+        ValueOutput.ValueOutputList data = output.childrenList("data");
         for (MinionInfo i : minions) {
-            CompoundTag d = i.data.serializeNBT(provider);
-            d.putInt("death_timer", i.deathCooldown);
-            d.putInt("id", i.minionID);
-            if (i.minionType != null) d.putString("entity_type", RegUtil.id(i.minionType).toString());
-            minionTokens[i.minionID].ifPresent(t -> d.putInt("token", t));
-            data.add(d);
+            ValueOutput child = data.addChild();
+
+            i.data.serialize(child.child("content"));
+            child.putInt("death_timer", i.deathCooldown);
+            child.putInt("id", i.minionID);
+
+            if (i.minionType != null) {
+                child.store("entity_type", BuiltInRegistries.ENTITY_TYPE.byNameCodec(), i.minionType);
+            }
+            minionTokens[i.minionID].ifPresent(t -> child.putInt("token", t));
         }
-        nbt.put("data", data);
-        return nbt;
+    }
+
+    @Override
+    public void deserialize(@NotNull ValueInput input) {
+        //noinspection unchecked
+        Optional<? extends Holder<? extends IPlayableFaction<?>>> faction = (Optional<? extends Holder<? extends IPlayableFaction<?>>>) (Object) input.read("faction", ModRegistries.FACTIONS.holderByNameCodec());
+        if (faction.isEmpty()) {
+            this.maxMinions = 0;
+            return;
+        }
+
+        this.faction = faction.get();
+        this.maxMinions = input.getIntOr("max_minions", 0);
+
+        Map<Integer, MinionInfo> infos = new HashMap<>();
+        Map<Integer, Optional<Integer>> tokens = new HashMap<>();
+
+        for (ValueInput data : input.childrenListOrEmpty("data")) {
+            Optional<Integer> idOpt = data.getInt("id");
+            if (idOpt.isEmpty()) {
+                continue;
+            }
+
+            int id = idOpt.get();
+
+            MinionData minionData = MinionData.fromNBT(data.childOrEmpty("content"));
+            if (minionData == null) {
+                continue;
+            }
+
+            EntityType<? extends MinionEntity<?>> type = data.read("entity_type", ModCodecs.<MinionEntity<?>>entityCodec()).orElse(null);
+
+            MinionInfo minionInfo = new MinionInfo(id, minionData, type);
+            minionInfo.deathCooldown = data.getIntOr("death_timer", 0);
+
+            infos.put(id, minionInfo);
+            tokens.put(id, data.getInt("token").or(Optional::empty));
+        }
+
+        this.minions = infos.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).map(Map.Entry::getValue).toArray(MinionInfo[]::new);
+        //noinspection ReassignedVariable
+        this.minionTokens = (Optional<Integer>[]) infos.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey)).map(Map.Entry::getValue).toArray(Optional[]::new);
+
     }
 
     public void setMaxMinions(@Nullable Holder<? extends IPlayableFaction<?>> faction, int newCount) {

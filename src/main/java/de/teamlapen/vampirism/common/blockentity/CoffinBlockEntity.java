@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.common.core.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -14,6 +13,8 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,23 +53,18 @@ public class CoffinBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        super.loadAdditional(compound, provider);
-        this.color = compound.contains("color") ? DyeColor.byId(compound.getInt("color")) : DyeColor.BLACK;
-        this.lidPos = compound.getFloat("lidPos");
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        this.color = input.read("color", DyeColor.CODEC).orElse(DyeColor.BLACK);
+        this.lidPos = input.getFloatOr("lidPos", 0);
         this.playLidSoundFlag = this.lidPos==0;
     }
 
     @Override
-    public void onDataPacket(Connection net, @NotNull ClientboundBlockEntityDataPacket packet, HolderLookup.Provider provider) {
-        if (hasLevel()) loadCustomOnly(packet.getTag(), provider);
-    }
-
-    @Override
-    public void saveAdditional(@NotNull CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
-        compound.putInt("color", this.color.getId());
-        compound.putFloat("lidPos", this.lidPos);
+    public void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.store("color", DyeColor.CODEC, this.color);
+        output.putFloat("lidPos", this.lidPos);
     }
 
     @Override

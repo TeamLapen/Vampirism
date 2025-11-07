@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,6 +26,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -52,6 +52,7 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3x2fStack;
 import org.joml.Matrix4f;
 
 import java.util.Optional;
@@ -167,12 +168,12 @@ public class VampirismHUDOverlay {
             if (VampirePlayer.isBlockBiteable(level, pos, blockHit.getDirection()) && VampirePlayer.get(player).wantsBlood()) {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
                 if (blockEntity != null) {
-                    Optional.ofNullable(level.getCapability(Capabilities.FluidHandler.BLOCK, pos, state, blockEntity, null)).ifPresent(handler -> {
-                        if (FluidHelper.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
-                            renderBloodFangs(event.getGuiGraphics(), window.getGuiScaledWidth(), window.getGuiScaledHeight(), 1, ARGB.color(255, 0, 0));
-                            event.setCanceled(true);
-                        }
-                    });
+//                    Optional.ofNullable(level.getCapability(Capabilities.Fluid.BLOCK, pos, state, blockEntity, null)).ifPresent(handler -> { TODO
+//                        if (FluidHelper.getFluidAmount(handler, ModFluids.BLOOD.get()) > 0) {
+//                            renderBloodFangs(event.getGuiGraphics(), window.getGuiScaledWidth(), window.getGuiScaledHeight(), 1, ARGB.color(255, 0, 0));
+//                            event.setCanceled(true);
+//                        }
+//                    });
                 }
             }
         }
@@ -181,14 +182,14 @@ public class VampirismHUDOverlay {
         if (mc.options.getCameraType().isFirstPerson() && mc.gameMode != null && mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
             float progress = VampirePlayer.get(player).getFeedProgress();
             if (progress > 0) {
-                RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+//                RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 if (progress <= 1.0F) {
                     int x = window.getGuiScaledWidth() / 2 - 8;
                     int y = window.getGuiScaledHeight() / 2 + 9;
                     int l = (int) (progress * 14.0F) + 2;
 
-                    event.getGuiGraphics().blitSprite(RenderType::guiTextured, PROGRESS_BACKGROUND_SPRITE, x, y, 16, 2);
-                    event.getGuiGraphics().blitSprite(RenderType::guiTextured, PROGRESS_FOREGROUND_SPRITE, 16, 2, 0, 0, x, y, l, 2);
+                    event.getGuiGraphics().blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS_BACKGROUND_SPRITE, x, y, 16, 2);
+                    event.getGuiGraphics().blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS_FOREGROUND_SPRITE, 16, 2, 0, 0, x, y, l, 2);
                 }
             }
         }
@@ -209,8 +210,8 @@ public class VampirismHUDOverlay {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderGameOverlay(RenderGuiEvent.@NotNull Pre event) {
         if ((screenPercentage > 0) && ModConfig.CLIENT.renderScreenOverlay.get()) {
-            PoseStack stack = event.getGuiGraphics().pose();
-            stack.pushPose();
+            Matrix3x2fStack stack = event.getGuiGraphics().pose();
+            stack.pushMatrix();
             int w = (event.getGuiGraphics().guiWidth());
             int h = (event.getGuiGraphics().guiHeight());
             // Render a see through colored square over the whole screen
@@ -219,15 +220,15 @@ public class VampirismHUDOverlay {
             float b = (float) (screenColor & 255) / 255.0F;
             float a = (screenPercentage / 100f) * (screenColor >> 24 & 255) / 255F;
 
-            Matrix4f matrix = stack.last().pose();
-            VertexConsumer buffer = event.getGuiGraphics().bufferSource.getBuffer(RenderType.guiOverlay());
-            buffer.addVertex(matrix, 0, h, 0).setColor(r, g, b, a);
-            buffer.addVertex(matrix, w, h, 0).setColor(r, g, b, a);
-            buffer.addVertex(matrix, w, 0, 0).setColor(r, g, b, a);
-            buffer.addVertex(matrix, 0, 0, 0).setColor(r, g, b, a);
-            event.getGuiGraphics().flush();
+//            Matrix4f matrix = stack.last().pose(); TODO
+//            VertexConsumer buffer = event.getGuiGraphics().bufferSource.getBuffer(RenderType.guiOverlay());
+//            buffer.addVertex(matrix, 0, h, 0).setColor(r, g, b, a);
+//            buffer.addVertex(matrix, w, h, 0).setColor(r, g, b, a);
+//            buffer.addVertex(matrix, w, 0, 0).setColor(r, g, b, a);
+//            buffer.addVertex(matrix, 0, 0, 0).setColor(r, g, b, a);
+//            event.getGuiGraphics().flush();
 
-            stack.popPose();
+            stack.popMatrix();
         }
     }
 
@@ -262,17 +263,16 @@ public class VampirismHUDOverlay {
     private void renderBloodFangs(@NotNull GuiGraphics graphics, int width, int height, float perc, int color) {
         int left = width / 2 - 8;
         int top = height / 2 - 4;
-        graphics.blitSprite(RenderType::guiTextured, FANG_SPRITE, left, top, 16, 8);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FANG_SPRITE, left, top, 16, 8);
         int percHeight = (int) (10f * (1f-perc));
         GuiRenderer.blitSpriteTiledOffset(graphics, FANG_SPRITE, left, top, 16, 8, 0, percHeight, color);
     }
 
     private void renderStakeInstantKill(@NotNull GuiGraphics graphics, int width, int height) {
-        RenderSystem.enableBlend();
         if (this.mc.options.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
-            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-            RenderSystem.setShaderColor(158f / 256, 0, 0, 1);
-            graphics.blitSprite(RenderType::guiTextured, CROSSHAIR_SPRITE, (graphics.guiWidth() - 15) / 2, (graphics.guiHeight() - 15) / 2, 15, 15);
+//            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            int color = ARGB.colorFromFloat(1f, 158 / 256f, 0, 0);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CROSSHAIR_SPRITE, (graphics.guiWidth() - 15) / 2, (graphics.guiHeight() - 15) / 2, 15, 15, color);
 
             float f = this.mc.player.getAttackStrengthScale(0.0F);
             boolean flag = false;
@@ -284,15 +284,12 @@ public class VampirismHUDOverlay {
             int j = graphics.guiHeight() / 2 - 7 + 16;
             int k = graphics.guiWidth() / 2 - 8;
             if (flag) {
-                graphics.blitSprite(RenderType::guiTextured, CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE, k, j, 16, 16);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE, k, j, 16, 16, color);
             } else if (f < 1.0F) {
                 int l = (int) (f * 17.0F);
-                graphics.blitSprite(RenderType::guiTextured, CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE, k, j, 16, 4);
-                graphics.blitSprite(RenderType::guiTextured, CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE, 16, 4, 0, 0, k, j, l, 4);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE, k, j, 16, 4, color);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE, 16, 4, 0, 0, k, j, l, 4, color);
             }
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-            RenderSystem.defaultBlendFunc();
         }
-        RenderSystem.disableBlend();
     }
 }

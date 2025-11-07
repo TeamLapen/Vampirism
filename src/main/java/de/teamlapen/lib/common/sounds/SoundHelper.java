@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SoundHelper {
 
-    private static final ISoundHandler soundHandler = FMLEnvironment.dist == Dist.CLIENT ? Client.createSoundHandler() : new DummySoundHandler();
+    private static final ISoundHandler soundHandler = FMLEnvironment.getDist() == Dist.CLIENT ? Client.createSoundHandler() : new DummySoundHandler();
 
     public static ISoundHandler getSoundHandler() {
         return soundHandler;

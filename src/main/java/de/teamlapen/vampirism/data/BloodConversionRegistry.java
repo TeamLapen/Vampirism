@@ -17,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -30,6 +31,11 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
     @Override
     public boolean canBeConverted(@NotNull ItemStack stack) {
         return getItemBlood(stack).blood() > 0;
+    }
+
+    @Override
+    public boolean canBeConverted(@NotNull ItemResource resource) {
+        return getItemBlood(resource.toStack()).blood() > 0;
     }
 
     @Override

@@ -75,7 +75,7 @@ public class HunterBasicMenu extends InventoryContainerMenu {
     @Override
     public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
-        if (!playerIn.getCommandSenderWorld().isClientSide) {
+        if (!playerIn.level().isClientSide()) {
             this.clearContainer(playerIn, inventory);
         }
     }

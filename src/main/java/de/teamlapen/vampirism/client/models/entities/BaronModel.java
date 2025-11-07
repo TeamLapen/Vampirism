@@ -9,6 +9,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import org.jetbrains.annotations.NotNull;
@@ -193,23 +194,22 @@ public class BaronModel extends BaronBaseModel implements ArmedModel, HeadedMode
         this.armLeft.xRot -= (float) (Mth.sin(state.ageInTicks * 0.067F) * 0.06F + 0.03);
 
 
-        this.headOverlay.copyFrom(this.head);
-        this.armLeftOverlay.copyFrom(this.armLeft);
-        this.armRightOverlay.copyFrom(this.armRight);
-        this.clawsLeft.copyFrom(this.armLeft);
+        copyModelPartProperties(this.head, this.headOverlay);
+        copyModelPartProperties(this.armLeft, this.armLeftOverlay);
+        copyModelPartProperties(this.armRight, this.armRightOverlay);
+        copyModelPartProperties(this.armLeft, this.clawsLeft);
+        copyModelPartProperties(this.armRight, this.clawsRight);
         this.clawsLeft.y += 8;
-        this.clawsRight.copyFrom(this.armRight);
         this.clawsRight.y += 10;
 
-    }
-
-    @Override
-    public void translateToHand(@NotNull HumanoidArm sideIn, @NotNull PoseStack matrixStackIn) {
-        this.getArmForSide(sideIn).translateAndRotate(matrixStackIn);
     }
 
     protected ModelPart getArmForSide(HumanoidArm side) {
         return side == HumanoidArm.LEFT ? this.armLeft : this.armRight;
     }
 
+    @Override
+    public void translateToHand(EntityRenderState renderState, HumanoidArm arm, PoseStack poseStack) {
+        this.getArmForSide(arm).translateAndRotate(poseStack);
+    }
 }

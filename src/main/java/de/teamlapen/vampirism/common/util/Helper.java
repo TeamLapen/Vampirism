@@ -187,7 +187,7 @@ public class Helper {
 
     public static boolean isEntityInVampireBiome(@Nullable Entity e) {
         if (e == null) return false;
-        Level w = e.getCommandSenderWorld();
+        Level w = e.level();
         return w.getBiome(e.blockPosition()).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
     }
 
@@ -201,16 +201,16 @@ public class Helper {
      */
     public static boolean isEntityInArtificalVampireFogArea(@Nullable Entity e) {
         if (e == null) return false;
-        Level w = e.getCommandSenderWorld();
+        Level w = e.level();
         return LevelFog.get(w).isInsideArtificialVampireFogArea(e.blockPosition());
     }
 
     public static ResourceLocation getBiomeId(@NotNull Entity e) {
-        return getBiomeId(e.getCommandSenderWorld(), e.blockPosition());
+        return getBiomeId(e.level(), e.blockPosition());
     }
 
     public static Holder<Biome> getBiome(@NotNull Entity e) {
-        return e.getCommandSenderWorld().getBiome(e.blockPosition());
+        return e.level().getBiome(e.blockPosition());
     }
 
     public static ResourceLocation getBiomeId(@NotNull CommonLevelAccessor world, @NotNull BlockPos pos) {
@@ -221,22 +221,6 @@ public class Helper {
         return biome.unwrap().map(ResourceKey::location, b -> world.registryAccess().lookupOrThrow(Registries.BIOME).getKey(b));
     }
 
-    /**
-     * Returns false on client side
-     * Determines the gender of the player by checking the skin and assuming 'slim'->female.
-     *
-     * @param p Player
-     * @return True if female
-     */
-    public static boolean attemptToGuessGenderSafe(Player p) {
-        if (p instanceof ServerPlayer) { //Could extend to also support client side, but have to use proxy then
-            MinecraftProfileTextures textureMap = ((ServerPlayer) p).server.getSessionService().getTextures(p.getGameProfile());
-            if (textureMap.skin() != null) {
-                return "slim".equals(textureMap.skin().getMetadata("model"));
-            }
-        }
-        return false;
-    }
 
     public static <T extends Entity> @NotNull Optional<T> createEntity(@NotNull EntityType<T> type, @NotNull Level world, EntitySpawnReason spawnReason) {
         T e = type.create(world, spawnReason);

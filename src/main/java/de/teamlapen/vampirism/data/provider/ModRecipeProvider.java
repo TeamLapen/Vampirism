@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.common.util.RegUtil;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.provider.base.VampirismRecipeProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -324,7 +325,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("ICI")
                 .define('C', ModItems.CANDELABRA)
                 .define('I', IRON_INGOT)
-                .define('A', Blocks.CHAIN)
+                .define('A', Blocks.IRON_CHAIN)
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .unlockedBy("has_candelabra", has(ModItems.CANDELABRA))
                 .save(output);
@@ -1474,7 +1475,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     }
 
     private void smithingPure(ItemLike item, int level, ItemLike result) {
-        netheriteSmithing(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), item), RecipeCategory.COMBAT, DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), ModItems.BLOOD_INFUSED_NETHERITE_INGOT), PureLevel.pureBlood(result, level), "_purity_" + level);
+        netheriteSmithing(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), item), RecipeCategory.COMBAT, DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), ModItems.BLOOD_INFUSED_NETHERITE_INGOT), result.asItem(), DataComponentPatch.builder().set(ModDataComponents.PURE_LEVEL.get(), new PureLevel(level)).build(), "_purity_" + level);
     }
 
 

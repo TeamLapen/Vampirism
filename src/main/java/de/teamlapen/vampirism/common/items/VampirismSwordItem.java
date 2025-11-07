@@ -1,12 +1,18 @@
 package de.teamlapen.vampirism.common.items;
 
 import de.teamlapen.vampirism.api.ItemPropertiesExtension;
-import net.minecraft.world.item.SwordItem;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.component.Weapon;
 
-public class VampirismSwordItem extends SwordItem {
+public class VampirismSwordItem extends Item {
 
     public VampirismSwordItem(ToolMaterial material, int attackDamageIn, float attackSpeedIn, Properties builder) {
-        super(material, attackDamageIn, attackSpeedIn, ItemPropertiesExtension.descriptionWithout(builder, "_normal|_enhanced|_ultimate"));
+        this(material, attackDamageIn, attackSpeedIn, builder, 0);
+    }
+
+    public VampirismSwordItem(ToolMaterial material, int attackDamageIn, float attackSpeedIn, Properties builder, float disableShield) {
+        super(ItemPropertiesExtension.descriptionWithout(builder.sword(material, attackDamageIn, attackSpeedIn).component(DataComponents.WEAPON, new Weapon(1, disableShield)), "_normal|_enhanced|_ultimate"));
     }
 }

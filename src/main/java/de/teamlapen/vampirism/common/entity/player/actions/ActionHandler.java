@@ -21,12 +21,12 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -177,20 +177,19 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
         return this.unlockedActions.contains(action);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+    public void deserialize(@NotNull ValueInput input) {
         //If loading from save we want to clear everything beforehand.
         //NBT only contains actions that are active/cooldown
         activeTimers.clear();
         cooldownTimers.clear();
         expectedCooldownTimes.clear();
         expectedDurations.clear();
-        if (nbt.contains("actions_active")) {
-            loadTimerMapFromNBT(nbt.getCompound("actions_active"), (Object2IntMap<Holder<? extends IAction<T>>>) (Object) activeTimers);
-        }
-        if (nbt.contains("actions_cooldown")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
-        if (nbt.contains("actions_cooldown_expected")) loadTimerMapFromNBT(nbt.getCompound("actions_cooldown_expected"), expectedCooldownTimes);
-        if (nbt.contains("actions_duration_expected")) loadTimerMapFromNBT(nbt.getCompound("actions_duration_expected"), expectedDurations);
+        input.childrenList("actions_active").ifPresent(list -> loadTimerMapFromNBT(list, (Object2IntMap<Holder<? extends IAction<T>>>) (Object) activeTimers));
+        input.childrenList("actions_cooldown").ifPresent(list -> loadTimerMapFromNBT(list, cooldownTimers));
+        input.childrenList("actions_cooldown_expected").ifPresent(list -> loadTimerMapFromNBT(list, expectedCooldownTimes));
+        input.childrenList("actions_duration_expected").ifPresent(list -> loadTimerMapFromNBT(list, expectedDurations));
     }
 
     /**
@@ -210,7 +209,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
      * Attention: nbt is modified in the process
      **/
     @Override
-    public void deserializeUpdateNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+    public void deserializeUpdate(@NotNull ValueInput input) {
         /*
          * This happens client side
          * We want to:
@@ -223,43 +222,39 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
          * Any locally active action is removed from the NBT so after the iteration only actions that are not locally active should be present in the map. Therefore, any remaining actions are activated.
          *
          */
-        if (nbt.contains("actions_active", Tag.TAG_COMPOUND)) {
-            CompoundTag active = nbt.getCompound("actions_active");
+        input.childrenList("actions_active").ifPresent(list -> {
+            Map<ResourceLocation, Integer> active = list.stream().flatMap(s -> s.getString("action").map(ResourceLocation::parse).map(o -> Map.entry(o, s.getIntOr("value", 0))).stream()).collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue()));
             List<Holder<? extends ILastingAction<T>>> toRemove = new ArrayList<>();
             for (Object2IntMap.Entry<Holder<? extends ILastingAction<T>>> client_active : activeTimers.object2IntEntrySet()) {
-                String key = client_active.getKey().toString();
-                if (active.contains(key)) {
-                    client_active.setValue(active.getInt(key));
-                    nbt.remove(key);
+                Optional<ResourceLocation> key = client_active.getKey().unwrapKey().map(ResourceKey::location);
+                if (key.isPresent() && active.containsKey(key.get())) {
+                    client_active.setValue((int) active.get(key.get()));
                 } else {
                     toRemove.add(client_active.getKey());
                 }
             }
             toRemove.forEach(this::deactivateAction);
 
-            for (String key : active.getAllKeys()) {
-                ResourceLocation id = ResourceLocation.parse(key);
+            for (ResourceLocation id : active.keySet()) {
                 //noinspection unchecked
                 ModRegistries.ACTIONS.get(id).filter(s -> s.value() instanceof ILastingAction<?>).map(s -> ((Holder.Reference<ILastingAction<T>>) (Object) s)).ifPresent(action -> {
                     action.value().onActivatedClient(this.player);
-                    this.activeTimers.put(action, active.getInt(key));
+                    this.activeTimers.put(action, (int) active.get(id));
                 });
             }
-
-        }
-
-        if (nbt.contains("actions_cooldown", Tag.TAG_COMPOUND)) {
-            cooldownTimers.clear();
-            loadTimerMapFromNBT(nbt.getCompound("actions_cooldown"), cooldownTimers);
-        }
-        if (nbt.contains("actions_cooldown_expected", Tag.TAG_COMPOUND)) {
-            expectedCooldownTimes.clear();
-            loadTimerMapFromNBT(nbt.getCompound("actions_cooldown_expected"), expectedCooldownTimes);
-        }
-        if (nbt.contains("actions_duration_expected", Tag.TAG_COMPOUND)) {
-            expectedDurations.clear();
-            loadTimerMapFromNBT(nbt.getCompound("actions_duration_expected"), expectedDurations);
-        }
+        });
+        input.childrenList("actions_cooldown").ifPresent(list -> {
+            this.cooldownTimers.clear();
+            loadTimerMapFromNBT(list, this.cooldownTimers);
+        });
+        input.childrenList("actions_cooldown_expected").ifPresent(list -> {
+            this.expectedCooldownTimes.clear();
+            loadTimerMapFromNBT(list, this.expectedCooldownTimes);
+        });
+        input.childrenList("actions_duration_expected").ifPresent(list -> {
+            this.expectedDurations.clear();
+            loadTimerMapFromNBT(list, expectedDurations);
+        });
     }
 
     @Override
@@ -296,15 +291,13 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
         this.dirty = true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        //noinspection unchecked
-        tag.put("actions_active", writeTimersToNBT((ObjectSet<Object2IntMap.Entry<Holder<? extends IAction<T>>>>) (Object) activeTimers.object2IntEntrySet()));
-        tag.put("actions_cooldown", writeTimersToNBT(cooldownTimers.object2IntEntrySet()));
-        tag.put("actions_cooldown_expected", writeTimersToNBT(expectedCooldownTimes.object2IntEntrySet()));
-        tag.put("actions_duration_expected", writeTimersToNBT(expectedDurations.object2IntEntrySet()));
-        return tag;
+    public void serialize(@NotNull ValueOutput output) {
+        writeTimersToNBT(output.childrenList("actions_active"), (ObjectSet<Object2IntMap.Entry<Holder<? extends IAction<T>>>>) (Object) activeTimers.object2IntEntrySet());
+        writeTimersToNBT(output.childrenList("actions_cooldown"), cooldownTimers.object2IntEntrySet());
+        writeTimersToNBT(output.childrenList("actions_cooldown_expected"), expectedCooldownTimes.object2IntEntrySet());
+        writeTimersToNBT(output.childrenList("actions_duration_expected"), expectedDurations.object2IntEntrySet());
     }
 
     /**
@@ -442,8 +435,8 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
     }
 
     @Override
-    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
-        return serializeNBT(provider);
+    public void serializeUpdateInternal(@NotNull ValueOutput output, @NotNull UpdateParams params) {
+        serialize(output);
     }
 
     @Override
@@ -463,28 +456,25 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> implem
         return true;
     }
 
-    private void loadTimerMapFromNBT(@NotNull CompoundTag nbt, @NotNull Object2IntMap<Holder<? extends IAction<T>>> map) {
-        for (String key : nbt.getAllKeys()) {
-            ResourceLocation id = ResourceLocation.parse(key);
-            ModRegistries.ACTIONS.get(id).ifPresent(action -> {
-                //noinspection RedundantCast,unchecked
-                map.put((Holder<? extends IAction<T>>) (Object) action, nbt.getInt(key));
-            });
-        }
+    private void loadTimerMapFromNBT(ValueInput.ValueInputList inputList, @NotNull Object2IntMap<Holder<? extends IAction<T>>> map) {
+        inputList.forEach(input -> input.getString("action").map(ResourceLocation::parse).flatMap(ModRegistries.ACTIONS::get).ifPresent(action -> {
+            //noinspection RedundantCast,unchecked
+            map.put((Holder<? extends IAction<T>>) (Object) action, input.getIntOr("value", 0));
+        }));
     }
 
-    private @NotNull CompoundTag writeTimersToNBT(@NotNull ObjectSet<Object2IntMap.Entry<Holder<? extends IAction<T>>>> set) {
-        CompoundTag nbt = new CompoundTag();
+    private void writeTimersToNBT(ValueOutput.ValueOutputList outputList, @NotNull ObjectSet<Object2IntMap.Entry<Holder<? extends IAction<T>>>> set) {
         for (Object2IntMap.Entry<Holder<? extends IAction<T>>> entry : set) {
             entry.getKey().unwrapKey().ifPresent(key -> {
-                nbt.putInt(key.location().toString(), entry.getIntValue());
+                ValueOutput output = outputList.addChild();
+                output.putString("action", key.location().toString());
+                output.putInt("value", entry.getIntValue());
             });
         }
-        return nbt;
     }
 
     @Override
-    public String nbtKey() {
+    public @NotNull String nbtKey() {
         return NBT_KEY;
     }
 

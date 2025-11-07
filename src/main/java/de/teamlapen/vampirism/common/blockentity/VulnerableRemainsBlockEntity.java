@@ -9,9 +9,7 @@ import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.entity.VulnerableRemainsDummyEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -19,8 +17,9 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -64,20 +63,6 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
         this.level.setBlockAndUpdate(this.worldPosition, ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get().defaultBlockState());
     }
 
-    @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        this.health = tag.getInt("health");
-        this.lastDamage = tag.getLong("lastDamage");
-        if (tag.contains("motherPos")) {
-            int[] pos = tag.getIntArray("motherPos");
-            this.motherPos = new BlockPos(pos[0], pos[1], pos[2]);
-        }
-        if (tag.contains("dummy_entity_id", Tag.TAG_INT_ARRAY)) {
-            this.dummy_entity_id = tag.getUUID("dummy_entity_id");
-        }
-    }
-
     public void onDamageDealt(DamageSource src, double damage) {
         this.health -= (int) damage;
         if (this.level != null) {
@@ -96,15 +81,24 @@ public class VulnerableRemainsBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("health", this.health);
-        tag.putLong("lastDamage", this.lastDamage);
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.health = input.getIntOr("health", 0);
+        this.lastDamage = input.getLongOr("lastDamage", 0);
+        this.motherPos = input.read("motherPos", BlockPos.CODEC).orElse(null);
+        this.dummy_entity_id = input.read("dummy_entity_id", UUIDUtil.CODEC).orElse(null);
+    }
+
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("health", this.health);
+        output.putLong("lastDamage", this.lastDamage);
         if (this.motherPos != null) {
-            tag.putIntArray("motherPos", new int[] {this.motherPos.getX(), this.motherPos.getY(), this.motherPos.getZ()});
+            output.store("motherPos", BlockPos.CODEC, this.motherPos);
         }
         if (this.dummy_entity_id != null) {
-            tag.putUUID("dummy_entity_id", this.dummy_entity_id);
+            output.store("dummy_entity_id", UUIDUtil.CODEC, this.dummy_entity_id);
         }
     }
 

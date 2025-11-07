@@ -22,7 +22,7 @@ public class RestrictSunVampireGoal<T extends PathfinderMob & IVampire> extends 
         if (vampire.tickCount % 10 == 3) {
             cache = VampirismAPI.sundamageRegistry().hasSunDamage(vampire.level(), vampire.blockPosition()) && !Helper.isEntityInArtificalVampireFogArea(vampire);
         }
-        return cache && vampire.getCommandSenderWorld().isDay() && !vampire.isIgnoringSundamage();
+        return cache && vampire.level().isBrightOutside() && !vampire.isIgnoringSundamage();
     }
 
     public void start() {

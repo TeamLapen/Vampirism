@@ -7,6 +7,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,9 +30,8 @@ public class StayTask extends DefaultMinionTask<StayTask.Desc, MinionData> {
     }
 
     @Override
-    public @NotNull Desc readFromNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        BlockPos pos = NbtUtils.readBlockPos(nbt, "pos").orElseThrow();
-        return new Desc(pos);
+    public @NotNull Desc load(ValueInput input) {
+        return new Desc(input);
     }
 
     public static class Desc implements IMinionTask.IMinionTaskDesc<MinionData> {
@@ -40,15 +41,20 @@ public class StayTask extends DefaultMinionTask<StayTask.Desc, MinionData> {
             this.position = pos;
         }
 
+        private Desc(ValueInput input) {
+            this.position = input.read("pos", BlockPos.CODEC).orElseThrow();
+        }
+
 
         @Override
         public @NotNull IMinionTask<?, MinionData> getTask() {
             return MinionTasks.STAY.get();
         }
 
+
         @Override
-        public void writeToNBT(@NotNull CompoundTag nbt) {
-            nbt.put("pos", NbtUtils.writeBlockPos(position));
+        public void serialize(@NotNull ValueOutput output) {
+            output.store("pos", BlockPos.CODEC, position);
         }
     }
 

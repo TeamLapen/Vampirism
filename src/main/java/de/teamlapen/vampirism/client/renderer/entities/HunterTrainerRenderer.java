@@ -5,14 +5,15 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.common.entity.VampirismEntity;
-import net.minecraft.client.model.HumanoidArmorModel;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ public class HunterTrainerRenderer extends HumanoidMobRenderer<VampirismEntity, 
     public HunterTrainerRenderer(EntityRendererProvider.@NotNull Context context, boolean renderEquipment) {
         super(context, new ClothedModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), 0.5F);
         if (renderEquipment) {
-            this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getEquipmentRenderer()));
+            this.addLayer(new HumanoidArmorLayer<>(this, ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), HumanoidModel::new), context.getEquipmentRenderer()));
         }
     }
 
@@ -35,9 +36,9 @@ public class HunterTrainerRenderer extends HumanoidMobRenderer<VampirismEntity, 
     }
 
     @Override
-    protected void renderNameTag(HunterTrainerRenderState state, @NotNull Component name, @NotNull PoseStack stack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        if (state.distanceToCameraSq <= 128) {
-            super.renderNameTag(state, name, stack, bufferSource, packedLight);
+    protected void submitNameTag(HunterTrainerRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (renderState.distanceToCameraSq <= 128) {
+            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
         }
     }
 
@@ -46,6 +47,6 @@ public class HunterTrainerRenderer extends HumanoidMobRenderer<VampirismEntity, 
         return new HunterTrainerRenderState();
     }
 
-    public static class HunterTrainerRenderState extends PlayerRenderState {
+    public static class HunterTrainerRenderState extends AvatarRenderState {
     }
 }

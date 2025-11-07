@@ -4,9 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.common.inventory.base.PlayerOwnedMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -19,6 +17,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,21 +55,15 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
-        super.saveAdditional(pTag, provider);
-        if (this.lockDataHolder.owner != null) {
-            pTag.putUUID("owner", this.lockDataHolder.owner);
-            pTag.putString("lockStatus", this.lockDataHolder.lockStatus.getSerializedName());
-        }
+    protected void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        this.lockDataHolder.serialize(output.child("lock"));
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider provider) {
-        super.loadAdditional(pTag, provider);
-        if (pTag.hasUUID("owner")) {
-            this.lockDataHolder.owner = pTag.getUUID("owner");
-            this.lockDataHolder.lockStatus = Lock.get(pTag.getString("lockStatus"));
-        }
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        this.lockDataHolder.deserialize(input.childOrEmpty("lock"));
     }
 
     @Override
@@ -82,7 +77,7 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
         this.lockDataHolder.writeToBuffer(buffer);
     }
 
-    public static class LockDataHolder {
+    public static class LockDataHolder implements ValueIOSerializable {
         public static final Codec<LockDataHolder> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
                         Codec.STRING.xmap(UUID::fromString, UUID::toString).optionalFieldOf("owner").forGetter(l -> java.util.Optional.ofNullable(l.owner)),
@@ -127,6 +122,21 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
             return this.owner != null && this.owner.equals(player.getUUID());
         }
 
+        @Override
+        public void serialize(ValueOutput output) {
+            if (this.owner != null) {
+                output.store("owner", UUIDUtil.CODEC, this.owner);
+                output.store("lock", Lock.CODEC, this.lockStatus);
+            }
+        }
+
+        @Override
+        public void deserialize(ValueInput input) {
+            input.read("owner", UUIDUtil.CODEC).ifPresentOrElse(uuid -> {
+                this.owner = uuid;
+                this.lockStatus = input.read("lock", Lock.CODEC).orElse(Lock.PUBLIC);
+            }, () -> this.lockStatus = Lock.PUBLIC);
+        }
 
         private void writeToBuffer(FriendlyByteBuf buffer) {
             buffer.writeBoolean(this.owner != null);
@@ -159,6 +169,8 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
     public enum Lock implements StringRepresentable {
         PUBLIC("public"),
         PRIVATE("private");
+
+        public static final Codec<Lock> CODEC = StringRepresentable.fromEnum(Lock::values);
 
         private final String name;
 

@@ -14,13 +14,13 @@ import de.teamlapen.vampirism.common.entity.vampire.AdvancedVampireEntity;
 import de.teamlapen.vampirism.common.util.TextureComparator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.PlayerSkinRenderCache;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,18 +60,17 @@ public class AdvancedVampireRenderer extends HumanoidMobRenderer<AdvancedVampire
         renderState.bodyTexture = this.textures.length == 0 ? this.texture : this.textures[entity.getBodyTexture() % this.textures.length];
         renderState.fangType = entity.getFangType();
         renderState.eyeType = entity.getEyeType();
-        renderState.overlay = entity.getPlayerOverlay().map(p -> Minecraft.getInstance().getSkinManager().getInsecureSkin(p)).map(PlayerSkin::texture).orElseGet(DefaultPlayerSkin::getDefaultTexture);
+        renderState.overlay = entity.getPlayerOverlay().map(PlayerSkinRenderCache.RenderInfo::playerSkin).map(net.minecraft.world.entity.player.PlayerSkin::body).map(ClientAsset.Texture::texturePath).orElse(null);
     }
 
     @Override
-    protected void renderNameTag(@NotNull AdvancedVampireRenderState entityIn, @NotNull Component displayNameIn, @NotNull PoseStack matrixStackIn, @NotNull MultiBufferSource bufferIn, int packedLightIn) {
-        double dist = this.entityRenderDispatcher.distanceToSqr(entityIn.x, entityIn.y, entityIn.z);
-        if (dist <= 256) {
-            super.renderNameTag(entityIn, displayNameIn, matrixStackIn, bufferIn, packedLightIn);
+    protected void submitNameTag(AdvancedVampireRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        if (renderState.distanceToCameraSq <= 256) {
+            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
         }
     }
 
-    public static class AdvancedVampireRenderState extends PlayerRenderState implements IOverlayRenderState {
+    public static class AdvancedVampireRenderState extends AvatarRenderState implements IOverlayRenderState {
         public ResourceLocation bodyTexture;
         public int fangType;
         public int eyeType;

@@ -34,7 +34,7 @@ public class SyringeEventHandler {
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.SUCCESS);
 
-            if (level.isClientSide) return;
+            if (level.isClientSide()) return;
 
             Optional<? extends IBiteableEntity> biteableOpt = switch (target) {
                 case PathfinderMob mob when mob.isAlive() -> ExtendedCreature.getSafe(mob);
@@ -66,7 +66,7 @@ public class SyringeEventHandler {
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.SUCCESS);
 
-            if (level.isClientSide) return;
+            if (level.isClientSide()) return;
 
             ExtendedCreature.getSafe(target).ifPresent(entity -> entity.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
 

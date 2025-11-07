@@ -4,48 +4,30 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.blockentity.VampireBeaconBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BeaconRenderState;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class VampireBeaconRenderer implements BlockEntityRenderer<VampireBeaconBlockEntity> {
-
-    public static final ResourceLocation BEACON_BEAM_LOCATION = VResourceLocation.mc("textures/entity/beacon_beam.png");
-    public static final int MAX_RENDER_Y = 1024;
+public class VampireBeaconRenderer extends BeaconRenderer<VampireBeaconBlockEntity> {
 
     public VampireBeaconRenderer(BlockEntityRendererProvider.Context context) {
-    }
-
-    @Override
-    public void render(VampireBeaconBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        Level level = blockEntity.getLevel();
-        if (level == null) return;
-
-        long gameTime  = level.getGameTime();
-        List<BeaconBlockEntity.BeaconBeamSection> list = blockEntity.getBeamSections();
-        int j = 0;
-
-        for (int k = 0; k < list.size(); ++k) {
-            BeaconBlockEntity.BeaconBeamSection beaconblockentity$beaconbeamsection = list.get(k);
-            renderBeaconBeam(poseStack, bufferSource, partialTick, gameTime, j, k == list.size() - 1 ? MAX_RENDER_Y : beaconblockentity$beaconbeamsection.getHeight(), beaconblockentity$beaconbeamsection.getColor());
-            j += beaconblockentity$beaconbeamsection.getHeight();
-        }
-    }
-
-    private static void renderBeaconBeam(PoseStack poseStack, MultiBufferSource bufferSource, float partialTick, long gameTime, int yOffset, int height, int color) {
-        BeaconRenderer.renderBeaconBeam(poseStack, bufferSource, BEACON_BEAM_LOCATION, partialTick, 1.0F, gameTime, yOffset, height, color, 0.2F, 0.25F);
-    }
-
-    @Override
-    public boolean shouldRenderOffScreen(VampireBeaconBlockEntity blockEntity) {
-        return true;
     }
 
     @Override
@@ -62,4 +44,5 @@ public class VampireBeaconRenderer implements BlockEntityRenderer<VampireBeaconB
     public AABB getRenderBoundingBox(VampireBeaconBlockEntity blockEntity) {
         return AABB.INFINITE;
     }
+
 }

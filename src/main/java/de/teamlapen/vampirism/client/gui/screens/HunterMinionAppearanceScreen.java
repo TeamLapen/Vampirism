@@ -11,13 +11,10 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 
 import java.util.stream.IntStream;
 
-@OnlyIn(Dist.CLIENT)
 public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionEntity> {
 
     private static final Component NAME = Component.translatable("gui.vampirism.minion_appearance");

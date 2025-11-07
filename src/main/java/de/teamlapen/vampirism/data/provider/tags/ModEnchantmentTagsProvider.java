@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.data.tags.KeyTagProvider;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModEnchantmentTagsProvider extends TagsProvider<Enchantment> {
+public class ModEnchantmentTagsProvider extends KeyTagProvider<Enchantment> {
 
     public ModEnchantmentTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
         super(output, Registries.ENCHANTMENT, provider, REFERENCE.MODID);

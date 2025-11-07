@@ -46,6 +46,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 /**
  * Base class for Vampirism's vampire entities
  */
@@ -103,7 +105,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                 DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(level()), this.tickCount);
             }
         }
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (isAlive() && isInWater()) {
                 setAirSupply(300);
                 if (tickCount % 16 == 4) {
@@ -177,14 +179,14 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public boolean doHurtTarget(ServerLevel level, @NotNull Entity entity) {
-        if (canSuckBloodFromPlayer && !level().isClientSide && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
+        if (canSuckBloodFromPlayer && !level().isClientSide() && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
             int amt = VampirePlayer.get(player).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION, new DrinkBloodContext(player));
             VampirePlayer.get(player).tryInfect(this);
             return true;
         }
         if (entity instanceof LivingEntity living) {
-            for (ItemStack e : living.getArmorSlots()) {
+            for (ItemStack e : Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(living::getItemBySlot).toList()) {
                 if (e != null && e.getItem() instanceof HunterCoatItem) {
                     int j = 1;
                     if (((HunterCoatItem) e.getItem()).getVampirismTier().equals(IItemWithTier.Tier.ENHANCED)) {

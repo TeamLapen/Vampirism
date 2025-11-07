@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.server.commands;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -97,8 +96,8 @@ public class MinionInventoryCommand extends BasicCommand {
         String playerName = playerMinionIdentifier.player;
         int minionId = playerMinionIdentifier.id;
         MinionWorldData data = MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer());
-        GameProfile profile = ServerLifecycleHooks.getCurrentServer().getProfileCache().get(playerName).orElseThrow(NO_PLAYER::create);
-        PlayerMinionController controller = data.getController(profile.getId());
+        var profile = ServerLifecycleHooks.getCurrentServer().services().nameToIdCache().get(playerName).orElseThrow(NO_PLAYER::create);
+        PlayerMinionController controller = data.getController(profile.id());
         if (controller == null) {
             throw NO_MINION.create();
         }

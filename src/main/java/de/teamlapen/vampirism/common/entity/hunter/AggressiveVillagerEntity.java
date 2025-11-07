@@ -11,10 +11,10 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.common.entity.ai.goals.DefendVillageGoal;
 import de.teamlapen.vampirism.server.config.BalanceMobProps;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.*;
@@ -31,6 +31,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,13 +48,16 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
      */
     public static @NotNull AggressiveVillagerEntity makeHunter(@NotNull Villager villager) {
         AggressiveVillagerEntity hunter = ModEntities.VILLAGER_ANGRY.get().create(villager.level(), EntitySpawnReason.EVENT);
-        assert hunter != null;
-        CompoundTag nbt = new CompoundTag();
+
         if (villager.isSleeping()) {
             villager.stopSleeping();
         }
-        villager.saveWithoutId(nbt);
-        hunter.load(nbt);
+
+        TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        villager.saveWithoutId(output);
+
+        var input = TagValueInput.create(ProblemReporter.DISCARDING, villager.registryAccess(), output.buildResult());
+        hunter.load(input);
         hunter.setUUID(Mth.createInsecureUUID(hunter.random));
         hunter.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.PITCHFORK.get()));
         return hunter;
@@ -127,9 +132,12 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
         Villager villager = EntityType.VILLAGER.create(this.level(), EntitySpawnReason.EVENT);
         assert villager != null;
         this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-        CompoundTag nbt = new CompoundTag();
-        this.saveWithoutId(nbt);
-        villager.load(nbt);
+
+        TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        this.saveWithoutId(output);
+
+        var input = TagValueInput.create(ProblemReporter.DISCARDING, this.registryAccess(), output.buildResult());
+        villager.load(input);
         villager.setUUID(Mth.createInsecureUUID(this.random));
         UtilLib.replaceEntity(this, villager);
     }

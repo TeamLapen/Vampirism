@@ -18,10 +18,8 @@ public class DisguiseOverlay extends TextureOverlay {
         if (canRenderOverlays() && ModConfig.CLIENT.enableDisguiseOverlayRendering.get()) {
             HunterPlayerSpecialAttribute huntSpecial = ((IVampirismPlayer) this.player()).vampirism$getVampAtts().getHuntSpecial();
             if (huntSpecial.isDisguised()) {
-                graphics.pose().pushPose();
                 scaleBy(huntSpecial.getDisguiseProgress(), 1 / 4f, 2F, 1.0F, graphics);
                 renderTextureOverlay(graphics, DISGUISE_TEXTURE, 1.0F);
-                graphics.pose().popPose();
             }
         }
     }

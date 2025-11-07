@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.common.util;
 import de.teamlapen.vampirism.api.entity.factions.ILordTitleProvider;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class LordTitles {
     private static final Component VAMPIRE_1M = Component.translatable("text.vampirism.lord_title.vampire.male1");
@@ -41,7 +42,7 @@ public class LordTitles {
     @SuppressWarnings("DuplicatedCode")
     public static class VampireTitles implements ILordTitleProvider {
         @Override
-        public Component getLordTitle(int level, IPlayableFaction.TitleGender titleGender) {
+        public Component getLordTitle(int level, IPlayableFaction.@NotNull TitleGender titleGender) {
             return switch (titleGender) {
                 case FEMALE -> switch (level) {
                     case 1 -> VAMPIRE_1F;
@@ -63,7 +64,7 @@ public class LordTitles {
         }
 
         @Override
-        public Component getShort(int level, IPlayableFaction.TitleGender titleGender) {
+        public Component getShort(int level, IPlayableFaction.@NotNull TitleGender titleGender) {
             return switch (titleGender) {
                 case FEMALE -> switch (level) {
                     case 1 -> VAMPIRE_1FS;

@@ -58,7 +58,7 @@ public class VampireBeaconBlock extends BaseContainerBlock implements BeaconBeam
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(ModStats.INTERACT_WITH_ANCIENT_BEACON.get());
                 if (Helper.isHunter(serverPlayer)) {

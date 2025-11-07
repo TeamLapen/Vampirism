@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -29,7 +28,7 @@ import java.util.List;
 
 public class CursedSpruceBlock extends RotatedPillarBlock implements HolyWaterEffectConsumer {
 
-    public static final BooleanProperty ACTIVE = BlockStateProperties.ACTIVE;
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
     public CursedSpruceBlock(Properties properties) {
         super(properties.randomTicks());

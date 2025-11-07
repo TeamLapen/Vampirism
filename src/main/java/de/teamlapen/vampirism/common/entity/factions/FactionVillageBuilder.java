@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.common.entity.factions;
 
-import de.teamlapen.vampirism.api.entity.CaptureEntityEntry;
 import de.teamlapen.vampirism.api.entity.ITaskMasterEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillageBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.random.Weighted;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -26,39 +27,39 @@ public class FactionVillageBuilder implements IFactionVillageBuilder {
 
     Holder<MobEffect> badOmenEffect = null;
     Function<HolderLookup.Provider, ItemStack> bannerStack = (provider) -> new ItemStack(Items.WHITE_BANNER);
-    List<CaptureEntityEntry<?>> captureEntities = Collections.emptyList();
-    Supplier<VillagerProfession> factionVillageProfession = () -> VillagerProfession.NONE;
+    List<Weighted<Supplier<EntityType<? extends Mob>>>> captureEntities = Collections.emptyList();
+    ResourceKey<VillagerProfession> factionVillageProfession = VillagerProfession.NONE;
     Class<? extends Mob> guardSuperClass = Mob.class;
     Supplier<EntityType<? extends ITaskMasterEntity>> taskMasterEntity = () -> null;
     Supplier<? extends Block> fragileTotem = () -> Blocks.AIR;
     Supplier<? extends Block> craftedTotem = () -> Blocks.AIR;
 
     @Override
-    public @NotNull FactionVillageBuilder badOmenEffect(Holder<MobEffect> badOmenEffect) {
+    public FactionVillageBuilder badOmenEffect(Holder<MobEffect> badOmenEffect) {
         this.badOmenEffect = badOmenEffect;
         return this;
     }
 
     @Override
-    public @NotNull FactionVillageBuilder banner(Function<HolderLookup.Provider, ItemStack> bannerItem) {
+    public FactionVillageBuilder banner(Function<HolderLookup.Provider, ItemStack> bannerItem) {
         this.bannerStack = bannerItem;
         return this;
     }
 
     @Override
-    public @NotNull FactionVillageBuilder captureEntities(List<CaptureEntityEntry<?>> captureEntities) {
+    public FactionVillageBuilder captureEntities(List<Weighted<Supplier<EntityType<? extends Mob>>>> captureEntities) {
         this.captureEntities = captureEntities;
         return this;
     }
 
     @Override
-    public @NotNull FactionVillageBuilder factionVillagerProfession(Supplier<VillagerProfession> profession) {
+    public FactionVillageBuilder factionVillagerProfession(ResourceKey<VillagerProfession> profession) {
         this.factionVillageProfession = profession;
         return this;
     }
 
     @Override
-    public @NotNull FactionVillageBuilder guardSuperClass(Class<? extends Mob> clazz) {
+    public FactionVillageBuilder guardSuperClass(Class<? extends Mob> clazz) {
         this.guardSuperClass = clazz;
         return this;
     }
@@ -71,14 +72,14 @@ public class FactionVillageBuilder implements IFactionVillageBuilder {
     }
 
     @Override
-    public @NotNull FactionVillageBuilder totem(Supplier<? extends Block> fragile, Supplier<? extends Block> crafted) {
+    public FactionVillageBuilder totem(Supplier<? extends Block> fragile, Supplier<? extends Block> crafted) {
         this.fragileTotem = fragile;
         this.craftedTotem = crafted;
         return this;
     }
 
     @Override
-    public @NotNull IFactionVillage build() {
+    public IFactionVillage build() {
         return new FactionVillage(this);
     }
 }

@@ -23,7 +23,7 @@ import static de.teamlapen.vampirism.common.core.ModBlocks.*;
 import static de.teamlapen.vampirism.common.core.ModItems.*;
 
 @SuppressWarnings("unused")
-@EventBusSubscriber(modid = REFERENCE.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = REFERENCE.MODID)
 public class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, REFERENCE.MODID);
 

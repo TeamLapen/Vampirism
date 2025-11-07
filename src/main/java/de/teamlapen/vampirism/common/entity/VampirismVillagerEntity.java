@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.entity;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -34,7 +35,7 @@ public class VampirismVillagerEntity extends Villager {
         super(type, worldIn);
     }
 
-    public VampirismVillagerEntity(@NotNull EntityType<? extends VampirismVillagerEntity> type, @NotNull Level worldIn, @NotNull VillagerType villagerType) {
+    public VampirismVillagerEntity(@NotNull EntityType<? extends VampirismVillagerEntity> type, @NotNull Level worldIn, @NotNull ResourceKey<VillagerType> villagerType) {
         super(type, worldIn, villagerType);
     }
 
@@ -67,7 +68,7 @@ public class VampirismVillagerEntity extends Villager {
     public void tick() {
         super.tick();
 
-        if (!this.level().isClientSide && !peaceful && this.level().getDifficulty() == Difficulty.PEACEFUL) {
+        if (!this.level().isClientSide() && !peaceful && this.level().getDifficulty() == Difficulty.PEACEFUL) {
             this.discard();
         }
     }

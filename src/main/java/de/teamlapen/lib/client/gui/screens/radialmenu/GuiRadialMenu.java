@@ -28,19 +28,25 @@
 
 package de.teamlapen.lib.client.gui.screens.radialmenu;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.lib.client.gui.GuiGraphicsAccessor;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -101,7 +107,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        PoseStack pose = graphics.pose();
+        Matrix3x2fStack pose = graphics.pose();
 
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
         float currTick = minecraft.getDeltaTracker().getGameTimeDeltaTicks();
@@ -127,9 +133,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
             mousePositionInDegreesInRelationToCenterOfScreen += 360;
         }
 
-        pose.pushPose();
-        RenderSystem.setShaderColor(1,1,1,1);
-
+        pose.pushMatrix();
 
         boolean hasMouseOver = false;
         int mousedOverSlot = -1;
@@ -160,8 +164,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
             }
         }
 
-        RenderSystem.setShaderColor(1,1,1,1);
-        pose.translate(0, 0, 50);
+        pose.translate(0, 50);
 
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
@@ -171,8 +174,8 @@ public abstract class GuiRadialMenu<T> extends Screen {
         }
 
 
-        pose.pushPose();
-        pose.translate(0, 0, 50);
+        pose.pushMatrix();
+        pose.translate(0, 50);
 
         for (int i = 0; i < numberOfSlices; i++) {
             ItemStack stack = new ItemStack(Blocks.DIRT);
@@ -183,12 +186,9 @@ public abstract class GuiRadialMenu<T> extends Screen {
             float posX = centerOfScreenX - 8 + itemRadius * (float) Math.cos(angle1);
             float posY = centerOfScreenY - 8 + itemRadius * (float) Math.sin(angle1);
 
-//            RenderSystem.disableDepthTest();
-
             T primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
             List<T> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
             if (primarySlotIcon != null) {
-                RenderSystem.setShaderColor(1,1,1,1);
 
                 radialMenu.drawIcon(primarySlotIcon, graphics, (int) posX, (int) posY, 16);
                 if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
@@ -197,8 +197,8 @@ public abstract class GuiRadialMenu<T> extends Screen {
             }
             drawSliceName(graphics, String.valueOf(i + 1), stack, (int) posX, (int) posY);
         }
-        pose.popPose();
-        pose.popPose();
+        pose.popMatrix();
+        pose.popMatrix();
 
         if (mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
@@ -238,22 +238,22 @@ public abstract class GuiRadialMenu<T> extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
-        int adjustedKey = key - 48;
+    public boolean keyPressed(KeyEvent keyEvent) {
+        int adjustedKey = keyEvent.key() - 48;
         if (adjustedKey >= 0 && adjustedKey <= radialMenuSlots.size()) {
             selectedItem = adjustedKey == 0 ? radialMenuSlots.size() : adjustedKey;
             selectedItem = selectedItem - 1; // Offset by 1 because 0 based indexing but users see 1 indexed
-            mouseClicked(0, 0, 0);
+            //  mouseClicked(false);
             return true;
         }
-        return super.keyPressed(key, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
+        if (mouseButtonEvent.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             this.onClose();
-        } else if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (mouseButtonEvent.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (this.selectedItem != -1) {
                 radialMenu.setCurrentSlot(selectedItem);
                 minecraft.player.closeContainer();
@@ -266,32 +266,48 @@ public abstract class GuiRadialMenu<T> extends Screen {
         float angle = endAngle - startAngle;
         int sections = Math.max(1, Mth.ceil(angle / PRECISION));
 
-        startAngle = (float) Math.toRadians(startAngle);
-        endAngle = (float) Math.toRadians(endAngle);
-        angle = endAngle - startAngle;
+        guiGraphics.submitGuiElementRenderState(new SliceElement(RenderPipelines.GUI, TextureSetup.noTexture(), x, y, z, radiusIn, radiusOut, (float) Math.toRadians(startAngle), (float) Math.toRadians(endAngle), sections, r, g, b, a));
 
-        var buffer = ((GuiGraphicsAccessor)guiGraphics).getBufferSource().getBuffer(RenderType.gui());
+    }
 
-        for (int i = 0; i < sections; i++) {
-            float angle1 = startAngle + (i / (float) sections) * angle;
-            float angle2 = startAngle + ((i + 1) / (float) sections) * angle;
+    public record SliceElement(RenderPipeline pipeline, TextureSetup textureSetup, float x, float y, float z,
+                               float startAngle, float radiusIn, float radiusOut, float endAngle, int sections, int r,
+                               int g, int b, int a) implements GuiElementRenderState {
 
-            float pos1InX = x + radiusIn * (float) Math.cos(angle1);
-            float pos1InY = y + radiusIn * (float) Math.sin(angle1);
-            float pos1OutX = x + radiusOut * (float) Math.cos(angle1);
-            float pos1OutY = y + radiusOut * (float) Math.sin(angle1);
-            float pos2OutX = x + radiusOut * (float) Math.cos(angle2);
-            float pos2OutY = y + radiusOut * (float) Math.sin(angle2);
-            float pos2InX = x + radiusIn * (float) Math.cos(angle2);
-            float pos2InY = y + radiusIn * (float) Math.sin(angle2);
+        @Override
+        public void buildVertices(@NotNull VertexConsumer consumer) {
 
-            buffer.addVertex(pos1OutX, pos1OutY, z).setColor(r, g, b, a);
-            buffer.addVertex(pos1InX, pos1InY, z).setColor(r, g, b, a);
-            buffer.addVertex(pos2InX, pos2InY, z).setColor(r, g, b, a);
-            buffer.addVertex(pos2OutX, pos2OutY, z).setColor(r, g, b, a);
+            var angle = endAngle - startAngle;
+
+            for (int i = 0; i < sections; i++) {
+                float angle1 = startAngle + (i / (float) sections) * angle;
+                float angle2 = startAngle + ((i + 1) / (float) sections) * angle;
+
+                float pos1InX = x + radiusIn * (float) Math.cos(angle1);
+                float pos1InY = y + radiusIn * (float) Math.sin(angle1);
+                float pos1OutX = x + radiusOut * (float) Math.cos(angle1);
+                float pos1OutY = y + radiusOut * (float) Math.sin(angle1);
+                float pos2OutX = x + radiusOut * (float) Math.cos(angle2);
+                float pos2OutY = y + radiusOut * (float) Math.sin(angle2);
+                float pos2InX = x + radiusIn * (float) Math.cos(angle2);
+                float pos2InY = y + radiusIn * (float) Math.sin(angle2);
+
+                consumer.addVertex(pos1OutX, pos1OutY, z).setColor(r, g, b, a);
+                consumer.addVertex(pos1InX, pos1InY, z).setColor(r, g, b, a);
+                consumer.addVertex(pos2InX, pos2InY, z).setColor(r, g, b, a);
+                consumer.addVertex(pos2OutX, pos2OutY, z).setColor(r, g, b, a);
+            }
         }
 
-        guiGraphics.flush();
+        @Override
+        public @Nullable ScreenRectangle scissorArea() {
+            return null;
+        }
+
+        @Override
+        public @Nullable ScreenRectangle bounds() {
+            return null;
+        }
     }
 
     @Override

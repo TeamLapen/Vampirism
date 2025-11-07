@@ -22,8 +22,8 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.util.random.WeightedEntry;
-import net.minecraft.util.random.WeightedRandom;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -114,14 +114,14 @@ public class RefinementItemReward extends ItemReward {
         Z item = this.item.get() != null ? (Z) this.item.get() : faction.value().getRandomRefinementItem(random, IRefinementItem.AccessorySlotType.values()[random.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         @SuppressWarnings("DataFlowIssue")
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
-        List<WeightedEntry.Wrapper<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
+        List<Weighted<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
                 .filter(set -> IFaction.is(finalFaction, set.getFaction()))
                 .filter(set -> this.rarity == null || set.getRarity().ordinal() >= this.rarity.ordinal())
                 .filter(set -> set.getSlotType().map(slot1 -> slot1 == slot).orElse(true))
                 .map(set -> ((RefinementSet) set).getWeightedRandom()).collect(Collectors.toList());
         ItemStack stack = new ItemStack(item);
         if (!sets.isEmpty()) {
-            WeightedRandom.getRandomItem(random, sets).map(WeightedEntry.Wrapper::data).ifPresent(set -> item.applyRefinementSet(stack, set));
+            WeightedList.of(sets).getRandom(random).ifPresent(x -> item.applyRefinementSet(stack, x));
         }
         return stack;
     }

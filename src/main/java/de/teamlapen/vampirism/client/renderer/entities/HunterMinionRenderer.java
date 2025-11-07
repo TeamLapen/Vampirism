@@ -5,15 +5,15 @@ import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entities.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
 import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
-import net.minecraft.client.model.HumanoidArmorModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
@@ -34,7 +34,10 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
         this.textures = gatherTextures("textures/entity/hunter", true);
         this.minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new ArmorLayer<HumanoidModel<HunterMinionRenderState>>(this, new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR)), new HumanoidArmorModel<>(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), context.getEquipmentRenderer()));
+        this.addLayer(new ArmorLayer<HumanoidModel<HunterMinionRenderState>>(this,
+                ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), HumanoidModel::new),
+                ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), HumanoidModel::new),
+                context.getEquipmentRenderer()));
     }
 
     public int getHunterTextureCount() {
@@ -51,11 +54,11 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected void renderNameTag(@NotNull HunterMinionRenderState state, @NotNull Component name, PoseStack stack, @NotNull MultiBufferSource bufferSource, int packedLight) {
-        stack.popPose();
-        stack.translate(0, 0.4f, 0);
-        super.renderNameTag(state, name, stack, bufferSource, packedLight);
-        stack.pushPose();
+    protected void submitNameTag(HunterMinionRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        poseStack.pushPose();
+        poseStack.translate(0, 0.4f, 0);
+        super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
+        poseStack.popPose();
     }
 
     @Override

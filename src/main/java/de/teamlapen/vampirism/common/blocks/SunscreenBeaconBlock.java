@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.common.blockentity.SunscreenBeaconBlockEntity;
 import de.teamlapen.vampirism.common.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.util.IBlockWithDescription;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -22,9 +24,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
-public class SunscreenBeaconBlock extends BaseContainerBlock {
+public class SunscreenBeaconBlock extends BaseContainerBlock implements IBlockWithDescription {
 
     public static final MapCodec<SunscreenBeaconBlock> CODEC = simpleCodec(SunscreenBeaconBlock::new);
 
@@ -39,9 +41,9 @@ public class SunscreenBeaconBlock extends BaseContainerBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable(getDescriptionId() + ".tooltip1").withStyle(ChatFormatting.GRAY));
-        tooltipComponents.add(Component.translatable(getDescriptionId() + ".tooltip2", ModConfig.SERVER.sunscreenBeaconDistance.get()).withStyle(ChatFormatting.GRAY)); //Only add this if a world is present. Otherwise, the config might not be ready as this is also called during search tree population before setup
+    public void appendHoverText(ItemStack stack, Item.@Nullable TooltipContext context, TooltipDisplay display, TooltipFlag tooltipFlag, Consumer<Component> tooltips) {
+        tooltips.accept(Component.translatable(getDescriptionId() + ".tooltip1").withStyle(ChatFormatting.GRAY));
+        tooltips.accept(Component.translatable(getDescriptionId() + ".tooltip2", ModConfig.SERVER.sunscreenBeaconDistance.get()).withStyle(ChatFormatting.GRAY)); //Only add this if a world is present. Otherwise, the config might not be ready as this is also called during search tree population before setup
     }
 
     @Override

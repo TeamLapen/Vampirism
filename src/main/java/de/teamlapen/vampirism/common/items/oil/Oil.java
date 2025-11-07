@@ -4,9 +4,10 @@ import de.teamlapen.vampirism.api.items.oil.IOil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class Oil implements IOil {
 
@@ -17,7 +18,7 @@ public class Oil implements IOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltips) {
+    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
     }
 
     @Override

@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,8 +58,12 @@ public class AppearanceScreen<T extends LivingEntity> extends Screen {
         renderGuiBackground(pGuiGraphics);
     }
 
+    protected void renderGuiBackground(@NotNull GuiGraphics graphics, int color) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, color);
+    }
+
     protected void renderGuiBackground(@NotNull GuiGraphics graphics) {
-        graphics.blit(RenderType::guiTextured, BACKGROUND, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, 256);
+        renderGuiBackground(graphics, 256);
     }
 
     private void drawTitle(@NotNull GuiGraphics graphics) {

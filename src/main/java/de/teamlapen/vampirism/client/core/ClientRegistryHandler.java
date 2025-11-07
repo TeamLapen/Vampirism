@@ -14,7 +14,7 @@ import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyE
 import net.neoforged.neoforge.client.event.RegisterRangeSelectItemModelPropertyEvent;
 import org.jetbrains.annotations.ApiStatus;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class ClientRegistryHandler {
 
     @ApiStatus.Internal
@@ -36,7 +36,8 @@ public class ClientRegistryHandler {
         modbus.addListener(ModBlocksRender::registerClientExtensions);
         modbus.addListener(ModClientFluids::registerClientExtensions);
         modbus.addListener(ModItemsRender::registerClientExtensions);
-        modbus.addListener(ModBlocksRender::registerAdditionalModels);
+//        modbus.addListener(ModBlocksRender::registerAdditionalModels);
+        modbus.addListener(ModRenderPipelines::registerRenderPipelines);
     }
 
     @SubscribeEvent

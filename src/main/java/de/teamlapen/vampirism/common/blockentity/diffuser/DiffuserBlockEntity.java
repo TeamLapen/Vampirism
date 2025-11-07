@@ -9,9 +9,7 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.inventory.diffuser.DiffuserMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -25,6 +23,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
@@ -77,12 +77,12 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider pProvider) {
-        super.loadAdditional(pTag, pProvider);
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(pTag, this.items, pProvider);
-        this.litTime = pTag.getInt("litTime");
-        this.bootTimer = pTag.getInt("bootTimer");
+        ContainerHelper.loadAllItems(input, this.items);
+        this.litTime = input.getIntOr("litTime", 0);
+        this.bootTimer = input.getIntOr("bootTimer", 0);
         this.litDuration = this.getBurnDuration(this.items.get(0));
         this.loaded = true;
     }
@@ -90,11 +90,11 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
     protected abstract int getBurnDuration(ItemStack itemStack);
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag, HolderLookup.Provider pProvider) {
-        super.saveAdditional(pTag, pProvider);
-        pTag.putInt("litTime", this.litTime);
-        pTag.putInt("bootTimer", this.bootTimer);
-        ContainerHelper.saveAllItems(pTag, this.items, pProvider);
+    protected void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("litTime", this.litTime);
+        output.putInt("bootTimer", this.bootTimer);
+        ContainerHelper.saveAllItems(output, this.items);
     }
 
     @Override
@@ -195,7 +195,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
             hasChanged = true;
         }
 
-        if (hasChanged && !level.isClientSide) {
+        if (hasChanged && !level.isClientSide()) {
             setChanged(level, blockPos, blockState);
         }
     }
@@ -206,6 +206,12 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
 
     public void deactivateEffect(Level level, BlockPos blockPos, BlockState blockState) {
 
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        deactivateEffect(level, pos, state);
     }
 
     public int getParticleNumber(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {

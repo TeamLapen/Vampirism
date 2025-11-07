@@ -7,18 +7,16 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInp
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-@OnlyIn(Dist.CLIENT)
 public class DBNOScreen extends Screen {
 
     private final @Nullable Component causeOfDeath;
@@ -36,16 +34,16 @@ public class DBNOScreen extends Screen {
         return false;
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.causeOfDeath != null && mouseY > 85.0D && mouseY < (double) (85 + 9)) {
-            Style style = this.deriveDeathMessageStyle((int) mouseX);
-            if (style != null && style.getClickEvent() != null && style.getClickEvent().getAction() == ClickEvent.Action.OPEN_URL) {
+    @Override
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
+        if (this.causeOfDeath != null && mouseButtonEvent.y() > 85.0D && mouseButtonEvent.y() < (double) (85 + 9)) {
+            Style style = this.deriveDeathMessageStyle((int) mouseButtonEvent.x());
+            if (style != null && style.getClickEvent() != null && style.getClickEvent().action() == ClickEvent.Action.OPEN_URL) {
                 this.handleComponentClicked(style);
                 return false;
             }
         }
-
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseButtonEvent, doubleClick);
     }
 
     @Override

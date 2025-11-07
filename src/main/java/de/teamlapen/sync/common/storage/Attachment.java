@@ -2,7 +2,6 @@ package de.teamlapen.sync.common.storage;
 
 import de.teamlapen.sync.SyncHelper;
 import net.minecraft.nbt.*;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class Attachment implements IAttachment {
 
@@ -42,23 +41,26 @@ public abstract class Attachment implements IAttachment {
     }
 
     public void sync() {
-        sync(UpdateParams.defaults());
+//        sync(UpdateParams.defaults());
     }
 
-    public final void sync(UpdateParams param) {
-        if (asEntity().level().isClientSide()) return;
-        CompoundTag tag = serializeUpdateNBT(this.registryAccess(), param);
-        if (!tag.isEmpty()) {
-            sync(tag, param.isForAllPlayer());
-        }
-    }
+//    @SuppressWarnings("deprecation")
+//    public final void sync(UpdateParams param) {
+//        if (asEntity().level().isClientSide()) return;
+//            var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, asEntity().registryAccess());
+//            serializeUpdate(output, param);
+//            CompoundTag compoundTag = output.buildResult();
+//            if (!compoundTag.isEmpty()) {
+//                sync(compoundTag, output, param.isForAllPlayer());
+//            }
+//    }
 
     /**
      * Sync the capability using the given data
      *
      * @param allToAll Whether all tracking players should receive this packet or only the representing player
      */
-    public void sync(@NotNull CompoundTag data, boolean allToAll) {
+    public void sync(CompoundTag data, boolean allToAll) {
         SyncHelper.sync(this, data, asEntity(), allToAll);
     }
 

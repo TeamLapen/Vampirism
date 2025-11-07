@@ -6,20 +6,15 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.common.blockentity.diffuser.DiffuserBlockEntity;
 import de.teamlapen.vampirism.common.blockentity.diffuser.GarlicDiffuserBlockEntity;
+import de.teamlapen.vampirism.common.blocks.IDescriptionProvider;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
-import de.teamlapen.vampirism.common.util.DescriptionUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Supplier;
 
-public class GarlicDiffuserBlock extends DiffuserBlock {
+public class GarlicDiffuserBlock extends DiffuserBlock implements IDescriptionProvider {
 
     // Replace the radius field with a config codec if needed in the future
     public static final MapCodec<GarlicDiffuserBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
@@ -50,8 +45,8 @@ public class GarlicDiffuserBlock extends DiffuserBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public Object[] getDescriptionParameters() {
         int chunks = 1 + 2 * radius.get();
-        DescriptionUtil.addDescriptionTooltip(this, tooltipComponents, chunks, chunks);
+        return new Object[]{chunks, chunks};
     }
 }

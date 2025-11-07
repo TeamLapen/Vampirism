@@ -10,7 +10,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -38,7 +37,7 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
     }
 
     @Override
-    public IFactionBuilder<T> chatColor(@NotNull ChatFormatting color) {
+    public IFactionBuilder<T> chatColor(ChatFormatting color) {
         if (!color.isColor()) {
             throw new IllegalArgumentException("Parameter must be a color");
         }
@@ -47,25 +46,25 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
     }
 
     @Override
-    public IFactionBuilder<T> village(@NotNull IFactionVillage villageBuilder) {
+    public IFactionBuilder<T> village(IFactionVillage villageBuilder) {
         this.villageFactionData = villageBuilder;
         return this;
     }
 
     @Override
-    public IFactionBuilder<T> name(@NotNull String nameKey) {
+    public IFactionBuilder<T> name(String nameKey) {
         this.name = nameKey;
         return this;
     }
 
     @Override
-    public IFactionBuilder<T> namePlural(@NotNull String namePluralKey) {
+    public IFactionBuilder<T> namePlural(String namePluralKey) {
         this.namePlural = namePluralKey;
         return this;
     }
 
     @Override
-    public @NotNull IFaction<T> build() {
+    public IFaction<T> build() {
         return new Faction<>(this);
     }
 

@@ -19,11 +19,13 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class VampireBookItem extends Item implements BaseDisplayItemGenerator.CreativeTabItemProvider {
 
@@ -39,13 +41,13 @@ public class VampireBookItem extends Item implements BaseDisplayItemGenerator.Cr
         IVampireBook vampireBook = VampireBook.get(stack);
 
         if (vampireBook.isEmpty()) {
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 player.displayClientMessage(Component.translatable("text.vampirism.vampire_book.failed_to_load"), true);
             }
             return InteractionResult.FAIL;
         }
 
-        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
             serverPlayer.connection.send(new ClientboundOpenVampireBookPacket(vampireBook));
         }
 
@@ -59,9 +61,9 @@ public class VampireBookItem extends Item implements BaseDisplayItemGenerator.Cr
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add((Component.translatable("book.byAuthor", VampireBook.get(stack).author())).withStyle(ChatFormatting.GRAY));
-        tooltipComponents.add((Component.translatable("text.vampirism.vampire_book_description").withStyle(ChatFormatting.GRAY)));
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        tooltipComponents.accept((Component.translatable("book.byAuthor", VampireBook.get(stack).author())).withStyle(ChatFormatting.GRAY));
+        tooltipComponents.accept((Component.translatable("text.vampirism.vampire_book_description").withStyle(ChatFormatting.GRAY)));
     }
 
     @Override

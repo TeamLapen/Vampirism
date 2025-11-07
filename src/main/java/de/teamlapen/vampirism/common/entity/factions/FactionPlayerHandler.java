@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.common.entity.factions;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.sync.common.storage.Attachment;
+import de.teamlapen.sync.common.storage.AttachmentSync;
 import de.teamlapen.sync.common.storage.UpdateParams;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.*;
@@ -31,10 +34,8 @@ import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.saved.MinionWorldData;
 import de.teamlapen.vampirism.server.VampirismLogger;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -43,8 +44,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.attachment.IAttachmentHolder;
-import net.neoforged.neoforge.attachment.IAttachmentSerializer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +55,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -250,37 +250,10 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
     }
 
     @Override
-    public void joinFaction(@NotNull Holder<? extends IPlayableFaction<?>> faction) {
+    public void joinFaction(Holder<? extends IPlayableFaction<?>> faction) {
         if (canJoin(faction)) {
             setFactionAndLevel(faction, 1);
         }
-    }
-
-    @Override
-    public void deserializeUpdateNBT(HolderLookup.Provider provider, @NotNull CompoundTag nbt) {
-        Holder<? extends IPlayableFaction<?>> old = currentFaction;
-        int oldLevel = currentLevel;
-        if (nbt.contains("faction", Tag.TAG_STRING)) {
-            String f = nbt.getString("faction");
-            if ("null".equals(f)) {
-                currentFaction = ModFactions.NEUTRAL;
-                currentLevel = 0;
-                currentLordLevel = 0;
-            } else {
-                currentFaction = getFactionFromKey(ResourceLocation.parse(f));
-                currentLevel = nbt.getInt("level");
-                currentLordLevel = nbt.getInt("lord_level");
-            }
-            if (!IFaction.is(old, currentFaction) || oldLevel != currentLevel) {
-                VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
-            }
-        }
-        if (nbt.contains("title_gender", Tag.TAG_STRING)) {
-            this.titleGender = IPlayableFaction.TitleGender.valueOf(nbt.getString("title_gender"));
-        }
-        this.loadBoundActions(nbt);
-        updateCache();
-        notifyFaction(old, oldLevel);
     }
 
     @Override
@@ -316,7 +289,7 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
 
     @Override
     public void sync() {
-        this.sync(UpdateParams.ignoreChanged());
+//        this.sync(UpdateParams.ignoreChanged()); TODO
     }
 
     @Override
@@ -377,7 +350,7 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
         if (old != currentFaction || oldLevel != currentLevel) {
             VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
         }
-        sync(Objects.equals(old, currentFaction) ? UpdateParams.ignoreChanged() : UpdateParams.all());
+//        sync(Objects.equals(old, currentFaction) ? UpdateParams.ignoreChanged() : UpdateParams.all()); TODO
         if (player instanceof ServerPlayer serverPlayer) {
             ModAdvancements.TRIGGER_FACTION.get().trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
         }
@@ -403,19 +376,8 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
     public boolean setTitleGender(IPlayableFaction.TitleGender female) {
         this.titleGender = female;
         player.refreshDisplayName();
-        sync(UpdateParams.all());
+//        sync(UpdateParams.all()); TODO
         return true;
-    }
-
-    @Override
-    public @NotNull CompoundTag serializeUpdateNBTInternal(HolderLookup.@NotNull Provider provider, UpdateParams params) {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putString("faction", Optional.of(this.currentFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow());
-        nbt.putInt("level", currentLevel);
-        nbt.putInt("lord_level", currentLordLevel);
-        nbt.putString("title_gender", titleGender.name());
-        this.writeBoundActions(nbt);
-        return nbt;
     }
 
     @Override
@@ -435,18 +397,6 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
             return (Holder<? extends IPlayableFaction<?>>) (Object) faction;
         }
         return ModFactions.NEUTRAL;
-    }
-
-    private void loadBoundActions(@NotNull CompoundTag nbt) {
-        CompoundTag boundActions = nbt.getCompound("action_bindings");
-        for (String s : boundActions.getAllKeys()) {
-            try {
-                ActionKeys actionKey = ActionKeys.valueOf(s);
-                ModRegistries.ACTIONS.get(ResourceLocation.parse(boundActions.getString(s))).ifPresentOrElse(h -> this.boundActions.put(actionKey, h), () -> LOGGER.warn("Cannot find bound action {}", boundActions.getString(s)));
-            } catch (IllegalArgumentException e) {
-                LOGGER.warn("Invalid action key {}", s);
-            }
-        }
     }
 
     @Override
@@ -516,19 +466,10 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
         atts.faction = this.currentFaction;
     }
 
-    private void writeBoundActions(@NotNull CompoundTag nbt) {
-        CompoundTag bounds = new CompoundTag();
-        for (Map.Entry<ActionKeys, Holder<IAction<?>>> entry : this.boundActions.entrySet()) {
-            entry.getValue().unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(id -> {
-                bounds.putString(entry.getKey().name(), id);
-            });
-        }
-        nbt.put("action_bindings", bounds);
-    }
-
+    //<editor-fold desc="Serialization">
 
     @Override
-    public @NotNull CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
+    public void serialize(ValueOutput output) {
         CompoundTag nbt = new CompoundTag();
         Optional.of(this.currentFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(faction -> {
             nbt.putString("faction", faction);
@@ -537,51 +478,82 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
         });
         nbt.putString("title_gender", titleGender.name());
 
-        writeBoundActions(nbt);
-        return nbt;
+        writeBoundActions(output);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        if (nbt.contains("faction")) {
-            currentFaction = getFactionFromKey(ResourceLocation.parse(nbt.getString("faction")));
-            currentLevel = Math.min(nbt.getInt("level"), this.currentFaction.value().getHighestReachableLevel());
-            currentLordLevel = Math.min(nbt.getInt("lord_level"), this.currentFaction.value().getHighestLordLevel());
-            notifyFaction(null, 0);
-        }
-        if (nbt.contains("title_gender")) {
-            this.titleGender = IPlayableFaction.TitleGender.valueOf(nbt.getString("title_gender"));
-        }
-        loadBoundActions(nbt);
+    public void deserialize(ValueInput input) {
+        input.read("faction", ModRegistries.FACTIONS.holderByNameCodec()).ifPresentOrElse(x -> {
+            //noinspection unchecked
+            this.currentFaction = (Holder<? extends IPlayableFaction<?>>) (Object) x;
+            this.currentLevel = input.getIntOr("level", 0);
+            this.currentLordLevel = input.getIntOr("lord_level", 0);
+        }, () -> {
+            this.currentFaction = ModFactions.NEUTRAL;
+            this.currentLevel = 0;
+            this.currentLordLevel = 0;
+        });
+        notifyFaction(null, 0);
+        input.read("title_gender", IPlayableFaction.TitleGender.CODEC).ifPresent(x -> this.titleGender = x);
+        loadBoundActions(input);
         updateCache();
     }
 
-    public static class Serializer implements IAttachmentSerializer<CompoundTag, FactionPlayerHandler> {
+    @SuppressWarnings("unchecked")
+    @Override
+    public void serializeUpdateInternal(ValueOutput output, UpdateParams params) {
+        output.store("faction", ModRegistries.FACTIONS.holderByNameCodec(), (Holder<IFaction<?>>) (Object) this.currentFaction);
+        output.putInt("level", currentLevel);
+        output.putInt("lord_level", currentLordLevel);
+        output.putString("title_gender", titleGender.name());
+        this.writeBoundActions(output);
+    }
 
-        @Override
-        public @NotNull FactionPlayerHandler read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
-            if (holder instanceof Player player) {
-                FactionPlayerHandler handler = new FactionPlayerHandler(player);
-                handler.deserializeNBT(provider, tag);
-                return handler;
+    @Override
+    public void deserializeUpdate(ValueInput input) {
+        Holder<? extends IPlayableFaction<?>> old = currentFaction;
+        int oldLevel = currentLevel;
+        input.read("faction", ModRegistries.FACTIONS.holderByNameCodec()).ifPresent(x -> {
+            //noinspection unchecked
+            this.currentFaction = (Holder<? extends IPlayableFaction<?>>) (Object) x;
+            this.currentLevel = input.getIntOr("level", 0);
+            this.currentLordLevel = input.getIntOr("lord_level", 0);
+            if (!IFaction.is(old, currentFaction) || oldLevel != currentLevel) {
+                VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
             }
-            throw new IllegalStateException("Cannot deserialize FactionPlayerHandler for non player entity");
-        }
+            notifyFaction(old, oldLevel);
+        });
 
-        @Override
-        public CompoundTag write(FactionPlayerHandler attachment, HolderLookup.@NotNull Provider provider) {
-            return attachment.serializeNBT(provider);
+        input.read("title_gender", IPlayableFaction.TitleGender.CODEC).ifPresent(x -> this.titleGender = x);
+        this.loadBoundActions(input);
+        updateCache();
+    }
+
+    private void writeBoundActions(ValueOutput output) {
+        var actionList = output.list("action_bindings", ActionBinding.CODEC);
+        this.boundActions.entrySet().stream().map(entry -> new ActionBinding(entry.getKey(), entry.getValue())).forEach(actionList::add);
+    }
+
+    private void loadBoundActions(ValueInput input) {
+        for (ActionBinding actionBindings : input.listOrEmpty("action_bindings", ActionBinding.CODEC)) {
+            this.boundActions.put(actionBindings.key(), actionBindings.action());
         }
     }
 
-    public static class Factory implements Function<IAttachmentHolder, FactionPlayerHandler> {
+    private record ActionBinding(ActionKeys key, Holder<IAction<?>> action) {
+        public static final Codec<ActionBinding> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ActionKeys.CODEC.fieldOf("key").forGetter(ActionBinding::key),
+                ModRegistries.ACTIONS.holderByNameCodec().fieldOf("action").forGetter(ActionBinding::action)
+        ).apply(instance, ActionBinding::new));
+    }
+
+    //</editor-fold>
+
+    public static class AttachmentOptions extends AttachmentSync.PlayerOptions<FactionPlayerHandler> {
 
         @Override
-        public FactionPlayerHandler apply(IAttachmentHolder holder) {
-            if (holder instanceof Player player) {
-                return new FactionPlayerHandler(player);
-            }
-            throw new IllegalArgumentException("Cannot create faction player handler attachment for holder " + holder.getClass() + ". Expected Player");
+        protected FactionPlayerHandler create(Player player) {
+            return new FactionPlayerHandler(player);
         }
     }
 }

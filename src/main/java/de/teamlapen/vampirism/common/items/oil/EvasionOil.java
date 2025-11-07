@@ -4,13 +4,14 @@ import de.teamlapen.vampirism.api.items.oil.IArmorOil;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class EvasionOil extends ApplicableOil implements IArmorOil {
 
@@ -20,7 +21,8 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
 
     @Override
     public boolean canBeApplied(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem && stack.is(ModItemTags.APPLICABLE_OIL_ARMOR) == ModConfig.BALANCE.itApplicableOilArmorReverse.get();
+        var equippable = stack.get(DataComponents.EQUIPPABLE);
+        return equippable != null && equippable.slot().isArmor() && stack.is(ModItemTags.APPLICABLE_OIL_ARMOR) == ModConfig.BALANCE.itApplicableOilArmorReverse.get();
     }
 
     @Override
@@ -34,10 +36,10 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltips) {
-        tooltips.add(Component.empty());
-        tooltips.add(Component.translatable("text.vampirism.oil.evasion_armor_desc").withStyle(ChatFormatting.DARK_PURPLE));
-        tooltips.add(Component.literal("- ").append(Component.translatable("text.vampirism.oil.evasion_chance_desc")).withStyle(ChatFormatting.GRAY));
+    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
+        tooltips.accept(Component.empty());
+        tooltips.accept(Component.translatable("text.vampirism.oil.evasion_armor_desc").withStyle(ChatFormatting.DARK_PURPLE));
+        tooltips.accept(Component.literal("- ").append(Component.translatable("text.vampirism.oil.evasion_chance_desc")).withStyle(ChatFormatting.GRAY));
     }
 
     /**

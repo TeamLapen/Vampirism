@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.renderer.entities.state.TaskMasterRenderState;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,12 +29,12 @@ public class TaskMasterTypeLayer<T extends TaskMasterRenderState> extends Render
     }
 
     @Override
-    public void render(PoseStack stack, MultiBufferSource bufferSource, int packedLight, T state, float p_117353_, float p_117354_) {
-        if (!state.isInvisible) {
-            VillagerType type = state.getVillagerData().getType();
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, T renderState, float yRot, float xRot) {
+        if (!renderState.isInvisible) {
+            ResourceLocation type = renderState.getVillagerData().type().getKey().location();
             VillagerModel parentModel = getParentModel();
-            renderColoredCutoutModel(parentModel, this.deriveTypeTextureOverlay(BuiltInRegistries.VILLAGER_TYPE.getKey(type)), stack, bufferSource, packedLight, state, -1);
-            renderColoredCutoutModel(parentModel, additionalOverlay, stack, bufferSource, packedLight, state, -1);
+            renderColoredCutoutModel(parentModel, this.deriveTypeTextureOverlay(type), poseStack, nodeCollector, packedLight, renderState, -1, -1);
+            renderColoredCutoutModel(parentModel, additionalOverlay, poseStack, nodeCollector, packedLight, renderState, -1, -1);
         }
     }
 }

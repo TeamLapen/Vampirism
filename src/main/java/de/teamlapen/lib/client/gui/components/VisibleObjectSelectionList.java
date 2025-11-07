@@ -2,6 +2,9 @@ package de.teamlapen.lib.client.gui.components;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A simple {@link ObjectSelectionList} that can be hidden
@@ -13,9 +16,9 @@ public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.E
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleCLick) {
         if (this.visible) {
-            return super.mouseClicked(pMouseX, pMouseY, pButton);
+            return super.mouseClicked(event, doubleCLick);
         } else {
             return false;
         }
@@ -40,36 +43,36 @@ public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.E
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double pDragX, double pDragY) {
         if (this.visible) {
-            return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+            return super.mouseDragged(event, pDragX, pDragY);
         } else {
             return false;
         }
     }
 
     @Override
-    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
         if (this.visible) {
-            return super.mouseReleased(pMouseX, pMouseY, pButton);
+            return super.mouseReleased(event);
         } else {
             return false;
         }
     }
 
     @Override
-    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+    public boolean keyPressed(@NotNull KeyEvent event) {
         if (this.visible) {
-            return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+            return super.keyPressed(event);
         } else {
             return false;
         }
     }
 
     @Override
-    public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
+    public boolean keyReleased(@NotNull KeyEvent event) {
         if (this.visible) {
-            return super.keyReleased(pKeyCode, pScanCode, pModifiers);
+            return super.keyReleased(event);
         } else {
             return false;
         }

@@ -46,7 +46,7 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
     @Override
     public IConvertedCreature<T> createFrom(@NotNull T entity) {
         //noinspection unchecked
-        return Helper.createEntity((EntityType<ConvertedCreatureEntity<T>>) (Object) ModEntities.CONVERTED_CREATURE.get(), entity.getCommandSenderWorld(), EntitySpawnReason.CONVERSION).map(convertedCreature -> {
+        return Helper.createEntity((EntityType<ConvertedCreatureEntity<T>>) (Object) ModEntities.CONVERTED_CREATURE.get(), entity.level(), EntitySpawnReason.CONVERSION).map(convertedCreature -> {
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom())); //Set a new uuid to avoid confusion as the class of the entity associated with the uuid changes
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));

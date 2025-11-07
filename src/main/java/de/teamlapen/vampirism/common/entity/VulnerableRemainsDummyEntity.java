@@ -21,6 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +51,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public boolean canBeCollidedWith() {
+    public boolean canBeCollidedWith(@Nullable Entity entity) {
         return this.isAlive();
     }
 
@@ -87,11 +89,6 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public @NotNull Iterable<ItemStack> getArmorSlots() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot pSlot) {
         return ItemStack.EMPTY;
     }
@@ -125,7 +122,7 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
         this.noPhysics = true;
         super.tick();
         this.noPhysics = false;
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             BlockState block = this.level().getBlockState(ownerPos);
             if (this.ownerPos == null || !block.is(ModBlocks.ACTIVE_VULNERABLE_REMAINS.get()) || block.is(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get())) {
                 if (block.is(ModBlocks.INCAPACITATED_VULNERABLE_REMAINS.get())) {
@@ -191,8 +188,8 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        pCompound.putIntArray("ownerPos", new int[] {this.ownerPos.getX(), this.ownerPos.getY(), this.ownerPos.getZ()});
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        output.putIntArray("ownerPos", new int[]{this.ownerPos.getX(), this.ownerPos.getY(), this.ownerPos.getZ()});
     }
 
     @Override
@@ -201,9 +198,8 @@ public class VulnerableRemainsDummyEntity extends LivingEntity implements IEntit
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        int[] pos = pCompound.getIntArray("ownerPos");
-        this.ownerPos = new BlockPos(pos[0], pos[1], pos[2]);
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        input.getIntArray("ownerPos").ifPresentOrElse(pos -> this.ownerPos = new BlockPos(pos[0], pos[1], pos[2]), this::discard);
     }
 
     private int followerCount = 0;

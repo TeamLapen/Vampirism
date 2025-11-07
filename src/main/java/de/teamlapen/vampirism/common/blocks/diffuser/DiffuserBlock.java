@@ -53,7 +53,7 @@ public abstract class DiffuserBlock extends BaseContainerBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         } else {
             if (player instanceof ServerPlayer serverPlayer) {
@@ -127,17 +127,6 @@ public abstract class DiffuserBlock extends BaseContainerBlock {
             return Optional.of(diffuser);
         }
         return Optional.empty();
-    }
-
-    @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        getBlockEntity(level, pos).ifPresent(blockEntity -> blockEntity.deactivateEffect(level, pos, level.getBlockState(pos)));
-        super.onRemove(state, level, pos, newState, isMoving);
-    }
-
-    @Override
-    protected void clearContainer(BlockState state, Level level, BlockPos pos) {
-        dropInventoryTileEntityItems(level, pos);
     }
 
     @Override

@@ -2,9 +2,8 @@ package de.teamlapen.vampirism.common.entity.minion.management;
 
 import de.teamlapen.vampirism.api.entity.minion.IMinionEntity;
 import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +23,7 @@ public class SimpleMinionTask extends DefaultMinionTask<IMinionTask.NoDesc<Minio
     }
 
     @Override
-    public @NotNull NoDesc<MinionData> readFromNBT(HolderLookup.@NotNull Provider provider, CompoundTag nbt) {
+    public @NotNull NoDesc<MinionData> load(ValueInput input) {
         return new NoDesc<>(this);
     }
 }

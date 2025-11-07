@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
 import de.teamlapen.vampirism.common.world.biomes.VampirismBiomes;
 import de.teamlapen.vampirism.common.world.features.VampirismFeatures;
-import de.teamlapen.vampirism.common.world.modifier.ExtendedAddSpawnsBiomeModifier;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.world.BiomeModifier;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
@@ -26,8 +24,6 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 public class ModBiomes {
 
     public static final DeferredRegister<MapCodec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, REFERENCE.MODID);
-
-    public static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<ExtendedAddSpawnsBiomeModifier>> ADD_SPAWNS_BIOME_MODIFIER_TYPE = BIOME_MODIFIER_SERIALIZERS.register("extended_add_spawns", () -> ExtendedAddSpawnsBiomeModifier.CODEC);
 
     public static final ResourceKey<Biome> VAMPIRE_FOREST = ResourceKey.create(Registries.BIOME, VResourceLocation.mod("vampire_forest"));
 

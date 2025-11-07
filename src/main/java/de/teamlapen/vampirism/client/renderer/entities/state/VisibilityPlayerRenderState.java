@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.entities.state;
 
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 
-public abstract class VisibilityPlayerRenderState extends PlayerRenderState {
+public abstract class VisibilityPlayerRenderState extends AvatarRenderState {
 }

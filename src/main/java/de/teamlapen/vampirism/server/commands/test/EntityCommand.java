@@ -24,7 +24,7 @@ public class EntityCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int entity(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
-        List<Entity> l = asPlayer.getCommandSenderWorld().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
+        List<Entity> l = asPlayer.level().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Entity entity : l) {
             if (entity instanceof PathfinderMob) {
                 ResourceLocation id = RegUtil.id(entity.getType());

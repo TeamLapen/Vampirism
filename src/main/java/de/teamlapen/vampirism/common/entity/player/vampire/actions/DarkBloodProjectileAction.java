@@ -78,14 +78,14 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     private @NotNull DarkBloodProjectileEntity createProjectile(@NotNull Player shooter, @NotNull Vec3 position, double height, @NotNull Vec3 direction, boolean goThrough, float directDamage, float indirectDamage, float speed) {
-        DarkBloodProjectileEntity entity = new DarkBloodProjectileEntity(shooter.getCommandSenderWorld(), position.x + direction.x, position.y + height, position.z + direction.z, direction);
+        DarkBloodProjectileEntity entity = new DarkBloodProjectileEntity(shooter.level(), position.x + direction.x, position.y + height, position.z + direction.z, direction);
         entity.setMotionFactor(speed);
         entity.setOwner(shooter);
         entity.setDamage(directDamage, indirectDamage);
         if (goThrough) {
             entity.setGothrough(true);
         }
-        shooter.getCommandSenderWorld().addFreshEntity(entity);
+        shooter.level().addFreshEntity(entity);
         return entity;
     }
 

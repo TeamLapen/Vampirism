@@ -75,7 +75,7 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
                 }));
             }
             optional.ifPresent((component) -> {
-                graphics.renderTooltip(this.font, this.font.split(component, 115), pMouseX, pMouseY);
+                graphics.setTooltipForNextFrame(this.font, this.font.split(component, 115), pMouseX, pMouseY);
             });
         }
     }
@@ -99,7 +99,7 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
             component = Optional.of(Component.translatable("container.vampirism.hunter_table.structure_level_wrong"));
         }
         component.ifPresent((c) -> {
-            graphics.renderTooltip(this.font, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);
+            graphics.setTooltipForNextFrame(this.font, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60);
         });
     }
 

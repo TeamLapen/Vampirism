@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.entity.player.hunter;
 
 import de.teamlapen.sync.SyncHelper;
+import de.teamlapen.sync.common.storage.AttachmentSync;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -33,25 +34,21 @@ import de.teamlapen.vampirism.common.util.ScoreboardUtil;
 import de.teamlapen.vampirism.common.world.saved.MinionWorldData;
 import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.attachment.IAttachmentHolder;
-import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
+import java.util.Arrays;
 import java.util.function.Predicate;
-import java.util.stream.StreamSupport;
 
 /**
  * Main class for hunter players
@@ -146,8 +143,8 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.HUNTER_LEVEL_CRITERIA, level);
             LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_DAMAGE, "Hunter", level, getMaxLevel(), ModConfig.BALANCE.hpStrengthMaxMod.get(), ModConfig.BALANCE.hpStrengthType.get(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
             if (level == 0) {
-                EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP, HunterSkills.ARMOR_JUMP.getId());
-                EffectInstanceWithSource.removePotionEffect(player, MobEffects.MOVEMENT_SPEED, HunterSkills.ARMOR_SPEED.getId());
+                EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
+                EffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
             }
         }
     }
@@ -159,20 +156,20 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         if (level > 0) {
             if (!isRemote()) {
                 if (player.level().getGameTime() % 100 == 8) {
-                    if (StreamSupport.stream(player.getArmorSlots().spliterator(), false).allMatch(i -> i.is(ModItemTags.HUNTER_ARMOR))) {
+                    if (Arrays.stream(EquipmentSlot.values()).filter(i -> i.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).allMatch(i -> i.is(ModItemTags.HUNTER_ARMOR))) {
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_JUMP)) {
-                            MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.JUMP, -1, 0, false, false);
-                            ((EffectInstanceWithSource) mobEffectInstance).vampirism$setSource(HunterSkills.ARMOR_JUMP.getId());
+                            MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.JUMP_BOOST, -1, 0, false, false);
+                            ((EffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(HunterSkills.ARMOR_JUMP.getId());
                             player.addEffect(mobEffectInstance);
                         }
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_SPEED)) {
-                            MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, false, false);
-                            ((EffectInstanceWithSource) mobEffectInstance).vampirism$setSource(HunterSkills.ARMOR_SPEED.getId());
+                            MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.SPEED, -1, 0, false, false);
+                            ((EffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(HunterSkills.ARMOR_SPEED.getId());
                             player.addEffect(mobEffectInstance);
                         }
                     } else {
-                        EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP, HunterSkills.ARMOR_JUMP.getId());
-                        EffectInstanceWithSource.removePotionEffect(player, MobEffects.MOVEMENT_SPEED, HunterSkills.ARMOR_SPEED.getId());
+                        EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
+                        EffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
                     }
                 }
             } else {
@@ -189,8 +186,8 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
                 if (!OilUtils.getEquippedArmorOils(this.player).isEmpty()) {
                     this.player.addEffect(new MobEffectInstance(ModEffects.POISON, 120, 0, false, false));
                 }
-                EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP, HunterSkills.ARMOR_JUMP.getId());
-                EffectInstanceWithSource.removePotionEffect(player, MobEffects.MOVEMENT_SPEED, HunterSkills.ARMOR_SPEED.getId());
+                EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
+                EffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
             }
         }
         getSpecialAttributes().fullHunterCoat = level > 0 ? HunterCoatItem.isFullyEquipped(player) : null;
@@ -235,32 +232,10 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         }
     }
 
-    public static class Serializer implements IAttachmentSerializer<CompoundTag, HunterPlayer> {
-
+    public static class AttachmentOptions extends AttachmentSync.PlayerOptions<HunterPlayer> {
         @Override
-        public @NotNull HunterPlayer read(@NotNull IAttachmentHolder holder, @NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
-            if (holder instanceof Player player) {
-                var hunter = new HunterPlayer(player);
-                hunter.deserializeNBT(provider, tag);
-                return hunter;
-            }
-            throw new IllegalArgumentException("Expected Player, got " + holder.getClass().getSimpleName());
-        }
-
-        @Override
-        public CompoundTag write(HunterPlayer attachment, HolderLookup.@NotNull Provider provider) {
-            return attachment.serializeNBT(provider);
-        }
-    }
-
-    public static class Factory implements Function<IAttachmentHolder, HunterPlayer> {
-
-        @Override
-        public HunterPlayer apply(IAttachmentHolder holder) {
-            if (holder instanceof Player player) {
-                return new HunterPlayer(player);
-            }
-            throw new IllegalArgumentException("Cannot create hunter player attachment for holder " + holder.getClass() + ". Expected Player");
+        protected @NotNull HunterPlayer create(@NotNull Player player) {
+            return new HunterPlayer(player);
         }
     }
 }

@@ -60,7 +60,6 @@ public class HunterBasicScreen extends AbstractContainerScreen<HunterBasicMenu> 
 
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        GuiRenderer.resetColor();
         GuiRenderer.blit(graphics, guiTexture, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
     }
 

@@ -15,7 +15,7 @@ public class VampireBat {
         @Override
         public Bat apply(IAttachmentHolder holder) {
             if (holder instanceof Entity entity) {
-                var bat = EntityType.BAT.create(entity.getCommandSenderWorld(), EntitySpawnReason.LOAD);
+                var bat = EntityType.BAT.create(entity.level(), EntitySpawnReason.LOAD);
                 if (bat != null) {
                     bat.restAnimationState.stop();
                     bat.flyAnimationState.startIfStopped(entity.tickCount);

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minion.IFactionMinionTask;
@@ -33,7 +32,6 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
 
     private static void drawActionPart(@Nullable SelectMinionTaskRadialScreen.Entry entry, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
         if (entry == null) return;
-        RenderSystem.disableBlend();
         GuiRenderer.blit(graphics, entry.getIconLoc(), posX, posY, 16, 16, 16, 16);
     }
 
