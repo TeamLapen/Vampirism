@@ -69,7 +69,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Main class for Vampirism
  */
-@Mod(value = REFERENCE.MODID)
+@Mod(REFERENCE.MODID)
 public class VampirismMod {
 
     public static VampirismMod instance;
