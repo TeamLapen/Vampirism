@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.components.IVampireBook;
 import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.common.core.ModVampireBooks;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +14,7 @@ public class VampireBooks {
     private final VampireBookBackgroundReloadListener bookBackgrounds = new VampireBookBackgroundReloadListener();
     private final VampireBookContentsReloadListener bookContents = new VampireBookContentsReloadListener();
 
+    @SubscribeEvent
     public void register(@NotNull AddClientReloadListenersEvent event) {
         event.addListener(VampireBookContentsReloadListener.ID, this.bookContents);
         event.addListener(VampireBookBackgroundReloadListener.ID, this.bookBackgrounds);

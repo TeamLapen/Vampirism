@@ -409,7 +409,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.@NotNull NameFormat event) {
-        if (ModConfig.SERVER.factionColorInChat.get()) {
+        if (ModConfig.SERVER.factionColorInChat.get() && event.getEntity().isAlive()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(event.getEntity());
             Holder<? extends IFaction<?>> f = handler.factionPlayer().getDisguise().getViewedFaction(Optional.ofNullable(VampirismMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
             if (!IFaction.is(f, ModFactionTags.IS_NEUTRAL)) {

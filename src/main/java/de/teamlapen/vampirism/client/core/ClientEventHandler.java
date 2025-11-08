@@ -70,7 +70,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onWorldClosed(LevelEvent.Unload event) {
-        VampirismModClient.getInstance().clearBossBarOverlay();
+        VampirismModClient.getServices().bossInfoOverlay().clear();
     }
 
     @SubscribeEvent

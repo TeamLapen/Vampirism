@@ -16,13 +16,8 @@ public class ControllableFluidTank extends DelegatingResourceHandler<FluidResour
     private boolean allowInput;
     private boolean allowOutput;
 
-    public ControllableFluidTank(int capacity, Predicate<FluidResource> fluidPredicate, boolean allowInput, boolean allowOutput) {
-        this(capacity, () -> {
-        }, fluidPredicate, allowInput, allowOutput);
-    }
-
     public ControllableFluidTank(int capacity, Runnable onContentsChanged, Predicate<FluidResource> fluidPredicate, boolean allowInput, boolean allowOutput) {
-        super(() -> new FluidStacksResourceHandler(1, capacity) {
+        super(new FluidStacksResourceHandler(1, capacity) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 onContentsChanged.run();
@@ -39,12 +34,12 @@ public class ControllableFluidTank extends DelegatingResourceHandler<FluidResour
 
     @Override
     public void serialize(ValueOutput output) {
-        ((ValueIOSerializable) this.delegate.get()).serialize(output);
+        ((FluidStacksResourceHandler) this.delegate.get()).serialize(output);
     }
 
     @Override
     public void deserialize(ValueInput input) {
-        ((ValueIOSerializable) this.delegate.get()).deserialize(input);
+        ((FluidStacksResourceHandler) this.delegate.get()).deserialize(input);
     }
 
     public AccessTransaction beginAccess() {

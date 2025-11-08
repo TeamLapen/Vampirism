@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.settings.Supporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.world.item.component.ResolvableProfile;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +18,10 @@ import java.util.function.Consumer;
 
 public class PlayerSkinHelper {
 
+    @SubscribeEvent
+    public void onLoadLevel(LevelEvent.Load event) {
+        loadPlayerSkins();
+    }
     public static void loadPlayerSkins() {
         PlayerSkinRenderCache playerSkinRenderCache = Minecraft.getInstance().playerSkinRenderCache();
         List<CompletableFuture<Optional<PlayerSkinRenderCache.RenderInfo>>> list = SupporterManager.getSupporter().map(Supporter::texture).map(ResolvableProfile::createUnresolved).map(playerSkinRenderCache::lookup).toList();

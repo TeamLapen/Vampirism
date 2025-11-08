@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.client.renderer.VertexUtils;
 import de.teamlapen.vampirism.common.blockentity.BloodGrinderBlockEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -28,11 +29,11 @@ public class BloodGrinderRenderer implements BlockEntityRenderer<BloodGrinderBlo
     @Override
     public void submit(BloodGrinderRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
         VertexUtils.renderFluidTank(
+                Minecraft.getInstance().level, renderState.blockPos,
                 renderState.stack,
                 BloodGrinderBlockEntity.CAPACITY,
-                new Vec3(8 / 16f, 4 / 16f, 8 / 16f),
+                new Vec3(0, 0, 0),
                 new Vec3(15.75f / 16f, 8 / 16f, 15.75f / 16f),
-                0.85f,
                 poseStack,
                 nodeCollector,
                 renderState.lightCoords,

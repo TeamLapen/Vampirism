@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,14 @@ public class BipedCloakedModel<T extends AvatarRenderState> extends ClothedModel
         PartDefinition var3 = var2.getRoot();
         var3.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0, 0).addBox(-7, 0, 2f, 14, 20, 1), PartPose.offset(0, 0, 2));
         return var2;
+    }
+
+    public static ArmorModelSet<MeshDefinition> createArmorMeshSet(@NotNull CubeDeformation innerCubeDeformation, @NotNull CubeDeformation outerCubeDeformation) {
+        return PlayerModel.createArmorMeshSet(innerCubeDeformation, outerCubeDeformation).map(x -> {
+            PartDefinition root1 = x.getRoot();
+            root1.addOrReplaceChild(CLOAK, CubeListBuilder.create(), PartPose.ZERO);
+            return x;
+        });
     }
 
     public BipedCloakedModel(@NotNull ModelPart part, boolean smallArms) {

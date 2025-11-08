@@ -35,7 +35,7 @@ public class MinionWorldData extends SavedData implements ValueIOSerializable {
     private final static Logger LOGGER = LogManager.getLogger();
     private final static String ID = "vampirism-minion-data";
 
-    public static final SavedDataType<MinionWorldData> TYPE = new SavedDataType<>(VResourceLocation.modString("minion_data"), MinionWorldData::new, MinionWorldData::makeCodec);
+    public static final SavedDataType<MinionWorldData> TYPE = new SavedDataType<>(VResourceLocation.modString("minion_data").replace(':', '_'), MinionWorldData::new, MinionWorldData::makeCodec);
 
     @NotNull
     public static MinionWorldData getData(@NotNull ServerLevel world) {

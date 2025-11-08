@@ -90,7 +90,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
         ResourceLocation batCageModel = mod("block/bat_cage/block");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BAT_CAGE.get(), plainVariant(batCageModel)));
-//        createDefaultBlockItem(ModBlocks.BAT_CAGE.get(), batCageModel);
+        createDefaultBlockItem(ModBlocks.BAT_CAGE.get(), batCageModel);
 
         ResourceLocation bloodContainerModel = mod("block/blood_container/blood_container");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BLOOD_CONTAINER.get(), plainVariant(bloodContainerModel)));
@@ -98,7 +98,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
         ResourceLocation inspirationModel = mod("block/altar_inspiration/altar_inspiration");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.ALTAR_INSPIRATION.get(), plainVariant(inspirationModel)));
-//        createDefaultBlockItem(ModBlocks.ALTAR_INSPIRATION.get(), inspirationModel);
+        createDefaultBlockItem(ModBlocks.ALTAR_INSPIRATION.get(), inspirationModel);
 
         createNonTemplateModelBlock(ModBlocks.BLOOD.get());
     }
@@ -177,7 +177,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
                 .with(condition(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.FILLED), plainVariant(normal))
                 .with(condition(AlchemicalCauldronBlock.LIQUID, AlchemicalCauldronBlock.LiquidState.BOILING), plainVariant(boiling))
         );
-//        createDefaultBlockItem(ModBlocks.ALCHEMICAL_CAULDRON.get(), cauldron);
+        createDefaultBlockItem(ModBlocks.ALCHEMICAL_CAULDRON.get(), cauldron);
     }
 
     protected void createTotem() {
@@ -425,7 +425,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         withHorizontalRotation(generator, condition(HunterTableBlock.ALCHEMICAL_CAULDRON, true), plainVariant(mod("block/hunter_table/hunter_table_garlic")));
         withHorizontalRotation(generator, condition(HunterTableBlock.POTION_TABLE, true), plainVariant(mod("block/hunter_table/hunter_table_bottle")));
         this.blockStateOutput.accept(generator);
-//        createDefaultBlockItem(ModBlocks.HUNTER_TABLE.get(), hunterTable);
+        createDefaultBlockItem(ModBlocks.HUNTER_TABLE.get(), hunterTable);
     }
 
     protected void createAlchemicalFire() {
@@ -470,7 +470,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         withHorizontalRotation(generator, condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_0, true), plainVariant(mod("block/alchemy_table/alchemy_table_output_0")));
         withHorizontalRotation(generator, condition(AlchemyTableBlock.HAS_BOTTLE_OUTPUT_1, true), plainVariant(mod("block/alchemy_table/alchemy_table_output_1")));
         this.blockStateOutput.accept(generator);
-//        createDefaultBlockItem(ModBlocks.ALCHEMY_TABLE.get(), model);
+        createDefaultBlockItem(ModBlocks.ALCHEMY_TABLE.get(), model);
     }
 
     protected void createWeaponTable() {
@@ -483,7 +483,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         withHorizontalRotation(generator, condition().term(WeaponTableBlock.LAVA, 4), plainVariant(mod("block/weapon_table/weapon_table_lava4")));
         withHorizontalRotation(generator, condition().term(WeaponTableBlock.LAVA, 5), plainVariant(mod("block/weapon_table/weapon_table_lava5")));
         this.blockStateOutput.accept(generator);
-//        createDefaultBlockItem(ModBlocks.WEAPON_TABLE.get(), model);
+        createDefaultBlockItem(ModBlocks.WEAPON_TABLE.get(), model);
     }
 
     protected void createTent() {
@@ -542,6 +542,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.blockStateOutput.accept(MultiPartGenerator.multiPart(ModBlocks.INFUSER.get())
                 .with(plainVariant(VResourceLocation.mod("block/blood_infuser/infuser")))
                 .with(condition(BloodInfuserBlock.IS_ACTIVE, true), plainVariant(VResourceLocation.mod("block/blood_infuser/infuser_blood"))));
-//        this.createDefaultBlockItem(ModBlocks.INFUSER.get(), VResourceLocation.mod("block/blood_infuser/infuser"));
+        this.createDefaultBlockItem(ModBlocks.INFUSER.get(), VResourceLocation.mod("block/blood_infuser/infuser"));
     }
 }

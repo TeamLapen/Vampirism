@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "vampirism:block/blood_infuser"
+    "model": "vampirism:block/blood_infuser/infuser"
   }
 }

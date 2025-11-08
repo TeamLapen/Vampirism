@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism;
 
-import de.teamlapen.lib.common.ILifecycleListener;
 import de.teamlapen.sync.SyncRegistry;
 import de.teamlapen.sync.common.entities.IPlayerEventListener;
 import de.teamlapen.sync.common.storage.IAttachedSyncable;
@@ -9,6 +8,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
+import de.teamlapen.vampirism.common.CommonServices;
 import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
@@ -48,7 +48,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.*;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
+import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -113,7 +116,7 @@ public class VampirismMod {
         this.registryManager.registerModEventHandler();
         this.registryManager.registerForgeEventHandler();
         NeoForgeMod.enableMergedAttributeTooltips();
-        SERVICES = new Services();
+        SERVICES = new CommonServices(modContainer);
     }
 
     public static Services getServices() {
@@ -136,7 +139,6 @@ public class VampirismMod {
 
     @SuppressWarnings("unchecked")
     private void enqueueIMC(final InterModEnqueueEvent event) {
-        onInitStep(ILifecycleListener.Step.ENQUEUE_IMC, event);
         SyncRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.VAMPIRE_PLAYER.get(), VampirePlayer.class);
         SyncRegistry.registerPlayerEventReceivingCapability((AttachmentType<IPlayerEventListener>) (Object) ModAttachments.HUNTER_PLAYER.get(), HunterPlayer.class);
         SyncRegistry.registerSyncableEntityCapability((AttachmentType<IAttachedSyncable>) (Object) ModAttachments.EXTENDED_CREATURE.get(), ExtendedCreature.class);
@@ -200,7 +202,6 @@ public class VampirismMod {
     }
 
     private void loadComplete(final FMLLoadCompleteEvent event) {
-        onInitStep(ILifecycleListener.Step.LOAD_COMPLETE, event);
         event.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe);
         if (FMLEnvironment.getDist() == Dist.DEDICATED_SERVER) {
             VampirismLogger.init();
@@ -219,13 +220,11 @@ public class VampirismMod {
     }
 
     private void processIMC(final InterModProcessEvent event) {
-        onInitStep(ILifecycleListener.Step.PROCESS_IMC, event);
         IMCHandler.handleInterModMessage(event);
         CrossbowArrowHandler.collectCrossbowArrows();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        onInitStep(ILifecycleListener.Step.COMMON_SETUP, event);
 
         NeoForge.EVENT_BUS.register(new ModPlayerEventHandler());
         NeoForge.EVENT_BUS.register(new ModEntityEventHandler());
@@ -243,7 +242,4 @@ public class VampirismMod {
         TelemetryCollector.execute();
     }
 
-    private void onInitStep(ILifecycleListener.@NotNull Step step, ParallelDispatchEvent event) {
-        proxy.onInitStep(step, event);
-    }
 }

@@ -35,7 +35,10 @@ import de.teamlapen.vampirism.common.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.common.entity.player.*;
+import de.teamlapen.vampirism.common.entity.player.CommonFactionPlayer;
+import de.teamlapen.vampirism.common.entity.player.IVampirismPlayer;
+import de.teamlapen.vampirism.common.entity.player.LevelAttributeModifier;
+import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.common.entity.player.skills.RefinementHandler;
 import de.teamlapen.vampirism.common.entity.player.skills.SkillHandler;
@@ -56,7 +59,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
@@ -1193,11 +1195,12 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * @param pos The pos of the block to check.
      */
     public static boolean isBlockBiteable(@NotNull Level level, @NotNull BlockPos pos, @NotNull Direction side) {
-        ResourceHandler<FluidResource> capability = level.getCapability(Capabilities.Fluid.BLOCK, pos, side);
-        if (capability == null) return false;
-        try (var transaction = Transaction.openRoot()) {
-            return capability.extract(FluidResource.of(ModFluids.BLOOD.get()), VReference.FOOD_TO_FLUID_BLOOD, transaction) > 0;
-        }
+//        ResourceHandler<FluidResource> capability = level.getCapability(Capabilities.Fluid.BLOCK, pos, side);
+//        if (capability == null) return false;
+//        try (var transaction = Transaction.openRoot()) {
+//            return capability.extract(FluidResource.of(ModFluids.BLOOD.get()), VReference.FOOD_TO_FLUID_BLOOD, transaction) > 0;
+//        }
+        return false;
     }
 
     /**

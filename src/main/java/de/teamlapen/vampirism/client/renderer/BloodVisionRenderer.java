@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.renderer;
 
+import de.teamlapen.lib.client.IMinecraftAccessor;
 import de.teamlapen.lib.client.OptifineHandler;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.util.MixinHooks;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -17,22 +17,16 @@ import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class BloodVisionRenderer {
+public class BloodVisionRenderer implements IMinecraftAccessor {
     private static final int ENTITY_NEAR_SQ_DISTANCE = 600;
     private static final int BLOOD_VISION_FADE_TICKS = 80;
     public static final ResourceLocation BLUR_SHADER = VResourceLocation.mc("blur");
     private boolean inBloodVisionRendering;
-    private final Minecraft mc;
     //    private CustomBufferSource bloodVisionBuffer;
     private boolean reducedBloodVision = false;
     private int bloodVisionTicks = 0;
     private int lastBloodVisionTicks = 0;
     private boolean hasGarlicVision;
-
-
-    public BloodVisionRenderer(Minecraft mc) {
-        this.mc = mc;
-    }
 
     public boolean isInBloodVisionRendering() {
         return this.inBloodVisionRendering;
@@ -86,10 +80,10 @@ public class BloodVisionRenderer {
 
     @SubscribeEvent
     public void onTick(ClientTickEvent.Pre event) {
-        if (this.mc.level == null || this.mc.player == null || !mc.player.isAlive()) return;
+        if (this.level() == null || this.player() == null || !player().isAlive()) return;
         this.lastBloodVisionTicks = this.bloodVisionTicks;
-        VampirePlayer vampire = VampirePlayer.get(mc.player);
-        if (vampire.getSpecialAttributes().blood_vision && !ModConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(mc.player.level())) {
+        VampirePlayer vampire = VampirePlayer.get(player());
+        if (vampire.getSpecialAttributes().blood_vision && !ModConfig.CLIENT.disableBloodVisionRendering.get() && !vampire.isGettingSundamage(level())) {
             if (this.bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
                 this.bloodVisionTicks++;
 
@@ -137,7 +131,7 @@ public class BloodVisionRenderer {
     }
 
     public boolean shouldRenderBloodVision() {
-        return this.bloodVisionTicks > 0 && this.mc.player != null;
+        return this.bloodVisionTicks > 0 && this.player() != null;
     }
 
     private float getBloodVisionProgress(float partialTicks) {

@@ -62,7 +62,7 @@ public class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingE
 
     @WrapOperation(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;shouldRenderLayers(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;)Z"))
     private boolean skipLayersInBloodVision(LivingEntityRenderer<T, S, M> instance, S state, Operation<Boolean> original) {
-        if (VampirismModClient.getInstance().getBloodVisionRenderer().isInBloodVisionRendering()) {
+        if (VampirismModClient.getServices().bloodVisionRenderer().isInBloodVisionRendering()) {
             return false;
         } else {
             return original.call(instance, state);

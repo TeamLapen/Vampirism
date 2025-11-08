@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "vampirism:block/bat_cage"
+    "model": "vampirism:block/bat_cage/block"
   }
 }

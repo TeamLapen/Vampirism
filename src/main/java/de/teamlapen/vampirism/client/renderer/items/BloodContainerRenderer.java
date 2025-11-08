@@ -6,9 +6,11 @@ import de.teamlapen.lib.client.renderer.VertexUtils;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -28,11 +30,11 @@ public class BloodContainerRenderer implements SpecialModelRenderer<SimpleFluidC
     @Override
     public void submit(@Nullable SimpleFluidContent argument, ItemDisplayContext displayContext, PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, int packedOverlay, boolean hasFoil, int outlineColor) {
         VertexUtils.renderFluidTank(
+                Minecraft.getInstance().level, Minecraft.getInstance().player != null ? Minecraft.getInstance().player.blockPosition() : BlockPos.ZERO,
                 argument != null ? argument.copy() : null,
                 BloodContainerBlockEntity.CAPACITY,
-                new Vec3(8 / 16f, 1 / 16f, 8 / 16f),
-                new Vec3(10 / 16f, 13.8 / 16f, 10 / 16f),
-                0.85f,
+                new Vec3(0, 0, 0),
+                new Vec3(10 / 16f, 14 / 16f, 10 / 16f),
                 poseStack,
                 nodeCollector,
                 packedLight,

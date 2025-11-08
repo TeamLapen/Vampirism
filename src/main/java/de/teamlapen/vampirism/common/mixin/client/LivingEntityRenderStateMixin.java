@@ -41,7 +41,7 @@ public class LivingEntityRenderStateMixin implements IVampirismRenderState {
     private Bat vampirism$bat;
 
     @Unique
-    private VampirismPlayerAttributes vampirism$vampirismAttributes;
+    private VampirismPlayerAttributes vampirism$vampirismAttributes = new VampirismPlayerAttributes();
 
     @Override
     public @Nullable ResourceLocation vampirism$overlay() {

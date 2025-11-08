@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.client.renderer.entities.state.IOverlayRenderState
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.entity.hunter.AdvancedHunterEntity;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
@@ -38,8 +37,8 @@ public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEnti
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), true), 0.5F);
         this.addLayer(new CloakLayer<>(this, textureCloak, s -> s.hasCloak));
         this.addLayer(new ArmorLayer<HumanoidModel<AdvancedHunterRenderState>>(this,
-                ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, true)),
-                ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, false)),
+                ArmorModelSet.bake(ModEntitiesRender.HUNTER_ARMOR_SLIM, context.getModelSet(), x -> new BasicHunterModel<>(x, true)),
+                ArmorModelSet.bake(ModEntitiesRender.HUNTER_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, false)),
                 context.getEquipmentRenderer()));
         if (ModConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this));

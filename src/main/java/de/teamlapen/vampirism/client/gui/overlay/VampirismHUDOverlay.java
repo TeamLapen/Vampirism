@@ -1,11 +1,8 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import de.teamlapen.lib.client.IMinecraftAccessor;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
-import de.teamlapen.lib.common.fluids.FluidHelper;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
@@ -13,7 +10,6 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
@@ -22,12 +18,10 @@ import de.teamlapen.vampirism.common.integration.IMCHandler;
 import de.teamlapen.vampirism.common.items.StakeItem;
 import de.teamlapen.vampirism.common.mixin.accessor.LivingEntityAccessor;
 import de.teamlapen.vampirism.common.util.Helper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
@@ -46,20 +40,17 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2fStack;
-import org.joml.Matrix4f;
 
 import java.util.Optional;
 
-public class VampirismHUDOverlay {
+public class VampirismHUDOverlay implements IMinecraftAccessor {
 
-    private final Minecraft mc;
     protected static final ResourceLocation CROSSHAIR_SPRITE = VResourceLocation.mc("hud/crosshair");
     protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_full");
     protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_background");
@@ -74,10 +65,6 @@ public class VampirismHUDOverlay {
     private int rederFullOn, renderFullOff, renderFullColor;
     private boolean addTempPoison;
     private MobEffectInstance addedTempPoison;
-
-    public VampirismHUDOverlay(Minecraft mc) {
-        this.mc = mc;
-    }
 
     /**
      * Tint the entire screen in a certain color. Blends in and out
@@ -98,7 +85,7 @@ public class VampirismHUDOverlay {
 
     @SubscribeEvent
     public void onClientTick(ClientTickEvent.Pre event) {
-        if (mc.player == null || !mc.player.isAlive()) {
+        if (mc().player == null || !mc().player.isAlive()) {
             renderFullTick = 0;
             screenPercentage = 0;
             return;
@@ -121,11 +108,11 @@ public class VampirismHUDOverlay {
     public void onRenderCrosshair(RenderGuiLayerEvent.@NotNull Pre event) {
         if (event.getName() != VanillaGuiLayers.CROSSHAIR) return;
 
-        LocalPlayer player = mc.player;
-        HitResult hit = mc.hitResult;
+        LocalPlayer player = mc().player;
+        HitResult hit = mc().hitResult;
         if (player == null || !player.isAlive() || hit == null) return;
 
-        Window window = mc.getWindow();
+        Window window = mc().getWindow();
 
         if (hit instanceof EntityHitResult entityHit) {
             Entity targetEntity = entityHit.getEntity();
@@ -159,7 +146,7 @@ public class VampirismHUDOverlay {
                 }
             }
         } else if (hit instanceof BlockHitResult blockHit) {
-            ClientLevel level = mc.level;
+            ClientLevel level = mc().level;
             if (level == null) return;
 
             BlockPos pos = blockHit.getBlockPos();
@@ -179,7 +166,7 @@ public class VampirismHUDOverlay {
         }
 
         // Blood feed progress
-        if (mc.options.getCameraType().isFirstPerson() && mc.gameMode != null && mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
+        if (mc().options.getCameraType().isFirstPerson() && mc().gameMode != null && mc().gameMode.getPlayerMode() != GameType.SPECTATOR) {
             float progress = VampirePlayer.get(player).getFeedProgress();
             if (progress > 0) {
 //                RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -197,9 +184,9 @@ public class VampirismHUDOverlay {
 
     @SubscribeEvent
     public void onRenderFoodBar(RenderGuiLayerEvent.@NotNull Pre event) {
-        if (mc.player == null || !mc.player.isAlive() || !Helper.isVampire(mc.player)) return;
+        if (mc().player == null || !mc().player.isAlive() || !Helper.isVampire(mc().player)) return;
         //disable foodbar if bloodbar is rendered
-        if (event.getName() == VanillaGuiLayers.FOOD_LEVEL && !IMCHandler.requestedToDisableBloodbar && mc.gameMode.hasExperience()) {
+        if (event.getName() == VanillaGuiLayers.FOOD_LEVEL && !IMCHandler.requestedToDisableBloodbar && mc().gameMode.hasExperience()) {
             event.setCanceled(true);
         }
         if (event.getName().equals(VanillaGuiLayers.AIR_LEVEL)) {
@@ -238,7 +225,7 @@ public class VampirismHUDOverlay {
             return;
         }
         if (addTempPoison) {
-            ((LivingEntityAccessor) mc.player).getActiveEffects().remove(MobEffects.POISON);
+            ((LivingEntityAccessor) mc().player).getActiveEffects().remove(MobEffects.POISON);
         }
 
 
@@ -249,13 +236,13 @@ public class VampirismHUDOverlay {
         if (event.getName() != VanillaGuiLayers.PLAYER_HEALTH) {
             return;
         }
-        addTempPoison = mc.player.hasEffect(ModEffects.POISON) && !((LivingEntityAccessor) mc.player).getActiveEffects().containsKey(MobEffects.POISON);
+        addTempPoison = mc().player.hasEffect(ModEffects.POISON) && !((LivingEntityAccessor) mc().player).getActiveEffects().containsKey(MobEffects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {
                 addedTempPoison = new MobEffectInstance(MobEffects.POISON, 100);
             }
-            ((LivingEntityAccessor) mc.player).getActiveEffects().put(MobEffects.POISON, addedTempPoison);
+            ((LivingEntityAccessor) mc().player).getActiveEffects().put(MobEffects.POISON, addedTempPoison);
         }
 
     }
@@ -269,16 +256,16 @@ public class VampirismHUDOverlay {
     }
 
     private void renderStakeInstantKill(@NotNull GuiGraphics graphics, int width, int height) {
-        if (this.mc.options.getCameraType().isFirstPerson() && this.mc.gameMode.getPlayerMode() != GameType.SPECTATOR) {
+        if (this.mc().options.getCameraType().isFirstPerson() && this.mc().gameMode.getPlayerMode() != GameType.SPECTATOR) {
 //            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             int color = ARGB.colorFromFloat(1f, 158 / 256f, 0, 0);
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, CROSSHAIR_SPRITE, (graphics.guiWidth() - 15) / 2, (graphics.guiHeight() - 15) / 2, 15, 15, color);
 
-            float f = this.mc.player.getAttackStrengthScale(0.0F);
+            float f = this.mc().player.getAttackStrengthScale(0.0F);
             boolean flag = false;
-            if (this.mc.crosshairPickEntity != null && this.mc.crosshairPickEntity instanceof LivingEntity && f >= 1.0F) {
-                flag = this.mc.player.getCurrentItemAttackStrengthDelay() > 5.0F;
-                flag &= this.mc.crosshairPickEntity.isAlive();
+            if (this.mc().crosshairPickEntity != null && this.mc().crosshairPickEntity instanceof LivingEntity && f >= 1.0F) {
+                flag = this.mc().player.getCurrentItemAttackStrengthDelay() > 5.0F;
+                flag &= this.mc().crosshairPickEntity.isAlive();
             }
 
             int j = graphics.guiHeight() / 2 - 7 + 16;

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "vampirism:block/altar_inspiration"
+    "model": "vampirism:block/altar_inspiration/altar_inspiration"
   }
 }

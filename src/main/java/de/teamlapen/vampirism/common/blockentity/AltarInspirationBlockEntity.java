@@ -139,9 +139,13 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
         try (var transaction = Transaction.openRoot()) {
             try (var access = this.fluidInventory.beginAccess()) {
                 FluidResource resource = this.fluidInventory.getResource();
-                int amount = this.fluidInventory.getAmount();
-                this.fluidInventory.extract(resource, amount, transaction);
-                this.fluidInventory.insert(FluidResource.of(fluid), fluidInventory.getAmount(), transaction);
+                if (!resource.isEmpty()) {
+                    int amount = this.fluidInventory.getAmount();
+                    this.fluidInventory.extract(resource, amount, transaction);
+                }
+                if (!fluid.isEmpty()) {
+                    this.fluidInventory.insert(FluidResource.of(fluid), fluidInventory.getAmount(), transaction);
+                }
             }
             transaction.commit();
         }

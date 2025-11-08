@@ -79,7 +79,7 @@ public class ModKeys {
         ACTION_KEYS = builder.build();
     }
 
-    static void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
+    public void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
         event.registerCategory(CATEGORY);
 
         event.register(ACTION);

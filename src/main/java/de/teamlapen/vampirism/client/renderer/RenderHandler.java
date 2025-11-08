@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.renderer;
 
+import de.teamlapen.lib.client.IMinecraftAccessor;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.blocks.CoffinBlock;
@@ -39,10 +40,7 @@ import org.jetbrains.annotations.NotNull;
  * Handle most general rendering related stuff
  */
 @SuppressWarnings("unused")
-public class RenderHandler {
-    private final Minecraft mc;
-
-
+public class RenderHandler implements IMinecraftAccessor {
     private final int VAMPIRE_BIOME_FADE_TICKS = 60;
     private final Logger LOGGER = LogManager.getLogger();
 
@@ -55,16 +53,12 @@ public class RenderHandler {
 
     private float vampireBiomeFogDistanceMultiplier = 1;
 
-    public RenderHandler(Minecraft mc) {
-        this.mc = mc;
-    }
-
     @SubscribeEvent
     public void onCameraSetup(ViewportEvent.@NotNull ComputeCameraAngles event) {
         if (ModConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
-            DebugScreenEntryStatus status = this.mc.debugEntries.getStatus(DebugScreenEntries.ENTITY_HITBOXES);
+            DebugScreenEntryStatus status = this.mc().debugEntries.getStatus(DebugScreenEntries.ENTITY_HITBOXES);
             if (status != DebugScreenEntryStatus.NEVER) {
-                this.mc.debugEntries.setStatus(DebugScreenEntries.ENTITY_HITBOXES, DebugScreenEntryStatus.NEVER);
+                this.mc().debugEntries.setStatus(DebugScreenEntries.ENTITY_HITBOXES, DebugScreenEntryStatus.NEVER);
             }
         }
         if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
@@ -80,12 +74,12 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onClientTick(ClientTickEvent.Pre event) {
-        if (mc.level == null || mc.player == null || !mc.player.isAlive()) return;
-        VampirePlayer vampire = VampirePlayer.get(mc.player);
+        if (level() == null || player() == null || !player().isAlive()) return;
+        VampirePlayer vampire = VampirePlayer.get(player());
 
         //Vampire biome/village fog
-        if (mc.player.tickCount % 10 == 0) {
-            if ((ModConfig.CLIENT.renderVampireForestFog.get() || ModConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(mc.player) || Helper.isEntityInVampireBiome(mc.player))) {
+        if (player().tickCount % 10 == 0) {
+            if ((ModConfig.CLIENT.renderVampireForestFog.get() || ModConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(player()) || Helper.isEntityInVampireBiome(player()))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
                 vampireBiomeFogDistanceMultiplier += vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.VISTA) ? ModConfig.BALANCE.vrVistaMod.get().floatValue() : 0;
@@ -122,7 +116,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderHand(@NotNull RenderHandEvent event) {
-        if (mc.player != null && mc.player.isAlive() && VampirismPlayerAttributes.get(mc.player).getVampSpecial().bat) {
+        if (player() != null && player().isAlive() && VampirismPlayerAttributes.get(player()).getVampSpecial().bat) {
             event.setCanceled(true);
         }
     }
@@ -131,7 +125,7 @@ public class RenderHandler {
     public void onRenderLivingPre(RenderLivingEvent.@NotNull Pre<Player, AvatarRenderState, PlayerModel> event) {
         var vampirism = ((IVampirismRenderState) event.getRenderState()).vampirism$attributes();
         if (vampirism != null && vampirism.getHuntSpecial().isDisguised()) {
-            double dist = this.mc.player == null ? 0 : event.getRenderState().distanceToCameraSq;
+            double dist = this.player() == null ? 0 : event.getRenderState().distanceToCameraSq;
             if (dist > 64) {
                 event.setCanceled(true);
             } else if (dist > 16) {
@@ -196,9 +190,9 @@ public class RenderHandler {
 
             bat.tickCount = (int) event.getRenderState().ageInTicks;
             bat.setInvisible(event.getRenderState().isInvisible);
-            EntityRenderer<? super Bat, ?> renderer = mc.getEntityRenderDispatcher().getRenderer(bat);
+            EntityRenderer<? super Bat, ?> renderer = mc().getEntityRenderDispatcher().getRenderer(bat);
             EntityRenderState renderState = renderer.createRenderState(bat, partialTicks);
-            mc.getEntityRenderDispatcher().submit(renderState, new CameraRenderState(), 0, 0, 0, event.getPoseStack(), event.getSubmitNodeCollector());
+            mc().getEntityRenderDispatcher().submit(renderState, new CameraRenderState(), 0, 0, 0, event.getPoseStack(), event.getSubmitNodeCollector());
         }
     }
 

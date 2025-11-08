@@ -94,8 +94,7 @@ public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayI
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        BloodHelper.handleFluidItemBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection());
-        return InteractionResult.SUCCESS;
+        return BloodHelper.handleFluidBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection()) ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
     @Override

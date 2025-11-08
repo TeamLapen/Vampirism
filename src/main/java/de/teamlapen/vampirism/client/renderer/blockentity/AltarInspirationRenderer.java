@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.lib.client.renderer.VertexUtils;
 import de.teamlapen.vampirism.common.blockentity.AltarInspirationBlockEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -33,11 +34,11 @@ public class AltarInspirationRenderer implements BlockEntityRenderer<AltarInspir
     @Override
     public void submit(AltarInspirationRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
         VertexUtils.renderFluidTank(
+                Minecraft.getInstance().level, renderState.blockPos,
                 renderState.stack,
                 AltarInspirationBlockEntity.CAPACITY,
-                new Vec3(8 / 16f, 1 / 16f, 8 / 16f),
-                new Vec3(8 / 16f,10.8 / 16f,8 / 16f),
-                0.85f,
+                new Vec3(0, -1 / 16f, 0),
+                new Vec3(8 / 16f, 10 / 16f, 8 / 16f),
                 poseStack,
                 nodeCollector,
                 renderState.lightCoords,

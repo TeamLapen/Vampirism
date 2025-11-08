@@ -23,12 +23,7 @@ import java.util.UUID;
 
 public class CustomBossEventOverlay extends BaseOverlay {
     private static final ResourceLocation BAR_PROGRESS_SPRITE = VResourceLocation.mc("boss_bar/white_progress");
-    private final @NotNull Minecraft client;
     private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
-
-    public CustomBossEventOverlay() {
-        this.client = Minecraft.getInstance();
-    }
 
     public void clear() {
         this.bossInfoMap.clear();
@@ -53,15 +48,15 @@ public class CustomBossEventOverlay extends BaseOverlay {
             return;
         }
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        int j = 12 + ((BossHealthOverlayAccessor) this.client.gui.getBossOverlay()).getEvents().size() * (10 + this.client.font.lineHeight);
+        int j = 12 + ((BossHealthOverlayAccessor) this.mc().gui.getBossOverlay()).getEvents().size() * (10 + this.mc().font.lineHeight);
         for (MultiBossEvent value : bossInfoMap.values()) {
             int k = i / 2 - 91;
             this.render(graphics, k, j, value);
             Component itextcomponent = value.getName();
-            int l = this.client.font.width(itextcomponent);
+            int l = this.mc().font.width(itextcomponent);
             int i1 = i / 2 - l / 2;
             int j1 = j - 9;
-            graphics.drawString(this.client.font, itextcomponent, i1, j1, 16777215, true);
+            graphics.drawString(this.mc().font, itextcomponent, i1, j1, 16777215, true);
 
             if (j >= graphics.guiHeight() / 3) {
                 break;

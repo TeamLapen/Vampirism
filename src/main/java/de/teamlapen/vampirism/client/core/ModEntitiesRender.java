@@ -49,9 +49,9 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation VILLAGER_WITH_ARMS = new ModelLayerLocation(VResourceLocation.mod("villager_with_arms"), "main");
     public static final ModelLayerLocation GENERIC_BIPED = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "main");
     public static final ModelLayerLocation GENERIC_BIPED_SLIM = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "main");
-    public static final ModelLayerLocation GENERIC_BIPED_ARMOR_OUTER = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "outer_armor");
-    public static final ModelLayerLocation GENERIC_BIPED_ARMOR_INNER = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "inner_armor");
     public static final ArmorModelSet<ModelLayerLocation> GENERIC_BIPED_ARMOR = createArmorSet(VResourceLocation.mod("generic_biped"));
+    public static final ArmorModelSet<ModelLayerLocation> HUNTER_ARMOR = createArmorSet(VResourceLocation.mod("hunter_biped"));
+    public static final ArmorModelSet<ModelLayerLocation> HUNTER_ARMOR_SLIM = createArmorSet(VResourceLocation.mod("hunter_biped_slim"));
     public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(VResourceLocation.mod("task_master"), "main");
     public static final ModelLayerLocation REMAINS_DEFENDER = new ModelLayerLocation(VResourceLocation.mod("remains_defender"), "main");
     public static final ModelLayerLocation GHOST = new ModelLayerLocation(VResourceLocation.mod("ghost"), "main");
@@ -126,8 +126,6 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(VILLAGER_WITH_ARMS, () -> VillagerWithArmsModel.createLayer(0));
         event.registerLayerDefinition(GENERIC_BIPED, () -> LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, false), 64, 64));
         event.registerLayerDefinition(GENERIC_BIPED_SLIM, () -> LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, true), 64, 64));
-        event.registerLayerDefinition(GENERIC_BIPED_ARMOR_INNER, () -> LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.INNER_ARMOR_DEFORMATION, 0.0F), 64, 32));
-        event.registerLayerDefinition(GENERIC_BIPED_ARMOR_OUTER, () -> LayerDefinition.create(HumanoidModel.createMesh(LayerDefinitions.OUTER_ARMOR_DEFORMATION, 0.0F), 64, 32));
         event.registerLayerDefinition(TASK_MASTER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
         event.registerLayerDefinition(REMAINS_DEFENDER, RemainsDefenderModel::createBodyLayer);
         event.registerLayerDefinition(GHOST, GhostModel::createMesh);
@@ -137,7 +135,21 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(DARK_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
         event.registerLayerDefinition(CURSED_SPRUCE_BOAT, () -> boatDefinition);
         event.registerLayerDefinition(CURSED_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
+        ArmorModelSet<LayerDefinition> armorModelSetHunter = BipedCloakedModel.createArmorMeshSet(LayerDefinitions.INNER_ARMOR_DEFORMATION, LayerDefinitions.OUTER_ARMOR_DEFORMATION)
+                .map(definition -> LayerDefinition.create(definition, 64, 32));
+        addArmor(event, armorModelSetHunter, HUNTER_ARMOR);
+        addArmor(event, armorModelSetHunter, HUNTER_ARMOR_SLIM);
+        ArmorModelSet<LayerDefinition> armormodelsetHumanoid = HumanoidModel.createArmorMeshSet(LayerDefinitions.INNER_ARMOR_DEFORMATION, LayerDefinitions.OUTER_ARMOR_DEFORMATION)
+                .map(definition -> LayerDefinition.create(definition, 64, 32));
+        addArmor(event, armormodelsetHumanoid, GENERIC_BIPED_ARMOR);
 
+    }
+
+    private static void addArmor(EntityRenderersEvent.RegisterLayerDefinitions event, ArmorModelSet<LayerDefinition> armorModel, ArmorModelSet<ModelLayerLocation> set) {
+        event.registerLayerDefinition(set.head(), armorModel::head);
+        event.registerLayerDefinition(set.chest(), armorModel::chest);
+        event.registerLayerDefinition(set.legs(), armorModel::legs);
+        event.registerLayerDefinition(set.feet(), armorModel::feet);
     }
 
     static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {

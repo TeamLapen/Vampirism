@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.client.models.entities.BasicHunterModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.CloakLayer;
 import de.teamlapen.vampirism.common.entity.hunter.BasicHunterEntity;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -27,8 +26,8 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
     public BasicHunterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER), false), new BasicHunterModel<>(context.bakeLayer(ModEntitiesRender.HUNTER_SLIM), true), 0.5F);
         this.addLayer(new ArmorLayer<HumanoidModel<BasicHunterEntity.BasicHunterRenderState>>(this,
-                ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, true)),
-                ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, false)),
+                ArmorModelSet.bake(ModEntitiesRender.HUNTER_ARMOR_SLIM, context.getModelSet(), x -> new BasicHunterModel<>(x, true)),
+                ArmorModelSet.bake(ModEntitiesRender.HUNTER_ARMOR, context.getModelSet(), x -> new BasicHunterModel<>(x, false)),
                 context.getEquipmentRenderer()));
         this.addLayer(new CloakLayer<>(this, textureCloak, entity -> entity.entityLevel > 0));
         this.textures = gatherTextures("textures/entity/hunter", true);

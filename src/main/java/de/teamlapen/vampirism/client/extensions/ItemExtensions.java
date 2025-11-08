@@ -77,7 +77,7 @@ public class ItemExtensions {
 
         @Override
         public Model getHumanoidArmorModel(ItemStack itemStack, EquipmentClientInfo.LayerType layerType, Model original) {
-            return VampirismModClient.getInstance().getArmorModels().getModel(getArmorModelLocation(itemStack));
+            return VampirismModClient.getServices().armorModels().getModel(getArmorModelLocation(itemStack));
         }
     }
 

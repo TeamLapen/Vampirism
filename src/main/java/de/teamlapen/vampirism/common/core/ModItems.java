@@ -22,7 +22,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -31,10 +30,8 @@ import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.equipment.ArmorType;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -329,26 +326,4 @@ public class ModItems {
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get());
     }
 
-    public static void registerShiftTooltips(ItemTooltipEvent event) {
-        ItemStack stack = event.getItemStack();
-        List<Component> tooltipComponents = event.getToolTip();
-
-        Stream<ItemLike> descriptionItems = Stream.of(
-                ModBlocks.HUNTER_TABLE,
-                ModBlocks.MED_CHAIR,
-                ModBlocks.MOTHER_TROPHY,
-                ModBlocks.BLOOD_GRINDER,
-                ModBlocks.BLOOD_SIEVE,
-                FABRIC_FILTER,
-                BLOOD_BUCKET,
-                SYRINGE_EMPTY,
-                SYRINGE_BLOOD,
-                INJECTION_GARLIC,
-                INJECTION_SANGUINARE
-        );
-
-        if (descriptionItems.anyMatch(item -> stack.is(item.asItem()))) {
-//            DescriptionUtil.addDescriptionTooltip(event.getItemStack().getItem(), event.getContext(), event.getFlags(), event.getToolTip()); TODO
-        }
-    }
 }

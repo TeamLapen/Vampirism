@@ -5,8 +5,10 @@ import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.common.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.items.component.BottleBlood;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -16,10 +18,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -168,6 +174,47 @@ public class BloodHelper {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    public static boolean handleFluidBlockInteraction(ItemStack stack, Level level, BlockPos pos, Player player, InteractionHand hand, Direction side) {
+        if (stack.isEmpty()) return false;
+
+        if (tryDefaultFluid(stack, level, pos, player, hand, side)) return true;
+
+        if (stack.is(Items.GLASS_BOTTLE)) {
+            try (var transaction = Transaction.openRoot()) {
+                ItemStack bloodBottleStack = ModItems.BLOOD_BOTTLE.toStack();
+                var moved = ResourceHandlerUtil.move(level.getCapability(Capabilities.Fluid.BLOCK, pos, side), stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(bloodBottleStack)), y -> y.is(ModFluids.BLOOD), Integer.MAX_VALUE, transaction);
+                if (moved > 0 && bloodBottleStack.getOrDefault(ModDataComponents.BOTTLE_BLOOD, BottleBlood.EMPTY).blood() > 0) {
+                    transaction.commit();
+                    player.setItemInHand(hand, bloodBottleStack);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean tryDefaultFluid(ItemStack stack, Level level, BlockPos pos, Player player, InteractionHand hand, Direction side) {
+        try (var transaction = Transaction.openRoot()) {
+            var itemCapability = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forPlayerInteraction(player, hand));
+            var blockCapability = level.getCapability(Capabilities.Fluid.BLOCK, pos, side);
+            var moved = ResourceHandlerUtil.move(itemCapability, blockCapability, x -> true, Integer.MAX_VALUE, transaction);
+            if (moved > 0) {
+                transaction.commit();
+                return true;
+            }
+
+            moved = ResourceHandlerUtil.move(blockCapability, itemCapability, x -> true, Integer.MAX_VALUE, transaction);
+
+            if (moved > 0) {
+                transaction.commit();
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static boolean handleFluidItemBlockInteraction(ItemStack stack, Level level, BlockPos pos, Player player, InteractionHand hand, Direction side) {
