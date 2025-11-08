@@ -14,10 +14,10 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 import static de.teamlapen.vampirism.common.core.ModBlocks.*;
 import static de.teamlapen.vampirism.common.core.ModItems.*;
@@ -27,7 +27,7 @@ import static de.teamlapen.vampirism.common.core.ModItems.*;
 public class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, REFERENCE.MODID);
 
-    public static final Supplier<CreativeModeTab> VAMPIRISM_TAB = CREATIVE_TABS.register(REFERENCE.MODID,
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> VAMPIRISM_TAB = CREATIVE_TABS.register(REFERENCE.MODID,
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.vampirism"))
                     .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
@@ -35,136 +35,30 @@ public class ModCreativeTabs {
                     .displayItems(new VampirismDisplayItemGenerator())
                     .build());
 
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> VAMPIRE_TAB = CREATIVE_TABS.register(REFERENCE.MODID + "_vampire", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.vampirism.vampire"))
+            .withTabsBefore(VAMPIRISM_TAB.getKey())
+            .icon(VAMPIRE_MINION_BINDING::toStack)
+            .displayItems(new VampireDisplayItemGenerator())
+            .build());
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> HUNTER_TAB = CREATIVE_TABS.register(REFERENCE.MODID + "_hunter", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.vampirism.hunter"))
+            .withTabsBefore(VAMPIRISM_TAB.getKey())
+            .icon(HUNTER_MINION_EQUIPMENT::toStack)
+            .displayItems(new HunterDisplayItemGenerator())
+            .build());
+
     public static class VampirismDisplayItemGenerator extends BaseDisplayItemGenerator {
 
         @Override
         protected void addAll() {
-            addWeapons();
-            addArmor();
             addItems();
 
-            addFunctionalBlocks();
-            addPlants();
-            addBuildingBlocks();
-            addDecorativeBlocks();
+            addBlocks();
         }
 
-        private void addWeapons() {
-            addItemGen(HEART_SEEKER_NORMAL);
-            addItemGen(HEART_SEEKER_ENHANCED);
-            addItemGen(HEART_SEEKER_ULTIMATE);
-            addItemGen(HEART_STRIKER_NORMAL);
-            addItemGen(HEART_STRIKER_ENHANCED);
-            addItemGen(HEART_STRIKER_ULTIMATE);
-
-            addItemGen(HUNTER_AXE_NORMAL);
-            addItemGen(HUNTER_AXE_ENHANCED);
-            addItemGen(HUNTER_AXE_ULTIMATE);
-
-            add(BASIC_CROSSBOW);
-            add(BASIC_DOUBLE_CROSSBOW);
-            add(ENHANCED_CROSSBOW);
-            add(ENHANCED_DOUBLE_CROSSBOW);
-            add(BASIC_TECH_CROSSBOW);
-            add(ENHANCED_TECH_CROSSBOW);
-
-            add(CROSSBOW_ARROW_NORMAL);
-            add(CROSSBOW_ARROW_SPITFIRE);
-            add(CROSSBOW_ARROW_GARLIC);
-            add(CROSSBOW_ARROW_VAMPIRE_KILLER);
-            add(CROSSBOW_ARROW_TELEPORT);
-            add(CROSSBOW_ARROW_BLEEDING);
-
-            add(ARROW_CLIP);
-            add(QUARREL_POUCH);
-
-            add(PITCHFORK);
-            add(STAKE);
-
-            add(CRUCIFIX_NORMAL);
-            add(CRUCIFIX_ENHANCED);
-            add(CRUCIFIX_ULTIMATE);
-        }
-
-        private void addArmor() {
-            add(ARMOR_OF_SWIFTNESS_HEAD_NORMAL);
-            add(ARMOR_OF_SWIFTNESS_CHEST_NORMAL);
-            add(ARMOR_OF_SWIFTNESS_LEGS_NORMAL);
-            add(ARMOR_OF_SWIFTNESS_FEET_NORMAL);
-            add(ARMOR_OF_SWIFTNESS_HEAD_ENHANCED);
-            add(ARMOR_OF_SWIFTNESS_CHEST_ENHANCED);
-            add(ARMOR_OF_SWIFTNESS_LEGS_ENHANCED);
-            add(ARMOR_OF_SWIFTNESS_FEET_ENHANCED);
-            add(ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE);
-            add(ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE);
-            add(ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE);
-            add(ARMOR_OF_SWIFTNESS_FEET_ULTIMATE);
-
-            add(HUNTER_COAT_HEAD_NORMAL);
-            add(HUNTER_COAT_CHEST_NORMAL);
-            add(HUNTER_COAT_LEGS_NORMAL);
-            add(HUNTER_COAT_FEET_NORMAL);
-            add(HUNTER_COAT_HEAD_ENHANCED);
-            add(HUNTER_COAT_CHEST_ENHANCED);
-            add(HUNTER_COAT_LEGS_ENHANCED);
-            add(HUNTER_COAT_FEET_ENHANCED);
-            add(HUNTER_COAT_HEAD_ULTIMATE);
-            add(HUNTER_COAT_CHEST_ULTIMATE);
-            add(HUNTER_COAT_LEGS_ULTIMATE);
-            add(HUNTER_COAT_FEET_ULTIMATE);
-
-            add(HUNTER_HAT_TALL);
-            add(HUNTER_HAT_BROAD);
-
-            add(VAMPIRE_CLOTHING_CROWN);
-            add(VAMPIRE_CLOTHING_HAT);
-
-            ColorListsUtil.sortByTabOrder(ColorListsUtil.VAMPIRE_CLOAKS).forEach(this::add);
-
-            add(VAMPIRE_CLOTHING_LEGS);
-            add(VAMPIRE_CLOTHING_BOOTS);
-
-            addItemGen(AMULET);
-            addItemGen(RING);
-            addItemGen(OBI_BELT);
-        }
 
         private void addItems() {
-            addItemGen(BLOOD_BOTTLE);
-            addItemGen(BLOOD_INFUSED_RAW_IRON);
-            addItemGen(BLOOD_INFUSED_RAW_GOLD);
-            addItemGen(BLOOD_INFUSED_IRON_INGOT);
-            addItemGen(BLOOD_INFUSED_GOLD_INGOT);
-            addItemGen(BLOOD_INFUSED_DIAMOND);
-            addItemGen(BLOOD_INFUSED_NETHERITE_INGOT);
-
-            add(GARLIC_DIFFUSER_CORE);
-            add(GARLIC_DIFFUSER_CORE_IMPROVED);
-
-            add(HOLY_WATER_BOTTLE_NORMAL);
-            add(HOLY_WATER_BOTTLE_ENHANCED);
-            add(HOLY_WATER_BOTTLE_ULTIMATE);
-            add(HOLY_WATER_SPLASH_BOTTLE_NORMAL);
-            add(HOLY_WATER_SPLASH_BOTTLE_ENHANCED);
-            add(HOLY_WATER_SPLASH_BOTTLE_ULTIMATE);
-
-            add(HUNTER_INTEL_0);
-            add(HUNTER_INTEL_1);
-            add(HUNTER_INTEL_2);
-            add(HUNTER_INTEL_3);
-            add(HUNTER_INTEL_4);
-            add(HUNTER_INTEL_5);
-            add(HUNTER_INTEL_6);
-            add(HUNTER_INTEL_7);
-            add(HUNTER_INTEL_8);
-            add(HUNTER_INTEL_9);
-
-            add(PURE_BLOOD_0);
-            add(PURE_BLOOD_1);
-            add(PURE_BLOOD_2);
-            add(PURE_BLOOD_3);
-            add(PURE_BLOOD_4);
-
             add(GARLIC_BREAD);
             add(HUMAN_HEART);
             add(WEAK_HUMAN_HEART);
@@ -174,32 +68,13 @@ public class ModCreativeTabs {
             add(INJECTION_GARLIC);
             add(INJECTION_SANGUINARE);
 
-            add(ITEM_ALCHEMICAL_FIRE);
-
-            add(PURIFIED_GARLIC);
-            add(PURE_SALT);
-            add(PURE_SALT_WATER);
-
             add(SOUL_ORB_VAMPIRE);
             add(MOTHER_CORE);
             add(VAMPIRE_BLOOD_BOTTLE);
             addItemGen(VAMPIRE_BOOK);
             addIfPresent(VResourceLocation.loc(REFERENCE.GUIDEAPI_MODID, REFERENCE.GUIDEBOOK_ID));
             add(VAMPIRE_FANG);
-            add(UMBRELLA);
 
-            add(HUNTER_MINION_EQUIPMENT);
-            add(HUNTER_MINION_UPGRADE_SIMPLE);
-            add(HUNTER_MINION_UPGRADE_ENHANCED);
-            add(HUNTER_MINION_UPGRADE_SPECIAL);
-            add(VAMPIRE_MINION_BINDING);
-            add(VAMPIRE_MINION_UPGRADE_SIMPLE);
-            add(VAMPIRE_MINION_UPGRADE_ENHANCED);
-            add(VAMPIRE_MINION_UPGRADE_SPECIAL);
-
-            add(FABRIC_FILTER);
-
-            add(FEEDING_ADAPTER);
             add(OBLIVION_POTION);
             add(GARLIC_FINDER);
 
@@ -207,39 +82,16 @@ public class ModCreativeTabs {
             add(CURSED_SPRUCE_BOAT);
             add(DARK_SPRUCE_CHEST_BOAT);
             add(CURSED_SPRUCE_CHEST_BOAT);
+        }
 
-            ModRegistries.OILS.listElements().filter(s -> !s.is(ModOils.EMPTY)).map(s -> ItemDataUtils.createOil(OIL_BOTTLE.get(), s)).forEach(this::add);
+        private void addBlocks() {
+            addFunctionalBlocks();
+            addPlants();
+            addBuildingBlocks();
+            addDecorativeBlocks();
         }
 
         private void addFunctionalBlocks() {
-            add(ALTAR_INSPIRATION);
-            add(ALTAR_INFUSION);
-            add(ALTAR_PILLAR);
-            add(ALTAR_TIP);
-
-            add(BLOOD_PEDESTAL);
-            addBlockGen(BLOOD_CONTAINER);
-            add(BLOOD_GRINDER);
-            add(BLOOD_SIEVE);
-            add(INFUSER);
-
-            add(FOG_DIFFUSER);
-            add(SUNSCREEN_BEACON);
-
-            add(HUNTER_TABLE);
-            add(WEAPON_TABLE);
-            add(ALCHEMICAL_CAULDRON);
-            add(POTION_TABLE);
-            add(ALCHEMY_TABLE);
-            add(MED_CHAIR);
-            add(ALTAR_CLEANSING);
-
-            add(GARLIC_DIFFUSER_NORMAL);
-            add(GARLIC_DIFFUSER_WEAK);
-            add(GARLIC_DIFFUSER_IMPROVED);
-
-            add(VAMPIRE_BEACON);
-
             add(TOTEM_BASE);
             add(TOTEM_TOP);
             add(TOTEM_TOP_CRAFTED);
@@ -362,13 +214,223 @@ public class ModCreativeTabs {
             add(ITEM_TENT);
             add(ITEM_TENT_SPAWNER);
 
-            ColorListsUtil.COFFINS.forEach(this::add);
         }
 
         private void addCandleHolders(List<Item> allCandles) {
             for (int i = 0; i < allCandles.size(); i++) {
                 output.accept(allCandles.get(i), i <= 1 ? CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS : CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
             }
+        }
+    }
+
+    public static class VampireDisplayItemGenerator extends BaseDisplayItemGenerator {
+
+        @Override
+        protected void addAll() {
+            addItems();
+            addBlocks();
+        }
+
+        private void addItems() {
+            addWeapons();
+            addArmor();
+
+            addItemGen(BLOOD_BOTTLE);
+            addItemGen(BLOOD_INFUSED_RAW_IRON);
+            addItemGen(BLOOD_INFUSED_RAW_GOLD);
+            addItemGen(BLOOD_INFUSED_IRON_INGOT);
+            addItemGen(BLOOD_INFUSED_GOLD_INGOT);
+            addItemGen(BLOOD_INFUSED_DIAMOND);
+            addItemGen(BLOOD_INFUSED_NETHERITE_INGOT);
+
+            add(PURE_BLOOD_0);
+            add(PURE_BLOOD_1);
+            add(PURE_BLOOD_2);
+            add(PURE_BLOOD_3);
+            add(PURE_BLOOD_4);
+
+            add(VAMPIRE_MINION_BINDING);
+            add(VAMPIRE_MINION_UPGRADE_SIMPLE);
+            add(VAMPIRE_MINION_UPGRADE_ENHANCED);
+            add(VAMPIRE_MINION_UPGRADE_SPECIAL);
+
+            add(UMBRELLA);
+            add(FABRIC_FILTER);
+            add(FEEDING_ADAPTER);
+
+            ModRegistries.OILS.listElements().filter(s -> !s.is(ModOils.EMPTY)).map(s -> ItemDataUtils.createOil(OIL_BOTTLE.get(), s)).forEach(this::add);
+        }
+
+        private void addWeapons() {
+            addItemGen(HEART_SEEKER_NORMAL);
+            addItemGen(HEART_SEEKER_ENHANCED);
+            addItemGen(HEART_SEEKER_ULTIMATE);
+            addItemGen(HEART_STRIKER_NORMAL);
+            addItemGen(HEART_STRIKER_ENHANCED);
+            addItemGen(HEART_STRIKER_ULTIMATE);
+        }
+
+        private void addArmor() {
+            add(VAMPIRE_CLOTHING_CROWN);
+            add(VAMPIRE_CLOTHING_HAT);
+
+            ColorListsUtil.sortByTabOrder(ColorListsUtil.VAMPIRE_CLOAKS).forEach(this::add);
+
+            add(VAMPIRE_CLOTHING_LEGS);
+            add(VAMPIRE_CLOTHING_BOOTS);
+
+            addItemGen(AMULET);
+            addItemGen(RING);
+            addItemGen(OBI_BELT);
+        }
+
+        private void addBlocks() {
+            addFunctionalBlocks();
+        }
+
+        private void addFunctionalBlocks() {
+            add(FOG_DIFFUSER);
+            add(SUNSCREEN_BEACON);
+
+            add(ALTAR_INSPIRATION);
+            add(ALTAR_INFUSION);
+            add(ALTAR_PILLAR);
+            add(ALTAR_TIP);
+
+            add(BLOOD_PEDESTAL);
+            addBlockGen(BLOOD_CONTAINER);
+            add(BLOOD_GRINDER);
+            add(BLOOD_SIEVE);
+            add(INFUSER);
+        }
+    }
+
+    public static class HunterDisplayItemGenerator extends BaseDisplayItemGenerator {
+
+        @Override
+        protected void addAll() {
+            addItems();
+            addBlocks();
+        }
+
+        private void addWeapons() {
+            addItemGen(HUNTER_AXE_NORMAL);
+            addItemGen(HUNTER_AXE_ENHANCED);
+            addItemGen(HUNTER_AXE_ULTIMATE);
+
+            add(BASIC_CROSSBOW);
+            add(BASIC_DOUBLE_CROSSBOW);
+            add(ENHANCED_CROSSBOW);
+            add(ENHANCED_DOUBLE_CROSSBOW);
+            add(BASIC_TECH_CROSSBOW);
+            add(ENHANCED_TECH_CROSSBOW);
+
+            add(CROSSBOW_ARROW_NORMAL);
+            add(CROSSBOW_ARROW_SPITFIRE);
+            add(CROSSBOW_ARROW_GARLIC);
+            add(CROSSBOW_ARROW_VAMPIRE_KILLER);
+            add(CROSSBOW_ARROW_TELEPORT);
+            add(CROSSBOW_ARROW_BLEEDING);
+
+            add(ARROW_CLIP);
+            add(QUARREL_POUCH);
+
+            add(PITCHFORK);
+            add(STAKE);
+
+            add(CRUCIFIX_NORMAL);
+            add(CRUCIFIX_ENHANCED);
+            add(CRUCIFIX_ULTIMATE);
+        }
+
+        private void addArmor() {
+            add(ARMOR_OF_SWIFTNESS_HEAD_NORMAL);
+            add(ARMOR_OF_SWIFTNESS_CHEST_NORMAL);
+            add(ARMOR_OF_SWIFTNESS_LEGS_NORMAL);
+            add(ARMOR_OF_SWIFTNESS_FEET_NORMAL);
+            add(ARMOR_OF_SWIFTNESS_HEAD_ENHANCED);
+            add(ARMOR_OF_SWIFTNESS_CHEST_ENHANCED);
+            add(ARMOR_OF_SWIFTNESS_LEGS_ENHANCED);
+            add(ARMOR_OF_SWIFTNESS_FEET_ENHANCED);
+            add(ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE);
+            add(ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE);
+            add(ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE);
+            add(ARMOR_OF_SWIFTNESS_FEET_ULTIMATE);
+
+            add(HUNTER_COAT_HEAD_NORMAL);
+            add(HUNTER_COAT_CHEST_NORMAL);
+            add(HUNTER_COAT_LEGS_NORMAL);
+            add(HUNTER_COAT_FEET_NORMAL);
+            add(HUNTER_COAT_HEAD_ENHANCED);
+            add(HUNTER_COAT_CHEST_ENHANCED);
+            add(HUNTER_COAT_LEGS_ENHANCED);
+            add(HUNTER_COAT_FEET_ENHANCED);
+            add(HUNTER_COAT_HEAD_ULTIMATE);
+            add(HUNTER_COAT_CHEST_ULTIMATE);
+            add(HUNTER_COAT_LEGS_ULTIMATE);
+            add(HUNTER_COAT_FEET_ULTIMATE);
+
+            add(HUNTER_HAT_TALL);
+            add(HUNTER_HAT_BROAD);
+        }
+
+        private void addItems() {
+            addWeapons();
+            addArmor();
+
+            add(GARLIC_DIFFUSER_CORE);
+            add(GARLIC_DIFFUSER_CORE_IMPROVED);
+
+            add(HOLY_WATER_BOTTLE_NORMAL);
+            add(HOLY_WATER_BOTTLE_ENHANCED);
+            add(HOLY_WATER_BOTTLE_ULTIMATE);
+            add(HOLY_WATER_SPLASH_BOTTLE_NORMAL);
+            add(HOLY_WATER_SPLASH_BOTTLE_ENHANCED);
+            add(HOLY_WATER_SPLASH_BOTTLE_ULTIMATE);
+
+            add(HUNTER_INTEL_0);
+            add(HUNTER_INTEL_1);
+            add(HUNTER_INTEL_2);
+            add(HUNTER_INTEL_3);
+            add(HUNTER_INTEL_4);
+            add(HUNTER_INTEL_5);
+            add(HUNTER_INTEL_6);
+            add(HUNTER_INTEL_7);
+            add(HUNTER_INTEL_8);
+            add(HUNTER_INTEL_9);
+
+            add(PURIFIED_GARLIC);
+            add(PURE_SALT);
+            add(PURE_SALT_WATER);
+
+            add(HUNTER_MINION_EQUIPMENT);
+            add(HUNTER_MINION_UPGRADE_SIMPLE);
+            add(HUNTER_MINION_UPGRADE_ENHANCED);
+            add(HUNTER_MINION_UPGRADE_SPECIAL);
+
+            add(ITEM_ALCHEMICAL_FIRE);
+        }
+
+        private void addBlocks() {
+            addFunctionalBlocks();
+
+            ColorListsUtil.COFFINS.forEach(this::add);
+        }
+
+        private void addFunctionalBlocks() {
+            add(HUNTER_TABLE);
+            add(WEAPON_TABLE);
+            add(ALCHEMICAL_CAULDRON);
+            add(POTION_TABLE);
+            add(ALCHEMY_TABLE);
+            add(MED_CHAIR);
+            add(ALTAR_CLEANSING);
+
+            add(GARLIC_DIFFUSER_NORMAL);
+            add(GARLIC_DIFFUSER_WEAK);
+            add(GARLIC_DIFFUSER_IMPROVED);
+
+            add(VAMPIRE_BEACON);
         }
     }
 
@@ -395,6 +457,7 @@ public class ModCreativeTabs {
         event.accept(item);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void insertAfter(ItemLike item, ItemLike insertAfterItem, BuildCreativeModeTabContentsEvent event) {
         event.insertAfter(new ItemStack(insertAfterItem), new ItemStack(item), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
     }

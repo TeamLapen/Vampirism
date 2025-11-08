@@ -201,6 +201,8 @@
   "text.vampirism.action.lord_range.no_target": "No entities in range",
   "__comment": "util",
   "itemGroup.vampirism": "Vampirism",
+  "itemGroup.vampirism.vampire": "Vampirism: Vampire",
+  "itemGroup.vampirism.hunter": "Vampirism: Hunter",
   "action.vampirism.cancel": "Cancel",
   "__comment": "keys",
   "keys.vampirism.select_skills": "Vampirism Menu",
