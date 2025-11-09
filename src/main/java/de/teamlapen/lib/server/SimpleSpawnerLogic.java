@@ -1,6 +1,7 @@
 package de.teamlapen.lib.server;
 
 import de.teamlapen.lib.util.UtilLib;
+import de.teamlapen.vampirism.misc.extension.ISpawnState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
@@ -171,7 +172,7 @@ public class SimpleSpawnerLogic<T extends Entity> implements ValueIOSerializable
                         @Nullable
                         NaturalSpawner.SpawnState densityManager = ((ServerLevel) level).getChunkSource().getLastSpawnState();
                         try {
-                            if (densityManager != null && !((SpawnStateAccessor)densityManager).vampirism$canSpawnForCategoryLocalI(limitType, new ChunkPos(pos.getX() / 16, pos.getZ() / 16))) {
+                            if (densityManager != null && !((ISpawnState) densityManager).vampirism$canSpawnForCategoryLocalI(limitType, new ChunkPos(pos.getX() / 16, pos.getZ() / 16))) {
                                 this.resetTimer();
                                 break;
                             }

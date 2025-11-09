@@ -7,8 +7,6 @@ import de.teamlapen.vampirism.common.core.ModMenus;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterLeveling;
-import de.teamlapen.vampirism.common.mixin.accessor.ItemCombinerMenuAccessor;
-import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -104,10 +102,6 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
                 this.lvlRequirement = HunterLeveling.getTrainerRequirement(req.targetLevel() + 1);
             });
         }
-    }
-
-    private Container getInputSlots() {
-        return ((ItemCombinerMenuAccessor) this).getInputSlots();
     }
 
 

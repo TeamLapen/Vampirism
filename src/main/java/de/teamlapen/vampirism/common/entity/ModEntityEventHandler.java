@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModVillage;
 import de.teamlapen.vampirism.common.entity.ai.goals.AvoidBlockGoal;
 import de.teamlapen.vampirism.common.entity.ai.goals.GolemTargetNonVillageFactionGoal;
-import de.teamlapen.vampirism.common.entity.ai.goals.NearestTargetGoalModifier;
 import de.teamlapen.vampirism.common.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
@@ -23,13 +22,14 @@ import de.teamlapen.vampirism.common.items.HunterAxeItem;
 import de.teamlapen.vampirism.common.items.VampireSwordItem;
 import de.teamlapen.vampirism.common.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.items.oil.EvasionOil;
-import de.teamlapen.vampirism.common.mixin.accessor.NearestAttackableTargetGoalAccessor;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.common.util.DifficultyCalculator;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.OilUtils;
 import de.teamlapen.vampirism.common.util.TotemHelper;
+import de.teamlapen.vampirism.misc.extension.INearestTargetGoal;
+import de.teamlapen.vampirism.misc.mixin.accessor.NearestAttackableTargetGoalAccessor;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.minecraft.core.BlockPos;
@@ -92,7 +92,7 @@ public class ModEntityEventHandler {
             @SuppressWarnings("unchecked")
             EntityType<? extends T> type = (EntityType<? extends T>) e.getType();
             if (typeCheck.test(type)) {
-                ((NearestTargetGoalModifier) target).vampirism$ignoreVampires(e);
+                ((INearestTargetGoal) target).vampirism$ignoreVampires(e);
             }
         } else {
             if (entityAIReplacementWarnMap.getOrDefault(name, true)) {
@@ -194,7 +194,7 @@ public class ModEntityEventHandler {
                     }
                 }
                 if (mobTarget != null) {
-                    ((NearestTargetGoalModifier) mobTarget).vampirism$ignoreFactionEntities();
+                    ((INearestTargetGoal) mobTarget).vampirism$ignoreFactionEntities();
                 } else {
                     if (warnAboutGolem) {
                         LOGGER.warn("Could not replace villager iron golem target task");

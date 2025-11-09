@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.items;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.ItemPropertiesExtension;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
@@ -17,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -26,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
 public class HunterArmorItem extends ModArmorItem {
 
     public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props) {
-        super(materialIn, type, FactionRestriction.builder(ModFactionTags.IS_HUNTER).apply(ItemPropertiesExtension.descriptionWithout(props, "_normal|_enhanced|_ultimate")));
+        super(materialIn, type, props.vampirism$restrictFaction(ModFactionTags.IS_HUNTER).vampirism$descriptionWithout("_normal|_enhanced|_ultimate"));
     }
     public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props, ItemAttributeModifiers attributeModifiers) {
-        super(materialIn, type, FactionRestriction.builder(ModFactionTags.IS_HUNTER).apply(ItemPropertiesExtension.descriptionWithout(props, "_normal|_enhanced|_ultimate")), attributeModifiers);
+        super(materialIn, type, props.vampirism$restrictFaction(ModFactionTags.IS_HUNTER).vampirism$descriptionWithout("_normal|_enhanced|_ultimate"), attributeModifiers);
     }
 
     @Override

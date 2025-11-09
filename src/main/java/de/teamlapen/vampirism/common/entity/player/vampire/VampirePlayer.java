@@ -46,7 +46,6 @@ import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireAction
 import de.teamlapen.vampirism.common.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.integration.PlayerReviveHelper;
 import de.teamlapen.vampirism.common.items.HunterArmorItem;
-import de.teamlapen.vampirism.common.mixin.accessor.AttributeInstanceAccessor;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.common.particles.FlyingBloodEntityParticleOptions;
 import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
@@ -1042,19 +1041,19 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) ModConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
                 naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
-                double baseArmor = ((AttributeInstanceAccessor) armorAtt).invokeGetModifiersOrEmpty(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> ArmorModifier.ARMOR_IDS.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
-                double baseToughness = ((AttributeInstanceAccessor) toughnessAtt).invokeGetModifiersOrEmpty(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> ArmorModifier.ARMOR_IDS.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double baseArmor = armorAtt.invokeGetModifiersOrEmpty(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> ArmorModifier.ARMOR_IDS.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double baseToughness = toughnessAtt.invokeGetModifiersOrEmpty(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> ArmorModifier.ARMOR_IDS.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
                 double targetArmor = Math.max(0, naturalArmor - baseArmor);
                 double targetToughness = Math.max(0, naturalToughness - baseToughness);
                 if (modArmor != null && targetArmor != modArmor.amount()) {
-                    ((AttributeInstanceAccessor) armorAtt).invokeRemoveModifier(modArmor);
+                    armorAtt.removeModifier(modArmor);
                     modArmor = null;
                 }
                 if (targetArmor != 0 && modArmor == null) {
                     armorAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, targetArmor, AttributeModifier.Operation.ADD_VALUE));
                 }
                 if (modToughness != null && targetToughness != modToughness.amount()) {
-                    ((AttributeInstanceAccessor) toughnessAtt).invokeRemoveModifier(modToughness);
+                    toughnessAtt.removeModifier(modToughness);
                     modToughness = null;
                 }
                 if (targetToughness != 0 && modToughness == null) {

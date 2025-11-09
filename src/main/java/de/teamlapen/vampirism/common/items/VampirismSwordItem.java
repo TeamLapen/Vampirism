@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.vampirism.api.ItemPropertiesExtension;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ToolMaterial;
@@ -13,6 +12,6 @@ public class VampirismSwordItem extends Item {
     }
 
     public VampirismSwordItem(ToolMaterial material, int attackDamageIn, float attackSpeedIn, Properties builder, float disableShield) {
-        super(ItemPropertiesExtension.descriptionWithout(builder.sword(material, attackDamageIn, attackSpeedIn).component(DataComponents.WEAPON, new Weapon(1, disableShield)), "_normal|_enhanced|_ultimate"));
+        super(builder.sword(material, attackDamageIn, attackSpeedIn).component(DataComponents.WEAPON, new Weapon(1, disableShield)).vampirism$descriptionWithout("_normal|_enhanced|_ultimate"));
     }
 }

@@ -9,10 +9,8 @@ import de.teamlapen.vampirism.common.core.ModMenus;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.common.items.PureBloodItem;
-import de.teamlapen.vampirism.common.mixin.accessor.ItemCombinerMenuAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -88,10 +86,6 @@ public class HunterTableMenu extends ItemCombinerMenu {
                 && getInputSlots().countItem(ModItems.VAMPIRE_FANG.get()) >= req.vampireFangQuantity()
                 && countPureBlood(req) >= req.pureBloodQuantity()
                 && getInputSlots().countItem(ModItems.VAMPIRE_BOOK.get()) >= req.vampireBookQuantity();
-    }
-
-    private Container getInputSlots() {
-        return ((ItemCombinerMenuAccessor) this).getInputSlots();
     }
 
     private int countPureBlood(HunterLeveling.HunterTableRequirement req) {

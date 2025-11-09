@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.SkillCallbacks;
+import de.teamlapen.vampirism.misc.extension.IEffectInstanceWithSource;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -20,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IAction<T> {
     private String translationId;
 
-    public void addEffectInstance(@NotNull T player, @NotNull MobEffectInstance instance) {
-        ((EffectInstanceWithSource) instance).vampirism$setSource(this.getRegistryName());
+    public void addEffectInstance(T player, MobEffectInstance instance) {
+        ((IEffectInstanceWithSource) instance).vampirism$addProperty(this.getRegistryName());
         player.asEntity().addEffect(instance);
     }
 
@@ -33,7 +33,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
     }
 
     @Override
-    public final @NotNull IActionResult canUse(@NotNull T player) {
+    public final IActionResult canUse(T player) {
         if (!isEnabled()) {
             return IActionResult.DISABLED_CONFIG;
         }
@@ -47,7 +47,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
 
     @Deprecated
     @Override
-    public @NotNull String getTranslationKey() {
+    public String getTranslationKey() {
         if (this.translationId == null) {
             this.translationId = Util.makeDescriptionId("action", VampirismRegistries.ACTION.get().getKey(this));
         }
@@ -60,7 +60,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
     public abstract boolean isEnabled();
 
     @Override
-    public IActionResult onActivated(@NotNull T player, ActivationContext context) {
+    public IActionResult onActivated(T player, ActivationContext context) {
         if (IFaction.is(player.getFaction(), this.factions())) {
             return activate(player, context);
         } else {
@@ -68,12 +68,12 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
         }
     }
 
-    public void removePotionEffect(@NotNull T player, @NotNull Holder<MobEffect> effect) {
+    public void removePotionEffect(T player, Holder<MobEffect> effect) {
         MobEffectInstance ins = player.asEntity().getEffect(effect);
         while (ins != null) {
-            EffectInstanceWithSource insM = ((EffectInstanceWithSource) ins);
-            if (insM.vampirism$hasSource()) {
-                if (insM.vampirism$getSource().equals(this.getRegistryName())) {
+            IEffectInstanceWithSource insM = ((IEffectInstanceWithSource) ins);
+            if (insM.vampirism$hasProperties()) {
+                if (insM.vampirism$hasProperty(this.getRegistryName())) {
                     insM.vampirism$removeEffect();
                     break;
                 }

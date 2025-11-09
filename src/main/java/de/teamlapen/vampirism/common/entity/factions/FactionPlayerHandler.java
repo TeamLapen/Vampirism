@@ -64,14 +64,14 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
     private final static Logger LOGGER = LogManager.getLogger();
     public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod("faction_player_handler");
 
-    public static @NotNull FactionPlayerHandler get(@NotNull Player player) {
+    public static FactionPlayerHandler get(Player player) {
         return player.getData(ModAttachments.FACTION_PLAYER_HANDLER.get());
     }
 
     /**
      * Resolves the FactionPlayerHandler capability (prints a warning message if not present) and returns an Optional of the current IFactionPlayer instance
      */
-    public static <T extends IFactionPlayer<T>> @NotNull Optional<T> getCurrentFactionPlayer(@NotNull Player player) {
+    public static <T extends IFactionPlayer<T>> @NotNull Optional<T> getCurrentFactionPlayer(Player player) {
         return get(player).getCurrentFactionPlayer();
     }
 
@@ -89,7 +89,7 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
     }
 
     @Override
-    public @NotNull Player asEntity() {
+    public Player asEntity() {
         return player;
     }
 
@@ -116,7 +116,7 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
     }
 
     @Override
-    public @NotNull ResourceLocation getAttachedKey() {
+    public ResourceLocation getAttachedKey() {
         return SERIALIZER_ID;
     }
 

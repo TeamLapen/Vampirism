@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.vampirism.common.mixin.client.accessor.StatsScreenAccessor;
+import de.teamlapen.vampirism.misc.mixin.client.accessor.StatsScreenAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

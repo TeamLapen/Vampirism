@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.recipes;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModRecipes;
-import de.teamlapen.vampirism.common.mixin.accessor.ShapedRecipeAccessor;
+import de.teamlapen.vampirism.misc.mixin.accessor.ShapedRecipeAccessor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;

@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.entity.CrossbowArrowEntity;
-import de.teamlapen.vampirism.common.items.component.FactionRestriction;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +29,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
 
 
     public CrossbowArrowItem(ICrossbowArrowBehavior behavior, Properties properties) {
-        super(FactionRestriction.apply(ModFactionTags.IS_HUNTER, properties));
+        super(properties.vampirism$restrictFaction(ModFactionTags.IS_HUNTER));
         this.behavior = behavior;
     }
 

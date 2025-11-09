@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.effects;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.misc.extension.IEffectInstanceWithSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -62,11 +62,11 @@ public class ModEffectInstanceHelper {
     }
 
     public static void addSource(MobEffectInstance instance, ResourceLocation... source) {
-        ((EffectInstanceWithSource) instance).vampirism$setProperties(Arrays.stream(source).toList());
+        ((IEffectInstanceWithSource) instance).vampirism$setProperties(Arrays.stream(source).toList());
     }
 
     public static boolean hasSource(@Nullable MobEffectInstance instance, ResourceLocation source) {
         if (instance == null) return false;
-        return ((EffectInstanceWithSource) instance).vampirism$getProperties().contains(source);
+        return ((IEffectInstanceWithSource) instance).vampirism$getProperties().contains(source);
     }
 }

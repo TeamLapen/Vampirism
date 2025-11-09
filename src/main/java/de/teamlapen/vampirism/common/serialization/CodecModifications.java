@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.serialization;
 
-import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
-import de.teamlapen.vampirism.common.mixin.accessor.MobEffectInstanceAccessor;
+import de.teamlapen.vampirism.misc.extension.IEffectInstanceWithSource;
+import de.teamlapen.vampirism.misc.mixin.accessor.MobEffectInstanceAccessor;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -25,14 +25,14 @@ public class CodecModifications {
                 for (int i1 = 0; i1 < count; i1++) {
                     properties.add(byteBuf.readResourceLocation());
                 }
-                ((EffectInstanceWithSource) decode).vampirism$setProperties(properties);
+                ((IEffectInstanceWithSource) decode).vampirism$setProperties(properties);
                 return decode;
             }
 
             @Override
             public void encode(@NotNull RegistryFriendlyByteBuf byteBuf, @NotNull MobEffectInstance instance) {
                 codec.encode(byteBuf, instance);
-                Set<ResourceLocation> source = ((EffectInstanceWithSource) instance).vampirism$getProperties();
+                Set<ResourceLocation> source = ((IEffectInstanceWithSource) instance).vampirism$getProperties();
                 byteBuf.writeVarInt(source.size());
                 for (ResourceLocation resourceLocation : source) {
                     byteBuf.writeResourceLocation(resourceLocation);

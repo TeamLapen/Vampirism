@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.common.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
-import de.teamlapen.vampirism.common.mixin.accessor.EntityAccessor;
+import de.teamlapen.vampirism.misc.mixin.accessor.EntityAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;

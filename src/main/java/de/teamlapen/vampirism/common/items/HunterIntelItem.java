@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.items;
 
-import de.teamlapen.vampirism.api.ItemPropertiesExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -19,7 +18,7 @@ public class HunterIntelItem extends Item {
     private final int level;
 
     public HunterIntelItem(int level, Properties properties) {
-        super(ItemPropertiesExtension.descriptionWithout(properties, "_\\d"));
+        super(properties.vampirism$descriptionWithout("_\\d"));
         this.level = level;
     }
 

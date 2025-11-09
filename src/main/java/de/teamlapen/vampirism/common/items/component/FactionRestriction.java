@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.util.IFactionRestriction;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Stream;
 
-public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<HolderSet<ISkill<?>>> skills, Optional<Integer> minLevel) {
+public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<HolderSet<ISkill<?>>> skills, Optional<Integer> minLevel) implements IFactionRestriction {
 
     public static final FactionRestriction ALL = FactionRestriction.builder(ModFactionTags.ALL_FACTIONS).build();
     public static final Codec<FactionRestriction> CODEC = RecordCodecBuilder.create(inst ->

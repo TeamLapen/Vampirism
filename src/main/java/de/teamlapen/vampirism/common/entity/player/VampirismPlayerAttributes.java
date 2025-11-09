@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayerSpecialAttributes;
-import de.teamlapen.vampirism.common.mixin.PlayerMixin;
+import de.teamlapen.vampirism.misc.mixin.PlayerMixin;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;

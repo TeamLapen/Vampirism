@@ -8,6 +8,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -27,9 +28,9 @@ public interface IRefinementHandler<T extends IRefinementPlayer<T>> {
      *
      * @return Whether the item was equipped
      */
-    boolean equipRefinementItem(ItemStack stack);
+    boolean equipRefinement(ItemStack stack);
 
-    void removeRefinementItem(IRefinementItem.AccessorySlotType slot);
+    void removeRefinement(IRefinementItem.@NotNull AccessorySlotType slot);
 
     boolean isRefinementEquipped(Holder<IRefinement> refinement);
 

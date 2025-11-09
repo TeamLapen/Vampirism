@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data;
 
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.mixin.accessor.BlockFamiliesAccessor;
+import net.minecraft.data.BlockFamilies;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;
 
@@ -30,7 +30,7 @@ public class ModBlockFamilies {
     }
 
     private static BlockFamily.Builder familyBuilder(Block block) {
-        BlockFamily.Builder builder = BlockFamiliesAccessor.invokeFamilyBuilder(block);
+        BlockFamily.Builder builder = BlockFamilies.familyBuilder(block);
         MAP.put(block, builder.getFamily());
         return builder;
     }

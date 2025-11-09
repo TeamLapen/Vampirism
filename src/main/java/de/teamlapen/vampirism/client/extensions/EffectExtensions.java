@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.extensions;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
+import de.teamlapen.vampirism.misc.extension.IEffectInstanceWithSource;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -40,7 +40,7 @@ public class EffectExtensions {
 
         @Override
         public boolean isVisibleInInventory(MobEffectInstance instance) {
-            if (instance instanceof EffectInstanceWithSource withSource) {
+            if (instance instanceof IEffectInstanceWithSource withSource) {
                 return !withSource.vampirism$getProperties().contains(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
             }
             return true;
@@ -48,7 +48,7 @@ public class EffectExtensions {
 
         @Override
         public boolean isVisibleInGui(MobEffectInstance instance) {
-            if (instance instanceof EffectInstanceWithSource withSource) {
+            if (instance instanceof IEffectInstanceWithSource withSource) {
                 return !withSource.vampirism$getProperties().contains(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
             }
             return true;

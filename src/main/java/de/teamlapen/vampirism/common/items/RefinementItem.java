@@ -23,7 +23,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -86,8 +85,10 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
             tooltipComponents.accept(Component.translatable("text.vampirism.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
             for (Holder<IRefinement> holder : set.getRefinements()) {
                 IRefinement refinement = holder.value();
-                AttributeModifier attributeModifier = refinement.createAttributeModifier(refinement.getModifierValue());
-                if (refinement.getAttribute() != null && attributeModifier != null)  {
+                var mapper = refinement.attributeFactory();
+                if (mapper == null) continue;
+                var modifier = mapper.apply(holder.unwrapKey().orElseThrow().location(), refinement.getModifierValue());
+                if (refinement.getAttribute() != null && modifier != null) {
                     AttributeUtil.addAttributeTooltips(stack, tooltipComponents, tooltipDisplay, net.neoforged.neoforge.common.util.AttributeTooltipContext.of(VampirismMod.proxy.getClientPlayer(), context, tooltipDisplay, flagIn));
                 } else {
                     tooltipComponents.accept(Component.translatable(Util.makeDescriptionId("refinement", ModRegistries.REFINEMENTS.getKey(refinement)) + ".desc").withStyle(ChatFormatting.GRAY));
@@ -129,7 +130,7 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
             ItemStack stack = player.getItemInHand(hand);
-            if (IRefinementHandler.get(player).map(sh -> sh.equipRefinementItem(stack)).orElse(false)) {
+            if (IRefinementHandler.get(player).map(sh -> sh.equipRefinement(stack)).orElse(false)) {
                 return InteractionResult.CONSUME;
             }
 

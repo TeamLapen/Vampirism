@@ -24,8 +24,12 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 apply from: 'gradle/versioning.gradle'
 
 sourceSets {
+    extension {
+        compileClasspath += configurations["compileClasspath"]
+    }
     api {
         compileClasspath += configurations["compileClasspath"]
+        compileClasspath += sourceSets.extension.output
     }
     //noinspection GroovyAssignabilityCheck
     main {
@@ -47,16 +51,23 @@ sourceSets {
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
 
+        compileClasspath += sourceSets.extension.output
+        runtimeClasspath += sourceSets.extension.output
+
         resources.srcDirs += 'src/generated/resources'
     }
     test {
         compileClasspath += sourceSets.api.output
         runtimeClasspath += sourceSets.api.output
+        compileClasspath += sourceSets.extension.output
+        runtimeClasspath += sourceSets.extension.output
     }
 }
 
 neoForge {
     version = project.neo_version
+
+    interfaceInjectionData.from "src/main/resources/META-INF/interfaceinjection.json"
 
     parchment {
         mappingsVersion = project.parchment_mappings_version
@@ -113,6 +124,7 @@ neoForge {
         "${mod_id}" {
             sourceSet(sourceSets.main)
             sourceSet(sourceSets.api)
+            sourceSet(sourceSets.extension)
         }
     }
 }

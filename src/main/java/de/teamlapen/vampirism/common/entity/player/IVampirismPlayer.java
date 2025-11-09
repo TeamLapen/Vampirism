@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.player;
 
 
-import de.teamlapen.vampirism.common.mixin.PlayerMixin;
+import de.teamlapen.vampirism.misc.mixin.PlayerMixin;
 
 /**
  * Adds Vampirism's flavor to {@link net.minecraft.world.entity.player.Player} via Mixin {@link PlayerMixin}

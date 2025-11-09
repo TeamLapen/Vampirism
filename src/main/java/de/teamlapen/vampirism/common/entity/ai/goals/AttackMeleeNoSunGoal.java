@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.ai.goals;
 
-import de.teamlapen.vampirism.common.mixin.accessor.GroundPathNavigationAccessor;
-import de.teamlapen.vampirism.common.mixin.accessor.MeleeAttackGoalAccessor;
+import de.teamlapen.vampirism.misc.mixin.accessor.GroundPathNavigationAccessor;
+import de.teamlapen.vampirism.misc.mixin.accessor.MeleeAttackGoalAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;

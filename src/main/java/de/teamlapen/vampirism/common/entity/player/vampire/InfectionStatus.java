@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.entity.player.vampire;
 
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.entity.ExtendedCreature;
+import de.teamlapen.vampirism.misc.extension.IEffectInstanceWithSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,7 +49,7 @@ public class InfectionStatus {
         } else if (duration / (float) totalTicks < 0.5f) {
             if (this.entity.getEffect(MobEffects.HUNGER) == null) {
                 MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.HUNGER, MobEffectInstance.INFINITE_DURATION);
-                ((EffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(ModEffects.SANGUINARE.getId());
+                ((IEffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(ModEffects.SANGUINARE.getId());
                 this.entity.addEffect(mobEffectInstance);
             }
         }
@@ -61,7 +61,7 @@ public class InfectionStatus {
 
     private void finish() {
         MobEffectInstance effect = this.entity.getEffect(MobEffects.HUNGER);
-        if (effect instanceof EffectInstanceWithSource withSource && withSource.vampirism$getProperties().contains(ModEffects.SANGUINARE.getId())) {
+        if (effect instanceof IEffectInstanceWithSource withSource && withSource.vampirism$getProperties().contains(ModEffects.SANGUINARE.getId())) {
             withSource.vampirism$removeEffect();
         }
         if (this.entity instanceof PathfinderMob) {

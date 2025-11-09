@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.entity.ai.goals.DefendLeaderGoal;
 import de.teamlapen.vampirism.common.entity.ai.goals.FindLeaderGoal;
-import de.teamlapen.vampirism.common.entity.ai.goals.NearestTargetGoalModifier;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
+import de.teamlapen.vampirism.misc.extension.INearestTargetGoal;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -76,7 +76,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         NearestAttackableTargetGoal<Player> goal = new NearestAttackableTargetGoal<>(this, Player.class, 0, false, false, VampirismAPI.factionRegistry().getSelector(ModFactions.VAMPIRE, true, false, true, true, null));
-        ((NearestTargetGoalModifier) goal).vampirism$ignoreLineOfSight();
+        ((INearestTargetGoal) goal).vampirism$ignoreLineOfSight();
         this.targetSelector.addGoal(3, goal);
         NearestAttackableTargetGoal<?> goal2 = new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, false, false, VampirismAPI.factionRegistry().getSelector(ModFactions.VAMPIRE, false, true, false, true, null)) {
             @Override
@@ -84,7 +84,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
                 return super.getFollowDistance() / 2;
             }
         };
-        ((NearestTargetGoalModifier) goal2).vampirism$ignoreLineOfSight();
+        ((INearestTargetGoal) goal2).vampirism$ignoreLineOfSight();
         this.targetSelector.addGoal(4, goal2);
         this.targetSelector.addGoal(8, new DefendLeaderGoal<>(this));
     }

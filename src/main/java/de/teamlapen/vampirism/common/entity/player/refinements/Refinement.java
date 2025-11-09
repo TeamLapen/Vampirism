@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.entity.player.refinements;
 
 import de.teamlapen.vampirism.api.entity.player.refinement.IRefinement;
-import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -36,8 +35,8 @@ public class Refinement implements IRefinement {
     }
 
     @Override
-    public AttributeModifier createAttributeModifier(double value) {
-        return this.modifier == null ? null : this.modifier.apply(ModRegistries.REFINEMENTS.getKey(this), value);
+    public @Nullable BiFunction<ResourceLocation, Double, AttributeModifier> attributeFactory() {
+        return this.modifier;
     }
 
     @Nullable

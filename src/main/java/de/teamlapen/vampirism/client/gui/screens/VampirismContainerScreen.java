@@ -10,12 +10,11 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.skills.SkillsScreen;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.inventory.ITaskMenu;
 import de.teamlapen.vampirism.common.inventory.VampirismMenu;
-import de.teamlapen.vampirism.common.mixin.client.accessor.AbstractContainerScreenAccessor;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundDeleteRefinementPacket;
 import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.misc.mixin.client.accessor.AbstractContainerScreenAccessor;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -79,7 +78,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     }
 
     @Override
-    public boolean keyPressed(KeyEvent keyEvent) {
+    public boolean keyPressed(@NotNull KeyEvent keyEvent) {
         if (ModKeys.VAMPIRISM_MENU.matches(keyEvent)) {
             this.onClose();
             return true;
@@ -88,7 +87,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     }
 
     @Override
-    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+    public boolean mouseDragged(@NotNull MouseButtonEvent event, double dragX, double dragY) {
         super.mouseDragged(event, dragX, dragY);
         if (!this.isQuickCrafting) {
             this.list.mouseDragged(event, dragX, dragY);
@@ -128,7 +127,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
     }
 
     @Override
-    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+    public void resize(@NotNull Minecraft pMinecraft, int pWidth, int pHeight) {
         super.resize(pMinecraft, pWidth, pHeight);
         this.list.updateContent();
     }
@@ -147,7 +146,7 @@ public class VampirismContainerScreen extends AbstractContainerScreen<VampirismM
         this.list = this.addRenderableWidget(new TaskList(Minecraft.getInstance(), this.menu, factionPlayer, this.leftPos + 83, this.topPos + 7, 137, 104, () -> new ArrayList<>(this.menu.getTaskInfos())));
 
         var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 90, 20, 20, SKILLS, context -> {
-            if (this.minecraft.player.isAlive() && VampirismPlayerAttributes.get(this.minecraft.player).faction != null) {
+            if (this.minecraft.player.isAlive()) {
                 FactionPlayerHandler.get(this.minecraft.player).getCurrentSkillPlayer().ifPresent(f -> Minecraft.getInstance().setScreen(new SkillsScreen(f, this)));
             }
         }, Component.empty()));

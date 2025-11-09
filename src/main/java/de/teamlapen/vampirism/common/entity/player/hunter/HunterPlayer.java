@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.VampirismAttachments;
-import de.teamlapen.vampirism.api.entity.effect.EffectInstanceWithSource;
 import de.teamlapen.vampirism.api.entity.factions.IDisguise;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -32,6 +31,7 @@ import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.OilUtils;
 import de.teamlapen.vampirism.common.util.ScoreboardUtil;
 import de.teamlapen.vampirism.common.world.saved.MinionWorldData;
+import de.teamlapen.vampirism.misc.extension.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -143,8 +143,8 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
             ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.HUNTER_LEVEL_CRITERIA, level);
             LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_DAMAGE, "Hunter", level, getMaxLevel(), ModConfig.BALANCE.hpStrengthMaxMod.get(), ModConfig.BALANCE.hpStrengthType.get(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
             if (level == 0) {
-                EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
-                EffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
+                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
+                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
             }
         }
     }
@@ -159,17 +159,17 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
                     if (Arrays.stream(EquipmentSlot.values()).filter(i -> i.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).allMatch(i -> i.is(ModItemTags.HUNTER_ARMOR))) {
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_JUMP)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.JUMP_BOOST, -1, 0, false, false);
-                            ((EffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(HunterSkills.ARMOR_JUMP.getId());
+                            ((IEffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(HunterSkills.ARMOR_JUMP.getId());
                             player.addEffect(mobEffectInstance);
                         }
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_SPEED)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.SPEED, -1, 0, false, false);
-                            ((EffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(HunterSkills.ARMOR_SPEED.getId());
+                            ((IEffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(HunterSkills.ARMOR_SPEED.getId());
                             player.addEffect(mobEffectInstance);
                         }
                     } else {
-                        EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
-                        EffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
+                        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
+                        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
                     }
                 }
             } else {
@@ -186,8 +186,8 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
                 if (!OilUtils.getEquippedArmorOils(this.player).isEmpty()) {
                     this.player.addEffect(new MobEffectInstance(ModEffects.POISON, 120, 0, false, false));
                 }
-                EffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
-                EffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
+                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
+                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
             }
         }
         getSpecialAttributes().fullHunterCoat = level > 0 ? HunterCoatItem.isFullyEquipped(player) : null;

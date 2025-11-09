@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.structures.templatesystem;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.common.mixin.accessor.ProcessorRuleAccessor;
+import de.teamlapen.vampirism.misc.mixin.accessor.ProcessorRuleAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.PosAlwaysTrueTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.ProcessorRule;

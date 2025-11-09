@@ -76,7 +76,7 @@ public class ServerPayloadHandler {
     }
 
     public static void handleDeleteRefinementPacket(ServerboundDeleteRefinementPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> IRefinementHandler.get(context.player()).ifPresent(handler -> handler.removeRefinementItem(msg.slot())));
+        context.enqueueWork(() -> IRefinementHandler.get(context.player()).ifPresent(handler -> handler.removeRefinement(msg.slot())));
     }
 
     public static void handleNameItemPacket(ServerboundNameItemPacket msg, IPayloadContext context) {
