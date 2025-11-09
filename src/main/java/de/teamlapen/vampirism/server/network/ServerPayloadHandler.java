@@ -180,8 +180,8 @@ public class ServerPayloadHandler {
                     }
                 }
                 case BASIC_HUNTER_LEVELUP -> {
-                    if (player.containerMenu instanceof HunterBasicMenu) {
-                        ((HunterBasicMenu) player.containerMenu).onLevelUpClicked();
+                    if (player.containerMenu instanceof HunterBasicMenu menu) {
+                        menu.onLevelUpClicked(player);
                     }
                 }
                 case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(a -> player.connection.send(a));
@@ -250,7 +250,7 @@ public class ServerPayloadHandler {
                         //noinspection unchecked
                         skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill, msg.skillTree());
                         if (factionPlayer instanceof Attachment t) {
-//                            t.sync(UpdateParams.all()); TODO
+                            t.sync();
                         }
 
                     } else {

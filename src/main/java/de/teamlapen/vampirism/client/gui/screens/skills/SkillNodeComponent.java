@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @NonnullDefault
-public class SkillNodeScreen {
+public class SkillNodeComponent {
     private static final ResourceLocation SKILL_BACKGROUND_SPRITE = VResourceLocation.mod("skills_screen/node");
     private static final ResourceLocation START_SKILL_BACKGROUND_SPRITE = VResourceLocation.mod("skills_screen/start_node");
     private static final ResourceLocation TITLE_RED_SPRITE = VResourceLocation.mod("skills_screen/title_red");
@@ -40,25 +40,25 @@ public class SkillNodeScreen {
 
     private static final int[] TEST_SPLIT_OFFSETS = new int[] {0, 10, -10, 25, -25};
     private final Minecraft minecraft;
-    private final SkillsTabScreen tab;
+    private final SkillsTabComponent tab;
     private final SkillsScreen screen;
     private final SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode;
     private final ClientSkillTreeData treeData;
     private final SkillHandler<?> skillHandler;
-    private final List<SkillNodeScreen> children = new ArrayList<>();
+    private final List<SkillNodeComponent> children = new ArrayList<>();
     @Nullable
-    private final SkillNodeScreen parent;
+    private final SkillNodeComponent parent;
     private final int x;
     private final int y;
     private final FormattedCharSequence[] titles;
     private final List<FormattedCharSequence>[] descriptions;
     private final int[] width;
 
-    public SkillNodeScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, @NotNull SkillsTabScreen tab, @NotNull SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode, ClientSkillTreeData treeData, @NotNull SkillHandler<?> skillHandler) {
+    public SkillNodeComponent(Minecraft minecraft, SkillsScreen screen, SkillsTabComponent tab, SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode, ClientSkillTreeData treeData, SkillHandler<?> skillHandler) {
         this(minecraft, screen, tab, skillNode, treeData, skillHandler, null, 0, 0);
     }
 
-    public SkillNodeScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, @NotNull SkillsTabScreen tab, @NotNull SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode, ClientSkillTreeData treeData, @NotNull SkillHandler<?> skillHandler, @Nullable SkillNodeScreen parent, int x, int y) {
+    public SkillNodeComponent(Minecraft minecraft, SkillsScreen screen, SkillsTabComponent tab, SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode, ClientSkillTreeData treeData, SkillHandler<?> skillHandler, @Nullable SkillNodeComponent parent, int x, int y) {
         this.minecraft = minecraft;
         this.tab = tab;
         this.screen = screen;
@@ -80,7 +80,7 @@ public class SkillNodeScreen {
 
             for (int i = 0; i < skillNode.childrenCount(); i++) {
                 SkillTreeConfiguration.SkillTreeNodeConfiguration current = skillNode.children().get(i);
-                this.children.add(new SkillNodeScreen(minecraft, screen, tab, current, this.treeData, skillHandler, this, pos, y + 60));
+                this.children.add(new SkillNodeComponent(minecraft, screen, tab, current, this.treeData, skillHandler, this, pos, y + 60));
                 pos += this.treeData.getNodeWidth(current) / 2 + 30;
                 if (skillNode.children().size() >= i + 2) {
                     SkillTreeConfiguration.SkillTreeNodeConfiguration next = skillNode.children().get(i + 1);
@@ -103,8 +103,8 @@ public class SkillNodeScreen {
         }
     }
 
-    private static float getMaxWidth(@NotNull StringSplitter p_238693_0_, @NotNull List<FormattedText> p_238693_1_) {
-        return (float) p_238693_1_.stream().mapToDouble(p_238693_0_::stringWidth).max().orElse(0.0D);
+    private static float getMaxWidth(StringSplitter splitter, List<FormattedText> texts) {
+        return (float) texts.stream().mapToDouble(splitter::stringWidth).max().orElse(0.0D);
     }
 
     private SkillNodeState getState() {
@@ -124,7 +124,7 @@ public class SkillNodeScreen {
         return node.node().value().lockingNodes().stream().flatMap(x -> nodes.getOptional(x).stream()).flatMap(x -> x.skills().stream()).collect(Collectors.toList());
     }
 
-    public List<SkillNodeScreen> getChildren() {
+    public List<SkillNodeComponent> getChildren() {
         return children;
     }
 
@@ -132,7 +132,7 @@ public class SkillNodeScreen {
         return skillNode;
     }
 
-    public void draw(@NotNull GuiGraphics graphics, int i, int j) {
+    public void draw(GuiGraphics graphics, int i, int j) {
         var pose = graphics.pose();
         pose.pushMatrix();
         SkillNodeState state = getState();
@@ -164,12 +164,12 @@ public class SkillNodeScreen {
 
         pose.popMatrix();
 
-        for (SkillNodeScreen child : this.children) {
+        for (SkillNodeComponent child : this.children) {
             child.draw(graphics, i, j);
         }
     }
 
-    public void drawConnectivity(@NotNull GuiGraphics graphics, int startX, int startY, boolean outerLine) {
+    public void drawConnectivity(GuiGraphics graphics, int startX, int startY, boolean outerLine) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         if (this.parent != null) {
@@ -205,7 +205,7 @@ public class SkillNodeScreen {
 
         }
 
-        for (SkillNodeScreen child : this.children) {
+        for (SkillNodeComponent child : this.children) {
             child.drawConnectivity(graphics, startX, startY, outerLine);
         }
     }
@@ -214,7 +214,7 @@ public class SkillNodeScreen {
         return 26 * this.skillNode.elementCount() + (this.skillNode.elementCount() - 1) * 10;
     }
 
-    public void drawHover(@NotNull GuiGraphics graphics, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
+    public void drawHover(GuiGraphics graphics, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         Holder<ISkill<?>>[] elements = this.skillNode.elements().toArray(Holder[]::new);
@@ -299,7 +299,7 @@ public class SkillNodeScreen {
         }
     }
 
-    private ResourceLocation getSkillIconLocation(@NotNull ISkill skill) {
+    private ResourceLocation getSkillIconLocation(ISkill<?> skill) {
         if (skill instanceof ActionSkill) {
             return VResourceLocation.loc(((ActionSkill<?>) skill).getActionID().getNamespace(), "textures/actions/" + ((ActionSkill<?>) skill).getActionID().getPath() + ".png");
         } else {

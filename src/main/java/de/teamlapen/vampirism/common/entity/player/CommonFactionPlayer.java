@@ -92,7 +92,7 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
         if (!isRemote()) {
             if (newLevel <= 0) {
                 this.onLevelReset(false);
-//                this.sync(UpdateParams.all()); TODO
+                this.sync();
             }
 
         } else {

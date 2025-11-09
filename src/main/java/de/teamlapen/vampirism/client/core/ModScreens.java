@@ -38,7 +38,7 @@ public class ModScreens {
     }
 
     static void registerScreenOverlays(@NotNull RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.CONTEXTUAL_INFO_BAR, VIngameOverlays.FACTION_LEVEL_ID, new FactionLevelOverlay());
+        event.registerAbove(VanillaGuiLayers.EXPERIENCE_LEVEL, VIngameOverlays.FACTION_LEVEL_ID, new FactionLevelOverlay());
         event.registerAbove(VanillaGuiLayers.BOSS_OVERLAY, VIngameOverlays.FACTION_RAID_BAR_ID, VampirismModClient.getServices().bossInfoOverlay());
         event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, VIngameOverlays.BLOOD_BAR_ID, new BloodBarOverlay());
         event.registerAboveAll(VIngameOverlays.ACTION_COOLDOWN_ID, new ActionCooldownOverlay<>());

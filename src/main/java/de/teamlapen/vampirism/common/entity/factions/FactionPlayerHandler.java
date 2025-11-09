@@ -25,6 +25,7 @@ import de.teamlapen.vampirism.common.entity.player.ActionKeys;
 import de.teamlapen.vampirism.common.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundPlaySoundEventPacket;
+import de.teamlapen.vampirism.common.serialization.ModCodecs;
 import de.teamlapen.vampirism.common.tags.ModTaskTags;
 import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.util.LogUtil;
@@ -35,9 +36,7 @@ import de.teamlapen.vampirism.common.world.saved.MinionWorldData;
 import de.teamlapen.vampirism.server.VampirismLogger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,6 +45,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -86,6 +86,11 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
 
     public FactionPlayerHandler(Player player) {
         this.player = player;
+    }
+
+    @Override
+    public AttachmentType<?> attachmentType() {
+        return ModAttachments.FACTION_PLAYER_HANDLER.get();
     }
 
     @Override
@@ -288,11 +293,6 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
     }
 
     @Override
-    public void sync() {
-//        this.sync(UpdateParams.ignoreChanged()); TODO
-    }
-
-    @Override
     public boolean setFactionAndLevel(@NotNull Holder<? extends IPlayableFaction<?>> faction, int level) {
         Holder<? extends IPlayableFaction<?>> old = currentFaction;
         int oldLevel = currentLevel;
@@ -350,10 +350,10 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
         if (old != currentFaction || oldLevel != currentLevel) {
             VampirismEventFactory.fireFactionLevelChangedEvent(this, old, oldLevel, currentFaction, currentLevel);
         }
-//        sync(Objects.equals(old, currentFaction) ? UpdateParams.ignoreChanged() : UpdateParams.all()); TODO
         if (player instanceof ServerPlayer serverPlayer) {
             ModAdvancements.TRIGGER_FACTION.get().trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
         }
+        sync();
         return true;
 
     }
@@ -376,7 +376,7 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
     public boolean setTitleGender(IPlayableFaction.TitleGender female) {
         this.titleGender = female;
         player.refreshDisplayName();
-//        sync(UpdateParams.all()); TODO
+        sync();
         return true;
     }
 
@@ -470,42 +470,33 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
 
     @Override
     public void serialize(ValueOutput output) {
-        CompoundTag nbt = new CompoundTag();
-        Optional.of(this.currentFaction).flatMap(Holder::unwrapKey).map(ResourceKey::location).map(ResourceLocation::toString).ifPresent(faction -> {
-            nbt.putString("faction", faction);
-            nbt.putInt("level", currentLevel);
-            nbt.putInt("lord_level", currentLordLevel);
-        });
-        nbt.putString("title_gender", titleGender.name());
+        output.store("faction", ModCodecs.playableFaction(), this.currentFaction);
+        output.putInt("level", currentLevel);
+        output.putInt("lord_level", currentLordLevel);
+        output.store("title_gender", IPlayableFaction.TitleGender.CODEC, titleGender);
 
         writeBoundActions(output);
     }
 
     @Override
     public void deserialize(ValueInput input) {
-        input.read("faction", ModRegistries.FACTIONS.holderByNameCodec()).ifPresentOrElse(x -> {
-            //noinspection unchecked
-            this.currentFaction = (Holder<? extends IPlayableFaction<?>>) (Object) x;
-            this.currentLevel = input.getIntOr("level", 0);
-            this.currentLordLevel = input.getIntOr("lord_level", 0);
-        }, () -> {
-            this.currentFaction = ModFactions.NEUTRAL;
-            this.currentLevel = 0;
-            this.currentLordLevel = 0;
-        });
-        notifyFaction(null, 0);
-        input.read("title_gender", IPlayableFaction.TitleGender.CODEC).ifPresent(x -> this.titleGender = x);
+
+        this.currentFaction = input.read("faction", ModCodecs.playableFaction()).orElse(ModFactions.NEUTRAL);
+        this.currentLevel = IFaction.isNeutral(this.currentFaction) ? 0 : input.getIntOr("level", 0);
+        this.currentLordLevel = IFaction.isNeutral(this.currentFaction) ? 0 : input.getIntOr("lord_level", 0);
+//        notifyFaction(null, 0);
+        this.titleGender = input.read("title_gender", IPlayableFaction.TitleGender.CODEC).orElse(IPlayableFaction.TitleGender.UNKNOWN);
+
         loadBoundActions(input);
         updateCache();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void serializeUpdateInternal(ValueOutput output, UpdateParams params) {
-        output.store("faction", ModRegistries.FACTIONS.holderByNameCodec(), (Holder<IFaction<?>>) (Object) this.currentFaction);
+        output.store("faction", ModCodecs.playableFaction(), this.currentFaction);
         output.putInt("level", currentLevel);
         output.putInt("lord_level", currentLordLevel);
-        output.putString("title_gender", titleGender.name());
+        output.store("title_gender", IPlayableFaction.TitleGender.CODEC, titleGender);
         this.writeBoundActions(output);
     }
 
@@ -513,9 +504,8 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
     public void deserializeUpdate(ValueInput input) {
         Holder<? extends IPlayableFaction<?>> old = currentFaction;
         int oldLevel = currentLevel;
-        input.read("faction", ModRegistries.FACTIONS.holderByNameCodec()).ifPresent(x -> {
-            //noinspection unchecked
-            this.currentFaction = (Holder<? extends IPlayableFaction<?>>) (Object) x;
+        input.read("faction", ModCodecs.playableFaction()).ifPresent(x -> {
+            this.currentFaction = x;
             this.currentLevel = input.getIntOr("level", 0);
             this.currentLordLevel = input.getIntOr("lord_level", 0);
             if (!IFaction.is(old, currentFaction) || oldLevel != currentLevel) {

@@ -90,6 +90,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -175,6 +176,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.bloodStats = new BloodStats(player);
         this.disguise = new Disguise();
         this.refinementHandler = new RefinementHandler<>(this, ModFactions.VAMPIRE);
+    }
+
+    @Override
+    public @NotNull AttachmentType<?> attachmentType() {
+        return ModAttachments.VAMPIRE_PLAYER.get();
     }
 
     @Override
@@ -268,7 +274,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                         ((LivingEntity) e).addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 20, 7, false, false));
                         player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 25, 4, false, false));
 
-                        sync(KEY_FEED_VICTIM_ID, feed_victim, true);
+                        sync();
                         break;
                 }
             } else {
@@ -355,7 +361,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             if (player.hasEffect(MobEffects.SLOWNESS)) player.removeEffect(MobEffects.SLOWNESS);
         }
         if (sync) {
-            sync(KEY_FEED_VICTIM_ID, feed_victim, true);
+            sync();
         }
     }
 
@@ -451,7 +457,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (value != this.getSpecialAttributes().glowingEyes) {
             this.getSpecialAttributes().glowingEyes = value;
             this.isDirty = true;
-            sync(KEY_GLOWING_EYES, value);
+            sync();
         }
     }
 
@@ -600,10 +606,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             if (flag) {
                 dbnoMessage = player.getCombatTracker().getDeathMessage();
             }
-//            CompoundTag nbt = new CompoundTag(); TODO
-//            nbt.putInt(KEY_DBNO_TIMER, dbnoTimer);
-//            if (dbnoMessage != null) nbt.putString(KEY_DBNO_MSG, Component.Serializer.toJson(dbnoMessage, this.asEntity().registryAccess()));
-//            sync(nbt, true);
+            sync();
             return true;
         }
         return false;
@@ -714,7 +717,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 bloodStats.setMaxBlood(20);
             } else {
                 this.vision.deactivate();
-//                this.sync(UpdateParams.all()); TODO
+                this.sync();
             }
         } else {
             if (oldLevel == 0) {
@@ -771,7 +774,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             if (dbnoTimer > 0) {
                 this.setDBNOTimer(dbnoTimer - 1);
                 if (dbnoTimer == 0) {
-                    sync(KEY_DBNO_TIMER, 0);
+                    sync();
                 }
             }
             player.setAirSupply(300);
@@ -926,7 +929,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (eyeType != this.getEyeType()) {
             getSpecialAttributes().eyeType = eyeType;
             this.isDirty = true;
-            sync(KEY_EYE, eyeType);
+            sync();
         }
         return true;
     }
@@ -944,7 +947,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (fangType != this.getFangType()) {
             this.getSpecialAttributes().fangType = fangType;
             this.isDirty = true;
-            sync(KEY_FANGS, fangType);
+            sync();
         }
         return true;
     }
@@ -983,7 +986,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             this.bloodStats.removeBlood(bloodStats.getBloodLevel() - 1, true);
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
-//            this.sync(UpdateParams.all()); TODO
+            this.sync();
             int duration = (int) player.getAttributeValue(ModAttributes.NEONATAL_DURATION);
             this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL, duration));
             this.player.awardStat(ModStats.RESURRECTED.get());
@@ -995,7 +998,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 this.setDBNOTimer(-1);
             } else {
                 //If client thinks it is alive again, tell it to die again
-//                this.sync(UpdateParams.ignoreChanged()); TODO
+                this.sync();
             }
         }
     }
@@ -1008,7 +1011,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             this.dbnoMessage = null;
             this.player.setForcedPose(null);
             this.player.refreshDimensions();
-//            this.sync(UpdateParams.all()); TODO
+            this.sync();
             if (asEntity().level() instanceof ServerLevel level) {
                 DamageHandler.hurtModded(level, this.player, sources -> sources.dbno(msg), 10000);
             }
@@ -1232,8 +1235,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         if (blood > 0) {
             drinkBlood(blood, saturationMod, new DrinkBloodContext(entity));
-            sync(KEY_SPAWN_BITE_PARTICLE, entity.getId(), true);
-//            sync(UpdateParams.forAllPlayer()); TODO
+            sync();
             if (player instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.SUCK_BLOOD);
             }

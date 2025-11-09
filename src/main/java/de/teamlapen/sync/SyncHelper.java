@@ -5,11 +5,9 @@ import de.teamlapen.sync.common.storage.IAttachedSyncable;
 import de.teamlapen.sync.common.storage.ISyncable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -94,18 +92,18 @@ public class SyncHelper {
      * CAREFUL: If this is a player, and it is not connected yet, no message is sent, but no exception is thrown.
      */
     public static void sync(@NotNull IAttachedSyncable cap, CompoundTag data, @NotNull Entity entity, boolean allToAll) {
-        if (!entity.level().isClientSide()) {
-            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity, cap);
-            if (entity instanceof ServerPlayer player) {
-                //noinspection ConstantConditions
-                if (player.connection != null) {
-                    player.connection.send(m);
-                }
-            }
-            if (allToAll) {
-                sendToAll(entity, m);
-            }
-        }
+//        if (!entity.level().isClientSide()) {
+//            ClientboundUpdateEntityPacket m = ClientboundUpdateEntityPacket.create(entity, cap);
+//            if (entity instanceof ServerPlayer player) {
+//                //noinspection ConstantConditions
+//                if (player.connection != null) {
+//                    player.connection.send(m);
+//                }
+//            }
+//            if (allToAll) {
+//                sendToAll(entity, m);
+//            }
+//        }
 
     }
 

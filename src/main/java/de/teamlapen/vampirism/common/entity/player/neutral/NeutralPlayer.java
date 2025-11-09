@@ -4,11 +4,13 @@ import de.teamlapen.sync.common.storage.AttachmentSync;
 import de.teamlapen.vampirism.api.VampirismAttachments;
 import de.teamlapen.vampirism.api.entity.factions.IDisguise;
 import de.teamlapen.vampirism.api.entity.player.neutral.INeutralPlayer;
+import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.entity.player.FactionBasePlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -20,6 +22,11 @@ public class NeutralPlayer extends FactionBasePlayer<INeutralPlayer> implements 
     public NeutralPlayer(Player player) {
         super(player);
         this.disguise = new IDisguise.None(ModFactions.NEUTRAL);
+    }
+
+    @Override
+    public @NotNull AttachmentType<?> attachmentType() {
+        return ModAttachments.NEUTRAL_PLAYER.get();
     }
 
     @Override

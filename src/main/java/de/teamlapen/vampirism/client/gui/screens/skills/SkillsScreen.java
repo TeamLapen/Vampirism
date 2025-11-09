@@ -19,7 +19,6 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundUnlockSki
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -43,7 +42,7 @@ import java.util.List;
  * Gui screen which displays the skills available to the player and allows them to unlock some.
  * Inspired by Minecraft's new AchievementScreen but vertical
  * <p>
- * relevant classes {@link SkillsScreen} {@link SkillsTabScreen} {@link SkillNodeScreen}
+ * relevant classes {@link SkillsScreen} {@link SkillsTabComponent} {@link SkillNodeComponent}
  */
 @NonnullDefault
 public class SkillsScreen extends Screen {
@@ -55,13 +54,12 @@ public class SkillsScreen extends Screen {
     private static final Component NO_TABS_LABEL = Component.translatable("gui.vampirism.skill_screen.no_tab");
     private static final Component TITLE = Component.translatable("gui.vampirism.vampirism_menu.skill_screen");
 
-    @NotNull
     private final ISkillPlayer<?> factionPlayer;
-    private final List<SkillsTabScreen> tabs = new ArrayList<>();
+    private final List<SkillsTabComponent> tabs = new ArrayList<>();
     @Nullable
     private final Screen backScreen;
     @Nullable
-    private SkillsTabScreen selectedTab;
+    private SkillsTabComponent selectedTab;
     @Nullable
     private Button resetSkills;
 
@@ -72,7 +70,7 @@ public class SkillsScreen extends Screen {
     private Vec3 mousePos;
     private boolean clicked;
 
-    public SkillsScreen(@NotNull ISkillPlayer<?> factionPlayer, @Nullable Screen backScreen) {
+    public SkillsScreen(ISkillPlayer<?> factionPlayer, @Nullable Screen backScreen) {
         super(GameNarrator.NO_TITLE);
         this.factionPlayer = factionPlayer;
         this.backScreen = backScreen;
@@ -93,7 +91,7 @@ public class SkillsScreen extends Screen {
         int index = 0;
         SkillHandler<?> skillHandler = (SkillHandler<?>) this.factionPlayer.getSkillHandler();
         for (Holder<ISkillTree> unlockedSkillTree : skillHandler.unlockedSkillTrees()) {
-            this.tabs.add(new SkillsTabScreen(this.minecraft, this, index++, unlockedSkillTree, this.factionPlayer.getSkillHandler(), ((ClientSkillTreeData) skillHandler.getTreeData())));
+            this.tabs.add(new SkillsTabComponent(this.minecraft, this, index++, unlockedSkillTree, this.factionPlayer.getSkillHandler(), ((ClientSkillTreeData) skillHandler.getTreeData())));
         }
 
         if (!this.tabs.isEmpty()) {
@@ -126,18 +124,14 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
-
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderInside(graphics, mouseX, mouseY, guiLeft, guiTop);
         this.renderWindow(graphics, mouseX, mouseY, guiLeft, guiTop);
-        for (Renderable renderable : this.renderables) {
-            renderable.render(graphics, mouseX, mouseY, partialTicks);
-        }
+        super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY, guiLeft, guiTop);
     }
 
-    public void renderInside(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
+    public void renderInside(GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
         var pose = graphics.pose();
         if (this.selectedTab != null) {
             this.selectedTab.drawContents(graphics, x + 9, y + 18, mouseX - 9 - guiLeft, mouseY - 18 - guiTop);
@@ -152,23 +146,23 @@ public class SkillsScreen extends Screen {
         }
     }
 
-    public void renderWindow(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
+    public void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
         GuiRenderer.blit(graphics, WINDOW_LOCATION, x, y, SCREEN_WIDTH, SCREEN_HEIGHT);
         if (this.tabs.size() > 1) {
 
-            for (SkillsTabScreen skillTab : this.tabs) {
+            for (SkillsTabComponent skillTab : this.tabs) {
                 skillTab.drawTab(graphics, x, y, skillTab == this.selectedTab);
             }
 
-            for (SkillsTabScreen skillTab : this.tabs) {
+            for (SkillsTabComponent skillTab : this.tabs) {
                 skillTab.drawIcon(graphics, x, y);
             }
         }
         if (this.selectedTab != null) {
             Component remainingPoints = this.selectedTab.getRemainingPointsText();
-            graphics.drawString(this.font, remainingPoints, x + 240 - this.font.width(remainingPoints), y + 6, 4210752, false);
+            graphics.drawString(this.font, remainingPoints, x + 240 - this.font.width(remainingPoints), y + 6, 0xff000000, false);
         }
-        graphics.drawString(this.font, TITLE, x + 8, y + 6, 4210752, false);
+        graphics.drawString(this.font, TITLE, x + 8, y + 6, 0xff000000, false);
     }
 
     public void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int guiLeft, int guiTop) {
@@ -182,8 +176,8 @@ public class SkillsScreen extends Screen {
         }
 
         if (this.tabs.size() > 1) {
-            for (SkillsTabScreen tabScreen : this.tabs) {
-                if (tabScreen.isMouseOver(guiLeft, guiTop, mouseX, mouseY)) {
+            for (SkillsTabComponent tabScreen : this.tabs) {
+                if (tabScreen.isMouseOverTabItem(guiLeft, guiTop, mouseX, mouseY)) {
                     graphics.setTooltipForNextFrame(this.minecraft.font, tabScreen.getTitle(), mouseX, mouseY);
                 }
             }
@@ -198,8 +192,8 @@ public class SkillsScreen extends Screen {
         if (event.button() == 0) {
             this.clicked = true;
             this.mousePos = new Vec3(event.x(), event.y(), 0);
-            for (SkillsTabScreen tab : this.tabs) {
-                if (tab != this.selectedTab && tab.isMouseOver(this.guiLeft, this.guiTop, event.x(), event.y())) {
+            for (SkillsTabComponent tab : this.tabs) {
+                if (tab != this.selectedTab && tab.isMouseOverTabItem(this.guiLeft, this.guiTop, event.x(), event.y())) {
                     this.selectedTab = tab;
                     break;
                 }
@@ -217,7 +211,7 @@ public class SkillsScreen extends Screen {
     }
 
     private boolean isMouseOverContent(double pMouseX, double pMouseY) {
-        return pMouseX > guiLeft + 8 && pMouseX <= guiLeft + 9 + SkillsTabScreen.SCREEN_WIDTH && pMouseY > guiTop + 17 && pMouseY <= guiTop + 18 + SkillsTabScreen.SCREEN_HEIGHT;
+        return pMouseX > guiLeft + 8 && pMouseX <= guiLeft + 9 + SkillsTabComponent.SCREEN_WIDTH && pMouseY > guiTop + 17 && pMouseY <= guiTop + 18 + SkillsTabComponent.SCREEN_HEIGHT;
     }
 
     @Override

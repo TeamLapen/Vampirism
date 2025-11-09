@@ -21,7 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.NonnullDefault;
 
@@ -29,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NonnullDefault
-public class SkillsTabScreen {
+public class SkillsTabComponent {
 
     public static final int SCREEN_WIDTH = SkillsScreen.SCREEN_WIDTH - 18;
     public static final int SCREEN_HEIGHT = SkillsScreen.SCREEN_HEIGHT - 46;
@@ -39,9 +38,9 @@ public class SkillsTabScreen {
     private final ISkillHandler<?> skillHandler;
     private final ItemStack icon;
     private final Component title;
-    private final Map<SkillTreeConfiguration.SkillTreeNodeConfiguration, SkillNodeScreen> nodes = new HashMap<>();
+    private final Map<SkillTreeConfiguration.SkillTreeNodeConfiguration, SkillNodeComponent> nodes = new HashMap<>();
     private final AdvancementTabType position;
-    private final SkillNodeScreen root;
+    private final SkillNodeComponent root;
     private final int treeWidth;
     private final int treeHeight;
     private final ResourceLocation background;
@@ -59,7 +58,7 @@ public class SkillsTabScreen {
     private final double minZoom = 0.25;
 
 
-    public SkillsTabScreen(@NotNull Minecraft minecraft, @NotNull SkillsScreen screen, int index, Holder<ISkillTree> skillTree, @NotNull ISkillHandler<?> skillHandler, ClientSkillTreeData skillTreeData) {
+    public SkillsTabComponent(Minecraft minecraft, SkillsScreen screen, int index, Holder<ISkillTree> skillTree, ISkillHandler<?> skillHandler, ClientSkillTreeData skillTreeData) {
         this.minecraft = minecraft;
         this.screen = screen;
         this.skillTree = skillTree;
@@ -72,7 +71,7 @@ public class SkillsTabScreen {
         this.treeData = skillTreeData;
         this.treeWidth = this.treeData.getTreeWidth(skillTree);
         this.treeHeight = this.treeData.getTreeHeight(skillTree);
-        this.root = new SkillNodeScreen(minecraft, screen, this, this.treeData.root(skillTree), this.treeData, ((SkillHandler<?>) skillHandler));
+        this.root = new SkillNodeComponent(minecraft, screen, this, this.treeData.root(skillTree), this.treeData, ((SkillHandler<?>) skillHandler));
         this.background = tree.background().map(x -> x.withPath(path -> "textures/" + path + ".png")).orElse(VResourceLocation.mod("textures/gui/skills/backgrounds/level.png"));
         addNode(this.root);
 
@@ -89,9 +88,9 @@ public class SkillsTabScreen {
         this.centerY = 0;
     }
 
-    private void addNode(@NotNull SkillNodeScreen screen) {
+    private void addNode(SkillNodeComponent screen) {
         this.nodes.put(screen.getSkillNode(), screen);
-        for (SkillNodeScreen child : screen.getChildren()) {
+        for (SkillNodeComponent child : screen.getChildren()) {
             addNode(child);
         }
     }
@@ -100,7 +99,7 @@ public class SkillsTabScreen {
         return index;
     }
 
-    public void drawTab(@NotNull GuiGraphics graphics, int x, int y, boolean selected) {
+    public void drawTab(GuiGraphics graphics, int x, int y, boolean selected) {
         this.position.draw(graphics, x, y, selected, this.index);
     }
 
@@ -108,11 +107,11 @@ public class SkillsTabScreen {
         this.position.drawIcon(graphics, x, y, this.index, this.icon);
     }
 
-    public boolean isMouseOver(int guiLeft, int guiTop, double mouseX, double mouseY) {
+    public boolean isMouseOverTabItem(int guiLeft, int guiTop, double mouseX, double mouseY) {
         return this.position.isMouseOver(guiLeft, guiTop, this.index, mouseX, mouseY);
     }
 
-    public void drawContents(@NotNull GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
+    public void drawContents(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
         var pose = graphics.pose();
 
         graphics.enableScissor(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT);
@@ -145,7 +144,7 @@ public class SkillsTabScreen {
         graphics.disableScissor();
     }
 
-    public void drawTooltips(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+    public void drawTooltips(GuiGraphics graphics, int mouseX, int mouseY) {
         var pose = graphics.pose();
         pose.pushMatrix();
         pose.translate(0.0F, 0.0F/*, -200.0F TODO*/);
@@ -154,7 +153,7 @@ public class SkillsTabScreen {
         if (mouseX >= 0 && mouseX < SCREEN_WIDTH && mouseY >= 0 && mouseY < SCREEN_HEIGHT) {
             double scaledMouseX = getScaledMouseX(mouseX);
             double scaledMouseY = getScaledMouseY(mouseY);
-            for (SkillNodeScreen nodeScreen : this.nodes.values()) {
+            for (SkillNodeComponent nodeScreen : this.nodes.values()) {
                 if (nodeScreen.isMouseOver(scaledMouseX, scaledMouseY, 0, 0)) {
                     flag = true;
                     pose.pushMatrix();
@@ -207,7 +206,7 @@ public class SkillsTabScreen {
 
     @Nullable
     public Holder<ISkill<?>> getSelected(int mouseX, int mouseY) {
-        for (SkillNodeScreen screen : this.nodes.values()) {
+        for (SkillNodeComponent screen : this.nodes.values()) {
             Holder<ISkill<?>> selected = screen.getSelectedSkill(getScaledMouseX(mouseX), getScaledMouseY(mouseY), 0, 0);
             if (selected != null) {
                 return selected;
@@ -236,7 +235,7 @@ public class SkillsTabScreen {
         return this.skillTree;
     }
 
-    public void drawDisableText(@NotNull GuiGraphics graphics, int x, int y) {
+    public void drawDisableText(GuiGraphics graphics, int x, int y) {
         Component f = Component.translatable("text.vampirism.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);
         FormattedCharSequence s = Language.getInstance().getVisualOrder(f);
 
@@ -244,9 +243,6 @@ public class SkillsTabScreen {
         int tooltipX = 7 + x;
         int tooltipY = 17 + y;
         int tooltipHeight = this.minecraft.font.lineHeight * 2;
-//        int backgroundColor = 0xF09b0404;//0xF0550404;;
-//        int borderColorStart = 0x505f0c0c;
-//        int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
 
         TooltipRenderUtil.renderTooltipBackground(graphics, tooltipX, tooltipY, tooltipTextWidth, tooltipHeight, null);
 

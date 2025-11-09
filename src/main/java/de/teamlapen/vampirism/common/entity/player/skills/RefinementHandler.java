@@ -101,8 +101,9 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> implements IRefin
 
     @Override
     public void removeRefinement(IRefinementItem.@NotNull AccessorySlotType slot) {
-        ItemStack stack = refinementItems.remove(slot.getSlot());
+        ItemStack stack = refinementItems.set(slot.getSlot(), ItemStack.EMPTY);
         if (stack.isEmpty()) return;
+
 
         Set<Holder<IRefinement>> remove = refinementSets.remove(slot);
         if (remove == null) {

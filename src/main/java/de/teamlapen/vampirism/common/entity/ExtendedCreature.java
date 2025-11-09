@@ -29,6 +29,7 @@ import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,6 +86,11 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         }
         blood = maxBlood;
         poisonousBlood = 0;
+    }
+
+    @Override
+    public @NotNull AttachmentType<?> attachmentType() {
+        return ModAttachments.EXTENDED_CREATURE.get();
     }
 
     @Override
@@ -319,11 +325,6 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         input.getInt(KEY_MAX_BLOOD).ifPresent(this::setMaxBlood);
         input.getInt(KEY_BLOOD).ifPresent(this::setBlood);
         input.getInt(KEY_POISONOUS_BLOOD).ifPresent(this::setPoisonousBlood);
-    }
-
-    @Override
-    public void sync() {
-//        sync(UpdateParams.forAllPlayer()); TODO
     }
 
     public static class AttachmentOptions extends AttachmentSync<ExtendedCreature, PathfinderMob> {

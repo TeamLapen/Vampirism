@@ -44,6 +44,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,6 +65,11 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     public HunterPlayer(Player player) {
         super(player);
         this.disguise = new Disguise();
+    }
+
+    @Override
+    public AttachmentType<?> attachmentType() {
+        return ModAttachments.HUNTER_PLAYER.get();
     }
 
     @Override
@@ -159,12 +165,12 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
                     if (Arrays.stream(EquipmentSlot.values()).filter(i -> i.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).allMatch(i -> i.is(ModItemTags.HUNTER_ARMOR))) {
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_JUMP)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.JUMP_BOOST, -1, 0, false, false);
-                            ((IEffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(HunterSkills.ARMOR_JUMP.getId());
+                            mobEffectInstance.vampirism$addProperty(HunterSkills.ARMOR_JUMP.getId());
                             player.addEffect(mobEffectInstance);
                         }
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_SPEED)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.SPEED, -1, 0, false, false);
-                            ((IEffectInstanceWithSource) mobEffectInstance).vampirism$addProperty(HunterSkills.ARMOR_SPEED.getId());
+                            mobEffectInstance.vampirism$addProperty(HunterSkills.ARMOR_SPEED.getId());
                             player.addEffect(mobEffectInstance);
                         }
                     } else {

@@ -65,18 +65,13 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
 
     protected static @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions(Player player) {
         var lvlRequirement = HunterLeveling.getTrainerRequirement(FactionPlayerHandler.get(player).getCurrentLevel(ModFactions.HUNTER) + 1);
-        return ModifiedItemCombinerMenuSlotDefinition.createWithoutResult()
+        return ItemCombinerMenuSlotDefinition.create()
                 .withSlot(0, 27, 26, stack -> lvlRequirement.filter(req -> req.ironQuantity() > 0).isPresent() && stack.is(Items.IRON_INGOT))
                 .withSlot(1, 57, 26, stack -> lvlRequirement.filter(req -> req.goldQuantity() > 0).isPresent() && stack.is(Items.GOLD_INGOT))
                 .withSlot(2, 86, 26, stack -> lvlRequirement.map(req -> req.tableRequirement().resultIntelItem().get()).filter(stack::is).isPresent())
+                .withResultSlot(3, 115, -1000)
                 .build();
     }
-
-    @Override
-    public void createResultSlot(@NotNull ItemCombinerMenuSlotDefinition definition) {
-
-    }
-
 
     /**
      * @return If the player can levelup with the given tileInventory

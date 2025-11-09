@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.inventory;
 
-import de.teamlapen.lib.common.inventory.InventoryContainerMenu;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -10,11 +9,13 @@ import de.teamlapen.vampirism.common.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.ItemCombinerMenu;
+import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,11 +23,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Container for interacting with basic hunters to level up as a hunter
  */
-public class HunterBasicMenu extends InventoryContainerMenu {
-    private static final SelectorInfo[] SELECTOR_INFOS = new SelectorInfo[] {new SelectorInfo(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 27, 32)};
+public class HunterBasicMenu extends ItemCombinerMenu {
     private final @NotNull IHunterPlayer player;
     @Nullable
     private final BasicHunterEntity entity;
+
+    private LevelingState canLevelUp;
+    private int requiredBloodBottles;
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
@@ -35,55 +38,72 @@ public class HunterBasicMenu extends InventoryContainerMenu {
     }
 
     public HunterBasicMenu(int id, @NotNull Inventory playerInventory, @Nullable BasicHunterEntity hunter) {
-        super(ModMenus.HUNTER_BASIC.get(), id, playerInventory, hunter == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(hunter.level(), hunter.blockPosition()), new SimpleContainer(SELECTOR_INFOS.length), SELECTOR_INFOS);
-        player = HunterPlayer.get(playerInventory.player);
-        this.addPlayerSlots(playerInventory);
+        super(ModMenus.HUNTER_BASIC.get(), id, playerInventory, hunter == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(hunter.level(), hunter.blockPosition()), createInputSlotDefinitions(playerInventory.player));
+        this.player = HunterPlayer.get(playerInventory.player);
         this.entity = hunter;
     }
 
-    /**
-     * @return The number of missing vampire blood bottles to level up. -1 if wrong level
-     */
-    public int getMissingCount() {
-        int targetLevel = player.getLevel() + 1;
-        ItemStack blood = inventory.getItem(0);
-
-        return HunterLeveling.getBasicHunterRequirement(targetLevel).map(req -> {
-            int required = req.vampireBloodAmount();
-            return (blood.isEmpty() || !blood.getItem().equals(ModItems.VAMPIRE_BLOOD_BOTTLE.get())) ? required : Math.max(0, required - blood.getCount());
-        }).orElse(-1);
-    }
-
-    public boolean canLevelUp() {
-        return getMissingCount() == 0;
-    }
-
-    public void onLevelUpClicked() {
-        if (!canLevelUp()) return;
-        int target = player.getLevel() + 1;
-        HunterLeveling.getBasicHunterRequirement(target).ifPresent(req -> {
-            inventory.removeItem(0, req.vampireBloodAmount());
-            Player player1 = player.asEntity();
-            FactionPlayerHandler.get(player1).setFactionLevel(ModFactions.HUNTER, target);
-            player1.displayClientMessage(Component.translatable("container.vampirism.basic_hunter.levelup"), false);
-            player1.closeContainer();
-        });
-
-
+    protected static @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions(Player player) {
+        return ModifiedItemCombinerMenuSlotDefinition.createWithoutResult()
+                .withSlot(0, 27, 32, stack -> stack.is(ModItems.VAMPIRE_BLOOD_BOTTLE.get()))
+                .build();
     }
 
     @Override
-    public void removed(@NotNull Player playerIn) {
-        super.removed(playerIn);
-        if (!playerIn.level().isClientSide()) {
-            this.clearContainer(playerIn, inventory);
-        }
+    protected boolean mayPickup(@NotNull Player player, boolean hasStack) {
+        return true;
+    }
+
+    @Override
+    protected void onTake(@NotNull Player player, @NotNull ItemStack stack) {
+        int targetLevel = this.player.getLevel() + 1;
+        HunterLeveling.getBasicHunterRequirement(targetLevel).ifPresent(req -> {
+            int required = req.vampireBloodAmount();
+            getSlot(0).remove(required);
+            FactionPlayerHandler.get(player).setFactionLevel(ModFactions.HUNTER, targetLevel);
+            player.displayClientMessage(Component.translatable("container.vampirism.basic_hunter.levelup"), false);
+            player.closeContainer();
+        });
+    }
+
+    public void onLevelUpClicked(@NotNull Player player) {
+        this.onTake(player, ItemStack.EMPTY);
+    }
+
+    @Override
+    protected boolean isValidBlock(@NotNull BlockState state) {
+        return true;
+    }
+
+    @Override
+    public void createResult() {
+        this.canLevelUp = HunterLeveling.getBasicHunterRequirement(this.player.getLevel() + 1)
+                .map(HunterLeveling.BasicHunterRequirement::vampireBloodAmount)
+                .map(x -> {
+                    var state = getSlot(0).getItem().getCount() >= x ? LevelingState.CAN_LEVEL_UP : LevelingState.NEED_BLOOD;
+                    this.requiredBloodBottles = x;
+                    return state;
+                })
+                .orElse(LevelingState.WRONG_LEVEL);
+    }
+
+    public LevelingState canLevelUp() {
+        return this.canLevelUp;
+    }
+    public int requiredBloodBottles() {
+        return this.requiredBloodBottles;
     }
 
     @Override
     public boolean stillValid(@NotNull Player playerIn) {
-        if (entity == null) return false;
-        return new Vec3(playerIn.getX(), playerIn.getY(), playerIn.getZ()).distanceTo(new Vec3(entity.getX(), entity.getY(), entity.getZ())) < 5;
+        if (this.entity == null) return false;
+        return new Vec3(playerIn.getX(), playerIn.getY(), playerIn.getZ()).distanceTo(this.entity.position()) < 5;
+    }
+
+    public enum LevelingState {
+        NEED_BLOOD,
+        CAN_LEVEL_UP,
+        WRONG_LEVEL,
     }
 
 }
