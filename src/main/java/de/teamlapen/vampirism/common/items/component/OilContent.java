@@ -37,6 +37,11 @@ public record OilContent(Holder<IOil> oil) implements IOilContent {
         return new OilContent(oil);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T extends IOil> OilContent of(Holder<T> oil) {
+        return new OilContent((Holder<IOil>) oil);
+    }
+
     public static Holder<IOil> getOil(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.OIL, EMPTY).oil();
     }

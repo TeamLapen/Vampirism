@@ -1,10 +1,10 @@
-package de.teamlapen.vampirism.common.integration.jei;
+package de.teamlapen.vampirism.common.integration.jei.categories;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
 import de.teamlapen.vampirism.common.recipes.AlchemicalCauldronRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -15,8 +15,8 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
@@ -26,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -38,7 +39,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
     private final @NotNull IDrawableAnimated bubbles;
 
 
-    AlchemicalCauldronRecipeCategory(@NotNull IGuiHelper guiHelper) {
+    public AlchemicalCauldronRecipeCategory(@NotNull IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALCHEMICAL_CAULDRON.get()));
         this.background = guiHelper.drawableBuilder(AlchemicalCauldronScreen.BACKGROUND, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
@@ -60,7 +61,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
     @Override
     public void draw(@NotNull RecipeHolder<AlchemicalCauldronRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
         this.background.draw(graphics);
-        graphics.pose().pushPose();
+        graphics.pose().pushMatrix();
         AlchemicalCauldronRecipe recipe = holder.value();
         this.flame.draw(graphics, 19, 27);
         this.arrow.draw(graphics, 41, 25);
@@ -79,9 +80,9 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
             for (Holder<ISkill<?>> s : recipe.getRequiredSkills()) {
                 skillText.append(s.value().getName()).append(" ");
             }
-            y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.GRAY.getRGB());
+            graphics.drawWordWrap(minecraft.font, skillText, x, y, 132, Color.GRAY.getRGB(), false);
         }
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     @Override
@@ -101,7 +102,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
     }
 
     @Override
-    public @NotNull RecipeType<RecipeHolder<AlchemicalCauldronRecipe>> getRecipeType() {
+    public @NotNull IRecipeType<RecipeHolder<AlchemicalCauldronRecipe>> getRecipeType() {
         return VampirismJEIPlugin.ALCHEMICAL_CAULDRON;
     }
 
@@ -114,8 +115,9 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
     @Override
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull RecipeHolder<AlchemicalCauldronRecipe> holder, @NotNull IFocusGroup focuses) {
         AlchemicalCauldronRecipe recipe = holder.value();
-        builder.addSlot(RecipeIngredientRole.INPUT, 6, 7).addIngredients(recipe.getFluid().map(in -> in, fl -> Ingredient.of(fl.getFluid().getBucket())));
-        builder.addSlot(RecipeIngredientRole.INPUT, 30, 7).addIngredients(recipe.getIngredient());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 78, 25).addItemStack(RecipeUtil.getResultItem(recipe));
+        builder.addSlot(RecipeIngredientRole.INPUT, 6, 7).add(recipe.getFluid().<Ingredient>map(x -> x, x -> Ingredient.of(x.getFluid().getBucket())));
+        builder.addSlot(RecipeIngredientRole.INPUT, 30, 7).add(recipe.getIngredient());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 78, 25).add(recipe.result());
+        builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 18, 43).add(SlotDisplay.AnyFuel.INSTANCE);
     }
 }

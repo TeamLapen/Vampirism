@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.common.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.common.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.common.items.crossbow.arrow.*;
 import de.teamlapen.vampirism.common.items.dispenser.SyringeDispenseBehavior;
+import de.teamlapen.vampirism.common.items.display.ItemStackWithSize;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -29,6 +30,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.bus.api.IEventBus;
@@ -49,12 +51,16 @@ import java.util.stream.Stream;
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(REFERENCE.MODID);
     public static final DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECTS = DeferredRegister.create(Registries.CONSUME_EFFECT_TYPE, REFERENCE.MODID);
+    public static final DeferredRegister<SlotDisplay.Type<?>> SLOT_DISPLAYS = DeferredRegister.create(Registries.SLOT_DISPLAY, REFERENCE.MODID);
 
     // Consume Effects
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<OblivionEffect>> OBLIVION = CONSUME_EFFECTS.register("oblivious", () -> new ConsumeEffect.Type<>(OblivionEffect.CODEC, OblivionEffect.STREAM_CODEC));
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<FactionBasedConsumeEffect>> FACTION_BASED = CONSUME_EFFECTS.register("faction_based", () -> new ConsumeEffect.Type<>(FactionBasedConsumeEffect.CODEC, FactionBasedConsumeEffect.STREAM_CODEC));
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<BloodConsume>> CONSUME_BLOOD_EFFECT = CONSUME_EFFECTS.register("blood_consume", () -> new ConsumeEffect.Type<>(BloodConsume.CODEC, BloodConsume.STREAM_CODEC));
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<AffectGarlic>> AFFECT_GARLIC = CONSUME_EFFECTS.register("affect_garlic", () -> new ConsumeEffect.Type<>(AffectGarlic.CODEC, AffectGarlic.STREAM_CODEC));
+
+    // slot display
+    public static final DeferredHolder<SlotDisplay.Type<?>, SlotDisplay.Type<ItemStackWithSize>> ITEMSTACK_WITH_SIZE = SLOT_DISPLAYS.register("item_stack_with_size", () -> new SlotDisplay.Type<>(ItemStackWithSize.MAP_CODEC, ItemStackWithSize.STREAM_CODEC));
 
     // Weapons
     public static final DeferredItem<HeartSeekerItem> HEART_SEEKER_NORMAL = ITEMS.registerItem("iron_heart_seeker",  props -> new HeartSeekerItem(HeartSeekerItem.IRON, IItemWithTier.Tier.NORMAL, 1.3f, props));
@@ -200,7 +206,7 @@ public class ModItems {
 
     public static final DeferredItem<Item> PURIFIED_GARLIC = ITEMS.registerItem("purified_garlic",  props -> new Item(props.stacksTo(16)));
     public static final DeferredItem<Item> PURE_SALT = ITEMS.registerItem("pure_salt", Item::new);
-    public static final DeferredItem<BlessableItem> PURE_SALT_WATER = ITEMS.registerItem("pure_salt_water",  props -> new BlessableItem(props.stacksTo(1), HOLY_WATER_BOTTLE_NORMAL::get, HOLY_WATER_BOTTLE_ENHANCED::get) {
+    public static final DeferredItem<BlessableItem> PURE_SALT_WATER = ITEMS.registerItem("pure_salt_water",  props -> new BlessableItem(props.stacksTo(1), HOLY_WATER_BOTTLE_NORMAL, HOLY_WATER_BOTTLE_ENHANCED) {
         @Override
         public boolean isFoil(@NotNull ItemStack stack) {
             return true;

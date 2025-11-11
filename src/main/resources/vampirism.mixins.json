@@ -14,6 +14,7 @@
     "FoodPropertiesMixin",
     "ItemMixin",
     "ItemPropertiesMixin",
+    "ItemStackMixin",
     "JigsawPlacerMixin",
     "LivingEntityMixin",
     "MobEffectInstanceMixin",
@@ -55,6 +56,7 @@
   ],
   "client": [
     "client.CapeLayerMixin",
+    "client.GuiGraphicsMixin",
     "client.HumanoidArmorLayerMixin",
     "client.LivingEntityRendererMixin",
     "client.LivingEntityRenderStateMixin",

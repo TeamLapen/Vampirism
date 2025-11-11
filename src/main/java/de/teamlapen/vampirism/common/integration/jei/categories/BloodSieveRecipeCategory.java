@@ -1,9 +1,10 @@
-package de.teamlapen.vampirism.common.integration.jei;
+package de.teamlapen.vampirism.common.integration.jei.categories;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFluids;
+import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
 import de.teamlapen.vampirism.common.integration.jei.recipes.BloodSieveRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,15 +14,15 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
-import static de.teamlapen.vampirism.common.integration.jei.AlchemicalCauldronRecipeCategory.fixSprite;
+import static de.teamlapen.vampirism.common.integration.jei.categories.AlchemicalCauldronRecipeCategory.fixSprite;
 
 public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecipe> {
     private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/blood_grinder_jei.png");
@@ -44,7 +45,7 @@ public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecip
     }
 
     @Override
-    public @NotNull RecipeType<BloodSieveRecipe> getRecipeType() {
+    public @NotNull IRecipeType<BloodSieveRecipe> getRecipeType() {
         return VampirismJEIPlugin.BLOOD_SIEVE_CONVERSION;
     }
 
@@ -72,17 +73,17 @@ public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecip
     public void setRecipe(IRecipeLayoutBuilder builder, BloodSieveRecipe recipe, @NotNull IFocusGroup focuses) {
         int capacity = FluidType.BUCKET_VOLUME;
         builder.addSlot(RecipeIngredientRole.INPUT, 1, 1).setFluidRenderer(capacity, true, 16, 16)
-                .addFluidStack(recipe.input().getFluid(), capacity);
+                .add(recipe.input().getFluid(), capacity);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 58, 1).setFluidRenderer(capacity, true, 16, 16)
-                .addFluidStack(ModFluids.BLOOD.get(), (int) (capacity * recipe.conversionRate())).setBackground(this.slot, -1, -1);
+                .add(ModFluids.BLOOD.get(), (int) (capacity * recipe.conversionRate())).setBackground(this.slot, -1, -1);
     }
 
     @Override
     public void draw(@NotNull BloodSieveRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
         this.background.draw(guiGraphics);
-        guiGraphics.pose().pushPose();
+        guiGraphics.pose().pushMatrix();
         this.slot.draw(guiGraphics);
         this.arrow.draw(guiGraphics, 26, 1);
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
     }
 }

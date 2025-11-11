@@ -1,85 +1,58 @@
 package de.teamlapen.vampirism.common.integration.jei;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.task.Task;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
-import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
-import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.core.ModMenus;
+import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.entity.player.tasks.TaskUtil;
-import de.teamlapen.vampirism.common.integration.jei.categories.FogDiffuserRecipeCategory;
-import de.teamlapen.vampirism.common.integration.jei.categories.GarlicDiffuserRecipeCategory;
-import de.teamlapen.vampirism.common.integration.jei.recipes.BloodSieveRecipe;
-import de.teamlapen.vampirism.common.integration.jei.recipes.FogDiffuserRecipe;
-import de.teamlapen.vampirism.common.integration.jei.recipes.GarlicDiffuserRecipe;
-import de.teamlapen.vampirism.common.integration.jei.recipes.GrinderRecipe;
-import de.teamlapen.vampirism.common.integration.jei.recipes.maker.BloodSieveRecipeMaker;
-import de.teamlapen.vampirism.common.integration.jei.recipes.maker.FogDiffuserRecipeMaker;
-import de.teamlapen.vampirism.common.integration.jei.recipes.maker.GarlicDiffuserRecipeMaker;
-import de.teamlapen.vampirism.common.integration.jei.recipes.maker.GrinderRecipeMaker;
+import de.teamlapen.vampirism.common.integration.jei.categories.*;
+import de.teamlapen.vampirism.common.integration.jei.recipes.*;
+import de.teamlapen.vampirism.common.integration.jei.recipes.maker.*;
 import de.teamlapen.vampirism.common.integration.jei.subtypes.BloodBottleInterpreter;
 import de.teamlapen.vampirism.common.integration.jei.subtypes.BloodContainerInterpreter;
 import de.teamlapen.vampirism.common.integration.jei.subtypes.ContainedOilInterpreter;
 import de.teamlapen.vampirism.common.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.common.inventory.WeaponTableMenu;
-import de.teamlapen.vampirism.common.items.BlessableItem;
-import de.teamlapen.vampirism.common.items.component.AppliedOilContent;
-import de.teamlapen.vampirism.common.items.component.OilContent;
 import de.teamlapen.vampirism.common.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.common.recipes.AlchemyTableRecipe;
-import de.teamlapen.vampirism.common.tags.ModItemTags;
-import de.teamlapen.vampirism.common.util.OilUtils;
-import de.teamlapen.vampirism.common.util.RegUtil;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
-import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
+import mezz.jei.api.recipe.types.IRecipeHolderType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.Holder;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Tiers;
-import net.minecraft.world.item.crafting.*;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
-/**
- * Plugin for Just Enough Items
- */
 @JeiPlugin
-//Currently, core mod is required for this to not crash the game Forge https://github.com/MinecraftForge/MinecraftForge/pull/6254
 public class VampirismJEIPlugin implements IModPlugin {
-    public static final RecipeType<RecipeHolder<IWeaponTableRecipe>> WEAPON_TABLE = createFromModded(ModRecipes.WEAPONTABLE_CRAFTING_TYPE);
-    public static final RecipeType<RecipeHolder<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = createFromModded(ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
-    public static final RecipeType<Task> TASK = RecipeType.create("vampirism", "task", Task.class);
-    public static final RecipeType<BlessableItem.Recipe> BLESSING = RecipeType.create("vampirism", "blessing", BlessableItem.Recipe.class);
-    public static final RecipeType<JEIPotionMix> POTION = RecipeType.create("vampirism", "potion", JEIPotionMix.class);
-    public static final RecipeType<RecipeHolder<AlchemyTableRecipe>> ALCHEMY_TABLE = createFromModded(ModRecipes.ALCHEMICAL_TABLE_TYPE);
-    public static final RecipeType<GarlicDiffuserRecipe> GARLIC_DIFFUSER = RecipeType.create(REFERENCE.MODID, "garlic_diffuser", GarlicDiffuserRecipe.class);
-    public static final RecipeType<FogDiffuserRecipe> FOG_DIFFUSER = RecipeType.create(REFERENCE.MODID, "fog_diffuser", FogDiffuserRecipe.class);
-    public static final RecipeType<GrinderRecipe> GRINDER_RECIPE = RecipeType.create(REFERENCE.MODID, "grinder", GrinderRecipe.class);
-    public static final RecipeType<BloodSieveRecipe> BLOOD_SIEVE_CONVERSION = RecipeType.create(REFERENCE.MODID, "blood_sieve", BloodSieveRecipe.class);
+    public static final IRecipeType<RecipeHolder<IWeaponTableRecipe>> WEAPON_TABLE = createFromModded(ModRecipes.WEAPONTABLE_CRAFTING_TYPE);
+    public static final IRecipeType<RecipeHolder<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = createFromModded(ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
+    public static final IRecipeType<Task> TASK = IRecipeType.create("vampirism", "task", Task.class);
+    public static final IRecipeType<BlessableRecipe> BLESSING = IRecipeType.create("vampirism", "blessing", BlessableRecipe.class);
+    public static final IRecipeType<JEIPotionMix> POTION = IRecipeType.create("vampirism", "potion", JEIPotionMix.class);
+    public static final IRecipeType<RecipeHolder<AlchemyTableRecipe>> ALCHEMY_TABLE = createFromModded(ModRecipes.ALCHEMICAL_TABLE_TYPE);
+    public static final IRecipeType<GarlicDiffuserRecipe> GARLIC_DIFFUSER = IRecipeType.create(REFERENCE.MODID, "garlic_diffuser", GarlicDiffuserRecipe.class);
+    public static final IRecipeType<FogDiffuserRecipe> FOG_DIFFUSER = IRecipeType.create(REFERENCE.MODID, "fog_diffuser", FogDiffuserRecipe.class);
+    public static final IRecipeType<GrinderRecipe> GRINDER_RECIPE = IRecipeType.create(REFERENCE.MODID, "grinder", GrinderRecipe.class);
+    public static final IRecipeType<BloodSieveRecipe> BLOOD_SIEVE_CONVERSION = IRecipeType.create(REFERENCE.MODID, "blood_sieve", BloodSieveRecipe.class);
 
     private static final ResourceLocation ID = VResourceLocation.mod("plugin");
 
@@ -89,10 +62,8 @@ public class VampirismJEIPlugin implements IModPlugin {
         return ID;
     }
 
-    public static <R extends Recipe<?>> RecipeType<RecipeHolder<R>> createFromModded(DeferredHolder<net.minecraft.world.item.crafting.RecipeType<?>, net.minecraft.world.item.crafting.RecipeType<R>> vanillaRecipeType) {
-        @SuppressWarnings({"unchecked", "RedundantCast"})
-        Class<? extends RecipeHolder<R>> holderClass = (Class<? extends RecipeHolder<R>>) (Object) RecipeHolder.class;
-        return new RecipeType<>(vanillaRecipeType.getId(), holderClass);
+    public static <R extends Recipe<?>> IRecipeType<RecipeHolder<R>> createFromModded(DeferredHolder<net.minecraft.world.item.crafting.RecipeType<?>, net.minecraft.world.item.crafting.RecipeType<R>> vanillaRecipeType) {
+        return IRecipeHolderType.create(vanillaRecipeType.getId());
     }
 
 
@@ -127,7 +98,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeTransferHandlers(@NotNull IRecipeTransferRegistration registration) {
         registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModMenus.ALCHEMICAL_CAULDRON.get(), ALCHEMICAL_CAULDRON, 0, 2, 4, 36);
-        registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModMenus.ALCHEMICAL_CAULDRON.get(), RecipeTypes.FUELING, 3, 1, 4, 36);
+        registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModMenus.ALCHEMICAL_CAULDRON.get(), RecipeTypes.BLASTING, 3, 1, 4, 36);
         registration.addRecipeTransferHandler(WeaponTableMenu.class, ModMenus.WEAPON_TABLE.get(), WEAPON_TABLE, 1, 16, 17, 36);
     }
 
@@ -140,17 +111,16 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
-        ClientLevel world = Minecraft.getInstance().level;
-        RecipeManager recipeManager = world.getRecipeManager();
-        registration.addRecipes(ALCHEMICAL_CAULDRON, recipeManager.getAllRecipesFor(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()));
-        registration.addRecipes(WEAPON_TABLE, recipeManager.getAllRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()));
-        registration.addRecipes(TASK, TaskUtil.getItemRewardTasks(world.registryAccess()));
+        var recipes = VampirismMod.getServices().recipes().getRecipes();
+        var level = Minecraft.getInstance().level;
+        registration.addRecipes(ALCHEMICAL_CAULDRON, recipes.byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).stream().toList());
+        registration.addRecipes(WEAPON_TABLE, recipes.byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).stream().toList());
+        registration.addRecipes(TASK, TaskUtil.getItemRewardTasks(level.registryAccess()));
         registration.addRecipes(POTION, VampirismAPI.extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
-        registration.addRecipes(RecipeTypes.ANVIL, getRepairRecipes(registration.getVanillaRecipeFactory()));
-        registration.addRecipes(ALCHEMY_TABLE, recipeManager.getAllRecipesFor(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()));
-        registration.addRecipes(RecipeTypes.CRAFTING, getApplicableOilRecipes());
-        registration.addRecipes(BLESSING, BlessableItem.getBlessableRecipes());
-        registration.addRecipes(RecipeTypes.CRAFTING, getCleanOilRecipes(world.registryAccess()));
+        registration.addRecipes(RecipeTypes.ANVIL, RepairRecipeMaker.getRecipes(registration.getVanillaRecipeFactory(), registration.getIngredientManager()));
+        registration.addRecipes(ALCHEMY_TABLE, recipes.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().toList());
+        registration.addRecipes(RecipeTypes.CRAFTING, OilRecipeMaker.getRecipes(registration.getIngredientManager()));
+        registration.addRecipes(BLESSING, BlessableRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(GARLIC_DIFFUSER, GarlicDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(FOG_DIFFUSER, FogDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(GRINDER_RECIPE, GrinderRecipeMaker.getRecipes(registration.getIngredientManager()));
@@ -160,66 +130,5 @@ public class VampirismJEIPlugin implements IModPlugin {
     @Override
     public void registerVanillaCategoryExtensions(@NotNull IVanillaCategoryExtensionRegistration registration) {
 
-    }
-
-    private @NotNull List<IJeiAnvilRecipe> getRepairRecipes(@NotNull IVanillaRecipeFactory factory) {
-        List<IJeiAnvilRecipe> recipes = new ArrayList<>();
-        Map<Ingredient, List<Item>> items = Maps.newHashMap();
-        Ingredient ironIngredient = Tiers.IRON.getRepairIngredient();
-        items.put(ironIngredient, Lists.newArrayList(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get(), ModItems.HUNTER_COAT_CHEST_NORMAL.get(), ModItems.HUNTER_COAT_CHEST_ENHANCED.get(), ModItems.HUNTER_COAT_CHEST_ULTIMATE.get(), ModItems.HUNTER_COAT_HEAD_NORMAL.get(), ModItems.HUNTER_COAT_HEAD_ENHANCED.get(), ModItems.HUNTER_COAT_HEAD_ULTIMATE.get(), ModItems.HUNTER_COAT_LEGS_NORMAL.get(), ModItems.HUNTER_COAT_LEGS_ENHANCED.get(), ModItems.HUNTER_COAT_LEGS_ULTIMATE.get(), ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get()));
-        Ingredient stringIngredient = Ingredient.of(Tags.Items.STRINGS);
-        items.put(stringIngredient, Lists.newArrayList(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get()));
-        Ingredient leather = Ingredient.of(Tags.Items.LEATHERS);
-        items.put(leather, Lists.newArrayList(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get()));
-        Ingredient bloodIngot = Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get());
-        items.put(bloodIngot, Lists.newArrayList(ModItems.HEART_SEEKER_NORMAL.get(), ModItems.HEART_STRIKER_NORMAL.get()));
-        Ingredient enhancedBloodIngot = Ingredient.of(ModItems.PURE_BLOOD_INFUSED_IRON_INGOT.get());
-        items.put(enhancedBloodIngot, Lists.newArrayList(ModItems.HEART_SEEKER_ENHANCED.get(), ModItems.HEART_SEEKER_ULTIMATE.get(), ModItems.HEART_STRIKER_ENHANCED.get(), ModItems.HEART_STRIKER_ULTIMATE.get()));
-        Ingredient human_heart = Ingredient.of(ModItemTags.HEART);
-        items.put(human_heart, Lists.newArrayList(ModItems.VAMPIRE_CLOTHING_CROWN.get(), ModItems.VAMPIRE_CLOTHING_HAT.get(), ModItems.VAMPIRE_CLOTHING_LEGS.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get(), ModItems.VAMPIRE_CLOAK_RED.get(), ModItems.VAMPIRE_CLOAK_BLACK.get(), ModItems.VAMPIRE_CLOAK_BLACK_WHITE.get(), ModItems.VAMPIRE_CLOAK_WHITE.get(), ModItems.VAMPIRE_CLOAK_BLUE.get()));
-
-        for (Map.Entry<Ingredient, List<Item>> entry : items.entrySet()) {
-
-            List<ItemStack> repairMaterials = Lists.newArrayList(
-                    entry.getKey().getItems()
-            );
-
-            for (Item ingredientItem : entry.getValue()) {
-                ItemStack ingredient = new ItemStack(ingredientItem);
-                ItemStack damaged1 = ingredient.copy();
-                damaged1.setDamageValue(damaged1.getMaxDamage());
-                ItemStack damaged2 = ingredient.copy();
-                damaged2.setDamageValue(damaged2.getMaxDamage() * 3 / 4);
-                ItemStack damaged3 = ingredient.copy();
-                damaged3.setDamageValue(damaged3.getMaxDamage() * 2 / 4);
-
-                if (!repairMaterials.isEmpty()) {
-                    IJeiAnvilRecipe repairWithMaterial = factory.createAnvilRecipe(damaged1, repairMaterials, Collections.singletonList(damaged2));
-                    recipes.add(repairWithMaterial);
-                }
-                IJeiAnvilRecipe repairWithSame = factory.createAnvilRecipe(damaged2, Collections.singletonList(damaged2), Collections.singletonList(damaged3));
-                recipes.add(repairWithSame);
-            }
-        }
-        return recipes;
-    }
-
-    private @NotNull List<RecipeHolder<CraftingRecipe>> getApplicableOilRecipes() {
-        return ModRegistries.OILS.holders()
-                .filter(s -> s.value() instanceof IApplicableOil)
-                .map(s -> (Holder<IApplicableOil>) (Object) s)
-                .flatMap(oil -> BuiltInRegistries.ITEM.stream()
-                        .map(Item::getDefaultInstance)
-                        .filter(item -> (!(item.getItem() instanceof IFactionExclusiveItem) || IFaction.is(ModFactions.HUNTER, ((IFactionExclusiveItem) item.getItem()).getExclusiveFaction(item))))
-                        .filter(item -> oil.value().canBeApplied(item))
-                        .map(stack -> new RecipeHolder<CraftingRecipe>(VResourceLocation.mod((oil.unwrapKey().orElseThrow().location().toString() + RegUtil.id(stack.getItem())).replace(':', '_')), new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, AppliedOilContent.apply(stack.copy(), oil), NonNullList.of(Ingredient.EMPTY, Ingredient.of(stack), Ingredient.of(OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oil))))))).toList();
-    }
-
-    private @NotNull List<RecipeHolder<CraftingRecipe>> getCleanOilRecipes(RegistryAccess registryAccess) {
-        return getApplicableOilRecipes().stream().map(recipe -> {
-            ItemStack item = recipe.value().getResultItem(registryAccess);
-            IApplicableOil oil = OilUtils.getAppliedOil(item).get();
-            return new RecipeHolder<CraftingRecipe>(VResourceLocation.mod(("clean_" + RegUtil.id(oil) + "_from_" + RegUtil.id(item.getItem())).replace(':', '_')), new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, AppliedOilContent.remove(item.copy()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.PAPER), Ingredient.of(item))));
-        }).collect(Collectors.toList());
     }
 }

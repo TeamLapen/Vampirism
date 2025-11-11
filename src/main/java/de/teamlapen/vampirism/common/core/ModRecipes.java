@@ -70,6 +70,7 @@ public class ModRecipes {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         CONDITION_CODECS.register(bus);
+        RECIPE_BOOK_CATEGORIES.register(bus);
     }
 
 }

@@ -32,7 +32,10 @@ import de.teamlapen.vampirism.common.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.common.proxy.IProxy;
 import de.teamlapen.vampirism.common.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.common.serialization.CodecModifications;
-import de.teamlapen.vampirism.common.util.*;
+import de.teamlapen.vampirism.common.util.SupporterManager;
+import de.teamlapen.vampirism.common.util.TelemetryCollector;
+import de.teamlapen.vampirism.common.util.VampireVisionRegistry;
+import de.teamlapen.vampirism.common.util.VersionUpdater;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
 import de.teamlapen.vampirism.common.world.structures.VanillaStructureModifications;
 import de.teamlapen.vampirism.data.BloodConversionRegistry;
@@ -79,7 +82,7 @@ public class VampirismMod {
     public static final IProxy proxy = FMLEnvironment.getDist() == Dist.CLIENT ? VampirismModClient.getProxy() : new ServerProxy();
     public static boolean inDev = false;
     public static boolean inDataGen = false;
-    private static Services SERVICES;
+    private static CommonServices SERVICES;
 
     private final @NotNull ModRegistryManager registryManager;
     private final IEventBus modBus;
@@ -117,9 +120,10 @@ public class VampirismMod {
         this.registryManager.registerForgeEventHandler();
         NeoForgeMod.enableMergedAttributeTooltips();
         SERVICES = new CommonServices(modContainer);
+        SERVICES.register(modEventBus);
     }
 
-    public static Services getServices() {
+    public static CommonServices getServices() {
         return SERVICES;
     }
 

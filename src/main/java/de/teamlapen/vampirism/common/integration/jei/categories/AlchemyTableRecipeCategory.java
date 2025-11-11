@@ -1,10 +1,9 @@
-package de.teamlapen.vampirism.common.integration.jei;
+package de.teamlapen.vampirism.common.integration.jei.categories;
 
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.items.component.OilContent;
+import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
 import de.teamlapen.vampirism.common.recipes.AlchemyTableRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -15,8 +14,8 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -51,7 +50,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
     }
 
     @Override
-    public @NotNull RecipeType<RecipeHolder<AlchemyTableRecipe>> getRecipeType() {
+    public @NotNull IRecipeType<RecipeHolder<AlchemyTableRecipe>> getRecipeType() {
         return VampirismJEIPlugin.ALCHEMY_TABLE;
     }
 
@@ -80,26 +79,26 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
     @Override
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull RecipeHolder<AlchemyTableRecipe> holder, @NotNull IFocusGroup focuses) {
         AlchemyTableRecipe recipe = holder.value();
-        builder.addSlot(RecipeIngredientRole.INPUT, 4, 13).addIngredients(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.INPUT, 44, 4).addIngredients(recipe.getIngredient());
-        builder.addSlot(RecipeIngredientRole.INPUT, 68, 4).addIngredients(recipe.getIngredient());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 101, 60).addItemStack(RecipeUtil.getResultItem(recipe));
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 129, 32).addItemStack(RecipeUtil.getResultItem(recipe));
-        builder.addSlot(RecipeIngredientRole.INPUT, 23, 57).addItemStack(new ItemStack(Items.BLAZE_POWDER));
+        builder.addSlot(RecipeIngredientRole.INPUT, 4, 13).add(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.INPUT, 44, 4).add(recipe.getIngredient());
+        builder.addSlot(RecipeIngredientRole.INPUT, 68, 4).add(recipe.getIngredient());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 101, 60).add(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 129, 32).add(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.INPUT, 23, 57).add(new ItemStack(Items.BLAZE_POWDER));
     }
 
     @Override
     public void draw(@NotNull RecipeHolder<AlchemyTableRecipe> holder, IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
         this.background.draw(graphics);
-        graphics.pose().pushPose();
+        graphics.pose().pushMatrix();
         AlchemyTableRecipe recipe = holder.value();
         this.blazeHeat.draw(graphics, 33 - 9 - 2, 60 - 10 - 2);
         this.arrow.draw(graphics, 73 - 9 - 2, 57 - 10 - 2);
 
-        int color = OilContent.getOil(RecipeUtil.getResultItem(recipe)).value().getColor();
-        graphics.setColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
+//        int color = OilContent.getOil(RecipeUtil.getResultItem(recipe)).value().getColor();
+//        graphics.setColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
         this.pool.draw(graphics, 104 - 9 - 2, 36 - 10 - 2);
-        graphics.setColor(1, 1, 1, 1);
+//        graphics.setColor(1, 1, 1, 1);
 
         int x = 2;
         int y = 80;
@@ -113,10 +112,10 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
                 skillText.append(skill.getName()).append(" ");
 
             }
-            y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.gray.getRGB());
+            y += de.teamlapen.lib.util.UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.gray.getRGB());
 
         }
 
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 }

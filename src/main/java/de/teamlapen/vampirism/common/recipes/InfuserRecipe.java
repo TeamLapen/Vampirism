@@ -175,9 +175,9 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
                 Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient3,
                 Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient4,
                 Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
-                ItemStack.STREAM_CODEC, s -> s.result1,
-                ItemStack.STREAM_CODEC, s -> s.result2,
-                ItemStack.STREAM_CODEC, s -> s.result3,
+                ItemStack.OPTIONAL_STREAM_CODEC, s -> s.result1,
+                ItemStack.OPTIONAL_STREAM_CODEC, s -> s.result2,
+                ItemStack.OPTIONAL_STREAM_CODEC, s -> s.result3,
                 ByteBufCodecs.optional(ItemStack.STREAM_CODEC), s -> s.result,
                 ByteBufCodecs.INT, s -> s.cookingTime,
                 InfuserRecipe::new

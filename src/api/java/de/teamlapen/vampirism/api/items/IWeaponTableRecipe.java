@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.core.Holder;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -35,4 +36,6 @@ public interface IWeaponTableRecipe extends Recipe<CraftingInput> {
      */
     @NotNull
     List<Holder<ISkill<?>>> getRequiredSkills();
+
+    ItemStack getResult();
 }

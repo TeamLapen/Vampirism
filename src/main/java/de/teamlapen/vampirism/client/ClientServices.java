@@ -83,7 +83,7 @@ public class ClientServices extends Services {
     //<editor-fold desc="Register" >
 
     @Override
-    public void registerModBus(IEventBus bus) {
+    protected void registerModBus(IEventBus bus) {
         bus.register(this.armorModels);
         bus.addListener(this.bloodVisionRenderer::onClientSetup);
         bus.register(this.vampireBooks);
@@ -92,7 +92,7 @@ public class ClientServices extends Services {
     }
 
     @Override
-    public void registerGameBus(IEventBus bus) {
+    protected void registerGameBus(IEventBus bus) {
         bus.register(this.vampirismHUDOverlay);
         bus.register(this.renderHandler);
         bus.register(this.bloodVisionRenderer);

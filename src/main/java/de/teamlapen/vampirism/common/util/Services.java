@@ -16,10 +16,10 @@ public abstract class Services {
         return this.container;
     }
 
-    public void registerModBus(IEventBus bus) {
+    protected void registerModBus(IEventBus bus) {
     }
 
-    public void registerGameBus(IEventBus bus) {
+    protected void registerGameBus(IEventBus bus) {
     }
 
     public void register(IEventBus bus) {

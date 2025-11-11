@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.serialization.StreamCodecExtension;
@@ -16,6 +17,9 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +54,11 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
         this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
     }
 
+    @Override
+    public ItemStack getResult() {
+        return this.recipeOutput;
+    }
+
     @NotNull
     @Override
     public ItemStack assemble(@NotNull CraftingInput inv, @NotNull HolderLookup.Provider registryAccess) {
@@ -57,11 +66,20 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
     }
 
     @Override
-    public PlacementInfo placementInfo() {
+    public @NotNull PlacementInfo placementInfo() {
         if (placementInfo == null) {
             placementInfo = PlacementInfo.create(this.recipeItems);
         }
         return placementInfo;
+    }
+
+    @Override
+    public @NotNull List<RecipeDisplay> display() {
+        return List.of(new ShapelessCraftingRecipeDisplay(
+                this.getIngredients().stream().map(Ingredient::display).toList(),
+                new SlotDisplay.ItemStackSlotDisplay(this.getResult()),
+                new SlotDisplay.ItemSlotDisplay(ModBlocks.WEAPON_TABLE.asItem())
+        ));
     }
 
     @Override

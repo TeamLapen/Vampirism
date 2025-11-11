@@ -28,37 +28,27 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class BlessableItem extends Item {
 
-    private final Supplier<Item> blessedItem;
+    private final Supplier<? extends Item> blessedItem;
     @Nullable
-    private final Supplier<Item> enhancedBlessedItem;
+    private final Supplier<? extends Item> enhancedBlessedItem;
 
-    private final static List<BlessableItem> BLESSABLE_ITEMS = new ArrayList<>();
-
-    public static List<Recipe> getBlessableRecipes() {
-        List<Recipe> recipes = new ArrayList<>();
-        for (BlessableItem i : BLESSABLE_ITEMS) {
-            recipes.add(new Recipe(false, i, i.blessedItem.get()));
-            if (i.enhancedBlessedItem != null) {
-                recipes.add(new Recipe(true, i, i.enhancedBlessedItem.get()));
-            }
-        }
-        return recipes;
-    }
-
-    public record Recipe(boolean enhanced, BlessableItem input, Item output) {
-    }
-
-    public BlessableItem(Properties properties, Supplier<Item> blessedItem, @Nullable Supplier<Item> enhancedBlessedItem) {
+    public BlessableItem(Properties properties, Supplier<? extends Item> blessedItem, @Nullable Supplier<? extends Item> enhancedBlessedItem) {
         super(properties);
         this.blessedItem = blessedItem;
         this.enhancedBlessedItem = enhancedBlessedItem;
-        BLESSABLE_ITEMS.add(this);
+    }
+
+    public Item getBlessedItem() {
+        return this. blessedItem.get();
+    }
+
+    @Nullable
+    public Item getEnhancedBlessedItem() {
+        return this.enhancedBlessedItem == null ? null : this.enhancedBlessedItem.get();
     }
 
     @Override

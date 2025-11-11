@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.serialization.StreamCodecExtension;
@@ -16,6 +17,9 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,6 +56,11 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
         this.requiredLava = requiredLava;
     }
 
+    @Override
+    public ItemStack getResult() {
+        return this.recipeOutput;
+    }
+
     @NotNull
     @Override
     public ItemStack assemble(@NotNull CraftingInput inv, @NotNull HolderLookup.Provider registryAccess) {
@@ -65,6 +74,19 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
         }
 
         return this.placementInfo;
+    }
+
+    @Override
+    public @NotNull List<RecipeDisplay> display() {
+        return List.of(
+                new ShapedCraftingRecipeDisplay(
+                        this.pattern.width(),
+                        this.pattern.height(),
+                        this.pattern.ingredients().stream().map(x -> x.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE)).toList(),
+                        new SlotDisplay.ItemStackSlotDisplay(this.getResult()),
+                        new SlotDisplay.ItemSlotDisplay(ModBlocks.WEAPON_TABLE.asItem())
+                )
+        );
     }
 
     @Override
