@@ -40,6 +40,10 @@ public class RegUtil {
         return ModRegistries.ACTIONS.getKey(action);
     }
 
+    public static ResourceLocation id(@NotNull IFaction<?> faction) {
+        return ModRegistries.FACTIONS.getKey(faction);
+    }
+
     public static ResourceLocation id(@NotNull ISkill<?> skill) {
         return ModRegistries.SKILLS.getKey(skill);
     }

@@ -20,8 +20,6 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
     protected int color = Color.WHITE.getRGB();
     protected IFactionVillage villageFactionData;
     protected @Nullable TextColor chatColor;
-    protected String name;
-    protected String namePlural;
     protected Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags = new HashMap<>();
 
     @Override
@@ -48,18 +46,6 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
     @Override
     public IFactionBuilder<T> village(IFactionVillage villageBuilder) {
         this.villageFactionData = villageBuilder;
-        return this;
-    }
-
-    @Override
-    public IFactionBuilder<T> name(String nameKey) {
-        this.name = nameKey;
-        return this;
-    }
-
-    @Override
-    public IFactionBuilder<T> namePlural(String namePluralKey) {
-        this.namePlural = namePluralKey;
         return this;
     }
 

@@ -3,16 +3,17 @@ package de.teamlapen.vampirism.common.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionVillage;
+import de.teamlapen.vampirism.common.util.RegUtil;
+import net.minecraft.Util;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -22,10 +23,10 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private final int color;
     @NotNull
     private final IFactionVillage villageFactionData;
-    @NotNull
-    private final Component name;
-    @NotNull
-    private final Component namePlural;
+    @Nullable
+    private String descriptionId;
+    @Nullable
+    private String descriptionIdPlural;
     @NotNull
     private final TextColor chatColor;
     private final Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags;
@@ -34,8 +35,6 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         this.color = builder.color;
         this.villageFactionData = builder.villageFactionData;
         this.chatColor = builder.chatColor == null ? TextColor.fromRgb(this.color) : builder.chatColor;
-        this.name = Component.translatable(Objects.requireNonNull(builder.name));
-        this.namePlural = Component.translatable(Objects.requireNonNull(builder.namePlural));
         this.factionTags = Collections.unmodifiableMap(builder.factionTags);
     }
 
@@ -50,13 +49,19 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public Component getName() {
-        return name;
+    public String getDescriptionId() {
+        if (this.descriptionId == null) {
+            return Util.makeDescriptionId("faction", RegUtil.id(this));
+        }
+        return this.descriptionId;
     }
 
     @Override
-    public Component getNamePlural() {
-        return namePlural;
+    public String getDescriptionIdPlural() {
+        if (this.descriptionIdPlural == null) {
+            this.descriptionIdPlural = getDescriptionId() + ".plural";
+        }
+        return this.descriptionIdPlural;
     }
 
     @Override

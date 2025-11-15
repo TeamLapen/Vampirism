@@ -44,8 +44,6 @@ public class ModFactions {
     public static final DeferredFaction<IVampirePlayer, IPlayableFaction<IVampirePlayer>> VAMPIRE = FACTIONS.registerFaction(VampirismFactions.Keys.VAMPIRE.getPath(), () -> new PlayableFactionBuilder<>((Supplier<AttachmentType<IVampirePlayer>>) (Object) ModAttachments.VAMPIRE_PLAYER)
             .color(Color.MAGENTA_DARK.getRGB())
             .chatColor(ChatFormatting.DARK_PURPLE)
-            .name("text.vampirism.vampire")
-            .namePlural("text.vampirism.vampires")
             .highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
             .refinementItem(IRefinementItem.AccessorySlotType.AMULET, ModItems.AMULET::get)
             .refinementItem(IRefinementItem.AccessorySlotType.RING, ModItems.RING::get)
@@ -66,8 +64,6 @@ public class ModFactions {
     public static final DeferredFaction<IHunterPlayer, IPlayableFaction<IHunterPlayer>> HUNTER = FACTIONS.registerFaction(VampirismFactions.Keys.HUNTER.getPath(), () -> new PlayableFactionBuilder<>((Supplier<AttachmentType<IHunterPlayer>>) (Object) ModAttachments.HUNTER_PLAYER)
             .color(Color.BLUE.getRGB())
             .chatColor(ChatFormatting.BLUE)
-            .name("text.vampirism.hunter")
-            .namePlural("text.vampirism.hunters")
             .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
             .addTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_HUNTER_BIOME)
             .addTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_HUNTER)
@@ -83,8 +79,6 @@ public class ModFactions {
             .build());
 
     public static final DeferredFaction<INeutralPlayer, IPlayableFaction<INeutralPlayer>> NEUTRAL = FACTIONS.registerFaction(VampirismFactions.Keys.NEUTRAL.getPath(), () -> new PlayableFactionBuilder<>((Supplier<AttachmentType<INeutralPlayer>>) (Object) ModAttachments.NEUTRAL_PLAYER)
-            .name("text.vampirism.neutral")
-            .namePlural("text.vampirism.neutral")
             .color(new Color(254, 254, 254).getRGB())
             .build());
 

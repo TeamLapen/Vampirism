@@ -65,8 +65,8 @@ public class SkillCallbacks implements AddCallback<ISkill<?>>, ClearCallback<ISk
         }
 
         @Override
-        public String getTranslationKey() {
-            return this.actionHolder.value().getTranslationKey();
+        public String getDescriptionId() {
+            return this.actionHolder.value().getDescriptionId();
         }
 
         @Override

@@ -92,8 +92,8 @@ public class ActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends 
     }
 
     @Override
-    public String getTranslationKey() {
-        return this.action.value().getTranslationKey();
+    public String getDescriptionId() {
+        return this.action.value().getDescriptionId();
     }
 
     @Override

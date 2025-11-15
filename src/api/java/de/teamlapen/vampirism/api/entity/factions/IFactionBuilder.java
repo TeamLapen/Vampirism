@@ -48,22 +48,6 @@ public interface IFactionBuilder<T extends IFactionEntity> {
     IFactionBuilder<T> village(@NotNull IFactionVillage villageBuilder);
 
     /**
-     * Sets the singular name for a entity of this faction
-     *
-     * @param nameKey the translation key of the name
-     * @return the builder
-     */
-    IFactionBuilder<T> name(@NotNull String nameKey);
-
-    /**
-     * Sets the plural name for a entity of this faction
-     *
-     * @param namePluralKey the translation key of the name
-     * @return the builder
-     */
-    IFactionBuilder<T> namePlural(@NotNull String namePluralKey);
-
-    /**
      * Marks the tag as a faction tag
      *
      * @param registryKey the registry key for the tag registry

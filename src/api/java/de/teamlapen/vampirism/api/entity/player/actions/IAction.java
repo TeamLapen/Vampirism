@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
+import com.mojang.serialization.Codec;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
@@ -12,7 +14,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -21,10 +22,13 @@ import java.util.Optional;
  * Interface for player actions
  */
 public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
+
+    Codec<Holder<IAction<?>>> CODEC = VampirismRegistries.ACTION.get().holderByNameCodec();
+
     /**
      * Checks if the player can use this action
      *
-     * @param player Must be an instance of class that belongs to {@link IAction#getFaction()}
+     * @param player Must be an instance of class that belongs to {@link IAction#factions()}
      */
     IActionResult canUse(T player);
 
@@ -34,23 +38,13 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
      */
     int getCooldown(T player);
 
-    @NotNull
     TagKey<? extends IFaction<?>> factions();
 
-    /**
-     * @param faction The faction to test
-     * @return of the action can be used by the given faction
-     */
-    default boolean matchesFaction(@Nullable Holder<? extends IPlayableFaction<?>> faction) {
-        return IFaction.is(faction, factions());
-    }
-
-
     default MutableComponent getName() {
-        return Component.translatable(getTranslationKey());
+        return Component.translatable(getDescriptionId());
     }
 
-    String getTranslationKey();
+    String getDescriptionId();
 
     /**
      * Called when the action is activated. Only called server side
@@ -60,6 +54,14 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
     IActionResult onActivated(T player, ActivationContext context);
+
+    /**
+     * @param faction The faction to test
+     * @return of the action can be used by the given faction
+     */
+    default boolean matchesFaction(@Nullable Holder<? extends IPlayableFaction<?>> faction) {
+        return IFaction.is(faction, factions());
+    }
 
     /**
      * @return if the action should be shown in the action select screen
@@ -92,38 +94,6 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
             return second == null;
         }
         return second != null && first.is((Holder) second);
-    }
-
-    enum PERM {
-        /**
-         * The player can use the action
-         */
-        ALLOWED,
-        /**
-         * The action is disabled in the config
-         */
-        DISABLED,
-        /**
-         * The player does not have the action unlocked
-         */
-        NOT_UNLOCKED,
-        /**
-         * The player is not in the position to use the action.
-         * <p>
-         * This is the case if the player is in spectator mode or the action rejects the player
-         */
-        DISALLOWED,
-        /**
-         * The action is on cooldown and cannot be used.
-         * <p>
-         * Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
-         */
-        COOLDOWN,
-        /**
-         * The user does not have the correct permission to use the action {@link de.teamlapen.vampirism.util.Permissions#ACTION}
-         */
-        @SuppressWarnings("JavadocReference")
-        PERMISSION_DISALLOWED
     }
 
     /**

@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,11 @@ public interface IRefinementSet {
     TagKey<IFaction<?>> getFaction();
 
     @NotNull
-    Component getName();
+    default MutableComponent getName() {
+        return Component.translatable(getDescriptionId());
+    }
+
+    String getDescriptionId();
 
     @NotNull
     Rarity getRarity();

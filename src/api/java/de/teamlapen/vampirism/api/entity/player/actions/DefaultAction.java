@@ -11,17 +11,16 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Default implementation for an action
  */
 public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IAction<T> {
-    private String translationId;
+    private String descriptionId;
 
     public void addEffectInstance(T player, MobEffectInstance instance) {
-        ((IEffectInstanceWithSource) instance).vampirism$addProperty(this.getRegistryName());
+        instance.vampirism$addProperty(this.getRegistryName());
         player.asEntity().addEffect(instance);
     }
 
@@ -45,13 +44,12 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
 
     }
 
-    @Deprecated
     @Override
-    public String getTranslationKey() {
-        if (this.translationId == null) {
-            this.translationId = Util.makeDescriptionId("action", VampirismRegistries.ACTION.get().getKey(this));
+    public String getDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = Util.makeDescriptionId("action", VampirismRegistries.ACTION.get().getKey(this));
         }
-        return this.translationId;
+        return this.descriptionId;
     }
 
     /**
@@ -71,7 +69,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
     public void removePotionEffect(T player, Holder<MobEffect> effect) {
         MobEffectInstance ins = player.asEntity().getEffect(effect);
         while (ins != null) {
-            IEffectInstanceWithSource insM = ((IEffectInstanceWithSource) ins);
+            IEffectInstanceWithSource insM = ins;
             if (insM.vampirism$hasProperties()) {
                 if (insM.vampirism$hasProperty(this.getRegistryName())) {
                     insM.vampirism$removeEffect();
@@ -88,7 +86,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return this.getRegistryName() + " (" + this.getClass().getSimpleName() + ")";
     }
 

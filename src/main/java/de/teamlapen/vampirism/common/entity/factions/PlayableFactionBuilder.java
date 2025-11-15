@@ -62,16 +62,6 @@ public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends Faction
     }
 
     @Override
-    public PlayableFactionBuilder<T> name(String nameKey) {
-        return (PlayableFactionBuilder<T>) super.name(nameKey);
-    }
-
-    @Override
-    public PlayableFactionBuilder<T> namePlural(String namePluralKey) {
-        return (PlayableFactionBuilder<T>) super.namePlural(namePluralKey);
-    }
-
-    @Override
     public PlayableFactionBuilder<T> lord(ILordPlayerEntry builder) {
         this.lord = builder;
         return this;

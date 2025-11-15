@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.api.entity.player.refinement.IRefinementSet;
 import de.teamlapen.vampirism.api.items.IRefinementItem;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.RegUtil;
+import net.minecraft.Util;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.Weighted;
 import org.jetbrains.annotations.NotNull;
@@ -23,8 +23,8 @@ public abstract class RefinementSet implements IRefinementSet {
     private final Rarity rarity;
     private final int color;
     private final @NotNull Weighted<IRefinementSet> weightedRandom;
-    private Component name;
-    private Component desc;
+    @Nullable
+    private String descriptionId;
     @Nullable
     private IRefinementItem.AccessorySlotType restrictedType;
 
@@ -45,10 +45,12 @@ public abstract class RefinementSet implements IRefinementSet {
         return color;
     }
 
-    @NotNull
     @Override
-    public Component getName() {
-        return this.name != null ? this.name : (this.name = Component.translatable("refinement_set." + RegUtil.id(this).getNamespace() + "." + RegUtil.id(this).getPath()));
+    public String getDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = Util.makeDescriptionId("refinement_set", RegUtil.id(this));
+        }
+        return this.descriptionId;
     }
 
     @NotNull

@@ -31,7 +31,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>
     private final Map<Holder<Attribute>, AttributeHolder> attributeModifierMap = new HashMap<>();
     @Range(from = 0, to = 9)
     private final int skillPointCost;
-    private String translationId;
+    private String descriptionId;
 
     public DefaultSkill() {
         this(1);
@@ -42,11 +42,11 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>
     }
 
     @Override
-    public String getTranslationKey() {
-        if (this.translationId == null) {
-            this.translationId = Util.makeDescriptionId("skill", VampirismRegistries.SKILL.get().getKey(this));
+    public String getDescriptionId() {
+        if (this.descriptionId == null) {
+            this.descriptionId = Util.makeDescriptionId("skill", VampirismRegistries.SKILL.get().getKey(this));
         }
-        return translationId;
+        return descriptionId;
     }
 
     @Override

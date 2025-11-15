@@ -41,12 +41,6 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     @Override
     IPlayableFactionBuilder<T> chatColor(ChatFormatting color);
 
-    @Override
-    IPlayableFactionBuilder<T> name(@NotNull String nameKey);
-
-    @Override
-    IPlayableFactionBuilder<T> namePlural(@NotNull String namePluralKey);
-
     IPlayableFactionBuilder<T> lord(ILordPlayerEntry lordPlayerBuilder);
 
     @Override

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.lib.client.gui.components.SimpleList;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
-import de.teamlapen.vampirism.api.entity.minion.IMinionTask;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.inventory.MinionContainer;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,7 +18,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
 
 public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
@@ -61,7 +63,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         this.lockActionButton = this.addRenderableWidget(new LockIconButton(this.leftPos + 99, this.topPos + 19, this::toggleActionLock));
         this.statButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 40, 18, 18, STATS_SPRITES, this::onStatsPressed));
         this.lockActionButton.setLocked(this.menu.isTaskLocked());
-        List<Component> taskNames = Arrays.stream(menu.getAvailableTasks()).map(IMinionTask::getName).toList();
+        var taskNames = Arrays.stream(menu.getAvailableTasks()).map(x -> (Component) x.getName()).toList();
 
         this.taskList = this.addRenderableWidget(SimpleList.builder(this.leftPos + 119, this.topPos + 19 + 19, 88, Math.min(3 * 18, taskNames.size() * 18) + 2).componentsWithClick(taskNames, this::selectTask).build());
         this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), button -> taskList.visible = !taskList.visible));

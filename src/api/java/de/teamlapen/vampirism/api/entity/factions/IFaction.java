@@ -6,6 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -31,12 +32,20 @@ public interface IFaction<T extends IFactionEntity> {
     /**
      * @return The name of the faction
      */
-    Component getName();
+    default MutableComponent getName() {
+        return Component.translatable(getDescriptionId());
+    }
+
+    String getDescriptionId();
 
     /**
      * @return The plural name of the faction
      */
-    Component getNamePlural();
+    default MutableComponent getNamePlural() {
+        return Component.translatable(getDescriptionIdPlural());
+    }
+
+    String getDescriptionIdPlural();
 
     /**
      * Gets Village Totem related utility class

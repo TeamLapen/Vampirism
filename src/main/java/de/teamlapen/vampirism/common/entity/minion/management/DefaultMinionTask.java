@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -20,8 +19,9 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> implements IMinionTask<T, Q> {
 
-    private Component name;
     private final @Nullable Holder<ISkill<?>> requiredSkill;
+    @Nullable
+    private String descriptionId;
 
     public DefaultMinionTask() {
         this(null);
@@ -39,11 +39,11 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
     }
 
     @Override
-    public @NotNull Component getName() {
-        if (name == null) {
-            name = Component.translatable(Util.makeDescriptionId("minion_task", RegUtil.id(this)));
+    public String getDescriptionId() {
+        if (this.descriptionId != null) {
+            this.descriptionId = Util.makeDescriptionId("minion_task", RegUtil.id(this));
         }
-        return name;
+        return this.descriptionId;
     }
 
     protected void triggerAdvancements(Player player) {

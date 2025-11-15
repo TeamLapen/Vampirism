@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.api.entity.minion;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ILordPlayer;
 import net.minecraft.core.Holder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -40,7 +40,11 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      */
     void deactivateTask(T desc);
 
-    Component getName();
+    default MutableComponent getName() {
+        return Component.translatable(getDescriptionId());
+    }
+
+    String getDescriptionId();
 
     /**
      * @param faction The faction of the lord
@@ -53,7 +57,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
 
     /**
      * Read the task description from NBT.
-     * Counterpart to {@link IMinionTaskDesc#writeToNBT(CompoundTag)}
+     * Counterpart to {@link IMinionTaskDesc#serialize(ValueOutput)}
      */
     @NotNull
     T load(ValueInput input);

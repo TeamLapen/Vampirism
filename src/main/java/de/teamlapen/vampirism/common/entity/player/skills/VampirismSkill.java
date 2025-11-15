@@ -66,7 +66,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
      * Enable description using "text.vampirism.skill."+getID()+".desc" as unloc key
      */
     public @NotNull VampirismSkill<T> setHasDefaultDescription() {
-        description = () -> Component.translatable(getTranslationKey() + ".desc");
+        description = () -> Component.translatable(getDescriptionId() + ".desc");
         return this;
     }
 

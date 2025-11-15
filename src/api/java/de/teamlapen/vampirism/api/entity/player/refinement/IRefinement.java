@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.refinement;
 
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -20,7 +21,11 @@ public interface IRefinement {
     Holder<Attribute> getAttribute();
 
     @NotNull
-    Component getDescription();
+    default MutableComponent getDescription() {
+        return Component.translatable(getDescriptionId());
+    }
+
+    String getDescriptionId();
 
     double getModifierValue();
 }

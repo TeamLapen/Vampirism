@@ -29,10 +29,10 @@ public interface ISkill<T extends ISkillPlayer<T>> extends ISkillLike<T> {
     TagKey<? extends IFaction<?>> factions();
 
     default MutableComponent getName() {
-        return Component.translatable(getTranslationKey());
+        return Component.translatable(getDescriptionId());
     }
 
-    String getTranslationKey();
+    String getDescriptionId();
 
     /**
      * Called when the skill is disabled (Server: on load from nbt/on disabling all skills e.g. via the gui. Client: on update from server)
