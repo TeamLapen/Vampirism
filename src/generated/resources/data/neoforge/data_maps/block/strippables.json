@@ -1,0 +1,16 @@
+{
+  "values": {
+    "vampirism:cursed_spruce_log": {
+      "stripped_block": "vampirism:stripped_cursed_spruce_log"
+    },
+    "vampirism:cursed_spruce_wood": {
+      "stripped_block": "vampirism:stripped_cursed_spruce_wood"
+    },
+    "vampirism:dark_spruce_log": {
+      "stripped_block": "vampirism:stripped_dark_spruce_log"
+    },
+    "vampirism:dark_spruce_wood": {
+      "stripped_block": "vampirism:stripped_dark_spruce_wood"
+    }
+  }
+}

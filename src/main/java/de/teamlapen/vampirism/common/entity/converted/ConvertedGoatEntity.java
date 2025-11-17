@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.entity.converted;
 
+import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModAttributes;
-import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;

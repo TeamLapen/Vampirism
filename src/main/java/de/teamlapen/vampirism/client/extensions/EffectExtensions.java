@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.extensions;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.misc.extension.IEffectInstanceWithSource;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -26,43 +25,19 @@ public class EffectExtensions {
             guiGraphics.drawString(screen.getFont(), Component.translatable("effect.duration.infinite"), x + 10 + 18, y + 6 + 10, 8355711);
             return true;
         }
-
-        //        @Override
-//        public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphics graphics, int x, int y, int blitOffset) {
-//            Component component = ((EffectRenderingInventoryScreenAccessor) screen).invoke_getEffectName(instance);
-//            graphics.drawString(screen.font, component, x + 10 + 18, y + 6, 16777215, true);
-//            graphics.drawString(screen.font, "**:**", x + 10 + 18, y + 6 + 10, 8355711, true);
-//            return true;
-//        }
     };
 
     public static final IClientMobEffectExtensions NIGHT_VISION = new IClientMobEffectExtensions() {
 
         @Override
         public boolean isVisibleInInventory(MobEffectInstance instance) {
-            if (instance instanceof IEffectInstanceWithSource withSource) {
-                return !withSource.vampirism$getProperties().contains(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
-            }
-            return true;
+            return !instance.vampirism$getProperties().contains(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
         }
 
         @Override
         public boolean isVisibleInGui(MobEffectInstance instance) {
-            if (instance instanceof IEffectInstanceWithSource withSource) {
-                return !withSource.vampirism$getProperties().contains(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
-            }
-            return true;
+            return !instance.vampirism$getProperties().contains(VReference.PERMANENT_INVISIBLE_MOB_EFFECT);
         }
-
-//        @Override
-//        public boolean renderInventoryIcon(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphics graphics, int x, int y, int blitOffset) {
-//            return true;
-//        }
-//
-//        @Override
-//        public boolean renderInventoryText(MobEffectInstance instance, EffectRenderingInventoryScreen<?> screen, GuiGraphics graphics, int x, int y, int blitOffset) {
-//            return true;
-//        }
 
         @Override
         public boolean renderGuiIcon(MobEffectInstance instance, Gui gui, GuiGraphics graphics, int x, int y, float z, float alpha) {

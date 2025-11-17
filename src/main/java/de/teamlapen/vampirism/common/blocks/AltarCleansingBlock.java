@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.blocks;
 
-import com.mojang.datafixers.util.Pair;
 import de.teamlapen.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.blocks.base.BaseHorizontalBlock;
@@ -21,9 +20,11 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 public class AltarCleansingBlock extends BaseHorizontalBlock {
 
-    private static final Pair<VoxelShape, VoxelShape> SHAPES = UtilLib.getShapesRotatedSymmetrically(Shapes.or(
+    private static final Map<Direction, VoxelShape> SHAPES = UtilLib.getShapesRotatedFromNorth(Shapes.or(
             Block.box(1, 0, 5, 15, 1, 12),
             Block.box(7, 1, 7, 9, 12, 11),
             Block.box(1, 9, 3, 15, 14, 13)
@@ -36,7 +37,7 @@ public class AltarCleansingBlock extends BaseHorizontalBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(FACING) == Direction.NORTH || state.getValue(FACING) == Direction.SOUTH ? SHAPES.getFirst() : SHAPES.getSecond();
+        return SHAPES.get(state.getValue(FACING));
     }
 
     @Override

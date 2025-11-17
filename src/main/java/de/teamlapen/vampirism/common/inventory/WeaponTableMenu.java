@@ -167,7 +167,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
             if (world instanceof ServerLevel serverLevel) {
                 recipe = quickCheck.getRecipeFor(input, serverLevel);
             } else {
-                recipe = VampirismMod.proxy.recipeMap(world).getRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), input, world).findFirst();
+                recipe = VampirismMod.services().recipes().getRecipes().getRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), input, world).findFirst();
             }
             if (world instanceof ServerLevel serverLevel) {
                 return recipe.stream().flatMap(s -> s.value().getRequiredSkills().stream()).filter(s -> !hunterPlayer.getSkillHandler().isSkillEnabled(s)).toList();
@@ -182,7 +182,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
             if (worldIn instanceof ServerLevel serverLevel) {
                 optional = quickCheck.getRecipeFor(craftMatrixIn, serverLevel);
             } else {
-                optional = VampirismMod.proxy.recipeMap(worldIn).getRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), craftMatrixIn, worldIn).findFirst();
+                optional = VampirismMod.services().recipes().getRecipes().getRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), craftMatrixIn, worldIn).findFirst();
             }
             this.missingLava.set(false);
             craftResultIn.setItem(0, ItemStack.EMPTY);

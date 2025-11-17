@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.integration.IMCHandler;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ public class BloodBarOverlay extends BaseOverlay {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
-        if (canRenderOverlays() && Helper.isVampire(this.player()) && !IMCHandler.requestedToDisableBloodbar) {
+        if (canRenderOverlays() && Helper.isVampire(this.player()) && !VampirismMod.services().imc().isRequestedToDisableBloodbar()) {
             if (this.mc.gameMode.hasExperience()) {
                 IBloodStats stats = VampirePlayer.get(this.player()).getBloodStats();
                 int left = this.mc.getWindow().getGuiScaledWidth() / 2 + 91;

@@ -51,7 +51,7 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
                 .map(Map.Entry::getValue)
                 .map(modelManager::getStandaloneModel)
                 .toArray(BlockStateModel[]::new);
-        top = ModModels.COFFIN_KEYS.row(ModModels.CoffinType.BOTTOM).entrySet().stream()
+        top = ModModels.COFFIN_KEYS.row(ModModels.CoffinType.TOP).entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> entry.getKey().getId()))
                 .map(Map.Entry::getValue)
                 .map(modelManager::getStandaloneModel)
@@ -110,7 +110,7 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
             }
         }
 
-        nodeCollector.submitBlockModel(poseStack, RenderType.solid(), this.bottom[renderState.color.getId()], 1, 1, 1, renderState.lightCoords, OverlayTexture.NO_OVERLAY, -1);
+        nodeCollector.submitBlockModel(poseStack, RenderType.solid(), this.bottom[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 
         poseStack.pushPose();
         if (renderState.isVertical) {
@@ -121,8 +121,9 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
             poseStack.translate(0, 0, -0.5 * renderState.lidPos);
         }
 
-        nodeCollector.submitBlockModel(poseStack, RenderType.solid(), this.top[renderState.color.getId()], 1, 1, 1, renderState.lightCoords, OverlayTexture.NO_OVERLAY, -1);
+        nodeCollector.submitBlockModel(poseStack, RenderType.solid(), this.top[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
+
         poseStack.popPose();
     }
 

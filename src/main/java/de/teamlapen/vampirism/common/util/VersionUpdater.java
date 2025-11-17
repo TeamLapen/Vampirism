@@ -11,30 +11,30 @@ import org.jetbrains.annotations.Nullable;
 public class VersionUpdater {
 
     @Nullable
-    private static ArtifactVersion oldVersion;
+    private ArtifactVersion oldVersion;
     @Nullable
-    private static ArtifactVersion newVersion;
+    private ArtifactVersion newVersion;
 
-    public static void catchModVersionMismatch(ModMismatchEvent event) {
+    public void catchModVersionMismatch(ModMismatchEvent event) {
         event.getVersionDifference(REFERENCE.MODID).ifPresent(info -> {
             oldVersion = info.oldVersion();
             newVersion = info.newVersion();
         });
     }
 
-    public static void checkVersionUpdated(ServerStartingEvent event) {
+    public void checkVersionUpdated(ServerStartingEvent event) {
         if (oldVersion != null && newVersion != null) {
             update(oldVersion, newVersion);
         }
     }
 
-    private static void update(@NotNull ArtifactVersion oldVersion, ArtifactVersion newVersion) {
+    private void update(@NotNull ArtifactVersion oldVersion, ArtifactVersion newVersion) {
         if (oldVersion.getMajorVersion() == 1 && oldVersion.getMinorVersion() == 9 && newVersion.getMajorVersion() == 1 && newVersion.getMinorVersion() == 10) {
             update1_9to1_10();
         }
     }
 
-    private static void update1_9to1_10() {
+    private void update1_9to1_10() {
         double skillPointsPerLevel = ModConfig.BALANCE.skillPointsPerLevel.get();
         if (skillPointsPerLevel == 1) {
             skillPointsPerLevel = ModConfig.BALANCE.skillPointsPerLevel.getDefault();

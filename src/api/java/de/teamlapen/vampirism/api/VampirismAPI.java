@@ -18,7 +18,6 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 import static de.teamlapen.vampirism.api.VampirismAttachments.*;
 
@@ -30,46 +29,75 @@ public class VampirismAPI {
 
     private static boolean INIT;
 
-    private static IFactionRegistry factionRegistry;
-    private static ISundamageRegistry sundamageRegistry;
-    private static IVampirismEntityRegistry entityRegistry;
-    private static IVampireVisionRegistry vampireVisionRegistry;
-    private static IActionManager actionManager;
-    private static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry;
-    private static ISettingsProvider settings;
-    private static IBloodConversionRegistry bloodConversionRegistry;
+    private static IVampirismServices services;
 
+    /**
+     * @deprecated Use services() with {@link IVampirismServices#actionManager()}
+     */
+    @Deprecated
     public static IActionManager actionManager() {
-        return actionManager;
+        return services.actionManager();
     }
 
+    /**
+     * @deprecated Use services() with {@link IVampirismServices#visionRegistry()}
+     */
+    @Deprecated
     public static IVampireVisionRegistry vampireVisionRegistry() {
-        return vampireVisionRegistry;
+        return services.visionRegistry();
     }
 
+    /**
+     * @deprecated Use services() with {@link IVampirismServices#factionRegistry()}
+     */
+    @Deprecated
     public static IFactionRegistry factionRegistry() {
-        return factionRegistry;
+        return services.factionRegistry();
     }
 
+    /**
+     * @deprecated Use services() with {@link IVampirismServices#sundamageRegistry()}
+     */
+    @Deprecated
     public static ISundamageRegistry sundamageRegistry() {
-        return sundamageRegistry;
+        return services.sundamageRegistry() ;
     }
 
+    /**
+     * @deprecated Use services() with {@link IVampirismServices#entityRegistry()}
+     */
+    @Deprecated
     public static IVampirismEntityRegistry entityRegistry() {
-        return entityRegistry;
+        return services.entityRegistry();
     }
 
 
+    /**
+     * @deprecated Use services() with {@link IVampirismServices#extendedBrewingRecipeRegistry()}
+     */
+    @Deprecated
     public static IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry() {
-        return extendedBrewingRecipeRegistry;
+        return services.extendedBrewingRecipeRegistry();
     }
 
+    /**
+     * @deprecated Use services() with {@link IVampirismServices#settings()}
+     */
+    @Deprecated
     public static ISettingsProvider settings() {
-        return settings;
+        return services.settings();
     }
 
+    /**
+     * @deprecated Use services() with {@link IVampirismServices#bloodConversionRegistry()}
+     */
+    @Deprecated
     public static IBloodConversionRegistry bloodConversionRegistry() {
-        return bloodConversionRegistry;
+        return services.bloodConversionRegistry();
+    }
+
+    public static IVampirismServices services() {
+        return services;
     }
 
     /**
@@ -79,27 +107,10 @@ public class VampirismAPI {
      * @throws IllegalStateException if the API was already setup
      */
     @ApiStatus.Internal
-    public static void setUpRegistries(IFactionRegistry factionRegistryIn, ISundamageRegistry sundamageRegistryIn, IVampirismEntityRegistry entityRegistryIn, IActionManager actionManagerIn,
-                                       IVampireVisionRegistry vampireVisionRegistryIn, IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistryIn, ISettingsProvider settingsIn, IBloodConversionRegistry bloodConversionRegistryIn) {
+    public static void setUpRegistries(IVampirismServices services) {
         if (INIT) throw new IllegalStateException("Vampirism API can only be setup once");
-        factionRegistry = factionRegistryIn;
-        sundamageRegistry = sundamageRegistryIn;
-        entityRegistry = entityRegistryIn;
-        actionManager = actionManagerIn;
-        vampireVisionRegistry = vampireVisionRegistryIn;
-        extendedBrewingRecipeRegistry = extendedBrewingRecipeRegistryIn;
-        settings = settingsIn;
-        bloodConversionRegistry = bloodConversionRegistryIn;
+        VampirismAPI.services = services;
         INIT = true;
-    }
-
-    /**
-     * Called once Vampirism has finished preparing the API, and it is ready to use.
-     */
-    @SuppressWarnings("EmptyMethod")
-    @ApiStatus.Internal
-    public static void onSetupComplete() {
-        settings.syncSettingsCache();
     }
 
     /**
@@ -108,7 +119,7 @@ public class VampirismAPI {
      * @param player the player for which the attachment should be returned
      * @return the faction player handler for the given player
      */
-    public static @NotNull IFactionPlayerHandler factionPlayerHandler(@NotNull Player player) {
+    public static IFactionPlayerHandler factionPlayerHandler(Player player) {
         return player.getData(FACTION_PLAYER_HANDLER);
     }
 
@@ -118,7 +129,7 @@ public class VampirismAPI {
      * @param player the player for which the attachment should be returned
      * @return the vampire player for the given player
      */
-    public static @NotNull IVampirePlayer vampirePlayer(@NotNull Player player) {
+    public static IVampirePlayer vampirePlayer(Player player) {
         return player.getData(VAMPIRE_PLAYER);
     }
 
@@ -128,7 +139,7 @@ public class VampirismAPI {
      * @param player the player for which the attachment should be returned
      * @return the hunter player for the given player
      */
-    public static @NotNull IHunterPlayer hunterPlayer(@NotNull Player player) {
+    public static IHunterPlayer hunterPlayer(Player player) {
         return player.getData(HUNTER_PLAYER);
     }
 
@@ -138,7 +149,7 @@ public class VampirismAPI {
      * @param creature the creature for which the attachment should be returned
      * @return the extended creature vampirism for the given creature
      */
-    public static @NotNull IExtendedCreatureVampirism extendedCreatureVampirism(@NotNull PathfinderMob creature) {
+    public static IExtendedCreatureVampirism extendedCreatureVampirism(PathfinderMob creature) {
         return creature.getData(VampirismAttachments.EXTENDED_CREATURE);
     }
 
@@ -148,7 +159,7 @@ public class VampirismAPI {
      * @param w the world for which the attachment should be returned
      * @return the garlic chunk handler for the given world
      */
-    public static @NotNull IGarlicChunkHandler garlicHandler(@NotNull Level w) {
+    public static IGarlicChunkHandler garlicHandler(Level w) {
         return w.getData(VampirismAttachments.GARLIC_HANDLER);
     }
 
@@ -158,7 +169,7 @@ public class VampirismAPI {
      * @param w the world for which the attachment should be returned
      * @return the fog handler for the given world
      */
-    public static @NotNull IFogHandler fogHandler(@NotNull Level w) {
+    public static IFogHandler fogHandler(Level w) {
         return w.getData(VampirismAttachments.FOG_HANDLER);
     }
 

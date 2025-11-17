@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.entity.hunter;
 
 import com.mojang.logging.LogUtils;
 import de.teamlapen.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
@@ -10,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
+import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.entity.VampirismEntity;
@@ -20,8 +22,6 @@ import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.IPlayerOverlay;
 import de.teamlapen.vampirism.common.util.PlayerModelType;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
-import de.teamlapen.vampirism.common.util.SupporterManager;
-import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -286,7 +286,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pReason, @Nullable SpawnGroupData pSpawnData) {
-        Supporter supporter = SupporterManager.getRandomHunter(random);
+        Supporter supporter = VampirismMod.services().supporterManager().getRandomHunter(random);
         this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
         this.getEntityData().set(NAME, supporter.name());
         this.getEntityData().set(TEXTURE, supporter.texture());

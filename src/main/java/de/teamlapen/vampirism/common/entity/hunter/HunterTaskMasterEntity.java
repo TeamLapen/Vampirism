@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.entity.hunter;
 
+import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.entity.IDefaultTaskMasterEntity;
 import de.teamlapen.vampirism.common.entity.VampirismEntity;
@@ -7,7 +8,6 @@ import de.teamlapen.vampirism.common.entity.ai.goals.ForceLookEntityGoal;
 import de.teamlapen.vampirism.common.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.common.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

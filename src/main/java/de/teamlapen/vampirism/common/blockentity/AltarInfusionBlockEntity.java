@@ -4,6 +4,7 @@ import de.teamlapen.lib.common.blockentities.InventoryBlockEntity;
 import de.teamlapen.lib.common.inventory.InventoryHelper;
 import de.teamlapen.lib.util.ValuedObject;
 import de.teamlapen.vampirism.client.VampirismModClient;
+import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.common.blocks.AltarTipBlock;
 import de.teamlapen.vampirism.common.core.*;
@@ -15,15 +16,11 @@ import de.teamlapen.vampirism.common.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.common.items.PureBloodItem;
 import de.teamlapen.vampirism.common.particles.AltarInfusionParticleOptions;
-import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -52,7 +49,7 @@ import java.util.UUID;
 
 public class AltarInfusionBlockEntity extends InventoryBlockEntity {
 
-    private final static Logger LOGGER = LogManager.getLogger(AltarInfusionBlockEntity.class);
+    private final static Logger LOGGER = LogManager.getLogger();
     private static final int DURATION_TICK = 450;
     /**
      * Used to store a saved player UUID during read until world and player are available
@@ -155,18 +152,6 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             return null;
         }
         return this.tips;
-    }
-
-    @Nullable
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @NotNull
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
-        return this.saveWithoutMetadata(lookupProvider);
     }
 
     @Override

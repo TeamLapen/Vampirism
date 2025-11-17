@@ -18,7 +18,7 @@ public class ModParticleFactories {
         event.registerSpriteSet(ModParticles.ALTAR_INFUSION.get(), FlyingBloodParticle.Provider::new);
 
         event.registerSpriteSet(ModParticles.FLYING_BLOOD_ENTITY.get(), FlyingBloodEntityParticle.Provider::new);
-        event.registerSpecial(ModParticles.GENERIC.get(), new GenericParticle.Factory());
+        event.registerSpriteSet(ModParticles.GENERIC.get(), GenericParticle.Provider::new);
         event.registerSpriteSet(ModParticles.SANGUINARE.get(), SpellParticle.Provider::new);
     }
 }

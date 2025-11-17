@@ -40,7 +40,7 @@ public class FogDiffuserRenderer implements BlockEntityRenderer<FogDiffuserBlock
         poseStack.pushPose();
         poseStack.translate(0.5, 0.3, 0.5);
         poseStack.mulPose(Axis.YP.rotationDegrees(renderState.degrees));
-        renderState.itemState.submit(poseStack, nodeCollector, renderState.lightCoords, OverlayTexture.NO_OVERLAY, -1);
+        renderState.itemState.submit(poseStack, nodeCollector, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
     }
 

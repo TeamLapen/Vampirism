@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.data.provider.models;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.client.colors.CrossbowArrowTint;
-import de.teamlapen.vampirism.client.colors.OilBottleTint;
-import de.teamlapen.vampirism.client.colors.RefinementTint;
+import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
+import de.teamlapen.vampirism.client.color.item.OilBottleTint;
+import de.teamlapen.vampirism.client.color.item.RefinementTint;
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
 import de.teamlapen.vampirism.common.core.ModBlocks;

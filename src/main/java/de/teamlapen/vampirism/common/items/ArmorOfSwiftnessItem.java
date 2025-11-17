@@ -20,6 +20,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.Equippable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -53,10 +54,10 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, EquipmentSlot slot) {
+    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
         super.inventoryTick(stack, level, entity, slot);
 
-        if (entity.tickCount % 45 == 3 && slot.isArmor() && entity instanceof Player player) {
+        if (entity.tickCount % 45 == 3 && slot != null && slot.isArmor() && entity instanceof Player player) {
             Equippable equippable = components().get(DataComponents.EQUIPPABLE);
             if (equippable != null && equippable.slot() == EquipmentSlot.CHEST) {
                 boolean flag = true;

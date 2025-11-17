@@ -1,27 +1,23 @@
 package de.teamlapen.vampirism.common.blockentity;
 
+import de.teamlapen.lib.common.blockentities.NetworkedBlockEntity;
 import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * TileEntity for coffins. Handles coffin lid position and color
  */
-public class CoffinBlockEntity extends BlockEntity {
+public class CoffinBlockEntity extends NetworkedBlockEntity {
     public float lidPos;
     public DyeColor color = DyeColor.RED;
     private boolean playLidSoundFlag;
@@ -40,18 +36,6 @@ public class CoffinBlockEntity extends BlockEntity {
         setChanged();
     }
 
-    @Nullable
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @NotNull
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        return this.saveWithoutMetadata(provider);
-    }
-
     @Override
     public void loadAdditional(@NotNull ValueInput input) {
         super.loadAdditional(input);
@@ -65,14 +49,6 @@ public class CoffinBlockEntity extends BlockEntity {
         super.saveAdditional(output);
         output.store("color", DyeColor.CODEC, this.color);
         output.putFloat("lidPos", this.lidPos);
-    }
-
-    @Override
-    public void setChanged() {
-        super.setChanged();
-        if (level != null) {
-            level.sendBlockUpdated(getBlockPos(), level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
-        }
     }
 
     public static void clientTickHead(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull CoffinBlockEntity blockEntity) {

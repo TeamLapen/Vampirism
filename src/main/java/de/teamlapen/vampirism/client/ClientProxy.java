@@ -15,13 +15,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
@@ -30,7 +29,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static de.teamlapen.vampirism.common.blocks.TentBlock.FACING;
 import static de.teamlapen.vampirism.common.blocks.TentBlock.POSITION;
@@ -168,25 +169,4 @@ public class ClientProxy extends CommonProxy {
         return this.bossEventSounds.get(bossEventUuid);
     }
 
-    @Override
-    public @NotNull RecipeMap recipeMap(Level level) {
-        if (level instanceof ServerLevel serverLevel) {
-            return serverLevel.recipeAccess().recipeMap();
-        } else {
-            return this.recipeMap;
-        }
-    }
-
-    public void setRecipes(Collection<RecipeHolder<?>> recipes) {
-        this.recipeMap = RecipeMap.create(recipes);
-    }
-
-    @Override
-    public <I extends RecipeInput, T extends Recipe<I>> Optional<RecipeHolder<T>> getRecipeFor(RecipeType<T> type, I input, Level level, RecipeManager.CachedCheck<I, T> check) {
-        if (level instanceof ServerLevel serverLevel) {
-            return check.getRecipeFor(input, serverLevel);
-        } else {
-            return this.recipeMap.getRecipesFor(type, input, level).findFirst();
-        }
-    }
 }

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.core;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
+import de.teamlapen.lib.client.IMinecraftAccessor;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -25,7 +26,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * Handles all key/input related stuff
  */
-public class ModKeys {
+public class ModKeys implements IMinecraftAccessor {
 
     private static final Logger LOGGER = LogManager.getLogger();
     /**
@@ -95,7 +95,6 @@ public class ModKeys {
     private boolean suckKeyDown = false;
 
     private final List<KeyConfig> keyMappingActions;
-    private final Minecraft mc;
     private final Object2LongArrayMap<ActionKeys> actionTriggerTime = new Object2LongArrayMap<>();
 
     public ModKeys() {
@@ -108,8 +107,6 @@ public class ModKeys {
         keyMappingActions.add(new KeyConfig(SKILL_SCREEN, this::openSkillScreen, true));
         ACTION_KEYS.forEach((i, key) -> keyMappingActions.add(new KeyConfig(key, () -> toggleAction(i), true)));
         this.keyMappingActions = keyMappingActions.build();
-        this.mc = Minecraft.getInstance();
-
     }
 
     @SubscribeEvent
@@ -166,7 +163,7 @@ public class ModKeys {
     }
 
     private void openActionMenu() {
-        if (mc.player.isAlive() && !mc.player.isSpectator()) {
+        if (player().isAlive() && !player().isSpectator()) {
             SelectActionRadialScreen.show();
         }
     }
@@ -176,8 +173,8 @@ public class ModKeys {
     }
 
     private void openSkillScreen() {
-        FactionPlayerHandler.get(mc.player).getCurrentSkillPlayer().ifPresent(factionPlayer -> {
-            mc.setScreen(new SkillsScreen(factionPlayer, mc.screen));
+        FactionPlayerHandler.get(player()).getCurrentSkillPlayer().ifPresent(factionPlayer -> {
+            mc().setScreen(new SkillsScreen(factionPlayer, mc().screen));
         });
     }
 
@@ -187,7 +184,7 @@ public class ModKeys {
 
     private void openMinionTaskMenu() {
         if (Minecraft.getInstance().player.isSpectator()) return;
-        if (FactionPlayerHandler.get(mc.player).getLordLevel() > 0) {
+        if (FactionPlayerHandler.get(player()).getLordLevel() > 0) {
             SelectMinionTaskRadialScreen.show();
         }
     }
@@ -196,9 +193,8 @@ public class ModKeys {
         long t = System.currentTimeMillis();
         if (t - this.actionTriggerTime.getOrDefault(key, 0) > ACTION_BUTTON_COOLDOWN) {
             this.actionTriggerTime.put(key, t);
-            Player player = mc.player;
-            if (player.isAlive()) {
-                FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            if (player().isAlive()) {
+                FactionPlayerHandler handler = FactionPlayerHandler.get(player());
                 toggleBoundAction(handler.factionPlayer(), handler.getBoundAction(key));
             }
         }
@@ -221,7 +217,7 @@ public class ModKeys {
     }
 
     private void selectAmmo() {
-        if (mc.player.isAlive()) {
+        if (player().isAlive()) {
             SelectAmmoScreen.show();
         }
     }

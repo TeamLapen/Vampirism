@@ -14,12 +14,6 @@ public class ModModels {
     @Unmodifiable
     public static Table<CoffinType, DyeColor, StandaloneModelKey<BlockStateModel>> COFFIN_KEYS = createCoffinKeys();
 
-    @SuppressWarnings("DataFlowIssue")
-    @NotNull
-    public static StandaloneModelKey<BlockStateModel> getCoffinKey(DyeColor dye, CoffinType type) {
-        return COFFIN_KEYS.get(type, dye);
-    }
-
     private static Table<CoffinType, DyeColor, StandaloneModelKey<BlockStateModel>> createCoffinKeys() {
         var builder = ImmutableTable.<CoffinType, DyeColor, StandaloneModelKey<BlockStateModel>>builder();
 

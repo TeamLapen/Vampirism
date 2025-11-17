@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.client.renderer.tooltips.QuarrelPouchClientTooltip
 import de.teamlapen.vampirism.common.blocks.IDescriptionProvider;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.items.tooltip.QuarrelPouchTooltip;
 import de.teamlapen.vampirism.common.util.BlockDescription;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.GatherEffectScreenTooltipsEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
@@ -61,5 +63,12 @@ public class ClientTooltips {
 
     public void registerTooltipRenderer(RegisterClientTooltipComponentFactoriesEvent event) {
         event.register(QuarrelPouchTooltip.class, QuarrelPouchClientTooltip::new);
+    }
+
+    @SubscribeEvent
+    public void gatherEffectTooltips(GatherEffectScreenTooltipsEvent event) {
+        if (event.getEffectInstance().is(ModEffects.SANGUINARE)) {
+            event.getTooltip().removeAll(event.getTooltip().stream().skip(1).toList());
+        }
     }
 }

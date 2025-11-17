@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.proxy;
 
-import de.teamlapen.lib.common.ILifecycleListener;
 import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
 import net.minecraft.core.BlockPos;
@@ -11,7 +10,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +17,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
  * Proxy interface
  */
-public interface IProxy extends ILifecycleListener {
+public interface IProxy {
 
     default void displayNameSwordScreen(ItemStack stack) {
     }
@@ -78,10 +75,4 @@ public interface IProxy extends ILifecycleListener {
     default void displayHunterMinionStatsScreen(HunterMinionEntity entity) {
 
     }
-
-
-    @NotNull
-    RecipeMap recipeMap(Level level);
-
-    <I extends RecipeInput, T extends Recipe<I>> Optional<RecipeHolder<T>> getRecipeFor(RecipeType<T> type, I input, Level level, RecipeManager.CachedCheck<I, T> check);
 }

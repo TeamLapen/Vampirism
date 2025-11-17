@@ -5,11 +5,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -19,7 +17,7 @@ import net.neoforged.neoforge.items.wrapper.InvWrapper;
 /**
  * Basic abstract class for BlockEntities which need a small inventory (with a gui)
  */
-public abstract class InventoryBlockEntity extends BaseContainerBlockEntity implements MenuProvider {
+public abstract class InventoryBlockEntity extends NetworkedContainerBlockEntity implements MenuProvider {
 
     /**
      * Maximal squared distance from which the player can access the inventory
@@ -108,10 +106,6 @@ public abstract class InventoryBlockEntity extends BaseContainerBlockEntity impl
         }
         this.setChanged();//Not sure
 
-    }
-
-    @Override
-    public void startOpen(ContainerUser user) {
     }
 
     @Override

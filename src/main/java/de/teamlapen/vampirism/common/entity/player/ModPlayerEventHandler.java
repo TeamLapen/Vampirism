@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.common.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.effects.VampirismPoisonMobEffect;
+import de.teamlapen.vampirism.common.entity.SundamageRegistry;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
@@ -64,6 +65,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
@@ -525,4 +527,14 @@ public class ModPlayerEventHandler {
             LevelFog.get(event.getLevel()).updatePlayer(player);
         }
     }
+
+    @SubscribeEvent
+    private void onDataPackSyncEvent(OnDatapackSyncEvent event) {
+        if (event.getPlayer() != null) {
+            ((SundamageRegistry) VampirismAPI.sundamageRegistry()).updateClient(event.getPlayer());
+        } else {
+            event.getPlayerList().getPlayers().forEach(player -> ((SundamageRegistry) VampirismAPI.sundamageRegistry()).updateClient(player));
+        }
+    }
+
 }

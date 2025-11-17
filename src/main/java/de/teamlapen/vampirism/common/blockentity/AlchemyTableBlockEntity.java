@@ -182,7 +182,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             --blockEntity.fuel;
             blockEntity.brewTime = 600;
             blockEntity.ingredient = itemstack1.getItem();
-            blockEntity.productColor = VampirismMod.proxy.recipeMap(level).byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().isInput(blockEntity.items.get(4)) && (recipe.value().isIngredient(blockEntity.items.getFirst()) || recipe.value().isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.value().getResultItem()).map(s -> OilContent.getOil(s).value().getColor()).findAny().orElse(0xffffff);
+            blockEntity.productColor = VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().isInput(blockEntity.items.get(4)) && (recipe.value().isIngredient(blockEntity.items.getFirst()) || recipe.value().isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.value().getResultItem()).map(s -> OilContent.getOil(s).value().getColor()).findAny().orElse(0xffffff);
             blockEntity.setChanged();
         }
 
@@ -264,19 +264,19 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     private boolean hasRecipe(@NotNull Level level, ItemStack input, @NotNull ItemStack ingredient) {
-        return VampirismMod.proxy.recipeMap(level).byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(input) && recipe.value().isIngredient(ingredient));
+        return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(input) && recipe.value().isIngredient(ingredient));
     }
 
     public boolean isValidIngredient(@NotNull Level level, @NotNull ItemStack stack) {
-        return VampirismMod.proxy.recipeMap(level).byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isIngredient(stack));
+        return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isIngredient(stack));
     }
 
     public boolean isValidInput(@NotNull Level level, @NotNull ItemStack stack) {
-        return VampirismMod.proxy.recipeMap(level).byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(stack));
+        return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(stack));
     }
 
     public @NotNull ItemStack getOutput(@NotNull Level level, @NotNull ItemStack input, @NotNull ItemStack ingredient) {
-        return VampirismMod.proxy.recipeMap(level).byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().map(recipe -> recipe.value().getResult(input, ingredient)).filter(a -> !a.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
+        return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().map(recipe -> recipe.value().getResult(input, ingredient)).filter(a -> !a.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
     }
 
     @Override

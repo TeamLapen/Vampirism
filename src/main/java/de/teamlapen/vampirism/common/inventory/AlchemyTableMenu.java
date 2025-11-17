@@ -145,7 +145,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
         }
 
         public static boolean mayPlaceItem(@NotNull Level world, @NotNull ItemStack itemstack) {
-            return VampirismMod.proxy.recipeMap(world).byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isIngredient(itemstack));
+            return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isIngredient(itemstack));
         }
 
         public boolean mayPlace(@NotNull ItemStack stack) {

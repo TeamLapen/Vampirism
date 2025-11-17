@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.network;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.task.ITaskInstance;
-import de.teamlapen.vampirism.client.ClientProxy;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.data.ClientSkillTreeData;
 import de.teamlapen.vampirism.client.gui.screens.SelectMinionScreen;
@@ -114,12 +113,6 @@ public class ClientPayloadHandler {
             SimpleSoundInstance simpleSoundInstance = SimpleSoundInstance.forAmbientAddition(msg.soundEvent().value());
             Minecraft.getInstance().getSoundManager().play(simpleSoundInstance);
             context.player().level().playLocalSound(context.player(), msg.soundEvent().value(), SoundSource.AMBIENT, 1,1);
-        });
-    }
-
-    public static void handleRecipesPacket(ClientboundRecipesPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            ((ClientProxy) VampirismMod.proxy).setRecipes(msg.recipes());
         });
     }
 }

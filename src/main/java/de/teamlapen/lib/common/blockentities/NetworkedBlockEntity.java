@@ -1,6 +1,8 @@
 package de.teamlapen.lib.common.blockentities;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -8,11 +10,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A class for block entities that require interaction with metadata used on client.
- * IMPORTANT: Override {@code loadMetaData} and {@code saveMetaData} to make it save the variables that are added in {@code getModelData}.
+ * A class for block entities that require updated data on the client.
+ * IMPORTANT: By default, the whole data is sent to the client, but {@link #saveUpdate(HolderLookup.Provider)} and {@link #handleUpdateTag(ValueInput)} can be overridden.
  */
 public abstract class NetworkedBlockEntity extends BlockEntity {
 
@@ -23,11 +26,11 @@ public abstract class NetworkedBlockEntity extends BlockEntity {
     @Override
     public void setChanged() {
         super.setChanged();
-        if (level != null) {
-            if (level.isClientSide()) {
+        if (this.level != null) {
+            if (this.level.isClientSide()) {
                 requestModelDataUpdate();
             } else {
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
         }
     }
@@ -36,5 +39,19 @@ public abstract class NetworkedBlockEntity extends BlockEntity {
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveUpdate(registries);
+    }
+
+    protected CompoundTag saveUpdate(HolderLookup.Provider registries) {
+        return this.saveCustomOnly(registries);
+    }
+
+    @Override
+    public void handleUpdateTag(ValueInput input) {
+        this.loadCustomOnly(input);
     }
 }

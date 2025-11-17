@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
@@ -24,7 +25,7 @@ public class PlayerSkinHelper {
     }
     public static void loadPlayerSkins() {
         PlayerSkinRenderCache playerSkinRenderCache = Minecraft.getInstance().playerSkinRenderCache();
-        List<CompletableFuture<Optional<PlayerSkinRenderCache.RenderInfo>>> list = SupporterManager.getSupporter().map(Supporter::texture).map(ResolvableProfile::createUnresolved).map(playerSkinRenderCache::lookup).toList();
+        List<CompletableFuture<Optional<PlayerSkinRenderCache.RenderInfo>>> list = VampirismMod.services().supporterManager().getSupporter().map(Supporter::texture).map(ResolvableProfile::createUnresolved).map(playerSkinRenderCache::lookup).toList();
         CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).thenAccept(v -> list.forEach(CompletableFuture::join));
     }
 

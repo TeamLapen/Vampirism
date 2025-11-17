@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.entity.vampire;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.entity.IDefaultTaskMasterEntity;
 import de.teamlapen.vampirism.common.entity.ai.goals.FleeSunVampireGoal;
@@ -10,7 +11,6 @@ import de.teamlapen.vampirism.common.entity.ai.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.common.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.common.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

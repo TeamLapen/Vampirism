@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.common.effects;
 
+import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModParticles;
 import de.teamlapen.vampirism.common.entity.player.vampire.InfectionStatus;
-import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;

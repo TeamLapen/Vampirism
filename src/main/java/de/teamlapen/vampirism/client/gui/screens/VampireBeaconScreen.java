@@ -213,7 +213,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
 
         protected void renderIcon(GuiGraphics pGuiGraphics) {
-            pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX() + 2, this.getY() + 2, 0, 18, 18);
+            pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX() + 2, this.getY() + 2, 18, 18);
         }
 
         public void updateStatus(int pBeaconTier) {

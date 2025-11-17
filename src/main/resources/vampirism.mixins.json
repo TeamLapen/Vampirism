@@ -61,6 +61,7 @@
     "client.LivingEntityRendererMixin",
     "client.LivingEntityRenderStateMixin",
     "client.MinecraftMixin",
+    "client.MutableSpriteSetMixin",
     "client.ResourceLoadStateTrackerMixin",
     "client.SplashManagerMixin",
     "client.SplashRendererMixin",

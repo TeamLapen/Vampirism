@@ -94,7 +94,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
 
         }
         ItemStack output = level.potionBrewing().mix(ingredient, bottle);
-        return output.isEmpty() ? Optional.empty() : Optional.of(Triple.of(output, 1, 0));
+        return output.isEmpty() || ItemStack.matches(output, bottle) ? Optional.empty() : Optional.of(Triple.of(output, 1, 0));
     }
 
     @Override

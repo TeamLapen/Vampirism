@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.common.blockentities.NetworkedBlockEntity;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.inventory.VampireBeaconMenu;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
@@ -9,12 +10,9 @@ import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.ARGB;
@@ -34,7 +32,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BeaconBeamOwner;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.storage.ValueInput;
@@ -52,7 +49,7 @@ import java.util.stream.Collectors;
 
 import static net.minecraft.world.level.block.entity.BeaconBlockEntity.playSound;
 
-public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvider, Nameable, BeaconBeamOwner {
+public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements MenuProvider, Nameable, BeaconBeamOwner {
     private static final int MAX_LEVELS = 3;
     public static final Holder<MobEffect>[][] BEACON_EFFECTS = new Holder[][]{{MobEffects.SPEED, MobEffects.SATURATION}, {MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING}, {MobEffects.REGENERATION, MobEffects.SATURATION}};
     public static final int[][] BEACON_EFFECTS_AMPLIFIER = new int[][] {{0, 0}, {0, 0}, {0, 1}};
@@ -256,16 +253,6 @@ public class VampireBeaconBlockEntity extends BlockEntity implements MenuProvide
 
     public List<BeaconBeamOwner.Section> getBeamSections() {
         return this.levels == 0 ? ImmutableList.of() : this.beamSections;
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        return this.saveWithoutMetadata(provider);
     }
 
     @Nullable

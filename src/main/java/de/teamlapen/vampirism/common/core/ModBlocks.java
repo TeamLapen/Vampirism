@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.core;
 
-import com.google.common.collect.ImmutableMap;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.ModRegistryItems;
@@ -479,15 +478,6 @@ public class ModBlocks {
 
     static void register(IEventBus bus) {
         BLOCKS.register(bus);
-    }
-
-    public static void registerStrippables() {
-        AxeItem.STRIPPABLES = new ImmutableMap.Builder<Block, Block>().putAll(AxeItem.STRIPPABLES)
-                .put(DARK_SPRUCE_LOG.get(), STRIPPED_DARK_SPRUCE_LOG.get())
-                .put(DARK_SPRUCE_WOOD.get(), STRIPPED_DARK_SPRUCE_WOOD.get())
-                .put(CURSED_SPRUCE_LOG.get(), STRIPPED_CURSED_SPRUCE_LOG.get())
-                .put(CURSED_SPRUCE_WOOD.get(), STRIPPED_CURSED_SPRUCE_WOOD.get())
-                .build();
     }
 
     public static void registerFlammables() {

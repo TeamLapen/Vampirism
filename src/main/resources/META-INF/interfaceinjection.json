@@ -81,5 +81,8 @@
   ],
   "net/minecraft/world/item/ItemStack": [
     "de/teamlapen/vampirism/misc/injection/IItemStackMock"
+  ],
+  "net.minecraft.client.particle.ParticleResources$MutableSpriteSet": [
+    "de/teamlapen/vampirism/misc/injection/client/IListBasedSpriteSetMock"
   ]
 }

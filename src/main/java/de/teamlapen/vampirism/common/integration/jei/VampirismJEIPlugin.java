@@ -111,7 +111,7 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
-        var recipes = VampirismMod.getServices().recipes().getRecipes();
+        var recipes = VampirismMod.services().recipes().getRecipes();
         var level = Minecraft.getInstance().level;
         registration.addRecipes(ALCHEMICAL_CAULDRON, recipes.byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).stream().toList());
         registration.addRecipes(WEAPON_TABLE, recipes.byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).stream().toList());

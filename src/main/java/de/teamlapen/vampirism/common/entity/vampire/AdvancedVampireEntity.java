@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.common.entity.vampire;
 
 import de.teamlapen.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.ICaptureAttributes;
+import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.entity.ai.goals.*;
@@ -14,8 +16,6 @@ import de.teamlapen.vampirism.common.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.common.util.IPlayerOverlay;
 import de.teamlapen.vampirism.common.util.PlayerModelType;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
-import de.teamlapen.vampirism.common.util.SupporterManager;
-import de.teamlapen.vampirism.server.config.BalanceMobProps;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -283,7 +283,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pReason, @Nullable SpawnGroupData pSpawnData) {
-        Supporter supporter = SupporterManager.getRandomVampire(random);
+        Supporter supporter = VampirismMod.services().supporterManager().getRandomVampire(random);
         lootBookId = supporter.bookId();
         this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
         this.getEntityData().set(NAME, supporter.name());

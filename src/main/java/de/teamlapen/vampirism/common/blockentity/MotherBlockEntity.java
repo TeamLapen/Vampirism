@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.blockentity;
 
+import de.teamlapen.lib.common.blockentities.NetworkedBlockEntity;
 import de.teamlapen.lib.common.entities.SpawnHelper;
 import de.teamlapen.vampirism.common.blocks.mother.IRemainsBlock;
 import de.teamlapen.vampirism.common.blocks.mother.MotherTreeStructure;
@@ -10,14 +11,9 @@ import de.teamlapen.vampirism.common.network.packets.client.ClientboundBossEvent
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundPlayEventPacket;
 import de.teamlapen.vampirism.common.particles.MotherParticleOptions;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.DustParticleOptions;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +26,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -45,7 +40,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class MotherBlockEntity extends BlockEntity {
+public class MotherBlockEntity extends NetworkedBlockEntity {
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, MotherBlockEntity e) {
 
@@ -202,17 +197,6 @@ public class MotherBlockEntity extends BlockEntity {
     private void addPlayerToBossEvent(ServerPlayer player) {
         this.bossEvent.addPlayer(player);
         player.connection.send(new ClientboundBossEventSoundPacket(this.bossEvent.getId(), ModSounds.MOTHER_AMBIENT.getKey()));
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        return saveWithoutMetadata(provider);
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     public void onVulnerabilityHit(LivingEntity entity, boolean destroyed) {

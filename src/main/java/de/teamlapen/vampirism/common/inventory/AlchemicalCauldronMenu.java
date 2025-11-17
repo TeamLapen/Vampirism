@@ -164,11 +164,11 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu {
     }
 
     protected boolean canSmeltAsIngredient(ItemStack pStack) {
-        return VampirismMod.proxy.recipeMap(this.level).getRecipesFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new AlchemicalCauldronRecipeInput(pStack, this.container.getItem(FLUID_SLOT), ITestableRecipeInput.TestType.INPUT_1), this.level).findAny().isPresent();
+        return VampirismMod.services().recipes().getRecipes().getRecipesFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new AlchemicalCauldronRecipeInput(pStack, this.container.getItem(FLUID_SLOT), ITestableRecipeInput.TestType.INPUT_1), this.level).findAny().isPresent();
     }
 
     protected boolean canSmeltAsFluid(ItemStack pStack) {
-        return VampirismMod.proxy.recipeMap(this.level).getRecipesFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new AlchemicalCauldronRecipeInput(this.container.getItem(INGREDIENT_SLOT), pStack, ITestableRecipeInput.TestType.INPUT_2), this.level).findAny().isPresent();
+        return VampirismMod.services().recipes().getRecipes().getRecipesFor((RecipeType<AlchemicalCauldronRecipe>) this.recipeType, new AlchemicalCauldronRecipeInput(this.container.getItem(INGREDIENT_SLOT), pStack, ITestableRecipeInput.TestType.INPUT_2), this.level).findAny().isPresent();
     }
 
     protected boolean isFuel(ItemStack pStack) {

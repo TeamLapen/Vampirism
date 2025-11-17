@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.gui.overlay;
 import com.mojang.blaze3d.platform.Window;
 import de.teamlapen.lib.client.IMinecraftAccessor;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
@@ -14,7 +15,6 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.integration.IMCHandler;
 import de.teamlapen.vampirism.common.items.StakeItem;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.misc.mixin.accessor.LivingEntityAccessor;
@@ -186,7 +186,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
     public void onRenderFoodBar(RenderGuiLayerEvent.@NotNull Pre event) {
         if (mc().player == null || !mc().player.isAlive() || !Helper.isVampire(mc().player)) return;
         //disable foodbar if bloodbar is rendered
-        if (event.getName() == VanillaGuiLayers.FOOD_LEVEL && !IMCHandler.requestedToDisableBloodbar && mc().gameMode.hasExperience()) {
+        if (event.getName() == VanillaGuiLayers.FOOD_LEVEL && !VampirismMod.services().imc().isRequestedToDisableBloodbar() && mc().gameMode.hasExperience()) {
             event.setCanceled(true);
         }
         if (event.getName().equals(VanillaGuiLayers.AIR_LEVEL)) {

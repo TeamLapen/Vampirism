@@ -22,21 +22,16 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
 
     private static final int[] BUBBLELENGTHS = new int[] {29, 24, 20, 16, 11, 6, 0};
 
-    public AlchemyTableScreen(@NotNull AlchemyTableMenu p_i51105_1_, @NotNull Inventory p_i51105_2_, @NotNull Component p_i51105_3_) {
-        super(p_i51105_1_, p_i51105_2_, p_i51105_3_);
+    public AlchemyTableScreen(@NotNull AlchemyTableMenu menu, @NotNull Inventory inventory, @NotNull Component title) {
+        super(menu, inventory, title);
         this.imageHeight = 181;
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
-    protected void init() {
-        super.init();
-        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-    }
-
     @Override
-    public void render(@NotNull GuiGraphics graphics, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
-        super.render(graphics, p_230430_2_, p_230430_3_, p_230430_4_);
-        this.renderTooltip(graphics, p_230430_2_, p_230430_3_);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
@@ -56,7 +51,7 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
             if (j1 > 0) {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS_SPRITE, 28, 8, 0, 0, i + 73, j + 57, (int) (j1 * 28), 8);
                 int color = this.menu.getColor();
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, OIL_SPRITE, 32, 32, 0, 0, i + 104, j + 36, (int) (j1 * 32), 32, ARGB.color(1, color));
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, OIL_SPRITE, 32, 32, 0, 0, i + 104, j + 36, (int) (j1 * 32), 32, ARGB.color(1f, color));
             }
         }
 

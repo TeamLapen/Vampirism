@@ -27,6 +27,6 @@ public class AltarTipBlock extends Block {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return super.getShape(state, level, pos, context);
+        return SHAPE;
     }
 }

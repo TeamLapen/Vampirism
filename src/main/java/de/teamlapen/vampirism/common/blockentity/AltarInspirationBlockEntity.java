@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.blockentity;
 import de.teamlapen.lib.common.blockentities.NetworkedBlockEntity;
 import de.teamlapen.lib.common.fluids.ControllableFluidTank;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
@@ -11,7 +12,6 @@ import de.teamlapen.vampirism.common.entity.player.vampire.VampireLeveling.Altar
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.particles.FlyingBloodEntityParticleOptions;
-import de.teamlapen.vampirism.server.advancements.critereon.VampireActionCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -80,11 +80,13 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
         int neededBlood = requirement.get().bloodAmount() * VReference.FOOD_TO_FLUID_BLOOD;
 
         try (var transaction = Transaction.openRoot()) {
-            var blood = ResourceHandlerUtil.extractFirst(fluidInventory, x -> x.is(ModFluids.BLOOD), neededBlood, transaction);
+            try (var ignored = fluidInventory.beginAccess()){
+                var blood = ResourceHandlerUtil.extractFirst(fluidInventory, x -> x.is(ModFluids.BLOOD), neededBlood, transaction);
 
-            if (blood == null || blood.amount() < neededBlood) {
-                player.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
-                return;
+                if (blood == null || blood.amount() < neededBlood) {
+                    player.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
+                    return;
+                }
             }
         }
 
@@ -137,7 +139,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
 
     public void setFluid(FluidStack fluid) {
         try (var transaction = Transaction.openRoot()) {
-            try (var access = this.fluidInventory.beginAccess()) {
+            try (var ignored = this.fluidInventory.beginAccess()) {
                 FluidResource resource = this.fluidInventory.getResource();
                 if (!resource.isEmpty()) {
                     int amount = this.fluidInventory.getAmount();

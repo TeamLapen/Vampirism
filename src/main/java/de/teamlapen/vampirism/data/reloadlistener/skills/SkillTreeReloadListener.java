@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.reloadlistener.skills;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.common.data.ServerSkillTreeData;
 import de.teamlapen.vampirism.common.entity.player.skills.SkillTreeConfiguration;
-import de.teamlapen.vampirism.server.data.ServerSkillTreeData;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;

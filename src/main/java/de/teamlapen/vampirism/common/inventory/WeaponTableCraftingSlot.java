@@ -116,7 +116,7 @@ public class WeaponTableCraftingSlot extends Slot {
     }
 
     protected @Nullable IWeaponTableRecipe findMatchingRecipe(@NotNull Player playerIn, @NotNull IHunterPlayer factionPlayer, int lava) {
-        Optional<RecipeHolder<IWeaponTableRecipe>> optional = VampirismMod.proxy.recipeMap(playerIn.level()).getRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), playerIn.level()).findFirst();
+        Optional<RecipeHolder<IWeaponTableRecipe>> optional = VampirismMod.services().recipes().getRecipes().getRecipesFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), playerIn.level()).findFirst();
         if (optional.isPresent()) {
             IWeaponTableRecipe recipe = optional.get().value();
             if (factionPlayer.getLevel() >= recipe.getRequiredLevel() && lava >= recipe.getRequiredLavaUnits() && Helper.areSkillsEnabled(factionPlayer.getSkillHandler(), recipe.getRequiredSkills())) {

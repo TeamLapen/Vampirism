@@ -7,10 +7,12 @@ import de.teamlapen.vampirism.common.entity.player.lord.actions.LordActions;
 import de.teamlapen.vampirism.common.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.common.integration.TerraBlenderCompat;
+import de.teamlapen.vampirism.common.serialization.CodecModifications;
 import de.teamlapen.vampirism.data.ModDataPacks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import org.jetbrains.annotations.ApiStatus;
@@ -23,14 +25,7 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.Internal
 public class ModRegistryManager {
 
-    private final IEventBus eventBus;
-
-    public ModRegistryManager(@NotNull IEventBus eventBus) {
-        this.eventBus = eventBus;
-        this.eventBus.register(this);
-    }
-
-    public void setupRegistries() {
+    public void setupRegistries(IEventBus eventBus) {
         ModAttributes.register(eventBus);
         ModBiomes.register(eventBus);
         ModBlocks.register(eventBus);
@@ -82,18 +77,28 @@ public class ModRegistryManager {
         ModDataMaps.registerDataMaps(event);
     }
 
-    public void registerModEventHandler() {
-        this.eventBus.addListener(ModEntities::onModifyEntityTypeAttributes);
-        this.eventBus.addListener(ModEntities::onRegisterEntityTypeAttributes);
-        this.eventBus.addListener(ModEntities::onRegisterSpawns);
-        this.eventBus.addListener(ModRegistries::registerRegistries);
-        this.eventBus.addListener(ModDataPacks::registerPackRepository);
-        this.eventBus.addListener(ModBlockEntities::registerTileExtensions);
+    public void registerModEventHandler(IEventBus eventBus) {
+        eventBus.addListener(ModEntities::onModifyEntityTypeAttributes);
+        eventBus.addListener(ModEntities::onRegisterEntityTypeAttributes);
+        eventBus.addListener(ModEntities::onRegisterSpawns);
+        eventBus.addListener(ModRegistries::registerRegistries);
+        eventBus.addListener(ModDataPacks::registerPackRepository);
+        eventBus.addListener(ModBlockEntities::registerTileExtensions);
     }
 
-    public void registerForgeEventHandler() {
-        IEventBus eventBus = NeoForge.EVENT_BUS;
+    public void registerForgeEventHandler(IEventBus eventBus) {
         eventBus.addListener(ModCommands::registerCommands);
         eventBus.addListener(ModPotions::registerPotionMixes);
+    }
+
+    @SubscribeEvent
+    private void setup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
+        event.enqueueWork(ModStats::registerFormatter);
+        event.enqueueWork(CodecModifications::changeMobEffectCodec);
+        event.enqueueWork(ModVillage::villagerTradeSetup);
+        event.enqueueWork(ModItems::registerDispenserBehaviour);
+        event.enqueueWork(ModBlocks::registerFlammables);
+        event.enqueueWork(ModFluids::registerFluidInteractions);
     }
 }

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.blockentity;
 
+import de.teamlapen.lib.common.blockentities.NetworkedBlockEntity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
@@ -8,12 +9,8 @@ import de.teamlapen.vampirism.common.core.ModParticles;
 import de.teamlapen.vampirism.common.particles.PedestalParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -30,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class PedestalBlockEntity extends BlockEntity {
+public class PedestalBlockEntity extends NetworkedBlockEntity {
 
     private final Random rand = new Random();
     private final int chargeRate = 30;
@@ -50,25 +47,12 @@ public class PedestalBlockEntity extends BlockEntity {
         this.internalStack = ItemStack.EMPTY;
     }
 
-    @NotNull
     public ItemStack getStackForRender() {
         return internalStack;
     }
 
     public int getTickForRender() {
         return ticksExistedClient;
-    }
-
-    @Nullable
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @NotNull
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        return this.saveWithoutMetadata(provider);
     }
 
     public boolean hasStack() {

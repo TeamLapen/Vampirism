@@ -17,10 +17,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.data.DataMapProvider;
 import net.neoforged.neoforge.registries.datamaps.builtin.Compostable;
 import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
+import net.neoforged.neoforge.registries.datamaps.builtin.Strippable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -42,6 +44,7 @@ public class ModDataMapProvider extends DataMapProvider {
         gatherLiquidColors(builder(ModDataMaps.LIQUID_COLOR_MAP));
         gatherGarlicDiffuserFuel(builder(ModDataMaps.GARLIC_DIFFUSER_FUEL_MAP));
         gatherFogDiffuserFuel(builder(ModDataMaps.FOG_DIFFUSER_FUEL_MAP));
+        gatherStrippables(builder(NeoForgeDataMaps.STRIPPABLES));
     }
 
     private void gatherLiquidColors(Builder<Integer, Item> builder) {
@@ -144,6 +147,14 @@ public class ModDataMapProvider extends DataMapProvider {
         entityValues.add(holder.apply(EntityType.LLAMA), new ConverterEntry(overlay.apply("llama")), false);
         entityValues.add(holder.apply(EntityType.POLAR_BEAR), new ConverterEntry(overlay.apply("polarbear")), false);
         entityValues.add(holder.apply(EntityType.PANDA), new ConverterEntry(overlay.apply("panda")), false);
+    }
+
+    @SuppressWarnings("deprecation")
+    protected void gatherStrippables(Builder<Strippable, Block> strippables) {
+        strippables.add(ModBlocks.DARK_SPRUCE_LOG.get().builtInRegistryHolder(), new Strippable(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()), false);
+        strippables.add(ModBlocks.DARK_SPRUCE_WOOD.get().builtInRegistryHolder(), new Strippable(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get()), false);
+        strippables.add(ModBlocks.CURSED_SPRUCE_LOG.get().builtInRegistryHolder(), new Strippable(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get()), false);
+        strippables.add(ModBlocks.CURSED_SPRUCE_WOOD.get().builtInRegistryHolder(), new Strippable(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get()), false);
     }
 
 }
