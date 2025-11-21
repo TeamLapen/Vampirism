@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import de.teamlapen.vampirism.client.core.ModRenderPipelines;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -10,7 +9,7 @@ import net.minecraft.util.Mth;
 public abstract class TextureOverlay extends BaseOverlay {
 
     protected void renderTextureOverlay(GuiGraphics pGuiGraphics, ResourceLocation pShaderLocation, float pAlpha) {
-        pGuiGraphics.blit(ModRenderPipelines.GUI_TEXTURED_BLEND, pShaderLocation, 0, 0, 0.0F, 0.0F, pGuiGraphics.guiWidth(), pGuiGraphics.guiHeight(), pGuiGraphics.guiWidth(), pGuiGraphics.guiHeight(), ARGB.color(pAlpha, -90));
+        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, pShaderLocation, 0, 0, 0.0F, 0.0F, pGuiGraphics.guiWidth(), pGuiGraphics.guiHeight(), pGuiGraphics.guiWidth(), pGuiGraphics.guiHeight(), ARGB.color(pAlpha, -90));
     }
 
     protected void scaleBy(float progress, float type, float start, float end, GuiGraphics graphics) {

@@ -27,7 +27,7 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 public class ServerEventHandler {
 
     @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         boolean isAdminLikePlayer = !ServerLifecycleHooks.getCurrentServer().isDedicatedServer() || UtilLib.isPlayerOp(player);
 
@@ -48,18 +48,18 @@ public class ServerEventHandler {
     }
 
     @SubscribeEvent
-    public static void onServerTick(ServerTickEvent.Pre event) {
+    public void onServerTick(ServerTickEvent.Pre event) {
         if (ServerLifecycleHooks.getCurrentServer() != null) {
             MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer()).tick();
         }
     }
 
     @SubscribeEvent
-    public static void onDatapackSync(OnDatapackSyncEvent event) {
+    public void onDatapackSync(OnDatapackSyncEvent event) {
         sendSkillTree(event);
     }
 
-    private static void sendSkillTree(OnDatapackSyncEvent event) {
+    private void sendSkillTree(OnDatapackSyncEvent event) {
         ClientboundSkillTreePacket skillTrees = ClientboundSkillTreePacket.of(ServerSkillTreeData.instance().getConfigurations());
         if (event.getPlayer() != null) {
             event.getPlayer().connection.send(skillTrees);

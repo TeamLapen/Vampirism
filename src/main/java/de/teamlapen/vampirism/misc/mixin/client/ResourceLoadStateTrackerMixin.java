@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.misc.mixin.client;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import net.minecraft.client.ResourceLoadStateTracker;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,8 +12,6 @@ public class ResourceLoadStateTrackerMixin {
 
     @Inject(method = "finishReload", at = @At("RETURN"))
     private void updateOverlays(CallbackInfo ci) {
-        if (VampirismAPI.entityRegistry() instanceof VampirismClientEntityRegistry reg) {
-            reg.syncOverlays();
-        }
+        VampirismModClient.services().renderHandler().syncOverlays();
     }
 }

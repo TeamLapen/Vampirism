@@ -64,7 +64,7 @@ public class BloodBottleFluidHandler extends ItemAccessResourceHandler<FluidReso
 
     @Override
     public boolean isValid(int index, FluidResource resource) {
-        return index == 1 && resource.getFluid().getFluidType() == ModFluids.BLOOD_TYPE.get();
+        return index == 0 && resource.is(ModFluids.BLOOD.get());
     }
 
 

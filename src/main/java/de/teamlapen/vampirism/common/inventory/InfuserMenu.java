@@ -18,6 +18,7 @@ import net.minecraft.world.item.crafting.RecipePropertySet;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.IContainerFactory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class InfuserMenu extends AbstractContainerMenu implements InfuserSlots {
 
@@ -129,7 +130,7 @@ public class InfuserMenu extends AbstractContainerMenu implements InfuserSlots {
     public static class Factory implements IContainerFactory<InfuserMenu> {
 
         @Override
-        public @NotNull InfuserMenu create(int windowId, @NotNull Inventory inv, @NotNull RegistryFriendlyByteBuf data) {
+        public @NotNull InfuserMenu create(int windowId, @NotNull Inventory inv, @Nullable RegistryFriendlyByteBuf data) {
             return new InfuserMenu(windowId, inv);
         }
     }

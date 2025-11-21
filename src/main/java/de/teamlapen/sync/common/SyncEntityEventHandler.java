@@ -2,12 +2,8 @@ package de.teamlapen.sync.common;
 
 import de.teamlapen.sync.SyncRegistry;
 import de.teamlapen.sync.common.entities.IPlayerEventListener;
-import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
 import de.teamlapen.sync.common.storage.Attachment;
-import de.teamlapen.sync.common.storage.ISyncable;
 import de.teamlapen.vampirism.REFERENCE;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -102,16 +98,6 @@ public class SyncEntityEventHandler {
     public static void onPlayerUpdate(PlayerTickEvent.Post event) {
         for (AttachmentType<IPlayerEventListener> listener : listeners()) {
             event.getEntity().getData(listener).onUpdatePlayer(event);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onStartTracking(PlayerEvent.@NotNull StartTracking event) {
-        if ((event.getTarget() instanceof PathfinderMob && !SyncRegistry.getSyncableEntityCaps().isEmpty()) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof Player && !SyncRegistry.getSyncablePlayerCaps().isEmpty())) {
-//            ClientboundUpdateEntityPacket packet = ClientboundUpdateEntityPacket.createJoinWorldPacket(event.getTarget()); TODO
-//            if (packet != null && event.getEntity() instanceof ServerPlayer player) {
-//                player.connection.send(packet);
-//            }
         }
     }
 }

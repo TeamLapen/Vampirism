@@ -64,6 +64,7 @@ public class BloodGrinderBlock extends BaseEntityBlock {
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
         ItemStack heldItem = player.getItemInHand(hand);
 
         Optional<BloodGrinderBlockEntity> optionalBlockEntity = getBlockEntity(level, pos);

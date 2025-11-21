@@ -7,19 +7,20 @@ import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEntitySelectors;
 import de.teamlapen.vampirism.common.core.ModRegistryManager;
+import de.teamlapen.vampirism.common.data.BloodConversionRegistry;
 import de.teamlapen.vampirism.common.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.common.entity.SundamageRegistry;
+import de.teamlapen.vampirism.common.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.common.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.common.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.common.entity.player.actions.ActionManager;
 import de.teamlapen.vampirism.common.entity.player.vampire.ModVampireVisions;
-import de.teamlapen.vampirism.common.integration.IMCHandler;
+import de.teamlapen.vampirism.common.integration.InterModHandler;
 import de.teamlapen.vampirism.common.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.common.recipes.RecipesSync;
 import de.teamlapen.vampirism.common.server.ServerEventHandler;
 import de.teamlapen.vampirism.common.util.*;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
-import de.teamlapen.vampirism.data.BloodConversionRegistry;
 import de.teamlapen.vampirism.data.reloadlistener.ModReloadListeners;
 import de.teamlapen.vampirism.data.remote.SettingsProvider;
 import net.neoforged.bus.api.IEventBus;
@@ -45,7 +46,8 @@ public class CommonServices extends Services implements IVampirismServices {
     private final ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
     private final SettingsProvider settingsProvider = new SettingsProvider(REFERENCE.SETTINGS_API);
     private final BloodConversionRegistry bloodConversionRegistry = new BloodConversionRegistry();
-    private final IMCHandler interModCommunicationHandler = new IMCHandler();
+    private final InterModHandler interModCommunicationHandler = new InterModHandler();
+    private final IVampirismEntityRegistry entityRegistry = new VampirismEntityRegistry();
 
 
     public CommonServices(ModContainer container) {
@@ -85,6 +87,7 @@ public class CommonServices extends Services implements IVampirismServices {
 
     @Override
     public IVampirismEntityRegistry entityRegistry() {
+        return this.entityRegistry;
     }
 
     @Override
@@ -102,7 +105,7 @@ public class CommonServices extends Services implements IVampirismServices {
         return this.bloodConversionRegistry;
     }
 
-    public IMCHandler imc() {
+    public InterModHandler imc() {
         return this.interModCommunicationHandler;
     }
 

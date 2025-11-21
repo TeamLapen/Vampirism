@@ -8,4 +8,9 @@ public interface IItemCombinerMenuMock extends IItemCombinerMenu {
     default Container getInputSlots() {
         return null;
     }
+
+    @Override
+    default void setInputSlots(Container inputSlots) {
+
+    }
 }

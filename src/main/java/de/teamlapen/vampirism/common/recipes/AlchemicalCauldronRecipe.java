@@ -20,8 +20,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,7 +126,13 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     @Override
     public boolean matches(@NotNull AlchemicalCauldronRecipeInput inv, @NotNull Level worldIn) {
         boolean match = this.ingredient.test(inv.ingredient());
-        Boolean fluidMatch = fluid.map(ingredient1 -> ingredient1.test(inv.fluid()), fluid1 -> FluidUtil.getFluidContained(inv.fluid()).map(s -> FluidStack.isSameFluidSameComponents(fluid1, s) && fluid1.getAmount() < s.getAmount()).orElse(false));
+        Boolean fluidMatch = fluid.map(ingredient1 -> ingredient1.test(inv.fluid()), fluid1 -> {
+            try (var transaction = Transaction.openRoot()) {
+                var inputHandler = inv.fluid().getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(inv.fluid()));
+                var extracted = ResourceHandlerUtil.extractFirst(inputHandler, x -> x.is(fluid1.getFluid()), fluid1.getAmount(), transaction);
+                return extracted != null && extracted.amount() >= fluid1.getAmount();
+            }
+        });
         return switch (inv.testType()) {
             case INPUT_1 -> match;
             case INPUT_2 -> fluidMatch;

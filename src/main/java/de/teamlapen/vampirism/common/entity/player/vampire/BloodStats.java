@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.common.core.ModAttributes;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.items.consume.BloodFoodProperties;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
+import de.teamlapen.vampirism.common.util.BloodResourceHandler;
 import de.teamlapen.vampirism.misc.mixin.accessor.FoodDataAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
@@ -18,6 +19,7 @@ import net.minecraft.world.food.FoodData;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Handles VP's blood stats. Very similar to {@link FoodData}
  */
-public class BloodStats implements IBloodStats, ISyncableSaveData {
+public class BloodStats implements IBloodStats, ISyncableSaveData, BloodResourceHandler {
     private static final String NBT_KEY = "blood_stats";
     private final static Logger LOGGER = LogManager.getLogger(BloodStats.class);
     private final Player player;
@@ -36,6 +38,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     private int bloodTimer;
     private int prevBloodLevel = 20;
     private boolean changed = false;
+    private final SnapshotJournal<Integer> bloodJournal = new BloodJournal();
 
     BloodStats(Player player) {
         this.player = player;
@@ -231,5 +234,48 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
     @Override
     public @NotNull String nbtKey() {
         return NBT_KEY;
+    }
+
+    @Override
+    public int getAmount() {
+        return this.bloodLevel;
+    }
+
+    @Override
+    public int addBlood(int amount) {
+        this.bloodLevel += amount;
+        return amount;
+    }
+
+    @Override
+    public int extractBlood(int amount) {
+        return 0;
+    }
+
+    @Override
+    public int getCapacity() {
+        return this.maxBlood;
+    }
+
+    @Override
+    public SnapshotJournal<Integer> getJournal() {
+        return this.bloodJournal;
+    }
+
+    private class BloodJournal extends SnapshotJournal<Integer> {
+        @Override
+        protected Integer createSnapshot() {
+            return bloodLevel;
+        }
+
+        @Override
+        protected void revertToSnapshot(Integer snapshot) {
+            bloodLevel = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Integer originalState) {
+            changed = true;
+        }
     }
 }

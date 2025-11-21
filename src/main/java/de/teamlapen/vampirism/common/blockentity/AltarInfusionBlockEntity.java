@@ -17,7 +17,6 @@ import de.teamlapen.vampirism.common.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.common.items.PureBloodItem;
 import de.teamlapen.vampirism.common.particles.AltarInfusionParticleOptions;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -70,7 +69,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      */
     private int targetLevel;
 
-    public AltarInfusionBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public AltarInfusionBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ALTAR_INFUSION.get(), pos, state, AltarInfusionMenu.createInputSlotDefinition());
     }
 
@@ -79,7 +78,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      *
      * @param player trying to execute the ritual
      */
-    public @NotNull Result canActivate(@NotNull Player player) {
+    public Result canActivate(Player player) {
         if (runningTick > 0) {
             return Result.ISRUNNING;
         }
@@ -105,7 +104,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     /**
      * Returns the phase the ritual is in
      */
-    public @NotNull PHASE getCurrentPhase() {
+    public PHASE getCurrentPhase() {
         if (runningTick < 1) {
             return PHASE.NOT_RUNNING;
         }
@@ -155,7 +154,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input) {
+    public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         int tick = input.getIntOr("tick", 0);
         //This is used on both client and server side and has to be prepared for the world not being available yet
@@ -168,7 +167,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull ValueOutput output) {
+    public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putInt("tick", runningTick);
         if (player != null) {
@@ -180,14 +179,14 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
      * Starts the ritual.
      * ONLY call if {@link #canActivate(Player)} returned 1
      */
-    public void startRitual(@NotNull Player player) {
+    public void startRitual(Player player) {
         if (level == null) return;
         LOGGER.debug("Starting ritual for {}", player);
         this.player = player;
         runningTick = DURATION_TICK;
 
         this.setChanged();
-        if (!this.level.isClientSide()) {
+        if (!this.level.isClientSide() && tips != null) {
             for (BlockPos pTip : tips) {
                 ModParticles.spawnParticlesServer(level, new AltarInfusionParticleOptions(60, false, pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5), worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5, 3, 0.1, 0.1, 0.1, 0);
             }
@@ -225,7 +224,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             }
             if (runningTick == DURATION_TICK - 200) {
                 if (getPlayer().isLocalPlayer()) {
-                    VampirismModClient.getServices().hud().makeRenderFullColor(DURATION_TICK - 250, 50, 0xFF0000);
+                    VampirismModClient.services().hud().makeRenderFullColor(DURATION_TICK - 250, 50, 0xFF0000);
                 }
             }
         }
@@ -278,26 +277,14 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         }
     }
 
-    @NotNull
     @Override
-    protected AbstractContainerMenu createMenu(int id, @NotNull Inventory player) {
+    protected AbstractContainerMenu createMenu(int id, Inventory player) {
         return new AltarInfusionMenu(id, player, this, level == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(level, worldPosition));
     }
 
-    @NotNull
     @Override
     protected Component getDefaultName() {
         return Component.translatable("tile.vampirism.altar_infusion");
-    }
-
-    @Override
-    protected @NotNull NonNullList<ItemStack> getItems() {
-        return this.inventorySlots;
-    }
-
-    @Override
-    protected void setItems(@NotNull NonNullList<ItemStack> items) {
-        this.inventorySlots = items;
     }
 
     /**
@@ -396,7 +383,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         return list.toArray(new BlockPos[0]);
     }
 
-    private boolean loadRitual(@NotNull UUID playerID) {
+    private boolean loadRitual(UUID playerID) {
         if (this.level == null) return false;
         if (this.level.players().isEmpty()) return false;
         this.player = this.level.getPlayerByUUID(playerID);

@@ -20,7 +20,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
@@ -41,8 +40,6 @@ import static de.teamlapen.vampirism.common.blocks.TentBlock.POSITION;
  */
 public class ClientProxy extends CommonProxy {
     private final Map<UUID, ResourceKey<SoundEvent>> bossEventSounds = new HashMap<>();
-    private RecipeMap recipeMap = RecipeMap.EMPTY;
-
     public ClientProxy() {
     }
 

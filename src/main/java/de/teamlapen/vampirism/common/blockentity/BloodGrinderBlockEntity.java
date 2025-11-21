@@ -221,7 +221,7 @@ public class BloodGrinderBlockEntity extends NetworkedBlockEntity {
 
     public static void pourBloodDown(Level level, BlockPos pos, BloodGrinderBlockEntity blockEntity) {
         try (var access = blockEntity.fluidInventory.beginAccess()) {
-            var transfer = ResourceHandlerUtil.move(blockEntity.fluidInventory, level.getCapability(Capabilities.Fluid.BLOCK, pos.above(), Direction.DOWN), x -> x.is(ModFluids.BLOOD), 50, null);
+            var transfer = ResourceHandlerUtil.move(blockEntity.fluidInventory, level.getCapability(Capabilities.Fluid.BLOCK, pos.below(), Direction.UP), x -> x.is(ModFluids.BLOOD), 50, null);
             if (transfer > 0) {
                 if (level instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(new DustColorTransitionOptions(0x750014, 0x46011a, 0.8f + level.getRandom().nextFloat() / 2), pos.getX() + 0.5, pos.getY() - 0.1, pos.getZ() + 0.5, 4, 2.5 / 16d, 0.2 / 16d, 2.5 / 16d, 4);

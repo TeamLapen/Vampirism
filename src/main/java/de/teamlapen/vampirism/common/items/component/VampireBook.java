@@ -82,7 +82,7 @@ public record VampireBook(ResourceLocation id, Component author) implements IVam
     }
 
     public IBookContents bookContents() {
-        return VampirismModClient.getServices().vampireBooks().getContentsFor(this);
+        return VampirismModClient.services().vampireBooks().getContentsFor(this);
     }
 
     public List<MutableComponent> translations() {
@@ -90,7 +90,7 @@ public record VampireBook(ResourceLocation id, Component author) implements IVam
     }
 
     public IBookBackground background() {
-        return VampirismModClient.getServices().vampireBooks().getBackground(bookContents().background());
+        return VampirismModClient.services().vampireBooks().getBackground(bookContents().background());
     }
 
     public List<IBookContents.IImageEntry> images() {

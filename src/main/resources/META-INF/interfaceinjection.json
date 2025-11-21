@@ -82,7 +82,16 @@
   "net/minecraft/world/item/ItemStack": [
     "de/teamlapen/vampirism/misc/injection/IItemStackMock"
   ],
-  "net.minecraft.client.particle.ParticleResources$MutableSpriteSet": [
+  "net/minecraft/client/particle/ParticleResources$MutableSpriteSet": [
     "de/teamlapen/vampirism/misc/injection/client/IListBasedSpriteSetMock"
+  ],
+  "net/minecraft/world/inventory/Slot": [
+    "de/teamlapen/vampirism/misc/injection/ISlotMock"
+  ],
+  "net/minecraft/client/gui/components/ImageWidget$Sprite": [
+    "de/teamlapen/vampirism/misc/injection/client/IImageWidgetSpriteMock"
+  ],
+  "net/minecraft/client/gui/components/ImageWidget$Texture": [
+    "de/teamlapen/vampirism/misc/injection/client/IImageWidgetTextureMock"
   ]
 }

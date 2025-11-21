@@ -33,12 +33,17 @@ public class AltarInfusionMenu extends ItemCombinerMenu {
 
     public AltarInfusionMenu(int id, @NotNull Inventory playerInventory, @NotNull Container inventory, ContainerLevelAccess worldPosCallable) {
         super(ModMenus.ALTAR_INFUSION.get(), id, playerInventory, worldPosCallable, createInputSlotDefinition());
+        this.setInputSlots(inventory);
+        for (int i = 0; i < 3; i++) {
+            this.slots.get(i).setContainer(this.getInputSlots());
+        }
         this.lvlRequirement = VampireLeveling.getInfusionRequirement(FactionPlayerHandler.get(player).getCurrentLevel(ModFactions.VAMPIRE) + 1);
     }
 
     public Optional<VampireLeveling.AltarInfusionRequirements> getRequirement() {
         return lvlRequirement;
     }
+
 
     @Override
     protected boolean mayPickup(@NotNull Player pPlayer, boolean pHasStack) {

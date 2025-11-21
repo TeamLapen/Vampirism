@@ -2,11 +2,9 @@ package de.teamlapen.vampirism.client;
 
 import de.teamlapen.lib.client.OptifineHandler;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.config.ModFilter;
 import de.teamlapen.vampirism.client.core.ClientRegistryHandler;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
-import de.teamlapen.vampirism.client.renderer.VampirismClientEntityRegistry;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
 import de.teamlapen.vampirism.client.renderer.items.CoffinRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
@@ -51,7 +49,7 @@ public class VampirismModClient {
 
     }
 
-    public static ClientServices getServices() {
+    public static ClientServices services() {
         return SERVICES;
     }
 
@@ -65,7 +63,7 @@ public class VampirismModClient {
     }
 
     public void onDataMapsUpdated(DataMapsUpdatedEvent event) {
-        ((VampirismClientEntityRegistry) VampirismAPI.entityRegistry()).syncOverlays();
+        services().renderHandler().syncOverlays();
     }
 
     public static IProxy getProxy() {

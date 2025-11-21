@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common;
 
 import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
+import de.teamlapen.vampirism.common.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
@@ -47,5 +48,6 @@ public class ModCapabilities {
         event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.BLOOD_PEDESTAL.get(), (blockEntity, side) -> blockEntity.new ItemWrapper());
         event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.POTION_TABLE.get(), WorldlyContainerWrapper::new);
         event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.ALTAR_INFUSION.get(), (blockEntity, side) -> VanillaContainerWrapper.of(blockEntity));
+        event.registerBlock(Capabilities.Fluid.BLOCK, WeaponTableBlock::getResourceHandler, ModBlocks.WEAPON_TABLE.get());
     }
 }

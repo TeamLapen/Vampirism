@@ -84,7 +84,7 @@ public class PedestalBlock extends BaseContainerBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         try (var transaction = Transaction.openRoot()) {
-            var resource = Optional.ofNullable(level.getCapability(Capabilities.Item.BLOCK, pos, null)).map(handler -> {
+            var resource = Optional.ofNullable(level.getCapability(Capabilities.Item.BLOCK, pos, hitResult.getDirection())).map(handler -> {
                 var item = ResourceHandlerUtil.extractFirst(handler, x -> true, 1, transaction);
                 if (item == null || item.isEmpty()) {
                     return null;

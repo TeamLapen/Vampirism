@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.data;
+package de.teamlapen.vampirism.common.data;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismDataMaps;

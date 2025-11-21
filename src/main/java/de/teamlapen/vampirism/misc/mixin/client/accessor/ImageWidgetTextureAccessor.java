@@ -1,0 +1,24 @@
+package de.teamlapen.vampirism.misc.mixin.client.accessor;
+
+import de.teamlapen.vampirism.misc.extension.client.IImageWidgetTexture;
+import net.minecraft.client.gui.components.ImageWidget;
+import net.minecraft.resources.ResourceLocation;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
+
+@Mixin(ImageWidget.Texture.class)
+public interface ImageWidgetTextureAccessor extends IImageWidgetTexture {
+    
+    @Accessor("texture")
+    @Override
+    ResourceLocation texture();
+
+    @Accessor("textureWidth")
+    @Override
+    int textureWidth();
+
+    @Accessor("textureHeight")
+    @Override
+    int textureHeight();
+    
+}

@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.common.items;
 import de.teamlapen.lib.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.api.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.items.component.BottleBlood;
-import de.teamlapen.vampirism.common.util.BloodHelper;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -20,9 +20,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import static de.teamlapen.vampirism.api.components.IBottleBlood.MULTIPLIER;
 
@@ -57,26 +57,28 @@ public class BloodBottleItem extends Item implements BaseDisplayItemGenerator.Cr
         if (livingEntity instanceof Player player && Helper.isVampire(livingEntity)) {
             VampirePlayer vampire = VampirePlayer.get(player);
             ItemStack consumed = stack.copyWithCount(1);
-            int blood = BloodHelper.getBlood(consumed);
 
-            if (blood > 0) {
-                ItemStack[] leftover = new ItemStack[1];
-                BloodHelper.drain(consumed, blood, IFluidHandler.FluidAction.EXECUTE, true, container -> leftover[0] = container);
-                vampire.drinkBlood(blood / MULTIPLIER, 0, new DrinkBloodContext(consumed).setReturnsSpareBlood(false));
-
-                if (stack.getCount() == 1) {
-                    return leftover[0];
-                } else {
-                    stack.shrink(1);
-                    if (!player.getInventory().add(leftover[0])) {
-                        player.drop(leftover[0], false);
+            var bottleResource = consumed.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(consumed));
+            try (var transaction = Transaction.openRoot()) {
+                var extracted = ResourceHandlerUtil.extractFirst(bottleResource, s -> s.is(ModFluids.BLOOD), CAPACITY, transaction);
+                if (extracted != null) {
+                    vampire.drinkBlood(extracted.amount() / MULTIPLIER, 0, new DrinkBloodContext(consumed).setReturnsSpareBlood(false));
+                    transaction.commit();
+                    super.finishUsingItem(stack, level, livingEntity);
+                    if (stack.getCount() == 1) {
+                        return consumed;
+                    } else {
+                        stack.shrink(1);
+                        if (!player.getInventory().add(consumed)) {
+                            player.drop(consumed, false);
+                        }
+                        return stack;
                     }
-                    return stack;
                 }
             }
         }
 
-        return FluidUtil.getFluidHandler(stack).map(IFluidHandlerItem::getContainer).orElseGet(() -> super.finishUsingItem(stack, level, livingEntity));
+        return stack;
     }
 
     @Override

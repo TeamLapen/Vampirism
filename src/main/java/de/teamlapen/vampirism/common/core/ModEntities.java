@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.sync.SyncRegistry;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VampirismRegistries;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
@@ -187,6 +189,11 @@ public class ModEntities {
         event.add(EntityType.PLAYER, ModAttributes.BLOOD_EXHAUSTION);
         event.add(EntityType.PLAYER, ModAttributes.NEONATAL_DURATION);
         event.add(EntityType.PLAYER, ModAttributes.DBNO_DURATION);
+    }
+
+    static void registerPlayerEventHandler(InterModEnqueueEvent event) {
+        SyncRegistry.registerPlayerEventHandler(ModAttachments.VAMPIRE_PLAYER.get());
+        SyncRegistry.registerPlayerEventHandler(ModAttachments.HUNTER_PLAYER.get());
     }
 
     public static <E extends Entity> DeferredHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category) {

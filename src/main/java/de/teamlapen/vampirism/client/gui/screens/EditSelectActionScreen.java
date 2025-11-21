@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
+import de.teamlapen.lib.client.gui.components.ColoredImageWidget;
+import de.teamlapen.lib.client.gui.components.EmptyComponent;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
+import de.teamlapen.lib.util.IntReference;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
@@ -19,10 +22,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -73,16 +76,44 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         super(getOrdering(player), action -> action.value().getName().plainCopy(), EditSelectActionScreen::drawActionPart, (ordering) -> saveOrdering(player, ordering), (item) -> EditSelectActionScreen.isEnabled(player, item));
     }
 
+
     @Override
-    protected void init() {
-        super.init();
+    protected void setupGrid() {
+        super.setupGrid();
 
-        this.keyBindingList = this.addRenderableWidget(new KeyBindingList(this.width - 140 + 4, 20, 140 - 8, this.height - 60));
+        addKeyBindingList();
+        this.layout.arrangeElements();
+        IntReference width = new IntReference();
+        this.layout.visitChildren(x -> width.add(x.getWidth()));
+        var spacer = this.layout.addChild(new EmptyComponent(this.width - width.get(), this.height), 0,1);
+        this.repositionCallback.add((width1, height1) -> {
+            this.layout.arrangeElements();
+            IntReference width2 = new IntReference();
+            this.layout.visitChildren(x -> {
+                if (x == spacer) return;
+                width2.add(x.getWidth());
+            });
+            spacer.setWidth(width1 - width2.get());
+        });
+    }
 
-        this.addRenderableWidget(new ResetButton(this.width - 140 + 4, this.height - 45, 140 - 8, 20, (context) -> this.resetKeyBindings()));
-        this.addRenderableWidget(new ExtendedButton(this.width - 140 + 4, this.height - 24, 140 - 8, 20, Component.translatable("text.vampirism.open_settings"), (context) -> {
-            Minecraft.getInstance().setScreen(new KeyBindsScreen(this, getMinecraft().options));
-        }));
+    protected void addKeyBindingList() {
+        int excludesWidth = 140;
+        var excludesWrapper = new GridLayout();
+        var background = excludesWrapper.addChild(ColoredImageWidget.sprite(excludesWidth, this.height, BACKGROUND, ARGB.colorFromFloat(1, 0.5f, 0.5f, 0.5f)), 0,0);
+        this.repositionCallback.add(((width1, height1) -> background.setHeight(height1)));
+        var excludes = new GridLayout()
+                .rowSpacing(2);
+        excludesWrapper.addChild(excludes,0,0, excludesWrapper.newCellSettings().padding(4).paddingTop(5));
+
+        GridLayout.RowHelper rowHelper = excludes.createRowHelper(1);
+        rowHelper.defaultCellSetting().alignHorizontallyCenter();
+        keyBindingList = rowHelper.addChild(new KeyBindingList(0,0,excludesWidth - 8, this.height - 55));
+        this.repositionCallback.add((width1, height1) -> keyBindingList.setHeight(height1 - 55));
+        rowHelper.addChild(new ResetButton(0, 0, excludesWidth - 30, 20, (context) -> this.resetKeyBindings()), rowHelper.newCellSettings().paddingHorizontal(1));
+        rowHelper.addChild(new ExtendedButton(0, 0, excludesWidth - 30, 20, Component.translatable("text.vampirism.open_settings"), (context) -> Minecraft.getInstance().setScreen(new KeyBindsScreen(this, getMinecraft().options))), rowHelper.newCellSettings().paddingHorizontal(1));
+
+        this.layout.addChild(excludesWrapper,0,2);
     }
 
     private void resetKeyBindings() {
@@ -96,9 +127,32 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
         super.renderBackground(graphics, p_296369_, p_296477_, p_294317_);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.width - 140, 0, 140, this.height, ARGB.colorFromFloat(1, 0.5f, 0.5f, 0.5f));
-
         graphics.drawCenteredString(this.font, Component.translatable("text.vampirism.key_shortcuts"), this.width - 70, 5, -1);
+    }
+
+    public class KeyBindingActionList extends ContainerObjectSelectionList<KeyBindingActionList.ActionSetting> {
+
+        public KeyBindingActionList(Minecraft minecraft, int width) {
+            super(minecraft, width, EditSelectActionScreen.this.height - 40, 40, 20);
+        }
+
+        public class ActionSetting extends ContainerObjectSelectionList.Entry<ActionSetting> {
+
+            @Override
+            public List<? extends NarratableEntry> narratables() {
+                return List.of();
+            }
+
+            @Override
+            public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+
+            }
+
+            @Override
+            public List<? extends GuiEventListener> children() {
+                return List.of();
+            }
+        }
     }
 
     public class KeyBindingList extends ContainerObjectSelectionList<KeyBindingList.KeyBindingSetting> {

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -23,8 +22,6 @@ public class VReference {
 
     public static final Supplier<Fluid> BLOOD = DeferredHolder.create(Registries.FLUID, VResourceLocation.mod("blood"));
 
-    public static IVampireVision vision_nightVision;
-    public static IVampireVision vision_bloodVision;
     public static final ResourceLocation PERMANENT_INVISIBLE_MOB_EFFECT = VResourceLocation.mod("permanent");
     public static final ResourceLocation VAMPIRE_NIGHT_VISION_EFFECT = VResourceLocation.mod("night_vision");
 }

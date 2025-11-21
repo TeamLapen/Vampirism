@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens.radial.edit;
 
-import de.teamlapen.lib.client.gui.components.SimpleList;
+import de.teamlapen.lib.client.gui.components.ColoredImageWidget;
+import de.teamlapen.lib.client.gui.components.RepositionCallback;
 import de.teamlapen.lib.client.gui.screens.radialmenu.DrawCallback;
 import de.teamlapen.lib.client.gui.screens.radialmenu.GuiRadialMenu;
 import de.teamlapen.lib.client.gui.screens.radialmenu.IRadialMenuSlot;
@@ -10,11 +11,14 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -24,6 +28,7 @@ import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -41,6 +46,8 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     private final Function<T, Boolean> isEnabled;
     private ExcludedItemList excludedList;
     private Boolean wasGuiHidden;
+    protected final GridLayout layout = new GridLayout();
+    protected List<RepositionCallback> repositionCallback = new ArrayList<>();
 
     public ReorderingGuiRadialMenu(ItemOrdering<T> ordering, Function<T, MutableComponent> nameFunction, DrawCallback<T> drawCallback, @NotNull Consumer<ItemOrdering<T>> saveAction, Function<T, Boolean> isEnabled) {
         super(createMenu(ordering, nameFunction, drawCallback, isEnabled));
@@ -55,9 +62,9 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     protected void init() {
         super.init();
 
-        this.addRenderableWidget(new ResetButton(3, this.height - 45, 140 - 4, 20, (context) -> this.reset()));
-        this.addRenderableWidget(new ExtendedButton(3, this.height - 24, 140 - 4, 20, Component.translatable("gui.done"), (context) -> this.onClose()));
-        this.excludedList = this.addRenderableWidget(new ExcludedItemList(3, 20, 140 - 3, this.height - 70));
+        setupGrid();
+        this.layout.visitWidgets(this::addRenderableWidget);
+        this.layout.arrangeElements();
 
         if (this.wasGuiHidden == null) {
             this.wasGuiHidden = Minecraft.getInstance().options.hideGui;
@@ -67,9 +74,37 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         updateExcludedList();
     }
 
+    protected void setupGrid() {
+        addExcludeList();
+    }
+
+    protected void addExcludeList() {
+        int excludesWidth = 140;
+        var excludesWrapper = new GridLayout();
+        var background = excludesWrapper.addChild(ColoredImageWidget.sprite(excludesWidth, this.height, BACKGROUND, ARGB.colorFromFloat(1, 0.5f, 0.5f, 0.5f)), 0,0);
+        this.repositionCallback.add(((width1, height1) -> background.setHeight(height1)));
+        var excludes = new GridLayout()
+                .rowSpacing(2);
+        excludesWrapper.addChild(excludes,0,0, excludesWrapper.newCellSettings().padding(4).paddingTop(5));
+
+        GridLayout.RowHelper rowHelper = excludes.createRowHelper(1);
+        rowHelper.defaultCellSetting().alignHorizontallyCenter();
+        excludedList = rowHelper.addChild(new ExcludedItemList(excludesWidth - 8, this.height - 55));
+        this.repositionCallback.add((width1, height1) -> excludedList.setHeight(height1 - 55));
+        rowHelper.addChild(new ResetButton(0, 0, excludesWidth - 30, 20, (context) -> this.reset()), rowHelper.newCellSettings().paddingHorizontal(1));
+        rowHelper.addChild(new ExtendedButton(0, 0, excludesWidth - 30, 20, Component.translatable("gui.done"), (context) -> this.onClose()), rowHelper.newCellSettings().paddingHorizontal(1));
+
+        this.layout.addChild(excludesWrapper,0,0);
+    }
+
+    @Override
+    protected void repositionElements() {
+        this.repositionCallback.forEach(x -> x.repositionElements(this.width, this.height));
+        this.layout.arrangeElements();
+    }
+
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND, 0, 0, 143, this.height, ARGB.colorFromFloat(1, 0.5f, 0.5f, 0.5f));
     }
 
     @Override
@@ -173,7 +208,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-        this.excludedList.mouseDragged(event, dragX, dragY);
+//        this.excludedList.mouseDragged(event, dragX, dragY);
         return super.mouseDragged(event, dragX, dragY);
     }
 
@@ -228,11 +263,10 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }, 0);
     }
 
-    public class ExcludedItemList extends SimpleList<ExcludedEntry<T>> {
+    public class ExcludedItemList extends ContainerObjectSelectionList<ExcludedEntry<T>> {
 
-        public ExcludedItemList(int x, int y, int pWidth, int pHeight) {
-            super(Minecraft.getInstance(), pWidth, pHeight, y, 20);
-            this.setX(x);
+        public ExcludedItemList(int pWidth, int pHeight) {
+            super(Minecraft.getInstance(), pWidth, pHeight, 0, 20);
         }
 
         public void updateContent(List<T> newItems, Function<T, MutableComponent> nameFunction) {
@@ -247,43 +281,89 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
             }
         }
 
-        @Override
-        public boolean mouseClicked(MouseButtonEvent event, boolean doubleCLick) {
-            if (isMouseOver(event.x(), event.y())) {
-                if (ReorderingGuiRadialMenu.this.movingItem != null) {
-                    ReorderingGuiRadialMenu.this.excludeItem();
-                    return true;
-                }
-            }
-            return super.mouseClicked(event, doubleCLick);
-        }
+//        @Override
+//        public boolean mouseClicked(MouseButtonEvent event, boolean doubleCLick) {
+//            if (isMouseOver(event.x(), event.y())) {
+//                if (ReorderingGuiRadialMenu.this.movingItem != null) {
+//                    ReorderingGuiRadialMenu.this.excludeItem();
+//                    return true;
+//                }
+//            }
+//            return super.mouseClicked(event, doubleCLick);
+//        }
 
-        @Override
-        public void renderWidget(GuiGraphics guiGraphics, int p_283242_, int p_282891_, float p_283683_) {
-            super.renderWidget(guiGraphics, p_283242_, p_282891_, p_283683_);
-            if (this.visible && ReorderingGuiRadialMenu.this.movingItem != null) {
-                int i = this.getX();
-                int j = this.getY();
-                guiGraphics.pose().pushMatrix();
-                guiGraphics.pose().translate(i, j);
-                guiGraphics.fillGradient(0, 0, this.getWidth(), this.getHeight(), -1072689136, -804253680);
-                guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("text.vampirism.place_exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
-                guiGraphics.pose().popMatrix();
-            }
-        }
+//        @Override
+//        public void renderWidget(GuiGraphics guiGraphics, int p_283242_, int p_282891_, float p_283683_) {
+//            super.renderWidget(guiGraphics, p_283242_, p_282891_, p_283683_);
+//            if (this.visible && ReorderingGuiRadialMenu.this.movingItem != null) {
+//                int i = this.getX();
+//                int j = this.getY();
+//                guiGraphics.pose().pushMatrix();
+//                guiGraphics.pose().translate(i, j);
+//                guiGraphics.fillGradient(0, 0, this.getWidth(), this.getHeight(), -1072689136, -804253680);
+//                guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("text.vampirism.place_exclude"), this.width / 2, this.height / 2, 0xFFFFFF);
+//                guiGraphics.pose().popMatrix();
+//            }
+//        }
     }
 
-    public static class ExcludedEntry<T> extends SimpleList.Entry<ExcludedEntry<T>> {
+    public static class ExcludedEntry<T> extends ContainerObjectSelectionList.Entry<ExcludedEntry<T>> {
 
         private final T item;
+        private final Button button;
 
         public ExcludedEntry(@NotNull T item, Component name, Runnable onClick) {
-            super(name, onClick);
             this.item = item;
+            this.button = Button.builder(name, b -> onClick.run()).size(getWidth(), getHeight()).build();
         }
 
         public T getItem() {
             return item;
+        }
+
+        @Override
+        public void setPosition(int x, int y) {
+            super.setPosition(x, y);
+            this.button.setPosition(x,y);
+        }
+
+        @Override
+        public void setX(int x) {
+            super.setX(x);
+            this.button.setX(x);
+        }
+
+        @Override
+        public void setY(int y) {
+            super.setY(y);
+            this.button.setY(y);
+        }
+
+        @Override
+        public void setHeight(int height) {
+            super.setHeight(height);
+            this.button.setHeight(height);
+        }
+
+        @Override
+        public void setWidth(int width) {
+            super.setWidth(width);
+            this.button.setWidth(width);
+        }
+
+        @Override
+        public @NotNull List<? extends NarratableEntry> narratables() {
+            return List.of(button);
+        }
+
+        @Override
+        public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+            this.button.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        @Override
+        public @NotNull List<? extends GuiEventListener> children() {
+            return List.of(button);
         }
     }
 

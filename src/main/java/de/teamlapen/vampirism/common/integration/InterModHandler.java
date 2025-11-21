@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-public class IMCHandler {
+public class InterModHandler {
     private static final Logger LOGGER = LogManager.getLogger();
     private boolean requestedToDisableBloodbar = false;
 
@@ -20,9 +20,9 @@ public class IMCHandler {
         ISundamageRegistry sundamageRegistry = VampirismAPI.services().sundamageRegistry();
         event.getIMCStream("nosundamage-biome"::equals).forEach(msg -> {
             Object value = msg.messageSupplier().get();
-            if (value instanceof ResourceLocation) {
+            if (value instanceof ResourceLocation loc) {
                 LOGGER.info("Received no sundamage biome {} from {}", value, msg.senderModId());
-                sundamageRegistry.addNoSundamageBiomes(ResourceKey.create(Registries.BIOME, (ResourceLocation) value));
+                sundamageRegistry.addNoSundamageBiomes(ResourceKey.create(Registries.BIOME, loc));
             } else {
                 LOGGER.error("Received invalid nosundamage-biome thing {} from {}", value, msg.senderModId());
             }

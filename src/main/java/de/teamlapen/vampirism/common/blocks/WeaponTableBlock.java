@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.blocks;
 
+import com.google.common.collect.MapMaker;
 import de.teamlapen.vampirism.common.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
@@ -8,7 +9,6 @@ import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -18,6 +18,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -25,15 +26,18 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.TransferPreconditions;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.stream.IntStream;
+import java.util.Map;
+import java.util.Objects;
 
 public class WeaponTableBlock extends BaseHorizontalBlock {
 
@@ -60,46 +64,15 @@ public class WeaponTableBlock extends BaseHorizontalBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemStack heldItem = player.getItemInHand(hand);
-        if (FluidUtil.getFluidHandler(heldItem).stream().flatMap(handler -> IntStream.range(0, handler.getTanks()).mapToObj(handler::getFluidInTank)).anyMatch(fluid -> fluid.is(Fluids.LAVA))) {
-            if (level instanceof ServerLevel) {
-                if (!Helper.isHunter(player)) {
-                    player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
-                    return InteractionResult.CONSUME;
-                }
-
-                int fluid = level.getBlockState(pos).getValue(LAVA);
-                boolean flag = false;
-                if (fluid < MAX_LAVA) {
-                    Optional<IFluidHandlerItem> opt = FluidUtil.getFluidHandler(heldItem);
-                    flag = opt.map(fluidHandler -> {
-                        FluidStack missing = new FluidStack(Fluids.LAVA, (MAX_LAVA - fluid) * MB_PER_META);
-                        FluidStack drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);
-                        if (drainable.isEmpty()) { // Buckets can only provide {@link Fluid.BUCKET_VOLUME} at a time, so try this too. Additional lava is wasted though
-                            missing.setAmount(FluidType.BUCKET_VOLUME);
-                            drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);
-                        }
-                        if (drainable.getAmount() >= MB_PER_META) {
-                            FluidStack drained = fluidHandler.drain(missing, IFluidHandler.FluidAction.EXECUTE);
-                            if (drained.getAmount() > 0) {
-                                level.setBlockAndUpdate(pos, state.setValue(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META)));
-                                player.setItemInHand(hand, fluidHandler.getContainer());
-
-                                return true;
-                            }
-                        }
-
-                        return false;
-                    }).orElse(false);
-                }
-
-                if (flag) {
-                    return InteractionResult.SUCCESS_SERVER;
-                }
+        var capability = heldItem.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forPlayerInteraction(player, hand));
+        if (capability != null && ResourceHandlerUtil.contains(capability, FluidResource.of(Fluids.LAVA))) {
+            var moved = ResourceHandlerUtil.move(capability, level.getCapability(Capabilities.Fluid.BLOCK, pos, null), x -> x.is(Fluids.LAVA), MAX_LAVA * MB_PER_META, null);
+            if (moved > 0) {
+                return InteractionResult.SUCCESS_SERVER;
+            } else {
+                return InteractionResult.CONSUME;
             }
-
-            return InteractionResult.CONSUME;
         }
-
         return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
@@ -130,5 +103,111 @@ public class WeaponTableBlock extends BaseHorizontalBlock {
             return HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.WEAPON_TABLE);
         }
         return false;
+    }
+
+    private record WrapperLocation(Level level, BlockPos pos) {
+        public BlockState getBlockState() {
+            return this.level.getBlockState(pos);
+        }
+
+        public void setBlockState(BlockState state) { this.level.setBlock(this.pos, state, 0);}
+
+        public void sendUpdate() {
+            var state = getBlockState();
+            this.level.sendBlockUpdated(pos, state, state,3);
+        }
+    }
+
+    private static final Map<WrapperLocation, WeaponTableResourceHandler> wrappers = new MapMaker().concurrencyLevel(1).weakKeys().weakValues().makeMap();
+
+    public static ResourceHandler<FluidResource> getResourceHandler(Level level, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, @Nullable Direction context) {
+        var location = new WrapperLocation(level, pos.immutable());
+        return wrappers.computeIfAbsent(location, WeaponTableResourceHandler::new);
+    }
+
+    private static class WeaponTableResourceHandler extends SnapshotJournal<BlockState> implements ResourceHandler<FluidResource> {
+
+        private final WrapperLocation location;
+
+        public WeaponTableResourceHandler(WrapperLocation location) {
+            this.location = location;
+        }
+
+        @Override
+        public int size() {
+            return 1;
+        }
+
+        @Override
+        public FluidResource getResource(int index) {
+            Objects.checkIndex(index, size());
+
+            BlockState state = location.getBlockState();
+            return FluidResource.of(state.getValue(WeaponTableBlock.LAVA) > 0 ? Fluids.LAVA : Fluids.EMPTY);
+        }
+
+        @Override
+        public long getAmountAsLong(int index) {
+            Objects.checkIndex(index, size());
+
+            BlockState blockState = location.getBlockState();
+
+            return blockState.getValue(WeaponTableBlock.LAVA) * MB_PER_META;
+        }
+
+        @Override
+        public long getCapacityAsLong(int index, FluidResource resource) {
+            Objects.checkIndex(index, size());
+            return MAX_LAVA * MB_PER_META;
+        }
+
+        @Override
+        public boolean isValid(int index, FluidResource resource) {
+            Objects.checkIndex(index, size());
+            TransferPreconditions.checkNonEmpty(resource);
+
+            return resource.is(Fluids.LAVA);
+        }
+
+        @Override
+        public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
+            Objects.checkIndex(index, size());
+            TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+
+            BlockState blockState = location.getBlockState();
+            int currentCount = blockState.getValue(WeaponTableBlock.LAVA);
+
+            int toAdd = amount / MB_PER_META;
+            int actualAdd = Math.min(MAX_LAVA - currentCount, toAdd);
+
+            updateSnapshots(transaction);
+
+            this.location.setBlockState(blockState.setValue(WeaponTableBlock.LAVA, currentCount + actualAdd));
+
+            return actualAdd * MB_PER_META;
+        }
+
+        @Override
+        public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+            Objects.checkIndex(index, size());
+            return 0;
+        }
+
+        @Override
+        protected BlockState createSnapshot() {
+            return this.location.getBlockState();
+        }
+
+        @Override
+        protected void revertToSnapshot(@Nullable BlockState snapshot) {
+            if (snapshot != null) {
+                this.location.setBlockState(snapshot);
+            }
+        }
+
+        @Override
+        protected void onRootCommit(@Nullable BlockState originalState) {
+            this.location.sendUpdate();
+        }
     }
 }

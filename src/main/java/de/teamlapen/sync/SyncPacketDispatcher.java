@@ -2,8 +2,6 @@ package de.teamlapen.sync;
 
 import de.teamlapen.sync.client.ClientPayloadHandler;
 import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
-import de.teamlapen.sync.common.packages.ServerboundRequestPlayerUpdatePacket;
-import de.teamlapen.sync.server.ServerPayloadHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -26,6 +24,5 @@ public class SyncPacketDispatcher {
 
     private static void registerPackets(PayloadRegistrar registrar) {
         registrar.playToClient(ClientboundUpdateEntityPacket.TYPE, ClientboundUpdateEntityPacket.CODEC, (s, l) -> ClientPayloadHandler.getInstance().handleUpdateEntityPacket(s, l));
-        registrar.playToServer(ServerboundRequestPlayerUpdatePacket.TYPE, ServerboundRequestPlayerUpdatePacket.CODEC, (msg, context) -> ServerPayloadHandler.getInstance().handleRequestPlayerUpdatePacket(msg, context));
     }
 }

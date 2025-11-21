@@ -45,6 +45,7 @@
     "accessor.RegistriesDatapackGeneratorAccessor",
     "accessor.ShapedRecipeAccessor",
     "accessor.ShapedRecipeBuilderAccessor",
+    "accessor.SlotAccessor",
     "accessor.SpreadingSnowyDirtBlockAccessor",
     "accessor.StructureTemplatePoolAccessor",
     "accessor.TargetConditionAccessor",
@@ -70,6 +71,8 @@
     "client.accessor.BossHealthOverlayAccessor",
     "client.accessor.CameraAccessor",
     "client.accessor.EntityRenderDispatcherAccessor",
+    "client.accessor.ImageWidgetSpriteAccessor",
+    "client.accessor.ImageWidgetTextureAccessor",
     "client.accessor.ItemInHandRendererAccessor",
     "client.accessor.LivingEntityRendererAccessor",
     "client.accessor.StatsScreenAccessor"

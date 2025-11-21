@@ -1,14 +1,9 @@
 package de.teamlapen.sync.client;
 
-import de.teamlapen.sync.SyncRegistry;
 import de.teamlapen.sync.common.packages.ClientboundUpdateEntityPacket;
-import de.teamlapen.sync.common.storage.IAttachedSyncable;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,17 +44,5 @@ public class ClientPayloadHandler {
 //                }
             }
         });
-    }
-
-    private static void handleCapability(Entity e, ResourceLocation key, CompoundTag data) {
-        AttachmentType<IAttachedSyncable> cap = SyncRegistry.getSyncableEntityCaps().get(key);
-        if (cap == null && e instanceof Player) {
-            cap = SyncRegistry.getSyncablePlayerCaps().get(key);
-        }
-        if (cap == null) {
-            LOGGER.warn("Capability with key {} is not registered in the HelperRegistry", key);
-        } else {
-//            e.getData(cap).deserializeUpdate(e.registryAccess(), data);
-        }
     }
 }

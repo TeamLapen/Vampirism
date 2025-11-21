@@ -36,7 +36,7 @@ public class MotherTrophyRenderer implements NoDataSpecialModelRenderer {
         poseStack.translate(0.0F, -1.701F, 0.0F);
         float f1 = RotationSegment.convertToDegrees(0);
         poseStack.mulPose(Axis.YP.rotationDegrees(f1));
-        nodeCollector.submitModel(this.model, new GhostRenderer.GhostRenderState(), poseStack, RenderType.itemEntityTranslucentCull(GhostRenderer.TEXTURE), packedLight, packedOverlay, -1, null);
+        nodeCollector.submitModel(this.model, new GhostRenderer.GhostRenderState(), poseStack, RenderType.itemEntityTranslucentCull(GhostRenderer.TEXTURE), packedLight, packedOverlay, 0, null);
         poseStack.popPose();
     }
 

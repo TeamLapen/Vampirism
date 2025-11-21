@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.entity.player.vampire.skills;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.entity.factions.ISkillNode;
 import de.teamlapen.vampirism.api.entity.factions.ISkillTree;
@@ -19,6 +18,7 @@ import de.teamlapen.vampirism.common.entity.player.skills.ActionSkill;
 import de.teamlapen.vampirism.common.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.common.entity.player.skills.SkillTree;
 import de.teamlapen.vampirism.common.entity.player.skills.VampirismSkill;
+import de.teamlapen.vampirism.common.entity.player.vampire.ModVampireVisions;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -56,7 +56,7 @@ public class VampireSkills {
         }
     });
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> BLOOD_CHARGE = SKILLS.register("blood_charge", () -> new VampirismSkill.SimpleVampireSkill(1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> BLOOD_VISION = SKILLS.register("blood_vision", () -> new VampirismSkill.SimpleVampireSkill(3, true).setToggleActions(player -> player.unlockVision(VReference.vision_bloodVision), player -> player.unUnlockVision(VReference.vision_bloodVision)));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> BLOOD_VISION = SKILLS.register("blood_vision", () -> new VampirismSkill.SimpleVampireSkill(3, true).setToggleActions(player -> player.unlockVision(ModVampireVisions.BLOOD_VISION.getValue()), player -> player.unUnlockVision(ModVampireVisions.BLOOD_VISION.getValue())));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> BLOOD_VISION_GARLIC = SKILLS.register("blood_vision_garlic", () -> new VampirismSkill.SimpleVampireSkill(1, true).setToggleActions(player -> ((VampirePlayer) player).getSpecialAttributes().blood_vision_garlic = true, player -> ((VampirePlayer) player).getSpecialAttributes().blood_vision_garlic = false));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DARK_BLOOD_PROJECTILE = SKILLS.register("dark_blood_projectile", () -> new ActionSkill<>(VampireActions.DARK_BLOOD_PROJECTILE, Trees.LEVEL, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> FREEZE = SKILLS.register("freeze", () -> new ActionSkill<>(VampireActions.FREEZE, Trees.LEVEL, 2, true));
@@ -67,9 +67,9 @@ public class VampireSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LESS_SUNDAMAGE = SKILLS.register("less_sundamage", () -> new VampirismSkill.SimpleVampireSkill(3, true).registerAttributeModifier(ModAttributes.SUNDAMAGE, () -> ModConfig.BALANCE.vsSundamageReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> NIGHT_VISION = SKILLS.register("night_vision", () -> new VampirismSkill.SimpleVampireSkill(2, false)
             .setToggleActions(player -> {
-                player.unlockVision(VReference.vision_nightVision);
-                player.activateVision(VReference.vision_nightVision);
-            }, player -> player.unUnlockVision(VReference.vision_nightVision)));
+                player.unlockVision(ModVampireVisions.NIGHT_VISION.getValue());
+                player.activateVision(ModVampireVisions.NIGHT_VISION.getValue());
+            }, player -> player.unUnlockVision(ModVampireVisions.NIGHT_VISION.getValue())));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> SUNSCREEN = SKILLS.register("sunscreen", () -> new ActionSkill<>(VampireActions.SUNSCREEN, Trees.LEVEL, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> SUMMON_BATS = SKILLS.register("summon_bats", () -> new ActionSkill<>(VampireActions.SUMMON_BAT, Trees.LEVEL, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> SWORD_FINISHER = SKILLS.register("sword_finisher", () -> new VampirismSkill.SimpleVampireSkill(2, true).setDescription(() -> Component.translatable("skill.vampirism.sword_finisher.desc", (int) (ModConfig.BALANCE.vsSwordFinisherMaxHealth.get() * 100))));

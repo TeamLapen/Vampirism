@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 /**
  * Basic abstract class for BlockEntities which need a small inventory (with a gui)
@@ -127,16 +126,4 @@ public abstract class InventoryBlockEntity extends NetworkedContainerBlockEntity
         return true;
     }
 
-    @Deprecated
-    public static class SelectorInvWrapper extends InvWrapper {
-
-        public SelectorInvWrapper(InventoryBlockEntity inv) {
-            super(inv);
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return (slot < 0 || slot >= ((InventoryBlockEntity) this.getInv()).selectors.length) ? 0 : ((InventoryBlockEntity) this.getInv()).selectors[slot].stackLimit;
-        }
-    }
 }

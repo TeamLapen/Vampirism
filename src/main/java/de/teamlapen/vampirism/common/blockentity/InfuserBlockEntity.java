@@ -75,22 +75,22 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     }
 
     @Override
-    protected @NotNull Component getDefaultName() {
+    protected Component getDefaultName() {
         return Component.translatable("block.vampirism.blood_infuser");
     }
 
     @Override
-    protected @NotNull NonNullList<ItemStack> getItems() {
+    protected NonNullList<ItemStack> getItems() {
         return this.items;
     }
 
     @Override
-    protected void setItems(@NotNull NonNullList<ItemStack> items) {
+    protected void setItems(NonNullList<ItemStack> items) {
         this.items = items;
     }
 
     @Override
-    protected @NotNull AbstractContainerMenu createMenu(int containerId, @NotNull Inventory inventory) {
+    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
         return new InfuserMenu(containerId, inventory, this, this.dataAccess);
     }
 
@@ -100,7 +100,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     }
 
     @Override
-    protected void loadAdditional(@NotNull ValueInput input) {
+    protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input, this.items);
@@ -109,7 +109,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output) {
+    protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putInt("cooking_time_spend", this.cookingTimer);
         output.putInt("cooking_total_time", this.totalCookingTime);

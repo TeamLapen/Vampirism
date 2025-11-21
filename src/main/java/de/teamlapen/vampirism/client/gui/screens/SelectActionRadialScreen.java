@@ -5,7 +5,6 @@ import de.teamlapen.lib.client.gui.screens.radialmenu.RadialMenu;
 import de.teamlapen.lib.client.gui.screens.radialmenu.RadialMenuSlot;
 import de.teamlapen.lib.client.renderer.GuiRenderer;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -13,7 +12,6 @@ import de.teamlapen.vampirism.client.config.ClientConfigHelper;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.screens.radial.DualSwitchingRadialMenu;
 import de.teamlapen.vampirism.common.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundToggleActionPacket;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -43,19 +41,16 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
     }
 
     public static <T extends ISkillPlayer<T>> void show(KeyMapping keyMapping) {
-        Holder<? extends IPlayableFaction<T>> faction = VampirismPlayerAttributes.get(Minecraft.getInstance().player).faction();
-        if (faction != null) {
-            FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(player -> {
-                //noinspection rawtypes
-                List<Holder<IAction<?>>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler) player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
-                if (!actions.isEmpty()) {
-                    Minecraft.getInstance().setScreen(new SelectActionRadialScreen<>(player, actions, keyMapping));
-                } else {
-                    Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.vampirism.no_actions"), true);
-                    Minecraft.getInstance().setScreen(null);
-                }
-            });
-        }
+        FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(player -> {
+            //noinspection rawtypes
+            List<Holder<IAction<?>>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler) player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
+            if (!actions.isEmpty()) {
+                Minecraft.getInstance().setScreen(new SelectActionRadialScreen<>(player, actions, keyMapping));
+            } else {
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.vampirism.no_actions"), true);
+                Minecraft.getInstance().setScreen(null);
+            }
+        });
     }
 
     @Override

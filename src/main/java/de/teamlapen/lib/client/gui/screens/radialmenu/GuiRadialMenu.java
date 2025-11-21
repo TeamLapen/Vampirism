@@ -52,7 +52,6 @@ import org.lwjgl.glfw.GLFW;
 import java.util.List;
 import java.util.Optional;
 
-//@EventBusSubscriber(Dist.CLIENT)
 public abstract class GuiRadialMenu<T> extends Screen {
     private static final float PRECISION = 5.0f;
     protected static final int MAX_SLOTS = 30;
@@ -63,8 +62,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
     protected final List<IRadialMenuSlot<T>> radialMenuSlots;
     protected final float OPEN_ANIMATION_LENGTH = 0.20f;
     protected float totalTime;
-    protected float prevTick;
-    protected float extraTick;
+    protected long lastTime;
     /**
      * Zero-Based index
      */
@@ -93,13 +91,6 @@ public abstract class GuiRadialMenu<T> extends Screen {
 //        }
 //    }
 
-    @Override
-    public void tick() {
-        if (totalTime != OPEN_ANIMATION_LENGTH) {
-            extraTick++;
-        }
-    }
-
     protected boolean isMouseOverMenuItems(double mouseDistanceToCenterOfScreen, float radiusIn, float radiusOut) {
         return allowMouseDirection ? mouseDistanceToCenterOfScreen >= 10 : mouseDistanceToCenterOfScreen >= radiusIn && mouseDistanceToCenterOfScreen < radiusOut;
     }
@@ -109,11 +100,15 @@ public abstract class GuiRadialMenu<T> extends Screen {
         super.render(graphics, mouseX, mouseY, partialTicks);
         Matrix3x2fStack pose = graphics.pose();
 
+        if (lastTime == 0) {
+            lastTime = System.nanoTime();
+        }
+
+        long currentTime = System.nanoTime();
+        totalTime += Math.min((currentTime - lastTime) / 1_000_000_000f, 0.1f);
+        lastTime = currentTime;
+
         float openAnimation = closing ? 1.0f - totalTime / OPEN_ANIMATION_LENGTH : totalTime / OPEN_ANIMATION_LENGTH;
-        float currTick = minecraft.getDeltaTracker().getGameTimeDeltaTicks();
-        totalTime += (currTick + extraTick - prevTick) / 20f;
-        extraTick = 0;
-        prevTick = currTick;
 
 
         float animProgress = Mth.clamp(openAnimation, 0, 1);
@@ -164,7 +159,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
             }
         }
 
-        pose.translate(0, 50);
+        pose.translate(0, 0/*,50*/);
 
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
@@ -175,7 +170,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
 
 
         pose.pushMatrix();
-        pose.translate(0, 50);
+        pose.translate(0, 0/*,50*/);
 
         for (int i = 0; i < numberOfSlices; i++) {
             ItemStack stack = new ItemStack(Blocks.DIRT);
@@ -263,16 +258,33 @@ public abstract class GuiRadialMenu<T> extends Screen {
     }
 
     public void drawSlice(IRadialMenuSlot<T> slot, boolean highlighted, GuiGraphics guiGraphics, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
-        float angle = endAngle - startAngle;
-        int sections = Math.max(1, Mth.ceil(angle / PRECISION));
+        // Normalize angles to [0, 360) and ensure sweep is always positive (handles wrap-around at 360)
+        float startDeg = Mth.positiveModulo(startAngle, 360.0f);
+        float endDeg = Mth.positiveModulo(endAngle, 360.0f);
+        float sweepDeg = endDeg - startDeg;
+        if (sweepDeg <= 0.0f) {
+            sweepDeg += 360.0f;
+        }
 
-        guiGraphics.submitGuiElementRenderState(new SliceElement(RenderPipelines.GUI, TextureSetup.noTexture(), x, y, z, radiusIn, radiusOut, (float) Math.toRadians(startAngle), (float) Math.toRadians(endAngle), sections, r, g, b, a));
+        int sections = Math.max(1, Mth.ceil(sweepDeg / PRECISION));
+        float startRad = (float) Math.toRadians(startDeg);
+        float endRad = (float) Math.toRadians(startDeg + sweepDeg);
+
+        guiGraphics.submitGuiElementRenderState(new SliceElement(x, y, 0, radiusIn, radiusOut, startRad, endRad, sections, r, g, b, a, guiGraphics.pose()));
 
     }
 
     public record SliceElement(RenderPipeline pipeline, TextureSetup textureSetup, float x, float y, float z,
-                               float startAngle, float radiusIn, float radiusOut, float endAngle, int sections, int r,
-                               int g, int b, int a) implements GuiElementRenderState {
+                               float radiusIn, float radiusOut, float startAngle, float endAngle, int sections, int r,
+                               int g, int b, int a,
+                               @Nullable ScreenRectangle scissorArea,
+                               @Nullable ScreenRectangle bounds) implements GuiElementRenderState {
+
+        public SliceElement(float x, float y, float z,
+                            float radiusIn, float radiusOut, float startAngle, float endAngle, int sections, int r,
+                            int g, int b, int a, Matrix3x2fStack pose) {
+            this(RenderPipelines.GUI, TextureSetup.noTexture(), x, y, z, radiusIn, radiusOut,startAngle, endAngle, sections, r, g, b, a, null, createBounds(x, y, radiusOut, pose));
+        }
 
         @Override
         public void buildVertices(@NotNull VertexConsumer consumer) {
@@ -299,14 +311,14 @@ public abstract class GuiRadialMenu<T> extends Screen {
             }
         }
 
-        @Override
-        public @Nullable ScreenRectangle scissorArea() {
-            return null;
-        }
-
-        @Override
-        public @Nullable ScreenRectangle bounds() {
-            return null;
+        private static ScreenRectangle createBounds(float centerX, float centerY, float radius, Matrix3x2fStack pose) {
+            // x, y, width, height
+            return new ScreenRectangle(
+                    (int) (centerX - radius),
+                    (int) (centerY - radius),
+                    (int) (radius * 2),
+                    (int) (radius * 2)
+            ).transformMaxBounds(pose);
         }
     }
 

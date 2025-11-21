@@ -84,6 +84,7 @@ public class ModRegistryManager {
         eventBus.addListener(ModRegistries::registerRegistries);
         eventBus.addListener(ModDataPacks::registerPackRepository);
         eventBus.addListener(ModBlockEntities::registerTileExtensions);
+        eventBus.addListener(ModEntities::registerPlayerEventHandler);
     }
 
     public void registerForgeEventHandler(IEventBus eventBus) {

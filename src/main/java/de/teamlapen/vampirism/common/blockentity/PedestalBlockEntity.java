@@ -15,12 +15,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -125,13 +125,13 @@ public class PedestalBlockEntity extends NetworkedBlockEntity {
 
     private void drainBlood() {
         if (level == null) return;
-        FluidUtil.getFluidHandler(this.level, this.worldPosition.below(), Direction.UP).ifPresent(handler -> {
-            FluidStack drained = handler.drain(new FluidStack(ModFluids.BLOOD.get(), VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.SIMULATE);
-            if (!drained.isEmpty() && drained.getAmount() == VReference.FOOD_TO_FLUID_BLOOD) {
-                drained = handler.drain(new FluidStack(ModFluids.BLOOD.get(), VReference.FOOD_TO_FLUID_BLOOD), IFluidHandler.FluidAction.EXECUTE);
-                bloodStored += drained.getAmount();
+        try (var transaction = Transaction.openRoot()) {
+            var extracted = ResourceHandlerUtil.extractFirst(this.level.getCapability(Capabilities.Fluid.BLOCK, this.worldPosition.below(), Direction.UP), x -> x.is(ModFluids.BLOOD), VReference.FOOD_TO_FLUID_BLOOD, transaction);
+            if (extracted != null) {
+                bloodStored += extracted.amount();
+                transaction.commit();
             }
-        });
+        }
     }
 
     public int getChargedProgress() {
@@ -158,16 +158,6 @@ public class PedestalBlockEntity extends NetworkedBlockEntity {
             super.setChanged();
             BlockState block = this.level.getBlockState(this.worldPosition);
             level.sendBlockUpdated(worldPosition, block, block, 3);
-        }
-    }
-
-    /**
-     * Set the held stack.
-     */
-    private void setStack(@NotNull ItemStack stack) {
-        this.chargingTicks = 0;
-        if (this.internalStack.isEmpty()) {
-            this.internalStack = stack;
         }
     }
 
@@ -213,7 +203,7 @@ public class PedestalBlockEntity extends NetworkedBlockEntity {
                 return 0;
             }
 
-            createSnapshot();
+            updateSnapshots(transaction);
             internalStack = resource.toStack();
 
             return 1;
@@ -226,7 +216,8 @@ public class PedestalBlockEntity extends NetworkedBlockEntity {
             }
 
             if (resource.matches(internalStack)) {
-                createSnapshot();
+                updateSnapshots(transaction);
+                internalStack = ItemStack.EMPTY;
                 return 1;
             }
 

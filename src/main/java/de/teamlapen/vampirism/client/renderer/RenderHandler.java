@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import de.teamlapen.lib.client.IMinecraftAccessor;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
+import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -13,17 +16,23 @@ import de.teamlapen.vampirism.common.items.CrucifixItem;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.VampirismEventFactory;
 import de.teamlapen.vampirism.misc.mixin.client.accessor.CameraAccessor;
+import de.teamlapen.vampirism.misc.mixin.client.accessor.EntityRenderDispatcherAccessor;
+import de.teamlapen.vampirism.misc.mixin.client.accessor.LivingEntityRendererAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ambient.Bat;
@@ -193,6 +202,19 @@ public class RenderHandler implements IMinecraftAccessor {
             EntityRenderer<? super Bat, ?> renderer = mc().getEntityRenderDispatcher().getRenderer(bat);
             EntityRenderState renderState = renderer.createRenderState(bat, partialTicks);
             mc().getEntityRenderDispatcher().submit(renderState, new CameraRenderState(), 0, 0, 0, event.getPoseStack(), event.getSubmitNodeCollector());
+        }
+    }
+
+    public <I extends LivingEntity, S extends LivingEntityRenderState & IConvertedOverlayRenderState, U extends EntityModel<S>> void syncOverlays() {
+        for (EntityType<?> type : VampirismMod.services().entityRegistry().getConvertibleOverlay().keySet()) {
+            LivingEntityRenderer<I, S, U> render = (LivingEntityRenderer<I, S, U>) ((EntityRenderDispatcherAccessor) Minecraft.getInstance().getEntityRenderDispatcher()).getRenderers().get(type);
+            if (render == null) {
+                LOGGER.error("Did not find renderer for {}", type);
+                continue;
+            }
+            if (((LivingEntityRendererAccessor) render).getLayers().stream().noneMatch(s -> s instanceof ConvertedVampireEntityLayer<?, ?>)) {
+                render.addLayer(new ConvertedVampireEntityLayer<>(render, true));
+            }
         }
     }
 

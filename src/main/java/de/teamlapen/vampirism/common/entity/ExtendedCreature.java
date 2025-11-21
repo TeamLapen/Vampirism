@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.util.BloodResourceHandler;
 import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +41,7 @@ import java.util.Optional;
 /**
  * Extended entity property which every {@link PathfinderMob} has
  */
-public class ExtendedCreature extends Attachment implements IExtendedCreatureVampirism {
+public class ExtendedCreature extends Attachment implements IExtendedCreatureVampirism, BloodResourceHandler {
     public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod("extended_creature");
 
     public static final int POISONOUS_BLOOD_DOSE_DURATION = 72000; // 3 in-game days
@@ -69,14 +71,16 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
      */
     private int blood;
     private int remainingBarkTicks;
+    private final BloodJournal journal = new BloodJournal();
+
 
     public ExtendedCreature(PathfinderMob entity) {
         this.entity = entity;
         // We need to call getEntry and not getOrCreateEntry because the values can not be calculated until after the entity constructor has finished
-        IEntityBlood entry = VampirismAPI.entityRegistry().getEntry(entity);
+        IEntityBlood entry = VampirismAPI.services().entityRegistry().getEntry(entity);
         if (entry != null && entry.blood() > 0) {
             maxBlood = entry.blood();
-            canBecomeVampire = VampirismAPI.entityRegistry().getConverterEntry(entity) != null;
+            canBecomeVampire = VampirismAPI.services().entityRegistry().getConverterEntry(entity) != null;
         } else {
             if (entry == null) {
                 markForBloodCalculation = true;
@@ -299,18 +303,13 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
             }
         }
         if (markForBloodCalculation) {
-            IEntityBlood entry = VampirismAPI.entityRegistry().getOrCreateEntry(entity);
+            IEntityBlood entry = VampirismAPI.services().entityRegistry().getOrCreateEntry(entity);
             setMaxBlood(entry.blood());
             markForBloodCalculation = false;
         }
         if (this.remainingBarkTicks > 0) {
             --this.remainingBarkTicks;
         }
-    }
-
-    @Override
-    public @NotNull String toString() {
-        return super.toString() + " for entity (" + entity.toString() + ") [B" + blood + ",MB" + maxBlood + ",CV" + canBecomeVampire + "]";
     }
 
     @Override
@@ -339,6 +338,51 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
                 return create(mob);
             }
             throw new IllegalArgumentException("Cannot create attachment for holder " + holder.getClass() + ". Expected PathfinderMob");
+        }
+    }
+
+    @Override
+    public int getAmount() {
+        return this.blood;
+    }
+
+    @Override
+    public int addBlood(int amount) {
+        return 0;
+    }
+
+    @Override
+    public int extractBlood(int amount) {
+        this.blood -= amount;
+        return amount;
+    }
+
+    @Override
+    public int getCapacity() {
+        return this.maxBlood;
+    }
+
+    @Override
+    public SnapshotJournal<Integer> getJournal() {
+        return this.journal;
+    }
+
+    public class BloodJournal extends SnapshotJournal<Integer> {
+        @Override
+        protected Integer createSnapshot() {
+            return blood;
+        }
+
+        @Override
+        protected void revertToSnapshot(Integer snapshot) {
+            blood = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Integer originalState) {
+            if (blood == 0 && entity.level() instanceof ServerLevel level) {
+                DamageHandler.hurtModded(level, entity, ModDamageSources::noBlood, 1000);
+            }
         }
     }
 }

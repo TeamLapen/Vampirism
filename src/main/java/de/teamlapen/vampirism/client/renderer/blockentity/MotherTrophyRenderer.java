@@ -43,7 +43,7 @@ public class MotherTrophyRenderer implements BlockEntityRenderer<MotherTrophyBlo
         this.model.setupAnim2(renderState.gameTime);
         poseStack.translate(0,0.75,0);
         poseStack.scale(0.5F, 0.5F, 0.5F);
-        nodeCollector.submitModel(model, renderState.ghostRenderState, poseStack, RenderType.itemEntityTranslucentCull(GhostRenderer.TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, -1, null);
+        nodeCollector.submitModel(model, renderState.ghostRenderState, poseStack, RenderType.itemEntityTranslucentCull(GhostRenderer.TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0, null);
         poseStack.popPose();
     }
 
