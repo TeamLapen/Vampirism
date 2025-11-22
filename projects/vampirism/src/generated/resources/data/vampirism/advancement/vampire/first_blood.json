@@ -1,0 +1,45 @@
+{
+  "parent": "vampirism:vampire/become_vampire",
+  "criteria": {
+    "flower": {
+      "conditions": {
+        "action": "suck_blood"
+      },
+      "trigger": "vampirism:vampire_action"
+    },
+    "main": {
+      "conditions": {
+        "type": "level",
+        "faction": "vampirism:vampire",
+        "level": 1
+      },
+      "trigger": "factions:faction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.sucking_blood.desc"
+    },
+    "icon": {
+      "components": {
+        "vampirism:bottle_blood": {
+          "blood": 5
+        }
+      },
+      "count": 1,
+      "id": "vampirism:blood_bottle"
+    },
+    "title": {
+      "translate": "advancement.vampirism.sucking_blood"
+    }
+  },
+  "requirements": [
+    [
+      "flower"
+    ],
+    [
+      "main"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

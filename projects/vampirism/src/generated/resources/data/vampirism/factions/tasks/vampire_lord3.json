@@ -1,0 +1,57 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factions:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "count": 48,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "factions:entity_type",
+        "amount": 30,
+        "description": {
+          "translate": "entity_tag.vampirism.hunter"
+        },
+        "entityType": "vampirism:hunter",
+        "id": "vampirism:hunter"
+      },
+      {
+        "type": "factions:item",
+        "description": {
+          "translate": "item.vampirism.pure_blood_4"
+        },
+        "id": "vampirism:pure_blood_4",
+        "item": {
+          "count": 5,
+          "id": "vampirism:pure_blood_4"
+        }
+      }
+    ]
+  },
+  "reward": {
+    "type": "factions:lord_level",
+    "description": {
+      "translate": "task_reward.vampirism.lord_level_reward",
+      "with": [
+        3
+      ]
+    },
+    "targetLevel": 3
+  },
+  "title": {
+    "translate": "task.vampirism.vampire_lord3"
+  },
+  "unlocker": [
+    {
+      "type": "factions:lord_level",
+      "exact": true,
+      "reqLordLevel": 2
+    }
+  ]
+}

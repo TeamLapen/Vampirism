@@ -1,0 +1,148 @@
+plugins {
+    id 'net.neoforged.moddev' version '2.0.116'
+}
+
+group = project.factions_group_id
+version = project.factions_version
+
+base {
+    archivesName = project.factions_mod_name
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(project.java_version)
+    }
+    withSourcesJar()
+}
+
+sourceSets {
+    main {
+        resources.srcDirs += file('src/generated/resources')
+    }
+}
+
+List<Project> dependencyProjects = [project(':factions-api')]
+
+dependencyProjects.forEach {
+    project.evaluationDependsOn(it.path)
+}
+
+tasks.withType(org.gradle.api.tasks.compile.JavaCompile.class).configureEach {
+    dependencyProjects.forEach {
+        source(it.sourceSets.main.allSource)
+    }
+}
+
+dependencies {
+    dependencyProjects.forEach {
+        implementation(it)
+    }
+}
+
+neoForge {
+    version = project.neoforge_version
+
+    interfaceInjectionData {
+        from project.file("src/main/resources/META-INF/interfaceinjection.json")
+        publish project.file("src/main/resources/META-INF/interfaceinjection.json")
+    }
+
+    accessTransformers {
+        from project.file("src/main/resources/META-INF/accesstransformer.cfg")
+        publish project.file("src/main/resources/META-INF/accesstransformer.cfg")
+    }
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+    runs {
+        configureEach {
+            logLevel = org.slf4j.event.Level.WARN
+            jvmArgument '-XX:+AllowEnhancedClassRedefinition'
+            jvmArgument '-XX:+IgnoreUnrecognizedVMOptions'
+            systemProperty 'mixin.debug.export', 'true'
+        }
+
+        client { client() }
+        server { server(); programArgument '--nogui' }
+        data {
+            clientData()
+
+            programArguments.addAll '--mod', project.factions_mod_id, '--all', '--output', project.file('src/generated/resources/').getAbsolutePath(), '--existing', project.file('src/main/resources/').getAbsolutePath()
+        }
+    }
+
+    mods {
+        "${factions_mod_id}" {
+            sourceSet(sourceSets.main)
+            sourceSet(project(':factions-api').sourceSets.main)
+        }
+    }
+}
+
+// Mod metadata generation (templates located in root/src/main/templates)
+def generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    def replaceProperties = [
+            minecraft_version           : minecraft_version,
+            minecraft_version_range     : minecraft_version_range,
+            neoforge_version            : neoforge_version,
+            mod_id             : factions_mod_id,
+            mod_name           : factions_mod_name,
+            mod_license            : factions_license,
+            mod_version            : factions_version,
+            mod_authors            : factions_authors,
+            mod_description        : factions_description,
+            mod_issue_tracker      : factions_issue_tracker,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from file("src/main/templates")
+    into layout.buildDirectory.dir("generated/sources/modMetadata")
+}
+
+// Add generated metadata dir as resource root
+sourceSets.main.resources.srcDir generateModMetadata
+
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    javaToolchains {
+        compilerFor{
+            languageVersion = JavaLanguageVersion.of(project.java_version)
+        }
+    }
+}
+
+tasks.jar {
+    from (sourceSets.main.output)
+    from (project(':factions-api').sourceSets.main.output)
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+var sourcesJarTask = tasks.named("sourcesJar", Jar) {
+    from(sourceSets.main.allJava)
+    from (project(':factions-api').sourceSets.main.allJava)
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier.set("sources")
+}
+
+artifacts {
+    archives(tasks.jar)
+    archives(sourcesJarTask.get())
+}
+
+publishing {
+    publications {
+        register("factions", MavenPublication) {
+            artifactId = "${project.factions_mod_name}"
+            artifact(tasks.jar)
+            artifact(sourcesJarTask.get())
+        }
+    }
+}

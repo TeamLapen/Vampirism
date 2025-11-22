@@ -1,0 +1,46 @@
+plugins {
+    id 'net.neoforged.moddev' version '2.0.116'
+}
+
+group = project.factions_group_id
+version = project.factions_version
+
+base {
+    archivesName = "${project.factions_mod_name}-api"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(project.java_version)
+    }
+    withSourcesJar()
+}
+
+neoForge {
+    version = project.neoforge_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    javaToolchains {
+        compilerFor {
+            languageVersion = JavaLanguageVersion.of(project.java_version)
+        }
+    }
+}
+
+publishing {
+    publications {
+        register("factions-api", MavenPublication) {
+            artifactId = "${project.factions_mod_name}-api"
+            artifact(tasks.jar)
+            artifact(tasks.named("sourcesJar"))
+        }
+    }
+}

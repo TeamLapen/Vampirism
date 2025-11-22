@@ -21,8 +21,8 @@ usercache.json
 whitelist.json
 
 # Other
-/run/
-/runs/
+**/run/
+**/runs/
 Thumbs.db
 .directory
 ### Eclipse template
@@ -94,7 +94,7 @@ local.properties
 ## Plugin-specific files:
 
 # IntelliJ
-/out/
+**/out/
 *.iml
 *.ipr
 
@@ -134,7 +134,7 @@ fabric.properties
 hs_err_pid*
 ### Gradle template
 .gradle
-/build/
+**/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting

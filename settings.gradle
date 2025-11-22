@@ -9,3 +9,17 @@ plugins {
 }
 
 rootProject.name= "Vampirism"
+
+// Enable multi-project build: separate mods/modules
+
+include(
+        ':factions-api',
+        ':factions',
+        ':vampirism-api',
+        ':vampirism'
+)
+
+project(':factions-api').projectDir = file("projects/factions-api")
+project(':factions').projectDir = file("projects/factions")
+project(':vampirism-api').projectDir = file("projects/vampirism-api")
+project(':vampirism').projectDir = file("projects/vampirism")

@@ -1,0 +1,42 @@
+package de.teamlapen.factions.api.world;
+
+import de.teamlapen.factions.api.factions.IFaction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * used for {@link de.teamlapen.factions.api.entities.IVillageCaptureEntity#attackVillage(ICaptureAttributes)} and {@link de.teamlapen.factions.api.entities.IVillageCaptureEntity#defendVillage(ICaptureAttributes)}
+ */
+public interface ICaptureAttributes {
+
+    /**
+     * @return currently attacking faction of the village
+     */
+    @Nullable
+    Holder<? extends IFaction<?>> getAttackingFaction();
+
+    /**
+     * @return currently defending faction of the village
+     */
+    @Nullable
+    Holder<? extends IFaction<?>> getDefendingFaction();
+
+    /**
+     * @return totem position
+     */
+    BlockPos getPosition();
+
+    /**
+     * @return village area
+     */
+    AABB getVillageArea();
+
+    /**
+     * @return whether AI goals should target opposing factions without see restrictions
+     */
+    default boolean shouldForceTargets() {
+        return false;
+    }
+}

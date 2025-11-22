@@ -1,0 +1,185 @@
+plugins {
+    id 'net.neoforged.moddev' version '2.0.116'
+}
+group = project.vampirism_group_id
+version = project.vampirism_version
+
+base {
+    archivesName = project.vampirism_mod_name
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(project.java_version)
+    }
+    withSourcesJar()
+}
+
+// Map subproject sourceSets to the original project directories to avoid moving files for now
+sourceSets {
+    main {
+        java {
+            if (!include_jei.toBoolean()) {
+                exclude('de/teamlapen/vampirism/common/integration/jei')
+            }
+            if (!include_guideapi.toBoolean()) {
+                exclude('de/teamlapen/vampirism/common/integration/guide')
+            }
+            if (!include_terrablender.toBoolean()) {
+                exclude('de/teamlapen/vampirism/common/integration/terrablender')
+            }
+        }
+        resources.srcDirs += file('src/generated/resources')
+    }
+
+}
+
+List<Project> dependencyProjects = [
+        project(':factions-api'),
+        project(':factions'),
+        project(':vampirism-api'),
+]
+
+dependencyProjects.forEach {
+    project.evaluationDependsOn(it.path)
+}
+
+tasks.withType(org.gradle.api.tasks.compile.JavaCompile.class).configureEach {
+    source(project(':vampirism-api'))
+}
+
+dependencies {
+    implementation project(':vampirism-api')
+    implementation project(':factions-api')
+
+    implementation project(':factions')
+    interfaceInjectionData project(':factions')
+    accessTransformers project(':factions')
+}
+
+
+neoForge {
+    version = project.neoforge_version
+
+    interfaceInjectionData.from project.file("src/main/resources/META-INF/interfaceinjection.json")
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+    runs {
+        configureEach {
+            logLevel = org.slf4j.event.Level.WARN //ERROR,WARN,INFO,DEBUG,TRACE
+
+            jvmArgument '-XX:+AllowEnhancedClassRedefinition'
+            jvmArgument '-XX:+IgnoreUnrecognizedVMOptions'
+
+            systemProperty 'mixin.debug.export', 'true'
+        }
+
+        client {
+            client()
+
+            systemProperty 'forge.enabledGameTestNamespaces', project.vampirism_mod_id
+        }
+        server {
+            server()
+            programArgument '--nogui'
+
+            systemProperty 'forge.enabledGameTestNamespaces', project.vampirism_mod_id
+        }
+
+        data {
+            clientData()
+
+            programArguments.addAll '--mod', project.vampirism_mod_id, '--all', '--output', project.file('src/generated/resources/').getAbsolutePath(), '--existing', project.file('src/main/resources/').getAbsolutePath()
+        }
+    }
+
+    mods {
+        "${vampirism_mod_id}" {
+            sourceSet(sourceSets.main)
+            sourceSet(project(':vampirism-api').sourceSets.main)
+        }
+        "${factions_mod_id}" {
+            sourceSet(project(':factions').sourceSets.main)
+            sourceSet(project(':factions-api').sourceSets.main)
+        }
+    }
+}
+
+apply from: file('dependencies.gradle')
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+// Mod metadata generation (templates located in root/src/main/templates)
+def generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    def replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neoforge_version,
+            mod_id                 : vampirism_mod_id,
+            mod_name               : vampirism_mod_name,
+            mod_license            : vampirism_mod_license,
+            mod_version            : vampirism_version,
+            mod_authors            : vampirism_authors,
+            mod_description        : vampirism_description,
+            mod_issue_tracker      : vampirism_issue_tracker,
+            mod_url                : vampirism_url,
+            mod_update_url         : vampirism_update_url,
+            jei_version            : jei_version
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from file("src/main/templates")
+    into layout.buildDirectory.dir("generated/sources/modMetadata")
+}
+
+// Add generated metadata dir as resource root
+sourceSets.main.resources.srcDir generateModMetadata
+
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    javaToolchains {
+        compilerFor{
+            languageVersion = JavaLanguageVersion.of(project.java_version)
+        }
+    }
+}
+
+
+tasks.jar {
+    from (sourceSets.main.output)
+    from (project(':vampirism-api').sourceSets.main.output)
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+var sourcesJarTask = tasks.named("sourcesJar", Jar) {
+    from(sourceSets.main.allJava)
+    from (project(':vampirism-api').sourceSets.main.allJava)
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier.set("sources")
+}
+
+artifacts {
+    archives(tasks.jar)
+    archives(sourcesJarTask.get())
+}
+
+
+publishing {
+    publications {
+        register("vampirism", MavenPublication) {
+            artifactId = "${project.vampirism_mod_name}"
+            artifact(tasks.jar)
+            artifact(sourcesJarTask.get())
+        }
+    }
+}

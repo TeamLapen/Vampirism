@@ -1,0 +1,1489 @@
+package de.teamlapen.vampirism.common.entity.player.vampire;
+
+import de.teamlapen.factions.api.entities.player.IFactionPlayer;
+import de.teamlapen.factions.common.util.ModCodecs;
+import de.teamlapen.sync.Property;
+import de.teamlapen.sync.PropertySync;
+import de.teamlapen.vampirism.api.util.VampirismEventFactory;
+import de.teamlapen.factions.common.sounds.ISoundReference;
+import de.teamlapen.vampirism.common.util.UtilLib;
+import de.teamlapen.factions.common.util.AttachmentSynchronization;
+import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.IBiteableEntity;
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.factions.api.factions.IDisguise;
+import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.api.refinements.IRefinementHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
+import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.effects.ModEffectInstanceHelper;
+import de.teamlapen.vampirism.common.effects.SanguinareMobEffect;
+import de.teamlapen.vampirism.common.entity.ExtendedCreature;
+import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.common.entity.player.CommonFactionPlayer;
+import de.teamlapen.vampirism.common.entity.player.LevelAttributeModifier;
+import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.factions.common.actions.ActionHandler;
+import de.teamlapen.factions.common.skills.RefinementHandler;
+import de.teamlapen.factions.common.skills.SkillHandler;
+import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.common.entity.vampire.DrinkBloodContext;
+import de.teamlapen.vampirism.common.integration.PlayerReviveHelper;
+import de.teamlapen.vampirism.common.items.HunterArmorItem;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
+import de.teamlapen.vampirism.common.particles.FlyingBloodEntityParticleOptions;
+import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
+import de.teamlapen.vampirism.common.util.*;
+import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
+import de.teamlapen.factions.common.minions.MinionWorldData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.function.Predicate;
+
+/**
+ * Main class for Vampire Players.
+ */
+public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
+    public final static ResourceLocation NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
+    private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
+    private final static int FEED_TIMER = 20;
+    /**
+     * Keys for NBT values
+     */
+    private final static String KEY_EYE = "eye_type";
+    private final static String KEY_FANGS = "fang_type";
+    private final static String KEY_GLOWING_EYES = "glowing_eyes";
+    private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
+    private final static String KEY_VISION = "vision";
+    private final static String KEY_FEED_VICTIM_ID = "feed_victim";
+    private final static String KEY_DBNO_TIMER = "dbno";
+    private final static String KEY_DBNO_MSG = "dbno_msg";
+    private final static String KEY_WAS_DBNO = "wasDBNO";
+
+
+    public static VampirePlayer get(Player player) {
+        return player.getData(ModAttachments.VAMPIRE_PLAYER);
+    }
+
+    public static double getNaturalArmorValue(int lvl) {
+        return lvl > 0 ? ModConfig.BALANCE.vpNaturalArmorBaseValue.get() + (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.BALANCE.vpNaturalArmorIncrease.get() : 0;
+    }
+
+    public static double getNaturalArmorToughnessValue(int lvl) {
+        return (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.BALANCE.vpNaturalArmorToughnessIncrease.get();
+    }
+
+    private final BloodStats bloodStats;
+    private boolean sundamage_cache = false;
+    private EnumStrength garlic_cache = EnumStrength.NONE;
+    private int ticksInSun = 0;
+    private int remainingBarkTicks = 0;
+    private boolean wasDead = false;
+    private final VisionStatus vision = new VisionStatus();
+    private int feed_victim = -1;
+    /**
+     * Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1
+     */
+    @Nullable
+    private ISoundReference feedingSoundReference;
+    private @Nullable BITE_TYPE feed_victim_bite_type;
+    private int feedBiteTickCounter = 0;
+    private boolean forceNaturalArmorUpdate;
+    /**
+     * >=0 if DBNO, counts downwards, if == 0, can resurrect
+     */
+    private int dbnoTimer = -1;
+    /**
+     * Only set on data load.
+     * Will be active when player rejoined world after being in DBNO state.
+     * Will kill player next tick (and remove invulnerable)
+     */
+    private boolean wasDBNO = false;
+    /**
+     * The original death message from the event that sent the player to DBNO state
+     */
+    @Nullable
+    private Component dbnoMessage;
+    private final Disguise disguise;
+    private final RefinementHandler<IVampirePlayer> refinementHandler;
+    private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
+
+    public VampirePlayer(Player player) {
+        super(player);
+        this.bloodStats = new BloodStats(this);
+        this.disguise = new Disguise();
+        this.refinementHandler = new RefinementHandler<>(this, de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE);
+    }
+
+    @Override
+    public AttachmentType<? extends IFactionPlayer<?>> attachmentType() {
+        return ModAttachments.VAMPIRE_PLAYER.get();
+    }
+
+    @Override
+    public AttachmentType<?> getType() {
+        return ModAttachments.VAMPIRE_PLAYER.get();
+    }
+
+    @Override
+    protected ActionHandler<IVampirePlayer> createActionHandler() {
+        return new ActionHandler<>(this);
+    }
+
+    @Override
+    protected SkillHandler<IVampirePlayer> createSkillHandler() {
+        return new SkillHandler<>(this, de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE);
+    }
+
+    @Override
+    public IRefinementHandler<IVampirePlayer> getRefinementHandler() {
+        return refinementHandler;
+    }
+
+    @Override
+    public void activateVision(@Nullable ResourceKey<IVampireVision> vision) {
+        this.vision.activate(vision);
+    }
+
+    @Override
+    public void addExhaustion(float exhaustion) {
+        if (!player.getAbilities().invulnerable && getLevel() > 0) {
+            if (!isRemote()) {
+                bloodStats.addExhaustion(exhaustion);
+            }
+        }
+    }
+
+    /**
+     * Try to drink blood from the given block
+     * <p>
+     * Named like this to match biteEntity
+     */
+    public void biteBlock(BlockPos pos, Direction side) {
+        if (player.isSpectator()) {
+            LOGGER.warn("Player can't bite in spectator mode");
+            return;
+        }
+        double dist = player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE).getValue() + 1;
+        if (player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > dist * dist) {
+            LOGGER.warn("Block sent by client is not in reach {}", pos);
+        } else {
+            biteBlock(pos, player.level().getBlockState(pos), side, player.level().getBlockEntity(pos));
+        }
+    }
+
+    /**
+     * Bite the entity with the given id.
+     * Checks reach distance
+     *
+     * @param entityId The id of the entity to start biting
+     */
+    public void biteEntity(int entityId) {
+        if (this.getLevel() == 0) {
+            LOGGER.warn("Player can't bite. Isn't a vampire");
+            return;
+        }
+        Entity e = player.level().getEntity(entityId);
+        if (player.isSpectator()) {
+            LOGGER.warn("Player can't bite in spectator mode");
+            return;
+        }
+        if (getActionHandler().isActionActive(VampireActions.BAT)) {
+            LOGGER.warn("Cannot bite in bat mode");
+            return;
+        }
+        if (e instanceof LivingEntity) {
+            if (e.distanceTo(player) <= player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE).getValue() + 1) {
+                feed_victim_bite_type = determineBiteType((LivingEntity) e);
+                player.awardStat(ModStats.AMOUNT_BITTEN.get());
+                switch (feed_victim_bite_type) {
+                    case HUNTER_CREATURE:
+                        player.addEffect(new MobEffectInstance(ModEffects.POISON, 60));
+                        if (player instanceof ServerPlayer) {
+                            ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.POISONOUS_BITE);
+                        }
+                        break;
+                    case NONE:
+                        break;
+                    default:
+                        if (feed_victim == -1) feedBiteTickCounter = 0;
+
+                        feed_victim = e.getId();
+
+                        ((LivingEntity) e).addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 20, 7, false, false));
+                        player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 25, 4, false, false));
+
+                        sync();
+                        break;
+                }
+            } else {
+                LOGGER.warn("Entity sent by client is not in reach {}", entityId);
+            }
+        }
+    }
+
+    @Override
+    public float calculateFireDamage(float amount) {
+        float protectionMod = 1F;
+        MobEffectInstance protection = player.getEffect(ModEffects.FIRE_PROTECTION);
+        if (protection != null) {
+            int amplifier = protection.getAmplifier();
+            protectionMod = amplifier >= 5 ? 0 : 1F / (2F + amplifier);
+        }
+
+        return amount * protectionMod * (float) LevelAttributeModifier.calculateModifierValue(getLevel(), getMaxLevel(), ModConfig.BALANCE.vpFireVulnerabilityMod.get(), 0.5);
+    }
+
+    @Override
+    public boolean canBeBitten(@Nullable IVampire biter) {
+        return biter != null && !(player.isSpectator() || player.isCreative());
+    }
+
+    @Override
+    public boolean canLeaveFaction() {
+        return true;
+    }
+
+    @NotNull
+    public BITE_TYPE determineBiteType(LivingEntity entity) {
+        if (player instanceof ServerPlayer && Permissions.FEED.isDisallowed(((ServerPlayer) player))) {
+            return BITE_TYPE.NONE;
+        }
+        if (entity instanceof IBiteableEntity) {
+            if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
+        }
+        if (entity instanceof PathfinderMob && entity.isAlive()) {
+            Optional<ExtendedCreature> opt = ExtendedCreature.getSafe(entity);
+            if (opt.map(creature -> creature.canBeBitten(this)).orElse(false)) {
+                if (opt.map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false)) {
+                    return BITE_TYPE.HUNTER_CREATURE;
+                }
+                return BITE_TYPE.SUCK_BLOOD_CREATURE;
+            }
+        } else if (entity instanceof Player) {
+            if (((Player) entity).getAbilities().instabuild || !de.teamlapen.factions.common.Permissions.isPvpEnabled(player)) {
+                return BITE_TYPE.NONE;
+            }
+            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.get((Player) entity).canBeBitten(this) && (!(player instanceof ServerPlayer) || Permissions.FEED_PLAYER.isAllowed((ServerPlayer) player))) {
+                if (!(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof HunterArmorItem)) {
+                    return BITE_TYPE.SUCK_BLOOD_PLAYER;
+                }
+            } else {
+                return BITE_TYPE.NONE;
+            }
+        }
+        return BITE_TYPE.NONE;
+    }
+
+    @Override
+    public boolean doesResistGarlic(EnumStrength strength) {
+        return false;
+    }
+
+    @Override
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
+        BloodDrinkEvent.@NotNull PlayerDrinkBloodEvent event = VampirismEventFactory.fireVampirePlayerDrinkBloodEvent(this, amt, saturationMod, useRemaining, drinkContext);
+        int remainingBlood = this.bloodStats.addBlood(event.getAmount(), event.getSaturation());
+        if (event.useRemaining() && remainingBlood > 0 && event.getBloodSource().returnsSpareBlood()) {
+            handleSpareBlood(remainingBlood);
+        }
+        this.player.awardStat(ModStats.BLOOD_DRUNK.get(), amt * VReference.FOOD_TO_FLUID_BLOOD);
+    }
+
+    /**
+     * Cleanly ends biting process
+     */
+    public void endFeeding(boolean sync) {
+        if (feed_victim != -1 || feed_victim_bite_type != null) {
+            feed_victim = -1;
+            feed_victim_bite_type = null;
+            if (player.hasEffect(MobEffects.SLOWNESS)) player.removeEffect(MobEffects.SLOWNESS);
+        }
+        if (sync) {
+            sync();
+        }
+    }
+
+    @Nullable
+    @Override
+    public Holder<IVampireVision> getActiveVision() {
+        return this.vision.vision;
+    }
+
+    @Override
+    public int getBloodLevel() {
+        return bloodStats.getBloodLevel();
+    }
+
+    @Override
+    public float getBloodLevelRelative() {
+        if (getLevel() == 0) {
+            return player.getFoodData().getFoodLevel() / 20f; //Foodstats not synced to other clients so this is incorrect on client side
+        }
+        return bloodStats.getBloodLevel() / (float) bloodStats.getMaxBlood();
+    }
+
+    @Override
+    public float getBloodSaturation() {
+        return ModConfig.BALANCE.vpPlayerBloodSaturation.get().floatValue();
+    }
+
+    @NotNull
+    @Override
+    public IBloodStats getBloodStats() {
+        return bloodStats;
+    }
+
+    public int getRemainingBarkTicks() {
+        return remainingBarkTicks;
+    }
+
+    public void increaseRemainingBarkTicks(int additionalTicks) {
+        this.remainingBarkTicks = additionalTicks;
+    }
+
+    public int getDbnoDuration() {
+        return (int) player.getAttributeValue(ModAttributes.DBNO_DURATION);
+    }
+
+    public int getDbnoTimer() {
+        return this.dbnoTimer;
+    }
+
+    @Override
+    public IDisguise getDisguise() {
+        return this.disguise;
+    }
+
+    /**
+     * @return Eyetype for rendering
+     */
+    public int getEyeType() {
+        return getSpecialAttributes().eyeType;
+    }
+
+    /**
+     * @return Fangtype for rendering
+     */
+    public int getFangType() {
+        return getSpecialAttributes().fangType;
+    }
+
+    /**
+     * @return 0-1f
+     */
+    public float getFeedProgress() {
+        return feedBiteTickCounter / (float) FEED_TIMER;
+    }
+
+    /**
+     * @return Render eyes glowing
+     */
+    public boolean getGlowingEyes() {
+        return getSpecialAttributes().glowingEyes;
+    }
+
+    /**
+     * Sets glowing eyes.
+     * Also sends a sync packet if on server
+     */
+    public void setGlowingEyes(boolean value) {
+        if (value != this.getSpecialAttributes().glowingEyes) {
+            this.getSpecialAttributes().glowingEyes = value;
+            this.isDirty = true;
+            sync();
+        }
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return REFERENCE.HIGHEST_VAMPIRE_LEVEL;
+    }
+
+    @Override
+    public Predicate<LivingEntity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
+        if (otherFactionPlayers) {
+            return entity -> true;
+        } else {
+            return VampirismAPI.factionRegistry().getPredicate(getFaction(), ignoreDisguise);
+        }
+    }
+
+    /**
+     * You can use {@link VampirismPlayerAttributes#getVampSpecial()} instead if you don't have the vampire player already
+     */
+    @NotNull
+    public VampirePlayerSpecialAttributes getSpecialAttributes() {
+        return this.specialAttributes;
+    }
+
+    @Override
+    public int getTicksInSun() {
+        return ticksInSun;
+    }
+
+    @Override
+    public boolean isAdvancedBiter() {
+        return getSpecialAttributes().advanced_biter;
+    }
+
+    @Override
+    public boolean isDBNO() {
+        return this.dbnoTimer >= 0;
+    }
+
+    @Override
+    public boolean isDisguised() {
+        return getSpecialAttributes().disguised;
+    }
+
+    @NotNull
+    @Override
+    public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forcerefresh) {
+        if (forcerefresh) {
+            garlic_cache = Helper.getGarlicStrength(player, iWorld);
+        }
+        return garlic_cache;
+    }
+
+    @Override
+    public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
+        if (forcerefresh) {
+            sundamage_cache = Helper.gettingSundamge(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
+        }
+        return sundamage_cache;
+    }
+
+    @Override
+    public boolean isIgnoringSundamage() {
+        return false;
+    }
+
+    @Override
+    public boolean canBeInfected(IVampire vampire) {
+        return !player.hasEffect(ModEffects.SANGUINARE) && Helper.canTurnPlayer(vampire, player) && Helper.canBecomeVampire(player);
+    }
+
+    @Override
+    public boolean tryInfect(IVampire vampire) {
+        if (canBeInfected(vampire)) {
+            SanguinareMobEffect.addRandom(player, true);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int onBite(IVampire biter) {
+        float perc = biter instanceof IVampirePlayer ? 0.2F : 0.08F;
+        if (getLevel() == 0) {
+            int amt = player.getFoodData().getFoodLevel();
+            int sucked = (int) Math.ceil((amt * perc));
+            player.getFoodData().setFoodLevel(amt - sucked);
+            player.causeFoodExhaustion(1000F);
+            return sucked;
+        }
+        int amt = this.getBloodStats().getBloodLevel();
+        int sucked = (int) Math.ceil((amt * perc));
+        bloodStats.removeBlood(sucked, true);
+        return sucked;
+    }
+
+    @Override
+    public int onSyringeUse(int amount) {
+        return 0;
+    }
+
+    public int removeBlood(float percentage) {
+        if (getLevel() == 0) {
+            int amt = player.getFoodData().getFoodLevel();
+            int sucked = (int) Math.ceil((amt * percentage));
+            player.getFoodData().setFoodLevel(amt - sucked);
+            return sucked;
+        } else {
+            int amt = this.getBloodStats().getBloodLevel();
+            int sucked = (int) Math.ceil((amt * percentage));
+            bloodStats.removeBlood(sucked, true);
+            return sucked;
+        }
+    }
+
+    @Override
+    public boolean onDeadlyHit(@NotNull DamageSource source) {
+        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL) && !Helper.canKillVampires(source)) {
+            int timePreviouslySpentInPlayerRevive = PlayerReviveHelper.getPreviousDownTime(this.player);
+            int dbnoTime = Math.max(1, getDbnoDuration() - timePreviouslySpentInPlayerRevive);
+            this.setDBNOTimer(dbnoTime);
+            this.player.setHealth(0.5f);
+            this.player.setForcedPose(Pose.SLEEPING);
+            resetNearbyTargetingMobs();
+            boolean flag = player.level() instanceof ServerLevel level && level.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES);
+            if (flag) {
+                dbnoMessage = player.getCombatTracker().getDeathMessage();
+            }
+            sync();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDeath(@NotNull DamageSource src) {
+        super.onDeath(src);
+        this.refinementHandler.damageRefinements();
+        if (this.getActionHandler().isActionActive(VampireActions.BAT) && src.getDirectEntity() instanceof Projectile) {
+            if (player instanceof ServerPlayer) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.SNIPED_IN_BAT);
+            }
+        }
+        wasDead = true;
+        this.setDBNOTimer(-1);
+        dbnoMessage = null;
+    }
+
+    @Override
+    public boolean onEntityAttacked(@NotNull DamageSource src, float amt) {
+        if (getLevel() > 0) {
+            if (isDBNO() && !Helper.canKillVampires(src)) {
+                if (src.getEntity() != null && src.getEntity() instanceof Mob && ((Mob) src.getEntity()).getTarget() == player) {
+                    ((Mob) src.getEntity()).setTarget(null);
+                }
+                return true;
+            }
+            if (asEntity().level() instanceof ServerLevel level) {
+                if (src.is(DamageTypes.ON_FIRE)) {
+                    DamageHandler.hurtModded(level, player, ModDamageSources::vampireOnFire, calculateFireDamage(amt));
+                    return true;
+                } else if (src.is(DamageTypes.IN_FIRE) || src.is(DamageTypes.LAVA)) {
+                    DamageHandler.hurtModded(level, player, ModDamageSources::vampireInFire, calculateFireDamage(amt));
+                    return true;
+                }
+            }
+        }
+        endFeeding(true);
+        if (getSpecialAttributes().half_invulnerable) {
+            if (amt >= asEntity().getMaxHealth() * (this.getRefinementHandler().isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? ModConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * ModConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+                if (useBlood(ModConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
+                    return true;
+                } else {
+                    this.getActionHandler().deactivateAction(VampireActions.HALF_INVULNERABLE);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onEntityKilled(LivingEntity victim, DamageSource src) {
+        if (this.getRefinementHandler().isRefinementEquipped(ModRefinements.RAGE_FURY)) {
+            //No need to check if rage active, extending only has an effect when already active
+            int bonus = ModConfig.BALANCE.vrRageFuryDurationBonus.get() * 20;
+            if (victim instanceof Player) {
+                bonus *= 2;
+            }
+            this.getActionHandler().extendActionTimer(VampireActions.VAMPIRE_RAGE, bonus);
+        }
+    }
+
+    @Override
+    public void onJoinWorld() {
+        super.onJoinWorld();
+        if (getLevel() > 0) {
+            ticksInSun = 0;
+            if (wasDead) {
+                player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 400, 4, false, false));
+                player.addEffect(new MobEffectInstance(ModEffects.ARMOR_REGENERATION, ModConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20, 0, false, false));
+                requestNaturalArmorUpdate();
+                player.setHealth(player.getMaxHealth());
+                bloodStats.setBloodLevel(bloodStats.getMaxBlood());
+            }
+        }
+    }
+
+    @Override
+    protected void onLevelReset(boolean client) {
+        super.onLevelReset(client);
+        this.refinementHandler.reset();
+        this.removeEntityAttributes();
+    }
+
+    @Override
+    public void onLevelChanged(int newLevel, int oldLevel) {
+        super.onLevelChanged(newLevel, oldLevel);
+        if (newLevel > 0) {
+            this.applyEntityAttributes();
+        }
+        if (!isRemote()) {
+            ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
+            applyLevelModifiersA(newLevel);
+            applyLevelModifiersB(newLevel, false);
+            if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
+            updateNaturalArmor(newLevel);
+            if (newLevel > 13) {
+                bloodStats.setMaxBlood(40);
+            } else if (newLevel > 9) {
+                bloodStats.setMaxBlood(34);
+            } else if (newLevel > 6) {
+                bloodStats.setMaxBlood(30);
+            } else if (newLevel > 3) {
+                bloodStats.setMaxBlood(26);
+            } else if (newLevel > 0) {
+                bloodStats.setMaxBlood(20);
+            } else {
+                this.vision.deactivate();
+                this.sync();
+            }
+        } else {
+            if (oldLevel == 0) {
+                if (player.hasEffect(MobEffects.NIGHT_VISION)) {
+                    player.removeEffect(MobEffects.NIGHT_VISION);
+                }
+            } else if (newLevel == 0) {
+                if (ModEffectInstanceHelper.hasSource(player.getEffect(MobEffects.NIGHT_VISION), VReference.VAMPIRE_NIGHT_VISION_EFFECT)) {
+                    player.removeEffect(MobEffects.NIGHT_VISION);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onPlayerLoggedIn() {
+        if (getLevel() > 0 && !player.level().isClientSide()) {
+            player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 200, 4, true, false));
+        }
+    }
+
+    @Override
+    public void onPlayerLoggedOut() {
+        endFeeding(false);
+        if (this.isDBNO() && asEntity().level() instanceof ServerLevel level) {
+            this.setDBNOTimer(-1);
+            DamageHandler.kill(level, player, 10000);
+        }
+    }
+
+    /**
+     * Called when a sanguinare effect runs out.
+     * DON'T add/remove potions here, since it is called while the potion effect list is modified.
+     */
+    public void onSanguinareFinished() {
+        if (Helper.canBecomeVampire(player) && !isRemote() && player.isAlive()) {
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            handler.joinFaction(getFaction());
+            player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 300));
+            player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 300));
+        }
+    }
+
+    @Override
+    public void onUpdate() {
+        Level world = player.level();
+        if (wasDBNO) {
+            wasDBNO = false;
+            if (world instanceof ServerLevel level) {
+                DamageHandler.kill(level, player, 100000);
+            }
+            return;
+        } else if (this.dbnoTimer >= 0) {
+            if (dbnoTimer > 0) {
+                this.setDBNOTimer(dbnoTimer - 1);
+                if (dbnoTimer == 0) {
+                    sync();
+                }
+            }
+            player.setAirSupply(300);
+            player.setDeltaMovement(0, Math.min(0, player.getDeltaMovement().y()), 0);
+            player.removeAllEffects();
+            return;
+        }
+        super.onUpdate();
+        int level = getLevel();
+        if (level > 0) {
+            if (player.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 0) {
+                isGettingSundamage(world, true);
+            }
+            if (player.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 0) {
+                isGettingGarlicDamage(world, true);
+            }
+        } else {
+            sundamage_cache = false;
+            garlic_cache = EnumStrength.NONE;
+        }
+        this.vision.tick();
+
+        if (!isRemote()) {
+            if (level > 0) {
+
+                if (isGettingSundamage(world)) {
+                    handleSunDamage(false);
+                } else if (ticksInSun > 0) {
+                    ticksInSun--;
+                }
+                if (isGettingGarlicDamage(world) != EnumStrength.NONE) {
+                    DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(world), player.tickCount);
+                }
+                if (player.isAlive()) {
+                    player.setAirSupply(300);
+                    if (player.tickCount % 16 == 4 && !getSpecialAttributes().waterResistance && !player.getAbilities().instabuild) {
+                        if (player.isInWater()) {
+                            FluidState state1 = world.getFluidState(player.blockPosition());
+                            FluidState state2 = world.getFluidState(player.blockPosition().above());
+                            if ((state1.is(FluidTags.WATER) && (state1.getFlow(world, player.blockPosition()).lengthSqr() > 0)) || (state2.is(FluidTags.WATER) && (state2.getFlow(world, player.blockPosition().above()).lengthSqr() > 0))) {
+                                player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 80, (int) (getLevel() / (float) getMaxLevel() * 3)));
+                            }
+                        }
+                    }
+                }
+
+                if (player.tickCount % 9 == 3 && ModConfig.BALANCE.vpFireResistanceReplace.get() && player.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+                    MobEffectInstance fireResistance = player.getEffect(MobEffects.FIRE_RESISTANCE);
+                    player.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                    player.removeEffect(MobEffects.FIRE_RESISTANCE);
+                }
+                if (feed_victim != -1 && feedBiteTickCounter++ >= FEED_TIMER) {
+                    updateFeeding();
+                    feedBiteTickCounter = 0;
+                }
+
+                if (forceNaturalArmorUpdate || player.tickCount % 128 == 0) {
+                    updateNaturalArmor(getLevel());
+                    forceNaturalArmorUpdate = false;
+                }
+
+            } else {
+                ticksInSun = 0;
+            }
+        } else {
+            if (level > 0) {
+                if (isGettingSundamage(world)) {
+                    handleSunDamage(true);
+                } else if (ticksInSun > 0) {
+                    ticksInSun--;
+                }
+            } else {
+                ticksInSun = 0;
+            }
+
+            if (feed_victim != -1 && feedBiteTickCounter++ % 5 == 0) {
+                Entity e = VampirismMod.proxy.getMouseOverEntity();
+                if (e == null || e.getId() != feed_victim) {
+                    VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FINISH_SUCK_BLOOD));
+                    feedBiteTickCounter = 0;
+                    feed_victim = -1;
+                    return;
+                }
+                if (feedBiteTickCounter >= FEED_TIMER) {
+                    feedBiteTickCounter = 0;
+                }
+            }
+        }
+        if (feed_victim == -1) {
+            feedBiteTickCounter = 0;
+        }
+        if (remainingBarkTicks > 0) {
+            --remainingBarkTicks;
+        }
+    }
+
+    @Override
+    public void onUpdatePlayer(PlayerTickEvent event) {
+        if (event instanceof PlayerTickEvent.Post) {
+            //update sleeping pose
+            if (getLevel() > 0) {
+                VampirismMod.proxy.handleSleepClient(player);
+            }
+
+            //Update blood stats
+            if (getLevel() > 0 && !isDBNO()) {
+                this.bloodStats.onUpdate();
+            }
+
+            if (event.getEntity().level().isClientSide() && getTicksInSun() > 0 && !event.getEntity().hasEffect(ModEffects.SUNSCREEN)) {
+                int i = event.getEntity().isInvisible() ? 15 : 4;
+                if (event.getEntity().getRandom().nextInt(i) == 0) {
+                    event.getEntity().level().addParticle(new GenericParticleOptions(VResourceLocation.mc("drip_hang"),20,9145227, 0.2f), event.getEntity().getRandomX(0.5), event.getEntity().getRandomY(), event.getEntity().getRandomZ(0.5), 0, -3, 0);
+                }
+            }
+        }
+    }
+
+    /**
+     * Request an update to the player natural armor next tick
+     */
+    public void requestNaturalArmorUpdate() {
+        this.forceNaturalArmorUpdate = true;
+    }
+
+    /**
+     * Sets the eyeType as long as it is valid.
+     * Also sends a sync packet if on server
+     *
+     * @return Whether the type is valid or not
+     */
+    public boolean setEyeType(int eyeType) {
+        if (eyeType >= REFERENCE.EYE_TYPE_COUNT || eyeType < 0) {
+            return false;
+        }
+        if (eyeType != this.getEyeType()) {
+            getSpecialAttributes().eyeType = eyeType;
+        }
+        return true;
+    }
+
+    /**
+     * Sets the fangType as long as it is valid.
+     * Also sends a sync packet if on server
+     *
+     * @return Whether the type is valid or not
+     */
+    public boolean setFangType(int fangType) {
+        if (fangType >= REFERENCE.FANG_TYPE_COUNT || fangType < 0) {
+            return false;
+        }
+        if (fangType != this.getFangType()) {
+            this.getSpecialAttributes().fangType = fangType;
+            this.isDirty = true;
+            sync();
+        }
+        return true;
+    }
+
+    public void setSkinData(@NotNull List<Integer> data) {
+        for (int i = 0; i < data.size(); i++) {
+            switch (i) {
+                case 0:
+                    setFangType(data.get(i));
+                    break;
+                case 1:
+                    setEyeType(data.get(i));
+                    break;
+                case 2:
+                    setGlowingEyes(data.get(i) > 0);
+                    break;
+                case 3:
+                    FactionPlayerHandler.get(this.player).setTitleGender(data.get(i) > 0);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Switch to the next vision
+     */
+    public void switchVision() {
+        this.vision.switchVision();
+    }
+
+    public void tryResurrect() {
+        if (this.getDbnoTimer() == 0) {
+            this.setDBNOTimer(-1);
+            this.dbnoMessage = null;
+            this.player.setHealth(Math.max(0.5f, bloodStats.getBloodLevel() - 1));
+            this.bloodStats.removeBlood(bloodStats.getBloodLevel() - 1, true);
+            this.player.setForcedPose(null);
+            this.player.refreshDimensions();
+            this.sync();
+            int duration = (int) player.getAttributeValue(ModAttributes.NEONATAL_DURATION);
+            this.player.addEffect(new MobEffectInstance(ModEffects.NEONATAL, duration));
+            this.player.awardStat(ModStats.RESURRECTED.get());
+            if (this.player instanceof ServerPlayer serverPlayer) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.RESURRECT);
+            }
+        } else {
+            if (this.isRemote()) {
+                this.setDBNOTimer(-1);
+            } else {
+                //If client thinks it is alive again, tell it to die again
+                this.sync();
+            }
+        }
+    }
+
+    public void giveUpDBNO() {
+        if (this.isDBNO()) {
+            //Reset dbno state before killing the player in case something is canceling the death event
+            this.setDBNOTimer(-1);
+            Component msg = this.dbnoMessage;
+            this.dbnoMessage = null;
+            this.player.setForcedPose(null);
+            this.player.refreshDimensions();
+            this.sync();
+            if (asEntity().level() instanceof ServerLevel level) {
+                DamageHandler.hurtModded(level, this.player, sources -> sources.dbno(msg), 10000);
+            }
+        }
+    }
+
+    @Override
+    public void unUnlockVision(ResourceKey<IVampireVision> vision) {
+        this.vision.lockVision(vision);
+    }
+
+    @Override
+    public void unlockVision(ResourceKey<IVampireVision> vision) {
+        this.vision.unlockVision(vision);
+    }
+
+    @SuppressWarnings("UnreachableCode")
+    public void updateNaturalArmor(int lvl) {
+        AttributeInstance armorAtt = player.getAttribute(Attributes.ARMOR);
+        AttributeInstance toughnessAtt = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
+        if (armorAtt != null && toughnessAtt != null) {
+            if (lvl == 0) {
+                armorAtt.removeModifier(NATURAL_ARMOR_UUID);
+                toughnessAtt.removeModifier(NATURAL_ARMOR_UUID);
+            } else {
+                AttributeModifier modArmor = armorAtt.getModifier(NATURAL_ARMOR_UUID);
+                AttributeModifier modToughness = toughnessAtt.getModifier(NATURAL_ARMOR_UUID);
+                double naturalArmor = getNaturalArmorValue(lvl);
+                MobEffectInstance armorRegen = player.getEffect(ModEffects.ARMOR_REGENERATION);
+                double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) ModConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
+                naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
+                double naturalToughness = getNaturalArmorToughnessValue(lvl);
+                double baseArmor = armorAtt.invokeGetModifiersOrEmpty(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> ArmorModifier.ARMOR_IDS.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double baseToughness = toughnessAtt.invokeGetModifiersOrEmpty(AttributeModifier.Operation.ADD_VALUE).stream().filter(m -> ArmorModifier.ARMOR_IDS.contains(m.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
+                double targetArmor = Math.max(0, naturalArmor - baseArmor);
+                double targetToughness = Math.max(0, naturalToughness - baseToughness);
+                if (modArmor != null && targetArmor != modArmor.amount()) {
+                    armorAtt.removeModifier(modArmor);
+                    modArmor = null;
+                }
+                if (targetArmor != 0 && modArmor == null) {
+                    armorAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, targetArmor, AttributeModifier.Operation.ADD_VALUE));
+                }
+                if (modToughness != null && targetToughness != modToughness.amount()) {
+                    toughnessAtt.removeModifier(modToughness);
+                    modToughness = null;
+                }
+                if (targetToughness != 0 && modToughness == null) {
+                    toughnessAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, targetToughness, AttributeModifier.Operation.ADD_VALUE));
+                }
+                applyLevelModifiersB(lvl, ModConfig.BALANCE.vpArmorPenalty.get() && baseArmor > 7);
+
+            }
+        }
+    }
+
+    @Override
+    public boolean useBlood(int amt, boolean allowPartial) {
+        return bloodStats.removeBlood(amt, allowPartial);
+    }
+
+    @Override
+    public boolean wantsBlood() {
+        return getLevel() > 0 && bloodStats.needsBlood();
+    }
+
+
+
+    //    @Override
+//    public void deserialize(@NotNull ValueInput input) {
+//        super.deserialize(input);
+//        input.getInt(KEY_SPAWN_BITE_PARTICLE).ifPresent(this::spawnBiteParticle);
+//        input.getInt(KEY_FEED_VICTIM_ID).ifPresent(id -> {
+//            feed_victim = id;
+//            if (feed_victim != -1) {
+//                if (feedingSoundReference == null || !feedingSoundReference.isPlaying()) {
+//                    feedingSoundReference = SoundUtil.getSoundHandler().createSoundReference(ModSounds.VAMPIRE_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 0.8f, 1);
+//                    feedingSoundReference.startPlaying();
+//                }
+//            } else {
+//                if (feedingSoundReference != null) {
+//                    feedingSoundReference.stopPlaying();
+//                    feedingSoundReference = null;
+//                }
+//            }
+//        });
+//    }
+
+    private void loadDBNOTimer(int timer) {
+        boolean wasDBNOClient = isDBNO();
+            setDBNOTimer(timer);
+            if (!wasDBNOClient && isDBNO()) {
+                VampirismMod.proxy.showDBNOScreen(player, dbnoMessage);
+                player.setForcedPose(Pose.SLEEPING);
+                player.refreshDimensions();
+            } else if (wasDBNOClient && !isDBNO()) {
+                player.setForcedPose(null);
+                player.refreshDimensions();
+            }
+    }
+
+    @Override
+    protected void registerProperties() {
+        super.registerProperties();
+        this.registerProperty(VResourceLocation.mod("eyes"), 0, this::getEyeType, this::setEyeType, true);
+        this.registerProperty(VResourceLocation.mod("fangs"), 0, this::getFangType, this::setFangType, true);
+        this.registerProperty(VResourceLocation.mod("glowing_eyes"), false, this::getGlowingEyes, this::setGlowingEyes, true);
+        this.registerProperty(VResourceLocation.mod("dbno_timer"), 0, this::getDbnoTimer, this::loadDBNOTimer, true);
+        this.registerProperty(VResourceLocation.mod("feed_victim"), -1, () -> this.feed_victim, x -> this.feed_victim = x, true);
+        this.registerNullableProperty(VResourceLocation.mod("dbno_message"), ComponentSerialization.CODEC, null, () -> this.dbnoMessage, x -> {
+            var old = this.dbnoMessage;
+            this.dbnoMessage = x;
+            return !Objects.equals(old, x);
+        }, true);
+        this.registerProperty(VResourceLocation.mod("blood_stats"), true, () -> this.bloodStats);
+        this.registerProperty(VResourceLocation.mod("vision"), true, () -> this.vision);
+        this.registerProperty(VResourceLocation.mod("disguise"), true, () -> this.disguise);
+        this.registerProperty(VResourceLocation.mod("refinement_handler"), true, () ->this.refinementHandler);
+    }
+
+    private void applyEntityAttributes() {
+        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(ModConfig.BALANCE.vpSundamage.get());
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION).setBaseValue(ModConfig.BALANCE.vpBloodExhaustionFactor.get());
+        player.getAttribute(ModAttributes.NEONATAL_DURATION).setBaseValue(ModConfig.BALANCE.vpNeonatalDuration.get() * 20);
+        player.getAttribute(ModAttributes.DBNO_DURATION).setBaseValue(ModConfig.BALANCE.vpDbnoDuration.get() * 20);
+    }
+
+    private void removeEntityAttributes() {
+        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(0);
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION).setBaseValue(0);
+        player.getAttribute(ModAttributes.NEONATAL_DURATION).setBaseValue(0);
+        player.getAttribute(ModAttributes.DBNO_DURATION).setBaseValue(0);
+    }
+
+    /**
+     * Apply the armor unaffected level scaled entity attribute modifiers
+     */
+    private void applyLevelModifiersA(int level) {
+        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), ModConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), ModConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+    }
+
+    /**
+     * Apply the armor affected level scaled entity attribute modifiers
+     */
+    private void applyLevelModifiersB(int level, boolean heavyArmor) {
+        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), ModConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), ModConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+    }
+
+    private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState state, @NotNull Direction side, @Nullable BlockEntity blockEntity) {
+        if (isRemote() || getLevel() == 0 || !bloodStats.needsBlood() || blockEntity == null) return;
+
+        int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
+        Level level = blockEntity.getLevel();
+        if (level == null) return;
+
+        ResourceHandler<FluidResource> capability = level.getCapability(Capabilities.Fluid.BLOCK, pos, state, blockEntity, side);
+        if (capability == null) return;
+
+        try (var transaction = Transaction.openRoot()) {
+            var extracted = capability.extract(FluidResource.of(ModFluids.BLOOD.get()), need * VReference.FOOD_TO_FLUID_BLOOD, transaction);
+            int usable = (extracted / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD;
+            if (usable <= 0) return;
+
+            capability.insert(FluidResource.of(ModFluids.BLOOD.get()), extracted - usable, transaction);
+
+            int blood = usable / VReference.FOOD_TO_FLUID_BLOOD;
+
+            if (blood > 0) {
+                drinkBlood(blood, IBloodStats.LOW_SATURATION, new DrinkBloodContext(state, pos));
+                transaction.commit();
+            }
+        }
+    }
+
+    /**
+     * Checks if the block is valid to suck blood from.
+     * Does NOT check reach distance and whether the player is in the right state to bite.
+     *
+     * @param pos The pos of the block to check.
+     */
+    public static boolean isBlockBiteable(@NotNull Level level, @NotNull BlockPos pos, @NotNull Direction side) {
+//        ResourceHandler<FluidResource> capability = level.getCapability(Capabilities.Fluid.BLOCK, pos, side);
+//        if (capability == null) return false;
+//        try (var transaction = Transaction.openRoot()) {
+//            return capability.extract(FluidResource.of(ModFluids.BLOOD.get()), VReference.FOOD_TO_FLUID_BLOOD, transaction) > 0;
+//        }
+        return false;
+    }
+
+    /**
+     * Bite the given entity.
+     * Does NOT check reach distance
+     *
+     * @param entity the entity to feed on
+     * @return If feeding can continue
+     */
+    private boolean biteFeed(@NotNull LivingEntity entity) {
+        if (isRemote()) return true;
+        if (getLevel() == 0) return false;
+        int blood = 0;
+        float saturationMod = IBloodStats.HIGH_SATURATION;
+        boolean continue_feeding = true;
+        if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_CREATURE && entity.isAlive()) {
+            Optional<ExtendedCreature> opt = ExtendedCreature.getSafe(entity);
+            blood = opt.map(creature -> creature.onBite(this)).orElse(0);
+            saturationMod = opt.map(IBiteableEntity::getBloodSaturation).orElse(0f);
+            if (isAdvancedBiter() && opt.map(IExtendedCreatureVampirism::getBlood).orElse(0) == 1) {
+                continue_feeding = false;
+            }
+        } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_PLAYER) {
+            VampirePlayer vampire = VampirePlayer.get((Player) entity);
+            blood = vampire.onBite(this);
+            saturationMod = vampire.getBloodSaturation();
+        } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD) {
+            blood = ((IBiteableEntity) entity).onBite(this);
+            saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
+        }
+        if (blood > 0) {
+            drinkBlood(blood, saturationMod, new DrinkBloodContext(entity));
+            sync();
+            if (player instanceof ServerPlayer) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.SUCK_BLOOD);
+            }
+            return continue_feeding;
+        }
+        return false;
+    }
+
+    /**
+     * Handle blood which could not be filled into the blood stats
+     *
+     * @param amt In food blood unit
+     */
+    private void handleSpareBlood(int amt) {
+        BloodHelper.fillBloodIntoInventory(player, amt * VReference.FOOD_TO_FLUID_BLOOD);
+    }
+
+    /**
+     * Handle sun damage
+     */
+    private void handleSunDamage(boolean isRemote) {
+        MobEffectInstance potionEffect = player.getEffect(ModEffects.SUNSCREEN);
+        int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
+        if (ticksInSun < 100) {
+            ticksInSun++;
+        }
+        if (ticksInSun > 50 && (sunscreen >= 4 || (ModConfig.BALANCE.vpSunscreenBuff.get() && sunscreen >= 0))) {
+            ticksInSun = 50;
+        }
+        if (!player.isAlive() || isRemote || player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
+
+        if (ticksInSun == 100 && ModConfig.BALANCE.vpSundamageInstantDeath.get()) {
+            DamageHandler.kill(((ServerLevel) asEntity().level()), player, 100000);
+            turnToAsh();
+        }
+
+        if (ModConfig.BALANCE.vpSundamageNausea.get() && getLevel() >= ModConfig.BALANCE.vpSundamageNauseaMinLevel.get() && player.tickCount % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
+            player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 180));
+        }
+        if (getLevel() >= ModConfig.BALANCE.vpSundamageWeaknessMinLevel.get() && player.tickCount % 150 == 3 && sunscreen < 5) {
+            player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 152, 0));
+        }
+        if (getLevel() >= ModConfig.BALANCE.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
+            float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE).getValue());
+            if (damage > 0) {
+                DamageHandler.hurtModded(((ServerLevel) asEntity().level()), player, ModDamageSources::sunDamage, damage);
+            }
+            if (!player.isAlive()) {
+                turnToAsh(); //Instead of the normal dying animation, just turn to ash
+            }
+        }
+    }
+
+    /**
+     * Spawn ash particles and remove body.
+     * Must be dead already
+     */
+    private void turnToAsh() {
+        if (!player.isAlive()) {
+            player.deathTime = 19;
+            ModParticles.spawnParticlesServer(player.level(), ParticleTypes.WHITE_ASH, player.getX() + 0.5, player.getY() + player.getBbHeight(), player.getZ() + 0.5f, 20, 0.2, player.getBbHeight() * 0.2d, 0.2, 0.1);
+            ModParticles.spawnParticlesServer(player.level(), ParticleTypes.ASH, player.getX() + 0.5, player.getY() + player.getBbHeight() / 2, player.getZ() + 0.5f, 20, 0.2, player.getBbHeight() * 0.2d, 0.2, 0.1);
+        }
+    }
+
+    /**
+     * Make sure no nearby mob continues targets the player
+     */
+    private void resetNearbyTargetingMobs() {
+        AABB axisalignedbb = (new AABB(player.blockPosition())).inflate(32.0D, 10.0D, 32.0D);
+        player.level().getEntitiesOfClass(Mob.class, axisalignedbb).forEach(e -> {
+            if (e.getTarget() == player) {
+                e.targetSelector.getAvailableGoals().stream().filter(WrappedGoal::isRunning).filter(g -> g.getGoal() instanceof TargetGoal).forEach(WrappedGoal::stop);
+            }
+            if (e instanceof NeutralMob && player.level() instanceof ServerLevel level) {
+                ((NeutralMob) e).playerDied(level, player);
+            }
+        });
+    }
+
+    private void setDBNOTimer(int newValue) {
+        this.dbnoTimer = newValue;
+        this.getSpecialAttributes().isDBNO = isDBNO();
+    }
+
+    /**
+     * Spawn particle after biting an entity
+     *
+     * @param entityId ID of the entity
+     */
+    private void spawnBiteParticle(int entityId) {
+        Entity entity = player.level().getEntity(entityId);
+        if (entity != null) {
+            UtilLib.spawnParticles(player.level(), ParticleTypes.CRIT, entity.getX(), entity.getY(), entity.getZ(), player.getX() - entity.getX(), player.getY() - entity.getY(), player.getZ() - entity.getZ(), 10, 1);
+        }
+        for (int j = 0; j < 16; ++j) {
+            Vec3 vec3 = new Vec3((player.getRandom().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            vec3 = vec3.xRot(-player.getXRot() * (float) Math.PI / 180F);
+            vec3 = vec3.yRot(-player.getYRot() * (float) Math.PI / 180F);
+            double d0 = (double) (-player.getRandom().nextFloat()) * 0.6D - 0.3D;
+            Vec3 vec31 = new Vec3(((double) player.getRandom().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
+            vec31 = vec31.xRot(-player.getXRot() * (float) Math.PI / 180.0F);
+            vec31 = vec31.yRot(-player.getYRot() * (float) Math.PI / 180.0F);
+            vec31 = vec31.add(player.getX(), player.getY() + (double) player.getEyeHeight(), player.getZ());
+
+            player.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
+        }
+    }
+
+    /**
+     * This is called every 20 ticks in onUpdate() to run the continuous feeding effect
+     */
+    private void updateFeeding() {
+        Entity entity = player.level().getEntity(feed_victim);
+        if (!(entity instanceof LivingEntity e)) return;
+        if (e.getHealth() == 0f) {
+            endFeeding(true);
+            return;
+        }
+        e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 20, 7, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 25, 4, false, false));
+
+        ModParticles.spawnParticlesServer(player.level(), new FlyingBloodEntityParticleOptions(player.getId(), true), e.getX(), e.getY() + e.getEyeHeight() / 2, e.getZ(), 10, 0.1f, 0.1f, 0.1f, 0);
+
+        if (!biteFeed(e)) {
+            endFeeding(true);
+        }
+
+        if (!(e.distanceTo(player) <= player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE).getValue() + 1) || e.getHealth() == 0f) {
+            endFeeding(true);
+        }
+    }
+
+    @Override
+    public void updateMinionAttributes(boolean enabled) {
+        MinionWorldData.getData(this.player.level()).ifPresent(a -> a.getOrCreateController(FactionPlayerHandler.get(this.player)).contactMinions((minion) -> {
+            (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData) b).setIncreasedStats(enabled));
+//            SyncHelper.sync(minion); TODO
+        }));
+    }
+
+    private class VisionStatus extends PropertySync implements ValueIOSerializable {
+        private final Set<ResourceKey<IVampireVision>> unlockedVisions = new HashSet<>();
+        private @Nullable Holder<IVampireVision> vision;
+
+        @Override
+        public void sync() {
+            VampirePlayer.this.sync();
+        }
+
+        public void deactivate() {
+            if (this.vision != null) {
+                this.vision.value().onDeactivated(VampirePlayer.this);
+                vision = null;
+            }
+        }
+
+        public void deactivate(ResourceKey<IVampireVision> vision) {
+            if (this.vision != null && this.vision.is(vision)) {
+                deactivate();
+            }
+        }
+
+        private void tick() {
+            if (this.vision != null) {
+                this.vision.value().tick(VampirePlayer.this);
+                if (!this.vision.value().isEnabled()) {
+                    deactivate();
+                }
+            }
+        }
+
+        private void switchVision() {
+            List<ResourceKey<IVampireVision>> visions = ModRegistries.VAMPIRE_VISION.listElements().filter(x -> unlockedVisions.contains(x.getKey())).filter(x -> x.value().isEnabled()).map(Holder.Reference::getKey).toList();
+            int newIndex;
+            if (this.vision != null) {
+                newIndex = visions.indexOf(this.vision.getKey()) + 1;
+            } else {
+                newIndex = 0;
+            }
+            var newVision = newIndex >= visions.size() ? null : visions.get(newIndex);
+            activate(newVision);
+        }
+
+        public void unlockVision(ResourceKey<IVampireVision> vision) {
+            this.unlockedVisions.add(vision);
+        }
+
+        public void lockVision(ResourceKey<IVampireVision> vision) {
+            this.deactivate(vision);
+            this.unlockedVisions.remove(vision);
+        }
+
+        public void activate(@Nullable ResourceKey<IVampireVision> vision) {
+            if (this.vision != null && (vision != null && this.vision.is(vision))) {
+                return;
+            }
+            if (vision != null && !this.unlockedVisions.contains(vision)) {
+                return;
+            }
+            if (this.vision != null) {
+                deactivate();
+            }
+            var holder = Optional.ofNullable(vision).flatMap(ModRegistries.VAMPIRE_VISION::get).orElse(null);
+            if (holder != null) {
+                if (holder.value().isEnabled()) {
+                    this.vision = holder;
+                    this.vision.value().onActivated(VampirePlayer.this);
+                }
+            } else {
+                this.vision = null;
+            }
+        }
+
+        @Override
+        protected void registerProperty(Property property) {
+            this.registerNullableProperty(VResourceLocation.mod("vision"), IVampireVision.CODEC, null, () -> this.vision, v -> {
+                var old = this.vision;
+                this.vision = v;
+                if (old != this.vision) {
+                    if (old != null) {
+                        old.value().onDeactivated(VampirePlayer.this);
+                    }
+                    if (this.vision != null) {
+                        this.vision.value().onActivated(VampirePlayer.this);
+                    }
+                    return true;
+                }
+                return false;
+            }, true);
+        }
+    }
+
+    private class Disguise extends PropertySync implements IDisguise, ValueIOSerializable {
+        private boolean isDisguised;
+        @Nullable
+        private Holder<? extends IFaction<?>> disguiseFaction = actualFaction();
+
+        @Override
+        public void sync() {
+            VampirePlayer.this.sync();
+        }
+
+        @Override
+        public void unDisguise() {
+            disguiseAs(actualFaction());
+        }
+
+        @Override
+        public void disguiseAs(Holder<? extends IFaction<?>> faction) {
+            this.disguiseFaction = faction;
+            this.isDisguised = !IFaction.is(faction, actualFaction());
+            getSpecialAttributes().disguised = this.isDisguised;
+            player.refreshDisplayName();
+        }
+
+        @Override
+        public Holder<? extends IPlayableFaction<?>> actualFaction() {
+            return getFaction();
+        }
+
+        @Override
+        public Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
+            return actualFaction();
+        }
+
+        @Override
+        public boolean isDisguised() {
+            return this.isDisguised;
+        }
+
+        @Override
+        protected void registerProperties() {
+            this.registerNullableProperty(VResourceLocation.mod("disguise_faction"), ModCodecs.faction(), null, () -> disguiseFaction, d -> {
+                var old = this.disguiseFaction;
+                this.disguiseFaction = d;
+                this.isDisguised = !IFaction.is(this.disguiseFaction, actualFaction());
+                return IFaction.is(old, this.disguiseFaction);
+            }, true);
+        }
+
+        @Override
+        protected void onPropertyChanged() {
+            player.refreshDisplayName();
+        }
+
+    }
+
+
+    public static class AttachmentOptions extends AttachmentSynchronization.PlayerOptions<VampirePlayer> {
+        @Override
+        protected VampirePlayer create(Player player) {
+            return new VampirePlayer(player);
+        }
+    }
+}

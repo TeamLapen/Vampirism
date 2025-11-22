@@ -1,0 +1,40 @@
+{
+  "parent": "vampirism:vampire/become_vampire",
+  "criteria": {
+    "action": {
+      "conditions": {
+        "action": "vampirism:bat"
+      },
+      "trigger": "factions:action"
+    },
+    "main": {
+      "conditions": {
+        "type": "level",
+        "faction": "vampirism:vampire",
+        "level": 1
+      },
+      "trigger": "factions:faction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.bat.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:feather"
+    },
+    "title": {
+      "translate": "advancement.vampirism.bat"
+    }
+  },
+  "requirements": [
+    [
+      "action"
+    ],
+    [
+      "main"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

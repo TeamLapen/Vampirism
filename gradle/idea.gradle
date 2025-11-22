@@ -1,0 +1,11 @@
+apply plugin: 'idea'
+
+idea {
+    module {
+        for (String excludeDirName in ["run", "out", "logs", "runs"]) {
+            excludeDirs.add(file(excludeDirName))
+        }
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

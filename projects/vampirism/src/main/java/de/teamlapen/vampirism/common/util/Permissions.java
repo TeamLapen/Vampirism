@@ -1,0 +1,45 @@
+package de.teamlapen.vampirism.common.util;
+
+import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.server.permission.PermissionAPI;
+import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
+import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
+import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
+import org.jetbrains.annotations.NotNull;
+
+@EventBusSubscriber
+public class Permissions {
+    public static final PermissionNode<Boolean> GENERAL_CHECK = new PermissionNode<>(REFERENCE.MODID, "check", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
+    public static final Permission FEED = create(new PermissionNode<>(REFERENCE.MODID, "bite.feed", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true)));
+    public static final Permission FEED_PLAYER = create(new PermissionNode<>(REFERENCE.MODID, "bite.feed.player", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true)));
+    public static final Permission INFECT_PLAYER = create(new PermissionNode<>(REFERENCE.MODID, "infect.player", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true)));
+
+
+    @SubscribeEvent
+    public static void registerNodes(PermissionGatherEvent.@NotNull Nodes event) {
+        event.addNodes(GENERAL_CHECK, FEED.node, FEED_PLAYER.node, INFECT_PLAYER.node);
+    }
+
+    private static Permission create(PermissionNode<Boolean> node) {
+        return new Permission(node);
+    }
+
+    public static boolean isSetupCorrectly(ServerPlayer player) {
+        return !ModConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, GENERAL_CHECK);
+    }
+
+    public record Permission(PermissionNode<Boolean> node) {
+        public boolean isAllowed(ServerPlayer player) {
+            return !ModConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, this.node);
+        }
+
+        public boolean isDisallowed(ServerPlayer player) {
+            return !isAllowed(player);
+        }
+    }
+
+}

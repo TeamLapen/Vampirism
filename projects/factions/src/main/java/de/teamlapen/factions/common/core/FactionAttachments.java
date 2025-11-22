@@ -1,0 +1,31 @@
+package de.teamlapen.factions.common.core;
+
+import de.teamlapen.factions.api.extensions.IEntity;
+import de.teamlapen.factions.api.util.REFERENCE;
+import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.factions.common.factions.neutral.NeutralPlayer;
+import de.teamlapen.factions.common.util.AttachmentSynchronization;
+import de.teamlapen.factions.common.world.attachments.LevelDamage;
+import de.teamlapen.sync.api.IAttachment;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+public class FactionAttachments {
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, REFERENCE.MOD_ID);
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<FactionPlayerHandler>> FACTION_PLAYER_HANDLER = ATTACHMENT_TYPES.register(de.teamlapen.factions.api.FactionAttachments.Keys.FACTION_PLAYER_HANDLER.getPath(), () -> syncAttachment(new FactionPlayerHandler.AttachmentOptions()).copyOnDeath().build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<NeutralPlayer>> NEUTRAL_PLAYER = ATTACHMENT_TYPES.register(de.teamlapen.factions.api.FactionAttachments.Keys.NEUTRAL_PLAYER.getPath(), () -> syncAttachment(new NeutralPlayer.AttachmentOptions()).copyOnDeath().build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<LevelDamage>> LEVEL_DAMAGE = ATTACHMENT_TYPES.register(de.teamlapen.factions.api.FactionAttachments.Keys.DAMAGE_HANDLER.getPath(), () -> AttachmentType.builder(new LevelDamage.Factory()).build());
+
+    static void register(IEventBus bus) {
+        ATTACHMENT_TYPES.register(bus);
+    }
+
+    private static <T extends IAttachment & IEntity, Z extends IAttachmentHolder> AttachmentType.Builder<T> syncAttachment(AttachmentSynchronization<T, Z> options) {
+        return AttachmentType.builder(options).serialize(options).sync(options);
+    }
+}

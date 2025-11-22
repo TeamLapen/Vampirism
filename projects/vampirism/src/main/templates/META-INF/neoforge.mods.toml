@@ -1,0 +1,113 @@
+license = "${mod_license}"
+
+# A URL to refer people to when problems occur with this mod
+issueTrackerURL = "${mod_issue_tracker}" #optional
+
+# A list of mods - how many allowed here is determined by the individual mod loader
+[[mods]] #mandatory
+
+# The modid of the mod
+modId = "${mod_id}" #mandatory
+
+# The version number of the mod
+version = "${mod_version}" #mandatory
+
+# A display name for the mod
+displayName = "${mod_name}" #mandatory
+
+# A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
+#updateJSONURL = "${mod_update_url}" #optional
+
+# A URL for the "homepage" for this mod, displayed in the mod UI
+displayURL = "${mod_url}" #optional
+
+# A file name (in the root of the mod JAR) containing a logo for display
+logoFile = "logo.png" #optional
+
+# A text field displayed in the mod UI
+credits = '''\n
+     - 1LiterZinalco (triage/textures/models)
+     - TheRebelT (textures)
+     - TinkerHatWill (textures)
+     - Alis (textures)
+     - dimensionpainter (textures)
+     - S_olace (textures)
+     - Mistadon (code/models)
+     - wildbill22 (code)
+     - LRA_10 (models/textures)
+     - Oreo365 (models)
+     - Slippingchip400 (models)
+     - Йода (textures)
+     - XxKidDowdallxX (texture)
+     - F_Spade (textures)
+     - Matheo (lore)
+     - cournualllama2 (lore)
+     - special_krab (lore)
+     - Random (textures/models)
+     - Shumnik (textures/models)
+     - BugraaK (textures/models)
+     - MrVityaTrash (textures)
+     - FrostedOver (textures)
+     - Grid (code/textures/models/structures/lore)
+     - T_Corvus (textures)
+     - Zeyke (textures)
+     - freesound.org (sounds)
+     - freeSFX.co.uk (sounds)'''
+
+# A text field displayed in the mod UI
+authors = "${mod_authors}" #optional
+
+# The description text for the mod (multi line!) (#mandatory)
+description = '''${mod_description}'''
+
+enumExtensions = "META-INF/enumextensions.json"
+
+# The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
+[[mixins]]
+config = "${mod_id}.mixins.json"
+
+# The [[accessTransformers]] block allows you to declare where your AT file is.
+# If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
+[[accessTransformers]]
+file = "META-INF/accesstransformer.cfg"
+
+# The coremods config file path is not configurable and is always loaded from META-INF/coremods.json
+
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.${ mod_id }]] #optional
+# the modid of the dependency
+modId = "neoforge" #mandatory
+# The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
+# 'required' requires the mod to exist, 'optional' does not
+# 'incompatible' will prevent the game from loading when the mod exists, and 'discouraged' will show a warning
+type = "required" #mandatory
+# Optional field describing why the dependency is required or why it is incompatible
+# reason="..."
+# The version range of the dependency
+versionRange = "[${neo_version},)" #mandatory
+# An ordering relationship for the dependency.
+# BEFORE - This mod is loaded BEFORE the dependency
+# AFTER - This mod is loaded AFTER the dependency
+ordering = "NONE"
+# Side this dependency is applied on - BOTH, CLIENT, or SERVER
+side = "BOTH"
+
+# Here's another dependency
+[[dependencies.${ mod_id }]]
+modId = "minecraft"
+type = "required"
+# This version range declares a minimum of the current minecraft version up to but not including the next major version
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${ mod_id }]]
+modId = "jei"
+type = "optional"
+versionRange = "[${jei_version},)"
+
+# Features are specific properties of the game environment, that you may want to declare you require. This example declares
+# that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
+# stop your mod loading on the server for example.
+#[features.${mod_id}]
+#openGLVersion="[3.2,)"
