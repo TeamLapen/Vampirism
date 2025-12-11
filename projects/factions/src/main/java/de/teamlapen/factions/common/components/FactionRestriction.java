@@ -1,13 +1,16 @@
 package de.teamlapen.factions.common.components;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
 import de.teamlapen.factions.api.items.components.IFactionRestriction;
 import de.teamlapen.factions.api.skills.ISkill;
+import de.teamlapen.factions.api.skills.ISkillHandler;
 import de.teamlapen.factions.common.core.FactionDataComponents;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
@@ -27,12 +30,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<HolderSet<ISkill<?>>> skills, Optional<Integer> minLevel) implements IFactionRestriction {
+public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<HolderSet<ISkill<?>>> skills, Optional<Integer> minLevel) implements IFactionRestriction, IFactionRestrictionProvider {
 
     public static final FactionRestriction ALL = FactionRestriction.builder(FactionTags.ALL_FACTIONS).build();
     public static final Codec<FactionRestriction> CODEC = RecordCodecBuilder.create(inst ->
@@ -56,86 +62,111 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         this(factions, Optional.empty(), Optional.empty());
     }
 
-    public FactionRestriction(Holder<IFaction<?>> faction) {
-        this(HolderSet.direct(faction));
+    @SuppressWarnings("unchecked")
+    public FactionRestriction(Holder<? extends IFaction<?>> faction) {
+        this(HolderSet.direct((Holder<IFaction<?>>) faction));
     }
 
-    public static <T extends IFaction<?>, Z extends Holder<T>> boolean matchFaction(ItemStack stack, Z faction) {
-        FactionRestriction factionRestriction = stack.get(FactionDataComponents.FACTION_RESTRICTION);
-        if (factionRestriction != null) {
-            return IFaction.contains(factionRestriction.factions(), faction);
-        }
-        return true;
+    @Override
+    public FactionRestriction getFactionRestriction() {
+        return this;
     }
 
-    public static Builder builder(TagKey<IFaction<?>> tagKey) {
-        return new Builder(tagKey);
-    }
+    //<editor-fold desc="ItemProperties extensions">
 
     @SuppressWarnings("unchecked")
-    public static <T extends IFaction<?>, Z extends Holder<T>> Builder builder(Z faction) {
-        return new Builder((Holder<IFaction<?>>) faction);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends IFaction<?>, Z extends Holder<T>> Item.Properties apply(Z faction, Item.Properties properties) {
-        return new Builder((Holder<IFaction<?>>) faction).apply(properties);
-    }
-
-    public static Item.Properties apply(TagKey<IFaction<?>> faction, Item.Properties properties) {
+    public static <T extends IFaction<?>, Z extends Holder<T>> Item.Properties apply(Item.Properties properties, Z faction) {
         return new Builder(faction).apply(properties);
     }
 
-    public static boolean canUse(Player player, ItemStack stack, boolean message) {
-        var result = canUse(player, stack, message, stack.get(FactionDataComponents.FACTION_RESTRICTION));
-//        if (result && stack.has(ModDataComponents.APPLIED_OIL)) { TODO
-//            result = canUse(player, stack, message, AppliedOilContent.HUNTER_RESTRICTION);
-//        }
-        return result;
+    public static Item.Properties apply(Item.Properties properties, TagKey<IFaction<?>> faction) {
+        return new Builder(faction).apply(properties);
     }
 
-    private static boolean canUse(Player player, ItemStack stack, boolean message, @Nullable FactionRestriction restriction) {
-        if (restriction != null) {
-            FactionPlayerHandler factionPlayerHandler = FactionPlayerHandler.get(player);
+    @SuppressWarnings("unchecked")
+    public static Item.Properties apply(Item.Properties properties, Holder<? extends IFaction<?>>... factions) {
+        return new Builder(factions).apply(properties);
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Usage Check">
+
+    public static <T extends IFaction<?>, Z extends Holder<T>> boolean matchFaction(ItemStack stack, Z faction) {
+        var restrictions = stack.getAllOfType(IFactionRestrictionProvider.class).map(IFactionRestrictionProvider::getFactionRestriction).filter(Objects::nonNull).toList();
+        if (restrictions.isEmpty()) return true;
+
+        for (IFactionRestriction restriction : restrictions) {
+            //noinspection DataFlowIssue
+            if (!IFaction.contains(restriction.factions(), faction)) return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Total check for all possibilities
+     */
+    public static boolean canUse(LivingEntity entity, ItemStack stack, boolean message) {
+        var restrictions = stack.getAllOfType(IFactionRestrictionProvider.class).map(IFactionRestrictionProvider::getFactionRestriction).filter(Objects::nonNull).toList();
+        if (restrictions.isEmpty()) return true;
+
+        if (entity instanceof Player player) {
+            //noinspection NullableProblems
+            return canUse(player, restrictions, message);
+        } else {
+            //noinspection NullableProblems
+            return canUse(entity, restrictions);
+        }
+    }
+
+    /**
+     * simple player check
+     */
+    public static boolean canUse(Player player, IFactionRestriction restrictions, boolean message) {
+        return canUse(player, Collections.singletonList(restrictions), message);
+    }
+
+    /**
+     * simple entity check
+     */
+    public static boolean canUse(LivingEntity player, IFactionRestriction restriction) {
+        return canUse(player, Collections.singletonList(restriction));
+    }
+
+    /**
+     * collection player check
+     */
+    public static boolean canUse(Player player, List<IFactionRestriction> restrictions, boolean message) {
+        FactionPlayerHandler factionPlayerHandler = FactionPlayerHandler.get(player);
+
+        for (IFactionRestriction restriction : restrictions) {
             Result result = restriction.canUse(factionPlayerHandler);
-            if (message) {
-                result.message().ifPresent(s -> player.displayClientMessage(s, true));
+            if (!result.success()) {
+                result.message().filter(x -> message).ifPresent(s -> player.displayClientMessage(s, true));
+                return false;
             }
-            return result.success();
+        }
+
+        return true;
+    }
+
+    /**
+     * collection entity check
+     */
+    public static boolean canUse(LivingEntity player, List<IFactionRestriction> restrictions) {
+        Holder<? extends IFaction<?>> faction = FactionsMod.services().factionRegistry().getFaction(player);
+
+        for (IFactionRestriction restriction : restrictions) {
+            if(!IFaction.contains(restriction.factions(), faction)) {
+                return false;
+            }
         }
         return true;
     }
 
-    public static boolean canUse(LivingEntity entity, ItemStack stack, boolean message) {
-        if (entity instanceof Player player) {
-            return canUse(player, stack, message);
-        } else {
-            Holder<? extends IFaction<?>> faction = FactionsMod.services().factionRegistry().getFaction(entity);
-            FactionRestriction restriction = stack.get(FactionDataComponents.FACTION_RESTRICTION);
-            if (restriction != null && IFaction.contains(restriction.factions(), faction)) {
-                return true;
-            }
-            return false;
-//            return stack.has(ModDataComponents.APPLIED_OIL) && IFaction.contains(AppliedOilContent.HUNTER_RESTRICTION.factions(), faction); TODO
-        }
-    }
-
-    public static void addTooltipIfExist(ItemStack stack, List<Component> tooltip) {
-        addTooltipIfExist(FactionsMod.proxy.getClientPlayer(), stack, tooltip);
-    }
-
-    public static void addTooltipIfExist(@Nullable Player player, ItemStack stack, List<Component> tooltip) {
-        Stream<FactionRestriction> factionRestrictionStream = Stream.of(stack.get(FactionDataComponents.FACTION_RESTRICTION));
-//        if (stack.has(ModDataComponents.APPLIED_OIL)) { TODO
-//            factionRestrictionStream = Stream.concat(factionRestrictionStream, Stream.of(AppliedOilContent.HUNTER_RESTRICTION));
-//        }
-        List<FactionRestriction> list = factionRestrictionStream.filter(Objects::nonNull).toList();
-        if (!list.isEmpty()) {
-            addTooltip(tooltip, player == null ? null : FactionPlayerHandler.get(player), list);
-        }
-    }
-
-    public Result canUse(FactionPlayerHandler player) {
+    @Override
+    public Result canUse(IFactionPlayerHandler player) {
         if (!IFaction.contains(factions, player.getFaction())) {
             return Result.WRONG_FACTION;
         }
@@ -148,45 +179,85 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         return Result.SUCCESS;
     }
 
-    public static void addTooltip(List<Component> tooltips, @Nullable FactionPlayerHandler player, List<FactionRestriction> restrictions) {
-        tooltips.add(Component.empty());
-        tooltips.add(Component.translatable("text.vampirism.faction_specifics").withStyle(ChatFormatting.GRAY));
-        tooltips.addAll(restrictions.stream().map(FactionRestriction::factions).flatMap(HolderSet::stream).distinct().map(faction -> {
-            var color = player == null ? ChatFormatting.GRAY : restrictions.stream().allMatch(factions -> IFaction.contains(factions.factions(), player.getFaction())) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
-            return faction.value().getName().copy().withStyle(color);
-        }).map(x -> Component.literal(" ").append(x)).toList());
-        restrictions.stream().map(FactionRestriction::minLevel).flatMap(Optional::stream).mapToInt(s -> s).max().ifPresent(minLevel -> {
-            var color = player == null ? ChatFormatting.GRAY : player.getCurrentLevel() >= minLevel ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
-            tooltips.add(Component.literal(" ").append(Component.translatable("text.vampirism.required_level", String.valueOf(minLevel)).withStyle(color)));
+    //</editor-fold>
+
+    //<editor-fold desc="Tooltip">
+
+    public static void addTooltipIfExist(@Nullable Player player, ItemStack stack, Consumer<Component> tooltips) {
+
+        if (player == null) {
+            player = FactionsMod.proxy.getClientPlayer();
+        }
+
+        //noinspection NullableProblems
+        List<IFactionRestriction> restrictions = stack.getAllOfType(IFactionRestrictionProvider.class).map(IFactionRestrictionProvider::getFactionRestriction).filter(Objects::nonNull).toList();
+        if (restrictions.isEmpty()) return;
+
+        @Nullable
+        FactionPlayerHandler factionPlayerHandler = player == null ? null : FactionPlayerHandler.get(player);
+
+        tooltips.accept(Component.empty());
+        tooltips.accept(Component.translatable("tooltip.factions.faction_specifics").withStyle(ChatFormatting.GRAY));
+
+        var factionsOpt = restrictions.stream().map(s -> s.factions().stream().collect(Collectors.toSet())).reduce(Sets::intersection);
+        var minLevelOpt = restrictions.stream().flatMap(x -> x.minLevel().stream()).max(Integer::compareTo);
+        var skills = restrictions.stream().flatMap(x -> x.skills().stream()).flatMap(HolderSet::stream).collect(Collectors.toSet());
+
+        factionsOpt.ifPresent(factions -> {
+            Holder<? extends IFaction<?>> faction = factionPlayerHandler == null ? null : factionPlayerHandler.getFaction();
+            factionsOpt.get().stream().map(x -> Component.literal(" ").append(x.value().getName().withStyle(style -> {
+                if (faction == null) return style;
+                return IFaction.is(x, faction) ? style.withColor(ChatFormatting.DARK_GREEN) : style.withColor(ChatFormatting.DARK_RED);
+            }))).forEach(tooltips);
         });
-        restrictions.stream().map(FactionRestriction::skills).flatMap(Optional::stream).flatMap(HolderSet::stream).map(skill ->
-        {
-            var color = player == null ? ChatFormatting.GRAY : player.getSkillHandler().map(s -> s.isSkillEnabled(skill)).orElse(false) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
-            return Component.translatable("text.vampirism.required_skill", skill.value().getName()).withStyle(color);
-        }).map(s -> Component.literal(" ").append(s)).forEach(tooltips::add);
+
+        minLevelOpt.ifPresent(minLevel -> {
+            tooltips.accept(Component.literal(" ").append(Component.translatable("tooltip.factions.required_level", String.valueOf(minLevel))).withStyle(style -> {
+                if (factionPlayerHandler == null) return style;
+                return factionPlayerHandler.getCurrentLevel() >= minLevel ? style.withColor(ChatFormatting.DARK_GREEN) : style.withColor(ChatFormatting.DARK_RED);
+            }));
+        });
+
+        if (!skills.isEmpty()) {
+            var skillHandler = factionPlayerHandler == null ? null : factionPlayerHandler.getSkillHandler().orElse(null);
+            skills.stream().map(skill -> Component.translatable("tooltip.factions.required_skill", skill.value().getName().withStyle(style -> {
+                if (skillHandler == null) return style;
+                return skillHandler.isSkillEnabled(skill) ? style.withColor(ChatFormatting.DARK_GREEN) : style.withColor(ChatFormatting.DARK_RED);
+            }))).forEach(tooltips);
+        }
+
     }
 
-    public record Result(Optional<Component> message, boolean success) {
-        public static final Result SUCCESS = new Result(Optional.empty(), true);
-        public static final Result WRONG_FACTION = new Result(Optional.of(Component.translatable("text.vampirism.can_not_be_used_faction")), false);
-        public static final Result MISSING_SKILLS = new Result(Optional.of(Component.translatable("text.vampirism.can_not_be_used_skill")), false);
-        public static final Result MISSING_LEVEL = new Result(Optional.of(Component.translatable("text.vampirism.can_not_be_used_level")), false);
+    //</editor-fold>
+
+    //<editor-fold desc="Builder">
+
+    public static Builder builder(TagKey<IFaction<?>> tagKey) {
+        return new Builder(tagKey);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IFaction<?>, Z extends Holder<T>> Builder builder(Z faction) {
+        return new Builder(faction);
     }
 
     public static class Builder {
 
+        @Nullable
         private TagKey<IFaction<?>> factionTag;
-        private final List<Holder<IFaction<?>>> factionHolder = new ArrayList<>();
+        private final List<Holder<? extends IFaction<?>>> factionHolder = new ArrayList<>();
+        @Nullable
         private TagKey<ISkill<?>> skillTag;
         private final List<Holder<ISkill<?>>> skillHolder = new ArrayList<>();
-        private Integer minLevel;
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        private Optional<Integer> minLevel = Optional.empty();
 
         public Builder(TagKey<IFaction<?>> tagKey) {
             this.factionTag = tagKey;
         }
 
         @SuppressWarnings("unchecked")
-        public Builder(Holder<IFaction<?>>... faction) {
+        public Builder(Holder<? extends IFaction<?>>... faction) {
             this.factionHolder.addAll(Arrays.asList(faction));
         }
 
@@ -207,7 +278,7 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         }
 
         public Builder minLevel(int minLevel) {
-            this.minLevel = minLevel;
+            this.minLevel = Optional.of(minLevel);
             return this;
         }
 
@@ -216,11 +287,15 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
             HolderGetter<ISkill<?>> skills = BuiltInRegistries.acquireBootstrapRegistrationLookup(ModRegistries.SKILLS);
             Preconditions.checkArgument((this.factionTag != null && this.factionHolder.isEmpty() )|| (this.factionTag == null && !this.factionHolder.isEmpty()), "You need to provide either a faction tag or a list of factions");
             Preconditions.checkArgument(!(this.skillTag != null && !this.skillHolder.isEmpty()), "You can only supply a skill tag or a list of skills or not skills at all");
-            return new FactionRestriction(factionTag != null ? factions.getOrThrow(factionTag) : HolderSet.direct(factionHolder), skillTag != null ? Optional.of(skillTag).map(skills::getOrThrow) : !skillHolder.isEmpty() ? Optional.of(HolderSet.direct(skillHolder)) : Optional.empty(), Optional.ofNullable(minLevel));
+            //noinspection unchecked,RedundantCast
+            return new FactionRestriction(factionTag != null ? factions.getOrThrow(factionTag) : HolderSet.direct((List< ? extends Holder<IFaction<?>>>) (Object) factionHolder), skillTag != null ? Optional.of(skillTag).map(skills::getOrThrow) : !skillHolder.isEmpty() ? Optional.of(HolderSet.direct(skillHolder)) : Optional.empty(), minLevel);
         }
 
         public Item.Properties apply(Item.Properties properties) {
             return properties.component(FactionDataComponents.FACTION_RESTRICTION, build());
         }
     }
+
+    //</editor-fold>
+
 }

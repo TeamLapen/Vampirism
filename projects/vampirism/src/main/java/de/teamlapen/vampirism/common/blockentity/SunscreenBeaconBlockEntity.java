@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.blockentity;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +43,7 @@ public class SunscreenBeaconBlockEntity extends BlockEntity {
 
             for (Player player : list) {
                 if (player.isAlive() && blockEntity.selector.test(player)) {
-                    if (VampirismPlayerAttributes.get(player).vampireLevel > 0) {
+                    if (VampirePlayer.get(player).getLevel() > 0) {
                         player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 160, 5, true, false));
                     }
                 }

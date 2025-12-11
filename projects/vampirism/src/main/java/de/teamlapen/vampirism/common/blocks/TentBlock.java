@@ -4,10 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
+import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -301,7 +301,7 @@ public class TentBlock extends Block {
     @Override
     public InteractionResult useWithoutItem(BlockState blockState, Level world, final BlockPos pos, Player player, BlockHitResult rayTraceResult) {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
-        if (VampirismPlayerAttributes.get(player).hunterLevel == 0) {
+        if (HunterPlayer.get(player).getLevel() == 0) {
             player.displayClientMessage(Component.translatable("text.vampirism.tent.cant_use"), true);
             return InteractionResult.SUCCESS;
         }

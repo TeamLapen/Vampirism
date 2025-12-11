@@ -14,7 +14,7 @@ import java.util.Map;
 public class SkillTreeReloadListener extends SimpleJsonResourceReloadListener<SkillTreeConfiguration> {
 
     public static final ResourceLocation SKILL_TREE_ID = FResourceLocation.mc("skill_tree");
-    private static final String DIRECTORY = "vampirism/configured_skill_tree";
+    private static final String DIRECTORY = "factions/configured_skill_tree";
 
     public SkillTreeReloadListener() {
         super(SkillTreeConfiguration.CODEC, FileToIdConverter.json(DIRECTORY));

@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.common.entity.hunter;
 
+import de.teamlapen.factions.common.core.FactionMinionTasks;
 import de.teamlapen.factions.common.entities.ForceLookEntityGoal;
+import de.teamlapen.factions.common.util.SpawnUtil;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.items.IHunterCrossbow;
@@ -12,15 +13,13 @@ import de.teamlapen.factions.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.factions.common.effects.VampirismBadOmenMobEffect;
+import de.teamlapen.factions.common.effects.FactionBadOmenMobEffect;
 import de.teamlapen.vampirism.common.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.entity.ai.goals.*;
 import de.teamlapen.vampirism.common.entity.ai.navigation.HunterPathNavigation;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
-import de.teamlapen.vampirism.common.entity.minion.management.MinionTasks;
 import de.teamlapen.factions.common.minions.PlayerMinionController;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.entity.vampire.VampireBaseEntity;
@@ -148,39 +147,31 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     /**
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
-    public void convertToMinion(@NotNull Player lord) {
-        FactionPlayerHandler fph = FactionPlayerHandler.get(lord);
-        if (fph.getMaxMinions() > 0) {
-            MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+    public void convertToMinion(@NotNull Player player) {
+        FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(getFaction())).ifPresentOrElse(lord -> {
+            MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    if (IFaction.is(fph.getFaction(), this.getFaction())) {
-                        boolean hasIncreasedStats = fph.getSkillHandler().map(s -> s.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
-                        HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false, hasIncreasedStats);
-                        var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registryAccess());
-                        this.serializeAttachments(output);
-                        data.updateEntityCaps(output.buildResult());
-                        int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
-                        if (id < 0) {
-                            LOGGER.error("Failed to get minion slot");
-                            return;
-                        }
-                        HunterMinionEntity minion = ModEntities.HUNTER_MINION.get().create(this.level(), EntitySpawnReason.CONVERSION);
-                        minion.claimMinionSlot(id, controller);
-                        minion.copyPosition(this);
-                        minion.markAsConverted();
-                        controller.activateTask(0, MinionTasks.STAY.get());
-                        UtilLib.replaceEntity(this, minion);
-
-                    } else {
-                        LOGGER.warn("Wrong faction for minion");
+                    boolean hasIncreasedStats = lord.asSkillPlayer().map(x -> x.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+                    HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), this.getEntityTextureType() % 4, false, hasIncreasedStats);
+                    var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registryAccess());
+                    this.serializeAttachments(output);
+                    data.updateEntityCaps(output.buildResult());
+                    int id = controller.createNewMinionSlot(data, ModEntities.HUNTER_MINION.get());
+                    if (id < 0) {
+                        LOGGER.error("Failed to get minion slot");
+                        return;
                     }
+                    HunterMinionEntity minion = ModEntities.HUNTER_MINION.get().create(this.level(), EntitySpawnReason.CONVERSION);
+                    minion.claimMinionSlot(id, controller);
+                    minion.copyPosition(this);
+                    minion.markAsConverted();
+                    controller.activateTask(0, FactionMinionTasks.STAY.get());
+                    SpawnUtil.replaceEntity(this, minion);
                 } else {
                     LOGGER.warn("No free slot");
                 }
             });
-        } else {
-            LOGGER.error("Can't have minions");
-        }
+        }, () -> LOGGER.error("Can't have minions"));
     }
 
     @Override
@@ -197,7 +188,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public void die(@NotNull DamageSource cause) {
         if (this.villageAttributes == null) {
-            VampirismBadOmenMobEffect.handlePotentialBannerKill(cause.getEntity(), this);
+            FactionBadOmenMobEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
         super.die(cause);
     }
@@ -369,7 +360,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) { //processInteract
         if (hand == InteractionHand.MAIN_HAND && tryCureSanguinare(player)) return InteractionResult.SUCCESS;
-        int hunterLevel = VampirismPlayerAttributes.get(player).hunterLevel;
+        int hunterLevel = FactionPlayerHandler.get(player).getCurrentLevel(getFaction());
         if (this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (!level().isClientSide()) {
                 if (HunterLeveling.getBasicHunterRequirement(hunterLevel + 1).isPresent()) {
@@ -382,8 +373,9 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     }
                     return InteractionResult.SUCCESS;
                 } else if (hunterLevel > 0) {
-                    FactionPlayerHandler fph = FactionPlayerHandler.get(player);
-                    if (fph.getMaxMinions() > 0) {
+                    @Nullable
+                    var lord = FactionPlayerHandler.get(player).getLordPlayer().orElse(null);
+                    if (lord != null && lord.getMaxMinions() > 0) {
                         ItemStack heldItem = player.getItemInHand(hand);
 
                         if (this.getEntityLevel() > 0) {
@@ -391,7 +383,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                                 player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.unavailable"), true);
                             }
                         } else {
-                            boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(fph)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
+                            boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
                             player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.available"), false);
                             if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
                                 if (!freeSlot) {

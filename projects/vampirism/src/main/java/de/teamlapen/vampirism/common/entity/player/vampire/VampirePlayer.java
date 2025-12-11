@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.common.entity.player.vampire;
 
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.common.util.ModCodecs;
-import de.teamlapen.sync.Property;
-import de.teamlapen.sync.PropertySync;
+import de.teamlapen.factions.api.factions.LevelingChange;
+import de.teamlapen.factions.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.factions.common.sounds.ISoundReference;
+import de.teamlapen.vampirism.common.entity.player.vampire.properties.Customization;
+import de.teamlapen.vampirism.common.entity.player.vampire.properties.VampireDisguise;
+import de.teamlapen.vampirism.common.entity.player.vampire.properties.VisionStatus;
+import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampirePlayerSkillProperties;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.factions.common.util.AttachmentSynchronization;
 import de.teamlapen.vampirism.REFERENCE;
@@ -16,8 +18,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.factions.api.factions.IDisguise;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.refinements.IRefinementHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
@@ -29,14 +29,12 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
-import de.teamlapen.vampirism.common.effects.ModEffectInstanceHelper;
 import de.teamlapen.vampirism.common.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.entity.ExtendedCreature;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.entity.player.LevelAttributeModifier;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.factions.common.actions.ActionHandler;
 import de.teamlapen.factions.common.skills.RefinementHandler;
 import de.teamlapen.factions.common.skills.SkillHandler;
@@ -82,12 +80,10 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -104,54 +100,33 @@ import java.util.function.Predicate;
  * Main class for Vampire Players.
  */
 public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
-    public final static ResourceLocation NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
-    private static final Logger LOGGER = LogManager.getLogger(VampirePlayer.class);
-    private final static int FEED_TIMER = 20;
-    /**
-     * Keys for NBT values
-     */
-    private final static String KEY_EYE = "eye_type";
-    private final static String KEY_FANGS = "fang_type";
-    private final static String KEY_GLOWING_EYES = "glowing_eyes";
-    private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
-    private final static String KEY_VISION = "vision";
-    private final static String KEY_FEED_VICTIM_ID = "feed_victim";
-    private final static String KEY_DBNO_TIMER = "dbno";
-    private final static String KEY_DBNO_MSG = "dbno_msg";
-    private final static String KEY_WAS_DBNO = "wasDBNO";
-
+    public static final ResourceLocation NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final int FEED_TIMER = 20;
 
     public static VampirePlayer get(Player player) {
         return player.getData(ModAttachments.VAMPIRE_PLAYER);
     }
 
-    public static double getNaturalArmorValue(int lvl) {
-        return lvl > 0 ? ModConfig.BALANCE.vpNaturalArmorBaseValue.get() + (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.BALANCE.vpNaturalArmorIncrease.get() : 0;
-    }
-
-    public static double getNaturalArmorToughnessValue(int lvl) {
-        return (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.BALANCE.vpNaturalArmorToughnessIncrease.get();
-    }
-
-    private final BloodStats bloodStats;
-    private boolean sundamage_cache = false;
-    private EnumStrength garlic_cache = EnumStrength.NONE;
     private int ticksInSun = 0;
     private int remainingBarkTicks = 0;
     private boolean wasDead = false;
-    private final VisionStatus vision = new VisionStatus();
     private int feed_victim = -1;
-    /**
-     * Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1
-     */
-    @Nullable
-    private ISoundReference feedingSoundReference;
+    /** Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1 */
+    private @Nullable ISoundReference feedingSoundReference;
     private @Nullable BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
     private boolean forceNaturalArmorUpdate;
-    /**
-     * >=0 if DBNO, counts downwards, if == 0, can resurrect
-     */
+
+    //<editor-fold desc="Special Attributes">
+
+    private final VampirePlayerSkillProperties skillProperties = new VampirePlayerSkillProperties();
+
+    //</editor-fold>
+
+    //<editor-fold desc="DBNO Attributes">
+
+    /** >=0 if DBNO, counts downwards, if == 0, can resurrect */
     private int dbnoTimer = -1;
     /**
      * Only set on data load.
@@ -159,25 +134,38 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * Will kill player next tick (and remove invulnerable)
      */
     private boolean wasDBNO = false;
-    /**
-     * The original death message from the event that sent the player to DBNO state
-     */
+
+    /** The original death message from the event that sent the player to DBNO state */
     @Nullable
     private Component dbnoMessage;
-    private final Disguise disguise;
+
+    //</editor-fold>
+
+    //<editor-fold desc="Cache">
+
+    private boolean sunDamageCache = false;
+    private EnumStrength garlicCache = EnumStrength.NONE;
+
+    //</editor-fold>
+
+    // <editor-fold desc="Sub Properties">
+
+    private final BloodStats bloodStats;
+    private final VisionStatus vision;
+    private final VampireDisguise disguise;
     private final RefinementHandler<IVampirePlayer> refinementHandler;
-    private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
+    private final Customization customization;
+
+
+    //</editor-fold>
 
     public VampirePlayer(Player player) {
         super(player);
         this.bloodStats = new BloodStats(this);
-        this.disguise = new Disguise();
+        this.disguise = new VampireDisguise(this);
+        this.vision = new VisionStatus(this);
         this.refinementHandler = new RefinementHandler<>(this, de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE);
-    }
-
-    @Override
-    public AttachmentType<? extends IFactionPlayer<?>> attachmentType() {
-        return ModAttachments.VAMPIRE_PLAYER.get();
+        this.customization = new Customization(this);
     }
 
     @Override
@@ -193,6 +181,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     protected SkillHandler<IVampirePlayer> createSkillHandler() {
         return new SkillHandler<>(this, de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE);
+    }
+
+    public Customization getCustomization() {
+        return this.customization;
     }
 
     @Override
@@ -367,7 +359,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Nullable
     @Override
     public Holder<IVampireVision> getActiveVision() {
-        return this.vision.vision;
+        return this.vision.vision();
     }
 
     @Override
@@ -419,14 +411,14 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * @return Eyetype for rendering
      */
     public int getEyeType() {
-        return getSpecialAttributes().eyeType;
+        return this.customization.eyeType();
     }
 
     /**
      * @return Fangtype for rendering
      */
     public int getFangType() {
-        return getSpecialAttributes().fangType;
+        return this.customization.fangType();
     }
 
     /**
@@ -440,7 +432,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * @return Render eyes glowing
      */
     public boolean getGlowingEyes() {
-        return getSpecialAttributes().glowingEyes;
+        return this.customization.glowingEyes();
     }
 
     /**
@@ -448,11 +440,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * Also sends a sync packet if on server
      */
     public void setGlowingEyes(boolean value) {
-        if (value != this.getSpecialAttributes().glowingEyes) {
-            this.getSpecialAttributes().glowingEyes = value;
-            this.isDirty = true;
-            sync();
-        }
+        this.customization.setGlowingEyes(value);
     }
 
     @Override
@@ -469,12 +457,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
     }
 
-    /**
-     * You can use {@link VampirismPlayerAttributes#getVampSpecial()} instead if you don't have the vampire player already
-     */
-    @NotNull
-    public VampirePlayerSpecialAttributes getSpecialAttributes() {
-        return this.specialAttributes;
+    public VampirePlayerSkillProperties getSkillProperties() {
+        return this.skillProperties;
     }
 
     @Override
@@ -484,7 +468,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public boolean isAdvancedBiter() {
-        return getSpecialAttributes().advanced_biter;
+        return getSkillProperties().advanced_biter;
     }
 
     @Override
@@ -494,24 +478,23 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public boolean isDisguised() {
-        return getSpecialAttributes().disguised;
+        return this.disguise.isDisguised();
     }
 
-    @NotNull
     @Override
     public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            garlic_cache = Helper.getGarlicStrength(player, iWorld);
+            garlicCache = Helper.getGarlicStrength(player, iWorld);
         }
-        return garlic_cache;
+        return garlicCache;
     }
 
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sundamage_cache = Helper.gettingSundamge(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
+            sunDamageCache = Helper.gettingSundamge(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
         }
-        return sundamage_cache;
+        return sunDamageCache;
     }
 
     @Override
@@ -569,7 +552,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     @Override
-    public boolean onDeadlyHit(@NotNull DamageSource source) {
+    public boolean onDeadlyHit(DamageSource source) {
         if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL) && !Helper.canKillVampires(source)) {
             int timePreviouslySpentInPlayerRevive = PlayerReviveHelper.getPreviousDownTime(this.player);
             int dbnoTime = Math.max(1, getDbnoDuration() - timePreviouslySpentInPlayerRevive);
@@ -588,7 +571,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     @Override
-    public void onDeath(@NotNull DamageSource src) {
+    public void onDeath(DamageSource src) {
         super.onDeath(src);
         this.refinementHandler.damageRefinements();
         if (this.getActionHandler().isActionActive(VampireActions.BAT) && src.getDirectEntity() instanceof Projectile) {
@@ -602,7 +585,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     @Override
-    public boolean onEntityAttacked(@NotNull DamageSource src, float amt) {
+    public boolean onEntityAttacked(DamageSource src, float amt) {
         if (getLevel() > 0) {
             if (isDBNO() && !Helper.canKillVampires(src)) {
                 if (src.getEntity() != null && src.getEntity() instanceof Mob && ((Mob) src.getEntity()).getTarget() == player) {
@@ -621,7 +604,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             }
         }
         endFeeding(true);
-        if (getSpecialAttributes().half_invulnerable) {
+        if (getSkillProperties().half_invulnerable) {
             if (amt >= asEntity().getMaxHealth() * (this.getRefinementHandler().isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? ModConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * ModConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
                 if (useBlood(ModConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
@@ -662,49 +645,50 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     @Override
-    protected void onLevelReset(boolean client) {
-        super.onLevelReset(client);
+    protected void onLevelReset() {
+        super.onLevelReset();
         this.refinementHandler.reset();
         this.removeEntityAttributes();
     }
 
     @Override
-    public void onLevelChanged(int newLevel, int oldLevel) {
-        super.onLevelChanged(newLevel, oldLevel);
-        if (newLevel > 0) {
-            this.applyEntityAttributes();
+    public void leaveFaction() {
+        this.removeEntityAttributes();
+        this.vision.deactivate();
+        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.NIGHT_VISION, VReference.VAMPIRE_NIGHT_VISION_EFFECT);
+        super.leaveFaction();
+    }
+
+    @Override
+    public void levelChanged(LevelingChange changes) {
+        this.applyEntityAttributes();
+        var newLevel = changes.getNewLevel();
+
+        int maxBlood = 20;
+
+        if (newLevel > 13) {
+            maxBlood = 40;
+        } else if (newLevel > 9) {
+            maxBlood = 34;
+        } else if (newLevel > 6) {
+            maxBlood = 30;
+        } else if (newLevel > 3) {
+            maxBlood = 26;
         }
-        if (!isRemote()) {
-            ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, newLevel);
-            applyLevelModifiersA(newLevel);
-            applyLevelModifiersB(newLevel, false);
-            if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
-            updateNaturalArmor(newLevel);
-            if (newLevel > 13) {
-                bloodStats.setMaxBlood(40);
-            } else if (newLevel > 9) {
-                bloodStats.setMaxBlood(34);
-            } else if (newLevel > 6) {
-                bloodStats.setMaxBlood(30);
-            } else if (newLevel > 3) {
-                bloodStats.setMaxBlood(26);
-            } else if (newLevel > 0) {
-                bloodStats.setMaxBlood(20);
-            } else {
-                this.vision.deactivate();
-                this.sync();
-            }
-        } else {
-            if (oldLevel == 0) {
-                if (player.hasEffect(MobEffects.NIGHT_VISION)) {
-                    player.removeEffect(MobEffects.NIGHT_VISION);
-                }
-            } else if (newLevel == 0) {
-                if (ModEffectInstanceHelper.hasSource(player.getEffect(MobEffects.NIGHT_VISION), VReference.VAMPIRE_NIGHT_VISION_EFFECT)) {
-                    player.removeEffect(MobEffects.NIGHT_VISION);
-                }
-            }
+        this.bloodStats.setMaxBlood(maxBlood);
+
+        super.levelChanged(changes);
+    }
+
+    @Override
+    protected void onLevelChanged(int level) {
+        ScoreboardUtil.updateScoreboard(this.player, ScoreboardUtil.VAMPIRE_LEVEL_CRITERIA, level);
+        applyLevelModifiersA(level);
+        applyLevelModifiersB(level, false);
+        if (this.player.getHealth() > this.player.getMaxHealth()) {
+            this.player.setHealth(this.player.getMaxHealth());
         }
+        updateNaturalArmor(level);
     }
 
     @Override
@@ -767,8 +751,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 isGettingGarlicDamage(world, true);
             }
         } else {
-            sundamage_cache = false;
-            garlic_cache = EnumStrength.NONE;
+            sunDamageCache = false;
+            garlicCache = EnumStrength.NONE;
         }
         this.vision.tick();
 
@@ -785,7 +769,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 }
                 if (player.isAlive()) {
                     player.setAirSupply(300);
-                    if (player.tickCount % 16 == 4 && !getSpecialAttributes().waterResistance && !player.getAbilities().instabuild) {
+                    if (player.tickCount % 16 == 4 && !getSkillProperties().waterResistance && !player.getAbilities().instabuild) {
                         if (player.isInWater()) {
                             FluidState state1 = world.getFluidState(player.blockPosition());
                             FluidState state2 = world.getFluidState(player.blockPosition().above());
@@ -882,13 +866,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * @return Whether the type is valid or not
      */
     public boolean setEyeType(int eyeType) {
-        if (eyeType >= REFERENCE.EYE_TYPE_COUNT || eyeType < 0) {
-            return false;
-        }
-        if (eyeType != this.getEyeType()) {
-            getSpecialAttributes().eyeType = eyeType;
-        }
-        return true;
+        return this.customization.setEyeType(eyeType);
     }
 
     /**
@@ -898,18 +876,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * @return Whether the type is valid or not
      */
     public boolean setFangType(int fangType) {
-        if (fangType >= REFERENCE.FANG_TYPE_COUNT || fangType < 0) {
-            return false;
-        }
-        if (fangType != this.getFangType()) {
-            this.getSpecialAttributes().fangType = fangType;
-            this.isDirty = true;
-            sync();
-        }
-        return true;
+        return this.customization.setFangType(fangType);
     }
 
-    public void setSkinData(@NotNull List<Integer> data) {
+    public void setSkinData(List<Integer> data) {
         for (int i = 0; i < data.size(); i++) {
             switch (i) {
                 case 0:
@@ -1073,20 +1043,18 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     protected void registerProperties() {
         super.registerProperties();
-        this.registerProperty(VResourceLocation.mod("eyes"), 0, this::getEyeType, this::setEyeType, true);
-        this.registerProperty(VResourceLocation.mod("fangs"), 0, this::getFangType, this::setFangType, true);
-        this.registerProperty(VResourceLocation.mod("glowing_eyes"), false, this::getGlowingEyes, this::setGlowingEyes, true);
-        this.registerProperty(VResourceLocation.mod("dbno_timer"), 0, this::getDbnoTimer, this::loadDBNOTimer, true);
-        this.registerProperty(VResourceLocation.mod("feed_victim"), -1, () -> this.feed_victim, x -> this.feed_victim = x, true);
-        this.registerNullableProperty(VResourceLocation.mod("dbno_message"), ComponentSerialization.CODEC, null, () -> this.dbnoMessage, x -> {
+        this.registerProperty(VResourceLocation.mod("dbno_timer")).simple(0, this::getDbnoTimer, this::loadDBNOTimer);
+        this.registerProperty(VResourceLocation.mod("feed_victim")).simple(-1, () -> this.feed_victim, x -> this.feed_victim = x);
+        this.registerProperty(VResourceLocation.mod("dbno_message")).nullable(ComponentSerialization.CODEC).provider(() -> this.dbnoMessage).commonLoader(x -> {
             var old = this.dbnoMessage;
             this.dbnoMessage = x;
             return !Objects.equals(old, x);
-        }, true);
-        this.registerProperty(VResourceLocation.mod("blood_stats"), true, () -> this.bloodStats);
-        this.registerProperty(VResourceLocation.mod("vision"), true, () -> this.vision);
-        this.registerProperty(VResourceLocation.mod("disguise"), true, () -> this.disguise);
-        this.registerProperty(VResourceLocation.mod("refinement_handler"), true, () ->this.refinementHandler);
+        }).register();
+        this.registerProperty(VResourceLocation.mod("blood_stats")).subProperty(() -> this.bloodStats).register();
+        this.registerProperty(VResourceLocation.mod("vision")).subProperty(() -> this.vision).register();
+        this.registerProperty(VResourceLocation.mod("disguise")).subProperty(() -> this.disguise).register();
+        this.registerProperty(VResourceLocation.mod("refinement_handler")).subProperty(() ->this.refinementHandler).register();
+        this.registerProperty(VResourceLocation.mod("customization")).subProperty(() -> this.customization).register();
     }
 
     private void applyEntityAttributes() {
@@ -1119,7 +1087,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), ModConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
-    private void biteBlock(@NotNull BlockPos pos, @NotNull BlockState state, @NotNull Direction side, @Nullable BlockEntity blockEntity) {
+    private void biteBlock(BlockPos pos, BlockState state, Direction side, @Nullable BlockEntity blockEntity) {
         if (isRemote() || getLevel() == 0 || !bloodStats.needsBlood() || blockEntity == null) return;
 
         int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
@@ -1151,9 +1119,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      *
      * @param pos The pos of the block to check.
      */
-    public static boolean isBlockBiteable(@NotNull Level level, @NotNull BlockPos pos, @NotNull Direction side) {
+    public static boolean isBlockBiteable(Level level, BlockPos pos, Direction side) {
 //        ResourceHandler<FluidResource> capability = level.getCapability(Capabilities.Fluid.BLOCK, pos, side);
-//        if (capability == null) return false;
+//        if (capability == null) return false; TODO
 //        try (var transaction = Transaction.openRoot()) {
 //            return capability.extract(FluidResource.of(ModFluids.BLOOD.get()), VReference.FOOD_TO_FLUID_BLOOD, transaction) > 0;
 //        }
@@ -1167,7 +1135,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * @param entity the entity to feed on
      * @return If feeding can continue
      */
-    private boolean biteFeed(@NotNull LivingEntity entity) {
+    private boolean biteFeed(LivingEntity entity) {
         if (isRemote()) return true;
         if (getLevel() == 0) return false;
         int blood = 0;
@@ -1273,7 +1241,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     private void setDBNOTimer(int newValue) {
         this.dbnoTimer = newValue;
-        this.getSpecialAttributes().isDBNO = isDBNO();
+        this.getSkillProperties().isDBNO = isDBNO();
     }
 
     /**
@@ -1326,157 +1294,18 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public void updateMinionAttributes(boolean enabled) {
-        MinionWorldData.getData(this.player.level()).ifPresent(a -> a.getOrCreateController(FactionPlayerHandler.get(this.player)).contactMinions((minion) -> {
+        MinionWorldData.getData(this.player.level()).ifPresent(a -> a.getOrCreateController(this).contactMinions((minion) -> {
             (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData) b).setIncreasedStats(enabled));
 //            SyncHelper.sync(minion); TODO
         }));
     }
 
-    private class VisionStatus extends PropertySync implements ValueIOSerializable {
-        private final Set<ResourceKey<IVampireVision>> unlockedVisions = new HashSet<>();
-        private @Nullable Holder<IVampireVision> vision;
-
-        @Override
-        public void sync() {
-            VampirePlayer.this.sync();
-        }
-
-        public void deactivate() {
-            if (this.vision != null) {
-                this.vision.value().onDeactivated(VampirePlayer.this);
-                vision = null;
-            }
-        }
-
-        public void deactivate(ResourceKey<IVampireVision> vision) {
-            if (this.vision != null && this.vision.is(vision)) {
-                deactivate();
-            }
-        }
-
-        private void tick() {
-            if (this.vision != null) {
-                this.vision.value().tick(VampirePlayer.this);
-                if (!this.vision.value().isEnabled()) {
-                    deactivate();
-                }
-            }
-        }
-
-        private void switchVision() {
-            List<ResourceKey<IVampireVision>> visions = ModRegistries.VAMPIRE_VISION.listElements().filter(x -> unlockedVisions.contains(x.getKey())).filter(x -> x.value().isEnabled()).map(Holder.Reference::getKey).toList();
-            int newIndex;
-            if (this.vision != null) {
-                newIndex = visions.indexOf(this.vision.getKey()) + 1;
-            } else {
-                newIndex = 0;
-            }
-            var newVision = newIndex >= visions.size() ? null : visions.get(newIndex);
-            activate(newVision);
-        }
-
-        public void unlockVision(ResourceKey<IVampireVision> vision) {
-            this.unlockedVisions.add(vision);
-        }
-
-        public void lockVision(ResourceKey<IVampireVision> vision) {
-            this.deactivate(vision);
-            this.unlockedVisions.remove(vision);
-        }
-
-        public void activate(@Nullable ResourceKey<IVampireVision> vision) {
-            if (this.vision != null && (vision != null && this.vision.is(vision))) {
-                return;
-            }
-            if (vision != null && !this.unlockedVisions.contains(vision)) {
-                return;
-            }
-            if (this.vision != null) {
-                deactivate();
-            }
-            var holder = Optional.ofNullable(vision).flatMap(ModRegistries.VAMPIRE_VISION::get).orElse(null);
-            if (holder != null) {
-                if (holder.value().isEnabled()) {
-                    this.vision = holder;
-                    this.vision.value().onActivated(VampirePlayer.this);
-                }
-            } else {
-                this.vision = null;
-            }
-        }
-
-        @Override
-        protected void registerProperty(Property property) {
-            this.registerNullableProperty(VResourceLocation.mod("vision"), IVampireVision.CODEC, null, () -> this.vision, v -> {
-                var old = this.vision;
-                this.vision = v;
-                if (old != this.vision) {
-                    if (old != null) {
-                        old.value().onDeactivated(VampirePlayer.this);
-                    }
-                    if (this.vision != null) {
-                        this.vision.value().onActivated(VampirePlayer.this);
-                    }
-                    return true;
-                }
-                return false;
-            }, true);
-        }
+    public static double getNaturalArmorValue(int lvl) {
+        return lvl > 0 ? ModConfig.BALANCE.vpNaturalArmorBaseValue.get() + (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.BALANCE.vpNaturalArmorIncrease.get() : 0;
     }
 
-    private class Disguise extends PropertySync implements IDisguise, ValueIOSerializable {
-        private boolean isDisguised;
-        @Nullable
-        private Holder<? extends IFaction<?>> disguiseFaction = actualFaction();
-
-        @Override
-        public void sync() {
-            VampirePlayer.this.sync();
-        }
-
-        @Override
-        public void unDisguise() {
-            disguiseAs(actualFaction());
-        }
-
-        @Override
-        public void disguiseAs(Holder<? extends IFaction<?>> faction) {
-            this.disguiseFaction = faction;
-            this.isDisguised = !IFaction.is(faction, actualFaction());
-            getSpecialAttributes().disguised = this.isDisguised;
-            player.refreshDisplayName();
-        }
-
-        @Override
-        public Holder<? extends IPlayableFaction<?>> actualFaction() {
-            return getFaction();
-        }
-
-        @Override
-        public Holder<? extends IFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
-            return actualFaction();
-        }
-
-        @Override
-        public boolean isDisguised() {
-            return this.isDisguised;
-        }
-
-        @Override
-        protected void registerProperties() {
-            this.registerNullableProperty(VResourceLocation.mod("disguise_faction"), ModCodecs.faction(), null, () -> disguiseFaction, d -> {
-                var old = this.disguiseFaction;
-                this.disguiseFaction = d;
-                this.isDisguised = !IFaction.is(this.disguiseFaction, actualFaction());
-                return IFaction.is(old, this.disguiseFaction);
-            }, true);
-        }
-
-        @Override
-        protected void onPropertyChanged() {
-            player.refreshDisplayName();
-        }
-
+    public static double getNaturalArmorToughnessValue(int lvl) {
+        return (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.BALANCE.vpNaturalArmorToughnessIncrease.get();
     }
 
 

@@ -14,7 +14,7 @@
           "functions": [
             {
               "function": "vampirism:set_blood",
-              "maxBlood": 6,
+              "maxBlood": 3,
               "minBlood": 0
             }
           ],

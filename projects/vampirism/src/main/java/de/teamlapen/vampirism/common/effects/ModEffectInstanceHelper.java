@@ -62,11 +62,11 @@ public class ModEffectInstanceHelper {
     }
 
     public static void addSource(MobEffectInstance instance, ResourceLocation... source) {
-        ((IEffectInstanceWithSource) instance).factions$setProperties(Arrays.stream(source).toList());
+        instance.factions$setProperties(Arrays.stream(source).toList());
     }
 
     public static boolean hasSource(@Nullable MobEffectInstance instance, ResourceLocation source) {
         if (instance == null) return false;
-        return ((IEffectInstanceWithSource) instance).factions$getProperties().contains(source);
+        return instance.factions$getProperties().contains(source);
     }
 }

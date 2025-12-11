@@ -3,7 +3,7 @@
   "criteria": {
     "task": {
       "conditions": {
-        "task": "vampirism:defend_area"
+        "task": "factions:defend_area"
       },
       "trigger": "factions:minion_action"
     }

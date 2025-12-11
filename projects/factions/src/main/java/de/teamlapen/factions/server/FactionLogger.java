@@ -16,11 +16,12 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
  */
 public class FactionLogger {
 
-    private static final String LOG_FILE_NAME = "logs/vampirism.log";
-    private static final String LOG_NAME = "vampirism";
-    public static final String LOGGER_NAME = "vampirism";
+    private static final String LOG_FILE_NAME = "logs/factions.log";
+    private static final String LOG_NAME = "factions";
+    public static final String LOGGER_NAME = "factions";
 
     public static final Marker LEVEL = MarkerManager.getMarker("LEVEL");
+    public static final Marker FACTION = MarkerManager.getMarker("FACTION");
     public static final Marker SKILLS = MarkerManager.getMarker("SKILLS");
     public static final Marker LORD_LEVEL = MarkerManager.getMarker("LORD LEVEL");
     public static final Marker MINION_INVENTORY = MarkerManager.getMarker("MINION INVENTORY");

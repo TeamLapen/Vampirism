@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.entity.player.vampire.actions;
 
 import de.teamlapen.factions.api.actions.IActionResult;
 import de.teamlapen.factions.api.actions.ILastingAction;
-import de.teamlapen.vampirism.common.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
@@ -21,7 +20,7 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
 
     @Override
     protected IActionResult activate(IVampirePlayer player, ActivationContext context) {
-        ((VampirePlayer) player).getSpecialAttributes().darkStalker = true;
+        ((VampirePlayer) player).getSkillProperties().darkStalker = true;
         applyEffect(player);
         return IActionResult.SUCCESS;
     }
@@ -33,18 +32,18 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
 
     @Override
     public void onActivatedClient(IVampirePlayer player) {
-        ((VampirePlayer) player).getSpecialAttributes().darkStalker = true;
+        ((VampirePlayer) player).getSkillProperties().darkStalker = true;
     }
 
     @Override
     public void onDeactivated(IVampirePlayer player) {
-        ((VampirePlayer) player).getSpecialAttributes().darkStalker = false;
+        ((VampirePlayer) player).getSkillProperties().darkStalker = false;
 
     }
 
     @Override
     public void onReActivated(IVampirePlayer player) {
-        ((VampirePlayer) player).getSpecialAttributes().darkStalker = true;
+        ((VampirePlayer) player).getSkillProperties().darkStalker = true;
     }
 
     @Override

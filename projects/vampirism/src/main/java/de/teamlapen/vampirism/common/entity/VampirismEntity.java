@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.common.entity;
 
 import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.common.config.ModConfig;
+import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.factions.common.util.SpawnUtil;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.factions.api.entities.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.factions.api.factions.IFaction;
@@ -12,7 +12,6 @@ import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.extensions.ILivingEntity;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModParticles;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
@@ -309,10 +308,10 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
                     if (opt == de.teamlapen.factions.common.config.ServerConfig.IMobOptions.SMART) {
                         Player player = FactionsMod.proxy.getClientPlayer();
                         if (player != null && player.isAlive()) {
-                            Holder<? extends IPlayableFaction<?>> f = VampirismPlayerAttributes.get(player).faction;
+                            Holder<? extends IPlayableFaction<?>> f = FactionPlayerHandler.get(player).getFaction();
                             Holder<IFaction<?>> thisFaction = (Holder<IFaction<?>>) ((IFactionEntity) this).getFaction();
 
-                            boolean hostile = f == null ? thisFaction.is(ModFactionTags.HOSTILE_TOWARDS_NEUTRAL) : !thisFaction.equals(f);
+                            boolean hostile = IFaction.isNeutral(f) ? thisFaction.is(ModFactionTags.HOSTILE_TOWARDS_NEUTRAL) : !thisFaction.equals(f);
                             convert = hostile != current;
 
                         }
@@ -328,7 +327,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
                         newEntity.load(TagValueInput.create(ProblemReporter.DISCARDING, this.registryAccess(), withContext.buildResult()));
                         newEntity.setUUID(Mth.createInsecureUUID(this.random));
                         assert newEntity instanceof LivingEntity;
-                        UtilLib.replaceEntity(this, (LivingEntity) newEntity);
+                        SpawnUtil.replaceEntity(this, (LivingEntity) newEntity);
                     });
 
                 }

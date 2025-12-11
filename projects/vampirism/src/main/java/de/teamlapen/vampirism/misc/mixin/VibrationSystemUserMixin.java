@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.misc.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import de.teamlapen.vampirism.common.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.tags.ModGameEventTags;
 import net.minecraft.core.Holder;
@@ -18,6 +17,6 @@ public interface VibrationSystemUserMixin {
 
     @WrapOperation(method = "isValidVibration", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;dampensVibrations()Z"))
     private boolean modifyDampensVibrations(Entity instance, Operation<Boolean> original, Holder<GameEvent> gameEvent) {
-        return (instance instanceof Player player && VampirePlayer.get(player).getSpecialAttributes().darkStalker && gameEvent.is(ModGameEventTags.DARK_STALKER_IGNORE)) || original.call(instance);
+        return (instance instanceof Player player && VampirePlayer.get(player).getSkillProperties().darkStalker && gameEvent.is(ModGameEventTags.DARK_STALKER_IGNORE)) || original.call(instance);
     }
 }

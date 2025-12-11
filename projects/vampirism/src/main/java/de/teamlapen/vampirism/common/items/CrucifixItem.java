@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRefinements;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.entity.vampire.AdvancedVampireEntity;
@@ -103,10 +102,11 @@ public class CrucifixItem extends Item implements IItemWithTier {
 
     protected static int determineEntityTier(LivingEntity entity) {
         if (entity instanceof Player player) {
-            int level = VampirismPlayerAttributes.get(player).vampireLevel;
+            VampirePlayer vampire = VampirePlayer.get(player);
+            int level = vampire.getLevel();
             int tier = (level >= ModFactions.VAMPIRE.value().getHighestReachableLevel()) ? 3 : (level >= 8) ? 2 : 1;
 
-            if (VampirePlayer.get(player).getRefinementHandler().isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)) {
+            if (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)) {
                 tier++;
             }
             return tier;

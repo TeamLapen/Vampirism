@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.common.blockentity;
 
+import de.teamlapen.factions.api.factions.LevelingChange;
 import de.teamlapen.factions.common.blockentity.NetworkedBlockEntity;
 import de.teamlapen.vampirism.common.fluids.ControllableFluidTank;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampireLeveling.AltarInspirationRequirement;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
@@ -68,7 +68,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
     public void startRitual(Player player) {
         if (ritualTicksLeft > 0 || !player.isAlive()) return;
 
-        targetLevel = VampirismPlayerAttributes.get(player).vampireLevel + 1;
+        targetLevel = VampirePlayer.get(player).getLevel() + 1;
         Optional<AltarInspirationRequirement> requirement = VampireLeveling.getInspirationRequirement(targetLevel);
         if (requirement.isEmpty()) {
             if (player.level().isClientSide()) {
@@ -120,7 +120,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
                     blockEntity.fluidInventory.extract(FluidResource.of(ModFluids.BLOOD), blood, transaction);
                 }
                 blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
-                FactionPlayerHandler.get(blockEntity.ritualPlayer).setFactionLevel(ModFactions.VAMPIRE, blockEntity.targetLevel);
+                FactionPlayerHandler.get(blockEntity.ritualPlayer).setFaction(LevelingChange.builder().faction(ModFactions.VAMPIRE).level(blockEntity.targetLevel));
                 VampirePlayer.get(blockEntity.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());
                 if (blockEntity.ritualPlayer instanceof ServerPlayer serverPlayer) {
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INSPIRATION);

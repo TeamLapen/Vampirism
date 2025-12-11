@@ -8,8 +8,8 @@ import de.teamlapen.factions.common.entities.ForceLookEntityGoal;
 import de.teamlapen.vampirism.common.entity.ai.goals.HunterHurtByTargetGoal;
 import de.teamlapen.vampirism.common.entity.ai.goals.OpenGateGoal;
 import de.teamlapen.vampirism.common.entity.ai.navigation.HunterPathNavigation;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterLeveling;
+import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.common.inventory.HunterTrainerMenu;
 import net.minecraft.network.chat.Component;
@@ -129,7 +129,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         boolean flag = !stack.isEmpty() && stack.getItem() instanceof SpawnEggItem;
 
         if (!flag && this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-            int lvl = VampirismPlayerAttributes.get(player).hunterLevel;
+            int lvl = HunterPlayer.get(player).getLevel();
             if (!this.level().isClientSide() && lvl > 0) {
                 if (HunterLeveling.getTrainerRequirement(lvl + 1).isPresent()) {
                     if (trainee == null) {

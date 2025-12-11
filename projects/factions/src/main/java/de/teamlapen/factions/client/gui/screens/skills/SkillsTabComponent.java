@@ -14,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.advancements.AdvancementTabType;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -136,9 +135,7 @@ public class SkillsTabComponent {
 
         if (this.minecraft.player.getEffect(FactionEffects.OBLIVION) != null) {
             pose.pushMatrix();
-            pose.translate(0.0F, 0.0F/*, 200.0F TODO*/);
             graphics.fill(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT, Mth.floor(0.5 * 255.0F) << 24);
-            pose.translate(0, 0/*, 200 TODO*/);
             this.drawDisableText(graphics, x, y);
             pose.popMatrix();
         }
@@ -149,7 +146,6 @@ public class SkillsTabComponent {
     public void drawTooltips(GuiGraphics graphics, int mouseX, int mouseY) {
         var pose = graphics.pose();
         pose.pushMatrix();
-        pose.translate(0.0F, 0.0F/*, -200.0F TODO*/);
         graphics.fill(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
         boolean flag = false;
         if (mouseX >= 0 && mouseX < SCREEN_WIDTH && mouseY >= 0 && mouseY < SCREEN_HEIGHT) {
@@ -160,7 +156,7 @@ public class SkillsTabComponent {
                     flag = true;
                     pose.pushMatrix();
                     pose.translate((float) (SCREEN_WIDTH / 2d + centerX), (float) (20 + centerY));
-                    pose.scale((float) this.zoom, (float) this.zoom/*,  TODO 1*/);
+                    pose.scale((float) this.zoom, (float) this.zoom);
                     nodeScreen.drawHover(graphics, scaledMouseX, scaledMouseY, this.fade, 0, 0);
                     pose.popMatrix();
                     break;
@@ -238,7 +234,7 @@ public class SkillsTabComponent {
     }
 
     public void drawDisableText(GuiGraphics graphics, int x, int y) {
-        Component f = Component.translatable("text.vampirism.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);
+        Component f = Component.translatable("gui.factions.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);
         FormattedCharSequence s = Language.getInstance().getVisualOrder(f);
 
         int tooltipTextWidth = 219;
@@ -248,10 +244,7 @@ public class SkillsTabComponent {
 
         TooltipRenderUtil.renderTooltipBackground(graphics, tooltipX, tooltipY, tooltipTextWidth, tooltipHeight, RED_TOOLTIP);
 
-        graphics.pose().pushMatrix();
-        graphics.pose().translate(0, 0/*, 400 TODO*/);
         graphics.drawCenteredString(this.minecraft.font, f, tooltipX + tooltipTextWidth / 2, tooltipY + tooltipHeight / 2 - this.minecraft.font.lineHeight / 2, 0xff000000);
-        graphics.pose().popMatrix();
     }
 
 }

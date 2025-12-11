@@ -38,7 +38,7 @@ public class FactionKeys implements IMinecraftAccessor {
 
     public static final KeyMapping ACTION = new KeyMapping("keys.factions.action", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);
     public static final KeyMapping MINION = new KeyMapping("keys.factions.minion_task", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping VAMPIRISM_MENU = new KeyMapping("keys.factions.faction_Screen", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
+    public static final KeyMapping FACTION_MENU = new KeyMapping("keys.factions.faction_menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
     public static final KeyMapping SKILL_SCREEN = new KeyMapping("keys.factions.skill_screen", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
 
@@ -70,7 +70,7 @@ public class FactionKeys implements IMinecraftAccessor {
         KeyBindings.Builder builder = KeyBindings.builder()
         .addBinding(ACTION, this::openActionMenu)
             .addBinding(MINION, this::openMinionTaskMenu)
-            .addBinding(VAMPIRISM_MENU, this::openVampirismMenu)
+            .addBinding(FACTION_MENU, this::openFactionMenu)
             .addBinding(SKILL_SCREEN, this::openSkillScreen);
 
         ACTION_KEYS.forEach((i, key) -> builder.addBinding(key, () -> toggleAction(i), true));
@@ -83,7 +83,7 @@ public class FactionKeys implements IMinecraftAccessor {
 
         event.register(ACTION);
         event.register(MINION);
-        event.register(VAMPIRISM_MENU);
+        event.register(FACTION_MENU);
         event.register(SKILL_SCREEN);
 
         ACTION_KEYS.forEach((i, k) -> event.register(k));
@@ -110,8 +110,8 @@ public class FactionKeys implements IMinecraftAccessor {
         }
     }
 
-    private void openVampirismMenu() {
-        FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.VAMPIRISM_MENU));
+    private void openFactionMenu() {
+        FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU));
     }
 
     private void openSkillScreen() {
@@ -135,11 +135,11 @@ public class FactionKeys implements IMinecraftAccessor {
 
     private void toggleBoundAction(IFactionPlayer<?> player, @Nullable Holder<IAction<?>> action) {
         if (action == null) {
-            player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
+            player.asEntity().displayClientMessage(Component.translatable("text.factions.action.not_bound", "/vampirism bind-action"), true);
         } else {
             IAction<?> value = action.value();
             if (!IFaction.is(player.getFaction(), value.factions())) {
-                player.asEntity().displayClientMessage(Component.translatable("text.vampirism.action.wrong_faction"), true);
+                player.asEntity().displayClientMessage(Component.translatable("text.factions.action.wrong_faction"), true);
             } else {
                 FactionsMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(action, Minecraft.getInstance().hitResult));
             }

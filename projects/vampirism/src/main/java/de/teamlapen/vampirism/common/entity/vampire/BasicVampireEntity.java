@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.common.entity.vampire;
 
+import de.teamlapen.factions.api.skills.ISkillPlayer;
+import de.teamlapen.factions.common.core.FactionMinionTasks;
 import de.teamlapen.factions.common.entities.goals.LookAtClosestVisibleGoal;
+import de.teamlapen.factions.common.util.SpawnUtil;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.factions.api.entities.IEntityLeader;
-import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
@@ -13,13 +15,12 @@ import de.teamlapen.factions.api.world.ICaptureAttributes;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
-import de.teamlapen.factions.common.effects.VampirismBadOmenMobEffect;
+import de.teamlapen.factions.common.effects.FactionBadOmenMobEffect;
 import de.teamlapen.vampirism.common.entity.IEntityFollower;
 import de.teamlapen.vampirism.common.entity.ai.goals.*;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.common.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.common.util.VampireVillage;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
@@ -147,42 +148,33 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     /**
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
-    public void convertToMinion(@NotNull Player lord) {
-        FactionPlayerHandler fph = FactionPlayerHandler.get(lord);
-        if (fph.getMaxMinions() > 0) {
-            MinionWorldData.getData(lord.level()).map(w -> w.getOrCreateController(fph)).ifPresent(controller -> {
+    public void convertToMinion(@NotNull Player player) {
+        FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(getFaction())).ifPresentOrElse(lord -> {
+            MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    if (IFaction.is(fph.getFaction(), this.getFaction())) {
-                        boolean hasIncreasedStats = fph.getSkillHandler().map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE)).orElse(false);
-                        VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
-                        TagValueOutput withContext = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, lord.registryAccess());
-                        this.serializeAttachments(withContext);
-                        data.updateEntityCaps(withContext.buildResult());
-                        int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
-                        if (id < 0) {
-                            LOGGER.error("Failed to get minion slot");
-                            return;
-                        }
-                        VampireMinionEntity minion = ModEntities.VAMPIRE_MINION.get().create(this.level(), EntitySpawnReason.CONVERSION);
-                        minion.claimMinionSlot(id, controller);
-                        minion.copyPosition(this);
-                        minion.markAsConverted();
-                        controller.activateTask(0, MinionTasks.STAY.get());
-                        UtilLib.replaceEntity(this, minion);
-
-                    } else {
-                        LOGGER.warn("Wrong faction for minion");
+                    boolean hasIncreasedStats = lord.asSkillPlayer().map(ISkillPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE)).orElse(false);
+                    VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
+                    TagValueOutput withContext = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, lord.registryAccess());
+                    this.serializeAttachments(withContext);
+                    data.updateEntityCaps(withContext.buildResult());
+                    int id = controller.createNewMinionSlot(data, ModEntities.VAMPIRE_MINION.get());
+                    if (id < 0) {
+                        LOGGER.error("Failed to get minion slot");
+                        return;
                     }
+                    VampireMinionEntity minion = ModEntities.VAMPIRE_MINION.get().create(this.level(), EntitySpawnReason.CONVERSION);
+                    minion.claimMinionSlot(id, controller);
+                    minion.copyPosition(this);
+                    minion.markAsConverted();
+                    controller.activateTask(0, FactionMinionTasks.STAY.get());
+                    SpawnUtil.replaceEntity(this, minion);
                 } else {
                     LOGGER.warn("No free slot");
                 }
             });
-
-
-        } else {
+        }, () -> {
             LOGGER.error("Can't have minions");
-        }
-
+        });
     }
 
     /**
@@ -227,7 +219,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public void die(@NotNull DamageSource cause) {
         if (this.villageAttributes == null) {
-            VampirismBadOmenMobEffect.handlePotentialBannerKill(cause.getEntity(), this);
+            FactionBadOmenMobEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
         super.die(cause);
     }
@@ -405,34 +397,29 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (this.isAlive() && !player.isShiftKeyDown()) {
             if (!level().isClientSide()) {
-                FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                int vampireLevel = handler.getCurrentLevel(ModFactions.VAMPIRE);
-                if (vampireLevel > 0) {
-                    if (handler.getMaxMinions() > 0) {
-                        ItemStack heldItem = player.getItemInHand(hand);
-                        //noinspection Convert2MethodRef
-                        boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(handler)).map(c -> c.hasFreeMinionSlot()).orElse(false);
-                        player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.available"), true);
-                        if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
-                            if (!freeSlot) {
-                                player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.no_free_slot"), true);
-                            } else {
-                                String key = switch (this.getRandom().nextInt(3)) {
-                                    case 0 -> "text.vampirism.basic_vampire.minion.start_serving1";
-                                    case 1 -> "text.vampirism.basic_vampire.minion.start_serving2";
-                                    default -> "text.vampirism.basic_vampire.minion.start_serving3";
-                                };
-                                player.displayClientMessage(Component.translatable(key), false);
-                                convertToMinion(player);
-                                if (!player.getAbilities().instabuild) heldItem.shrink(1);
-                            }
-                        } else if (freeSlot) {
-                            player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.require_binding", Component.translatable(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
+                return FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(ModFactions.VAMPIRE)).<InteractionResult>map(lord -> {
+                    ItemStack heldItem = player.getItemInHand(hand);
+                    //noinspection Convert2MethodRef
+                    boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(c -> c.hasFreeMinionSlot()).orElse(false);
+                    player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.available"), true);
+                    if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
+                        if (!freeSlot) {
+                            player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.no_free_slot"), true);
+                        } else {
+                            String key = switch (this.getRandom().nextInt(3)) {
+                                case 0 -> "text.vampirism.basic_vampire.minion.start_serving1";
+                                case 1 -> "text.vampirism.basic_vampire.minion.start_serving2";
+                                default -> "text.vampirism.basic_vampire.minion.start_serving3";
+                            };
+                            player.displayClientMessage(Component.translatable(key), false);
+                            convertToMinion(player);
+                            if (!player.getAbilities().instabuild) heldItem.shrink(1);
                         }
-                        return InteractionResult.SUCCESS;
+                    } else if (freeSlot) {
+                        player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.require_binding", Component.translatable(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
                     }
-                    return InteractionResult.PASS;
-                }
+                    return InteractionResult.SUCCESS;
+                }).orElse(InteractionResult.PASS);
             }
             return InteractionResult.PASS;
         }

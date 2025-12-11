@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayerSpecialAttribute;
+import de.teamlapen.vampirism.common.entity.player.hunter.HunterSkillProperties;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.particles.ParticleTypes;
@@ -76,7 +76,7 @@ public class BlessableItem extends Item {
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
         if (remainingUseDuration == 300 && livingEntity.level().isClientSide() && livingEntity instanceof Player player) {
-            HunterPlayerSpecialAttribute att = HunterPlayer.get(player).getSpecialAttributes();
+            HunterSkillProperties att = HunterPlayer.get(player).getSpecialAttributes();
             if (att.blessingSoundReference != null) {
                 att.blessingSoundReference.stopPlaying();
             }
@@ -110,7 +110,7 @@ public class BlessableItem extends Item {
     @Override
     public boolean releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeLeft) {
         if (entity.level().isClientSide() && entity instanceof Player player) {
-            HunterPlayerSpecialAttribute att = HunterPlayer.get(player).getSpecialAttributes();
+            HunterSkillProperties att = HunterPlayer.get(player).getSpecialAttributes();
             if (att.blessingSoundReference != null) {
                 att.blessingSoundReference.stopPlaying();
             }

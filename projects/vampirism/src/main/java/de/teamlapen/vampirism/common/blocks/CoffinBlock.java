@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.common.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.common.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.misc.mixin.accessor.EntityAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -195,7 +195,7 @@ public class CoffinBlock extends BaseContainerBlock {
                 BlockPos otherPos = getOtherPos(pos, state);
                 worldIn.setBlock(otherPos, worldIn.getBlockState(otherPos).setValue(CLOSED, !state.getValue(CLOSED)), 3);
                 return InteractionResult.CONSUME;
-            } else if (VampirismPlayerAttributes.get(player).vampireLevel == 0) {
+            } else if (VampirePlayer.get(player).getLevel() == 0) {
                 player.displayClientMessage(Component.translatable("text.vampirism.coffin.cant_use"), true);
                 return InteractionResult.CONSUME;
             } else if (state.getValue(BedBlock.OCCUPIED)) {

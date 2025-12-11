@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.data.loot.functions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModLoot;
 import de.teamlapen.vampirism.common.items.component.BottleBlood;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.List;
 import java.util.Random;
@@ -25,11 +27,11 @@ public class SetBloodFunction extends LootItemConditionalFunction {
                     .apply(inst, SetBloodFunction::new)
     );
 
-    public static @NotNull Builder<?> builder(int minBlood, int maxBlood) {
+    public static @NotNull Builder<?> builder(@Range(from = 0, to = IBottleBlood.MAX_VALUE) int minBlood, @Range(from = 0, to = IBottleBlood.MAX_VALUE) int maxBlood) {
         return simpleBuilder(conditions -> new SetBloodFunction(conditions, minBlood, maxBlood));
     }
 
-    public static @NotNull Builder<?> builder(int blood) {
+    public static @NotNull Builder<?> builder(@Range(from = 0, to = IBottleBlood.MAX_VALUE) int blood) {
         return simpleBuilder(conditions -> new SetBloodFunction(conditions, blood, blood));
     }
 

@@ -6,10 +6,9 @@ import de.teamlapen.factions.api.factions.lord.ILordPlayerBuilder;
 import de.teamlapen.factions.api.factions.lord.ILordPlayerEntry;
 import de.teamlapen.factions.api.factions.lord.ILordTitleProvider;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LordPlayerBuilder<T extends IFactionPlayer<T>> implements ILordPlayerBuilder<@NotNull T> {
+public class LordPlayerBuilder<T extends IFactionPlayer<T>> implements ILordPlayerBuilder<T> {
 
     protected int maxLevel = 0;
     protected ILordTitleProvider lordTitleFunction = (LordTitleProvider) (a, b) -> Component.literal("Lord " + a);
@@ -21,7 +20,7 @@ public class LordPlayerBuilder<T extends IFactionPlayer<T>> implements ILordPlay
     }
 
     @Override
-    public ILordPlayerBuilder<@NotNull T> lordTitle(ILordTitleProvider lordTitleFunction) {
+    public ILordPlayerBuilder<T> lordTitle(ILordTitleProvider lordTitleFunction) {
         this.lordTitleFunction = lordTitleFunction;
         return this;
     }

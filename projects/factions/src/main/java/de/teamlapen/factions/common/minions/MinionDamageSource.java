@@ -1,6 +1,6 @@
 package de.teamlapen.factions.common.minions;
 
-import de.teamlapen.factions.api.entities.player.ILordPlayer;
+import de.teamlapen.factions.api.extensions.IPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -22,7 +22,7 @@ public class MinionDamageSource extends DamageSource {
     protected final Player playerEntity;
 
     public MinionDamageSource(Holder<DamageType> damageType, @NotNull MinionEntity<?> minion) {
-        super(damageType, minion, minion.getLordOpt().map(ILordPlayer::getPlayer).orElse(null));
+        super(damageType, minion, minion.getLordOpt().map(IPlayer::asEntity).orElse(null));
         this.minionEntity = minion;
         this.playerEntity = (Player) getEntity();
     }

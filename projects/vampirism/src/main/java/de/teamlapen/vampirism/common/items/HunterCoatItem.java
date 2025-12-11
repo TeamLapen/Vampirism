@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.items;
 
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayerSpecialAttribute;
+import de.teamlapen.vampirism.common.entity.player.hunter.HunterSkillProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +25,7 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
     }
 
     /**
-     * Consider using cached value instead {@link HunterPlayerSpecialAttribute#fullHunterCoat}
+     * Consider using cached value instead {@link HunterSkillProperties#fullHunterCoat}
      * Checks if the player has this armor fully equipped
      *
      * @return if fully equipped the tier of the worst item, otherwise null

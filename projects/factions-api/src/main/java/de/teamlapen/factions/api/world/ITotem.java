@@ -8,7 +8,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -41,7 +40,7 @@ public interface ITotem {
      *
      * @return level of the totem
      */
-    default @Nullable Level getTileWorld() {
+    default @Nullable Level getTileLevel() {
         return ((BlockEntity) this).getLevel();
     }
 
@@ -63,5 +62,7 @@ public interface ITotem {
     default Optional<BlockPos> getVampireForestLocation() {
         return Optional.empty();
     }
+
+    BlockPos position();
 
 }

@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  */
 public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> implements IPlayableFaction<T> {
     private final int highestLevel;
+    @Nullable
     private final ILordPlayerEntry lord;
     private final Supplier<AttachmentType<T>> playerCapabilitySupplier;
     private final Map<IRefinementItem.AccessorySlotType, List<Supplier<IRefinementItem>>> refinementItemBySlot;
@@ -51,7 +52,7 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
 
     @Nullable
     @Override
-    public ILordTitleProvider lordTiles() {
+    public ILordTitleProvider lordTitles() {
         if (lord == null) return null;
         return this.lord.lordTitleFunction();
     }

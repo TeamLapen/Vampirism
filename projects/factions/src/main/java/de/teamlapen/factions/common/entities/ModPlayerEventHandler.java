@@ -3,6 +3,7 @@ package de.teamlapen.factions.common.entities;
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.common.blockentity.TotemBlockEntity;
 import de.teamlapen.factions.common.components.FactionRestriction;
 import de.teamlapen.factions.common.config.ModConfig;
@@ -44,7 +45,7 @@ public class ModPlayerEventHandler {
             Holder<? extends IFaction<?>> f = handler.factionPlayer().getDisguise().getViewedFaction(Optional.ofNullable(FactionsMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
             if (!IFaction.is(f, FactionTags.IS_NEUTRAL)) {
                 MutableComponent displayName;
-                displayName = Optional.of(handler).filter(h -> h.getLordLevel() > 0).filter(x -> ModConfig.SERVER.lordPrefixInChat.get()).map(FactionPlayerHandler::getLordTitle)
+                displayName = handler.getLordPlayer().filter(h -> h.getLordLevel() > 0).filter(x -> ModConfig.SERVER.lordPrefixInChat.get()).map(ILordPlayer::getLordTitle)
                         .map(x -> Component.literal("[").append(x).append("] ").append(event.getDisplayname()))
                         .orElseGet(() -> event.getDisplayname().copy());
                 event.setDisplayname(displayName.withStyle(style -> style.withColor((f.value().getChatColor()))));
@@ -100,7 +101,7 @@ public class ModPlayerEventHandler {
             BlockEntity totem = (event.getLevel().getBlockEntity(totemPos));
             if (totem instanceof TotemBlockEntity blockEntity && !IFaction.isNeutral(blockEntity.getControllingFaction()) && IFaction.is(FactionPlayerHandler.get(event.getPlayer()).getFaction(), blockEntity.getControllingFaction())) {
                 event.setCanceled(true);
-                event.getPlayer().displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_totem_faction"), true);
+                event.getPlayer().displayClientMessage(Component.translatable("text.factions.village.totem_destroy.fail_totem_faction"), true);
                 if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayer player) {
                     positions.forEach(pos -> {
                         player.connection.send(new ClientboundBlockUpdatePacket(event.getLevel(), pos));

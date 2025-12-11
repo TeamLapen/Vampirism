@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.vampirism.api.VampirismFactions;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
@@ -21,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  * Interface for the player vampire data.
  * Attached to all players as capability
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, ITaskPlayer<IVampirePlayer>, IRefinementPlayer<IVampirePlayer> {
+public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, ITaskPlayer<IVampirePlayer>, IRefinementPlayer<IVampirePlayer>, ILordPlayer<IVampirePlayer> {
 
     /**
      * Force enables the vision

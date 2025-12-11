@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.entity.vampire.VampireBaronEntity;
@@ -134,8 +133,8 @@ public class DamageHandler {
 
 
                 double amount = (affect * (ModConfig.BALANCE.holyWaterSplashDamage.get() * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? ModConfig.BALANCE.holyWaterTierDamageInc.get() : (ModConfig.BALANCE.holyWaterTierDamageInc.get() * ModConfig.BALANCE.holyWaterTierDamageInc.get()))) + 0.5D);
-                if (entity instanceof Player) {
-                    int l = VampirismPlayerAttributes.get((Player) entity).vampireLevel;
+                if (entity instanceof Player player) {
+                    int l = VampirePlayer.get(player).getLevel();
                     amount = scaleDamageWithLevel(l, REFERENCE.HIGHEST_VAMPIRE_LEVEL, amount * 0.8, amount * 1.3);
                 } else if (entity instanceof VampireBaronEntity) {
                     int l = ((VampireBaronEntity) entity).getEntityLevel();

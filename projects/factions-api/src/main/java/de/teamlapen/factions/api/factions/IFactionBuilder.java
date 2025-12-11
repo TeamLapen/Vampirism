@@ -1,11 +1,14 @@
 package de.teamlapen.factions.api.factions;
 
 import de.teamlapen.factions.api.factions.village.IFactionVillage;
+import de.teamlapen.factions.api.factions.village.IFactionVillageBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+
+import java.util.function.Consumer;
 
 public interface IFactionBuilder<T extends IFactionEntity> {
 
@@ -46,6 +49,8 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      * @return the builder
      */
     IFactionBuilder<T> village(IFactionVillage villageBuilder);
+
+    IFactionBuilder<T> village(Consumer<IFactionVillageBuilder> villageBuilder);
 
     /**
      * Marks the tag as a faction tag

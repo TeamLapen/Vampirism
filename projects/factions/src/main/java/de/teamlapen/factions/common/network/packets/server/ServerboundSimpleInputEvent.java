@@ -23,6 +23,6 @@ public record ServerboundSimpleInputEvent(Event event) implements CustomPacketPa
     public enum Event {
         RESET_SKILLS,
         SHOW_MINION_CALL_SELECTION,
-        VAMPIRISM_MENU,
+        FACTION_MENU,
     }
 }

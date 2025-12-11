@@ -2,6 +2,8 @@ package de.teamlapen.factions.common.minions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import de.teamlapen.factions.api.entities.player.IFactionPlayer;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -100,8 +102,8 @@ public class MinionWorldData extends SavedData implements ValueIOSerializable {
     }
 
     @NotNull
-    public PlayerMinionController getOrCreateController(@NotNull FactionPlayerHandler lord) {
-        UUID id = lord.getPlayer().getUUID();
+    public PlayerMinionController getOrCreateController(@NotNull ILordPlayer<?> lord) {
+        UUID id = lord.asEntity().getUUID();
         if (controllers.containsKey(id)) {
             return controllers.get(id);
         } else {

@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.common.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.entity.player.lord.actions.LordActions;
 import de.teamlapen.vampirism.common.entity.player.lord.skills.LordSkills;
-import de.teamlapen.vampirism.common.entity.player.vampire.ModVampireVisions;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirismVampireVisions;
 import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.common.integration.TerraBlenderCompat;
@@ -65,7 +65,7 @@ public class ModRegistryManager {
         ModEnchantments.register(eventBus);
         ModDataComponents.register(eventBus);
         ModFactions.register(eventBus);
-        ModVampireVisions.register(eventBus);
+        VampirismVampireVisions.register(eventBus);
     }
 
     @SubscribeEvent

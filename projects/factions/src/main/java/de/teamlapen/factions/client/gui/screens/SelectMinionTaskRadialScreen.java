@@ -3,6 +3,7 @@ package de.teamlapen.factions.client.gui.screens;
 import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.entities.minion.IMinionTask;
 import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.client.config.ClientConfigHelper;
 import de.teamlapen.factions.client.gui.GuiRenderer;
@@ -32,9 +33,9 @@ import java.util.stream.Stream;
 
 public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<SelectMinionTaskRadialScreen.Entry> {
 
-    public static Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_single"), Component.translatable("text.vampirism.minion.call_single"), FResourceLocation.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
-            new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_all"), Component.translatable("text.vampirism.minion.call_all"), FResourceLocation.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
-            new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("respawn"), Component.translatable("text.vampirism.minion.respawn"), FResourceLocation.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
+    public static Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_single"), Component.translatable("text.factions.minion.call_single"), FResourceLocation.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
+            new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_all"), Component.translatable("text.factions.minion.call_all"), FResourceLocation.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
+            new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("respawn"), Component.translatable("text.factions.minion.respawn"), FResourceLocation.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
 
     private SelectMinionTaskRadialScreen(Collection<Entry> entries, KeyMapping keyMapping) {
         super(getRadialMenu(entries), keyMapping, SelectActionRadialScreen::show);
@@ -45,30 +46,26 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     }
 
     public static void show(KeyMapping mapping) {
-        FactionPlayerHandler handler = FactionPlayerHandler.get(Minecraft.getInstance().player);
-        if (handler.getLordLevel() > 0) {
-            Collection<Entry> tasks = getTasks(handler);
+        FactionPlayerHandler.get(Minecraft.getInstance().player).getLordPlayer().filter(x -> x.getLordLevel() > 0).ifPresent(lord -> {
+            Collection<Entry> tasks = getTasks(lord);
             if (tasks.isEmpty()) {
-                Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.vampirism.no_minion_tasks"), true);
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.factions.no_minion_tasks"), true);
                 Minecraft.getInstance().setScreen(null);
             } else {
                 Minecraft.getInstance().setScreen(new SelectMinionTaskRadialScreen(tasks, mapping));
             }
-        }
+        });
     }
 
     @Override
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
     }
 
-    private static List<Entry> getTasks(IFactionPlayerHandler playerHandler) {
-        if (playerHandler.getLordLevel() == 0) return List.of();
-        return playerHandler.getCurrentFactionPlayer().map(player -> {
-                    return ClientConfigHelper.getMinionTaskOrder(playerHandler.getFaction()).stream().filter(entry -> {
-                        return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(player.getFaction(), playerHandler)).orElse(true);
-                    }).collect(Collectors.toList());
-                }
-        ).orElseGet(List::of);
+    private static List<Entry> getTasks(ILordPlayer<?> lord) {
+        if (lord.getLordLevel() == 0) return List.of();
+        return ClientConfigHelper.getMinionTaskOrder(lord.getFaction()).stream().filter(entry -> {
+            return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(lord)).orElse(true);
+        }).collect(Collectors.toList());
     }
 
     private static RadialMenu<Entry> getRadialMenu(Collection<Entry> playerHandler) {

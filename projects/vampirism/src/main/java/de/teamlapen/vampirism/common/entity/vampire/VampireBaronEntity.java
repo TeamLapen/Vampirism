@@ -8,7 +8,8 @@ import de.teamlapen.vampirism.common.entity.ai.goals.AttackRangedDarkBloodGoal;
 import de.teamlapen.vampirism.common.entity.ai.goals.FleeGarlicVampireGoal;
 import de.teamlapen.factions.common.entities.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import net.minecraft.core.BlockPos;
@@ -157,11 +158,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         if (flag && entity instanceof LivingEntity) {
             float tm = 1f;
             int mr = 1;
-            if (entity instanceof Player) {
-                float pld = (this.getEntityLevel() + 1) - VampirismPlayerAttributes.get((Player) entity).vampireLevel / 3f;
+            if (entity instanceof Player player) {
+                float pld = (this.getEntityLevel() + 1) - VampirePlayer.get(player).getLevel() / 3f;
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
-                if (VampirismPlayerAttributes.get((Player) entity).getHuntSpecial().fullHunterCoat != null) {
+                if (HunterPlayer.get(player).getSpecialAttributes().fullHunterCoat != null) {
                     tm *= 0.5F;
                 }
             }

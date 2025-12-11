@@ -58,7 +58,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     private final float trainedAttackSpeedIncrease;
 
     public VampireSwordItem(ToolMaterial material, int attackDamage, float trainSpeedIncrease, Item.Properties prop) {
-        super(material, attackDamage, material.speed(), FactionRestriction.apply(ModFactions.VAMPIRE, prop).component(ModDataComponents.BLOOD_CHARGED, new BloodCharged(0)));
+        super(material, attackDamage, material.speed(), prop.factions$restrictFaction(ModFactions.VAMPIRE).component(ModDataComponents.BLOOD_CHARGED, new BloodCharged(0)));
         this.trainedAttackSpeedIncrease = trainSpeedIncrease;
     }
 

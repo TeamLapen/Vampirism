@@ -33,21 +33,6 @@ public class GuiRenderer {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height, color);
     }
 
-    public static void blitSpriteTiledOffset(GuiGraphics graphics, ResourceLocation texture, int x, int y, int width, int height, int xOffset, int yOffset, int color) {
-//        x += xOffset;
-//        y += yOffset;
-//        width -= xOffset;
-//        height -= yOffset;
-//        TextureAtlasSprite textureatlassprite = graphics.sprites.getSprite(texture); TODO
-//        GuiSpriteScaling guispritescaling = graphics.sprites.getSpriteScaling(textureatlassprite);
-//        if (guispritescaling instanceof GuiSpriteScaling.Tile(int tileWidth, int tileHeight)) {
-//            graphics.blitTiledSprite(RenderPipelines.GUI_TEXTURED, textureatlassprite, x, y, width, height, xOffset, yOffset, tileWidth, tileHeight, tileWidth, tileHeight, color);
-//        } else {
-//            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height, color);
-//        }
-
-    }
-
     public static void blitSprite(GuiGraphics graphics, ResourceLocation texture, int textureWidth, int textureHeight, int uPosition, int vPosition, int x, int y, int uWidth, int vHeight, int color) {
         graphics.enableScissor(x, y, x+ uWidth, y+vHeight);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, x - uPosition, y - vPosition, textureWidth, textureHeight, color);

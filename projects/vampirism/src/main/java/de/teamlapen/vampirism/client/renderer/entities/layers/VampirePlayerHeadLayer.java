@@ -3,17 +3,16 @@ package de.teamlapen.vampirism.client.renderer.entities.layers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.misc.extension.client.IVampirePlayerState;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,22 +36,13 @@ public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends Playe
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, T renderState, float yRot, float xRot) {
         if (!ModConfig.CLIENT.renderVampireEyes.get() || renderState.deathTime > 0) return;
-        VampirismPlayerAttributes atts = ((IVampirismRenderState) renderState).vampirism$attributes();
-        if (atts.vampireLevel > 0 && !atts.getVampSpecial().disguised && !renderState.isInvisible) {
-            int eyeType = Math.max(0, Math.min(atts.getVampSpecial().eyeType, eyeOverlays.length - 1));
-            int fangType = Math.max(0, Math.min(atts.getVampSpecial().fangType, fangOverlays.length - 1));
+        if (renderState instanceof IVampirePlayerState vampireState && vampireState.vampirism$vampire$level() > 0 && !vampireState.vampirism$vampire$isDisguised() && !renderState.isInvisible) {
+            int eyeType = Math.max(0, Math.min(vampireState.vampirism$vampire$getEyeType(), eyeOverlays.length - 1));
+            int fangType = Math.max(0, Math.min(vampireState.vampirism$vampire$getFangType(), fangOverlays.length - 1));
             ModelPart head = this.getParentModel().head;
-            int packerOverlay = LivingEntityRenderer.getOverlayCoords(renderState, 0);
 
-            nodeCollector.submitCustomGeometry(poseStack, atts.getVampSpecial().glowingEyes ? RenderType.eyes(eyeOverlays[eyeType]) : RenderType.entityCutoutNoCull(eyeOverlays[eyeType]), (pose, cosumer) -> {
-                head.render(poseStack, cosumer, packedLight, packerOverlay);
-            });
-            nodeCollector.submitCustomGeometry(poseStack, RenderType.entityCutoutNoCull(fangOverlays[fangType]), (pose, cosumer) -> {
-                head.render(poseStack, cosumer, packedLight, packerOverlay);
-
-            });
-
+            nodeCollector.submitModelPart(head, poseStack,vampireState.vampirism$vampire$getGlowingEyes() ? RenderType.eyes(eyeOverlays[eyeType]) : RenderType.entityCutoutNoCull(eyeOverlays[eyeType]),packedLight, OverlayTexture.NO_OVERLAY, null);
+            nodeCollector.submitModelPart(head, poseStack,RenderType.entityCutoutNoCull(fangOverlays[fangType]),packedLight, OverlayTexture.NO_OVERLAY, null);
         }
     }
-
 }

@@ -5,13 +5,17 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.entity.ExtendedCreature;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.misc.extension.client.IHunterPlayerState;
+import de.teamlapen.vampirism.misc.extension.client.IVampirePlayerState;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
@@ -44,20 +48,36 @@ public class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingE
             });
         }
         if (entity instanceof Player player) {
-            renderState.vampirism$attributes(VampirismPlayerAttributes.get(player));
-            Bat bat = player.getData(ModAttachments.VAMPIRE_BAT.get());
-            bat.yHeadRot = player.yHeadRot;
-            bat.yBodyRot = player.yBodyRot;
-            bat.yHeadRotO = player.yHeadRotO;
-            bat.yBodyRotO = player.yBodyRotO;
-            renderState.vampirism$bat(bat);
+            if (renderState instanceof IVampirePlayerState vampireState) {
+                var vampire = VampirePlayer.get(player);
+                vampireState.vampirism$vampire$setDisguised(vampire.isDisguised());
+                vampireState.vampirism$vampire$setVampireLevel(vampire.getLevel());
+                vampireState.vampirism$vampire$setEyeType(vampire.getEyeType());
+                vampireState.vampirism$vampire$setFangType(vampire.getFangType());
+                vampireState.vampirism$vampire$setGlowingEyes(vampire.getGlowingEyes());
+                vampireState.vampirism$vampire$setInvisible(vampire.getSkillProperties().invisible);
+
+                if (vampire.getSkillProperties().bat) {
+                    Bat bat = player.getData(ModAttachments.VAMPIRE_BAT.get());
+                    bat.yHeadRot = player.yHeadRot;
+                    bat.yBodyRot = player.yBodyRot;
+                    bat.yHeadRotO = player.yHeadRotO;
+                    bat.yBodyRotO = player.yBodyRotO;
+                    vampireState.vampirism$vampire$setBat(bat);
+                }
+            }
+
+            if (renderState instanceof IHunterPlayerState hunterState) {
+                var hunter = HunterPlayer.get(player);
+                hunterState.vampirism$hunter$setDisguised(hunter.isDisguised());
+                hunterState.vampirism$hunter$setFullHunterCoat(hunter.getSpecialAttributes().fullHunterCoat == IItemWithTier.Tier.ENHANCED || hunter.getSpecialAttributes().fullHunterCoat == IItemWithTier.Tier.ULTIMATE);
+            }
         }
         ExtendedCreature.getSafe(entity).ifPresent(creature -> {
             renderState.vampirism$blood(creature.getBlood());
             renderState.vampirism$poisonousBlood(creature.hasPoisonousBlood());
         });
         renderState.vampirism$hunter(entity instanceof IHunterMob);
-        renderState.sleeping$inCoffin(entity.getSleepingPos().map(s -> entity.level().getBlockState(s)).filter(s -> s.getBlock() instanceof CoffinBlock).isPresent());
     }
 
     @WrapOperation(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;shouldRenderLayers(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;)Z"))

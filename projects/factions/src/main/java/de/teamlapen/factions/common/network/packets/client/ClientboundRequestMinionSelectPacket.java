@@ -34,17 +34,18 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
      * @return Empty if no minions are available
      */
     public static @NotNull Optional<ClientboundRequestMinionSelectPacket> createRequestForPlayer(@NotNull ServerPlayer player, Action action) {
-        FactionPlayerHandler fp = FactionPlayerHandler.get(player);
-        PlayerMinionController controller = MinionWorldData.getData(player.level()).getOrCreateController(fp);
-        Collection<Integer> ids = controller.getCallableMinions();
-        if (!ids.isEmpty()) {
-            List<Pair<Integer, Component>> minions = new ArrayList<>(ids.size());
-            ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().copy()).ifPresent(n -> minions.add(Pair.of(id, n))));
-            return Optional.of(new ClientboundRequestMinionSelectPacket(action, minions));
-        } else {
-            ServerboundSelectMinionTaskPacket.printRecoveringMinions(player, controller.getRecoveringMinionNames());
-        }
-        return Optional.empty();
+        return FactionPlayerHandler.get(player).getLordPlayer().map(lord -> {
+            PlayerMinionController controller = MinionWorldData.getData(player.level()).getOrCreateController(lord);
+            Collection<Integer> ids = controller.getCallableMinions();
+            if (!ids.isEmpty()) {
+                List<Pair<Integer, Component>> minions = new ArrayList<>(ids.size());
+                ids.forEach(id -> controller.contactMinionData(id, data -> data.getFormattedName().copy()).ifPresent(n -> minions.add(Pair.of(id, n))));
+                return new ClientboundRequestMinionSelectPacket(action, minions);
+            } else {
+                ServerboundSelectMinionTaskPacket.printRecoveringMinions(player, controller.getRecoveringMinionNames());
+            }
+            return null;
+        });
     }
 
     public static final Type<ClientboundRequestMinionSelectPacket> TYPE = new Type<>(FResourceLocation.mod("request_minion_select"));

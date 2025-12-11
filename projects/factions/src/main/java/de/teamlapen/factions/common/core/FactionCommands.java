@@ -52,9 +52,7 @@ public class FactionCommands {
 
     private static void registerCommand(LiteralArgumentBuilder<CommandSourceStack> parent, CommandBuildContext buildContext) {
         parent.then(BindActionCommand.register(buildContext))
-                .then(LevelCommand.register(buildContext))
-                .then(LordCommand.register())
-                .then(LevelUpCommand.register())
+                .then(FactionCommand.register(buildContext))
                 .then(GenderCommand.register())
                 .then(SkillCommand.register(buildContext))
                 .then(MinionInventoryCommand.register(buildContext))

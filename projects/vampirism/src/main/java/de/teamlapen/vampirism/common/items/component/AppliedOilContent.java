@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.factions.FactionsMod;
+import de.teamlapen.factions.api.items.components.IFactionRestriction;
 import de.teamlapen.factions.common.components.FactionRestriction;
+import de.teamlapen.factions.common.components.IFactionRestrictionProvider;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.items.components.IAppliedOilContent;
@@ -24,12 +26,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
-public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implements IAppliedOilContent {
+public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implements IAppliedOilContent, IFactionRestrictionProvider {
 
     public static final Codec<AppliedOilContent> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
@@ -63,6 +66,13 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
         return Optional.ofNullable(stack.get(ModDataComponents.APPLIED_OIL));
     }
 
+    @Override
+    public IFactionRestriction getFactionRestriction() {
+        return HUNTER_RESTRICTION;
+    }
+
+    //<editor-fold desc="Tooltip>
+
     public static void addTooltipIfExist(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         addTooltipIfExist(FactionsMod.proxy.getClientPlayer(), stack, tooltip, flag);
     }
@@ -74,6 +84,7 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
         }
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public void addTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
         ResourceLocation id = oil().getKey().location();
         MutableComponent component = Component.translatable(String.format("oil.%s.%s", id.getNamespace(), id.getPath())).withStyle(ChatFormatting.LIGHT_PURPLE);
@@ -89,4 +100,6 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
         }
         tooltip.add(component);
     }
+
+    //</editor-fold>
 }

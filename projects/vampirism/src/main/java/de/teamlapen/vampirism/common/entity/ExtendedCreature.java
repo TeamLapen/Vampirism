@@ -199,7 +199,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
             DamageHandler.hurtModded(((ServerLevel)entity.level()), entity, ModDamageSources::noBlood, 1000);
         }
 
-//        this.sync(); TODO
+        this.sync();
         entity.setLastHurtByMob(biter.asEntity());
 
         // If entity is a child only give 1/3 blood
@@ -234,7 +234,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         }
 
         blood -= amount / (isChild ? 3 : 1);
-//        this.sync(); TODO
+        this.sync();
 
         return amount;
     }
@@ -254,7 +254,7 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
         if (Helper.isVampire(entity)) return;
 
         poisonousBlood = poisonous;
-//        sync(); TODO
+        this.sync();
     }
 
     public int getRemainingBarkTicks() {
@@ -282,13 +282,13 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
                 }
                 if (entity.getRandom().nextInt(BalanceMobProps.mobProps.BLOOD_REGEN_CHANCE) == 0 && LevelAttributeModifier.calculateModifierValue(blood, getMaxBlood(), 1, 0.8) < entity.getRandom().nextDouble()) {
                     setBlood(getBlood() + 1);
-//                    sync(); TODO
+                    sync();
                 }
             }
             if (poisonousBlood > 0) {
                 poisonousBlood--;
                 if (poisonousBlood == 0) {
-//                    sync(); TODO
+                    sync();
                 }
             }
             if (Helper.isVampire(entity)) {
@@ -307,9 +307,9 @@ public class ExtendedCreature extends Attachment implements IExtendedCreatureVam
 
     @Override
     protected void registerProperties() {
-        this.registerProperty(VResourceLocation.mod("blood"), 0, () -> this.blood, b -> this.blood = b, true);
-        this.registerProperty(VResourceLocation.mod("max_blood"), 0, () -> this.maxBlood, b -> this.maxBlood = b, true);
-        this.registerProperty(VResourceLocation.mod("poisonous_blood"), 0, () -> this.poisonousBlood, b -> this.poisonousBlood = b, true);
+        this.registerProperty(VResourceLocation.mod("blood")).simple(0, () -> this.blood, b -> this.blood = b);
+        this.registerProperty(VResourceLocation.mod("max_blood")).simple(0, () -> this.maxBlood, b -> this.maxBlood = b);
+        this.registerProperty(VResourceLocation.mod("poisonous_blood")).simple(0, () -> this.poisonousBlood, b -> this.poisonousBlood = b);
     }
 
     public static class AttachmentOptions extends AttachmentSynchronization<ExtendedCreature, PathfinderMob> {

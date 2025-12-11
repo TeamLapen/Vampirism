@@ -14,11 +14,10 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public record SkillTree(@NotNull Holder<? extends IPlayableFaction<?>> faction, @NotNull EntityPredicate unlockPredicate, @NotNull ItemStack display, @NotNull Component name, @NotNull Optional<ResourceLocation> background, @NotNull TagKey<ISkillTree> skillPointTag) implements ISkillTree {
+public record SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPredicate unlockPredicate, ItemStack display, Component name, Optional<ResourceLocation> background, TagKey<ISkillTree> skillPointTag) implements ISkillTree {
 
     public static final Codec<ISkillTree> CODEC = Codec.lazyInitialized(() -> RecordCodecBuilder.create(inst ->
             inst.group(
@@ -31,12 +30,12 @@ public record SkillTree(@NotNull Holder<? extends IPlayableFaction<?>> faction, 
             ).apply(inst, SkillTree::new)
     ));
 
-    public SkillTree(@NotNull Holder<? extends IPlayableFaction<?>> faction, @NotNull EntityPredicate unlockPredicate, @NotNull ItemStack display, @NotNull Component name) {
+    public SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPredicate unlockPredicate, ItemStack display, Component name) {
         this(faction, unlockPredicate, display, name, Optional.empty());
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public SkillTree(@NotNull Holder<? extends IPlayableFaction<?>> faction, @NotNull EntityPredicate unlockPredicate, @NotNull ItemStack display, @NotNull Component name, @NotNull Optional<ResourceLocation> background) {
+    public SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPredicate unlockPredicate, ItemStack display, Component name, Optional<ResourceLocation> background) {
         this(faction, unlockPredicate, display, name, background, FactionSkillTreeTags.DEFAULT);
     }
 }

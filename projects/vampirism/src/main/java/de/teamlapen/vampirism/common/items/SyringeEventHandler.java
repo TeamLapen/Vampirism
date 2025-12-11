@@ -54,10 +54,10 @@ public class SyringeEventHandler {
                         player.setItemInHand(event.getHand(), filledStack);
                     } else {
                         heldStack.shrink(1);
-                        ItemHandlerHelper.giveItemToPlayer(player, filledStack);
+                        player.addItem(filledStack);
                     }
                 } else {
-                    ItemHandlerHelper.giveItemToPlayer(player, filledStack);
+                    player.addItem(filledStack);
                 }
 
                 level.playSound(null, player.blockPosition(), ModSounds.VAMPIRE_BITE.get(), SoundSource.PLAYERS, 1.0f,  1.0f);
@@ -75,7 +75,7 @@ public class SyringeEventHandler {
                     player.setItemInHand(event.getHand(), heldStack.getCraftingRemainder());
                 } else {
                     heldStack.shrink(1);
-                    ItemHandlerHelper.giveItemToPlayer(player, heldStack.getCraftingRemainder());
+                    player.addItem(heldStack.getCraftingRemainder());
                 }
             }
 

@@ -3,7 +3,8 @@ package de.teamlapen.factions.common.minions;
 import de.teamlapen.factions.api.entities.minion.IMinionEntity;
 import de.teamlapen.factions.api.entities.minion.IMinionInventory;
 import de.teamlapen.factions.api.entities.minion.IMinionTask;
-import de.teamlapen.factions.api.entities.player.ILordPlayer;
+import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.common.Permissions;
 import de.teamlapen.factions.common.components.FactionRestriction;
@@ -121,9 +122,9 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         super(type, world);
         this.softAttackPredicate = attackPredicate;
         this.hardAttackPredicate = livingEntity -> {
-            boolean flag1 = getLordOpt().map(ILordPlayer::getPlayer).filter(entity -> entity == livingEntity).isPresent(); //Don't attack lord
+            boolean flag1 = getLordOpt().map(ILordPlayer::asEntity).filter(entity -> entity == livingEntity).isPresent(); //Don't attack lord
             boolean flag2 = livingEntity instanceof MinionEntity && ((MinionEntity<?>) livingEntity).getLordID().filter(id -> getLordID().map(id2 -> id == id2).orElse(false)).isPresent(); //Don't attack other minions of lord
-            boolean flag3 = livingEntity instanceof Player otherPlayer && getLordOpt().map(ILordPlayer::getPlayer).map(player -> !player.canHarmPlayer(otherPlayer)).orElse(!Permissions.isPvpEnabled(otherPlayer));
+            boolean flag3 = livingEntity instanceof Player otherPlayer && getLordOpt().map(ILordPlayer::asEntity).map(player -> !player.canHarmPlayer(otherPlayer)).orElse(!Permissions.isPvpEnabled(otherPlayer));
             return !flag1 && !flag2 && !flag3;
         };
     }
@@ -174,7 +175,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (this.playerMinionController != null) {
-            this.getLordOpt().map(ILordPlayer::getPlayer).ifPresent(p -> p.displayClientMessage(Component.translatable("text.vampirism.minion.died", this.getDisplayName()), true));
+            this.getLordOpt().map(ILordPlayer::asEntity).ifPresent(p -> p.displayClientMessage(Component.translatable("text.factions.minion.died", this.getDisplayName()), true));
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);
             this.playerMinionController = null;
         }
@@ -219,12 +220,12 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     @Nullable
     @Override
     public PlayerTeam getTeam() {
-        return getLordOpt().map(s -> s.getPlayer().getTeam()).orElseGet(super::getTeam);
+        return getLordOpt().map(s -> s.asEntity().getTeam()).orElseGet(super::getTeam);
     }
 
     @Override
     protected boolean considersEntityAsAlly(Entity pEntity) {
-        return getLordOpt().map(s -> s.getPlayer() == pEntity).orElseGet(() -> super.considersEntityAsAlly(pEntity));
+        return getLordOpt().map(s -> s.asEntity() == pEntity).orElseGet(() -> super.considersEntityAsAlly(pEntity));
     }
 
     public void eat(@NotNull Level world, @NotNull ItemStack stack, FoodProperties properties) {
@@ -267,8 +268,8 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
 
     @Override
     @NotNull
-    public Optional<ILordPlayer> getLordOpt() {
-        return Optional.ofNullable(getLord());
+    public Optional<ILordPlayer<?>> getLordOpt() {
+        return getLord();
     }
 
     public @NotNull Optional<T> getMinionData() {
@@ -395,7 +396,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     public @NotNull Predicate<ItemStack> getEquipmentPredicate(EquipmentSlot slotType) {
-        return itemStack -> FactionRestriction.matchFaction(itemStack, getFaction());
+        return itemStack -> FactionRestriction.canUse(this, itemStack, false);
 
     }
 
@@ -465,9 +466,8 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         builder.define(LORD_ID, Optional.empty());
     }
 
-    @Nullable
-    protected ILordPlayer getLord() {
-        return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).map(FactionPlayerHandler::get).orElse(null);
+    protected Optional<ILordPlayer<?>> getLord() {
+        return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).map(FactionPlayerHandler::get).<ILordPlayer<?>>flatMap(x -> x.getLordPlayer());
     }
 
     protected @NotNull Optional<UUID> getLordID() {
@@ -502,7 +502,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
-                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord()), Component.translatable("text.vampirism.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()), Component.translatable("text.factions.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
             return InteractionResult.SUCCESS;
         }

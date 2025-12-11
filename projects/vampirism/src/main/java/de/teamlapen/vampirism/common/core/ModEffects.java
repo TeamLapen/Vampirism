@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.factions.common.effects.OblivionMobEffect;
-import de.teamlapen.factions.common.effects.VampirismBadOmenMobEffect;
+import de.teamlapen.factions.common.effects.FactionBadOmenMobEffect;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.effects.*;
 import net.minecraft.core.registries.Registries;
@@ -29,8 +28,8 @@ public class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> FREEZE = EFFECTS.register("freeze", () -> new FreezeMobEffect(MobEffectCategory.HARMFUL, 0xFFFFFF));
     public static final DeferredHolder<MobEffect, MobEffect> NEONATAL = EFFECTS.register("neonatal", () -> new VampirismMobEffect(MobEffectCategory.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, ModEffects.NEONATAL.getId(), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, ModEffects.NEONATAL.getId(), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> ARMOR_REGENERATION = EFFECTS.register("armor_regeneration", () -> new VampirismMobEffect(MobEffectCategory.NEUTRAL, 0xD17642));
-    public static final DeferredHolder<MobEffect, MobEffect> BAD_OMEN_HUNTER = EFFECTS.register("bad_omen_hunter", () -> new VampirismBadOmenMobEffect(ModFactions.HUNTER));
-    public static final DeferredHolder<MobEffect, MobEffect> BAD_OMEN_VAMPIRE = EFFECTS.register("bad_omen_vampire", () -> new VampirismBadOmenMobEffect(ModFactions.VAMPIRE));
+    public static final DeferredHolder<MobEffect, MobEffect> BAD_OMEN_HUNTER = EFFECTS.register("bad_omen_hunter", () -> new FactionBadOmenMobEffect(ModFactions.HUNTER));
+    public static final DeferredHolder<MobEffect, MobEffect> BAD_OMEN_VAMPIRE = EFFECTS.register("bad_omen_vampire", () -> new FactionBadOmenMobEffect(ModFactions.VAMPIRE));
     public static final DeferredHolder<MobEffect, MobEffect> LORD_SPEED = EFFECTS.register("lord_speed", () -> new VampirismMobEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.MOVEMENT_SPEED, ModEffects.LORD_SPEED.getId(), 0.07F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> LORD_ATTACK_SPEED = EFFECTS.register("lord_attack_speed", () -> new VampirismMobEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.ATTACK_SPEED, ModEffects.LORD_ATTACK_SPEED.getId(), 0.05F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> NO_BLOOD = EFFECTS.register("no_blood", () -> new VampirismMobEffect(MobEffectCategory.HARMFUL, 0x191919)

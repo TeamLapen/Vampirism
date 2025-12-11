@@ -31,6 +31,7 @@ public interface IRefinementHandler<T extends IRefinementPlayer<T>> {
 
     boolean isRefinementEquipped(Holder<IRefinement> refinement);
 
+    void updateItems();
     /**
      * remove all equipped refinements
      */

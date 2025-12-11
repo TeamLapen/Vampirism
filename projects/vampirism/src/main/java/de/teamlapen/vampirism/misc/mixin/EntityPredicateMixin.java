@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.misc.mixin;
 
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
+import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
@@ -25,8 +25,8 @@ public class EntityPredicateMixin {
     @Inject(method = "test", at = @At("RETURN"), cancellable = true)
     private void ignoreIfDown(ServerLevel level, LivingEntity attacker, LivingEntity target, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && isCombat) {
-            if (target instanceof Player && !(attacker instanceof IHunterMob)) {
-                if (VampirismPlayerAttributes.get((Player) target).getVampSpecial().isDBNO) {
+            if (target instanceof Player player && !(attacker instanceof IHunterMob)) {
+                if (VampirePlayer.get(player).getSkillProperties().isDBNO) {
                     cir.setReturnValue(false);
                     cir.cancel();
                 }

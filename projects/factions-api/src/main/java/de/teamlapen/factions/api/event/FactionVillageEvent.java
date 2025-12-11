@@ -9,7 +9,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public abstract class FactionVillageEvent extends Event {
     }
 
     public Level getWorld() {
-        return this.totem.getTileWorld();
+        return this.totem.getTileLevel();
     }
 
     /**
@@ -287,6 +286,34 @@ public abstract class FactionVillageEvent extends Event {
 
         public boolean isRandomRaid() {
             return badOmenLevel == -1;
+        }
+    }
+
+    public static class AreaChangedEvent extends FactionVillageEvent {
+
+        private final @Nullable AABB area;
+
+        public AreaChangedEvent(ITotem totem, @Nullable AABB area) {
+            super(totem);
+            this.area = area;
+        }
+
+        public @Nullable AABB getArea() {
+            return area;
+        }
+    }
+
+    public static class RemovedEvent extends FactionVillageEvent {
+
+        public RemovedEvent(ITotem totem) {
+            super(totem);
+        }
+    }
+
+    public static class SpawnVillagerEvent extends FactionVillageEvent {
+
+        public SpawnVillagerEvent(ITotem totem) {
+            super(totem);
         }
     }
 }

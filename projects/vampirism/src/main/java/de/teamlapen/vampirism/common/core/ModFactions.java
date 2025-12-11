@@ -56,9 +56,10 @@ public class ModFactions {
             .addTag(FactionRegistries.Keys.FACTION, ModFactionTags.IS_VAMPIRE)
             .addTag(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.VAMPIRE_FOOD)
             .addTag(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_VAMPIRE)
-            .village(VampireVillage.vampireVillage().build())
-            .lord(new LordPlayerBuilder<IVampirePlayer>()
-                    .lordTitle(new LordTitles.VampireTitles()).lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD).build())
+            .village(VampireVillage::vampireVillage)
+            .lord(builder -> builder
+                    .lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD)
+                    .lordTitle(new LordTitles.VampireTitles()))
             .build());
 
     public static final DeferredFaction<IHunterPlayer, IPlayableFaction<IHunterPlayer>> HUNTER = FACTIONS.registerFaction(VampirismFactions.Keys.HUNTER.getPath(), () -> new PlayableFactionBuilder<>((Supplier<AttachmentType<IHunterPlayer>>) (Object) ModAttachments.HUNTER_PLAYER)
@@ -73,9 +74,10 @@ public class ModFactions {
             .addTag(FactionRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER)
             .addTag(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.HUNTER_FOOD)
             .addTag(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_HUNTER)
-            .village(HunterVillage.hunterVillage().build())
-            .lord(new LordPlayerBuilder<IHunterPlayer>()
-                    .lordTitle(new LordTitles.HunterTitles()).lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).build())
+            .village(HunterVillage::hunterVillage)
+            .lord(builder -> builder
+                    .lordTitle(new LordTitles.HunterTitles())
+                    .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).build())
             .build());
 
     public static final DeferredHolder<IMinionEntry<?, ?>, IMinionEntry<IVampirePlayer, VampireMinionEntity.VampireMinionData>> VAMPIRE_MINION = MINIONS.register(VampirismFactions.Keys.VAMPIRE.getPath(), () ->

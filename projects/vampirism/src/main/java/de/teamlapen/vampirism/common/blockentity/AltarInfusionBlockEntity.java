@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.blockentity;
 
+import de.teamlapen.factions.api.factions.LevelingChange;
 import de.teamlapen.factions.common.blockentity.InventoryBlockEntity;
 import de.teamlapen.factions.common.inventory.InventoryHelper;
 import de.teamlapen.vampirism.common.util.ValuedObject;
@@ -9,7 +10,6 @@ import de.teamlapen.vampirism.common.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.common.blocks.AltarTipBlock;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.entity.vampire.DrinkBloodContext;
@@ -84,7 +84,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         }
         this.player = null;
 
-        targetLevel = VampirismPlayerAttributes.get(player).vampireLevel + 1;
+        targetLevel = VampirePlayer.get(player).getLevel() + 1;
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
             return Result.WRONGLEVEL;
@@ -224,7 +224,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
             }
             if (runningTick == DURATION_TICK - 200) {
                 if (getPlayer().isLocalPlayer()) {
-                    VampirismModClient.services().hud().makeRenderFullColor(DURATION_TICK - 250, 50, 0xFF0000);
+                    VampirismModClient.services().fullScreenOverlay().start(this.level, DURATION_TICK - 250, 50, 0xFF0000);
                 }
             }
         }
@@ -242,7 +242,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
                     LOGGER.warn("Player {} changed level while the ritual was running. Cannot levelup.", player);
                     return;
                 }
-                handler.setFactionLevel(ModFactions.VAMPIRE, handler.getCurrentLevel(ModFactions.VAMPIRE) + 1);
+                handler.setFaction(LevelingChange.builder().faction(ModFactions.VAMPIRE).level(handler.getCurrentLevel(ModFactions.VAMPIRE) + 1));
                 VampirePlayer.get(player).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());
                 if (player instanceof ServerPlayer serverPlayer) {
                     ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INFUSION);
@@ -388,7 +388,7 @@ public class AltarInfusionBlockEntity extends InventoryBlockEntity {
         if (this.level.players().isEmpty()) return false;
         this.player = this.level.getPlayerByUUID(playerID);
         if (this.player != null && player.isAlive()) {
-            this.targetLevel = VampirismPlayerAttributes.get(player).vampireLevel + 1;
+            this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
             checkStructureLevel(checkRequiredLevel());
         } else {
             runningTick = 0;

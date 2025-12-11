@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.util;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.factions.api.factions.village.IFactionVillageBuilder;
 import de.teamlapen.factions.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.factions.common.factions.FactionVillageBuilder;
@@ -39,8 +40,8 @@ public class VampireVillage {
         return itemStack;
     }
 
-    public static FactionVillageBuilder vampireVillage() {
-        return new FactionVillageBuilder().badOmenEffect(ModEffects.BAD_OMEN_VAMPIRE)
+    public static void vampireVillage(IFactionVillageBuilder builder) {
+        builder.badOmenEffect(ModEffects.BAD_OMEN_VAMPIRE)
                 .captureEntities(Lists.newArrayList(new Weighted<>(ModEntities.VAMPIRE::get, 10), new Weighted<>(ModEntities.ADVANCED_VAMPIRE::get, 2)))
                 .factionVillagerProfession(ModVillage.VAMPIRE_EXPERT.getKey())
                 .guardSuperClass(VampireBaseEntity.class)

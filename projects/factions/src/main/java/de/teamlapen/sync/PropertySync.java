@@ -1,7 +1,7 @@
 package de.teamlapen.sync;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.OptionalFieldCodec;
+import de.teamlapen.sync.api.IPropertySync;
 import de.teamlapen.sync.api.IStatusProvider;
 import de.teamlapen.sync.api.ISyncable;
 import net.minecraft.resources.ResourceLocation;
@@ -13,10 +13,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class PropertySync implements ValueIOSerializable, ISyncable, IStatusProvider {
+public abstract class PropertySync implements ValueIOSerializable, ISyncable, IStatusProvider, IPropertySync {
 
     private final Map<ResourceLocation, Property> propertiesMap = new HashMap<>();
     protected final Collection<Property> properties = Collections.unmodifiableCollection(propertiesMap.values());
@@ -38,21 +37,34 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
 
     }
 
-    protected void registerProperty(Property property) {
+    @Override
+    public boolean hasClientSync() {
+        return this.properties.stream().anyMatch(Property::hasClientSync);
+    }
+
+    @Override
+    public boolean hasServerLoad() {
+        return this.properties.stream().anyMatch(Property::hasServerLoad);
+    }
+
+    protected final void registerProperty(Property property) {
         this.propertiesMap.put(property.key(), property);
     }
 
     @Override
     public void serialize(ValueOutput output) {
         for (Property syncProperty : this.properties) {
-            syncProperty.storeValue(output, Property.StoreMode.FULL);
+            if (syncProperty.hasServerLoad()) {
+                syncProperty.storeValue(output, Property.StoreMode.FULL);
+            }
         }
     }
 
     @Override
     public void deserialize(ValueInput input) {
         for (Property syncProperty : this.properties) {
-            syncProperty.load(input, true);
+            if (!syncProperty.hasServerLoad()) continue;
+            syncProperty.loadServer(input);
         }
 
         onPropertyChanged();
@@ -61,7 +73,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
     @Override
     public void serializeFullUpdate(ValueOutput output) {
         for (Property property : this.properties) {
-            if (property.sync()) {
+            if (property.hasClientSync()) {
                 property.storeValue(output, Property.StoreMode.FULL_UPDATE);
             }
         }
@@ -70,7 +82,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
     @Override
     public void serializeUpdate(ValueOutput output) {
         for (Property property : this.properties) {
-            if (property.sync() && property.hasChanged()) {
+            if (property.hasClientSync() && property.hasChanged()) {
                 property.store(output, Property.StoreMode.UPDATE);
             }
         }
@@ -80,8 +92,8 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
     public boolean deserializeUpdate(ValueInput input) {
         boolean changed = false;
         for (Property property : this.properties) {
-            if (property.sync()) {
-                changed = property.load(input, false) || changed;
+            if (property.hasClientSync()) {
+                changed = property.loadClient(input) || changed;
             }
         }
 
@@ -97,62 +109,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
 
     }
 
-    protected <T> void registerProperty(ResourceLocation key, Codec<T> codec, T defaultValue, Supplier<T> valueProvider, Function<T, Boolean> valueSetter, boolean sync) {
-        this.propertiesMap.put(key, new SimpleProperty<>(key, sync, codec, defaultValue, valueProvider, valueSetter));
-    }
-
-    protected <T> void registerNullableProperty(ResourceLocation key, Codec<@Nullable T> codec, @Nullable T defaultValue, Supplier<@Nullable T> valueProvider, Function<@Nullable T, Boolean> valueSetter, boolean sync) {
-        this.propertiesMap.put(key, new NullableProperty<>(key, sync, codec, defaultValue, valueProvider, valueSetter));
-    }
-
-    protected <T> void registerProperty(ResourceLocation key, Codec<T> codec, T defaultValue, Supplier<T> valueProvider, Consumer<T> valueSetter, Comparator<T> comparator, boolean sync) {
-        this.propertiesMap.put(key, new SimpleProperty<>(key, sync, codec, defaultValue, valueProvider, x -> {
-            var old = valueProvider.get();
-            valueSetter.accept(x);
-            return comparator.compare(old, x) != 0;
-        }));
-    }
-
-    protected <T> void registerNullableProperty(ResourceLocation key, Codec<@Nullable T> codec, @Nullable T defaultValue, Supplier<@Nullable T> valueProvider, Consumer<@Nullable T> valueSetter, Comparator<@Nullable T> comparator, boolean sync) {
-        this.propertiesMap.put(key, new NullableProperty<>(key, sync, codec, defaultValue, valueProvider, x -> {
-            @Nullable
-            var old = valueProvider.get();
-            valueSetter.accept(x);
-            return comparator.compare(old, x) != 0;
-        }));
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    protected <T extends Enum<T>> void registerEnumProperty(ResourceLocation key, Codec<T> codec, T defaultValue, Supplier<T> valueProvider, Consumer<T> valueSetter, boolean sync) {
-        registerProperty(key, codec, defaultValue, valueProvider, valueSetter, Enum::compareTo, sync);
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    protected void registerProperty(ResourceLocation key, int defaultValue, Supplier<Integer> valueProvider, Consumer<Integer> valueSetter, boolean sync) {
-        registerProperty(key, Codec.INT, defaultValue, valueProvider, valueSetter, Integer::compareTo, sync);
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    protected void registerProperty(ResourceLocation key, boolean defaultValue, Supplier<Boolean> valueProvider, Consumer<Boolean> valueSetter, boolean sync) {
-        registerProperty(key, Codec.BOOL, defaultValue, valueProvider, valueSetter, Boolean::compareTo, sync);
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    protected void registerProperty(ResourceLocation key, double defaultValue, Supplier<Double> valueProvider, Consumer<Double> valueSetter, boolean sync) {
-        registerProperty(key, Codec.DOUBLE, defaultValue, valueProvider, valueSetter, Double::compareTo, sync);
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    protected void registerProperty(ResourceLocation key, float defaultValue, Supplier<Float> valueProvider, Consumer<Float> valueSetter, boolean sync) {
-        registerProperty(key, Codec.FLOAT, defaultValue, valueProvider, valueSetter, Float::compareTo, sync);
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    protected <T> void registerListProperty(ResourceLocation key, Codec<T> codec, Supplier<List<T>> defaultValue, Supplier<List<T>> valueProvider, Function<List<T>, Boolean> valueSetter, boolean sync) {
-        this.propertiesMap.put(key, new ListProperty<>(key, sync, codec, defaultValue, valueProvider, valueSetter));
-    }
-
-    protected <T> void registerProperty(ResourceLocation key, boolean sync, Supplier<PropertySync> propertySync) {
-        this.propertiesMap.put(key, new SubProperty<>(key, sync, propertySync));
+    protected final Property.PropertyBuilder registerProperty(ResourceLocation key) {
+        return new Property.PropertyBuilder(this, key);
     }
 }

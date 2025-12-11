@@ -16,6 +16,7 @@ import de.teamlapen.factions.api.world.ITotem;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +54,14 @@ public class FactionEventFactory {
         return Pair.of(event.getDefendStrength(), event.getAttackStrength());
     }
 
+    public static void fireVillageAreaChangedEvent(@NotNull ITotem totem, @Nullable AABB area) {
+        NeoForge.EVENT_BUS.post(new FactionVillageEvent.AreaChangedEvent(totem, area));
+    }
+
+    public static void fireVillageTotemRemovedEvent(@NotNull ITotem totem) {
+        NeoForge.EVENT_BUS.post(new FactionVillageEvent.RemovedEvent(totem));
+    }
+
     public static PlayerFactionEvent.CanJoinFaction.Behavior fireCanJoinFactionEvent(@NotNull IFactionPlayerHandler playerHandler, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction, Holder<? extends IPlayableFaction<?>> newFaction) {
         PlayerFactionEvent.CanJoinFaction event = new PlayerFactionEvent.CanJoinFaction(playerHandler, (Holder<IPlayableFaction<?>>) currentFaction, (Holder<IPlayableFaction<?>>) newFaction);
         NeoForge.EVENT_BUS.post(event);
@@ -67,6 +76,11 @@ public class FactionEventFactory {
 
     public static void fireFactionLevelChangedEvent(@NotNull IFactionPlayerHandler player, @Nullable Holder<? extends IPlayableFaction<?>> oldFaction, int oldLevel, @Nullable Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
         PlayerFactionEvent.FactionLevelChanged event = new PlayerFactionEvent.FactionLevelChanged(player, (Holder<IPlayableFaction<?>>) oldFaction, oldLevel, (Holder<IPlayableFaction<?>>) newFaction, newLevel);
+        NeoForge.EVENT_BUS.post(event);
+    }
+
+    public static void fireLevelChangedEvent(@NotNull IFactionPlayerHandler player, de.teamlapen.factions.api.factions.LevelingChange change) {
+        PlayerFactionEvent.LevelChanged event = new PlayerFactionEvent.LevelChanged(player, change);
         NeoForge.EVENT_BUS.post(event);
     }
 

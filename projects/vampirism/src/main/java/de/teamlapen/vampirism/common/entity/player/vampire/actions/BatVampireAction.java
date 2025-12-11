@@ -4,7 +4,6 @@ import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.factions.api.actions.IActionResult;
 import de.teamlapen.factions.api.actions.ILastingAction;
-import de.teamlapen.vampirism.common.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttachments;
@@ -62,7 +61,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.level().dimension().location().toString())) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.dimension"));
         } else if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
+            return IActionResult.fail(Component.translatable("text.factions.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
         } else if (player.isInWater()) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_water"));
         } else if (player.getVehicle() != null) {
@@ -89,7 +88,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public void onActivatedClient(@NotNull IVampirePlayer vampire) {
-        if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
+        if (!((VampirePlayer) vampire).getSkillProperties().bat) {
             updatePlayer((VampirePlayer) vampire, true);
         }
         ResourceLocation key = ModRegistries.ACTIONS.getKey(this);
@@ -114,7 +113,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public void onReActivated(@NotNull IVampirePlayer vampire) {
         setModifier(vampire.asEntity(), true);
-        if (!((VampirePlayer) vampire).getSpecialAttributes().bat) {
+        if (!((VampirePlayer) vampire).getSkillProperties().bat) {
             updatePlayer((VampirePlayer) vampire, true);
         }
     }
@@ -186,7 +185,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      */
     private void updatePlayer(@NotNull VampirePlayer vampire, boolean bat) {
         Player player = vampire.asEntity();
-        vampire.getSpecialAttributes().bat = bat;
+        vampire.getSkillProperties().bat = bat;
         player.setForcedPose(bat ? Pose.STANDING : null);
         //Eye height is set in {@link ModPlayerEventHandler} on {@link EyeHeight} event
         //Entity size is hacked in via {@link ASMHooks}

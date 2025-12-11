@@ -36,7 +36,7 @@ public class ScreenEventHandler {
     public void onInitGuiEventPost(ScreenEvent.Init.@NotNull Post event) {
         if (event.getScreen() instanceof InventoryScreen && ModConfig.CLIENT.guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
             button = new ImageButton(((InventoryScreen) event.getScreen()).getGuiLeft() + ModConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + ModConfig.CLIENT.overrideGuiSkillButtonY.get(), 20, 18, INVENTORY_SKILLS, (context) -> {
-                FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.VAMPIRISM_MENU));
+                FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU));
             });
             event.addListener(button);
         }

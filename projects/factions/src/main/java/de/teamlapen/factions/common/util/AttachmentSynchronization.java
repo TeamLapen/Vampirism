@@ -75,15 +75,4 @@ public abstract class AttachmentSynchronization<T extends IAttachment & IEntity,
             throw new IllegalArgumentException("Cannot create attachment for holder " + holder.getClass() + ". Expected Player");
         }
     }
-
-    public static abstract class PathFinderMobOptions<T extends IAttachment & IEntity> extends AttachmentSynchronization<T, Mob> {
-        @Override
-        public T apply(IAttachmentHolder holder) {
-            if (holder instanceof net.minecraft.world.entity.Mob mob) {
-                return create(mob);
-            }
-            throw new IllegalArgumentException("Cannot create attachment for holder " + holder.getClass() + ". Expected Mob");
-        }
-
-    }
 }

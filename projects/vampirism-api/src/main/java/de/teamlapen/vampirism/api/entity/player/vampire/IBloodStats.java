@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
 
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+
 /**
  * Blood stats similar to FoodStats for vampire players
  */
-public interface IBloodStats {
+public interface IBloodStats extends ResourceHandler<FluidResource> {
     float LOW_SATURATION = 0.3F;
     float MEDIUM_SATURATION = 0.7F;
     float HIGH_SATURATION = 1.0F;

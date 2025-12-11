@@ -1,15 +1,19 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.client.core.FactionAppearanceScreens;
 import de.teamlapen.factions.common.core.FactionMenus;
 import de.teamlapen.vampirism.api.client.VampirismOverlays;
 import de.teamlapen.vampirism.client.DisguiseOverlay;
 import de.teamlapen.factions.client.gui.screens.MinionScreen;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
-import de.teamlapen.factions.client.gui.screens.taskboard.TaskBoardScreen;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModMenus;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -27,8 +31,6 @@ public class ModScreens {
         event.register(ModMenus.HUNTER_BASIC.get(), HunterBasicScreen::new);
         event.register(ModMenus.ALTAR_INFUSION.get(), AltarInfusionScreen::new);
         event.register(ModMenus.BLOOD_GRINDER.get(), BloodGrinderScreen::new);
-        event.register(FactionMenus.MINION.get(), MinionScreen::new);
-        event.register(FactionMenus.TASK_MASTER.get(), TaskBoardScreen::new);
         event.register(ModMenus.EXTENDED_POTION_TABLE.get(), PotionTableScreen::new);
         event.register(ModMenus.ALCHEMICAL_TABLE.get(), AlchemyTableScreen::new);
         event.register(ModMenus.VAMPIRE_BEACON.get(), VampireBeaconScreen::new);
@@ -39,12 +41,15 @@ public class ModScreens {
     }
 
     static void registerScreenOverlays(@NotNull RegisterGuiLayersEvent event) {
-
         event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, VampirismOverlays.BLOOD_BAR_ID, new BloodBarOverlay());
-
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.RAGE, new RageOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.BAT, new BatOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.DISGUISE, new DisguiseOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.SUN, new SunOverlay());
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.FULL_SCREEN, VampirismModClient.services().fullScreenOverlay());
+    }
+
+    public static void registerAppearanceScreens(FactionAppearanceScreens.RegisterFactionAppearanceScreensEvent event) {
+        event.register(ModFactions.VAMPIRE, VampirePlayerAppearanceScreen::new, new WidgetSprites(FResourceLocation.mod("widget/appearance"), FResourceLocation.mod("widget/appearance_highlighted")));
     }
 }

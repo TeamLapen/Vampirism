@@ -1,5 +1,10 @@
 package de.teamlapen.vampirism.common.entity.player;
 
+import de.teamlapen.factions.api.factions.ILordPlayer;
+import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.api.factions.LevelingChange;
+import de.teamlapen.factions.api.factions.lord.ILordTitleProvider;
+import de.teamlapen.factions.common.config.ModConfig;
 import de.teamlapen.factions.common.tasks.TaskManager;
 import de.teamlapen.factions.common.factions.FactionBasePlayer;
 import de.teamlapen.factions.api.entities.player.IFactionPlayer;
@@ -8,16 +13,16 @@ import de.teamlapen.factions.api.tasks.ITaskPlayer;
 import de.teamlapen.factions.common.actions.ActionHandler;
 import de.teamlapen.factions.common.skills.SkillHandler;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPlayer<T> & ITaskPlayer<T>> extends FactionBasePlayer<T> implements ISkillPlayer<T>, ITaskPlayer<T> {
+import java.util.Optional;
+
+public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPlayer<T> & ITaskPlayer<T> & ILordPlayer<T>> extends FactionBasePlayer<T> implements ISkillPlayer<T>, ITaskPlayer<T>, ILordPlayer<T> {
 
     /**
      * {@code @NotNull} on server, otherwise {@code null}
@@ -25,12 +30,12 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     private final @Nullable TaskManager<T> taskManager;
     private final ActionHandler<T> actionHandler;
     private final SkillHandler<T> skillHandler;
-    protected boolean isDirty;
 
     public CommonFactionPlayer(Player player) {
         super(player);
-        if (player instanceof ServerPlayer) {
-            this.taskManager = new TaskManager((ServerPlayer) player, this, this.getFaction());
+        if (player instanceof ServerPlayer serverPlayer) {
+            //noinspection unchecked,rawtypes
+            this.taskManager = new TaskManager(serverPlayer, this, this.getFaction());
         } else {
             this.taskManager = null;
         }
@@ -89,35 +94,63 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
 
     @MustBeInvokedByOverriders
     @Override
-    public void onLevelChanged(int newLevel, int oldLevel) {
-        if (!isRemote()) {
-            if (newLevel <= 0) {
-                this.onLevelReset(false);
-                this.sync();
-            }
+    public void levelChanged(LevelingChange changes) {
+        onLevelChanged(changes.getNewLevel());
+    }
 
-        } else {
-            if (newLevel == 0) {
-                this.onLevelReset(true);
-            }
-        }
+    protected void onLevelChanged(int newLevel) {
+
     }
 
     @MustBeInvokedByOverriders
-    protected void onLevelReset(boolean client) {
-        this.getActionHandler().resetTimers();
+    @Override
+    public void leaveFaction() {
+        onLevelChanged(0);
+        this.onLevelReset();
+        this.sync();
+    }
 
-        if (!client) {
-            this.getSkillHandler().reset();
-        }
+    @MustBeInvokedByOverriders
+    protected void onLevelReset() {
+        this.getActionHandler().resetTimers();
+        this.getSkillHandler().reset();
+    }
+
+    public int getMaxMinions() {
+        return getLordLevel() * ModConfig.SERVER.miMinionPerLordLevel.get();
+    }
+
+    @Override
+    public int getLordLevel() {
+        return factionHandler().getLordLevel();
+    }
+
+    @SuppressWarnings("NullableProblems")
+    public Optional<ILordTitleProvider> lordTitles() {
+        return Optional.ofNullable(getFaction().value().lordTitles());
+    }
+
+    @Override
+    public IPlayableFaction.TitleGender titleGender() {
+        return factionHandler().titleGender();
+    }
+
+    @Override
+    public @Nullable Component getLordTitle() {
+        return lordTitles().map(titles -> titles.getLordTitle(getLordLevel(), factionHandler().titleGender())).orElse(null);
+    }
+
+    @Override
+    public @Nullable Component getLordTitleShort() {
+        return lordTitles().map(titles -> titles.getShort(getLordLevel(), factionHandler().titleGender())).orElse(null);
     }
 
     @MustBeInvokedByOverriders
     @Override
     protected void registerProperties() {
-        this.registerProperty(VResourceLocation.mod("action_handler"), true, () -> this.actionHandler);
-        this.registerProperty(VResourceLocation.mod("skill_handler"), true, () -> this.skillHandler);
+        this.registerProperty(VResourceLocation.mod("action_handler")).subProperty(() -> this.actionHandler).register();
+        this.registerProperty(VResourceLocation.mod("skill_handler")).subProperty(() -> this.skillHandler).register();
         //noinspection DataFlowIssue
-        this.registerProperty(VResourceLocation.mod("task_manager"), false, () -> this.taskManager); // task manager is not synced
+        this.registerProperty(VResourceLocation.mod("task_manager")).subProperty(() -> this.taskManager).disableClientSync().register();
     }
 }

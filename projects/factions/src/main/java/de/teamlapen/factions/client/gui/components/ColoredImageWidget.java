@@ -9,20 +9,24 @@ public abstract class ColoredImageWidget {
 
     ColoredImageWidget() {}
 
-    public static ImageWidget texture(int width, int height, ResourceLocation texture, int textureWidth, int textureHeight, int color) {
+    public static Texture texture(int width, int height, ResourceLocation texture, int textureWidth, int textureHeight, int color) {
         return new ColoredImageWidget.Texture(0, 0, width, height, texture, textureWidth, textureHeight, color);
     }
 
-    public static ImageWidget sprite(int width, int height, ResourceLocation sprite, int color) {
+    public static Sprite sprite(int width, int height, ResourceLocation sprite, int color) {
         return new ColoredImageWidget.Sprite(0, 0, width, height, sprite, color);
     }
 
     public static class Sprite extends ImageWidget.Sprite {
 
-        private final int color;
+        private int color;
 
         public Sprite(int x, int y, int width, int height, ResourceLocation sprite, int color) {
             super(x, y, width, height, sprite);
+            this.color = color;
+        }
+
+        public void setColor(int color) {
             this.color = color;
         }
 
@@ -34,10 +38,14 @@ public abstract class ColoredImageWidget {
 
     public static class Texture extends ImageWidget.Texture {
 
-        private final int color;
+        private int color;
 
         public Texture(int x, int y, int width, int height, ResourceLocation texture, int textureWidth, int textureHeight, int color) {
             super(x, y, width, height, texture, textureWidth, textureHeight);
+            this.color = color;
+        }
+
+        public void setColor(int color) {
             this.color = color;
         }
 

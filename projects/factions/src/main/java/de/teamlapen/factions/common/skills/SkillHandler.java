@@ -226,15 +226,13 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
 
     @Override
     protected void registerProperties() {
-        this.<Set<Holder<ISkillTree>>>registerProperty(FResourceLocation.mod("unlocked_trees"), RegistryFixedCodec.create(FactionRegistries.Keys.SKILL_TREE).listOf().xmap(HashSet::new, ArrayList::new), new HashSet<>(), () -> this.unlockedTrees, x ->  {
-            return CollectionUtil.updateCollection(this.unlockedTrees, x);
-        }, true);
-        this.registerProperty(FResourceLocation.mod("skills"), (Codec<Map<Holder<ISkillTree>, List<Holder<ISkill<T>>>>>) (Object) ENABLED_SKILLS_CODEC, new HashMap<>(), () -> this.enabledSkills, map -> {
+        this.registerProperty(FResourceLocation.mod("unlocked_trees")).set(RegistryFixedCodec.create(FactionRegistries.Keys.SKILL_TREE)).provider(() -> this.unlockedTrees).commonLoader(x -> CollectionUtil.updateCollection(this.unlockedTrees, x)).register();
+        this.registerProperty(FResourceLocation.mod("skills")).simple((Codec<Map<Holder<ISkillTree>, List<Holder<ISkill<T>>>>>) (Object) ENABLED_SKILLS_CODEC).defaultValue(() -> new HashMap<>()).provider(() -> this.enabledSkills).commonLoader(map -> {
             var old = new HashSet<>(this.skills);
             this.enabledSkills.clear();
             this.enabledSkills.putAll(map);
             return CollectionUtil.checkCollection(old, this.skills, x -> x.value().onDisable(this.player), x -> x.value().onEnable(this.player));
-        }, true);
+        }).register();
     }
 
     public void resetSkills() {

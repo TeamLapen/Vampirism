@@ -1,8 +1,10 @@
 package de.teamlapen.factions.api.items.components;
 
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
 import de.teamlapen.factions.api.skills.ISkill;
 import net.minecraft.core.HolderSet;
+import net.minecraft.network.chat.Component;
 
 import java.util.Optional;
 
@@ -22,4 +24,13 @@ public interface IFactionRestriction {
      * Minimum level required to use this object.
      */
     Optional<Integer> minLevel();
+
+    Result canUse(IFactionPlayerHandler player);
+
+    record Result(Optional<Component> message, boolean success) {
+        public static final Result SUCCESS = new Result(Optional.empty(), true);
+        public static final Result WRONG_FACTION = new Result(Optional.of(Component.translatable("text.factions.restriction.can_not_be_used_faction")), false);
+        public static final Result MISSING_SKILLS = new Result(Optional.of(Component.translatable("text.factions.restriction.can_not_be_used_skill")), false);
+        public static final Result MISSING_LEVEL = new Result(Optional.of(Component.translatable("text.factions.restriction.can_not_be_used_level")), false);
+    }
 }

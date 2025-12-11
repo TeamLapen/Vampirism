@@ -64,6 +64,10 @@ public class TaskBoardMenu extends AbstractContainerMenu implements ITaskMenu {
         return this.registry;
     }
 
+    public @NotNull IFactionPlayer<?> getFactionPlayer() {
+        return this.factionPlayer;
+    }
+
     @Override
     public boolean areRequirementsCompleted(@NotNull ITaskInstance task, @NotNull TaskRequirement.Type type) {
         if (task.isCompleted()) return true;
@@ -110,7 +114,9 @@ public class TaskBoardMenu extends AbstractContainerMenu implements ITaskMenu {
                 ISoundHandler.getSoundHandler().createMasterSoundReference(FactionSounds.TASK_COMPLETE.get(), 1, 1).startPlaying();
             }
             case TaskAction.ACCEPT -> taskInfo.startTask(factionPlayer.asEntity().level().getGameTime() + taskInfo.getTaskDuration());
-            default -> taskInfo.aboardTask();
+            default -> {
+                taskInfo.aboardTask();
+            }
         }
         FactionsMod.proxy.sendToServer(new ServerboundTaskActionPacket(taskInfo.getId(), taskInfo.getTaskBoard(), action));
         if (this.listener != null) {

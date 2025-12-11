@@ -2,9 +2,7 @@ package de.teamlapen.vampirism.misc.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.entity.player.IVampirismPlayer;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.MixinHooks;
@@ -45,7 +43,7 @@ public class EntityMixin {
     @Inject(method = "vibrationAndSoundEffectsFromBlock", at = @At("HEAD"), cancellable = true)
     private void test(BlockPos pPos, BlockState pState, boolean pPlayStepSound, boolean pBroadcastGameEvent, Vec3 pEntityPos, CallbackInfoReturnable<Boolean> cir) {
         var entity = (Entity) (Object) this;
-        if (entity instanceof Player player && VampirePlayer.get(player).getSpecialAttributes().darkStalker) {
+        if (entity instanceof Player player && VampirePlayer.get(player).getSkillProperties().darkStalker) {
             cir.setReturnValue(false);
         }
     }

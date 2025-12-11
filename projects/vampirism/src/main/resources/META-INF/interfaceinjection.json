@@ -18,7 +18,7 @@
   "net/minecraft/client/Camera": [
     "de/teamlapen/vampirism/misc/injection/client/ICameraMock"
   ],
-  "de/minecraft/client/renderer/entity/EntityRenderDispatcher": [
+  "net/minecraft/client/renderer/entity/EntityRenderDispatcher": [
     "de/teamlapen/vampirism/misc/injection/client/IEntityRenderDispatcherMock"
   ],
   "net/minecraft/client/renderer/ItemInHandRenderer": [
@@ -77,5 +77,14 @@
   ],
   "net/minecraft/world/inventory/Slot": [
     "de/teamlapen/vampirism/misc/injection/ISlotMock"
+  ],
+  "net/minecraft/client/renderer/entity/LivingEntityRenderer": [
+    "de/teamlapen/vampirism/misc/injection/client/ILivingEntityRendererMock"
+  ],
+  "net/minecraft/client/renderer/entity/state/AvatarRenderState": [
+    "de/teamlapen/vampirism/misc/injection/client/AvatarRenderStateMock"
+  ],
+  "net/minecraft/world/entity/LivingEntity": [
+    "de/teamlapen/vampirism/misc/injection/ILivingEntityMock"
   ]
 }

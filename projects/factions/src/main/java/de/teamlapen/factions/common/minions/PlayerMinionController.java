@@ -2,8 +2,8 @@ package de.teamlapen.factions.common.minions;
 
 import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.entities.minion.IMinionTask;
-import de.teamlapen.factions.api.entities.player.ILordPlayer;
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.skills.ISkillPlayer;
 import de.teamlapen.factions.common.commands.arguments.MinionArgument;
@@ -295,7 +295,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         if (i != null) {
             i.checkin();
             i.deathCooldown = 20 * ModConfig.SERVER.miDeathRecoveryTime.get();
-            getLord().flatMap(player -> player.getLordFaction().map(Holder::value).map(s -> s.getPlayerCapability(player.getPlayer())).filter(s -> s instanceof ISkillPlayer<?>).map(ISkillPlayer.class::cast).map(ISkillPlayer::getSkillHandler)).ifPresent(s -> {
+            getLord().filter(x -> x instanceof ISkillPlayer<?>).map(ISkillPlayer.class::cast).map(ISkillPlayer::getSkillHandler).ifPresent(s -> {
 //                if (s.isSkillEnabled(LordSkills.MINION_RECOVERY)) { TODO
 //                    i.deathCooldown = (int) (i.deathCooldown * 0.8);
 //                }
@@ -438,7 +438,7 @@ public class PlayerMinionController implements ValueIOSerializable {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
                     i.data.setHealth(i.data.getMaxHealth());
-                    getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.vampirism.minion.can_respawn", i.data.getFormattedName()), true));
+                    getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.factions.minion.can_respawn", i.data.getFormattedName()), true));
                 }
             } else {
                 IMinionTask.IMinionTaskDesc<MinionData> taskDesc = i.data.getCurrentTaskDesc();
@@ -451,7 +451,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         @Nullable
         IMinionTask.IMinionTaskDesc<MinionData> desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.vampirism.command_could_not_activate"), false));
+            getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.factions.minion.command_could_not_activate"), false));
         } else {
             MinionData d = info.data;
             d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
@@ -459,8 +459,8 @@ public class PlayerMinionController implements ValueIOSerializable {
         }
     }
 
-    private @NotNull Optional<? extends ILordPlayer> getLord() {
-        return getLordPlayer().flatMap(player -> Optional.of(FactionPlayerHandler.get(player)));
+    private @NotNull Optional<? extends ILordPlayer<?>> getLord() {
+        return getLordPlayer().map(FactionPlayerHandler::get).filter(x -> x.getLordLevel() > 0).flatMap(FactionPlayerHandler::getLordPlayer);
     }
 
     private @NotNull Optional<Player> getLordPlayer() {

@@ -12,7 +12,7 @@ import de.teamlapen.factions.common.core.FactionStats;
 import de.teamlapen.factions.common.inventory.ITaskMenu;
 import de.teamlapen.factions.common.inventory.InventoryHelper;
 import de.teamlapen.factions.common.inventory.TaskBoardMenu;
-import de.teamlapen.factions.common.inventory.VampirismMenu;
+import de.teamlapen.factions.common.inventory.FactionMenu;
 import de.teamlapen.factions.common.network.packets.client.ClientboundTaskPacket;
 import de.teamlapen.factions.common.network.packets.client.ClientboundTaskStatusPacket;
 import de.teamlapen.factions.common.network.packets.server.ServerboundTaskActionPacket;
@@ -23,6 +23,7 @@ import de.teamlapen.sync.PropertySync;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,9 +32,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +42,7 @@ import java.util.stream.Collectors;
 
 public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implements ITaskManager {
     private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
+    private static final Codec<Map<UUID, TaskWrapper>> TASK_WRAPPER_CODEC = Codec.unboundedMap(UUIDUtil.STRING_CODEC, TaskWrapper.CODEC);
 
     private final Holder<? extends IPlayableFaction<?>> faction;
     private final ServerPlayer player;
@@ -190,38 +189,52 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     }
 
     @Override
-    public void openTaskMasterScreen(UUID taskBoardId) {
+    public void openTaskBoardScreen(UUID taskBoardId) {
         if (player.containerMenu instanceof TaskBoardMenu) {
             TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
-            Set<ITaskInstance> selectedTasks = new HashSet<>(getTasks(taskBoardId));
-            selectedTasks.addAll(getUniqueTasks());
-            player.connection.send(new ClientboundTaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoardId));
+            player.connection.send(createTaskBoardPacket(taskBoardId));
             wrapper.lastSeenPos = this.player.blockPosition();
         }
     }
 
+    private ClientboundTaskStatusPacket createTaskBoardPacket(UUID taskBoard) {
+        Set<ITaskInstance> selectedTasks = new HashSet<>(getTasks(taskBoard));
+        selectedTasks.addAll(getUniqueTasks());
+        return new ClientboundTaskStatusPacket(selectedTasks, this.getCompletableTasks(selectedTasks), getCompletedRequirements(selectedTasks), player.containerMenu.containerId, taskBoard);
+    }
+
+    private ClientboundTaskPacket createFactionMenuPacket() {
+        return new ClientboundTaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)));
+    }
+
     @Override
-    public void openVampirismMenu() {
+    @Nullable
+    public CustomPacketPayload getUpdatePacket(UUID taskBoard) {
+        if (player.containerMenu instanceof TaskBoardMenu) {
+            return createTaskBoardPacket(taskBoard);
+        } else if (player.containerMenu instanceof ITaskMenu) {
+            return createFactionMenuPacket();
+        }
+        return null;
+    }
+
+    @Override
+    public void openFactionMenu() {
         if (!player.isAlive()) return;
-        player.openMenu(new SimpleMenuProvider((i, inventory, player) -> new VampirismMenu(i, inventory), Component.empty()));
+        player.openMenu(new SimpleMenuProvider((i, inventory, player) -> new FactionMenu(i, inventory), Component.empty()));
         if (player.containerMenu instanceof ITaskMenu) {
-            player.connection.send(new ClientboundTaskPacket(player.containerMenu.containerId, this.taskWrapperMap, this.taskWrapperMap.entrySet().stream().map(entry -> Pair.of(entry.getKey(), getCompletableTasks(entry.getValue().getAcceptedTasks()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue)), this.taskWrapperMap.values().stream().map(wrapper -> Pair.of(wrapper.id, getCompletedRequirements(wrapper.tasks.values()))).collect(Collectors.toMap(Pair::getKey, Pair::getValue))));
+            player.connection.send(createFactionMenuPacket());
         }
     }
 
     @Override
     protected void registerProperties() {
-        this.<Set<ResourceKey<Task>>>registerProperty(FResourceLocation.mod("completed_tasks"), ResourceKey.codec(FactionRegistries.Keys.TASK).listOf().xmap(HashSet::new, ArrayList::new), new HashSet<>(), () -> this.completedTasks, x -> CollectionUtil.updateCollection(this.completedTasks, x), false);
-        this.registerProperty(FResourceLocation.mod("task_wrapper"), MM, new HashMap<>(), () -> this.taskWrapperMap, x -> {
-            var old = new HashSet<>(this.taskWrapperMap.values());
+        this.registerProperty(FResourceLocation.mod("completed_tasks")).set(ResourceKey.codec(FactionRegistries.Keys.TASK)).provider(() -> this.completedTasks).serverLoader(x -> CollectionUtil.updateCollection(this.completedTasks, x)).register();
+        this.registerProperty(FResourceLocation.mod("task_wrapper")).map(TASK_WRAPPER_CODEC).provider(() -> this.taskWrapperMap).serverLoader(x -> {
             this.taskWrapperMap.clear();
             this.taskWrapperMap.putAll(x);
-
-            return CollectionUtil.checkCollection(old, new HashSet<>(this.taskWrapperMap.values()));
-        }, false);
+        }).register();
     }
-
-    private static final Codec<Map<UUID, TaskWrapper>> MM = Codec.unboundedMap(UUIDUtil.CODEC, TaskWrapper.CODEC);
 
     /**
      * remove the taskInstance's requirements from the player
@@ -467,10 +480,10 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
 
         @SuppressWarnings("unchecked")
         public static final Codec<TaskWrapper> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-                UUIDUtil.CODEC.fieldOf("id").forGetter(i -> i.id),
+                UUIDUtil.STRING_CODEC.fieldOf("id").forGetter(i -> i.id),
                 Codec.INT.fieldOf("lessTasks").forGetter(i -> i.lessTasks),
                 Codec.INT.fieldOf("taskAmount").forGetter(i -> i.taskAmount),
-                Codec.unboundedMap(UUIDUtil.CODEC, TaskInstance.CODEC).fieldOf("tasksSize").forGetter(i -> (Map<UUID, TaskInstance>) (Object) i.tasks),
+                Codec.unboundedMap(UUIDUtil.STRING_CODEC, TaskInstance.CODEC).fieldOf("tasksSize").forGetter(i -> (Map<UUID, TaskInstance>) (Object) i.tasks),
                 BlockPos.CODEC.optionalFieldOf("lastSeenPos").forGetter(i -> Optional.ofNullable(i.lastSeenPos))
         ).apply(instance, TaskWrapper::new));
 

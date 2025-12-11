@@ -1,7 +1,9 @@
 package de.teamlapen.factions.api.tasks;
 
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -51,12 +53,15 @@ public interface ITaskManager {
      *
      * @param taskBoardId the unique id of the task board
      */
-    void openTaskMasterScreen(UUID taskBoardId);
+    void openTaskBoardScreen(UUID taskBoardId);
+
+    @Nullable
+    CustomPacketPayload getUpdatePacket(UUID taskBoard);
 
     /**
      * Open menu container and send task information to the vampirism container
      */
-    void openVampirismMenu();
+    void openFactionMenu();
 
     /**
      * cleans the TaskManager from every trace of completed/active tasks

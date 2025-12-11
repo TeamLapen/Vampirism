@@ -25,7 +25,7 @@ public record LordLvlUnlocker(int reqLordLevel, boolean exact) implements TaskUn
 
     @Override
     public Component getDescription() {
-        return Component.translatable("text.vampirism.lord").append(Component.literal(" ")).append(Component.translatable("text.vampirism.level")).append(Component.literal((exact ? " = " : " ") + reqLordLevel));
+        return Component.translatable("text.factions.lord").append(Component.literal(" ")).append(Component.translatable("text.factions.level")).append(Component.literal((exact ? " = " : " ") + reqLordLevel));
     }
 
     @Override

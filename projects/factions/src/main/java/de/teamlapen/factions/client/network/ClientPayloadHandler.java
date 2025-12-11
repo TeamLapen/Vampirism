@@ -1,0 +1,63 @@
+package de.teamlapen.factions.client.network;
+
+import de.teamlapen.factions.api.tasks.ITaskInstance;
+import de.teamlapen.factions.client.FactionsClientMod;
+import de.teamlapen.factions.client.gui.screens.SelectMinionScreen;
+import de.teamlapen.factions.common.inventory.TaskBoardMenu;
+import de.teamlapen.factions.common.inventory.FactionMenu;
+import de.teamlapen.factions.common.network.packets.client.*;
+import de.teamlapen.factions.common.skills.ClientSkillTreeData;
+import de.teamlapen.factions.common.skills.ClientboundSkillTreePacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import java.util.Set;
+
+public class ClientPayloadHandler {
+
+    public static void handleTaskStatusPacket(ClientboundTaskStatusPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            AbstractContainerMenu container = context.player().containerMenu;
+            if (msg.containerId() == container.containerId && container instanceof TaskBoardMenu) {
+                ((TaskBoardMenu) container).init((Set<ITaskInstance>) msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
+            }
+        });
+    }
+
+    public static void handleSkillTreePacket(ClientboundSkillTreePacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> ClientSkillTreeData.init(msg.skillTrees()));
+    }
+
+    public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> openScreen(new SelectMinionScreen(msg.action(), msg.minions())));
+    }
+
+    public static void handleTaskPacket(ClientboundTaskPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            AbstractContainerMenu container = context.player().containerMenu;
+            if (msg.containerId() == container.containerId && container instanceof FactionMenu) {
+                ((FactionMenu) container).init(msg.taskWrappers(), msg.completableTasks(), msg.completedRequirements());
+            }
+        });
+    }
+
+    public static void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> FactionsClientMod.services().bossInfoOverlay().read(msg));
+    }
+
+    public static void handlePlaySoundEventPacket(ClientboundPlaySoundEventPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            SimpleSoundInstance simpleSoundInstance = SimpleSoundInstance.forAmbientAddition(msg.soundEvent().value());
+            Minecraft.getInstance().getSoundManager().play(simpleSoundInstance);
+            context.player().level().playLocalSound(context.player(), msg.soundEvent().value(), SoundSource.AMBIENT, 1,1);
+        });
+    }
+
+    private static void openScreen(Screen screen) {
+        Minecraft.getInstance().setScreen(screen);
+    }
+}

@@ -7,7 +7,7 @@ public class CommonConfig {
     public final ModConfigSpec.BooleanValue enableFactionLogging;
 
     public CommonConfig(ModConfigSpec.Builder builder) {
-        this.enableFactionLogging = builder.comment("Enable a custom vampirism log file that logs specific faction actions").gameRestart().define("enableFactionLogging", false);
+        this.enableFactionLogging = builder.comment("Enable a custom faction log file that logs specific faction actions").gameRestart().define("enableFactionLogging", false);
 
     }
 }

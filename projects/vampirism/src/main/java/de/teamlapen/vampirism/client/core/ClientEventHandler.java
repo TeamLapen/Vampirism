@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.factions.client.FactionsClientMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.factions.common.skills.ClientSkillTreeData;
@@ -55,7 +56,6 @@ public class ClientEventHandler {
         Player player = event.getEntity();
 
         AppliedOilContent.addTooltipIfExist(player, stack, tooltip, event.getFlags());
-        FactionRestriction.addTooltipIfExist(player, stack, tooltip);
 
         if (BasePotion.isHunterPotion(stack, true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(s -> s.value().isBeneficial())).orElse(false) && (player == null || !Helper.isHunter(player))) {
             tooltip.add(Component.translatable("text.vampirism.hunter_potion.deadly").withStyle(ChatFormatting.DARK_RED));
@@ -66,16 +66,6 @@ public class ClientEventHandler {
         } else if (stack.is(ModItemTags.VAMPIRE_SPAWN)) {
             tooltip.add(Component.translatable("block.vampirism.castle_block.vampire_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
         }
-    }
-
-    @SubscribeEvent
-    public void onWorldClosed(LevelEvent.Unload event) {
-        VampirismModClient.services().bossInfoOverlay().clear();
-    }
-
-    @SubscribeEvent
-    public void onJoined(ClientPlayerNetworkEvent.LoggingOut event) {
-        ClientSkillTreeData.reset();
     }
 
     public static void onModelRegistry(ModelEvent.RegisterStandalone standalone) {

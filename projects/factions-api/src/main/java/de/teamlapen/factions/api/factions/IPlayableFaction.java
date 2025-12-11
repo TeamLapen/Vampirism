@@ -36,7 +36,7 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      * Gets the lord title provider for this faction
      */
     @Nullable
-    ILordTitleProvider lordTiles();
+    ILordTitleProvider lordTitles();
 
     /**
      * @return The "<? extends IFactionPlayer>" of this faction for the given player

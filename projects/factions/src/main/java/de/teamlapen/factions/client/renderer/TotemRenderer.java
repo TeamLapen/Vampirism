@@ -60,7 +60,7 @@ public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity, Tote
             }
             BeaconRenderer.submitBeaconBeam(poseStack, nodeCollector, TOTEM_BEAM_LOCATION, renderState.partialTicks, renderState.time, offset, HEIGHT - offset, baseColors, 0.2f, 0.25f);
         } else if (renderState.factionName != null) {
-            nodeCollector.submitNameTag(poseStack, new Vec3(0.5f,0,0.5f), 1, renderState.factionName, true, renderState.lightCoords, renderState.distanceToCamera, cameraRenderState);
+            nodeCollector.submitNameTag(poseStack, new Vec3(0.5f,0.5,0.5f), 1, renderState.factionName, true, renderState.lightCoords, renderState.distanceToCamera, cameraRenderState);
         }
     }
 

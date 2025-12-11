@@ -1,13 +1,9 @@
 package de.teamlapen.vampirism.common.entity.player.hunter;
 
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
 import de.teamlapen.factions.common.util.AttachmentSynchronization;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.factions.api.factions.IDisguise;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -15,13 +11,12 @@ import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.entity.player.LevelAttributeModifier;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.factions.common.actions.ActionHandler;
 import de.teamlapen.vampirism.common.entity.player.hunter.actions.HunterActions;
+import de.teamlapen.vampirism.common.entity.player.hunter.properties.HunterDisguise;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.factions.common.skills.SkillHandler;
 import de.teamlapen.vampirism.common.items.HunterCoatItem;
@@ -31,7 +26,6 @@ import de.teamlapen.vampirism.common.util.OilUtils;
 import de.teamlapen.vampirism.common.util.ScoreboardUtil;
 import de.teamlapen.factions.common.minions.MinionWorldData;
 import de.teamlapen.factions.misc.extensions.IEffectInstanceWithSource;
-import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -42,7 +36,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.function.Predicate;
@@ -56,21 +49,16 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         return player.getData(ModAttachments.HUNTER_PLAYER);
     }
 
-    private final Disguise disguise;
-    private final HunterPlayerSpecialAttribute specialAttributes = new HunterPlayerSpecialAttribute();
+    private final HunterDisguise disguise;
+    private final HunterSkillProperties specialAttributes = new HunterSkillProperties();
 
     public HunterPlayer(Player player) {
         super(player);
-        this.disguise = new Disguise();
+        this.disguise = new HunterDisguise(this);
     }
 
     @Override
     public AttachmentType<?> getType() {
-        return ModAttachments.HUNTER_PLAYER.get();
-    }
-
-    @Override
-    public AttachmentType<? extends IFactionPlayer<?>> attachmentType() {
         return ModAttachments.HUNTER_PLAYER.get();
     }
 
@@ -95,7 +83,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     }
 
     @Override
-    public IDisguise getDisguise() {
+    public HunterDisguise getDisguise() {
         return this.disguise;
     }
 
@@ -113,10 +101,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         }
     }
 
-    /**
-     * You can use {@link VampirismPlayerAttributes#getHuntSpecial()} instead if you don't have the hunter player already
-     */
-    public HunterPlayerSpecialAttribute getSpecialAttributes() {
+    public HunterSkillProperties getSpecialAttributes() {
         return this.specialAttributes;
     }
 
@@ -134,16 +119,16 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     }
 
     @Override
-    public void onLevelChanged(int level, int oldLevel) {
-        super.onLevelChanged(level, oldLevel);
-        if (!isRemote()) {
-            ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.HUNTER_LEVEL_CRITERIA, level);
-            LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_DAMAGE, "Hunter", level, getMaxLevel(), ModConfig.BALANCE.hpStrengthMaxMod.get(), ModConfig.BALANCE.hpStrengthType.get(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
-            if (level == 0) {
-                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
-                IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
-            }
-        }
+    public void leaveFaction() {
+        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
+        IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
+        super.leaveFaction();
+    }
+
+    @Override
+    public void onLevelChanged(int newLevel) {
+        ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.HUNTER_LEVEL_CRITERIA, newLevel);
+        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_DAMAGE, "Hunter", newLevel, getMaxLevel(), ModConfig.BALANCE.hpStrengthMaxMod.get(), ModConfig.BALANCE.hpStrengthType.get(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
     @Override
@@ -194,39 +179,11 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     @Override
     public void updateMinionAttributes(boolean increasedStats) {
         MinionWorldData.getData(this.player.level()).ifPresent(a -> {
-            a.getOrCreateController(FactionPlayerHandler.get(this.player)).contactMinions((minion) -> {
+            a.getOrCreateController(this).contactMinions((minion) -> {
                 (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData) b).setIncreasedStats(increasedStats));
 //                SyncHelper.sync(minion); TODO
             });
         });
-    }
-
-    public class Disguise implements IDisguise {
-
-        @Override
-        public Holder<? extends IPlayableFaction<?>> actualFaction() {
-            return getFaction();
-        }
-
-        @Override
-        public Holder<? extends IPlayableFaction<?>> getViewedFaction(@Nullable Holder<? extends IFaction<?>> viewerFaction) {
-            return player.hasEffect(ModEffects.DISGUISE_AS_VAMPIRE) ? ModFactions.VAMPIRE : actualFaction();
-        }
-
-        @Override
-        public void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction) {
-
-        }
-
-        @Override
-        public void unDisguise() {
-
-        }
-
-        @Override
-        public boolean isDisguised() {
-            return false;
-        }
     }
 
     public static class AttachmentOptions extends AttachmentSynchronization.PlayerOptions<HunterPlayer> {

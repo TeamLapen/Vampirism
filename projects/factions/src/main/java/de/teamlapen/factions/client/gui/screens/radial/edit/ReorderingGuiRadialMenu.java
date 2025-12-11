@@ -236,7 +236,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(graphics, mouseX, mouseY, partialTicks);
-        graphics.drawCenteredString(this.font, Component.translatable("text.vampirism.excluded"), 70, 5, -1);
+        graphics.drawCenteredString(this.font, Component.translatable("gui.factions.reordering.excluded"), 70, 5, -1);
         super.render(graphics, mouseX, mouseY, partialTicks);
         if (this.movingItem != null) {
             this.drawCallback.accept(this.movingItem.get(), graphics, mouseX - 8, mouseY - 8, 16, false);
@@ -367,8 +367,8 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     public static class ResetButton extends ExtendedButton {
 
-        private static final Component DESCRIPTION = Component.translatable("text.vampirism.gui.reset");
-        private static final Component DESCRIPTION_CONFIRM = Component.translatable("text.vampirism.gui.reset_question").withStyle(ChatFormatting.DARK_RED);
+        private static final Component DESCRIPTION = Component.translatable("gui.factions.reset");
+        private static final Component DESCRIPTION_CONFIRM = Component.translatable("gui.factions.reset_question").withStyle(ChatFormatting.DARK_RED);
 
         private boolean isClicked = false;
 

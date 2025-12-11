@@ -1,29 +1,16 @@
 package de.teamlapen.vampirism.client.network;
 
-import de.teamlapen.factions.common.network.packets.client.*;
-import de.teamlapen.factions.common.skills.ClientboundSkillTreePacket;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.factions.api.tasks.ITaskInstance;
-import de.teamlapen.vampirism.client.VampirismModClient;
-import de.teamlapen.factions.common.skills.ClientSkillTreeData;
-import de.teamlapen.factions.client.gui.screens.SelectMinionScreen;
 import de.teamlapen.vampirism.client.gui.screens.VampireBookScreen;
 import de.teamlapen.vampirism.common.entity.SundamageRegistry;
-import de.teamlapen.factions.common.inventory.TaskBoardMenu;
-import de.teamlapen.factions.common.inventory.VampirismMenu;
 import de.teamlapen.vampirism.common.network.packets.client.*;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-
-import java.util.Set;
 
 public class ClientPayloadHandler {
 
@@ -48,42 +35,12 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> openScreen(new SelectMinionScreen(msg.action(), msg.minions())));
-    }
-
     public static void handleSundamageData(ClientboundSundamagePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> ((SundamageRegistry) VampirismAPI.sundamageRegistry()).applyNetworkData(msg));
     }
 
-    public static void handleTaskPacket(ClientboundTaskPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            AbstractContainerMenu container = context.player().containerMenu;
-            if (msg.containerId() == container.containerId && container instanceof VampirismMenu) {
-                ((VampirismMenu) container).init(msg.taskWrappers(), msg.completableTasks(), msg.completedRequirements());
-            }
-        });
-    }
-
-    public static void handleTaskStatusPacket(ClientboundTaskStatusPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            AbstractContainerMenu container = context.player().containerMenu;
-            if (msg.containerId() == container.containerId && container instanceof TaskBoardMenu) {
-                ((TaskBoardMenu) container).init((Set<ITaskInstance>) msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
-            }
-        });
-    }
-
-    public static void handleUpdateMultiBossInfoPacket(ClientboundUpdateMultiBossEventPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> VampirismModClient.services().bossInfoOverlay().read(msg));
-    }
-
     private static void openScreen(Screen screen) {
         Minecraft.getInstance().setScreen(screen);
-    }
-
-    public static void handleSkillTreePacket(ClientboundSkillTreePacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> ClientSkillTreeData.init(msg.skillTrees()));
     }
 
     public static void handleRemoveGarlicEmitterPacket(ClientboundRemoveGarlicEmitterPacket msg, IPayloadContext context) {
@@ -110,11 +67,4 @@ public class ClientPayloadHandler {
         context.enqueueWork(() -> LevelFog.get(context.player().level()).remove(msg.position(), msg.tmp()));
     }
 
-    public static void handlePlaySoundEventPacket(ClientboundPlaySoundEventPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            SimpleSoundInstance simpleSoundInstance = SimpleSoundInstance.forAmbientAddition(msg.soundEvent().value());
-            Minecraft.getInstance().getSoundManager().play(simpleSoundInstance);
-            context.player().level().playLocalSound(context.player(), msg.soundEvent().value(), SoundSource.AMBIENT, 1,1);
-        });
-    }
 }

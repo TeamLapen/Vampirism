@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.entity.player.vampire.actions;
 
 import de.teamlapen.factions.api.actions.IActionResult;
 import de.teamlapen.factions.api.actions.ILastingAction;
-import de.teamlapen.vampirism.common.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
@@ -38,13 +37,13 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
 
     @Override
     public void onDeactivated(@NotNull IVampirePlayer player) {
-        ((VampirePlayer) player).getSpecialAttributes().half_invulnerable = false;
+        ((VampirePlayer) player).getSkillProperties().half_invulnerable = false;
         removePotionEffect(player, MobEffects.SLOWNESS);
     }
 
     @Override
     public void onReActivated(@NotNull IVampirePlayer player) {
-        ((VampirePlayer) player).getSpecialAttributes().half_invulnerable = true;
+        ((VampirePlayer) player).getSkillProperties().half_invulnerable = true;
 
     }
 
@@ -58,7 +57,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
 
     @Override
     protected IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
-        ((VampirePlayer) vampire).getSpecialAttributes().half_invulnerable = true;
+        ((VampirePlayer) vampire).getSkillProperties().half_invulnerable = true;
         applyEffect(vampire);
         return IActionResult.SUCCESS;
     }

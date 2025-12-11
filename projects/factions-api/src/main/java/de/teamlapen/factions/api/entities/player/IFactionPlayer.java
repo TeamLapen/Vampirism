@@ -1,16 +1,15 @@
 package de.teamlapen.factions.api.entities.player;
 
 import de.teamlapen.factions.api.extensions.IPlayer;
-import de.teamlapen.factions.api.factions.IDisguise;
-import de.teamlapen.factions.api.factions.IFactionEntity;
-import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.api.factions.*;
+import de.teamlapen.factions.api.skills.ISkillPlayer;
 import de.teamlapen.sync.api.IAttachment;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -47,6 +46,10 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     @Override
     Holder<? extends IPlayableFaction<?>> getFaction();
 
+    default boolean is(Holder<? extends IFaction<?>> faction) {
+        return IFaction.is(faction, getFaction());
+    }
+
     /**
      * Careful this selects all {@link LivingEntity}'s including etc. Items
      *
@@ -70,12 +73,8 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      */
     boolean isRemote();
 
-    /**
-     * Is called when the player's faction level changed.
-     * Is called on world load.
-     * Is called on client and server side.
-     * Might be called with oldLevel=newLevel to reset things
-     */
-    void onLevelChanged(int newLevel, int oldLevel);
+    void leaveFaction();
+
+    void levelChanged(LevelingChange changes);
 
 }

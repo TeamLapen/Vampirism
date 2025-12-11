@@ -22,12 +22,6 @@ dependencyProjects.forEach {
     project.evaluationDependsOn(it.path)
 }
 
-tasks.withType(org.gradle.api.tasks.compile.JavaCompile.class).configureEach {
-    dependencyProjects.forEach {
-        source(it.sourceSets.main.allSource)
-    }
-}
-
 dependencies {
     dependencyProjects.forEach {
         implementation(it)

@@ -36,8 +36,8 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     private Button statButton;
     private LockIconButton lockActionButton;
 
-    public MinionScreen(@NotNull MinionContainer screenContainer, @NotNull Inventory inv, @NotNull Component titleIn) {
-        super(Objects.requireNonNull(screenContainer), inv, titleIn);
+    public MinionScreen(MinionContainer screenContainer, @NotNull Inventory inv, @NotNull Component titleIn) {
+        super(screenContainer, inv, titleIn);
         this.imageWidth = 214;
         this.imageHeight = 185;
         this.extraSlots = screenContainer.getExtraSlots();
@@ -83,18 +83,18 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     @Override
     protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.drawString(this.font, title, 5, 6, 0x404040, false);
-        graphics.drawString(this.font, Component.translatable("gui.vampirism.minion.active_task"), 120, 10, 0x404040, false);
+        graphics.drawString(this.font, Component.translatable("gui.factions.minion.active_task"), 120, 10, 0x404040, false);
 
     }
 
     @Override
     protected void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.lockActionButton.isMouseOver(mouseX, mouseY)) {
-            drawButtonTip(graphics, Component.translatable("gui.vampirism.minion.lock_action"), mouseX, mouseY);
+            drawButtonTip(graphics, Component.translatable("gui.factions.minion.lock_action"), mouseX, mouseY);
         } else if (this.appearanceButton.isMouseOver(mouseX, mouseY)) {
-            drawButtonTip(graphics, Component.translatable("gui.vampirism.minion.appearance"), mouseX, mouseY);
+            drawButtonTip(graphics, Component.translatable("gui.factions.minion.appearance"), mouseX, mouseY);
         } else if (this.statButton.isMouseOver(mouseX, mouseY)) {
-            drawButtonTip(graphics, Component.translatable("gui.vampirism.minion_stats"), mouseX, mouseY);
+            drawButtonTip(graphics, Component.translatable("gui.factions.minion_stats"), mouseX, mouseY);
         } else {
             super.renderTooltip(graphics, mouseX, mouseY);
         }

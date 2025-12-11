@@ -160,7 +160,7 @@ public class TotemTopBlock extends BaseEntityBlock {
         }
         if (super.onDestroyedByPlayer(state, level, pos, player, toolStack, willHarvest, fluid)) {
             if (blockEntity != null && !blockEntity.getControllingFaction().is(DefaultFactions.NEUTRAL.getId())) {
-                blockEntity.notifyNearbyPlayers(Component.translatable("text.vampirism.village.village_abandoned"));
+                blockEntity.notifyNearbyPlayers(Component.translatable("text.factions.village.village_abandoned"));
             }
             return true;
         } else {

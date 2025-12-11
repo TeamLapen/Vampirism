@@ -192,27 +192,49 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
 
     @Override
     protected void registerProperties() {
-        this.registerProperty(FResourceLocation.mod("cooldown_timer"), (Codec<Map<Holder<? extends IAction<T>>, Integer>>) (Object) ACTION_TIME_CODEC, new HashMap<>(), () -> this.cooldownTimers, map -> {
-            CollectionUtil.updateCollection(this.cooldownTimers, map);
-            return true;
-        }, true);
-        this.registerProperty(FResourceLocation.mod("duration_timer"), (Codec<Map<Holder<? extends ILastingAction<T>>, Integer>>) (Object) LASTING_ACTION_TIME_CODEC, new HashMap<>(), () -> this.activeTimers, map -> {
-            CollectionUtil.updateCollection(this.activeTimers, map,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onActivatedClient(this.player));
-            return true;
-        }, true);
-        this.registerProperty(FResourceLocation.mod("expected_cooldown_timer"), (Codec<Map<Holder<? extends IAction<T>>, Integer>>) (Object) ACTION_TIME_CODEC, new HashMap<>(), () -> this.expectedCooldownTimes, map -> {
-            CollectionUtil.updateCollection(this.expectedCooldownTimes, map);
-            return true;
-        }, true);
-        this.registerProperty(FResourceLocation.mod("expected_duration_timer"), (Codec<Map<Holder<? extends IAction<T>>, Integer>>) (Object) ACTION_TIME_CODEC, new HashMap<>(), () -> this.expectedDurations, map -> {
-            CollectionUtil.updateCollection(this.expectedDurations, map);
-            return true;
-        }, true);
-        this.registerListProperty(FResourceLocation.mod("unlocked_actions"), (Codec<Holder<? extends IAction<T>>>) (Object) IAction.CODEC, ArrayList::new, () -> this.unlockedActions, l -> {
-            this.unlockedActions.clear();
-            this.unlockedActions.addAll(l);
-            return true;
-        }, true);
+        this.registerProperty(FResourceLocation.mod("cooldown_timer")).simple((Codec<Map<Holder<? extends IAction<T>>, Integer>>) (Object) ACTION_TIME_CODEC)
+                .defaultValue(HashMap::new)
+                .provider(() -> this.cooldownTimers)
+                .commonLoader(x -> {
+                    CollectionUtil.updateCollection(this.cooldownTimers, x);
+                    return true;
+                })
+                .register();
+        this.registerProperty(FResourceLocation.mod("duration_timer")).simple((Codec<Map<Holder<? extends ILastingAction<T>>, Integer>>) (Object) LASTING_ACTION_TIME_CODEC)
+                .defaultValue(HashMap::new)
+                .provider(() -> this.activeTimers)
+                .serverLoader(x -> {
+                    CollectionUtil.updateCollection(this.activeTimers, x,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onReActivated(this.player));
+                })
+                .clientLoader(x -> {
+                    CollectionUtil.updateCollection(this.activeTimers, x,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onActivatedClient(this.player));
+                    return true;
+                })
+                .register();
+        this.registerProperty(FResourceLocation.mod("expected_cooldown_timer")).simple((Codec<Map<Holder<? extends IAction<T>>, Integer>>) (Object) ACTION_TIME_CODEC)
+                .defaultValue(HashMap::new)
+                .provider(() -> this.expectedCooldownTimes)
+                .commonLoader(x -> {
+                    CollectionUtil.updateCollection(this.expectedCooldownTimes, x);
+                    return true;
+                })
+                .register();
+        this.registerProperty(FResourceLocation.mod("expected_duration_timer")).simple((Codec<Map<Holder<? extends IAction<T>>, Integer>>) (Object) ACTION_TIME_CODEC)
+                .defaultValue(HashMap::new)
+                .provider(() -> this.expectedDurations)
+                .commonLoader(x -> {
+                    CollectionUtil.updateCollection(this.expectedDurations, x);
+                    return true;
+                })
+                .register();
+        this.registerProperty(FResourceLocation.mod("unlocked_actions")).list((Codec<Holder<? extends IAction<T>>>) (Object) IAction.CODEC)
+                .provider(() -> this.unlockedActions)
+                .commonLoader(x -> {
+                    this.unlockedActions.clear();
+                    this.unlockedActions.addAll(x);
+                    return true;
+                })
+                .register();
     }
 
     @Override

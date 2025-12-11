@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.inventory;
 
+import de.teamlapen.factions.api.factions.LevelingChange;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -60,7 +61,7 @@ public class HunterBasicMenu extends ItemCombinerMenu {
         HunterLeveling.getBasicHunterRequirement(targetLevel).ifPresent(req -> {
             int required = req.vampireBloodAmount();
             getSlot(0).remove(required);
-            FactionPlayerHandler.get(player).setFactionLevel(ModFactions.HUNTER, targetLevel);
+            FactionPlayerHandler.get(player).setFaction(LevelingChange.builder().faction(ModFactions.HUNTER).level(targetLevel));
             player.displayClientMessage(Component.translatable("container.vampirism.basic_hunter.levelup"), false);
             player.closeContainer();
         });

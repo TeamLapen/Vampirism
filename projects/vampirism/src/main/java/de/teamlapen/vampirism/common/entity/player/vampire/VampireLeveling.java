@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.entity.player.vampire;
 
 import de.teamlapen.vampirism.REFERENCE;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Arrays;
@@ -22,12 +23,12 @@ public class VampireLeveling {
     private static final AltarInfusionRequirements LEVEL_13 = new AltarInfusionRequirements(13, 3, 2, 20, 1);
     private static final AltarInfusionRequirements LEVEL_14 = new AltarInfusionRequirements(14, 4, 2, 25, 1);
 
-    private static final VampireLevelRequirement[] LEVEL_REQUIREMENTS = {null, null, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
+    private static final @Nullable VampireLevelRequirement[] LEVEL_REQUIREMENTS = {null, null, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
 
     public static Optional<VampireLevelRequirement> getLevelRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
         //noinspection ConstantValue
         if (targetLevel < 0 || targetLevel > REFERENCE.HIGHEST_VAMPIRE_LEVEL) return Optional.empty();
-        return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]);
+        return Optional.<VampireLevelRequirement>ofNullable(LEVEL_REQUIREMENTS[targetLevel]);
     }
 
     public static Optional<AltarInfusionRequirements> getInfusionRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {

@@ -78,7 +78,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 //        UtilLib.replaceEntity(villager, hunter);
     }
 
-    private final ServerMultiBossEvent captureInfo = new ServerMultiBossEvent(Component.translatable("text.vampirism.village.bossinfo.raid"), BossEvent.BossBarOverlay.NOTCHED_10);
+    private final ServerMultiBossEvent captureInfo = new ServerMultiBossEvent(Component.translatable("text.factions.village.bossinfo.raid"), BossEvent.BossBarOverlay.NOTCHED_10);
     public long timeSinceLastRaid = 0;
     //block attributes
     private boolean isComplete;
@@ -134,7 +134,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 
     public void abortCapture() {
         this.applyVictoryBonus(false);
-        notifyNearbyPlayers(Component.translatable("text.vampirism.village.defended"));
+        notifyNearbyPlayers(Component.translatable("text.factions.village.defended"));
         breakCapture();
     }
 
@@ -162,19 +162,19 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             if (this.capturingFaction == null) {
                 return true;
             } else {
-                player.displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_other_capturing"), true);
+                player.displayClientMessage(Component.translatable("text.factions.village.totem_destroy.fail_other_capturing"), true);
                 return false;
             }
         } else if (IFaction.is(this.capturingFaction, faction)) {
             if (IFaction.is(this.controllingFaction, FactionTags.IS_NEUTRAL)) {
                 return true;
             } else {
-                player.displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_other_faction"), true);
+                player.displayClientMessage(Component.translatable("text.factions.village.totem_destroy.fail_other_faction"), true);
                 return false;
             }
         } else {
             if (!(this.capturingFaction == null && IFaction.is(this.controllingFaction, FactionTags.IS_NEUTRAL))) {
-                player.displayClientMessage(Component.translatable("text.vampirism.village.totem_destroy.fail_other_faction"), true);
+                player.displayClientMessage(Component.translatable("text.factions.village.totem_destroy.fail_other_faction"), true);
                 return false;
             }
             return true;
@@ -266,10 +266,10 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 
         if (IFaction.isNeutral(this.controllingFaction)) {
             this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
-            this.notifyNearbyPlayers(Component.translatable("text.vampirism.village.neutral_village_under_attack", faction.value().getNamePlural()));
+            this.notifyNearbyPlayers(Component.translatable("text.factions.village.neutral_village_under_attack", faction.value().getNamePlural()));
         } else {
             this.phase = CAPTURE_PHASE.PHASE_1_OPPOSITE;
-            this.notifyNearbyPlayers(Component.translatable("text.vampirism.village.faction_village_under_attack", this.controllingFaction.value().getNamePlural(), faction.value().getNamePlural()));
+            this.notifyNearbyPlayers(Component.translatable("text.factions.village.faction_village_under_attack", this.controllingFaction.value().getNamePlural(), faction.value().getNamePlural()));
         }
 
 
@@ -299,16 +299,17 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             }
         }, () -> setCapturingFaction(null));
         if (this.level != null) {
-//            LevelFog fog = LevelFog.get(this.level);
             input.read("villageArea", ModCodecs.AABB).ifPresentOrElse(aabb -> this.villageArea = aabb, () -> this.villageArea = null);
-//            fog.updateArtificialFogBoundingBox(this.worldPosition, IFaction.is(this.controllingFaction, ModFactions.VAMPIRE) ? aabb : null); TODO
-//            if (this.isRaidTriggeredByBadOmen() && IFaction.is(this.capturingFaction, ModFactions.VAMPIRE)) {
-//                fog.updateTemporaryArtificialFog(this.worldPosition, aabb);
-//            }
+            FactionEventFactory.fireVillageAreaChangedEvent(this, this.villageArea);
         }
         this.forceVillageUpdate = true;
         this.captureInfo.deserialize(input.childOrEmpty("captureInfo"));
         this.timeSinceLastRaid = input.getLongOr("timeSinceLastRaid", 0L);
+    }
+
+    @Override
+    public BlockPos position() {
+        return this.worldPosition;
     }
 
     public void notifyNearbyPlayers(@NotNull Component textComponent) {
@@ -403,11 +404,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         super.setChanged();
         if (this.level != null) {
             if (!this.village.isEmpty()) {
-//                LevelFog fog = LevelFog.get(this.level); TODO
-//                fog.updateArtificialFogBoundingBox(this.worldPosition, IFaction.is(this.controllingFaction, ModFactions.VAMPIRE) ? this.getVillageArea() : null);
-//                if (this.isRaidTriggeredByBadOmen() && IFaction.is(this.capturingFaction, ModFactions.VAMPIRE)) {
-//                    fog.updateTemporaryArtificialFog(this.worldPosition, this.getVillageArea());
-//                }
+                FactionEventFactory.fireVillageAreaChangedEvent(this, this.villageArea);
             }
         }
     }
@@ -437,8 +434,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 
     @Override
     public void setRemoved() {
-        //noinspection ConstantConditions
-//        LevelFog.get(this.level).updateArtificialFogBoundingBox(this.worldPosition, null); TODO
+        FactionEventFactory.fireVillageTotemRemovedEvent(this);
         TotemHelper.removeTotem(this.level.dimension(), this.village, this.worldPosition, true);
         if (!unloaded) {
             // @Volatile: MC calls setRemoved when a chunk unloads now as well (see ServerLevel#unload -> LevelChunk#clearAllBlockEntities).
@@ -597,7 +593,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
                         captureTimer = 1;
                         this.setupPhase2();
                         this.setChanged();
-                        this.notifyNearbyPlayers(Component.translatable("text.vampirism.village.almost_captured", currentDefender));
+                        this.notifyNearbyPlayers(Component.translatable("text.factions.village.almost_captured", currentDefender));
                     } else {
                         if (captureTimer % 2 == 0) {
                             float max = attackerStrength + defenderStrength;
@@ -779,15 +775,15 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 
     private boolean capturePreconditions(@Nullable Holder<? extends IFaction<?>> faction, @NotNull BiConsumer<Component, Boolean> feedback) {
         if (faction == null) {
-            feedback.accept(Component.translatable("text.vampirism.village.no_faction"), true);
+            feedback.accept(Component.translatable("text.factions.village.no_faction"), true);
             return false;
         }
         if (capturingFaction != null) {
-            feedback.accept(Component.translatable("text.vampirism.village.capturing_in_progress"), true);
+            feedback.accept(Component.translatable("text.factions.village.capturing_in_progress"), true);
             return false;
         }
         if (faction.equals(controllingFaction)) {
-            feedback.accept(Component.translatable("text.vampirism.village.same_faction"), true);
+            feedback.accept(Component.translatable("text.factions.village.same_faction"), true);
             return false;
         }
         if (!isInsideVillage) {
@@ -798,20 +794,20 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             //noinspection ConstantConditions
             Map<Integer, Integer> stats = TotemHelper.getVillageStats(TotemHelper.getVillagePointsOfInterest((ServerLevel) level, this.worldPosition), this.level);
             int status = TotemHelper.isVillage(stats, !IFaction.isNeutral(this.controllingFaction) || this.capturingFaction != null);
-            MutableComponent text = Component.translatable("text.vampirism.village.missing_components");
+            MutableComponent text = Component.translatable("text.factions.village.missing_components");
             if ((status & 1) == 0) {
                 text.append("\n  - ");
-                text.append(Component.translatable("text.vampirism.village.missing_components.home"));
+                text.append(Component.translatable("text.factions.village.missing_components.home"));
                 text.append(" " + stats.get(1) + "/" + TotemHelper.MIN_HOMES);
             }
             if ((status & 2) == 0) {
                 text.append("\n  - ");
-                text.append(Component.translatable("text.vampirism.village.missing_components.workstations"));
+                text.append(Component.translatable("text.factions.village.missing_components.workstations"));
                 text.append(" " + stats.get(2) + "/" + TotemHelper.MIN_WORKSTATIONS);
             }
             if ((status & 4) == 0) {
                 text.append("\n  - ");
-                text.append(Component.translatable("text.vampirism.village.missing_components.villager"));
+                text.append(Component.translatable("text.factions.village.missing_components.villager"));
                 text.append(" " + stats.get(4) + "/" + TotemHelper.MIN_VILLAGER);
             }
             feedback.accept(text, false);
@@ -820,7 +816,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             return false;
         }
         if (isDisabled) {
-            feedback.accept(Component.translatable("text.vampirism.village.othertotem"), true);
+            feedback.accept(Component.translatable("text.factions.village.othertotem"), true);
             return false;
         }
         FactionVillageEvent.InitiateCapture event = new FactionVillageEvent.InitiateCapture(this, faction);
@@ -847,7 +843,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         this.setCapturingFaction(null);
 
         if (notifyPlayer) {
-            this.notifyNearbyPlayers(Component.translatable("text.vampirism.village.village_captured_by", controllingFaction.value().getNamePlural()));
+            this.notifyNearbyPlayers(Component.translatable("text.factions.village.village_captured_by", controllingFaction.value().getNamePlural()));
         }
         this.updateBossinfoPlayers(null);
         this.setChanged();
@@ -925,7 +921,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             case PHASE_1_NEUTRAL, PHASE_1_OPPOSITE -> neutralPerc = this.captureTimer / (float) ModConfig.SERVER.viPhase1Duration.get();
             case PHASE_2 -> {
                 neutralPerc = 1f;
-                this.captureInfo.setName(Component.translatable("text.vampirism.village.bossinfo.remaining"));
+                this.captureInfo.setName(Component.translatable("text.factions.village.bossinfo.remaining"));
             }
             default -> neutralPerc = 0;
         }
@@ -938,7 +934,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         this.progressColor = faction != null ? new Color(faction.value().getColor()).getRGB() : DyeColor.WHITE.getTextureDiffuseColor();
         if (faction != null) {
             this.captureInfo.setColors(new Color(faction.value().getColor()), Color.WHITE, new Color(this.controllingFaction.value().getColor()));
-            this.captureInfo.setName(Component.translatable("text.vampirism.village.bossinfo.raid", faction.value().getName().plainCopy().withStyle(style -> style.withColor((faction.value().getChatColor())))));
+            this.captureInfo.setName(Component.translatable("text.factions.village.bossinfo.raid", faction.value().getName().plainCopy().withStyle(style -> style.withColor((faction.value().getChatColor())))));
         }
     }
 
@@ -962,7 +958,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     private void setupPhase2() {
         if (this.phase != CAPTURE_PHASE.PHASE_2) {
             this.phase = CAPTURE_PHASE.PHASE_2;
-            this.captureInfo.setName(Component.translatable("text.vampirism.village.bossinfo.remaining"));
+            this.captureInfo.setName(Component.translatable("text.factions.village.bossinfo.remaining"));
         }
     }
 

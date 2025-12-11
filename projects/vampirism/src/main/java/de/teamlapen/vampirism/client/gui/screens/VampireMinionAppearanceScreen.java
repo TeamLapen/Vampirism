@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearanc
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
@@ -73,6 +74,11 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         this.typeButton = this.addRenderableWidget(new ExtendedButton(this.typeList.getX(), this.typeList.getY() - 20, this.typeList.getWidth(), 20, Component.literal(""), (button1 -> setListVisibility(!this.typeList.visible))));
 
         setListVisibility(false);
+    }
+
+    @Override
+    protected LayoutElement createLayout() {
+        return null;
     }
 
     private void onNameChanged(String newName) {

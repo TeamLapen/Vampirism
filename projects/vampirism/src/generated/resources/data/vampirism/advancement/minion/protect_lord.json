@@ -3,7 +3,7 @@
   "criteria": {
     "task": {
       "conditions": {
-        "task": "vampirism:protect_lord"
+        "task": "factions:protect_lord"
       },
       "trigger": "factions:minion_action"
     }

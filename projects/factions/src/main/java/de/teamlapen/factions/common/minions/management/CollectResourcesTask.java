@@ -3,8 +3,8 @@ package de.teamlapen.factions.common.minions.management;
 import de.teamlapen.factions.api.entities.minion.IFactionMinionTask;
 import de.teamlapen.factions.api.entities.minion.IMinionEntity;
 import de.teamlapen.factions.api.entities.minion.IMinionTask;
-import de.teamlapen.factions.api.entities.player.ILordPlayer;
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.skills.ISkill;
 import de.teamlapen.factions.common.config.ModConfig;
@@ -74,8 +74,8 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public boolean isAvailable(@NotNull Holder<? extends IPlayableFaction<?>> faction, @Nullable ILordPlayer player) {
-        return (this.faction == null || IFaction.is(this.faction, faction)) && isRequiredSkillUnlocked(faction, player);
+    public boolean isAvailable( @NotNull ILordPlayer<?> player) {
+        return (this.faction == null || IFaction.is(this.faction, player.getFaction())) && isRequiredSkillUnlocked(player);
     }
 
 

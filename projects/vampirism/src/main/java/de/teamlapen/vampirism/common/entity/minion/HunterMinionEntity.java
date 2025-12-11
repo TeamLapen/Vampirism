@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.common.entity.minion;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.factions.api.factions.ILordPlayer;
+import de.teamlapen.factions.common.core.FactionMinionTasks;
 import de.teamlapen.factions.common.minions.MinionEntity;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -14,12 +16,10 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.entity.ai.goals.RangedHunterCrossbowAttackGoal;
 import de.teamlapen.vampirism.common.entity.hunter.BasicHunterEntity;
 import de.teamlapen.factions.common.minions.MinionData;
 import de.teamlapen.vampirism.common.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.common.items.crossbow.TechCrossbowItem;
@@ -73,7 +73,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     @Override
     public @NotNull List<IMinionTask<?, ?>> getAvailableTasks() {
-        return Lists.newArrayList(MinionTasks.FOLLOW_LORD.get(), MinionTasks.DEFEND_AREA.get(), MinionTasks.STAY.get(), MinionTasks.COLLECT_HUNTER_ITEMS.get(), MinionTasks.PROTECT_LORD.get());
+        return Lists.newArrayList(FactionMinionTasks.FOLLOW_LORD.get(), FactionMinionTasks.DEFEND_AREA.get(), FactionMinionTasks.STAY.get(), MinionTasks.COLLECT_HUNTER_ITEMS.get(), FactionMinionTasks.PROTECT_LORD.get());
     }
 
     public void setHatType(int type) {
@@ -205,7 +205,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     @Override
     public boolean canUseCrossbow(ItemStack stack) {
-        return stack.getItem() instanceof TechCrossbowItem ? getLordOpt().map(p -> HunterPlayer.get(p.getPlayer()).getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false) : true;
+        return stack.getItem() instanceof TechCrossbowItem ? getLordOpt().flatMap(ILordPlayer::asSkillPlayer).map(x -> x.getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false) : true;
     }
 
     @Override
@@ -232,7 +232,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public @NotNull Predicate<ItemStack> getEquipmentPredicate(EquipmentSlot slotType) {
         Predicate<ItemStack> predicate = super.getEquipmentPredicate(slotType);
         if (slotType == EquipmentSlot.MAINHAND) {
-            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || HunterPlayer.get(getLord().getPlayer()).getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS));
+            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || getLord().flatMap(ILordPlayer::asSkillPlayer).map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false));
         }
         return predicate;
     }

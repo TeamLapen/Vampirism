@@ -23,7 +23,7 @@ public abstract class SkillTreeProvider implements DataProvider {
     private final String modId;
 
     public SkillTreeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId) {
-        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "vampirism/configured_skill_tree");
+        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "factions/configured_skill_tree");
         this.lookupProvider = lookupProvider;
         this.modId = modId;
     }

@@ -49,7 +49,7 @@ public class InfectionStatus {
         } else if (duration / (float) totalTicks < 0.5f) {
             if (this.entity.getEffect(MobEffects.HUNGER) == null) {
                 MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.HUNGER, MobEffectInstance.INFINITE_DURATION);
-                ((IEffectInstanceWithSource) mobEffectInstance).factions$addProperty(ModEffects.SANGUINARE.getId());
+                mobEffectInstance.factions$addProperty(ModEffects.SANGUINARE.getId());
                 this.entity.addEffect(mobEffectInstance);
             }
         }

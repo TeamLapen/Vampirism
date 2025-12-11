@@ -25,14 +25,6 @@ import org.apache.logging.log4j.Logger;
 
 public class ServerPayloadHandler {
 
-    private static final ServerPayloadHandler INSTANCE = new ServerPayloadHandler();
-    private static final Logger LOGGER = LogManager.getLogger();
-
-    public static ServerPayloadHandler getInstance() {
-        return INSTANCE;
-    }
-
-
     public static void handleAppearancePacket(ServerboundAppearancePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             Entity entity1 = context.player().level().getEntity(msg.entityId());
@@ -74,8 +66,6 @@ public class ServerPayloadHandler {
         });
     }
 
-
-
     public static void handleSetVampireBeaconPacket(ServerboundSetVampireBeaconPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().containerMenu instanceof VampireBeaconMenu beaconMenu && beaconMenu.stillValid(context.player())) {
@@ -89,15 +79,19 @@ public class ServerPayloadHandler {
             ServerPlayer player = (ServerPlayer) context.player();
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             //Try to keep this simple
+            final VampirePlayer vampirePlayer = VampirePlayer.get(player);
             switch (msg.event()) {
-                case FINISH_SUCK_BLOOD -> VampirePlayer.get(player).endFeeding(true);
+                case FINISH_SUCK_BLOOD -> vampirePlayer.endFeeding(true);
                 case REVERT_BACK -> {
                     if (player.containerMenu instanceof RevertBackMenu menu) {
                         menu.consume(player);
                     }
                     handler.leaveFaction(!player.level().getServer().isHardcore());
                 }
-                case TOGGLE_VAMPIRE_VISION -> VampirePlayer.get(player).switchVision();
+                case TOGGLE_VAMPIRE_VISION -> {
+                    vampirePlayer.switchVision();
+                    vampirePlayer.sync();
+                }
                 case TRAINER_LEVELUP -> {
                     if (player.containerMenu instanceof HunterTrainerMenu) {
                         ((HunterTrainerMenu) player.containerMenu).onLevelupClicked();
@@ -108,8 +102,8 @@ public class ServerPayloadHandler {
                         menu.onLevelUpClicked(player);
                     }
                 }
-                case RESURRECT -> VampirePlayer.get(player).tryResurrect();
-                case GIVE_UP -> VampirePlayer.get(player).giveUpDBNO();
+                case RESURRECT -> vampirePlayer.tryResurrect();
+                case GIVE_UP -> vampirePlayer.giveUpDBNO();
             }
         });
     }
@@ -121,21 +115,5 @@ public class ServerPayloadHandler {
             msg.target().ifRight(blockContact -> vampire.biteBlock(blockContact.pos(), blockContact.side()));
         });
     }
-
-
-
-    public static void handleUpgradeMinionStatPacket(ServerboundUpgradeMinionStatPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            Player player = context.player();
-            Entity entity = player.level().getEntity(msg.entityId());
-            if (entity instanceof MinionEntity) {
-                if (((MinionEntity<?>) entity).getMinionData().map(d -> d.upgradeStat(msg.statId(), (MinionEntity<?>) entity)).orElse(false)) {
-//                    SyncHelper.sync((MinionEntity<?>) entity); TODO
-                }
-            }
-        });
-    }
-
-
 
 }

@@ -1,6 +1,7 @@
 package de.teamlapen.factions.client.gui.overlay;
 
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.common.config.ModConfig;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
@@ -22,11 +23,7 @@ public class FactionLevelOverlay extends BaseOverlay {
                 // boolean flag1 = false;
                 int color = faction.value().getColor();
                 int backGroundColor = ARGB.scaleRGB(color, 0.25f);
-                int lord = handler.getLordLevel();
-                Component text = null;
-                if (lord > 0) {
-                    text = handler.getLordTitleShort();
-                }
+                Component text = handler.getLordPlayer().filter(x -> x.getLordLevel() > 0).map(ILordPlayer::getLordTitleShort).orElse(null);
 
                 if (text == null) {
                     text = Component.literal(String.valueOf(handler.getCurrentLevel()));

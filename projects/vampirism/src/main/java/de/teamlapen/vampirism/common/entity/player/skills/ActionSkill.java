@@ -63,7 +63,7 @@ public class ActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends 
         super(skillTree, skillPointCost, customDescription);
         this.action = action;
         if (!customDescription) {
-            this.setDescription(() -> Component.translatable("text.vampirism.skill.unlocks_action"));
+            this.setDescription(() -> Component.translatable("gui.factions.skill.unlocks_action"));
         }
     }
 

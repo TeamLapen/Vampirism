@@ -240,7 +240,7 @@ public class GuideBook implements IGuideBook {
         entries.put(VResourceLocation.mod(base + "dbno"), new EntryText(dbnoPages, translateComponent(base + "dbno")));
 
         List<IPage> lordPages = new ArrayList<>();
-        ILordTitleProvider titles = ModFactions.VAMPIRE.value().lordTiles();
+        ILordTitleProvider titles = ModFactions.VAMPIRE.value().lordTitles();
         assert titles != null;
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_VAMPIRE.get().getDescription(), titles.getLordTitle(1, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE), titles.getLordTitle(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.MALE), titles.getLordTitle(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.FEMALE))), VResourceLocation.mod(("guide.vampirism.entity.taskmaster"))));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(3).setHeadline(translateComponent(base + "lord.titles"));
@@ -338,7 +338,7 @@ public class GuideBook implements IGuideBook {
         entries.put(VResourceLocation.mod(base + "vamp_slayer"), new EntryText(vampSlayerPages, translateComponent(base + "vamp_slayer")));
 
         List<IPage> lordPages = new ArrayList<>();
-        ILordTitleProvider titles = ModFactions.HUNTER.value().lordTiles();
+        ILordTitleProvider titles = ModFactions.HUNTER.value().lordTitles();
         assert titles != null;
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_HUNTER.get().getDescription(), titles.getLordTitle(1, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(ModFactions.HUNTER.value().getHighestLordLevel(), IPlayableFaction.TitleGender.MALE))), VResourceLocation.mod("guide.vampirism.entity.taskmaster")));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(2);
@@ -541,7 +541,7 @@ public class GuideBook implements IGuideBook {
         List<IPage> v1_8 = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base1_8 + "overview.text")));
         //vampirism menu
         List<IPage> vampirism_menu = PageHelper.pagesForLongText(translateComponent(base1_8 + "vampirism_menu.text", ModKeys.VAMPIRISM_MENU.getTranslatedKeyMessage()));
-        vampirism_menu.add(new PageTextImage(translateComponent(base1_8 + "vampirism_menu.image"), ResourceLocation.parse(IMAGE_BASE + "vampirism_menu.png"), false));
+        vampirism_menu.add(new PageTextImage(translateComponent(base1_8 + "vampirism_menu.image"), ResourceLocation.parse(IMAGE_BASE + "faction_menu.png"), false));
         v1_8.addAll(vampirism_menu);
         //vampire accessories
         List<IPage> accessories = PageHelper.pagesForLongText(translateComponent(base1_8 + "accessories.text"));

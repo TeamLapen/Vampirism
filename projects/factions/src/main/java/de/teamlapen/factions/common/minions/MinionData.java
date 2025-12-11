@@ -140,7 +140,7 @@ public abstract class MinionData implements ValueIOSerializable, IMinionData {
     public void resetStats(@NotNull MinionEntity<?> entity) {
         entity.getInventory().ifPresent(inv -> {
             if (!InventoryHelper.removeItemFromInventory(inv, new ItemStack(FactionItems.OBLIVION_POTION.get()))) {
-                entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.getPlayer().getInventory(), new ItemStack(FactionItems.OBLIVION_POTION.get())));
+                entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.asEntity().getInventory(), new ItemStack(FactionItems.OBLIVION_POTION.get())));
             }
         });
     }
@@ -199,7 +199,7 @@ public abstract class MinionData implements ValueIOSerializable, IMinionData {
                     inv.addItemStack(stack);
                     if (!stack.isEmpty()) {
                         entity.getLordOpt().ifPresent(lord -> {
-                            if (!lord.getPlayer().addItem(stack)) {
+                            if (!lord.asEntity().addItem(stack)) {
                                 entity.spawnAtLocation(serverLevel, stack);
                             }
                         });

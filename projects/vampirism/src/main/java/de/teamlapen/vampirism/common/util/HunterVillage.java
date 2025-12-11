@@ -39,8 +39,8 @@ public class HunterVillage {
         return itemStack;
     }
 
-    public static IFactionVillageBuilder hunterVillage() {
-        return new FactionVillageBuilder().badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
+    public static void hunterVillage(IFactionVillageBuilder builder) {
+        builder.badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
                 .captureEntities(Lists.newArrayList(new Weighted<>(ModEntities.HUNTER::get, 10), new Weighted<>(ModEntities.ADVANCED_HUNTER::get, 2)))
                 .factionVillagerProfession(ModVillage.HUNTER_EXPERT.getKey())
                 .guardSuperClass(HunterBaseEntity.class)

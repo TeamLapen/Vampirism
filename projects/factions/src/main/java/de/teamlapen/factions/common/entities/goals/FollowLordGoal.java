@@ -1,6 +1,6 @@
 package de.teamlapen.factions.common.entities.goals;
 
-import de.teamlapen.factions.api.entities.player.ILordPlayer;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.common.core.FactionMinionTasks;
 import de.teamlapen.factions.common.minions.MinionEntity;
 import net.minecraft.core.Vec3i;
@@ -14,7 +14,7 @@ import java.util.Optional;
 public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
 
-    private @Nullable ILordPlayer lord;
+    private @Nullable ILordPlayer<?> lord;
 
 
     public FollowLordGoal(@NotNull MinionEntity<?> entity, double followSpeedIn) {
@@ -31,7 +31,7 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
         if (this.entity.getCurrentTask().filter(task -> task.getTask() == FactionMinionTasks.FOLLOW_LORD.get() || task.getTask() == FactionMinionTasks.PROTECT_LORD.get()).isEmpty()) {
             return false;
         }
-        Optional<ILordPlayer> lord = this.entity.getLordOpt();
+        Optional<ILordPlayer<?>> lord = this.entity.getLordOpt();
         if (lord.isEmpty()) {
             return false;
         }
@@ -52,12 +52,12 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
     @Override
     protected @NotNull Vec3 getLookPosition() {
-        return lord.getPlayer().getEyePosition(1);
+        return Optional.ofNullable(lord).map(x -> x.asEntity().getEyePosition(1)).orElseGet(() -> this.entity.getEyePosition(1));
     }
 
     @Override
     protected @NotNull Vec3i getTargetPosition() {
-        return lord.getPlayer().blockPosition();
+        return Optional.ofNullable(lord).map(x -> x.asEntity().blockPosition()).orElseGet(this.entity::blockPosition);
     }
 
 }

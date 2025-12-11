@@ -47,6 +47,7 @@ public class FactionTasks {
         TASK_UNLOCKER.register(bus);
         TASK_REWARDS.register(bus);
         TASK_REQUIREMENTS.register(bus);
+        TASK_REWARD_INSTANCES.register(bus);
     }
 
     static void createTasks(BootstrapContext<Task> context) {

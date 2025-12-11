@@ -8,7 +8,6 @@ import de.teamlapen.factions.api.tasks.TaskUnlocker;
 import de.teamlapen.factions.common.core.FactionTasks;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 public record ParentUnlocker(Holder<Task> parent) implements TaskUnlocker {
 
@@ -20,11 +19,11 @@ public record ParentUnlocker(Holder<Task> parent) implements TaskUnlocker {
 
     @Override
     public Component getDescription() {
-        return Component.translatable("text.vampirism.task.require_parent", this.parent.value().title());
+        return Component.translatable("text.factions.task.require_parent", this.parent.value().title());
     }
 
     @Override
-    public <T extends ITaskPlayer<T>> boolean isUnlocked(@NotNull T playerEntity) {
+    public <T extends ITaskPlayer<T>> boolean isUnlocked(T playerEntity) {
         return this.parent.unwrapKey().map(key -> playerEntity.getTaskManager().wasTaskCompleted(key)).orElse(false);
     }
 

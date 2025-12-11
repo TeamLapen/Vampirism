@@ -1,15 +1,11 @@
 package de.teamlapen.vampirism.common.entity.player;
 
-import com.google.common.collect.ImmutableList;
-import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.common.core.FactionDataComponents;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.items.components.IBottleBlood;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.actions.IActionHandler;
-import de.teamlapen.factions.common.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.common.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.blocks.mother.MotherBlock;
@@ -24,22 +20,15 @@ import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.entity.player.vampire.actions.BatVampireAction;
 import de.teamlapen.factions.common.components.FactionRestriction;
 import de.teamlapen.factions.common.components.FactionSlayer;
+import de.teamlapen.vampirism.common.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.common.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.potions.BasePotion;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.util.RegUtil;
-import de.teamlapen.factions.common.util.TotemHelper;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -78,14 +67,10 @@ import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.StreamSupport;
 
 /**
@@ -94,12 +79,12 @@ import java.util.stream.StreamSupport;
 public class ModPlayerEventHandler {
 
     @SubscribeEvent
-    public void eyeHeight(EntityEvent.@NotNull Size event) {
-        if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/) {
+    public void eyeHeight(EntityEvent.Size event) {
+        if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getInventory() != null /*make sure we are not in the player's contructor*/ && (!(event.getEntity() instanceof ServerPlayer serverPlayer) || serverPlayer.connection != null)) {
             if (event.getEntity().isAlive() && event.getEntity().position().lengthSqr() != 0 && event.getEntity().getVehicle() == null) { //Do not attempt to get capability while entity is being initialized
-                if (VampirePlayer.get((Player) event.getEntity()).getSpecialAttributes().bat) {
+                if (VampirePlayer.get((Player) event.getEntity()).getSkillProperties().bat) {
                     event.setNewSize(BatVampireAction.BAT_SIZE);
-                } else if (VampirePlayer.get((Player) event.getEntity()).getSpecialAttributes().isDBNO) {
+                } else if (VampirePlayer.get((Player) event.getEntity()).getSkillProperties().isDBNO) {
                     event.setNewSize(EntityDimensions.fixed(0.6f, 0.95f).withEyeHeight(0.725f));
                 }
             }
@@ -107,17 +92,17 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onTryMount(@NotNull EntityMountEvent event) {
-        if (event.getEntity() instanceof Player && VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
+    public void onTryMount(EntityMountEvent event) {
+        if (event.getEntity() instanceof Player player && VampirePlayer.get(player).getSkillProperties().isCannotInteract()) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onAttackEntity(@NotNull AttackEntityEvent event) {
+    public void onAttackEntity(AttackEntityEvent event) {
         Player player = event.getEntity();
         if (player.isAlive()) {
-            if (VampirePlayer.get(player).getSpecialAttributes().bat) {
+            if (VampirePlayer.get(player).getSkillProperties().bat) {
                 event.setCanceled(true);
             }
             HunterPlayer.get(player).breakDisguise();
@@ -135,10 +120,10 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.@NotNull EntityPlaceEvent event) {
-        if (!(event.getEntity() instanceof Player) || !event.getEntity().isAlive()) return;
+        if (!(event.getEntity() instanceof Player player) || !event.getEntity().isAlive()) return;
         if (event.getPlacedBlock().isAir()) return; //If for some reason, cough Create cough, a block is removed (so air is placed) we don't want to prevent that.
         try {
-            if (VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().isCannotInteract()) {
+            if (VampirePlayer.get(player).getSkillProperties().isCannotInteract()) {
                 event.setCanceled(true);
 
                 //Workaround for https://github.com/MinecraftForge/MinecraftForge/issues/7609 or https://github.com/TeamLapen/Vampirism/issues/1021
@@ -164,33 +149,37 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onBreakSpeed(PlayerEvent.@NotNull BreakSpeed event) {
-        if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
+    public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
+        if (VampirePlayer.get(event.getEntity()).getSkillProperties().isCannotInteract()) {
             event.setCanceled(true);
-        } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == event.getState().getBlock()) && VampirismPlayerAttributes.get(event.getEntity()).vampireLevel > 0) {
+        } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == event.getState().getBlock()) && VampirePlayer.get(event.getEntity()).getLevel() > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
 
     @SubscribeEvent
-    public void onItemPickupPre(@NotNull ItemEntityPickupEvent.Pre event) {
-        if (VampirismPlayerAttributes.get(event.getPlayer()).getVampSpecial().isDBNO) {
+    public void onItemPickupPre(ItemEntityPickupEvent.Pre event) {
+        if (VampirePlayer.get(event.getPlayer()).getSkillProperties().isDBNO) {
             event.setCanPickup(TriState.FALSE);
         }
     }
 
-    @SubscribeEvent
-    public void onItemRightClick(PlayerInteractEvent.@NotNull RightClickItem event) {
-        if (VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
+        if (VampirePlayer.get(event.getEntity()).getSkillProperties().isCannotInteract()) {
             event.setCancellationResult(InteractionResult.SUCCESS_SERVER);
+            event.setCanceled(true);
+        }
+        var oilContent = event.getItemStack().get(ModDataComponents.APPLIED_OIL);
+        if (oilContent != null && !FactionRestriction.canUse(event.getEntity(), AppliedOilContent.HUNTER_RESTRICTION, false)) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onItemUse(LivingEntityUseItemEvent.@NotNull Start event) {
+    public void onItemUse(LivingEntityUseItemEvent.Start event) {
         if (event.getEntity() instanceof Player player) {
-            if (VampirismPlayerAttributes.get(player).getVampSpecial().isCannotInteract()) {
+            if (VampirePlayer.get(player).getSkillProperties().isCannotInteract()) {
                 event.setCanceled(true);
             }
             if (event.getItem().getItem() instanceof HunterCrossbowItem && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.CROSSBOW_TECHNIQUE)) {
@@ -202,13 +191,13 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onBlockRightClicked(PlayerInteractEvent.RightClickBlock event) {
-        if (Helper.isVampire(event.getEntity()) && VampirismPlayerAttributes.get(event.getEntity()).getVampSpecial().isCannotInteract()) {
+        if (Helper.isVampire(event.getEntity()) && VampirePlayer.get(event.getEntity()).getSkillProperties().isCannotInteract()) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onItemUse(LivingEntityUseItemEvent.@NotNull Finish event) {
+    public void onItemUse(LivingEntityUseItemEvent.Finish event) {
         if (!Helper.isHunter(event.getEntity())) {
             ItemStack stack = event.getItem();
             if (stack.getItem() == Items.POTION) {
@@ -233,7 +222,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onLivingDeathFirst(@NotNull LivingDeathEvent event) {
+    public void onLivingDeathFirst(LivingDeathEvent event) {
         if (event.getEntity() instanceof Player player) {
             if (VampirePlayer.get(player).onDeadlyHit(event.getSource())) {
                 event.setCanceled(true);
@@ -242,17 +231,17 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingFall(@NotNull LivingFallEvent event) {
-        if (event.getEntity() instanceof Player) {
-            event.setDistance(event.getDistance() - VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().getJumpBoost());
+    public void onLivingFall(LivingFallEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            event.setDistance(event.getDistance() - VampirePlayer.get(player).getSkillProperties().getJumpBoost());
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onLivingHurt(@NotNull LivingDamageEvent.Pre event) {
+    public void onLivingHurt(LivingDamageEvent.Pre event) {
         DamageContainer d = event.getContainer();
         if (!d.getSource().is(DamageTypeTags.WITCH_RESISTANT_TO) && !d.getSource().is(DamageTypeTags.BYPASSES_ARMOR) && event.getEntity() instanceof Player) {
-            if (VampirePlayer.get((Player) event.getEntity()).getSpecialAttributes().bat) {
+            if (VampirePlayer.get((Player) event.getEntity()).getSkillProperties().bat) {
                 d.setNewDamage(event.getContainer().getNewDamage() * 2);
             }
         }
@@ -266,14 +255,14 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingJump(LivingEvent.@NotNull LivingJumpEvent event) {
-        if (event.getEntity() instanceof Player) {
-            event.getEntity().setDeltaMovement(event.getEntity().getDeltaMovement().add(0.0D, (float) VampirismPlayerAttributes.get((Player) event.getEntity()).getVampSpecial().getJumpBoost() * 0.1F, 0.0D));
+    public void onLivingJump(LivingEvent.LivingJumpEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            event.getEntity().setDeltaMovement(event.getEntity().getDeltaMovement().add(0.0D, (float) VampirePlayer.get(player).getSkillProperties().getJumpBoost() * 0.1F, 0.0D));
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent.@NotNull RightClickBlock event) {
+    public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
 
         //To replace glas bottles with blood bottles if interacting with a blood container
         //Also used to force block interaction with blood container if sneaking
@@ -320,7 +309,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onPlayerLeftClickedBlock(PlayerInteractEvent.@NotNull LeftClickBlock event) {
+    public void onPlayerLeftClickedBlock(PlayerInteractEvent.LeftClickBlock event) {
         if (event.getFace() == null) return;
         Level world = event.getLevel();
         BlockPos pos = event.getPos();
@@ -352,7 +341,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void sleepTimeCheck(@NotNull CanPlayerSleepEvent event) {
+    public void sleepTimeCheck(CanPlayerSleepEvent event) {
         if (Helper.isVampire(event.getEntity()) && event.getState().getBlock() instanceof CoffinBlock) {
             //This complete overwrites sleep check logic from net.minecraft.server.level.ServerPlayer.startSleepInBed
             //Vanilla checks for several things in order. We only want to overwrite the last two things: NOT_POSSIBLE_NOW and NOT_SAFE.

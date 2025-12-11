@@ -31,9 +31,9 @@ public record LvlUnlocker(int reqLevel, int maxLevel) implements TaskUnlocker {
 
     @Override
     public Component getDescription() {
-        MutableComponent t = Component.translatable("text.vampirism.level_min", reqLevel);
+        MutableComponent t = Component.translatable("text.factions.level_min", reqLevel);
         if (maxLevel > 0) {
-            t.append(" ").append(Component.translatable("text.vampirism.level_max", maxLevel));
+            t.append(" ").append(Component.translatable("text.factions.level_max", maxLevel));
         }
         return t;
     }

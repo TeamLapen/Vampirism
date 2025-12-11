@@ -112,7 +112,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         this.keyBindingList = rowHelper.addChild(new KeyBindingList(excludesWidth - 8, this.height - 55 - 11));
         this.repositionCallback.add((width1, height1) -> keyBindingList.setHeight(height1 - 55 - 11));
         rowHelper.addChild(new ResetButton(0, 0, excludesWidth - 30, 20, (context) -> this.resetKeyBindings()), rowHelper.newCellSettings().paddingHorizontal(1));
-        rowHelper.addChild(new ExtendedButton(0, 0, excludesWidth - 30, 20, Component.translatable("text.vampirism.open_settings"), (context) -> Minecraft.getInstance().setScreen(new KeyBindsScreen(this, getMinecraft().options))), rowHelper.newCellSettings().paddingHorizontal(1));
+        rowHelper.addChild(new ExtendedButton(0, 0, excludesWidth - 30, 20, Component.translatable("gui.factions.edit_action.open_keybinding_settings"), (context) -> Minecraft.getInstance().setScreen(new KeyBindsScreen(this, getMinecraft().options))), rowHelper.newCellSettings().paddingHorizontal(1));
 
         this.layout.addChild(excludesWrapper,0,2);
     }
@@ -128,7 +128,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     @Override
     public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
         super.renderBackground(graphics, p_296369_, p_296477_, p_294317_);
-        graphics.drawCenteredString(this.font, Component.translatable("text.vampirism.key_shortcuts"), this.width - 70, 5, -1);
+        graphics.drawCenteredString(this.font, Component.translatable("gui.factions.edit_action.key_shortcuts"), this.width - 70, 5, -1);
     }
 
     public class KeyBindingList extends ContainerObjectSelectionList<KeyBindingList.KeyBindingSetting> {

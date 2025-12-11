@@ -12,7 +12,6 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -24,14 +23,14 @@ public class PlayerEntityEventHandler {
     }
 
     @SubscribeEvent
-    public static void onChangedDimension(PlayerEvent.@NotNull PlayerChangedDimensionEvent event) {
+    public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         for (AttachmentType<IPlayerEventListener> listener : listeners()) {
             event.getEntity().getData(listener).onChangedDimension(event.getFrom(), event.getTo());
         }
     }
 
     @SubscribeEvent
-    public static void onEntityJoinWorld(@NotNull EntityJoinLevelEvent event) {
+    public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Player) {
             for (AttachmentType<IPlayerEventListener> listener : listeners()) {
                 event.getEntity().getData(listener).onJoinWorld();
@@ -41,7 +40,7 @@ public class PlayerEntityEventHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingAttack(@NotNull LivingIncomingDamageEvent event) {
+    public static void onLivingAttack(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             for (AttachmentType<IPlayerEventListener> listener : listeners()) {
                 if (event.getEntity().getData(listener).onEntityAttacked(event.getSource(), event.getAmount())) {
@@ -52,7 +51,7 @@ public class PlayerEntityEventHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingDeath(@NotNull LivingDeathEvent event) {
+    public static void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof Player) {
             for (AttachmentType<IPlayerEventListener> listener : listeners()) {
                 event.getEntity().getData(listener).onDeath(event.getSource());
@@ -79,14 +78,14 @@ public class PlayerEntityEventHandler {
     }
 
     @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.@NotNull PlayerLoggedInEvent event) {
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         for (AttachmentType<IPlayerEventListener> listener : listeners()) {
             event.getEntity().getData(listener).onPlayerLoggedIn();
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerLoggedOut(PlayerEvent.@NotNull PlayerLoggedOutEvent event) {
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         for (AttachmentType<IPlayerEventListener> listener : listeners()) {
             event.getEntity().getData(listener).onPlayerLoggedOut();
         }

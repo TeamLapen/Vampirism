@@ -9,9 +9,7 @@ import de.teamlapen.factions.api.tasks.ITaskInstance;
 import de.teamlapen.factions.api.tasks.ITaskRewardInstance;
 import de.teamlapen.factions.api.tasks.Task;
 import de.teamlapen.factions.common.tags.FactionTaskTags;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -25,9 +23,9 @@ public class TaskInstance implements ITaskInstance {
 
     public static final Codec<TaskInstance> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(
-                UUIDUtil.CODEC.fieldOf("taskGiver").forGetter(t -> t.taskGiver),
+                UUIDUtil.STRING_CODEC.fieldOf("taskGiver").forGetter(t -> t.taskGiver),
                 ResourceKey.codec(FactionRegistries.Keys.TASK).fieldOf("task").forGetter(t -> t.task),
-                UUIDUtil.CODEC.fieldOf("instanceId").forGetter(t -> t.instanceId),
+                UUIDUtil.STRING_CODEC.fieldOf("instanceId").forGetter(t -> t.instanceId),
                 Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("stats").forGetter(t -> t.stats),
                 ITaskRewardInstance.CODEC.fieldOf("reward").forGetter(t -> t.reward),
                 Codec.LONG.fieldOf("taskDuration").forGetter(t -> t.taskDuration),
@@ -46,8 +44,8 @@ public class TaskInstance implements ITaskInstance {
     private long taskTimeStamp;
     private boolean completed;
 
-    public TaskInstance(Holder.Reference<Task> task, UUID taskGiver, IFactionPlayer<?> player, long taskDuration) {
-        this.task = task.key();
+    public TaskInstance(Holder<Task> task, UUID taskGiver, IFactionPlayer<?> player, long taskDuration) {
+        this.task = task.getKey();
         this.taskGiver = taskGiver;
         this.instanceId = UUID.randomUUID();
         this.stats = new HashMap<>();
@@ -103,7 +101,7 @@ public class TaskInstance implements ITaskInstance {
     }
 
     public ResourceKey<Task> getTask() {
-        return task;
+        return this.task;
     }
 
     @Override

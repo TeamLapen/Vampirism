@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
+import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.factions.api.factions.IFaction;
@@ -13,7 +14,6 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.entity.CrossbowArrowEntity;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.items.StakeItem;
 import de.teamlapen.vampirism.common.items.crossbow.arrow.VampireKillerBehavior;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
@@ -138,19 +138,19 @@ public class Helper {
      * @return If the given entity is a vampire (Either a player in the vampire faction or a vampire entity
      */
     public static boolean isVampire(Entity entity) {
-        return IFaction.is(ModFactions.VAMPIRE, VampirismAPI.factionRegistry().getFaction(entity));
+        return IFaction.is(ModFactions.VAMPIRE, FactionsMod.services().factionRegistry().getFaction(entity));
     }
 
     public static boolean isHunter(Entity entity) {
-        return IFaction.is(ModFactions.HUNTER, VampirismAPI.factionRegistry().getFaction(entity));
+        return IFaction.is(ModFactions.HUNTER, FactionsMod.services().factionRegistry().getFaction(entity));
     }
 
     public static boolean isHunter(@NotNull Player entity) {
-        return IFaction.is(ModFactions.HUNTER, VampirismPlayerAttributes.get(entity).faction);
+        return FactionPlayerHandler.get(entity).isInFaction(ModFactions.HUNTER);
     }
 
     public static boolean isVampire(Player entity) {
-        return IFaction.is(ModFactions.VAMPIRE, VampirismPlayerAttributes.get(entity).faction);
+        return FactionPlayerHandler.get(entity).isInFaction(ModFactions.VAMPIRE);
     }
 
     public static boolean appearsAsVampire(Entity entity, Entity viewer) {
@@ -166,7 +166,7 @@ public class Helper {
     }
 
     public static Holder<? extends IFaction<?>> viewedFaction(Player player, Entity viewer) {
-        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(VampirismAPI.factionRegistry().getFaction(viewer))).orElse(null);
+        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(FactionsMod.services().factionRegistry().getFaction(viewer))).orElse(null);
     }
 
     /**

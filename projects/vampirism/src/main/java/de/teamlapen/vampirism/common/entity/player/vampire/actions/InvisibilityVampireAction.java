@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.entity.player.vampire.actions;
 
 import de.teamlapen.factions.api.actions.IActionResult;
 import de.teamlapen.factions.api.actions.ILastingAction;
-import de.teamlapen.vampirism.common.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
@@ -42,13 +41,13 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
 
     @Override
     public void onActivatedClient(@NotNull IVampirePlayer vampire) {
-        ((VampirePlayer) vampire).getSpecialAttributes().invisible = true;
+        ((VampirePlayer) vampire).getSkillProperties().invisible = true;
     }
 
     @Override
     public void onDeactivated(@NotNull IVampirePlayer vampire) {
         vampire.asEntity().setInvisible(false);
-        ((VampirePlayer) vampire).getSpecialAttributes().invisible = false;
+        ((VampirePlayer) vampire).getSkillProperties().invisible = false;
     }
 
     @Override

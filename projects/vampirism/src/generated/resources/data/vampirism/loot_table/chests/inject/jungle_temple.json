@@ -14,8 +14,8 @@
           "functions": [
             {
               "function": "vampirism:set_blood",
-              "maxBlood": 9,
-              "minBlood": 3
+              "maxBlood": 2,
+              "minBlood": 1
             }
           ],
           "name": "vampirism:blood_bottle",

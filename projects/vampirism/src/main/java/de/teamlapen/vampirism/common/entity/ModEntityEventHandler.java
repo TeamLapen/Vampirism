@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.common.core.ModVillage;
 import de.teamlapen.vampirism.common.entity.ai.goals.AvoidBlockGoal;
 import de.teamlapen.vampirism.common.entity.ai.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.factions.common.minions.MinionEntity;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
@@ -218,8 +217,9 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityVisibilityCheck(LivingEvent.@NotNull LivingVisibilityEvent event) {
         if (event.getEntity() instanceof Player player) {
-            if (VampirismPlayerAttributes.get(player).getHuntSpecial().isDisguised()) {
-                event.modifyVisibility((VampirismPlayerAttributes.get((Player) event.getEntity()).getHuntSpecial().fullHunterCoat != null ? 0.5 : 1) * ModConfig.BALANCE.haDisguiseVisibilityMod.get());
+            HunterPlayer hunter = HunterPlayer.get(player);
+            if (hunter.isDisguised()) {
+                event.modifyVisibility((hunter.getSpecialAttributes().fullHunterCoat != null ? 0.5 : 1) * ModConfig.BALANCE.haDisguiseVisibilityMod.get());
             }
         }
     }

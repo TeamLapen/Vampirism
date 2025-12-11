@@ -1,7 +1,7 @@
 package de.teamlapen.factions.api.entities.minion;
 
-import de.teamlapen.factions.api.entities.player.ILordPlayer;
 import de.teamlapen.factions.api.factions.IFactionEntity;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
@@ -26,7 +26,7 @@ public interface IMinionEntity extends IFactionEntity {
     /**
      * @return The lord player. Empty if minion data is not available or lord is not loaded
      */
-    Optional<ILordPlayer> getLordOpt();
+    Optional<ILordPlayer<?>> getLordOpt();
 
     /**
      * @return The id of this minion. Empty if failed to check out minion data

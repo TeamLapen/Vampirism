@@ -21,16 +21,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.common.util.ValueIOSerializable;
-import org.jetbrains.annotations.NotNull;
 
-import java.time.temporal.ValueRange;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RefinementHandler<T extends IRefinementPlayer<T>> extends PropertySync implements IRefinementHandler<T>, ValueIOSerializable {
+public class RefinementHandler<T extends IRefinementPlayer<T>> extends PropertySync implements IRefinementHandler<T> {
 
     private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(IRefinementItem.AccessorySlotType.values().length, ItemStack.EMPTY);
     private final Map<IRefinementItem.AccessorySlotType, Set<Holder<IRefinement>>> refinementSets = new HashMap<>();
@@ -147,6 +142,32 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> extends PropertyS
     }
 
     @Override
+    public void updateItems() {
+        for (IRefinementItem.AccessorySlotType value : IRefinementItem.AccessorySlotType.values()) {
+            var refinements = this.refinementSets.remove(value);
+            if (refinements != null) {
+                refinements.forEach(this::removeAttributes);
+            }
+        }
+
+        for (ItemStack refinementItem : this.refinementItems) {
+            if (refinementItem.getItem() instanceof IRefinementItem refinement) {
+                IRefinementItem.AccessorySlotType slotType = refinement.getSlotType();
+                IRefinementSet refinementSet = refinement.getRefinementSet(refinementItem);
+                Set<Holder<IRefinement>> refinements;
+                if (refinementSet == null) {
+                    refinements = Set.of();
+                } else {
+                    refinements = refinementSet.getRefinements();
+                }
+                refinementSets.put(slotType, refinements);
+                refinements.forEach(this::addAttributes);
+            }
+        }
+        sync();
+    }
+
+    @Override
     public void resetRefinements() {
         for (IRefinementItem.AccessorySlotType slot : IRefinementItem.AccessorySlotType.values()) {
             removeRefinement(slot);
@@ -162,7 +183,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> extends PropertyS
 
     @Override
     protected void registerProperties() {
-        this.registerListProperty(FResourceLocation.mod("refinement_items"), ItemStackWithSlot.CODEC, ArrayList::new, () -> {
+        this.registerProperty(FResourceLocation.mod("refinement_items")).list(ItemStackWithSlot.CODEC).provider(() -> {
             ArrayList<ItemStackWithSlot> itemStacks = new ArrayList<>(this.refinementItems.size());
             for (int i = 0; i < refinementItems.size(); i++) {
                 var stack = refinementItems.get(i);
@@ -170,13 +191,13 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> extends PropertyS
                 itemStacks.add(new ItemStackWithSlot(i, stack));
             }
             return itemStacks;
-        }, x -> {
+        }).commonLoader(x -> {
             Map<Integer, ItemStack> updatedItems = x.stream().collect(Collectors.toMap(ItemStackWithSlot::slot, ItemStackWithSlot::stack));
             for (int i = 0; i < refinementItems.size(); i++) {
                 refinementItems.set(i, updatedItems.getOrDefault(i, ItemStack.EMPTY));
             }
             return true;
-        }, true);
+        }).register();
     }
 
 }

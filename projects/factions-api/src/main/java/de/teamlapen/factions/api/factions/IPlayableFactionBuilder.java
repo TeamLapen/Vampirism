@@ -1,6 +1,7 @@
 package de.teamlapen.factions.api.factions;
 
 import de.teamlapen.factions.api.entities.player.IFactionPlayer;
+import de.teamlapen.factions.api.factions.lord.ILordPlayerBuilder;
 import de.teamlapen.factions.api.factions.lord.ILordPlayerEntry;
 import de.teamlapen.factions.api.factions.village.IFactionVillage;
 import de.teamlapen.factions.api.items.IRefinementItem;
@@ -11,6 +12,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IFactionBuilder<T> {
@@ -43,6 +45,8 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     IPlayableFactionBuilder<T> chatColor(ChatFormatting color);
 
     IPlayableFactionBuilder<T> lord(ILordPlayerEntry lordPlayerBuilder);
+
+    IPlayableFactionBuilder<T> lord(Consumer<ILordPlayerBuilder<T>> builder);
 
     @Override
     <Z> IPlayableFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag);

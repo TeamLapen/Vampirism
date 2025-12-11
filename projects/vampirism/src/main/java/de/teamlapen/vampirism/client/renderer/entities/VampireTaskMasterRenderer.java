@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entities.layers.TaskMasterTypeLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.VampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.TaskMasterRenderState;
+import de.teamlapen.vampirism.common.entity.hunter.HunterTaskMasterEntity;
 import de.teamlapen.vampirism.common.entity.vampire.VampireTaskMasterEntity;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.client.model.VillagerModel;
@@ -46,6 +47,12 @@ public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEnti
         if (renderState.distanceToCameraSq <= 128) {
             super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
         }
+    }
+
+    @Override
+    public void extractRenderState(@NotNull VampireTaskMasterEntity entity, @NotNull VampireTaskMasterRenderer.VampireTaskMasterRenderState renderState, float partialTicks) {
+        super.extractRenderState(entity, renderState, partialTicks);
+        renderState.villagerData = entity.getVillageData();
     }
 
     @Override

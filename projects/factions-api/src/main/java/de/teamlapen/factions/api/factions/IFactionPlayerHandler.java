@@ -2,7 +2,6 @@ package de.teamlapen.factions.api.factions;
 
 import de.teamlapen.factions.api.actions.IActionHandler;
 import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.entities.player.ILordPlayer;
 import de.teamlapen.factions.api.extensions.IPlayer;
 import de.teamlapen.factions.api.refinements.IRefinementHandler;
 import de.teamlapen.factions.api.refinements.IRefinementPlayer;
@@ -22,7 +21,7 @@ import java.util.Optional;
  * Handles factions and levels for the player
  * Attached to all players as capability
  */
-public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
+public interface IFactionPlayerHandler extends IPlayer {
 
     /**
      * Players can only join a faction if they are in no other.
@@ -42,9 +41,8 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
     Holder<? extends IPlayableFaction<?>> getFaction();
 
     /**
-     * @return The currently active faction player. Can be null
+     * @return The currently active faction player
      */
-    @NotNull
     <T extends IFactionPlayer<T>> T factionPlayer();
 
     /**
@@ -80,6 +78,8 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
 
     <T extends ITaskPlayer<T>> Optional<T> getTaskPlayer();
 
+    <T extends ILordPlayer<T>> Optional<T> getLordPlayer();
+
     Optional<ITaskManager> getTaskManager();
 
     /**
@@ -90,13 +90,17 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      */
     int getCurrentLevel();
 
+    int getLordLevel();
+
+    IPlayableFaction.TitleGender titleGender();
+
     /**
      * Makes some things easier.
      * Prefer using {@link IFactionPlayer#getLevel()} unless you are checking your own faction, since other factions might handle things differently
      *
      * @return If the faction is active: The faction level, otherwise 0
      */
-    int getCurrentLevel(Holder<? extends IPlayableFaction<?>> f);
+    int getCurrentLevel(Holder<? extends IFaction<?>> f);
 
     /**
      * If not in faction returns 0f
@@ -123,28 +127,11 @@ public interface IFactionPlayerHandler extends ILordPlayer, IPlayer {
      */
     boolean onEntityAttacked(DamageSource src, float amt);
 
-    /**
-     * Set the players faction and it's level. Only use this if you are sure that you want to override the previous faction.
-     *
-     * @return If successful
-     */
-    boolean setFactionAndLevel(Holder<? extends IPlayableFaction<?>> faction, int level);
+    boolean setFaction(LevelingChange param);
 
-    /**
-     * Set the level for a faction. Only works if the player already is in the given faction.
-     * Use {@link IFactionPlayerHandler#joinFaction(net.minecraft.core.Holder)} to join a faction first or {@link IFactionPlayerHandler#setFactionAndLevel(net.minecraft.core.Holder, int)} if you are sure what you do
-     *
-     * @return If successful
-     */
-    boolean setFactionLevel(Holder<? extends IPlayableFaction<?>> faction, int level);
-
-    /**
-     * Set the players lord level.
-     * Checks if player is in faction and at faction max level and if level is lower than max lord level
-     *
-     * @return if successful
-     */
-    boolean setLordLevel(int level);
+    default boolean setFaction(LevelingChange.Builder param) {
+        return setFaction(param.build());
+    }
 
     /**
      * Leave the current faction (if in any) by setting current faction to null and level to 0.

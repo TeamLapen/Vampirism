@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.factions.api.entities.player.IFactionPlayer;
+import de.teamlapen.factions.api.factions.LevelingChange;
 import de.teamlapen.factions.api.tasks.ITaskRewardInstance;
 import de.teamlapen.factions.api.tasks.TaskReward;
 import de.teamlapen.factions.common.core.FactionTasks;
@@ -33,14 +34,14 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
 
     public LordLevelReward(int targetLevel) {
         this.targetLevel = targetLevel;
-        this.description = Component.translatable("task_reward.vampirism.lord_level_reward", targetLevel);
+        this.description = Component.translatable("task_reward.factions.lord_level_reward", targetLevel);
     }
 
     @Override
     public void applyReward(IFactionPlayer<?> p) {
         FactionPlayerHandler fph = FactionPlayerHandler.get(p.asEntity());
         if (fph.getLordLevel() == targetLevel - 1) {
-            fph.setLordLevel(targetLevel);
+            fph.setFaction(LevelingChange.builder().lordLevel(targetLevel).build());
         }
     }
 

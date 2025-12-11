@@ -33,8 +33,4 @@ public interface INeutralPlayer extends IFactionPlayer<INeutralPlayer> {
         return false;
     }
 
-    @Override
-    default void onLevelChanged(int newLevel, int oldLevel) {
-
-    }
 }

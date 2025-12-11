@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.inventory;
 
+import de.teamlapen.factions.api.factions.LevelingChange;
 import de.teamlapen.factions.common.inventory.InventoryHelper;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,7 +93,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
     public void onLevelupClicked() {
         if (canLevelup()) {
             this.lvlRequirement.ifPresent(req -> {
-                FactionPlayerHandler.get(this.player).setFactionLevel(ModFactions.HUNTER, req.targetLevel());
+                FactionPlayerHandler.get(this.player).setFaction(LevelingChange.builder().faction(ModFactions.HUNTER).level(req.targetLevel()));
                 InventoryHelper.removeItems(getInputSlots(), req.ironQuantity(), req.goldQuantity(), 1);
                 this.player.addEffect(new MobEffectInstance(ModEffects.SATURATION, 400, 2));
                 this.lvlRequirement = HunterLeveling.getTrainerRequirement(req.targetLevel() + 1);

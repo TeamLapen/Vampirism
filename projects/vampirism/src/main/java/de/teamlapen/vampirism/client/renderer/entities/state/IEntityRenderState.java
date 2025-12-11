@@ -16,7 +16,4 @@ public interface IEntityRenderState {
 
     void vampirism$attackArm(HumanoidArm arm);
 
-    boolean sleeping$inCoffin();
-
-    void sleeping$inCoffin(boolean sleepingInCoffin);
 }

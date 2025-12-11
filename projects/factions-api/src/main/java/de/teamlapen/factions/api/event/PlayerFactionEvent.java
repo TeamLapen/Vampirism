@@ -2,9 +2,11 @@ package de.teamlapen.factions.api.event;
 
 import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.api.factions.LevelingChange;
 import net.minecraft.core.Holder;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Event related to any faction changes of players
@@ -108,6 +110,21 @@ public class PlayerFactionEvent extends Event {
          */
         public int getNewLevel() {
             return newLevel;
+        }
+    }
+
+    public static class LevelChanged extends PlayerFactionEvent {
+
+        private final LevelingChange change;
+
+        @SuppressWarnings("unchecked")
+        public LevelChanged(IFactionPlayerHandler player, LevelingChange change) {
+            super(player, (Holder<IPlayableFaction<?>>) change.getNewFaction());
+            this.change = change;
+        }
+
+        public LevelingChange getChange() {
+            return this.change;
         }
     }
 

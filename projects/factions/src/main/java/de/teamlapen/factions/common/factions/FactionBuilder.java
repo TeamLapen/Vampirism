@@ -4,6 +4,7 @@ import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionBuilder;
 import de.teamlapen.factions.api.factions.IFactionEntity;
 import de.teamlapen.factions.api.factions.village.IFactionVillage;
+import de.teamlapen.factions.api.factions.village.IFactionVillageBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder<T> {
 
@@ -46,6 +48,14 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
     @Override
     public IFactionBuilder<T> village(IFactionVillage villageBuilder) {
         this.villageFactionData = villageBuilder;
+        return this;
+    }
+
+    @Override
+    public IFactionBuilder<T> village(Consumer<IFactionVillageBuilder> villageBuilder) {
+        var builder = new FactionVillageBuilder();
+        villageBuilder.accept(builder);
+        this.villageFactionData = builder.build();
         return this;
     }
 

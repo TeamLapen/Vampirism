@@ -1,6 +1,6 @@
 package de.teamlapen.factions.api.entities.minion;
 
-import de.teamlapen.factions.api.entities.player.ILordPlayer;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -47,11 +47,10 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
     String getDescriptionId();
 
     /**
-     * @param faction The faction of the lord
      * @param player  The lord player entity if loaded
      * @return Whether the task can currently be given by the lord player
      */
-    default boolean isAvailable(@NotNull Holder<? extends IPlayableFaction<?>> faction, @Nullable ILordPlayer player) {
+    default boolean isAvailable(ILordPlayer<?> player) {
         return true;
     }
 
@@ -59,7 +58,6 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * Read the task description from NBT.
      * Counterpart to {@link IMinionTaskDesc#serialize(ValueOutput)}
      */
-    @NotNull
     T load(ValueInput input);
 
     /**
@@ -70,7 +68,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      * @param minionGetter Getter for the minion entity. Only use if necessary as it's a costly operation. Optional can be empty if there is an issue.
      * @param minionData   The minion data.
      */
-    default void tickActive(T desc, @NotNull Supplier<Optional<IMinionEntity>> minionGetter, @NotNull Q minionData) {
+    default void tickActive(T desc, Supplier<Optional<IMinionEntity>> minionGetter, Q minionData) {
         this.tickBackground(desc, minionData);
     }
 

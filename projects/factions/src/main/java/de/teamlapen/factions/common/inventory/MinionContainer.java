@@ -3,7 +3,7 @@ package de.teamlapen.factions.common.inventory;
 import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.entities.minion.IMinionInventory;
 import de.teamlapen.factions.api.entities.minion.IMinionTask;
-import de.teamlapen.factions.api.entities.player.ILordPlayer;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.common.core.FactionMenus;
 import de.teamlapen.factions.common.core.FactionMinionTasks;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
@@ -32,7 +32,7 @@ public class MinionContainer extends InventoryContainerMenu {
     private final static Logger LOGGER = LogManager.getLogger();
 
     @Nullable
-    public static MinionContainer create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity<?> minionEntity, @NotNull ILordPlayer lord) {
+    public static MinionContainer create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity<?> minionEntity, @NotNull ILordPlayer<?> lord) {
         Optional<IMinionInventory> minionInv = minionEntity.getInventory();
         return minionInv.map(inv -> new MinionContainer(id, playerInventory, lord, minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize()))).orElse(null);
     }
@@ -65,11 +65,11 @@ public class MinionContainer extends InventoryContainerMenu {
     private IMinionTask<?, ?> taskToActivate;
     private boolean taskLocked;
 
-    public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer lord, @NotNull MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
+    public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer<?> lord, @NotNull MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, SelectorInfo... selectorInfos) {
         super(FactionMenus.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level(), minionEntity.blockPosition()), inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
-        this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord.getLordFaction().orElseThrow(), lord)).toArray(IMinionTask[]::new);
+        this.availableTasks = this.minionEntity.getAvailableTasks().stream().filter(task -> task.isAvailable(lord)).toArray(IMinionTask[]::new);
         this.minionEntity.setInteractingPlayer(playerInventory.player);
         this.addPlayerSlots(playerInventory, 27, 103);
         this.previousTask = this.minionEntity.getCurrentTask().map(IMinionTask.IMinionTaskDesc::getTask).orElse(null);
@@ -159,7 +159,7 @@ public class MinionContainer extends InventoryContainerMenu {
                 LOGGER.error("Cannot find related minion entity {}", entityId);
                 return null;
             }
-            ILordPlayer player = FactionPlayerHandler.get(inv.player);
+            ILordPlayer<?> player = FactionPlayerHandler.get(inv.player).getLordPlayer().orElseThrow();
             return MinionContainer.create(windowId, inv, (MinionEntity<?>) e, player);
         }
     }

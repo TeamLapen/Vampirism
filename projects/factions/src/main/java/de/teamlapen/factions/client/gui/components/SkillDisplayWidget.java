@@ -55,6 +55,6 @@ public class SkillDisplayWidget extends AbstractWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        narrationElementOutput.add(NarratedElementType.TITLE, Component.translatable("narration.vampirism.skill", this.skill.value().getName()));
+        narrationElementOutput.add(NarratedElementType.TITLE, Component.translatable("narration.factions.skill", this.skill.value().getName()));
     }
 }

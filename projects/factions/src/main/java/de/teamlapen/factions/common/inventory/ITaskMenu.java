@@ -3,6 +3,7 @@ package de.teamlapen.factions.common.inventory;
 import de.teamlapen.factions.api.tasks.ITaskInstance;
 import de.teamlapen.factions.api.tasks.Task;
 import de.teamlapen.factions.api.tasks.TaskRequirement;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
@@ -70,23 +71,31 @@ public interface ITaskMenu {
         return getRegistry().getValueOrThrow(key);
     }
 
+    default boolean showLocateTaskmaster() {
+        return false;
+    }
+
+    default BlockPos getLastKnownPosition(ITaskInstance instance) {
+        return null;
+    }
+
     enum TaskAction implements StringRepresentable {
         /**
          * The task can be completed
          */
-        COMPLETE("complete", "gui.vampirism.taskmaster.complete_task"),
+        COMPLETE("complete", "gui.factions.taskmaster.complete_task"),
         /**
          * The task can be accepted
          */
-        ACCEPT("accept", "gui.vampirism.taskmaster.accept_task"),
+        ACCEPT("accept", "gui.factions.taskmaster.accept_task"),
         /**
          * The task can be aborted
          */
-        ABORT("abort", "gui.vampirism.taskmaster.abort_task"),
+        ABORT("abort", "gui.factions.taskmaster.abort_task"),
         /**
          * The task can only be removed
          */
-        REMOVE("remove", "gui.vampirism.taskmaster.remove_task");
+        REMOVE("remove", "gui.factions.taskmaster.remove_task");
 
         private final String name;
         @NotNull

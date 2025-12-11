@@ -8,7 +8,6 @@ import de.teamlapen.factions.api.skills.ISkillPlayer;
 import de.teamlapen.factions.common.actions.DefaultAction;
 import de.teamlapen.factions.api.actions.IActionResult;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.common.entity.player.IVampirismPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;

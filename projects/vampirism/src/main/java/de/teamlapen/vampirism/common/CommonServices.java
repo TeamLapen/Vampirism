@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.common;
 
+import de.teamlapen.factions.FactionsMod;
+import de.teamlapen.factions.api.factions.IFactionRegistry;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.IVampirismServices;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -11,14 +13,13 @@ import de.teamlapen.vampirism.common.data.BloodConversionRegistry;
 import de.teamlapen.vampirism.common.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.common.entity.SundamageRegistry;
 import de.teamlapen.vampirism.common.entity.converted.VampirismEntityRegistry;
-import de.teamlapen.factions.common.factions.FactionRegistry;
 import de.teamlapen.vampirism.common.entity.player.ModPlayerEventHandler;
-import de.teamlapen.vampirism.common.entity.player.vampire.ModVampireVisions;
 import de.teamlapen.vampirism.common.integration.InterModHandler;
 import de.teamlapen.vampirism.common.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.common.recipes.RecipesSync;
 import de.teamlapen.vampirism.common.server.ServerEventHandler;
 import de.teamlapen.vampirism.common.util.*;
+import de.teamlapen.vampirism.common.world.VillageEventHandler;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
 import de.teamlapen.vampirism.data.reloadlistener.ModReloadListeners;
 import de.teamlapen.vampirism.data.remote.SettingsProvider;
@@ -38,13 +39,13 @@ public class CommonServices extends Services implements IVampirismServices {
     private final ServerEventHandler serverEventHandler = new ServerEventHandler();
     private final SupporterManager supporterManager = new SupporterManager();
     private final ModReloadListeners reloadListeners = new ModReloadListeners();
-    private final FactionRegistry factionRegistry = new FactionRegistry();
     private final SundamageRegistry sundamageRegistry = new SundamageRegistry();
     private final ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
     private final SettingsProvider settingsProvider = new SettingsProvider(REFERENCE.SETTINGS_API);
     private final BloodConversionRegistry bloodConversionRegistry = new BloodConversionRegistry();
     private final InterModHandler interModCommunicationHandler = new InterModHandler();
     private final IVampirismEntityRegistry entityRegistry = new VampirismEntityRegistry();
+    private final VillageEventHandler villageEventHandler = new VillageEventHandler();
 
 
     public CommonServices(ModContainer container) {
@@ -63,8 +64,8 @@ public class CommonServices extends Services implements IVampirismServices {
     }
 
     @Override
-    public FactionRegistry factionRegistry() {
-        return this.factionRegistry;
+    public IFactionRegistry factionRegistry() {
+        return FactionsMod.services().factionRegistry();
     }
 
     @Override
@@ -126,5 +127,6 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.register(this.entityEventHandler);
         bus.register(this.reloadListeners);
         bus.register(this.serverEventHandler);
+        bus.register(this.villageEventHandler);
     }
 }

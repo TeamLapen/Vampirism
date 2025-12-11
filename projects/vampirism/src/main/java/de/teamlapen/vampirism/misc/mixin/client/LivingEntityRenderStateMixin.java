@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.misc.mixin.client;
 
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
-import de.teamlapen.vampirism.common.entity.player.VampirismPlayerAttributes;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.HumanoidArm;
@@ -29,19 +28,10 @@ public class LivingEntityRenderStateMixin implements IVampirismRenderState {
     private boolean vampirism$isHunter;
 
     @Unique
-    private boolean vampirism$sleepingInCoffin;
-
-    @Unique
     private float vampirism$attackTime;
 
     @Unique
     private HumanoidArm vampirism$attackArm = HumanoidArm.RIGHT;
-
-    @Unique
-    private Bat vampirism$bat;
-
-    @Unique
-    private VampirismPlayerAttributes vampirism$vampirismAttributes = new VampirismPlayerAttributes();
 
     @Override
     public @Nullable ResourceLocation vampirism$overlay() {
@@ -61,16 +51,6 @@ public class LivingEntityRenderStateMixin implements IVampirismRenderState {
     @Override
     public void vampirism$convertedOverlay(@Nullable ResourceLocation overlay) {
         vampirism$convertedOverlay = overlay;
-    }
-
-    @Override
-    public VampirismPlayerAttributes vampirism$attributes() {
-        return vampirism$vampirismAttributes;
-    }
-
-    @Override
-    public void vampirism$attributes(VampirismPlayerAttributes attributes) {
-        this.vampirism$vampirismAttributes = attributes;
     }
 
     @Override
@@ -103,15 +83,6 @@ public class LivingEntityRenderStateMixin implements IVampirismRenderState {
         this.vampirism$isHunter = hunter;
     }
 
-    @Override
-    public boolean sleeping$inCoffin() {
-        return this.vampirism$sleepingInCoffin;
-    }
-
-    @Override
-    public void sleeping$inCoffin(boolean sleepingInCoffin) {
-        this.vampirism$sleepingInCoffin = sleepingInCoffin;
-    }
 
     @Override
     public float vampirism$attackTime() {
@@ -133,13 +104,4 @@ public class LivingEntityRenderStateMixin implements IVampirismRenderState {
         this.vampirism$attackArm = arm;
     }
 
-    @Override
-    public Bat vampirism$bat() {
-        return this.vampirism$bat;
-    }
-
-    @Override
-    public void vampirism$bat(Bat bat) {
-        this.vampirism$bat = bat;
-    }
 }

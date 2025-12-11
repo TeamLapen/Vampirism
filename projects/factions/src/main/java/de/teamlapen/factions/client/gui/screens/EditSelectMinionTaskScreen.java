@@ -35,8 +35,8 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
         GuiRenderer.blit(graphics, entry.getIconLoc(), posX, posY, 16, 16, 16, 16);
     }
 
-    private static boolean isEnabled(FactionPlayerHandler player, @NotNull SelectMinionTaskRadialScreen.Entry item) {
-        return player.getCurrentFactionPlayer().flatMap(fp -> Optional.ofNullable(item.getTask()).map(task -> task.isAvailable(fp.getFaction(), player))).orElse(true);
+    private static boolean isEnabled(FactionPlayerHandler handler, @NotNull SelectMinionTaskRadialScreen.Entry item) {
+        return handler.getLordPlayer().flatMap(player -> Optional.ofNullable(item.getTask()).map(task -> task.isAvailable(player))).orElse(true);
     }
 
     private static ItemOrdering<SelectMinionTaskRadialScreen.Entry> getOrdering(FactionPlayerHandler player) {

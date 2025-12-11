@@ -44,9 +44,9 @@ dependencyProjects.forEach {
     project.evaluationDependsOn(it.path)
 }
 
-tasks.withType(org.gradle.api.tasks.compile.JavaCompile.class).configureEach {
-    source(project(':vampirism-api'))
-}
+//tasks.withType(org.gradle.api.tasks.compile.JavaCompile.class).configureEach {
+ //   source(project(':vampirism-api'))
+//}
 
 dependencies {
     implementation project(':vampirism-api')

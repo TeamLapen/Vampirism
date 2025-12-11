@@ -4,6 +4,7 @@ import de.teamlapen.factions.common.advancements.criterion.ActionCriterionTrigge
 import de.teamlapen.factions.common.advancements.criterion.FactionCriterionTrigger;
 import de.teamlapen.factions.common.advancements.criterion.FactionSubPredicate;
 import de.teamlapen.factions.common.advancements.criterion.MinionTaskCriterionTrigger;
+import de.teamlapen.factions.common.core.FactionMinionTasks;
 import de.teamlapen.factions.common.util.MapUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
@@ -313,12 +314,12 @@ public class ModAdvancementProvider extends AdvancementProvider {
             AdvancementHolder protect_lord = Advancement.Builder.advancement()
                     .display(Items.SHIELD, Component.translatable("advancement.vampirism.protect_lord"), Component.translatable("advancement.vampirism.protect_lord.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(become_lord)
-                    .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.PROTECT_LORD.get()))
+                    .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(FactionMinionTasks.PROTECT_LORD.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/protect_lord");
             AdvancementHolder defend_area = Advancement.Builder.advancement()
                     .display(Blocks.RED_BANNER, Component.translatable("advancement.vampirism.defend_area"), Component.translatable("advancement.vampirism.defend_area.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(become_lord)
-                    .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(MinionTasks.DEFEND_AREA.get()))
+                    .addCriterion("task", MinionTaskCriterionTrigger.TriggerInstance.tasks(FactionMinionTasks.DEFEND_AREA.get()))
                     .save(consumer, REFERENCE.MODID + ":minion/defend_area");
         }
     }

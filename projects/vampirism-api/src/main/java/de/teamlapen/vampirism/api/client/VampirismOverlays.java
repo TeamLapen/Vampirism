@@ -25,4 +25,5 @@ public class VampirismOverlays {
     public static final ResourceLocation BAT = VResourceLocation.mod("bat");
     public static final ResourceLocation DISGUISE = VResourceLocation.mod("disguise");
     public static final ResourceLocation SUN = VResourceLocation.mod("sun");
+    public static final ResourceLocation FULL_SCREEN = VResourceLocation.mod("fullscreen");
 }

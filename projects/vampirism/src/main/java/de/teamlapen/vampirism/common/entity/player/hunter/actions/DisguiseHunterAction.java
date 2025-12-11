@@ -2,12 +2,10 @@ package de.teamlapen.vampirism.common.entity.player.hunter.actions;
 
 import de.teamlapen.factions.api.actions.IActionResult;
 import de.teamlapen.factions.api.actions.ILastingAction;
-import de.teamlapen.vampirism.common.entity.player.hunter.DefaultHunterAction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Allows a hunter player to disguise himself which makes him less visible and reduces the detection radius for mobs
@@ -20,23 +18,23 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public @NotNull IActionResult activate(@NotNull IHunterPlayer player, @NotNull ActivationContext context) {
-        ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
+    public IActionResult activate(IHunterPlayer player, ActivationContext context) {
+        ((HunterPlayer) player).getSpecialAttributes().activateConcealment();
         return IActionResult.SUCCESS;
     }
 
     @Override
-    public @NotNull IActionResult canBeUsedBy(@NotNull IHunterPlayer player) {
+    public IActionResult canBeUsedBy(IHunterPlayer player) {
         return IActionResult.otherAction(player.getActionHandler(), HunterActions.AWARENESS_HUNTER);
     }
 
     @Override
-    public int getCooldown(@NotNull IHunterPlayer player) {
+    public int getCooldown(IHunterPlayer player) {
         return 0;
     }
 
     @Override
-    public int getDuration(@NotNull IHunterPlayer player) {
+    public int getDuration(IHunterPlayer player) {
         return Integer.MAX_VALUE;
     }
 
@@ -46,31 +44,31 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public void onActivatedClient(@NotNull IHunterPlayer player) {
-        ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
+    public void onActivatedClient(IHunterPlayer player) {
+        ((HunterPlayer) player).getSpecialAttributes().activateConcealment();
 
     }
 
     @Override
-    public void onDeactivated(@NotNull IHunterPlayer player) {
-        ((HunterPlayer) player).getSpecialAttributes().resetDisguise();
+    public void onDeactivated(IHunterPlayer player) {
+        ((HunterPlayer) player).getSpecialAttributes().resetConcealment();
 
     }
 
     @Override
-    public void onReActivated(@NotNull IHunterPlayer player) {
-        ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
+    public void onReActivated(IHunterPlayer player) {
+        ((HunterPlayer) player).getSpecialAttributes().activateConcealment();
 
     }
 
     @Override
-    public boolean onUpdate(@NotNull IHunterPlayer player) {
-        ((HunterPlayer) player).getSpecialAttributes().increaseDisguiseTicks();
+    public boolean onUpdate(IHunterPlayer player) {
+        ((HunterPlayer) player).getSpecialAttributes().increaseConcealmentTicks();
         return false;
     }
 
     @Override
-    public boolean showHudDuration(@NotNull Player player) {
+    public boolean showHudDuration(Player player) {
         return true;
     }
 }

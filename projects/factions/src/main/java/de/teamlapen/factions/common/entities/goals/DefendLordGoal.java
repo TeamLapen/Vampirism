@@ -22,24 +22,24 @@ public class DefendLordGoal extends TargetGoal {
         super(mobIn, false, false);
         this.setFlags(EnumSet.of(Goal.Flag.TARGET));
         this.entity = mobIn;
-        this.predicate = TargetingConditions.forCombat().selector((e, level) -> entity.getAttackPredicate(false).test(e) && entity.getLordOpt().map(lp -> lp.getPlayer().distanceToSqr(e) < maxStartDistSQ).orElse(true)).ignoreInvisibilityTesting().range(60);
+        this.predicate = TargetingConditions.forCombat().selector((e, level) -> entity.getAttackPredicate(false).test(e) && entity.getLordOpt().map(lp -> lp.asEntity().distanceToSqr(e) < maxStartDistSQ).orElse(true)).ignoreInvisibilityTesting().range(60);
 
     }
 
     @Override
     public boolean canContinueToUse() {
-        return entity.getCurrentTask().map(d -> d.getTask() == FactionMinionTasks.PROTECT_LORD.get()).orElse(false) && super.canContinueToUse() && entity.getLordOpt().map(lp -> lp.getPlayer().distanceToSqr(targetMob) < maxStopDistSQ).orElse(true);
+        return entity.getCurrentTask().map(d -> d.getTask() == FactionMinionTasks.PROTECT_LORD.get()).orElse(false) && super.canContinueToUse() && entity.getLordOpt().map(lp -> lp.asEntity().distanceToSqr(targetMob) < maxStopDistSQ).orElse(true);
     }
 
     @Override
     public boolean canUse() {
         return entity.getCurrentTask().map(d -> d.getTask() == FactionMinionTasks.PROTECT_LORD.get()).orElse(false) && entity.getLordOpt().map(lp -> {
-            LivingEntity attackTarget = lp.getPlayer().getLastHurtMob();
+            LivingEntity attackTarget = lp.asEntity().getLastHurtMob();
             if (canAttack(attackTarget, predicate)) {
                 this.targetMob = attackTarget;
                 return true;
             }
-            LivingEntity revengeTarget = lp.getPlayer().getLastHurtByMob();
+            LivingEntity revengeTarget = lp.asEntity().getLastHurtByMob();
             if (canAttack(revengeTarget, predicate)) {
                 this.targetMob = revengeTarget;
                 return true;

@@ -2,6 +2,7 @@ package de.teamlapen.factions.common.factions.neutral;
 
 import de.teamlapen.factions.api.entities.player.INeutralPlayer;
 import de.teamlapen.factions.api.factions.IDisguise;
+import de.teamlapen.factions.api.factions.LevelingChange;
 import de.teamlapen.factions.common.core.DefaultFactions;
 import de.teamlapen.factions.common.core.FactionAttachments;
 import de.teamlapen.factions.common.factions.FactionBasePlayer;
@@ -34,6 +35,16 @@ public class NeutralPlayer extends FactionBasePlayer<INeutralPlayer> implements 
     @Override
     public AttachmentType<?> getType() {
         return FactionAttachments.NEUTRAL_PLAYER.get();
+    }
+
+    @Override
+    public void levelChanged(LevelingChange changes) {
+
+    }
+
+    @Override
+    public void leaveFaction() {
+
     }
 
     public static class AttachmentOptions extends AttachmentSynchronization.PlayerOptions<NeutralPlayer> {

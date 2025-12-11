@@ -10,9 +10,11 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearanc
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.IntStream;
 
@@ -81,6 +83,11 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
 
         setSkinListVisibility(false);
         setHatListVisibility(false);
+    }
+
+    @Override
+    protected @NotNull LayoutElement createLayout() {
+        return null;
     }
 
     private void hat(int type) {

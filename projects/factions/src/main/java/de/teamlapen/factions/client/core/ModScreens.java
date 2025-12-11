@@ -5,7 +5,9 @@ import de.teamlapen.factions.client.FactionsClientMod;
 import de.teamlapen.factions.client.gui.overlay.ActionCooldownOverlay;
 import de.teamlapen.factions.client.gui.overlay.ActionDurationOverlay;
 import de.teamlapen.factions.client.gui.overlay.FactionLevelOverlay;
-import de.teamlapen.factions.client.gui.screens.VampirismContainerScreen;
+import de.teamlapen.factions.client.gui.screens.MinionScreen;
+import de.teamlapen.factions.client.gui.screens.FactionMenuScreen;
+import de.teamlapen.factions.client.gui.screens.taskboard.TaskBoardScreen;
 import de.teamlapen.factions.common.core.FactionMenus;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -14,8 +16,9 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 public class ModScreens {
 
     public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(FactionMenus.VAMPIRISM.get(), VampirismContainerScreen::new);
-
+        event.register(FactionMenus.FACTION_MENU.get(), FactionMenuScreen::new);
+        event.register(FactionMenus.TASK_MASTER.get(), TaskBoardScreen::new);
+        event.register(FactionMenus.MINION.get(), MinionScreen::new);
     }
 
     public static void registerScreenOverlays(RegisterGuiLayersEvent event) {

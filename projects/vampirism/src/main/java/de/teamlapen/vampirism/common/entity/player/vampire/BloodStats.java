@@ -182,11 +182,11 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
 
     @Override
     protected void registerProperties() {
-        this.registerProperty(VResourceLocation.mod("blood_level"), 0, () -> this.bloodLevel, level -> bloodLevel = level, true);
-        this.registerProperty(VResourceLocation.mod("blood_timer"), 0, () -> this.bloodTimer, level -> bloodTimer = level, true);
-        this.registerProperty(VResourceLocation.mod("blood_saturation"), 0F, () -> this.bloodSaturationLevel, level -> bloodSaturationLevel = level, true);
-        this.registerProperty(VResourceLocation.mod("blood_exhaustion"), 0F, () -> this.bloodExhaustionLevel, level -> bloodExhaustionLevel = level, true);
-        this.registerProperty(VResourceLocation.mod("max_blood"), 20, () -> this.maxBlood, level -> maxBlood = level, true);
+        this.registerProperty(VResourceLocation.mod("blood_level")).simple(0, () -> this.bloodLevel, level -> this.bloodLevel = level);
+        this.registerProperty(VResourceLocation.mod("blood_timer")).simple(0, () -> this.bloodTimer, level -> this.bloodTimer = level);
+        this.registerProperty(VResourceLocation.mod("blood_saturation")).simple(0F, () -> this.bloodSaturationLevel, level -> this.bloodSaturationLevel = level);
+        this.registerProperty(VResourceLocation.mod("blood_exhaustion")).simple(0F, () -> this.bloodExhaustionLevel, level -> this.bloodExhaustionLevel = level);
+        this.registerProperty(VResourceLocation.mod("max_blood")).simple(20, () -> this.maxBlood, level -> this.maxBlood = level);
     }
 
     boolean removeBlood(int a, boolean allowPartial) {

@@ -9,7 +9,9 @@ import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.entities.minion.IMinionData;
 import de.teamlapen.factions.api.entities.minion.IMinionEntity;
 import de.teamlapen.factions.api.entities.minion.IMinionEntry;
+import de.teamlapen.factions.api.entities.player.IFactionPlayer;
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.factions.lord.IMinionEntryBuilder;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
@@ -104,7 +106,7 @@ public class MinionCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static <T extends IMinionData> int spawnNewMinion(@NotNull CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, @NotNull T data, EntityType<? extends IMinionEntity> type) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
-        FactionPlayerHandler fph = handler(p);
+        ILordPlayer<?> fph = handler(p);
 
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
         if (controller.hasFreeMinionSlot()) {
@@ -127,17 +129,13 @@ public class MinionCommand extends BasicCommand {
         return 0;
     }
 
-    private static FactionPlayerHandler handler(Player player) {
-        FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-        if (handler.getMaxMinions() <= 0) {
-            throw new IllegalArgumentException("Can't have minions");
-        }
-        return handler;
+    private static ILordPlayer<?> handler(Player player) {
+        return FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).orElseThrow(() -> new IllegalArgumentException("Can't have minions"));
     }
 
     @SuppressWarnings("SameReturnValue")
     private static int recall(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
-        FactionPlayerHandler factionPlayerHandler = handler(player);
+        ILordPlayer<?> factionPlayerHandler = handler(player);
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(factionPlayerHandler);
         Collection<Integer> ids = controller.recallMinions(true);
         for (Integer id : ids) {
@@ -150,7 +148,7 @@ public class MinionCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int respawn(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
-        FactionPlayerHandler fph = handler(player);
+        ILordPlayer<?> fph = handler(player);
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
         Collection<Integer> ids = controller.getUnclaimedMinions();
         for (Integer id : ids) {

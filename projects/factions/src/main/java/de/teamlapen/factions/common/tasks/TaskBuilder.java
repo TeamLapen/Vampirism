@@ -2,16 +2,13 @@ package de.teamlapen.factions.common.tasks;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.entities.player.FactionPlayerBooleanSupplier;
 import de.teamlapen.factions.api.entities.player.FactionPlayerConsumer;
 import de.teamlapen.factions.api.tasks.Task;
 import de.teamlapen.factions.api.tasks.TaskRequirement;
 import de.teamlapen.factions.api.tasks.TaskReward;
 import de.teamlapen.factions.api.tasks.TaskUnlocker;
-import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.api.util.REFERENCE;
-import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.tasks.requirements.*;
 import de.teamlapen.factions.common.tasks.reward.ConsumerReward;
 import de.teamlapen.factions.common.tasks.reward.ItemReward;
@@ -25,25 +22,20 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 @SuppressWarnings("unused")
 public class TaskBuilder {
+
     public static TaskBuilder builder() {
         return new TaskBuilder();
-    }
-
-    /**
-     * @deprecated this method is available to support legacy ids.
-     */
-    @Deprecated
-    public static TaskBuilder builder(ResourceKey<Task> taskKey) {
-        return new TaskBuilder(taskKey);
     }
 
     private final Map<ResourceLocation, TaskRequirement.Requirement<?>> requirement = new HashMap<>();
@@ -55,19 +47,7 @@ public class TaskBuilder {
     @Nullable
     private Component description;
 
-    @Nullable
-    private ResourceLocation taskId;
-
     private TaskBuilder() {
-    }
-
-    private TaskBuilder(ResourceKey<Task> taskKey) {
-        this.taskId = taskKey.location();
-    }
-
-    @Deprecated
-    public TaskBuilder addRequirement(String name, EntityType<?> entityType, int amount) {
-        return this.addRequirement(new EntityRequirement(FResourceLocation.loc(modId(), name), entityType, amount, requirementDescription(name)));
     }
 
     public TaskBuilder addRequirement(EntityType<?> entityType, int amount, Component description) {
@@ -78,11 +58,6 @@ public class TaskBuilder {
         return this.addRequirement(new EntityRequirement(entityType, amount, Component.translatable(Util.makeDescriptionId("entity", RegUtil.id(entityType)))));
     }
 
-    @Deprecated
-    public TaskBuilder addRequirement(String name, TagKey<EntityType<?>> entityType, int amount) {
-        return this.addRequirement(new EntityTypeRequirement(FResourceLocation.loc(modId(), name), entityType, amount, requirementDescription(name)));
-    }
-
     public TaskBuilder addRequirement(TagKey<EntityType<?>> entityType, int amount, Component description) {
         return this.addRequirement(new EntityTypeRequirement(entityType, amount, description));
     }
@@ -91,22 +66,12 @@ public class TaskBuilder {
         return this.addRequirement(new EntityTypeRequirement(entityType, amount, Component.translatable(Util.makeDescriptionId("entity_tag", entityType.location()))));
     }
 
-    @Deprecated
-    public TaskBuilder addRequirement(String name, ResourceLocation stat, int amount) {
-        return this.addRequirement(new StatRequirement(FResourceLocation.loc(modId(), name), stat, amount, requirementDescription(name)));
-    }
-
     public TaskBuilder addRequirement(ResourceLocation stat, int amount, Component description) {
         return this.addRequirement(new StatRequirement(stat, amount, description));
     }
 
     public TaskBuilder addRequirement( ResourceLocation stat, int amount) {
         return this.addRequirement(new StatRequirement(stat, amount, Component.translatable(Util.makeDescriptionId("stat", stat))));
-    }
-
-    @Deprecated
-    public TaskBuilder addRequirement(String name, ItemStack itemStack) {
-        return this.addRequirement(new ItemRequirement(FResourceLocation.loc(modId(), name), itemStack, requirementDescription(name)));
     }
 
     public TaskBuilder addRequirement(ItemStack itemStack, Component description) {
@@ -136,24 +101,21 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder setTitle(ResourceLocation title) {
-        this.title = Component.translatable(Util.makeDescriptionId("task", title));
-        return this;
+    public void build(BiConsumer<ResourceKey<Task>, Task> consumer, ResourceKey<Task> key) {
+        build(consumer, key, false);
     }
 
-    @Deprecated
-    public TaskBuilder defaultTitle() {
-        Preconditions.checkArgument(this.taskId != null, "If you want to use legacy naming, you need to provide the builder with a task key");
-        this.title = Component.translatable(Util.makeDescriptionId("task", this.taskId));
-        return this;
+    public void build(BiConsumer<ResourceKey<Task>, Task> consumer, ResourceKey<Task> key, boolean withDescription) {
+        if (this.title == null) {
+            this.title = Component.translatable(Util.makeDescriptionId("task", key.location()));
+        }
+        if (this.description == null && withDescription) {
+            this.description = Component.translatable(Util.makeDescriptionId("task", key.location().withPath(x -> x + ".description")));
+        }
+        Preconditions.checkArgument(!this.requirement.isEmpty(), "Task needs requirements");
+        Preconditions.checkArgument(this.reward != null, "Task needs a reward");
+        consumer.accept(key, new Task(new TaskRequirement(this.requirement.values()), this.reward, this.unlocker, Optional.ofNullable(this.description), this.title));
     }
-
-    @Deprecated
-    private Component requirementDescription(String name) {
-        Preconditions.checkArgument(this.taskId != null, "If you want to use legacy naming, you need to provide the builder with a task key");
-        return Component.translatable(Util.makeDescriptionId("task", this.taskId) + ".req." + FResourceLocation.loc(modId(), name).toString().replace(":", "."));
-    }
-
 
     public Task build() {
         Preconditions.checkArgument(!this.requirement.isEmpty(), "Task needs requirements");
@@ -167,12 +129,7 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder setDescription(ResourceLocation title) {
-        this.description = Component.translatable(Util.makeDescriptionId("task", title) + ".desc");
-        return this;
-    }
-
-    public TaskBuilder requireParent(@Nullable Holder<Task> parentTask) {
+    public TaskBuilder requireParent(Holder<Task> parentTask) {
         this.unlocker.add(new ParentUnlocker(parentTask));
         return this;
     }
@@ -194,9 +151,5 @@ public class TaskBuilder {
     public TaskBuilder unlockedBy(TaskUnlocker unlocker) {
         this.unlocker.add(unlocker);
         return this;
-    }
-
-    protected String modId() {
-        return REFERENCE.MOD_ID;
     }
 }

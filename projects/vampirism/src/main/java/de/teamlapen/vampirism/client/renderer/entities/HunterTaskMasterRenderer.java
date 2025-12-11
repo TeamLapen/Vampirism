@@ -45,6 +45,12 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     }
 
     @Override
+    public void extractRenderState(@NotNull HunterTaskMasterEntity entity, @NotNull HunterTaskMasterRenderState renderState, float partialTicks) {
+        super.extractRenderState(entity, renderState, partialTicks);
+        renderState.villagerData = entity.getVillageData();
+    }
+
+    @Override
     public @NotNull HunterTaskMasterRenderState createRenderState() {
         return new HunterTaskMasterRenderState();
     }
@@ -61,7 +67,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
         }
 
         @Override
-        public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, HunterTaskMasterRenderState state, float yRot, float xRot) {
+        public void submit(@NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodeCollector, int packedLight, HunterTaskMasterRenderState state, float yRot, float xRot) {
             if (!state.headItem.isEmpty()) {
                 poseStack.pushPose();
                 this.getParentModel().getHead().translateAndRotate(poseStack);

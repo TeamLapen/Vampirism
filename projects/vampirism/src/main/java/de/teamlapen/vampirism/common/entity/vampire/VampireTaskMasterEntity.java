@@ -11,12 +11,12 @@ import de.teamlapen.vampirism.common.entity.ai.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.common.entity.hunter.HunterBaseEntity;
 import de.teamlapen.factions.common.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.common.util.Helper;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -28,10 +28,14 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +43,7 @@ import java.util.Optional;
 
 public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefaultTaskMasterEntity {
 
-    private static final EntityDataAccessor<String> BIOME_TYPE = SynchedEntityData.defineId(VampireTaskMasterEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<VillagerData> VILLAGER_DATA = SynchedEntityData.defineId(VampireTaskMasterEntity.class, EntityDataSerializers.VILLAGER_DATA);
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
@@ -57,6 +61,18 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     }
 
     @Override
+    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.store("VillagerData", VillagerData.CODEC, this.getVillageData());
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.entityData.set(VILLAGER_DATA, input.read("VillagerData", VillagerData.CODEC).orElseGet(VampireTaskMasterEntity::createDefaultVillagerData));
+    }
+
+    @Override
     public void aiStep() {
         super.aiStep();
         if (interactor != null && !(interactor.isAlive() && interactor.containerMenu instanceof TaskBoardMenu)) {
@@ -68,19 +84,17 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     @Override
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
-        this.setBiomeType(VillagerType.byBiome(worldIn.getBiome(this.blockPosition())));
+        this.setBiomeType(worldIn.registryAccess(), VillagerType.byBiome(worldIn.getBiome(this.blockPosition())));
         return data;
     }
 
     @Override
-    public @NotNull VillagerType getBiomeType() {
-        String key = this.entityData.get(BIOME_TYPE);
-        ResourceLocation id = ResourceLocation.parse(key);
-        return BuiltInRegistries.VILLAGER_TYPE.getValue(id);
+    public @NotNull VillagerData getVillageData() {
+        return this.entityData.get(VILLAGER_DATA);
     }
 
-    protected void setBiomeType(@NotNull ResourceKey<VillagerType> type) {
-        this.entityData.set(BIOME_TYPE, BuiltInRegistries.VILLAGER_TYPE.getOrThrow(type).toString());
+    protected void setBiomeType(@NotNull RegistryAccess registryAccess, @NotNull ResourceKey<VillagerType> type) {
+        this.entityData.set(VILLAGER_DATA, new VillagerData(registryAccess.getOrThrow(type), registryAccess.getOrThrow(VillagerProfession.NONE),0));
     }
 
     @NotNull
@@ -95,9 +109,13 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(BIOME_TYPE, BuiltInRegistries.VILLAGER_TYPE.getDefaultKey().toString());
+        builder.define(VILLAGER_DATA, createDefaultVillagerData());
+    }
+
+    private static VillagerData createDefaultVillagerData() {
+        return new VillagerData(BuiltInRegistries.VILLAGER_TYPE.getOrThrow(VillagerType.PLAINS), BuiltInRegistries.VILLAGER_PROFESSION.getOrThrow(VillagerProfession.NONE), 0);
     }
 
     @NotNull

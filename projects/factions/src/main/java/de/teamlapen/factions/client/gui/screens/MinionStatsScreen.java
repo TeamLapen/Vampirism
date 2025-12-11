@@ -40,14 +40,14 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected final int statCount;
     @Nullable
     protected final Screen backScreen;
-    private final MutableComponent textLevel = Component.translatable("text.vampirism.level");
+    private final MutableComponent textLevel = Component.translatable("text.factions.level");
     private final List<Button> statButtons = new ArrayList<>();
     protected int guiLeft;
     protected int guiTop;
     private Button reset;
 
     protected MinionStatsScreen(Q entity, int statCount, @Nullable Screen backScreen) {
-        super(Component.translatable("gui.vampirism.minion_stats"));
+        super(Component.translatable("gui.factions.minion.stats"));
         assert statCount > 0;
         this.entity = entity;
         this.statCount = statCount;
@@ -106,14 +106,14 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, RESET, pButton -> {
             FactionsMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
-        }, Component.translatable("text.vampirism.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))) {
+        }, Component.translatable("text.factions.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))) {
             @Override
             public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
                 ResourceLocation resourcelocation = this.sprites.get(this.isActive(), this.isHoveredOrFocused());
                 pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), this.width, this.height, this.active ? -1 : ARGB.colorFromFloat(1, 0.65f, 0.65f, 0.65f));
             }
         });
-        reset.setTooltip(Tooltip.create(Component.translatable("text.vampirism.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
+        reset.setTooltip(Tooltip.create(Component.translatable("text.factions.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
         reset.active = false;
     }
 
@@ -136,7 +136,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected void renderStatRow(@NotNull GuiGraphics graphics, int i, @NotNull MutableComponent name, @NotNull Component value, int currentLevel, int maxLevel) {
         graphics.drawString(this.font, name.append(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040, false);
         graphics.drawString(this.font, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040, false);
-        graphics.drawString(this.font, Component.translatable("text.vampirism.level_short").append(": " + currentLevel + "/" + maxLevel), guiLeft + 175, guiTop + 50 + 26 * i, 0x404040, false);
+        graphics.drawString(this.font, Component.translatable("text.factions.level_short").append(": " + currentLevel + "/" + maxLevel), guiLeft + 175, guiTop + 50 + 26 * i, 0x404040, false);
     }
 
     protected void renderStats(GuiGraphics graphics, T data) {
