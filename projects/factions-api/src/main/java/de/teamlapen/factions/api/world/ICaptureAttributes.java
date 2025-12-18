@@ -1,13 +1,14 @@
 package de.teamlapen.factions.api.world;
 
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.world.entities.IVillageCaptureEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * used for {@link de.teamlapen.factions.api.entities.IVillageCaptureEntity#attackVillage(ICaptureAttributes)} and {@link de.teamlapen.factions.api.entities.IVillageCaptureEntity#defendVillage(ICaptureAttributes)}
+ * used for {@link IVillageCaptureEntity#attackVillage(ICaptureAttributes)} and {@link IVillageCaptureEntity#defendVillage(ICaptureAttributes)}
  */
 public interface ICaptureAttributes {
 

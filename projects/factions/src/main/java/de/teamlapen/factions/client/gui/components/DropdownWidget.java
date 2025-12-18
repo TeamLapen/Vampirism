@@ -273,9 +273,11 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
         return selectedIndex;
     }
 
-    public void setSelectedIndex(int index) {
+    public DropdownWidget setSelectedIndex(int index) {
         this.selectedIndex = index;
         updateMessage();
+
+        return this;
     }
 
     @Override
@@ -295,8 +297,8 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
      * Builder for creating DropdownWidget instances.
      */
     public static class Builder {
-        private int x;
-        private int y;
+        private final int x;
+        private final int y;
         private int width = 100;
         private int itemHeight = 20;
         private int maxVisibleItems = 5;

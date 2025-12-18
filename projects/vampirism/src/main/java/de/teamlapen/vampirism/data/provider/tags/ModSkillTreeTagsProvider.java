@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.factions.api.factions.skills.ISkillTree;
 import de.teamlapen.factions.common.tags.FactionSkillTreeTags;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.factions.api.skills.ISkillTree;
-import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.KeyTagProvider;

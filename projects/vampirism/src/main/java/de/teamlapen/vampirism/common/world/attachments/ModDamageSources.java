@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.attachments;
 
+import de.teamlapen.factions.common.factions.minions.MinionDamageSource;
+import de.teamlapen.factions.common.factions.minions.MinionEntity;
 import de.teamlapen.vampirism.common.core.ModDamageTypes;
-import de.teamlapen.factions.common.minions.MinionEntity;
-import de.teamlapen.factions.common.minions.MinionDamageSource;
 import de.teamlapen.vampirism.common.util.DBNODamageSource;
 import de.teamlapen.vampirism.common.util.PlayerAttackDamageSourceBypassArmor;
 import net.minecraft.core.Registry;

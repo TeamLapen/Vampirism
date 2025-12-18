@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.common.core;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.entity.convertible.Converter;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
-import de.teamlapen.vampirism.api.items.oil.IOil;
-import de.teamlapen.vampirism.common.items.component.VampireBook;
+import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
+import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.world.features.VampirismFeatures;
+import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
@@ -16,7 +16,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
-import static de.teamlapen.vampirism.api.VampirismRegistries.Keys.*;
+import static de.teamlapen.vampirism.api.VampirismRegistries.Keys.VAMPIRE_BOOK;
 
 public class ModRegistries {
 

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.provider.loot;
 
-import de.teamlapen.vampirism.api.items.components.IBottleBlood;
+import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;

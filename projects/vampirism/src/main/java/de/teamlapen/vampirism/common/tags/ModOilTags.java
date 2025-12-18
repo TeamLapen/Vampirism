@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.tags;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.items.oil.IOil;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import net.minecraft.tags.TagKey;
 
 public class ModOilTags {

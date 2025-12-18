@@ -1,20 +1,21 @@
 package de.teamlapen.factions.common.event;
 
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.actions.ILastingAction;
 import de.teamlapen.factions.api.event.ActionEvent;
 import de.teamlapen.factions.api.event.FactionVillageEvent;
 import de.teamlapen.factions.api.event.PlayerFactionEvent;
 import de.teamlapen.factions.api.event.SkillEvents;
+import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillHandler;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
-import de.teamlapen.factions.api.skills.ISkillTree;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.ILastingAction;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.skills.ISkillTree;
 import de.teamlapen.factions.api.world.ITotem;
 import net.minecraft.core.Holder;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.NeoForge;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public class FactionEventFactory {
 
@@ -32,20 +34,21 @@ public class FactionEventFactory {
         return event.isEntityConversionDisabled();
     }
 
-    public static void fireVillagerCaptureEventPost(@NotNull ITotem totem, @NotNull List<Villager> villagerIn, boolean forced) {
-        NeoForge.EVENT_BUS.post(new FactionVillageEvent.VillagerCaptureFinish.Post(totem, villagerIn, forced));
-    }
-
-    public static @NotNull Villager fireSpawnNewVillagerEvent(@NotNull ITotem totem, @Nullable Mob oldEntity, @NotNull Villager newEntity, boolean replaceOld) {
+    public static @NotNull Villager fireSpawnNewVillagerEvent(@NotNull ITotem totem, @Nullable LivingEntity oldEntity, @NotNull Villager newEntity, boolean replaceOld) {
         FactionVillageEvent.SpawnNewVillager event = new FactionVillageEvent.SpawnNewVillager(totem, oldEntity, newEntity, replaceOld);
         NeoForge.EVENT_BUS.post(event);
         return event.getNewVillager();
     }
 
-    public static boolean fireMakeAggressive(@NotNull ITotem totem, @NotNull Villager entity) {
-        FactionVillageEvent.MakeAggressive event = new FactionVillageEvent.MakeAggressive(totem, entity);
+    public static void fireMakeAggressive(@NotNull ITotem totem, @NotNull Villager entity) {
+        NeoForge.EVENT_BUS.post(new FactionVillageEvent.MakeAggressive(totem, entity));
+    }
+
+    @Nullable
+    public static LivingEntity fireCreateCaptureEntityEvent(@NotNull ITotem totem, Holder<? extends IFaction<?>> faction) {
+        FactionVillageEvent.SpawnCaptureEntityEvent event = new FactionVillageEvent.SpawnCaptureEntityEvent(totem, faction);
         NeoForge.EVENT_BUS.post(event);
-        return !event.isCanceled();
+        return event.getEntity();
     }
 
     public static @NotNull Pair<Float, Float> fireDefineRaidStrengthEvent(@NotNull ITotem totem, int badOmenLevel, float defendStrength, float attackStrength) {
@@ -62,20 +65,28 @@ public class FactionEventFactory {
         NeoForge.EVENT_BUS.post(new FactionVillageEvent.RemovedEvent(totem));
     }
 
-    public static PlayerFactionEvent.CanJoinFaction.Behavior fireCanJoinFactionEvent(@NotNull IFactionPlayerHandler playerHandler, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction, Holder<? extends IPlayableFaction<?>> newFaction) {
-        PlayerFactionEvent.CanJoinFaction event = new PlayerFactionEvent.CanJoinFaction(playerHandler, (Holder<IPlayableFaction<?>>) currentFaction, (Holder<IPlayableFaction<?>>) newFaction);
+    public static void fireVillageCaptureBreakEvent(@NotNull ITotem totem) {
+        NeoForge.EVENT_BUS.post(new FactionVillageEvent.BreakCaptureEvent(totem));
+    }
+
+    public static Map<LivingEntity, FactionVillageEvent.UpdateCreaturesOnCaptureFinishEvent.Action> fireReplaceEntitiesOnCaptureEvent(@NotNull ITotem totem, boolean forced) {
+        return NeoForge.EVENT_BUS.post(new FactionVillageEvent.UpdateCreaturesOnCaptureFinishEvent(totem, forced)).getEntitiesScheduledForReplacement();
+    }
+
+    public static PlayerFactionEvent.CanJoinFaction.Behavior fireCanJoinFactionEvent(@NotNull IFactionPlayerHandler playerHandler, Holder<? extends IPlayableFaction<?>> currentFaction, Holder<? extends IPlayableFaction<?>> newFaction) {
+        PlayerFactionEvent.CanJoinFaction event = new PlayerFactionEvent.CanJoinFaction(playerHandler, currentFaction, newFaction);
         NeoForge.EVENT_BUS.post(event);
         return event.getBehavior();
     }
 
-    public static boolean fireChangeLevelOrFactionEvent(@NotNull IFactionPlayerHandler player, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction, int currentLevel, @Nullable Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
-        PlayerFactionEvent.FactionLevelChangePre event = new PlayerFactionEvent.FactionLevelChangePre(player, (Holder<IPlayableFaction<?>>) currentFaction, currentLevel, (Holder<IPlayableFaction<?>>) newFaction, newLevel);
+    public static boolean fireChangeLevelOrFactionEvent(@NotNull IFactionPlayerHandler player, Holder<? extends IPlayableFaction<?>> currentFaction, int currentLevel, Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
+        PlayerFactionEvent.FactionLevelChangePre event = new PlayerFactionEvent.FactionLevelChangePre(player, currentFaction, currentLevel, newFaction, newLevel);
         NeoForge.EVENT_BUS.post(event);
         return event.isCanceled();
     }
 
-    public static void fireFactionLevelChangedEvent(@NotNull IFactionPlayerHandler player, @Nullable Holder<? extends IPlayableFaction<?>> oldFaction, int oldLevel, @Nullable Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
-        PlayerFactionEvent.FactionLevelChanged event = new PlayerFactionEvent.FactionLevelChanged(player, (Holder<IPlayableFaction<?>>) oldFaction, oldLevel, (Holder<IPlayableFaction<?>>) newFaction, newLevel);
+    public static void fireFactionLevelChangedEvent(@NotNull IFactionPlayerHandler player, Holder<? extends IPlayableFaction<?>> oldFaction, int oldLevel, Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
+        PlayerFactionEvent.FactionLevelChanged event = new PlayerFactionEvent.FactionLevelChanged(player, oldFaction, oldLevel, newFaction, newLevel);
         NeoForge.EVENT_BUS.post(event);
     }
 

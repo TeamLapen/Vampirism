@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.common.server;
 
-import de.teamlapen.vampirism.common.util.UtilLib;
+import de.teamlapen.factions.common.factions.minions.MinionWorldData;
+import de.teamlapen.factions.common.factions.skills.ClientboundSkillTreePacket;
+import de.teamlapen.factions.common.factions.skills.ServerSkillTreeData;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.factions.common.skills.ServerSkillTreeData;
-import de.teamlapen.vampirism.common.entity.SundamageRegistry;
-import de.teamlapen.factions.common.skills.ClientboundSkillTreePacket;
 import de.teamlapen.vampirism.common.util.Permissions;
-import de.teamlapen.factions.common.minions.MinionWorldData;
+import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.structures.VanillaStructureModifications;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -71,11 +70,11 @@ public class ServerEventHandler {
     @SubscribeEvent
     private void onServerStarting(ServerAboutToStartEvent event) {
         VanillaStructureModifications.addVillageStructures(event.getServer().registryAccess());
-        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).initServer(event.getServer().registryAccess());
+        VampirismMod.services().sunDamageRegistry().initServer(event.getServer().registryAccess());
     }
 
     @SubscribeEvent
     private void onServerStopped(ServerStoppedEvent event) {
-        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).removeServer();
+        VampirismMod.services().sunDamageRegistry().removeServer();
     }
 }

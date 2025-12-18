@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.factions.common.advancements.criterion.ActionCriterionTrigger;
-import de.teamlapen.factions.common.advancements.criterion.FactionCriterionTrigger;
-import de.teamlapen.factions.common.advancements.criterion.MinionTaskCriterionTrigger;
-import de.teamlapen.factions.common.advancements.criterion.SkillUnlockedCriterionTrigger;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.advancements.critereon.*;
+import de.teamlapen.vampirism.common.advancements.critereon.CuredVampireVillagerCriterionTrigger;
+import de.teamlapen.vampirism.common.advancements.critereon.HunterActionCriterionTrigger;
+import de.teamlapen.vampirism.common.advancements.critereon.MapFoundCriterionTrigger;
+import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.registries.Registries;

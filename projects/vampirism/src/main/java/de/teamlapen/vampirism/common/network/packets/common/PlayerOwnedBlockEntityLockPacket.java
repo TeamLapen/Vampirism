@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.network.packets.common;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.blockentity.PlayerOwnedBlockEntity;
+import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

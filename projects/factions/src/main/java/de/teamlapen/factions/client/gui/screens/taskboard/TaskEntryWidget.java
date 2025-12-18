@@ -1,12 +1,12 @@
 package de.teamlapen.factions.client.gui.screens.taskboard;
 
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.tasks.ITaskInstance;
-import de.teamlapen.factions.api.tasks.Task;
-import de.teamlapen.factions.api.tasks.TaskRequirement;
+import de.teamlapen.factions.api.factions.tasks.ITaskInstance;
+import de.teamlapen.factions.api.factions.tasks.Task;
+import de.teamlapen.factions.api.factions.tasks.TaskRequirement;
 import de.teamlapen.factions.api.util.FResourceLocation;
-import de.teamlapen.factions.common.inventory.ITaskMenu;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.factions.common.util.Util;
+import de.teamlapen.factions.common.world.inventory.ITaskMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

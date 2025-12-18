@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.blockentity.AltarInfusionBlockEntity;
+import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

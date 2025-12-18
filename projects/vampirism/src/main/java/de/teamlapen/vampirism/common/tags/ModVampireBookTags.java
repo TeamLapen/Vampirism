@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.tags;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import net.minecraft.tags.TagKey;
 
 public class ModVampireBookTags {

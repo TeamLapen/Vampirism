@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.util;
 
 import de.teamlapen.vampirism.common.core.*;
-import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

@@ -1,12 +1,11 @@
 package de.teamlapen.factions.common.factions;
 
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFactionBuilder;
 import de.teamlapen.factions.api.factions.lord.ILordPlayerBuilder;
 import de.teamlapen.factions.api.factions.lord.ILordPlayerEntry;
-import de.teamlapen.factions.api.factions.village.IFactionVillage;
 import de.teamlapen.factions.api.factions.village.IFactionVillageBuilder;
-import de.teamlapen.factions.api.items.IRefinementItem;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
@@ -26,7 +25,7 @@ public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends Faction
 
     protected final Supplier<AttachmentType<T>> playerCapabilitySupplier;
     protected int highestLevel = 1;
-    protected Map<IRefinementItem.AccessorySlotType, List<Supplier<IRefinementItem>>> refinementItemBySlot = new HashMap<>();
+    protected final Map<IRefinementItem.AccessorySlotType, List<Supplier<IRefinementItem>>> refinementItemBySlot = new HashMap<>();
     @Nullable
     protected ILordPlayerEntry lord;
 
@@ -43,11 +42,6 @@ public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends Faction
     public PlayableFactionBuilder<T> highestLevel(int highestLevel) {
         this.highestLevel = highestLevel;
         return this;
-    }
-
-    @Override
-    public PlayableFactionBuilder<T> village(IFactionVillage villageBuilder) {
-        return (PlayableFactionBuilder<T>) super.village(villageBuilder);
     }
 
     @Override
@@ -69,12 +63,6 @@ public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends Faction
     @Override
     public PlayableFactionBuilder<T> chatColor(ChatFormatting color) {
         return (PlayableFactionBuilder<T>) super.chatColor(color);
-    }
-
-    @Override
-    public PlayableFactionBuilder<T> lord(ILordPlayerEntry builder) {
-        this.lord = builder;
-        return this;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.blockentity;
 
-import de.teamlapen.vampirism.common.blockentity.VampireBeaconBlockEntity;
+import de.teamlapen.vampirism.common.world.blockentity.VampireBeaconBlockEntity;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.phys.AABB;

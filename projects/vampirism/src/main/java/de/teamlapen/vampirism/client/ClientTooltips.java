@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.client;
 
 import de.teamlapen.vampirism.client.renderer.tooltips.QuarrelPouchClientTooltip;
-import de.teamlapen.vampirism.common.blocks.IDescriptionProvider;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.items.tooltip.QuarrelPouchTooltip;
 import de.teamlapen.vampirism.common.util.BlockDescription;
 import de.teamlapen.vampirism.common.util.ShiftDescription;
+import de.teamlapen.vampirism.common.world.blocks.IDescriptionProvider;
+import de.teamlapen.vampirism.common.world.items.tooltip.QuarrelPouchTooltip;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -57,7 +57,7 @@ public class ClientTooltips {
         );
 
         if (descriptionItems.anyMatch(item -> stack.is(item.asItem()))) {
-//            DescriptionUtil.addDescriptionTooltip(event.getItemStack().getItem(), event.getContext(), event.getFlags(), event.getToolTip()); TODO
+//            DescriptionUtil.addDescriptionTooltip(event.getItemStack().getItem(), event.getContext(), event.getFlags(), event.getToolTip()); FIXME
         }
     }
 

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import de.teamlapen.factions.client.IMinecraftAccessor;
-import de.teamlapen.vampirism.client.OptifineHandler;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.client.OptifineHandler;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.util.MixinHooks;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -17,6 +17,7 @@ import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import org.jetbrains.annotations.NotNull;
 
+// FIXME
 public class BloodVisionRenderer implements IMinecraftAccessor {
     private static final int ENTITY_NEAR_SQ_DISTANCE = 600;
     private static final int BLOOD_VISION_FADE_TICKS = 80;
@@ -33,7 +34,7 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
     }
 
 //    public static void onRegisterStage(RenderLevelStageEvent.AfterLevel event) {
-//        TODO readd
+//        FIXME readd
 //        event.(VResourceLocation.mod("after_blood_vision"), SOLID_TRANSPARENCY_ENTITY);
 //    }
 
@@ -53,7 +54,7 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
 
     @SubscribeEvent
     public void onRenderWorldLast(@NotNull RenderLevelStageEvent.AfterWeather event) {
-//            if (shouldRenderBloodVision() && !reducedBloodVision) { TODO readd
+//            if (shouldRenderBloodVision() && !reducedBloodVision) { FIXME readd
 //                this.inBloodVisionRendering = true;
 //                //noinspection DataFlowIssue
 //                this.hasGarlicVision = VampirismPlayerAttributes.get(mc.player).getVampSpecial().blood_vision_garlic;

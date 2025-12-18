@@ -3,13 +3,15 @@ package de.teamlapen.vampirism.common.core;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import de.teamlapen.factions.common.commands.*;
+import de.teamlapen.factions.common.server.commands.arguments.FactionArgument;
+import de.teamlapen.factions.common.server.commands.arguments.MinionArgument;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.common.commands.*;
-import de.teamlapen.factions.common.commands.arguments.FactionArgument;
-import de.teamlapen.factions.common.commands.arguments.MinionArgument;
-import de.teamlapen.vampirism.common.commands.test.*;
+import de.teamlapen.vampirism.common.server.commands.AppearanceCommand;
+import de.teamlapen.vampirism.common.server.commands.BloodBarCommand;
+import de.teamlapen.vampirism.common.server.commands.ConfigCommand;
+import de.teamlapen.vampirism.common.server.commands.VampireSwordCommand;
+import de.teamlapen.vampirism.common.server.commands.test.*;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -60,7 +62,6 @@ public class ModCommands {
                                     .then(MarkerCommand.register())
                                     .then(EntityCommand.register())
                                     .then(InfoEntityCommand.register())
-                                    .then(MakeVillagerAgressiveCommand.register())
                                     .then(TentCommand.register())
                                     .then(GarlicCheckCommand.register())
                                     .then(SpawnTestAnimalCommand.register())

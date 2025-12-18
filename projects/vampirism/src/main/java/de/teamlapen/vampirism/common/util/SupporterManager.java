@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.util;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.settings.Supporter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -43,7 +43,7 @@ public class SupporterManager {
     }
 
     public void init() {
-        VampirismAPI.settings().getSupportersAsync().thenAccept(optional -> {
+        VampirismApi.services().settings().getSupportersAsync().thenAccept(optional -> {
             if (optional.isPresent()) {
                 this.supporters = optional.get().stream().collect(Collectors.groupingBy(Supporter::faction));
                 LOGGER.debug("Loaded {} supporter for {} factions", optional.get().size(), this.supporters.size());

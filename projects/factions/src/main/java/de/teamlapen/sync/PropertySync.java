@@ -1,21 +1,28 @@
 package de.teamlapen.sync;
 
-import com.mojang.serialization.Codec;
-import de.teamlapen.sync.api.IPropertySync;
-import de.teamlapen.sync.api.IStatusProvider;
 import de.teamlapen.sync.api.ISyncable;
+import de.teamlapen.sync.properties.IProperty;
+import de.teamlapen.sync.properties.Property;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
-public abstract class PropertySync implements ValueIOSerializable, ISyncable, IStatusProvider, IPropertySync {
+/**
+ * Base class for sync-able properties.
+ * <p>
+ * Handles registering, syncing ob properties
+ * <p>
+ * To make use of this class, you need to override {@link #registerProperties()}. In the implementation you can register properties.
+ * <p>
+ * Properties are registered using {@link #registerProperty(ResourceLocation)}.
+ * <p>
+ * To handle property changes, override {@link #onPropertyChanged()}.
+ */
+public abstract class PropertySync implements ValueIOSerializable, ISyncable, IProperty {
 
     private final Map<ResourceLocation, Property> propertiesMap = new HashMap<>();
     protected final Collection<Property> properties = Collections.unmodifiableCollection(propertiesMap.values());
@@ -24,17 +31,20 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
         this.registerProperties();
     }
 
-    @Override
-    public abstract void sync();
+    /**
+     * This method is called in the constructor of this class.
+     * It should be used to register properties using {@link #registerProperty(ResourceLocation)}
+     */
+    @ApiStatus.OverrideOnly
+    protected void registerProperties() {
+
+    }
+
+    //<editor-fold desc="IProperty">
 
     @Override
     public int getStatus() {
         return Objects.hash(this.properties.stream().map(Property::getStatus).toList());
-    }
-
-    @ApiStatus.OverrideOnly
-    protected void registerProperties() {
-
     }
 
     @Override
@@ -47,9 +57,26 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
         return this.properties.stream().anyMatch(Property::hasServerLoad);
     }
 
-    protected final void registerProperty(Property property) {
+    //</editor-fold>
+
+    //<editor-fold desc="Properties">
+
+    @ApiStatus.OverrideOnly
+    protected void onPropertyChanged() {
+
+    }
+
+    public final void registerProperty(Property property) {
         this.propertiesMap.put(property.key(), property);
     }
+
+    protected final Property.PropertyBuilder registerProperty(ResourceLocation key) {
+        return new Property.PropertyBuilder(this, key);
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Serialization">
 
     @Override
     public void serialize(ValueOutput output) {
@@ -71,7 +98,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
     }
 
     @Override
-    public void serializeFullUpdate(ValueOutput output) {
+    public final void serializeFullUpdate(ValueOutput output) {
         for (Property property : this.properties) {
             if (property.hasClientSync()) {
                 property.storeValue(output, Property.StoreMode.FULL_UPDATE);
@@ -80,7 +107,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
     }
 
     @Override
-    public void serializeUpdate(ValueOutput output) {
+    public final void serializeUpdate(ValueOutput output) {
         for (Property property : this.properties) {
             if (property.hasClientSync() && property.hasChanged()) {
                 property.store(output, Property.StoreMode.UPDATE);
@@ -89,7 +116,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
     }
 
     @Override
-    public boolean deserializeUpdate(ValueInput input) {
+    public final boolean deserializeUpdate(ValueInput input) {
         boolean changed = false;
         for (Property property : this.properties) {
             if (property.hasClientSync()) {
@@ -104,12 +131,5 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IS
         return false;
     }
 
-    @ApiStatus.OverrideOnly
-    protected void onPropertyChanged() {
-
-    }
-
-    protected final Property.PropertyBuilder registerProperty(ResourceLocation key) {
-        return new Property.PropertyBuilder(this, key);
-    }
+    //</editor-fold>
 }

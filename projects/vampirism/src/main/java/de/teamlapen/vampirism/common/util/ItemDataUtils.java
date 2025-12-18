@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.vampirism.api.items.oil.IOil;
-import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
+import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.items.BloodBottleItem;
-import de.teamlapen.vampirism.common.items.component.BottleBlood;
-import de.teamlapen.vampirism.common.items.component.OilContent;
+import de.teamlapen.vampirism.common.world.blockentity.BloodContainerBlockEntity;
+import de.teamlapen.vampirism.common.world.items.BloodBottleItem;
+import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
+import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;

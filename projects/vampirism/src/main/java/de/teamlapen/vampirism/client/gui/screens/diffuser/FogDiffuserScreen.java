@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens.diffuser;
 
-import de.teamlapen.vampirism.common.inventory.diffuser.FogDiffuserMenu;
+import de.teamlapen.vampirism.common.world.inventory.diffuser.FogDiffuserMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 

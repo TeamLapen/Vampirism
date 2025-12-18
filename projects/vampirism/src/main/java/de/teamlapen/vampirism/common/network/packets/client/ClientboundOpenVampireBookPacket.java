@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.network.packets.client;
 
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.items.component.VampireBook;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
+import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

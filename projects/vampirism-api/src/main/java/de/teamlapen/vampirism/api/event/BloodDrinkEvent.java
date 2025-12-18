@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.event;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.IDrinkBloodContext;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import net.neoforged.bus.api.Event;
 import org.jetbrains.annotations.NotNull;
 

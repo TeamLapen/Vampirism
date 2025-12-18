@@ -1,17 +1,14 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
-import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.general.IBloodConversionRegistry;
-import de.teamlapen.vampirism.api.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.api.settings.ISettingsProvider;
+import de.teamlapen.vampirism.api.world.entity.ISundamageRegistry;
+import de.teamlapen.vampirism.api.world.entity.IVampirismEntityRegistry;
+import de.teamlapen.vampirism.api.world.items.IExtendedBrewingRecipeRegistry;
 
 public interface IVampirismServices {
 
-    IFactionRegistry factionRegistry();
-
-    ISundamageRegistry sundamageRegistry();
+    ISundamageRegistry sunDamageRegistry();
 
     IVampirismEntityRegistry entityRegistry();
 

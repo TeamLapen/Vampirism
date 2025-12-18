@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.misc.mixin;
 
-import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;

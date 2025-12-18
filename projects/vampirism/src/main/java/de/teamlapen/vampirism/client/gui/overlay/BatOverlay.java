@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.factions.api.actions.IActionHandler;
+import de.teamlapen.factions.api.factions.actions.IActionHandler;
 import de.teamlapen.factions.client.gui.overlay.TextureOverlay;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;

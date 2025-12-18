@@ -7,15 +7,16 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public interface IItemPropertiesFactionsMock extends IItemProperties {
 
     @Override
     default Item.Properties factions$restrictFaction(@NotNull TagKey<IFaction<?>> faction) {
-        return null;
+        throw new IllegalStateException("This class is only supported as injection class");
     }
 
     @Override
     default Item.Properties factions$restrictFaction(@NotNull Holder<? extends IFaction<?>> faction) {
-        return null;
+        throw new IllegalStateException("This class is only supported as injection class");
     }
 }

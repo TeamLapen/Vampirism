@@ -8,6 +8,7 @@ import net.minecraft.tags.TagKey;
 public class FactionTags {
 
     public static final TagKey<IFaction<?>> ALL_FACTIONS = tag("all");
+    public static final TagKey<IFaction<?>> NOT_NEUTRAL = tag("not_neutral");
     public static final TagKey<IFaction<?>> IS_NEUTRAL = tag("is_neutral");
 
     private static TagKey<IFaction<?>> tag(String name) {

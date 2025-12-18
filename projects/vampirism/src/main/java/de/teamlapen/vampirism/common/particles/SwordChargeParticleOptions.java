@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.common.particles;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.core.ModParticles;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3d;
 
 public class SwordChargeParticleOptions extends FlyingBloodParticleOptions {
 

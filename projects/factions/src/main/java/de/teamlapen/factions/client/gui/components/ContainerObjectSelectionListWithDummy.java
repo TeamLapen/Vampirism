@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.input.MouseButtonEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
     }
 
     @Override
-    protected void renderListBackground(GuiGraphics p_331297_) {
+    protected void renderListBackground(@NotNull GuiGraphics p_331297_) {
     }
 
     @Override
@@ -34,12 +35,6 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
         super.renderWidget(graphics, p_283242_, p_282891_, p_283683_);
     }
 
-//    @Override
-//    protected void renderDecorations(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY) {
-//        graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getY() + 4, -16777216, 0);
-//        graphics.fillGradient(this.getX(), this.getBottom() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
-//    }
-
     @Override
     public int getRowWidth() {
         return this.width;
@@ -49,11 +44,6 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
     public int getRowLeft() {
         return super.getRowLeft() - 2;
     }
-
-//    @Override
-//    protected void renderItem(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
-//        super.renderItem(graphics, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
-//    }
 
     @Override
     protected int scrollBarY() {
@@ -131,7 +121,7 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
         }
 
         @Override
-        public boolean mouseClicked(MouseButtonEvent p_445873_, boolean p_433971_) {
+        public boolean mouseClicked(@NotNull MouseButtonEvent p_445873_, boolean p_433971_) {
             selectItem(this);
             return true;
         }

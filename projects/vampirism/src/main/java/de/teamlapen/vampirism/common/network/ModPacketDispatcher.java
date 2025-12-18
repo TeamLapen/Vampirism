@@ -1,14 +1,10 @@
 package de.teamlapen.vampirism.common.network;
 
-import de.teamlapen.factions.common.network.packets.client.*;
-import de.teamlapen.factions.common.network.packets.server.*;
-import de.teamlapen.factions.common.skills.ClientboundSkillTreePacket;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.network.ClientPayloadHandler;
 import de.teamlapen.vampirism.common.network.packets.client.*;
 import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
-import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;

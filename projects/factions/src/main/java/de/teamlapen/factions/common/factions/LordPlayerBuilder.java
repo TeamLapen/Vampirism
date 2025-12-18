@@ -1,10 +1,10 @@
 package de.teamlapen.factions.common.factions;
 
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.factions.lord.ILordPlayerBuilder;
 import de.teamlapen.factions.api.factions.lord.ILordPlayerEntry;
 import de.teamlapen.factions.api.factions.lord.ILordTitleProvider;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 

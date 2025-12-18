@@ -8,6 +8,6 @@ import java.util.Map;
 
 public interface ILivingEntity {
 
-    Map<Holder<MobEffect>, MobEffectInstance> getActiveEffects();
+    Map<Holder<MobEffect>, MobEffectInstance> vampirism$activeEffects();
 
 }

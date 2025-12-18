@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.general;
 import de.teamlapen.vampirism.api.VampirismDataMaps;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.api.datamaps.IItemBlood;
+import de.teamlapen.vampirism.api.world.entity.IVampirismEntityRegistry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
  * {@link VampirismDataMaps#FLUID_BLOOD_CONVERSION}
  * <br>
  * <br>
- * Entity blood values are handled by {@link de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry}
+ * Entity blood values are handled by {@link IVampirismEntityRegistry}
  */
 public interface IBloodConversionRegistry {
 

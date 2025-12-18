@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
-import de.teamlapen.vampirism.api.items.oil.IArmorOil;
-import de.teamlapen.vampirism.common.items.component.AppliedOilContent;
+import de.teamlapen.vampirism.api.world.items.oil.IApplicableOil;
+import de.teamlapen.vampirism.api.world.items.oil.IArmorOil;
+import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;

@@ -1,16 +1,13 @@
 package de.teamlapen.factions.api.factions;
 
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
 import de.teamlapen.factions.api.factions.lord.ILordPlayerBuilder;
-import de.teamlapen.factions.api.factions.lord.ILordPlayerEntry;
-import de.teamlapen.factions.api.factions.village.IFactionVillage;
-import de.teamlapen.factions.api.items.IRefinementItem;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -28,9 +25,6 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
      */
     IPlayableFactionBuilder<T> highestLevel(int highestLevel);
 
-    @Override
-    IPlayableFactionBuilder<T> village(IFactionVillage villageBuilder);
-
     /**
      * Allows this faction to have accessories
      *
@@ -43,8 +37,6 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
 
     @Override
     IPlayableFactionBuilder<T> chatColor(ChatFormatting color);
-
-    IPlayableFactionBuilder<T> lord(ILordPlayerEntry lordPlayerBuilder);
 
     IPlayableFactionBuilder<T> lord(Consumer<ILordPlayerBuilder<T>> builder);
 

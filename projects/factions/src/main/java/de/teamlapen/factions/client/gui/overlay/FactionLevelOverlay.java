@@ -1,9 +1,9 @@
 package de.teamlapen.factions.client.gui.overlay;
 
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.ILordPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.common.config.ModConfig;
+import de.teamlapen.factions.api.factions.lord.ILordPlayer;
+import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.factions.common.tags.FactionTags;
 import net.minecraft.client.DeltaTracker;
@@ -16,7 +16,7 @@ public class FactionLevelOverlay extends BaseOverlay {
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (canRenderOverlays() && this.player().jumpableVehicle() == null && !this.mc().options.hideGui && ModConfig.CLIENT.enableFactionLevelOverlayRendering.get()) {
+        if (canRenderOverlays() && this.player().jumpableVehicle() == null && !this.mc().options.hideGui && FactionConfig.CLIENT.enableFactionLevelOverlayRendering.get()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(this.player());
             Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
             if (this.mc().gameMode != null && this.mc().gameMode.hasExperience() && !IFaction.is(faction, FactionTags.IS_NEUTRAL)) {
@@ -29,8 +29,8 @@ public class FactionLevelOverlay extends BaseOverlay {
                     text = Component.literal(String.valueOf(handler.getCurrentLevel()));
                 }
 
-                int x = (this.mc().getWindow().getGuiScaledWidth() - this.mc().font.width(text)) / 2 + ModConfig.CLIENT.guiLevelOffsetX.get();
-                int y = this.mc().getWindow().getGuiScaledHeight() - ModConfig.CLIENT.guiLevelOffsetY.get();
+                int x = (this.mc().getWindow().getGuiScaledWidth() - this.mc().font.width(text)) / 2 + FactionConfig.CLIENT.guiLevelOffsetX.get();
+                int y = this.mc().getWindow().getGuiScaledHeight() - FactionConfig.CLIENT.guiLevelOffsetY.get();
                 graphics.drawString(font(), text, x + 1, y, backGroundColor, false);
                 graphics.drawString(font(), text, x - 1, y, backGroundColor, false);
                 graphics.drawString(font(), text, x, y + 1, backGroundColor, false);

@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.client.gui.overlay;
 
 import de.teamlapen.factions.client.gui.overlay.BaseOverlay;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

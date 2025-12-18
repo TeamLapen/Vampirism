@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.util;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.core.ModRecipes;
-import de.teamlapen.vampirism.common.recipes.InfuserRecipe;
+import de.teamlapen.vampirism.common.world.items.recipes.InfuserRecipe;
 import net.minecraft.world.item.crafting.RecipePropertySet;
 import net.minecraft.world.level.Level;
 

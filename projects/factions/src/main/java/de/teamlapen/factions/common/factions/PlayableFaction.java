@@ -1,11 +1,11 @@
 package de.teamlapen.factions.common.factions;
 
 import com.google.common.collect.ImmutableMap;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.factions.lord.ILordPlayerEntry;
 import de.teamlapen.factions.api.factions.lord.ILordTitleProvider;
-import de.teamlapen.factions.api.items.IRefinementItem;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -70,7 +70,6 @@ public class PlayableFaction<T extends IFactionPlayer<T>> extends Faction<T> imp
     @Override
     public <Z extends Item & IRefinementItem> Z getRandomRefinementItem(RandomSource random, IRefinementItem.AccessorySlotType type) {
         List<Supplier<IRefinementItem>> iRefinementItems = this.refinementItemBySlot.get(type);
-        assert iRefinementItems != null && !iRefinementItems.isEmpty();
         return ((Z) iRefinementItems.get(random.nextInt(iRefinementItems.size())).get());
     }
 

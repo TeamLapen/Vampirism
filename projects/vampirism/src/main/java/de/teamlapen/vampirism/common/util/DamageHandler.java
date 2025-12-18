@@ -1,19 +1,19 @@
 package de.teamlapen.vampirism.common.util;
 
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.IActionHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.actions.IActionHandler;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
-import de.teamlapen.vampirism.common.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.common.tags.ModActionTags;
 import de.teamlapen.vampirism.common.world.attachments.LevelDamage;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaronEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;

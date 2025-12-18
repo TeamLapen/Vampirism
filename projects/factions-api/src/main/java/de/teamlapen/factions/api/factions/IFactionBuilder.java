@@ -1,6 +1,5 @@
 package de.teamlapen.factions.api.factions;
 
-import de.teamlapen.factions.api.factions.village.IFactionVillage;
 import de.teamlapen.factions.api.factions.village.IFactionVillageBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
@@ -41,14 +40,6 @@ public interface IFactionBuilder<T extends IFactionEntity> {
      */
     IFactionBuilder<T> chatColor(ChatFormatting color);
 
-
-    /**
-     * Adds faction village compatibility
-     *
-     * @param villageBuilder village builder
-     * @return the builder
-     */
-    IFactionBuilder<T> village(IFactionVillage villageBuilder);
 
     IFactionBuilder<T> village(Consumer<IFactionVillageBuilder> villageBuilder);
 

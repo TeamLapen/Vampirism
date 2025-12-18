@@ -1,31 +1,35 @@
 package de.teamlapen.factions.client.gui.screens;
 
 import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.factions.ILordPlayer;
-import de.teamlapen.factions.api.items.IRefinementItem;
+import de.teamlapen.factions.api.factions.lord.ILordPlayer;
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
 import de.teamlapen.factions.client.core.FactionAppearanceScreens;
 import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.factions.client.gui.screens.skills.SkillsScreen;
 import de.teamlapen.factions.client.gui.screens.taskboard.TaskListWidget;
 import de.teamlapen.factions.common.core.FactionKeys;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.inventory.ITaskMenu;
-import de.teamlapen.factions.common.inventory.FactionMenu;
 import de.teamlapen.factions.common.network.packets.server.ServerboundDeleteRefinementPacket;
+import de.teamlapen.factions.common.world.inventory.FactionMenu;
+import de.teamlapen.factions.common.world.inventory.ITaskMenu;
 import de.teamlapen.factions.misc.mixin.client.accessor.AbstractContainerScreenAccessor;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -34,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
 
 public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> implements ExtendedScreen {
 
@@ -194,7 +197,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
                         refinementList.set(slot.index, ItemStack.EMPTY);
                     }, Component.empty()) {
                         @Override
-                        public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+                        public void renderWidget(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
                             if (!refinementList.get(slot.index).isEmpty() && ((AbstractContainerScreenAccessor) FactionMenuScreen.this).getDraggingItem().isEmpty() && overSlot(slot, pMouseX, pMouseY)) {
                                 super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
                             }
@@ -246,80 +249,4 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
             }
         }
     }
-
-//    private static class TaskList extends de.teamlapen.factions.client.gui.screens.taskboard.TaskList {
-//
-//        public TaskList(Minecraft minecraft, ITaskMenu menu, IFactionPlayer<?> factionPlayer, int x, int y, int width, int height, Supplier<List<ITaskInstance>> itemSupplier) {
-//            super(menu, factionPlayer, x, y, width, height, itemSupplier);
-//        }
-//
-//        @Override
-//        protected TaskEntry createItem(ITaskInstance item) {
-//            return new TaskEntry(item);
-//        }
-//
-//        @Override
-//        public void renderWidget(GuiGraphics graphics, int p_283242_, int p_282891_, float p_283683_) {
-//            super.renderWidget(graphics, p_283242_, p_282891_, p_283683_);
-//            if (children().isEmpty()) {
-//                graphics.drawCenteredString(minecraft.font, Component.translatable("gui.vampirism.vampirism_menu.no_tasks"), this.getX() + width / 2, this.getY() + height / 2, 0x404040);
-//            }
-//
-//        }
-//
-//        private class TaskEntry extends de.teamlapen.factions.client.gui.screens.taskboard.TaskList.TaskEntry {
-//
-//            private @Nullable ImageButton button;
-//
-//            public TaskEntry(ITaskInstance taskInstance) {
-//                super(taskInstance);
-//
-//                if (!taskInstance.isUnique(menu.getRegistry())) {
-//                    this.button = new ImageButton(0, 0, 8, 11, LOCATE_TASK_MASTER, this::clickLocator, Component.empty());
-//                    this.button.setTooltip(Tooltip.create(createTooltip()));
-//                }
-//            }
-//
-//            @Override
-//            public boolean mouseClicked(MouseButtonEvent p_445873_, boolean p_433971_) {
-//                if (this.button != null && button.mouseClicked(p_445873_, p_433971_)) {
-//                    return true;
-//                }
-//                return super.mouseClicked(p_445873_, p_433971_);
-//            }
-//
-//            @Override
-//            protected void renderToolTips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-//                if (this.button != null && !button.isMouseOver(mouseX, mouseY)) {
-//                    super.renderToolTips(guiGraphics, mouseX, mouseY);
-//                }
-//            }
-//
-//            private void clickLocator(Button button) {
-//                Player player = factionPlayer.asEntity();
-//                Component position = ((VampirismMenu) menu).taskWrapper.get(getItem().getTaskBoard()).getLastSeenPos().map(pos -> {
-//                    int i = Mth.floor(Util.horizontalDistance(player.blockPosition(), pos));
-//                    MutableComponent itextcomponent = ComponentUtils.wrapInSquareBrackets(Component.translatable("chat.coordinates", pos.getX(), "~", pos.getZ())).withStyle((p_241055_1_) -> {
-//                        return p_241055_1_.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent.SuggestCommand("/tp @s " + pos.getX() + " ~ " + pos.getZ())).withHoverEvent(new HoverEvent.ShowText(Component.translatable("chat.coordinates.tooltip")));
-//                    });
-//                    return itextcomponent.append(Component.translatable("gui.vampirism.vampirism_menu.distance", i));
-//                }).orElseGet(() -> Component.translatable("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD));
-//                player.displayClientMessage(Component.translatable("gui.vampirism.vampirism_menu.last_known_pos").append(position), false);
-//            }
-//
-//            private Component createTooltip() {
-//                Component position = ((VampirismMenu) menu).taskWrapper.get(this.getItem().getTaskBoard()).getLastSeenPos().map(pos -> Component.literal("[" + pos.toShortString() + "]").withStyle(ChatFormatting.GREEN)).orElseGet(() -> Component.translatable("gui.vampirism.vampirism_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD));
-//                return Component.translatable("gui.vampirism.vampirism_menu.last_known_pos").append(position);
-//            }
-//
-//            @Override
-//            public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-//                super.renderContent(guiGraphics, mouseX, mouseY, isHovering, partialTick);
-//                if (this.button != null) {
-//                    this.button.setPosition(getRowLeft() + getRowWidth() - this.button.getWidth() - 1, getY() + 1);
-//                    this.button.render(guiGraphics, mouseX, mouseY, partialTick);
-//                }
-//            }
-//        }
-//    }
 }

@@ -4,7 +4,6 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 public class ParticleUtil {
 

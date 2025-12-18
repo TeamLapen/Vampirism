@@ -1,6 +1,6 @@
 package de.teamlapen.factions.server;
 
-import de.teamlapen.factions.common.config.ModConfig;
+import de.teamlapen.factions.common.config.FactionConfig;
 import org.apache.logging.log4j.*;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -11,7 +11,7 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
 /**
- * logger for vampirism faction stuff that is only initialized for dedicated server and only woorking if {@link CommonConfig#enableFactionLogging} is true<br>
+ * logger for vampirism faction stuff that is only initialized for dedicated server and only woorking if {@link de.teamlapen.factions.common.config.CommonConfig#enableFactionLogging} is true<br>
  * otherwise the logger does nothing
  */
 public class FactionLogger {
@@ -32,7 +32,7 @@ public class FactionLogger {
      * requires common config to be loaded
      */
     public static void init() {
-        if (!ModConfig.COMMON.enableFactionLogging.get() || logger != null) return;
+        if (!FactionConfig.COMMON.enableFactionLogging.get() || logger != null) return;
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration configuration = ctx.getConfiguration();
 

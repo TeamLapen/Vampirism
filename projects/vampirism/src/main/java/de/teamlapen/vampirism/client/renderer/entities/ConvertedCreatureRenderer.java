@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.common.entity.converted.ConvertedCreatureEntity;
+import de.teamlapen.vampirism.common.world.entity.converted.ConvertedCreatureEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

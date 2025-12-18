@@ -1,24 +1,27 @@
 package de.teamlapen.vampirism.common.core;
 
+import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
+import de.teamlapen.factions.common.components.FactionRestriction;
 import de.teamlapen.factions.common.core.ModRegistries;
-import de.teamlapen.factions.common.items.consume.FactionBasedConsumeEffect;
+import de.teamlapen.factions.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.factions.api.items.IRefinementItem;
-import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.items.*;
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.vampirism.common.items.consume.*;
-import de.teamlapen.vampirism.common.items.crossbow.ArrowContainer;
-import de.teamlapen.vampirism.common.items.crossbow.DoubleCrossbowItem;
-import de.teamlapen.vampirism.common.items.crossbow.SingleCrossbowItem;
-import de.teamlapen.vampirism.common.items.crossbow.TechCrossbowItem;
-import de.teamlapen.vampirism.common.items.crossbow.arrow.*;
-import de.teamlapen.vampirism.common.items.dispenser.SyringeDispenseBehavior;
-import de.teamlapen.vampirism.common.items.display.ItemStackWithSize;
+import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.world.items.*;
+import de.teamlapen.vampirism.common.world.items.consume.AffectGarlic;
+import de.teamlapen.vampirism.common.world.items.consume.BloodConsume;
+import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
+import de.teamlapen.vampirism.common.world.items.consume.ModConsumables;
+import de.teamlapen.vampirism.common.world.items.crossbow.ArrowContainer;
+import de.teamlapen.vampirism.common.world.items.crossbow.DoubleCrossbowItem;
+import de.teamlapen.vampirism.common.world.items.crossbow.SingleCrossbowItem;
+import de.teamlapen.vampirism.common.world.items.crossbow.TechCrossbowItem;
+import de.teamlapen.vampirism.common.world.items.crossbow.arrow.*;
+import de.teamlapen.vampirism.common.world.items.dispenser.SyringeDispenseBehavior;
+import de.teamlapen.vampirism.common.world.items.display.ItemStackWithSize;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -71,7 +74,7 @@ public class ModItems {
     public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_ENHANCED = ITEMS.registerItem("diamond_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.DIAMOND, IItemWithTier.Tier.ENHANCED, 1.3f, props));
     public static final DeferredItem<HeartStrikerItem> HEART_STRIKER_ULTIMATE = ITEMS.registerItem("netherite_heart_striker",  props -> new HeartStrikerItem(HeartStrikerItem.NETHERITE, IItemWithTier.Tier.ULTIMATE, 1.35f, props));
 
-    public static final DeferredItem<HunterAxeItem> HUNTER_AXE_NORMAL = ITEMS.registerItem("hunter_axe_normal",  props -> new HunterAxeItem(HunterAxeItem.NORMAL, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HunterAxeItem> HUNTER_AXE_NORMAL = ITEMS.registerItem("hunter_axe_normal", props -> new HunterAxeItem(HunterAxeItem.NORMAL, IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<HunterAxeItem> HUNTER_AXE_ENHANCED = ITEMS.registerItem("hunter_axe_enhanced",  props -> new HunterAxeItem(HunterAxeItem.ENHANCED, IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<HunterAxeItem> HUNTER_AXE_ULTIMATE = ITEMS.registerItem("hunter_axe_ultimate",  props -> new HunterAxeItem(HunterAxeItem.ULTIMATE, IItemWithTier.Tier.ULTIMATE, props));
 
@@ -100,7 +103,7 @@ public class ModItems {
     public static final DeferredItem<CrucifixItem> CRUCIFIX_ULTIMATE = ITEMS.registerItem("crucifix_ultimate",  props -> new CrucifixItem(IItemWithTier.Tier.ULTIMATE, props));
 
     // Armor
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = ITEMS.registerItem("armor_of_swiftness_chest_normal",  props ->new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = ITEMS.registerItem("armor_of_swiftness_chest_normal", props ->new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = ITEMS.registerItem("armor_of_swiftness_chest_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_chest_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.ULTIMATE, props));
     public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = ITEMS.registerItem("armor_of_swiftness_feet_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.NORMAL, props));
@@ -134,7 +137,7 @@ public class ModItems {
     public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_BOOTS = ITEMS.registerItem("vampire_clothing_boots",  props -> new VampireClothingItem(ArmorType.BOOTS, ModArmorMaterials.VAMPIRE_CLOTH_BOOTS, props));
     public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_HAT = ITEMS.registerItem("vampire_clothing_hat",  props -> new VampireClothingItem(ArmorType.HELMET, ModArmorMaterials.VAMPIRE_CLOTH_HAT, props));
 
-    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_WHITE = ITEMS.registerItem("vampire_cloak_white",  props -> new VampireCloakItem(DyeColor.WHITE, props));
+    public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_WHITE = ITEMS.registerItem("vampire_cloak_white", props -> new VampireCloakItem(DyeColor.WHITE, props));
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_ORANGE = ITEMS.registerItem("vampire_cloak_orange",  props -> new VampireCloakItem(DyeColor.ORANGE, props));
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_MAGENTA = ITEMS.registerItem("vampire_cloak_magenta",  props -> new VampireCloakItem(DyeColor.MAGENTA, props));
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_LIGHT_BLUE = ITEMS.registerItem("vampire_cloak_light_blue",  props -> new VampireCloakItem(DyeColor.LIGHT_BLUE, props));

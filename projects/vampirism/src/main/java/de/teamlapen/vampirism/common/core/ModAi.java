@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.entity.ai.sensing.VampireVillagerHostilesSensor;
+import de.teamlapen.vampirism.common.world.entity.ai.sensing.VampireVillagerHostilesSensor;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.neoforged.bus.api.IEventBus;

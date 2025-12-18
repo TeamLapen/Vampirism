@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.api.util;
 
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.actions.ILastingAction;
-import de.teamlapen.factions.api.refinements.IRefinement;
-import de.teamlapen.factions.api.skills.ISkill;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.ILastingAction;
+import de.teamlapen.factions.api.factions.refinements.IRefinement;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
 import org.jetbrains.annotations.ApiStatus;
 

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
-import de.teamlapen.vampirism.common.entity.SoulOrbEntity;
+import de.teamlapen.vampirism.common.world.entity.SoulOrbEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

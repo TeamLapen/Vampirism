@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -44,7 +45,7 @@ public class ArmorModels {
         builder.put(ModEntitiesRender.CLOTHING_PANTS, ClothingPantsModel::new);
         builder.put(ModEntitiesRender.HUNTER_HAT_TALL, HunterHatModel::new);
         builder.put(ModEntitiesRender.HUNTER_HAT_BROAD, HunterHatModel::new);
-        builder.put(ModEntitiesRender.GENERIC_BIPED, DummyClothingModel::new);
+        builder.put(ModelLayers.PLAYER, DummyClothingModel::new);
         MODEL_CONSTRUCTORS = builder.build();
     }
 }

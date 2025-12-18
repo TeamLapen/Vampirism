@@ -1,8 +1,8 @@
 package de.teamlapen.factions.common;
 
-import de.teamlapen.factions.api.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.IAction;
 import de.teamlapen.factions.api.util.REFERENCE;
-import de.teamlapen.factions.common.config.ModConfig;
+import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.factions.common.util.RegUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -38,12 +38,12 @@ public class Permissions {
     public record ContextPermission<T>(PermissionNode<Boolean> node, PermissionDynamicContextKey<T> context) {
 
         public boolean isAllowed(ServerPlayer player, T context) {
-            return !ModConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, this.node, this.context.createContext(context));
+            return !FactionConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, this.node, this.context.createContext(context));
         }
 
         @SafeVarargs
         public final boolean isAllowed(ServerPlayer player, T... context) {
-            return !ModConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, this.node, Arrays.stream(context).map(this.context::createContext).toArray(PermissionDynamicContext[]::new));
+            return !FactionConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, this.node, Arrays.stream(context).map(this.context::createContext).toArray(PermissionDynamicContext[]::new));
         }
 
         public boolean isDisallowed(ServerPlayer player, T context) {

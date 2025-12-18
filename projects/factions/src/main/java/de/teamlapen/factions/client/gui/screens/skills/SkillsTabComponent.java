@@ -1,14 +1,14 @@
 package de.teamlapen.factions.client.gui.screens.skills;
 
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillHandler;
-import de.teamlapen.factions.api.skills.ISkillTree;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.factions.api.factions.skills.ISkillTree;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.factions.common.core.FactionEffects;
-import de.teamlapen.factions.common.skills.ClientSkillTreeData;
-import de.teamlapen.factions.common.skills.SkillHandler;
-import de.teamlapen.factions.common.skills.SkillTreeConfiguration;
+import de.teamlapen.factions.common.factions.skills.ClientSkillTreeData;
+import de.teamlapen.factions.common.factions.skills.SkillHandler;
+import de.teamlapen.factions.common.factions.skills.SkillTreeConfiguration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -34,7 +34,6 @@ public class SkillsTabComponent {
     public static final int SCREEN_WIDTH = SkillsScreen.SCREEN_WIDTH - 18;
     public static final int SCREEN_HEIGHT = SkillsScreen.SCREEN_HEIGHT - 46;
     private final Minecraft minecraft;
-    private final SkillsScreen screen;
     private final Holder<ISkillTree> skillTree;
     private final ISkillHandler<?> skillHandler;
     private final ItemStack icon;
@@ -52,16 +51,14 @@ public class SkillsTabComponent {
     private double zoom = 1;
     private final int index;
     private float fade;
-    private final ClientSkillTreeData treeData;
     private double centerX;
     private double centerY;
-    private final double maxZoom = 2;
-    private final double minZoom = 0.25;
+    private static final double maxZoom = 2;
+    private static final double minZoom = 0.25;
 
 
     public SkillsTabComponent(Minecraft minecraft, SkillsScreen screen, int index, Holder<ISkillTree> skillTree, ISkillHandler<?> skillHandler, ClientSkillTreeData skillTreeData) {
         this.minecraft = minecraft;
-        this.screen = screen;
         this.skillTree = skillTree;
         this.skillHandler = skillHandler;
         ISkillTree tree = skillTree.value();
@@ -69,10 +66,9 @@ public class SkillsTabComponent {
         this.icon = tree.display();
         this.title = tree.name();
         this.position = AdvancementTabType.LEFT;
-        this.treeData = skillTreeData;
-        this.treeWidth = this.treeData.getTreeWidth(skillTree);
-        this.treeHeight = this.treeData.getTreeHeight(skillTree);
-        this.root = new SkillNodeComponent(minecraft, screen, this, this.treeData.root(skillTree), this.treeData, ((SkillHandler<?>) skillHandler));
+        this.treeWidth = skillTreeData.getTreeWidth(skillTree);
+        this.treeHeight = skillTreeData.getTreeHeight(skillTree);
+        this.root = new SkillNodeComponent(minecraft, screen, this, skillTreeData.root(skillTree), skillTreeData, ((SkillHandler<?>) skillHandler));
         this.background = tree.background().map(x -> x.withPath(path -> "textures/" + path + ".png")).orElse(FResourceLocation.mod("textures/gui/skills/backgrounds/level.png"));
         addNode(this.root);
 

@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.factions.api.factions.skills.ISkillNode;
+import de.teamlapen.factions.api.factions.skills.ISkillTree;
+import de.teamlapen.factions.common.factions.skills.SkillTreeConfiguration;
+import de.teamlapen.factions.data.provider.base.SkillTreeProvider;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.factions.api.skills.ISkillNode;
-import de.teamlapen.factions.api.skills.ISkillTree;
-import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.factions.common.skills.SkillTreeConfiguration;
-import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampireSkills;
-import de.teamlapen.factions.common.data.provider.base.SkillTreeProvider;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import org.jetbrains.annotations.NotNull;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.entity.CrossbowArrowEntity;
+import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.ArrowRenderState;

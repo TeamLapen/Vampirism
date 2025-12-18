@@ -142,5 +142,11 @@
   "minion_task.factions.defend_area": "Defend area",
   "minion_task.factions.follow_lord": "Follow",
   "minion_task.factions.protect_lord": "Defend Lord",
-  "minion_task.factions.nothing": "Nothing"
+  "minion_task.factions.nothing": "Nothing",
+  "gui.factions.minion_stats": "Minion Stats",
+  "stat_type.factions.action_used": "Action Activated",
+  "stat_type.factions.action_time": "Action Active",
+  "stat_type.factions.action_cooldown_time": "Action On Cooldown",
+  "stat_type.factions.skill_unlocked": "Skill Unlocked",
+  "stat_type.factions.skill_forgotten": "Skill Forgotten"
 }

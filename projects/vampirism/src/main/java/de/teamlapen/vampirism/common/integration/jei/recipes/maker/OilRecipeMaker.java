@@ -1,17 +1,17 @@
 package de.teamlapen.vampirism.common.integration.jei.recipes.maker;
 
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.common.components.FactionRestriction;
 import de.teamlapen.factions.common.core.FactionDataComponents;
-import de.teamlapen.vampirism.api.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.world.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModRegistries;
-import de.teamlapen.vampirism.common.items.component.AppliedOilContent;
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.vampirism.common.items.component.OilContent;
 import de.teamlapen.vampirism.common.util.RegUtil;
+import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
+import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;

@@ -1,9 +1,9 @@
 package de.teamlapen.factions.api.registries.actions;
 
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.integration.jei.recipes.maker;
 
 import de.teamlapen.vampirism.common.integration.jei.recipes.BlessableRecipe;
-import de.teamlapen.vampirism.common.items.BlessableItem;
+import de.teamlapen.vampirism.common.world.items.BlessableItem;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

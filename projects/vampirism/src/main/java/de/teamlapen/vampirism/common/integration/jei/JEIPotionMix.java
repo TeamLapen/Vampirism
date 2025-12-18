@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.integration.jei;
 
 
-import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
+import de.teamlapen.vampirism.api.world.items.ExtendedPotionMix;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.item.Item;

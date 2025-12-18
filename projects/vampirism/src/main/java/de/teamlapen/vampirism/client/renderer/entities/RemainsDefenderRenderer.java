@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.RemainsDefenderModel;
-import de.teamlapen.vampirism.common.entity.RemainsDefenderEntity;
+import de.teamlapen.vampirism.common.world.entity.RemainsDefenderEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;

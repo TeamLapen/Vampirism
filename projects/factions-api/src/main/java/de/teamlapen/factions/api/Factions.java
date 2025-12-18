@@ -1,9 +1,9 @@
 package de.teamlapen.factions.api;
 
-import de.teamlapen.factions.api.entities.player.INeutralPlayer;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.registries.factions.DeferredFaction;
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.api.world.entities.player.INeutralPlayer;
 import net.minecraft.resources.ResourceLocation;
 
 import static de.teamlapen.factions.api.registries.ApiRegistryProvider.retrieveFaction;

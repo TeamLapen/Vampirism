@@ -2,13 +2,13 @@ package de.teamlapen.factions.common.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.tasks.*;
+import de.teamlapen.factions.api.factions.tasks.*;
 import de.teamlapen.factions.api.util.REFERENCE;
-import de.teamlapen.factions.common.tasks.requirements.*;
-import de.teamlapen.factions.common.tasks.reward.*;
-import de.teamlapen.factions.common.tasks.unlock.LordLvlUnlocker;
-import de.teamlapen.factions.common.tasks.unlock.LvlUnlocker;
-import de.teamlapen.factions.common.tasks.unlock.ParentUnlocker;
+import de.teamlapen.factions.common.factions.tasks.requirements.*;
+import de.teamlapen.factions.common.factions.tasks.reward.*;
+import de.teamlapen.factions.common.factions.tasks.unlock.LordLvlUnlocker;
+import de.teamlapen.factions.common.factions.tasks.unlock.LvlUnlocker;
+import de.teamlapen.factions.common.factions.tasks.unlock.ParentUnlocker;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -50,6 +50,7 @@ public class FactionTasks {
         TASK_REWARD_INSTANCES.register(bus);
     }
 
+    @SuppressWarnings("EmptyMethod")
     static void createTasks(BootstrapContext<Task> context) {
 
     }

@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.config;
 
 
-import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
+import de.teamlapen.vampirism.common.util.UtilLib;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.ModConfigSpec;

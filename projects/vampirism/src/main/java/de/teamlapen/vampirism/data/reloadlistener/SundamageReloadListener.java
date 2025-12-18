@@ -5,9 +5,9 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.entity.SundamageRegistry;
+import de.teamlapen.vampirism.common.world.entity.SundamageRegistry;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -113,7 +113,7 @@ public class SundamageReloadListener implements PreparableReloadListener {
     }
 
     private void apply(SundamageRegistry.Settings file) {
-        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).applyData(file);
+        VampirismMod.services().sunDamageRegistry().applyData(file);
     }
 
 

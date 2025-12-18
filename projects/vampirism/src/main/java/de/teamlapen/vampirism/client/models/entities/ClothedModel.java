@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.models.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import net.minecraft.Util;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.HumanoidArm;
@@ -13,7 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ClothedModel<T extends AvatarRenderState> extends HumanoidModel<T> {
+/**
+ * Keep in sync with {@link net.minecraft.client.model.PlayerModel}
+ */
+public class ClothedModel<T extends AvatarLikeRenderState> extends HumanoidModel<T> {
     private static final String LEFT_SLEEVE = "left_sleeve";
     private static final String RIGHT_SLEEVE = "right_sleeve";
     private static final String LEFT_PANTS = "left_pants";
@@ -64,6 +67,8 @@ public class ClothedModel<T extends AvatarRenderState> extends HumanoidModel<T> 
         this.rightPants.visible = visible;
         this.jacket.visible = visible;
     }
+
+
 
     @Override
     public void translateToHand(@NotNull HumanoidRenderState state, @NotNull HumanoidArm side, @NotNull PoseStack poseStack) {

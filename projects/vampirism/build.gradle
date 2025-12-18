@@ -83,6 +83,13 @@ neoForge {
 
             systemProperty 'forge.enabledGameTestNamespaces', project.vampirism_mod_id
         }
+        clientAuth {
+            client()
+
+            devLogin = true
+
+            systemProperty 'forge.enabledGameTestNamespaces', project.vampirism_mod_id
+        }
         server {
             server()
             programArgument '--nogui'

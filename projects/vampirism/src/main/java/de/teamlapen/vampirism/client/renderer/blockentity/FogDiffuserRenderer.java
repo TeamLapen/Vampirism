@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import de.teamlapen.vampirism.common.blockentity.diffuser.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.world.blockentity.diffuser.FogDiffuserBlockEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

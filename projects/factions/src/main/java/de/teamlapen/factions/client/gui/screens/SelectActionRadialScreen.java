@@ -1,9 +1,9 @@
 package de.teamlapen.factions.client.gui.screens;
 
 import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.actions.IActionHandler;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.IActionHandler;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
 import de.teamlapen.factions.client.config.ClientConfigHelper;
 import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.factions.client.gui.radialmenu.IRadialMenuSlot;

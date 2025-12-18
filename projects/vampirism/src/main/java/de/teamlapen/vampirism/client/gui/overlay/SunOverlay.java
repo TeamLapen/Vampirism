@@ -4,7 +4,7 @@ import de.teamlapen.factions.client.gui.overlay.TextureOverlay;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.AbstractClientPlayer;

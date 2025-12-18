@@ -1,7 +1,7 @@
 package de.teamlapen.factions.common.core;
 
 import de.teamlapen.factions.api.util.REFERENCE;
-import de.teamlapen.factions.common.effects.OblivionMobEffect;
+import de.teamlapen.factions.common.world.effects.OblivionMobEffect;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

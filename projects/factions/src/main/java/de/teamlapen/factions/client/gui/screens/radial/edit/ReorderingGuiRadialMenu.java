@@ -48,7 +48,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     private ExcludedItemList excludedList;
     private Boolean wasGuiHidden;
     protected final GridLayout layout = new GridLayout();
-    protected List<RepositionCallback> repositionCallback = new ArrayList<>();
+    protected final List<RepositionCallback> repositionCallback = new ArrayList<>();
 
     public ReorderingGuiRadialMenu(ItemOrdering<T> ordering, Function<T, MutableComponent> nameFunction, DrawCallback<T> drawCallback, @NotNull Consumer<ItemOrdering<T>> saveAction, Function<T, Boolean> isEnabled) {
         super(createMenu(ordering, nameFunction, drawCallback, isEnabled));

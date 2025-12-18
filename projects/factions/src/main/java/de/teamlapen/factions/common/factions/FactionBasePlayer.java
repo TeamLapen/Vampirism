@@ -1,22 +1,18 @@
 package de.teamlapen.factions.common.factions;
 
 import com.mojang.logging.LogUtils;
-import de.teamlapen.factions.api.FactionApi;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.common.entities.IPlayerEventListener;
-import de.teamlapen.sync.Attachment;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.common.world.entities.IPlayerEventListener;
+import de.teamlapen.sync.AttachmentSync;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
  */
-public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> extends Attachment implements IFactionPlayer<T>, IPlayerEventListener {
+public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> extends AttachmentSync implements IFactionPlayer<T>, IPlayerEventListener {
 
     protected static final Logger LOGGER = LogUtils.getLogger();
 

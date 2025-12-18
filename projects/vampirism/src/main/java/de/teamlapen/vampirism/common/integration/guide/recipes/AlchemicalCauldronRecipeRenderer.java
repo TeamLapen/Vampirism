@@ -11,7 +11,7 @@ import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.lib.util.Color;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.recipes.AlchemicalCauldronRecipe;
+import de.teamlapen.vampirism.common.world.items.recipes.AlchemicalCauldronRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

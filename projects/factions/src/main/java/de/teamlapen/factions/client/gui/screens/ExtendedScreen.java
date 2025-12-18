@@ -1,6 +1,6 @@
 package de.teamlapen.factions.client.gui.screens;
 
-import de.teamlapen.factions.common.inventory.ITaskMenu;
+import de.teamlapen.factions.common.world.inventory.ITaskMenu;
 
 
 /**

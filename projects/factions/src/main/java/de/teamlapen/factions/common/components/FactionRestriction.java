@@ -8,9 +8,9 @@ import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
-import de.teamlapen.factions.api.items.components.IFactionRestriction;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillHandler;
+import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.world.items.components.IFactionRestriction;
 import de.teamlapen.factions.common.core.FactionDataComponents;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
@@ -30,13 +30,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<HolderSet<ISkill<?>>> skills, Optional<Integer> minLevel) implements IFactionRestriction, IFactionRestrictionProvider {
 
@@ -155,7 +153,7 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
      * collection entity check
      */
     public static boolean canUse(LivingEntity player, List<IFactionRestriction> restrictions) {
-        Holder<? extends IFaction<?>> faction = FactionsMod.services().factionRegistry().getFaction(player);
+        Holder<? extends IFaction<?>> faction = IFactionRegistry.get().getFaction(player);
 
         for (IFactionRestriction restriction : restrictions) {
             if(!IFaction.contains(restriction.factions(), faction)) {

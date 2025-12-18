@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.models.items.properties;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
-import de.teamlapen.vampirism.common.items.component.BottleBlood;
+import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import net.minecraft.resources.ResourceLocation;

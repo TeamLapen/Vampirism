@@ -1,25 +1,23 @@
 package de.teamlapen.factions.api.event;
 
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.actions.ILastingAction;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.ILastingAction;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>, Z extends IAction<T>> extends Event {
 
-    @NotNull
     private final T factionPlayer;
     private final Holder<Z> action;
 
     @ApiStatus.Internal
-    public ActionEvent(@NotNull T factionPlayer, Holder<Z> action) {
+    public ActionEvent(T factionPlayer, Holder<Z> action) {
         this.factionPlayer = factionPlayer;
         this.action = action;
     }
@@ -48,7 +46,7 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
         private Component cancelMessage = Component.translatable("text.vampirism.action.cancelled");
 
         @ApiStatus.Internal
-        public ActionActivatedEvent(@NotNull T factionPlayer, Holder<IAction<T>> action, int cooldown, int duration) {
+        public ActionActivatedEvent(T factionPlayer, Holder<IAction<T>> action, int cooldown, int duration) {
             super(factionPlayer, action);
             this.cooldown = cooldown;
             this.duration = duration;
@@ -108,7 +106,7 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
         private boolean fullCooldown;
 
         @ApiStatus.Internal
-        public ActionDeactivatedEvent(@NotNull T factionPlayer, Holder<ILastingAction<T>> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
+        public ActionDeactivatedEvent(T factionPlayer, Holder<ILastingAction<T>> action, int remainingDuration, int cooldown, boolean ignoreCooldown, boolean fullCooldown) {
             super(factionPlayer, action);
             this.remainingDuration = remainingDuration;
             this.cooldown = cooldown;
@@ -175,7 +173,7 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
         private boolean skipActionUpdate;
 
         @ApiStatus.Internal
-        public ActionUpdateEvent(@NotNull T factionPlayer, Holder<ILastingAction<T>> action, int remainingDuration) {
+        public ActionUpdateEvent(T factionPlayer, Holder<ILastingAction<T>> action, int remainingDuration) {
             super(factionPlayer, action);
             this.remainingDuration = remainingDuration;
         }

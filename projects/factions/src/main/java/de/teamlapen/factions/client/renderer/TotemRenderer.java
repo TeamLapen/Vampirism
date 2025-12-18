@@ -3,7 +3,7 @@ package de.teamlapen.factions.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.util.FResourceLocation;
-import de.teamlapen.factions.common.blockentity.TotemBlockEntity;
+import de.teamlapen.factions.common.world.blockentity.TotemBlockEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

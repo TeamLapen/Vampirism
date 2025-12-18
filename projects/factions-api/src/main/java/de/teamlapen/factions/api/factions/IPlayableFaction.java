@@ -1,9 +1,9 @@
 package de.teamlapen.factions.api.factions;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
 import de.teamlapen.factions.api.factions.lord.ILordTitleProvider;
-import de.teamlapen.factions.api.items.IRefinementItem;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;

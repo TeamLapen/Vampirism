@@ -9,10 +9,11 @@ import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEn
 import de.teamlapen.vampirism.client.renderer.entities.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
 import de.teamlapen.vampirism.common.core.ModEntities;
-import net.minecraft.client.model.*;
-import net.minecraft.client.model.geom.LayerDefinitions;
+import net.minecraft.client.model.BoatModel;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.*;
@@ -30,8 +31,6 @@ import org.jetbrains.annotations.NotNull;
  * Handles entity render registration
  */
 public class ModEntitiesRender {
-    public static final ModelLayerLocation HUNTER = new ModelLayerLocation(VResourceLocation.mod("hunter"), "main");
-    public static final ModelLayerLocation HUNTER_SLIM = new ModelLayerLocation(VResourceLocation.mod("slim_hunter"), "main");
     public static final ModelLayerLocation COFFIN = new ModelLayerLocation(VResourceLocation.mod("coffin"), "main");
     public static final ModelLayerLocation WING = new ModelLayerLocation(VResourceLocation.mod("wing"), "main");
     public static final ModelLayerLocation BARON = new ModelLayerLocation(VResourceLocation.mod("baron"), "main");
@@ -47,11 +46,6 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation HUNTER_HAT_BROAD = new ModelLayerLocation(VResourceLocation.mod("hunter_hat_broad"), "main");
     public static final ModelLayerLocation HUNTER_EQUIPMENT = new ModelLayerLocation(VResourceLocation.mod("hunter_equipment"), "main");
     public static final ModelLayerLocation VILLAGER_WITH_ARMS = new ModelLayerLocation(VResourceLocation.mod("villager_with_arms"), "main");
-    public static final ModelLayerLocation GENERIC_BIPED = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "main");
-    public static final ModelLayerLocation GENERIC_BIPED_SLIM = new ModelLayerLocation(VResourceLocation.mod("generic_biped"), "main");
-    public static final ArmorModelSet<ModelLayerLocation> GENERIC_BIPED_ARMOR = createArmorSet(VResourceLocation.mod("generic_biped"));
-    public static final ArmorModelSet<ModelLayerLocation> HUNTER_ARMOR = createArmorSet(VResourceLocation.mod("hunter_biped"));
-    public static final ArmorModelSet<ModelLayerLocation> HUNTER_ARMOR_SLIM = createArmorSet(VResourceLocation.mod("hunter_biped_slim"));
     public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(VResourceLocation.mod("task_master"), "main");
     public static final ModelLayerLocation REMAINS_DEFENDER = new ModelLayerLocation(VResourceLocation.mod("remains_defender"), "main");
     public static final ModelLayerLocation GHOST = new ModelLayerLocation(VResourceLocation.mod("ghost"), "main");
@@ -108,8 +102,6 @@ public class ModEntitiesRender {
     }
 
     static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(HUNTER, BasicHunterModel::createBodyLayer);
-        event.registerLayerDefinition(HUNTER_SLIM, BasicHunterModel::createSlimBodyLayer);
         event.registerLayerDefinition(COFFIN, CoffinModel::createLayer);
         event.registerLayerDefinition(WING, WingModel::createLayer);
         event.registerLayerDefinition(BARON, BaronModel::createLayer);
@@ -124,8 +116,6 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(HUNTER_HAT_TALL, HunterHatModel::createTallHatLayer);
         event.registerLayerDefinition(HUNTER_HAT_BROAD, HunterHatModel::createBroadHatLayer);
         event.registerLayerDefinition(VILLAGER_WITH_ARMS, () -> VillagerWithArmsModel.createLayer(0));
-        event.registerLayerDefinition(GENERIC_BIPED, () -> LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, false), 64, 64));
-        event.registerLayerDefinition(GENERIC_BIPED_SLIM, () -> LayerDefinition.create(PlayerModel.createMesh(CubeDeformation.NONE, true), 64, 64));
         event.registerLayerDefinition(TASK_MASTER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
         event.registerLayerDefinition(REMAINS_DEFENDER, RemainsDefenderModel::createBodyLayer);
         event.registerLayerDefinition(GHOST, GhostModel::createMesh);
@@ -135,14 +125,6 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(DARK_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
         event.registerLayerDefinition(CURSED_SPRUCE_BOAT, () -> boatDefinition);
         event.registerLayerDefinition(CURSED_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
-        ArmorModelSet<LayerDefinition> armorModelSetHunter = BipedCloakedModel.createArmorMeshSet(LayerDefinitions.INNER_ARMOR_DEFORMATION, LayerDefinitions.OUTER_ARMOR_DEFORMATION)
-                .map(definition -> LayerDefinition.create(definition, 64, 32));
-        addArmor(event, armorModelSetHunter, HUNTER_ARMOR);
-        addArmor(event, armorModelSetHunter, HUNTER_ARMOR_SLIM);
-        ArmorModelSet<LayerDefinition> armormodelsetHumanoid = HumanoidModel.createArmorMeshSet(LayerDefinitions.INNER_ARMOR_DEFORMATION, LayerDefinitions.OUTER_ARMOR_DEFORMATION)
-                .map(definition -> LayerDefinition.create(definition, 64, 32));
-        addArmor(event, armormodelsetHumanoid, GENERIC_BIPED_ARMOR);
-
     }
 
     private static void addArmor(EntityRenderersEvent.RegisterLayerDefinitions event, ArmorModelSet<LayerDefinition> armorModel, ArmorModelSet<ModelLayerLocation> set) {

@@ -2,8 +2,8 @@ package de.teamlapen.factions.common.components;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.items.components.IEffectiveRefinementSet;
-import de.teamlapen.factions.api.refinements.IRefinementSet;
+import de.teamlapen.factions.api.factions.refinements.IRefinementSet;
+import de.teamlapen.factions.api.world.items.components.IEffectiveRefinementSet;
 import de.teamlapen.factions.common.core.ModRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

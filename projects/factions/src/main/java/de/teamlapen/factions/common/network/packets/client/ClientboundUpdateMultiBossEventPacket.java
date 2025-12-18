@@ -1,6 +1,7 @@
 package de.teamlapen.factions.common.network.packets.client;
 
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.api.util.SafeCast;
 import de.teamlapen.factions.common.util.Color;
 import de.teamlapen.factions.common.world.MultiBossEvent;
 import net.minecraft.core.UUIDUtil;
@@ -156,7 +157,7 @@ public record ClientboundUpdateMultiBossEventPacket(Operation operation) impleme
         }
 
         public StreamCodec<RegistryFriendlyByteBuf, Operation> codec() {
-            return (StreamCodec<RegistryFriendlyByteBuf, Operation>) streamCodec;
+            return SafeCast.cast(this.streamCodec);
         }
     }
 }

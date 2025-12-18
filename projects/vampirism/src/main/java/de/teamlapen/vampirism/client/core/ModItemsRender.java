@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.vampirism.api.items.IHunterCrossbow;
+import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
-import de.teamlapen.factions.client.color.tint.RefinementTint;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;

@@ -3,7 +3,6 @@ package de.teamlapen.factions.common.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.world.item.component.ResolvableProfile;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

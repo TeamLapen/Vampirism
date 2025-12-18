@@ -1,18 +1,17 @@
 package de.teamlapen.vampirism.common.util;
 
-import com.google.common.collect.Lists;
 import de.teamlapen.factions.api.factions.village.IFactionVillageBuilder;
 import de.teamlapen.factions.common.core.FactionDataComponents;
-import de.teamlapen.vampirism.common.core.*;
-import de.teamlapen.factions.common.factions.FactionVillageBuilder;
-import de.teamlapen.vampirism.common.entity.hunter.HunterBaseEntity;
+import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModEffects;
+import de.teamlapen.vampirism.common.core.ModEntities;
+import de.teamlapen.vampirism.common.tags.ModEntityTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
-import net.minecraft.util.random.Weighted;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,9 +40,7 @@ public class HunterVillage {
 
     public static void hunterVillage(IFactionVillageBuilder builder) {
         builder.badOmenEffect(ModEffects.BAD_OMEN_HUNTER)
-                .captureEntities(Lists.newArrayList(new Weighted<>(ModEntities.HUNTER::get, 10), new Weighted<>(ModEntities.ADVANCED_HUNTER::get, 2)))
-                .factionVillagerProfession(ModVillage.HUNTER_EXPERT.getKey())
-                .guardSuperClass(HunterBaseEntity.class)
+                .guardTypes(ModEntityTags.HUNTER_VILLAGE_GUARDS)
                 .taskMaster(ModEntities.TASK_MASTER_HUNTER)
                 .banner(HunterVillage::createBanner)
                 .totem(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER, ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED);

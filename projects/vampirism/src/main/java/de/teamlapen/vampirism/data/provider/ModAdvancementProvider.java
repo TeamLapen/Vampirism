@@ -8,17 +8,21 @@ import de.teamlapen.factions.common.core.FactionMinionTasks;
 import de.teamlapen.factions.common.util.MapUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.advancements.critereon.*;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
+import de.teamlapen.vampirism.common.advancements.critereon.CuredVampireVillagerCriterionTrigger;
+import de.teamlapen.vampirism.common.advancements.critereon.HunterActionCriterionTrigger;
+import de.teamlapen.vampirism.common.advancements.critereon.MapFoundCriterionTrigger;
+import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.components.predicates.VampireBookPredicate;
 import de.teamlapen.vampirism.common.core.*;
-import de.teamlapen.vampirism.common.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.tags.ModEntityTags;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
+import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,6 +39,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -47,7 +52,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
     }
 
     private interface VampirismAdvancementSubProvider {
-        void generate(@NotNull AdvancementHolder root, @NotNull HolderLookup.Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer);
+        void generate(AdvancementHolder root, HolderLookup.Provider holderProvider, Consumer<AdvancementHolder> consumer);
     }
 
     private static class VampirismAdvancements implements AdvancementSubProvider {
@@ -55,10 +60,10 @@ public class ModAdvancementProvider extends AdvancementProvider {
         private final List<VampirismAdvancementSubProvider> subProvider = List.of(new MainAdvancements(), new HunterAdvancements(), new VampireAdvancements(), new MinionAdvancements());
 
         @Override
-        public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> consumer) {
+        public void generate(HolderLookup.@NotNull Provider registries, Consumer<AdvancementHolder> consumer) {
 
             AdvancementHolder root = Advancement.Builder.advancement()
-                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), VResourceLocation.mod("textures/block/dark_stone_bricks.png"), AdvancementType.TASK, false, false, false)
+                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), VResourceLocation.mod("block/dark_stone_bricks.png"), AdvancementType.TASK, false, false, false)
                     .addCriterion("main", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_FANG.get()))
                     .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.GARLIC.get()))
                     .requirements(AdvancementRequirements.Strategy.OR)
@@ -72,7 +77,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
+        public void generate(AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, Consumer<AdvancementHolder> consumer) {
             HolderLookup.RegistryLookup<EntityType<?>> entities = holderProvider.lookupOrThrow(Registries.ENTITY_TYPE);
             AdvancementHolder become_hunter = Advancement.Builder.advancement()
                     .display(ModBlocks.GARLIC.get(), Component.translatable("advancement.vampirism.become_hunter"), Component.translatable("advancement.vampirism.become_hunter.desc"), null, AdvancementType.TASK, true, false, true)
@@ -137,7 +142,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
+        public void generate(AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, Consumer<AdvancementHolder> consumer) {
             HolderGetter<Item> itemRegistryLookup = holderProvider.lookupOrThrow(Registries.ITEM);
             HolderLookup.RegistryLookup<Biome> biomeRegistryLookup = holderProvider.lookupOrThrow(Registries.BIOME);
             HolderLookup.RegistryLookup<EntityType<?>> entities = holderProvider.lookupOrThrow(Registries.ENTITY_TYPE);
@@ -183,7 +188,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
         builder.requirements(AdvancementRequirements.Strategy.AND);
 
         Optional<? extends HolderLookup.RegistryLookup<IVampireBook>> registryLookup = holderProvider.lookup(VampirismRegistries.Keys.VAMPIRE_BOOK);
-        registryLookup.ifPresent(registry -> registry.listElements().forEach(vampireBook -> {
+        registryLookup.ifPresent(registry -> registry.listElements().sorted(Comparator.comparing(Holder.Reference::key)).forEach(vampireBook -> {
             builder.addCriterion(
                     "has_" + vampireBook.value().id().getPath(),
                     InventoryChangeTrigger.TriggerInstance.hasItems(
@@ -201,7 +206,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
+        public void generate(AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, Consumer<AdvancementHolder> consumer) {
             AdvancementHolder become_vampire = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism.become_vampire"), Component.translatable("advancement.vampirism.become_vampire.desc"), null, AdvancementType.TASK, true, false, true)
                     .parent(root)
@@ -295,7 +300,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
 
         @SuppressWarnings("unused")
         @Override
-        public void generate(@NotNull AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, @NotNull Consumer<AdvancementHolder> consumer) {
+        public void generate(AdvancementHolder root, HolderLookup.@NotNull Provider holderProvider, Consumer<AdvancementHolder> consumer) {
             AdvancementHolder become_lord = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_CLOTHING_CROWN.get(), Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(root)

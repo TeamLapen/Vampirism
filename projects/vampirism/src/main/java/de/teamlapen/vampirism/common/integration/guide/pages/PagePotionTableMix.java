@@ -8,7 +8,7 @@ import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.PageHelper;
 import de.maxanier.guideapi.gui.BaseScreen;
-import de.teamlapen.vampirism.api.items.ExtendedPotionMix;
+import de.teamlapen.vampirism.api.world.items.ExtendedPotionMix;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;

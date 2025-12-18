@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampireLeveling;
-import de.teamlapen.vampirism.common.inventory.AltarInfusionMenu;
-import de.teamlapen.vampirism.common.items.PureBloodItem;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling;
+import de.teamlapen.vampirism.common.world.inventory.AltarInfusionMenu;
+import de.teamlapen.vampirism.common.world.items.PureBloodItem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;

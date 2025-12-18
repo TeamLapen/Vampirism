@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.data.provider.loot;
 
 import de.teamlapen.factions.common.core.FactionItems;
-import de.teamlapen.factions.common.items.OblivionPotionItem;
 import de.teamlapen.factions.common.util.MapUtil;
-import de.teamlapen.vampirism.api.items.components.IBottleBlood;
+import de.teamlapen.factions.common.world.items.OblivionPotionItem;
+import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.tags.ModStructureTags;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;

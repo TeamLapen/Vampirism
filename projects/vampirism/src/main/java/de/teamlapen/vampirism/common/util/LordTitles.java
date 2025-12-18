@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.util;
 
 
-import de.teamlapen.factions.api.factions.lord.ILordTitleProvider;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.api.factions.lord.ILordTitleProvider;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 

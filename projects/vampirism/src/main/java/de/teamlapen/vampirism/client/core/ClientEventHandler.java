@@ -1,16 +1,12 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.factions.client.FactionsClientMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.client.VampirismModClient;
-import de.teamlapen.factions.common.skills.ClientSkillTreeData;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.entity.player.LevelAttributeModifier;
-import de.teamlapen.vampirism.common.items.component.AppliedOilContent;
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.vampirism.common.potions.BasePotion;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
+import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
+import de.teamlapen.vampirism.common.world.potions.BasePotion;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,12 +17,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.event.level.LevelEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

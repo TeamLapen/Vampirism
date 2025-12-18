@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.api;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
-import de.teamlapen.vampirism.api.entity.convertible.Converter;
-import de.teamlapen.vampirism.api.items.oil.IOil;
+import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
+import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 

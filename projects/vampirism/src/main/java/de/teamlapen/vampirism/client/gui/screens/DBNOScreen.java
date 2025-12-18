@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.components.CooldownButton;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;

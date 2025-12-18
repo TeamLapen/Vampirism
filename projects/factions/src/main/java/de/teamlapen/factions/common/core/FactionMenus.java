@@ -1,9 +1,9 @@
 package de.teamlapen.factions.common.core;
 
 import de.teamlapen.factions.api.util.REFERENCE;
-import de.teamlapen.factions.common.inventory.MinionContainer;
-import de.teamlapen.factions.common.inventory.TaskBoardMenu;
-import de.teamlapen.factions.common.inventory.FactionMenu;
+import de.teamlapen.factions.common.world.inventory.FactionMenu;
+import de.teamlapen.factions.common.world.inventory.MinionContainer;
+import de.teamlapen.factions.common.world.inventory.TaskBoardMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;

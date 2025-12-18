@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.vampirism.common.entity.minion.management.MinionTasks;
-import de.teamlapen.vampirism.common.entity.player.hunter.actions.HunterActions;
-import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.entity.player.lord.actions.LordActions;
-import de.teamlapen.vampirism.common.entity.player.lord.skills.LordSkills;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirismVampireVisions;
-import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
-import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.common.integration.TerraBlenderCompat;
-import de.teamlapen.vampirism.common.serialization.CodecModifications;
+import de.teamlapen.vampirism.common.util.serialization.CodecModifications;
+import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.world.entity.player.lord.actions.LordActions;
+import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirismVampireVisions;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.data.ModDataPacks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;

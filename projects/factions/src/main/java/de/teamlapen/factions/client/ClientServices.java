@@ -2,10 +2,7 @@ package de.teamlapen.factions.client;
 
 import de.teamlapen.factions.Services;
 import de.teamlapen.factions.client.config.ClientConfigHelper;
-import de.teamlapen.factions.client.core.FactionAppearanceScreens;
-import de.teamlapen.factions.client.core.ModBlockRenderer;
-import de.teamlapen.factions.client.core.ModItemRenderer;
-import de.teamlapen.factions.client.core.ModScreens;
+import de.teamlapen.factions.client.core.*;
 import de.teamlapen.factions.client.entity.ClientEventHandler;
 import de.teamlapen.factions.client.gui.overlay.CustomBossEventOverlay;
 import de.teamlapen.factions.client.gui.screens.ScreenEventHandler;
@@ -43,11 +40,12 @@ public class ClientServices extends Services {
     public void registerModBus(IEventBus bus) {
         bus.addListener(this.modKeys::registerKeyMapping);
         bus.addListener(ClientConfigHelper::onConfigChanged);
-        bus.addListener(ModScreens::registerScreens);
-        bus.addListener(ModScreens::registerScreenOverlays);
-        bus.addListener(ModItemRenderer::registerColors);
-        bus.addListener(ModBlockRenderer::registerBlockEntityRenderers);
+        bus.addListener(FactionScreens::registerScreens);
+        bus.addListener(FactionScreens::registerScreenOverlays);
+        bus.addListener(FactionItemRenderer::registerColors);
+        bus.addListener(FactionBlockRenderer::registerBlockEntityRenderers);
         bus.addListener(FMLClientSetupEvent.class, x -> FactionAppearanceScreens.init());
+        bus.addListener(FactionParticleFactories::registerFactories);
     }
 
     @Override

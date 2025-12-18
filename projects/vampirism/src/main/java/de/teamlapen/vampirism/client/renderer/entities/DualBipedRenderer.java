@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.common.util.TextureComparator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -12,7 +13,6 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +28,7 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 
 
-public abstract class DualBipedRenderer<T extends Mob, S extends AvatarRenderState, M extends HumanoidModel<S>> extends HumanoidMobRenderer<T, S, M> {
+public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRenderState, M extends HumanoidModel<S>> extends HumanoidMobRenderer<T, S, M> {
     private final @NotNull M modelA;
     private final M modelB;
 

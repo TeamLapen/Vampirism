@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.tags.FactionTags;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -28,5 +29,7 @@ public class ModFactionTagsProvider extends KeyTagProvider<IFaction<?>> {
         this.tag(ModFactionTags.USE_GARLIC_BREAD).addTags(ModFactionTags.IS_HUNTER, ModFactionTags.IS_NEUTRAL);
         this.tag(ModFactionTags.CAN_RAID).addTags(ModFactionTags.IS_HUNTER, ModFactionTags.IS_VAMPIRE);
         this.tag(ModFactionTags.HAS_RANDOM_RAID).addTag(ModFactionTags.CAN_RAID);
+        this.tag(ModFactionTags.HUNTER_MINION_TARGETS).addTag(ModFactionTags.IS_VAMPIRE);
+        this.tag(ModFactionTags.VAMPIRE_MINION_TARGETS).addTag(FactionTags.NOT_NEUTRAL).remove(ModFactionTags.IS_VAMPIRE);
     }
 }

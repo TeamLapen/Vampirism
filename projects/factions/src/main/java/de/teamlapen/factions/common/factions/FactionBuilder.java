@@ -20,9 +20,9 @@ import java.util.function.Consumer;
 public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder<T> {
 
     protected int color = ARGB.white(1);
-    protected IFactionVillage villageFactionData;
+    protected @Nullable IFactionVillage villageFactionData;
     protected @Nullable TextColor chatColor;
-    protected Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags = new HashMap<>();
+    protected final Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags = new HashMap<>();
 
     @Override
     public IFactionBuilder<T> color(int color) {
@@ -42,12 +42,6 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
             throw new IllegalArgumentException("Parameter must be a color");
         }
         this.chatColor = TextColor.fromLegacyFormat(color);
-        return this;
-    }
-
-    @Override
-    public IFactionBuilder<T> village(IFactionVillage villageBuilder) {
-        this.villageFactionData = villageBuilder;
         return this;
     }
 

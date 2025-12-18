@@ -1,9 +1,9 @@
 package de.teamlapen.factions.common.network.packets.server;
 
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.IAction;
 import de.teamlapen.factions.api.util.FResourceLocation;
-import de.teamlapen.factions.common.actions.ActionKeys;
+import de.teamlapen.factions.common.factions.actions.ActionKeys;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

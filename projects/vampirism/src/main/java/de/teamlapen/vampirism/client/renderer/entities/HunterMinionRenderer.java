@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
-import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -30,13 +30,13 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
 
 
     public HunterMinionRenderer(EntityRendererProvider.@NotNull Context context) {
-        super(context, new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED), false), new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(context.bakeLayer(ModEntitiesRender.GENERIC_BIPED_SLIM), true), 0.5F);
+        super(context, new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false), new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
         this.textures = gatherTextures("textures/entity/hunter", true);
         this.minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
         this.addLayer(new PlayerBodyOverlayLayer<>(this));
-        this.addLayer(new ArmorLayer<HumanoidModel<HunterMinionRenderState>>(this,
-                ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), HumanoidModel::new),
-                ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), HumanoidModel::new),
+        this.addLayer(new ArmorLayer<ClothedModel<HunterMinionRenderState>>(this,
+                ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), x -> new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(x, true)),
+                ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), x -> new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(x, false)),
                 context.getEquipmentRenderer()));
     }
 

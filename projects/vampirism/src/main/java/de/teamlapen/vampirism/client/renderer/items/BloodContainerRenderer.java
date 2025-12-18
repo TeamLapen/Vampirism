@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.client.renderer.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.client.renderer.VertexUtils;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
+import de.teamlapen.vampirism.client.renderer.VertexUtils;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.world.blockentity.BloodContainerBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;

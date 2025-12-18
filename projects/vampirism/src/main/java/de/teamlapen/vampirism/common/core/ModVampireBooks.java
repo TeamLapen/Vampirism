@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.items.component.VampireBook;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
+import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
-import static de.teamlapen.vampirism.common.items.component.VampireBook.builder;
+import static de.teamlapen.vampirism.common.world.items.component.VampireBook.builder;
 
 public class ModVampireBooks {
 

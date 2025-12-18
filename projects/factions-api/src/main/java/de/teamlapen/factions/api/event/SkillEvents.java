@@ -1,9 +1,9 @@
 package de.teamlapen.factions.api.event;
 
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillHandler;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
-import de.teamlapen.factions.api.skills.ISkillTree;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.skills.ISkillTree;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
+import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.factions.client.gui.GuiRenderer;
-import de.teamlapen.factions.api.skills.ISkill;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.common.inventory.AlchemicalCauldronMenu;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.common.world.inventory.AlchemicalCauldronMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

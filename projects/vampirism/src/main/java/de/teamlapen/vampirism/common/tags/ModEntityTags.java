@@ -14,6 +14,8 @@ public class ModEntityTags {
     public static final TagKey<EntityType<?>> CONVERTED_CREATURES = tag("converted_creatures");
     public static final TagKey<EntityType<?>> ALERTABLE_HUNTERS = tag("alertable_hunters");
     public static final TagKey<EntityType<?>> ALERTABLE_VAMPIRES = tag("alertable_vampires");
+    public static final TagKey<EntityType<?>> VAMPIRE_VILLAGE_GUARDS = tag("village/guards/vampire");
+    public static final TagKey<EntityType<?>> HUNTER_VILLAGE_GUARDS = tag("village/guards/hunter");
 
     public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
     public static final TagKey<EntityType<?>> IGNORE_VAMPIRE_SWORD_FINISHER = tag("ignore_vampire_sword_finisher");

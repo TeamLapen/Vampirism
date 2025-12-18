@@ -2,18 +2,17 @@ package de.teamlapen.vampirism.misc.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
-import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.VampirismApi;
+import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
-import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.core.ModAttachments;
-import de.teamlapen.vampirism.common.entity.ExtendedCreature;
-import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.misc.extension.client.IHunterPlayerState;
 import de.teamlapen.vampirism.misc.extension.client.IVampirePlayerState;
 import net.minecraft.client.model.EntityModel;
@@ -38,12 +37,12 @@ public class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingE
     private void applyConvertedRenderState(T entity, S reusedState, float partialTick, CallbackInfo ci) {
         IVampirismRenderState renderState = (IVampirismRenderState) reusedState;
         if (ConvertedCreatureRenderer.renderOverlay) {
-            Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(ResourceLocation::toString).map(s -> VampirismAPI.entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
+            Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(ResourceLocation::toString).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
                 renderState.vampirism$overlay(location);
             });
         }
         if (entity instanceof IConvertedCreature<?> creature) {
-            Optional.ofNullable(creature.getSourceEntityId()).map(s -> VampirismAPI.entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
+            Optional.ofNullable(creature.getSourceEntityId()).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
                 renderState.vampirism$convertedOverlay(location);
             });
         }

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.factions.common.core.FactionItems;
-import de.teamlapen.vampirism.common.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
+import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;

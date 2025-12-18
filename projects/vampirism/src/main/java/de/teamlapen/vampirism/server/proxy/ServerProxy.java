@@ -1,16 +1,16 @@
 package de.teamlapen.vampirism.server.proxy;
 
-import de.teamlapen.vampirism.common.blocks.CoffinBlock;
-import de.teamlapen.vampirism.common.blocks.TentBlock;
 import de.teamlapen.vampirism.common.proxy.CommonProxy;
+import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
+import de.teamlapen.vampirism.common.world.blocks.TentBlock;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static de.teamlapen.vampirism.common.blocks.TentBlock.FACING;
-import static de.teamlapen.vampirism.common.blocks.TentBlock.POSITION;
+import static de.teamlapen.vampirism.common.world.blocks.TentBlock.FACING;
+import static de.teamlapen.vampirism.common.world.blocks.TentBlock.POSITION;
 
 /**
  * Serverside proxy

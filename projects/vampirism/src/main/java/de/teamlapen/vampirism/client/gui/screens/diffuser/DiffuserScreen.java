@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.gui.screens.diffuser;
 
-import de.teamlapen.vampirism.client.gui.components.ProgressBar;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.blockentity.PlayerOwnedBlockEntity;
-import de.teamlapen.vampirism.common.inventory.diffuser.DiffuserMenu;
+import de.teamlapen.vampirism.client.gui.components.ProgressBar;
 import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
+import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
+import de.teamlapen.vampirism.common.world.inventory.diffuser.DiffuserMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.LockIconButton;

@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.common.core;
 
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.inventory.*;
-import de.teamlapen.vampirism.common.inventory.diffuser.FogDiffuserMenu;
-import de.teamlapen.vampirism.common.inventory.diffuser.GarlicDiffuserMenu;
+import de.teamlapen.vampirism.common.world.inventory.*;
+import de.teamlapen.vampirism.common.world.inventory.diffuser.FogDiffuserMenu;
+import de.teamlapen.vampirism.common.world.inventory.diffuser.GarlicDiffuserMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;

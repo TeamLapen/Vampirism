@@ -1,9 +1,9 @@
 package de.teamlapen.factions.client.color.tint;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.factions.api.items.IRefinementItem;
-import de.teamlapen.factions.api.refinements.IRefinementSet;
+import de.teamlapen.factions.api.factions.refinements.IRefinementSet;
 import de.teamlapen.factions.api.util.REFERENCE;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;

@@ -112,7 +112,7 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         tag(ModItemTags.CROSSBOW_REPAIRABLE).addTag(Tags.Items.STRINGS);
         tag(ItemTags.VILLAGER_PLANTABLE_SEEDS).add(ModBlocks.GARLIC.asItem());
         tag(ItemTags.BOOKSHELF_BOOKS).addTag(ModItemTags.HUNTER_INTEL).add(ModItems.VAMPIRE_BOOK.get())
-//                .addOptional(ResourceLocation.fromNamespaceAndPath("guideapi_vp", "vampirism-guidebook")) TODO
+//                .addOptional(ResourceLocation.fromNamespaceAndPath("guideapi_vp", "vampirism-guidebook")) FIXME
         ;
 
         addCompatibilityTags();

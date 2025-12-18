@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.datamaps;
 
-import de.teamlapen.vampirism.api.entity.convertible.Converter;
+import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;

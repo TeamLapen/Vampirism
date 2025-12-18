@@ -48,5 +48,5 @@ public class FactionAppearanceScreens {
         AppearanceScreen<?> create(@Nullable Screen backScreen);
     }
 
-    public record AppearanceScreenDefinition(AppearanceScreenProvider provider, WidgetSprites widgetSpritesSupplier) {};
+    public record AppearanceScreenDefinition(AppearanceScreenProvider provider, WidgetSprites widgetSpritesSupplier) {}
 }

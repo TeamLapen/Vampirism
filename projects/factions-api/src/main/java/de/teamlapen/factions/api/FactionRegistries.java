@@ -1,21 +1,21 @@
 package de.teamlapen.factions.api;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.entities.minion.IMinionEntry;
-import de.teamlapen.factions.api.entities.minion.IMinionTask;
-import de.teamlapen.factions.api.entities.player.FactionPlayerBooleanSupplier;
-import de.teamlapen.factions.api.entities.player.FactionPlayerConsumer;
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.refinements.IRefinement;
-import de.teamlapen.factions.api.refinements.IRefinementSet;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.refinements.IRefinement;
+import de.teamlapen.factions.api.factions.refinements.IRefinementSet;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillNode;
+import de.teamlapen.factions.api.factions.skills.ISkillPointProvider;
+import de.teamlapen.factions.api.factions.skills.ISkillTree;
+import de.teamlapen.factions.api.factions.tasks.*;
 import de.teamlapen.factions.api.registries.RegistryProvider;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillNode;
-import de.teamlapen.factions.api.skills.ISkillPointProvider;
-import de.teamlapen.factions.api.skills.ISkillTree;
-import de.teamlapen.factions.api.tasks.*;
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.api.world.entities.minion.IMinionEntry;
+import de.teamlapen.factions.api.world.entities.minion.IMinionTask;
+import de.teamlapen.factions.api.world.entities.player.FactionPlayerBooleanSupplier;
+import de.teamlapen.factions.api.world.entities.player.FactionPlayerConsumer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 

@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.client.renderer.entities.layers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.AdvancedVampireRenderer;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -16,11 +16,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Render the eyes over the advanced vampire custom face
  */
-public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireRenderer.AdvancedVampireRenderState, HumanoidModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> {
+public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> {
 
-    private final ResourceLocation @NotNull [] overlays;
+    private final ResourceLocation @NotNull []overlays;
 
-    public AdvancedVampireEyeLayer(@NotNull RenderLayerParent<AdvancedVampireRenderer.AdvancedVampireRenderState, HumanoidModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> renderer) {
+    public AdvancedVampireEyeLayer(@NotNull RenderLayerParent<AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> renderer) {
         super(renderer);
         overlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
@@ -29,7 +29,7 @@ public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireRenderer
     }
 
     @Override
-    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, AdvancedVampireRenderer.AdvancedVampireRenderState renderState, float yRot, float xRot) {
+    public void submit(@NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodeCollector, int packedLight, AdvancedVampireRenderer.AdvancedVampireRenderState renderState, float yRot, float xRot) {
         int type = renderState.eyeType;
         if (type < 0 || type >= overlays.length) {
             type = 0;
@@ -38,7 +38,7 @@ public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireRenderer
         boolean showModel = this.getParentModel().head.visible;
 
         getParentModel().head.visible = true;
-        nodeCollector.submitModel(getParentModel(), renderState, poseStack, RenderType.entityCutoutNoCull(overlays[type]), packedLight, OverlayTexture.NO_OVERLAY, -1, null);
+        nodeCollector.submitModel(getParentModel(), renderState, poseStack, RenderType.entityTranslucent(overlays[type]), packedLight, OverlayTexture.NO_OVERLAY, -1, null);
         getParentModel().head.visible = showModel;
     }
 }

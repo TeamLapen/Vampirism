@@ -1,8 +1,8 @@
 package de.teamlapen.factions.common.world;
 
 import de.teamlapen.factions.common.core.FactionDamageTypes;
-import de.teamlapen.factions.common.minions.MinionDamageSource;
-import de.teamlapen.factions.common.minions.MinionEntity;
+import de.teamlapen.factions.common.factions.minions.MinionDamageSource;
+import de.teamlapen.factions.common.factions.minions.MinionEntity;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;

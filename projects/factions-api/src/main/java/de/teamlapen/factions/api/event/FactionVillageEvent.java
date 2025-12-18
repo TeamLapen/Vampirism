@@ -3,7 +3,7 @@ package de.teamlapen.factions.api.event;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.world.ITotem;
 import net.minecraft.core.Holder;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -11,7 +11,10 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public abstract class FactionVillageEvent extends Event {
@@ -45,7 +48,7 @@ public abstract class FactionVillageEvent extends Event {
         return totem.getVillageAreaReduced();
     }
 
-    public Level getWorld() {
+    public Level getLevel() {
         return this.totem.getTileLevel();
     }
 
@@ -63,11 +66,11 @@ public abstract class FactionVillageEvent extends Event {
          * Used as a "seed" villager to get a valid spawn point.
          */
         @Nullable
-        private final Mob oldEntity;
+        private final LivingEntity oldEntity;
         private final boolean replace;
         private Villager newVillager;
 
-        public SpawnNewVillager(ITotem totem, @Nullable Mob oldEntity, Villager newVillager, boolean replace) {
+        public SpawnNewVillager(ITotem totem, @Nullable LivingEntity oldEntity, Villager newVillager, boolean replace) {
             super(totem);
             this.oldEntity = oldEntity;
             this.newVillager = newVillager;
@@ -77,7 +80,7 @@ public abstract class FactionVillageEvent extends Event {
         /**
          * Faction that owns the village
          */
-        public @Nullable Holder<? extends IFaction<?>> getFaction() {
+        public Holder<? extends IFaction<?>> getFaction() {
             return this.totem.getControllingFaction();
         }
 
@@ -88,15 +91,16 @@ public abstract class FactionVillageEvent extends Event {
         /**
          * The villager that should be spawned
          */
-        public void setNewVillager(Villager newVillager) {
+        public Villager setNewVillager(Villager newVillager) {
             this.newVillager = newVillager;
+            return newVillager;
         }
 
         /**
          * A random existing villager which can be used as a seed (e.g. for the position)
          */
         @Nullable
-        public Mob getOldEntity() {
+        public LivingEntity getOldEntity() {
             return oldEntity;
         }
 
@@ -115,18 +119,18 @@ public abstract class FactionVillageEvent extends Event {
      */
     public static class MakeAggressive extends FactionVillageEvent implements ICancellableEvent {
 
-        private final Villager oldVillager;
+        private final Villager villager;
 
         public MakeAggressive(ITotem totem, Villager villager) {
             super(totem);
-            this.oldVillager = villager;
+            this.villager = villager;
         }
 
         /**
          * @return The villager which should be made aggressive
          */
-        public Villager getOldVillager() {
-            return oldVillager;
+        public Villager getVillager() {
+            return villager;
         }
     }
 
@@ -153,12 +157,6 @@ public abstract class FactionVillageEvent extends Event {
 
         public boolean isForced() {
             return forced;
-        }
-
-        public static class Post extends VillagerCaptureFinish {
-            public Post(ITotem totem, List<Villager> villagerIn, boolean forced) {
-                super(totem, villagerIn, forced);
-            }
         }
 
         public static class Pre extends VillagerCaptureFinish {
@@ -314,6 +312,71 @@ public abstract class FactionVillageEvent extends Event {
 
         public SpawnVillagerEvent(ITotem totem) {
             super(totem);
+        }
+    }
+
+    public static class BreakCaptureEvent extends FactionVillageEvent {
+        public BreakCaptureEvent(ITotem totem) {
+            super(totem);
+        }
+    }
+
+    public static class UpdateCreaturesOnCaptureFinishEvent extends FactionVillageEvent {
+
+        private final boolean forced;
+        private final Map<LivingEntity, Action> entitiesScheduledForReplacement = new HashMap<>();
+
+        public UpdateCreaturesOnCaptureFinishEvent(ITotem totem, boolean forced) {
+            super(totem);
+            this.forced = forced;
+        }
+
+        public boolean isForced() {
+            return this.forced;
+        }
+
+        public void requestReplacement(LivingEntity oldVillager) {
+            if (this.entitiesScheduledForReplacement.get(oldVillager) != Action.KILL) {
+                this.entitiesScheduledForReplacement.put(oldVillager, Action.REPLACE);
+            }
+        }
+
+        public void requestKill(LivingEntity oldVillager) {
+            this.entitiesScheduledForReplacement.put(oldVillager, Action.KILL);
+        }
+
+        public Map<LivingEntity, Action> getEntitiesScheduledForReplacement() {
+            return Collections.unmodifiableMap(this.entitiesScheduledForReplacement);
+        }
+
+        public enum Action {
+            REPLACE,
+            KILL
+        }
+    }
+
+    public static class SpawnCaptureEntityEvent extends FactionVillageEvent {
+
+        private final Holder<? extends IFaction<?>> faction;
+        @Nullable
+        private LivingEntity entity;
+
+        public SpawnCaptureEntityEvent(ITotem totem, Holder<? extends IFaction<?>> faction) {
+            super(totem);
+            this.faction = faction;
+        }
+
+        public @Nullable LivingEntity getEntity() {
+            return entity;
+        }
+
+        public <T extends LivingEntity> T setEntity(T entity) {
+            this.entity = entity;
+            return entity;
+        }
+
+        public Holder<? extends IFaction<?>> getFaction() {
+            return faction;
         }
     }
 }

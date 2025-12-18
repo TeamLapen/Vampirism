@@ -1,6 +1,6 @@
 package de.teamlapen.factions.common.components;
 
-import de.teamlapen.factions.api.items.components.IFactionRestriction;
+import de.teamlapen.factions.api.world.items.components.IFactionRestriction;
 import org.jetbrains.annotations.Nullable;
 
 public interface IFactionRestrictionProvider {

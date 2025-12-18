@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.fluids.BloodFluid;
+import de.teamlapen.vampirism.common.world.fluids.BloodFluid;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Blocks;

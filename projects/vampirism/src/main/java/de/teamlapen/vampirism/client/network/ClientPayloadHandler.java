@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.client.network;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.gui.screens.VampireBookScreen;
-import de.teamlapen.vampirism.common.entity.SundamageRegistry;
 import de.teamlapen.vampirism.common.network.packets.client.*;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
@@ -36,7 +34,7 @@ public class ClientPayloadHandler {
     }
 
     public static void handleSundamageData(ClientboundSundamagePacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> ((SundamageRegistry) VampirismAPI.sundamageRegistry()).applyNetworkData(msg));
+        context.enqueueWork(() -> VampirismMod.services().sunDamageRegistry().applyNetworkData(msg));
     }
 
     private static void openScreen(Screen screen) {

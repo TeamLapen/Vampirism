@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.factions.api.FactionDataComponents;
-import de.teamlapen.factions.api.items.components.IEffectiveRefinementSet;
-import de.teamlapen.vampirism.api.items.components.*;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.world.items.components.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;

@@ -1,8 +1,8 @@
 package de.teamlapen.factions.common;
 
-import de.teamlapen.factions.api.items.IRefinementItem;
-import de.teamlapen.factions.api.refinements.IRefinement;
-import de.teamlapen.factions.api.refinements.IRefinementSet;
+import de.teamlapen.factions.api.factions.refinements.IRefinement;
+import de.teamlapen.factions.api.factions.refinements.IRefinementSet;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
 import de.teamlapen.factions.common.util.RegUtil;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;

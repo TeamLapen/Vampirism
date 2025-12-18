@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.common.config;
 
 
+import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.config.ClientConfig;
-import de.teamlapen.vampirism.common.entity.SundamageRegistry;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -102,10 +101,10 @@ public class ModConfig {
     @SubscribeEvent
     public static void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
         if (configEvent.getConfig().getType() == net.neoforged.fml.config.ModConfig.Type.SERVER) {
-            ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
+            VampirismMod.services().sunDamageRegistry().reloadConfiguration();
         } else if (configEvent.getConfig().getType() == net.neoforged.fml.config.ModConfig.Type.CLIENT) {
-            if (de.teamlapen.factions.common.config.ModConfig.CLIENT.guiLevelOffsetY.get() == 0) {
-                de.teamlapen.factions.common.config.ModConfig.CLIENT.guiLevelOffsetY.set(47); //Temporary workaround to reset incorrect values
+            if (FactionConfig.CLIENT.guiLevelOffsetY.get() == 0) {
+                FactionConfig.CLIENT.guiLevelOffsetY.set(47); //Temporary workaround to reset incorrect values
             }
         }
         if (configEvent.getConfig().getSpec() == balanceSpec) {
@@ -116,7 +115,7 @@ public class ModConfig {
     @SubscribeEvent
     public static void onReload(final ModConfigEvent.@NotNull Reloading configEvent) {
         if (configEvent.getConfig().getType() == net.neoforged.fml.config.ModConfig.Type.SERVER) {
-            ((SundamageRegistry) VampirismAPI.sundamageRegistry()).reloadConfiguration();
+            VampirismMod.services().sunDamageRegistry().reloadConfiguration();
         }
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             HELPER.onBalanceConfigChanged(configEvent);

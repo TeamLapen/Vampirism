@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.common.util;
 
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.vampirism.common.blocks.CoffinBlock;
-import de.teamlapen.vampirism.common.blocks.candle.CandleHolderBlock;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.items.VampireCloakItem;
+import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
+import de.teamlapen.vampirism.common.world.blocks.candle.CandleHolderBlock;
+import de.teamlapen.vampirism.common.world.items.VampireCloakItem;
 import net.minecraft.Util;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;

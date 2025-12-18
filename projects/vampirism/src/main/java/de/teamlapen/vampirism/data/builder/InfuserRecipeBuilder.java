@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.builder;
 
-import de.teamlapen.vampirism.common.recipes.InfuserRecipe;
+import de.teamlapen.vampirism.common.world.items.recipes.InfuserRecipe;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;

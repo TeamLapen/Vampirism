@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.api;
 
 import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.factions.api.registries.factions.DeferredFaction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import net.minecraft.resources.ResourceLocation;
 
 import static de.teamlapen.vampirism.api.APIUtil.factionHolder;

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import de.teamlapen.vampirism.common.blockentity.PedestalBlockEntity;
+import de.teamlapen.vampirism.common.world.blockentity.PedestalBlockEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

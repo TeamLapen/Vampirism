@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.client.models.entities.BaronModel;
 import de.teamlapen.vampirism.client.models.entities.BaronessModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.BaronAttireLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.WingsLayer;
-import de.teamlapen.vampirism.common.entity.vampire.VampireBaronEntity;
+import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

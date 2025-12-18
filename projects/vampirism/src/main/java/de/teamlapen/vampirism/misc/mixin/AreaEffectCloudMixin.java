@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.misc.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.teamlapen.vampirism.common.effects.VampirismPoisonMobEffect;
-import de.teamlapen.vampirism.common.potions.BasePotion;
 import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.common.world.effects.VampirismPoisonMobEffect;
+import de.teamlapen.vampirism.common.world.potions.BasePotion;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;

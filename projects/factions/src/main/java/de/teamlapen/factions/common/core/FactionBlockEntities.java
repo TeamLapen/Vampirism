@@ -1,8 +1,8 @@
 package de.teamlapen.factions.common.core;
 
 import de.teamlapen.factions.api.util.REFERENCE;
-import de.teamlapen.factions.common.blockentity.TotemBlockEntity;
-import de.teamlapen.factions.common.blocks.TotemTopBlock;
+import de.teamlapen.factions.common.world.blockentity.TotemBlockEntity;
+import de.teamlapen.factions.common.world.blocks.TotemTopBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

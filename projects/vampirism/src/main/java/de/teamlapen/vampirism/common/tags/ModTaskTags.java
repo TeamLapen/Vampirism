@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.tags;
 
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.tasks.Task;
+import de.teamlapen.factions.api.factions.tasks.Task;
 import de.teamlapen.factions.common.tags.FactionTaskTags;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.tags.TagKey;

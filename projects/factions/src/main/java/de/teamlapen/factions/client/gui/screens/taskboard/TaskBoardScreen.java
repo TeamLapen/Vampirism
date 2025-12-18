@@ -1,11 +1,11 @@
 package de.teamlapen.factions.client.gui.screens.taskboard;
 
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.factions.client.gui.screens.ExtendedScreen;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.inventory.ITaskMenu;
-import de.teamlapen.factions.common.inventory.TaskBoardMenu;
+import de.teamlapen.factions.common.world.inventory.ITaskMenu;
+import de.teamlapen.factions.common.world.inventory.TaskBoardMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageWidget;
 import net.minecraft.client.gui.components.StringWidget;

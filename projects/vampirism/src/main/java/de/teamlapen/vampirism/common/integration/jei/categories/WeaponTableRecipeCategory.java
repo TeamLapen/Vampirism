@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.common.integration.jei.categories;
 
+import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.factions.common.util.Color;
-import de.teamlapen.vampirism.common.util.UtilLib;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.vampirism.api.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
 import de.teamlapen.vampirism.common.integration.jei.extension.WeaponTableCategoryExtension;
 import de.teamlapen.vampirism.common.integration.jei.extension.WeaponTableCraftingHelper;
+import de.teamlapen.vampirism.common.util.UtilLib;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

@@ -1,7 +1,7 @@
 package de.teamlapen.factions.client.proxy;
 
-import de.teamlapen.factions.common.proxy.CommonProxy;
 import de.teamlapen.factions.client.sounds.ClientSoundHandler;
+import de.teamlapen.factions.common.proxy.CommonProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;

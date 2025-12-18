@@ -1,9 +1,9 @@
 package de.teamlapen.factions.common.core;
 
 import de.teamlapen.factions.api.util.REFERENCE;
-import de.teamlapen.factions.common.items.OblivionPotionItem;
-import de.teamlapen.factions.common.items.consume.FactionBasedConsumeEffect;
-import de.teamlapen.factions.common.items.consume.OblivionEffect;
+import de.teamlapen.factions.common.world.items.OblivionPotionItem;
+import de.teamlapen.factions.common.world.items.consume.FactionBasedConsumeEffect;
+import de.teamlapen.factions.common.world.items.consume.OblivionEffect;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Rarity;

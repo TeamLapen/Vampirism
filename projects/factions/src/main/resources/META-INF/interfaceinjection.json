@@ -15,6 +15,6 @@
     "de/teamlapen/factions/misc/injection/IItemPropertiesFactionsMock"
   ],
   "net/minecraft/world/effect/MobEffectInstance": [
-    "de/teamlapen/factions/misc/injection/IEffectInstanceWithSourceMock"
+    "de/teamlapen/factions/misc/injection/IEffectInstanceWithSourceFactionsMock"
   ]
 }

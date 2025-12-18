@@ -2,9 +2,9 @@ package de.teamlapen.factions.client.gui.overlay;
 
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.client.gui.GuiRenderer;
-import de.teamlapen.factions.common.config.ModConfig;
-import de.teamlapen.factions.common.util.Color;
+import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.factions.common.network.packets.client.ClientboundUpdateMultiBossEventPacket;
+import de.teamlapen.factions.common.util.Color;
 import de.teamlapen.factions.common.world.MultiBossEvent;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -43,7 +43,7 @@ public class CustomBossEventOverlay extends BaseOverlay {
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (!canRenderOverlays() || !ModConfig.CLIENT.enableVillageRaidOverlayRendering.get()) {
+        if (!canRenderOverlays() || !FactionConfig.CLIENT.enableVillageRaidOverlayRendering.get()) {
             return;
         }
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();

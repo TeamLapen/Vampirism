@@ -1,19 +1,20 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
+import de.teamlapen.factions.client.gui.components.DropdownWidget;
 import de.teamlapen.factions.client.gui.screens.AppearanceScreen;
-import de.teamlapen.vampirism.client.gui.components.HoverList;
+import de.teamlapen.factions.common.factions.minions.MinionData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.renderer.entities.VampireMinionRenderer;
-import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
-import de.teamlapen.factions.common.minions.MinionData;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
+import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.layouts.LayoutElement;
+import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.IntStream;
 
@@ -23,13 +24,9 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     private int skinType;
     private boolean useLordSkin;
     private boolean isMinionSpecificSkin;
-    private HoverList<?> typeList;
-    private ExtendedButton typeButton;
-    private Checkbox lordSkinButton;
-    private EditBox nameWidget;
     private int normalSkinCount;
-    @SuppressWarnings("FieldCanBeLocal")
     private int minionSkinCount;
+    private String minionName;
 
     public VampireMinionAppearanceScreen(VampireMinionEntity minion, Screen backScreen) {
         super(NAME, minion, backScreen);
@@ -37,7 +34,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
 
     @Override
     public void removed() {
-        String name = nameWidget.getValue();
+        String name = minionName;
         if (name.isEmpty()) {
             name = Component.translatable("text.vampirism.minion").getString() + entity.getMinionId().orElse(0);
         }
@@ -47,13 +44,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
 
     @Override
     protected void init() {
-        super.init();
-        this.nameWidget = this.addRenderableWidget(new EditBox(font, this.guiLeft + 21, this.guiTop + 29, 98, 12, Component.translatable("gui.vampirism.minion_appearance.name")));
-        this.nameWidget.setValue(entity.getMinionData().map(MinionData::getName).orElse("Minion"));
-        this.nameWidget.setTextColorUneditable(-1);
-        this.nameWidget.setTextColor(-1);
-        this.nameWidget.setMaxLength(MinionData.MAX_NAME_LENGTH);
-        this.nameWidget.setResponder(this::onNameChanged);
+        this.minionName = this.entity.getMinionData().map(MinionData::getName).orElse("");
         this.normalSkinCount = ((VampireMinionRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(this.entity)).getVampireTextureCount();
         this.minionSkinCount = ((VampireMinionRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(this.entity)).getMinionSpecificTextureCount(); //can be 0
         this.skinType = this.entity.getVampireType();
@@ -65,23 +56,44 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
             this.isMinionSpecificSkin = false; //If this.isMinionSpecificSkin && this.minionSkinCount==0
         }
         this.useLordSkin = this.entity.shouldRenderLordSkin();
-        this.lordSkinButton = this.addRenderableWidget(Checkbox.builder(Component.translatable("gui.vampirism.minion_appearance.use_lord_skin"), minecraft.font).pos(this.guiLeft + 20, this.guiTop + 64).selected(useLordSkin).onValueChange((button, selected) -> {
-            useLordSkin = selected;
-            entity.setUseLordSkin(useLordSkin);
-        }).build());
-
-        this.typeList = this.addRenderableWidget(HoverList.builder(this.guiLeft + 20, this.guiTop + 43 + 19, 99, 80).componentsWithClickAndHover(IntStream.range(0, this.normalSkinCount + this.minionSkinCount).mapToObj(type -> Component.translatable("gui.vampirism.minion_appearance.skin").append(" " + (type + 1))).toList(), this::skin, this::previewSkin).build());
-        this.typeButton = this.addRenderableWidget(new ExtendedButton(this.typeList.getX(), this.typeList.getY() - 20, this.typeList.getWidth(), 20, Component.literal(""), (button1 -> setListVisibility(!this.typeList.visible))));
-
-        setListVisibility(false);
+        super.init();
     }
 
     @Override
-    protected LayoutElement createLayout() {
-        return null;
+    protected @NotNull LayoutElement createLayout() {
+        LinearLayout vertical = LinearLayout.vertical()
+                .spacing(4);
+
+        var name = new EditBox(this.font,  98, 12, Component.translatable("gui.vampirism.minion_appearance.name"));
+        name.setTextColorUneditable(-1);
+        name.setTextColor(-1);
+        name.insertText(this.minionName);
+        name.setMaxLength(MinionData.MAX_NAME_LENGTH);
+        name.setResponder(this::onNameChanged);
+        vertical.addChild(name);
+
+        vertical.addChild(DropdownWidget.builder(0,0)
+                .width(99)
+                .itemHeight(20)
+                .maxVisibleItems(5)
+                .initialSelection(this.skinType)
+                .onSelect(this::skin)
+                .onHover(this::previewSkin)
+                .items(IntStream.range(0, this.normalSkinCount + this.minionSkinCount)
+                        .mapToObj(type -> (Component) Component.translatable("gui.vampirism.minion_appearance.skin").append(" " + (type + 1)))
+                        .toList())
+                .build());
+
+        vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.minion_appearance.use_lord_skin"), this.font).selected(useLordSkin).onValueChange((checkBox, selected) -> {
+            useLordSkin = selected;
+            entity.setUseLordSkin(selected);
+        }).build());
+
+        return vertical;
     }
 
     private void onNameChanged(String newName) {
+        this.minionName = newName;
         this.entity.changeMinionName(newName);
     }
 
@@ -96,15 +108,8 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         }
     }
 
-    private void setListVisibility(boolean show) {
-        this.typeButton.setMessage(Component.translatable("gui.vampirism.minion_appearance.skin").append(" " + (skinType + 1)));
-        this.typeList.visible = show;
-        this.lordSkinButton.visible = !show;
-    }
-
     private void skin(int type) {
         boolean minionSpecific = type >= normalSkinCount;
         this.entity.setVampireType(this.skinType = type, this.isMinionSpecificSkin = minionSpecific);
-        setListVisibility(false);
     }
 }

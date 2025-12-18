@@ -1,8 +1,8 @@
 package de.teamlapen.factions.client.gui.screens.taskboard;
 
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.tasks.ITaskInstance;
-import de.teamlapen.factions.common.inventory.ITaskMenu;
+import de.teamlapen.factions.api.factions.tasks.ITaskInstance;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.common.world.inventory.ITaskMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractContainerWidget;
 import net.minecraft.client.gui.components.AbstractWidget;

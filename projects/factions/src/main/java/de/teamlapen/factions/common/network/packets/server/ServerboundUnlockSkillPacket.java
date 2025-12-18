@@ -1,8 +1,8 @@
 package de.teamlapen.factions.common.network.packets.server;
 
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillTree;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillTree;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;

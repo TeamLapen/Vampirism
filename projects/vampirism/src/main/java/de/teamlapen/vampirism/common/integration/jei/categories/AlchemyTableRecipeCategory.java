@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.common.integration.jei.categories;
 
-import de.teamlapen.factions.api.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
-import de.teamlapen.vampirism.common.recipes.AlchemyTableRecipe;
 import de.teamlapen.vampirism.common.util.UtilLib;
+import de.teamlapen.vampirism.common.world.items.recipes.AlchemyTableRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

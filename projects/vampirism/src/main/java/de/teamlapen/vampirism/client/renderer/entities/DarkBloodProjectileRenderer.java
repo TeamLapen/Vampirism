@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
-import de.teamlapen.vampirism.common.entity.DarkBloodProjectileEntity;
+import de.teamlapen.vampirism.common.world.entity.DarkBloodProjectileEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;

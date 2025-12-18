@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.misc.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.tags.ModGameEventTags;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

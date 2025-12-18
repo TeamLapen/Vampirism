@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.inventory.InfuserMenu;
+import de.teamlapen.vampirism.common.world.inventory.InfuserMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;

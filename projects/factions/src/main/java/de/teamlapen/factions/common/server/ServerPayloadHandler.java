@@ -1,29 +1,29 @@
 package de.teamlapen.factions.common.server;
 
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.actions.IActionResult;
-import de.teamlapen.factions.api.entities.minion.IMinionTask;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.refinements.IRefinementHandler;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillHandler;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
-import de.teamlapen.factions.api.tasks.ITaskManager;
-import de.teamlapen.factions.common.actions.ActionHandler;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.IActionResult;
+import de.teamlapen.factions.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.tasks.ITaskManager;
+import de.teamlapen.factions.api.world.entities.minion.IMinionTask;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.inventory.InventoryHelper;
-import de.teamlapen.factions.common.items.OblivionPotionItem;
-import de.teamlapen.factions.common.minions.MinionData;
-import de.teamlapen.factions.common.minions.MinionEntity;
-import de.teamlapen.factions.common.minions.MinionWorldData;
-import de.teamlapen.factions.common.minions.PlayerMinionController;
+import de.teamlapen.factions.common.factions.actions.ActionHandler;
+import de.teamlapen.factions.common.factions.minions.MinionData;
+import de.teamlapen.factions.common.factions.minions.MinionEntity;
+import de.teamlapen.factions.common.factions.minions.MinionWorldData;
+import de.teamlapen.factions.common.factions.minions.PlayerMinionController;
+import de.teamlapen.factions.common.factions.skills.ClientboundSkillTreePacket;
+import de.teamlapen.factions.common.factions.skills.ServerSkillTreeData;
+import de.teamlapen.factions.common.factions.tasks.TaskManager;
 import de.teamlapen.factions.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.factions.common.network.packets.server.*;
-import de.teamlapen.factions.common.skills.ClientboundSkillTreePacket;
-import de.teamlapen.factions.common.skills.ServerSkillTreeData;
-import de.teamlapen.factions.common.tasks.TaskManager;
 import de.teamlapen.factions.common.util.RegUtil;
+import de.teamlapen.factions.common.world.inventory.InventoryHelper;
+import de.teamlapen.factions.common.world.items.OblivionPotionItem;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -186,9 +186,9 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             Player player = context.player();
             Entity entity = player.level().getEntity(msg.entityId());
-            if (entity instanceof MinionEntity) {
-                if (((MinionEntity<?>) entity).getMinionData().map(d -> d.upgradeStat(msg.statId(), (MinionEntity<?>) entity)).orElse(false)) {
-//                    SyncHelper.sync((MinionEntity<?>) entity); TODO
+            if (entity instanceof MinionEntity<?> minion) {
+                if (minion.getMinionData().map(d -> d.upgradeStat(msg.statId(), minion)).orElse(false)) {
+                    minion.sync();
                 }
             }
         });

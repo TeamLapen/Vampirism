@@ -1,8 +1,8 @@
 package de.teamlapen.factions.client.gui.screens;
 
-import de.teamlapen.factions.api.entities.minion.IFactionMinionTask;
-import de.teamlapen.factions.api.entities.minion.INoGlobalCommandTask;
 import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.world.entities.minion.IFactionMinionTask;
+import de.teamlapen.factions.api.world.entities.minion.INoGlobalCommandTask;
 import de.teamlapen.factions.client.config.ClientConfigHelper;
 import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.factions.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
-import de.teamlapen.vampirism.common.blocks.CoffinBlock;
-import de.teamlapen.vampirism.common.blocks.TentBlock;
+import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
+import de.teamlapen.vampirism.common.world.blocks.TentBlock;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.InBedChatScreen;

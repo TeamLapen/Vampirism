@@ -9,7 +9,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -21,13 +20,11 @@ import java.util.Optional;
  */
 public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private final int color;
-    @NotNull
     private final IFactionVillage villageFactionData;
     @Nullable
     private String descriptionId;
     @Nullable
     private String descriptionIdPlural;
-    @NotNull
     private final TextColor chatColor;
     private final Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags;
 

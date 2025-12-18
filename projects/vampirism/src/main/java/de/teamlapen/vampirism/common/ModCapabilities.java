@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.common;
 
-import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
-import de.teamlapen.vampirism.common.blocks.WeaponTableBlock;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.items.BloodBottleFluidHandler;
-import de.teamlapen.vampirism.common.items.BloodSyringeFluidHandler;
+import de.teamlapen.vampirism.common.world.blockentity.BloodContainerBlockEntity;
+import de.teamlapen.vampirism.common.world.blocks.WeaponTableBlock;
+import de.teamlapen.vampirism.common.world.items.BloodBottleFluidHandler;
+import de.teamlapen.vampirism.common.world.items.BloodSyringeFluidHandler;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;

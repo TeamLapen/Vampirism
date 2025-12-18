@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.misc.mixin;
 
-import de.teamlapen.vampirism.common.util.AndTargetSelector;
 import de.teamlapen.factions.api.factions.IFactionEntity;
+import de.teamlapen.vampirism.common.util.AndTargetSelector;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.misc.extension.INearestTargetGoal;
 import de.teamlapen.vampirism.misc.mixin.accessor.TargetConditionAccessor;

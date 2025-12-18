@@ -1,12 +1,12 @@
 package de.teamlapen.factions.common.core;
 
-import de.teamlapen.factions.api.extensions.IEntity;
 import de.teamlapen.factions.api.util.REFERENCE;
+import de.teamlapen.factions.api.world.entities.extensions.IEntity;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.factions.common.factions.neutral.NeutralPlayer;
 import de.teamlapen.factions.common.util.AttachmentSynchronization;
 import de.teamlapen.factions.common.world.attachments.LevelDamage;
-import de.teamlapen.sync.api.IAttachment;
+import de.teamlapen.sync.api.IAttachmentSync;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
@@ -25,7 +25,7 @@ public class FactionAttachments {
         ATTACHMENT_TYPES.register(bus);
     }
 
-    private static <T extends IAttachment & IEntity, Z extends IAttachmentHolder> AttachmentType.Builder<T> syncAttachment(AttachmentSynchronization<T, Z> options) {
+    private static <T extends IAttachmentSync & IEntity, Z extends IAttachmentHolder> AttachmentType.Builder<T> syncAttachment(AttachmentSynchronization<T, Z> options) {
         return AttachmentType.builder(options).serialize(options).sync(options);
     }
 }

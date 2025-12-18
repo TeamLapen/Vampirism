@@ -1,9 +1,9 @@
 package de.teamlapen.factions.api;
 
-import de.teamlapen.factions.api.items.components.IEffectiveRefinementSet;
-import de.teamlapen.factions.api.items.components.IFactionRestriction;
-import de.teamlapen.factions.api.items.components.IFactionSlayer;
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.api.world.items.components.IEffectiveRefinementSet;
+import de.teamlapen.factions.api.world.items.components.IFactionRestriction;
+import de.teamlapen.factions.api.world.items.components.IFactionSlayer;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;

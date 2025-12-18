@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.data.loot.functions;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.factions.api.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
-import de.teamlapen.vampirism.api.entity.VampireBookLootProvider;
+import de.teamlapen.vampirism.api.world.entity.VampireBookLootProvider;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.core.ModLoot;
-import de.teamlapen.vampirism.common.items.component.VampireBook;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
+import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -77,7 +77,7 @@ public class SetVampireBookFunction extends LootItemConditionalFunction {
                     LOGGER.warn("Vampire Book \"{}\" does not exist, cannot add it to a loot table", id.getPath());
                 }
             } else {
-                TagKey<IVampireBook> factionTag = Optional.of(VampirismAPI.factionRegistry().getFaction(entity)).map(Holder::value).flatMap(s -> s.getTag(VampirismRegistries.Keys.VAMPIRE_BOOK)).orElse(ModVampireBookTags.IS_GENERAL);
+                TagKey<IVampireBook> factionTag = Optional.of(IFactionRegistry.get().getFaction(entity)).map(Holder::value).flatMap(s -> s.getTag(VampirismRegistries.Keys.VAMPIRE_BOOK)).orElse(ModVampireBookTags.IS_GENERAL);
                 vampireBook = VampireBook.getRandomBook(factionTag, lootContext);
             }
         }

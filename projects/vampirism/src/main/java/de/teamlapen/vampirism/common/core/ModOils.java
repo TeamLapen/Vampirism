@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.items.oil.IOil;
-import de.teamlapen.vampirism.common.items.oil.EffectWeaponOil;
-import de.teamlapen.vampirism.common.items.oil.EvasionOil;
-import de.teamlapen.vampirism.common.items.oil.Oil;
-import de.teamlapen.vampirism.common.items.oil.SmeltingOil;
+import de.teamlapen.vampirism.api.world.items.oil.IOil;
+import de.teamlapen.vampirism.common.world.items.oil.EffectWeaponOil;
+import de.teamlapen.vampirism.common.world.items.oil.EvasionOil;
+import de.teamlapen.vampirism.common.world.items.oil.Oil;
+import de.teamlapen.vampirism.common.world.items.oil.SmeltingOil;
 import net.minecraft.world.effect.MobEffects;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;

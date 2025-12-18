@@ -2,35 +2,31 @@ package de.teamlapen.factions.client.gui.screens;
 
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.client.gui.GuiRenderer;
-import de.teamlapen.factions.client.gui.components.SimpleList;
-import de.teamlapen.factions.common.inventory.MinionContainer;
+import de.teamlapen.factions.client.gui.components.DropdownWidget;
+import de.teamlapen.factions.client.gui.components.IRenderLast;
+import de.teamlapen.factions.common.world.inventory.MinionContainer;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.LockIconButton;
-import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Objects;
+import java.util.List;
 import java.util.Optional;
 
 public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
-    private static final ResourceLocation BACKGROUND = FResourceLocation.mod("textures/gui/container/minion_inventory.png");
+    private static final ResourceLocation BACKGROUND = FResourceLocation.mod("textures/gui/container/minion/inventory.png");
     private static final ResourceLocation LOCKED_SPRITE = FResourceLocation.mod("container/minion_inventory/locked");
     private static final WidgetSprites APPEARANCE_SPRITES = new WidgetSprites(FResourceLocation.mod("widget/settings"), FResourceLocation.mod("widget/settings_highlighted"));
     private static final WidgetSprites STATS_SPRITES = new WidgetSprites(FResourceLocation.mod("widget/skill_points"), FResourceLocation.mod("widget/skill_points_highlighted"));
     private final int extraSlots;
-    private SimpleList<?> taskList;
+    private DropdownWidget taskList;
     private Button taskButton;
     private Button appearanceButton;
     private Button statButton;
@@ -44,16 +40,25 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    public boolean mouseDragged(MouseButtonEvent p_446671_, double p_97752_, double p_97753_) {
-        this.taskList.mouseDragged(p_446671_, p_97752_, p_97753_);
-        return super.mouseDragged(p_446671_, p_97752_, p_97753_);
+    public boolean mouseDragged(MouseButtonEvent event, double p_97752_, double p_97753_) {
+        this.taskList.mouseDragged(event, p_97752_, p_97753_);
+        return super.mouseDragged(event, p_97752_, p_97753_);
     }
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
+    }
 
+    @Override
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
+        for (Renderable renderable : this.renderables) {
+            if (renderable instanceof IRenderLast last) {
+                last.renderLast(guiGraphics, mouseX, mouseY, partialTick);
+            }
+        }
     }
 
     @Override
@@ -63,11 +68,10 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         this.lockActionButton = this.addRenderableWidget(new LockIconButton(this.leftPos + 99, this.topPos + 19, this::toggleActionLock));
         this.statButton = this.addRenderableWidget(new ImageButton(this.leftPos + 6, this.topPos + 40, 18, 18, STATS_SPRITES, this::onStatsPressed));
         this.lockActionButton.setLocked(this.menu.isTaskLocked());
-        var taskNames = Arrays.stream(menu.getAvailableTasks()).map(x -> (Component) x.getName()).toList();
+        var availableTasks = List.of(menu.getAvailableTasks());
+        var taskNames = availableTasks.stream().map(x -> (Component) x.getName()).toList();
 
-        this.taskList = this.addRenderableWidget(SimpleList.builder(this.leftPos + 119, this.topPos + 19 + 19, 88, Math.min(3 * 18, taskNames.size() * 18) + 2).componentsWithClick(taskNames, this::selectTask).build());
-        this.taskButton = this.addRenderableWidget(new ExtendedButton(this.leftPos + 119, this.topPos + 19, 88, 20, getActiveTaskName(), button -> taskList.visible = !taskList.visible));
-        this.taskList.visible = false;
+        this.taskList = this.addRenderableWidget(DropdownWidget.builder(this.leftPos + 120, this.topPos + 20).width(88).itemHeight(18).maxVisibleItems(4).onSelect(this::setActiveTask).items(taskNames).build().setSelectedIndex(availableTasks.indexOf(menu.getSelectedTask())));
     }
 
     @Override
@@ -100,13 +104,12 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         }
     }
 
-
     private void drawButtonTip(@NotNull GuiGraphics graphics, Component text, int mouseX, int mouseY) {
         graphics.setTooltipForNextFrame(this.font, Collections.singletonList(text), Optional.empty(), mouseX, mouseY);
     }
 
-    private Component getActiveTaskName() {
-        return menu.getSelectedTask().getName();
+    private void setActiveTask(int id) {
+        this.menu.setTaskToActivate(id);
     }
 
     private void onConfigurePressed(Button b) {
@@ -115,12 +118,6 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
     private void onStatsPressed(Button b) {
         menu.openStatsScreen();
-    }
-
-    private void selectTask(int id) {
-        this.taskList.visible = false;
-        this.menu.setTaskToActivate(id);
-        this.taskButton.setMessage(getActiveTaskName());
     }
 
     private void toggleActionLock(Button b) {

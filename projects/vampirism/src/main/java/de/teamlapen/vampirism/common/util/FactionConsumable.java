@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.vampirism.common.items.consume.BloodFoodProperties;
+import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.component.ConsumableListener;
 

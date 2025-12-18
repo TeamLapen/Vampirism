@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.inventory.BloodGrinderMenu;
+import de.teamlapen.vampirism.common.world.inventory.BloodGrinderMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

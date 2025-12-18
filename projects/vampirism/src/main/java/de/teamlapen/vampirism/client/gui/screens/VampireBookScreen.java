@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
 import de.teamlapen.vampirism.api.general.IBookBackground;
 import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

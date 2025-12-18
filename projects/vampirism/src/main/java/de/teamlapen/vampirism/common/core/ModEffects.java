@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.factions.common.effects.FactionBadOmenMobEffect;
+import de.teamlapen.factions.common.world.effects.FactionBadOmenMobEffect;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.effects.*;
+import de.teamlapen.vampirism.common.world.effects.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;

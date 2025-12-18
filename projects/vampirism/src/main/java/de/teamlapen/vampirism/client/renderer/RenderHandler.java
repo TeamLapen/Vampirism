@@ -1,20 +1,18 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import de.teamlapen.factions.client.IMinecraftAccessor;
+import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
-import de.teamlapen.vampirism.common.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModRefinements;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.entity.player.vampire.skills.VampirePlayerSkillProperties;
-import de.teamlapen.vampirism.common.items.CrucifixItem;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.api.util.VampirismEventFactory;
-import de.teamlapen.factions.misc.mixin.client.accessor.CameraAccessor;
+import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.world.items.CrucifixItem;
 import de.teamlapen.vampirism.misc.extension.client.ILivingEntityRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
@@ -62,7 +60,7 @@ public class RenderHandler implements IMinecraftAccessor {
 
     @SubscribeEvent
     public void onCameraSetup(ViewportEvent.@NotNull ComputeCameraAngles event) {
-        if (de.teamlapen.factions.common.config.ModConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
+        if (FactionConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
             DebugScreenEntryStatus status = this.mc().debugEntries.getStatus(DebugScreenEntries.ENTITY_HITBOXES);
             if (status != DebugScreenEntryStatus.NEVER) {
                 this.mc().debugEntries.setStatus(DebugScreenEntries.ENTITY_HITBOXES, DebugScreenEntryStatus.NEVER);
@@ -71,9 +69,9 @@ public class RenderHandler implements IMinecraftAccessor {
         if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
             ((LivingEntity) event.getCamera().getEntity()).getSleepingPos().map(pos -> event.getCamera().getEntity().level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
                 if (blockState.getValue(CoffinBlock.VERTICAL)) {
-                    ((CameraAccessor) event.getCamera()).invokeMove(0.2f, -0.2f, 0);
+                    event.getCamera().invokeMove(0.2f, -0.2f, 0);
                 } else {
-                    ((CameraAccessor) event.getCamera()).invokeMove(0, -0.2f, 0);
+                    event.getCamera().invokeMove(0, -0.2f, 0);
                 }
             });
         }

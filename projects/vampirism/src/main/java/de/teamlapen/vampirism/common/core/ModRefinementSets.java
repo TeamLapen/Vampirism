@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.factions.api.factions.refinements.IRefinement;
+import de.teamlapen.factions.api.factions.refinements.IRefinementSet;
+import de.teamlapen.factions.api.factions.refinements.IRefinementSet.Rarity;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
 import de.teamlapen.factions.common.RefinementSet;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.factions.api.refinements.IRefinement;
-import de.teamlapen.factions.api.refinements.IRefinementSet;
-import de.teamlapen.factions.api.refinements.IRefinementSet.Rarity;
-import de.teamlapen.factions.api.items.IRefinementItem;
 import de.teamlapen.vampirism.common.VampireRefinementSet;
 import net.minecraft.core.Holder;
 import net.neoforged.bus.api.IEventBus;

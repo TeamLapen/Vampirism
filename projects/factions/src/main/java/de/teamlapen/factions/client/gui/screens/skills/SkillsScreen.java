@@ -1,20 +1,20 @@
 package de.teamlapen.factions.client.gui.screens.skills;
 
 import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillHandler;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
-import de.teamlapen.factions.api.skills.ISkillTree;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.skills.ISkillTree;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.factions.common.core.FactionEffects;
 import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.factions.common.core.FactionSounds;
-import de.teamlapen.factions.common.inventory.InventoryHelper;
+import de.teamlapen.factions.common.factions.skills.ClientSkillTreeData;
+import de.teamlapen.factions.common.factions.skills.SkillHandler;
 import de.teamlapen.factions.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.factions.common.network.packets.server.ServerboundUnlockSkillPacket;
-import de.teamlapen.factions.common.skills.ClientSkillTreeData;
-import de.teamlapen.factions.common.skills.SkillHandler;
+import de.teamlapen.factions.common.world.inventory.InventoryHelper;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -60,8 +60,6 @@ public class SkillsScreen extends Screen {
     private final Screen backScreen;
     @Nullable
     private SkillsTabComponent selectedTab;
-    @Nullable
-    private Button resetSkills;
 
     private int guiLeft;
     private int guiTop;
@@ -108,7 +106,9 @@ public class SkillsScreen extends Screen {
         }));
         boolean test = !FMLEnvironment.isProduction();
 
-        this.resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("gui.factions.skill.resetall"), (context) -> {
+        //server syncs after the screen is closed
+        @Nullable
+        Button resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("gui.factions.skill.resetall"), (context) -> {
             FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.RESET_SKILLS));
             InventoryHelper.removeItemFromInventory(this.factionPlayer.asEntity().getInventory(), new ItemStack(FactionItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
             if ((this.factionPlayer.getLevel() < 2 || this.minecraft.player.getInventory().countItem(FactionItems.OBLIVION_POTION.get()) <= 1) && !test) {
@@ -116,10 +116,10 @@ public class SkillsScreen extends Screen {
             }
         }));
         if ((this.factionPlayer.getLevel() < 2 || this.minecraft.player.getInventory().countItem(FactionItems.OBLIVION_POTION.get()) <= 0) && !test) {
-            this.resetSkills.active = false;
-            this.resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factions.skills.reset_consume", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
+            resetSkills.active = false;
+            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factions.skills.reset_consume", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
         } else {
-            this.resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factions.skills.reset_req", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
+            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factions.skills.reset_req", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
         }
     }
 

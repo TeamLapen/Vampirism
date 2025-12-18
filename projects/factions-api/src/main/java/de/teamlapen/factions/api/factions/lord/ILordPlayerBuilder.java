@@ -1,7 +1,7 @@
 package de.teamlapen.factions.api.factions.lord;
 
 
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 
 public interface ILordPlayerBuilder<T extends IFactionPlayer<T>> {
 

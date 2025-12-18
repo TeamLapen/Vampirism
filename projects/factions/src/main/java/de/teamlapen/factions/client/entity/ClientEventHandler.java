@@ -1,7 +1,7 @@
 package de.teamlapen.factions.client.entity;
 
 import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.factions.common.skills.ClientSkillTreeData;
+import de.teamlapen.factions.common.factions.skills.ClientSkillTreeData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;

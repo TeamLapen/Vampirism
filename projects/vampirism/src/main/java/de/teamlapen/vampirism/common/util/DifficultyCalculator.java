@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;

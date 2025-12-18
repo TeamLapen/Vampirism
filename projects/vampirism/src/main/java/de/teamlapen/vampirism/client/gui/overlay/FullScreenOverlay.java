@@ -1,19 +1,11 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.factions.client.gui.overlay.BaseOverlay;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.navigation.ScreenRectangle;
-import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.gui.render.state.ColoredRectangleRenderState;
-import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 public class FullScreenOverlay extends BaseOverlay {
 

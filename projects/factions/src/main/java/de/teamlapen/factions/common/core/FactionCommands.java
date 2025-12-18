@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.teamlapen.factions.api.util.REFERENCE;
-import de.teamlapen.factions.common.commands.*;
-import de.teamlapen.factions.common.commands.arguments.FactionArgument;
-import de.teamlapen.factions.common.commands.arguments.MinionArgument;
+import de.teamlapen.factions.common.server.commands.*;
+import de.teamlapen.factions.common.server.commands.arguments.FactionArgument;
+import de.teamlapen.factions.common.server.commands.arguments.MinionArgument;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -57,7 +57,7 @@ public class FactionCommands {
                 .then(SkillCommand.register(buildContext))
                 .then(MinionInventoryCommand.register(buildContext))
                 .then(VillageCommand.register(buildContext))
-                .then(MinionCommand.register())
+                .then(MinionCommand.register(buildContext))
                 .then(ResetActionsCommand.register())
         ;
 

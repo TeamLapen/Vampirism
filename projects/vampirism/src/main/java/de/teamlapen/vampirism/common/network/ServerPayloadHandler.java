@@ -1,17 +1,15 @@
 package de.teamlapen.vampirism.common.network;
 
-import de.teamlapen.factions.common.network.packets.server.*;
-import de.teamlapen.vampirism.api.items.IHunterCrossbow;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.minions.MinionEntity;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.inventory.HunterBasicMenu;
-import de.teamlapen.vampirism.common.inventory.HunterTrainerMenu;
-import de.teamlapen.vampirism.common.inventory.RevertBackMenu;
-import de.teamlapen.vampirism.common.inventory.VampireBeaconMenu;
-import de.teamlapen.vampirism.common.items.VampireSwordItem;
+import de.teamlapen.factions.common.factions.minions.MinionEntity;
+import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.network.packets.server.*;
-import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.world.inventory.HunterBasicMenu;
+import de.teamlapen.vampirism.common.world.inventory.HunterTrainerMenu;
+import de.teamlapen.vampirism.common.world.inventory.RevertBackMenu;
+import de.teamlapen.vampirism.common.world.inventory.VampireBeaconMenu;
+import de.teamlapen.vampirism.common.world.items.VampireSwordItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -20,8 +18,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class ServerPayloadHandler {
 
@@ -31,8 +27,10 @@ public class ServerPayloadHandler {
             if (entity1 instanceof Player player) {
                 VampirePlayer.get(player).setSkinData(msg.data());
             } else if (entity1 instanceof MinionEntity<?> minion) {
-                minion.getMinionData().ifPresent(minionData -> minionData.handleMinionAppearanceConfig(msg.name(), msg.data()));
-//                SyncHelper.sync(minion); TODO
+                minion.getMinionData().ifPresent(minionData -> {
+                    minionData.handleMinionAppearanceConfig(msg.name(), msg.data());
+                    minion.sync();
+                });
             }
         });
     }

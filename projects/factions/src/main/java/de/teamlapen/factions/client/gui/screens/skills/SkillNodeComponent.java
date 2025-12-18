@@ -1,14 +1,14 @@
 package de.teamlapen.factions.client.gui.screens.skills;
 
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.skills.IActionSkill;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillNode;
+import de.teamlapen.factions.api.factions.skills.IActionSkill;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillNode;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.client.gui.GuiRenderer;
-import de.teamlapen.factions.common.skills.ClientSkillTreeData;
-import de.teamlapen.factions.common.skills.SkillHandler;
-import de.teamlapen.factions.common.skills.SkillTreeConfiguration;
+import de.teamlapen.factions.common.factions.skills.ClientSkillTreeData;
+import de.teamlapen.factions.common.factions.skills.SkillHandler;
+import de.teamlapen.factions.common.factions.skills.SkillTreeConfiguration;
 import de.teamlapen.factions.common.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -40,8 +40,6 @@ public class SkillNodeComponent {
 
     private static final int[] TEST_SPLIT_OFFSETS = new int[] {0, 10, -10, 25, -25};
     private final Minecraft minecraft;
-    private final SkillsTabComponent tab;
-    private final SkillsScreen screen;
     private final SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode;
     private final ClientSkillTreeData treeData;
     private final SkillHandler<?> skillHandler;
@@ -60,8 +58,6 @@ public class SkillNodeComponent {
 
     public SkillNodeComponent(Minecraft minecraft, SkillsScreen screen, SkillsTabComponent tab, SkillTreeConfiguration.SkillTreeNodeConfiguration skillNode, ClientSkillTreeData treeData, SkillHandler<?> skillHandler, @Nullable SkillNodeComponent parent, int x, int y) {
         this.minecraft = minecraft;
-        this.tab = tab;
-        this.screen = screen;
         this.skillNode = skillNode;
         this.treeData = treeData;
         this.skillHandler = skillHandler;

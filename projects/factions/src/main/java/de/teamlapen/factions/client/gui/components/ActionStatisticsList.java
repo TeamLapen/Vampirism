@@ -1,9 +1,10 @@
 package de.teamlapen.factions.client.gui.components;
 
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.skills.IActionSkill;
-import de.teamlapen.factions.api.skills.ISkill;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.skills.IActionSkill;
+import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.api.util.SafeCast;
 import de.teamlapen.factions.common.core.FactionStats;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.misc.extensions.client.IStatsScreen;
@@ -25,7 +26,10 @@ import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ActionStatisticsList extends ContainerObjectSelectionList<ActionStatisticsList.Entry> {
@@ -54,14 +58,12 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
     protected int sortOrder;
 
     public ActionStatisticsList(Minecraft minecraft, StatsScreen screen) {
-        super(minecraft, screen.width, screen.height, 33, 9 * 4);
+        super(minecraft, screen.width, screen.height, 33, 22);
         this.skillColumns = List.of(FactionStats.SKILL_UNLOCKED.get(), FactionStats.SKILL_FORGOTTEN.get());
         this.actionColumns = List.of(FactionStats.ACTION_USED.get(), FactionStats.ACTION_TIME.get(), FactionStats.ACTION_COOLDOWN_TIME.get());
         this.font = screen.getFont();
         this.screen = screen;
-        Set<Holder<ISkill<?>>> skills = new HashSet<>();
-        skills.addAll(ModRegistries.SKILLS.listElements().filter(x -> skillColumns.stream().mapToInt(y -> this.screen.getStats().getValue(y.get(x.value()))).sum() > 0).collect(Collectors.toSet()));
-        //skills.addAll(ModRegistries.ACTIONS.listElements().filter(x -> actionColumns.stream().mapToInt(y -> this.screen.getStats().getValue(y.get(x.value()))).sum() > 0).map(IAction::asSkill).toList());
+        Set<Holder<ISkill<?>>> skills = ModRegistries.SKILLS.listElements().filter(x -> skillColumns.stream().mapToInt(y -> this.screen.getStats().getValue(y.get(x.value()))).sum() > 0).collect(Collectors.toSet());
         if (!skills.isEmpty()) {
             this.addEntry(new HeaderEntry());
             skills.forEach(s -> addEntry(new SkillRow(s)));
@@ -130,7 +132,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
     }
 
     @Override
-    protected void renderListSeparators(GuiGraphics guiGraphics) {
+    protected void renderListSeparators(@NotNull GuiGraphics guiGraphics) {
     }
 
     public abstract static class Entry extends ContainerObjectSelectionList.Entry<Entry> {
@@ -227,7 +229,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
         }
 
         @Override
-        public void renderContent(GuiGraphics pGuiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+        public void renderContent(@NotNull GuiGraphics pGuiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
             this.widget.setPosition(this.getContentX(), this.getContentY());
             this.widget.render(pGuiGraphics, mouseX, mouseY, partialTick);
 
@@ -235,7 +237,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
             int i = actionStatisticsList.children().indexOf(this);
 
             for (int i1 = 0; i1 < actionStatisticsList.skillColumns.size(); i1++) {
-                actionStatisticsList.skillColumns.get(i).get(this.skill);
+                actionStatisticsList.skillColumns.get(i1).get(this.skill);
                 this.renderStat(pGuiGraphics,
                         actionStatisticsList.skillColumns.get(i1).get(this.skill),
                         this.getContentX() + actionStatisticsList.getColumnX(i1),
@@ -276,7 +278,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
         class SkillRowWidget extends SkillDisplayWidget {
 
             public SkillRowWidget(Holder<ISkill<?>> skill) {
-                super(Minecraft.getInstance(), 1, 1, 18, 18, skill.value().getName(), skill, false);
+                super(Minecraft.getInstance(), 1, 1, 18, 18, skill.value().getName(), skill, true);
             }
 
             @Override
@@ -287,7 +289,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
 
             @Override
             protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-                super.renderTooltip(guiGraphics, SkillRow.this.getContentX() + mouseX, SkillRow.this.getContentY() + mouseY);
+                super.renderTooltip(guiGraphics, SkillRow.this.getContentX() + 18, SkillRow.this.getContentY() + 18);
             }
         }
     }
@@ -302,11 +304,11 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
                 i = 0;
                 j = 0;
             } else if (actionColumns.contains(sortColumn)) {
-                StatType<IAction<?>> stattype1 = (StatType<IAction<?>>) ActionStatisticsList.this.sortColumn;
+                StatType<IAction<?>> stattype1 = SafeCast.cast(ActionStatisticsList.this.sortColumn);
                 i = item instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.action()) : -1;
                 j = item1 instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.action()) : -1;
             } else {
-                StatType<ISkill<?>> stattype1 = (StatType<ISkill<?>>) ActionStatisticsList.this.sortColumn;
+                StatType<ISkill<?>> stattype1 = SafeCast.cast(ActionStatisticsList.this.sortColumn);
                 i = screen.getStats().getValue(stattype1, item);
                 j = screen.getStats().getValue(stattype1, item1);
             }

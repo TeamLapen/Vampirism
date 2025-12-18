@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
+import de.teamlapen.vampirism.common.world.inventory.HunterBasicMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;

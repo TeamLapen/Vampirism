@@ -83,7 +83,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         this.selectedItem = -1;
     }
 
-//    @SubscribeEvent
+//    @SubscribeEvent TODO add
 //    public static void updateInputEvent(MovementInputUpdateEvent event) {
 //        if (Minecraft.getInstance().screen instanceof GuiRadialMenu<?> screen) {
 //

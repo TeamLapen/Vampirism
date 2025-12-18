@@ -6,17 +6,16 @@ import de.teamlapen.factions.api.factions.LevelingChange;
 import net.minecraft.core.Holder;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Event related to any faction changes of players
  */
 public class PlayerFactionEvent extends Event {
 
-    private final Holder<IPlayableFaction<?>> currentFaction;
+    private final Holder<? extends IPlayableFaction<?>> currentFaction;
     private final IFactionPlayerHandler player;
 
-    private PlayerFactionEvent(IFactionPlayerHandler player, Holder<IPlayableFaction<?>> currentFaction) {
+    private PlayerFactionEvent(IFactionPlayerHandler player, Holder<? extends IPlayableFaction<?>> currentFaction) {
         this.currentFaction = currentFaction;
         this.player = player;
     }
@@ -24,7 +23,7 @@ public class PlayerFactionEvent extends Event {
     /**
      * @return The faction the respective player is currently in.
      */
-    public Holder<IPlayableFaction<?>> getCurrentFaction() {
+    public Holder<? extends IPlayableFaction<?>> getCurrentFaction() {
         return currentFaction;
     }
 
@@ -45,9 +44,9 @@ public class PlayerFactionEvent extends Event {
     public static class FactionLevelChangePre extends PlayerFactionEvent implements ICancellableEvent {
         private final int currentLevel;
         private final int newLevel;
-        private final Holder<IPlayableFaction<?>> newFaction;
+        private final Holder<? extends IPlayableFaction<?>> newFaction;
 
-        public FactionLevelChangePre(IFactionPlayerHandler player, Holder<IPlayableFaction<?>> currentFaction, int currentLevel, Holder<IPlayableFaction<?>> newFaction, int newLevel) {
+        public FactionLevelChangePre(IFactionPlayerHandler player, Holder<? extends IPlayableFaction<?>> currentFaction, int currentLevel, Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
             super(player, currentFaction);
             this.currentLevel = currentLevel;
             this.newLevel = newLevel;
@@ -64,7 +63,7 @@ public class PlayerFactionEvent extends Event {
         /**
          * @return The faction the player is going to be
          */
-        public Holder<IPlayableFaction<?>> getNewFaction() {
+        public Holder<? extends IPlayableFaction<?>> getNewFaction() {
             return newFaction;
         }
 
@@ -82,9 +81,9 @@ public class PlayerFactionEvent extends Event {
     public static class FactionLevelChanged extends PlayerFactionEvent {
         private final int oldLevel;
         private final int newLevel;
-        private final Holder<IPlayableFaction<?>> oldFaction;
+        private final Holder<? extends IPlayableFaction<?>> oldFaction;
 
-        public FactionLevelChanged(IFactionPlayerHandler player, Holder<IPlayableFaction<?>> oldFaction, int oldLevel, Holder<IPlayableFaction<?>> newFaction, int newLevel) {
+        public FactionLevelChanged(IFactionPlayerHandler player, Holder<? extends IPlayableFaction<?>> oldFaction, int oldLevel, Holder<? extends IPlayableFaction<?>> newFaction, int newLevel) {
             super(player, newFaction);
             this.oldLevel = oldLevel;
             this.newLevel = newLevel;
@@ -101,7 +100,7 @@ public class PlayerFactionEvent extends Event {
         /**
          * @return The faction the player was before
          */
-        public Holder<IPlayableFaction<?>> getOldFaction() {
+        public Holder<? extends IPlayableFaction<?>> getOldFaction() {
             return oldFaction;
         }
 
@@ -117,9 +116,8 @@ public class PlayerFactionEvent extends Event {
 
         private final LevelingChange change;
 
-        @SuppressWarnings("unchecked")
         public LevelChanged(IFactionPlayerHandler player, LevelingChange change) {
-            super(player, (Holder<IPlayableFaction<?>>) change.getNewFaction());
+            super(player, change.getNewFaction());
             this.change = change;
         }
 
@@ -141,10 +139,10 @@ public class PlayerFactionEvent extends Event {
      */
     public static class CanJoinFaction extends PlayerFactionEvent {
 
-        private final Holder<IPlayableFaction<?>> toJoin;
+        private final Holder<? extends IPlayableFaction<?>> toJoin;
         private Behavior behavior = Behavior.ONLY_WHEN_NO_FACTION;
 
-        public CanJoinFaction(IFactionPlayerHandler player, Holder<IPlayableFaction<?>> currentFaction, Holder<IPlayableFaction<?>> toJoin) {
+        public CanJoinFaction(IFactionPlayerHandler player, Holder<? extends IPlayableFaction<?>> currentFaction, Holder<? extends IPlayableFaction<?>> toJoin) {
             super(player, currentFaction);
             this.toJoin = toJoin;
         }
@@ -152,7 +150,7 @@ public class PlayerFactionEvent extends Event {
         /**
          * @return The faction the player wants to join
          */
-        public Holder<IPlayableFaction<?>> getFactionToJoin() {
+        public Holder<? extends IPlayableFaction<?>> getFactionToJoin() {
             return toJoin;
         }
 

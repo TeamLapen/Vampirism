@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.config.ModConfig;
 import net.neoforged.neoforge.event.ModMismatchEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.apache.maven.artifact.versioning.ArtifactVersion;

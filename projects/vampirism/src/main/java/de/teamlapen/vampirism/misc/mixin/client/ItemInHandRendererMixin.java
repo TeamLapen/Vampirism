@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.misc.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import de.teamlapen.vampirism.common.items.crossbow.HunterCrossbowItem;
+import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.world.item.CrossbowItem;
 import org.spongepowered.asm.mixin.Mixin;

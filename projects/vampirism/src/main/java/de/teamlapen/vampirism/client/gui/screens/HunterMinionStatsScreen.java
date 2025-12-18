@@ -1,55 +1,41 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.factions.client.gui.screens.MinionStatsScreen;
-import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
-import net.minecraft.client.gui.GuiGraphics;
+import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
 public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntity.HunterMinionData, HunterMinionEntity> {
 
-    private final MutableComponent inventoryLevel = Component.translatable("text.vampirism.minion.stats.inventory_level");
-    private final MutableComponent healthLevel = Component.translatable(Attributes.MAX_HEALTH.value().getDescriptionId());
-    private final MutableComponent strengthLevel = Component.translatable(Attributes.ATTACK_DAMAGE.value().getDescriptionId());
-    private final MutableComponent resourceLevel = Component.translatable("text.vampirism.minion.stats.resource_level");
-
     public HunterMinionStatsScreen(HunterMinionEntity entity, @Nullable Screen backScreen) {
-        super(entity, 4, backScreen);
+        super(entity, backScreen);
+
     }
 
     @Override
-    protected boolean areButtonsVisible(HunterMinionEntity.@NotNull HunterMinionData d) {
-        return d.getRemainingStatPoints() > 0 || d.getLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL;
+    protected void initStatRows() {
+        addStatRow(new StatRow(Component.translatable("text.vampirism.minion.stats.inventory_level"), HunterMinionEntity.HunterMinionData.MAX_LEVEL_INVENTORY, () -> String.valueOf(this.minionData.getInventorySize()), () -> this.minionData.getInventoryLevel()));
+        addStatRow(new StatRow(Component.translatable(Attributes.MAX_HEALTH.value().getDescriptionId()), HunterMinionEntity.HunterMinionData.MAX_LEVEL_HEALTH, () -> String.format("%.1f", entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue()), () -> this.minionData.getHealthLevel()));
+        addStatRow(new StatRow(Component.translatable(Attributes.ATTACK_DAMAGE.value().getDescriptionId()), HunterMinionEntity.HunterMinionData.MAX_LEVEL_STRENGTH, () -> String.format("%.1f", entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue()), () -> this.minionData.getStrengthLevel()));
+        addStatRow(new StatRow(Component.translatable("text.vampirism.minion.stats.resource_level"), HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES, () -> String.format("%.1f", (Math.ceil((float) (this.minionData.getResourceEfficiencyLevel() + 1) / (HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1) * 100))) + "%", () -> this.minionData.getResourceEfficiencyLevel()));
+    }
+
+
+    @Override
+    protected int getRemainingStatPoints() {
+        return this.minionData.getRemainingStatPoints();
     }
 
     @Override
-    protected int getRemainingStatPoints(HunterMinionEntity.@NotNull HunterMinionData d) {
-        return d.getRemainingStatPoints();
+    protected int getLevel() {
+        return this.minionData.getLevel();
     }
 
     @Override
-    protected boolean isActive(HunterMinionEntity.@NotNull HunterMinionData data, int i) {
-        return switch (i) {
-            case 0 -> data.getRemainingStatPoints() > 0 && data.getInventoryLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL_INVENTORY;
-            case 1 -> data.getRemainingStatPoints() > 0 && data.getHealthLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL_HEALTH;
-            case 2 -> data.getRemainingStatPoints() > 0 && data.getStrengthLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL_STRENGTH;
-            case 3 -> data.getRemainingStatPoints() > 0 && data.getResourceEfficiencyLevel() < HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES;
-            default -> false;
-        };
-    }
-
-    @Override
-    protected void renderStats(@NotNull GuiGraphics graphics, HunterMinionEntity.@NotNull HunterMinionData data) {
-        renderLevelRow(graphics, data.getLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL + 1);
-        renderStatRow(graphics, 0, inventoryLevel, Component.literal("" + data.getInventorySize()), data.getInventoryLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_INVENTORY + 1);
-        renderStatRow(graphics, 1, healthLevel, Component.literal(String.format("%.1f", entity.getAttribute(Attributes.MAX_HEALTH).getBaseValue())), data.getHealthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_HEALTH + 1);
-        renderStatRow(graphics, 2, strengthLevel, Component.literal(String.format("%.1f", entity.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue())), data.getStrengthLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_STRENGTH + 1);
-        renderStatRow(graphics, 3, resourceLevel, Component.literal(String.format("%.1f", (Math.ceil((float) (data.getResourceEfficiencyLevel() + 1) / (HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1) * 100))) + "%"), data.getResourceEfficiencyLevel() + 1, HunterMinionEntity.HunterMinionData.MAX_LEVEL_RESOURCES + 1);
-
+    protected int getMaxLevel() {
+        return HunterMinionEntity.HunterMinionData.MAX_LEVEL;
     }
 }

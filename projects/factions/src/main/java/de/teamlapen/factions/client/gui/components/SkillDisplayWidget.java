@@ -1,7 +1,7 @@
 package de.teamlapen.factions.client.gui.components;
 
-import de.teamlapen.factions.api.skills.IActionSkill;
-import de.teamlapen.factions.api.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.IActionSkill;
+import de.teamlapen.factions.api.factions.skills.ISkill;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -34,8 +34,7 @@ public class SkillDisplayWidget extends AbstractWidget {
     @Override
     protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         ResourceLocation texture = switch (this.skill.value()) {
-            case IActionSkill<?> actionSkill ->
-                    this.skill.getKey().location().withPath(path -> "textures/actions/" + path + ".png");
+            case IActionSkill<?> actionSkill -> actionSkill.actionHolder().getKey().location().withPath(path -> "textures/actions/" + path + ".png");
             default -> this.skill.getKey().location().withPath(path -> "textures/skills/" + path + ".png");
         };
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, this.getX() + this.xOffset, this.getY() + this.yOffset, 0, 0, 16, 16, 16, 16);

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.integration;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
+import de.teamlapen.vampirism.api.VampirismApi;
+import de.teamlapen.vampirism.api.world.entity.ISundamageRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +17,7 @@ public class InterModHandler {
 
     @SubscribeEvent
     public void handleInterModMessage(@NotNull InterModProcessEvent event) {
-        ISundamageRegistry sundamageRegistry = VampirismAPI.services().sundamageRegistry();
+        ISundamageRegistry sundamageRegistry = VampirismApi.services().sunDamageRegistry();
         event.getIMCStream("nosundamage-biome"::equals).forEach(msg -> {
             Object value = msg.messageSupplier().get();
             if (value instanceof ResourceLocation loc) {

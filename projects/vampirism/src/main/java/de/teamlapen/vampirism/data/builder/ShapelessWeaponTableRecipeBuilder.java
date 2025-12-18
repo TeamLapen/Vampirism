@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.data.builder;
 
-import de.teamlapen.factions.api.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.factions.common.advancements.criterion.SkillUnlockedCriterionTrigger;
 import de.teamlapen.factions.common.core.FactionAdvancements;
-import de.teamlapen.vampirism.common.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.recipes.ShapelessWeaponTableRecipe;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.world.items.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;

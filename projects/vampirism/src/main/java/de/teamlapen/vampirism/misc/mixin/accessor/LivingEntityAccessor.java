@@ -15,5 +15,5 @@ public interface LivingEntityAccessor extends ILivingEntity {
 
     @Override
     @Accessor("activeEffects")
-    Map<Holder<MobEffect>, MobEffectInstance> getActiveEffects();
+    Map<Holder<MobEffect>, MobEffectInstance> vampirism$activeEffects();
 }

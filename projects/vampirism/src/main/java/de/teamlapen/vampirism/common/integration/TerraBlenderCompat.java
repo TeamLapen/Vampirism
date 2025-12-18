@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.integration;
 
 import de.teamlapen.vampirism.common.config.ModConfig;
-//import de.teamlapen.vampirism.common.integration.terrablender.TerraBlenderRegistration;
 import net.neoforged.fml.ModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

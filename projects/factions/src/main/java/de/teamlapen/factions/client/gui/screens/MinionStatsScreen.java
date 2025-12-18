@@ -2,154 +2,207 @@ package de.teamlapen.factions.client.gui.screens;
 
 import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.client.gui.screens.taskboard.SeparatorWidget;
 import de.teamlapen.factions.common.core.FactionItems;
-import de.teamlapen.factions.common.inventory.InventoryHelper;
-import de.teamlapen.factions.common.minions.MinionData;
-import de.teamlapen.factions.common.minions.MinionEntity;
+import de.teamlapen.factions.common.factions.minions.MinionData;
+import de.teamlapen.factions.common.factions.minions.MinionEntity;
 import de.teamlapen.factions.common.network.packets.server.ServerboundUpgradeMinionStatPacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.components.WidgetSprites;
+import de.teamlapen.factions.common.world.inventory.InventoryHelper;
+import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 
 public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEntity<T>> extends Screen {
 
-    private static final ResourceLocation BACKGROUND = FResourceLocation.mod("textures/gui/appearance.png");
-    private static final WidgetSprites RESET = new WidgetSprites(FResourceLocation.mod("widget/reset"), FResourceLocation.mod("widget/reset_highlighted"));
+    private static final ResourceLocation BACKGROUND = FResourceLocation.mod("background/default");
+    protected static final WidgetSprites RESET = new WidgetSprites(FResourceLocation.mod("widget/reset"), FResourceLocation.mod("widget/reset_disabled"), FResourceLocation.mod("widget/reset_highlighted"));
+    protected static final WidgetSprites ADD = new WidgetSprites(FResourceLocation.mod("widget/add"), FResourceLocation.mod("widget/add_disabled"), FResourceLocation.mod("widget/add_highlighted"));
 
     protected final Q entity;
-    protected final int xSize = 256;
-    protected final int ySize = 177;
-    protected final int statCount;
     @Nullable
     protected final Screen backScreen;
-    private final MutableComponent textLevel = Component.translatable("text.factions.level");
-    private final List<Button> statButtons = new ArrayList<>();
-    protected int guiLeft;
-    protected int guiTop;
     private Button reset;
+    protected T minionData;
 
-    protected MinionStatsScreen(Q entity, int statCount, @Nullable Screen backScreen) {
+    private final GridLayout layout = new GridLayout();
+    @UnknownNullability
+    private ImageWidget background;
+    @UnknownNullability
+    private StringWidget levelWidget;
+    @UnknownNullability
+    private StringWidget skillPointWidget;
+    private final List<StatRow> statRows = new ArrayList<>();
+
+    protected MinionStatsScreen(Q entity, @Nullable Screen backScreen) {
         super(Component.translatable("gui.factions.minion.stats"));
-        assert statCount > 0;
         this.entity = entity;
-        this.statCount = statCount;
+        this.minionData = entity.getMinionData().orElseThrow();
         this.backScreen = backScreen;
+        this.initStatRows();
     }
 
 
-    @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        this.drawTitle(graphics);
-        entity.getMinionData().ifPresent(d -> renderStats(graphics, d));
+    protected abstract void initStatRows();
+
+    protected abstract int getRemainingStatPoints();
+
+    protected abstract int getLevel();
+
+    protected abstract int getMaxLevel();
+
+    protected void updateStats() {
+        this.levelWidget.setMessage(Component.literal((getLevel() + 1) + "/" + (getMaxLevel() + 1)));
+        this.skillPointWidget.setMessage(Component.literal("(" + getRemainingStatPoints() + ")"));
+        this.statRows.forEach(StatRow::changed);
+    }
+
+    private void updateStat(StatRow row) {
+        FactionsMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), statRows.indexOf(row)));
+        updateStats();
+    }
+
+    protected void addStatRow(StatRow statRow) {
+        this.statRows.add(statRow);
     }
 
     @Override
-    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderGuiBackground(pGuiGraphics);
+    protected void rebuildWidgets() {
+        this.layout.arrangeElements();
+        fitLayout();
     }
 
     @Override
     public void tick() {
-        for (int i = 0; i < statCount; i++) {
-            int finalI = i;
-            statButtons.get(i).active = entity.getMinionData().map(d -> isActive(d, finalI)).orElse(false);
-            statButtons.get(i).visible = entity.getMinionData().map(this::areButtonsVisible).orElse(false);
-        }
+        updateStats();
 
-        reset.active = entity.getMinionData().map(MinionData::hasUsedSkillPoints).orElse(false) && getOblivionPotion().isPresent();
+        this.reset.active = entity.getMinionData().map(MinionData::hasUsedSkillPoints).orElse(false) && getOblivionPotion().isPresent();
     }
-
-    protected abstract boolean areButtonsVisible(T d);
-
-    protected abstract int getRemainingStatPoints(T d);
 
     @Override
     protected void init() {
-        this.statButtons.clear();
-        this.guiLeft = (this.width - this.xSize) / 2;
-        this.guiTop = (this.height - this.ySize) / 2;
-        this.addRenderableWidget(new ExtendedButton(this.guiLeft + this.xSize - 80 - 20, this.guiTop + 152, 80, 20, Component.translatable("gui.done"), (context) -> {
-            this.onClose();
-        }));
-        if (backScreen != null) {
-            this.addRenderableWidget(new ExtendedButton(this.guiLeft + 20, this.guiTop + 152, 80, 20, Component.translatable("gui.back"), (context) -> {
-                Minecraft.getInstance().setScreen(this.backScreen);
-            }));
-        }
-        for (int i = 0; i < statCount; i++) {
-            int finalI = i;
-            Button button = this.addRenderableWidget(new ExtendedButton(guiLeft + 225, guiTop + 43 + 26 * i, 20, 20, Component.literal("+"), (b) -> FactionsMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), finalI))));
-            statButtons.add(button);
-            button.visible = false;
-        }
+        this.background = this.layout.addChild(ImageWidget.sprite(0, 0, BACKGROUND), 0, 0);
+        GridLayout layout = this.layout.addChild(new GridLayout(), 0, 0, this.layout.newCellSettings().padding(8))
+                .spacing(10);
 
-        reset = this.addRenderableWidget(new ImageButton(this.guiLeft + 225, this.guiTop + 8, 20, 20, RESET, pButton -> {
+        layout.addChild(new StringWidget(this.title, this.font),0,0);
+        this.reset = layout.addChild(new ImageButton(18,18, RESET, s -> {
             FactionsMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
         }, Component.translatable("text.factions.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))) {
             @Override
-            public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-                ResourceLocation resourcelocation = this.sprites.get(this.isActive(), this.isHoveredOrFocused());
-                pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), this.width, this.height, this.active ? -1 : ARGB.colorFromFloat(1, 0.65f, 0.65f, 0.65f));
+            public boolean shouldTakeFocusAfterInteraction() {
+                return false;
             }
-        });
-        reset.setTooltip(Tooltip.create(Component.translatable("text.factions.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
-        reset.active = false;
-    }
+        }, 0,1, layout.newCellSettings().alignHorizontallyRight());
 
-    protected abstract boolean isActive(T data, int i);
 
-    protected void renderGuiBackground(@NotNull GuiGraphics graphics) {
-        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.guiLeft, this.guiTop, 0, 0, 0, this.xSize, this.ySize, 300, 256);
-    }
+        var statsLayout = layout.addChild(new GridLayout(), 1,0,1,2, layout.newCellSettings().alignHorizontallyCenter())
+                .rowSpacing(2)
+                .columnSpacing(4);
+        statsLayout.defaultCellSetting()
+                .alignHorizontallyCenter();
 
-    protected void renderLevelRow(@NotNull GuiGraphics graphics, int current, int max) {
-        graphics.drawString(this.font, textLevel, guiLeft + 10, guiTop + 30, 0x0, false);
-        graphics.drawString(this.font, current + "/" + max, guiLeft + 145, guiTop + 30, 0x404040, false);
-        int remainingPoints = entity.getMinionData().map(this::getRemainingStatPoints).orElse(0);
-        if (remainingPoints > 0) {
-            graphics.drawString(this.font, "(" + remainingPoints + ")", guiLeft + 228, guiTop + 30, 0x404040, false);
+        statsLayout.addChild(new StringWidget(Component.translatable("text.factions.level"), this.font), 0, 0);
+        this.levelWidget = statsLayout.addChild(new StringWidget(Component.empty(), this.font), 0, 1);
+        this.skillPointWidget = statsLayout.addChild(new StringWidget(Component.empty(), this.font), 0, 3);
+
+        statsLayout.addChild(new SeparatorWidget(200),1, 0, 1, 4, layout.newCellSettings().alignHorizontallyCenter());
+
+        for (int i = 0; i < this.statRows.size(); i++) {
+            createStatRow(statsLayout, i + 2,this.statRows.get(i));
         }
-        graphics.hLine(guiLeft + 10, guiLeft + xSize - 10, guiTop + 40, 0xF0303030);
+
+        GridLayout buttonsLayout = layout.addChild(new GridLayout(),2,0,1,2, layout.newCellSettings().alignHorizontallyCenter());
+        buttonsLayout.columnSpacing(20);
+        buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.back"), x -> {
+            if (this.minecraft != null && this.backScreen != null) this.minecraft.setScreen(this.backScreen);
+        }), 0, 0, buttonsLayout.newCellSettings().alignHorizontallyCenter());
+        buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.done"), x -> this.onClose()),0,1, buttonsLayout.newCellSettings().alignHorizontallyCenter());
+
+        updateStats();
+        this.layout.arrangeElements();
+        this.layout.visitWidgets(this::addRenderableWidget);
+        fitLayout();
     }
 
-    protected void renderStatRow(@NotNull GuiGraphics graphics, int i, @NotNull MutableComponent name, @NotNull Component value, int currentLevel, int maxLevel) {
-        graphics.drawString(this.font, name.append(":"), guiLeft + 10, guiTop + 50 + 26 * i, 0x404040, false);
-        graphics.drawString(this.font, value, guiLeft + 145, guiTop + 50 + 26 * i, 0x404040, false);
-        graphics.drawString(this.font, Component.translatable("text.factions.level_short").append(": " + currentLevel + "/" + maxLevel), guiLeft + 175, guiTop + 50 + 26 * i, 0x404040, false);
-    }
-
-    protected void renderStats(GuiGraphics graphics, T data) {
-
-    }
-
-    private void drawTitle(@NotNull GuiGraphics graphics) {
-        graphics.drawString(this.font, this.title, this.guiLeft + 10, this.guiTop + 10, -1, true);
+    private void fitLayout() {
+        int layoutWidth = this.layout.getWidth();
+        int layoutHeight = this.layout.getHeight();
+        this.background.setWidth(layoutWidth);
+        this.background.setHeight(layoutHeight);
+//        this.separatorWidget.setWidth(layoutWidth - 20);
+        FrameLayout.centerInRectangle(this.layout, (this.width - layoutWidth) / 2, (this.height - layoutHeight) / 2, layoutWidth, layoutHeight);
     }
 
     private @NotNull Optional<ItemStack> getOblivionPotion() {
         return Optional.ofNullable(entity.getMinionData().flatMap(data -> Optional.ofNullable(InventoryHelper.getFirst(data.getInventory(), FactionItems.OBLIVION_POTION.get()))).orElse(InventoryHelper.getFirst(this.minecraft.player.getInventory(), FactionItems.OBLIVION_POTION.get())));
     }
 
+    private void createStatRow(GridLayout layout, int row, StatRow statRow) {
+        layout.addChild(new StringWidget(statRow.name, font), row, 0);
+        var value = layout.addChild(new StringWidget(Component.empty(), font), row, 1);
+        var level = layout.addChild(new StringWidget(Component.empty(), font), row, 2);
+        var button = layout.addChild(new ImageButton(18,18, ADD, s -> updateStat(statRow), Component.empty()) {
+            @Override
+            public boolean shouldTakeFocusAfterInteraction() {
+                return false;
+            }
+        }, row,3);
+
+        statRow.subscribe(() -> {
+            value.setMessage(Component.literal(statRow.value));
+            level.setMessage(Component.translatable("text.factions.level_short").append(" ").append(String.valueOf(statRow.currentLevel + 1)).append("/").append(String.valueOf(statRow.totalLevels + 1)));
+            button.active = statRow.canUpgrade() && this.getRemainingStatPoints() > 0;
+        });
+    }
+
+    protected static class StatRow {
+
+        private final Component name;
+        private final int totalLevels;
+        private final Supplier<String> valueSupplier;
+        private final Supplier<Integer> currentLevelSupplier;
+        private String value = "";
+        private int currentLevel;
+        @Nullable
+        private Runnable onChange;
+
+        public StatRow(Component name, int totalLevels, Supplier<String> valueSupplier, Supplier<Integer> currentLevelSupplier) {
+            this.totalLevels = totalLevels;
+            this.name = name;
+            this.valueSupplier = valueSupplier;
+            this.currentLevelSupplier = currentLevelSupplier;
+        }
+
+        public boolean canUpgrade() {
+            return currentLevel < totalLevels;
+        }
+
+        public void subscribe(Runnable onChange) {
+            this.onChange = onChange;
+        }
+
+        public void changed() {
+            value = this.valueSupplier.get();
+            currentLevel = this.currentLevelSupplier.get();
+            if (this.onChange != null) {
+                this.onChange.run();
+            }
+        }
+    }
 
 }

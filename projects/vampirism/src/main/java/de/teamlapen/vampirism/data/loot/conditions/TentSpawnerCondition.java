@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.loot.conditions;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.common.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.common.core.ModLoot;
+import de.teamlapen.vampirism.common.world.blockentity.TentBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;

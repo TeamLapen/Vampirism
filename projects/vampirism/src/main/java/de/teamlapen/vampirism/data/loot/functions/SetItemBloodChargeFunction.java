@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.loot.functions;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.items.IBloodChargeable;
+import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
 import de.teamlapen.vampirism.common.core.ModLoot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Function to set the charge of any {@link de.teamlapen.vampirism.api.items.IBloodChargeable}
+ * Function to set the charge of any {@link IBloodChargeable}
  */
 public class SetItemBloodChargeFunction extends LootItemConditionalFunction {
 

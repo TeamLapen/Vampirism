@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.config;
 
-import de.teamlapen.factions.common.config.ModConfig;
+import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
@@ -13,13 +13,13 @@ import java.util.List;
 public class ServerConfig {
 
     public final ModConfigSpec.BooleanValue enforceRenderForestFog;
-    public final ModConfigSpec.BooleanValue unlockAllSkills = ModConfig.SERVER.unlockAllSkills;
+    public final ModConfigSpec.BooleanValue unlockAllSkills = FactionConfig.SERVER.unlockAllSkills;
     public final ModConfigSpec.IntValue sunscreenBeaconDistance;
     public final ModConfigSpec.BooleanValue sunscreenBeaconMineable;
     public final ModConfigSpec.BooleanValue autoCalculateEntityBlood;
     public final ModConfigSpec.BooleanValue playerCanTurnPlayer;
     public final ModConfigSpec.BooleanValue infectCreaturesSanguinare;
-    public final ModConfigSpec.BooleanValue usePermissions = ModConfig.SERVER.usePermissions;
+    public final ModConfigSpec.BooleanValue usePermissions = FactionConfig.SERVER.usePermissions;
 
     public final ModConfigSpec.BooleanValue sundamageUnknownDimension;
     public final ModConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;

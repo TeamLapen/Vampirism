@@ -1,10 +1,9 @@
 package de.teamlapen.factions.client.gui.screens;
 
 import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.factions.api.entities.minion.IMinionTask;
-import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
-import de.teamlapen.factions.api.factions.ILordPlayer;
+import de.teamlapen.factions.api.factions.lord.ILordPlayer;
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.api.world.entities.minion.IMinionTask;
 import de.teamlapen.factions.client.config.ClientConfigHelper;
 import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.factions.client.gui.radialmenu.IRadialMenuSlot;
@@ -33,7 +32,7 @@ import java.util.stream.Stream;
 
 public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<SelectMinionTaskRadialScreen.Entry> {
 
-    public static Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_single"), Component.translatable("text.factions.minion.call_single"), FResourceLocation.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
+    public static final Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_single"), Component.translatable("text.factions.minion.call_single"), FResourceLocation.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
             new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_all"), Component.translatable("text.factions.minion.call_all"), FResourceLocation.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
             new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("respawn"), Component.translatable("text.factions.minion.respawn"), FResourceLocation.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
 

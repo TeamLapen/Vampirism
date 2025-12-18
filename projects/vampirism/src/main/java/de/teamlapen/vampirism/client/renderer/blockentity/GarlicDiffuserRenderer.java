@@ -1,17 +1,16 @@
 package de.teamlapen.vampirism.client.renderer.blockentity;
 
-import com.google.common.collect.Streams;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import de.teamlapen.vampirism.client.core.ModRenderPipelines;
-import de.teamlapen.vampirism.common.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.world.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollection;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

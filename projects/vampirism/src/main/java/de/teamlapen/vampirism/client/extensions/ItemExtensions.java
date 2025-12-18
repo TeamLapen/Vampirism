@@ -2,17 +2,18 @@ package de.teamlapen.vampirism.client.extensions;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import de.teamlapen.vampirism.api.items.IHunterCrossbow;
+import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.core.ModClientEnums;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.common.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.util.RegUtil;
+import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.misc.mixin.client.accessor.ItemInHandRendererAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.util.Mth;
@@ -47,7 +48,7 @@ public class ItemExtensions {
                 case "vampire_clothing_legs" -> ModEntitiesRender.CLOTHING_PANTS;
                 case "vampire_clothing_boots" -> ModEntitiesRender.CLOTHING_BOOTS;
                 case "vampire_clothing_hat" -> ModEntitiesRender.CLOTHING_HAT;
-                default -> ModEntitiesRender.GENERIC_BIPED;
+                default -> ModelLayers.PLAYER;
             };
         }
     };
@@ -66,7 +67,7 @@ public class ItemExtensions {
             return switch (RegUtil.id(itemStack.getItem()).getPath()) {
                 case "hunter_hat_tall" -> ModEntitiesRender.HUNTER_HAT_TALL;
                 case "hunter_hat_broad" -> ModEntitiesRender.HUNTER_HAT_BROAD;
-                default -> ModEntitiesRender.GENERIC_BIPED;
+                default -> ModelLayers.PLAYER;
             };
         }
     };

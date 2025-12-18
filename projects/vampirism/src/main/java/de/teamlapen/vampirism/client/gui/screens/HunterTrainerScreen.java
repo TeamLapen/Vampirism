@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.inventory.HunterTrainerMenu;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
+import de.teamlapen.vampirism.common.util.UtilLib;
+import de.teamlapen.vampirism.common.world.inventory.HunterTrainerMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

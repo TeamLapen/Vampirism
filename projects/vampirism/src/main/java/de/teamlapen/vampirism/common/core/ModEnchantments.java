@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.core;
 
+import de.teamlapen.factions.common.advancements.criterion.FactionSubPredicate;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismDataComponents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.factions.common.advancements.criterion.FactionSubPredicate;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.advancements.critereon.EntityPredicate;

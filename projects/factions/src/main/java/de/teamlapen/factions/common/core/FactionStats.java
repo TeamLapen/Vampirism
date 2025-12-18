@@ -1,7 +1,7 @@
 package de.teamlapen.factions.common.core;
 
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.skills.ISkill;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.api.util.REFERENCE;
 import de.teamlapen.factions.common.util.CustomStatType;

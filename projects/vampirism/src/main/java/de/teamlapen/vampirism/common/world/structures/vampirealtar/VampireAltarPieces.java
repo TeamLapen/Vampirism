@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.common.world.structures.vampirealtar;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModLootTables;
 import de.teamlapen.vampirism.common.core.ModStructures;
-import de.teamlapen.vampirism.common.entity.vampire.AdvancedVampireEntity;
+import de.teamlapen.vampirism.common.world.entity.vampire.AdvancedVampireEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -64,7 +64,7 @@ public class VampireAltarPieces {
                 }
                 case "entity" -> {
                     pLevel.removeBlock(pPos, false);
-                    if (!VampirismAPI.sundamageRegistry().hasSunDamage(pLevel, pPos)) {
+                    if (!VampirismApi.services().sunDamageRegistry().hasSunDamage(pLevel, pPos)) {
                         AdvancedVampireEntity advancedVampireEntity = ModEntities.ADVANCED_VAMPIRE.get().create(pLevel.getLevel(), EntitySpawnReason.LOAD);
                         advancedVampireEntity.setPos(pPos.getX() + 0.5, pPos.getY(), pPos.getZ() + 0.5);
                         pLevel.addFreshEntity(advancedVampireEntity);

@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.client;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.screens.*;
-import de.teamlapen.vampirism.common.blocks.CoffinBlock;
-import de.teamlapen.vampirism.common.blocks.TentBlock;
-import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
-import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.proxy.CommonProxy;
+import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
+import de.teamlapen.vampirism.common.world.blocks.TentBlock;
+import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -32,8 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static de.teamlapen.vampirism.common.blocks.TentBlock.FACING;
-import static de.teamlapen.vampirism.common.blocks.TentBlock.POSITION;
+import static de.teamlapen.vampirism.common.world.blocks.TentBlock.FACING;
+import static de.teamlapen.vampirism.common.world.blocks.TentBlock.POSITION;
 
 /**
  * Clientside Proxy

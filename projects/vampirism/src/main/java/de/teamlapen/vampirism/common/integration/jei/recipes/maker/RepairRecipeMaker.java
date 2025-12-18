@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.common.integration.jei.recipes.maker;
 
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.items.component.PureLevel;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
+import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;

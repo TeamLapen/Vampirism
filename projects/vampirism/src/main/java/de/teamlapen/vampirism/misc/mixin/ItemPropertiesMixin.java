@@ -1,10 +1,7 @@
 package de.teamlapen.vampirism.misc.mixin;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.common.components.FactionRestriction;
 import de.teamlapen.vampirism.misc.extension.IItemProperties;
 import net.minecraft.resources.DependantName;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;

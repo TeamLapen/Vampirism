@@ -13,7 +13,6 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.jarcontents.JarContents;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Path;

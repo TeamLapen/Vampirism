@@ -1,7 +1,7 @@
 package de.teamlapen.factions.common.network.packets.client;
 
 import de.teamlapen.factions.api.util.FResourceLocation;
-import de.teamlapen.factions.common.tasks.TaskManager;
+import de.teamlapen.factions.common.factions.tasks.TaskManager;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

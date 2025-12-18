@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.factions.api.factions.actions.IAction;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.vampirism.common.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.tags.ModActionTags;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.KeyTagProvider;

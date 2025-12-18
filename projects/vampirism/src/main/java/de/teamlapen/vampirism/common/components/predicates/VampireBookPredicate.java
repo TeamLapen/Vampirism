@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.components.predicates;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.predicates.DataComponentPredicate;

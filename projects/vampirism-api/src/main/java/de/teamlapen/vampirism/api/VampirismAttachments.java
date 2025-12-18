@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.world.IFogHandler;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
+import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -29,5 +29,8 @@ public class VampirismAttachments {
         public static final ResourceLocation DAMAGE_HANDLER = VResourceLocation.mod("damage_handler");
         public static final ResourceLocation VAMPIRE_BAT = VResourceLocation.mod("vampire_bat");
         public static final ResourceLocation INFECTION_STATUS = VResourceLocation.mod("infection_status");
+        public static final ResourceLocation NEAREST_VILLAGE = VResourceLocation.mod("nearest_village");
+        public static final ResourceLocation VAMPIRE_MINION_DATA = VResourceLocation.mod("vampire_minion_data");
+        public static final ResourceLocation HUNTER_MINION_DATA = VResourceLocation.mod("hunter_minion_data");
     }
 }

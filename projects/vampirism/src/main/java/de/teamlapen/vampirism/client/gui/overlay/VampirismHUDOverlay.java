@@ -2,25 +2,20 @@ package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.Window;
 import de.teamlapen.factions.client.IMinecraftAccessor;
-import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.IBiteableEntity;
-import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
-import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.client.VampirismModClient;
-import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
+import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.world.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.entity.ExtendedCreature;
-import de.teamlapen.vampirism.common.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.common.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.items.StakeItem;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.misc.extension.ILivingEntity;
-import de.teamlapen.vampirism.misc.mixin.accessor.LivingEntityAccessor;
+import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.world.items.StakeItem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -41,18 +36,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
-import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3x2fStack;
 
 import java.util.Optional;
 
@@ -71,7 +60,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
 
 
     @SubscribeEvent
-    public void onRenderCrosshair(RenderGuiLayerEvent.@NotNull Pre event) {
+    public void onRenderCrosshair(RenderGuiLayerEvent.Pre event) {
         if (event.getName() != VanillaGuiLayers.CROSSHAIR) return;
 
         LocalPlayer player = mc().player;
@@ -153,7 +142,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
     }
 
     @SubscribeEvent
-    public void onRenderFoodBar(RenderGuiLayerEvent.@NotNull Pre event) {
+    public void onRenderFoodBar(RenderGuiLayerEvent.Pre event) {
         if (mc().player == null || !mc().player.isAlive() || !Helper.isVampire(mc().player)) return;
         //disable foodbar if bloodbar is rendered
         if (event.getName() == VanillaGuiLayers.FOOD_LEVEL && !VampirismMod.services().imc().isRequestedToDisableBloodbar() && mc().gameMode.hasExperience()) {
@@ -165,34 +154,34 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPost(RenderGuiLayerEvent.@NotNull Post event) {
+    public void onRenderHealthBarPost(RenderGuiLayerEvent.Post event) {
         if (event.getName() != VanillaGuiLayers.PLAYER_HEALTH) {
             return;
         }
         if (addTempPoison) {
-            ((ILivingEntity) mc().player).getActiveEffects().remove(MobEffects.POISON);
+            player().vampirism$activeEffects().remove(MobEffects.POISON);
         }
 
 
     }
 
     @SubscribeEvent
-    public void onRenderHealthBarPre(RenderGuiLayerEvent.@NotNull Pre event) {
+    public void onRenderHealthBarPre(RenderGuiLayerEvent.Pre event) {
         if (event.getName() != VanillaGuiLayers.PLAYER_HEALTH) {
             return;
         }
-        addTempPoison = mc().player.hasEffect(ModEffects.POISON) && !((LivingEntityAccessor) mc().player).getActiveEffects().containsKey(MobEffects.POISON);
+        addTempPoison = mc().player.hasEffect(ModEffects.POISON) && !player().vampirism$activeEffects().containsKey(MobEffects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {
                 addedTempPoison = new MobEffectInstance(MobEffects.POISON, 100);
             }
-            ((LivingEntityAccessor) mc().player).getActiveEffects().put(MobEffects.POISON, addedTempPoison);
+            player().vampirism$activeEffects().put(MobEffects.POISON, addedTempPoison);
         }
 
     }
 
-    private void renderBloodFangs(@NotNull GuiGraphics graphics, int width, int height, float perc, int color) {
+    private void renderBloodFangs(GuiGraphics graphics, int width, int height, float perc, int color) {
         int left = width / 2 - 8;
         int top = height / 2 - 4;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FANG_SPRITE, left, top, 16, 8);
@@ -200,7 +189,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         graphics.vampirism$blitSpriteTiledOffset(FANG_SPRITE, left, top, 16, 8, 0, percHeight, color);
     }
 
-    private void renderStakeInstantKill(@NotNull GuiGraphics graphics, int width, int height) {
+    private void renderStakeInstantKill(GuiGraphics graphics, int width, int height) {
         if (this.mc().options.getCameraType().isFirstPerson() && this.mc().gameMode.getPlayerMode() != GameType.SPECTATOR) {
 //            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             int color = ARGB.colorFromFloat(1f, 158 / 256f, 0, 0);

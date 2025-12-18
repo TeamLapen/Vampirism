@@ -1,90 +1,90 @@
 {
   "net/minecraft/world/item/Item$Properties": [
-    "de/teamlapen/vampirism/misc/injection/IItemPropertiesMock"
+    "de/teamlapen/vampirism/misc/injection/IItemPropertiesVampirismMock"
   ],
   "net/minecraft/world/level/block/state/BlockBehaviour$Properties": [
-    "de/teamlapen/vampirism/misc/injection/IBlockPropertiesMock"
+    "de/teamlapen/vampirism/misc/injection/IBlockPropertiesVampirismMock"
   ],
   "net/minecraft/world/entity/ai/goal/target/NearestAttackableTargetGoal": [
-    "de/teamlapen/vampirism/misc/injection/INearestTargetGoalModifierMock",
-    "de/teamlapen/vampirism/misc/injection/INearestAttackableTargetGoalMock"
+    "de/teamlapen/vampirism/misc/injection/INearestTargetGoalModifierVampirismMock",
+    "de/teamlapen/vampirism/misc/injection/INearestAttackableTargetGoalVampirismMock"
   ],
   "net/minecraft/world/level/NaturalSpawner$SpawnState": [
-    "de/teamlapen/vampirism/misc/injection/ISpawnStateAccessorMock"
+    "de/teamlapen/vampirism/misc/injection/ISpawnStateAccessorVampirismMock"
   ],
   "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen": [
-    "de/teamlapen/vampirism/misc/injection/client/IAbstractContainerScreenMock"
+    "de/teamlapen/vampirism/misc/injection/client/IAbstractContainerScreenVampirismMock"
   ],
   "net/minecraft/client/Camera": [
-    "de/teamlapen/vampirism/misc/injection/client/ICameraMock"
+    "de/teamlapen/vampirism/misc/injection/client/ICameraVampirismMock"
   ],
   "net/minecraft/client/renderer/entity/EntityRenderDispatcher": [
-    "de/teamlapen/vampirism/misc/injection/client/IEntityRenderDispatcherMock"
+    "de/teamlapen/vampirism/misc/injection/client/IEntityRenderDispatcherVampirismMock"
   ],
   "net/minecraft/client/renderer/ItemInHandRenderer": [
-    "de/teamlapen/vampirism/misc/injection/client/IItemInHandRendererMock"
+    "de/teamlapen/vampirism/misc/injection/client/IItemInHandRendererVampirismMock"
   ],
   "net/minecraft/world/entity/ai/attributes/AttributeInstance": [
-    "de/teamlapen/vampirism/misc/injection/IAttributeInstanceMock"
+    "de/teamlapen/vampirism/misc/injection/IAttributeInstanceVampirismMock"
   ],
   "net/minecraft/world/food/FoodData": [
-    "de/teamlapen/vampirism/misc/injection/IFoodDataMock"
+    "de/teamlapen/vampirism/misc/injection/IFoodDataVampirismMock"
   ],
   "net/minecraft/world/entity/ai/navigation/GroundPathNavigation": [
-    "de/teamlapen/vampirism/misc/injection/IGroundPathNavigationMock"
+    "de/teamlapen/vampirism/misc/injection/IGroundPathNavigationVampirismMock"
   ],
   "net/minecraft/world/inventory/ItemCombinerMenu": [
-    "de/teamlapen/vampirism/misc/injection/IItemCombinerMenuMock"
+    "de/teamlapen/vampirism/misc/injection/IItemCombinerMenuVampirismMock"
   ],
   "net/minecraft/world/level/storage/loot/LootTable": [
-    "de/teamlapen/vampirism/misc/injection/ILootTableMock"
+    "de/teamlapen/vampirism/misc/injection/ILootTableVampirismMock"
   ],
   "net/minecraft/world/entity/ai/goal/MeleeAttackGoal": [
-    "de/teamlapen/vampirism/misc/injection/IMeleeAttackGoalMock"
+    "de/teamlapen/vampirism/misc/injection/IMeleeAttackGoalVampirismMock"
   ],
   "net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList$Preset": [
-    "de/teamlapen/vampirism/misc/injection/IMultiNoiseBiomeSourceParameterListMock$PresetMock"
+    "de/teamlapen/vampirism/misc/injection/IMultiNoiseBiomeSourceParameterListVampirismMock$PresetVampirismMock"
   ],
   "net/minecraft/world/level/levelgen/structure/templatesystem/ProcessorRule": [
-    "de/teamlapen/vampirism/misc/injection/IProcessorRuleMock"
+    "de/teamlapen/vampirism/misc/injection/IProcessorRuleVampirismMock"
   ],
   "net/minecraft/data/registries/RegistriesDatapackGenerator": [
-    "de/teamlapen/vampirism/misc/injection/IRegistriesDatapackGeneratorMock"
+    "de/teamlapen/vampirism/misc/injection/IRegistriesDatapackGeneratorVampirismMock"
   ],
   "net/minecraft/world/item/crafting/ShapedRecipe": [
-    "de/teamlapen/vampirism/misc/injection/IShapedRecipeMock"
+    "de/teamlapen/vampirism/misc/injection/IShapedRecipeVampirismMock"
   ],
   "net/minecraft/data/recipes/ShapedRecipeBuilder": [
-    "de/teamlapen/vampirism/misc/injection/IShapedRecipeBuilderMock"
+    "de/teamlapen/vampirism/misc/injection/IShapedRecipeBuilderVampirismMock"
   ],
   "net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool": [
-    "de/teamlapen/vampirism/misc/injection/IStructureTemplatePoolMock"
+    "de/teamlapen/vampirism/misc/injection/IStructureTemplatePoolVampirismMock"
   ],
   "net/minecraft/world/entity/ai/targeting/TargetingConditions": [
-    "de/teamlapen/vampirism/misc/injection/ITargetingConditionsMock"
+    "de/teamlapen/vampirism/misc/injection/ITargetingConditionsVampirismMock"
   ],
   "net/minecraft/world/entity/WalkAnimationState": [
-    "de/teamlapen/vampirism/misc/injection/IWalkAnimationStateMock"
+    "de/teamlapen/vampirism/misc/injection/IWalkAnimationStateVampirismMock"
   ],
   "net/minecraft/client/gui/GuiGraphics": [
-    "de/teamlapen/vampirism/misc/injection/client/IGuiGraphicsMock"
+    "de/teamlapen/vampirism/misc/injection/client/IGuiGraphicsVampirismMock"
   ],
   "net/minecraft/world/item/ItemStack": [
-    "de/teamlapen/vampirism/misc/injection/IItemStackMock"
+    "de/teamlapen/vampirism/misc/injection/IItemStackVampirismMock"
   ],
   "net/minecraft/client/particle/ParticleResources$MutableSpriteSet": [
-    "de/teamlapen/vampirism/misc/injection/client/IListBasedSpriteSetMock"
+    "de/teamlapen/vampirism/misc/injection/client/IListBasedSpriteSetVampirismMock"
   ],
   "net/minecraft/world/inventory/Slot": [
-    "de/teamlapen/vampirism/misc/injection/ISlotMock"
+    "de/teamlapen/vampirism/misc/injection/ISlotVampirismMock"
   ],
   "net/minecraft/client/renderer/entity/LivingEntityRenderer": [
-    "de/teamlapen/vampirism/misc/injection/client/ILivingEntityRendererMock"
+    "de/teamlapen/vampirism/misc/injection/client/ILivingEntityRendererVampirismMock"
   ],
   "net/minecraft/client/renderer/entity/state/AvatarRenderState": [
-    "de/teamlapen/vampirism/misc/injection/client/AvatarRenderStateMock"
+    "de/teamlapen/vampirism/misc/injection/client/AvatarRenderStateVampirismMock"
   ],
   "net/minecraft/world/entity/LivingEntity": [
-    "de/teamlapen/vampirism/misc/injection/ILivingEntityMock"
+    "de/teamlapen/vampirism/misc/injection/ILivingEntityVampirismMock"
   ]
 }

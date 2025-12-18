@@ -19,7 +19,7 @@ public class Services {
     protected void registerModBus(IEventBus bus) {
     }
 
-    protected void registerGameBus(IEventBus bus) {
+    protected void registerGameBus(@SuppressWarnings("SameParameterValue") IEventBus bus) {
     }
 
     public void register(IEventBus bus) {

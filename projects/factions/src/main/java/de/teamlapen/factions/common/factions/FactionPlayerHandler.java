@@ -3,31 +3,38 @@ package de.teamlapen.factions.common.factions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.actions.IActionHandler;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
 import de.teamlapen.factions.api.event.PlayerFactionEvent;
-import de.teamlapen.factions.api.factions.*;
-import de.teamlapen.factions.api.refinements.IRefinementHandler;
-import de.teamlapen.factions.api.refinements.IRefinementPlayer;
-import de.teamlapen.factions.api.skills.ISkillHandler;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
-import de.teamlapen.factions.api.skills.ISkillTree;
-import de.teamlapen.factions.api.tasks.ITaskManager;
-import de.teamlapen.factions.api.tasks.ITaskPlayer;
+import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
+import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.api.factions.LevelingChange;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.IActionHandler;
+import de.teamlapen.factions.api.factions.lord.ILordPlayer;
+import de.teamlapen.factions.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.factions.api.factions.refinements.IRefinementPlayer;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.skills.ISkillTree;
+import de.teamlapen.factions.api.factions.tasks.ITaskManager;
+import de.teamlapen.factions.api.factions.tasks.ITaskPlayer;
 import de.teamlapen.factions.api.util.FResourceLocation;
-import de.teamlapen.factions.common.actions.ActionKeys;
-import de.teamlapen.factions.common.config.ModConfig;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.factions.common.core.*;
 import de.teamlapen.factions.common.event.FactionEventFactory;
-import de.teamlapen.factions.common.minions.MinionWorldData;
-import de.teamlapen.factions.common.minions.PlayerMinionController;
+import de.teamlapen.factions.common.factions.actions.ActionKeys;
+import de.teamlapen.factions.common.factions.minions.MinionWorldData;
+import de.teamlapen.factions.common.factions.minions.PlayerMinionController;
 import de.teamlapen.factions.common.network.packets.client.ClientboundPlaySoundEventPacket;
 import de.teamlapen.factions.common.tags.FactionTaskTags;
-import de.teamlapen.factions.common.util.*;
+import de.teamlapen.factions.common.util.AttachmentSynchronization;
+import de.teamlapen.factions.common.util.DamageHandler;
+import de.teamlapen.factions.common.util.ModCodecs;
+import de.teamlapen.factions.common.util.ScoreboardUtil;
 import de.teamlapen.factions.common.world.ModDamageSources;
 import de.teamlapen.factions.server.FactionLogger;
-import de.teamlapen.sync.Attachment;
+import de.teamlapen.sync.AttachmentSync;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -42,13 +49,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Extended entity property that handles factions and levels for the player
  */
-public class FactionPlayerHandler extends Attachment implements IFactionPlayerHandler {
+public class FactionPlayerHandler extends AttachmentSync implements IFactionPlayerHandler {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static FactionPlayerHandler get(Player player) {
@@ -210,7 +220,7 @@ public class FactionPlayerHandler extends Attachment implements IFactionPlayerHa
 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
-        if (ModConfig.SERVER.pvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
+        if (FactionConfig.SERVER.pvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
             Holder<? extends IPlayableFaction<?>> otherFaction = get((Player) src.getEntity()).getFaction();
             return !IFaction.is(this.currentFaction, otherFaction);
         }

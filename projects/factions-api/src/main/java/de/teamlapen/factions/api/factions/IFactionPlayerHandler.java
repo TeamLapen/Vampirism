@@ -1,19 +1,19 @@
 package de.teamlapen.factions.api.factions;
 
-import de.teamlapen.factions.api.actions.IActionHandler;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.extensions.IPlayer;
-import de.teamlapen.factions.api.refinements.IRefinementHandler;
-import de.teamlapen.factions.api.refinements.IRefinementPlayer;
+import de.teamlapen.factions.api.factions.actions.IActionHandler;
+import de.teamlapen.factions.api.factions.lord.ILordPlayer;
+import de.teamlapen.factions.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.factions.api.factions.refinements.IRefinementPlayer;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.tasks.ITaskManager;
+import de.teamlapen.factions.api.factions.tasks.ITaskPlayer;
 import de.teamlapen.factions.api.registries.factions.DeferredFaction;
-import de.teamlapen.factions.api.skills.ISkillHandler;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
-import de.teamlapen.factions.api.tasks.ITaskManager;
-import de.teamlapen.factions.api.tasks.ITaskPlayer;
+import de.teamlapen.factions.api.world.entities.extensions.IPlayer;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 

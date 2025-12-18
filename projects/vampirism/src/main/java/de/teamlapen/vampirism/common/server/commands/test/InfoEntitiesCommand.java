@@ -1,0 +1,31 @@
+package de.teamlapen.vampirism.common.server.commands.test;
+
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import de.teamlapen.factions.common.server.commands.BasicCommand;
+import de.teamlapen.vampirism.api.VEnums;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.NaturalSpawner;
+import org.jetbrains.annotations.NotNull;
+
+public class InfoEntitiesCommand extends BasicCommand {
+    public static final int maxSpawns = 50;
+
+    public static ArgumentBuilder<CommandSourceStack, ?> register() {
+        return Commands.literal("info-entities")
+                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
+                .executes(context -> infoEntities(context.getSource(), context.getSource().getPlayerOrException()));
+    }
+
+    @SuppressWarnings("SameReturnValue")
+    private static int infoEntities(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer) {
+        NaturalSpawner.SpawnState densityManager = asPlayer.level().getChunkSource().getLastSpawnState();
+        Object2IntMap<MobCategory> object2intmap = densityManager.getMobCategoryCounts();
+        commandSource.sendSuccess(() -> Component.literal(String.format("Creature: %d (%d), Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", object2intmap.getOrDefault(MobCategory.CREATURE, 0), MobCategory.CREATURE.getMaxInstancesPerChunk(), object2intmap.getOrDefault(MobCategory.MONSTER, 0), MobCategory.MONSTER.getMaxInstancesPerChunk(), object2intmap.getOrDefault(VEnums.HUNTER_CATEGORY.getValue(), 0), VEnums.HUNTER_CATEGORY.getValue().getMaxInstancesPerChunk(), object2intmap.getOrDefault(VEnums.VAMPIRE_CATEGORY.getValue(), 0), VEnums.VAMPIRE_CATEGORY.getValue().getMaxInstancesPerChunk())), true);
+        return 0;
+    }
+}

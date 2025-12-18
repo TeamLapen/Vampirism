@@ -1,15 +1,12 @@
 package de.teamlapen.factions.common.util;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.codecs.OptionalFieldCodec;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
 import de.teamlapen.factions.common.core.ModRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -19,14 +16,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ModCodecs {
 
-    public static Codec<AABB> AABB = Codec.DOUBLE.listOf(6,6).xmap(x -> new AABB(x.get(0),x.get(1),x.get(2),x.get(3),x.get(4),x.get(5)), x -> List.of(x.minX,x.minY,x.minZ,x.maxX,x.maxY,x.maxZ));
+    public static final Codec<AABB> AABB = Codec.DOUBLE.listOf(6,6).xmap(x -> new AABB(x.get(0),x.get(1),x.get(2),x.get(3),x.get(4),x.get(5)), x -> List.of(x.minX,x.minY,x.minZ,x.maxX,x.maxY,x.maxZ));
 
     @SuppressWarnings({"RedundantCast", "unchecked"})
     public static Codec<Holder<? extends IPlayableFaction<?>>> playableFaction() {

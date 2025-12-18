@@ -1,7 +1,7 @@
 package de.teamlapen.factions.common.network.packets.server;
 
 import de.teamlapen.factions.api.util.FResourceLocation;
-import de.teamlapen.factions.common.inventory.ITaskMenu;
+import de.teamlapen.factions.common.world.inventory.ITaskMenu;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.data.provider.loot;
 
 import de.teamlapen.factions.common.core.FactionBlocks;
-import de.teamlapen.vampirism.common.blocks.*;
-import de.teamlapen.vampirism.common.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
+import de.teamlapen.vampirism.common.world.blocks.*;
+import de.teamlapen.vampirism.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.data.loot.conditions.TentSpawnerCondition;
 import de.teamlapen.vampirism.misc.mixin.accessor.VanillaBlockLootAccessor;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;

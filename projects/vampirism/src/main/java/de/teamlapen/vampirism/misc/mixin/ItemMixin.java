@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.misc.mixin;
 
-import de.teamlapen.vampirism.common.items.component.AppliedOilContent;
+import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;

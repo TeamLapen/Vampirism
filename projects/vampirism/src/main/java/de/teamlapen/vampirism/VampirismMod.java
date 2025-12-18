@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism;
 
+import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.CommonServices;
-import de.teamlapen.vampirism.common.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.common.proxy.IProxy;
+import de.teamlapen.vampirism.common.world.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.server.proxy.ServerProxy;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -37,6 +37,7 @@ public class VampirismMod {
 
         SERVICES = new CommonServices(modContainer);
         SERVICES.register(modEventBus);
+        VampirismApi.init(SERVICES);
     }
 
     public static CommonServices services() {

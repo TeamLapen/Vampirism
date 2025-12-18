@@ -2,7 +2,7 @@ package de.teamlapen.factions.common.network.packets.server;
 
 import com.mojang.datafixers.util.Either;
 import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.actions.IAction;
+import de.teamlapen.factions.api.factions.actions.IAction;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

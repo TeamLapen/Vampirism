@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
-import de.teamlapen.vampirism.common.entity.ThrowableItemEntity;
+import de.teamlapen.vampirism.common.world.entity.ThrowableItemEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import org.jetbrains.annotations.NotNull;

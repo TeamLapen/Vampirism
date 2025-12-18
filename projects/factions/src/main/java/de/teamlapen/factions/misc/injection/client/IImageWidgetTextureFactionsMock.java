@@ -3,20 +3,21 @@ package de.teamlapen.factions.misc.injection.client;
 import de.teamlapen.factions.misc.extensions.client.IImageWidgetTexture;
 import net.minecraft.resources.ResourceLocation;
 
+@Deprecated
 public interface IImageWidgetTextureFactionsMock extends IImageWidgetTexture {
 
     @Override
     default ResourceLocation texture() {
-        return null;
+        throw new IllegalStateException("This class is only supported as injection class");
     }
 
     @Override
     default int textureWidth() {
-        return 0;
+        throw new IllegalStateException("This class is only supported as injection class");
     }
 
     @Override
     default int textureHeight() {
-        return 0;
+        throw new IllegalStateException("This class is only supported as injection class");
     }
 }

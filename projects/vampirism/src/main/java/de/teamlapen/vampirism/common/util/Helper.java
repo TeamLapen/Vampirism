@@ -1,24 +1,24 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.vampirism.api.EnumStrength;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.factions.api.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismApi;
+import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.entity.CrossbowArrowEntity;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.common.items.StakeItem;
-import de.teamlapen.vampirism.common.items.crossbow.arrow.VampireKillerBehavior;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
+import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
+import de.teamlapen.vampirism.common.world.items.StakeItem;
+import de.teamlapen.vampirism.common.world.items.crossbow.arrow.VampireKillerBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -56,7 +56,7 @@ public class Helper {
      */
     public static boolean gettingSundamge(LivingEntity entity, LevelAccessor world) {
         if (entity instanceof Player && entity.isSpectator()) return false;
-        if (VampirismAPI.sundamageRegistry().hasSunDamage(world, entity.blockPosition())) {
+        if (VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition())) {
             if (!(world instanceof Level) || !((Level) world).isRaining()) {
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (isDay(world)) {
@@ -110,7 +110,7 @@ public class Helper {
 
     @NotNull
     public static EnumStrength getGarlicStrengthAt(LevelAccessor world, @NotNull BlockPos pos) {
-        return world instanceof Level ? VampirismAPI.garlicHandler((Level) world).getStrengthAtChunk(new ChunkPos(pos)) : EnumStrength.NONE;
+        return world instanceof Level ? VampirismApi.garlicHandler((Level) world).getStrengthAtChunk(new ChunkPos(pos)) : EnumStrength.NONE;
     }
 
     @NotNull
@@ -138,11 +138,11 @@ public class Helper {
      * @return If the given entity is a vampire (Either a player in the vampire faction or a vampire entity
      */
     public static boolean isVampire(Entity entity) {
-        return IFaction.is(ModFactions.VAMPIRE, FactionsMod.services().factionRegistry().getFaction(entity));
+        return IFaction.is(ModFactions.VAMPIRE, IFactionRegistry.get().getFaction(entity));
     }
 
     public static boolean isHunter(Entity entity) {
-        return IFaction.is(ModFactions.HUNTER, FactionsMod.services().factionRegistry().getFaction(entity));
+        return IFaction.is(ModFactions.HUNTER, IFactionRegistry.get().getFaction(entity));
     }
 
     public static boolean isHunter(@NotNull Player entity) {
@@ -166,7 +166,7 @@ public class Helper {
     }
 
     public static Holder<? extends IFaction<?>> viewedFaction(Player player, Entity viewer) {
-        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(FactionsMod.services().factionRegistry().getFaction(viewer))).orElse(null);
+        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(IFactionRegistry.get().getFaction(viewer))).orElse(null);
     }
 
     /**

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.misc.mixin;
 
-import de.teamlapen.vampirism.common.potions.BasePotion;
+import de.teamlapen.vampirism.common.world.potions.BasePotion;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;

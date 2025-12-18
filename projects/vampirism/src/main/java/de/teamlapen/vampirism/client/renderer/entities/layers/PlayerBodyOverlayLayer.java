@@ -38,18 +38,18 @@ public class PlayerBodyOverlayLayer<S extends MinionRenderState, M extends Playe
         if (state.renderLordSkin) {
             if (type != null) {
                 getParentModel().setVisibility(VisibilityPlayerModel.Visibility.HEAD);
-                nodeCollector.submitModel(getParentModel(), state, poseStack, type, packedLight, OverlayTexture.NO_OVERLAY, -1, null);
+                nodeCollector.submitModel(getParentModel(), state, poseStack, type, packedLight, OverlayTexture.NO_OVERLAY, 0, null);
             }
 
             texture = state.skin.body().texturePath();
             RenderType bodyType = getParentModel().getRenderType(this.getParentModel(), texture, state);
             if (bodyType != null) {
                 getParentModel().setVisibility(VisibilityPlayerModel.Visibility.BODY);
-                nodeCollector.submitModel(getParentModel(), state, poseStack, bodyType, packedLight, OverlayTexture.NO_OVERLAY, -1, null);
+                nodeCollector.submitModel(getParentModel(), state, poseStack, bodyType, packedLight, OverlayTexture.NO_OVERLAY, 0, null);
             }
         } else if (type != null) {
             getParentModel().setVisibility(VisibilityPlayerModel.Visibility.ALL);
-            nodeCollector.submitModel(getParentModel(), state, poseStack, type, packedLight, OverlayTexture.NO_OVERLAY, -1, null);
+            nodeCollector.submitModel(getParentModel(), state, poseStack, type, packedLight, OverlayTexture.NO_OVERLAY, 0, null);
         }
         getParentModel().setVisibility(VisibilityPlayerModel.Visibility.NONE);
     }

@@ -4,29 +4,29 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.api.registries.factions.DeferredFaction;
+import de.teamlapen.factions.api.registries.factions.DeferredFactionRegister;
+import de.teamlapen.factions.api.util.SafeCast;
+import de.teamlapen.factions.api.world.entities.minion.IMinionEntry;
+import de.teamlapen.factions.api.world.items.IRefinementItem;
+import de.teamlapen.factions.common.factions.PlayableFactionBuilder;
+import de.teamlapen.factions.common.factions.minions.MinionData;
 import de.teamlapen.factions.common.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismFactions;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
-import de.teamlapen.factions.api.entities.minion.IMinionEntry;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
-import de.teamlapen.factions.api.items.IRefinementItem;
-import de.teamlapen.factions.api.registries.factions.DeferredFaction;
-import de.teamlapen.factions.api.registries.factions.DeferredFactionRegister;
-import de.teamlapen.factions.common.factions.LordPlayerBuilder;
-import de.teamlapen.factions.common.factions.PlayableFactionBuilder;
-import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
-import de.teamlapen.vampirism.common.entity.minion.MinionEntryBuilder;
-import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
-import de.teamlapen.factions.common.minions.MinionData;
+import de.teamlapen.vampirism.api.world.entity.hunter.IBasicHunter;
+import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.world.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.common.tags.*;
 import de.teamlapen.vampirism.common.util.HunterVillage;
 import de.teamlapen.vampirism.common.util.LordTitles;
 import de.teamlapen.vampirism.common.util.VampireVillage;
+import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.common.world.entity.minion.MinionEntryBuilder;
+import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
@@ -41,7 +41,7 @@ public class ModFactions {
     private static final DeferredFactionRegister FACTIONS = DeferredFactionRegister.create(REFERENCE.MODID);
     private static final DeferredRegister<IMinionEntry<?, ?>> MINIONS = DeferredRegister.create(FactionRegistries.Keys.MINION, REFERENCE.MODID);
 
-    public static final DeferredFaction<IVampirePlayer, IPlayableFaction<IVampirePlayer>> VAMPIRE = FACTIONS.registerFaction(VampirismFactions.Keys.VAMPIRE.getPath(), () -> new PlayableFactionBuilder<>((Supplier<AttachmentType<IVampirePlayer>>) (Object) ModAttachments.VAMPIRE_PLAYER)
+    public static final DeferredFaction<IVampirePlayer, IPlayableFaction<IVampirePlayer>> VAMPIRE = FACTIONS.registerFaction(VampirismFactions.Keys.VAMPIRE.getPath(), () -> new PlayableFactionBuilder<>(SafeCast.<Supplier<AttachmentType<IVampirePlayer>>>cast(ModAttachments.VAMPIRE_PLAYER))
             .color(Color.MAGENTA_DARK.getRGB())
             .chatColor(ChatFormatting.DARK_PURPLE)
             .highestLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
@@ -62,7 +62,7 @@ public class ModFactions {
                     .lordTitle(new LordTitles.VampireTitles()))
             .build());
 
-    public static final DeferredFaction<IHunterPlayer, IPlayableFaction<IHunterPlayer>> HUNTER = FACTIONS.registerFaction(VampirismFactions.Keys.HUNTER.getPath(), () -> new PlayableFactionBuilder<>((Supplier<AttachmentType<IHunterPlayer>>) (Object) ModAttachments.HUNTER_PLAYER)
+    public static final DeferredFaction<IHunterPlayer, IPlayableFaction<IHunterPlayer>> HUNTER = FACTIONS.registerFaction(VampirismFactions.Keys.HUNTER.getPath(), () -> new PlayableFactionBuilder<>(SafeCast.<Supplier<AttachmentType<IHunterPlayer>>>cast(ModAttachments.HUNTER_PLAYER))
             .color(Color.BLUE.getRGB())
             .chatColor(ChatFormatting.BLUE)
             .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
@@ -82,14 +82,14 @@ public class ModFactions {
 
     public static final DeferredHolder<IMinionEntry<?, ?>, IMinionEntry<IVampirePlayer, VampireMinionEntity.VampireMinionData>> VAMPIRE_MINION = MINIONS.register(VampirismFactions.Keys.VAMPIRE.getPath(), () ->
             new MinionEntryBuilder<>(VAMPIRE, VampireMinionEntity.VampireMinionData::new)
-                    .commandBuilder(new MinionEntryBuilder.MinionCommandBuilder<IVampirePlayer, VampireMinionEntity.VampireMinionData>(ModEntities.VAMPIRE_MINION::get)
+                    .commandBuilder(ModEntities.VAMPIRE_MINION, builder -> builder
                             .with("name", "Vampire", StringArgumentType.string(), MinionData::setName, StringArgumentType::getString)
                             .with("texture", -1, IntegerArgumentType.integer(-1, IBasicVampire.TYPES), VampireMinionEntity.VampireMinionData::setType, IntegerArgumentType::getInteger)
                             .with("use_lord_skin", false, BoolArgumentType.bool(), VampireMinionEntity.VampireMinionData::setUseLordSkin, BoolArgumentType::getBool)).build());
 
     public static final DeferredHolder<IMinionEntry<?, ?>, IMinionEntry<IHunterPlayer, HunterMinionEntity.HunterMinionData>> HUNTER_MINION = MINIONS.register(VampirismFactions.Keys.HUNTER.getPath(), () ->
             new MinionEntryBuilder<>(HUNTER, HunterMinionEntity.HunterMinionData::new)
-                    .commandBuilder(new MinionEntryBuilder.MinionCommandBuilder<IHunterPlayer, HunterMinionEntity.HunterMinionData>(ModEntities.HUNTER_MINION::get)
+                    .commandBuilder(ModEntities.HUNTER_MINION, builder -> builder
                             .with("name", "Hunter", StringArgumentType.string(), MinionData::setName, StringArgumentType::getString)
                             .with("texture", -1, IntegerArgumentType.integer(-1, IBasicHunter.TYPES), HunterMinionEntity.HunterMinionData::setType, IntegerArgumentType::getInteger)
                             .with("hat", 0, IntegerArgumentType.integer(-1, 3), HunterMinionEntity.HunterMinionData::setHat, IntegerArgumentType::getInteger)

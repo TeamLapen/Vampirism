@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens.diffuser;
 
-import de.teamlapen.vampirism.common.inventory.diffuser.GarlicDiffuserMenu;
+import de.teamlapen.vampirism.common.world.inventory.diffuser.GarlicDiffuserMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 

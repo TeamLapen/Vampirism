@@ -1,19 +1,19 @@
 package de.teamlapen.factions.client.gui.screens;
 
 import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.factions.api.actions.IAction;
-import de.teamlapen.factions.api.entities.player.IFactionPlayer;
-import de.teamlapen.factions.api.skills.ISkillPlayer;
+import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.factions.client.config.ClientConfigHelper;
 import de.teamlapen.factions.client.gui.GuiRenderer;
 import de.teamlapen.factions.client.gui.components.ColoredImageWidget;
 import de.teamlapen.factions.client.gui.components.EmptyComponent;
 import de.teamlapen.factions.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
-import de.teamlapen.factions.common.actions.ActionKeys;
 import de.teamlapen.factions.common.core.FactionKeys;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.factions.common.factions.actions.ActionKeys;
 import de.teamlapen.factions.common.network.packets.server.ServerboundActionBindingPacket;
 import de.teamlapen.factions.common.util.IntReference;
 import de.teamlapen.factions.common.util.ItemOrdering;
@@ -34,12 +34,10 @@ import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix3x2fStack;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends ReorderingGuiRadialMenu<Holder<IAction<?>>> {
@@ -175,7 +173,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
 
         private class KeyBindingSetting extends ContainerObjectSelectionList.Entry<KeyBindingSetting> {
 
-            private final WidgetSprites REMOVE_ICON = new WidgetSprites(FResourceLocation.mod("widget/remove"), FResourceLocation.mod("widget/remove_highlighted"));
+            private static final WidgetSprites REMOVE_ICON = new WidgetSprites(FResourceLocation.mod("widget/remove"), FResourceLocation.mod("widget/remove_highlighted"));
 
             private final ActionKeys actionKey;
             private Holder<IAction<?>> action;

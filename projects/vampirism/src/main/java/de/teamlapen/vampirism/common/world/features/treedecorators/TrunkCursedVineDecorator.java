@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.common.world.features.treedecorators;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.common.blocks.DiagonalCursedBarkBlock;
-import de.teamlapen.vampirism.common.blocks.DirectCursedBarkBlock;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFeatures;
+import de.teamlapen.vampirism.common.world.blocks.DiagonalCursedBarkBlock;
+import de.teamlapen.vampirism.common.world.blocks.DirectCursedBarkBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockBehaviour;

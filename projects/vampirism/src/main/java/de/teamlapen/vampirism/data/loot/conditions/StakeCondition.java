@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.data.loot.conditions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.common.core.ModLoot;
-import de.teamlapen.vampirism.common.items.StakeItem;
+import de.teamlapen.vampirism.common.world.items.StakeItem;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

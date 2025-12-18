@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.color.item;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import de.teamlapen.vampirism.common.items.CrossbowArrowItem;
+import de.teamlapen.vampirism.common.world.items.CrossbowArrowItem;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;

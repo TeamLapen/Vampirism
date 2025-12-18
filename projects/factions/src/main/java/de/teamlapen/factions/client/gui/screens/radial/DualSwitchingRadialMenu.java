@@ -36,7 +36,7 @@ public abstract class DualSwitchingRadialMenu<T> extends GuiRadialMenu<T> {
     }
 
     @Override
-    public boolean keyReleased(KeyEvent event) {
+    public boolean keyReleased(@NotNull KeyEvent event) {
         if (this.keyMapping != null && this.keyMapping.matches(event)) {
             this.wasKeyReleased = true;
         }

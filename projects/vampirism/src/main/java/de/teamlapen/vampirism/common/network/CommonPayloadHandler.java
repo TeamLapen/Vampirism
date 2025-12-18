@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.network;
 
-import de.teamlapen.vampirism.common.inventory.base.PlayerOwnedMenu;
 import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
+import de.teamlapen.vampirism.common.world.inventory.base.PlayerOwnedMenu;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class CommonPayloadHandler {

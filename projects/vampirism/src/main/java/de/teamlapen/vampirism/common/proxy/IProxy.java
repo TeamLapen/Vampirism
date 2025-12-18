@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.proxy;
 
-import de.teamlapen.vampirism.common.entity.minion.HunterMinionEntity;
-import de.teamlapen.vampirism.common.entity.minion.VampireMinionEntity;
+import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

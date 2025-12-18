@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.items.components.IFactionSlayer;
+import de.teamlapen.factions.api.world.items.components.IFactionSlayer;
 import de.teamlapen.factions.common.core.ModRegistries;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;

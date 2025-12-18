@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.items.components.IBottleBlood;
+import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
-import de.teamlapen.vampirism.common.blockentity.BloodContainerBlockEntity;
-import de.teamlapen.vampirism.common.blocks.BloodContainerBlock;
+import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.items.component.BottleBlood;
+import de.teamlapen.vampirism.common.world.blockentity.BloodContainerBlockEntity;
+import de.teamlapen.vampirism.common.world.blocks.BloodContainerBlock;
+import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -210,7 +210,7 @@ public class BloodHelper {
     }
 
     public static boolean isConvertibleToBlood(Fluid fluid) {
-        return VampirismAPI.services().bloodConversionRegistry().hasConversion(fluid);
+        return VampirismApi.services().bloodConversionRegistry().hasConversion(fluid);
     }
 
     public static IFluidBloodConversion getBloodConversion(FluidStack fluid) {
@@ -218,6 +218,6 @@ public class BloodHelper {
     }
 
     public static IFluidBloodConversion getBloodConversion(Fluid fluid) {
-        return VampirismAPI.services().bloodConversionRegistry().getFluidConversion(fluid);
+        return VampirismApi.services().bloodConversionRegistry().getFluidConversion(fluid);
     }
 }

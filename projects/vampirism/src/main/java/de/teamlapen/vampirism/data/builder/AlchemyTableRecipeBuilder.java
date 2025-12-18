@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.data.builder;
 
-import de.teamlapen.factions.api.skills.ISkill;
-import de.teamlapen.vampirism.api.items.oil.IOil;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModOils;
-import de.teamlapen.vampirism.common.items.component.OilContent;
-import de.teamlapen.vampirism.common.recipes.AlchemyTableRecipe;
+import de.teamlapen.vampirism.common.world.items.component.OilContent;
+import de.teamlapen.vampirism.common.world.items.recipes.AlchemyTableRecipe;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;

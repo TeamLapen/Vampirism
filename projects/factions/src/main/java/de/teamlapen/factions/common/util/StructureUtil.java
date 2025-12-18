@@ -9,7 +9,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 

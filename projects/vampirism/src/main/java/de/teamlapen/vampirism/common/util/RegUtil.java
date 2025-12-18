@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.vampirism.api.items.oil.IOil;
+import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;

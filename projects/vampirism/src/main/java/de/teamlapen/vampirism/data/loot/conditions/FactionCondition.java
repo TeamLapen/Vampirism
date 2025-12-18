@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.data.loot.conditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.factions.common.core.DefaultFactions;
-import de.teamlapen.factions.api.FactionApi;
+import de.teamlapen.factions.api.FactionsApi;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
+import de.teamlapen.factions.common.core.DefaultFactions;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModLoot;
 import net.minecraft.core.Holder;
@@ -89,7 +89,7 @@ public class FactionCondition implements LootItemCondition {
     public boolean test(LootContext lootContext) {
         Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if (entity instanceof Player player) {
-            IFactionPlayerHandler handler = FactionApi.factionPlayerHandler(player);
+            IFactionPlayerHandler handler = FactionsApi.factionPlayerHandler(player);
             return switch (this.type) {
                 case NO_FACTION -> IFaction.is(handler.factionPlayer(), DefaultFactions.NEUTRAL);
                 case ANY_FACTION -> !this.minLevel.map(minLevel -> handler.getCurrentLevel() < minLevel).orElse(false) && !this.maxLevel.map(maxLevel -> handler.getCurrentLevel() > maxLevel).orElse(false);

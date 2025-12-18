@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.reloadlistener.vampirebook;
 
-import de.teamlapen.vampirism.common.Language;
-import de.teamlapen.vampirism.api.items.components.IVampireBook;
 import de.teamlapen.vampirism.api.general.IBookContents;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
+import de.teamlapen.vampirism.common.Language;
 import de.teamlapen.vampirism.common.core.ModVampireBooks;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;

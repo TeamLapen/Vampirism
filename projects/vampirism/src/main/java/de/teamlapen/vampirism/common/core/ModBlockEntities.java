@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.blockentity.*;
-import de.teamlapen.vampirism.common.blockentity.diffuser.FogDiffuserBlockEntity;
-import de.teamlapen.vampirism.common.blockentity.diffuser.GarlicDiffuserBlockEntity;
+import de.teamlapen.vampirism.common.world.blockentity.*;
+import de.teamlapen.vampirism.common.world.blockentity.diffuser.FogDiffuserBlockEntity;
+import de.teamlapen.vampirism.common.world.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;

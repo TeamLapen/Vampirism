@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.config;
 
-import de.teamlapen.factions.common.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,26 +1,26 @@
 package de.teamlapen.vampirism.common;
 
-import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.IVampirismServices;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
+import de.teamlapen.vampirism.api.world.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEntitySelectors;
 import de.teamlapen.vampirism.common.core.ModRegistryManager;
-import de.teamlapen.vampirism.common.data.BloodConversionRegistry;
-import de.teamlapen.vampirism.common.entity.ModEntityEventHandler;
-import de.teamlapen.vampirism.common.entity.SundamageRegistry;
-import de.teamlapen.vampirism.common.entity.converted.VampirismEntityRegistry;
-import de.teamlapen.vampirism.common.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.common.integration.InterModHandler;
-import de.teamlapen.vampirism.common.recipes.ExtendedBrewingRecipeRegistry;
-import de.teamlapen.vampirism.common.recipes.RecipesSync;
 import de.teamlapen.vampirism.common.server.ServerEventHandler;
-import de.teamlapen.vampirism.common.util.*;
+import de.teamlapen.vampirism.common.util.Services;
+import de.teamlapen.vampirism.common.util.SupporterManager;
+import de.teamlapen.vampirism.common.util.TelemetryCollector;
+import de.teamlapen.vampirism.common.util.VersionUpdater;
 import de.teamlapen.vampirism.common.world.VillageEventHandler;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
+import de.teamlapen.vampirism.common.world.entity.ModEntityEventHandler;
+import de.teamlapen.vampirism.common.world.entity.SundamageRegistry;
+import de.teamlapen.vampirism.common.world.entity.converted.VampirismEntityRegistry;
+import de.teamlapen.vampirism.common.world.entity.player.ModPlayerEventHandler;
+import de.teamlapen.vampirism.common.world.items.recipes.ExtendedBrewingRecipeRegistry;
+import de.teamlapen.vampirism.common.world.items.recipes.RecipesSync;
+import de.teamlapen.vampirism.data.BloodConversionRegistry;
 import de.teamlapen.vampirism.data.reloadlistener.ModReloadListeners;
 import de.teamlapen.vampirism.data.remote.SettingsProvider;
 import net.neoforged.bus.api.IEventBus;
@@ -50,7 +50,6 @@ public class CommonServices extends Services implements IVampirismServices {
 
     public CommonServices(ModContainer container) {
         super(container);
-        VampirismAPI.setUpRegistries(this);
     }
 
     //<editor-fold desc="Getters" >
@@ -64,12 +63,7 @@ public class CommonServices extends Services implements IVampirismServices {
     }
 
     @Override
-    public IFactionRegistry factionRegistry() {
-        return FactionsMod.services().factionRegistry();
-    }
-
-    @Override
-    public SundamageRegistry sundamageRegistry() {
+    public SundamageRegistry sunDamageRegistry() {
         return this.sundamageRegistry;
     }
 

@@ -1,6 +1,6 @@
 package de.teamlapen.factions.api.factions;
 
-import de.teamlapen.factions.api.extensions.IEntity;
+import de.teamlapen.factions.api.world.entities.extensions.IEntity;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 
