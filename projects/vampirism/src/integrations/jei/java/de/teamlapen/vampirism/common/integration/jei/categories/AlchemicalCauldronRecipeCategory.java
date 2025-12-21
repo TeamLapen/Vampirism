@@ -22,7 +22,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -54,7 +54,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
         this.bubbles = guiHelper.createAnimatedDrawable(bubblesDrawable, 200, IDrawableAnimated.StartDirection.BOTTOM, false);
     }
 
-    public static ResourceLocation fixSprite(ResourceLocation spriteLoc) {
+    public static Identifier fixSprite(Identifier spriteLoc) {
         return spriteLoc.withPrefix("textures/gui/sprites/").withSuffix(".png");
     }
 

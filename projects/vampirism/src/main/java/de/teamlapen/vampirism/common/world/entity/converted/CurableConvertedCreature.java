@@ -36,8 +36,8 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
@@ -254,7 +254,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     default void tickDeathC() {
         PathfinderMob entity = ((PathfinderMob) this);
         if (entity.deathTime == 19) {
-            if (entity.level() instanceof ServerLevel level && data().dropSoul && level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            if (entity.level() instanceof ServerLevel level && data().dropSoul && level.getGameRules().get(GameRules.MOB_DROPS)) {
                 level.addFreshEntity(new SoulOrbEntity(entity.level(), entity.getX(), entity.getY(), entity.getZ(), SoulOrbEntity.VARIANT.VAMPIRE));
             }
         }

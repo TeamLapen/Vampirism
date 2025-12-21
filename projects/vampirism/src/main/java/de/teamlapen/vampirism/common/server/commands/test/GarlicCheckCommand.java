@@ -17,7 +17,7 @@ public class GarlicCheckCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("garlicCheck")
-                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .executes(context -> garlicCheck(context.getSource(), context.getSource().getPlayerOrException(), false))
                 .then(Commands.argument("print", BoolArgumentType.bool())
                         .executes(context -> garlicCheck(context.getSource(), context.getSource().getPlayerOrException(), BoolArgumentType.getBool(context, "print"))));

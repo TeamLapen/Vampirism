@@ -3,7 +3,7 @@ package de.teamlapen.factions.api;
 import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.api.world.entities.player.INeutralPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -16,8 +16,8 @@ public class FactionAttachments {
 
 
     public static class Keys {
-        public static final ResourceLocation FACTION_PLAYER_HANDLER = FResourceLocation.mod("faction_player_handler");
-        public static final ResourceLocation NEUTRAL_PLAYER = FResourceLocation.mod("neutral_player");
-        public static final ResourceLocation DAMAGE_HANDLER = FResourceLocation.mod("damage_handler");
+        public static final Identifier FACTION_PLAYER_HANDLER = FResourceLocation.mod("faction_player_handler");
+        public static final Identifier NEUTRAL_PLAYER = FResourceLocation.mod("neutral_player");
+        public static final Identifier DAMAGE_HANDLER = FResourceLocation.mod("damage_handler");
     }
 }

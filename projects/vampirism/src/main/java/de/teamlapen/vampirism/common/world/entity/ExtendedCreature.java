@@ -19,7 +19,7 @@ import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -27,7 +27,7 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
@@ -40,7 +40,7 @@ import java.util.Optional;
  * Extended entity property which every {@link PathfinderMob} has
  */
 public class ExtendedCreature extends AttachmentSync implements IExtendedCreatureVampirism, BloodResourceHandler {
-    public static final ResourceLocation SERIALIZER_ID = VResourceLocation.mod("extended_creature");
+    public static final Identifier SERIALIZER_ID = VResourceLocation.mod("extended_creature");
 
     public static final int POISONOUS_BLOOD_DOSE_DURATION = 72000; // 3 in-game days
 

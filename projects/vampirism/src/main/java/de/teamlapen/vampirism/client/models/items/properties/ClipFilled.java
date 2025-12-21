@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.common.world.items.component.ContainedProjectiles;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record ClipFilled() implements RangeSelectItemModelProperty {
 
-    public static final ResourceLocation ID = VResourceLocation.mod("clip_filled");
+    public static final Identifier ID = VResourceLocation.mod("clip_filled");
     public static final MapCodec<ClipFilled> CODEC = MapCodec.unit(ClipFilled::new);
 
     @Override

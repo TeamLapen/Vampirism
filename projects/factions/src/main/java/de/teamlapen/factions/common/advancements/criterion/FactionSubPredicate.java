@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import net.minecraft.advancements.critereon.EntitySubPredicate;
+import net.minecraft.advancements.criterion.EntitySubPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

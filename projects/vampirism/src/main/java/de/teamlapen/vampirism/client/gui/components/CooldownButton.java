@@ -17,13 +17,14 @@ public class CooldownButton extends Button {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, this.isHoveredOrFocused()), this.getX(), this.getY(), this.getWidth(), this.getHeight(), ARGB.white(this.alpha));
         int width = (int) ((1f - this.progress) * this.getWidth());
         guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(true, this.isHoveredOrFocused() && progress == 0f), this.getX(), this.getY(), width, this.getHeight());
         int i = getFGColor();
-        this.renderString(guiGraphics, minecraft.font, i | Mth.ceil(this.alpha * 255.0F) << 24);
+
+        renderDefaultLabel(guiGraphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
     }
 
     public void updateState(float progress) {

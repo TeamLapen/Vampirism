@@ -5,7 +5,7 @@ import de.teamlapen.factions.api.world.items.components.IEffectiveRefinementSet;
 import de.teamlapen.factions.api.world.items.components.IFactionRestriction;
 import de.teamlapen.factions.api.world.items.components.IFactionSlayer;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Unit;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -21,10 +21,10 @@ public class FactionDataComponents {
 
     public static class Keys {
 
-        public static final ResourceLocation REFINEMENT_SET = FResourceLocation.mod("refinement_set");
-        public static final ResourceLocation IS_FACTION_BANNER = FResourceLocation.mod("is_faction_banner");
-        public static final ResourceLocation FACTION_RESTRICTION = FResourceLocation.mod("faction_restriction");
-        public static final ResourceLocation FACTION_SLAYER = FResourceLocation.mod("faction_slayer");
+        public static final Identifier REFINEMENT_SET = FResourceLocation.mod("refinement_set");
+        public static final Identifier IS_FACTION_BANNER = FResourceLocation.mod("is_faction_banner");
+        public static final Identifier FACTION_RESTRICTION = FResourceLocation.mod("faction_restriction");
+        public static final Identifier FACTION_SLAYER = FResourceLocation.mod("faction_slayer");
 
     }
 }

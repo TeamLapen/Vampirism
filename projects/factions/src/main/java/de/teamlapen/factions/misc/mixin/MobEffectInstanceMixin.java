@@ -1,7 +1,7 @@
 package de.teamlapen.factions.misc.mixin;
 
 import de.teamlapen.factions.misc.extensions.IEffectInstanceWithSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +28,7 @@ public abstract class MobEffectInstanceMixin implements IEffectInstanceWithSourc
     private MobEffectInstance hiddenEffect;
 
     @Unique
-    private final Set<ResourceLocation> factions$properties = new HashSet<>();
+    private final Set<Identifier> factions$properties = new HashSet<>();
 
     @Override
     @Nullable
@@ -36,23 +36,23 @@ public abstract class MobEffectInstanceMixin implements IEffectInstanceWithSourc
         return this.hiddenEffect;
     }
 
-    public Set<ResourceLocation> factions$getProperties() {
+    public Set<Identifier> factions$getProperties() {
         return this.factions$properties;
     }
 
     @Override
-    public boolean factions$hasProperty(@Nullable ResourceLocation source) {
+    public boolean factions$hasProperty(@Nullable Identifier source) {
         return this.factions$properties.contains(source);
     }
 
     @Override
-    public void factions$setProperties(Collection<ResourceLocation> sources) {
+    public void factions$setProperties(Collection<Identifier> sources) {
         this.factions$properties.clear();
         this.factions$properties.addAll(sources);
     }
 
     @Override
-    public void factions$addProperty(@Nullable ResourceLocation source) {
+    public void factions$addProperty(@Nullable Identifier source) {
         if (source == null) return;
         this.factions$properties.add(source);
     }

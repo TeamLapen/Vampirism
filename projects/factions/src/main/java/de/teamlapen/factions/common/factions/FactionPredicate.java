@@ -154,7 +154,7 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
 
         @Override
         public int hashCode() {
-            int result = sourceFaction == null ? 0 : sourceFaction.getKey().location().hashCode();
+            int result = sourceFaction == null ? 0 : sourceFaction.getKey().identifier().hashCode();
             result = 31 * result + Boolean.hashCode(targetPlayers);
             result = 31 * result + Boolean.hashCode(targetNonPlayers);
             result = 31 * result + Boolean.hashCode(ignoreDisguise);

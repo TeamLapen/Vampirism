@@ -1,17 +1,17 @@
 package de.teamlapen.vampirism.client.renderer.entities.state;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 public interface IConvertedOverlayRenderState {
 
     @Nullable
-    ResourceLocation vampirism$overlay();
+    Identifier vampirism$overlay();
 
-    void vampirism$overlay(@Nullable ResourceLocation overlay);
+    void vampirism$overlay(@Nullable Identifier overlay);
 
     @Nullable
-    ResourceLocation vampirism$convertedOverlay();
+    Identifier vampirism$convertedOverlay();
 
-    void vampirism$convertedOverlay(@Nullable ResourceLocation overlay);
+    void vampirism$convertedOverlay(@Nullable Identifier overlay);
 }

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.common.core.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,7 +32,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
 
     @Override
     public IActionResult activate(final @NotNull IVampirePlayer vampire, ActivationContext context) {
-        if (vampire.asEntity().level().dimensionType().ultraWarm()) {
+        if (vampire.asEntity().level().environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, vampire.asEntity().position())) {
             return IActionResult.SUCCESS;
         }
         freezeEntities(vampire);

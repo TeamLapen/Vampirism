@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,11 +22,11 @@ import java.util.Optional;
  * Gui for the hunter table
  */
 public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
-    private static final ResourceLocation BOOK_SLOT_SPRITE = VResourceLocation.mod("container/slot/book");
-    private static final ResourceLocation FANG_SLOT_SPRITE = VResourceLocation.mod("container/slot/fang");
-    private static final ResourceLocation PURE_BLOOD_BOTTLE_SLOT_SPRITE = VResourceLocation.mod("container/slot/pure_blood_bottle");
-    private static final ResourceLocation VAMPIRE_BOOK_SLOT_SPRITE = VResourceLocation.mod("container/slot/vampire_book");
-    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/hunter_table.png");
+    private static final Identifier BOOK_SLOT_SPRITE = VResourceLocation.mod("container/slot/book");
+    private static final Identifier FANG_SLOT_SPRITE = VResourceLocation.mod("container/slot/fang");
+    private static final Identifier PURE_BLOOD_BOTTLE_SLOT_SPRITE = VResourceLocation.mod("container/slot/pure_blood_bottle");
+    private static final Identifier VAMPIRE_BOOK_SLOT_SPRITE = VResourceLocation.mod("container/slot/vampire_book");
+    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/hunter_table.png");
 
     private final CyclingSlotBackground bookIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground fangsIcon = new CyclingSlotBackground(1);

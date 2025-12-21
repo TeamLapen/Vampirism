@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.advancements.critereon.HunterActionCriterio
 import de.teamlapen.vampirism.common.advancements.critereon.MapFoundCriterionTrigger;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.criterion.PlayerTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;

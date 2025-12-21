@@ -30,7 +30,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -41,8 +41,8 @@ import java.util.Map;
 
 public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> implements ExtendedScreen {
 
-    private static final ResourceLocation BACKGROUND = FResourceLocation.mod("textures/gui/container/faction_menu.png");
-    private static final ResourceLocation BACKGROUND_REFINEMENTS = FResourceLocation.mod("textures/gui/container/faction_menu_refinements.png");
+    private static final Identifier BACKGROUND = FResourceLocation.mod("textures/gui/container/faction_menu.png");
+    private static final Identifier BACKGROUND_REFINEMENTS = FResourceLocation.mod("textures/gui/container/faction_menu_refinements.png");
     private static final WidgetSprites SKILLS = new WidgetSprites(FResourceLocation.mod("widget/skills"), FResourceLocation.mod("widget/skills_highlighted"));
     private static final WidgetSprites SETTINGS = new WidgetSprites(FResourceLocation.mod("widget/settings"), FResourceLocation.mod("widget/settings_highlighted"));
     private static final WidgetSprites REMOVE_ACCESSORY = new WidgetSprites(FResourceLocation.mod("widget/remove_accessory"), FResourceLocation.mod("widget/remove_accessory_highlighted"));
@@ -138,8 +138,8 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
     }
 
     @Override
-    public void resize(@NotNull Minecraft pMinecraft, int pWidth, int pHeight) {
-        super.resize(pMinecraft, pWidth, pHeight);
+    public void resize(int width, int height) {
+        super.resize(width, height);
         refreshTaskList();
     }
 
@@ -196,10 +196,11 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
                         FactionsMod.proxy.sendToServer(new ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
                         refinementList.set(slot.index, ItemStack.EMPTY);
                     }, Component.empty()) {
+
                         @Override
-                        public void renderWidget(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-                            if (!refinementList.get(slot.index).isEmpty() && ((AbstractContainerScreenAccessor) FactionMenuScreen.this).getDraggingItem().isEmpty() && overSlot(slot, pMouseX, pMouseY)) {
-                                super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+                        public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+                            if (!refinementList.get(slot.index).isEmpty() && ((AbstractContainerScreenAccessor) FactionMenuScreen.this).getDraggingItem().isEmpty() && overSlot(slot, mouseX, mouseY)) {
+                                super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
                             }
                         }
 

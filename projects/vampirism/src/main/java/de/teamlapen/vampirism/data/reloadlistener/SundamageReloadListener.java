@@ -15,7 +15,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -37,7 +37,7 @@ import java.util.concurrent.Executor;
 
 public class SundamageReloadListener implements PreparableReloadListener {
 
-    public static final ResourceLocation SUNDAMAGE_ID = VResourceLocation.mod("sundamage");
+    public static final Identifier SUNDAMAGE_ID = VResourceLocation.mod("sundamage");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String DIRECTORY = "vampirism";
     private static final String FILE_NAME = "no_sun_damage.json";
@@ -56,8 +56,8 @@ public class SundamageReloadListener implements PreparableReloadListener {
 
     private SundamageRegistry.Settings load(@NotNull ResourceManager manager) {
         List<RawFile> files = new ArrayList<>();
-        for (Map.Entry<ResourceLocation, List<Resource>> entry : manager.listResourceStacks(DIRECTORY, location -> location.getPath().endsWith(FILE_NAME)).entrySet()) {
-            ResourceLocation resourceName = ResourceLocation.fromNamespaceAndPath(entry.getKey().getNamespace(), entry.getKey().getPath().substring(DIRECTORY.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
+        for (Map.Entry<Identifier, List<Resource>> entry : manager.listResourceStacks(DIRECTORY, location -> location.getPath().endsWith(FILE_NAME)).entrySet()) {
+            Identifier resourceName = Identifier.fromNamespaceAndPath(entry.getKey().getNamespace(), entry.getKey().getPath().substring(DIRECTORY.length() + 1, entry.getKey().getPath().length() - PATH_SUFFIX_LENGTH));
             for (Resource resource : entry.getValue()) {
                 try (Reader reader = resource.openAsReader()) {
                     JsonElement jsonElement = JsonParser.parseReader(reader);

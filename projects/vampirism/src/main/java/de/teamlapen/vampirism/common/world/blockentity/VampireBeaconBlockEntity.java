@@ -299,9 +299,13 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
     }
 
     @Override
-    @Nullable
-    public AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
-        return BaseContainerBlockEntity.canUnlock(pPlayer, this.lockKey, this.getDisplayName()) ? new VampireBeaconMenu(pContainerId, pPlayerInventory, this.dataAccess, ContainerLevelAccess.create(this.level, this.getBlockPos())) : null;
+    public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        if (this.lockKey.canUnlock(pPlayer)) {
+            return new BeaconMenu(pContainerId, pPlayerInventory, this.dataAccess, ContainerLevelAccess.create(this.level, this.getBlockPos()));
+        } else {
+            BaseContainerBlockEntity.sendChestLockedNotifications(this.getBlockPos().getCenter(), pPlayer, this.getDisplayName());
+            return null;
+        }
     }
 
     @Override

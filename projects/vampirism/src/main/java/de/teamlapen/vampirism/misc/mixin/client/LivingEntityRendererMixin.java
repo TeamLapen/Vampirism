@@ -19,7 +19,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.player.Player;
@@ -37,7 +37,7 @@ public class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingE
     private void applyConvertedRenderState(T entity, S reusedState, float partialTick, CallbackInfo ci) {
         IVampirismRenderState renderState = (IVampirismRenderState) reusedState;
         if (ConvertedCreatureRenderer.renderOverlay) {
-            Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(ResourceLocation::toString).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
+            Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(Identifier::toString).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
                 renderState.vampirism$overlay(location);
             });
         }

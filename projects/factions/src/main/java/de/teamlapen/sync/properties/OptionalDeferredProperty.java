@@ -3,7 +3,7 @@ package de.teamlapen.sync.properties;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import de.teamlapen.sync.PropertySync;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +18,7 @@ public class OptionalDeferredProperty<T extends PropertySync> extends Property {
     private final Supplier<T> factory;
     private final Consumer<Optional<T>> onSet;
 
-    public OptionalDeferredProperty(ResourceLocation key, Supplier<Optional<T>> property, Supplier<T> factory, Consumer<Optional<T>> onSet) {
+    public OptionalDeferredProperty(Identifier key, Supplier<Optional<T>> property, Supplier<T> factory, Consumer<Optional<T>> onSet) {
         super(key);
         this.property = property;
         this.factory = factory;

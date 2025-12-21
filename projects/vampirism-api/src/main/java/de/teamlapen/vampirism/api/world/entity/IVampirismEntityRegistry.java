@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertingHandler;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.NotNull;
@@ -38,11 +38,11 @@ public interface IVampirismEntityRegistry {
     IConvertedCreature<?> convert(PathfinderMob entity);
 
     /**
-     * @return A mapping from source entity types (not the converted one), to {@link ResourceLocation} of the overlay texture
+     * @return A mapping from source entity types (not the converted one), to {@link Identifier} of the overlay texture
      */
     @Unmodifiable
     @NotNull
-    Map<EntityType<?>, ResourceLocation> getConvertibleOverlay();
+    Map<EntityType<?>, Identifier> getConvertibleOverlay();
 
     /**
      * Get a specific overlay texture for an entity
@@ -51,7 +51,7 @@ public interface IVampirismEntityRegistry {
      * @return the overlay texture or {@code null} if there is none
      */
     @Nullable
-    ResourceLocation getConvertibleOverlay(@NotNull String originalEntity);
+    Identifier getConvertibleOverlay(@NotNull String originalEntity);
 
     /**
      * Get the {@link IEntityBlood} for the given creature.

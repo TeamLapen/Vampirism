@@ -30,7 +30,7 @@
     {
       "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
       "name": "VAMPIRISM_DOUBLE_CROSSBOW_CHARGE",
-      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "constructor": "(ZZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
       "parameters": {
         "class": "de/teamlapen/vampirism/client/core/ModClientEnums",
         "field": "DOUBLE_CROSSBOW_CHARGE"
@@ -39,7 +39,7 @@
     {
       "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
       "name": "VAMPIRISM_DOUBLE_CROSSBOW_HOLD",
-      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "constructor": "(ZZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
       "parameters": {
         "class": "de/teamlapen/vampirism/client/core/ModClientEnums",
         "field": "DOUBLE_CROSSBOW_HOLD"

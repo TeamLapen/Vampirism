@@ -17,7 +17,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -204,8 +204,8 @@ public class UtilLib {
      * Call {@link Mob#finalizeSpawn(ServerLevelAccessor, DifficultyInstance, MobSpawnType, SpawnGroupData, CompoundTag)} if applicable
      */
     private static void onInitialSpawn(@NotNull ServerLevel level, Entity e, @NotNull EntitySpawnReason reason) {
-        if (e instanceof Mob mob) {
-            mob.finalizeSpawn(level, e.level().getCurrentDifficultyAt(e.blockPosition()), reason, null);
+        if (e instanceof Mob mob && level instanceof ServerLevel serverLevel) {
+            mob.finalizeSpawn(level, serverLevel.getCurrentDifficultyAt(e.blockPosition()), reason, null);
         }
     }
 
@@ -646,12 +646,12 @@ public class UtilLib {
     }
 
     public static boolean isValidResourceLocation(@NotNull String loc) {
-        return ResourceLocation.tryParse(loc) != null;
+        return Identifier.tryParse(loc) != null;
     }
 
     public static boolean checkRegistryObjectExistence(ResourceKey<? extends Registry<?>> key, Object obj) {
         if (obj instanceof String string) {
-            ResourceLocation id = ResourceLocation.tryParse(string);
+            Identifier id = Identifier.tryParse(string);
             if (id != null) {
                 if (ServerLifecycleHooks.getCurrentServer() != null) {
                     return ServerLifecycleHooks.getCurrentServer().registryAccess().lookupOrThrow(key).containsKey(id);

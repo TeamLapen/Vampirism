@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.ClientAsset;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.PlayerModelType;
@@ -41,7 +41,7 @@ public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRende
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(S renderState) {
+    public @NotNull Identifier getTextureLocation(S renderState) {
         return renderState.skin.body().texturePath();
     }
 
@@ -62,7 +62,7 @@ public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRende
     /**
      * @return Array of texture and slim status
      */
-    protected @NotNull PlayerSkin[] separateSlimTextures(@NotNull Stream<ResourceLocation> set) {
+    protected @NotNull PlayerSkin[] separateSlimTextures(@NotNull Stream<Identifier> set) {
         return set.map(r -> {
             PlayerModelType b = r.getPath().endsWith("slim.png") ? PlayerModelType.SLIM : PlayerModelType.WIDE;
             return new PlayerSkin(new ClientAsset.ResourceTexture(r, r), null, null, b, false);
@@ -77,7 +77,7 @@ public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRende
      * @return Array of texture and slim status
      */
     protected @NotNull PlayerSkin[] gatherTextures(@NotNull String dirPath, boolean required) {
-        Collection<ResourceLocation> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().listResources(dirPath, s -> s.getPath().endsWith(".png")).keySet());
+        Collection<Identifier> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().listResources(dirPath, s -> s.getPath().endsWith(".png")).keySet());
         PlayerSkin[] textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
         if (textures.length == 0 && required) {
             throw new IllegalStateException("Must have at least one hunter texture: " + REFERENCE.MODID + ":" + dirPath + "/texture.png");

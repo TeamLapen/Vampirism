@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.items;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +34,7 @@ public abstract class BaseDisplayItemGenerator implements CreativeModeTab.Displa
         output.accept(item);
     }
 
-    protected void addIfPresent(ResourceLocation id) {
+    protected void addIfPresent(Identifier id) {
         Item item = BuiltInRegistries.ITEM.getValue(ResourceKey.create(Registries.ITEM, id));
         if (item != null) add(item);
     }

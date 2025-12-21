@@ -1,5 +1,5 @@
 
-@NotNullByDefault
+@NullMarked
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jspecify.annotations.NullMarked;

@@ -21,7 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -84,7 +84,7 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
 
     @SuppressWarnings("DataFlowIssue")
     public void addTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
-        ResourceLocation id = oil().getKey().location();
+        Identifier id = oil().getKey().identifier();
         MutableComponent component = Component.translatable(String.format("oil.%s.%s", id.getNamespace(), id.getPath())).withStyle(ChatFormatting.LIGHT_PURPLE);
         if (oil().value().hasDuration()) {
             int maxDuration = oil().value().getMaxDuration(stack);

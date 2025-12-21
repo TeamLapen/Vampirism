@@ -10,7 +10,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class SkillDisplayWidget extends AbstractWidget {
@@ -33,14 +33,14 @@ public class SkillDisplayWidget extends AbstractWidget {
     @SuppressWarnings({"DataFlowIssue", "SwitchStatementWithTooFewBranches"})
     @Override
     protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        ResourceLocation texture = switch (this.skill.value()) {
-            case IActionSkill<?> actionSkill -> actionSkill.actionHolder().getKey().location().withPath(path -> "textures/actions/" + path + ".png");
-            default -> this.skill.getKey().location().withPath(path -> "textures/skills/" + path + ".png");
+        Identifier texture = switch (this.skill.value()) {
+            case IActionSkill<?> actionSkill -> actionSkill.actionHolder().getKey().identifier().withPath(path -> "textures/actions/" + path + ".png");
+            default -> this.skill.getKey().identifier().withPath(path -> "textures/skills/" + path + ".png");
         };
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, this.getX() + this.xOffset, this.getY() + this.yOffset, 0, 0, 16, 16, 16, 16);
 
         if (this.isFocused()) {
-            guiGraphics.submitOutline(this.getX(), this.getY(), this.getWidth(), this.getHeight(), -1);
+            guiGraphics.renderOutline(this.getX(), this.getY(), this.getWidth(), this.getHeight(), -1);
         }
 
         if (this.tooltip && this.isHoveredOrFocused()) {

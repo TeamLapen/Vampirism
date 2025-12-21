@@ -31,7 +31,7 @@ import mezz.jei.api.recipe.types.IRecipeHolderType;
 import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -53,11 +53,11 @@ public class VampirismJEIPlugin implements IModPlugin {
     public static final IRecipeType<GrinderRecipe> GRINDER_RECIPE = IRecipeType.create(REFERENCE.MODID, "grinder", GrinderRecipe.class);
     public static final IRecipeType<BloodSieveRecipe> BLOOD_SIEVE_CONVERSION = IRecipeType.create(REFERENCE.MODID, "blood_sieve", BloodSieveRecipe.class);
 
-    private static final ResourceLocation ID = VResourceLocation.mod("plugin");
+    private static final Identifier ID = VResourceLocation.mod("plugin");
 
     @NotNull
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return ID;
     }
 

@@ -12,14 +12,14 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractContainerScreen<T> {
-    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/diffuser.png");
-    private static final ResourceLocation LIT_PROGRESS_SPRITE = VResourceLocation.mc("container/furnace/lit_progress");
+    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/diffuser.png");
+    private static final Identifier LIT_PROGRESS_SPRITE = VResourceLocation.mc("container/furnace/lit_progress");
 
     protected final int xSize = 176;
     protected final int ySize = 166;

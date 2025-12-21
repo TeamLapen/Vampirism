@@ -10,11 +10,11 @@ import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityDimensions;
@@ -58,7 +58,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.has_umbrella"));
         } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE || vampire.asEntity().hasEffect(ModEffects.GARLIC) && vampire.asEntity().getEffect(ModEffects.GARLIC).getAmplifier() > 0) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.effected_by_garlic"));
-        } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.level().dimension().location().toString())) {
+        } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.dimension"));
         } else if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
             return IActionResult.fail(Component.translatable("text.factions.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
@@ -91,7 +91,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (!((VampirePlayer) vampire).getSkillProperties().bat) {
             updatePlayer((VampirePlayer) vampire, true);
         }
-        ResourceLocation key = ModRegistries.ACTIONS.getKey(this);
+        Identifier key = ModRegistries.ACTIONS.getKey(this);
         AttributeInstance fly = vampire.asEntity().getAttribute(NeoForgeMod.CREATIVE_FLIGHT);
         if (fly != null && !fly.hasModifier(key)) {
             fly.addPermanentModifier(new AttributeModifier(key, 1, AttributeModifier.Operation.ADD_VALUE));
@@ -130,7 +130,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE && !vampire.isRemote()) {
                 player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_garlic"));
                 return true;
-            } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.level().dimension().location().toString())) {
+            } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
                 player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_dimension"));
                 return true;
             } else {
@@ -150,7 +150,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     private void setModifier(@NotNull Player player, boolean enabled) {
-        ResourceLocation key = ModRegistries.ACTIONS.getKey(this);
+        Identifier key = ModRegistries.ACTIONS.getKey(this);
         if (key == null) {
             return;
         }

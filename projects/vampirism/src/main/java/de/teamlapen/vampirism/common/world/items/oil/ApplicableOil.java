@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -39,7 +39,7 @@ public abstract class ApplicableOil extends Oil implements IApplicableOil {
 
     @Override
     public Optional<Component> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration, TooltipFlag flag) {
-        ResourceLocation id = RegUtil.id(oil);
+        Identifier id = RegUtil.id(oil);
         MutableComponent component = Component.translatable(String.format("oil.%s.%s", id.getNamespace(), id.getPath())).withStyle(ChatFormatting.LIGHT_PURPLE);
         if (oil.hasDuration()) {
             int maxDuration = oil.getMaxDuration(stack);

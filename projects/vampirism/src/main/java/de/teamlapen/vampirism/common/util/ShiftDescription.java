@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.util;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,7 +18,7 @@ public record ShiftDescription() {
 
     public static final ShiftDescription INSTANCE = new ShiftDescription();
 
-    public static final Codec<ShiftDescription> CODEC = Codec.unit(INSTANCE);
+    public static final Codec<ShiftDescription> CODEC = MapCodec.unitCodec(INSTANCE);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ShiftDescription> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.util;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,7 +17,7 @@ public record BlockDescription() {
 
     public static final BlockDescription INSTANCE = new BlockDescription();
 
-    public static final Codec<BlockDescription> CODEC = Codec.unit(INSTANCE);
+    public static final Codec<BlockDescription> CODEC = MapCodec.unitCodec(INSTANCE);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockDescription> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 

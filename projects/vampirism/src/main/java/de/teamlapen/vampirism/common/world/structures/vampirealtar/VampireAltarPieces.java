@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.common.core.ModStructures;
 import de.teamlapen.vampirism.common.world.entity.vampire.AdvancedVampireEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -27,13 +27,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireAltarPieces {
 
-    private static final ResourceLocation LOCATION_SMALL = VResourceLocation.mod("altar_small");
-    private static final ResourceLocation LOCATION_BIG = VResourceLocation.mod("altar_big");
-    private static final ResourceLocation LOCATION_SMALL_OLD = VResourceLocation.mod("altar_small_old");
-    private static final ResourceLocation LOCATION_BIG_OLD = VResourceLocation.mod("altar_big_old");
+    private static final Identifier LOCATION_SMALL = VResourceLocation.mod("altar_small");
+    private static final Identifier LOCATION_BIG = VResourceLocation.mod("altar_big");
+    private static final Identifier LOCATION_SMALL_OLD = VResourceLocation.mod("altar_small_old");
+    private static final Identifier LOCATION_BIG_OLD = VResourceLocation.mod("altar_big_old");
 
     public static void addPieces(StructureTemplateManager structureTemplateManager, StructurePieceAccessor pieceAccessor, RandomSource random, BlockPos pos) {
-        ResourceLocation location;
+        Identifier location;
         if (random.nextFloat() < 0.2) {
             location = random.nextFloat() < 0.3 ? LOCATION_BIG_OLD : LOCATION_BIG;
         } else {
@@ -44,7 +44,7 @@ public class VampireAltarPieces {
 
     public static class VampireAltarPiece extends TemplateStructurePiece {
 
-        public VampireAltarPiece(StructureTemplateManager pStructureTemplateManager, ResourceLocation pLocation, BlockPos pPos) {
+        public VampireAltarPiece(StructureTemplateManager pStructureTemplateManager, Identifier pLocation, BlockPos pPos) {
             super(ModStructures.VAMPIRE_ALTAR_PIECE.get(), 0, pStructureTemplateManager, pLocation, pLocation.toString(), makeSettings(), pPos);
         }
 

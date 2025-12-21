@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "vampirism:item/advanced_vampire_spawn_egg"
+  }
+}

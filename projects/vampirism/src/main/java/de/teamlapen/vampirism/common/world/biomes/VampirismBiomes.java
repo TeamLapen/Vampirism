@@ -11,12 +11,16 @@ import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
 import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.sounds.Musics;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.attribute.*;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Optional;
 
 public class VampirismBiomes {
 
@@ -28,12 +32,21 @@ public class VampirismBiomes {
         mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
         mobSpawnBuilder.addSpawn(MobCategory.CREATURE, 80, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 3, 6));
 
-        BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).waterFogColor(0x670717).fogColor(0x171717).skyColor(0x131313).foliageColorOverride(0x101010).grassColorOverride(0x101010)
-                .ambientMoodSound(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D))
-                .ambientAdditionsSound(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D));
-        ModSounds.VAMPIRE_FOREST_AMBIENT.asOptional().map(BuiltInRegistries.SOUND_EVENT::wrapAsHolder).ifPresent(soundEvent -> biomeSpecialEffectsBuilder.backgroundMusic(Musics.createGameMusic(soundEvent)));
+        BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).foliageColorOverride(0x101010).grassColorOverride(0x101010);
 
-        return prepareVampireForestBuilder(featureGetter, carverGetter, mobSpawnBuilder, biomeSpecialEffectsBuilder).build();
+        var builder = prepareVampireForestBuilder(featureGetter, carverGetter, mobSpawnBuilder, biomeSpecialEffectsBuilder)
+                .setAttribute(EnvironmentAttributes.FOG_COLOR, 0x171717)
+                .setAttribute(EnvironmentAttributes.WATER_FOG_COLOR, 0x670717)
+                .setAttribute(EnvironmentAttributes.SKY_COLOR, 0x131313)
+                .setAttribute(EnvironmentAttributes.AMBIENT_SOUNDS, new AmbientSounds(
+                        Optional.empty(),
+                        Optional.of(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)),
+                        List.of(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D))))
+                ;
+
+        ModSounds.VAMPIRE_FOREST_AMBIENT.asOptional().map(BuiltInRegistries.SOUND_EVENT::wrapAsHolder).ifPresent(soundEvent -> builder.setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, new BackgroundMusic(soundEvent)));
+
+        return builder.build();
     }
 
     public static Biome.@NotNull BiomeBuilder prepareVampireForestBuilder(HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter, MobSpawnSettings.@NotNull Builder spawnBuilder, BiomeSpecialEffects.@NotNull Builder ambienceBuilder) {

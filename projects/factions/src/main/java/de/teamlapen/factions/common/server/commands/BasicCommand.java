@@ -1,8 +1,10 @@
 package de.teamlapen.factions.common.server.commands;
 
-/**
- * Basic command not really necessary since CommandTreeBase exists, but keeping it for future additions
- */
+import net.minecraft.commands.Commands;
+import net.minecraft.server.permissions.PermissionCheck;
+import net.minecraft.server.permissions.PermissionProviderCheck;
+import net.minecraft.server.permissions.PermissionSetSupplier;
+
 public abstract class BasicCommand {
 
     protected final static int PERMISSION_LEVEL_ALL = 0;

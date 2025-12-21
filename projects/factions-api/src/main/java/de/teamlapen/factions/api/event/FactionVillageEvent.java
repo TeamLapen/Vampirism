@@ -4,7 +4,7 @@ import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.world.ITotem;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.Event;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.tags;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -90,7 +90,7 @@ public class ModItemTags {
         public static final TagKey<Item> SERENE_SEASONS_SUMMER_CROPS = compatTag(SERENE_SEASONS, "summer_crops");
 
         private static TagKey<Item> compatTag(String namespace, String name) {
-            return ItemTags.create(ResourceLocation.fromNamespaceAndPath(namespace, name));
+            return ItemTags.create(Identifier.fromNamespaceAndPath(namespace, name));
         }
     }
 }

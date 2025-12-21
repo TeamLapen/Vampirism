@@ -19,6 +19,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.LevelBasedPermissionSet;
+import net.minecraft.server.permissions.PermissionSet;
 
 import java.util.Collection;
 
@@ -30,7 +32,7 @@ public class FactionCommand extends BasicCommand {
         HolderLookup.RegistryLookup<IFaction<?>> factions = buildContext.lookupOrThrow(FactionRegistries.Keys.FACTION);
 
         var root = Commands.literal("faction")
-                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT));
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
 
         for (var listHolder : factions.listElements().toList()) {
             if (!(listHolder.value() instanceof IPlayableFaction<?> faction)){
@@ -40,7 +42,7 @@ public class FactionCommand extends BasicCommand {
             //noinspection unchecked
             var holder = (Holder.Reference<IPlayableFaction<?>>) (Object) listHolder;
 
-            var factionCommand = Commands.literal(holder.key().location().toString());
+            var factionCommand = Commands.literal(holder.key().identifier().toString());
 
             factionCommand.executes(context -> setLevel(context, holder, 1, Lists.newArrayList(context.getSource().getPlayerOrException())));
 

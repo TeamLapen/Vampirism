@@ -1,10 +1,10 @@
 package de.teamlapen.factions.misc.extensions.client;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface IImageWidgetTexture {
 
-    ResourceLocation texture();
+    Identifier texture();
 
     int textureWidth();
 

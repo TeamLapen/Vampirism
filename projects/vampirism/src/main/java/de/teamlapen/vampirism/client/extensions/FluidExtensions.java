@@ -5,7 +5,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.FogEnvironment;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
@@ -15,12 +15,12 @@ public class FluidExtensions {
     public static final IClientFluidTypeExtensions BLOOD = new IClientFluidTypeExtensions() {
 
         @Override
-        public ResourceLocation getStillTexture() {
+        public Identifier getStillTexture() {
             return VResourceLocation.mod("block/blood_still");
         }
 
         @Override
-        public ResourceLocation getFlowingTexture() {
+        public Identifier getFlowingTexture() {
             return VResourceLocation.mod("block/blood_flow");
         }
 

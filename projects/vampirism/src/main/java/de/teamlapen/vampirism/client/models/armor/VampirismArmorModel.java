@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.client.models.armor;
 
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -12,7 +12,7 @@ import java.util.Collections;
 public class VampirismArmorModel extends Model<Object> {
 
     public VampirismArmorModel(ModelPart root) {
-        super(root, RenderType::entityCutoutNoCull);
+        super(root, RenderTypes::entityCutoutNoCull);
     }
 
 

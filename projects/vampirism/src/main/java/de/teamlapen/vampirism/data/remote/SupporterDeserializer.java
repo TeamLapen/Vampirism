@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.remote;
 
 import com.google.gson.*;
 import de.teamlapen.vampirism.api.settings.Supporter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -30,6 +30,6 @@ public class SupporterDeserializer implements JsonDeserializer<Supporter> {
         } else {
             appearance = Map.of();
         }
-        return new Supporter(ResourceLocation.parse(faction), name, texture, book, appearance);
+        return new Supporter(Identifier.parse(faction), name, texture, book, appearance);
     }
 }

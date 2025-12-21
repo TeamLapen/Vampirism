@@ -17,7 +17,7 @@ public class VillageCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
         return Commands.literal("village")
-                .requires(context -> context.hasPermission(BasicCommand.PERMISSION_LEVEL_CHEAT))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("capture")
                         .then(Commands.argument("faction", FactionArgument.factions(buildContext))
                                 .executes(context -> capture(context.getSource(), context.getSource().getPlayerOrException(), FactionArgument.getFaction(context, "faction")))))

@@ -2,9 +2,12 @@
   "pack": {
     "description": "Vampirism resources",
     "max_format": [
-      88,
-      0
+      94,
+      1
     ],
-    "min_format": 88
+    "min_format": [
+      94,
+      1
+    ]
   }
 }

@@ -6,7 +6,7 @@
 package de.teamlapen.vampirism.misc.sit;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ public class SitUtil {
      * <dimension type id, <position, <entity, previous player position>>>
      * This map only gets populated on server side.
      */
-    private static final Map<ResourceLocation, Map<BlockPos, SitEntity>> OCCUPIED = new HashMap<>();
+    private static final Map<Identifier, Map<BlockPos, SitEntity>> OCCUPIED = new HashMap<>();
 
     /**
      * Adds a sit entity to the map that keeps track of them. This does not spawn the entity itself.
@@ -35,7 +35,7 @@ public class SitUtil {
      */
     public static boolean addSitEntity(@NotNull Level level, BlockPos blockPos, SitEntity entity) {
         if (!level.isClientSide()) {
-            ResourceLocation id = getDimensionTypeId(level);
+            Identifier id = getDimensionTypeId(level);
 
             if (!OCCUPIED.containsKey(id)) {
                 OCCUPIED.put(id, new HashMap<>());
@@ -61,7 +61,7 @@ public class SitUtil {
      */
     public static boolean removeSitEntity(@NotNull Level level, BlockPos pos) {
         if (!level.isClientSide()) {
-            ResourceLocation id = getDimensionTypeId(level);
+            Identifier id = getDimensionTypeId(level);
 
             if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos)) {
                 OCCUPIED.get(id).remove(pos);
@@ -81,7 +81,7 @@ public class SitUtil {
      */
     public static @Nullable SitEntity getSitEntity(@NotNull Level level, BlockPos pos) {
         if (!level.isClientSide()) {
-            ResourceLocation id = getDimensionTypeId(level);
+            Identifier id = getDimensionTypeId(level);
 
             if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos)) {
                 return OCCUPIED.get(id).get(pos);
@@ -99,7 +99,7 @@ public class SitUtil {
      * @return true if a player is sitting at the given position in the given world, false otherwhise. This is always false on the client.
      */
     public static boolean isOccupied(@NotNull Level world, BlockPos pos) {
-        ResourceLocation id = getDimensionTypeId(world);
+        Identifier id = getDimensionTypeId(world);
 
         return SitUtil.OCCUPIED.containsKey(id) && SitUtil.OCCUPIED.get(id).containsKey(pos);
     }
@@ -111,7 +111,7 @@ public class SitUtil {
      * @return true if the given player is sitting anywhere, false otherwise
      */
     public static boolean isPlayerSitting(@NotNull Player player) {
-        for (ResourceLocation i : OCCUPIED.keySet()) {
+        for (Identifier i : OCCUPIED.keySet()) {
             for (SitEntity pair : OCCUPIED.get(i).values()) {
                 if (pair.hasPassenger(player)) {
                     return true;
@@ -122,7 +122,7 @@ public class SitUtil {
         return false;
     }
 
-    private static @NotNull ResourceLocation getDimensionTypeId(@NotNull Level level) {
-        return level.dimension().location();
+    private static @NotNull Identifier getDimensionTypeId(@NotNull Level level) {
+        return level.dimension().identifier();
     }
 }

@@ -6,7 +6,7 @@ import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
 import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,12 +31,12 @@ public class DeferredActionRegister<T extends IFactionPlayer<T> & ISkillPlayer<T
     @Deprecated
     @SuppressWarnings("unchecked")
     @Override
-    public <I extends IAction<T>> DeferredAction<T, IAction<T>, I> register(String name, Function<ResourceLocation, ? extends I> func) {
+    public <I extends IAction<T>> DeferredAction<T, IAction<T>, I> register(String name, Function<Identifier, ? extends I> func) {
         return (DeferredAction<T, @NotNull IAction<T>, I>) super.register(name, func);
     }
 
     @SuppressWarnings("unchecked")
-    public <L extends IAction<T>, I extends L> DeferredAction<T, L, I> registerAction(String name, Function<ResourceLocation, ? extends I> func) {
+    public <L extends IAction<T>, I extends L> DeferredAction<T, L, I> registerAction(String name, Function<Identifier, ? extends I> func) {
         return (DeferredAction<T, L, I>) super.register(name, func);
     }
 
@@ -61,7 +61,7 @@ public class DeferredActionRegister<T extends IFactionPlayer<T> & ISkillPlayer<T
     }
 
     @Override
-    protected <I extends IAction<T>> DeferredAction<T, IAction<T>, I> createHolder(ResourceKey<? extends Registry<IAction<T>>> registryKey, ResourceLocation key) {
+    protected <I extends IAction<T>> DeferredAction<T, IAction<T>, I> createHolder(ResourceKey<? extends Registry<IAction<T>>> registryKey, Identifier key) {
         return DeferredAction.createAction(ResourceKey.create(registryKey, key));
     }
 

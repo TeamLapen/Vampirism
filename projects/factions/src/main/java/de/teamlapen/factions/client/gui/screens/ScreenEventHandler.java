@@ -1,6 +1,7 @@
 package de.teamlapen.factions.client.gui.screens;
 
 import de.teamlapen.factions.FactionsMod;
+import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.api.util.REFERENCE;
 import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
@@ -8,7 +9,6 @@ import de.teamlapen.factions.common.network.packets.server.ServerboundSimpleInpu
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ScreenEventHandler {
 
-    private static final WidgetSprites INVENTORY_SKILLS = new WidgetSprites(ResourceLocation.fromNamespaceAndPath(REFERENCE.MOD_ID,"widget/inventory_skills"), ResourceLocation.fromNamespaceAndPath(REFERENCE.MOD_ID,"widget/inventory_skills_highlighted"));
+    private static final WidgetSprites INVENTORY_SKILLS = new WidgetSprites(FResourceLocation.mod("widget/inventory_skills"), FResourceLocation.mod("widget/inventory_skills_highlighted"));
     private ImageButton button;
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

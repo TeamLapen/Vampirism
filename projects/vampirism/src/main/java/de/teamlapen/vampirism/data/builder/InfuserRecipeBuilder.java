@@ -5,7 +5,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -113,7 +113,7 @@ public class InfuserRecipeBuilder implements RecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
         var recipe = new InfuserRecipe(this.group, this.ingredients.get(0), this.ingredients.get(1), this.ingredients.get(2), this.ingredients.get(3), this.input, this.results.get(0), this.results.get(1), this.results.get(2), Optional.ofNullable(this.result), this.burnTime);
-        recipeOutput.accept(key, recipe, advancement.build(key.location().withPrefix("recipes/infuser/")));
+        recipeOutput.accept(key, recipe, advancement.build(key.identifier().withPrefix("recipes/infuser/")));
     }
 
     public static InfuserRecipeBuilder infuserRecipe(HolderLookup.RegistryLookup<Item> itemLookup, ItemStack result) {

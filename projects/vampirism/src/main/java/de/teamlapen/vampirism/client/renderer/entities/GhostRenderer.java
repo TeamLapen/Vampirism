@@ -5,17 +5,17 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.GhostModel;
 import de.teamlapen.vampirism.common.world.entity.GhostEntity;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GhostRenderer extends MobRenderer<GhostEntity, GhostRenderer.GhostRenderState, GhostModel> {
 
-    public static final ResourceLocation TEXTURE = VResourceLocation.mod("textures/entity/ghost.png");
+    public static final Identifier TEXTURE = VResourceLocation.mod("textures/entity/ghost.png");
 
     public GhostRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new GhostModel(pContext.bakeLayer(ModEntitiesRender.GHOST)), 0.1f);
@@ -33,7 +33,7 @@ public class GhostRenderer extends MobRenderer<GhostEntity, GhostRenderer.GhostR
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull GhostRenderState pEntity) {
+    public @NotNull Identifier getTextureLocation(@NotNull GhostRenderState pEntity) {
         return TEXTURE;
     }
 

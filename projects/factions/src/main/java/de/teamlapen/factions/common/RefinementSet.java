@@ -4,8 +4,8 @@ import de.teamlapen.factions.api.factions.refinements.IRefinement;
 import de.teamlapen.factions.api.factions.refinements.IRefinementSet;
 import de.teamlapen.factions.api.world.items.IRefinementItem;
 import de.teamlapen.factions.common.util.RegUtil;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.util.Util;
 import net.minecraft.util.random.Weighted;
 import org.jetbrains.annotations.Nullable;
 

@@ -11,7 +11,7 @@ import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.block.model.VariantMutator;
 import net.minecraft.data.BlockFamily;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -28,11 +28,11 @@ import java.util.stream.Stream;
 
 public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
 
-    private static final ResourceLocation CUTOUT = ResourceLocation.withDefaultNamespace("cutout");
+    private static final Identifier CUTOUT = Identifier.withDefaultNamespace("cutout");
 
     public static final PropertyDispatch<VariantMutator> HORIZONTAL_ROTATION = ROTATION_HORIZONTAL_FACING;
 
-    public BaseBlockModelGenerators(Consumer<BlockModelDefinitionGenerator> blockStateGenerator, ItemModelOutput itemModelOutput, BiConsumer<ResourceLocation, ModelInstance> modelOutput) {
+    public BaseBlockModelGenerators(Consumer<BlockModelDefinitionGenerator> blockStateGenerator, ItemModelOutput itemModelOutput, BiConsumer<Identifier, ModelInstance> modelOutput) {
         super(blockStateGenerator, itemModelOutput, modelOutput);
     }
 
@@ -68,7 +68,7 @@ public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
 
     private final Set<Item> createdItemModels = new HashSet<>();
 
-    protected void createDefaultBlockItem(Block block, ResourceLocation model) {
+    protected void createDefaultBlockItem(Block block, Identifier model) {
         var item = block.asItem();
         if (item != Items.AIR && !createdItemModels.contains(item)) {
             this.createdItemModels.add(item);
@@ -145,7 +145,7 @@ public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
         if (ageProperty.getPossibleValues().size() != ageToVisualStageMapping.length) {
             throw new IllegalArgumentException();
         } else {
-            Int2ObjectMap<ResourceLocation> int2objectmap = new Int2ObjectOpenHashMap<>();
+            Int2ObjectMap<Identifier> int2objectmap = new Int2ObjectOpenHashMap<>();
             this.blockStateOutput.accept(MultiVariantGenerator.dispatch(cropBlock)
                     .with(PropertyDispatch.initial(ageProperty).generate(p_408977_ -> {
                         int i = ageToVisualStageMapping[p_408977_];
@@ -154,7 +154,7 @@ public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
         }
     }
 
-    protected static ModelTemplate copy(ModelTemplate template, ResourceLocation renderType) {
+    protected static ModelTemplate copy(ModelTemplate template, Identifier renderType) {
         return template.extend().renderType(renderType).build();
     }
 

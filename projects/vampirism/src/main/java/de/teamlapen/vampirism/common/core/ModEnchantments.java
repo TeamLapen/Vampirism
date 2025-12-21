@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.VampirismDataComponents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
-import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -73,7 +73,7 @@ public class ModEnchantments {
                                         LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))
                                 )
                         )
-                        .build(VAMPIRE_SLAYER.location()));
+                        .build(VAMPIRE_SLAYER.identifier()));
         context.register(ARROW_FRUGALITY,
                 new Enchantment.Builder(
                         Enchantment.definition(
@@ -86,6 +86,6 @@ public class ModEnchantments {
                                 EquipmentSlotGroup.MAINHAND))
                         .exclusiveWith(enchantments.getOrThrow(ModEnchantmentTags.CROSSBOW_INCOMPATIBLE))
                         .withEffect(FRUGALITY_DATA.get(), new AddValue(LevelBasedValue.perLevel(1F)))
-                        .build(ARROW_FRUGALITY.location()));
+                        .build(ARROW_FRUGALITY.identifier()));
     }
 }

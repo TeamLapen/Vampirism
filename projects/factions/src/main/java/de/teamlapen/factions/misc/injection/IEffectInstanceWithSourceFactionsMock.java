@@ -1,7 +1,7 @@
 package de.teamlapen.factions.misc.injection;
 
 import de.teamlapen.factions.misc.extensions.IEffectInstanceWithSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,22 +16,22 @@ public interface IEffectInstanceWithSourceFactionsMock extends IEffectInstanceWi
     }
 
     @Override
-    default Set<ResourceLocation> factions$getProperties() {
+    default Set<Identifier> factions$getProperties() {
         throw new IllegalStateException("This class is only supported as injection class");
     }
 
     @Override
-    default boolean factions$hasProperty(@Nullable ResourceLocation source) {
+    default boolean factions$hasProperty(@Nullable Identifier source) {
         throw new IllegalStateException("This class is only supported as injection class");
     }
 
     @Override
-    default void factions$setProperties(Collection<ResourceLocation> sources) {
+    default void factions$setProperties(Collection<Identifier> sources) {
         throw new IllegalStateException("This class is only supported as injection class");
     }
 
     @Override
-    default void factions$addProperty(@Nullable ResourceLocation source) {
+    default void factions$addProperty(@Nullable Identifier source) {
         throw new IllegalStateException("This class is only supported as injection class");
     }
 

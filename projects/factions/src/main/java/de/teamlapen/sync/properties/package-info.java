@@ -1,5 +1,5 @@
 
-@NotNullByDefault
+@NullMarked
 package de.teamlapen.sync.properties;
 
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jspecify.annotations.NullMarked;

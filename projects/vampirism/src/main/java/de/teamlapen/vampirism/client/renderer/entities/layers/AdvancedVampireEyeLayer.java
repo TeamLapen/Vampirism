@@ -5,12 +5,12 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.AdvancedVampireRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,11 +18,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> {
 
-    private final ResourceLocation @NotNull []overlays;
+    private final Identifier @NotNull []overlays;
 
     public AdvancedVampireEyeLayer(@NotNull RenderLayerParent<AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> renderer) {
         super(renderer);
-        overlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
+        overlays = new Identifier[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
             overlays[i] = VResourceLocation.mod("textures/entity/vanilla/eyes" + (i) + ".png");
         }
@@ -38,7 +38,7 @@ public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireRenderer
         boolean showModel = this.getParentModel().head.visible;
 
         getParentModel().head.visible = true;
-        nodeCollector.submitModel(getParentModel(), renderState, poseStack, RenderType.entityTranslucent(overlays[type]), packedLight, OverlayTexture.NO_OVERLAY, -1, null);
+        nodeCollector.submitModel(getParentModel(), renderState, poseStack, RenderTypes.entityTranslucent(overlays[type]), packedLight, OverlayTexture.NO_OVERLAY, -1, null);
         getParentModel().head.visible = showModel;
     }
 }

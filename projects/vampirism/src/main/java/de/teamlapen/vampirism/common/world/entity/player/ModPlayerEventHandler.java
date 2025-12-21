@@ -29,6 +29,7 @@ import de.teamlapen.vampirism.common.world.potions.BasePotion;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,10 +38,14 @@ import net.minecraft.util.TriState;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.skeleton.Skeleton;
+import net.minecraft.world.entity.monster.skeleton.Stray;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -345,13 +350,13 @@ public class ModPlayerEventHandler {
         if (Helper.isVampire(event.getEntity()) && event.getState().getBlock() instanceof CoffinBlock) {
             //This complete overwrites sleep check logic from net.minecraft.server.level.ServerPlayer.startSleepInBed
             //Vanilla checks for several things in order. We only want to overwrite the last two things: NOT_POSSIBLE_NOW and NOT_SAFE.
-            boolean day = Helper.isDay(event.getLevel());
+            boolean day = Helper.isDay(event.getLevel(), event.getPos());
             if (!day && event.getProblem() == null) {
                 //If everything is fine, but it is night, we change it to NOT POSSIBLE NOW
-                event.setProblem(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
+                event.setProblem(new Player.BedSleepingProblem(Component.translatable("block.minecraft.bed.no_sleep")));
                 return;
             }
-            if (day && (event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW || event.getProblem() == Player.BedSleepingProblem.NOT_SAFE)) {
+            if (day && event.getProblem() != null && (event.getProblem().message() == BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(null) || event.getProblem() == Player.BedSleepingProblem.NOT_SAFE)) {
                 //If vanilla comes up with NOT_POSSIBLE_NOW or NOT_SAFE, it means all other conditions are met.
                 //Respawn position is already set by vanilla at this point in code
                 if (!event.getEntity().isCreative()) {
@@ -383,8 +388,8 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void canContinueToSleep(CanContinueSleepingEvent event) {
         if (Helper.isVampire(event.getEntity()) && event.getEntity().getSleepingPos().map(s -> event.getEntity().level().getBlockState(s)).map(s -> s.getBlock() instanceof CoffinBlock).orElse(false)) {
-            boolean day = Helper.isDay(event.getEntity().level());
-            if (day && event.getProblem() == Player.BedSleepingProblem.NOT_POSSIBLE_NOW) {
+            boolean day = Helper.isDay(event.getEntity().level(), event.getEntity().blockPosition());
+            if (day && event.getProblem() != null && event.getProblem().message() == BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(null)) {
                 event.setContinueSleeping(true);
             } else if (!day) {
                 event.setContinueSleeping(false);
@@ -394,7 +399,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void sleepTimeFinish(@NotNull SleepFinishedTimeEvent event) {
-        if (event.getLevel() instanceof ServerLevel && Helper.isDay(event.getLevel())) {
+        if (event.getLevel() instanceof ServerLevel && Helper.isDay(event.getLevel(), BlockPos.ZERO)) {
             boolean sleepingInCoffin = event.getLevel().players().stream().anyMatch(player -> {
                 Optional<BlockPos> pos = player.getSleepingPos();
                 return pos.isPresent() && event.getLevel().getBlockState(pos.get()).getBlock() instanceof CoffinBlock;

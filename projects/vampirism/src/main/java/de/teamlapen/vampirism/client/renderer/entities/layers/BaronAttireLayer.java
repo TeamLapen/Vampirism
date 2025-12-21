@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -24,8 +24,8 @@ import java.util.function.Predicate;
 public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
     private final @NotNull BaronessAttireModel baroness;
     private final @NotNull BaronAttireModel baron;
-    private final ResourceLocation textureBaroness = VResourceLocation.mod("textures/entity/baroness_attire.png");
-    private final ResourceLocation textureBaron = VResourceLocation.mod("textures/entity/baron_attire.png");
+    private final Identifier textureBaroness = VResourceLocation.mod("textures/entity/baroness_attire.png");
+    private final Identifier textureBaron = VResourceLocation.mod("textures/entity/baron_attire.png");
     private final Predicate<VampireBaronRenderer.VampireBaronRenderState> predicateFemale;
 
     /**

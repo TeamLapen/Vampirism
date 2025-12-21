@@ -3,7 +3,7 @@ package de.teamlapen.sync;
 import de.teamlapen.sync.api.ISyncable;
 import de.teamlapen.sync.properties.IProperty;
 import de.teamlapen.sync.properties.Property;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
@@ -24,7 +24,7 @@ import java.util.*;
  */
 public abstract class PropertySync implements ValueIOSerializable, ISyncable, IProperty {
 
-    private final Map<ResourceLocation, Property> propertiesMap = new HashMap<>();
+    private final Map<Identifier, Property> propertiesMap = new HashMap<>();
     protected final Collection<Property> properties = Collections.unmodifiableCollection(propertiesMap.values());
 
     public PropertySync() {
@@ -70,7 +70,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IP
         this.propertiesMap.put(property.key(), property);
     }
 
-    protected final Property.PropertyBuilder registerProperty(ResourceLocation key) {
+    protected final Property.PropertyBuilder registerProperty(Identifier key) {
         return new Property.PropertyBuilder(this, key);
     }
 

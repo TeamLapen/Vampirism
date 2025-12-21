@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
 import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -68,7 +68,7 @@ public class SetVampireBookFunction extends LootItemConditionalFunction {
         Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if (entity instanceof VampireBookLootProvider provider) {
             if (provider.getBookLootId().isPresent()) {
-                ResourceLocation id = ResourceLocation.parse(provider.getBookLootId().get());
+                Identifier id = Identifier.parse(provider.getBookLootId().get());
                 Optional<IVampireBook> possibleBook = registryAccess.lookupOrThrow(VampirismRegistries.Keys.VAMPIRE_BOOK).getOptional(id);
 
                 if (possibleBook.isPresent()) {

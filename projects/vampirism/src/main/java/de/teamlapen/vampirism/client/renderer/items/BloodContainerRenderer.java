@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -20,12 +20,14 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class BloodContainerRenderer implements SpecialModelRenderer<SimpleFluidContent> {
 
-    public static final ResourceLocation ID = VResourceLocation.mod("blood_container");
+    public static final Identifier ID = VResourceLocation.mod("blood_container");
 
     @Override
     public void submit(@Nullable SimpleFluidContent argument, ItemDisplayContext displayContext, PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, int packedOverlay, boolean hasFoil, int outlineColor) {
@@ -43,7 +45,7 @@ public class BloodContainerRenderer implements SpecialModelRenderer<SimpleFluidC
     }
 
     @Override
-    public void getExtents(Set<Vector3f> output) {
+    public void getExtents(Consumer<Vector3fc> output) {
 
     }
 

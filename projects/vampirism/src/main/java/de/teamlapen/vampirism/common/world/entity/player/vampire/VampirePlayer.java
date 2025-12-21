@@ -54,7 +54,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
@@ -72,11 +72,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -99,7 +99,7 @@ import java.util.Optional;
  * Main class for Vampire Players.
  */
 public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
-    public static final ResourceLocation NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
+    public static final Identifier NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int FEED_TIMER = 20;
 
@@ -550,7 +550,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             this.player.setHealth(0.5f);
             this.player.setForcedPose(Pose.SLEEPING);
             resetNearbyTargetingMobs();
-            boolean flag = player.level() instanceof ServerLevel level && level.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES);
+            boolean flag = player.level() instanceof ServerLevel level && level.getGameRules().get(GameRules.SHOW_DEATH_MESSAGES);
             if (flag) {
                 dbnoMessage = player.getCombatTracker().getDeathMessage();
             }

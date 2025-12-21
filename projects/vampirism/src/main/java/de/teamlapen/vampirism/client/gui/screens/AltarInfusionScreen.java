@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
-    private static final ResourceLocation PURE_BLOOD_BOTTLE_SLOT_SPRITE = VResourceLocation.mod("container/slot/pure_blood_bottle");
-    private static final ResourceLocation HUMAN_HEART_SLOT_SPRITE = VResourceLocation.mod("container/slot/human_heart");
-    private static final ResourceLocation VAMPIRE_BOOK_SLOT_SPRITE = VResourceLocation.mod("container/slot/vampire_book");
-    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/altar_of_infusion.png");
+    private static final Identifier PURE_BLOOD_BOTTLE_SLOT_SPRITE = VResourceLocation.mod("container/slot/pure_blood_bottle");
+    private static final Identifier HUMAN_HEART_SLOT_SPRITE = VResourceLocation.mod("container/slot/human_heart");
+    private static final Identifier VAMPIRE_BOOK_SLOT_SPRITE = VResourceLocation.mod("container/slot/vampire_book");
+    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/altar_of_infusion.png");
 
     private final CyclingSlotBackground pureBloodIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground humanHeartIcon = new CyclingSlotBackground(1);

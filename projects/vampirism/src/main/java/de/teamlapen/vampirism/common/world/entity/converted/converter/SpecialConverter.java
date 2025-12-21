@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.common.datamaps.ConverterEntry;
 import de.teamlapen.vampirism.common.world.entity.converted.SpecialConvertingHandler;
 import de.teamlapen.vampirism.common.world.entity.converted.VampirismEntityRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +44,7 @@ public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob &
     }
 
     @Override
-    public IConvertingHandler<?> createHandler(@Nullable ResourceLocation texture) {
+    public IConvertingHandler<?> createHandler(@Nullable Identifier texture) {
         return new SpecialConvertingHandler<>(() -> this.convertedType, texture, new VampirismEntityRegistry.DefaultHelper(this.helper));
     }
 

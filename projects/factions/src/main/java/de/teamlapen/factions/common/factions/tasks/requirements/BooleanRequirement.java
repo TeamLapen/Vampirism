@@ -9,7 +9,7 @@ import de.teamlapen.factions.common.core.FactionTasks;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public record BooleanRequirement(Holder<FactionPlayerBooleanSupplier> function, Component description) implements TaskRequirement.Requirement<Boolean> {
 
@@ -19,8 +19,8 @@ public record BooleanRequirement(Holder<FactionPlayerBooleanSupplier> function, 
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(s -> s.description)
             ).apply(inst, BooleanRequirement::new));
 
-    public ResourceLocation id() {
-        return this.function.getKey().location();
+    public Identifier id() {
+        return this.function.getKey().identifier();
     }
 
     @Override

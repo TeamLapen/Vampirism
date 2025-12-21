@@ -9,7 +9,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.NonNullList;
@@ -18,7 +18,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -93,7 +93,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         advancement$builder.addCriterion("has_skill", FactionAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), HunterSkills.WEAPON_TABLE.get())));
         this.skills.forEach(skill -> {
-            advancement$builder.addCriterion("has_skill_" + skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow().replace(":", "_"), FactionAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), skill.value())));
+            advancement$builder.addCriterion("has_skill_" + skill.unwrapKey().map(ResourceKey::identifier).map(Identifier::toString).orElseThrow().replace(":", "_"), FactionAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), skill.value())));
         });
         this.criteria.forEach(advancement$builder::addCriterion);
         ShapelessWeaponTableRecipe shapelessrecipe = new ShapelessWeaponTableRecipe(
@@ -105,7 +105,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
                 lava,
                 skills
         );
-        output.accept(id, shapelessrecipe, advancement$builder.build(id.location().withPrefix("recipes/weapontable/")));
+        output.accept(id, shapelessrecipe, advancement$builder.build(id.identifier().withPrefix("recipes/weapontable/")));
     }
 
     public @NotNull ShapelessWeaponTableRecipeBuilder lava(int amount) {
@@ -131,7 +131,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
     private void ensureValidMod(ResourceKey<Recipe<?>> p_379745_) {
         if (this.criteria.isEmpty()) {
-            throw new IllegalStateException("No way of obtaining recipe " + p_379745_.location());
+            throw new IllegalStateException("No way of obtaining recipe " + p_379745_.identifier());
         }
     }
 }

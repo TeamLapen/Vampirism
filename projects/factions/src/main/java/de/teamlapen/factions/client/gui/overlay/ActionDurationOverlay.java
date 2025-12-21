@@ -10,8 +10,8 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 
 import java.util.Optional;
@@ -33,9 +33,9 @@ public class ActionDurationOverlay<T extends ISkillPlayer<T>> extends BaseOverla
                     for (Holder<? extends ILastingAction<T>> action : factionPlayer.getActionHandler().getActiveActions()) {
                         if (!(action.value().showHudDuration(this.player()))) continue;
                         if (!actionHandler.isActionActive(action)) continue;
-                        Optional<ResourceLocation> texture = action.unwrapKey().map(ResourceKey::location).map(key -> key.withPath("textures/actions/" + key.getPath() + ".png"));
+                        Optional<Identifier> texture = action.unwrapKey().map(ResourceKey::identifier).map(key -> key.withPath("textures/actions/" + key.getPath() + ".png"));
                         if (texture.isPresent()) {
-                            ResourceLocation loc = texture.get();
+                            Identifier loc = texture.get();
                             int perc = (int) (((1 - actionHandler.getDurationPercentage(action)) * 16));
                             //render gray transparent background for remaining duration
                             graphics.fillGradient(x, y + perc, x + 16, y + 16, 0x44888888/*Color.GRAY - 0xBB000000 */, 0x44888888/*Color.GRAY - 0xBB000000 */);

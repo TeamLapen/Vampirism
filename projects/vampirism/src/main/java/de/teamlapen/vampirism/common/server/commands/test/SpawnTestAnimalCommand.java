@@ -7,14 +7,14 @@ import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.animal.cow.Cow;
 import org.jetbrains.annotations.NotNull;
 
 public class SpawnTestAnimalCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("spawnTestAnimal")
-                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
+                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .executes(context -> spawnTestAnimal(context.getSource().getPlayerOrException()));
     }
 

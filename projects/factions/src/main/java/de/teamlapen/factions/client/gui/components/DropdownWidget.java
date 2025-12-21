@@ -1,5 +1,6 @@
 package de.teamlapen.factions.client.gui.components;
 
+import de.teamlapen.factions.api.util.FResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -9,7 +10,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -20,9 +21,9 @@ import java.util.function.Consumer;
 public class DropdownWidget extends AbstractWidget implements IRenderLast {
 
     private static final WidgetSprites BUTTON_SPRITES = new WidgetSprites(
-            ResourceLocation.withDefaultNamespace("widget/button"),
-            ResourceLocation.withDefaultNamespace("widget/button_disabled"),
-            ResourceLocation.withDefaultNamespace("widget/button_highlighted")
+            FResourceLocation.mc("widget/button"),
+            FResourceLocation.mc("widget/button_disabled"),
+            FResourceLocation.mc("widget/button_highlighted")
     );
 
     private final List<DropdownEntry> entries = new ArrayList<>();

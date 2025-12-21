@@ -2,7 +2,7 @@ package de.teamlapen.factions.misc.mixin.client;
 
 import de.teamlapen.factions.misc.extensions.client.IImageWidgetTexture;
 import net.minecraft.client.gui.components.ImageWidget;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -11,7 +11,7 @@ public interface ImageWidgetTextureAccessor extends IImageWidgetTexture {
     
     @Accessor("texture")
     @Override
-    ResourceLocation texture();
+    Identifier texture();
 
     @Accessor("textureWidth")
     @Override

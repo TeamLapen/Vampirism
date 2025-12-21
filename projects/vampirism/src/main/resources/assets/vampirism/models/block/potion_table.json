@@ -4,9 +4,9 @@
     "particle": "block/spruce_planks",
     "foundation": "block/spruce_planks",
     "iron": "block/iron_block",
-    "top": "vampirism:block/blood_table_top",
-    "bottle": "vampirism:item/vampire_blood_bottle",
-    "blaze": "item/blaze_rod"
+    "top": "vampirism:block/potion_table/table_top",
+    "bottle": "vampirism:block/vampire_blood_bottle",
+    "blaze": "vampirism:block/potion_table/blaze_rod"
   },
   "render_type": "minecraft:cutout",
   "elements": [

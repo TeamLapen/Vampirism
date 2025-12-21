@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -21,16 +21,16 @@ public class VampirismAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<IFogHandler>> DAMAGE_HANDLER = DeferredHolder.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Keys.DAMAGE_HANDLER);
 
     public static class Keys {
-        public static final ResourceLocation EXTENDED_CREATURE = VResourceLocation.mod("extended_creature");
-        public static final ResourceLocation VAMPIRE_PLAYER = VResourceLocation.mod("vampire_player");
-        public static final ResourceLocation HUNTER_PLAYER = VResourceLocation.mod("hunter_player");
-        public static final ResourceLocation GARLIC_HANDLER = VResourceLocation.mod("garlic_handler");
-        public static final ResourceLocation FOG_HANDLER = VResourceLocation.mod("fog_handler");
-        public static final ResourceLocation DAMAGE_HANDLER = VResourceLocation.mod("damage_handler");
-        public static final ResourceLocation VAMPIRE_BAT = VResourceLocation.mod("vampire_bat");
-        public static final ResourceLocation INFECTION_STATUS = VResourceLocation.mod("infection_status");
-        public static final ResourceLocation NEAREST_VILLAGE = VResourceLocation.mod("nearest_village");
-        public static final ResourceLocation VAMPIRE_MINION_DATA = VResourceLocation.mod("vampire_minion_data");
-        public static final ResourceLocation HUNTER_MINION_DATA = VResourceLocation.mod("hunter_minion_data");
+        public static final Identifier EXTENDED_CREATURE = VResourceLocation.mod("extended_creature");
+        public static final Identifier VAMPIRE_PLAYER = VResourceLocation.mod("vampire_player");
+        public static final Identifier HUNTER_PLAYER = VResourceLocation.mod("hunter_player");
+        public static final Identifier GARLIC_HANDLER = VResourceLocation.mod("garlic_handler");
+        public static final Identifier FOG_HANDLER = VResourceLocation.mod("fog_handler");
+        public static final Identifier DAMAGE_HANDLER = VResourceLocation.mod("damage_handler");
+        public static final Identifier VAMPIRE_BAT = VResourceLocation.mod("vampire_bat");
+        public static final Identifier INFECTION_STATUS = VResourceLocation.mod("infection_status");
+        public static final Identifier NEAREST_VILLAGE = VResourceLocation.mod("nearest_village");
+        public static final Identifier VAMPIRE_MINION_DATA = VResourceLocation.mod("vampire_minion_data");
+        public static final Identifier HUNTER_MINION_DATA = VResourceLocation.mod("hunter_minion_data");
     }
 }

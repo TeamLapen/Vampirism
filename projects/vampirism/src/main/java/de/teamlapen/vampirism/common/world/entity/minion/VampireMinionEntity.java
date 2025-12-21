@@ -32,7 +32,7 @@ import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -44,8 +44,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Skeleton;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.skeleton.Skeleton;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
@@ -262,7 +262,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     public static class VampireMinionData extends MinionData {
-        public static final ResourceLocation ID = VResourceLocation.mod("vampire");
+        public static final Identifier ID = VResourceLocation.mod("vampire");
 
         public static final int MAX_LEVEL = 6;
         public static final int MAX_LEVEL_INVENTORY = 2;
@@ -459,7 +459,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        protected ResourceLocation getDataType() {
+        protected Identifier getDataType() {
             return ID;
         }
 

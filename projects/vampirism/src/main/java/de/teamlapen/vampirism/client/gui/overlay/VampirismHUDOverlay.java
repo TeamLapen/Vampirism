@@ -21,7 +21,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -47,13 +47,13 @@ import java.util.Optional;
 
 public class VampirismHUDOverlay implements IMinecraftAccessor {
 
-    protected static final ResourceLocation CROSSHAIR_SPRITE = VResourceLocation.mc("hud/crosshair");
-    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_full");
-    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_background");
-    protected static final ResourceLocation CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_progress");
-    public static final ResourceLocation FANG_SPRITE = VResourceLocation.mod("fang/fang");
-    public static final ResourceLocation PROGRESS_BACKGROUND_SPRITE = VResourceLocation.mod("fang/progress_background");
-    public static final ResourceLocation PROGRESS_FOREGROUND_SPRITE = VResourceLocation.mod("fang/progress_foreground");
+    protected static final Identifier CROSSHAIR_SPRITE = VResourceLocation.mc("hud/crosshair");
+    protected static final Identifier CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_full");
+    protected static final Identifier CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_background");
+    protected static final Identifier CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_progress");
+    public static final Identifier FANG_SPRITE = VResourceLocation.mod("fang/fang");
+    public static final Identifier PROGRESS_BACKGROUND_SPRITE = VResourceLocation.mod("fang/progress_background");
+    public static final Identifier PROGRESS_FOREGROUND_SPRITE = VResourceLocation.mod("fang/progress_foreground");
 
     private boolean addTempPoison;
     private MobEffectInstance addedTempPoison;

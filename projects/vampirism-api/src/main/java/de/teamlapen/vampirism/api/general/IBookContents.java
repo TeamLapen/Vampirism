@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.general;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface IBookContents {
     /**
      * The id of the book background, aka layout, to be used.
      */
-    ResourceLocation background();
+    Identifier background();
 
     /**
      * A list of image entries that should be rendered onto specific pages of the book. Can be used for fancy titles, photos, drawings, etc.
@@ -39,7 +39,7 @@ public interface IBookContents {
         /**
          * The location of the image texture.
          */
-        ResourceLocation texture();
+        Identifier texture();
 
         /**
          * The page number (starting from 0) the image will appear on. If the layout is two-page, the images from both of the visible pages will be rendered.

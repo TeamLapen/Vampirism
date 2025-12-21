@@ -37,7 +37,7 @@ public class OilBottleItem extends Item implements IOilItem, BaseDisplayItemGene
     @Override
     public Component getName(ItemStack stack) {
         OilContent oilContents = stack.getOrDefault(ModDataComponents.OIL, OilContent.EMPTY);
-        return oilContents.oil().unwrapKey().map(s -> Component.translatable("oil." + s.location().getNamespace() + "." + s.location().getPath()).append(" ")).orElse(Component.empty());
+        return oilContents.oil().unwrapKey().map(s -> Component.translatable("oil." + s.identifier().getNamespace() + "." + s.identifier().getPath()).append(" ")).orElse(Component.empty());
     }
 
     @Override

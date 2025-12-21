@@ -12,7 +12,7 @@ public class MarkerCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("marker")
-                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
+                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .executes(context -> marker(null)).then(Commands.argument("args", StringArgumentType.greedyString())
                         .executes(context -> marker(StringArgumentType.getString(context, "args"))
                         ));

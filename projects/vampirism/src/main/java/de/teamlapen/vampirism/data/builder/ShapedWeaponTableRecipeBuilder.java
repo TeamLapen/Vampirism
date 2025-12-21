@@ -7,7 +7,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.recipes.RecipeBuilder;
@@ -110,7 +110,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
         ShapedWeaponTableRecipe recipe = new ShapedWeaponTableRecipe(Objects.requireNonNullElse(this.group, ""), RecipeBuilder.determineBookCategory(((ShapedRecipeBuilderAccessor) this).getCategory()), shapedRecipePattern, new ItemStack(result, count), level, skills, lava);
-        output.accept(recipeId, recipe, advancement.build(recipeId.location().withPrefix("recipes/weapontable/")));
+        output.accept(recipeId, recipe, advancement.build(recipeId.identifier().withPrefix("recipes/weapontable/")));
     }
 
     @Override

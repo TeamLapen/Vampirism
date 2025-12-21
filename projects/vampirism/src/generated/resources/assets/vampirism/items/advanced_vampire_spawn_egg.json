@@ -1,16 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/template_spawn_egg",
-    "tints": [
-      {
-        "type": "minecraft:constant",
-        "value": -7856743
-      },
-      {
-        "type": "minecraft:constant",
-        "value": -1197276
-      }
-    ]
+    "model": "vampirism:item/advanced_vampire_spawn_egg"
   }
 }

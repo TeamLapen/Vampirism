@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.entity.player;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LevelAttributeModifier {
 
-    public static final ResourceLocation ID = VResourceLocation.mod("level_attribute_modifier");
+    public static final Identifier ID = VResourceLocation.mod("level_attribute_modifier");
 
     /**
      * @param player      The player to be modified

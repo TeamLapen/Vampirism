@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.Set;
@@ -37,7 +37,7 @@ public class ModLootTables {
         return register(VResourceLocation.mod(resourceName));
     }
 
-    private static ResourceKey<LootTable> register(ResourceLocation resourceLocation) {
+    private static ResourceKey<LootTable> register(Identifier resourceLocation) {
         ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, resourceLocation);
         LOOT_TABLES.add(key);
         return key;

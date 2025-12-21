@@ -12,7 +12,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.ProcessorLists;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
@@ -38,14 +38,14 @@ public class VanillaStructureModifications {
     /**
      * @return a map the maps {@link StructurePoolElement}s that should be modified to the type village type of added objects
      */
-    private static @NotNull Map<ResourceLocation, BiomeType> getDefaultPools() {
+    private static @NotNull Map<Identifier, BiomeType> getDefaultPools() {
         return Map.ofEntries(Map.entry(VResourceLocation.mc("village/plains/houses"), VanillaStructureModifications.BiomeType.PLAINS), Map.entry(VResourceLocation.mc("village/desert/houses"), VanillaStructureModifications.BiomeType.DESERT), Map.entry(VResourceLocation.mc("village/savanna/houses"), VanillaStructureModifications.BiomeType.SAVANNA), Map.entry(VResourceLocation.mc("village/taiga/houses"), VanillaStructureModifications.BiomeType.TAIGA), Map.entry(VResourceLocation.mc("village/snowy/houses"), VanillaStructureModifications.BiomeType.SNOWY));
     }
 
     /**
      * @return a map that maps {@link StructureTemplatePool}s that should be modified to a map that maps temple {@link StructurePoolElement}s to modified temple {@link StructurePoolElement}s
      */
-    private static @NotNull Map<ResourceLocation, Map<String, StructurePoolElement>> getTempleReplacements(@NotNull HolderGetter<StructureProcessorList> processorList) {
+    private static @NotNull Map<Identifier, Map<String, StructurePoolElement>> getTempleReplacements(@NotNull HolderGetter<StructureProcessorList> processorList) {
         return new HashMap<>() {
             {
                 this.put(VResourceLocation.mc("village/plains/houses"), ImmutableMap.of(VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_3"), VanillaStructureModifications.singleJigsawPiece(processorList, "village/plains/houses/plains_temple_3", ProcessorLists.MOSSIFY_10_PERCENT), VanillaStructureModifications.singleLegacyJigsawString("minecraft:village/plains/houses/plains_temple_4"), VanillaStructureModifications.singleJigsawPiece(processorList, "village/plains/houses/plains_temple_4", ProcessorLists.MOSSIFY_10_PERCENT)));
@@ -65,7 +65,7 @@ public class VanillaStructureModifications {
     /**
      * replaces half of the temples with temples with church altar
      */
-    private static void replaceTemples(@NotNull RegistryAccess dynamicRegistries, @NotNull Map<ResourceLocation, Map<String, StructurePoolElement>> patternReplacements) {
+    private static void replaceTemples(@NotNull RegistryAccess dynamicRegistries, @NotNull Map<Identifier, Map<String, StructurePoolElement>> patternReplacements) {
         // return if temples should not be modified
         if (!ModConfig.COMMON.villageReplaceTemples.get()) return;
         // get jigsaw registry
@@ -121,7 +121,7 @@ public class VanillaStructureModifications {
     /**
      * adds a hunter trainer house to each village
      */
-    private static void addHunterTrainerHouse(@NotNull RegistryAccess reg, @NotNull Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
+    private static void addHunterTrainerHouse(@NotNull RegistryAccess reg, @NotNull Map<Identifier, VanillaStructureModifications.BiomeType> pools) {
         // get jigsaw registry
         reg.lookup(Registries.TEMPLATE_POOL).ifPresent(patternRegistry -> {
             // for every desired pools
@@ -146,7 +146,7 @@ public class VanillaStructureModifications {
 
     }
 
-    private static void addTotem(@NotNull RegistryAccess reg, @NotNull Map<ResourceLocation, VanillaStructureModifications.BiomeType> pools) {
+    private static void addTotem(@NotNull RegistryAccess reg, @NotNull Map<Identifier, VanillaStructureModifications.BiomeType> pools) {
         ResourceKey<StructureProcessorList> TOTEM_FACTION_PROCESSOR = ResourceKey.create(Registries.PROCESSOR_LIST, VResourceLocation.mod("totem_faction"));
 
 

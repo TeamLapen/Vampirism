@@ -4,13 +4,13 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -51,7 +51,7 @@ public class ModdedSmithingTransformRecipeBuilder {
     }
 
     public void save(RecipeOutput recipeOutput, String recipeId) {
-        this.save(recipeOutput, ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(recipeId)));
+        this.save(recipeOutput, ResourceKey.create(Registries.RECIPE, Identifier.parse(recipeId)));
     }
 
     public void save(RecipeOutput output, ResourceKey<Recipe<?>> resourceKey) {
@@ -65,13 +65,13 @@ public class ModdedSmithingTransformRecipeBuilder {
                 Optional.of(this.template), this.base, Optional.of(this.addition), new TransmuteResult(this.result.builtInRegistryHolder(), 1, patch)
         );
         output.accept(
-                resourceKey, smithingtransformrecipe, advancement$builder.build(resourceKey.location().withPrefix("recipes/" + this.category.getFolderName() + "/"))
+                resourceKey, smithingtransformrecipe, advancement$builder.build(resourceKey.identifier().withPrefix("recipes/" + this.category.getFolderName() + "/"))
         );
     }
 
     private void ensureValid(ResourceKey<Recipe<?>> recipe) {
         if (this.criteria.isEmpty()) {
-            throw new IllegalStateException("No way of obtaining recipe " + recipe.location());
+            throw new IllegalStateException("No way of obtaining recipe " + recipe.identifier());
         }
     }
 }

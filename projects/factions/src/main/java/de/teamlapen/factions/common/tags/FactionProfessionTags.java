@@ -3,7 +3,7 @@ package de.teamlapen.factions.common.tags;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 
 public class FactionProfessionTags {
 

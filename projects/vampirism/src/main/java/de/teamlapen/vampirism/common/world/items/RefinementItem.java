@@ -14,11 +14,11 @@ import de.teamlapen.factions.common.core.FactionDataComponents;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -86,7 +86,7 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
                 IRefinement refinement = holder.value();
                 var mapper = refinement.attributeFactory();
                 if (mapper == null) continue;
-                var modifier = mapper.apply(holder.unwrapKey().orElseThrow().location(), refinement.getModifierValue());
+                var modifier = mapper.apply(holder.unwrapKey().orElseThrow().identifier(), refinement.getModifierValue());
                 if (refinement.getAttribute() != null && modifier != null) {
                     AttributeUtil.addAttributeTooltips(stack, tooltipComponents, tooltipDisplay, net.neoforged.neoforge.common.util.AttributeTooltipContext.of(FactionsMod.proxy.getClientPlayer(), context, tooltipDisplay, flagIn));
                 } else {

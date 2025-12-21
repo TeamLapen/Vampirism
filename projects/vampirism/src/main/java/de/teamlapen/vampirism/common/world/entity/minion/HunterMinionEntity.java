@@ -31,7 +31,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -251,7 +251,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public static class HunterMinionData extends MinionData {
-        public static final ResourceLocation ID = VResourceLocation.mod("hunter");
+        public static final Identifier ID = VResourceLocation.mod("hunter");
 
         public static final int MAX_LEVEL = 6;
         public static final int MAX_LEVEL_INVENTORY = 2;
@@ -470,7 +470,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        protected ResourceLocation getDataType() {
+        protected Identifier getDataType() {
             return ID;
         }
 

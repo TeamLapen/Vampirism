@@ -3,17 +3,17 @@ package de.teamlapen.vampirism.data.reloadlistener.vampirebook;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.general.IBookBackground;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record BookBackground(ResourceLocation texture, Optional<ResourceLocation> textureFirstPage, Optional<ResourceLocation> textureLastPage, boolean twoPages, int textureWidth, int textureHeight, TextProperties textProperties, PageNumbering pageNumbering) implements IBookBackground {
+public record BookBackground(Identifier texture, Optional<Identifier> textureFirstPage, Optional<Identifier> textureLastPage, boolean twoPages, int textureWidth, int textureHeight, TextProperties textProperties, PageNumbering pageNumbering) implements IBookBackground {
 
     public static final Codec<BookBackground> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("texture").forGetter(BookBackground::texture),
-            ResourceLocation.CODEC.optionalFieldOf("textureFirstPage").forGetter(BookBackground::textureFirstPage),
-            ResourceLocation.CODEC.optionalFieldOf("textureLastPage").forGetter(BookBackground::textureLastPage),
+            Identifier.CODEC.fieldOf("texture").forGetter(BookBackground::texture),
+            Identifier.CODEC.optionalFieldOf("textureFirstPage").forGetter(BookBackground::textureFirstPage),
+            Identifier.CODEC.optionalFieldOf("textureLastPage").forGetter(BookBackground::textureLastPage),
             Codec.BOOL.optionalFieldOf("twoPages", true).forGetter(BookBackground::twoPages),
             Codec.INT.fieldOf("textureWidth").forGetter(BookBackground::textureWidth),
             Codec.INT.fieldOf("textureHeight").forGetter(BookBackground::textureHeight),
@@ -103,18 +103,18 @@ public record BookBackground(ResourceLocation texture, Optional<ResourceLocation
         return this.pageNumbering.pageButtonYOffset;
     }
 
-    public static Builder builder(ResourceLocation texture, int textureWidth, int textureHeight) {
+    public static Builder builder(Identifier texture, int textureWidth, int textureHeight) {
         return new Builder(texture, textureWidth, textureHeight);
     }
 
     @SuppressWarnings("unused")
     public static class Builder {
-        private final ResourceLocation texture;
+        private final Identifier texture;
         private final int textureWidth;
         private final int textureHeight;
 
-        private @Nullable ResourceLocation textureFirstPage = null;
-        private @Nullable ResourceLocation textureLastPage = null;
+        private @Nullable Identifier textureFirstPage = null;
+        private @Nullable Identifier textureLastPage = null;
         private boolean twoPages = true;
         private int textColor = 0x362511;
         private int textWidth = 134;
@@ -128,18 +128,18 @@ public record BookBackground(ResourceLocation texture, Optional<ResourceLocation
         private int pageButtonXOffset = 22;
         private int pageButtonYOffset = 12;
 
-        public Builder(ResourceLocation texture, int textureWidth, int textureHeight) {
+        public Builder(Identifier texture, int textureWidth, int textureHeight) {
             this.texture = texture;
             this.textureWidth = textureWidth;
             this.textureHeight = textureHeight;
         }
 
-        public Builder textureFirstPage(ResourceLocation textureFirstPage) {
+        public Builder textureFirstPage(Identifier textureFirstPage) {
             this.textureFirstPage = textureFirstPage;
             return this;
         }
 
-        public Builder textureLastPage(ResourceLocation textureLastPage) {
+        public Builder textureLastPage(Identifier textureLastPage) {
             this.textureLastPage = textureLastPage;
             return this;
         }

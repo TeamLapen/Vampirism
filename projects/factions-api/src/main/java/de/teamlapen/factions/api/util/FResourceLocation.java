@@ -1,26 +1,26 @@
 package de.teamlapen.factions.api.util;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @SuppressWarnings("unused")
 public class FResourceLocation {
-    public static ResourceLocation loc(String namespace, String path) {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+    public static Identifier loc(String namespace, String path) {
+        return Identifier.fromNamespaceAndPath(namespace, path);
     }
 
-    public static ResourceLocation mod(String path) {
-        return ResourceLocation.fromNamespaceAndPath(REFERENCE.MOD_ID, path);
+    public static Identifier mod(String path) {
+        return Identifier.fromNamespaceAndPath(REFERENCE.MOD_ID, path);
     }
 
     public static String modString(String path) {
         return REFERENCE.MOD_ID + ":" + path;
     }
 
-    public static ResourceLocation common(String path) {
-        return ResourceLocation.fromNamespaceAndPath("c", path);
+    public static Identifier common(String path) {
+        return Identifier.fromNamespaceAndPath("c", path);
     }
 
-    public static ResourceLocation mc(String path) {
-        return ResourceLocation.withDefaultNamespace(path);
+    public static Identifier mc(String path) {
+        return Identifier.withDefaultNamespace(path);
     }
 }

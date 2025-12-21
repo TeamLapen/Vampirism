@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.api;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.world.items.components.*;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Unit;
 
 import java.util.function.Supplier;
@@ -30,24 +30,24 @@ public class VampirismDataComponents {
 
 
     public static class Keys {
-        public static final ResourceLocation OIL_CONTENTS = VResourceLocation.mod( "oil_contents");
-        public static final ResourceLocation APPLIED_OIL = VResourceLocation.mod( "applied_oil");
-        public static final ResourceLocation VAMPIRE_BOOK = VResourceLocation.mod( "vampire_book");
-        public static final ResourceLocation BLOOD_CONTAINER = VResourceLocation.mod( "blood_container");
-        public static final ResourceLocation CONTAINED_PROJECTILES = VResourceLocation.mod( "contained_projectiles");
-        public static final ResourceLocation DO_NOT_NAME = VResourceLocation.mod( "do_not_name");
-        public static final ResourceLocation VAMPIRE_SWORD = VResourceLocation.mod( "vampire_sword");
-        public static final ResourceLocation TRAINING_CACHE = VResourceLocation.mod( "training_cache");
-        public static final ResourceLocation SELECTED_AMMUNITION = VResourceLocation.mod( "selected_ammunition");
-        public static final ResourceLocation BLOOD_CHARGED = VResourceLocation.mod( "blood_charged");
-        public static final ResourceLocation BOTTLE_BLOOD = VResourceLocation.mod( "bottle_blood");
-        public static final ResourceLocation FRUGALITY = VResourceLocation.mod( "frugality");
-        public static final ResourceLocation VAMPIRE_FOOD = VResourceLocation.mod("vampire_food");
-        public static final ResourceLocation DROP_VAMPIRE_SOUL = VResourceLocation.mod("drop_vampire_soul");
-        public static final ResourceLocation PURE_LEVEL = VResourceLocation.mod("pure_level");
-        public static final ResourceLocation QUARREL_POUCH_CONTENTS = VResourceLocation.mod("quarrel_pouch_contents");
-        public static final ResourceLocation ACTIVE = VResourceLocation.mod("active");
-        public static final ResourceLocation SHIFT_DESCRIPTION = VResourceLocation.mod("shift_description");
-        public static final ResourceLocation BLOCK_DESCRIPTION = VResourceLocation.mod("block_description");
+        public static final Identifier OIL_CONTENTS = VResourceLocation.mod( "oil_contents");
+        public static final Identifier APPLIED_OIL = VResourceLocation.mod( "applied_oil");
+        public static final Identifier VAMPIRE_BOOK = VResourceLocation.mod( "vampire_book");
+        public static final Identifier BLOOD_CONTAINER = VResourceLocation.mod( "blood_container");
+        public static final Identifier CONTAINED_PROJECTILES = VResourceLocation.mod( "contained_projectiles");
+        public static final Identifier DO_NOT_NAME = VResourceLocation.mod( "do_not_name");
+        public static final Identifier VAMPIRE_SWORD = VResourceLocation.mod( "vampire_sword");
+        public static final Identifier TRAINING_CACHE = VResourceLocation.mod( "training_cache");
+        public static final Identifier SELECTED_AMMUNITION = VResourceLocation.mod( "selected_ammunition");
+        public static final Identifier BLOOD_CHARGED = VResourceLocation.mod( "blood_charged");
+        public static final Identifier BOTTLE_BLOOD = VResourceLocation.mod( "bottle_blood");
+        public static final Identifier FRUGALITY = VResourceLocation.mod( "frugality");
+        public static final Identifier VAMPIRE_FOOD = VResourceLocation.mod("vampire_food");
+        public static final Identifier DROP_VAMPIRE_SOUL = VResourceLocation.mod("drop_vampire_soul");
+        public static final Identifier PURE_LEVEL = VResourceLocation.mod("pure_level");
+        public static final Identifier QUARREL_POUCH_CONTENTS = VResourceLocation.mod("quarrel_pouch_contents");
+        public static final Identifier ACTIVE = VResourceLocation.mod("active");
+        public static final Identifier SHIFT_DESCRIPTION = VResourceLocation.mod("shift_description");
+        public static final Identifier BLOCK_DESCRIPTION = VResourceLocation.mod("block_description");
     }
 }

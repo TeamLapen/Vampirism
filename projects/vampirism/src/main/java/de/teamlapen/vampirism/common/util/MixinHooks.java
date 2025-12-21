@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.util;
 
 import com.google.common.collect.Lists;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import org.jetbrains.annotations.NotNull;
@@ -22,11 +22,11 @@ public class MixinHooks {
 
     public static float armorLayerPartialTicks;
 
-    public static void addSingleInstanceStructure(@NotNull List<ResourceLocation> structures) {
+    public static void addSingleInstanceStructure(@NotNull List<Identifier> structures) {
         onlyOneStructure.addAll(structures.stream().map(MixinHooks::singleJigsawString).toList());
     }
 
-    public static void replaceSingleInstanceStructure(@NotNull List<ResourceLocation> structures) {
+    public static void replaceSingleInstanceStructure(@NotNull List<Identifier> structures) {
         onlyOneStructure.clear();
         onlyOneStructure.addAll(structures.stream().map(MixinHooks::singleJigsawString).toList());
     }
@@ -43,7 +43,7 @@ public class MixinHooks {
         return first.toString().equals(second.toString());
     }
 
-    private static @NotNull String singleJigsawString(@NotNull ResourceLocation resourceLocation) {
+    private static @NotNull String singleJigsawString(@NotNull Identifier resourceLocation) {
         return "Single[Left[" + resourceLocation + "]]";
     }
 

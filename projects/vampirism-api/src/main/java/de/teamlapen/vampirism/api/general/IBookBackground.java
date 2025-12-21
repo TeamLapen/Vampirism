@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.general;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 
@@ -12,21 +12,21 @@ public interface IBookBackground {
     /**
      * The main texture used for the background.
      */
-    ResourceLocation texture();
+    Identifier texture();
 
     /**
      * Optional texture used for the first page of the book. Must have the same dimensions as the main one.
      * <p>
      * If not present, {@link #texture()} is used.
      */
-    Optional<ResourceLocation> textureFirstPage();
+    Optional<Identifier> textureFirstPage();
 
     /**
      * Optional texture used for the last page of the book. Must have the same dimensions as the main one.
      * <p>
      * If not present, {@link #texture()} is used.
      */
-    Optional<ResourceLocation> textureLastPage();
+    Optional<Identifier> textureLastPage();
 
     /**
      * Determines whether the book displays one page at a time or two.

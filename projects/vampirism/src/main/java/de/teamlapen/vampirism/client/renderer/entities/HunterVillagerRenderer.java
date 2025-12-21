@@ -12,14 +12,14 @@ import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 import net.minecraft.client.renderer.entity.state.HoldingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import org.jetbrains.annotations.NotNull;
 
 public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRenderState, VillagerWithArmsModel> {
 
-    private static final ResourceLocation texture = VResourceLocation.mc("textures/entity/villager/villager.png");
+    private static final Identifier texture = VResourceLocation.mc("textures/entity/villager/villager.png");
 
     public HunterVillagerRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerWithArmsModel(context.bakeLayer(ModEntitiesRender.VILLAGER_WITH_ARMS)), 0.5f);
@@ -33,7 +33,7 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRender
 
     @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@NotNull VillagerRenderState villagerEntity) {
+    public Identifier getTextureLocation(@NotNull VillagerRenderState villagerEntity) {
         return texture;
     }
 

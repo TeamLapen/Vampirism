@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.effects;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.util.Helper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -55,16 +55,16 @@ public class ModEffectInstanceHelper {
     }
 
 
-    public static MobEffectInstance withSource(MobEffectInstance instance, ResourceLocation... source) {
+    public static MobEffectInstance withSource(MobEffectInstance instance, Identifier... source) {
         addSource(instance, source);
         return instance;
     }
 
-    public static void addSource(MobEffectInstance instance, ResourceLocation... source) {
+    public static void addSource(MobEffectInstance instance, Identifier... source) {
         instance.factions$setProperties(Arrays.stream(source).toList());
     }
 
-    public static boolean hasSource(@Nullable MobEffectInstance instance, ResourceLocation source) {
+    public static boolean hasSource(@Nullable MobEffectInstance instance, Identifier source) {
         if (instance == null) return false;
         return instance.factions$getProperties().contains(source);
     }

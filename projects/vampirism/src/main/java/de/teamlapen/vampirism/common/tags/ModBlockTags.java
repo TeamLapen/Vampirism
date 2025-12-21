@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.tags;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -63,7 +63,7 @@ public class ModBlockTags {
         public static final TagKey<Block> TRAY_HEAT_SOURCES = compatTag(FARMERS_DELIGHT, "tray_heat_sources");
 
         private static TagKey<Block> compatTag(String namespace, String name) {
-            return BlockTags.create(ResourceLocation.fromNamespaceAndPath(namespace, name));
+            return BlockTags.create(Identifier.fromNamespaceAndPath(namespace, name));
         }
     }
 }

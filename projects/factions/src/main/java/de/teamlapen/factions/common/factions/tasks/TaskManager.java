@@ -24,8 +24,8 @@ import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
@@ -114,7 +114,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     }
 
     private Task getTask(ResourceKey<Task> key) {
-        return this.registry.getValue(key.location());
+        return this.registry.getValue(key.identifier());
     }
 
     @Override
@@ -138,10 +138,10 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
      * @param taskInstances the task for which the requirements are needed
      * @return map of completed requirement per task
      */
-    public Map<UUID, Map<ResourceLocation, Integer>> getCompletedRequirements(Collection<ITaskInstance> taskInstances) {
-        Map<UUID, Map<ResourceLocation, Integer>> completedRequirements = Maps.newHashMap();
+    public Map<UUID, Map<Identifier, Integer>> getCompletedRequirements(Collection<ITaskInstance> taskInstances) {
+        Map<UUID, Map<Identifier, Integer>> completedRequirements = Maps.newHashMap();
         taskInstances.forEach(task -> {
-            Map<ResourceLocation, Integer> completed = getCompletedRequirements(task);
+            Map<Identifier, Integer> completed = getCompletedRequirements(task);
             if (!completed.isEmpty()) {
                 completedRequirements.put(task.getId(), completed);
             }
@@ -323,8 +323,8 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
      * @param taskInstance the taskInstance to be checked
      * @return a map of all taskInstance requirements
      */
-    private Map<ResourceLocation, Integer> getCompletedRequirements(ITaskInstance taskInstance) {
-        Map<ResourceLocation, Integer> completed = new HashMap<>();
+    private Map<Identifier, Integer> getCompletedRequirements(ITaskInstance taskInstance) {
+        Map<Identifier, Integer> completed = new HashMap<>();
         for (TaskRequirement.Requirement<?> requirement : getTask(taskInstance.getTask()).requirements().getAll()) {
             completed.put(requirement.id(), getStat(taskInstance, requirement));
         }
@@ -332,13 +332,13 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     }
 
     private int getStat(ITaskInstance taskInstance, TaskRequirement.Requirement<?> requirement) {
-        Map<ResourceLocation, Integer> stats = taskInstance.getStats();
+        Map<Identifier, Integer> stats = taskInstance.getStats();
         if (!taskInstance.isAccepted()) return 0;
         int neededStat = 0;
         int actualStat = 0;
         switch (requirement.getType()) {
             case STATS -> {
-                actualStat = this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer)));
+                actualStat = this.player.getStats().getValue(Stats.CUSTOM.get((Identifier) requirement.getStat(this.factionPlayer)));
                 neededStat = stats.get(requirement.id()) + requirement.getAmount(this.factionPlayer);
             }
             case ENTITY -> {
@@ -462,10 +462,10 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
         if (!taskInstance.isAccepted()) return;
         Task task = getTask(taskInstance.getTask());
         if (!task.requirements().isHasStatBasedReq()) return;
-        Map<ResourceLocation, Integer> reqStats = taskInstance.getStats();
+        Map<Identifier, Integer> reqStats = taskInstance.getStats();
         for (TaskRequirement.Requirement<?> requirement : task.requirements().getAll()) {
             switch (requirement.getType()) {
-                case STATS -> reqStats.putIfAbsent(requirement.id(), this.player.getStats().getValue(Stats.CUSTOM.get((ResourceLocation) requirement.getStat(this.factionPlayer))));
+                case STATS -> reqStats.putIfAbsent(requirement.id(), this.player.getStats().getValue(Stats.CUSTOM.get((Identifier) requirement.getStat(this.factionPlayer))));
                 case ENTITY -> reqStats.putIfAbsent(requirement.id(), this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer))));
                 case ENTITY_TAG ->
                     //noinspection unchecked

@@ -43,7 +43,7 @@ public class MinionCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
         return Commands.literal("minion")
-                .requires(context -> context.hasPermission(BasicCommand.PERMISSION_LEVEL_CHEAT))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(registerNew(buildContext))
                 .then(Commands.literal("recall")
                         .executes(context -> recall(context.getSource(), context.getSource().getPlayerOrException()))
@@ -79,7 +79,7 @@ public class MinionCommand extends BasicCommand {
                 }
                 currentCommand = builder;
             }
-            spawnNew.then(Commands.literal(entry.getKey().location().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (Supplier<MinionData>) minion.data(), minion.type(), List.of(), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<MinionData, ?>>) arguments)).then(currentCommand));
+            spawnNew.then(Commands.literal(entry.getKey().identifier().toString()).executes(context -> spawnNewMinionExtra(context, context.getSource(), faction, (Supplier<MinionData>) minion.data(), minion.type(), List.of(), (Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<MinionData, ?>>) arguments)).then(currentCommand));
 
         }
         return spawnNew;

@@ -3,17 +3,17 @@ package de.teamlapen.factions.client.gui.components;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageWidget;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public abstract class ColoredImageWidget {
 
     ColoredImageWidget() {}
 
-    public static Texture texture(int width, int height, ResourceLocation texture, int textureWidth, int textureHeight, int color) {
+    public static Texture texture(int width, int height, Identifier texture, int textureWidth, int textureHeight, int color) {
         return new ColoredImageWidget.Texture(0, 0, width, height, texture, textureWidth, textureHeight, color);
     }
 
-    public static Sprite sprite(int width, int height, ResourceLocation sprite, int color) {
+    public static Sprite sprite(int width, int height, Identifier sprite, int color) {
         return new ColoredImageWidget.Sprite(0, 0, width, height, sprite, color);
     }
 
@@ -21,7 +21,7 @@ public abstract class ColoredImageWidget {
 
         private int color;
 
-        public Sprite(int x, int y, int width, int height, ResourceLocation sprite, int color) {
+        public Sprite(int x, int y, int width, int height, Identifier sprite, int color) {
             super(x, y, width, height, sprite);
             this.color = color;
         }
@@ -40,7 +40,7 @@ public abstract class ColoredImageWidget {
 
         private int color;
 
-        public Texture(int x, int y, int width, int height, ResourceLocation texture, int textureWidth, int textureHeight, int color) {
+        public Texture(int x, int y, int width, int height, Identifier texture, int textureWidth, int textureHeight, int color) {
             super(x, y, width, height, texture, textureWidth, textureHeight);
             this.color = color;
         }

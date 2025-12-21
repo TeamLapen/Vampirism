@@ -17,7 +17,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,7 @@ import java.util.Map;
 @NonnullDefault
 public class SkillsTabComponent {
 
-    private static final ResourceLocation RED_TOOLTIP = FResourceLocation.mod("red");
+    private static final Identifier RED_TOOLTIP = FResourceLocation.mod("red");
     public static final int SCREEN_WIDTH = SkillsScreen.SCREEN_WIDTH - 18;
     public static final int SCREEN_HEIGHT = SkillsScreen.SCREEN_HEIGHT - 46;
     private final Minecraft minecraft;
@@ -43,7 +43,7 @@ public class SkillsTabComponent {
     private final SkillNodeComponent root;
     private final int treeWidth;
     private final int treeHeight;
-    private final ResourceLocation background;
+    private final Identifier background;
     private double minX = Double.MIN_VALUE;
     private double minY = Double.MAX_VALUE;
     private double maxX = Double.MAX_VALUE;

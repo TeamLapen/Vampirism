@@ -8,13 +8,13 @@ import de.teamlapen.factions.api.factions.skills.IActionSkill;
 import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
 import de.teamlapen.factions.api.factions.skills.ISkillTree;
+import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.api.util.REFERENCE;
 import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.neoforged.neoforge.registries.callback.AddCallback;
 import net.neoforged.neoforge.registries.callback.ClearCallback;
@@ -53,7 +53,7 @@ public class SkillCallbacks implements AddCallback<ISkill<?>>, ClearCallback<ISk
     }
 
     public record EmptyActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>>(Holder<? extends IAction<T>> actionHolder) implements IActionSkill<T> {
-        private static final TagKey<ISkillTree> key = TagKey.create(FactionRegistries.Keys.SKILL_TREE, ResourceLocation.fromNamespaceAndPath(REFERENCE.MOD_ID, "empty"));
+        private static final TagKey<ISkillTree> key = TagKey.create(FactionRegistries.Keys.SKILL_TREE, FResourceLocation.mod("empty"));
 
         @Override
         public @Nullable Component getDescription() {

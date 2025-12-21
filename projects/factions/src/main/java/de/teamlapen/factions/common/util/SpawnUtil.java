@@ -67,7 +67,7 @@ public class SpawnUtil {
 
     private static void onInitialSpawn(ServerLevel level, Entity e, EntitySpawnReason reason) {
         if (e instanceof Mob mob) {
-            mob.finalizeSpawn(level, e.level().getCurrentDifficultyAt(e.blockPosition()), reason, null);
+            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(e.blockPosition()), reason, null);
         }
     }
 

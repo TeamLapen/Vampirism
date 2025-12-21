@@ -18,14 +18,14 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 
 import static de.teamlapen.vampirism.common.integration.jei.categories.AlchemicalCauldronRecipeCategory.fixSprite;
 
 public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecipe> {
-    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/blood_grinder_jei.png");
+    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/blood_grinder_jei.png");
     public static final int width = 78;
     public static final int height = 18;
 

@@ -13,7 +13,7 @@ import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 
 public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEntity<T>> extends Screen {
 
-    private static final ResourceLocation BACKGROUND = FResourceLocation.mod("background/default");
+    private static final Identifier BACKGROUND = FResourceLocation.mod("background/default");
     protected static final WidgetSprites RESET = new WidgetSprites(FResourceLocation.mod("widget/reset"), FResourceLocation.mod("widget/reset_disabled"), FResourceLocation.mod("widget/reset_highlighted"));
     protected static final WidgetSprites ADD = new WidgetSprites(FResourceLocation.mod("widget/add"), FResourceLocation.mod("widget/add_disabled"), FResourceLocation.mod("widget/add_highlighted"));
 

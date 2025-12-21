@@ -17,7 +17,7 @@ public class InfoEntityCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("printEntityNBT")
-                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
+                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .executes(context -> infoEntity(context.getSource(), context.getSource().getPlayerOrException()));
     }
 

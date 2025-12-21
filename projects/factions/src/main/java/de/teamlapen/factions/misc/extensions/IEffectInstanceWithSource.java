@@ -1,7 +1,7 @@
 package de.teamlapen.factions.misc.extensions;
 
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,13 +24,13 @@ public interface IEffectInstanceWithSource {
     @Nullable
     MobEffectInstance factions$getHiddenEffect();
 
-    Set<ResourceLocation> factions$getProperties();
+    Set<Identifier> factions$getProperties();
 
-    boolean factions$hasProperty(@Nullable ResourceLocation source);
+    boolean factions$hasProperty(@Nullable Identifier source);
 
-    void factions$setProperties(Collection<ResourceLocation> sources);
+    void factions$setProperties(Collection<Identifier> sources);
 
-    void factions$addProperty(@Nullable ResourceLocation source);
+    void factions$addProperty(@Nullable Identifier source);
 
     boolean factions$hasProperties();
 
@@ -41,7 +41,7 @@ public interface IEffectInstanceWithSource {
      */
     void factions$removeEffect();
 
-    static void removePotionEffect(@NotNull LivingEntity entity, @NotNull Holder<MobEffect> effect, @NotNull ResourceLocation source) {
+    static void removePotionEffect(@NotNull LivingEntity entity, @NotNull Holder<MobEffect> effect, @NotNull Identifier source) {
         MobEffectInstance ins = entity.getEffect(effect);
         while (ins != null) {
             if (ins.factions$hasProperties()) {

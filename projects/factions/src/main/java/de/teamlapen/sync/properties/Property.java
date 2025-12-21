@@ -3,7 +3,7 @@ package de.teamlapen.sync.properties;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import de.teamlapen.sync.PropertySync;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -17,10 +17,10 @@ import java.util.function.Supplier;
  */
 public abstract class Property implements IProperty {
 
-    protected final ResourceLocation key;
+    protected final Identifier key;
     private int lastHash;
 
-    public Property(ResourceLocation key) {
+    public Property(Identifier key) {
         this.key = key;
     }
 
@@ -29,7 +29,7 @@ public abstract class Property implements IProperty {
      * <p>
      * Used as the key for serialization / deserialization of this property
      */
-    public ResourceLocation key() {
+    public Identifier key() {
         return key;
     }
 
@@ -109,7 +109,7 @@ public abstract class Property implements IProperty {
         }
     }
 
-    public record PropertyBuilder(PropertySync propertySync, ResourceLocation key) {
+    public record PropertyBuilder(PropertySync propertySync, Identifier key) {
 
         public <T> SimpleProperty.Builder<T> simple(Codec<T> codec) {
             return new SimpleProperty.Builder<>(this, codec);
@@ -179,7 +179,7 @@ public abstract class Property implements IProperty {
             }).register();
         }
 
-        public void register(Function<ResourceLocation,Property> property) {
+        public void register(Function<Identifier,Property> property) {
             this.propertySync.registerProperty(property.apply(this.key));
         }
     }

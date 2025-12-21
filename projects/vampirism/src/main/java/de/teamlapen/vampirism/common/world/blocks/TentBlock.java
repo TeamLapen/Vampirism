@@ -13,6 +13,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -105,7 +107,7 @@ public class TentBlock extends Block {
         offsets = offsetsBuilder.build();
 
         ImmutableMap.Builder<Player.BedSleepingProblem, Component> sleepBuilder = ImmutableMap.builder();
-        sleepBuilder.put(Player.BedSleepingProblem.NOT_POSSIBLE_NOW, Component.translatable("text.vampirism.tent.no_sleep"));
+        sleepBuilder.put(new Player.BedSleepingProblem(BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(Component.empty())), Component.translatable("text.vampirism.tent.no_sleep"));
         sleepBuilder.put(Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("text.vampirism.tent.too_far_away"));
         sleepBuilder.put(Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("text.vampirism.tent.obstructed"));
         sleepResults = sleepBuilder.build();
@@ -306,7 +308,8 @@ public class TentBlock extends Block {
             return InteractionResult.SUCCESS;
         }
 
-        if (!BedBlock.canSetSpawn(world)) {
+        BedRule bedrule = world.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
+        if (!bedrule.explodes()) {
             world.removeBlock(pos, false);
             BlockPos blockpos = pos.relative(blockState.getValue(HORIZONTAL_FACING).getOpposite());
             if (world.getBlockState(blockpos).is(this)) {
@@ -339,8 +342,8 @@ public class TentBlock extends Block {
             BlockState finalTargetState = targetState;
             BlockPos finalTargetPos = targetPos;
             player.startSleepInBed(finalTargetPos).ifLeft(sleepResult1 -> {
-                if (sleepResult1 != null) {
-                    player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
+                if (sleepResult1.message() != null) {
+                    player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.message()), true);
                 }
             }).ifRight(u -> {
                 this.setBedOccupied(finalTargetState, world, finalTargetPos, null, true);

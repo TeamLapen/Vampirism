@@ -11,7 +11,7 @@ import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import de.teamlapen.vampirism.data.builder.*;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
@@ -19,7 +19,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
@@ -280,7 +280,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
         this.nineBlockStorageRecipes(unpackedCategory, unpacked, packedCategory, packed, RegUtil.id(packed.getItem()).withSuffix(pathSuffix), null, RegUtil.id(unpacked.getItem()).withSuffix(pathSuffix), null);
     }
 
-    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStack unpacked, RecipeCategory packedCategory, ItemStack packed, ResourceLocation packedName, @Nullable String packedGroup, ResourceLocation unpackedName, @Nullable String unpackedGroup) {
+    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStack unpacked, RecipeCategory packedCategory, ItemStack packed, Identifier packedName, @Nullable String packedGroup, Identifier unpackedName, @Nullable String unpackedGroup) {
         this.shapeless(unpackedCategory, unpacked)
                 .requires(DataComponentIngredient.of(false, packed))
                 .group(unpackedGroup).unlockedBy(getHasName(packed.getItem()), this.has(packed.getItem()))

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.util;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.settings.Supporter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class SupporterManager {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private Map<ResourceLocation, List<Supporter>> supporters = new HashMap<>();
+    private Map<Identifier, List<Supporter>> supporters = new HashMap<>();
 
     /**
      * Returns a randomly picked hunter

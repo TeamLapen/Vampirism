@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.common.world.entity.player.refinements;
 import de.teamlapen.factions.api.factions.refinements.IRefinement;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
@@ -17,13 +17,13 @@ import java.util.function.BiFunction;
 public class Refinement implements IRefinement {
 
     private final @Nullable Holder<Attribute> attribute;
-    private final @Nullable BiFunction<ResourceLocation, Double, AttributeModifier> modifier;
+    private final @Nullable BiFunction<Identifier, Double, AttributeModifier> modifier;
     private final double baseValue;
     private boolean detrimental = false;
     @Nullable
     private String descriptionId;
 
-    public Refinement(@Nullable Holder<Attribute> attribute, double baseValue, @Nullable BiFunction<ResourceLocation, Double, AttributeModifier> modifier) {
+    public Refinement(@Nullable Holder<Attribute> attribute, double baseValue, @Nullable BiFunction<Identifier, Double, AttributeModifier> modifier) {
         this.attribute = attribute;
         this.modifier = modifier;
         this.baseValue = baseValue;
@@ -36,7 +36,7 @@ public class Refinement implements IRefinement {
     }
 
     @Override
-    public @Nullable BiFunction<ResourceLocation, Double, AttributeModifier> attributeFactory() {
+    public @Nullable BiFunction<Identifier, Double, AttributeModifier> attributeFactory() {
         return this.modifier;
     }
 

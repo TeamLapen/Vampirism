@@ -3,7 +3,7 @@ package de.teamlapen.factions.common.core;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.api.util.REFERENCE;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -24,7 +24,7 @@ public class FactionSounds {
     }
 
     private static DeferredHolder<SoundEvent, SoundEvent> create(String soundNameIn) {
-        ResourceLocation resourcelocation = FResourceLocation.mod(soundNameIn);
+        Identifier resourcelocation = FResourceLocation.mod(soundNameIn);
         return SOUND_EVENTS.register(soundNameIn, () -> SoundEvent.createVariableRangeEvent(resourcelocation));
     }
 }

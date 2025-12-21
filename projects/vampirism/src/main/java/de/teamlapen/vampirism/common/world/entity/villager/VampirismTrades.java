@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -17,8 +16,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.npc.villager.VillagerTrades;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -32,6 +32,7 @@ import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -77,7 +78,7 @@ public class VampirismTrades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull ServerLevel level, @NotNull Entity trader, @NotNull RandomSource random) {
             int cost = price.getPrice(random);
             return new MerchantOffer(new ItemCost(currency, Math.min(cost, 64)), cost > 64 ? Optional.of(new ItemCost(currency, cost - 64)) : Optional.empty(), new ItemStack(sellingItem[random.nextInt(sellingItem.length)].getItem(), selling.getPrice(random)), maxUses, xp, 0.2F);
         }
@@ -92,8 +93,8 @@ public class VampirismTrades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource random) {
-            return offers[random.nextInt(0, offers.length)].getOffer(trader, random);
+        public MerchantOffer getOffer(@NotNull ServerLevel level, @NotNull Entity trader, @NotNull RandomSource random) {
+            return offers[random.nextInt(0, offers.length)].getOffer(level, trader, random);
         }
     }
 
@@ -106,10 +107,11 @@ public class VampirismTrades {
             this.condition = condition;
         }
 
+
         @Nullable
         @Override
-        public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource random) {
-            return condition.test(trader) ? offer.getOffer(trader, random) : null;
+        public MerchantOffer getOffer(@NonNull ServerLevel level, @NonNull Entity trader, @NotNull RandomSource random) {
+            return condition.test(trader) ? offer.getOffer(level, trader, random) : null;
         }
     }
 
@@ -176,7 +178,7 @@ public class VampirismTrades {
 
         @NotNull
         @Override
-        public MerchantOffer getOffer(@NotNull Entity entity, @NotNull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull ServerLevel level, @NotNull Entity entity, @NotNull RandomSource random) {
             ItemStack bottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), resultAmount);
             bottle.set(ModDataComponents.BOTTLE_BLOOD.get(), new BottleBlood(9));
             return new MerchantOffer(new ItemCost(Items.EMERALD, this.emeraldAmount), bottle, this.maxUses, this.givenXP, this.priceMultiplier);
@@ -204,7 +206,7 @@ public class VampirismTrades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@NotNull Entity entity, @NotNull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull ServerLevel level, @NotNull Entity entity, @NotNull RandomSource random) {
             ItemStack bottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), selling.getPrice(random));
             bottle.set(ModDataComponents.BOTTLE_BLOOD.get(), new BottleBlood(blood));
             return new MerchantOffer(new ItemCost(ModItems.HUMAN_HEART.get(), price.getPrice(random)), bottle, maxUses, xp, 0.1F);
@@ -231,7 +233,7 @@ public class VampirismTrades {
         }
 
         @Nullable
-        public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull ServerLevel level, @NotNull Entity trader, @NotNull RandomSource random) {
             if (trader instanceof ConvertedVillagerEntity convertedVillager && trader.level() instanceof ServerLevel serverLevel) {
                 //This may block for a short amount of time if the vampire villager has not completed its forest search yet
                 return convertedVillager.getClosestVampireForest(trader.level(), trader.blockPosition()).map(blockPos -> {
@@ -268,7 +270,7 @@ public class VampirismTrades {
         }
 
         @Nullable
-        public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull ServerLevel level, @NotNull Entity trader, @NotNull RandomSource random) {
             if (trader.level() instanceof ServerLevel serverLevel) {
                 BlockPos targetPos = locateBiome(serverLevel, trader.blockPosition(), biome);
                 if (targetPos != null) {
@@ -309,7 +311,7 @@ public class VampirismTrades {
 
         @Nullable
         @Override
-        public MerchantOffer getOffer(@NotNull Entity trader, @NotNull RandomSource random) {
+        public MerchantOffer getOffer(@NotNull ServerLevel level, @NotNull Entity trader, @NotNull RandomSource random) {
             ItemStack itemStack = MapUtil.getMap(trader, destination, displayName, decorationType, 100);
             if (itemStack != null) {
                 return new MerchantOffer(new ItemCost(Items.EMERALD, this.emeraldCost), Optional.of(new ItemCost(Items.COMPASS)), itemStack, this.maxUses, this.villagerXp, 0.2F);

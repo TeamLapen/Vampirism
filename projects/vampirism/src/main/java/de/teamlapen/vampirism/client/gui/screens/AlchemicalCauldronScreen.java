@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -23,11 +23,11 @@ import java.util.stream.Stream;
 
 
 public class AlchemicalCauldronScreen extends AbstractContainerScreen<AlchemicalCauldronMenu> {
-    public static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/alchemical_cauldron.png");
-    public static final ResourceLocation LIT_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/lit_progress");
-    public static final ResourceLocation BURN_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/burn_progress");
-    public static final ResourceLocation BUBBLES_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/bubbles_progress");
-    private static final ResourceLocation ERROR_SPRITE = ResourceLocation.withDefaultNamespace("container/anvil/error");
+    public static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/alchemical_cauldron.png");
+    public static final Identifier LIT_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/lit_progress");
+    public static final Identifier BURN_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/burn_progress");
+    public static final Identifier BUBBLES_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/bubbles_progress");
+    private static final Identifier ERROR_SPRITE = VResourceLocation.mod("container/anvil/error");
 
     public AlchemicalCauldronScreen(@NotNull AlchemicalCauldronMenu inventorySlotsIn, @NotNull Inventory inventoryPlayer, @NotNull Component name) {
         super(inventorySlotsIn, inventoryPlayer, name);

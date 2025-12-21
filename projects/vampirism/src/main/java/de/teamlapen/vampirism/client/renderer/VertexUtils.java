@@ -2,9 +2,10 @@ package de.teamlapen.vampirism.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -37,11 +38,10 @@ public class VertexUtils {
         ChunkSectionLayer renderLayer = ItemBlockRenderTypes.getRenderLayer(fluidState);
 
         RenderType type = switch (renderLayer) {
-            case SOLID -> RenderType.SOLID;
-            case TRANSLUCENT -> RenderType.TRANSLUCENT_MOVING_BLOCK;
-            case CUTOUT -> RenderType.CUTOUT;
-            case TRIPWIRE -> RenderType.TRIPWIRE;
-            case CUTOUT_MIPPED -> RenderType.CUTOUT_MIPPED;
+            case SOLID -> RenderTypes.solidMovingBlock();
+            case TRANSLUCENT -> RenderTypes.translucentMovingBlock();
+            case CUTOUT -> RenderTypes.cutoutMovingBlock();
+            case TRIPWIRE -> RenderTypes.tripwireMovingBlock();
         };
 
         TextureAtlasSprite still = sprites[0];
@@ -63,7 +63,7 @@ public class VertexUtils {
         });
 
         // East side (x=1)
-        nodeCollector.submitCustomGeometry(poseStack, RenderType.translucentMovingBlock(), (pose, vertexBuilder) -> {
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose, vertexBuilder) -> {
             vertexBuilder.addVertex(pose, 1, 0, 1).setColor(tintColor).setUv(u1, v1).setLight(packedLight).setOverlay(packedOverlay).setNormal(1, 0, 0);
             vertexBuilder.addVertex(pose, 1, 0, 0).setColor(tintColor).setUv(u1, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(1, 0, 0);
             vertexBuilder.addVertex(pose, 1, height, 0).setColor(tintColor).setUv(u2, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(1, 0, 0);
@@ -71,7 +71,7 @@ public class VertexUtils {
         });
 
         // North side (z=0)
-        nodeCollector.submitCustomGeometry(poseStack, RenderType.translucentMovingBlock(), (pose, vertexBuilder) -> {
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose, vertexBuilder) -> {
             vertexBuilder.addVertex(pose, 1, 0, 0).setColor(tintColor).setUv(u1, v1).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, 0, -1);
             vertexBuilder.addVertex(pose, 0, 0, 0).setColor(tintColor).setUv(u1, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, 0, -1);
             vertexBuilder.addVertex(pose, 0, height, 0).setColor(tintColor).setUv(u2, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, 0, -1);
@@ -79,7 +79,7 @@ public class VertexUtils {
         });
 
         // South side (z=1)
-        nodeCollector.submitCustomGeometry(poseStack, RenderType.translucentMovingBlock(), (pose, vertexBuilder) -> {
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose, vertexBuilder) -> {
             vertexBuilder.addVertex(pose, 0, 0, 1).setColor(tintColor).setUv(u1, v1).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, 0, 1);
             vertexBuilder.addVertex(pose, 1, 0, 1).setColor(tintColor).setUv(u1, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, 0, 1);
             vertexBuilder.addVertex(pose, 1, height, 1).setColor(tintColor).setUv(u2, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, 0, 1);
@@ -87,7 +87,7 @@ public class VertexUtils {
         });
 
         // Bottom face (y=0)
-        nodeCollector.submitCustomGeometry(poseStack, RenderType.translucentMovingBlock(), (pose, vertexBuilder) -> {
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose, vertexBuilder) -> {
             vertexBuilder.addVertex(pose, 0, 0, 0).setColor(tintColor).setUv(u1, v1).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, -1, 0);
             vertexBuilder.addVertex(pose, 1, 0, 0).setColor(tintColor).setUv(u1, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, -1, 0);
             vertexBuilder.addVertex(pose, 1, 0, 1).setColor(tintColor).setUv(u2, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, -1, 0);
@@ -95,7 +95,7 @@ public class VertexUtils {
         });
 
         // Top face (y=1)
-        nodeCollector.submitCustomGeometry(poseStack, RenderType.translucentMovingBlock(), (pose, vertexBuilder) -> {
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.translucentMovingBlock(), (pose, vertexBuilder) -> {
             vertexBuilder.addVertex(pose, 0, height, 1).setColor(tintColor).setUv(u1, v1).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, 1, 0);
             vertexBuilder.addVertex(pose, 1, height, 1).setColor(tintColor).setUv(u1, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, 1, 0);
             vertexBuilder.addVertex(pose, 1, height, 0).setColor(tintColor).setUv(u2, v2).setLight(packedLight).setOverlay(packedOverlay).setNormal(0, 1, 0);

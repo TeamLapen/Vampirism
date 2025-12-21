@@ -9,7 +9,7 @@ import de.teamlapen.factions.common.core.FactionTasks;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Range;
@@ -17,12 +17,12 @@ import org.jetbrains.annotations.Range;
 /**
  * the entity tag needs a translation key with format {@code tasks.vampirism.<tagid>}
  */
-public record EntityTypeRequirement(ResourceLocation id, TagKey<EntityType<?>> entityType, @Range(from = 0, to = Integer.MAX_VALUE) int amount,
+public record EntityTypeRequirement(Identifier id, TagKey<EntityType<?>> entityType, @Range(from = 0, to = Integer.MAX_VALUE) int amount,
                                     Component description) implements TaskRequirement.Requirement<TagKey<EntityType<?>>> {
 
     public static final MapCodec<EntityTypeRequirement> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
-                ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
+                Identifier.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
                 TagKey.codec(Registries.ENTITY_TYPE).fieldOf("entityType").forGetter(i -> i.entityType),
                 Codec.INT.fieldOf("amount").forGetter(s -> s.amount),
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(s -> s.description)

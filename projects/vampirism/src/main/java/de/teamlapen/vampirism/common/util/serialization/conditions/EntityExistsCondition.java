@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,20 +12,20 @@ public class EntityExistsCondition implements ICondition {
     public static MapCodec<EntityExistsCondition> CODEC = RecordCodecBuilder.mapCodec(
             builder -> builder
                     .group(
-                            ResourceLocation.CODEC.fieldOf("entity_type").forGetter(EntityExistsCondition::getEntityType))
+                            Identifier.CODEC.fieldOf("entity_type").forGetter(EntityExistsCondition::getEntityType))
                     .apply(builder, EntityExistsCondition::new));
 
-    private final ResourceLocation entity_type;
+    private final Identifier entity_type;
 
     public EntityExistsCondition(String location) {
-        this(ResourceLocation.parse(location));
+        this(Identifier.parse(location));
     }
 
     public EntityExistsCondition(String namespace, String path) {
         this(VResourceLocation.loc(namespace, path));
     }
 
-    public EntityExistsCondition(ResourceLocation entity_type) {
+    public EntityExistsCondition(Identifier entity_type) {
         this.entity_type = entity_type;
     }
 
@@ -39,7 +39,7 @@ public class EntityExistsCondition implements ICondition {
         return CODEC;
     }
 
-    public ResourceLocation getEntityType() {
+    public Identifier getEntityType() {
         return this.entity_type;
     }
 

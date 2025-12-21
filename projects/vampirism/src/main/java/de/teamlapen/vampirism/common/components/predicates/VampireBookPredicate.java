@@ -6,12 +6,12 @@ import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.predicates.DataComponentPredicate;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-public record VampireBookPredicate(ResourceLocation id) implements DataComponentPredicate {
+public record VampireBookPredicate(Identifier id) implements DataComponentPredicate {
 
     public static final Codec<VampireBookPredicate> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(VampireBookPredicate::id)
+            Identifier.CODEC.fieldOf("id").forGetter(VampireBookPredicate::id)
     ).apply(inst, VampireBookPredicate::new));
 
     @Override

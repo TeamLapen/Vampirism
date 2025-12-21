@@ -40,11 +40,11 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gamerules.GameRules;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -270,7 +270,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     protected void tickDeath() {
         if (this.deathTime == 19) {
-            if (this.level() instanceof ServerLevel level && (dropSoul && level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
+            if (this.level() instanceof ServerLevel level && (dropSoul && level.getGameRules().get(GameRules.MOB_DROPS))) {
                 level.addFreshEntity(new SoulOrbEntity(this.level(), this.getX(), this.getY(), this.getZ(), SoulOrbEntity.VARIANT.VAMPIRE));
             }
         }

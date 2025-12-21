@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.util;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.DetectedVersion;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;

@@ -4,16 +4,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
@@ -26,8 +27,8 @@ import org.joml.Matrix4f;
  */
 public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionBlockEntity, AltarInfusionRenderer.AltarInfusionRenderState> {
 
-    private static final ResourceLocation INFUSION_BEAM_LOCATION = VResourceLocation.mod("textures/entity/infusion_beam.png");
-    private static final ResourceLocation BEACON_BEAM_LOCATION = VResourceLocation.mc("textures/entity/beacon_beam.png");
+    private static final Identifier INFUSION_BEAM_LOCATION = VResourceLocation.mod("textures/entity/infusion_beam.png");
+    private static final Identifier BEACON_BEAM_LOCATION = VResourceLocation.mc("textures/entity/beacon_beam.png");
     
     public AltarInfusionRenderer(BlockEntityRendererProvider.Context context) {
     }
@@ -90,7 +91,7 @@ public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionB
         float f2 = partialTick * 0.05f;
         float f3 = dist / 32.0F + partialTick * 0.05f;
 
-        nodeCollector.submitCustomGeometry(poseStack, RenderType.entitySmoothCutout(beacon ? BEACON_BEAM_LOCATION : INFUSION_BEAM_LOCATION), (pose, vertexBuilder) -> {
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.entitySmoothCutout(beacon ? BEACON_BEAM_LOCATION : INFUSION_BEAM_LOCATION), (pose, vertexBuilder) -> {
             float f4 = 0.0F;
             float f5 = 0.2F;
             float f6 = 0.0F;

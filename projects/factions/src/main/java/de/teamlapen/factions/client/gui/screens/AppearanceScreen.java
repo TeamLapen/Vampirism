@@ -12,7 +12,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.UnknownNullability;
 
 public abstract class AppearanceScreen<T extends LivingEntity> extends Screen {
 
-    private static final ResourceLocation BACKGROUND = FResourceLocation.mod("background/default");
+    private static final Identifier BACKGROUND = FResourceLocation.mod("background/default");
 
     protected final T entity;
     @Nullable

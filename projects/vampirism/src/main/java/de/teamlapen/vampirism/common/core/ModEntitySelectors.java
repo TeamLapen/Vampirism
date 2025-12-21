@@ -7,11 +7,11 @@ import de.teamlapen.factions.api.factions.IFactionEntity;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.commands.arguments.selector.options.EntitySelectorOptions;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class ModEntitySelectors {
     public static void registerSelectors() {
         EntitySelectorOptions.register(FACTION, (parser) -> {
             boolean invert = parser.shouldInvertValue();
-            ResourceLocation factionID = ResourceLocation.parse(parser.getReader().readString());
+            Identifier factionID = Identifier.parse(parser.getReader().readString());
             List<Holder.Reference<IFaction<?>>> factions = ModRegistries.FACTIONS.listElements().toList();
             for (final Holder.Reference<IFaction<?>> f : factions) {
                 if (f.is(factionID)) {

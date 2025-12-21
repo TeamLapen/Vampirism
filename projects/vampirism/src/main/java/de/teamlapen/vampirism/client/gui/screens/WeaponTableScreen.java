@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,11 +23,11 @@ import java.util.stream.Stream;
  */
 public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> {
 
-    public static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/weapon_table.png");
-    private static final ResourceLocation LAVA_SPRITE = VResourceLocation.mod("container/weapon_table/lava");
-    private static final ResourceLocation EMPTY_BUCKET_SPRITE = VResourceLocation.mod("container/weapon_table/empty_bucket");
-    private static final ResourceLocation MISSING_LAVA_SPRITE = VResourceLocation.mod("container/weapon_table/missing_lava");
-    private static final ResourceLocation ERROR_SPRITE = ResourceLocation.withDefaultNamespace("container/anvil/error");
+    public static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/weapon_table.png");
+    private static final Identifier LAVA_SPRITE = VResourceLocation.mod("container/weapon_table/lava");
+    private static final Identifier EMPTY_BUCKET_SPRITE = VResourceLocation.mod("container/weapon_table/empty_bucket");
+    private static final Identifier MISSING_LAVA_SPRITE = VResourceLocation.mod("container/weapon_table/missing_lava");
+    private static final Identifier ERROR_SPRITE = VResourceLocation.mc("container/anvil/error");
 
     public WeaponTableScreen(@NotNull WeaponTableMenu inventorySlotsIn, @NotNull Inventory inventoryPlayer, @NotNull Component name) {
         super(inventorySlotsIn, inventoryPlayer, name);

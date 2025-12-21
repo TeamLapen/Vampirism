@@ -21,8 +21,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -60,7 +60,7 @@ public class FactionArgument implements ArgumentType<Holder.Reference<IFaction<?
         if (holder.value() instanceof IPlayableFaction<?>) {
             return (Holder<IPlayableFaction<?>>) (Object) holder;
         } else {
-            throw FACTION_NOT_PLAYABLE.create(holder.key().location());
+            throw FACTION_NOT_PLAYABLE.create(holder.key().identifier());
         }
     }
 
@@ -78,12 +78,12 @@ public class FactionArgument implements ArgumentType<Holder.Reference<IFaction<?
         if (this.onlyPlayableFactions) {
             factions = factions.filter(f -> f.value() instanceof IPlayableFaction);
         }
-        return SharedSuggestionProvider.suggest(factions.map(i -> i.key().location().toString()), builder);
+        return SharedSuggestionProvider.suggest(factions.map(i -> i.key().identifier().toString()), builder);
     }
 
     @Override
     public @NotNull Holder.Reference<IFaction<?>> parse(@NotNull StringReader reader) throws CommandSyntaxException {
-        ResourceLocation id = ResourceLocation.read(reader);
+        Identifier id = Identifier.read(reader);
         var key = ResourceKey.create(FactionRegistries.Keys.FACTION, id);
         return this.registryLookup.get(key).orElseThrow(() -> FACTION_NOT_FOUND.create(id));
     }

@@ -29,7 +29,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -98,7 +98,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     protected @Nullable T minionData;
 
     @Nullable
-    private Pair<ResourceLocation, PlayerModelType> skinDetails;
+    private Pair<Identifier, PlayerModelType> skinDetails;
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Nullable

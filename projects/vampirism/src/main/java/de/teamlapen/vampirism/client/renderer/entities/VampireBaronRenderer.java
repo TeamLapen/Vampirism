@@ -14,16 +14,16 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.AnimationState;
 import org.jetbrains.annotations.NotNull;
 
 public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
 
-    private static final ResourceLocation textureLord = VResourceLocation.mod("textures/entity/baron.png");
-    private static final ResourceLocation textureLady = VResourceLocation.mod("textures/entity/baroness.png");
-    private static final ResourceLocation textureLordEnraged = VResourceLocation.mod("textures/entity/baron_enraged.png");
-    private static final ResourceLocation textureLadyEnraged = VResourceLocation.mod("textures/entity/baroness_enraged.png");
+    private static final Identifier textureLord = VResourceLocation.mod("textures/entity/baron.png");
+    private static final Identifier textureLady = VResourceLocation.mod("textures/entity/baroness.png");
+    private static final Identifier textureLordEnraged = VResourceLocation.mod("textures/entity/baron_enraged.png");
+    private static final Identifier textureLadyEnraged = VResourceLocation.mod("textures/entity/baroness_enraged.png");
 
     private final BaronModel baronModel;
     private final BaronessModel baronessModel;
@@ -38,7 +38,7 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, Vampir
 
     @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@NotNull VampireBaronRenderState entity) {
+    public Identifier getTextureLocation(@NotNull VampireBaronRenderState entity) {
         return entity.isEnraged ? (entity.isLady ? textureLadyEnraged : textureLordEnraged) : (entity.isLady ? textureLady : textureLord);
     }
 

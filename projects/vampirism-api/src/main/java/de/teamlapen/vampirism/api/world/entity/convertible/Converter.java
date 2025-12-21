@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.api.world.entity.convertible;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
@@ -21,7 +21,7 @@ public interface Converter {
      * @param texture an optional texture overlay for the converted entity
      * @return the converting handler
      */
-    IConvertingHandler<?> createHandler(@Nullable ResourceLocation texture);
+    IConvertingHandler<?> createHandler(@Nullable Identifier texture);
 
     /**
      * @return Codec for this converter

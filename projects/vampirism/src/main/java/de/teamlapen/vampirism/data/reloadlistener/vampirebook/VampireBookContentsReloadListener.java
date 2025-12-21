@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModVampireBooks;
 import io.netty.handler.codec.DecoderException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -22,16 +22,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class VampireBookContentsReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, VampireBookContentsReloadListener.TranslatedBookContent>> {
+public class VampireBookContentsReloadListener extends SimplePreparableReloadListener<Map<Identifier, VampireBookContentsReloadListener.TranslatedBookContent>> {
 
-    public static final ResourceLocation ID = VResourceLocation.mod("vampire_book_contents");
+    public static final Identifier ID = VResourceLocation.mod("vampire_book_contents");
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private Map<ResourceLocation, VampireBookContentsReloadListener.TranslatedBookContent> translatedBookContents = Map.of();
+    private Map<Identifier, VampireBookContentsReloadListener.TranslatedBookContent> translatedBookContents = Map.of();
 
     @Override
-    protected @NotNull Map<ResourceLocation, VampireBookContentsReloadListener.TranslatedBookContent> prepare(ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
-        Map<ResourceLocation, Resource> vampireBooks = resourceManager.listResources("vampire_books", x -> x.getPath().endsWith(".json"));
+    protected @NotNull Map<Identifier, VampireBookContentsReloadListener.TranslatedBookContent> prepare(ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
+        Map<Identifier, Resource> vampireBooks = resourceManager.listResources("vampire_books", x -> x.getPath().endsWith(".json"));
         var contentByBook = vampireBooks.keySet().stream().collect(Collectors.groupingBy(x -> x.withPath(path -> {
             var parts = path.split("/");
             if (parts.length != 3){
@@ -72,7 +72,7 @@ public class VampireBookContentsReloadListener extends SimplePreparableReloadLis
                 }
 
                 if (base != null) {
-                    ResourceLocation background = !localized.background().equals(ModVampireBooks.DIARY_BACKGROUND) ? localized.background() : base.background();
+                    Identifier background = !localized.background().equals(ModVampireBooks.DIARY_BACKGROUND) ? localized.background() : base.background();
 
                     Map<Integer, IBookContents.IImageEntry> baseImages = base.images().stream().collect(Collectors.toMap(IBookContents.IImageEntry::id, image -> image));
                     for (IBookContents.IImageEntry localizedImage : localized.images()) {
@@ -90,11 +90,11 @@ public class VampireBookContentsReloadListener extends SimplePreparableReloadLis
     }
 
     @Override
-    protected void apply(@NotNull Map<ResourceLocation, VampireBookContentsReloadListener.TranslatedBookContent> object, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
+    protected void apply(@NotNull Map<Identifier, VampireBookContentsReloadListener.TranslatedBookContent> object, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profiler) {
         this.translatedBookContents = Collections.unmodifiableMap(object);
     }
 
-    public Map<ResourceLocation, TranslatedBookContent> getTranslatedBookContents() {
+    public Map<Identifier, TranslatedBookContent> getTranslatedBookContents() {
         return this.translatedBookContents;
     }
 

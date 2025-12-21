@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.misc.mixin.client;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.SplashRenderer;
 import net.minecraft.client.resources.SplashManager;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -35,14 +37,19 @@ public class SplashManagerMixin {
     private static final RandomSource vampirism$RANDOM = RandomSource.create();
 
     @Inject(method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
-    private void vampirism$prepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<List<String>> cir) {
-        List<String> baseSplashes = cir.getReturnValue();
-        List<String> customSplashes = Collections.emptyList();
+    private void vampirism$prepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<List<Component>> cir) {
+        List<Component> baseSplashes = cir.getReturnValue();
+        List<Component> customSplashes = Collections.emptyList();
 
         try (InputStream inputStream = VampirismMod.class.getResourceAsStream(VAMPIRISM_SPLASHES_LOCATION)) {
             if (inputStream != null) {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-                    customSplashes = reader.lines().map(String::trim).filter(line -> !line.isEmpty()).toList();
+                    customSplashes = reader
+                            .lines()
+                            .map(String::trim)
+                            .filter(line -> !line.isEmpty())
+                            .map(x -> "MOTHER".equals(x) ? Component.literal(x).withStyle(ChatFormatting.DARK_RED): SplashManager.literalSplash(x))
+                    .toList();
 
                     vampirism$LOGGER.info("Loaded {} Vampirism splashes", customSplashes.size());
                 }
@@ -57,7 +64,7 @@ public class SplashManagerMixin {
             int timesAdded = (int) Math.ceil((chance * originalSize) / ((1 - chance) * customSplashes.size()));
 
             for (int i = 0; i < timesAdded; i++) {
-                for (String splash : customSplashes) {
+                for (Component splash : customSplashes) {
                     baseSplashes.add(vampirism$RANDOM.nextInt(baseSplashes.size() + 1), splash);
                 }
             }
@@ -73,7 +80,7 @@ public class SplashManagerMixin {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         if (calendar.get(Calendar.MONTH) == Calendar.AUGUST && calendar.get(Calendar.DATE) == 11) {
-            cir.setReturnValue(new SplashRenderer("Happy anniversary, Vampirism!"));
+            cir.setReturnValue(new SplashRenderer(Component.literal("Happy anniversary, Vampirism!")));
         }
     }
 }

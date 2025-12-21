@@ -1,4 +1,4 @@
-@NotNullByDefault
+@NullMarked
 package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jspecify.annotations.NullMarked;

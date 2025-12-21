@@ -5,7 +5,7 @@ import de.teamlapen.factions.api.registries.factions.DeferredFaction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import static de.teamlapen.vampirism.api.APIUtil.factionHolder;
 
@@ -15,7 +15,7 @@ public class VampirismFactions {
     public static final DeferredFaction<IHunterPlayer, IPlayableFaction<IHunterPlayer>> HUNTER = factionHolder(Keys.HUNTER);
 
     public static class Keys {
-        public static final ResourceLocation VAMPIRE = VResourceLocation.mod("vampire");
-        public static final ResourceLocation HUNTER = VResourceLocation.mod("hunter");
+        public static final Identifier VAMPIRE = VResourceLocation.mod("vampire");
+        public static final Identifier HUNTER = VResourceLocation.mod("hunter");
     }
 }

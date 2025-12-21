@@ -7,7 +7,7 @@ import de.teamlapen.factions.common.world.inventory.TaskBoardMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.npc.villager.VillagerData;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 

@@ -12,7 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.BossHealthOverlay;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.BossEvent;
 
 import java.util.LinkedHashMap;
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class CustomBossEventOverlay extends BaseOverlay {
-    private static final ResourceLocation BAR_PROGRESS_SPRITE = FResourceLocation.mc("boss_bar/white_progress");
+    private static final Identifier BAR_PROGRESS_SPRITE = FResourceLocation.mc("boss_bar/white_progress");
     private final Map<UUID, MultiBossEvent> bossInfoMap = new LinkedHashMap<>();
 
     public void clear() {

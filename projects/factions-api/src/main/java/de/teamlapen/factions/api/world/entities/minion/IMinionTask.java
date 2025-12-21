@@ -1,6 +1,7 @@
 package de.teamlapen.factions.api.world.entities.minion;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.factions.api.factions.lord.ILordPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -109,7 +110,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
     class NoDesc<Q extends IMinionData> implements IMinionTaskDesc<Q> {
 
         public static <Q extends IMinionData> Codec<NoDesc<Q>> codec(Supplier<? extends IMinionTask<NoDesc<Q>, Q>> task) {
-            return Codec.unit(() -> new NoDesc<>(task.get()));
+            return MapCodec.unitCodec(() -> new NoDesc<>(task.get()));
         }
 
         private final IMinionTask<NoDesc<Q>, Q> task;

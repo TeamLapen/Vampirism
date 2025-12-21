@@ -10,15 +10,15 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class BloodBarOverlay extends BaseOverlay {
-    public static final ResourceLocation BACKGROUND = VResourceLocation.mod("blood_bar/background");
-    public static final ResourceLocation QUARTER = VResourceLocation.mod("blood_bar/quarter");
-    public static final ResourceLocation HALF = VResourceLocation.mod("blood_bar/half");
-    public static final ResourceLocation THREE_QUARTER = VResourceLocation.mod("blood_bar/three_quarter");
-    public static final ResourceLocation FULL = VResourceLocation.mod("blood_bar/full");
+    public static final Identifier BACKGROUND = VResourceLocation.mod("blood_bar/background");
+    public static final Identifier QUARTER = VResourceLocation.mod("blood_bar/quarter");
+    public static final Identifier HALF = VResourceLocation.mod("blood_bar/half");
+    public static final Identifier THREE_QUARTER = VResourceLocation.mod("blood_bar/three_quarter");
+    public static final Identifier FULL = VResourceLocation.mod("blood_bar/full");
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override

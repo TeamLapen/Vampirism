@@ -1,7 +1,7 @@
 package de.teamlapen.sync.properties;
 
 import de.teamlapen.sync.PropertySync;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -13,7 +13,7 @@ public class DeferredProperty<T extends PropertySync> extends Property {
     private final boolean clientSync;
     private final boolean serverLoad;
 
-    public DeferredProperty(ResourceLocation key, Supplier<T> property, boolean clientSync, boolean serverLoad) {
+    public DeferredProperty(Identifier key, Supplier<T> property, boolean clientSync, boolean serverLoad) {
         super(key);
         this.property = property;
         this.clientSync = clientSync;

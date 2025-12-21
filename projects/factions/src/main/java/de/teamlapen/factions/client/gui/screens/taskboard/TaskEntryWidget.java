@@ -21,7 +21,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +33,8 @@ import java.util.UUID;
 
 public class TaskEntryWidget extends AbstractWidget {
 
-    private static final ResourceLocation TASK_ITEM_BACKGROUND = FResourceLocation.mod("widget/task_background");
-    private static final ResourceLocation TASK_DETAIL_BACKGROUND = FResourceLocation.mod("widget/task_background_2");
+    private static final Identifier TASK_ITEM_BACKGROUND = FResourceLocation.mod("widget/task_background");
+    private static final Identifier TASK_DETAIL_BACKGROUND = FResourceLocation.mod("widget/task_background_2");
 
     private static final WidgetSprites ACCEPT_BUTTON = new WidgetSprites(
             FResourceLocation.mod("widget/task_action_accept"),

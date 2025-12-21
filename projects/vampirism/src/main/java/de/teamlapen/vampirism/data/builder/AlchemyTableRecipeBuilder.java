@@ -8,9 +8,9 @@ import de.teamlapen.vampirism.common.core.ModOils;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemyTableRecipe;
 import net.minecraft.advancements.*;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -94,7 +94,7 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
         var recipe = new AlchemyTableRecipe(Objects.requireNonNullElse(this.group, ""), this.ingredient, this.input, this.result, this.skills);
-        recipeOutput.accept(resourceLocation, recipe, advancement.build(resourceLocation.location().withPrefix("recipes/alchemy_table/")));
+        recipeOutput.accept(resourceLocation, recipe, advancement.build(resourceLocation.identifier().withPrefix("recipes/alchemy_table/")));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
         return this.result.getItem();
     }
 
-    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(HolderGetter<Item> holderGetter,  ItemLike p_125978_) {
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(HolderGetter<Item> holderGetter, ItemLike p_125978_) {
         return inventoryTrigger(ItemPredicate.Builder.item().of(holderGetter, p_125978_));
     }
 

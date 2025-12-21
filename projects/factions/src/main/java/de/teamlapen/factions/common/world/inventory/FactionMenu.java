@@ -20,7 +20,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +41,7 @@ public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu
     private final NonNullList<ItemStack> refinementStacks;
     public @NotNull Map<UUID, TaskManager.TaskWrapper> taskWrappers = new HashMap<>();
     public @NotNull Map<UUID, Set<UUID>> completableTasks = new HashMap<>();
-    public @NotNull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements = new HashMap<>();
+    public @NotNull Map<UUID, Map<UUID, Map<Identifier, Integer>>> completedRequirements = new HashMap<>();
     private @Nullable Runnable listener;
     private final boolean refinementsAvailable;
     private final Registry<Task> registry;
@@ -110,7 +110,7 @@ public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu
     @Override
     public boolean areRequirementsCompleted(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Type type) {
         if (this.completedRequirements.containsKey(taskInfo.getTaskBoard()) && this.completedRequirements.get(taskInfo.getTaskBoard()).containsKey(taskInfo.getId())) {
-            Map<ResourceLocation, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
+            Map<Identifier, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
             for (TaskRequirement.Requirement<?> requirement : getTask(taskInfo.getTask()).requirements().requirements().get(type)) {
                 if (!data.containsKey(requirement.id()) || data.get(requirement.id()) < requirement.getAmount(this.factionPlayer)) {
                     return false;
@@ -162,7 +162,7 @@ public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu
         return this.taskWrappers.values().stream().flatMap(t -> t.getTaskInstances().stream().filter(ITaskInstance::isAccepted)).collect(Collectors.toList());
     }
 
-    public void init(@NotNull Map<UUID, TaskManager.TaskWrapper> taskWrapper, @NotNull Map<UUID, Set<UUID>> completableTasks, @NotNull Map<UUID, Map<UUID, Map<ResourceLocation, Integer>>> completedRequirements) {
+    public void init(@NotNull Map<UUID, TaskManager.TaskWrapper> taskWrapper, @NotNull Map<UUID, Set<UUID>> completableTasks, @NotNull Map<UUID, Map<UUID, Map<Identifier, Integer>>> completedRequirements) {
         this.taskWrappers = taskWrapper;
         this.completedRequirements = completedRequirements;
         this.completableTasks = completableTasks;
@@ -179,7 +179,7 @@ public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu
     @Override
     public boolean isRequirementCompleted(@NotNull ITaskInstance taskInfo, @NotNull TaskRequirement.Requirement<?> requirement) {
         if (this.completedRequirements.containsKey(taskInfo.getTaskBoard()) && this.completedRequirements.get(taskInfo.getTaskBoard()).containsKey(taskInfo.getId())) {
-            Map<ResourceLocation, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
+            Map<Identifier, Integer> data = this.completedRequirements.get(taskInfo.getTaskBoard()).get(taskInfo.getId());
             return data.containsKey(requirement.id()) && data.get(requirement.id()) >= requirement.getAmount(this.factionPlayer);
         }
         return false;

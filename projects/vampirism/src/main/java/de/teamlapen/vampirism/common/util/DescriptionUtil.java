@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -35,7 +35,7 @@ public class DescriptionUtil {
         addDescriptionTooltip(name, REFERENCE.MODID, context, tooltipDisplay, tooltipFlag, tooltipComponents, parameters);
     }
 
-    public static void addDescriptionTooltip(ResourceLocation itemLocation, Item.TooltipContext context, TooltipDisplay tooltipDisplay, TooltipFlag tooltipFlag, Consumer<Component> tooltipComponents, Object... parameters) {
+    public static void addDescriptionTooltip(Identifier itemLocation, Item.TooltipContext context, TooltipDisplay tooltipDisplay, TooltipFlag tooltipFlag, Consumer<Component> tooltipComponents, Object... parameters) {
         addDescriptionTooltip(itemLocation.getPath(), itemLocation.getNamespace(), context, tooltipDisplay, tooltipFlag, tooltipComponents, parameters);
     }
 

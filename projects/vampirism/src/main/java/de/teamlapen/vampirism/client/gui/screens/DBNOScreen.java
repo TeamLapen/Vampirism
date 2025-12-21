@@ -4,7 +4,9 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.components.CooldownButton;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
+import net.minecraft.client.gui.ActiveTextCollector;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.TextAlignment;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -15,6 +17,7 @@ import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.net.URI;
 import java.util.Optional;
 
 public class DBNOScreen extends Screen {
@@ -35,30 +38,21 @@ public class DBNOScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
-        if (this.causeOfDeath != null && mouseButtonEvent.y() > 85.0D && mouseButtonEvent.y() < (double) (85 + 9)) {
-            Style style = this.deriveDeathMessageStyle((int) mouseButtonEvent.x());
-            if (style != null && style.getClickEvent() != null && style.getClickEvent().action() == ClickEvent.Action.OPEN_URL) {
-                this.handleComponentClicked(style);
-                return false;
-            }
-        }
-        return super.mouseClicked(mouseButtonEvent, doubleClick);
+    public boolean mouseClicked(MouseButtonEvent p_446287_, boolean p_433128_) {
+        ActiveTextCollector.ClickableStyleFinder activetextcollector$clickablestylefinder = new ActiveTextCollector.ClickableStyleFinder(
+                this.getFont(), (int)p_446287_.x(), (int)p_446287_.y()
+        );
+        this.visitText(activetextcollector$clickablestylefinder);
+        Style style = activetextcollector$clickablestylefinder.result();
+        return style != null && style.getClickEvent() instanceof ClickEvent.OpenUrl(URI uri)
+                ? clickUrlAction(this.minecraft, this, uri)
+                : super.mouseClicked(p_446287_, p_433128_);
     }
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-
-        if (this.causeOfDeath != null) {
-            graphics.drawCenteredString(this.font, this.causeOfDeath, this.width / 2, 85, 16777215);
-        }
-
-        if (this.causeOfDeath != null && mouseY > 85 && mouseY < 85 + 9) {
-            Style style = this.deriveDeathMessageStyle(mouseX);
-            graphics.renderComponentHoverEffect(this.font, style, mouseX, mouseY);
-        }
-
+        this.visitText(graphics.textRenderer(GuiGraphics.HoveredTextEffects.TOOLTIP_AND_CURSOR));
     }
 
     public boolean shouldCloseOnEsc() {
@@ -93,15 +87,14 @@ public class DBNOScreen extends Screen {
 
     }
 
-    @Nullable
-    private Style deriveDeathMessageStyle(int mouseX) {
-        if (this.causeOfDeath == null) {
-            return null;
-        } else {
-            int i = this.minecraft.font.width(this.causeOfDeath);
-            int j = this.width / 2 - i / 2;
-            int k = this.width / 2 + i / 2;
-            return mouseX >= j && mouseX <= k ? this.minecraft.font.getSplitter().componentStyleAtWidth(this.causeOfDeath, mouseX - j) : null;
+    private void visitText(ActiveTextCollector collector) {
+        ActiveTextCollector.Parameters activetextcollector$parameters = collector.defaultParameters();
+        int i = this.width / 2;
+        collector.defaultParameters(activetextcollector$parameters.withScale(2.0F));
+        collector.accept(TextAlignment.CENTER, i / 2, 30, this.title);
+        collector.defaultParameters(activetextcollector$parameters);
+        if (this.causeOfDeath != null) {
+            collector.accept(TextAlignment.CENTER, i, 85, this.causeOfDeath);
         }
     }
 }

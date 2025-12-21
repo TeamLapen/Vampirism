@@ -9,18 +9,18 @@ import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEn
 import de.teamlapen.vampirism.client.renderer.entities.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
 import de.teamlapen.vampirism.common.core.ModEntities;
-import net.minecraft.client.model.BoatModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.npc.VillagerModel;
+import net.minecraft.client.model.object.boat.BoatModel;
+import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelType;
@@ -138,7 +138,7 @@ public class ModEntitiesRender {
         _onAddLayers(event);
     }
 
-    private static ArmorModelSet<ModelLayerLocation> createArmorSet(ResourceLocation path) {
+    private static ArmorModelSet<ModelLayerLocation> createArmorSet(Identifier path) {
         return new ArmorModelSet<>(new ModelLayerLocation(path, "helmet"), new ModelLayerLocation(path, "chestplate"), new ModelLayerLocation(path, "leggings"), new ModelLayerLocation(path, "boots"));
     }
 

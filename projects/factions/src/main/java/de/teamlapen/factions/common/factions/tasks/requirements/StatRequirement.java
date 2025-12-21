@@ -9,14 +9,14 @@ import de.teamlapen.factions.common.core.FactionTasks;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Range;
 
-public record StatRequirement(ResourceLocation id, ResourceLocation stat, @Range(from = 0, to = Integer.MAX_VALUE) int amount, Component description) implements TaskRequirement.Requirement<ResourceLocation> {
+public record StatRequirement(Identifier id, Identifier stat, @Range(from = 0, to = Integer.MAX_VALUE) int amount, Component description) implements TaskRequirement.Requirement<Identifier> {
 
     public static final MapCodec<StatRequirement> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
-                ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
+                Identifier.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
                 BuiltInRegistries.CUSTOM_STAT.byNameCodec().fieldOf("stat").forGetter(i -> i.stat),
                 Codec.INT.fieldOf("amount").forGetter(s -> s.amount),
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(s -> s.description)
@@ -25,14 +25,14 @@ public record StatRequirement(ResourceLocation id, ResourceLocation stat, @Range
         });
     });
 
-    public StatRequirement(ResourceLocation id, ResourceLocation stat, int amount, Component description) {
+    public StatRequirement(Identifier id, Identifier stat, int amount, Component description) {
         this.id = id;
         this.stat = stat;
         this.amount = amount;
         this.description = description;
     }
 
-    public StatRequirement(ResourceLocation stat, int amount, Component description) {
+    public StatRequirement(Identifier stat, int amount, Component description) {
         this(stat, stat, amount, description);
     }
 
@@ -42,7 +42,7 @@ public record StatRequirement(ResourceLocation id, ResourceLocation stat, @Range
     }
 
     @Override
-    public ResourceLocation getStat(IFactionPlayer<?> player) {
+    public Identifier getStat(IFactionPlayer<?> player) {
         return stat;
     }
 

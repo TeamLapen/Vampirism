@@ -22,7 +22,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
-    protected static final ResourceLocation BACKGROUND = FResourceLocation.mod("widget/background");
+    protected static final Identifier BACKGROUND = FResourceLocation.mod("widget/background");
 
     protected ItemWrapper<T> movingItem;
     private final ItemOrdering<T> ordering;

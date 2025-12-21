@@ -4,11 +4,11 @@ import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionEntity;
 import de.teamlapen.factions.api.factions.village.IFactionVillage;
 import de.teamlapen.factions.common.util.RegUtil;
-import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;

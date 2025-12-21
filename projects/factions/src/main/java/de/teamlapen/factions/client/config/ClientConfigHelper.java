@@ -15,10 +15,10 @@ import de.teamlapen.factions.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.util.RegUtil;
-import de.teamlapen.factions.common.util.serialization.ResourceLocationTypeAdapter;
+import de.teamlapen.factions.common.util.serialization.IdentifierTypeAdapter;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,26 +33,26 @@ public class ClientConfigHelper {
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(TypeToken.getParameterized(List.class, TypeToken.getParameterized(Holder.class, IAction.class).getType()).getType(), new IActionListTypeAdapter())
             .registerTypeAdapter(TypeToken.getParameterized(List.class, SelectMinionTaskRadialScreen.Entry.class).getType(), new EntryListTypeAdapter())
-            .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter())
+            .registerTypeHierarchyAdapter(Identifier.class, new IdentifierTypeAdapter())
             .create();
 
     @SuppressWarnings("unchecked")
-    private static final TypeToken<Map<ResourceLocation, List<Holder<IAction<?>>>>> ACTION_TOKEN = (TypeToken<Map<ResourceLocation, List<Holder<IAction<?>>>>>) TypeToken.getParameterized(Map.class, ResourceLocation.class, TypeToken.getParameterized(List.class, TypeToken.getParameterized(Holder.class, IAction.class).getType()).getType());
+    private static final TypeToken<Map<Identifier, List<Holder<IAction<?>>>>> ACTION_TOKEN = (TypeToken<Map<Identifier, List<Holder<IAction<?>>>>>) TypeToken.getParameterized(Map.class, Identifier.class, TypeToken.getParameterized(List.class, TypeToken.getParameterized(Holder.class, IAction.class).getType()).getType());
     @SuppressWarnings("unchecked")
-    private static final TypeToken<Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>>> MINION_TASK_TOKEN = (TypeToken<Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>>>) TypeToken.getParameterized(Map.class, ResourceLocation.class, TypeToken.getParameterized(List.class, SelectMinionTaskRadialScreen.Entry.class).getType());
+    private static final TypeToken<Map<Identifier, List<SelectMinionTaskRadialScreen.Entry>>> MINION_TASK_TOKEN = (TypeToken<Map<Identifier, List<SelectMinionTaskRadialScreen.Entry>>>) TypeToken.getParameterized(Map.class, Identifier.class, TypeToken.getParameterized(List.class, SelectMinionTaskRadialScreen.Entry.class).getType());
 
     /**
      * Dummy task order identifier id no faction is given, but this should never happen
      */
-    private static final ResourceLocation NONE = FResourceLocation.mod("none");
+    private static final Identifier NONE = FResourceLocation.mod("none");
     /**
      * Cache for the action order
      */
-    private static Map<ResourceLocation, List<Holder<IAction<?>>>> ACTION_ORDER = new HashMap<>();
+    private static Map<Identifier, List<Holder<IAction<?>>>> ACTION_ORDER = new HashMap<>();
     /**
      * Cache for the minion task order
      */
-    private static Map<ResourceLocation, List<SelectMinionTaskRadialScreen.Entry>> MINION_TASK_ORDER = new HashMap<>();
+    private static Map<Identifier, List<SelectMinionTaskRadialScreen.Entry>> MINION_TASK_ORDER = new HashMap<>();
 
     /**
      * Caches the action and minion task order for faster access that does not require deserialization on every access
@@ -117,7 +117,7 @@ public class ClientConfigHelper {
      */
     @NotNull
     public static List<Holder<IAction<?>>> getActionOrder(@NotNull Holder<? extends IPlayableFaction<?>> faction) {
-        ResourceLocation id = faction.unwrapKey().map(ResourceKey::location).orElseThrow();
+        Identifier id = faction.unwrapKey().map(ResourceKey::identifier).orElseThrow();
         return Objects.requireNonNullElseGet(ACTION_ORDER.get(id), () -> {
             List<Holder<IAction<?>>> order = getDefaultActionOrder(faction);
             saveActionOrder(id, order);
@@ -136,7 +136,7 @@ public class ClientConfigHelper {
      */
     @NotNull
     public static List<SelectMinionTaskRadialScreen.Entry> getMinionTaskOrder(@Nullable Holder<? extends IFaction<?>> faction) {
-        return Objects.requireNonNullElseGet(MINION_TASK_ORDER.get(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::location).orElse(NONE)), () -> {
+        return Objects.requireNonNullElseGet(MINION_TASK_ORDER.get(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::identifier).orElse(NONE)), () -> {
             List<SelectMinionTaskRadialScreen.Entry> order = getDefaultMinionTaskOrder(faction);
             saveMinionTaskOrder(faction, order);
             return order;
@@ -165,7 +165,7 @@ public class ClientConfigHelper {
      * @param id      the ordering identifier (faction id)
      * @param actions the ordering
      */
-    public static void saveActionOrder(@NotNull ResourceLocation id, @NotNull List<Holder<IAction<?>>> actions) {
+    public static void saveActionOrder(@NotNull Identifier id, @NotNull List<Holder<IAction<?>>> actions) {
         ACTION_ORDER.put(id, actions);
         try {
             String object = GSON.toJson(ACTION_ORDER, ACTION_TOKEN.getType());
@@ -182,7 +182,7 @@ public class ClientConfigHelper {
      * @param tasks   the ordering
      */
     public static void saveMinionTaskOrder(@Nullable Holder<? extends IFaction<?>> faction, @NotNull List<SelectMinionTaskRadialScreen.Entry> tasks) {
-        MINION_TASK_ORDER.put(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::location).orElse(NONE), tasks);
+        MINION_TASK_ORDER.put(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::identifier).orElse(NONE), tasks);
         try {
             String object = GSON.toJson(MINION_TASK_ORDER, MINION_TASK_TOKEN.getType());
             FactionConfig.CLIENT.minionTaskOrder.set(object);
@@ -199,7 +199,7 @@ public class ClientConfigHelper {
             List<Holder<IAction<?>>> actions = new ArrayList<>();
             in.beginArray();
             while (in.hasNext()) {
-                ModRegistries.ACTIONS.get(ResourceLocation.parse(in.nextString())).ifPresent(actions::add);
+                ModRegistries.ACTIONS.get(Identifier.parse(in.nextString())).ifPresent(actions::add);
             }
             in.endArray();
             return actions;
@@ -210,7 +210,7 @@ public class ClientConfigHelper {
             out.beginArray();
             if (value != null) {
                 for (Holder<IAction<?>> action : value) {
-                    ResourceLocation location = action.unwrapKey().map(ResourceKey::location).orElse(null);
+                    Identifier location = action.unwrapKey().map(ResourceKey::identifier).orElse(null);
                     if (location != null) {
                         out.value(location.toString());
                     }
@@ -227,7 +227,7 @@ public class ClientConfigHelper {
             List<SelectMinionTaskRadialScreen.Entry> actions = new ArrayList<>();
             in.beginArray();
             while (in.hasNext()) {
-                ResourceLocation resourceLocation = ResourceLocation.parse(in.nextString());
+                Identifier resourceLocation = Identifier.parse(in.nextString());
                 IMinionTask<?, ?> minionTask = RegUtil.getMinionTask(resourceLocation);
                 SelectMinionTaskRadialScreen.Entry entry = SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.get(resourceLocation);
                 if (entry != null) {

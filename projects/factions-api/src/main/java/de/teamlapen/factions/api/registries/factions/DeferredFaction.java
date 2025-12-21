@@ -5,7 +5,7 @@ import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionEntity;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +20,7 @@ public class DeferredFaction<Z extends IFactionEntity, L extends IFaction<Z>> ex
     }
 
     @SuppressWarnings("unchecked")
-    public static <Z extends IFactionEntity, L extends IFaction<Z>> DeferredFaction<Z, L> createFaction(ResourceLocation key) {
+    public static <Z extends IFactionEntity, L extends IFaction<Z>> DeferredFaction<Z, L> createFaction(Identifier key) {
         return createFaction((ResourceKey<L>) ResourceKey.create(FactionRegistries.Keys.FACTION, key));
     }
 

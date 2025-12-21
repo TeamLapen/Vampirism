@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.world.entity.ISundamageRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +20,7 @@ public class InterModHandler {
         ISundamageRegistry sundamageRegistry = VampirismApi.services().sunDamageRegistry();
         event.getIMCStream("nosundamage-biome"::equals).forEach(msg -> {
             Object value = msg.messageSupplier().get();
-            if (value instanceof ResourceLocation loc) {
+            if (value instanceof Identifier loc) {
                 LOGGER.info("Received no sundamage biome {} from {}", value, msg.senderModId());
                 sundamageRegistry.addNoSundamageBiomes(ResourceKey.create(Registries.BIOME, loc));
             } else {

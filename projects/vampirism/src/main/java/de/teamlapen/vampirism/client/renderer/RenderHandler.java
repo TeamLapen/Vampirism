@@ -18,7 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -66,8 +66,8 @@ public class RenderHandler implements IMinecraftAccessor {
                 this.mc().debugEntries.setStatus(DebugScreenEntries.ENTITY_HITBOXES, DebugScreenEntryStatus.NEVER);
             }
         }
-        if (event.getCamera().getEntity() instanceof LivingEntity && ((LivingEntity) event.getCamera().getEntity()).isSleeping()) {
-            ((LivingEntity) event.getCamera().getEntity()).getSleepingPos().map(pos -> event.getCamera().getEntity().level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
+        if (event.getCamera().entity() instanceof LivingEntity && ((LivingEntity) event.getCamera().entity()).isSleeping()) {
+            ((LivingEntity) event.getCamera().entity()).getSleepingPos().map(pos -> event.getCamera().entity().level().getBlockState(pos)).filter(blockState -> blockState.getBlock() instanceof CoffinBlock).ifPresent(blockState -> {
                 if (blockState.getValue(CoffinBlock.VERTICAL)) {
                     event.getCamera().invokeMove(0.2f, -0.2f, 0);
                 } else {
@@ -113,7 +113,7 @@ public class RenderHandler implements IMinecraftAccessor {
         f *= vampireBiomeFogDistanceMultiplier;
 
         switch (event.getType()) {
-            case ATMOSPHERIC, DIMENSION_OR_BOSS -> {
+            case ATMOSPHERIC -> {
                 event.setNearPlaneDistance(Math.min(event.getNearPlaneDistance() * 0.75f, 6 * f));
                 event.setFarPlaneDistance(Math.min(event.getFarPlaneDistance(), 50 * f));
             }

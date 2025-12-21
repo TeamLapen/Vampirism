@@ -7,9 +7,9 @@ import de.teamlapen.factions.api.factions.actions.IAction;
 import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
 import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -153,7 +153,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>
         }
     }
 
-    private @Nullable ResourceLocation getRegistryName() {
+    private @Nullable Identifier getRegistryName() {
         return FactionRegistries.SKILL.get().getKey(this);
     }
 
@@ -176,7 +176,7 @@ public abstract class DefaultSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>
             this.skill = skill;
         }
 
-        public ResourceLocation getId() {
+        public Identifier getId() {
             return FactionRegistries.SKILL.get().getKey(this.skill);
         }
 

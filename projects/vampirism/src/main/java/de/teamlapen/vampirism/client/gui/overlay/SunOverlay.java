@@ -8,13 +8,13 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.NotNull;
 
 public class SunOverlay extends TextureOverlay {
 
-    public static final ResourceLocation SUN_TEXTURE = VResourceLocation.mod("textures/misc/sun.png");
+    public static final Identifier SUN_TEXTURE = VResourceLocation.mod("textures/misc/sun.png");
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {

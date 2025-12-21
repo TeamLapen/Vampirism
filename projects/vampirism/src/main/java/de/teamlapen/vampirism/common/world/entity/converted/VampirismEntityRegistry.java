@@ -14,7 +14,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
@@ -39,16 +39,16 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     }
 
     @NotNull
-    public Map<EntityType<?>, ResourceLocation> getConvertibleOverlay() {
+    public Map<EntityType<?>, Identifier> getConvertibleOverlay() {
         DefaultedRegistry<EntityType<?>> registry = BuiltInRegistries.ENTITY_TYPE;
-        Stream<Map.Entry<? extends EntityType<?>, ResourceLocation>> entryStream = registry.getDataMap(ModDataMaps.ENTITY_CONVERTER_MAP).entrySet().stream().flatMap(s -> s.getValue().overlay().flatMap(l -> Optional.ofNullable(registry.getValue(s.getKey())).map(p -> Map.entry(p, l))).stream());
+        Stream<Map.Entry<? extends EntityType<?>, Identifier>> entryStream = registry.getDataMap(ModDataMaps.ENTITY_CONVERTER_MAP).entrySet().stream().flatMap(s -> s.getValue().overlay().flatMap(l -> Optional.ofNullable(registry.getValue(s.getKey())).map(p -> Map.entry(p, l))).stream());
         //noinspection unchecked
         return Map.ofEntries(entryStream.toArray(Map.Entry[]::new));
     }
 
     @Override
-    public @Nullable ResourceLocation getConvertibleOverlay(@NotNull String originalEntity) {
-        return BuiltInRegistries.ENTITY_TYPE.get(ResourceKey.create(Registries.ENTITY_TYPE, ResourceLocation.parse(originalEntity))).map(s -> s.getData(VampirismDataMaps.ENTITY_CONVERTER.get())).flatMap(IConverterEntry::overlay).orElse(null);
+    public @Nullable Identifier getConvertibleOverlay(@NotNull String originalEntity) {
+        return BuiltInRegistries.ENTITY_TYPE.get(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.parse(originalEntity))).map(s -> s.getData(VampirismDataMaps.ENTITY_CONVERTER.get())).flatMap(IConverterEntry::overlay).orElse(null);
     }
 
     @Override

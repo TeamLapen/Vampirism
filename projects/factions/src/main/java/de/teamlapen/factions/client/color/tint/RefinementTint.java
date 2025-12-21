@@ -2,11 +2,12 @@ package de.teamlapen.factions.client.color.tint;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.factions.api.factions.refinements.IRefinementSet;
+import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.api.util.REFERENCE;
 import de.teamlapen.factions.api.world.items.IRefinementItem;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class RefinementTint implements ItemTintSource {
 
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(REFERENCE.MOD_ID,"refinement_tint");
+    public static final Identifier ID = FResourceLocation.mod("refinement_tint");
     public static final RefinementTint INSTANCE = new RefinementTint();
     public static final MapCodec<RefinementTint> CODEC = MapCodec.unit(INSTANCE);
 

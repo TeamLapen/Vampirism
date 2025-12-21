@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.common.util;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Comparator;
 
 public class TextureComparator {
 
-    public static Comparator<ResourceLocation> alphaNumericComparator() {
+    public static Comparator<Identifier> alphaNumericComparator() {
         return (o1, o2) -> {
             String[] parts1 = o1.toString().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");
             String[] parts2 = o2.toString().split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)");

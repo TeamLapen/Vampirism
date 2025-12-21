@@ -3,7 +3,7 @@ package de.teamlapen.factions.api.factions.refinements;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +20,7 @@ public interface IRefinement {
      * If this refinement modifies an attribute, this factory is used to create the attribute modifier for the {@link #getAttribute()} with {@link #getModifierValue()}
      */
     @Nullable
-    BiFunction<ResourceLocation, Double, AttributeModifier> attributeFactory();
+    BiFunction<Identifier, Double, AttributeModifier> attributeFactory();
 
     /**
      * The optional attribute that this refinement can modify

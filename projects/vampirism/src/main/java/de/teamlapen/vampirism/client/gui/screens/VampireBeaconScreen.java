@@ -20,7 +20,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,13 +34,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMenu> {
-    private static final ResourceLocation BEACON_LOCATION = VResourceLocation.mod("textures/gui/container/vampire_beacon.png");
-    static final ResourceLocation BUTTON_DISABLED_SPRITE = VResourceLocation.mc("container/beacon/button_disabled");
-    static final ResourceLocation BUTTON_SELECTED_SPRITE = VResourceLocation.mc("container/beacon/button_selected");
-    static final ResourceLocation BUTTON_HIGHLIGHTED_SPRITE = VResourceLocation.mc("container/beacon/button_highlighted");
-    static final ResourceLocation BUTTON_SPRITE = VResourceLocation.mc("container/beacon/button");
-    static final ResourceLocation CONFIRM_SPRITE = VResourceLocation.mc("container/beacon/confirm");
-    static final ResourceLocation CANCEL_SPRITE = VResourceLocation.mc("container/beacon/cancel");
+    private static final Identifier BEACON_LOCATION = VResourceLocation.mod("textures/gui/container/vampire_beacon.png");
+    static final Identifier BUTTON_DISABLED_SPRITE = VResourceLocation.mc("container/beacon/button_disabled");
+    static final Identifier BUTTON_SELECTED_SPRITE = VResourceLocation.mc("container/beacon/button_selected");
+    static final Identifier BUTTON_HIGHLIGHTED_SPRITE = VResourceLocation.mc("container/beacon/button_highlighted");
+    static final Identifier BUTTON_SPRITE = VResourceLocation.mc("container/beacon/button");
+    static final Identifier CONFIRM_SPRITE = VResourceLocation.mc("container/beacon/confirm");
+    static final Identifier CANCEL_SPRITE = VResourceLocation.mc("container/beacon/cancel");
     private static final Component EFFECT_LABEL = Component.translatable("container.vampirism.vampire_beacon.power");
     private final List<BeaconButton> beaconButtons = new ArrayList<>();
     @Nullable
@@ -171,7 +171,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         protected final int tier;
         private Holder<MobEffect> effect;
         private int effectAmplifier;
-        private ResourceLocation sprite;
+        private Identifier sprite;
 
         public BeaconPowerButton(int pX, int pY, Holder<MobEffect> pEffect, int effectAmplifier, int pTier) {
             super(pX, pY);
@@ -237,8 +237,9 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
             super(pX, pY, 22, 22, pMessage);
         }
 
-        public void renderWidget(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-            ResourceLocation resourcelocation;
+        @Override
+        public void renderContents(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            Identifier resourcelocation;
             if (!this.active) {
                 resourcelocation = BUTTON_DISABLED_SPRITE;
             } else if (this.selected) {
@@ -269,9 +270,9 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
     }
 
     abstract static class BeaconSpriteScreenButton extends BeaconScreenButton {
-        private final ResourceLocation sprite;
+        private final Identifier sprite;
 
-        protected BeaconSpriteScreenButton(int pX, int pY, ResourceLocation pSprite, Component pMessage) {
+        protected BeaconSpriteScreenButton(int pX, int pY, Identifier pSprite, Component pMessage) {
             super(pX, pY, pMessage);
             this.sprite = pSprite;
 

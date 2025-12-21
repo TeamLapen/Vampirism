@@ -6,13 +6,13 @@ import de.teamlapen.vampirism.client.core.ModModels;
 import de.teamlapen.vampirism.common.world.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelManager;
@@ -110,7 +110,7 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
             }
         }
 
-        nodeCollector.submitBlockModel(poseStack, RenderType.solid(), this.bottom[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        nodeCollector.submitBlockModel(poseStack, RenderTypes.solidMovingBlock(), this.bottom[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 
         poseStack.pushPose();
         if (renderState.isVertical) {
@@ -121,7 +121,7 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
             poseStack.translate(0, 0, -0.5 * renderState.lidPos);
         }
 
-        nodeCollector.submitBlockModel(poseStack, RenderType.solid(), this.top[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        nodeCollector.submitBlockModel(poseStack, RenderTypes.solidMovingBlock(), this.top[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
 
         poseStack.popPose();

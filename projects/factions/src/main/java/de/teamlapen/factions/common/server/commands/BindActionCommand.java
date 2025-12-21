@@ -20,7 +20,6 @@ public class BindActionCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
         return Commands.literal("bind-action")
-                .requires(context -> context.hasPermission(BasicCommand.PERMISSION_LEVEL_ALL))
                 .then(Commands.argument("key", EnumArgument.enumArgument(ActionKeys.class))
                         .then(Commands.argument("action", ResourceArgument.resource(buildContext, FactionRegistries.Keys.ACTION))
                                 .executes(context -> bindAction(context, context.getSource().getPlayerOrException(), context.getArgument("key", ActionKeys.class), ActionArgument.getAction(context, "action")))));

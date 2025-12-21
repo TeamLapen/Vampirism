@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.common.world.blocks.*;
 import de.teamlapen.vampirism.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.data.loot.conditions.TentSpawnerCondition;
 import de.teamlapen.vampirism.misc.mixin.accessor.VanillaBlockLootAccessor;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;

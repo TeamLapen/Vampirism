@@ -7,22 +7,22 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 
-public record ServerboundSelectMinionTaskPacket(int minionID, ResourceLocation taskID) implements CustomPacketPayload {
+public record ServerboundSelectMinionTaskPacket(int minionID, Identifier taskID) implements CustomPacketPayload {
     public static final Type<ServerboundSelectMinionTaskPacket> TYPE = new Type<>(FResourceLocation.mod("select_minion_task"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundSelectMinionTaskPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ServerboundSelectMinionTaskPacket::minionID,
-            ResourceLocation.STREAM_CODEC, ServerboundSelectMinionTaskPacket::taskID,
+            Identifier.STREAM_CODEC, ServerboundSelectMinionTaskPacket::taskID,
             ServerboundSelectMinionTaskPacket::new
     );
-    public final static ResourceLocation RECALL = FResourceLocation.mod("recall");
-    public final static ResourceLocation RESPAWN = FResourceLocation.mod("respawn");
+    public final static Identifier RECALL = FResourceLocation.mod("recall");
+    public final static Identifier RESPAWN = FResourceLocation.mod("respawn");
 
     public static void printRecoveringMinions(@NotNull ServerPlayer player, @NotNull List<MutableComponent> recoveringMinions) {
         if (recoveringMinions.size() == 1) {

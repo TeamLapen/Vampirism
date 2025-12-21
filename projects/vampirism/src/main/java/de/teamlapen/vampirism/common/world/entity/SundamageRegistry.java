@@ -10,7 +10,7 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.WorldGenRegion;
@@ -94,9 +94,9 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     public void reloadConfiguration() {
-        Set<ResourceKey<Biome>> biomes = ModConfig.SERVER.sundamageDisabledBiomes.get().stream().map(ResourceLocation::parse).map(s -> ResourceKey.create(Registries.BIOME, s)).collect(Collectors.toUnmodifiableSet());
-        Set<ResourceKey<Level>> levels = ModConfig.SERVER.sundamageDimensionsOverrideNegative.get().stream().map(ResourceLocation::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
-        Set<ResourceKey<Level>> positiveLevels = ModConfig.SERVER.sundamageDimensionsOverridePositive.get().stream().map(ResourceLocation::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Biome>> biomes = ModConfig.SERVER.sundamageDisabledBiomes.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.BIOME, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> levels = ModConfig.SERVER.sundamageDimensionsOverrideNegative.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> positiveLevels = ModConfig.SERVER.sundamageDimensionsOverridePositive.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
         this.configSettings = new ConfigSettings(levels, positiveLevels, biomes);
         reloadSettings();
     }

@@ -16,7 +16,7 @@ import de.teamlapen.factions.api.factions.skills.ISkillTree;
 import de.teamlapen.factions.api.world.ITotem;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.NeoForge;
 import org.apache.commons.lang3.tuple.Pair;

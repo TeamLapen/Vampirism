@@ -5,12 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import de.teamlapen.factions.common.util.serialization.ResourceLocationTypeAdapter;
+import de.teamlapen.factions.common.util.serialization.IdentifierTypeAdapter;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.settings.ISettingsProvider;
 import de.teamlapen.vampirism.api.settings.Supporter;
-import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class SettingsProvider implements ISettingsProvider {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocationTypeAdapter()).registerTypeHierarchyAdapter(Supporter.class, new SupporterDeserializer()).create();
+    private static final Gson GSON = new GsonBuilder().registerTypeHierarchyAdapter(Identifier.class, new IdentifierTypeAdapter()).registerTypeHierarchyAdapter(Supporter.class, new SupporterDeserializer()).create();
 
     private final HttpClient client;
     private final String baseUrl;

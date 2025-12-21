@@ -2,7 +2,7 @@ package de.teamlapen.factions.api.factions.tasks;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 import java.util.UUID;
@@ -29,7 +29,7 @@ public interface ITaskInstance {
     /**
      * @return stats for this instance
      */
-    Map<ResourceLocation, Integer> getStats();
+    Map<Identifier, Integer> getStats();
 
     /**
      * @return the corresponding task

@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,8 +21,8 @@ import java.util.Optional;
 
 public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
-    private static final ResourceLocation BACKGROUND = FResourceLocation.mod("textures/gui/container/minion/inventory.png");
-    private static final ResourceLocation LOCKED_SPRITE = FResourceLocation.mod("container/minion_inventory/locked");
+    private static final Identifier BACKGROUND = FResourceLocation.mod("textures/gui/container/minion/inventory.png");
+    private static final Identifier LOCKED_SPRITE = FResourceLocation.mod("container/minion_inventory/locked");
     private static final WidgetSprites APPEARANCE_SPRITES = new WidgetSprites(FResourceLocation.mod("widget/settings"), FResourceLocation.mod("widget/settings_highlighted"));
     private static final WidgetSprites STATS_SPRITES = new WidgetSprites(FResourceLocation.mod("widget/skill_points"), FResourceLocation.mod("widget/skill_points_highlighted"));
     private final int extraSlots;

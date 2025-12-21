@@ -4,14 +4,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
 import de.teamlapen.vampirism.client.renderer.entities.state.VisibilityPlayerRenderState;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +32,7 @@ public class PlayerBodyOverlayLayer<S extends MinionRenderState, M extends Playe
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, S state, float yRot, float xRot) {
-        ResourceLocation texture = state.skin.body().texturePath();
+        Identifier texture = state.skin.body().texturePath();
         RenderType type = getParentModel().getRenderType(getParentModel(), texture, state);
 
         if (state.renderLordSkin) {
@@ -55,7 +55,7 @@ public class PlayerBodyOverlayLayer<S extends MinionRenderState, M extends Playe
     }
 
     /**
-     * Default {@link PlayerModel} implementation that allows to hide the head and body parts without changing the {@link ModelPart#visible} property.
+     * Default {@link net.minecraft.client.model.player.PlayerModel} implementation that allows to hide the head and body parts without changing the {@link ModelPart#visible} property.
      */
     public static class VisibilityPlayerModel<T extends VisibilityPlayerRenderState> extends ClothedModel<T> {
 
@@ -76,16 +76,16 @@ public class PlayerBodyOverlayLayer<S extends MinionRenderState, M extends Playe
         }
 
         @Nullable
-        public RenderType getRenderType(ClothedModel<T> model, ResourceLocation location, T state) {
+        public RenderType getRenderType(ClothedModel<T> model, Identifier location, T state) {
             boolean pBodyVisible = !state.isInvisible;
             boolean translucent = !pBodyVisible && !state.isInvisibleToPlayer;
             boolean flag2 = state.appearsGlowing();
             if (translucent) {
-                return RenderType.itemEntityTranslucentCull(location);
+                return RenderTypes.itemEntityTranslucentCull(location);
             } else if (pBodyVisible) {
                 return model.renderType(location);
             } else {
-                return flag2 ? RenderType.outline(location) : null;
+                return flag2 ? RenderTypes.outline(location) : null;
             }
         }
 

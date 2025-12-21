@@ -53,16 +53,16 @@ public class MinionWorldData extends SavedData implements ValueIOSerializable {
     private final MinecraftServer server;
     private final Object2ObjectOpenHashMap<UUID, PlayerMinionController> controllers = new Object2ObjectOpenHashMap<>();
 
-    public MinionWorldData(SavedData.Context context) {
-        this.server = context.level().getServer();
+    public MinionWorldData(ServerLevel level) {
+        this.server = level.getServer();
     }
 
-    private static Codec<MinionWorldData> makeCodec(SavedData.Context context) {
+    private static Codec<MinionWorldData> makeCodec(ServerLevel level) {
         return CompoundTag.CODEC.flatXmap(tag -> {
-            MinionWorldData minionWorldData = new MinionWorldData(context);
+            MinionWorldData minionWorldData = new MinionWorldData(level);
             ProblemReporter.Collector reporter = new ProblemReporter.Collector();
 
-            minionWorldData.deserialize(TagValueInput.create(reporter, context.level().registryAccess(), tag));
+            minionWorldData.deserialize(TagValueInput.create(reporter, level.registryAccess(), tag));
             return !reporter.isEmpty() ? DataResult.error(() -> "Deserialisation error in minion data: " + reporter.getReport()) : DataResult.success(minionWorldData);
         }, data -> {
             ProblemReporter.Collector reporter = new ProblemReporter.Collector();

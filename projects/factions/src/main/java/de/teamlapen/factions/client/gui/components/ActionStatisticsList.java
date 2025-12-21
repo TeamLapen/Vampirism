@@ -18,7 +18,7 @@ import net.minecraft.client.gui.screens.achievement.StatsScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.stats.Stat;
 import net.minecraft.stats.StatType;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public class ActionStatisticsList extends ContainerObjectSelectionList<ActionStatisticsList.Entry> {
     protected final List<StatType<ISkill<?>>> skillColumns;
     protected final List<StatType<IAction<?>>> actionColumns;
-    private final ResourceLocation[] iconSprites = new ResourceLocation[] {
+    private final Identifier[] iconSprites = new Identifier[] {
             FResourceLocation.mod("statistics/skills_unlocked"),
             FResourceLocation.mod("statistics/skills_forgotten"),
             FResourceLocation.mc("statistics/item_used"),
@@ -141,10 +141,10 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
 
     public class HeaderEntry extends Entry {
 
-        private static final ResourceLocation SKILLS_UNLOCKED = FResourceLocation.mod("statistics/skills_unlocked");
-        private static final ResourceLocation SKILLS_FORGOTTEN = FResourceLocation.mod("statistics/skills_forgotten");
-        private static final ResourceLocation SKILLS_USED = FResourceLocation.mc("statistics/item_used");
-        private static final ResourceLocation SKILLS_TIME = FResourceLocation.mod("statistics/time");
+        private static final Identifier SKILLS_UNLOCKED = FResourceLocation.mod("statistics/skills_unlocked");
+        private static final Identifier SKILLS_FORGOTTEN = FResourceLocation.mod("statistics/skills_forgotten");
+        private static final Identifier SKILLS_USED = FResourceLocation.mc("statistics/item_used");
+        private static final Identifier SKILLS_TIME = FResourceLocation.mod("statistics/time");
         private final StatSortButton skillsUnlocked;
         private final StatSortButton skillsForgotten;
         private final StatSortButton actionUsed;
@@ -175,7 +175,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
             this.actionCooldownTime.render(guiGraphics, mouseX, mouseY, partialTick);
             if (ActionStatisticsList.this.sortColumn != null) {
                 int i = ActionStatisticsList.this.getColumnX(ActionStatisticsList.this.getColumnIndex(ActionStatisticsList.this.sortColumn)) - 36;
-                ResourceLocation resourcelocation = ActionStatisticsList.this.sortOrder == 1 ? StatsScreen.SORT_UP_SPRITE : StatsScreen.SORT_DOWN_SPRITE;
+                Identifier resourcelocation = ActionStatisticsList.this.sortOrder == 1 ? StatsScreen.SORT_UP_SPRITE : StatsScreen.SORT_DOWN_SPRITE;
                 guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getContentX() + i, this.getContentY() + 1, 18, 18);
             }
         }
@@ -191,9 +191,9 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
         }
 
         public class StatSortButton extends ImageButton {
-            private final ResourceLocation sprite;
+            private final Identifier sprite;
 
-            StatSortButton(int column, ResourceLocation sprite) {
+            StatSortButton(int column, Identifier sprite) {
                 super(
                         18,
                         18,
@@ -206,10 +206,10 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
             }
 
             @Override
-            public void renderWidget(GuiGraphics p_440197_, int p_439800_, int p_440460_, float p_439309_) {
-                ResourceLocation resourcelocation = this.sprites.get(this.isActive(), this.isHoveredOrFocused());
-                p_440197_.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), this.width, this.height);
-                p_440197_.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX(), this.getY(), this.width, this.height);
+            public void renderContents(GuiGraphics graphics, int p_281473_, int p_283021_, float partialTicks) {
+                Identifier identifier = this.sprites.get(this.isActive(), this.isHoveredOrFocused());
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), this.getY(), this.width, this.height);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX(), this.getY(), this.width, this.height);
             }
         }
     }

@@ -1,8 +1,8 @@
 package de.teamlapen.factions.misc.extensions.client;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface IImageWidgetSprite {
 
-    ResourceLocation sprite();
+    Identifier sprite();
 }

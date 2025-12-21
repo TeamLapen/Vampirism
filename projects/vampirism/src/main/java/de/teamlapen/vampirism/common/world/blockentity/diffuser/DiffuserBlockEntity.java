@@ -146,13 +146,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
     }
 
     public static boolean tryAccess(Player player, Holder<? extends IPlayableFaction<?>> faction, Component displayName) {
-        if (!player.isSpectator() && IFaction.is(IFactionRegistry.get().getFaction(player), faction)) {
-            return true;
-        } else {
-            player.displayClientMessage(Component.translatable("text.vampirism.cannot_access_menu", displayName), true);
-            player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
-            return false;
-        }
+        return !player.isSpectator() && IFaction.is(IFactionRegistry.get().getFaction(player), faction);
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {

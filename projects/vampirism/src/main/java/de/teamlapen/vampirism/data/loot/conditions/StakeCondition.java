@@ -37,7 +37,7 @@ public class StakeCondition implements LootItemCondition {
 
     @Override
     public boolean test(@NotNull LootContext context) {
-        Entity player = context.getOptionalParameter(target.getParam());
+        Entity player = context.getOptionalParameter(target.contextParam());
         if (player instanceof Player) {
             ItemStack active = ((Player) player).getMainHandItem();
             return !active.isEmpty() && active.getItem() instanceof StakeItem;

@@ -15,7 +15,7 @@ import de.teamlapen.sync.PropertySync;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +40,7 @@ public abstract class MinionData extends PropertySync implements IMinionData {
 
     @Nullable
     public static <T extends MinionData> T fromNBT(ValueInput input) {
-        return input.read("data_type", ResourceLocation.CODEC).map(ModRegistries.MINIONS::getValue).map(IMinionEntry::data).map(Supplier::get).map(x -> {
+        return input.read("data_type", Identifier.CODEC).map(ModRegistries.MINIONS::getValue).map(IMinionEntry::data).map(Supplier::get).map(x -> {
             try {
                 @SuppressWarnings("unchecked")
                 T t = (T) x;
@@ -160,7 +160,7 @@ public abstract class MinionData extends PropertySync implements IMinionData {
         inventory.write(output.list("inv", ItemStackWithSlot.CODEC));
         output.putFloat("health", this.health);
         output.putString("name", this.name);
-        output.store("data_type", ResourceLocation.CODEC, getDataType());
+        output.store("data_type", Identifier.CODEC, getDataType());
         output.putBoolean("locked", this.taskLocked);
         output.store("task", MINION_TASK_CODEC, this.activeTaskDesc);
         output.store("caps", CompoundTag.CODEC, this.entityCaps);
@@ -249,7 +249,5 @@ public abstract class MinionData extends PropertySync implements IMinionData {
         return false;
     }
 
-    protected ResourceLocation getDataType() {
-        return ResourceLocation.withDefaultNamespace("");
-    }
+    protected abstract Identifier getDataType();
 }

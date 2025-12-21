@@ -1,10 +1,10 @@
 package de.teamlapen.factions.api.factions.actions;
 
 import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Util;
 
 /**
  * The result of an attempt to activate an action, active the action or check if an action can be activated
@@ -30,7 +30,7 @@ public interface IActionResult {
      * Creates a fail result if the other action is active
      */
     static <T extends ISkillPlayer<T>> IActionResult otherAction(IActionHandler<T> handler, Holder<? extends ILastingAction<T>> otherAction) {
-        return handler.isActionActive(otherAction) ? new Result(false, Component.translatable("text.factions.action.other_action", Component.translatable(Util.makeDescriptionId("action", otherAction.unwrapKey().map(ResourceKey::location).orElseThrow())))) : SUCCESS;
+        return handler.isActionActive(otherAction) ? new Result(false, Component.translatable("text.factions.action.other_action", Component.translatable(Util.makeDescriptionId("action", otherAction.unwrapKey().map(ResourceKey::identifier).orElseThrow())))) : SUCCESS;
     }
 
     /**

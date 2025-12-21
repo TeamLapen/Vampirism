@@ -4,6 +4,7 @@ import de.teamlapen.factions.api.factions.actions.IAction;
 import de.teamlapen.factions.api.util.REFERENCE;
 import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.factions.common.util.RegUtil;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -16,6 +17,7 @@ import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 
 import java.util.Arrays;
 
+// TODO adapt minecrafts new permission system
 public class Permissions {
 
     @SuppressWarnings("unchecked")
@@ -29,8 +31,8 @@ public class Permissions {
     }
 
     public static boolean isPvpEnabled(Player player) {
-        if (!player.level().isClientSide()) {
-            return ServerLifecycleHooks.getCurrentServer().isPvpAllowed();
+        if (player.level() instanceof ServerLevel server) {
+            return server.isPvpAllowed();
         }
         return true;
     }

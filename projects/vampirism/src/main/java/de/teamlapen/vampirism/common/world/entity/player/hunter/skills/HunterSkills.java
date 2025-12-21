@@ -17,7 +17,7 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterAc
 import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.common.world.entity.player.skills.ActionSkill;
 import de.teamlapen.vampirism.common.world.entity.player.skills.VampirismSkill;
-import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
@@ -40,8 +40,8 @@ import java.util.Optional;
 public class HunterSkills {
     public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(FactionRegistries.Keys.SKILL, REFERENCE.MODID);
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LEVEL_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().location().getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LORD_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().location().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LEVEL_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().identifier().getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LORD_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> BASIC_ALCHEMY = SKILLS.register("basic_alchemy", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> GARLIC_DIFFUSER = SKILLS.register("garlic_diffuser", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> GARLIC_DIFFUSER_IMPROVED = SKILLS.register("garlic_diffuser_improved", () -> new VampirismSkill.SimpleHunterSkill(2, true));

@@ -2,19 +2,19 @@ package de.teamlapen.vampirism.client.models.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
-import net.minecraft.Util;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.HumanoidArm;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 /**
- * Keep in sync with {@link net.minecraft.client.model.PlayerModel}
+ * Keep in sync with {@link net.minecraft.client.model.player.PlayerModel}
  */
 public class ClothedModel<T extends AvatarLikeRenderState> extends HumanoidModel<T> {
     private static final String LEFT_SLEEVE = "left_sleeve";
@@ -30,7 +30,7 @@ public class ClothedModel<T extends AvatarLikeRenderState> extends HumanoidModel
     private final boolean slim;
 
     public ClothedModel(ModelPart root, boolean slim) {
-        super(root, RenderType::entityTranslucent);
+        super(root, RenderTypes::entityTranslucent);
         this.slim = slim;
         this.leftSleeve = this.leftArm.getChild(LEFT_SLEEVE);
         this.rightSleeve = this.rightArm.getChild(RIGHT_SLEEVE);

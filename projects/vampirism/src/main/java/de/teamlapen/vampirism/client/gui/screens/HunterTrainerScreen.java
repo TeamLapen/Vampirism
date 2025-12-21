@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -29,9 +29,9 @@ import java.util.Optional;
  * Gui for the Hunter Trainer interaction
  */
 public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
-    private static final ResourceLocation INGOT_SLOT_SPRITE = ResourceLocation.withDefaultNamespace("container/slot/ingot");
-    private static final ResourceLocation HUNTER_INTEL_SLOT_SPRITE = VResourceLocation.mod("container/slot/hunter_intel");
-    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/hunter_trainer.png");
+    private static final Identifier INGOT_SLOT_SPRITE = VResourceLocation.mc("container/slot/ingot");
+    private static final Identifier HUNTER_INTEL_SLOT_SPRITE = VResourceLocation.mod("container/slot/hunter_intel");
+    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/hunter_trainer.png");
 
     private Button buttonLevelup;
 

@@ -33,7 +33,7 @@ public class MinecraftMixin {
     @Nullable
     public LocalPlayer player;
 
-    @Inject(method = "getSituationalMusic", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"), cancellable = true)
+    @Inject(method = "getSituationalMusic", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;attributeProbe()Lnet/minecraft/world/attribute/EnvironmentAttributeProbe;", shift = At.Shift.BEFORE), cancellable = true)
     private void getSituationalMusicVampirism(CallbackInfoReturnable<Music> cir) {
         Map<UUID, LerpingBossEvent> events = this.gui.getBossOverlay().getEvents();
         events.values().stream().map(s -> ((ClientProxy) VampirismMod.proxy).getBossEventSound(s.getId())).filter(Objects::nonNull).findFirst().ifPresent(s -> cir.setReturnValue(ModSounds.getMusic(s)));

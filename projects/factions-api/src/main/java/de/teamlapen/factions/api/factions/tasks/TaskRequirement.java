@@ -7,7 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -127,7 +127,7 @@ public class TaskRequirement {
             return 1;
         }
 
-        ResourceLocation id();
+        Identifier id();
 
         /**
          * @param player the player who wants to complete this task

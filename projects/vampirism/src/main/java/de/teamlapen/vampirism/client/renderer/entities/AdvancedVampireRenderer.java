@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.ClientAsset;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.PlayerModelType;
 import net.minecraft.world.entity.player.PlayerSkin;
 import org.jetbrains.annotations.NotNull;
@@ -71,11 +71,11 @@ public class AdvancedVampireRenderer extends DualBipedRenderer<AdvancedVampireEn
         public int eyeType;
 
         @Nullable
-        public ResourceLocation overlay;
+        public Identifier overlay;
 
         @Nullable
         @Override
-        public ResourceLocation overlay() {
+        public Identifier overlay() {
             return this.overlay;
         }
     }

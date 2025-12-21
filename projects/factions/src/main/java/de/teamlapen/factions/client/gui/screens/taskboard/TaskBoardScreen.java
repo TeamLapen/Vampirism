@@ -14,13 +14,13 @@ import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> implements ExtendedScreen {
 
-    private static final ResourceLocation BACKGROUND = FResourceLocation.mod("background/default");
+    private static final Identifier BACKGROUND = FResourceLocation.mod("background/default");
 
     private static final int SCREEN_WIDTH = 220;
     private static final int SCREEN_HEIGHT = 200;

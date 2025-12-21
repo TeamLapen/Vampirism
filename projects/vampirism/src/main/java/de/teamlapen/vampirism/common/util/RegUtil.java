@@ -7,11 +7,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -22,35 +22,35 @@ import org.jetbrains.annotations.NotNull;
 
 public class RegUtil extends de.teamlapen.factions.common.util.RegUtil {
 
-    public static ResourceLocation id(@NotNull Item item) {
+    public static Identifier id(@NotNull Item item) {
         return BuiltInRegistries.ITEM.getKey(item);
     }
 
-    public static ResourceLocation id(@NotNull ItemLike item) {
+    public static Identifier id(@NotNull ItemLike item) {
         return BuiltInRegistries.ITEM.getKey(item.asItem());
     }
 
-    public static ResourceLocation id(@NotNull Block block) {
+    public static Identifier id(@NotNull Block block) {
         return BuiltInRegistries.BLOCK.getKey(block);
     }
 
-    public static ResourceLocation id(@NotNull Fluid block) {
+    public static Identifier id(@NotNull Fluid block) {
         return BuiltInRegistries.FLUID.getKey(block);
     }
 
-    public static ResourceLocation id(@NotNull EntityType<?> type) {
+    public static Identifier id(@NotNull EntityType<?> type) {
         return BuiltInRegistries.ENTITY_TYPE.getKey(type);
     }
 
-    public static ResourceLocation id(Level level, @NotNull Biome type) {
+    public static Identifier id(Level level, @NotNull Biome type) {
         return level.registryAccess().lookupOrThrow(Registries.BIOME).getKey(type);
     }
 
-    public static ResourceLocation id(@NotNull VillagerProfession profession) {
+    public static Identifier id(@NotNull VillagerProfession profession) {
         return BuiltInRegistries.VILLAGER_PROFESSION.getKey(profession);
     }
 
-    public static ResourceLocation id(@NotNull IOil oil) {
+    public static Identifier id(@NotNull IOil oil) {
         return ModRegistries.OILS.getKey(oil);
     }
 
@@ -67,15 +67,15 @@ public class RegUtil extends de.teamlapen.factions.common.util.RegUtil {
     }
 
 
-    public static Item getItem(@NotNull ResourceLocation id) {
+    public static Item getItem(@NotNull Identifier id) {
         return BuiltInRegistries.ITEM.getValue(id);
     }
 
-    public static Biome getBiome(ServerLevel level, @NotNull ResourceLocation id) {
+    public static Biome getBiome(ServerLevel level, @NotNull Identifier id) {
         return level.registryAccess().lookupOrThrow(Registries.BIOME).getValue(id);
     }
 
-    public static IOil getOil(@NotNull ResourceLocation id) {
+    public static IOil getOil(@NotNull Identifier id) {
         return ModRegistries.OILS.getValue(id);
     }
 
@@ -87,7 +87,7 @@ public class RegUtil extends de.teamlapen.factions.common.util.RegUtil {
         return getHolder(level, Registries.DAMAGE_TYPE, type);
     }
 
-    public static <T> boolean has(@NotNull Registry<T> registry, @NotNull ResourceLocation id) {
+    public static <T> boolean has(@NotNull Registry<T> registry, @NotNull Identifier id) {
         return registry.containsKey(id);
     }
 

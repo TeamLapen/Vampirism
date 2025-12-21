@@ -2,7 +2,7 @@ package de.teamlapen.sync.properties;
 
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +20,7 @@ public class SimpleProperty<T> extends Property {
     private final Supplier<T> valueProvider;
     private final DataApply<T> valueSetter;
 
-    public SimpleProperty(ResourceLocation key, Codec<T> codec, Supplier<T> defaultValue, Supplier<T> valueProvider, DataApply<T> valueSetter) {
+    public SimpleProperty(Identifier key, Codec<T> codec, Supplier<T> defaultValue, Supplier<T> valueProvider, DataApply<T> valueSetter) {
         super(key);
         this.codec = codec;
         this.defaultValue = defaultValue;

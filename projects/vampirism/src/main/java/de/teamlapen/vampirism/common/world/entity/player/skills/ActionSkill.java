@@ -11,7 +11,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,8 +67,8 @@ public class ActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends 
         }
     }
 
-    public ResourceLocation getActionID() {
-        return this.action.unwrapKey().map(ResourceKey::location).orElseThrow();
+    public Identifier getActionID() {
+        return this.action.unwrapKey().map(ResourceKey::identifier).orElseThrow();
     }
 
     @Override

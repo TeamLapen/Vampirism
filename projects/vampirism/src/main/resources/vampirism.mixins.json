@@ -65,7 +65,6 @@
     "client.MutableSpriteSetMixin",
     "client.ResourceLoadStateTrackerMixin",
     "client.SplashManagerMixin",
-    "client.SplashRendererMixin",
     "client.StatsScreenMixin",
     "client.VampireAvatarRenderStateMixin"
   ],

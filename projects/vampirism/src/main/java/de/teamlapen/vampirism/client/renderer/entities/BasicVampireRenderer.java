@@ -8,25 +8,25 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class BasicVampireRenderer extends HumanoidMobRenderer<BasicVampireEntity, BasicVampireEntity.BasicVampireRenderState, HumanoidModel<BasicVampireEntity.BasicVampireRenderState>> {
 
-    private final ResourceLocation @NotNull [] textures;
+    private final Identifier @NotNull [] textures;
 
     public BasicVampireRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false), 0.5F);
-        textures = Minecraft.getInstance().getResourceManager().listResources("textures/entity/vampire", s -> s.getPath().endsWith(".png")).keySet().stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).toArray(ResourceLocation[]::new);
+        textures = Minecraft.getInstance().getResourceManager().listResources("textures/entity/vampire", s -> s.getPath().endsWith(".png")).keySet().stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())).toArray(Identifier[]::new);
     }
 
     @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@NotNull BasicVampireEntity.BasicVampireRenderState entity) {
+    public Identifier getTextureLocation(@NotNull BasicVampireEntity.BasicVampireRenderState entity) {
         return entity.texture;
     }
 
-    public ResourceLocation getVampireTexture(int entityId) {
+    public Identifier getVampireTexture(int entityId) {
         return textures[entityId % textures.length];
     }
 

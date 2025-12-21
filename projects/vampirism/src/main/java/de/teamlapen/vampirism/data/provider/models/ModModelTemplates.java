@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import static de.teamlapen.vampirism.api.util.VResourceLocation.mod;
 
@@ -37,15 +37,15 @@ public class ModModelTemplates extends ModelTemplates {
     public static final ModelTemplate TECH_CROSSBOW_UNLOADED = createItem(mod("tech_crossbow_unloaded"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
     public static final ModelTemplate GARLIC_DIFFUSER_CORE = createItem(mod("garlic_diffuser_core"), TextureSlot.TEXTURE);
 
-    public static ModelTemplate createItem(ResourceLocation modelName, TextureSlot... textures) {
+    public static ModelTemplate createItem(Identifier modelName, TextureSlot... textures) {
         return ModelTemplates.createItem(modelName.toString(), textures);
     }
 
-    public static ModelTemplate create(ResourceLocation modelName, TextureSlot... textures) {
+    public static ModelTemplate create(Identifier modelName, TextureSlot... textures) {
         return ModelTemplates.create(modelName.toString(), textures);
     }
 
-    public static ModelTemplate copy(ModelTemplate template, ResourceLocation renderType) {
+    public static ModelTemplate copy(ModelTemplate template, Identifier renderType) {
         return template.extend().renderType(renderType).build();
     }
 }

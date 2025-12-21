@@ -20,7 +20,7 @@ import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
@@ -58,7 +58,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
         this.arrow = guiHelper.createAnimatedDrawable(progress, 400, IDrawableAnimated.StartDirection.TOP, false);
     }
 
-    private static ResourceLocation fixSprite(ResourceLocation spriteLoc) {
+    private static Identifier fixSprite(Identifier spriteLoc) {
         return spriteLoc.withPrefix("textures/gui/sprites/").withSuffix(".png");
     }
 

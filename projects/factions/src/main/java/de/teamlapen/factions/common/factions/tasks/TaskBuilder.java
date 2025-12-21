@@ -13,12 +13,12 @@ import de.teamlapen.factions.common.factions.tasks.reward.ConsumerReward;
 import de.teamlapen.factions.common.factions.tasks.reward.ItemReward;
 import de.teamlapen.factions.common.factions.tasks.unlock.ParentUnlocker;
 import de.teamlapen.factions.common.util.RegUtil;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +36,7 @@ public class TaskBuilder {
         return new TaskBuilder();
     }
 
-    private final Map<ResourceLocation, TaskRequirement.Requirement<?>> requirement = new HashMap<>();
+    private final Map<Identifier, TaskRequirement.Requirement<?>> requirement = new HashMap<>();
     private final List<TaskUnlocker> unlocker = Lists.newArrayList();
     @Nullable
     private TaskReward reward;
@@ -64,11 +64,11 @@ public class TaskBuilder {
         return this.addRequirement(new EntityTypeRequirement(entityType, amount, Component.translatable(Util.makeDescriptionId("entity_tag", entityType.location()))));
     }
 
-    public TaskBuilder addRequirement(ResourceLocation stat, int amount, Component description) {
+    public TaskBuilder addRequirement(Identifier stat, int amount, Component description) {
         return this.addRequirement(new StatRequirement(stat, amount, description));
     }
 
-    public TaskBuilder addRequirement( ResourceLocation stat, int amount) {
+    public TaskBuilder addRequirement( Identifier stat, int amount) {
         return this.addRequirement(new StatRequirement(stat, amount, Component.translatable(Util.makeDescriptionId("stat", stat))));
     }
 
@@ -85,7 +85,7 @@ public class TaskBuilder {
     }
 
     public TaskBuilder addRequirement(Holder<FactionPlayerBooleanSupplier> function) {
-        return this.addRequirement(new BooleanRequirement(function, Component.translatable(Util.makeDescriptionId("faction_boolean_supplier", function.getKey().location()))));
+        return this.addRequirement(new BooleanRequirement(function, Component.translatable(Util.makeDescriptionId("faction_boolean_supplier", function.getKey().identifier()))));
     }
 
     public TaskBuilder addRequirement(TaskRequirement.Requirement<?> requirement) {
@@ -105,10 +105,10 @@ public class TaskBuilder {
 
     public void build(BiConsumer<ResourceKey<Task>, Task> consumer, ResourceKey<Task> key, boolean withDescription) {
         if (this.title == null) {
-            this.title = Component.translatable(Util.makeDescriptionId("task", key.location()));
+            this.title = Component.translatable(Util.makeDescriptionId("task", key.identifier()));
         }
         if (this.description == null && withDescription) {
-            this.description = Component.translatable(Util.makeDescriptionId("task", key.location().withPath(x -> x + ".description")));
+            this.description = Component.translatable(Util.makeDescriptionId("task", key.identifier().withPath(x -> x + ".description")));
         }
         Preconditions.checkArgument(!this.requirement.isEmpty(), "Task needs requirements");
         Preconditions.checkArgument(this.reward != null, "Task needs a reward");

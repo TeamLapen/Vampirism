@@ -15,7 +15,7 @@ import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaronEntity;
 import de.teamlapen.vampirism.misc.mixin.accessor.EntityAccessor;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.InteractionHand;
@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 public class CrucifixItem extends Item implements IItemWithTier {
 
     private final Tier tier;
-    private static final ResourceLocation COOLDOWN_GROUP = VResourceLocation.mod("crucifix");
+    private static final Identifier COOLDOWN_GROUP = VResourceLocation.mod("crucifix");
 
     public CrucifixItem(Tier tier, Properties properties) {
         super(FactionRestriction.builder(ModFactionTags.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).apply(properties).stacksTo(1).component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {

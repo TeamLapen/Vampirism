@@ -85,9 +85,9 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void resize(@NotNull Minecraft p_resize_1_, int p_resize_2_, int p_resize_3_) {
+    public void resize(int p_resize_2_, int p_resize_3_) {
         String text = nameField.getValue();
-        super.resize(p_resize_1_, p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
+        super.resize(p_resize_2_, p_resize_3_); //Text gets deleted as this calls init again
         nameField.setValue(text);
     }
 

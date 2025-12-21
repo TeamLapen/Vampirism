@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public class CoffinModel extends Model<Object> {
     }
 
     public CoffinModel(@NotNull ModelPart part) {
-        super(part, RenderType::entitySolid);
+        super(part, RenderTypes::entitySolid);
         this.leftPlate = part.getChild(LEFT_PLATE);
         this.rightPlate = part.getChild(RIGHT_PLATE);
         this.backPlate = part.getChild(BACK_PLATE);

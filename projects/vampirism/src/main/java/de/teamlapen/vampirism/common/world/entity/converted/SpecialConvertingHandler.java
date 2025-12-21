@@ -4,7 +4,7 @@ import de.teamlapen.factions.common.util.SpawnUtil;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.entity.convertible.ICurableConvertedCreature;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,12 +23,12 @@ public class SpecialConvertingHandler<T extends PathfinderMob, Z extends Pathfin
 
     private final Supplier<EntityType<Z>> convertedType;
 
-    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType, ResourceLocation overlayTexture) {
+    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType, Identifier overlayTexture) {
         super(null, overlayTexture);
         this.convertedType = convertedType;
     }
 
-    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType, ResourceLocation overlayTexture, IDefaultHelper attributeHelper) {
+    public SpecialConvertingHandler(Supplier<EntityType<Z>> convertedType, Identifier overlayTexture, IDefaultHelper attributeHelper) {
         super(attributeHelper, overlayTexture);
         this.convertedType = convertedType;
     }

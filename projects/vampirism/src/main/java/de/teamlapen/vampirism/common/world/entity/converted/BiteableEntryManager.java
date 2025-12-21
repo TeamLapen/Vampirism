@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.common.datamaps.EntityBloodEntry;
 import de.teamlapen.vampirism.common.tags.ModEntityTags;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.PathfinderMob;
@@ -40,7 +40,7 @@ public class BiteableEntryManager {
     public IEntityBlood calculate(@NotNull PathfinderMob creature) {
         if (!ModConfig.SERVER.autoCalculateEntityBlood.get()) return EntityBloodEntry.EMPTY;
         EntityType<?> type = creature.getType();
-        ResourceLocation id = RegUtil.id(type);
+        Identifier id = RegUtil.id(type);
         if (isEntityBlacklisted(creature)) {
             return EntityBloodEntry.EMPTY;
         }
@@ -104,7 +104,7 @@ public class BiteableEntryManager {
      * @param id registryname of the entity type
      * @return weather the entity type is blacklisted by the server config or not
      */
-    private boolean isConfigBlackListed(@NotNull ResourceLocation id) {
+    private boolean isConfigBlackListed(@NotNull Identifier id) {
         List<? extends String> list = ModConfig.SERVER.blacklistedBloodEntity.get();
         return list.contains(id.toString());
     }

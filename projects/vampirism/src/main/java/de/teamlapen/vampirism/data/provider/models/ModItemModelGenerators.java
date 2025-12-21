@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.item.properties.numeric.CrossbowPull;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -34,7 +34,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         getFlatItems().forEach(item -> generateFlatItem(item, ModModelTemplates.FLAT_ITEM));
         getFlatItemWithTexture().forEach(this::generateFlatItemWithTexture);
         generateArrows();
-        generateSpawnEggs();
         generateBloodBottle();
         generateAmmoClip();
         generateQuarrelPouch();
@@ -61,19 +60,19 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         this.itemModelOutput.accept(item, ItemModelUtils.plainModel(getDefaultModelLocation(item)));
     }
 
-    protected ResourceLocation getDefaultModelLocation(Item item) {
+    protected Identifier getDefaultModelLocation(Item item) {
         return ModelLocationUtils.getModelLocation(item);
     }
 
-    protected void generateFlatItemWithTexture(Item item, ResourceLocation texture) {
+    protected void generateFlatItemWithTexture(Item item, Identifier texture) {
         this.itemModelOutput.accept(item, ItemModelUtils.plainModel(createFlatItemWithTexture(item, texture)));
     }
 
-    protected ResourceLocation createFlatItemWithTexture(Item item, ResourceLocation texture) {
+    protected Identifier createFlatItemWithTexture(Item item, Identifier texture) {
         return ModModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(item), TextureMapping.layer0(texture), this.modelOutput);
     }
 
-    protected ResourceLocation createFlatItemWithTexture(ResourceLocation item, ResourceLocation texture) {
+    protected Identifier createFlatItemWithTexture(Identifier item, Identifier texture) {
         return ModModelTemplates.FLAT_ITEM.create(ModelLocationUtils.decorateItemModelLocation(item.toString()), TextureMapping.layer0(texture), this.modelOutput);
     }
 
@@ -83,7 +82,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         generateCrucifix(ModItems.CRUCIFIX_ULTIMATE.get(), VResourceLocation.mod("item/crucifix_gold"));
     }
 
-    protected void generateCrucifix(Item item, ResourceLocation texture) {
+    protected void generateCrucifix(Item item, Identifier texture) {
         this.itemModelOutput.accept(item, ItemModelUtils.plainModel(ModModelTemplates.CRUCIFIX.create(ModelLocationUtils.getModelLocation(item), TextureMapping.defaultTexture(texture).put(TextureSlot.PARTICLE, texture), this.modelOutput)));
     }
 
@@ -99,49 +98,29 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         this.itemModelOutput.accept(ModItems.OIL_BOTTLE.asItem(), ItemModelUtils.tintedModel(bloodBottle, BLANK_LAYER, new OilBottleTint()));
     }
 
-    protected void generateSpawnEggs() {
-        this.generateSpawnEgg(ModItems.VAMPIRE_SPAWN_EGG.get(), 0x881d99, 0x5e1975);
-        this.generateSpawnEgg(ModItems.ADVANCED_VAMPIRE_SPAWN_EGG.get(), 0x881d99, 0xedbb24);
-        this.generateSpawnEgg(ModItems.VAMPIRE_BARON_SPAWN_EGG.get(), 0x9a1b1b, 0x252525);
-        this.generateSpawnEgg(ModItems.TASK_MASTER_VAMPIRE_SPAWN_EGG.get(), 0x881d99, 0xcecdd1);
-
-        this.generateSpawnEgg(ModItems.VAMPIRE_HUNTER_SPAWN_EGG.get(), 0x173f9c, 142163);
-        this.generateSpawnEgg(ModItems.ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG.get(), 0x173f9c, 0xedbb24);
-        this.generateSpawnEgg(ModItems.HUNTER_TRAINER_SPAWN_EGG.get(), 0x99989c, 0x252525);
-        this.generateSpawnEgg(ModItems.TASK_MASTER_HUNTER_SPAWN_EGG.get(), 0x173f9c, 0xcecdd1);
-
-        this.generateSpawnEgg(ModItems.GHOST_SPAWN_EGG.get(), 0xcecdd1, 0xb5b3ba);
-    }
-
-    public void generateSpawnEgg(Item spawnEggItem, int primaryColor, int secondaryColor) {
-        ResourceLocation resourcelocation = ModelLocationUtils.decorateItemModelLocation("template_spawn_egg");
-        this.itemModelOutput
-                .accept(spawnEggItem, ItemModelUtils.tintedModel(resourcelocation, ItemModelUtils.constantTint(primaryColor), ItemModelUtils.constantTint(secondaryColor)));
-    }
-
     protected void generateCrossbows() {
-        ResourceLocation basicModel = ModModelTemplates.CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_CROSSBOW.get()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")).put(ModTextureSlots.ARROW, mod("item/crossbow_part_arrow")), this.modelOutput);
-        ResourceLocation basicModelUnloaded = ModModelTemplates.CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")), this.modelOutput);
+        Identifier basicModel = ModModelTemplates.CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_CROSSBOW.get()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")).put(ModTextureSlots.ARROW, mod("item/crossbow_part_arrow")), this.modelOutput);
+        Identifier basicModelUnloaded = ModModelTemplates.CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")), this.modelOutput);
         this.itemModelOutput.accept(ModItems.BASIC_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(basicModel), ItemModelUtils.override(ItemModelUtils.plainModel(basicModelUnloaded), 0.99f)));
 
-        ResourceLocation enhancedModel = ModModelTemplates.CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_CROSSBOW.get()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")).put(ModTextureSlots.ARROW, mod("item/crossbow_part_arrow")), this.modelOutput);
-        ResourceLocation enhancedModelUnloaded = ModModelTemplates.CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")), this.modelOutput);
+        Identifier enhancedModel = ModModelTemplates.CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_CROSSBOW.get()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")).put(ModTextureSlots.ARROW, mod("item/crossbow_part_arrow")), this.modelOutput);
+        Identifier enhancedModelUnloaded = ModModelTemplates.CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_string")), this.modelOutput);
         this.itemModelOutput.accept(ModItems.ENHANCED_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(enhancedModel), ItemModelUtils.override(ItemModelUtils.plainModel(enhancedModelUnloaded), 0.99f)));
 
-        ResourceLocation doubleModel = ModModelTemplates.DOUBLE_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_DOUBLE_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_double")).put(ModTextureSlots.STRING, mod("item/crossbow_part_double_string")).put(ModTextureSlots.ARROW, mod("item/crossbow_part_arrow")), this.modelOutput);
-        ResourceLocation doubleModelUnloaded = ModModelTemplates.DOUBLE_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_DOUBLE_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_double")).put(ModTextureSlots.STRING, mod("item/crossbow_part_double_string")), this.modelOutput);
+        Identifier doubleModel = ModModelTemplates.DOUBLE_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_DOUBLE_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_double")).put(ModTextureSlots.STRING, mod("item/crossbow_part_double_string")).put(ModTextureSlots.ARROW, mod("item/crossbow_part_arrow")), this.modelOutput);
+        Identifier doubleModelUnloaded = ModModelTemplates.DOUBLE_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_DOUBLE_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_double")).put(ModTextureSlots.STRING, mod("item/crossbow_part_double_string")), this.modelOutput);
         this.itemModelOutput.accept(ModItems.BASIC_DOUBLE_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(doubleModel), ItemModelUtils.override(ItemModelUtils.plainModel(doubleModelUnloaded), 0.99f)));
 
-        ResourceLocation enhancedDoubleModel = ModModelTemplates.DOUBLE_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_DOUBLE_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_double_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_double_string")).put(ModTextureSlots.ARROW, mod("item/crossbow_part_arrow")), this.modelOutput);
-        ResourceLocation enhancedDoubleModelUnloaded = ModModelTemplates.DOUBLE_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_DOUBLE_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_double_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_double_string")), this.modelOutput);
+        Identifier enhancedDoubleModel = ModModelTemplates.DOUBLE_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_DOUBLE_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_double_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_double_string")).put(ModTextureSlots.ARROW, mod("item/crossbow_part_arrow")), this.modelOutput);
+        Identifier enhancedDoubleModelUnloaded = ModModelTemplates.DOUBLE_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_DOUBLE_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/crossbow_double_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_double_string")), this.modelOutput);
         this.itemModelOutput.accept(ModItems.ENHANCED_DOUBLE_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(enhancedDoubleModel), ItemModelUtils.override(ItemModelUtils.plainModel(enhancedDoubleModelUnloaded), 0.99f)));
 
-        ResourceLocation techModel = ModModelTemplates.TECH_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_TECH_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/tech_crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_tech_string")), this.modelOutput);
-        ResourceLocation techModelUnloaded = ModModelTemplates.TECH_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_TECH_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/tech_crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_tech_string_unloaded")), this.modelOutput);
+        Identifier techModel = ModModelTemplates.TECH_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_TECH_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/tech_crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_tech_string")), this.modelOutput);
+        Identifier techModelUnloaded = ModModelTemplates.TECH_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_TECH_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/tech_crossbow")).put(ModTextureSlots.STRING, mod("item/crossbow_part_tech_string_unloaded")), this.modelOutput);
         this.itemModelOutput.accept(ModItems.BASIC_TECH_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(techModel), ItemModelUtils.override(ItemModelUtils.plainModel(techModelUnloaded), 0.99f)));
 
-        ResourceLocation enhancedTechModel = ModModelTemplates.TECH_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_TECH_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/tech_crossbow_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_tech_string")), this.modelOutput);
-        ResourceLocation enhancedTechModelUnloaded = ModModelTemplates.TECH_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_TECH_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/tech_crossbow_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_tech_string_unloaded")), this.modelOutput);
+        Identifier enhancedTechModel = ModModelTemplates.TECH_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_TECH_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/tech_crossbow_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_tech_string")), this.modelOutput);
+        Identifier enhancedTechModelUnloaded = ModModelTemplates.TECH_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_TECH_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, mod("item/tech_crossbow_enhanced")).put(ModTextureSlots.STRING, mod("item/crossbow_part_tech_string_unloaded")), this.modelOutput);
         this.itemModelOutput.accept(ModItems.ENHANCED_TECH_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(enhancedTechModel), ItemModelUtils.override(ItemModelUtils.plainModel(enhancedTechModelUnloaded), 0.99f)));
     }
 
@@ -284,11 +263,20 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.BLOOD_INFUSED_IRON_INGOT,
                 ModItems.BLOOD_INFUSED_GOLD_INGOT,
                 ModItems.BLOOD_INFUSED_DIAMOND,
-                ModItems.BLOOD_INFUSED_NETHERITE_INGOT
+                ModItems.BLOOD_INFUSED_NETHERITE_INGOT,
+                ModItems.VAMPIRE_SPAWN_EGG,
+                ModItems.ADVANCED_VAMPIRE_SPAWN_EGG,
+                ModItems.VAMPIRE_BARON_SPAWN_EGG,
+                ModItems.TASK_MASTER_VAMPIRE_SPAWN_EGG,
+                ModItems.VAMPIRE_HUNTER_SPAWN_EGG,
+                ModItems.ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG,
+                ModItems.HUNTER_TRAINER_SPAWN_EGG,
+                ModItems.TASK_MASTER_HUNTER_SPAWN_EGG,
+                ModItems.GHOST_SPAWN_EGG
                 ).map(DeferredItem::asItem);
     }
 
-    protected Map<Item, ResourceLocation> getFlatItemWithTexture() {
+    protected Map<Item, Identifier> getFlatItemWithTexture() {
         return new HashMap<>() {{
             put(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), mod("item/holy_water_normal"));
             put(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), mod("item/holy_water_enhanced"));

@@ -93,7 +93,7 @@ public class OverworldModifications {
                     Pair<Climate.ParameterPoint, Holder<Biome>> pair = it.next();
                     //It should be safe to get the biome here because {@link BiomeSource} does so as well right after this function call
                     removed += pair.getSecond().unwrapKey().map(biomeId -> {
-                        if ("minecraft".equals(biomeId.location().getNamespace()) && Arrays.stream(forestPoints).anyMatch(p -> intersects(p, pair.getFirst()))) {
+                        if ("minecraft".equals(biomeId.identifier().getNamespace()) && Arrays.stream(forestPoints).anyMatch(p -> intersects(p, pair.getFirst()))) {
                             it.remove();
                             LOGGER.debug("Removing biome {} from parameter point {} in overworld preset", biomeId, pair.getFirst());
                             return 1;
@@ -104,7 +104,7 @@ public class OverworldModifications {
                 LOGGER.debug("Removed a total of {} points from {}", removed, oldCount);
 
 
-                LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.location(), Arrays.toString(forestPoints));
+                LOGGER.info("Adding biome {} to ParameterPoints {} in Preset.OVERWORLD", ModBiomes.VAMPIRE_FOREST.identifier(), Arrays.toString(forestPoints));
                 for (Climate.ParameterPoint forestPoint : forestPoints) {
                     biomes.add(Pair.of(forestPoint, (Holder<Biome>) p_275485_.apply(ModBiomes.VAMPIRE_FOREST)));
                 }

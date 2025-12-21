@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.neoforge.common.data.SoundDefinition;
 import net.neoforged.neoforge.common.data.SoundDefinitionsProvider;
@@ -56,7 +56,7 @@ public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
             soundDefinition.subtitle(getSubtitle(sound));
         }
         for (int i = 1; i <= count; i++) {
-            soundDefinition.with(SoundDefinition.Sound.sound(ResourceLocation.fromNamespaceAndPath(REFERENCE.MODID, fileName + "_" + i), SoundDefinition.SoundType.SOUND));
+            soundDefinition.with(SoundDefinition.Sound.sound(Identifier.fromNamespaceAndPath(REFERENCE.MODID, fileName + "_" + i), SoundDefinition.SoundType.SOUND));
         }
 
         this.add(sound, soundDefinition);

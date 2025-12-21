@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.client.renderer.entities.layers.TaskMasterTypeLaye
 import de.teamlapen.vampirism.client.renderer.entities.state.TaskMasterRenderState;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.hunter.HunterTaskMasterEntity;
-import net.minecraft.client.model.VillagerModel;
+import net.minecraft.client.model.npc.VillagerModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -16,15 +16,15 @@ import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the advanced vampire with overlays
  */
 public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity, HunterTaskMasterRenderer.HunterTaskMasterRenderState, VillagerModel> {
-    private final static ResourceLocation texture = VResourceLocation.mc("textures/entity/villager/villager.png");
-    private final static ResourceLocation overlay = VResourceLocation.mod("textures/entity/hunter_task_master_overlay.png");
+    private final static Identifier texture = VResourceLocation.mc("textures/entity/villager/villager.png");
+    private final static Identifier overlay = VResourceLocation.mod("textures/entity/hunter_task_master_overlay.png");
 
     public HunterTaskMasterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerModel(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);
@@ -33,7 +33,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull HunterTaskMasterRenderState state) {
+    public @NotNull Identifier getTextureLocation(@NotNull HunterTaskMasterRenderState state) {
         return texture;
     }
 

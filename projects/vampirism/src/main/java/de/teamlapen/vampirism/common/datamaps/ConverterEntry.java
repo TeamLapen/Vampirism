@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
 import de.teamlapen.vampirism.common.world.entity.converted.converter.DefaultConverter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -20,19 +20,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public record ConverterEntry(Converter converter, Optional<ResourceLocation> overlay) implements IConverterEntry {
+public record ConverterEntry(Converter converter, Optional<Identifier> overlay) implements IConverterEntry {
     public static final Codec<IConverterEntry> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(
                 Converter.CODEC.optionalFieldOf("handler", new DefaultConverter()).forGetter(IConverterEntry::converter),
-                ResourceLocation.CODEC.optionalFieldOf("overlay").forGetter(IConverterEntry::overlay)
+                Identifier.CODEC.optionalFieldOf("overlay").forGetter(IConverterEntry::overlay)
         ).apply(inst, ConverterEntry::new);
     });
 
-    public ConverterEntry(Converter converter, ResourceLocation overlay) {
+    public ConverterEntry(Converter converter, Identifier overlay) {
         this(converter, Optional.of(overlay));
     }
 
-    public ConverterEntry(@Nullable ResourceLocation overlay) {
+    public ConverterEntry(@Nullable Identifier overlay) {
         this(new DefaultConverter(), Optional.ofNullable(overlay));
     }
 

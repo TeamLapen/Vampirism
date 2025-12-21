@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.tags;
 
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
@@ -20,7 +20,7 @@ public class ModEntityTags {
     public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
     public static final TagKey<EntityType<?>> IGNORE_VAMPIRE_SWORD_FINISHER = tag("ignore_vampire_sword_finisher");
 
-    private static TagKey<EntityType<?>> tag(ResourceLocation resourceLocation) {
+    private static TagKey<EntityType<?>> tag(Identifier resourceLocation) {
         return TagKey.create(Registries.ENTITY_TYPE, resourceLocation);
     }
 

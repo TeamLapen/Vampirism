@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.DefendLeaderGoal;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.FindLeaderGoal;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEntityFollower {
 
-    private static final ResourceLocation SPEED_MODIFIER = VResourceLocation.mod("not_in_block");
+    private static final Identifier SPEED_MODIFIER = VResourceLocation.mod("not_in_block");
     private IEntityLeader leader;
 
     public GhostEntity(@NotNull EntityType<? extends VampirismEntity> type, @NotNull Level world) {

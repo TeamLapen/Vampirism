@@ -7,12 +7,12 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterSkillProperties;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class DisguiseOverlay extends TextureOverlay {
 
-    public static final ResourceLocation DISGUISE_TEXTURE = FResourceLocation.mod("textures/misc/disguise.png");
+    public static final Identifier DISGUISE_TEXTURE = FResourceLocation.mod("textures/misc/disguise.png");
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {

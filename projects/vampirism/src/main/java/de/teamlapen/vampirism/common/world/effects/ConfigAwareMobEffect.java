@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.effects;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -27,7 +27,7 @@ public class ConfigAwareMobEffect extends MobEffect {
         super(category, color, particle);
     }
 
-    public void addAttributeModifier(Holder<Attribute> attribute, ResourceLocation id, Supplier<Double> amount, AttributeModifier.Operation operation) {
+    public void addAttributeModifier(Holder<Attribute> attribute, Identifier id, Supplier<Double> amount, AttributeModifier.Operation operation) {
         this.attributeModifiers.put(attribute, new AttributeTemplate(id, amount, operation));
     }
 
@@ -54,7 +54,7 @@ public class ConfigAwareMobEffect extends MobEffect {
         }
     }
 
-    public record AttributeTemplate(ResourceLocation id, Supplier<Double> amount, AttributeModifier.Operation operation) {
+    public record AttributeTemplate(Identifier id, Supplier<Double> amount, AttributeModifier.Operation operation) {
 
         public AttributeModifier create(int amplifier) {
             return new AttributeModifier(this.id, this.amount.get() * (double) (amplifier + 1), this.operation);

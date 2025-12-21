@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.world.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.datamaps.ConverterEntry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -32,12 +32,12 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
     private static final Logger LOGGER = LogManager.getLogger();
 
     protected final @NotNull IDefaultHelper helper;
-    protected final @Nullable ResourceLocation overlayTexture;
+    protected final @Nullable Identifier overlayTexture;
 
     /**
      * @param helper If null a default one will be used
      */
-    public DefaultConvertingHandler(@Nullable IDefaultHelper helper, @Nullable ResourceLocation overlayTexture) {
+    public DefaultConvertingHandler(@Nullable IDefaultHelper helper, @Nullable Identifier overlayTexture) {
         this.helper = Objects.requireNonNullElse(helper, new VampirismEntityRegistry.DefaultHelper(ConverterEntry.ConvertingAttributeModifier.DEFAULT));
         this.overlayTexture = overlayTexture;
     }

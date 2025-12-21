@@ -6,26 +6,28 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModModels;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class CoffinRenderer implements SpecialModelRenderer<CoffinBlock> {
 
-    public static final ResourceLocation ID = VResourceLocation.mod("coffin");
+    public static final Identifier ID = VResourceLocation.mod("coffin");
     private final BlockStateModel[] models;
 
     public CoffinRenderer(BlockStateModel[] models) {
@@ -35,11 +37,13 @@ public class CoffinRenderer implements SpecialModelRenderer<CoffinBlock> {
     @Override
     public void submit(@Nullable CoffinBlock argument, @NotNull ItemDisplayContext displayContext, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodeCollector, int packedLight, int packedOverlay, boolean hasFoil, int outlineColor) {
         if (argument == null) return;
-        nodeCollector.submitBlockModel(poseStack, RenderType.solid(), this.models[argument.getColor().getId()], 1, 1, 1, packedLight, packedOverlay, outlineColor);
+        nodeCollector.submitBlockModel(poseStack, RenderTypes.solidMovingBlock(), this.models[argument.getColor().getId()], 1, 1, 1, packedLight, packedOverlay, outlineColor);
     }
 
+
     @Override
-    public void getExtents(@NotNull Set<Vector3f> output) {
+    public void getExtents(Consumer<Vector3fc> consumer) {
+
     }
 
     @Override

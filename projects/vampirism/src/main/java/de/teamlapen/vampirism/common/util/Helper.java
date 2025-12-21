@@ -26,10 +26,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -59,7 +60,7 @@ public class Helper {
         if (VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition())) {
             if (!(world instanceof Level) || !((Level) world).isRaining()) {
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
-                if (isDay(world)) {
+                if (isDay(world, entity.blockPosition())) {
                     BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
                     if (canBlockSeeSun(world, pos)) {
                         return world instanceof Level && !LevelFog.get(((Level) world)).isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()));
@@ -70,8 +71,8 @@ public class Helper {
         return false;
     }
 
-    public static boolean isDay(LevelAccessor level) {
-        float angle = level.getTimeOfDay(1.0F);
+    public static boolean isDay(LevelAccessor level, BlockPos pos) {
+        float angle = level.environmentAttributes().getValue(EnvironmentAttributes.SUN_ANGLE, pos) / 360;
         return angle > 0.78 || angle < 0.24;
     }
 
@@ -201,7 +202,7 @@ public class Helper {
         return LevelFog.get(w).isInsideArtificialVampireFogArea(e.blockPosition());
     }
 
-    public static ResourceLocation getBiomeId(@NotNull Entity e) {
+    public static Identifier getBiomeId(@NotNull Entity e) {
         return getBiomeId(e.level(), e.blockPosition());
     }
 
@@ -209,12 +210,12 @@ public class Helper {
         return e.level().getBiome(e.blockPosition());
     }
 
-    public static ResourceLocation getBiomeId(@NotNull CommonLevelAccessor world, @NotNull BlockPos pos) {
+    public static Identifier getBiomeId(@NotNull CommonLevelAccessor world, @NotNull BlockPos pos) {
         return getBiomeId(world, world.getBiome(pos));
     }
 
-    public static ResourceLocation getBiomeId(@NotNull CommonLevelAccessor world, @NotNull Holder<Biome> biome) {
-        return biome.unwrap().map(ResourceKey::location, b -> world.registryAccess().lookupOrThrow(Registries.BIOME).getKey(b));
+    public static Identifier getBiomeId(@NotNull CommonLevelAccessor world, @NotNull Holder<Biome> biome) {
+        return biome.unwrap().map(ResourceKey::identifier, b -> world.registryAccess().lookupOrThrow(Registries.BIOME).getKey(b));
     }
 
 

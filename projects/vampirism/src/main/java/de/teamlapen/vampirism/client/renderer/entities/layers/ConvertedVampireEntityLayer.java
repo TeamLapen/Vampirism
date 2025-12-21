@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -29,7 +29,7 @@ public class ConvertedVampireEntityLayer<Z extends LivingEntityRenderState & ICo
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, Z renderState, float yRot, float xRot) {
         if (!renderState.isInvisible) {
-            ResourceLocation texture = renderState.vampirism$convertedOverlay();
+            Identifier texture = renderState.vampirism$convertedOverlay();
             if (texture == null) {
                 texture = renderState.vampirism$overlay();
             }

@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import de.teamlapen.factions.common.core.FactionBlocks;
 import de.teamlapen.factions.common.util.MapUtil;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.tags.ModPoiTypeTags;
 import de.teamlapen.vampirism.common.tags.ModStructureTags;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
@@ -13,19 +14,21 @@ import de.teamlapen.vampirism.common.world.entity.villager.VampirismTrades;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.attribute.AttributeTypes;
+import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
-import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.VillagerTrades;
 import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.entity.schedule.Schedule;
-import net.minecraft.world.entity.schedule.ScheduleBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
+import net.minecraft.world.timeline.Timeline;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -40,7 +43,7 @@ import java.util.stream.Stream;
 public class ModVillage {
     public static final DeferredRegister<VillagerProfession> PROFESSIONS = DeferredRegister.create(Registries.VILLAGER_PROFESSION, REFERENCE.MODID);
     public static final DeferredRegister<PoiType> POI_TYPES = DeferredRegister.create(Registries.POINT_OF_INTEREST_TYPE, REFERENCE.MODID);
-    public static final DeferredRegister<Schedule> SCHEDULES = DeferredRegister.create(Registries.SCHEDULE, REFERENCE.MODID);
+    public static final DeferredRegister<EnvironmentAttribute<?>> SCHEDULES = DeferredRegister.create(Registries.ENVIRONMENT_ATTRIBUTE, REFERENCE.MODID);
 
     public static final DeferredHolder<PoiType, PoiType> HUNTER_TOTEM = POI_TYPES.register("hunter_totem", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get()), 1, 1));
     public static final DeferredHolder<PoiType, PoiType> VAMPIRE_TOTEM = POI_TYPES.register("vampire_totem", () -> new PoiType(getAllStates(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get()), 1, 1));
@@ -48,8 +51,9 @@ public class ModVillage {
     public static final DeferredHolder<PoiType, PoiType> ALTAR_CLEANSING = POI_TYPES.register("altar_cleansing", () -> new PoiType(getAllStates(ModBlocks.ALTAR_CLEANSING.get()), 1, 1));
     public static final DeferredHolder<PoiType, PoiType> CREEPER_REPELLENT = POI_TYPES.register("creeper_repellent", () -> new PoiType(getAllStates(ModBlocks.VAMPIRE_SOUL_LANTERN.get()), 1, 1));
 
-    public static final DeferredHolder<Schedule, Schedule> CONVERTED_DEFAULT = SCHEDULES.register("converted_default", () ->
-            new ScheduleBuilder(new Schedule()).changeActivityAt(12000, Activity.IDLE).changeActivityAt(10, Activity.REST).changeActivityAt(14000, Activity.WORK).changeActivityAt(21000, Activity.MEET).changeActivityAt(23000, Activity.IDLE).build());
+    public static final DeferredHolder<EnvironmentAttribute<?>, EnvironmentAttribute<Activity>> CONVERTED_DEFAULT = SCHEDULES.register("converted_default", () -> EnvironmentAttribute.builder(AttributeTypes.ACTIVITY).defaultValue(Activity.IDLE).build());
+
+    public static final ResourceKey<Timeline> VAMPIRE_VILLAGER_SCHEDULE = ResourceKey.create(Registries.TIMELINE, VResourceLocation.mod("vampire_villager_schedule"));
 
     public static final DeferredHolder<VillagerProfession, VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession(Component.translatable(REFERENCE.MODID + ":vampire_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CARTOGRAPHER));
     public static final DeferredHolder<VillagerProfession, VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession(Component.translatable(REFERENCE.MODID + ":hunter_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(ModBlocks.HUNTER_TABLE.get(), ModBlocks.WEAPON_TABLE.get(), ModBlocks.GARLIC.get()), SoundEvents.VILLAGER_WORK_ARMORER));
@@ -60,6 +64,20 @@ public class ModVillage {
         POI_TYPES.register(bus);
         PROFESSIONS.register(bus);
         SCHEDULES.register(bus);
+    }
+
+    static void createTimelines(BootstrapContext<Timeline> bootstrapContext) {
+        bootstrapContext.register(VAMPIRE_VILLAGER_SCHEDULE, Timeline.builder()
+                .setPeriodTicks(24000)
+                .addTrack(CONVERTED_DEFAULT.get(),
+                        builder -> builder
+                                .addKeyframe(10, Activity.REST)
+                                .addKeyframe(12000, Activity.IDLE)
+                                .addKeyframe(14000, Activity.WORK)
+                                .addKeyframe(21000, Activity.MEET)
+                                .addKeyframe(23000, Activity.IDLE)
+                )
+                .build());
     }
 
     private static Set<BlockState> getAllStates(Block @NotNull ... blocks) {

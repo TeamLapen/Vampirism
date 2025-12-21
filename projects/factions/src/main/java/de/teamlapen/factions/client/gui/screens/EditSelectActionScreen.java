@@ -28,8 +28,8 @@ import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
@@ -51,8 +51,8 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         GuiRenderer.blit(graphics, getActionIcon(action), posX, posY, 16, 16, 16, 16);
     }
 
-    private static ResourceLocation getActionIcon(Holder<IAction<?>> action) {
-        return action.unwrapKey().map(ResourceKey::location).map(s -> s.withPath("textures/actions/" + s.getPath() + ".png")).orElseThrow();
+    private static Identifier getActionIcon(Holder<IAction<?>> action) {
+        return action.unwrapKey().map(ResourceKey::identifier).map(s -> s.withPath("textures/actions/" + s.getPath() + ".png")).orElseThrow();
     }
 
     @SuppressWarnings("unchecked")
@@ -65,7 +65,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     }
 
     private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<Holder<IAction<?>>> ordering) {
-        ClientConfigHelper.saveActionOrder(player.getFaction().unwrapKey().map(ResourceKey::location).orElseThrow(), ordering.getOrdering());
+        ClientConfigHelper.saveActionOrder(player.getFaction().unwrapKey().map(ResourceKey::identifier).orElseThrow(), ordering.getOrdering());
     }
 
     private KeyBindingList keyBindingList;

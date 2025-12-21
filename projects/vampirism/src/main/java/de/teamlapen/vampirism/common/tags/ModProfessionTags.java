@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.tags;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 
 public class ModProfessionTags {
     public static final TagKey<VillagerProfession> HAS_FACTION = tag("has_faction");

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.renderer;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.teamlapen.vampirism.client.core.ModRenderPipelines;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,13 +20,13 @@ public class CustomBufferSource extends MultiBufferSource.BufferSource {
         super(bufferSource.sharedBuffer, bufferSource.fixedBuffers);
     }
 
-    @Override
-    public @NotNull VertexConsumer getBuffer(@NotNull RenderType renderType) {
-        if (!entityRenderTypes.contains(renderType.name)) {
-            return new NoOpGenerator();
-        }
-        return new OutlineGenerator(super.getBuffer(ModRenderPipelines.solidTransparencyEntity().get()), teamR, teamG, teamB, teamA);
-    }
+//    @Override
+//    public @NotNull VertexConsumer getBuffer(@NotNull RenderType renderType) {
+//        if (!entityRenderTypes.contains(renderType.name)) {
+//            return new NoOpGenerator(); FIXME
+//        }
+//        return new OutlineGenerator(super.getBuffer(ModRenderPipelines.solidTransparencyEntity().get()), teamR, teamG, teamB, teamA);
+//    }
 
     public void setColor(int red, int green, int blue, int alpha) {
         this.teamR = red;
@@ -80,6 +80,18 @@ public class CustomBufferSource extends MultiBufferSource.BufferSource {
             this.consumer.setNormal(normalX, normalY, normalZ);
             return this;
         }
+
+        @Override
+        public VertexConsumer setColor(int color) {
+            this.consumer.setColor(color);
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setLineWidth(float p_456188_) {
+            this.consumer.setLineWidth(p_456188_);
+            return this;
+        }
     }
 
     public record NoOpGenerator() implements VertexConsumer {
@@ -111,6 +123,16 @@ public class CustomBufferSource extends MultiBufferSource.BufferSource {
 
         @Override
         public @NotNull VertexConsumer setNormal(float normalX, float normalY, float normalZ) {
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setColor(int color) {
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setLineWidth(float p_456188_) {
             return this;
         }
     }

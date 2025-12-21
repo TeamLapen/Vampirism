@@ -12,8 +12,8 @@ import de.teamlapen.factions.common.tags.FactionTaskTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class TaskInstance implements ITaskInstance {
                 UUIDUtil.STRING_CODEC.fieldOf("taskGiver").forGetter(ITaskInstance::getTaskBoard),
                 ResourceKey.codec(FactionRegistries.Keys.TASK).fieldOf("task").forGetter(ITaskInstance::getTask),
                 UUIDUtil.STRING_CODEC.fieldOf("instanceId").forGetter(ITaskInstance::getId),
-                Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("stats").forGetter(ITaskInstance::getStats),
+                Codec.unboundedMap(Identifier.CODEC, Codec.INT).fieldOf("stats").forGetter(ITaskInstance::getStats),
                 ITaskRewardInstance.CODEC.fieldOf("reward").forGetter(ITaskInstance::getReward),
                 Codec.LONG.fieldOf("taskDuration").forGetter(ITaskInstance::getTaskDuration),
                 Codec.BOOL.fieldOf("accepted").forGetter(ITaskInstance::isAccepted),
@@ -38,7 +38,7 @@ public class TaskInstance implements ITaskInstance {
     private final UUID taskGiver;
     private final ResourceKey<Task> task;
     private final UUID instanceId;
-    private final Map<ResourceLocation, Integer> stats;
+    private final Map<Identifier, Integer> stats;
     private final ITaskRewardInstance reward;
     private final long taskDuration;
     private boolean accepted;
@@ -55,7 +55,7 @@ public class TaskInstance implements ITaskInstance {
         this.reward = task.value().reward().createInstance(player);
     }
 
-    private TaskInstance(UUID taskGiver, ResourceKey<Task> task, UUID instanceId, Map<ResourceLocation, Integer> stats, ITaskRewardInstance taskRewardInstance, long taskDuration, boolean accepted, long taskTimeStamp) {
+    private TaskInstance(UUID taskGiver, ResourceKey<Task> task, UUID instanceId, Map<Identifier, Integer> stats, ITaskRewardInstance taskRewardInstance, long taskDuration, boolean accepted, long taskTimeStamp) {
         this.taskGiver = taskGiver;
         this.task = task;
         this.stats = new HashMap<>(stats);
@@ -92,7 +92,7 @@ public class TaskInstance implements ITaskInstance {
         return this.reward;
     }
 
-    public Map<ResourceLocation, Integer> getStats() {
+    public Map<Identifier, Integer> getStats() {
         return stats;
     }
 

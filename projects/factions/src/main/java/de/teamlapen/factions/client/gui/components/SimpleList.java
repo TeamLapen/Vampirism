@@ -1,5 +1,6 @@
 package de.teamlapen.factions.client.gui.components;
 
+import de.teamlapen.factions.api.util.FResourceLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -7,7 +8,6 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
@@ -124,7 +124,7 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
     }
 
     public static class Entry<T extends Entry<T>> extends ObjectSelectionList.Entry<T> {
-        protected static final WidgetSprites SPRITES = new WidgetSprites(ResourceLocation.withDefaultNamespace("widget/button"), ResourceLocation.withDefaultNamespace("widget/button_disabled"), ResourceLocation.withDefaultNamespace("widget/button_highlighted"));
+        protected static final WidgetSprites SPRITES = new WidgetSprites(FResourceLocation.mc("widget/button"), FResourceLocation.mc("widget/button_disabled"), FResourceLocation.mc("widget/button_highlighted"));
 
         private final Component component;
         private final Runnable onClick;

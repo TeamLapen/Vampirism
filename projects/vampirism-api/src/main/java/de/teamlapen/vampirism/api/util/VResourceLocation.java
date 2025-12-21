@@ -1,27 +1,27 @@
 package de.teamlapen.vampirism.api.util;
 
 import de.teamlapen.vampirism.api.VReference;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class VResourceLocation {
 
-    public static ResourceLocation loc(String namespace, String path) {
-        return ResourceLocation.fromNamespaceAndPath(namespace, path);
+    public static Identifier loc(String namespace, String path) {
+        return Identifier.fromNamespaceAndPath(namespace, path);
     }
 
-    public static ResourceLocation mod(String path) {
-        return ResourceLocation.fromNamespaceAndPath(VReference.MODID, path);
+    public static Identifier mod(String path) {
+        return Identifier.fromNamespaceAndPath(VReference.MODID, path);
     }
 
     public static String modString(String path) {
         return VReference.MODID + ":" + path;
     }
 
-    public static ResourceLocation common(String path) {
-        return ResourceLocation.fromNamespaceAndPath("c", path);
+    public static Identifier common(String path) {
+        return Identifier.fromNamespaceAndPath("c", path);
     }
 
-    public static ResourceLocation mc(String path) {
-        return ResourceLocation.withDefaultNamespace(path);
+    public static Identifier mc(String path) {
+        return Identifier.withDefaultNamespace(path);
     }
 }

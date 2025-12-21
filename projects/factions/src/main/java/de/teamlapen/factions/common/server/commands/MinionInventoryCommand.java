@@ -32,7 +32,7 @@ public class MinionInventoryCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext builderContext) {
         return Commands.literal("modifyMinionInventory")
-                .requires(context -> context.hasPermission(BasicCommand.PERMISSION_LEVEL_ADMIN))
+                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .then(Commands.argument("minion", MinionArgument.minions())
                         .then(Commands.literal("list")
                                 .executes(context -> listInventory(context.getSource(), context.getSource().getPlayerOrException(), MinionArgument.getId(context, "minion"))))

@@ -124,7 +124,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> extends PropertyS
         if (instance == null) return;
         var factory = refinement.value().attributeFactory();
         if (factory == null) return;
-        AttributeModifier attributeModifier = factory.apply(refinement.unwrapKey().orElseThrow().location(), refinement.value().getModifierValue());
+        AttributeModifier attributeModifier = factory.apply(refinement.unwrapKey().orElseThrow().identifier(), refinement.value().getModifierValue());
         if (attributeModifier == null) return;
 
         instance.addTransientModifier(attributeModifier);
@@ -136,7 +136,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> extends PropertyS
 
         AttributeInstance instance = this.player.asEntity().getAttribute(attribute);
         if (instance == null) return;
-        instance.removeModifier(refinement.unwrapKey().orElseThrow().location());
+        instance.removeModifier(refinement.unwrapKey().orElseThrow().identifier());
     }
 
     @Override

@@ -30,7 +30,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.StructureTags;
@@ -468,6 +468,6 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     public static class BasicVampireRenderState extends AvatarLikeRenderState {
-        public ResourceLocation texture;
+        public Identifier texture;
     }
 }

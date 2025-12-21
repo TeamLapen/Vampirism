@@ -13,14 +13,14 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity, TotemRenderer.TotemRenderState> {
 
-    private static final ResourceLocation TOTEM_BEAM_LOCATION = FResourceLocation.mod("textures/entity/totem_beam.png");
+    private static final Identifier TOTEM_BEAM_LOCATION = FResourceLocation.mod("textures/entity/totem_beam.png");
     private final static int HEIGHT = 100;
 
     public TotemRenderer(BlockEntityRendererProvider.Context context) {

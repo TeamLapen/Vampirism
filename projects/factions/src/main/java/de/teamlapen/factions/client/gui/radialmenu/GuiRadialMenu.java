@@ -29,6 +29,7 @@
 package de.teamlapen.factions.client.gui.radialmenu;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -79,7 +80,6 @@ public abstract class GuiRadialMenu<T> extends Screen {
         this.allowMouseDirection = allowMouseDirection;
         this.radialMenuSlots = this.radialMenu.getRadialMenuSlots();
         this.closing = false;
-        this.minecraft = Minecraft.getInstance();
         this.selectedItem = -1;
     }
 
@@ -246,9 +246,9 @@ public abstract class GuiRadialMenu<T> extends Screen {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean isDoubleClick) {
-        if (mouseButtonEvent.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (mouseButtonEvent.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             this.onClose();
-        } else if (mouseButtonEvent.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (mouseButtonEvent.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (this.selectedItem != -1) {
                 radialMenu.setCurrentSlot(selectedItem);
                 minecraft.player.closeContainer();

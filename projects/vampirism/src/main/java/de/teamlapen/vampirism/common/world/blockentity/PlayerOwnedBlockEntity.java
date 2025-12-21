@@ -40,13 +40,7 @@ public abstract class PlayerOwnedBlockEntity extends BaseContainerBlockEntity {
     }
 
     public static boolean tryAccess(Player player, PlayerOwnedBlockEntity blockEntity, Component displayName) {
-        if (!player.isSpectator() && !blockEntity.lockDataHolder.canAccess(player)) {
-            player.displayClientMessage(Component.translatable("container.isLocked", displayName), true);
-            player.playNotifySound(SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
-            return false;
-        } else {
-            return true;
-        }
+        return player.isSpectator() || blockEntity.lockDataHolder.canAccess(player);
     }
 
     @Override

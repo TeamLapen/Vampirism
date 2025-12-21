@@ -7,15 +7,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class InfuserScreen extends AbstractContainerScreen<InfuserMenu> {
 
-    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/infuser.png");
-    private static final ResourceLocation BURN_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("container/furnace/burn_progress");
+    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/infuser.png");
+    private static final Identifier BURN_PROGRESS_SPRITE = VResourceLocation.mc("container/furnace/burn_progress");
 
     public InfuserScreen(InfuserMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);

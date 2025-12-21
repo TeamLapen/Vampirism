@@ -1,16 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "minecraft:item/template_spawn_egg",
-    "tints": [
-      {
-        "type": "minecraft:constant",
-        "value": -3224111
-      },
-      {
-        "type": "minecraft:constant",
-        "value": -4869190
-      }
-    ]
+    "model": "vampirism:item/ghost_spawn_egg"
   }
 }

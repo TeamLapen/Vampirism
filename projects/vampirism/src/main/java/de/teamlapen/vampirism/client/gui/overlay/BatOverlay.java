@@ -9,12 +9,12 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class BatOverlay extends TextureOverlay {
 
-    public static final ResourceLocation BAT_TEXTURE = VResourceLocation.mod("textures/misc/bat.png");
+    public static final Identifier BAT_TEXTURE = VResourceLocation.mod("textures/misc/bat.png");
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {

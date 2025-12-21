@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +25,7 @@ public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q
     private final @NotNull WingModel<S> model;
     private final Predicate<S> predicateRender;
     private final BiFunction<S, Q, ModelPart> bodyPartFunction;
-    private final ResourceLocation texture = VResourceLocation.mod("textures/entity/wings.png");
+    private final Identifier texture = VResourceLocation.mod("textures/entity/wings.png");
 
     /**
      * @param predicateRender  Decides if the layer is rendered

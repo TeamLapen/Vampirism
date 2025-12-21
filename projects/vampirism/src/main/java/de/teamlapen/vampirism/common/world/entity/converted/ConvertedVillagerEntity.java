@@ -43,8 +43,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -185,7 +185,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     protected @NotNull Component getTypeName() {
-        var profName = this.getVillagerData().profession().getKey().location();
+        var profName = this.getVillagerData().profession().getKey().identifier();
         return Component.translatable(EntityType.VILLAGER.getDescriptionId() + '.' + (!"minecraft".equals(profName.getNamespace()) ? profName.getNamespace() + '.' : "") + profName.getPath());
     }
 
@@ -233,7 +233,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         super.registerBrainGoals(brain);
         if (!this.isBaby()) {
             brain.setSchedule(ModVillage.CONVERTED_DEFAULT.get());
-            brain.updateActivityFromSchedule(this.level().getDayTime(), this.level().getGameTime());
+            brain.updateActivityFromSchedule(this.level().environmentAttributes(), this.level().getGameTime(), position());
         }
     }
 
@@ -267,11 +267,11 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    protected void updateTrades() {
-        super.updateTrades();
+    protected void updateTrades(ServerLevel level) {
+        super.updateTrades(level);
         Holder<VillagerProfession> profession = this.getVillagerData().profession();
         if (!this.getOffers().isEmpty() && !profession.is(ModVillage.VAMPIRE_EXPERT) && !profession.is(VillagerProfession.BUTCHER) && this.getRandom().nextInt(3) == 0) {
-            this.addOffersFromItemListings(this.getOffers(), VampirismTrades.getConvertedTrades(), 1);
+            this.addOffersFromItemListings(level, this.getOffers(), VampirismTrades.getConvertedTrades(), 1);
         }
     }
 

@@ -3,6 +3,7 @@ package de.teamlapen.factions.common.factions.skills;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.skills.ISkillNode;
 import de.teamlapen.factions.api.factions.skills.ISkillTree;
+import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.api.util.REFERENCE;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -10,14 +11,13 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 import java.util.List;
 
 public record ClientboundSkillTreePacket(List<ConfigHolder> skillTrees) implements CustomPacketPayload {
 
-    public static final Type<ClientboundSkillTreePacket> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(REFERENCE.MOD_ID,"skill_tree_config"));
+    public static final Type<ClientboundSkillTreePacket> TYPE = new Type<>(FResourceLocation.mod("skill_tree_config"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundSkillTreePacket> CODEC = StreamCodec.composite(
             ConfigHolder.CODEC.apply(ByteBufCodecs.list()), ClientboundSkillTreePacket::skillTrees,

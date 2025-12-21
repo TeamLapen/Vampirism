@@ -18,7 +18,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -27,20 +27,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
-public record VampireBook(ResourceLocation id, Component author) implements IVampireBook {
+public record VampireBook(Identifier id, Component author) implements IVampireBook {
 
     public static final MutableComponent UNKNOWN_AUTHOR = Component.translatable("vampire_book.vampirism.unknown.author");
 
     public static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown"), UNKNOWN_AUTHOR);
 
     public static final Codec<IVampireBook> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("id").forGetter(IVampireBook::id),
+            Identifier.CODEC.fieldOf("id").forGetter(IVampireBook::id),
             ComponentSerialization.CODEC.optionalFieldOf("author", UNKNOWN_AUTHOR).forGetter(IVampireBook::author)
             ).apply(instance, VampireBook::new)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, IVampireBook> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC, IVampireBook::id,
+            Identifier.STREAM_CODEC, IVampireBook::id,
             ComponentSerialization.STREAM_CODEC, IVampireBook::author,
             VampireBook::new
     );
@@ -119,7 +119,7 @@ public record VampireBook(ResourceLocation id, Component author) implements IVam
          * Recommended to use for names that should be localized.
          */
         public Builder customAuthor() {
-            this.author = Component.translatable("vampire_book." + id.location().toLanguageKey() + ".author");
+            this.author = Component.translatable("vampire_book." + id.identifier().toLanguageKey() + ".author");
             return this;
         }
 
@@ -135,7 +135,7 @@ public record VampireBook(ResourceLocation id, Component author) implements IVam
         }
 
         public VampireBook build() {
-            return new VampireBook(id.location(), author == null ? VampireBook.UNKNOWN_AUTHOR : author);
+            return new VampireBook(id.identifier(), author == null ? VampireBook.UNKNOWN_AUTHOR : author);
         }
     }
 }

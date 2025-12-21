@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.common.datamaps.FluidBloodConversion;
 import de.teamlapen.vampirism.common.datamaps.ItemBlood;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -82,11 +82,11 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
         return new FluidStack(VReference.BLOOD.get(), (int) (getBloodValue(fluid) * fluid.getAmount()));
     }
 
-    private static @NotNull ResourceLocation id(Item item) {
+    private static @NotNull Identifier id(Item item) {
         return BuiltInRegistries.ITEM.getKey(item);
     }
 
-    private static @NotNull ResourceLocation id(Fluid block) {
+    private static @NotNull Identifier id(Fluid block) {
         return BuiltInRegistries.FLUID.getKey(block);
     }
 

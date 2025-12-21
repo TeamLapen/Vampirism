@@ -2,7 +2,7 @@ package de.teamlapen.factions.common.world.entities;
 
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.PlayerModelType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ public interface IPlayerOverlay {
     /**
      * Used as overlay description while waiting for the texture to be loaded
      */
-    Pair<ResourceLocation, PlayerModelType> PENDING_PROP = Pair.of(DefaultPlayerSkin.getDefaultTexture(), PlayerModelType.WIDE);
+    Pair<Identifier, PlayerModelType> PENDING_PROP = Pair.of(DefaultPlayerSkin.getDefaultTexture(), PlayerModelType.WIDE);
 
     @NotNull
     Optional<PlayerSkinRenderCache.RenderInfo> getPlayerOverlay();

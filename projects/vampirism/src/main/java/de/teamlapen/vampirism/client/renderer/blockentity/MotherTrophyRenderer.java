@@ -7,12 +7,12 @@ import de.teamlapen.vampirism.client.models.entities.GhostModel;
 import de.teamlapen.vampirism.client.renderer.entities.GhostRenderer;
 import de.teamlapen.vampirism.common.world.blockentity.MotherTrophyBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.MotherTrophyBlock;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.phys.Vec3;
@@ -43,7 +43,7 @@ public class MotherTrophyRenderer implements BlockEntityRenderer<MotherTrophyBlo
         this.model.setupAnim2(renderState.gameTime);
         poseStack.translate(0,0.75,0);
         poseStack.scale(0.5F, 0.5F, 0.5F);
-        nodeCollector.submitModel(model, renderState.ghostRenderState, poseStack, RenderType.itemEntityTranslucentCull(GhostRenderer.TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0, null);
+        nodeCollector.submitModel(model, renderState.ghostRenderState, poseStack, RenderTypes.itemEntityTranslucentCull(GhostRenderer.TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0, null);
         poseStack.popPose();
     }
 

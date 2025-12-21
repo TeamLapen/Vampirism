@@ -10,22 +10,22 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 public class RemainsDefenderRenderer extends MobRenderer<RemainsDefenderEntity, RemainsDefenderRenderer.RemainsDefenderRenderState, RemainsDefenderModel> {
-    private final ResourceLocation TEX1 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender1.png");
-    private final ResourceLocation TEX2 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender2.png");
-    private final ResourceLocation TEX3 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender3.png");
-    private final ResourceLocation TEX4 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender4.png");
+    private final Identifier TEX1 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender1.png");
+    private final Identifier TEX2 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender2.png");
+    private final Identifier TEX3 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender3.png");
+    private final Identifier TEX4 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender4.png");
 
     public RemainsDefenderRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new RemainsDefenderModel(pContext.bakeLayer(ModEntitiesRender.REMAINS_DEFENDER)), 0f);
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull RemainsDefenderRenderState pEntity) {
+    public @NotNull Identifier getTextureLocation(@NotNull RemainsDefenderRenderState pEntity) {
         int t = ((int) pEntity.ageInTicks) % 20;
         if (t > 15) {
             return TEX4;

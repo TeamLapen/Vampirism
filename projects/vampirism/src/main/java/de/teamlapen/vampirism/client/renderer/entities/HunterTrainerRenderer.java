@@ -12,12 +12,12 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class HunterTrainerRenderer extends HumanoidMobRenderer<VampirismEntity, HunterTrainerRenderer.HunterTrainerRenderState, ClothedModel<HunterTrainerRenderer.HunterTrainerRenderState>> {
 
-    private final ResourceLocation texture = VResourceLocation.mod("textures/entity/hunter_trainer.png");
+    private final Identifier texture = VResourceLocation.mod("textures/entity/hunter_trainer.png");
 
     public HunterTrainerRenderer(EntityRendererProvider.@NotNull Context context, boolean renderEquipment) {
         super(context, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false), 0.5F);
@@ -29,7 +29,7 @@ public class HunterTrainerRenderer extends HumanoidMobRenderer<VampirismEntity, 
 
     @NotNull
     @Override
-    public ResourceLocation getTextureLocation(@NotNull HunterTrainerRenderState entity) {
+    public Identifier getTextureLocation(@NotNull HunterTrainerRenderState entity) {
         return texture;
     }
 

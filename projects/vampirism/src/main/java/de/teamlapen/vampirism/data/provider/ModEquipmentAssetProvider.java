@@ -47,10 +47,10 @@ public class ModEquipmentAssetProvider extends EquipmentAssetProvider {
     }
 
     protected EquipmentClientInfo createDefaultArmor(ResourceKey<EquipmentAsset> asset) {
-        return EquipmentClientInfo.builder().addHumanoidLayers(asset.location()).build();
+        return EquipmentClientInfo.builder().addHumanoidLayers(asset.identifier()).build();
     }
 
     protected EquipmentClientInfo createCustomOnly(ResourceKey<EquipmentAsset> asset) {
-        return EquipmentClientInfo.builder().addMainHumanoidLayer(asset.location(), false).build();
+        return EquipmentClientInfo.builder().addMainHumanoidLayer(asset.identifier(), false).build();
     }
 }

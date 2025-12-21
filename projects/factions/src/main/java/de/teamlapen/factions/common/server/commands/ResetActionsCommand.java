@@ -15,7 +15,7 @@ public class ResetActionsCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("resetActions")
-                .requires(context -> context.hasPermission(BasicCommand.PERMISSION_LEVEL_ADMIN))
+                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .executes(context -> resetActions(context.getSource(), Lists.newArrayList(context.getSource().getPlayerOrException())))
                 .then(Commands.argument("players", EntityArgument.entities())
                         .executes(context -> resetActions(context.getSource(), Lists.newArrayList(EntityArgument.getPlayers(context, "players")))));

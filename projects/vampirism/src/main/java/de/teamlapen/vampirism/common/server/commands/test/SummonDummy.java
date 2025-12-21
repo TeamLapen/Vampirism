@@ -16,7 +16,7 @@ public class SummonDummy extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("summonDummy")
-                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ADMIN))
+                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .then(Commands.literal("vampire").executes(context -> summon(context.getSource().getPlayerOrException(), true)))
                 .then(Commands.literal("hunter").executes(context -> summon(context.getSource().getPlayerOrException(), false)));
     }

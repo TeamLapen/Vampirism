@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,7 +34,7 @@ public abstract class GuiGraphicsMixin implements IGuiGraphics {
     protected abstract void blitTiledSprite(RenderPipeline pipeline, TextureAtlasSprite sprite, int x, int y, int width, int height, int u, int v, int spriteWidth, int spriteHeight, int textureWidth, int textureHeight, int color);
 
     @Shadow
-    public abstract void blitSprite(RenderPipeline pipeline, ResourceLocation sprite, int x, int y, int width, int height, int color);
+    public abstract void blitSprite(RenderPipeline pipeline, Identifier sprite, int x, int y, int width, int height, int color);
 
     @Override
     public void vampirism$drawCenteredString(Font font, Component text, int x, int y, int color, boolean shadow) {
@@ -43,7 +43,7 @@ public abstract class GuiGraphicsMixin implements IGuiGraphics {
     }
 
     @Override
-    public void vampirism$blitSpriteTiledOffset(ResourceLocation texture, int x, int y, int width, int height, int xOffset, int yOffset, int color) {
+    public void vampirism$blitSpriteTiledOffset(Identifier texture, int x, int y, int width, int height, int xOffset, int yOffset, int color) {
         x += xOffset;
         y += yOffset;
         width -= xOffset;

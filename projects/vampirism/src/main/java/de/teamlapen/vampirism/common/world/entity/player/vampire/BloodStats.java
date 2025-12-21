@@ -15,7 +15,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,7 +106,7 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
             }
         }
         if (player.level() instanceof ServerLevel level) {
-            boolean regen = level.getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
+            boolean regen = level.getGameRules().get(GameRules.NATURAL_HEALTH_REGENERATION);
             if (regen && this.bloodSaturationLevel > 0 && player.isHurt() && this.bloodLevel >= maxBlood) {
                 ++this.bloodTimer;
                 if (this.bloodTimer >= 10) {

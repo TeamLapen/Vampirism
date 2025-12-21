@@ -4,7 +4,7 @@ import de.teamlapen.factions.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.misc.mixin.accessor.MobEffectInstanceAccessor;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,21 +21,21 @@ public class CodecModifications {
             public @NotNull MobEffectInstance decode(@NotNull RegistryFriendlyByteBuf byteBuf) {
                 MobEffectInstance decode = codec.decode(byteBuf);
                 int count = byteBuf.readVarInt();
-                Set<ResourceLocation> properties = new HashSet<>();
+                Set<Identifier> properties = new HashSet<>();
                 for (int i1 = 0; i1 < count; i1++) {
-                    properties.add(byteBuf.readResourceLocation());
+                    properties.add(byteBuf.readIdentifier());
                 }
-                ((IEffectInstanceWithSource) decode).factions$setProperties(properties);
+                decode.factions$setProperties(properties);
                 return decode;
             }
 
             @Override
             public void encode(@NotNull RegistryFriendlyByteBuf byteBuf, @NotNull MobEffectInstance instance) {
                 codec.encode(byteBuf, instance);
-                Set<ResourceLocation> source = ((IEffectInstanceWithSource) instance).factions$getProperties();
+                Set<Identifier> source = instance.factions$getProperties();
                 byteBuf.writeVarInt(source.size());
-                for (ResourceLocation resourceLocation : source) {
-                    byteBuf.writeResourceLocation(resourceLocation);
+                for (Identifier Identifier : source) {
+                    byteBuf.writeIdentifier(Identifier);
                 }
             }
         };

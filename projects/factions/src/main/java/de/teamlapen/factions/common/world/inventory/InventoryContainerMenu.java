@@ -1,6 +1,6 @@
 package de.teamlapen.factions.common.world.inventory;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -170,7 +170,7 @@ public abstract class InventoryContainerMenu extends AbstractContainerMenu {
 
         @Nullable
         @Override
-        public ResourceLocation getNoItemIcon() {
+        public Identifier getNoItemIcon() {
             return info.background;
         }
 
@@ -202,9 +202,9 @@ public abstract class InventoryContainerMenu extends AbstractContainerMenu {
          * Pair of atlas and texture id
          */
         @Nullable
-        public final ResourceLocation background;
+        public final Identifier background;
 
-        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, boolean inverted, int limit, @Nullable ResourceLocation background) {
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, boolean inverted, int limit, @Nullable Identifier background) {
             this.predicate = predicate;
             this.xDisplay = x;
             this.yDisplay = y;
@@ -218,11 +218,11 @@ public abstract class InventoryContainerMenu extends AbstractContainerMenu {
         }
 
 
-        public SelectorInfo(@NotNull Item item, int x, int y, boolean inverted, int stackLimit, @Nullable ResourceLocation background) {
+        public SelectorInfo(@NotNull Item item, int x, int y, boolean inverted, int stackLimit, @Nullable Identifier background) {
             this(itemStack -> item.equals(itemStack.getItem()), x, y, inverted, stackLimit, background);
         }
 
-        public SelectorInfo(@NotNull Supplier<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable ResourceLocation background) {
+        public SelectorInfo(@NotNull Supplier<Collection<Item>> lazyItemCollection, int x, int y, boolean inverted, int stackLimit, @Nullable Identifier background) {
             this(itemStack -> lazyItemCollection.get().contains(itemStack.getItem()), x, y, inverted, stackLimit, background);
         }
 
@@ -231,7 +231,7 @@ public abstract class InventoryContainerMenu extends AbstractContainerMenu {
         }
 
 
-        public SelectorInfo(@NotNull TagKey<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable ResourceLocation background) {
+        public SelectorInfo(@NotNull TagKey<Item> tag, int x, int y, boolean inverted, int stackLimit, @Nullable Identifier background) {
             this(itemStack -> itemStack.is(tag), x, y, inverted, stackLimit, background);
         }
 
@@ -245,7 +245,7 @@ public abstract class InventoryContainerMenu extends AbstractContainerMenu {
         }
 
 
-        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, int stackLimit, @Nullable ResourceLocation background) {
+        public SelectorInfo(Predicate<ItemStack> predicate, int x, int y, int stackLimit, @Nullable Identifier background) {
             this(predicate, x, y, false, stackLimit, background);
         }
 

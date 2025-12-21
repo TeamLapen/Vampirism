@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.blocks.candle.CandleHolderBlock;
 import de.teamlapen.vampirism.common.world.items.VampireCloakItem;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

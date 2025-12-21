@@ -6,8 +6,10 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderSetup;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
 import java.util.function.Supplier;
@@ -30,21 +32,31 @@ public class ModRenderPipelines {
 
     public static final RenderPipeline CUTOUT_NO_DEPTH = RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
             .withLocation(VResourceLocation.mod("pipeline/entity_translucent"))
-            .withSampler("Sampler1")
+            .withSampler("Sampler0")
+            .withSampler("Sampler2")
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
             .withShaderDefine("ALPHA_CUTOUT", 0.1F)
             .build();
 
+    private static final RenderSetup CUTOUT_NO_DEPTH_SETUP = RenderSetup.builder(CUTOUT_NO_DEPTH)
+            .useLightmap()
+            .withTexture("Sampler0", TextureAtlas.LOCATION_BLOCKS, RenderTypes.MOVING_BLOCK_SAMPLER)
+            .bufferSize(131071)
+            .affectsCrumbling()
+            .createRenderSetup();
+
+    private static final RenderSetup SOLID_TRANSPARENCY_ENTITY_SETUP = RenderSetup.builder(SOLID_TRANSPARENCY_ENTITY)
+            .bufferSize(256)
+            .sortOnUpload()
+            .createRenderSetup();
+
+
     public static Supplier<RenderType> cutoutNoDepth() {
-        return Suppliers.memoize(() -> {
-            return RenderType.create(VResourceLocation.modString("cutout_no_depth"), 131072, true, false, CUTOUT_NO_DEPTH, RenderType.CompositeState.builder().setLightmapState(RenderStateShard.LIGHTMAP).setTextureState(RenderStateShard.BLOCK_SHEET).createCompositeState(true));
-        });
+        return Suppliers.memoize(() -> RenderType.create(VResourceLocation.modString("cutout_no_depth"), CUTOUT_NO_DEPTH_SETUP));
     }
 
     public static Supplier<RenderType> solidTransparencyEntity() {
-        return Suppliers.memoize(() -> {
-            return RenderType.create(VResourceLocation.modString("solid_transparency_entity"), 256, false, true, SOLID_TRANSPARENCY_ENTITY, RenderType.CompositeState.builder().createCompositeState(true));
-        });
+        return Suppliers.memoize(() -> RenderType.create(VResourceLocation.modString("solid_transparency_entity"), SOLID_TRANSPARENCY_ENTITY_SETUP));
     }
 
     public static void registerRenderPipelines(RegisterRenderPipelinesEvent event) {

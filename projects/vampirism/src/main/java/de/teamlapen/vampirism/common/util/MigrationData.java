@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.util;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -30,10 +30,10 @@ public class MigrationData {
 
     public record Mapping(DeferredRegister<?> register) {
         public void remap(String id, String newId) {
-            remap(ResourceLocation.parse(id), ResourceLocation.parse(newId));
+            remap(Identifier.parse(id), Identifier.parse(newId));
         }
 
-        public void remap(ResourceLocation id, ResourceLocation object) {
+        public void remap(Identifier id, Identifier object) {
             register.addAlias(id, object);
         }
     }

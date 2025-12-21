@@ -10,7 +10,7 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class ProgressBar extends AbstractWidget {
 
     private static final WidgetSprites SPRITES = new WidgetSprites(VResourceLocation.mod("widget/progress_bar"), VResourceLocation.mod("widget/progress_bar_inactive"), VResourceLocation.mod("widget/progress_bar_highlighted"));
-    private static final ResourceLocation PROGRESS = VResourceLocation.mod("widget/progress_bar_progress");
+    private static final Identifier PROGRESS = VResourceLocation.mod("widget/progress_bar_progress");
     private float progress = 0;
     private int color = 0xFFFFFF;
 

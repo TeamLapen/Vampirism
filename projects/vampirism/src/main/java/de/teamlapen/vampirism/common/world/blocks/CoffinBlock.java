@@ -16,6 +16,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +68,7 @@ public class CoffinBlock extends BaseContainerBlock {
     
     private static final ShapeTable SHAPES = new ShapeTable();
     
-    private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(Player.BedSleepingProblem.NOT_POSSIBLE_NOW, Component.translatable("text.vampirism.coffin.no_sleep"), Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("text.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("text.vampirism.coffin.obstructed"));
+    private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(new Player.BedSleepingProblem(BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(Component.empty())), Component.translatable("text.vampirism.coffin.no_sleep"), Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("text.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("text.vampirism.coffin.obstructed"));
 
     public CoffinBlock(Properties properties, DyeColor color) {
         this(color, properties);
@@ -206,7 +208,8 @@ public class CoffinBlock extends BaseContainerBlock {
                 return InteractionResult.CONSUME;
             }
 
-            if (!BedBlock.canSetSpawn(worldIn)) {
+            BedRule bedrule = worldIn.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
+            if (!bedrule.explodes()) {
                 worldIn.removeBlock(pos, false);
                 BlockPos blockpos = pos.relative(state.getValue(VERTICAL) ? Direction.DOWN : state.getValue(FACING).getOpposite());
                 if (worldIn.getBlockState(blockpos).is(this)) {
@@ -222,8 +225,8 @@ public class CoffinBlock extends BaseContainerBlock {
                 final BlockPos finalPos = pos;
                 BlockState finalState = state;
                 player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
-                    if (sleepResult1 != null) {
-                        player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.getMessage()), true);
+                    if (sleepResult1.message() != null) {
+                        player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.message()), true);
                     }
                 }).ifRight(u -> setCoffinSleepPosition(player, finalPos, finalState));
                 return InteractionResult.CONSUME;

@@ -8,15 +8,15 @@ import de.teamlapen.factions.common.core.FactionTasks;
 import de.teamlapen.factions.common.util.RegUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public record ItemRequirement(ResourceLocation id, ItemStack stack, Component description) implements TaskRequirement.Requirement<Item> {
+public record ItemRequirement(Identifier id, ItemStack stack, Component description) implements TaskRequirement.Requirement<Item> {
 
     public static final MapCodec<ItemRequirement> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
-                ResourceLocation.CODEC.optionalFieldOf("id").forGetter(i -> java.util.Optional.of(i.id)),
+                Identifier.CODEC.optionalFieldOf("id").forGetter(i -> java.util.Optional.of(i.id)),
                 ItemStack.CODEC.fieldOf("item").forGetter(i -> i.stack),
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(i -> i.description)
         ).apply(inst, (id, item, desc) -> new ItemRequirement(id.orElseGet(() -> RegUtil.id(item.getItem())), item, desc));

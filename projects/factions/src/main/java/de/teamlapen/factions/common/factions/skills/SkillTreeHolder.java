@@ -1,9 +1,9 @@
 package de.teamlapen.factions.common.factions.skills;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public record SkillTreeHolder(@NotNull ResourceLocation id, @NotNull SkillTreeConfiguration configuration) {
+public record SkillTreeHolder(@NotNull Identifier id, @NotNull SkillTreeConfiguration configuration) {
 
 
     @Override

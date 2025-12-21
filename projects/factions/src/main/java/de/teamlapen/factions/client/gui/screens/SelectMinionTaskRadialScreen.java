@@ -19,7 +19,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 
 public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<SelectMinionTaskRadialScreen.Entry> {
 
-    public static final Map<ResourceLocation, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_single"), Component.translatable("text.factions.minion.call_single"), FResourceLocation.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
+    public static final Map<Identifier, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_single"), Component.translatable("text.factions.minion.call_single"), FResourceLocation.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
             new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("call_all"), Component.translatable("text.factions.minion.call_all"), FResourceLocation.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
             new SelectMinionTaskRadialScreen.Entry(FResourceLocation.mod("respawn"), Component.translatable("text.factions.minion.respawn"), FResourceLocation.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
 
@@ -96,9 +96,9 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
 
     public static class Entry {
 
-        private final ResourceLocation id;
+        private final Identifier id;
         private final Component text;
-        private final ResourceLocation loc;
+        private final Identifier loc;
         private final Runnable onSelected;
         private final IMinionTask<?, ?> task;
 
@@ -106,7 +106,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
             this(RegUtil.id(task), task.getName(), FResourceLocation.loc(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)), task);
         }
 
-        public Entry(@NotNull ResourceLocation id, @NotNull Component text, @NotNull ResourceLocation icon, @NotNull Runnable onSelected, @Nullable IMinionTask<?, ?> task) {
+        public Entry(@NotNull Identifier id, @NotNull Component text, @NotNull Identifier icon, @NotNull Runnable onSelected, @Nullable IMinionTask<?, ?> task) {
             this.id = id;
             this.text = text;
             this.loc = icon;
@@ -114,17 +114,17 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
             this.task = task;
         }
 
-        public Entry(@NotNull ResourceLocation id, @NotNull Component text, @NotNull ResourceLocation icon, @NotNull Runnable onSelected) {
+        public Entry(@NotNull Identifier id, @NotNull Component text, @NotNull Identifier icon, @NotNull Runnable onSelected) {
             this(id, text, icon, onSelected, null);
         }
 
         @NotNull
-        public ResourceLocation getIconLoc() {
+        public Identifier getIconLoc() {
             return loc;
         }
 
         @NotNull
-        public ResourceLocation getId() {
+        public Identifier getId() {
             return id;
         }
 

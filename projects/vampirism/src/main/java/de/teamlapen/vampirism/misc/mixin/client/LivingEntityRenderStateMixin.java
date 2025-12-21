@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.misc.mixin.client;
 
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.HumanoidArm;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.Unique;
 public class LivingEntityRenderStateMixin implements IVampirismRenderState {
 
     @Unique
-    public ResourceLocation vampirism$convertedOverlay;
+    public Identifier vampirism$convertedOverlay;
 
     @Unique
-    public ResourceLocation vampirism$overlay;
+    public Identifier vampirism$overlay;
 
     @Unique
     private int vampirism$blood;
@@ -33,22 +33,22 @@ public class LivingEntityRenderStateMixin implements IVampirismRenderState {
     private HumanoidArm vampirism$attackArm = HumanoidArm.RIGHT;
 
     @Override
-    public @Nullable ResourceLocation vampirism$overlay() {
+    public @Nullable Identifier vampirism$overlay() {
         return this.vampirism$overlay;
     }
 
     @Override
-    public void vampirism$overlay(@Nullable ResourceLocation overlay) {
+    public void vampirism$overlay(@Nullable Identifier overlay) {
         this.vampirism$overlay = overlay;
     }
 
     @Override
-    public @Nullable ResourceLocation vampirism$convertedOverlay() {
+    public @Nullable Identifier vampirism$convertedOverlay() {
         return vampirism$convertedOverlay;
     }
 
     @Override
-    public void vampirism$convertedOverlay(@Nullable ResourceLocation overlay) {
+    public void vampirism$convertedOverlay(@Nullable Identifier overlay) {
         vampirism$convertedOverlay = overlay;
     }
 

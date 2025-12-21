@@ -3,11 +3,11 @@ package de.teamlapen.factions.api.factions.skills;
 import com.mojang.serialization.Codec;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
-import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryFixedCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,7 +40,7 @@ public interface ISkillTree {
      */
     ItemStack display();
 
-    Optional<ResourceLocation> background();
+    Optional<Identifier> background();
 
     TagKey<ISkillTree> skillPointTag();
 

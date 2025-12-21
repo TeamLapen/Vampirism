@@ -15,7 +15,7 @@ public class GiveBannerCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
         return Commands.literal("banner")
-                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.argument("faction", FactionArgument.factions(buildContext))
                         .executes(context -> giveBannerItem(FactionArgument.getFaction(context, "faction"), context.getSource().getPlayerOrException()))
                 );

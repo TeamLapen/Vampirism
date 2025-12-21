@@ -9,7 +9,7 @@ import io.netty.handler.codec.DecoderException;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,7 @@ public class ModSingleJigsawPiecesProvider implements DataProvider {
 
     @Override
     public @NotNull CompletableFuture<?> run(@NotNull CachedOutput pOutput) {
-        Set<ResourceLocation> set = Sets.newHashSet();
+        Set<Identifier> set = Sets.newHashSet();
         this.registerSingleJigsawPieces(set::add);
 
         return DataProvider.saveStable(pOutput, SingleJigsawReloadListener.CODEC.encodeStart(JsonOps.INSTANCE, new ArrayList<>(set)).getOrThrow(DecoderException::new), pathProvider.json(VResourceLocation.loc(modId, "single_jigsaw_pieces")));
@@ -45,7 +45,7 @@ public class ModSingleJigsawPiecesProvider implements DataProvider {
         return "Single Jigsaw Pieces";
     }
 
-    protected void registerSingleJigsawPieces(Consumer<ResourceLocation> consumer) {
+    protected void registerSingleJigsawPieces(Consumer<Identifier> consumer) {
         consumer.accept(VResourceLocation.mod("village/totem"));
         Arrays.stream(VanillaStructureModifications.BiomeType.values()).map((type) -> VResourceLocation.mod("village/" + type.path + "/houses/hunter_trainer")).forEach(consumer);
     }

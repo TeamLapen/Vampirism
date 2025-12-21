@@ -1,6 +1,6 @@
 package de.teamlapen.factions.common.world.inventory.base;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -177,7 +177,7 @@ public class AbstractInventoryContainer extends AbstractContainerMenu {
             int x,
             int y,
             int maxStackSize,
-            @Nullable ResourceLocation backgroundIcon
+            @Nullable Identifier backgroundIcon
     ) {
         public SlotDefinition(Predicate<ItemStack> mayPlace, int x, int y) {
             this(mayPlace, x, y, 64, null);
@@ -191,18 +191,18 @@ public class AbstractInventoryContainer extends AbstractContainerMenu {
             this(stack -> stack.is(tag), x, y);
         }
 
-        public SlotDefinition(TagKey<Item> tag, int x, int y, int maxStackSize, @Nullable ResourceLocation backgroundIcon) {
+        public SlotDefinition(TagKey<Item> tag, int x, int y, int maxStackSize, @Nullable Identifier backgroundIcon) {
             this(stack -> stack.is(tag), x, y, maxStackSize, backgroundIcon);
         }
 
-        public SlotDefinition(Supplier<Collection<Item>> itemsSupplier, int x, int y, int maxStackSize, @Nullable ResourceLocation backgroundIcon) {
+        public SlotDefinition(Supplier<Collection<Item>> itemsSupplier, int x, int y, int maxStackSize, @Nullable Identifier backgroundIcon) {
             this(stack -> itemsSupplier.get().contains(stack.getItem()), x, y, maxStackSize, backgroundIcon);
         }
 
         /**
          * Creates a slot definition with inverted predicate logic.
          */
-        public static SlotDefinition inverted(Predicate<ItemStack> mayNotPlace, int x, int y, int maxStackSize, @Nullable ResourceLocation backgroundIcon) {
+        public static SlotDefinition inverted(Predicate<ItemStack> mayNotPlace, int x, int y, int maxStackSize, @Nullable Identifier backgroundIcon) {
             return new SlotDefinition(stack -> !mayNotPlace.test(stack), x, y, maxStackSize, backgroundIcon);
         }
     }
@@ -238,7 +238,7 @@ public class AbstractInventoryContainer extends AbstractContainerMenu {
 
         @Nullable
         @Override
-        public ResourceLocation getNoItemIcon() {
+        public Identifier getNoItemIcon() {
             return this.definition.backgroundIcon();
         }
 

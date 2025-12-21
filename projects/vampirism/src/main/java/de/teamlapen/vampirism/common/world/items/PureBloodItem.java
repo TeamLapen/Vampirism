@@ -12,9 +12,9 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import de.teamlapen.vampirism.common.world.items.consume.BloodConsume;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;

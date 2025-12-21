@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,15 +14,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class VampireEntityLayer<T extends LivingEntityRenderState, U extends EntityModel<? super T>> extends RenderLayer<T, U> {
 
-    private final ResourceLocation texture;
+    private final Identifier texture;
 
-    public VampireEntityLayer(@NotNull RenderLayerParent<T, U> entityRendererIn, ResourceLocation texture) {
+    public VampireEntityLayer(@NotNull RenderLayerParent<T, U> entityRendererIn, Identifier texture) {
         super(entityRendererIn);
         this.texture = texture;
     }
 
     @Deprecated
-    public VampireEntityLayer(@NotNull RenderLayerParent<T, U> entityRendererIn, ResourceLocation texture, boolean checkIfRender) {
+    public VampireEntityLayer(@NotNull RenderLayerParent<T, U> entityRendererIn, Identifier texture, boolean checkIfRender) {
         this(entityRendererIn, texture);
     }
 

@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.general.IBookContents;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface IVampireBook {
     /**
      * The id of the book.
      */
-    ResourceLocation id();
+    Identifier id();
 
     /**
      * The book author displayed in the description of the item.

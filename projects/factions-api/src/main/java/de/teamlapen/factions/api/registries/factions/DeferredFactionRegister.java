@@ -5,7 +5,7 @@ import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionEntity;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -35,18 +35,18 @@ public class DeferredFactionRegister extends DeferredRegister<IFaction<?>> {
     }
 
     @Override
-    public <I extends IFaction<?>> DeferredHolder<IFaction<?>, I> register(String name, Function<ResourceLocation, ? extends I> func) {
+    public <I extends IFaction<?>> DeferredHolder<IFaction<?>, I> register(String name, Function<Identifier, ? extends I> func) {
         return super.register(name, func);
     }
 
     @SuppressWarnings({"unchecked", "RedundantCast"})
-    public <T extends IFactionEntity, I extends IFaction<T>> DeferredFaction<T, I> registerFaction(String name, Function<ResourceLocation, ? extends I> func) {
+    public <T extends IFactionEntity, I extends IFaction<T>> DeferredFaction<T, I> registerFaction(String name, Function<Identifier, ? extends I> func) {
         return (DeferredFaction<T, I>) (Object) super.register(name, func);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected <I extends IFaction<?>> DeferredHolder<IFaction<?>, I> createHolder(ResourceKey<? extends Registry<IFaction<?>>> registryKey, ResourceLocation key) {
+    protected <I extends IFaction<?>> DeferredHolder<IFaction<?>, I> createHolder(ResourceKey<? extends Registry<IFaction<?>>> registryKey, Identifier key) {
         return (DeferredHolder<IFaction<?>, I>) (Object) DeferredFaction.createFaction(key);
     }
 }

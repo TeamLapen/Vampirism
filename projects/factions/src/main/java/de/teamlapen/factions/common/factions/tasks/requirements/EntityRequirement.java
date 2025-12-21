@@ -10,15 +10,15 @@ import de.teamlapen.factions.common.util.RegUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Range;
 
-public record EntityRequirement(ResourceLocation id, EntityType<?> entityType, @Range(from = 0, to = Integer.MAX_VALUE) int amount, Component description) implements TaskRequirement.Requirement<EntityType<?>> {
+public record EntityRequirement(Identifier id, EntityType<?> entityType, @Range(from = 0, to = Integer.MAX_VALUE) int amount, Component description) implements TaskRequirement.Requirement<EntityType<?>> {
 
     public static final MapCodec<EntityRequirement> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
-                ResourceLocation.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
+                Identifier.CODEC.optionalFieldOf("id").forGetter(s -> java.util.Optional.of(s.id)),
                 BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entityType").forGetter(i -> i.entityType),
                 Codec.INT.fieldOf("amount").forGetter(s -> s.amount),
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(s -> s.description)

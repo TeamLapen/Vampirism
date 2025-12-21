@@ -17,7 +17,7 @@ import de.teamlapen.factions.common.sounds.ISoundHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -45,7 +45,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements ITaskMenu {
      * all task requirements that are completed
      */
     @Nullable
-    private Map<UUID, Map<ResourceLocation, Integer>> completedRequirements;
+    private Map<UUID, Map<Identifier, Integer>> completedRequirements;
     private UUID taskBoardId;
 
     @Nullable
@@ -158,7 +158,7 @@ public class TaskBoardMenu extends AbstractContainerMenu implements ITaskMenu {
     /**
      * @param completedRequirements updated completed requirements
      */
-    public void init(@NotNull Set<ITaskInstance> available, @NotNull Set<UUID> completableTasks, Map<UUID, Map<ResourceLocation, Integer>> completedRequirements, UUID taskBoardId) {
+    public void init(@NotNull Set<ITaskInstance> available, @NotNull Set<UUID> completableTasks, Map<UUID, Map<Identifier, Integer>> completedRequirements, UUID taskBoardId) {
         this.taskInstances.clear();
         this.taskInstances.addAll(available);
         this.completableTasks.addAll(completableTasks);

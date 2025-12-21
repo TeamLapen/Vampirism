@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.data.reloadlistener.vampirebook.BookBackground;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -20,11 +20,11 @@ public abstract class BookBackgroundsProvider implements DataProvider {
         this.pathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "vampire_book_backgrounds");
     }
 
-    protected abstract void registerBackgrounds(BiConsumer<ResourceLocation, BookBackground> output);
+    protected abstract void registerBackgrounds(BiConsumer<Identifier, BookBackground> output);
 
     @Override
     public @NotNull CompletableFuture<?> run(@NotNull CachedOutput output) {
-        Map<ResourceLocation, BookBackground> map = new HashMap<>();
+        Map<Identifier, BookBackground> map = new HashMap<>();
 
         registerBackgrounds((id, background) -> {
             if (map.putIfAbsent(id, background) != null) {

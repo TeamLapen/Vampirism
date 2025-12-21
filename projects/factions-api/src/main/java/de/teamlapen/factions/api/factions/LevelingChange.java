@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import de.teamlapen.factions.api.Factions;
 import de.teamlapen.factions.api.util.FResourceLocation;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -176,6 +176,6 @@ public record LevelingChange(Map<Key<?>, Change<?>> values, boolean notifyFactio
         }
     }
 
-    public record Key<T>(ResourceLocation id) {
+    public record Key<T>(Identifier id) {
     }
 }

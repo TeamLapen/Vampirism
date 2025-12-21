@@ -21,7 +21,7 @@ import de.teamlapen.vampirism.common.world.entity.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirismVampireVisions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
-import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -45,8 +45,8 @@ import java.util.Optional;
 public class VampireSkills {
     public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(FactionRegistries.Keys.SKILL, REFERENCE.MODID);
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LEVEL_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().location().getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LORD_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().location().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LEVEL_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LORD_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.register("advanced_biter", () -> new VampirismSkill.SimpleVampireSkill(2, false).setToggleActions(player -> ((VampirePlayer) player).getSkillProperties().advanced_biter = true, player -> ((VampirePlayer) player).getSkillProperties().advanced_biter = false).setHasDefaultDescription());
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> FLEDGLING = SKILLS.register("fledgling", () -> new VampirismSkill.SimpleVampireSkill(2, true) {
         @Override

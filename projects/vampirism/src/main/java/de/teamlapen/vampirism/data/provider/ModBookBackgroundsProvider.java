@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.common.core.ModVampireBooks;
 import de.teamlapen.vampirism.data.provider.base.BookBackgroundsProvider;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.BookBackground;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.BiConsumer;
 
@@ -16,7 +16,7 @@ public class ModBookBackgroundsProvider extends BookBackgroundsProvider {
     }
 
     @Override
-    protected void registerBackgrounds(BiConsumer<ResourceLocation, BookBackground> output) {
+    protected void registerBackgrounds(BiConsumer<Identifier, BookBackground> output) {
         output.accept(ModVampireBooks.DIARY_BACKGROUND, BookBackground
                 .builder(VResourceLocation.mod("textures/gui/vampire_books/diary.png"), 304, 200)
                 .textureFirstPage(VResourceLocation.mod("textures/gui/vampire_books/diary_first.png"))

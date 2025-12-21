@@ -5,7 +5,7 @@ import com.mojang.math.Axis;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.world.blockentity.BatCageBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.BatCageBlock;
-import net.minecraft.client.model.BatModel;
+import net.minecraft.client.model.ambient.BatModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -15,13 +15,13 @@ import net.minecraft.client.renderer.entity.state.BatRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity, BatCageRenderer.BatCageRenderState> {
 
-    public static final ResourceLocation BAT_LOCATION = VResourceLocation.mc("textures/entity/bat.png");
+    public static final Identifier BAT_LOCATION = VResourceLocation.mc("textures/entity/bat.png");
 
     private final BatModel model;
 

@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -18,7 +18,7 @@ public class EntityCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("entity")
-                .requires(context -> context.hasPermission(PERMISSION_LEVEL_ALL))
+                .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .executes(context -> entity(context.getSource(), context.getSource().getPlayerOrException()));
     }
 
@@ -27,7 +27,7 @@ public class EntityCommand extends BasicCommand {
         List<Entity> l = asPlayer.level().getEntities(asPlayer, asPlayer.getBoundingBox().inflate(3, 2, 3));
         for (Entity entity : l) {
             if (entity instanceof PathfinderMob) {
-                ResourceLocation id = RegUtil.id(entity.getType());
+                Identifier id = RegUtil.id(entity.getType());
                 commandSource.sendSuccess(() -> Component.literal(id.toString()), true);
             } else {
                 commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.entity.notbiteable", entity.getClass().getName()), true);

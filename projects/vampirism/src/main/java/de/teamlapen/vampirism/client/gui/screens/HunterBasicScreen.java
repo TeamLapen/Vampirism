@@ -9,7 +9,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +18,8 @@ import java.util.List;
 
 
 public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
-    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/basic_hunter.png");
-    private static final ResourceLocation PURE_BLOOD_BOTTLE_SLOT_SPRITE = VResourceLocation.mod("container/slot/pure_blood_bottle");
+    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/basic_hunter.png");
+    private static final Identifier PURE_BLOOD_BOTTLE_SLOT_SPRITE = VResourceLocation.mod("container/slot/pure_blood_bottle");
 
     private Button buttonLevelUp;
 

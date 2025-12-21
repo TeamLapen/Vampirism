@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.client.OptifineHandler;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.MixinHooks;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class BloodVisionRenderer implements IMinecraftAccessor {
     private static final int ENTITY_NEAR_SQ_DISTANCE = 600;
     private static final int BLOOD_VISION_FADE_TICKS = 80;
-    public static final ResourceLocation BLUR_SHADER = VResourceLocation.mc("blur");
+    public static final Identifier BLUR_SHADER = VResourceLocation.mc("blur");
     private boolean inBloodVisionRendering;
     //    private CustomBufferSource bloodVisionBuffer;
     private boolean reducedBloodVision = false;

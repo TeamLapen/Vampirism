@@ -1,4 +1,4 @@
-@NotNullByDefault
+@NullMarked
 package de.teamlapen.factions.common.factions.actions;
 
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jspecify.annotations.NullMarked;

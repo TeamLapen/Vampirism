@@ -7,7 +7,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeBuilder;
@@ -59,7 +59,7 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
         var recipe = new AlchemicalCauldronRecipe(Objects.requireNonNullElse(this.group, ""), this.ingredient, this.fluid, this.result, this.skills, this.reqLevel, this.cookTime, this.exp);
-        recipeOutput.accept(resourceLocation, recipe, builder.build(resourceLocation.location().withPrefix("recipes/alchemical_cauldron/")));
+        recipeOutput.accept(resourceLocation, recipe, builder.build(resourceLocation.identifier().withPrefix("recipes/alchemical_cauldron/")));
     }
 
     @Override

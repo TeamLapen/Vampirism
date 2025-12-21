@@ -45,7 +45,7 @@ import de.teamlapen.vampirism.common.world.items.recipes.ShapelessWeaponTableRec
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -104,8 +104,8 @@ public class GuideBook implements IGuideBook {
 
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static @NotNull Map<ResourceLocation, EntryAbstract> buildOverview(@NotNull BookHelper helper) {
-        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+    private static @NotNull Map<Identifier, EntryAbstract> buildOverview(@NotNull BookHelper helper) {
+        Map<Identifier, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.overview.";
 
         List<IPage> introPages = new ArrayList<>();
@@ -159,8 +159,8 @@ public class GuideBook implements IGuideBook {
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static @NotNull Map<ResourceLocation, EntryAbstract> buildVampire(@NotNull BookHelper helper) {
-        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+    private static @NotNull Map<Identifier, EntryAbstract> buildVampire(@NotNull BookHelper helper) {
+        Map<Identifier, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.vampire.";
 
         List<IPage> gettingStarted = new ArrayList<>();
@@ -268,8 +268,8 @@ public class GuideBook implements IGuideBook {
     }
 
     @SuppressWarnings("CollectionAddAllCanBeReplacedWithConstructor")
-    private static @NotNull Map<ResourceLocation, EntryAbstract> buildHunter(@NotNull BookHelper helper) {
-        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+    private static @NotNull Map<Identifier, EntryAbstract> buildHunter(@NotNull BookHelper helper) {
+        Map<Identifier, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.hunter.";
 
         List<IPage> gettingStarted = new ArrayList<>();
@@ -364,8 +364,8 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static @NotNull Map<ResourceLocation, EntryAbstract> buildCreatures(@NotNull BookHelper helper) {
-        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+    private static @NotNull Map<Identifier, EntryAbstract> buildCreatures(@NotNull BookHelper helper) {
+        Map<Identifier, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.entity.";
 
         ArrayList<IPage> generalPages = new ArrayList<>(PageHelper.pagesForLongText(FormattedText.composite(translateComponent(base + "general.text"), translateComponent(base + "general.text2"))));
@@ -427,8 +427,8 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static @NotNull Map<ResourceLocation, EntryAbstract> buildWorld(@NotNull BookHelper helper) {
-        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+    private static @NotNull Map<Identifier, EntryAbstract> buildWorld(@NotNull BookHelper helper) {
+        Map<Identifier, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.world.";
 
         List<IPage> vampireForestPages = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base + "vampire_forest.text")));
@@ -441,8 +441,8 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static @NotNull Map<ResourceLocation, EntryAbstract> buildItems(@NotNull BookHelper helper) {
-        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+    private static @NotNull Map<Identifier, EntryAbstract> buildItems(@NotNull BookHelper helper) {
+        Map<Identifier, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.items.";
         //General
         helper.info(ModItems.VAMPIRE_FANG.get()).build(entries);
@@ -483,8 +483,8 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    private static @NotNull Map<ResourceLocation, EntryAbstract> buildBlocks(@NotNull BookHelper helper) {
-        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+    private static @NotNull Map<Identifier, EntryAbstract> buildBlocks(@NotNull BookHelper helper) {
+        Map<Identifier, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.blocks.";
         //General
         helper.info(ModBlocks.DARK_STONE_BRICKS.get()).recipes("general/castle_block_dark_brick_0", "general/castle_block_dark_brick_1", "general/castle_block_dark_stone", "general/castle_block_normal_brick", "general/castle_block_purple_brick", "general/castle_slab_dark_brick", "general/castle_stairs_dark_brick").build(entries);
@@ -525,8 +525,8 @@ public class GuideBook implements IGuideBook {
         return entries;
     }
 
-    public static @NotNull Map<ResourceLocation, EntryAbstract> buildChangelog(BookHelper helper) {
-        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+    public static @NotNull Map<Identifier, EntryAbstract> buildChangelog(BookHelper helper) {
+        Map<Identifier, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.changelog.";
         entries.put(VResourceLocation.mod(base + "v1_8"), buildChangelog1_8());
         entries.put(VResourceLocation.mod(base + "v1_9"), buildChangelog1_9());
@@ -656,7 +656,7 @@ public class GuideBook implements IGuideBook {
 
     @Nullable
     @Override
-    public ResourceLocation getModel() {
+    public Identifier getModel() {
         return VResourceLocation.mod("item/guidebook");
     }
 }

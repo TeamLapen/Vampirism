@@ -10,8 +10,8 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 
 import java.util.Optional;
@@ -33,7 +33,7 @@ public class ActionCooldownOverlay<T extends ISkillPlayer<T>> extends BaseOverla
                     for (Holder<? extends IAction<T>> action : actionHandler.getUnlockedActionHolder()) {
                         if (!(action.value().showHudCooldown(this.player()))) continue;
                         if (!actionHandler.isActionOnCooldown(action)) continue;
-                        Optional<ResourceLocation> texture = action.unwrapKey().map(ResourceKey::location).map(key -> key.withPath("textures/actions/" + key.getPath() + ".png"));
+                        Optional<Identifier> texture = action.unwrapKey().map(ResourceKey::identifier).map(key -> key.withPath("textures/actions/" + key.getPath() + ".png"));
                         if (texture.isPresent()) {
                             int perc = (int) ((1 + actionHandler.getCooldownPercentage(action)) * 16);
                             //render gray transparent background for remaining cooldown

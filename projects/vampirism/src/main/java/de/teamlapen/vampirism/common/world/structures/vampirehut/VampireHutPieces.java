@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.common.core.ModStructures;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireHutPieces {
 
-    private static final ResourceLocation LOCATION = VResourceLocation.mod("vampire_hut");
+    private static final Identifier LOCATION = VResourceLocation.mod("vampire_hut");
 
     public static void addPieces(StructureTemplateManager structureTemplateManager, StructurePieceAccessor pieceAccessor, RandomSource random, BlockPos pos) {
         Rotation rotation = Rotation.getRandom(random);
@@ -41,7 +41,7 @@ public class VampireHutPieces {
 
     public static class VampireHutPiece extends TemplateStructurePiece {
 
-        public VampireHutPiece(StructureTemplateManager pStructureTemplateManager, ResourceLocation pLocation, BlockPos pPos, Rotation pRotation) {
+        public VampireHutPiece(StructureTemplateManager pStructureTemplateManager, Identifier pLocation, BlockPos pPos, Rotation pRotation) {
             super(ModStructures.VAMPIRE_HUT_PIECE.get(), 0, pStructureTemplateManager, pLocation, pLocation.toString(), makeSettings(pRotation), pPos);
         }
 

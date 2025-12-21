@@ -20,8 +20,8 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Collection;
@@ -35,7 +35,7 @@ public class SkillCommand extends BasicCommand {
     }
 
     private static ArgumentBuilder<CommandSourceStack, ?> create(ArgumentBuilder<CommandSourceStack, ?> builder, CommandBuildContext buildContext) {
-        return builder.requires(context -> context.hasPermission(BasicCommand.PERMISSION_LEVEL_ADMIN))
+        return builder.requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .then(Commands.literal("disableall")
                         .executes(context -> disableAll(context.getSource(), context.getSource().getPlayerOrException()))
                         .then(Commands.argument("player", EntityArgument.players())
@@ -121,7 +121,7 @@ public class SkillCommand extends BasicCommand {
             case OK -> {
                 //noinspection unchecked
                 skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill);
-                commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.enabled", skill.unwrapKey().map(ResourceKey::location).map(ResourceLocation::toString).orElseThrow() + " (" + skill.value().getName().getString() + ")"), false);
+                commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.enabled", skill.unwrapKey().map(ResourceKey::identifier).map(Identifier::toString).orElseThrow() + " (" + skill.value().getName().getString() + ")"), false);
             }
             case ALREADY_ENABLED -> commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.skill.alreadyenabled", skill.value().getName()), false);
             case PARENT_NOT_ENABLED -> commandSource.sendFailure(Component.translatable("command.vampirism.test.skill.parents.disabled"));

@@ -21,7 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -32,7 +32,7 @@ import java.util.List;
 
 public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<AlchemyTableRecipe>> {
 
-    private static final ResourceLocation location = VResourceLocation.mod("textures/gui/container/alchemy_table.png");
+    private static final Identifier location = VResourceLocation.mod("textures/gui/container/alchemy_table.png");
 
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable icon;

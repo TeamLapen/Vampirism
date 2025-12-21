@@ -7,7 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -50,7 +50,7 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
         );
     }
 
-    private final Map<ResourceLocation, Supplier<Block>> fullHolderByContent = Maps.newHashMap();
+    private final Map<Identifier, Supplier<Block>> fullHolderByContent = Maps.newHashMap();
     protected final @Nullable Supplier<? extends Block> emptyBlock;
     protected final Supplier<Item> candle;
 
@@ -61,7 +61,7 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LIT, false));
     }
 
-    public void addCandle(ResourceLocation candle, Supplier<Block> holder) {
+    public void addCandle(Identifier candle, Supplier<Block> holder) {
         this.fullHolderByContent.put(candle, holder);
     }
 

@@ -17,7 +17,7 @@ public class TentCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("tent")
-                .requires(context -> context.hasPermission(PERMISSION_LEVEL_CHEAT))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .executes(context -> tent(context.getSource(), context.getSource().getPlayerOrException(), false))
                 .then(Commands.literal("advanced")
                         .executes(context -> tent(context.getSource(), context.getSource().getPlayerOrException(), true)));

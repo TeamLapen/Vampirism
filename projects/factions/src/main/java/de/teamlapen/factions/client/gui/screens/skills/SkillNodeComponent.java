@@ -19,7 +19,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
@@ -31,12 +31,12 @@ import java.util.stream.Collectors;
 
 @NonnullDefault
 public class SkillNodeComponent {
-    private static final ResourceLocation SKILL_BACKGROUND_SPRITE = FResourceLocation.mod("skills_screen/node");
-    private static final ResourceLocation START_SKILL_BACKGROUND_SPRITE = FResourceLocation.mod("skills_screen/start_node");
-    private static final ResourceLocation TITLE_RED_SPRITE = FResourceLocation.mod("skills_screen/title_red");
-    private static final ResourceLocation TITLE_BLUE_SPRITE = FResourceLocation.mod("skills_screen/title_blue");
-    private static final ResourceLocation TITLE_GREEN_SPRITE = FResourceLocation.mod("skills_screen/title_green");
-    private static final ResourceLocation DESCRIPTION_SPRITE = FResourceLocation.mod("skills_screen/description");
+    private static final Identifier SKILL_BACKGROUND_SPRITE = FResourceLocation.mod("skills_screen/node");
+    private static final Identifier START_SKILL_BACKGROUND_SPRITE = FResourceLocation.mod("skills_screen/start_node");
+    private static final Identifier TITLE_RED_SPRITE = FResourceLocation.mod("skills_screen/title_red");
+    private static final Identifier TITLE_BLUE_SPRITE = FResourceLocation.mod("skills_screen/title_blue");
+    private static final Identifier TITLE_GREEN_SPRITE = FResourceLocation.mod("skills_screen/title_green");
+    private static final Identifier DESCRIPTION_SPRITE = FResourceLocation.mod("skills_screen/description");
 
     private static final int[] TEST_SPLIT_OFFSETS = new int[] {0, 10, -10, 25, -25};
     private final Minecraft minecraft;
@@ -273,7 +273,7 @@ public class SkillNodeComponent {
             }
 
             //draw title
-            ResourceLocation texture = state.sprite;
+            Identifier texture = state.sprite;
             if (state == SkillNodeState.UNLOCKED && !this.skillHandler.isSkillEnabled(hoveredSkill)) {
                 texture = SkillNodeState.LOCKED.sprite;
             }
@@ -295,12 +295,12 @@ public class SkillNodeComponent {
         }
     }
 
-    private ResourceLocation getSkillIconLocation(ISkill<?> skill) {
+    private Identifier getSkillIconLocation(ISkill<?> skill) {
         if (skill instanceof IActionSkill<?> actionSkill) {
-            ResourceLocation location = actionSkill.actionHolder().getKey().location();
+            Identifier location = actionSkill.actionHolder().getKey().identifier();
             return location.withPath(x -> "textures/actions/" + x + ".png");
         } else {
-            ResourceLocation id = RegUtil.id(skill);
+            Identifier id = RegUtil.id(skill);
             return id.withPath(x -> "textures/skills/" + x + ".png");
         }
     }
@@ -386,7 +386,7 @@ public class SkillNodeComponent {
         /**
          * texture y offset for the tooltip title back rendering
          */
-        public final ResourceLocation sprite;
+        public final Identifier sprite;
         /**
          * connectivity inner color
          */
@@ -396,7 +396,7 @@ public class SkillNodeComponent {
          */
         public final int outerColor;
 
-        SkillNodeState(ResourceLocation sprite, int innerColor, int outerColor) {
+        SkillNodeState(Identifier sprite, int innerColor, int outerColor) {
             this.sprite = sprite;
             this.outerColor = outerColor;
             this.innerColor = innerColor;

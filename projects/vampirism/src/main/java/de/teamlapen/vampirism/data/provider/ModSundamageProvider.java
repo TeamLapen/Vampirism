@@ -9,7 +9,7 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.Level;
@@ -37,7 +37,7 @@ public class ModSundamageProvider implements DataProvider {
         Consumer consumer = new Consumer();
         this.registerNoSundamageBiomes(consumer);
 
-        return DataProvider.saveStable(pOutput, SundamageReloadListener.RawFile.CODEC.encodeStart(JsonOps.INSTANCE, consumer.build()).getOrThrow(EncoderException::new), pathProvider.json(ResourceLocation.fromNamespaceAndPath(modId, "no_sun_damage")));
+        return DataProvider.saveStable(pOutput, SundamageReloadListener.RawFile.CODEC.encodeStart(JsonOps.INSTANCE, consumer.build()).getOrThrow(EncoderException::new), pathProvider.json(Identifier.fromNamespaceAndPath(modId, "no_sun_damage")));
     }
 
     @Override
@@ -58,24 +58,24 @@ public class ModSundamageProvider implements DataProvider {
         private final Set<ResourceKey<Level>> levels = Sets.newHashSet();
         private final Set<ResourceKey<Level>> sunDamageLevels = Sets.newHashSet();
 
-        public void addBiome(ResourceLocation biome) {
+        public void addBiome(Identifier biome) {
             this.biomes.add(new ExtraCodecs.TagOrElementLocation(biome, false));
         }
 
         public void addBiome(ResourceKey<Biome> biome) {
-            this.biomes.add(new ExtraCodecs.TagOrElementLocation(biome.location(), false));
+            this.biomes.add(new ExtraCodecs.TagOrElementLocation(biome.identifier(), false));
         }
 
         public void addBiome(TagKey<Biome> biome) {
             this.biomes.add(new ExtraCodecs.TagOrElementLocation(biome.location(), true));
         }
 
-        public void addDimension(ResourceLocation dimension) {
+        public void addDimension(Identifier dimension) {
             this.dimensions.add(new ExtraCodecs.TagOrElementLocation(dimension, false));
         }
 
         public void addDimension(ResourceKey<DimensionType> dimension) {
-            this.dimensions.add(new ExtraCodecs.TagOrElementLocation(dimension.location(), false));
+            this.dimensions.add(new ExtraCodecs.TagOrElementLocation(dimension.identifier(), false));
         }
 
         public void addDimension(TagKey<DimensionType> dimension) {

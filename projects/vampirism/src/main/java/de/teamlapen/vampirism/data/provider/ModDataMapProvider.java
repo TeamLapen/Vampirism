@@ -13,7 +13,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -129,7 +129,7 @@ public class ModDataMapProvider extends DataMapProvider {
     }
 
     protected void gatherEntityConverter(Builder<IConverterEntry, EntityType<?>> entityValues) {
-        Function<String, ResourceLocation> overlay = (String name) -> VResourceLocation.mod(String.format("textures/entity/vanilla/%s_overlay.png", name));
+        Function<String, Identifier> overlay = (String name) -> VResourceLocation.mod(String.format("textures/entity/vanilla/%s_overlay.png", name));
         Function<EntityType<?>, Holder<EntityType<?>>> holder = BuiltInRegistries.ENTITY_TYPE::wrapAsHolder;
 
         entityValues.add(holder.apply(EntityType.COW), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_COW), overlay.apply("cow")), false);

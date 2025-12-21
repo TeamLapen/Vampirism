@@ -1,0 +1,29 @@
+{
+  "period_ticks": 24000,
+  "tracks": {
+    "vampirism:converted_default": {
+      "keyframes": [
+        {
+          "ticks": 10,
+          "value": "minecraft:rest"
+        },
+        {
+          "ticks": 12000,
+          "value": "minecraft:idle"
+        },
+        {
+          "ticks": 14000,
+          "value": "minecraft:work"
+        },
+        {
+          "ticks": 21000,
+          "value": "minecraft:meet"
+        },
+        {
+          "ticks": 23000,
+          "value": "minecraft:idle"
+        }
+      ]
+    }
+  }
+}

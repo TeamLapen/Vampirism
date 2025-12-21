@@ -7,7 +7,7 @@ import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.factions.common.util.ModCodecs;
-import net.minecraft.advancements.critereon.EntitySubPredicate;
+import net.minecraft.advancements.criterion.EntitySubPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

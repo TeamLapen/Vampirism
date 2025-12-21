@@ -8,13 +8,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class BloodGrinderScreen extends AbstractContainerScreen<BloodGrinderMenu> {
 
-    private static final ResourceLocation BACKGROUND = VResourceLocation.mod("textures/gui/container/blood_grinder.png");
+    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/blood_grinder.png");
 
     public BloodGrinderScreen(@NotNull BloodGrinderMenu inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
         super(inventorySlotsIn, playerInventory, name);

@@ -7,7 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,10 +15,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu> {
 
-    private static final ResourceLocation BREWING_STAND_LOCATION = VResourceLocation.mod("textures/gui/container/alchemy_table.png");
-    private static final ResourceLocation BLAZE_CHARGE_SPRITE = VResourceLocation.mod("container/alchemy_table/blaze_charge");
-    private static final ResourceLocation OIL_SPRITE = VResourceLocation.mod("container/alchemy_table/oil");
-    private static final ResourceLocation PROGRESS_SPRITE = VResourceLocation.mod("container/alchemy_table/progress");
+    private static final Identifier BREWING_STAND_LOCATION = VResourceLocation.mod("textures/gui/container/alchemy_table.png");
+    private static final Identifier BLAZE_CHARGE_SPRITE = VResourceLocation.mod("container/alchemy_table/blaze_charge");
+    private static final Identifier OIL_SPRITE = VResourceLocation.mod("container/alchemy_table/oil");
+    private static final Identifier PROGRESS_SPRITE = VResourceLocation.mod("container/alchemy_table/progress");
 
     private static final int[] BUBBLELENGTHS = new int[] {29, 24, 20, 16, 11, 6, 0};
 

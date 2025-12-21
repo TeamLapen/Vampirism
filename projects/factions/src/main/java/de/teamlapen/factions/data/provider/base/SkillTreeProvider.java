@@ -7,8 +7,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,7 +31,7 @@ public abstract class SkillTreeProvider implements DataProvider {
     @Override
     public CompletableFuture<?> run(CachedOutput pOutput) {
         return this.lookupProvider.thenCompose(provider -> {
-            Set<ResourceLocation> set = new HashSet<>();
+            Set<Identifier> set = new HashSet<>();
             List<CompletableFuture<?>> list = new ArrayList<>();
             RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, provider);
             this.buildSkillTrees(provider, (id, skillTree) -> {
@@ -53,12 +53,12 @@ public abstract class SkillTreeProvider implements DataProvider {
         return "Skill tree config";
     }
 
-    protected ResourceLocation modId(String string) {
-        return ResourceLocation.fromNamespaceAndPath(this.modId, string);
+    protected Identifier modId(String string) {
+        return Identifier.fromNamespaceAndPath(this.modId, string);
     }
 
     public interface SkillTreeOutput {
 
-        ResourceLocation accept(ResourceLocation id, SkillTreeConfiguration skillTree);
+        Identifier accept(Identifier id, SkillTreeConfiguration skillTree);
     }
 }

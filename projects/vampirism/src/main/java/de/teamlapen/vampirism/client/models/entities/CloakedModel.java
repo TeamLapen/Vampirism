@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.models.entities;
 
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 

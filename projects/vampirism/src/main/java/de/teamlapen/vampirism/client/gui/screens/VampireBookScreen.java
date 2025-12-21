@@ -17,7 +17,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -144,7 +144,7 @@ public class VampireBookScreen extends Screen {
     public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        ResourceLocation backgroundTexture = null;
+        Identifier backgroundTexture = null;
         if (pageNumber == 0 && background.textureFirstPage().isPresent()) {
             backgroundTexture = background.textureFirstPage().get();
         } else if (pageNumber + 1 >= content.size() && background.textureLastPage().isPresent()) {
@@ -262,10 +262,10 @@ public class VampireBookScreen extends Screen {
 
     public static class VampireBookPageButton extends Button {
 
-        private static final ResourceLocation PAGE_FORWARD_HIGHLIGHTED_SPRITE = VResourceLocation.mod("widget/vampire_book_page_forward_highlighted");
-        private static final ResourceLocation PAGE_FORWARD_SPRITE = VResourceLocation.mod("widget/vampire_book_page_forward");
-        private static final ResourceLocation PAGE_BACKWARD_HIGHLIGHTED_SPRITE = VResourceLocation.mod("widget/vampire_book_page_backward_highlighted");
-        private static final ResourceLocation PAGE_BACKWARD_SPRITE = VResourceLocation.mod("widget/vampire_book_page_backward");
+        private static final Identifier PAGE_FORWARD_HIGHLIGHTED_SPRITE = VResourceLocation.mod("widget/vampire_book_page_forward_highlighted");
+        private static final Identifier PAGE_FORWARD_SPRITE = VResourceLocation.mod("widget/vampire_book_page_forward");
+        private static final Identifier PAGE_BACKWARD_HIGHLIGHTED_SPRITE = VResourceLocation.mod("widget/vampire_book_page_backward_highlighted");
+        private static final Identifier PAGE_BACKWARD_SPRITE = VResourceLocation.mod("widget/vampire_book_page_backward");
 
         private static final int WIDTH = 23;
         private static final int HEIGHT = 13;
@@ -278,8 +278,8 @@ public class VampireBookScreen extends Screen {
         }
 
         @Override
-        public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            ResourceLocation resourcelocation;
+        public void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            Identifier resourcelocation;
             if (this.isForward) {
                 resourcelocation = this.isHovered() ? PAGE_FORWARD_HIGHLIGHTED_SPRITE : PAGE_FORWARD_SPRITE;
             } else {

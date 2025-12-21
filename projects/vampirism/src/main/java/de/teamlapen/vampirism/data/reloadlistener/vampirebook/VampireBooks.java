@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.Language;
 import de.teamlapen.vampirism.common.core.ModVampireBooks;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ public class VampireBooks {
     }
 
     @NotNull
-    public BookBackground getBackground(ResourceLocation id) {
+    public BookBackground getBackground(Identifier id) {
         var backgrounds = this.bookBackgrounds.getBackgrounds();
         BookBackground bookBackground = backgrounds.get(id);
         if (bookBackground == null) {
