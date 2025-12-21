@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.common.world.biomes;
 
 import com.mojang.datafixers.util.Pair;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBiomes;
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.integration.TerraBlenderCompat;
 import de.teamlapen.vampirism.misc.mixin.NoiseGeneratorSettingsMixin;
 import de.teamlapen.vampirism.misc.mixin.accessor.MultiNoiseBiomeSourceParameterListPresetAccessor;
 import net.minecraft.core.Holder;
@@ -54,7 +54,7 @@ public class OverworldModifications {
      * Add our biomes to the overworld biome source preset
      */
     public static void addBiomesToOverworldUnsafe() {
-        if (TerraBlenderCompat.areBiomesAddedViaTerraBlender()) { //If we are already adding the biome to the overworld using TerraBlender, we shouldn't hack it into the overworld preset
+        if (VampirismMod.integrations().isUsingTerraBlender()) { //If we are already adding the biome to the overworld using TerraBlender, we shouldn't hack it into the overworld preset
             LOGGER.info("Vampirism Biomes are added via TerraBlender. Not adding them to overworld preset.");
             return;
         }

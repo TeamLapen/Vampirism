@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.misc.mixin;
 
 //import de.teamlapen.vampirism.modcompat.TerraBlenderCompat;
 
-import de.teamlapen.vampirism.common.integration.TerraBlenderCompat;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -16,7 +16,7 @@ public class NoiseGeneratorSettingsMixin {
 
     @Inject(method = "surfaceRule", at = @At("RETURN"), cancellable = true)
     private void addVampirismOverworldSurfaceRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-        if (!TerraBlenderCompat.areBiomesAddedViaTerraBlender()) { //When TerraBlender is installed, it adds the surface rules appropriately. This is likely called a few times before terrablender is activated, but that should not be an issue
+        if (!VampirismMod.integrations().isUsingTerraBlender()) { //When TerraBlender is installed, it adds the surface rules appropriately. This is likely called a few times before terrablender is activated, but that should not be an issue
             cir.setReturnValue(SurfaceRules.sequence(OverworldModifications.buildOverworldSurfaceRules(), cir.getReturnValue()));
         }
     }

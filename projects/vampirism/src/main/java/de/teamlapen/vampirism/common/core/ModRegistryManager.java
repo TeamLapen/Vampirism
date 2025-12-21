@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.vampirism.common.integration.TerraBlenderCompat;
 import de.teamlapen.vampirism.common.util.serialization.CodecModifications;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
@@ -95,7 +94,6 @@ public class ModRegistryManager {
 
     @SubscribeEvent
     private void setup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(TerraBlenderCompat::registerBiomeProviderIfPresentUnsafe);
         event.enqueueWork(ModStats::registerFormatter);
         event.enqueueWork(CodecModifications::changeMobEffectCodec);
         event.enqueueWork(ModVillage::villagerTradeSetup);

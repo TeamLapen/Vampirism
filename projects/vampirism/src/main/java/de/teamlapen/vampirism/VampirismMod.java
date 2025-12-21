@@ -3,6 +3,7 @@ package de.teamlapen.vampirism;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.CommonServices;
+import de.teamlapen.vampirism.common.integration.IntegrationServices;
 import de.teamlapen.vampirism.common.proxy.IProxy;
 import de.teamlapen.vampirism.common.world.items.crossbow.CrossbowArrowHandler;
 import de.teamlapen.vampirism.server.proxy.ServerProxy;
@@ -25,6 +26,7 @@ public class VampirismMod {
     public static boolean inDev = false;
     public static boolean inDataGen = false;
     private static CommonServices SERVICES;
+    private static IntegrationServices INTEGRATIONS;
 
 
     public VampirismMod(IEventBus modEventBus, ModContainer modContainer) {
@@ -38,10 +40,15 @@ public class VampirismMod {
         SERVICES = new CommonServices(modContainer);
         SERVICES.register(modEventBus);
         VampirismApi.init(SERVICES);
+        INTEGRATIONS = new IntegrationServices(modContainer);
+        INTEGRATIONS.register(modEventBus);
     }
 
     public static CommonServices services() {
         return SERVICES;
+    }
+    public static IntegrationServices integrations() {
+        return INTEGRATIONS;
     }
 
     private void checkEnv() {

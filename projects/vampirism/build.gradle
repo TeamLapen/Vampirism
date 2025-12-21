@@ -8,6 +8,8 @@ base {
     archivesName = project.vampirism_mod_name
 }
 
+apply from: file('integrations.gradle')
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(project.java_version)
@@ -18,20 +20,19 @@ java {
 // Map subproject sourceSets to the original project directories to avoid moving files for now
 sourceSets {
     main {
-        java {
-            if (!include_jei.toBoolean()) {
-                exclude('de/teamlapen/vampirism/common/integration/jei')
-            }
-            if (!include_guideapi.toBoolean()) {
-                exclude('de/teamlapen/vampirism/common/integration/guide')
-            }
-            if (!include_terrablender.toBoolean()) {
-                exclude('de/teamlapen/vampirism/common/integration/terrablender')
-            }
-        }
         resources.srcDirs += file('src/generated/resources')
     }
+}
 
+for (var integration : integrations) {
+    if (integration.included) {
+        sourceSets.create(integration.name) {
+            java.srcDir "src/integrations/${integration.name}/java"
+
+            compileClasspath += sourceSets.main.output + configurations.compileClasspath
+            runtimeClasspath += output + compileClasspath + sourceSets.main.output
+        }
+    }
 }
 
 List<Project> dependencyProjects = [
@@ -43,10 +44,6 @@ List<Project> dependencyProjects = [
 dependencyProjects.forEach {
     project.evaluationDependsOn(it.path)
 }
-
-//tasks.withType(org.gradle.api.tasks.compile.JavaCompile.class).configureEach {
- //   source(project(':vampirism-api'))
-//}
 
 dependencies {
     implementation project(':vampirism-api')
@@ -108,6 +105,11 @@ neoForge {
         "${vampirism_mod_id}" {
             sourceSet(sourceSets.main)
             sourceSet(project(':vampirism-api').sourceSets.main)
+            integrations.each {
+                if (it.included) {
+                    sourceSet(sourceSets[it.name])
+                }
+            }
         }
         "${factions_mod_id}" {
             sourceSet(project(':factions').sourceSets.main)
@@ -164,12 +166,24 @@ tasks.jar {
     from (sourceSets.main.output)
     from (project(':vampirism-api').sourceSets.main.output)
 
+    integrations.each {
+        if (it.included) {
+            from(sourceSets[it.name].output)
+        }
+    }
+
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 var sourcesJarTask = tasks.named("sourcesJar", Jar) {
     from(sourceSets.main.allJava)
     from (project(':vampirism-api').sourceSets.main.allJava)
+
+    integrations.each {
+        if (it.included) {
+            from(sourceSets[it.name].allJava)
+        }
+    }
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier.set("sources")
