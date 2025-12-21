@@ -44,15 +44,6 @@ public interface IFactionBuilder<T extends IFactionEntity> {
     IFactionBuilder<T> village(Consumer<IFactionVillageBuilder> villageBuilder);
 
     /**
-     * Marks the tag as a faction tag
-     *
-     * @param registryKey the registry key for the tag registry
-     * @param tag         the faction tag
-     * @return the builder
-     */
-    <Z> IFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag);
-
-    /**
      * finish the building and registers the faction with values from the builder
      *
      * @return the final faction

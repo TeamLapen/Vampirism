@@ -14,10 +14,10 @@ import java.util.Map;
 
 public class FactionPredicates implements IFactionPredicates, FactionPredicate.FactionPredicateLookup {
 
-    private final FactionRegistry factionRegistry;
+    private final FactionHelper factionRegistry;
     private final Map<Integer, FactionPredicate> predicates = new HashMap<>();
 
-    public FactionPredicates(FactionRegistry factionRegistry) {
+    public FactionPredicates(FactionHelper factionRegistry) {
         this.factionRegistry = factionRegistry;
     }
 

@@ -41,8 +41,5 @@ public interface IPlayableFactionBuilder<T extends IFactionPlayer<T>> extends IF
     IPlayableFactionBuilder<T> lord(Consumer<ILordPlayerBuilder<T>> builder);
 
     @Override
-    <Z> IPlayableFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag);
-
-    @Override
     IPlayableFaction<T> build();
 }

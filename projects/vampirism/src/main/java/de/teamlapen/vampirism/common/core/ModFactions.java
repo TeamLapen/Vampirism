@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.factions.api.event.AddFactionTagEvent;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.registries.factions.DeferredFaction;
 import de.teamlapen.factions.api.registries.factions.DeferredFactionRegister;
@@ -33,6 +34,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Supplier;
 
@@ -48,14 +50,6 @@ public class ModFactions {
             .refinementItem(IRefinementItem.AccessorySlotType.AMULET, ModItems.AMULET::get)
             .refinementItem(IRefinementItem.AccessorySlotType.RING, ModItems.RING::get)
             .refinementItem(IRefinementItem.AccessorySlotType.OBI_BELT, ModItems.OBI_BELT::get)
-            .addTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME)
-            .addTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_VAMPIRE)
-            .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_VAMPIRE)
-            .addTag(Registries.ENTITY_TYPE, ModEntityTags.VAMPIRE)
-            .addTag(FactionRegistries.Keys.TASK, ModTaskTags.IS_VAMPIRE)
-            .addTag(FactionRegistries.Keys.FACTION, ModFactionTags.IS_VAMPIRE)
-            .addTag(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.VAMPIRE_FOOD)
-            .addTag(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_VAMPIRE)
             .village(VampireVillage::vampireVillage)
             .lord(builder -> builder
                     .lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD)
@@ -66,14 +60,6 @@ public class ModFactions {
             .color(Color.BLUE.getRGB())
             .chatColor(ChatFormatting.BLUE)
             .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
-            .addTag(Registries.BIOME, ModBiomeTags.HasFaction.IS_HUNTER_BIOME)
-            .addTag(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_HUNTER)
-            .addTag(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_HUNTER)
-            .addTag(Registries.ENTITY_TYPE, ModEntityTags.HUNTER)
-            .addTag(FactionRegistries.Keys.TASK, ModTaskTags.IS_HUNTER)
-            .addTag(FactionRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER)
-            .addTag(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.HUNTER_FOOD)
-            .addTag(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_HUNTER)
             .village(HunterVillage::hunterVillage)
             .lord(builder -> builder
                     .lordTitle(new LordTitles.HunterTitles())
@@ -98,6 +84,32 @@ public class ModFactions {
     static void register(IEventBus bus) {
         FACTIONS.register(bus);
         MINIONS.register(bus);
+    }
+
+    @ApiStatus.Internal
+    public static void registerFactionTags(AddFactionTagEvent event) {
+        event.faction(HUNTER)
+                .add(Registries.BIOME, ModBiomeTags.HasFaction.IS_HUNTER_BIOME)
+                .add(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_HUNTER)
+                .add(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_HUNTER)
+                .add(Registries.ENTITY_TYPE, ModEntityTags.HUNTER)
+                .add(FactionRegistries.Keys.TASK, ModTaskTags.IS_HUNTER)
+                .add(FactionRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER)
+                .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.HUNTER_FOOD)
+                .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_HUNTER)
+        ;
+
+        event.faction(VAMPIRE)
+                .add(Registries.BIOME, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME)
+                .add(Registries.POINT_OF_INTEREST_TYPE, ModPoiTypeTags.IS_VAMPIRE)
+                .add(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_VAMPIRE)
+                .add(Registries.ENTITY_TYPE, ModEntityTags.VAMPIRE)
+                .add(FactionRegistries.Keys.TASK, ModTaskTags.IS_VAMPIRE)
+                .add(FactionRegistries.Keys.FACTION, ModFactionTags.IS_VAMPIRE)
+                .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.VAMPIRE_FOOD)
+                .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_VAMPIRE)
+        ;
+
     }
 
 }

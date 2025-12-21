@@ -22,7 +22,6 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
     protected int color = ARGB.white(1);
     protected @Nullable IFactionVillage villageFactionData;
     protected @Nullable TextColor chatColor;
-    protected final Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags = new HashMap<>();
 
     @Override
     public IFactionBuilder<T> color(int color) {
@@ -58,9 +57,4 @@ public class FactionBuilder<T extends IFactionEntity> implements IFactionBuilder
         return new Faction<>(this);
     }
 
-    @Override
-    public <Z> IFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag) {
-        this.factionTags.put(registryKey, tag);
-        return this;
-    }
 }

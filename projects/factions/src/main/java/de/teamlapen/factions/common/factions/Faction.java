@@ -1,5 +1,7 @@
 package de.teamlapen.factions.common.factions;
 
+import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.factions.api.FactionsApi;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionEntity;
 import de.teamlapen.factions.api.factions.village.IFactionVillage;
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -26,13 +29,11 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Nullable
     private String descriptionIdPlural;
     private final TextColor chatColor;
-    private final Map<ResourceKey<? extends Registry<?>>, TagKey<?>> factionTags;
 
     Faction(FactionBuilder<T> builder) {
         this.color = builder.color;
-        this.villageFactionData = builder.villageFactionData;
+        this.villageFactionData = Objects.requireNonNullElseGet(builder.villageFactionData, () -> new FactionVillageBuilder().build());
         this.chatColor = builder.chatColor == null ? TextColor.fromRgb(this.color) : builder.chatColor;
-        this.factionTags = Collections.unmodifiableMap(builder.factionTags);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Override
     public String getDescriptionId() {
         if (this.descriptionId == null) {
-            return Util.makeDescriptionId("faction", RegUtil.id(this));
+            this.descriptionId = Util.makeDescriptionId("faction", RegUtil.id(this));
         }
         return this.descriptionId;
     }
@@ -64,11 +65,5 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Override
     public IFactionVillage getVillageData() {
         return villageFactionData;
-    }
-
-    @Override
-    public <Z> Optional<TagKey<Z>> getTag(ResourceKey<? extends Registry<Z>> registryKey) {
-        //noinspection unchecked
-        return (Optional<TagKey<Z>>) (Object) Optional.ofNullable(factionTags.get(registryKey));
     }
 }

@@ -1,20 +1,22 @@
 package de.teamlapen.factions.common.factions;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionEntity;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.api.factions.*;
 import de.teamlapen.factions.api.util.SafeCast;
 import de.teamlapen.factions.common.core.DefaultFactions;
 import de.teamlapen.factions.common.core.ModRegistries;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.Map;
 
-public class FactionRegistry implements IFactionRegistry {
+
+public class FactionHelper implements IFactionHelper {
     @Override
     public Holder<? extends IFaction<?>> getFaction(Entity entity) {
         if (entity instanceof Player player) {
@@ -26,7 +28,17 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     public Holder<? extends IFaction<?>> getFallbackFaction(Entity entity) {
-        return ModRegistries.FACTIONS.listElements().map(s -> (Holder<IFaction<?>>)s).filter(s -> s.value().getTag(Registries.ENTITY_TYPE).flatMap(BuiltInRegistries.ENTITY_TYPE::get).filter(tag -> entity.getType().is(tag)).isPresent()).findFirst().orElseGet(() -> SafeCast.cast(DefaultFactions.NEUTRAL));
+        return getFallbackFaction(entity.getType());
+    }
+
+    public Holder<? extends IFaction<?>> getFallbackFaction(EntityType<?> entity) {
+        Map<Holder<? extends IFaction<?>>, TagKey<EntityType<?>>> all = IFactionTags.get().all(Registries.ENTITY_TYPE);
+        for (var entry : all.entrySet()) {
+            if (entity.is(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return DefaultFactions.NEUTRAL;
     }
 
     @Override

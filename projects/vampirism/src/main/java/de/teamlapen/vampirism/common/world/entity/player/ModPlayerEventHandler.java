@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player;
 
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.factions.actions.IActionHandler;
 import de.teamlapen.factions.common.components.FactionRestriction;
@@ -422,7 +422,7 @@ public class ModPlayerEventHandler {
         ItemStack stack = event.getEntity().getMainHandItem();
         if (!stack.isEmpty()) {
             FactionSlayer factionSlayer = stack.get(FactionDataComponents.FACTION_SLAYER);
-            Holder<? extends IFaction<?>> faction = IFactionRegistry.get().getFaction(event.getTarget());
+            Holder<? extends IFaction<?>> faction = IFactionHelper.get().getFaction(event.getTarget());
             if (factionSlayer != null && IFaction.contains(factionSlayer.slayedFactions(), faction)) {
                 event.setDamageMultiplier(event.getDamageMultiplier() + (event.getVanillaMultiplier() * (factionSlayer.multiplier() - 1)));
             }

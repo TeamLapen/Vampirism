@@ -5,10 +5,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-public interface IFactionRegistry {
+public interface IFactionHelper {
 
-    static IFactionRegistry get() {
-        return FactionsApi.services().factionRegistry();
+    static IFactionHelper get() {
+        return FactionsApi.services().factionHelper();
     }
 
     Holder<? extends IFaction<?>> getFaction(Entity entity);

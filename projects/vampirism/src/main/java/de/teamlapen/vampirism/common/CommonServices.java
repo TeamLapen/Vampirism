@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.common;
 
-import com.google.common.base.Preconditions;
+import de.teamlapen.factions.api.event.AddFactionTagEvent;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.IVampirismServices;
 import de.teamlapen.vampirism.api.world.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEntitySelectors;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRegistryManager;
-import de.teamlapen.vampirism.common.integration.ITerraBlenderBiomeProvider;
 import de.teamlapen.vampirism.common.integration.InterModHandler;
 import de.teamlapen.vampirism.common.server.ServerEventHandler;
 import de.teamlapen.vampirism.common.util.Services;
@@ -30,9 +30,6 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 public class CommonServices extends Services implements IVampirismServices {
 
@@ -115,6 +112,7 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.addListener(FMLCommonSetupEvent.class, e -> this.supporterManager.init());
         bus.addListener(FMLCommonSetupEvent.class, e -> this.settingsProvider.syncSettingsCache());
         bus.addListener(FMLLoadCompleteEvent.class, e -> TelemetryCollector.execute());
+        bus.addListener(AddFactionTagEvent.class, ModFactions::registerFactionTags);
     }
 
     @Override

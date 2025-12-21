@@ -74,11 +74,6 @@ public class PlayableFactionBuilder<T extends IFactionPlayer<T>> extends Faction
     }
 
     @Override
-    public <Z> PlayableFactionBuilder<T> addTag(ResourceKey<? extends Registry<Z>> registryKey, TagKey<Z> tag) {
-        return (PlayableFactionBuilder<T>) super.addTag(registryKey, tag);
-    }
-
-    @Override
     public PlayableFaction<T> build() {
         return new PlayableFaction<>(this);
     }

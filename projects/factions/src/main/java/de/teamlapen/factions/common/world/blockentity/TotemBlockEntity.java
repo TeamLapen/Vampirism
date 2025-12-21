@@ -6,7 +6,7 @@ import com.google.common.collect.Sets;
 import de.teamlapen.factions.api.event.FactionVillageEvent;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionEntity;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.world.ICaptureAttributes;
 import de.teamlapen.factions.api.world.ITotem;
@@ -150,7 +150,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     public boolean canPlayerRemoveBlock(@NotNull Player player) {
         if (player.getAbilities().instabuild) return true;
         if (!player.isAlive()) return false;
-        @NotNull Holder<? extends IPlayableFaction<?>> faction = IFactionRegistry.get().getFaction(player);
+        @NotNull Holder<? extends IPlayableFaction<?>> faction = IFactionHelper.get().getFaction(player);
         if (IFaction.is(faction, this.controllingFaction)) {
             if (this.capturingFaction == null) {
                 return true;
@@ -346,12 +346,12 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 
     public void ringBell(@NotNull Player playerEntity) {
         if (this.capturingFaction != null) {
-            Holder<? extends IPlayableFaction<?>> faction = IFactionRegistry.get().getFaction(playerEntity);
+            Holder<? extends IPlayableFaction<?>> faction = IFactionHelper.get().getFaction(playerEntity);
             boolean defender = faction == this.controllingFaction;
             boolean attacker = faction == this.capturingFaction;
             List<LivingEntity> entities = this.level.getEntitiesOfClass(LivingEntity.class, getVillageArea());
             for (LivingEntity entity : entities) {
-                Holder<? extends IFaction<?>> f = IFactionRegistry.get().getFaction(entity);
+                Holder<? extends IFaction<?>> f = IFactionHelper.get().getFaction(entity);
                 if (IFaction.isNeutral(f)) continue;
                 if (entity instanceof ICaptureIgnore) {
                     continue;
@@ -524,7 +524,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         //count entities
         CaptureInfo captureInfo = new CaptureInfo(this);
         for (LivingEntity entity : entities) {
-            Holder<? extends IFaction<?>> faction = IFactionRegistry.get().getFaction(entity);
+            Holder<? extends IFaction<?>> faction = IFactionHelper.get().getFaction(entity);
             if (IFaction.isNeutral(faction)) continue;
             if (entity instanceof ICaptureIgnore) continue;
             if (!entity.isAlive()) continue;
@@ -725,7 +725,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     private void applyVictoryBonus(boolean attackWin) {
         for (Player player : level.players()) {
             if (player instanceof ServerPlayer serverPlayer && !serverPlayer.isSpectator() && this.getVillageArea().contains(serverPlayer.position())) {
-                Holder<? extends IFaction<?>> playerFaction = IFactionRegistry.get().getFaction(serverPlayer);
+                Holder<? extends IFaction<?>> playerFaction = IFactionHelper.get().getFaction(serverPlayer);
                 if (!serverPlayer.isSpectator() && IFaction.is(playerFaction, (attackWin ? this.capturingFaction : this.controllingFaction))) {
                     if (!attackWin) {
                         serverPlayer.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 48000, Math.max(this.badOmenLevel - 1, 0), false, false, true));

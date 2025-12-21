@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.lord.actions;
 
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
 import de.teamlapen.factions.api.factions.actions.IActionResult;
 import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
 import de.teamlapen.factions.api.tags.FactionTags;
@@ -31,7 +31,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T> & ISkill
     @Override
     protected @NotNull IActionResult activate(@NotNull T player, @NotNull ActivationContext context) {
         int lordLevel = FactionPlayerHandler.get(player.asEntity()).getLordLevel();
-        List<LivingEntity> entitiesOfClass = player.asEntity().level().getEntitiesOfClass(LivingEntity.class, new AABB(player.asEntity().blockPosition()).inflate(10, 10, 10), e -> IFaction.is(player.getFaction(), IFactionRegistry.get().getFaction(e)));
+        List<LivingEntity> entitiesOfClass = player.asEntity().level().getEntitiesOfClass(LivingEntity.class, new AABB(player.asEntity().blockPosition()).inflate(10, 10, 10), e -> IFaction.is(player.getFaction(), IFactionHelper.get().getFaction(e)));
         for (LivingEntity entity : entitiesOfClass) {
             if (entity instanceof Player && FactionPlayerHandler.get(((Player) entity)).getLordLevel() >= lordLevel) {
                 continue;

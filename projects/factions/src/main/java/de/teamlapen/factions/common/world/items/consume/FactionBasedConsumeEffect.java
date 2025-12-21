@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
 import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.factions.common.core.ModRegistries;
 import net.minecraft.core.Holder;
@@ -50,7 +50,7 @@ public record FactionBasedConsumeEffect(HolderSet<IFaction<?>> faction, List<Con
 
     @Override
     public boolean apply(Level level, ItemStack stack, LivingEntity entity) {
-        Holder<? extends IFaction<?>> faction1 = IFactionRegistry.get().getFaction(entity);
+        Holder<? extends IFaction<?>> faction1 = IFactionHelper.get().getFaction(entity);
         if (IFaction.contains(faction, faction1)) {
            return effects.stream().allMatch(s -> s.apply(level, stack, entity));
         }

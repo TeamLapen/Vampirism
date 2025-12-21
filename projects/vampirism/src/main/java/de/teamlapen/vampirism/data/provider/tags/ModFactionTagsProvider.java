@@ -4,6 +4,7 @@ import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.tags.FactionTags;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -21,10 +22,10 @@ public class ModFactionTagsProvider extends KeyTagProvider<IFaction<?>> {
     @SuppressWarnings("unchecked")
     @Override
     protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
-        this.tag(ModFactionTags.HOSTILE_TOWARDS_NEUTRAL).add(de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE.getRawKey());
-        this.tag(ModFactionTags.IS_HUNTER).add(de.teamlapen.vampirism.common.core.ModFactions.HUNTER.getRawKey());
-        this.tag(ModFactionTags.IS_VAMPIRE).add(de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE.getRawKey());
-        this.tag(ModFactionTags.HAS_LORD_SKILLS).add(de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE.getRawKey(), de.teamlapen.vampirism.common.core.ModFactions.HUNTER.getRawKey());
+        this.tag(ModFactionTags.HOSTILE_TOWARDS_NEUTRAL).add(ModFactions.VAMPIRE.getRawKey());
+        this.tag(ModFactionTags.IS_HUNTER).add(ModFactions.HUNTER.getRawKey());
+        this.tag(ModFactionTags.IS_VAMPIRE).add(ModFactions.VAMPIRE.getRawKey());
+        this.tag(ModFactionTags.HAS_LORD_SKILLS).add(ModFactions.VAMPIRE.getRawKey(), ModFactions.HUNTER.getRawKey());
         this.tag(ModFactionTags.ALL_FACTIONS).addTag(ModFactionTags.IS_HUNTER).addTag(ModFactionTags.IS_VAMPIRE);
         this.tag(ModFactionTags.USE_GARLIC_BREAD).addTags(ModFactionTags.IS_HUNTER, ModFactionTags.IS_NEUTRAL);
         this.tag(ModFactionTags.CAN_RAID).addTags(ModFactionTags.IS_HUNTER, ModFactionTags.IS_VAMPIRE);

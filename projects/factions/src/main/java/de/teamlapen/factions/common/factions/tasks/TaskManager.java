@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.factions.api.factions.IFactionTags;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.factions.tasks.*;
 import de.teamlapen.factions.api.util.FResourceLocation;
@@ -423,7 +424,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     }
 
     private boolean matchesFaction(Holder<Task> task) {
-        return !task.is(FactionTaskTags.HAS_FACTION) || this.faction.value().getTag(FactionRegistries.Keys.TASK).map(task::is).orElse(false);
+        return !task.is(FactionTaskTags.HAS_FACTION) || IFactionTags.get().get(this.faction,FactionRegistries.Keys.TASK).map(task::is).orElse(false);
     }
 
     /**

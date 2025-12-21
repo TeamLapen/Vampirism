@@ -3,7 +3,8 @@ package de.teamlapen.vampirism.misc.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
+import de.teamlapen.factions.api.factions.IFactionTags;
 import de.teamlapen.vampirism.common.tags.ModDataComponentTags;
 import de.teamlapen.vampirism.common.util.FactionConsumable;
 import net.minecraft.core.Holder;
@@ -32,8 +33,7 @@ public class ConsumableMixin {
 
     @WrapOperation(method = "onConsume", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;forEach(Ljava/util/function/Consumer;)V"))
     private void skipWrongFactions(Stream<ConsumableListener> instance, Consumer<ConsumableListener> consumer, Operation<Void> original, Level level, LivingEntity entity, ItemStack stack) {
-        //noinspection unchecked
-        var entityFaction = (Holder<IFaction<?>>) IFactionRegistry.get().getFaction(entity);
+        var entityFaction = IFactionHelper.get().getFaction(entity);
         var componentRegistry = BuiltInRegistries.DATA_COMPONENT_TYPE;
         var factionBasedConsumables = new HashMap<FactionConsumable, List<Pair<Holder<DataComponentType<?>>, ConsumableListener>>>();
         var defaultConsumable = new ArrayList<ConsumableListener>();
@@ -50,7 +50,7 @@ public class ConsumableMixin {
         // consume all that are not registered as FactionConsumable
         defaultConsumable.forEach(consumer);
 
-        var tag = Optional.ofNullable(entityFaction).map(Holder::value).flatMap(s -> s.getTag(Registries.DATA_COMPONENT_TYPE)).orElse(null);
+        var tag = IFactionTags.get().get(entityFaction, Registries.DATA_COMPONENT_TYPE).orElse(null);
 
         for (var classListEntry : factionBasedConsumables.entrySet()) {
 

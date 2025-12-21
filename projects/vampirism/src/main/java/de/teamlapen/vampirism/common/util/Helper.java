@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.util;
 
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
 import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.factions.api.factions.skills.ISkillHandler;
 import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
@@ -139,11 +139,11 @@ public class Helper {
      * @return If the given entity is a vampire (Either a player in the vampire faction or a vampire entity
      */
     public static boolean isVampire(Entity entity) {
-        return IFaction.is(ModFactions.VAMPIRE, IFactionRegistry.get().getFaction(entity));
+        return IFaction.is(ModFactions.VAMPIRE, IFactionHelper.get().getFaction(entity));
     }
 
     public static boolean isHunter(Entity entity) {
-        return IFaction.is(ModFactions.HUNTER, IFactionRegistry.get().getFaction(entity));
+        return IFaction.is(ModFactions.HUNTER, IFactionHelper.get().getFaction(entity));
     }
 
     public static boolean isHunter(@NotNull Player entity) {
@@ -167,7 +167,7 @@ public class Helper {
     }
 
     public static Holder<? extends IFaction<?>> viewedFaction(Player player, Entity viewer) {
-        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(IFactionRegistry.get().getFaction(viewer))).orElse(null);
+        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(IFactionHelper.get().getFaction(viewer))).orElse(null);
     }
 
     /**

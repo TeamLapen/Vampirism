@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.blockentity.diffuser;
 
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
@@ -11,8 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -146,7 +144,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
     }
 
     public static boolean tryAccess(Player player, Holder<? extends IPlayableFaction<?>> faction, Component displayName) {
-        return !player.isSpectator() && IFaction.is(IFactionRegistry.get().getFaction(player), faction);
+        return !player.isSpectator() && IFaction.is(IFactionHelper.get().getFaction(player), faction);
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, DiffuserBlockEntity blockEntity) {

@@ -2,7 +2,7 @@ package de.teamlapen.factions.common.world.effects;
 
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionEntity;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.common.core.FactionDataComponents;
 import de.teamlapen.factions.common.util.TotemHelper;
@@ -40,7 +40,7 @@ public class FactionBadOmenMobEffect extends MobEffect {
         if (offender instanceof Player player) {
             Holder<? extends IFaction<?>> faction = victim.getFaction();
             if (victim.asEntity().getItemBySlot(EquipmentSlot.HEAD).has(FactionDataComponents.IS_FACTION_BANNER)) {
-                Holder<? extends IPlayableFaction<?>> playerFaction = IFactionRegistry.get().getFaction(player);
+                Holder<? extends IPlayableFaction<?>> playerFaction = IFactionHelper.get().getFaction(player);
                 if (playerFaction != faction) {
                     Holder<MobEffect> badOmen = faction.value().getVillageData().badOmenEffect();
                     if (badOmen != null) {

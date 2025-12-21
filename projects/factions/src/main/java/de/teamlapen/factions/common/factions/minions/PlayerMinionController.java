@@ -1,7 +1,7 @@
 package de.teamlapen.factions.common.factions.minions;
 
 import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.factions.lord.ILordPlayer;
 import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
@@ -195,7 +195,7 @@ public class PlayerMinionController implements ValueIOSerializable {
             LOGGER.warn("Cannot create minion because type does not exist");
         } else {
             return SpawnUtil.createEntity(type, p.level(), EntitySpawnReason.LOAD).map(m -> {
-                if (faction == null || !IFactionRegistry.get().isEntityOfFaction(m, faction)) {
+                if (faction == null || !IFactionHelper.get().isEntityOfFaction(m, faction)) {
                     LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
                     m.discard();
                     return null;

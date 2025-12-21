@@ -93,8 +93,4 @@ public interface IFaction<T extends IFactionEntity> {
      */
     IFactionVillage getVillageData();
 
-    /**
-     * @return a tag key for the given registry associated with this faction if any is registered
-     */
-    <Z> Optional<TagKey<Z>> getTag(ResourceKey<? extends Registry<Z>> registryKey);
 }

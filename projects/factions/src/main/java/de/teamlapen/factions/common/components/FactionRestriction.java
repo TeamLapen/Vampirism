@@ -8,7 +8,7 @@ import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.FactionRegistries;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
-import de.teamlapen.factions.api.factions.IFactionRegistry;
+import de.teamlapen.factions.api.factions.IFactionHelper;
 import de.teamlapen.factions.api.factions.skills.ISkill;
 import de.teamlapen.factions.api.world.items.components.IFactionRestriction;
 import de.teamlapen.factions.common.core.FactionDataComponents;
@@ -153,7 +153,7 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
      * collection entity check
      */
     public static boolean canUse(LivingEntity player, List<IFactionRestriction> restrictions) {
-        Holder<? extends IFaction<?>> faction = IFactionRegistry.get().getFaction(player);
+        Holder<? extends IFaction<?>> faction = IFactionHelper.get().getFaction(player);
 
         for (IFactionRestriction restriction : restrictions) {
             if(!IFaction.contains(restriction.factions(), faction)) {
