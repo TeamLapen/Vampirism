@@ -38,7 +38,7 @@ public class AdvancedVampireEyeLayer extends RenderLayer<AdvancedVampireRenderer
         boolean showModel = this.getParentModel().head.visible;
 
         getParentModel().head.visible = true;
-        nodeCollector.submitModel(getParentModel(), renderState, poseStack, RenderTypes.entityTranslucent(overlays[type]), packedLight, OverlayTexture.NO_OVERLAY, -1, null);
+        nodeCollector.submitModel(getParentModel(), renderState, poseStack, RenderTypes.entityTranslucent(overlays[type]), packedLight, OverlayTexture.NO_OVERLAY, 0, null);
         getParentModel().head.visible = showModel;
     }
 }

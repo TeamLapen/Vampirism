@@ -1,9 +1,11 @@
 package de.teamlapen.factions.client.gui.screens;
 
 import de.teamlapen.factions.api.util.FResourceLocation;
+import de.teamlapen.factions.client.gui.components.IRenderLast;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageWidget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -34,6 +36,16 @@ public abstract class AppearanceScreen<T extends LivingEntity> extends Screen {
         super(titleIn);
         this.entity = entity;
         this.backScreen = backScreen;
+    }
+
+    @Override
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        for (Renderable renderable : this.renderables) {
+            if (renderable instanceof IRenderLast last) {
+                last.renderLast(guiGraphics, mouseX, mouseY, partialTicks);
+            }
+        }
     }
 
     @Override

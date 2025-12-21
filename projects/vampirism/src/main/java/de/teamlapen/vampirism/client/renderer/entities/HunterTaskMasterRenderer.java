@@ -74,7 +74,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
                 CustomHeadLayer.translateToHead(poseStack, CustomHeadLayer.Transforms.DEFAULT);
                 poseStack.translate(0.0F, -0.2F, 0.0F);
                 poseStack.scale(1.1F, 1.1F, 1.1F);
-                state.headItem.submit(poseStack, nodeCollector, packedLight, OverlayTexture.NO_OVERLAY, -1);
+                state.headItem.submit(poseStack, nodeCollector, packedLight, OverlayTexture.NO_OVERLAY, 0);
                 poseStack.popPose();
             }
         }

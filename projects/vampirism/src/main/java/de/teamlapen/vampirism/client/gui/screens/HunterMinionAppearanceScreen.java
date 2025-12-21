@@ -49,16 +49,6 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        for (Renderable renderable : this.renderables) {
-            if (renderable instanceof IRenderLast last) {
-                last.renderLast(guiGraphics, mouseX, mouseY, partialTicks);
-            }
-        }
-    }
-
-    @Override
     protected void init() {
         this.minionName = this.entity.getMinionData().map(MinionData::getName).orElse("");
         this.normalSkinCount = ((HunterMinionRenderer) Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(this.entity)).getHunterTextureCount();

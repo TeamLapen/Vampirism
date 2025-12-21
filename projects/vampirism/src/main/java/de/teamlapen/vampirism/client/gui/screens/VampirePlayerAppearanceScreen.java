@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.stream.IntStream;
 
@@ -55,7 +56,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         for (Renderable renderable : this.renderables) {
             if (renderable instanceof IRenderLast last) {

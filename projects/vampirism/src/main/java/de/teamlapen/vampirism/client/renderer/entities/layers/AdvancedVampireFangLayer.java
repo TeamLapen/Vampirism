@@ -37,7 +37,7 @@ public class AdvancedVampireFangLayer extends RenderLayer<AdvancedVampireRendere
 
         boolean showModel = this.getParentModel().head.visible;
         this.getParentModel().head.visible = true;
-        nodeCollector.submitModel(getParentModel(), renderState, poseStack, RenderTypes.entityTranslucent(overlays[type]), packedLight, OverlayTexture.NO_OVERLAY, -1, null);
+        nodeCollector.submitModel(getParentModel(), renderState, poseStack, RenderTypes.entityTranslucent(overlays[type]), packedLight, OverlayTexture.NO_OVERLAY, 0, null);
         this.getParentModel().head.visible = showModel;
 
     }

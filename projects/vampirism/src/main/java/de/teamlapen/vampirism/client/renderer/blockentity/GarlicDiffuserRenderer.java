@@ -49,7 +49,7 @@ public class GarlicDiffuserRenderer implements BlockEntityRenderer<GarlicDiffuse
         poseStack.mulPose(Axis.YP.rotationDegrees((renderState.ticks) % 360));
             poseStack.translate(-0.5D, 0, -0.5);
             poseStack.pushPose();
-        renderState.itemState.submit(poseStack, new CutoutStorage(nodeCollector), renderState.lightCoords, OverlayTexture.NO_OVERLAY, -1);
+        renderState.itemState.submit(poseStack, new CutoutStorage(nodeCollector), renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
             poseStack.popPose();
     }

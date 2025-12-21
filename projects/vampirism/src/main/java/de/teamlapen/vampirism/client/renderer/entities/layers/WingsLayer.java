@@ -51,7 +51,7 @@ public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q
         poseStack.pushPose();
         poseStack.translate(0f, 0, 0.02f);
         poseStack.scale(s, s, s);
-        coloredCutoutModelCopyLayerRender(model, texture, poseStack, nodeCollector, packedLight, renderState, -1, -1);
+        coloredCutoutModelCopyLayerRender(model, texture, poseStack, nodeCollector, packedLight, renderState, 0, 0);
         poseStack.popPose();
     }
 }

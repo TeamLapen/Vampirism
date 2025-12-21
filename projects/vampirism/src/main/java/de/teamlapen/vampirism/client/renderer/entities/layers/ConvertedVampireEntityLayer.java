@@ -34,7 +34,7 @@ public class ConvertedVampireEntityLayer<Z extends LivingEntityRenderState & ICo
                 texture = renderState.vampirism$overlay();
             }
             if (texture != null) {
-                renderColoredCutoutModel(this.getParentModel(), texture, poseStack, nodeCollector, packedLight, renderState, -1, -1);
+                renderColoredCutoutModel(this.getParentModel(), texture, poseStack, nodeCollector, packedLight, renderState, 0, 0);
             }
         }
     }

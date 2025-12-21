@@ -57,7 +57,7 @@ public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity, 
         batRenderState.isResting = true;
         batRenderState.restAnimationState.animateWhen(true, 0);
         this.model.setupAnim(batRenderState);
-        nodeCollector.submitModel(this.model, batRenderState, poseStack, this.model.renderType(BAT_LOCATION), packedLight, OverlayTexture.NO_OVERLAY, -1, null);
+        nodeCollector.submitModel(this.model, batRenderState, poseStack, this.model.renderType(BAT_LOCATION), packedLight, OverlayTexture.NO_OVERLAY, 0, null);
         poseStack.popPose();
     }
 
