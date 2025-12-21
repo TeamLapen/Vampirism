@@ -502,7 +502,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).map(FactionPlayerHandler::get).<ILordPlayer<?>>flatMap(x -> x.getLordPlayer());
     }
 
-    protected @NotNull Optional<UUID> getLordID() {
+    public @NotNull Optional<UUID> getLordID() {
         return this.getEntityData().get(LORD_ID);
     }
 

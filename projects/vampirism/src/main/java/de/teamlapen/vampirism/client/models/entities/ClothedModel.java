@@ -41,24 +41,6 @@ public class ClothedModel<T extends AvatarLikeRenderState> extends HumanoidModel
     }
 
     @Override
-    public void setupAnim(T p_365286_) {
-        boolean flag = !p_365286_.isSpectator;
-        this.body.visible = flag;
-        this.rightArm.visible = flag;
-        this.leftArm.visible = flag;
-        this.rightLeg.visible = flag;
-        this.leftLeg.visible = flag;
-        this.hat.visible = p_365286_.showHat;
-        this.jacket.visible = p_365286_.showJacket;
-        this.leftPants.visible = p_365286_.showLeftPants;
-        this.rightPants.visible = p_365286_.showRightPants;
-        this.leftSleeve.visible = p_365286_.showLeftSleeve;
-        this.rightSleeve.visible = p_365286_.showRightSleeve;
-        super.setupAnim(p_365286_);
-    }
-
-
-    @Override
     public void setAllVisible(boolean visible) {
         super.setAllVisible(visible);
         this.leftSleeve.visible = visible;

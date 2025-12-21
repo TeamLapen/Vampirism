@@ -32,8 +32,6 @@ public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRende
     private final @NotNull M modelA;
     private final M modelB;
 
-    private PlayerSkin playerSkin;
-
     public DualBipedRenderer(EntityRendererProvider.@NotNull Context context, @NotNull M modelBipedInA, M modelBipedInB, float shadowSize) {
         super(context, modelBipedInA, shadowSize);
         this.modelA = modelBipedInA;

@@ -470,5 +470,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         public void setUseLordSkin(boolean useLordSkin) {
             this.useLordSkin = useLordSkin;
         }
+
+        public boolean isUsingLordSkin() {
+            return this.useLordSkin;
+        }
     }
 }

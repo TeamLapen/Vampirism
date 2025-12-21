@@ -1,6 +1,10 @@
 package de.teamlapen.vampirism.client.renderer.entities.state;
 
+import net.minecraft.world.entity.player.PlayerSkin;
+import org.jetbrains.annotations.Nullable;
+
 public abstract class MinionRenderState extends VisibilityPlayerRenderState {
 
-    public boolean renderLordSkin;
+    @Nullable
+    public PlayerSkin lordSkin;
 }

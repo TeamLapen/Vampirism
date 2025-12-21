@@ -482,6 +482,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             this.useLordSkin = useLordSkin;
         }
 
+        public boolean isUsingLordSkin() {
+            return this.useLordSkin;
+        }
+
         public void setHat(int hat) {
             this.hat = hat;
         }
