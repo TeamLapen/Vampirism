@@ -3,7 +3,7 @@ plugins {
 }
 
 group = project.factions_group_id
-version = project.factions_version
+version = project.mod_version
 
 base {
     archivesName = "${project.factions_mod_name}-api"

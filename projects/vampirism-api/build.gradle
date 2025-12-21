@@ -3,7 +3,7 @@ plugins {
 }
 
 group = project.vampirism_group_id
-version = project.vampirism_version
+version = project.mod_version
 
 base {
     archivesName = "${project.vampirism_mod_name}-api"

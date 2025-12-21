@@ -2,7 +2,7 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.116'
 }
 group = project.vampirism_group_id
-version = project.vampirism_version
+version = project.mod_version
 
 base {
     archivesName = project.vampirism_mod_name
@@ -133,7 +133,7 @@ def generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_id                 : vampirism_mod_id,
             mod_name               : vampirism_mod_name,
             mod_license            : vampirism_mod_license,
-            mod_version            : vampirism_version,
+            mod_version            : mod_version,
             mod_authors            : vampirism_authors,
             mod_description        : vampirism_description,
             mod_issue_tracker      : vampirism_issue_tracker,
