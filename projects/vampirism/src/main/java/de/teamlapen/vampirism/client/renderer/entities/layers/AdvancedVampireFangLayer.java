@@ -22,7 +22,7 @@ public class AdvancedVampireFangLayer extends RenderLayer<AdvancedVampireRendere
 
     public AdvancedVampireFangLayer(@NotNull RenderLayerParent<AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> renderer) {
         super(renderer);
-        overlays = new Identifier[REFERENCE.EYE_TYPE_COUNT];
+        overlays = new Identifier[REFERENCE.FANG_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
             overlays[i] = VResourceLocation.mod("textures/entity/vanilla/fangs" + (i) + ".png");
         }

@@ -29,7 +29,7 @@ public class VampireEntityLayer<T extends LivingEntityRenderState, U extends Ent
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, T renderState, float yRot, float xRot) {
         if (!renderState.isInvisible) {
-            renderColoredCutoutModel(this.getParentModel(), this.texture, poseStack, nodeCollector, packedLight, renderState, 0, 0);
+            renderColoredCutoutModel(this.getParentModel(), this.texture, poseStack, nodeCollector, packedLight, renderState, -1, 1);
         }
     }
 }

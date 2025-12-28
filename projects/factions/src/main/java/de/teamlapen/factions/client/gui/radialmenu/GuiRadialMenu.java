@@ -31,7 +31,9 @@ package de.teamlapen.factions.client.gui.radialmenu;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
@@ -43,8 +45,12 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
@@ -53,6 +59,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.List;
 import java.util.Optional;
 
+//@EventBusSubscriber
 public abstract class GuiRadialMenu<T> extends Screen {
     private static final float PRECISION = 5.0f;
     protected static final int MAX_SLOTS = 30;
@@ -83,7 +90,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         this.selectedItem = -1;
     }
 
-//    @SubscribeEvent TODO add
+//    @SubscribeEvent TODO
 //    public static void updateInputEvent(MovementInputUpdateEvent event) {
 //        if (Minecraft.getInstance().screen instanceof GuiRadialMenu<?> screen) {
 //
@@ -327,41 +334,25 @@ public abstract class GuiRadialMenu<T> extends Screen {
         return false;
     }
 
-//    @SubscribeEvent
-//    protected static void updateMovement(InputEvent.Key event) {
-//        if (Minecraft.getInstance().screen instanceof GuiRadialMenu<?>) {
-//            InputConstants.Key key = InputConstants.getKey(event.getKey(), event.getScanCode());
-//            Options options = Minecraft.getInstance().options;
-//            Stream.of(options.keyUp, options.keyDown, options.keyLeft, options.keyRight, options.keyJump, options.keyShift, options.keySprint).filter(x -> x.getKey() == key).forEach(x -> {
-//                x.setDown(true);
-//                ((KeyMappingAccessor) x).clicked();
-//            });
-//        }
-//    }
+    protected void processInputEvent(MovementInputUpdateEvent event) {
+        Options settings = Minecraft.getInstance().options;
+        Input eInput = event.getInput().keyPresses;
+        var up = isKeyDown0(settings.keyUp);
+        var down = isKeyDown0(settings.keyDown);
+        var left = isKeyDown0(settings.keyLeft);
+        var right = isKeyDown0(settings.keyRight);
 
-//    protected void processInputEvent(MovementInputUpdateEvent event) {
-//        Options settings = Minecraft.getInstance().options;
-//        Input eInput = event.getInput().keyPresses;
-//        var up = isKeyDown0(settings.keyUp);
-//        var down = isKeyDown0(settings.keyDown);
-//        var left = isKeyDown0(settings.keyLeft);
-//        var right = isKeyDown0(settings.keyRight);
-//
-//        var jumping = isKeyDown0(settings.keyJump);
-//        var shiftKeyDown = isKeyDown0(settings.keyShift);
-//        var sprint = isKeyDown0(settings.keySprint);
-//        event.getInput().keyPresses = new Input(up, down, left, right, jumping, shiftKeyDown, sprint);
-//    }
+        var jumping = isKeyDown0(settings.keyJump);
+        var shiftKeyDown = isKeyDown0(settings.keyShift);
+        var sprint = isKeyDown0(settings.keySprint);
+        event.getInput().keyPresses = new Input(up, down, left, right, jumping, shiftKeyDown, sprint);
+        event.getInput().tick();
+    }
 
-//    private static boolean isKeyDown0(KeyMapping keybind) {
-//        if (keybind.isUnbound()) {
-//            return false;
-//        }
-//
-//        return switch (keybind.getKey().getType()) {
-//            case KEYSYM -> InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue());
-//            case MOUSE -> GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue()) == GLFW.GLFW_PRESS;
-//            default -> false;
-//        };
-//    }
+    private static boolean isKeyDown0(KeyMapping keybind) {
+        if (keybind.isUnbound()) {
+            return false;
+        }
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), keybind.getKey().getValue());
+    }
 }

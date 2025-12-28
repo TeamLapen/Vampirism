@@ -30,8 +30,8 @@ public class TaskMasterTypeLayer<T extends TaskMasterRenderState> extends Render
         if (!renderState.isInvisible) {
             Identifier type = renderState.getVillagerData().type().getKey().identifier();
             VillagerModel parentModel = getParentModel();
-            renderColoredCutoutModel(parentModel, this.deriveTypeTextureOverlay(type), poseStack, nodeCollector, packedLight, renderState, 0, 0);
-            renderColoredCutoutModel(parentModel, additionalOverlay, poseStack, nodeCollector, packedLight, renderState, 0, 0);
+            renderColoredCutoutModel(parentModel, this.deriveTypeTextureOverlay(type), poseStack, nodeCollector, packedLight, renderState, -1, 1);
+            renderColoredCutoutModel(parentModel, additionalOverlay, poseStack, nodeCollector, packedLight, renderState, -1, 1);
         }
     }
 }
