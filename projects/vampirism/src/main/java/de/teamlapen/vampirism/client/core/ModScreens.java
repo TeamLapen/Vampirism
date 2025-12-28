@@ -41,7 +41,7 @@ public class ModScreens {
         event.register(ModMenus.INFUSER_MENU.get(), InfuserScreen::new);
     }
 
-    static void registerScreenOverlays(@NotNull RegisterGuiLayersEvent event) {
+    public static void registerScreenOverlays(@NotNull RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.FOOD_LEVEL, VampirismOverlays.BLOOD_BAR_ID, new BloodBarOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.RAGE, new RageOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.BAT, new BatOverlay());

@@ -10,12 +10,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-@EventBusSubscriber
 public class ModPacketDispatcher {
 
     private static final String PROTOCOL_VERSION = Integer.toString(1);
 
-    @SubscribeEvent
     public static void registerHandler(RegisterPayloadHandlersEvent event) {
         registerPackets(event.registrar(REFERENCE.MODID).versioned(PROTOCOL_VERSION));
     }

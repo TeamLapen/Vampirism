@@ -11,7 +11,6 @@ import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
 import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 import org.jetbrains.annotations.NotNull;
 
-@EventBusSubscriber
 public class Permissions {
     public static final PermissionNode<Boolean> GENERAL_CHECK = new PermissionNode<>(REFERENCE.MODID, "check", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true));
     public static final Permission FEED = create(new PermissionNode<>(REFERENCE.MODID, "bite.feed", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true)));
@@ -19,7 +18,6 @@ public class Permissions {
     public static final Permission INFECT_PLAYER = create(new PermissionNode<>(REFERENCE.MODID, "infect.player", PermissionTypes.BOOLEAN, ((player, playerUUID, context) -> true)));
 
 
-    @SubscribeEvent
     public static void registerNodes(PermissionGatherEvent.@NotNull Nodes event) {
         event.addNodes(GENERAL_CHECK, FEED.node, FEED_PLAYER.node, INFECT_PLAYER.node);
     }

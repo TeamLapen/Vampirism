@@ -4,10 +4,16 @@ import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
+import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
+import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
+import de.teamlapen.vampirism.client.models.items.properties.HasName;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
+import net.neoforged.neoforge.client.event.RegisterRangeSelectItemModelPropertyEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2fStack;
@@ -20,9 +26,18 @@ import java.util.stream.Stream;
 public class ModItemsRender {
 
 
-    static void registerColors(RegisterColorHandlersEvent.@NotNull ItemTintSources event) {
+    public static void registerColors(RegisterColorHandlersEvent.@NotNull ItemTintSources event) {
         event.register(CrossbowArrowTint.ID, CrossbowArrowTint.CODEC);
         event.register(OilBottleTint.ID, OilBottleTint.CODEC);
+    }
+
+    public static void registerRangeSelector(RegisterRangeSelectItemModelPropertyEvent event) {
+        event.register(BloodFilled.ID, BloodFilled.CODEC);
+        event.register(ClipFilled.ID, ClipFilled.CODEC);
+    }
+
+    public static void registerConditional(RegisterConditionalItemModelPropertyEvent event) {
+        event.register(HasName.ID, HasName.CODEC);
     }
 
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {

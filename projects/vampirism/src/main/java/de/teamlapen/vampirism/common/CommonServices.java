@@ -5,21 +5,21 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.IVampirismServices;
 import de.teamlapen.vampirism.api.world.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModCreativeTabs;
 import de.teamlapen.vampirism.common.core.ModEntitySelectors;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRegistryManager;
 import de.teamlapen.vampirism.common.integration.InterModHandler;
+import de.teamlapen.vampirism.common.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.common.server.ServerEventHandler;
-import de.teamlapen.vampirism.common.util.Services;
-import de.teamlapen.vampirism.common.util.SupporterManager;
-import de.teamlapen.vampirism.common.util.TelemetryCollector;
-import de.teamlapen.vampirism.common.util.VersionUpdater;
+import de.teamlapen.vampirism.common.util.*;
 import de.teamlapen.vampirism.common.world.VillageEventHandler;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
 import de.teamlapen.vampirism.common.world.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.common.world.entity.SundamageRegistry;
 import de.teamlapen.vampirism.common.world.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.common.world.entity.player.ModPlayerEventHandler;
+import de.teamlapen.vampirism.common.world.items.ItemEventHandler;
 import de.teamlapen.vampirism.common.world.items.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.common.world.items.recipes.RecipesSync;
 import de.teamlapen.vampirism.data.BloodConversionRegistry;
@@ -48,6 +48,7 @@ public class CommonServices extends Services implements IVampirismServices {
     private final InterModHandler interModCommunicationHandler = new InterModHandler();
     private final IVampirismEntityRegistry entityRegistry = new VampirismEntityRegistry();
     private final VillageEventHandler villageEventHandler = new VillageEventHandler();
+    private final ItemEventHandler itemEventHandler = new ItemEventHandler();
 
 
     public CommonServices(ModContainer container) {
@@ -113,6 +114,9 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.addListener(FMLCommonSetupEvent.class, e -> this.settingsProvider.syncSettingsCache());
         bus.addListener(FMLLoadCompleteEvent.class, e -> TelemetryCollector.execute());
         bus.addListener(AddFactionTagEvent.class, ModFactions::registerFactionTags);
+        bus.addListener(ModCreativeTabs::addToExistingCreativeTabs);
+        bus.addListener(ModPacketDispatcher::registerHandler);
+        bus.addListener(MigrationData::fix);
     }
 
     @Override
@@ -125,5 +129,7 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.register(this.reloadListeners);
         bus.register(this.serverEventHandler);
         bus.register(this.villageEventHandler);
+        bus.addListener(Permissions::registerNodes);
+        bus.register(this.itemEventHandler);
     }
 }

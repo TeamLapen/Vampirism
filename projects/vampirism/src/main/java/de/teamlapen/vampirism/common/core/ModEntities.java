@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.core;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.factions.common.advancements.criterion.FactionSubPredicate;
 import de.teamlapen.factions.common.advancements.criterion.PlayerFactionSubPredicate;
+import de.teamlapen.factions.common.event.PlayerEventHandlerEvent;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VampirismRegistries;
@@ -15,7 +16,6 @@ import de.teamlapen.vampirism.common.world.entity.converted.converter.SpecialCon
 import de.teamlapen.vampirism.common.world.entity.hunter.*;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.common.world.entity.player.PlayerEventRegistry;
 import de.teamlapen.vampirism.common.world.entity.vampire.*;
 import de.teamlapen.vampirism.misc.sit.SitEntity;
 import net.minecraft.advancements.criterion.EntitySubPredicate;
@@ -32,7 +32,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
@@ -191,9 +190,9 @@ public class ModEntities {
         event.add(EntityType.PLAYER, ModAttributes.DBNO_DURATION);
     }
 
-    static void registerPlayerEventHandler(InterModEnqueueEvent event) {
-        PlayerEventRegistry.registerPlayerEventHandler(ModAttachments.VAMPIRE_PLAYER.get());
-        PlayerEventRegistry.registerPlayerEventHandler(ModAttachments.HUNTER_PLAYER.get());
+    static void registerPlayerEventHandler(PlayerEventHandlerEvent event) {
+        event.addAttachmentListener(ModAttachments.VAMPIRE_PLAYER);
+        event.addAttachmentListener(ModAttachments.HUNTER_PLAYER);
     }
 
     public static <E extends Entity> DeferredHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category) {

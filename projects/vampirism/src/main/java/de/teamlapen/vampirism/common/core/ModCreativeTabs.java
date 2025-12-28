@@ -24,7 +24,6 @@ import static de.teamlapen.vampirism.common.core.ModBlocks.*;
 import static de.teamlapen.vampirism.common.core.ModItems.*;
 
 @SuppressWarnings("unused")
-@EventBusSubscriber(modid = REFERENCE.MODID)
 public class ModCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, REFERENCE.MODID);
 
@@ -428,7 +427,6 @@ public class ModCreativeTabs {
         }
     }
 
-    @SubscribeEvent
     public static void addToExistingCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey().equals(CreativeModeTabs.SPAWN_EGGS)) {
             insert(VAMPIRE_SPAWN_EGG, event);

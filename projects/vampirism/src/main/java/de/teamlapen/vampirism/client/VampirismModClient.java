@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client;
 
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.client.config.ModFilter;
-import de.teamlapen.vampirism.client.core.ClientRegistryHandler;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
 import de.teamlapen.vampirism.client.renderer.items.CoffinRenderer;
@@ -33,8 +32,6 @@ public class VampirismModClient {
     private static ClientServices SERVICES;
 
     public VampirismModClient(IEventBus modEventBus, ModContainer modContainer) {
-        ClientRegistryHandler.init(modEventBus);
-
         SERVICES = new ClientServices(modContainer);
         SERVICES.register(modEventBus);
 

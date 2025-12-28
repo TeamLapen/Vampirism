@@ -1,11 +1,12 @@
-package de.teamlapen.vampirism.common.world.entity.player;
+package de.teamlapen.factions.common.world.entities;
 
-import de.teamlapen.factions.common.world.entities.IPlayerEventListener;
+import de.teamlapen.factions.common.event.PlayerEventHandlerEvent;
 import de.teamlapen.sync.AttachmentSync;
-import de.teamlapen.vampirism.REFERENCE;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.ModLoader;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
@@ -13,28 +14,31 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import org.jetbrains.annotations.ApiStatus;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.Set;
+import java.util.function.Supplier;
 
-@EventBusSubscriber(modid = REFERENCE.MODID)
-public class PlayerEntityEventHandler {
+@ApiStatus.Internal
+public class PlayerListenerEventHandler {
 
-    private static Collection<AttachmentType<IPlayerEventListener>> listeners() {
-        return PlayerEventRegistry.getEventListenerCaps();
+    private Set<Supplier<AttachmentType<IPlayerEventListener>>> playerEventListenerCaps = Set.of();
+
+    public void collect(FMLLoadCompleteEvent event) {
+        this.playerEventListenerCaps = ModLoader.postEventWithReturn(new PlayerEventHandlerEvent()).getAttachments();
     }
 
     @SubscribeEvent
-    public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+    public void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        for (var listener : this.playerEventListenerCaps) {
             event.getEntity().getData(listener).onChangedDimension(event.getFrom(), event.getTo());
         }
     }
 
     @SubscribeEvent
-    public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
+    public void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Player) {
-            for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+            for (var listener : this.playerEventListenerCaps) {
                 event.getEntity().getData(listener).onJoinWorld();
             }
         }
@@ -42,9 +46,9 @@ public class PlayerEntityEventHandler {
     }
 
     @SubscribeEvent
-    public static void onLivingAttack(LivingIncomingDamageEvent event) {
+    public void onLivingAttack(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player) {
-            for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+            for (var listener : this.playerEventListenerCaps) {
                 if (event.getEntity().getData(listener).onEntityAttacked(event.getSource(), event.getAmount())) {
                     event.setCanceled(true);
                 }
@@ -53,30 +57,30 @@ public class PlayerEntityEventHandler {
     }
 
     @SubscribeEvent
-    public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+    public void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        for (var listener : this.playerEventListenerCaps) {
             event.getEntity().getData(listener).onRespawn();
         }
     }
 
     @SubscribeEvent
-    public static void onLivingDeath(LivingDeathEvent event) {
+    public void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof Player) {
-            for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+            for (var listener : this.playerEventListenerCaps) {
                 event.getEntity().getData(listener).onDeath(event.getSource());
             }
         }
         if (event.getSource().getEntity() instanceof Player) {
-            for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+            for (var listener : this.playerEventListenerCaps) {
                 event.getSource().getEntity().getData(listener).onEntityKilled(event.getEntity(), event.getSource());
             }
         }
     }
 
     @SubscribeEvent
-    public static void onLivingUpdate(EntityTickEvent.Post event) {
+    public void onLivingUpdate(EntityTickEvent.Post event) {
         if (event.getEntity() instanceof Player) {
-            for (AttachmentType<IPlayerEventListener> type : listeners()) {
+            for (var type : this.playerEventListenerCaps) {
                 IPlayerEventListener listener = event.getEntity().getData(type);
                 listener.onUpdate();
                 if (listener  instanceof AttachmentSync syncable && !event.getEntity().level().isClientSide()) {
@@ -87,22 +91,22 @@ public class PlayerEntityEventHandler {
     }
 
     @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        for (var listener : this.playerEventListenerCaps) {
             event.getEntity().getData(listener).onPlayerLoggedIn();
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        for (var listener : this.playerEventListenerCaps) {
             event.getEntity().getData(listener).onPlayerLoggedOut();
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerUpdate(PlayerTickEvent.Post event) {
-        for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+    public void onPlayerUpdate(PlayerTickEvent.Post event) {
+        for (var listener : this.playerEventListenerCaps) {
             event.getEntity().getData(listener).onUpdatePlayer(event);
         }
     }

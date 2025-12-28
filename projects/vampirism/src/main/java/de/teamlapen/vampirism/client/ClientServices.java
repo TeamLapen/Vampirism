@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client;
 
-import de.teamlapen.vampirism.client.core.ClientEventHandler;
-import de.teamlapen.vampirism.client.core.ModKeys;
+import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
@@ -90,6 +89,25 @@ public class ClientServices extends Services {
         bus.register(this.vampireBooks);
         bus.addListener(this.clientTooltips::registerTooltipRenderer);
         bus.addListener(this.modKeys::registerKeyMapping);
+        bus.addListener(ModEntitiesRender::onRegisterRenderers);
+        bus.addListener(ModEntitiesRender::onRegisterLayers);
+        bus.addListener(ModEntitiesRender::onAddLayers);
+        bus.addListener(ModBlocksRender::registerBlockEntityRenderers);
+        bus.addListener(ModScreens::registerScreenOverlays);
+        bus.addListener(ModScreens::registerScreens);
+        bus.addListener(ModScreens::registerAppearanceScreens);
+        bus.addListener(ModBlocksRender::registerBlockColors);
+        bus.addListener(ModItemsRender::registerColors);
+        bus.addListener(ModItemsRender::registerRangeSelector);
+        bus.addListener(ModItemsRender::registerConditional);
+        bus.addListener(ModParticleFactories::registerFactories);
+        bus.addListener(ClientEventHandler::onModelRegistry);
+        bus.addListener(ModItemsRender::registerItemDecorator);
+        bus.addListener(ModClientEffects::registerClientExtensions);
+        bus.addListener(ModBlocksRender::registerClientExtensions);
+        bus.addListener(ModClientFluids::registerClientExtensions);
+        bus.addListener(ModItemsRender::registerClientExtensions);
+        bus.addListener(ModRenderPipelines::registerRenderPipelines);
     }
 
     @Override

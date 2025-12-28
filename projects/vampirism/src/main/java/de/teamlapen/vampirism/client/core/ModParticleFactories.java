@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ModParticleFactories {
 
-    static void registerFactories(@NotNull RegisterParticleProvidersEvent event) {
+    public static void registerFactories(@NotNull RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ModParticles.SWORD_CHARGE.get(), FlyingBloodParticle.Provider::new);
         event.registerSpriteSet(ModParticles.SWORD_CHARGED.get(), FlyingBloodParticle.Provider::new);
         event.registerSpriteSet(ModParticles.PEDESTAL.get(), FlyingBloodParticle.Provider::new);

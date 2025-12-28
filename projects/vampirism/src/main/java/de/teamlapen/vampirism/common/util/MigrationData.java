@@ -10,10 +10,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.jetbrains.annotations.NotNull;
 
-@EventBusSubscriber
 public class MigrationData {
 
-    @SubscribeEvent
     public static void fix(NewRegistryEvent event) {
         fixSkillsVampire(new Mapping(VampireSkills.SKILLS));
         fixSkillsHunter(new Mapping(HunterSkills.SKILLS));

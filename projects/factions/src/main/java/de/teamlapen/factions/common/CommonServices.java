@@ -13,6 +13,7 @@ import de.teamlapen.factions.common.factions.FactionHelper;
 import de.teamlapen.factions.common.factions.FactionTags;
 import de.teamlapen.factions.common.network.packets.ModPacketDispatcher;
 import de.teamlapen.factions.common.world.entities.ModPlayerEventHandler;
+import de.teamlapen.factions.common.world.entities.PlayerListenerEventHandler;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -25,6 +26,7 @@ public class CommonServices extends Services implements IFactionServices {
     private final ModPacketDispatcher packetDispatcher = new ModPacketDispatcher();
     private final ModPlayerEventHandler playerEventHandler = new ModPlayerEventHandler();
     private final FactionTags factionTags = new FactionTags();
+    private final PlayerListenerEventHandler playerListenerEventHandler = new PlayerListenerEventHandler();
 
     public CommonServices(ModContainer container) {
         super(container);
@@ -51,6 +53,7 @@ public class CommonServices extends Services implements IFactionServices {
         this.registryManager.setupRegistries(bus);
         bus.register(this.packetDispatcher);
         bus.addListener(FMLCommonSetupEvent.class, x -> this.factionTags.collectTags());
+        bus.addListener(this.playerListenerEventHandler::collect);
     }
 
     @Override
@@ -58,5 +61,6 @@ public class CommonServices extends Services implements IFactionServices {
         bus.addListener(FactionCommands::registerCommands);
         bus.addListener(Permissions::registerNodes);
         bus.register(this.playerEventHandler);
+        bus.register(this.playerListenerEventHandler);
     }
 }

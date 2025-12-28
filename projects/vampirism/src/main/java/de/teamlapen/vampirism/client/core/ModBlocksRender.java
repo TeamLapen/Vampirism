@@ -27,7 +27,7 @@ public class ModBlocksRender {
         registerRenderType();
     }
 
-    static void registerBlockColors(RegisterColorHandlersEvent.@NotNull Block event) {
+    public static void registerBlockColors(RegisterColorHandlersEvent.@NotNull Block event) {
         event.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 1) {
                 return 0x9966FF;
@@ -46,16 +46,15 @@ public class ModBlocksRender {
         event.register((state, worldIn, pos, tintIndex) -> {
             if (tintIndex == 255) {
                 BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
-                if (tile instanceof TotemBlockEntity) {
-                    Holder<? extends IFaction<?>> f = ((TotemBlockEntity) tile).getControllingFaction();
-                    if (f != null) return f.value().getColor();
+                if (tile instanceof TotemBlockEntity totem) {
+                    return totem.getControllingFaction().value().getColor();
                 }
             }
             return 0xFFFFFF;
         }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
     }
 
-    static void registerBlockEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
+    public static void registerBlockEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.COFFIN.get(), CoffinRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ALTAR_INFUSION.get(), AltarInfusionRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_PEDESTAL.get(), PedestalRenderer::new);

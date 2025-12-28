@@ -10,7 +10,6 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 /**
  * Provides several event related methods, which should be called by a dedicated EventHandler.
- * You can register a {@link net.neoforged.neoforge.capabilities.EntityCapability}, which instances implement this interface
  */
 public interface IPlayerEventListener {
 

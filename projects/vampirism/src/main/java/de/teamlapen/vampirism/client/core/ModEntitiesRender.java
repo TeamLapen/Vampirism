@@ -55,7 +55,7 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation CURSED_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VResourceLocation.mod("chest_boat/cursed_spruce"), "main");
 
 
-    static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
+    public static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BLINDING_BAT.get(), BatRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE_IMOB.get(), ConvertedCreatureRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE.get(), (ConvertedCreatureRenderer::new));
@@ -101,7 +101,7 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.CURSED_SPRUCE_CHEST_BOAT.get(), context -> new BoatRenderer(context, CURSED_SPRUCE_CHEST_BOAT));
     }
 
-    static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
+    public static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
         event.registerLayerDefinition(COFFIN, CoffinModel::createLayer);
         event.registerLayerDefinition(WING, WingModel::createLayer);
         event.registerLayerDefinition(BARON, BaronModel::createLayer);
@@ -134,7 +134,7 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(set.feet(), armorModel::feet);
     }
 
-    static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
+    public static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
         _onAddLayers(event);
     }
 
