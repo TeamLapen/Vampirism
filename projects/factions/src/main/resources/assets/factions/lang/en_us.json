@@ -123,6 +123,7 @@
   "text.factions.action.not_bound": "No action is bound to this key. See %s.",
   "text.factions.action.invalid_faction": "This action can not be used by your faction",
   "text.factions.action.permission_disallowed": "You do not have the permission to use this action",
+  "text.factions.action.active_effect": "You are currently unable to use actions due to an active effect",
   "text.factions.action.restricted": "You are unable to use actions",
   "text.factions.action.other_action": "You cannot use this action while %s is active",
   "text.factions.action.wrong_faction": "The action can not be used with your faction",

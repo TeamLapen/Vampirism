@@ -8,15 +8,19 @@ import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
 import de.teamlapen.factions.api.factions.tasks.ITaskPlayer;
 import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.factions.common.config.FactionConfig;
+import de.teamlapen.factions.common.core.FactionEffects;
 import de.teamlapen.factions.common.factions.FactionBasePlayer;
 import de.teamlapen.factions.common.factions.actions.ActionHandler;
 import de.teamlapen.factions.common.factions.skills.SkillHandler;
 import de.teamlapen.factions.common.factions.tasks.TaskManager;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,6 +74,12 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     @Override
     public void onDeath(DamageSource src) {
         this.actionHandler.deactivateAllActions();
+    }
+
+    @MustBeInvokedByOverriders
+    @Override
+    public void onRespawn() {
+        this.player.addEffect(new MobEffectInstance(FactionEffects.RESURRECTION_FATIGUE, 300));
     }
 
     @MustBeInvokedByOverriders

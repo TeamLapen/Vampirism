@@ -33,8 +33,22 @@ public class FactionTags implements IFactionTags {
     }
 
     @Override
+    public <T> TagKey<T> getCustom(Holder<? extends IFaction<?>> faction, ResourceKey<T> key, TagKey<T> fallback) {
+        var tag = this.tags.get(faction, key);
+        if (tag == null) return fallback;
+        return SafeCast.cast(tag);
+    }
+
+    @Override
     public <T> Optional<TagKey<T>> get(Holder<? extends IFaction<?>> faction, ResourceKey<? extends Registry<T>> key) {
         return SafeCast.cast(Optional.ofNullable(this.tags.get(faction, key)));
+    }
+
+    @Override
+    public <T> TagKey<T> get(Holder<? extends IFaction<?>> faction, ResourceKey<? extends Registry<T>> key, TagKey<T> fallback) {
+        var tag = this.tags.get(faction, key);
+        if (tag == null) return fallback;
+        return SafeCast.cast(tag);
     }
 
     @Unmodifiable

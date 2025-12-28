@@ -32,6 +32,10 @@ public interface IPlayerEventListener {
         return false;
     }
 
+    default void onRespawn() {
+
+    }
+
     /**
      * Called when the player killed a living entity
      *

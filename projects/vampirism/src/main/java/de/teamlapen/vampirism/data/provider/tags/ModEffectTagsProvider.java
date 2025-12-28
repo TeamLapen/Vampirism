@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
+import de.teamlapen.factions.common.core.FactionEffects;
+import de.teamlapen.factions.common.tags.FactionEffectTags;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.tags.ModEffectTags;
@@ -22,5 +24,7 @@ public class ModEffectTagsProvider extends KeyTagProvider<MobEffect> {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
         this.tag(ModEffectTags.HUNTER_POTION_RESISTANCE).add(MobEffects.BLINDNESS.unwrapKey().orElseThrow(), MobEffects.NAUSEA.unwrapKey().orElseThrow(), MobEffects.HUNGER.unwrapKey().orElseThrow(), MobEffects.POISON.unwrapKey().orElseThrow(), ModEffects.FREEZE.getKey());
+        this.tag(ModEffectTags.DISABLES_ACTIONS_HUNTER).addTag(FactionEffectTags.DISABLES_ACTIONS);
+        this.tag(ModEffectTags.DISABLES_ACTIONS_VAMPIRE).addTag(FactionEffectTags.DISABLES_ACTIONS);
     }
 }

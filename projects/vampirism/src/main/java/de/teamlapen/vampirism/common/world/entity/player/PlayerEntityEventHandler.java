@@ -15,6 +15,7 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @EventBusSubscriber(modid = REFERENCE.MODID)
 public class PlayerEntityEventHandler {
@@ -48,6 +49,13 @@ public class PlayerEntityEventHandler {
                     event.setCanceled(true);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        for (AttachmentType<IPlayerEventListener> listener : listeners()) {
+            event.getEntity().getData(listener).onRespawn();
         }
     }
 

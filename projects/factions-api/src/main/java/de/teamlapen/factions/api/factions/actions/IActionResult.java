@@ -18,6 +18,7 @@ public interface IActionResult {
     IActionResult DISALLOWED_PERMISSION = new Result(false, Component.translatable("text.factions.action.permission_disallowed"), false);
     IActionResult DISABLED_CONFIG = new Result(false, Component.translatable("text.factions.action.deactivated_by_serveradmin"), false);
     IActionResult DISALLOWED_FACTION = new Result(false, Component.translatable("text.factions.action.invalid_faction"), false);
+    IActionResult DISABLED_EFFECT = new Result(false, Component.translatable("text.factions.action.active_effect"));
 
     /**
      * Creates a fail result with the given message

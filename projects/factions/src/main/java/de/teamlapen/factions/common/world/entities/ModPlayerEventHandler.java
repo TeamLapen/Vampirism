@@ -6,6 +6,7 @@ import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.lord.ILordPlayer;
 import de.teamlapen.factions.common.components.FactionRestriction;
 import de.teamlapen.factions.common.config.FactionConfig;
+import de.teamlapen.factions.common.core.FactionEffects;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.factions.common.tags.FactionTags;
 import de.teamlapen.factions.common.util.RegUtil;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -63,6 +65,13 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemRightClick(PlayerInteractEvent.@NotNull RightClickItem event) {
         if (!FactionRestriction.canUse(event.getEntity(), event.getItemStack(), true)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onEffectRemoved(MobEffectEvent.Remove event) {
+        if (event.getEffect().is(FactionEffects.RESURRECTION_FATIGUE)) {
             event.setCanceled(true);
         }
     }

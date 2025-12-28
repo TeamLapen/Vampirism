@@ -2,7 +2,9 @@ package de.teamlapen.factions.common.factions.actions;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
+import de.teamlapen.factions.api.FactionTagKeys;
 import de.teamlapen.factions.api.event.ActionEvent;
+import de.teamlapen.factions.api.factions.IFactionTags;
 import de.teamlapen.factions.api.factions.actions.IAction;
 import de.teamlapen.factions.api.factions.actions.IActionHandler;
 import de.teamlapen.factions.api.factions.actions.IActionResult;
@@ -16,6 +18,7 @@ import de.teamlapen.factions.common.core.FactionAdvancements;
 import de.teamlapen.factions.common.core.FactionStats;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.event.FactionEventFactory;
+import de.teamlapen.factions.common.tags.FactionEffectTags;
 import de.teamlapen.factions.common.util.collections.CollectionUtil;
 import de.teamlapen.sync.PropertySync;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -187,6 +190,14 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
         }
     }
 
+    public IActionResult checkDefaultToggleConditions(Holder<? extends IAction<T>> action) {
+        if (this.player.asEntity().isSpectator()) return IActionResult.RESTRICTED;
+        if (!isActionUnlocked(action)) return IActionResult.NOT_UNLOCKED;
+        if (!isActionAllowedPermission(action)) return IActionResult.DISALLOWED_PERMISSION;
+
+        return action.value().canUse(player);
+    }
+
     private static final Codec<Map<Holder<IAction<?>>, Integer>> ACTION_TIME_CODEC = Codec.simpleMap(IAction.CODEC, Codec.INT, ModRegistries.ACTIONS).codec();
     private static final Codec<Map<Holder<ILastingAction<?>>, Integer>> LASTING_ACTION_TIME_CODEC = Codec.simpleMap(ILastingAction.CODEC, Codec.INT, ModRegistries.ACTIONS).codec();
 
@@ -280,6 +291,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
      */
     @Override
     public IActionResult toggleAction(Holder<? extends IAction<T>> action, IAction.ActivationContext context) {
+        if (ActionHelper.checkActionDisableEffect(this.player)) return IActionResult.DISABLED_EFFECT;
         if (activeTimers.containsKey(action)) {
             // it must be a lasting action because it is in the activeTimers field
             deactivateAction(SafeCast.<Holder<ILastingAction<T>>>cast(action));
@@ -291,7 +303,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
             if (!isActionUnlocked(action)) return IActionResult.NOT_UNLOCKED;
             if (!isActionAllowedPermission(action)) return IActionResult.DISALLOWED_PERMISSION;
 
-            IActionResult r = action.value().canUse(player);
+            IActionResult r = checkDefaultToggleConditions(action);
             if (r.successful()) {
                 /*
                  * Only lasting actions have a duration, so regular actions will return a duration of -1.

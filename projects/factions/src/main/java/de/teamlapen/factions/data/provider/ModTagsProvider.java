@@ -16,5 +16,6 @@ public class ModTagsProvider {
         generator.addProvider(true, new ModTaskTagProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModBlockTagProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModProfessionTagProvider(output, lookupProviderFuture));
+        generator.addProvider(true, new ModEffectsProvider(output, lookupProviderFuture));
     }
 }

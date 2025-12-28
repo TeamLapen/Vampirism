@@ -12,6 +12,7 @@ import de.teamlapen.factions.client.gui.radialmenu.RadialMenuSlot;
 import de.teamlapen.factions.client.gui.screens.radial.DualSwitchingRadialMenu;
 import de.teamlapen.factions.common.core.FactionKeys;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.factions.common.factions.actions.ActionHelper;
 import de.teamlapen.factions.common.network.packets.server.ServerboundToggleActionPacket;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -75,7 +76,7 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
         @SuppressWarnings("unchecked")
         Holder<IAction<T>> iActionHolder = (Holder<IAction<T>>) (Object) slot.primarySlotIcon();
         float actionPercentage = actionHandler.getPercentageForAction(iActionHolder);
-        if (!iActionHolder.value().canUse(this.player).successful()) {
+        if (ActionHelper.checkActionDisableEffect(player) || !this.player.getActionHandler().checkDefaultToggleConditions(iActionHolder).successful()) {
             actionPercentage = -1;
         }
         if (actionPercentage == 0) {
