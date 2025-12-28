@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.ModRegistryItems;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.BlockDescription;
-import de.teamlapen.vampirism.common.util.ShiftDescription;
 import de.teamlapen.vampirism.common.util.VampirismVoxelShapes;
 import de.teamlapen.vampirism.common.world.blocks.*;
 import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
@@ -29,6 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.*;
@@ -51,6 +51,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -75,8 +76,8 @@ public class ModBlocks {
 
     public static final DeferredBlock<PedestalBlock> BLOOD_PEDESTAL = registerWithItem("blood_pedestal", PedestalBlock::new, () -> basicProperties().mapColor(MapColor.STONE).strength(3f).noOcclusion());
     public static final DeferredBlock<BloodContainerBlock> BLOOD_CONTAINER = registerWithItem("blood_container", BloodContainerBlock::new, () -> copyProperties(Blocks.DARK_OAK_PLANKS).strength(1.0f), BloodContainerItem::new);
-    public static final DeferredBlock<BloodGrinderBlock> BLOOD_GRINDER = registerWithItem("blood_grinder", BloodGrinderBlock::new, () -> copyProperties(Blocks.DARK_OAK_PLANKS).strength(3.0f));
-    public static final DeferredBlock<BloodSieveBlock> BLOOD_SIEVE = registerWithItem("blood_sieve", BloodSieveBlock::new, () -> copyProperties(Blocks.DARK_OAK_PLANKS).strength(3.0f));
+    public static final DeferredBlock<BloodGrinderBlock> BLOOD_GRINDER = registerWithItem("blood_grinder", BloodGrinderBlock::new, () -> copyProperties(Blocks.DARK_OAK_PLANKS).strength(3.0f), x -> x.vampirism$withShiftDescription());
+    public static final DeferredBlock<BloodSieveBlock> BLOOD_SIEVE = registerWithItem("blood_sieve", BloodSieveBlock::new, () -> copyProperties(Blocks.DARK_OAK_PLANKS).strength(3.0f), x -> x.vampirism$withShiftDescription());
     public static final DeferredBlock<BloodInfuserBlock> INFUSER = registerWithItem("blood_infuser", BloodInfuserBlock::new);
 
     public static final DeferredBlock<LiquidBlock> BLOOD = registerBlock("blood", props -> new LiquidBlock(ModFluids.BLOOD.get(), props), () -> copyProperties(Blocks.WATER).mapColor(MapColor.CRIMSON_HYPHAE));
@@ -84,17 +85,17 @@ public class ModBlocks {
     public static final DeferredBlock<FogDiffuserBlock> FOG_DIFFUSER = registerWithItem("fog_diffuser", FogDiffuserBlock::new, () -> basicProperties().noOcclusion().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE));
     public static final DeferredBlock<SunscreenBeaconBlock> SUNSCREEN_BEACON = registerWithItem("sunscreen_beacon", SunscreenBeaconBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(-1, 3600000).noOcclusion(), itemProps -> itemProps.rarity(Rarity.RARE).component(ModDataComponents.BLOCK_DESCRIPTION, BlockDescription.INSTANCE));
 
-    public static final DeferredBlock<HunterTableBlock> HUNTER_TABLE = registerWithItem("hunter_table", HunterTableBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).strength(0.5f).ignitedByLava().noOcclusion());
+    public static final DeferredBlock<HunterTableBlock> HUNTER_TABLE = registerWithItem("hunter_table", HunterTableBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).strength(0.5f).ignitedByLava().noOcclusion(), x -> x.vampirism$withShiftDescription());
     public static final DeferredBlock<WeaponTableBlock> WEAPON_TABLE = registerWithItem("weapon_table", WeaponTableBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(3).noOcclusion());
     public static final DeferredBlock<AlchemicalCauldronBlock> ALCHEMICAL_CAULDRON = registerWithItem("alchemical_cauldron", (props) -> new AlchemicalCauldronBlock(props.mapColor(MapColor.METAL).strength(4f).lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 13 : 0).noOcclusion()));
     public static final DeferredBlock<PotionTableBlock> POTION_TABLE = registerWithItem("potion_table", props -> new PotionTableBlock(props.mapColor(MapColor.METAL).strength(1f).noOcclusion()));
     public static final DeferredBlock<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new, () -> basicProperties().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(0.5F).lightLevel(state -> 1).noOcclusion());
-    public static final DeferredBlock<MedChairBlock> MED_CHAIR = registerWithItem("med_chair", MedChairBlock::new);
+    public static final DeferredBlock<MedChairBlock> MED_CHAIR = registerWithItem("med_chair", MedChairBlock::new,  x -> x.vampirism$withShiftDescription());
     public static final DeferredBlock<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(0.5f).noOcclusion());
 
-    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = registerWithItem("garlic_diffuser_normal", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserNormalDist), () -> basicProperties().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion(), (item) -> item.component(ModDataComponents.SHIFT_DESCRIPTION.get(), ShiftDescription.INSTANCE));
-    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_WEAK = registerWithItem("garlic_diffuser_weak", props -> new GarlicDiffuserBlock(props, EnumStrength.WEAK, ModConfig.balance().hsGarlicDiffuserWeakDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL), (item) -> item.component(ModDataComponents.SHIFT_DESCRIPTION.get(), ShiftDescription.INSTANCE));
-    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_IMPROVED = registerWithItem("garlic_diffuser_improved", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserEnhancedDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL), (item) -> item.component(ModDataComponents.SHIFT_DESCRIPTION.get(), ShiftDescription.INSTANCE));
+    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = registerWithItem("garlic_diffuser_normal", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserNormalDist), () -> basicProperties().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion(), (item) -> item.vampirism$withShiftDescriptionParameter());
+    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_WEAK = registerWithItem("garlic_diffuser_weak", props -> new GarlicDiffuserBlock(props, EnumStrength.WEAK, ModConfig.balance().hsGarlicDiffuserWeakDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL), (item) -> item.vampirism$withShiftDescriptionParameter());
+    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_IMPROVED = registerWithItem("garlic_diffuser_improved", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserEnhancedDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL), (item) -> item.vampirism$withShiftDescriptionParameter());
 
     public static final DeferredBlock<VampireBeaconBlock> VAMPIRE_BEACON = registerWithItem("vampire_beacon", VampireBeaconBlock::new, () -> copyProperties(Blocks.BEACON).mapColor(MapColor.CRIMSON_HYPHAE), itemProps -> itemProps.rarity(Rarity.RARE));
 
@@ -290,7 +291,7 @@ public class ModBlocks {
     public static final DeferredBlock<StandingCandelabraBlock> CANDELABRA_BLACK = registerCandelabra("black", Items.BLACK_CANDLE);
     public static final DeferredBlock<WallCandelabraBlock> WALL_CANDELABRA_BLACK = registerWallCandelabra("black", Items.BLACK_CANDLE, CANDELABRA_BLACK);
 
-    public static final DeferredBlock<ChandelierBlock> CHANDELIER = registerWithItem("chandelier", props -> new ChandelierBlock(null, () -> null, props), () -> basicProperties().mapColor(MapColor.METAL).noOcclusion().strength(4.5f, 5.5f).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY), (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix().component(ModDataComponents.SHIFT_DESCRIPTION, ShiftDescription.INSTANCE)));
+    public static final DeferredBlock<ChandelierBlock> CHANDELIER = registerWithItem("chandelier", props -> new ChandelierBlock(null, () -> null, props), () -> basicProperties().mapColor(MapColor.METAL).noOcclusion().strength(4.5f, 5.5f).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY), (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix().vampirism$withShiftDescription()));
 
     public static final DeferredBlock<ChandelierBlock> CHANDELIER_NORMAL = registerChandelier("normal", Items.CANDLE);
     public static final DeferredBlock<ChandelierBlock> CHANDELIER_WHITE = registerChandelier("white", Items.WHITE_CANDLE);
@@ -321,7 +322,7 @@ public class ModBlocks {
     public static final DeferredBlock<BaseHorizontalBlock> VAMPIRE_RACK = registerWithItem("vampire_rack", props -> new BaseHorizontalBlock(props.ignitedByLava().strength(2, 3), VampirismVoxelShapes.VAMPIRE_RACK));
     public static final DeferredBlock<ThroneBlock> THRONE = registerWithItem("throne", ThroneBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().pushReaction(PushReaction.DESTROY).strength(2, 3));
     public static final DeferredBlock<BatCageBlock> BAT_CAGE = registerWithItem("bat_cage", BatCageBlock::new, () -> basicProperties().strength(5.0F, 6.0F).sound(SoundType.METAL).noOcclusion());
-    public static final DeferredBlock<MotherTrophyBlock> MOTHER_TROPHY = registerWithItem("mother_trophy", MotherTrophyBlock::new, () -> basicProperties().mapColor(MapColor.COLOR_GRAY).strength(3, 9).lightLevel(s -> 1).noOcclusion(), itemProps -> itemProps.rarity(Rarity.EPIC).stacksTo(1));
+    public static final DeferredBlock<MotherTrophyBlock> MOTHER_TROPHY = registerWithItem("mother_trophy", MotherTrophyBlock::new, () -> basicProperties().mapColor(MapColor.COLOR_GRAY).strength(3, 9).lightLevel(s -> 1).noOcclusion(), itemProps -> itemProps.vampirism$withShiftDescription().rarity(Rarity.EPIC).stacksTo(1));
 
     public static final DeferredBlock<TentBlock> TENT = registerBlock("tent", TentBlock::new, () -> basicProperties().mapColor(MapColor.WOOL).ignitedByLava().strength(0.6f).sound(SoundType.WOOL).noOcclusion());
     public static final DeferredBlock<TentMainBlock> TENT_MAIN = registerBlock("tent_main", TentMainBlock::new, () -> copyProperties(TENT));
@@ -372,6 +373,12 @@ public class ModBlocks {
     private static <T extends Block> DeferredBlock<T> registerWithItem(String name, Function<BlockBehaviour.Properties, T> supplier) {
         DeferredBlock<T> block = BLOCKS.registerBlock(name, supplier);
         createItem(name, block, BlockItem::new, props -> props);
+        return block;
+    }
+
+    private static <T extends Block> DeferredBlock<T> registerWithItem(String name, Function<BlockBehaviour.Properties, T> supplier, Function<Item.@NotNull Properties, Item.Properties> properties) {
+        DeferredBlock<T> block = BLOCKS.registerBlock(name, supplier);
+        createItem(name, block, (x, y) -> new BlockItem(x, properties.apply(y)), UnaryOperator.identity());
         return block;
     }
 
@@ -438,7 +445,7 @@ public class ModBlocks {
             ChandelierBlock block = new ChandelierBlock(CHANDELIER, () -> candle, props);
             CHANDELIER.get().addCandle(BuiltInRegistries.ITEM.getKey(candle), () -> block);
             return block;
-        }, () -> copyProperties(CHANDELIER), (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix().component(ModDataComponents.SHIFT_DESCRIPTION, ShiftDescription.INSTANCE)));
+        }, () -> copyProperties(CHANDELIER), (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix().vampirism$withShiftDescription(Component.translatable("tooltip.vampirism.chandelier.filled"))));
     }
 
     private static BlockBehaviour.Properties basicProperties() {

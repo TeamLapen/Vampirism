@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.misc.extension;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.DependantName;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.Item;
@@ -11,4 +12,12 @@ public interface IItemProperties {
     default Item.Properties vampirism$descriptionWithout(String regexPathReplace) {
         return vampirism$description(item -> Util.makeDescriptionId("item", item.identifier().withPath(item.identifier().getPath().replaceAll(regexPathReplace, ""))));
     }
+
+    Item.Properties vampirism$withShiftDescription();
+
+    Item.Properties vampirism$withShiftDescriptionParameter();
+
+    Item.Properties vampirism$withShiftDescriptionParameter(Object[] parameters);
+
+    Item.Properties vampirism$withShiftDescription(Component component);
 }

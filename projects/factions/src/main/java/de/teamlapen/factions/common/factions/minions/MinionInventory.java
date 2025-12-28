@@ -2,6 +2,7 @@ package de.teamlapen.factions.common.factions.minions;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.factions.api.world.entities.minion.IMinionInventory;
+import de.teamlapen.factions.common.world.inventory.InventoryHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.entity.player.Player;
@@ -33,17 +34,17 @@ public class MinionInventory implements IMinionInventory {
     @Override
     public void addItemStack(@NotNull ItemStack stack) {
 
-//        while (!stack.isEmpty()) { FIXME
-//            int slot = InventoryHelper.getFirstSuitableSlotToAdd(inventory, this.getContainerSize() - 6 /*access only main inventory*/, stack, this.getMaxStackSize());
-//            if (slot == -1) {
-//                break;
-//            }
-//            int oldSize = stack.getCount();
-//            InventoryHelper.addStackToSlotWithoutCheck(this, slot + 6 /*access main inventory*/, stack);
-//            if (stack.getCount() >= oldSize) {
-//                break;
-//            }
-//        }
+        while (!stack.isEmpty()) {
+            int slot = InventoryHelper.getFirstSuitableSlotToAdd(inventory, this.getContainerSize() - 6 /*access only main inventory*/, stack, this.getMaxStackSize());
+            if (slot == -1) {
+                break;
+            }
+            int oldSize = stack.getCount();
+            InventoryHelper.addStackToSlotWithoutCheck(this, slot + 6 /*access main inventory*/, stack);
+            if (stack.getCount() >= oldSize) {
+                break;
+            }
+        }
     }
 
     public void clearContent() {

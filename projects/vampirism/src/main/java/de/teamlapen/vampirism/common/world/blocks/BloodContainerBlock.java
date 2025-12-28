@@ -6,17 +6,23 @@ import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.util.BloodHelper;
+import de.teamlapen.vampirism.common.util.IBlockWithDescription;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -35,8 +41,9 @@ import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
-public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayItemGenerator.CreativeTabItemProvider {
+public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayItemGenerator.CreativeTabItemProvider, IBlockWithDescription {
 
     public static final MapCodec<BloodContainerBlock> CODEC = simpleCodec(BloodContainerBlock::new);
 
@@ -112,13 +119,13 @@ public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayI
         output.accept(stack);
     }
 
-//    @Override FIXME readd
-//    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-//        FluidStack fluidStack = getFluidFromItemStack(stack);
-//        if (!fluidStack.isEmpty()) {
-//            tooltipComponents.add(Component.translatable(fluidStack.getFluidType().getDescriptionId(fluidStack.copy())).append(Component.literal(": " + fluidStack.getAmount() + "mB")).withStyle(ChatFormatting.DARK_RED));
-//        }
-//    }
+    @Override
+    public void appendHoverText(ItemStack stack, Item.@Nullable TooltipContext context, TooltipDisplay display, TooltipFlag tooltipFlag, Consumer<Component> tooltips) {
+        FluidStack fluidStack = getFluidFromItemStack(stack);
+        if (!fluidStack.isEmpty()) {
+            tooltips.accept(Component.translatable(fluidStack.getFluidType().getDescriptionId(fluidStack.copy())).append(Component.literal(": " + fluidStack.getAmount() + "mB")).withStyle(ChatFormatting.DARK_RED));
+        }
+    }
 
     @Override
     public boolean hasAnalogOutputSignal(BlockState pState) {

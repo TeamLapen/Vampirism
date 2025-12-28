@@ -16,35 +16,18 @@ import java.util.function.Consumer;
 
 public class DescriptionUtil {
 
-    public static void addDescriptionTooltip(String key, String modId, Item.TooltipContext context, TooltipDisplay tooltipDisplay, TooltipFlag tooltipFlag, Consumer<Component> tooltipComponents, Object... parameters) {
-        if (key.isEmpty()) return;
+    public static void addDescriptionTooltip(Component component, Item.TooltipContext context, TooltipFlag tooltipFlag, Consumer<Component> tooltipComponents) {
 
         tooltipComponents.accept(Component.translatable("tooltip.vampirism.hold_shift_for_info").withStyle(ChatFormatting.DARK_GRAY));
 
         if (tooltipFlag.hasShiftDown()) {
-            List<String> lines = normalizeTextWidth(Component.translatable(getTranslationKey(modId, key), parameters).getString(), 40);
+            List<String> lines = normalizeTextWidth(component.getString(), 40);
 
             tooltipComponents.accept(Component.empty());
             for (String line : lines) {
                 tooltipComponents.accept(Component.literal(line).withStyle(ChatFormatting.GRAY));
             }
         }
-    }
-
-    public static void addDescriptionTooltip(String name, Item.TooltipContext context, TooltipDisplay tooltipDisplay, TooltipFlag tooltipFlag, Consumer<Component> tooltipComponents, Object... parameters) {
-        addDescriptionTooltip(name, REFERENCE.MODID, context, tooltipDisplay, tooltipFlag, tooltipComponents, parameters);
-    }
-
-    public static void addDescriptionTooltip(Identifier itemLocation, Item.TooltipContext context, TooltipDisplay tooltipDisplay, TooltipFlag tooltipFlag, Consumer<Component> tooltipComponents, Object... parameters) {
-        addDescriptionTooltip(itemLocation.getPath(), itemLocation.getNamespace(), context, tooltipDisplay, tooltipFlag, tooltipComponents, parameters);
-    }
-
-    public static void addDescriptionTooltip(ItemLike item, Item.TooltipContext context, TooltipDisplay tooltipDisplay, TooltipFlag tooltipFlag, Consumer<Component> tooltipComponents, Object... parameters) {
-        addDescriptionTooltip(BuiltInRegistries.ITEM.getKey(item.asItem()), context, tooltipDisplay, tooltipFlag, tooltipComponents, parameters);
-    }
-
-    private static String getTranslationKey(String modId, String key) {
-        return "tooltip." + modId + "." + key;
     }
 
     private static List<String> normalizeTextWidth(String text, int maxLength) {
