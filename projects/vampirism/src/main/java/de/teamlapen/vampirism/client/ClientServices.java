@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client;
 
+import de.teamlapen.factions.Services;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;
@@ -8,7 +9,6 @@ import de.teamlapen.vampirism.client.models.armor.ArmorModels;
 import de.teamlapen.vampirism.client.renderer.BloodVisionRenderer;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
-import de.teamlapen.vampirism.common.util.Services;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;

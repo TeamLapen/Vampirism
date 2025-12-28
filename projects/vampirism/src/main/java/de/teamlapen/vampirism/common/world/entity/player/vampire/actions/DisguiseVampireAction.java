@@ -29,17 +29,17 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaDisguiseCooldown.get() * 20;
+        return ModConfig.balance().vaDisguiseCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaDisguiseDuration.get() * 20;
+        return ModConfig.balance().vaDisguiseDuration.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaDisguiseEnabled.get();
+        return ModConfig.balance().vaDisguiseEnabled.get();
     }
 
     @Override

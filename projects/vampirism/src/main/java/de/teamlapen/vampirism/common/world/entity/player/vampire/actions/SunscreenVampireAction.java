@@ -20,22 +20,22 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaSunscreenCooldown.get() * 20;
+        return ModConfig.balance().vaSunscreenCooldown.get() * 20;
     }
 
 
     @Override
     public int getDuration(@NotNull IVampirePlayer player) {
-        int duration = 20 * (ModConfig.BALANCE.vaSunscreenDuration.get());
+        int duration = 20 * (ModConfig.balance().vaSunscreenDuration.get());
         if (player.getRefinementHandler().isRefinementEquipped(ModRefinements.SUN_SCREEN)) {
-            duration *= ModConfig.BALANCE.vrSunscreenDurationMod.get();
+            duration *= ModConfig.balance().vrSunscreenDurationMod.get();
         }
         return duration;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaSunscreenEnabled.get();
+        return ModConfig.balance().vaSunscreenEnabled.get();
     }
 
     @Override

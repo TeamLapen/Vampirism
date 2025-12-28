@@ -89,7 +89,7 @@ public class Helper {
                     BlockState state = world.getBlockState(blockpos);
                     if (state.liquid()) { // if fluid than it propagates the light until `vpSundamageWaterBlocks`
                         liquidBlocks++;
-                        if (liquidBlocks >= ModConfig.BALANCE.vpSundamageWaterblocks.get()) {
+                        if (liquidBlocks >= ModConfig.balance().vpSundamageWaterblocks.get()) {
                             return false;
                         }
                     } else if (state.canOcclude() && (state.isFaceSturdy(world, pos, Direction.DOWN) || state.isFaceSturdy(world, pos, Direction.UP))) { //solid block blocks the light (fence is solid too?)
@@ -126,10 +126,10 @@ public class Helper {
     public static boolean canTurnPlayer(IVampire biter, @Nullable Player target) {
         if (target != null && (target.isCreative() || target.isSpectator())) return false;
         if (biter instanceof IVampirePlayer player) {
-            if (!ModConfig.SERVER.playerCanTurnPlayer.get()) return false;
+            if (!ModConfig.server().playerCanTurnPlayer.get()) return false;
             return !(player instanceof ServerPlayer) || Permissions.INFECT_PLAYER.isAllowed((ServerPlayer) player);
         } else {
-            return !ModConfig.SERVER.disableMobBiteInfection.get();
+            return !ModConfig.server().disableMobBiteInfection.get();
         }
     }
 
@@ -239,7 +239,7 @@ public class Helper {
      */
     public static boolean canKillVampires(@NotNull DamageSource source) {
         if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-            if (source.is(ModDamageTypeTags.VAMPIRE_IMMORTAL) || ModConfig.BALANCE.vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
+            if (source.is(ModDamageTypeTags.VAMPIRE_IMMORTAL) || ModConfig.balance().vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
                 if (source.getDirectEntity() instanceof LivingEntity) {
                     //Maybe use all IVampireFinisher??
                     return source.getDirectEntity() instanceof IHunterMob || ((LivingEntity) source.getDirectEntity()).getMainHandItem().getItem() instanceof StakeItem;

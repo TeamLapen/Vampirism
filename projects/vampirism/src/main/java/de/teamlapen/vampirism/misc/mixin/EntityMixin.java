@@ -26,7 +26,7 @@ public class EntityMixin {
         if (MixinHooks.enforcingGlowing_bloodVision) {
             Entity p = FactionsMod.proxy.getClientPlayer();
             Entity e = (Entity) (Object) this;
-            if (p != null && p.distanceToSqr(e) < ModConfig.BALANCE.vsBloodVisionDistanceSq.get()) {
+            if (p != null && p.distanceToSqr(e) < ModConfig.balance().vsBloodVisionDistanceSq.get()) {
                 cir.setReturnValue(true);
             }
         }

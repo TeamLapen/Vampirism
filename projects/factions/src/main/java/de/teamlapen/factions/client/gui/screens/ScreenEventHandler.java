@@ -21,12 +21,12 @@ public class ScreenEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onButtonClicked(ScreenEvent.MouseButtonPressed.@NotNull Pre event) {//InventoryScreen changes layout if recipe book button is clicked. Unfortunately it does not propagate this to the screen children, so we need to use this
-        if (event.getScreen() instanceof InventoryScreen && FactionConfig.CLIENT.guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
+        if (event.getScreen() instanceof InventoryScreen && FactionConfig.client().guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
             //Do the same thing MouseHelper would do. However, if GUI returns false on mouseclick it will be called again by MouseHelper
             if (event.getScreen().mouseClicked(event.getMouseButtonEvent(), event.isDoubleClick())) {
                 event.setCanceled(true);
                 if (button != null) {
-                    button.setPosition(((InventoryScreen) event.getScreen()).getGuiLeft() + FactionConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + FactionConfig.CLIENT.overrideGuiSkillButtonY.get());
+                    button.setPosition(((InventoryScreen) event.getScreen()).getGuiLeft() + FactionConfig.client().overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + FactionConfig.client().overrideGuiSkillButtonY.get());
                 }
             }
         }
@@ -34,8 +34,8 @@ public class ScreenEventHandler {
 
     @SubscribeEvent
     public void onInitGuiEventPost(ScreenEvent.Init.@NotNull Post event) {
-        if (event.getScreen() instanceof InventoryScreen && FactionConfig.CLIENT.guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
-            button = new ImageButton(((InventoryScreen) event.getScreen()).getGuiLeft() + FactionConfig.CLIENT.overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + FactionConfig.CLIENT.overrideGuiSkillButtonY.get(), 20, 18, INVENTORY_SKILLS, (context) -> {
+        if (event.getScreen() instanceof InventoryScreen && FactionConfig.client().guiSkillButton.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
+            button = new ImageButton(((InventoryScreen) event.getScreen()).getGuiLeft() + FactionConfig.client().overrideGuiSkillButtonX.get(), event.getScreen().height / 2 + FactionConfig.client().overrideGuiSkillButtonY.get(), 20, 18, INVENTORY_SKILLS, (context) -> {
                 FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU));
             });
             event.addListener(button);

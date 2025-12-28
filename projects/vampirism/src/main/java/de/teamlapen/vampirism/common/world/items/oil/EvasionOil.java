@@ -22,7 +22,7 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     @Override
     public boolean canBeApplied(ItemStack stack) {
         var equippable = stack.get(DataComponents.EQUIPPABLE);
-        return equippable != null && equippable.slot().isArmor() && stack.is(ModItemTags.APPLICABLE_OIL_ARMOR) == ModConfig.BALANCE.itApplicableOilArmorReverse.get();
+        return equippable != null && equippable.slot().isArmor() && stack.is(ModItemTags.APPLICABLE_OIL_ARMOR) == ModConfig.balance().itApplicableOilArmorReverse.get();
     }
 
     @Override

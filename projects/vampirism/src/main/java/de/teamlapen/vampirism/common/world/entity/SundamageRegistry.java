@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.entity;
 
 import de.teamlapen.vampirism.api.world.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.config.ServerConfig;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundSundamagePacket;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.BlockPos;
@@ -94,9 +95,10 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     public void reloadConfiguration() {
-        Set<ResourceKey<Biome>> biomes = ModConfig.SERVER.sundamageDisabledBiomes.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.BIOME, s)).collect(Collectors.toUnmodifiableSet());
-        Set<ResourceKey<Level>> levels = ModConfig.SERVER.sundamageDimensionsOverrideNegative.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
-        Set<ResourceKey<Level>> positiveLevels = ModConfig.SERVER.sundamageDimensionsOverridePositive.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        ServerConfig config = ModConfig.server();
+        Set<ResourceKey<Biome>> biomes = config.sundamageDisabledBiomes.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.BIOME, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> levels = config.sundamageDimensionsOverrideNegative.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> positiveLevels = config.sundamageDimensionsOverridePositive.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
         this.configSettings = new ConfigSettings(levels, positiveLevels, biomes);
         reloadSettings();
     }
@@ -108,7 +110,7 @@ public class SundamageRegistry implements ISundamageRegistry {
         } else if (this.noSunDamageLevels.contains(dim)) {
             return false;
         } else {
-            return ModConfig.SERVER.sundamageUnknownDimension.get();
+            return ModConfig.server().sundamageUnknownDimension.get();
         }
     }
 

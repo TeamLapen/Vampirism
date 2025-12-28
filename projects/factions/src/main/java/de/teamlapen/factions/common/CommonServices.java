@@ -30,7 +30,6 @@ public class CommonServices extends Services implements IFactionServices {
 
     public CommonServices(ModContainer container) {
         super(container);
-        FactionConfig.register(container);
     }
 
     @Override

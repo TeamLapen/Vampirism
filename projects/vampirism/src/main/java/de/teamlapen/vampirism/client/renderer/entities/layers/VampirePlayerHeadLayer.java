@@ -35,7 +35,7 @@ public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends Playe
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, T renderState, float yRot, float xRot) {
-        if (!ModConfig.CLIENT.renderVampireEyes.get() || renderState.deathTime > 0) return;
+        if (!ModConfig.client().renderVampireEyes.get() || renderState.deathTime > 0) return;
         if (renderState instanceof IVampirePlayerState vampireState && vampireState.vampirism$vampire$level() > 0 && !vampireState.vampirism$vampire$isDisguised() && !renderState.isInvisible) {
             int eyeType = Math.max(0, Math.min(vampireState.vampirism$vampire$getEyeType(), eyeOverlays.length - 1));
             int fangType = Math.max(0, Math.min(vampireState.vampirism$vampire$getFangType(), fangOverlays.length - 1));

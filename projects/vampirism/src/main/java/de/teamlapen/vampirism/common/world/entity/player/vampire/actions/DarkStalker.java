@@ -15,7 +15,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class DarkStalker extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaDarkStalkerEnabled.get();
+        return ModConfig.balance().vaDarkStalkerEnabled.get();
     }
 
     @Override
@@ -27,7 +27,7 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
 
     @Override
     public int getDuration(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaDarkStalkerDuration.get();
+        return ModConfig.balance().vaDarkStalkerDuration.get();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
 
     @Override
     public boolean onUpdate(IVampirePlayer player, int duration, int expectedDuration) {
-        if (duration % ModConfig.HELPER.getTicksPerBlood() == 0) {
+        if (duration % ModConfig.helper().getTicksPerBlood() == 0) {
             player.useBlood(1, true);
         }
         if (!player.isRemote() && player.asEntity().tickCount % 20 == 0) {
@@ -59,7 +59,7 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaDarkStalkerCooldown.get();
+        return ModConfig.balance().vaDarkStalkerCooldown.get();
     }
 
     protected void applyEffect(IVampirePlayer vampire) {

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.CommonServices;
+import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.integration.IntegrationServices;
 import de.teamlapen.vampirism.common.proxy.IProxy;
 import de.teamlapen.vampirism.common.world.items.crossbow.CrossbowArrowHandler;
@@ -15,6 +16,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import org.jetbrains.annotations.UnknownNullability;
 
 /**
  * Main class for Vampirism
@@ -25,7 +27,11 @@ public class VampirismMod {
     public static final IProxy proxy = FMLEnvironment.getDist() == Dist.CLIENT ? VampirismModClient.getProxy() : new ServerProxy();
     public static boolean inDev = false;
     public static boolean inDataGen = false;
+    @UnknownNullability
+    private static ModConfig CONFIG;
+    @UnknownNullability
     private static CommonServices SERVICES;
+    @UnknownNullability
     private static IntegrationServices INTEGRATIONS;
 
 
@@ -37,6 +43,8 @@ public class VampirismMod {
         ShapedRecipePattern.setCraftingSize(4, 4);
         NeoForgeMod.enableMergedAttributeTooltips();
 
+        CONFIG = new ModConfig(modContainer);
+        CONFIG.register(modEventBus);
         SERVICES = new CommonServices(modContainer);
         SERVICES.register(modEventBus);
         VampirismApi.init(SERVICES);
@@ -49,6 +57,9 @@ public class VampirismMod {
     }
     public static IntegrationServices integrations() {
         return INTEGRATIONS;
+    }
+    public static ModConfig config() {
+        return CONFIG;
     }
 
     private void checkEnv() {

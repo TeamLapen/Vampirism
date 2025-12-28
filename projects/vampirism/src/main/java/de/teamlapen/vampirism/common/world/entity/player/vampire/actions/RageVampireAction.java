@@ -28,17 +28,17 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaRageCooldown.get() * 20;
+        return ModConfig.balance().vaRageCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(@NotNull IVampirePlayer player) {
-        return 20 * (ModConfig.BALANCE.vaRageMinDuration.get() + ModConfig.BALANCE.vaRageDurationIncrease.get() * player.getLevel());
+        return 20 * (ModConfig.balance().vaRageMinDuration.get() + ModConfig.balance().vaRageDurationIncrease.get() * player.getLevel());
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaRageEnabled.get();
+        return ModConfig.balance().vaRageEnabled.get();
     }
 
     @Override

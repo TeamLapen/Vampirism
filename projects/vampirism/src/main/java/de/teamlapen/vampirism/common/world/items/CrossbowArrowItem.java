@@ -49,7 +49,7 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
 
     public AbstractArrow createArrow(Level level, ItemStack stack, @Nullable LivingEntity shooter, Position position, @Nullable ItemStack weapon) {
         CrossbowArrowEntity arrowEntity = new CrossbowArrowEntity(level, position.x(), position.y(), position.z(), stack, weapon);
-        arrowEntity.setBaseDamage(this.behavior.baseDamage(level, stack, shooter) * ModConfig.BALANCE.crossbowDamageMult.get());
+        arrowEntity.setBaseDamage(this.behavior.baseDamage(level, stack, shooter) * ModConfig.balance().crossbowDamageMult.get());
         this.behavior.modifyArrow(level, stack, shooter, arrowEntity);
         if (shooter instanceof Player || shooter == null) {
             arrowEntity.pickup = this.behavior.pickupBehavior();

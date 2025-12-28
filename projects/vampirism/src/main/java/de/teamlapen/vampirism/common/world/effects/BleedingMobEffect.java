@@ -24,7 +24,7 @@ public class BleedingMobEffect extends MobEffect {
     public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (entity.isInvertedHealAndHarm()) return false;
         if (entity.getHealth() > 1.0F) {
-            DamageHandler.hurtModded(level, entity, ModDamageSources::bleeding, ModConfig.BALANCE.bleedingEffectDamage.get().floatValue());
+            DamageHandler.hurtModded(level, entity, ModDamageSources::bleeding, ModConfig.balance().bleedingEffectDamage.get().floatValue());
             if (entity.getRandom().nextInt(4) == 0) {
                 if (Helper.isVampire(entity)) {
                     if (entity instanceof Player) {

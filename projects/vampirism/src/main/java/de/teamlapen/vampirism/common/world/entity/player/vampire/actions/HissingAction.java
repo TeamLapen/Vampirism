@@ -15,12 +15,12 @@ public class HissingAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaHissingCooldown.get() * 20;
+        return ModConfig.balance().vaHissingCooldown.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaHissingEnabled.get();
+        return ModConfig.balance().vaHissingEnabled.get();
     }
 
     @Override

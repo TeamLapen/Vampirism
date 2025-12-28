@@ -13,17 +13,17 @@ public class SpeedLordAction<T extends ISkillPlayer<T>> extends LordRangeEffectA
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.laLordSpeedEnabled.get();
+        return ModConfig.balance().laLordSpeedEnabled.get();
     }
 
     @Override
     public int getCooldown(@NotNull T player) {
-        return super.getCooldown(player) + ModConfig.BALANCE.laLordSpeedCooldown.get();
+        return super.getCooldown(player) + ModConfig.balance().laLordSpeedCooldown.get();
     }
 
     @Override
     protected int getEffectDuration(T player) {
-        return ModConfig.BALANCE.laLordSpeedDuration.get() * 20;
+        return ModConfig.balance().laLordSpeedDuration.get() * 20;
     }
 
     @Override

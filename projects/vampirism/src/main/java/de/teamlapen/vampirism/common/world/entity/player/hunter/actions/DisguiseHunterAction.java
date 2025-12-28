@@ -40,7 +40,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.haDisguiseEnabled.get();
+        return ModConfig.balance().haDisguiseEnabled.get();
     }
 
     @Override

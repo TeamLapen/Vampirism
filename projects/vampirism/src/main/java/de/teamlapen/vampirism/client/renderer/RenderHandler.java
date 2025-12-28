@@ -60,7 +60,7 @@ public class RenderHandler implements IMinecraftAccessor {
 
     @SubscribeEvent
     public void onCameraSetup(ViewportEvent.@NotNull ComputeCameraAngles event) {
-        if (FactionConfig.SERVER.preventRenderingDebugBoundingBoxes.get()) {
+        if (FactionConfig.helper().preventRenderingDebugBoundingBoxes()) {
             DebugScreenEntryStatus status = this.mc().debugEntries.getStatus(DebugScreenEntries.ENTITY_HITBOXES);
             if (status != DebugScreenEntryStatus.NEVER) {
                 this.mc().debugEntries.setStatus(DebugScreenEntries.ENTITY_HITBOXES, DebugScreenEntryStatus.NEVER);
@@ -84,10 +84,10 @@ public class RenderHandler implements IMinecraftAccessor {
 
         //Vampire biome/village fog
         if (player().tickCount % 10 == 0) {
-            if ((ModConfig.CLIENT.renderVampireForestFog.get() || ModConfig.SERVER.enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(player()) || Helper.isEntityInVampireBiome(player()))) {
+            if ((ModConfig.client().renderVampireForestFog.get() || ModConfig.server().enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(player()) || Helper.isEntityInVampireBiome(player()))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
-                vampireBiomeFogDistanceMultiplier += vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.VISTA) ? ModConfig.BALANCE.vrVistaMod.get().floatValue() : 0;
+                vampireBiomeFogDistanceMultiplier += vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.VISTA) ? ModConfig.balance().vrVistaMod.get().floatValue() : 0;
 
                 vampireBiomeFogDistanceMultiplier = VampirismEventFactory.fireVampireFogEvent(vampireBiomeFogDistanceMultiplier);
 

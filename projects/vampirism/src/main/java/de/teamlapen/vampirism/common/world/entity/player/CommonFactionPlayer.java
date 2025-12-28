@@ -127,7 +127,7 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     }
 
     public int getMaxMinions() {
-        return getLordLevel() * FactionConfig.SERVER.miMinionPerLordLevel.get();
+        return getLordLevel() * FactionConfig.server().miMinionPerLordLevel.get();
     }
 
     @Override

@@ -58,7 +58,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.has_umbrella"));
         } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE || vampire.asEntity().hasEffect(ModEffects.GARLIC) && vampire.asEntity().getEffect(ModEffects.GARLIC).getAmplifier() > 0) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.effected_by_garlic"));
-        } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
+        } else if (ModConfig.server().batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.dimension"));
         } else if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
             return IActionResult.fail(Component.translatable("text.factions.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
@@ -73,17 +73,17 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaBatCooldown.get() * 20 + 1;
+        return ModConfig.balance().vaBatCooldown.get() * 20 + 1;
     }
 
     @Override
     public int getDuration(IVampirePlayer player) {
-        return Mth.clamp(ModConfig.BALANCE.vaBatDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
+        return Mth.clamp(ModConfig.balance().vaBatDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaBatEnabled.get();
+        return ModConfig.balance().vaBatEnabled.get();
     }
 
     @Override
@@ -130,11 +130,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE && !vampire.isRemote()) {
                 player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_garlic"));
                 return true;
-            } else if (ModConfig.SERVER.batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
+            } else if (ModConfig.server().batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
                 player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_dimension"));
                 return true;
             } else {
-                float exhaustion = ModConfig.BALANCE.vaBatExhaustion.get().floatValue();
+                float exhaustion = ModConfig.balance().vaBatExhaustion.get().floatValue();
                 if (exhaustion > 0) vampire.addExhaustion(exhaustion);
                 return player.isInWater();
             }
@@ -168,7 +168,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 fly.addPermanentModifier(new AttributeModifier(key, 1, AttributeModifier.Operation.ADD_VALUE));
             }
 
-            setFlightSpeed(player, ModConfig.BALANCE.vaBatFlightSpeed.get().floatValue());
+            setFlightSpeed(player, ModConfig.balance().vaBatFlightSpeed.get().floatValue());
         } else {
             Objects.requireNonNull(player.getAttribute(Attributes.ARMOR)).removeModifier(key);
             Objects.requireNonNull(player.getAttribute(Attributes.ARMOR_TOUGHNESS)).removeModifier(key);

@@ -53,9 +53,9 @@ public class FreezeVampireAction extends DefaultVampireAction {
 
             if (!entity.canFreeze()) continue;
 
-            int dur = ModConfig.BALANCE.vaFreezeDuration.get() * 20;
+            int dur = ModConfig.balance().vaFreezeDuration.get() * 20;
             if (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.FREEZE_DURATION)) {
-                dur *= ModConfig.BALANCE.vrFreezeDurationMod.get();
+                dur *= ModConfig.balance().vrFreezeDurationMod.get();
             }
             entity.addEffect(new MobEffectInstance(ModEffects.FREEZE, dur));
             entity.setSharedFlagOnFire(false);
@@ -83,12 +83,12 @@ public class FreezeVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaFreezeCooldown.get() * 20;
+        return ModConfig.balance().vaFreezeCooldown.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaFreezeEnabled.get();
+        return ModConfig.balance().vaFreezeEnabled.get();
     }
 
     @Override

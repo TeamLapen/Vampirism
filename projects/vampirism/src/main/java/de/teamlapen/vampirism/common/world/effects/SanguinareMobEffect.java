@@ -28,7 +28,7 @@ public class SanguinareMobEffect extends VampirismMobEffect {
     }
 
     public static void addRandom(LivingEntity entity, boolean player, boolean fasterInfection) {
-        int avgDuration = 20 * (player ? ModConfig.BALANCE.vpSanguinareAverageDuration.get() : BalanceMobProps.mobProps.SANGUINARE_AVG_DURATION);
+        int avgDuration = 20 * (player ? ModConfig.balance().vpSanguinareAverageDuration.get() : BalanceMobProps.mobProps.SANGUINARE_AVG_DURATION);
         if (fasterInfection) {
             avgDuration /= 2;
         }

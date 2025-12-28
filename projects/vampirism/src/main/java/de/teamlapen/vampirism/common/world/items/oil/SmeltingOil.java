@@ -26,7 +26,7 @@ public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO crea
 
     @Override
     public boolean isOilAllowedOnTool(ItemStack stack) {
-        return stack.is(ModItemTags.APPLICABLE_OIL_PICKAXE) == ModConfig.BALANCE.itApplicableOilPickaxeReverse.get();
+        return stack.is(ModItemTags.APPLICABLE_OIL_PICKAXE) == ModConfig.balance().itApplicableOilPickaxeReverse.get();
     }
 
     @Override

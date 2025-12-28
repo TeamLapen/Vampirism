@@ -3,6 +3,7 @@ package de.teamlapen.factions;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.common.NeoForge;
+import org.jetbrains.annotations.ApiStatus;
 
 public class Services {
 
@@ -16,9 +17,11 @@ public class Services {
         return this.container;
     }
 
+    @ApiStatus.OverrideOnly
     protected void registerModBus(IEventBus bus) {
     }
 
+    @ApiStatus.OverrideOnly
     protected void registerGameBus(@SuppressWarnings("SameParameterValue") IEventBus bus) {
     }
 

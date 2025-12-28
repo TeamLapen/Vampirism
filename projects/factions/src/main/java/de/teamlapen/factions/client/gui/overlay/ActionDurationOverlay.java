@@ -22,14 +22,14 @@ public class ActionDurationOverlay<T extends ISkillPlayer<T>> extends BaseOverla
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (canRenderOverlays() && !FactionConfig.CLIENT.disableHudActionDurationRendering.get()) {
+        if (canRenderOverlays() && !FactionConfig.client().disableHudActionDurationRendering.get()) {
             FactionsApi.factionPlayerHandler(this.player()).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
 
                 int x = 12;
                 int y = this.mc.getWindow().getGuiScaledHeight() - 27;
 
-                if (!FactionConfig.CLIENT.disableHudActionDurationRendering.get()) {
+                if (!FactionConfig.client().disableHudActionDurationRendering.get()) {
                     for (Holder<? extends ILastingAction<T>> action : factionPlayer.getActionHandler().getActiveActions()) {
                         if (!(action.value().showHudDuration(this.player()))) continue;
                         if (!actionHandler.isActionActive(action)) continue;

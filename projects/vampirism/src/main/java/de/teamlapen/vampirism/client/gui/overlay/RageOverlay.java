@@ -8,15 +8,14 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.Vampire
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public class RageOverlay extends TextureOverlay {
 
     public static final Identifier RAGE_TEXTURE = VResourceLocation.mod("textures/misc/rage.png");
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
-        if (canRenderOverlays() && ModConfig.CLIENT.enableRageOverlayRendering.get()) {
+    public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+        if (canRenderOverlays() && ModConfig.client().enableRageOverlayRendering.get()) {
             if (VampirePlayer.get(this.player()).getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
                 renderTextureOverlay(graphics, RAGE_TEXTURE, 1.0F);
             }

@@ -152,9 +152,9 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
 
     public int getTaskTimeConfig() {
         if (ServerLifecycleHooks.getCurrentServer().isDedicatedServer()) {
-            return FactionConfig.SERVER.taskDurationDedicatedServer.get();
+            return FactionConfig.server().taskDurationDedicatedServer.get();
         }
-        return FactionConfig.SERVER.taskDurationSinglePlayer.get();
+        return FactionConfig.server().taskDurationSinglePlayer.get();
     }
 
     // task filter -----------------------------------------------------------------------------------------------------
@@ -378,7 +378,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
         if (!wrapper.tasks.isEmpty()) {
             this.removeLockedTasks(wrapper.getTaskInstances());
         }
-        wrapper.taskAmount = wrapper.taskAmount < 0 ? player.getRandom().nextInt(FactionConfig.SERVER.taskMasterMaxTaskAmount.get()) + 1 - wrapper.lessTasks : wrapper.taskAmount;
+        wrapper.taskAmount = wrapper.taskAmount < 0 ? player.getRandom().nextInt(FactionConfig.server().taskMasterMaxTaskAmount.get()) + 1 - wrapper.lessTasks : wrapper.taskAmount;
         if (wrapper.tasks.size() < wrapper.taskAmount) {
             List<Holder.Reference<Task>> tasks = this.registry.listElements().collect(Collectors.toList());
             Collections.shuffle(tasks);

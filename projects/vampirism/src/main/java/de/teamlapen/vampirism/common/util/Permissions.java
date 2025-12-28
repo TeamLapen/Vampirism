@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
+import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,12 +28,12 @@ public class Permissions {
     }
 
     public static boolean isSetupCorrectly(ServerPlayer player) {
-        return !ModConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, GENERAL_CHECK);
+        return !FactionConfig.server().usePermissions.get() || PermissionAPI.getPermission(player, GENERAL_CHECK);
     }
 
     public record Permission(PermissionNode<Boolean> node) {
         public boolean isAllowed(ServerPlayer player) {
-            return !ModConfig.SERVER.usePermissions.get() || PermissionAPI.getPermission(player, this.node);
+            return !FactionConfig.server().usePermissions.get() || PermissionAPI.getPermission(player, this.node);
         }
 
         public boolean isDisallowed(ServerPlayer player) {

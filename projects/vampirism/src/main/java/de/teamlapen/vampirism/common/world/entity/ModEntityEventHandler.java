@@ -106,8 +106,6 @@ public class ModEntityEventHandler {
         }
     }
 
-    private final Set<Identifier> unknownZombies = new HashSet<>();
-
     private boolean warnAboutGolem = true;
 
     @SubscribeEvent
@@ -156,7 +154,7 @@ public class ModEntityEventHandler {
             //  Individual entity class changes below. Will return once processed
 
             //Creeper AI changes for AvoidedByCreepers Skill
-            if (ModConfig.BALANCE.creeperIgnoreVampire.get()) {
+            if (ModConfig.balance().creeperIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Creeper) {
                     ((Creeper) event.getEntity()).goalSelector.addGoal(3, new AvoidEntityGoal<>((Creeper) event.getEntity(), Player.class, 20, 1.1, 1.3, (target) -> Helper.appearsAsVampire(target, event.getEntity())));
                     //noinspection unchecked
@@ -167,7 +165,7 @@ public class ModEntityEventHandler {
             }
 
             //Zombie AI changes
-            if (ModConfig.BALANCE.zombieIgnoreVampire.get()) {
+            if (ModConfig.balance().zombieIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Zombie) {
                     //noinspection unchecked
                     makeVampireFriendly("zombie", (Zombie) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, type -> type == EntityType.ZOMBIE || type == EntityType.HUSK || type == EntityType.ZOMBIE_VILLAGER || type == EntityType.DROWNED);
@@ -178,7 +176,7 @@ public class ModEntityEventHandler {
                 }
             }
 
-            if (ModConfig.BALANCE.skeletonIgnoreVampire.get()) {
+            if (ModConfig.balance().skeletonIgnoreVampire.get()) {
                 if (event.getEntity() instanceof Skeleton || event.getEntity() instanceof Stray) {
                     //noinspection unchecked
                     makeVampireFriendly("skeleton", (AbstractSkeleton) event.getEntity(), NearestAttackableTargetGoal.class, Player.class, 2, type -> type == EntityType.SKELETON);
@@ -223,7 +221,7 @@ public class ModEntityEventHandler {
         if (event.getEntity() instanceof Player player) {
             HunterPlayer hunter = HunterPlayer.get(player);
             if (hunter.isDisguised()) {
-                event.modifyVisibility((hunter.getSpecialAttributes().fullHunterCoat != null ? 0.5 : 1) * ModConfig.BALANCE.haDisguiseVisibilityMod.get());
+                event.modifyVisibility((hunter.getSpecialAttributes().fullHunterCoat != null ? 0.5 : 1) * ModConfig.balance().haDisguiseVisibilityMod.get());
             }
         }
     }

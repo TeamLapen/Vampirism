@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.structures.huntercamp;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.factions.common.util.StructureUtil;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModStructures;
@@ -57,8 +58,8 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     protected boolean testPreconditions(@NotNull WorldGenLevel worldIn, @NotNull StructureManager manager, @NotNull ChunkPos chunkPos) {
-        if (!ModConfig.COMMON.enableHunterTentGeneration.get()) return false;
-        return UtilLib.getStructureStartAt(worldIn.getLevel(), this.pos, StructureTags.VILLAGE).isEmpty();
+        if (!ModConfig.common().enableHunterTentGeneration.get()) return false;
+        return StructureUtil.getStructureStartAt(worldIn.getLevel(), this.pos, StructureTags.VILLAGE).isEmpty();
     }
 
     public static class Fireplace extends HunterCampPieces {
@@ -109,7 +110,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             }
 
             //generation
-            this.placeBlock(worldIn, ModConfig.COMMON.useVanillaCampfire.get() ? Blocks.CAMPFIRE.defaultBlockState() : ModBlocks.FIRE_PLACE.get().defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, ModConfig.common().useVanillaCampfire.get() ? Blocks.CAMPFIRE.defaultBlockState() : ModBlocks.FIRE_PLACE.get().defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
             this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), 1, 1, 1, structureBoundingBoxIn);
         }
 

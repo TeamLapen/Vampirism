@@ -21,12 +21,12 @@ public class RegenVampireAction extends DefaultVampireAction implements ILasting
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaRegenerationCooldown.get() * 20;
+        return ModConfig.balance().vaRegenerationCooldown.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaRegenerationEnabled.get();
+        return ModConfig.balance().vaRegenerationEnabled.get();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class RegenVampireAction extends DefaultVampireAction implements ILasting
 
     @Override
     public int getDuration(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaRegenerationDuration.get() * 20;
+        return ModConfig.balance().vaRegenerationDuration.get() * 20;
     }
 
     @Override

@@ -51,6 +51,6 @@ public class NightVision implements IVampireVision {
 
     @Override
     public boolean isEnabled() {
-        return !ModConfig.BALANCE.vpNightVisionDisabled.get();
+        return !ModConfig.balance().vpNightVisionDisabled.get();
     }
 }

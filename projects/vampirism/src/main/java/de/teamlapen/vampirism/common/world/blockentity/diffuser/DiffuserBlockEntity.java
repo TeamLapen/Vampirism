@@ -170,7 +170,7 @@ public abstract class DiffuserBlockEntity extends PlayerOwnedBlockEntity {
             blockEntity.items.set(SLOT_FUEL, fuelStack);
             hasChanged = true;
         } else {
-            int maxBootTimer = ModConfig.BALANCE.diffuserBootTime.get() * 20;
+            int maxBootTimer = ModConfig.balance().diffuserBootTime.get() * 20;
             if (blockEntity.bootTimer == 0) {
                 blockEntity.deactivateEffect(level, blockPos, blockState);
                 blockEntity.bootTimer = maxBootTimer;

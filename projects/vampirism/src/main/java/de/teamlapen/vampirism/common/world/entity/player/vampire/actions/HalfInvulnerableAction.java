@@ -18,17 +18,17 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return 20 * (ModConfig.BALANCE.vaHalfInvulnerableCooldown.get());
+        return 20 * (ModConfig.balance().vaHalfInvulnerableCooldown.get());
     }
 
     @Override
     public int getDuration(IVampirePlayer player) {
-        return 20 * (ModConfig.BALANCE.vaHalfInvulnerableDuration.get());
+        return 20 * (ModConfig.balance().vaHalfInvulnerableDuration.get());
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaHalfInvulnerableEnabled.get();
+        return ModConfig.balance().vaHalfInvulnerableEnabled.get();
     }
 
     @Override

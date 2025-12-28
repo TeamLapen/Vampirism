@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.entity.player.vampire.vision;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.client.OptifineHandler;
+import de.teamlapen.vampirism.common.config.CommonConfig;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.network.chat.Component;
@@ -23,9 +24,10 @@ public class BloodVision implements IVampireVision {
         ((VampirePlayer) player).getSkillProperties().blood_vision = true;
         Player entity = player.asEntity();
         if (entity.level().isClientSide() && OptifineHandler.isShaders()) {
-            if (!ModConfig.COMMON.optifineBloodvisionWarning.get()) {
-                ModConfig.COMMON.optifineBloodvisionWarning.set(true);
-                ModConfig.COMMON.optifineBloodvisionWarning.save();
+            CommonConfig config = ModConfig.common();
+            if (!config.optifineBloodvisionWarning.get()) {
+                config.optifineBloodvisionWarning.set(true);
+                config.optifineBloodvisionWarning.save();
                 entity.displayClientMessage(Component.translatable("text.vampirism.warning_optifine_bloodvision"), false);
             }
         }
@@ -43,6 +45,6 @@ public class BloodVision implements IVampireVision {
 
     @Override
     public boolean isEnabled() {
-        return !ModConfig.BALANCE.vpBloodVisionDisabled.get();
+        return !ModConfig.balance().vpBloodVisionDisabled.get();
     }
 }

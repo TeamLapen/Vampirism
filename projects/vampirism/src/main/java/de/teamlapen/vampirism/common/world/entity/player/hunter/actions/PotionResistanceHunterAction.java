@@ -21,17 +21,17 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
 
     @Override
     public int getCooldown(IHunterPlayer player) {
-        return ModConfig.BALANCE.haPotionResistanceCooldown.get();
+        return ModConfig.balance().haPotionResistanceCooldown.get();
     }
 
     @Override
     public int getDuration(IHunterPlayer player) {
-        return ModConfig.BALANCE.haPotionResistanceDuration.get();
+        return ModConfig.balance().haPotionResistanceDuration.get();
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.haPotionResistanceEnabled.get();
+        return ModConfig.balance().haPotionResistanceEnabled.get();
     }
 
     @Override

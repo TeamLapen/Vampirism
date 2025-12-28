@@ -105,7 +105,7 @@ public abstract class DiffuserMenu extends PlayerOwnedMenu {
         if (timer == 0) {
             return 1f;
         }
-        return Mth.clamp(1f - ((float) timer / (ModConfig.BALANCE.diffuserBootTime.get() * 20)), 0f, 1f);
+        return Mth.clamp(1f - ((float) timer / (ModConfig.balance().diffuserBootTime.get() * 20)), 0f, 1f);
     }
 
     protected static abstract class Factory<T extends DiffuserMenu> extends PlayerOwnedMenu.Factory<T> {

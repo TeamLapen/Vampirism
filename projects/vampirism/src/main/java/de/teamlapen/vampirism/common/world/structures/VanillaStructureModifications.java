@@ -67,7 +67,7 @@ public class VanillaStructureModifications {
      */
     private static void replaceTemples(@NotNull RegistryAccess dynamicRegistries, @NotNull Map<Identifier, Map<String, StructurePoolElement>> patternReplacements) {
         // return if temples should not be modified
-        if (!ModConfig.COMMON.villageReplaceTemples.get()) return;
+        if (!ModConfig.common().villageReplaceTemples.get()) return;
         // get jigsaw registry
         dynamicRegistries.lookup(Registries.TEMPLATE_POOL).ifPresent(jigsawRegistry -> {
             // for every desired pools
@@ -131,14 +131,14 @@ public class VanillaStructureModifications {
                     // create trainer house piece with desired village type
                     StructurePoolElement piece = singleJigsawPiece(reg.lookupOrThrow(Registries.PROCESSOR_LIST), "village/" + type.path + "/houses/hunter_trainer");
                     // add hunter trainer house with weight
-                    for (int i = 0; i < ModConfig.COMMON.villageHunterTrainerWeight.get(); i++) {
+                    for (int i = 0; i < ModConfig.common().villageHunterTrainerWeight.get(); i++) {
                         ((StructureTemplatePoolAccessor) pattern).getTemplates().add(piece);
                     }
 
                     // Add hunter trainer house to the weighted list for better mod compat if other mods read this field instead of templates
                     // (ex: Repurposed Structures)
                     List<Pair<StructurePoolElement, Integer>> weightedElementList = new ArrayList<>(((StructureTemplatePoolAccessor) pattern).getRawTemplates());
-                    weightedElementList.add(new Pair<>(piece, ModConfig.COMMON.villageHunterTrainerWeight.get()));
+                    weightedElementList.add(new Pair<>(piece, ModConfig.common().villageHunterTrainerWeight.get()));
                     ((StructureTemplatePoolAccessor) pattern).setRawTemplates(weightedElementList);
                 });
             });
@@ -156,14 +156,14 @@ public class VanillaStructureModifications {
             // get the pool if present
             patternRegistry.getOptional(pool).ifPresent((pattern) -> {
                 // add totem with weight
-                for (int i = 0; i < ModConfig.COMMON.villageTotemWeight.get(); ++i) {
+                for (int i = 0; i < ModConfig.common().villageTotemWeight.get(); ++i) {
                     ((StructureTemplatePoolAccessor) pattern).getTemplates().add(totem);
                 }
 
                 // Add totem house to the weighted list for better mod compat if other mods read this field instead of templates
                 // (ex: Repurposed Structures)
                 List<Pair<StructurePoolElement, Integer>> weightedElementList = new ArrayList<>(((StructureTemplatePoolAccessor) pattern).getRawTemplates());
-                weightedElementList.add(new Pair<>(totem, ModConfig.COMMON.villageTotemWeight.get()));
+                weightedElementList.add(new Pair<>(totem, ModConfig.common().villageTotemWeight.get()));
                 ((StructureTemplatePoolAccessor) pattern).setRawTemplates(weightedElementList);
             });
         }));

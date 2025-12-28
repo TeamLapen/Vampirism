@@ -238,7 +238,7 @@ public class TotemHelper {
             points.clear();
             list.forEach(stream -> stream.forEach(point -> {
                 if (!finished.contains(point)) {
-                    if (point.getPos().closerThan(pos, FactionConfig.SERVER.viMaxTotemRadius.get())) {
+                    if (point.getPos().closerThan(pos, FactionConfig.server().viMaxTotemRadius.get())) {
                         points.add(point);
                     }
                 }

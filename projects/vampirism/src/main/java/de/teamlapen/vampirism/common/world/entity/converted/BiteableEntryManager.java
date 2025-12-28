@@ -38,7 +38,7 @@ public class BiteableEntryManager {
      */
     @NotNull
     public IEntityBlood calculate(@NotNull PathfinderMob creature) {
-        if (!ModConfig.SERVER.autoCalculateEntityBlood.get()) return EntityBloodEntry.EMPTY;
+        if (!ModConfig.server().autoCalculateEntityBlood.get()) return EntityBloodEntry.EMPTY;
         EntityType<?> type = creature.getType();
         Identifier id = RegUtil.id(type);
         if (isEntityBlacklisted(creature)) {
@@ -105,7 +105,7 @@ public class BiteableEntryManager {
      * @return weather the entity type is blacklisted by the server config or not
      */
     private boolean isConfigBlackListed(@NotNull Identifier id) {
-        List<? extends String> list = ModConfig.SERVER.blacklistedBloodEntity.get();
+        List<? extends String> list = ModConfig.server().blacklistedBloodEntity.get();
         return list.contains(id.toString());
     }
 

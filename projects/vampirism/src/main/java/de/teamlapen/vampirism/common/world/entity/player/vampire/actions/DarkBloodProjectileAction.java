@@ -20,16 +20,16 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown(@NotNull IVampirePlayer player) {
-        int cooldown = ModConfig.BALANCE.vaDarkBloodProjectileCooldown.get() * 20;
+        int cooldown = ModConfig.balance().vaDarkBloodProjectileCooldown.get() * 20;
         if (player.getRefinementHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_AOE)) {
-            cooldown *= ModConfig.BALANCE.vrDarkBloodProjectileAOECooldownMod.get();
+            cooldown *= ModConfig.balance().vrDarkBloodProjectileAOECooldownMod.get();
         }
         return cooldown;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaDarkBloodProjectileEnabled.get();
+        return ModConfig.balance().vaDarkBloodProjectileEnabled.get();
     }
 
     @Override
@@ -42,11 +42,11 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         Player shooter = player.asEntity();
         IRefinementHandler<IVampirePlayer> skillHandler = player.getRefinementHandler();
 
-        float directDamage = ModConfig.BALANCE.vaDarkBloodProjectileDamage.get().floatValue();
+        float directDamage = ModConfig.balance().vaDarkBloodProjectileDamage.get().floatValue();
         float indirectDamage = directDamage * 0.5f;
         float speed = 0.95f;
         if (skillHandler.isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_DAMAGE)) {
-            float modifier = ModConfig.BALANCE.vrDarkBloodProjectileDamageMod.get().floatValue();
+            float modifier = ModConfig.balance().vrDarkBloodProjectileDamageMod.get().floatValue();
             directDamage *= modifier;
             indirectDamage *= modifier;
         }
@@ -62,7 +62,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
                 entity.excludeShooter();
                 if (i == 0) {
                     entity.setDamage(0, directDamage);
-                    entity.explode(ModConfig.BALANCE.vrDarkBloodProjectileAOERange.get(), null);
+                    entity.explode(ModConfig.balance().vrDarkBloodProjectileAOERange.get(), null);
                 }
             }
         } else {

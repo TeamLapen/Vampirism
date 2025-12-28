@@ -16,7 +16,7 @@ public class DisguiseOverlay extends TextureOverlay {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
-        if (canRenderOverlays() && ModConfig.CLIENT.enableDisguiseOverlayRendering.get()) {
+        if (canRenderOverlays() && ModConfig.client().enableDisguiseOverlayRendering.get()) {
             HunterSkillProperties huntSpecial = HunterPlayer.get(this.player()).getSpecialAttributes();
             if (huntSpecial.isConcealed()) {
                 scaleBy(huntSpecial.getConcealmentProgress(), 1 / 4f, 2F, 1.0F, graphics);

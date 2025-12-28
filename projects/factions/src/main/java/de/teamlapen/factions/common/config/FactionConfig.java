@@ -1,52 +1,107 @@
 package de.teamlapen.factions.common.config;
 
+import de.teamlapen.factions.FactionsMod;
+import de.teamlapen.factions.Services;
 import de.teamlapen.factions.client.config.ClientConfig;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.IConfigSpec;
+import net.neoforged.fml.config.ModConfig.Type;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-public class FactionConfig {
+import java.util.function.Function;
 
-    public static final Logger LOGGER = LogManager.getLogger();
+public class FactionConfig extends Services {
 
+    public final Logger LOGGER = LogManager.getLogger();
 
-    public static final ClientConfig CLIENT;
-    public static final ServerConfig SERVER;
-    public static final CommonConfig COMMON;
+    private final Config<ClientConfig> client;
+    private final Config<ServerConfig> server;
+    private final Config<CommonConfig> common;
+    private final ConfigHelper helper;
 
-    private static final ModConfigSpec clientSpec;
-    private static final ModConfigSpec serverSpec;
-    private static final ModConfigSpec commonSpec;
-
-    static {
-        final Pair<ClientConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ClientConfig::new);
-        clientSpec = specPair.getRight();
-        CLIENT = specPair.getLeft();
+    public FactionConfig(ModContainer container) {
+        super(container);
+        this.client = Config.create(ClientConfig::new);
+        this.server = Config.create(ServerConfig::new);
+        this.common = Config.create(CommonConfig::new);
+        this.helper = new ConfigHelper(this);
     }
 
-    static {
-        final Pair<ServerConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ServerConfig::new);
-        serverSpec = specPair.getRight();
-        SERVER = specPair.getLeft();
+    @Override
+    protected void registerModBus(IEventBus bus) {
+        bus.addListener(this::setup);
     }
 
-    static {
-        final Pair<CommonConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(CommonConfig::new);
-        commonSpec = specPair.getRight();
-        COMMON = specPair.getLeft();
+    //<editor-fold desc="Static Accessors">
+
+    public static ClientConfig client() {
+        return FactionsMod.config().client.config();
     }
 
-    public static void register(ModContainer modContainer) {
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, clientSpec);
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, serverSpec);
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, commonSpec);
+    public static ServerConfig server() {
+        return FactionsMod.config().server.config();
     }
 
-    public static boolean isClientConfigSpec(IConfigSpec specs) {
-        return specs == clientSpec;
+    public static CommonConfig common() {
+        return FactionsMod.config().common.config();
     }
 
+    public static ConfigHelper helper() {
+        return FactionsMod.config().helper;
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Accessors">
+
+    public Config<ClientConfig> clientConfig() {
+        return this.client;
+    }
+
+    public Config<ServerConfig> serverConfig() {
+        return this.server;
+    }
+
+    public Config<CommonConfig> commonConfig() {
+        return this.common;
+    }
+
+    public boolean isClientConfigSpec(IConfigSpec specs) {
+        return this.client.isSpec(specs);
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Event Handler">
+
+    public void setup(NewRegistryEvent event) {
+        container().registerConfig(Type.CLIENT, client.spec());
+        container().registerConfig(Type.SERVER, server.spec());
+        container().registerConfig(Type.COMMON, common.spec());
+    }
+
+    //</editor-fold>
+
+    public record Config<T>(T config, ModConfigSpec spec) {
+
+        public static <T> Config<T> create(Function<ModConfigSpec.Builder, T> consumer) {
+            var builder = new ModConfigSpec.Builder().configure(consumer);
+            return new Config<>(builder.getLeft(), builder.getRight());
+        }
+
+        public boolean isSpec(IConfigSpec spec) {
+            return this.spec == spec;
+        }
+
+        public boolean isLoaded() {
+            return this.spec.isLoaded();
+        }
+    }
 }

@@ -14,7 +14,7 @@ public class WeaponOil extends ApplicableOil implements IWeaponOil {
     }
 
     public boolean canBeApplied(ItemStack stack) {
-        return stack.has(DataComponents.WEAPON) && stack.is(ModItemTags.APPLICABLE_OIL_SWORD) == ModConfig.BALANCE.itApplicableOilSwordReverse.get();
+        return stack.has(DataComponents.WEAPON) && stack.is(ModItemTags.APPLICABLE_OIL_SWORD) == ModConfig.balance().itApplicableOilSwordReverse.get();
     }
 
     @Override

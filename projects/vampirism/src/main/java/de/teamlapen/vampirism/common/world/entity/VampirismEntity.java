@@ -301,7 +301,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
             if (this.tickCount % 256 == 0 && this.isAlive()) {
                 boolean current = this instanceof Enemy;
                 boolean convert = false;
-                de.teamlapen.factions.common.config.ServerConfig.IMobOptions opt = FactionConfig.SERVER.entityIMob.get();
+                de.teamlapen.factions.common.config.ServerConfig.IMobOptions opt = FactionConfig.server().entityIMob.get();
                 if (ServerLifecycleHooks.getCurrentServer().isDedicatedServer()) {
                     convert = (opt == de.teamlapen.factions.common.config.ServerConfig.IMobOptions.ALWAYS_IMOB) != current;
                 } else {

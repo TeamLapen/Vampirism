@@ -43,22 +43,22 @@ public class SunscreenBeaconBlock extends BaseContainerBlock implements IBlockWi
     @Override
     public void appendHoverText(ItemStack stack, Item.@Nullable TooltipContext context, TooltipDisplay display, TooltipFlag tooltipFlag, Consumer<Component> tooltips) {
         tooltips.accept(Component.translatable(getDescriptionId() + ".tooltip1").withStyle(ChatFormatting.GRAY));
-        tooltips.accept(Component.translatable(getDescriptionId() + ".tooltip2", ModConfig.SERVER.sunscreenBeaconDistance.get()).withStyle(ChatFormatting.GRAY)); //Only add this if a world is present. Otherwise, the config might not be ready as this is also called during search tree population before setup
+        tooltips.accept(Component.translatable(getDescriptionId() + ".tooltip2", ModConfig.server().sunscreenBeaconDistance.get()).withStyle(ChatFormatting.GRAY)); //Only add this if a world is present. Otherwise, the config might not be ready as this is also called during search tree population before setup
     }
 
     @Override
     public boolean canHarvestBlock(BlockState state, BlockGetter level, BlockPos pos, Player player) {
-        return ModConfig.SERVER.sunscreenBeaconMineable.get();
+        return ModConfig.server().sunscreenBeaconMineable.get();
     }
 
     @Override
     protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
-        return ModConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : -1;
+        return ModConfig.server().sunscreenBeaconMineable.get() ? 50 : -1;
     }
 
     @Override
     public float getExplosionResistance() {
-        return ModConfig.SERVER.sunscreenBeaconMineable.get() ? 50 : 3600000;
+        return ModConfig.server().sunscreenBeaconMineable.get() ? 50 : 3600000;
     }
 
     @Override

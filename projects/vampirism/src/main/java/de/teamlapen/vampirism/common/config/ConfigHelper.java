@@ -13,7 +13,7 @@ public class ConfigHelper {
     }
 
     void onBalanceConfigChanged(@NotNull ModConfigEvent event) {
-        double asDouble = ModConfig.BALANCE.vaDarkStalkerBloodConsumption.getAsDouble();
+        double asDouble = ModConfig.balance().vaDarkStalkerBloodConsumption.getAsDouble();
         this.ticksPerBlood = (int) (VReference.FOOD_TO_FLUID_BLOOD / asDouble);
     }
 }

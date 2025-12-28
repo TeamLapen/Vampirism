@@ -28,6 +28,6 @@ public class VampirePlayerSkillProperties {
     }
 
     public boolean isCannotInteract() {
-        return isDBNO || (bat && !ModConfig.BALANCE.vaBatAllowInteraction.get());
+        return isDBNO || (bat && !ModConfig.balance().vaBatAllowInteraction.get());
     }
 }

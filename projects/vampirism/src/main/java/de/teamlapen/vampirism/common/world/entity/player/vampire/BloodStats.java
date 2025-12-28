@@ -101,7 +101,7 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
             this.bloodExhaustionLevel -= bloodExhaustionGate;
             if (bloodSaturationLevel > 0) {
                 bloodSaturationLevel = Math.max(bloodSaturationLevel - 1F, 0F);
-            } else if (enumDifficulty != Difficulty.PEACEFUL || ModConfig.BALANCE.vpBloodUsagePeaceful.get()) {
+            } else if (enumDifficulty != Difficulty.PEACEFUL || ModConfig.balance().vpBloodUsagePeaceful.get()) {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }

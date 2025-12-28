@@ -32,7 +32,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onFovOffsetUpdate(@NotNull ComputeFovModifierEvent event) {
-        if (ModConfig.CLIENT.disableFovChange.get() && Helper.isVampire(event.getPlayer())) {
+        if (ModConfig.client().disableFovChange.get() && Helper.isVampire(event.getPlayer())) {
             AttributeInstance speed = event.getPlayer().getAttribute(Attributes.MOVEMENT_SPEED);
             AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.ID);
             if (vampirespeed == null) {

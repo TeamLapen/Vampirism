@@ -48,7 +48,7 @@ public class IntegrationsNotifier {
      * @return If already notified
      */
     private static boolean checkAndUpdateAlreadyNotified(@NotNull List<String> mods) {
-        String saved = ModConfig.COMMON.integrationsNotifier.get();
+        String saved = ModConfig.common().integrationsNotifier.get();
         if ("never".equals(saved) || "'never'".equals(saved)) {
             return true;
         }
@@ -59,7 +59,7 @@ public class IntegrationsNotifier {
             return true;
         }
         Collections.addAll(missing, previous);
-        ModConfig.COMMON.integrationsNotifier.set(StringUtils.join(missing, ":"));
+        ModConfig.common().integrationsNotifier.set(StringUtils.join(missing, ":"));
         return false;
     }
 }

@@ -23,7 +23,7 @@ public class VampireFangItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide()) {
-            if (ModConfig.SERVER.disableFangInfection.get()) {
+            if (ModConfig.server().disableFangInfection.get()) {
                 player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
             } else {
                 if (Helper.canBecomeVampire(player)) {

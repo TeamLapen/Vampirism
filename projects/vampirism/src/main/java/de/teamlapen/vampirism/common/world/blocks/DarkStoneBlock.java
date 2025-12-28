@@ -51,7 +51,7 @@ public class DarkStoneBlock extends Block {
                     int bloodLeft = blood - 1;
                     ItemStack resultBottle;
 
-                    if (bloodLeft <= 0 && ModConfig.COMMON.autoConvertGlassBottles.get()) {
+                    if (bloodLeft <= 0 && ModConfig.common().autoConvertGlassBottles.get()) {
                         resultBottle = new ItemStack(Items.GLASS_BOTTLE);
                     } else {
                         resultBottle = bottle;
@@ -62,7 +62,7 @@ public class DarkStoneBlock extends Block {
                         if (!player.addItem(resultBottle)) {
                             player.drop(resultBottle, false);
                         }
-                    } else if (bloodLeft <= 0 && ModConfig.COMMON.autoConvertGlassBottles.get()) {
+                    } else if (bloodLeft <= 0 && ModConfig.common().autoConvertGlassBottles.get()) {
                         player.setItemInHand(hand, resultBottle);
                     }
                 }

@@ -182,7 +182,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
      * @return 0-100. 80 if in stage 2
      */
     public int getCaptureProgress() {
-        return this.capturingFaction == null ? 0 : this.phase == CAPTURE_PHASE.PHASE_2 ? 80 : (int) (this.captureTimer / (float) FactionConfig.SERVER.viPhase1Duration.get() * 80f);
+        return this.capturingFaction == null ? 0 : this.phase == CAPTURE_PHASE.PHASE_2 ? 80 : (int) (this.captureTimer / (float) FactionConfig.server().viPhase1Duration.get() * 80f);
     }
 
     public int getCapturingColors() {
@@ -302,7 +302,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     public void notifyNearbyPlayers(@NotNull Component textComponent) {
         //noinspection ConstantConditions
         for (Player player : this.level.players()) {
-            if (player.distanceToSqr(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ()) > FactionConfig.SERVER.viNotifyDistanceSQ.get()) {
+            if (player.distanceToSqr(this.worldPosition.getX(), this.worldPosition.getY(), this.worldPosition.getZ()) > FactionConfig.server().viNotifyDistanceSQ.get()) {
                 continue;
             }
             player.displayClientMessage(textComponent, true);
@@ -471,7 +471,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             int beds = (int) ((ServerLevel) level).getPoiManager().getInRange(pointOfInterestType -> pointOfInterestType.is(PoiTypes.HOME), this.worldPosition, ((int) Math.sqrt(Math.pow(this.getVillageArea().getXsize(), 2) + Math.pow(this.getVillageArea().getZsize(), 2))) / 2, PoiManager.Occupancy.ANY).count();
             boolean spawnTaskMaster = RNG.nextInt(6) == 0;
             int villagerCount = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea().inflate(20)).size();
-            int max = Math.min(beds, FactionConfig.SERVER.viMaxVillagerRespawn.get());
+            int max = Math.min(beds, FactionConfig.server().viMaxVillagerRespawn.get());
             if (villagerCount < max) {
                 var villager = FactionEventFactory.fireSpawnNewVillagerEvent(this, null, EntityType.VILLAGER.create(this.level, EntitySpawnReason.EVENT), false);
                 spawnEntity(villager);
@@ -495,7 +495,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         }
 
         //Random raids
-        if (timeSinceLastRaid > 12000 && this.level.getDifficulty() != Difficulty.PEACEFUL && this.level.random.nextFloat() < FactionConfig.SERVER.viRandomRaidChance.get()) {
+        if (timeSinceLastRaid > 12000 && this.level.getDifficulty() != Difficulty.PEACEFUL && this.level.random.nextFloat() < FactionConfig.server().viRandomRaidChance.get()) {
             List<Holder<IFaction<?>>> factions = ModRegistries.FACTIONS.get(FactionTags.HAS_RANDOM_RAID).stream().flatMap(HolderSet.ListBacked::stream).collect(Collectors.toList());
             factions.remove(this.controllingFaction);
             this.initiateCapture(factions.get(this.level.random.nextInt(factions.size())), null, 0, -1f);
@@ -568,7 +568,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         } else {
             switch (this.phase) {
                 case PHASE_1_NEUTRAL -> {
-                    if (this.captureTimer >= FactionConfig.SERVER.viPhase1Duration.get()) {
+                    if (this.captureTimer >= FactionConfig.server().viPhase1Duration.get()) {
                         this.captureTimer = 1;
                         this.setupPhase2();
                         this.setChanged();
@@ -581,7 +581,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
                     }
                 }
                 case PHASE_1_OPPOSITE -> {
-                    if (captureTimer >= FactionConfig.SERVER.viPhase1Duration.get()) {
+                    if (captureTimer >= FactionConfig.server().viPhase1Duration.get()) {
                         captureTimer = 1;
                         this.setupPhase2();
                         this.setChanged();
@@ -876,7 +876,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     }
 
     private void makeAgressive() {
-        if (FactionConfig.SERVER.disableVillageGuards.get()) return;
+        if (FactionConfig.server().disableVillageGuards.get()) return;
         //noinspection ConstantConditions
         if (!this.level.isClientSide()) {
             List<Villager> villagerEntities = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea());
@@ -899,7 +899,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     private void handleBossBar(float defenderMaxHealth, float defenderHealth, float attackerMaxHealth, float attackerHealth) {
         float neutralPerc;
         switch (this.phase) {
-            case PHASE_1_NEUTRAL, PHASE_1_OPPOSITE -> neutralPerc = this.captureTimer / (float) FactionConfig.SERVER.viPhase1Duration.get();
+            case PHASE_1_NEUTRAL, PHASE_1_OPPOSITE -> neutralPerc = this.captureTimer / (float) FactionConfig.server().viPhase1Duration.get();
             case PHASE_2 -> {
                 neutralPerc = 1f;
                 this.captureInfo.setName(Component.translatable("text.factions.village.bossinfo.remaining"));
@@ -1072,7 +1072,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             this.attackingFaction = totem.capturingFaction;
             this.villageArea = totem.getVillageAreaReduced();
             this.pos = totem.worldPosition;
-            this.shouldForceTargets = totem.captureForceTargetTimer > FactionConfig.SERVER.viForceTargetTime.get();
+            this.shouldForceTargets = totem.captureForceTargetTimer > FactionConfig.server().viForceTargetTime.get();
         }
 
         @Nullable

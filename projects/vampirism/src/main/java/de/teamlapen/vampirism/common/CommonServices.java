@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common;
 
+import de.teamlapen.factions.Services;
 import de.teamlapen.factions.api.event.AddFactionTagEvent;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.IVampirismServices;
@@ -103,10 +104,6 @@ public class CommonServices extends Services implements IVampirismServices {
         this.registryManager.registerModEventHandler(bus);
         bus.register(this.interModCommunicationHandler);
         bus.addListener(ModCapabilities::registerCapabilities);
-        bus.addListener(NewRegistryEvent.class, (event) -> {
-            ModConfig.buildBalanceConfig();
-            ModConfig.register(this.container());
-        });
         bus.addListener(this.versionUpdater::catchModVersionMismatch);
         bus.addListener(FMLCommonSetupEvent.class, e -> e.enqueueWork(ModEntitySelectors::registerSelectors));
         bus.addListener(FMLLoadCompleteEvent.class, e -> e.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe));

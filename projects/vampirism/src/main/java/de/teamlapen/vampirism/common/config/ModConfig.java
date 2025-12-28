@@ -1,17 +1,19 @@
 package de.teamlapen.vampirism.common.config;
 
 
-import de.teamlapen.factions.common.config.FactionConfig;
+import de.teamlapen.factions.Services;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.client.config.ClientConfig;
-import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.config.IConfigSpec;
+import net.neoforged.fml.config.ModConfig.Type;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,60 +21,125 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
-@EventBusSubscriber(modid = REFERENCE.MODID)
-public class ModConfig {
+public class ModConfig extends Services {
 
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public static final ClientConfig CLIENT;
-    public static final ServerConfig SERVER;
-    public static final CommonConfig COMMON;
-    public static final @NotNull BalanceConfig BALANCE;
-    public static final @NotNull ConfigHelper HELPER = new ConfigHelper();
+    private final Config<ClientConfig> client;
+    private final Config<ServerConfig> server;
+    private final Config<CommonConfig> common;
+    private final BalanceConfig balance;
+    private final ConfigHelper helper = new ConfigHelper();
 
-    private static final ModConfigSpec clientSpec;
-    private static final ModConfigSpec serverSpec;
-    private static final ModConfigSpec commonSpec;
-    private static ModConfigSpec balanceSpec;
-    private static @Nullable BalanceBuilder balanceBuilder;
+    private ModConfigSpec balanceSpec;
+    private @Nullable BalanceBuilder balanceBuilder;
 
-    static {
-        final Pair<ClientConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ClientConfig::new);
-        clientSpec = specPair.getRight();
-        CLIENT = specPair.getLeft();
+    public ModConfig(ModContainer container) {
+        super(container);
+        this.client = Config.create(ClientConfig::new);
+        this.server = Config.create(ServerConfig::new);
+        this.common = Config.create(CommonConfig::new);
+
+        this.balanceBuilder = new BalanceBuilder();
+        this.balance = new BalanceConfig(balanceBuilder);
     }
 
-    static {
-        final Pair<ServerConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ServerConfig::new);
-        serverSpec = specPair.getRight();
-        SERVER = specPair.getLeft();
-    }
-
-    static {
-        final Pair<CommonConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(CommonConfig::new);
-        commonSpec = specPair.getRight();
-        COMMON = specPair.getLeft();
-    }
-
-    static {
-        balanceBuilder = new BalanceBuilder();
-        BALANCE = new BalanceConfig(balanceBuilder);
-    }
-
-    public static boolean isClientConfigSpec(IConfigSpec specs) {
-        return specs == clientSpec;
+    @Override
+    protected void registerModBus(IEventBus bus) {
+        bus.addListener(this::setup);
+        bus.addListener(this::onLoad);
+        bus.addListener(this::onReload);
     }
 
     @ThreadSafeAPI
-    public static <T extends BalanceBuilder.Conf> void addBalanceModification(@NotNull String key, @NotNull Consumer<T> modifier) {
-        if (balanceBuilder == null) {
+    public <T extends BalanceBuilder.Conf> void addBalanceModification(@NotNull String key, @NotNull Consumer<T> modifier) {
+        if (this.balanceBuilder == null) {
             throw new IllegalStateException("Must add balance modifications during mod construction");
         }
-        balanceBuilder.addBalanceModifier(key, modifier);
+        this.balanceBuilder.addBalanceModifier(key, modifier);
     }
 
-    public static void buildBalanceConfig() {
+    //<editor-fold desc="Static Accessors">
+
+    public static ClientConfig client() {
+        return VampirismMod.config().clientConfig();
+    }
+
+    public static CommonConfig common() {
+        return VampirismMod.config().commonConfig();
+    }
+
+    public static ServerConfig server() {
+        return VampirismMod.config().serverConfig();
+    }
+
+    public static BalanceConfig balance() {
+        return VampirismMod.config().balanceConfig();
+    }
+
+    public static ConfigHelper helper() {
+        return VampirismMod.config().configHelper();
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Accessors">
+
+    public ClientConfig clientConfig() {
+        return client.config();
+    }
+
+    public ServerConfig serverConfig() {
+        return server.config();
+    }
+
+    public CommonConfig commonConfig() {
+        return common.config();
+    }
+
+    public BalanceConfig balanceConfig() {
+        return balance;
+    }
+
+    public ConfigHelper configHelper() {
+        return helper;
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Event Handler">
+
+    private void setup(NewRegistryEvent event) {
+        buildBalanceConfig();
+        container().registerConfig(Type.COMMON, common.spec());
+        container().registerConfig(Type.CLIENT, client.spec());
+        container().registerConfig(Type.SERVER, server.spec());
+        container().registerConfig(Type.SERVER, balanceSpec, "vampirism-balance.toml");
+    }
+
+    public void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
+        if (configEvent.getConfig().getType() == Type.SERVER) {
+            VampirismMod.services().sunDamageRegistry().reloadConfiguration();
+        }
+        if (configEvent.getConfig().getSpec() == balanceSpec) {
+            helper.onBalanceConfigChanged(configEvent);
+        }
+    }
+
+    public void onReload(final ModConfigEvent.@NotNull Reloading configEvent) {
+        if (configEvent.getConfig().getType() == Type.SERVER) {
+            VampirismMod.services().sunDamageRegistry().reloadConfiguration();
+        }
+        if (configEvent.getConfig().getSpec() == balanceSpec) {
+            helper.onBalanceConfigChanged(configEvent);
+        }
+    }
+
+    //</editor-fold>
+
+    public void buildBalanceConfig() {
         if (balanceBuilder == null) return;
         /*
         Build balance configuration
@@ -80,50 +147,27 @@ public class ModConfig {
         final Pair<BalanceConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure((builder) -> {
             builder.comment("A ton of options which allow you to balance the mod to your desire");
             builder.push("balance");
-            balanceBuilder.build(BALANCE, builder);
+            balanceBuilder.build(balance, builder);
             builder.pop();
-            return BALANCE;
+            return balance;
         });
         balanceSpec = specPair.getRight();
         if (VampirismMod.inDev) {
-            balanceBuilder.checkFields(BALANCE);
+            balanceBuilder.checkFields(balance);
         }
         balanceBuilder = null;
     }
 
-    public static void register(ModContainer modContainer) {
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, commonSpec);
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, clientSpec);
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, serverSpec);
-        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, balanceSpec, "vampirism-balance.toml");
-    }
+    private record Config<T>(T config, ModConfigSpec spec) {
 
-    @SubscribeEvent
-    public static void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
-        if (configEvent.getConfig().getType() == net.neoforged.fml.config.ModConfig.Type.SERVER) {
-            VampirismMod.services().sunDamageRegistry().reloadConfiguration();
-        } else if (configEvent.getConfig().getType() == net.neoforged.fml.config.ModConfig.Type.CLIENT) {
-            if (FactionConfig.CLIENT.guiLevelOffsetY.get() == 0) {
-                FactionConfig.CLIENT.guiLevelOffsetY.set(47); //Temporary workaround to reset incorrect values
-            }
+        public static <T> Config<T> create(Function<ModConfigSpec.Builder, T> consumer) {
+            var builder = new ModConfigSpec.Builder().configure(consumer);
+            return new Config<>(builder.getLeft(), builder.getRight());
         }
-        if (configEvent.getConfig().getSpec() == balanceSpec) {
-            HELPER.onBalanceConfigChanged(configEvent);
-        }
-    }
 
-    @SubscribeEvent
-    public static void onReload(final ModConfigEvent.@NotNull Reloading configEvent) {
-        if (configEvent.getConfig().getType() == net.neoforged.fml.config.ModConfig.Type.SERVER) {
-            VampirismMod.services().sunDamageRegistry().reloadConfiguration();
+        public boolean isSpec(IConfigSpec spec) {
+            return this.spec == spec;
         }
-        if (configEvent.getConfig().getSpec() == balanceSpec) {
-            HELPER.onBalanceConfigChanged(configEvent);
-        }
-    }
-
-    public static boolean isBalanceSpec(ModConfigSpec spec) {
-        return spec == balanceSpec;
     }
 
 }

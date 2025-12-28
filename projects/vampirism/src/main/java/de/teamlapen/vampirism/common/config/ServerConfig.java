@@ -13,13 +13,11 @@ import java.util.List;
 public class ServerConfig {
 
     public final ModConfigSpec.BooleanValue enforceRenderForestFog;
-    public final ModConfigSpec.BooleanValue unlockAllSkills = FactionConfig.SERVER.unlockAllSkills;
     public final ModConfigSpec.IntValue sunscreenBeaconDistance;
     public final ModConfigSpec.BooleanValue sunscreenBeaconMineable;
     public final ModConfigSpec.BooleanValue autoCalculateEntityBlood;
     public final ModConfigSpec.BooleanValue playerCanTurnPlayer;
     public final ModConfigSpec.BooleanValue infectCreaturesSanguinare;
-    public final ModConfigSpec.BooleanValue usePermissions = FactionConfig.SERVER.usePermissions;
 
     public final ModConfigSpec.BooleanValue sundamageUnknownDimension;
     public final ModConfigSpec.ConfigValue<List<? extends String>> sundamageDimensionsOverridePositive;

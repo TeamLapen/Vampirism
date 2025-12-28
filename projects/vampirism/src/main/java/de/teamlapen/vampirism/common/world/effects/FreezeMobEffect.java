@@ -13,7 +13,7 @@ public class FreezeMobEffect extends ConfigAwareMobEffect {
 
     public FreezeMobEffect(MobEffectCategory category, int color) {
         super(category, color);
-        addAttributeModifier(Attributes.ATTACK_SPEED, ModEffects.FREEZE.getId(), () -> -ModConfig.BALANCE.vaFreezeAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+        addAttributeModifier(Attributes.ATTACK_SPEED, ModEffects.FREEZE.getId(), () -> -ModConfig.balance().vaFreezeAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     @Override

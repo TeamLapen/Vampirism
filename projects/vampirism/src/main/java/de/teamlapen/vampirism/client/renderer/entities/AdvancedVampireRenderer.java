@@ -32,7 +32,7 @@ public class AdvancedVampireRenderer extends DualBipedRenderer<AdvancedVampireEn
 
     public AdvancedVampireRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false), new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
-        if (ModConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
+        if (ModConfig.client().renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false)));
             this.addLayer(new AdvancedVampireEyeLayer(this));
             this.addLayer(new AdvancedVampireFangLayer(this));

@@ -45,7 +45,7 @@ public class VampireKillerBehavior implements IVampirismCrossbowArrow.ICrossbowA
 
     @Override
     public boolean canBeInfinite() {
-        return ModConfig.BALANCE.allowInfiniteSpecialArrows.get();
+        return ModConfig.balance().allowInfiniteSpecialArrows.get();
     }
 
     @Override

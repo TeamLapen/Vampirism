@@ -10,15 +10,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
-import org.jetbrains.annotations.NotNull;
 
 public class SunOverlay extends TextureOverlay {
 
     public static final Identifier SUN_TEXTURE = VResourceLocation.mod("textures/misc/sun.png");
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
-        if (canRenderOverlays() && ModConfig.CLIENT.enableSunOverlayRendering.get()) {
+    public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+        if (canRenderOverlays() && ModConfig.client().enableSunOverlayRendering.get()) {
             AbstractClientPlayer player = this.player();
             VampirePlayer vampire = VampirePlayer.get(player);
             MobEffectInstance effect = player.getEffect(ModEffects.SUNSCREEN);

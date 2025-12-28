@@ -26,17 +26,17 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
 
     @Override
     public int getCooldown(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaInvisibilityCooldown.get() * 20;
+        return ModConfig.balance().vaInvisibilityCooldown.get() * 20;
     }
 
     @Override
     public int getDuration(IVampirePlayer player) {
-        return ModConfig.BALANCE.vaInvisibilityDuration.get() * 20;
+        return ModConfig.balance().vaInvisibilityDuration.get() * 20;
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.vaInvisibilityEnabled.get();
+        return ModConfig.balance().vaInvisibilityEnabled.get();
     }
 
     @Override

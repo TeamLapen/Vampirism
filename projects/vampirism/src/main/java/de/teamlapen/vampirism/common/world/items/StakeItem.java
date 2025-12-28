@@ -37,8 +37,8 @@ public class StakeItem extends VampirismSwordItem {
         } else if (attacker instanceof IAdvancedHunter) {
             instaKillLowHealth = true;// make more out of this
         }
-        if (instaKillLowHealth && target.getHealth() <= (ModConfig.BALANCE.hsInstantKill1MaxHealth.get() * target.getMaxHealth())) {
-            return !ModConfig.BALANCE.hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true);
+        if (instaKillLowHealth && target.getHealth() <= (ModConfig.balance().hsInstantKill1MaxHealth.get() * target.getMaxHealth())) {
+            return !ModConfig.balance().hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true);
 
         }
         return false;

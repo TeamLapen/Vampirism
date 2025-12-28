@@ -132,7 +132,7 @@ public class DamageHandler {
                 }
 
 
-                double amount = (affect * (ModConfig.BALANCE.holyWaterSplashDamage.get() * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? ModConfig.BALANCE.holyWaterTierDamageInc.get() : (ModConfig.BALANCE.holyWaterTierDamageInc.get() * ModConfig.BALANCE.holyWaterTierDamageInc.get()))) + 0.5D);
+                double amount = (affect * (ModConfig.balance().holyWaterSplashDamage.get() * (strength == EnumStrength.WEAK ? 1 : strength == EnumStrength.MEDIUM ? ModConfig.balance().holyWaterTierDamageInc.get() : (ModConfig.balance().holyWaterTierDamageInc.get() * ModConfig.balance().holyWaterTierDamageInc.get()))) + 0.5D);
                 if (entity instanceof Player player) {
                     int l = VampirePlayer.get(player).getLevel();
                     amount = scaleDamageWithLevel(l, REFERENCE.HIGHEST_VAMPIRE_LEVEL, amount * 0.8, amount * 1.3);
@@ -157,10 +157,10 @@ public class DamageHandler {
         }
         if (vampire) {
             if (strength.isStrongerThan(EnumStrength.WEAK)) {
-                entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, ModConfig.BALANCE.holyWaterNauseaDuration.get(), 2));
+                entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, ModConfig.balance().holyWaterNauseaDuration.get(), 2));
             }
             if (strength.isStrongerThan(EnumStrength.MEDIUM)) {
-                entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, ModConfig.BALANCE.holyWaterBlindnessDuration.get(), 1));
+                entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, ModConfig.balance().holyWaterBlindnessDuration.get(), 1));
             }
         }
     }

@@ -37,7 +37,7 @@ public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEnti
                 ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), x -> new ClothedModel<>(x, true)),
                 ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), x -> new ClothedModel<>(x, false)),
                 context.getEquipmentRenderer()));
-        if (ModConfig.CLIENT.renderAdvancedMobPlayerFaces.get()) {
+        if (ModConfig.client().renderAdvancedMobPlayerFaces.get()) {
             this.addLayer(new PlayerFaceOverlayLayer<>(this, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false)));
             this.getModel().head.visible = false;
             this.getModel().hat.visible = false;

@@ -91,7 +91,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         }
         if (level() instanceof ServerLevel level) {
             if (isGettingSundamage(level()) && this.isAlive()) {
-                if (ModConfig.BALANCE.vpSundamageInstantDeath.get()) {
+                if (ModConfig.balance().vpSundamageInstantDeath.get()) {
                     DamageHandler.hurtModded(level, this, ModDamageSources::sunDamage, 1000);
                     turnToAsh();
                 } else if (tickCount % 40 == 11) {

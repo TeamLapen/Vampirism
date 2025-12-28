@@ -49,12 +49,12 @@ public class HeartSeekerItem extends VampireSwordItem implements IItemWithTier, 
 
     @Override
     protected float getChargeUsage(ItemStack stack) {
-        return (float) ((ModConfig.BALANCE.vampireSwordBloodUsageFactor.get() / 100f) * (getVampirismTier().ordinal() + 2) / 2f) * getPurityChargeUsageModifier(stack);
+        return (float) ((ModConfig.balance().vampireSwordBloodUsageFactor.get() / 100f) * (getVampirismTier().ordinal() + 2) / 2f) * getPurityChargeUsageModifier(stack);
     }
 
     @Override
     protected float getChargingFactor(ItemStack stack) {
-        return (float) (ModConfig.BALANCE.vampireSwordChargingFactor.get() * 2f / (getVampirismTier().ordinal() + 2f)) * getPurityChargeSpeedModifier(stack);
+        return (float) (ModConfig.balance().vampireSwordChargingFactor.get() * 2f / (getVampirismTier().ordinal() + 2f)) * getPurityChargeSpeedModifier(stack);
     }
 
     @Override

@@ -32,7 +32,7 @@ public class FactionLogger {
      * requires common config to be loaded
      */
     public static void init() {
-        if (!FactionConfig.COMMON.enableFactionLogging.get() || logger != null) return;
+        if (!FactionConfig.common().enableFactionLogging.get() || logger != null) return;
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration configuration = ctx.getConfiguration();
 

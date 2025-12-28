@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * spawns hunters for tents
@@ -23,14 +22,14 @@ import org.jetbrains.annotations.NotNull;
 public class TentBlockEntity extends BlockEntity {
 
 
-    private final @NotNull SimpleSpawnerLogic<BasicHunterEntity> spawnerLogicHunter;
-    private final @NotNull SimpleSpawnerLogic<AdvancedHunterEntity> spawnerLogicAdvancedHunter;
+    private final SimpleSpawnerLogic<BasicHunterEntity> spawnerLogicHunter;
+    private final SimpleSpawnerLogic<AdvancedHunterEntity> spawnerLogicAdvancedHunter;
     private boolean spawn = false;
     private boolean advanced = false;
 
-    public TentBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public TentBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.TENT.get(), pos, state);
-        this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.HUNTER.get()).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(ModConfig.BALANCE.hunterTentMaxSpawn.get()).setLimitTotalEntities(VEnums.HUNTER_CATEGORY.getValue()).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
+        this.spawnerLogicHunter = new SimpleSpawnerLogic<>(ModEntities.HUNTER.get()).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(600).setMaxSpawnDelay(1000).setMaxNearbyEntities(2).setDailyLimit(ModConfig.balance().hunterTentMaxSpawn.get()).setLimitTotalEntities(VEnums.HUNTER_CATEGORY.getValue()).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
         this.spawnerLogicAdvancedHunter = new SimpleSpawnerLogic<>(ModEntities.ADVANCED_HUNTER.get()).setActivateRange(64).setSpawnRange(6).setMinSpawnDelay(1200).setMaxSpawnDelay(2000).setMaxNearbyEntities(1).setDailyLimit(1).setLimitTotalEntities(VEnums.HUNTER_CATEGORY.getValue()).setOnSpawned(hunter -> hunter.makeCampHunter(this.worldPosition));
     }
 
@@ -39,7 +38,7 @@ public class TentBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input) {
+    public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.spawnerLogicHunter.deserialize(input.childOrEmpty("spawner_logic_1"));
         this.spawnerLogicAdvancedHunter.deserialize(input.childOrEmpty("spawner_logic_2"));
@@ -48,7 +47,7 @@ public class TentBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull ValueOutput output) {
+    public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         this.spawnerLogicHunter.serialize(output.child("spawn_logic_1"));
         this.spawnerLogicAdvancedHunter.serialize(output.child("spawn_logic_2"));
@@ -65,7 +64,7 @@ public class TentBlockEntity extends BlockEntity {
         this.spawn = spawn;
     }
 
-    public static void serverTick(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull TentBlockEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, TentBlockEntity blockEntity) {
         if (blockEntity.spawn) {
             if (level.getGameTime() % 64 == 0) {
                 if (UtilLib.isInsideStructure(level, pos, StructureTags.VILLAGE)) {

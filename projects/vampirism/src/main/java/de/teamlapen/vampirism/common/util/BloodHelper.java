@@ -79,7 +79,7 @@ public class BloodHelper {
 
 
         ItemStack glass = getGlassBottleInHotbar(player.getInventory());
-        if (!glass.isEmpty() && ModConfig.COMMON.autoConvertGlassBottles.get()) {
+        if (!glass.isEmpty() && ModConfig.common().autoConvertGlassBottles.get()) {
             ItemStack bloodBottle = new ItemStack(ModItems.BLOOD_BOTTLE.get(), 1);
             int filled = ResourceHandlerUtil.insertStacking(bloodBottle.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(bloodBottle)), FluidResource.of(ModFluids.BLOOD), amt, null);
             if (filled == 0) {
@@ -176,7 +176,7 @@ public class BloodHelper {
         PlayerInventoryWrapper inventory = PlayerInventoryWrapper.of(player);
         ResourceHandler<ItemResource> handSlot = inventory.getHandSlot(hand);
         boolean interacted = ResourceHandlerUtil.move(level.getCapability(Capabilities.Fluid.BLOCK, pos, side), stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forHandlerIndex(handSlot, 0)), x -> x.is(ModFluids.BLOOD), IBottleBlood.MAX_VALUE * IBottleBlood.MULTIPLIER, null) > 0;
-        if (!interacted && stack.getItem().equals(Items.GLASS_BOTTLE) && ModConfig.COMMON.autoConvertGlassBottles.get()) {
+        if (!interacted && stack.getItem().equals(Items.GLASS_BOTTLE) && ModConfig.common().autoConvertGlassBottles.get()) {
             try(var transaction = Transaction.openRoot()) {
                 ItemStack bloodBottle = new ItemStack(ModItems.BLOOD_BOTTLE.get());
                 ItemAccess itemAccess = ItemAccess.forStack(new ItemStack(ModItems.BLOOD_BOTTLE.get()));

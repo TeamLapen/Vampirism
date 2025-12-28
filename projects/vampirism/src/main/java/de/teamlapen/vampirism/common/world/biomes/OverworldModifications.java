@@ -58,7 +58,7 @@ public class OverworldModifications {
             LOGGER.info("Vampirism Biomes are added via TerraBlender. Not adding them to overworld preset.");
             return;
         }
-        if (!ModConfig.COMMON.addVampireForestToOverworld.get()) {
+        if (!ModConfig.common().addVampireForestToOverworld.get()) {
             return;
         }
         /*

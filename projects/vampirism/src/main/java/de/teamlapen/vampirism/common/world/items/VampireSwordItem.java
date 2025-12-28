@@ -101,7 +101,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         if (!(livingEntity instanceof Player player)) return stack;
 
         VampirePlayer vampire = VampirePlayer.get(player);
-        int amount = (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? ModConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2);
+        int amount = (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? ModConfig.balance().vrBloodChargeSpeedMod.get() : 2);
         if (player.isCreative() || vampire.useBlood(amount, false)) {
             this.charge(stack, amount * VReference.FOOD_TO_FLUID_BLOOD);
         }
@@ -118,7 +118,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         if (attacker instanceof Player player && !Helper.isVampire(target) && !target.getType().is(ModEntityTags.IGNORE_VAMPIRE_SWORD_FINISHER)) {
             ISkillHandler<IVampirePlayer> skillHandler = VampirePlayer.get(player).getSkillHandler();
             IRefinementHandler<IVampirePlayer> refinementHandler = VampirePlayer.get(player).getRefinementHandler();
-            double relTh = ModConfig.BALANCE.vsSwordFinisherMaxHealth.get() * (skillHandler.isSkillEnabled(VampireSkills.SWORD_FINISHER) ? (refinementHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER) ? ModConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d);
+            double relTh = ModConfig.balance().vsSwordFinisherMaxHealth.get() * (skillHandler.isSkillEnabled(VampireSkills.SWORD_FINISHER) ? (refinementHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER) ? ModConfig.balance().vrSwordFinisherThresholdMod.get() : 1d) : 0d);
             if (relTh > 0 && target.getHealth() <= target.getMaxHealth() * relTh) {
                 if (player.level() instanceof ServerLevel level) {
                     DamageHandler.hurtModded(level, target, s -> s.getPlayerAttackWithBypassArmor(player), 10000f);
@@ -134,7 +134,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
             int exp = target instanceof Player ? 10 : (attacker instanceof Player && attacker.level() instanceof ServerLevel serverLevel ? target.getExperienceReward(serverLevel, attacker) : 5);
             float newTrained = exp / 5f * (1.0f - trained) / 15f;
             if (attacker instanceof Player && VampirePlayer.get((Player) attacker).getRefinementHandler().isRefinementEquipped(ModRefinements.SWORD_TRAINED_AMOUNT)) {
-                newTrained *= ModConfig.BALANCE.vrSwordTrainingSpeedMod.get();
+                newTrained *= ModConfig.balance().vrSwordTrainingSpeedMod.get();
             }
             trained += newTrained;
             setTrained(stack, attacker, trained);
@@ -159,7 +159,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
-        if (slot != null && level.isClientSide() && ModConfig.CLIENT.renderVampireSwordParticles.get() && slot.getType() == EquipmentSlot.Type.HAND) {
+        if (slot != null && level.isClientSide() && ModConfig.client().renderVampireSwordParticles.get() && slot.getType() == EquipmentSlot.Type.HAND) {
             boolean mainHand = slot == EquipmentSlot.MAINHAND;
             float charged = getChargePercentage(stack);
             if (charged > 0 && entity.tickCount % ((int) (20 + 100 * (1f - charged))) == 0 && entity instanceof LivingEntity livingEntity) {
@@ -234,7 +234,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         VampirePlayer vampire = VampirePlayer.get(player);
         if (vampire.getLevel() == 0) return InteractionResult.PASS;
 
-        if (this.canBeCharged(stack) && player.isShiftKeyDown() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.BLOOD_CHARGE) && (player.isCreative() || vampire.getBloodLevel() >= (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? ModConfig.BALANCE.vrBloodChargeSpeedMod.get() : 2))) {
+        if (this.canBeCharged(stack) && player.isShiftKeyDown() && vampire.getSkillHandler().isSkillEnabled(VampireSkills.BLOOD_CHARGE) && (player.isCreative() || vampire.getBloodLevel() >= (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.BLOOD_CHARGE_SPEED) ? ModConfig.balance().vrBloodChargeSpeedMod.get() : 2))) {
             player.startUsingItem(hand);
             return InteractionResult.SUCCESS;
         }

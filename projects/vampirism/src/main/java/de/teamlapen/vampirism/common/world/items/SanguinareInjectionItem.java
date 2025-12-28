@@ -38,7 +38,7 @@ public class SanguinareInjectionItem extends InjectionItem {
         }
         if (currentFaction == null) {
             if (handler.canJoin(ModFactions.VAMPIRE)) {
-                if (ModConfig.SERVER.disableFangInfection.get()) {
+                if (ModConfig.server().disableFangInfection.get()) {
                     player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
                 } else {
                     SanguinareMobEffect.addRandom(player, true, true);

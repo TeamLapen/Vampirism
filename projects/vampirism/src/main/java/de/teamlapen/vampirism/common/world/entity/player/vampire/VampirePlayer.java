@@ -26,6 +26,7 @@ import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
+import de.teamlapen.vampirism.common.config.BalanceConfig;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.integration.PlayerReviveHelper;
@@ -282,7 +283,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             protectionMod = amplifier >= 5 ? 0 : 1F / (2F + amplifier);
         }
 
-        return amount * protectionMod * (float) LevelAttributeModifier.calculateModifierValue(getLevel(), getMaxLevel(), ModConfig.BALANCE.vpFireVulnerabilityMod.get(), 0.5);
+        return amount * protectionMod * (float) LevelAttributeModifier.calculateModifierValue(getLevel(), getMaxLevel(), ModConfig.balance().vpFireVulnerabilityMod.get(), 0.5);
     }
 
     @Override
@@ -376,7 +377,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public float getBloodSaturation() {
-        return ModConfig.BALANCE.vpPlayerBloodSaturation.get().floatValue();
+        return ModConfig.balance().vpPlayerBloodSaturation.get().floatValue();
     }
 
     @NotNull
@@ -595,8 +596,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         endFeeding(true);
         if (getSkillProperties().half_invulnerable) {
-            if (amt >= asEntity().getMaxHealth() * (this.getRefinementHandler().isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? ModConfig.BALANCE.vrHalfInvulnerableThresholdMod.get() : 1) * ModConfig.BALANCE.vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
-                if (useBlood(ModConfig.BALANCE.vaHalfInvulnerableBloodCost.get(), false)) {
+            if (amt >= asEntity().getMaxHealth() * (this.getRefinementHandler().isRefinementEquipped(ModRefinements.HALF_INVULNERABLE) ? ModConfig.balance().vrHalfInvulnerableThresholdMod.get() : 1) * ModConfig.balance().vaHalfInvulnerableThreshold.get() && amt < 999) { //Make sure "instant kills" are not blocked by this
+                if (useBlood(ModConfig.balance().vaHalfInvulnerableBloodCost.get(), false)) {
                     return true;
                 } else {
                     this.getActionHandler().deactivateAction(VampireActions.HALF_INVULNERABLE);
@@ -611,7 +612,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public void onEntityKilled(LivingEntity victim, DamageSource src) {
         if (this.getRefinementHandler().isRefinementEquipped(ModRefinements.RAGE_FURY)) {
             //No need to check if rage active, extending only has an effect when already active
-            int bonus = ModConfig.BALANCE.vrRageFuryDurationBonus.get() * 20;
+            int bonus = ModConfig.balance().vrRageFuryDurationBonus.get() * 20;
             if (victim instanceof Player) {
                 bonus *= 2;
             }
@@ -626,7 +627,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             ticksInSun = 0;
             if (wasDead) {
                 player.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 400, 4, false, false));
-                player.addEffect(new MobEffectInstance(ModEffects.ARMOR_REGENERATION, ModConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20, 0, false, false));
+                player.addEffect(new MobEffectInstance(ModEffects.ARMOR_REGENERATION, ModConfig.balance().vpNaturalArmorRegenDuration.get() * 20, 0, false, false));
                 requestNaturalArmorUpdate();
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.getMaxBlood());
@@ -770,7 +771,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                     }
                 }
 
-                if (player.tickCount % 9 == 3 && ModConfig.BALANCE.vpFireResistanceReplace.get() && player.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+                if (player.tickCount % 9 == 3 && ModConfig.balance().vpFireResistanceReplace.get() && player.hasEffect(MobEffects.FIRE_RESISTANCE)) {
                     MobEffectInstance fireResistance = player.getEffect(MobEffects.FIRE_RESISTANCE);
                     player.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION, fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removeEffect(MobEffects.FIRE_RESISTANCE);
@@ -958,7 +959,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 AttributeModifier modToughness = toughnessAtt.getModifier(NATURAL_ARMOR_UUID);
                 double naturalArmor = getNaturalArmorValue(lvl);
                 MobEffectInstance armorRegen = player.getEffect(ModEffects.ARMOR_REGENERATION);
-                double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) ModConfig.BALANCE.vpNaturalArmorRegenDuration.get() * 20);
+                double armorRegenerationMod = armorRegen == null ? 0 : armorRegen.getDuration() / ((double) ModConfig.balance().vpNaturalArmorRegenDuration.get() * 20);
                 naturalArmor *= (1 - 0.75 * armorRegenerationMod); //Modify natural armor between 25% and 100% depending on the armor regen state
                 double naturalToughness = getNaturalArmorToughnessValue(lvl);
                 double baseArmor = armorAtt.invokeGetModifiersOrEmpty(AttributeModifier.Operation.ADD_VALUE).stream().filter(pair -> ArmorModifier.ARMOR_IDS.contains(pair.id())).map(AttributeModifier::amount).mapToDouble(Double::doubleValue).sum();
@@ -979,7 +980,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 if (targetToughness != 0 && modToughness == null) {
                     toughnessAtt.addTransientModifier(new AttributeModifier(NATURAL_ARMOR_UUID, targetToughness, AttributeModifier.Operation.ADD_VALUE));
                 }
-                applyLevelModifiersB(lvl, ModConfig.BALANCE.vpArmorPenalty.get() && baseArmor > 7);
+                applyLevelModifiersB(lvl, ModConfig.balance().vpArmorPenalty.get() && baseArmor > 7);
 
             }
         }
@@ -1048,10 +1049,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     private void applyEntityAttributes() {
-        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(ModConfig.BALANCE.vpSundamage.get());
-        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION).setBaseValue(ModConfig.BALANCE.vpBloodExhaustionFactor.get());
-        player.getAttribute(ModAttributes.NEONATAL_DURATION).setBaseValue(ModConfig.BALANCE.vpNeonatalDuration.get() * 20);
-        player.getAttribute(ModAttributes.DBNO_DURATION).setBaseValue(ModConfig.BALANCE.vpDbnoDuration.get() * 20);
+        BalanceConfig config = ModConfig.balance();
+        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(config.vpSundamage.get());
+        player.getAttribute(ModAttributes.BLOOD_EXHAUSTION).setBaseValue(config.vpBloodExhaustionFactor.get());
+        player.getAttribute(ModAttributes.NEONATAL_DURATION).setBaseValue(config.vpNeonatalDuration.get() * 20);
+        player.getAttribute(ModAttributes.DBNO_DURATION).setBaseValue(config.vpDbnoDuration.get() * 20);
     }
 
     private void removeEntityAttributes() {
@@ -1065,16 +1067,16 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * Apply the armor unaffected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersA(int level) {
-        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), ModConfig.BALANCE.vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
-        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), ModConfig.BALANCE.vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), ModConfig.balance().vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), ModConfig.balance().vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
     /**
      * Apply the armor affected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersB(int level, boolean heavyArmor) {
-        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), ModConfig.BALANCE.vpSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
-        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), ModConfig.BALANCE.vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
     private void biteBlock(BlockPos pos, BlockState state, Direction side, @Nullable BlockEntity blockEntity) {
@@ -1169,28 +1171,29 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * Handle sun damage
      */
     private void handleSunDamage(boolean isRemote) {
+        BalanceConfig config = ModConfig.balance();
         MobEffectInstance potionEffect = player.getEffect(ModEffects.SUNSCREEN);
         int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
         if (ticksInSun < 100) {
             ticksInSun++;
         }
-        if (ticksInSun > 50 && (sunscreen >= 4 || (ModConfig.BALANCE.vpSunscreenBuff.get() && sunscreen >= 0))) {
+        if (ticksInSun > 50 && (sunscreen >= 4 || (config.vpSunscreenBuff.get() && sunscreen >= 0))) {
             ticksInSun = 50;
         }
         if (!player.isAlive() || isRemote || player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
 
-        if (ticksInSun == 100 && ModConfig.BALANCE.vpSundamageInstantDeath.get()) {
+        if (ticksInSun == 100 && config.vpSundamageInstantDeath.get()) {
             DamageHandler.kill(((ServerLevel) asEntity().level()), player, 100000);
             turnToAsh();
         }
 
-        if (ModConfig.BALANCE.vpSundamageNausea.get() && getLevel() >= ModConfig.BALANCE.vpSundamageNauseaMinLevel.get() && player.tickCount % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
+        if (config.vpSundamageNausea.get() && getLevel() >= config.vpSundamageNauseaMinLevel.get() && player.tickCount % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
             player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 180));
         }
-        if (getLevel() >= ModConfig.BALANCE.vpSundamageWeaknessMinLevel.get() && player.tickCount % 150 == 3 && sunscreen < 5) {
+        if (getLevel() >= config.vpSundamageWeaknessMinLevel.get() && player.tickCount % 150 == 3 && sunscreen < 5) {
             player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 152, 0));
         }
-        if (getLevel() >= ModConfig.BALANCE.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
+        if (getLevel() >= config.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
             float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE).getValue());
             if (damage > 0) {
                 DamageHandler.hurtModded(((ServerLevel) asEntity().level()), player, ModDamageSources::sunDamage, damage);
@@ -1290,11 +1293,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     public static double getNaturalArmorValue(int lvl) {
-        return lvl > 0 ? ModConfig.BALANCE.vpNaturalArmorBaseValue.get() + (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.BALANCE.vpNaturalArmorIncrease.get() : 0;
+        return lvl > 0 ? ModConfig.balance().vpNaturalArmorBaseValue.get() + (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.balance().vpNaturalArmorIncrease.get() : 0;
     }
 
     public static double getNaturalArmorToughnessValue(int lvl) {
-        return (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.BALANCE.vpNaturalArmorToughnessIncrease.get();
+        return (lvl / (double) REFERENCE.HIGHEST_VAMPIRE_LEVEL) * ModConfig.balance().vpNaturalArmorToughnessIncrease.get();
     }
 
 

@@ -66,8 +66,6 @@ public class ServerConfig {
 
         skillPointsPerLevel = builder.comment("Players receive n skill points for each level-up. Anything except 2 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 2D, 1D, 20D);
         skillPointsPerLordLevel = builder.comment("Players receive n skill points for each lord level-up. Anything except 2 is unbalanced, but to unlock all skills on max lord level this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLordLevel", 2D, 1D, 20D);
-
-
     }
 
     public enum IMobOptions {

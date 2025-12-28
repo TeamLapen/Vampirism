@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import de.teamlapen.factions.FactionsMod;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.factions.actions.IAction;
@@ -20,6 +21,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.fml.event.config.ModConfigEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +33,7 @@ import java.util.stream.Stream;
 
 public class ClientConfigHelper {
 
+    private static final Logger LOGGER = LogManager.getLogger();
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(TypeToken.getParameterized(List.class, TypeToken.getParameterized(Holder.class, IAction.class).getType()).getType(), new IActionListTypeAdapter())
             .registerTypeAdapter(TypeToken.getParameterized(List.class, SelectMinionTaskRadialScreen.Entry.class).getType(), new EntryListTypeAdapter())
@@ -58,21 +62,21 @@ public class ClientConfigHelper {
      * Caches the action and minion task order for faster access that does not require deserialization on every access
      */
     public static void onConfigChanged(@NotNull ModConfigEvent event) {
-        if (FactionConfig.isClientConfigSpec(event.getConfig().getSpec())) {
+        if (FactionsMod.config().isClientConfigSpec(event.getConfig().getSpec())) {
             try {
-                String string = FactionConfig.CLIENT.actionOrder.get();
+                String string = FactionConfig.client().actionOrder.get();
                 ACTION_ORDER = Objects.requireNonNullElseGet(GSON.fromJson(string, ACTION_TOKEN), HashMap::new);
             } catch (JsonSyntaxException | IllegalArgumentException e) {
-                FactionConfig.LOGGER.error("Failed to parse action order config", e);
-                FactionConfig.CLIENT.actionOrder.set(FactionConfig.CLIENT.actionOrder.getDefault());
+                LOGGER.error("Failed to parse action order config", e);
+                FactionConfig.client().actionOrder.set(FactionConfig.client().actionOrder.getDefault());
                 ACTION_ORDER = new HashMap<>();
             }
             try {
-                String string = FactionConfig.CLIENT.minionTaskOrder.get();
+                String string = FactionConfig.client().minionTaskOrder.get();
                 MINION_TASK_ORDER = Objects.requireNonNullElseGet(GSON.fromJson(string, MINION_TASK_TOKEN), HashMap::new);
             } catch (JsonSyntaxException | IllegalArgumentException e) {
-                FactionConfig.LOGGER.error("Failed to parse minion task order config", e);
-                FactionConfig.CLIENT.minionTaskOrder.set(FactionConfig.CLIENT.minionTaskOrder.getDefault());
+                LOGGER.error("Failed to parse minion task order config", e);
+                FactionConfig.client().minionTaskOrder.set(FactionConfig.client().minionTaskOrder.getDefault());
                 MINION_TASK_ORDER = new HashMap<>();
             }
         }
@@ -169,9 +173,9 @@ public class ClientConfigHelper {
         ACTION_ORDER.put(id, actions);
         try {
             String object = GSON.toJson(ACTION_ORDER, ACTION_TOKEN.getType());
-            FactionConfig.CLIENT.actionOrder.set(object);
+            FactionConfig.client().actionOrder.set(object);
         } catch (JsonParseException e) {
-            FactionConfig.LOGGER.error("Failed to save action order", e);
+            LOGGER.error("Failed to save action order", e);
         }
     }
 
@@ -185,9 +189,9 @@ public class ClientConfigHelper {
         MINION_TASK_ORDER.put(Optional.ofNullable(faction).flatMap(Holder::unwrapKey).map(ResourceKey::identifier).orElse(NONE), tasks);
         try {
             String object = GSON.toJson(MINION_TASK_ORDER, MINION_TASK_TOKEN.getType());
-            FactionConfig.CLIENT.minionTaskOrder.set(object);
+            FactionConfig.client().minionTaskOrder.set(object);
         } catch (JsonParseException e) {
-            FactionConfig.LOGGER.error("Failed to save minion task order", e);
+            LOGGER.error("Failed to save minion task order", e);
         }
 
     }

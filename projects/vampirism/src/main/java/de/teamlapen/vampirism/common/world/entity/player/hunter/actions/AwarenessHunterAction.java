@@ -19,17 +19,17 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
 
     @Override
     public int getCooldown(IHunterPlayer player) {
-        return ModConfig.BALANCE.haAwarenessCooldown.get();
+        return ModConfig.balance().haAwarenessCooldown.get();
     }
 
     @Override
     public int getDuration(IHunterPlayer player) {
-        return ModConfig.BALANCE.haAwarenessDuration.get();
+        return ModConfig.balance().haAwarenessDuration.get();
     }
 
     @Override
     public boolean isEnabled() {
-        return ModConfig.BALANCE.haAwarenessEnabled.get();
+        return ModConfig.balance().haAwarenessEnabled.get();
     }
 
     @Override
@@ -44,11 +44,6 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     @Override
     public void onReActivated(IHunterPlayer player) {
         onUpdate(player);
-    }
-
-    @Override
-    public boolean onUpdate(IHunterPlayer player) {
-        return false;
     }
 
     @Override

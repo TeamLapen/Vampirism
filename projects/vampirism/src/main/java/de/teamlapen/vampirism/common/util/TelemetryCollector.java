@@ -28,7 +28,7 @@ public class TelemetryCollector {
 
     public static void execute() {
         // TODO use server telemetry when available
-        if (ModConfig.COMMON.collectStats.get()) {
+        if (ModConfig.common().collectStats.get()) {
             send();
         }
     }

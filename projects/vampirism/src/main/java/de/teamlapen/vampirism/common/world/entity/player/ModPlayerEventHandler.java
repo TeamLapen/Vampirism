@@ -10,6 +10,7 @@ import de.teamlapen.factions.common.core.FactionDataComponents;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
+import de.teamlapen.vampirism.common.config.BalanceConfig;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.util.Helper;
@@ -277,7 +278,7 @@ public class ModPlayerEventHandler {
             if (!heldStack.isEmpty() && heldStack.getCount() == 1) {
                 boolean glassBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
                 boolean bloodBottle = ModItems.BLOOD_BOTTLE.get() == heldStack.getItem();
-                if (bloodBottle || (glassBottle && ModConfig.COMMON.autoConvertGlassBottles.get())) {
+                if (bloodBottle || (glassBottle && ModConfig.common().autoConvertGlassBottles.get())) {
                     Block block = event.getLevel().getBlockState(event.getPos()).getBlock();
                     BlockState state = event.getLevel().getBlockState(event.getPos());
                     boolean convert = false;
@@ -363,9 +364,10 @@ public class ModPlayerEventHandler {
                     //Perform vanilla style check for monsters nearby, but ignore monsters that don't attack vampires
                     Vec3 vec3 = Vec3.atBottomCenterOf(event.getPos());
                     List<Monster> list = event.getLevel().getEntitiesOfClass(Monster.class, new AABB(vec3.x() - 8.0, vec3.y() - 5.0, vec3.z() - 8.0, vec3.x() + 8.0, vec3.y() + 5.0, vec3.z() + 8.0));
-                    boolean zombie = ModConfig.BALANCE.zombieIgnoreVampire.get();
-                    boolean skeleton = ModConfig.BALANCE.skeletonIgnoreVampire.get();
-                    boolean creeper = ModConfig.BALANCE.creeperIgnoreVampire.get();
+                    BalanceConfig config = ModConfig.balance();
+                    boolean zombie = config.zombieIgnoreVampire.get();
+                    boolean skeleton = config.skeletonIgnoreVampire.get();
+                    boolean creeper = config.creeperIgnoreVampire.get();
                     if (list.stream().anyMatch(monster ->
                             {
                                 if (zombie && monster instanceof Zombie) return false;

@@ -97,13 +97,13 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     public void tickBackground(@NotNull Desc<Q> desc, @NotNull Q data) {
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
-            desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * FactionConfig.SERVER.miResourceCooldownOfflineMult.get());
+            desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * FactionConfig.server().miResourceCooldownOfflineMult.get());
             WeightedList.of(resources).getRandom(rng).ifPresent(s -> data.getInventory().addItemStack(s));
             List<ItemStack> stacks = Stream.of(data.getInventory().getInventoryArmor(), data.getInventory().getInventoryHands()).flatMap(Collection::stream).filter(stack -> !stack.isEmpty()).toList();
             if (!stacks.isEmpty()) {
                 ItemStack stack = stacks.get(rng.nextInt(stacks.size()));
                 if (stack.get(DataComponents.REPAIRABLE) != null && stack.getDamageValue() > 0) {
-                    stack.setDamageValue(Math.max(0, stack.getDamageValue() - FactionConfig.SERVER.miEquipmentRepairAmount.get()));
+                    stack.setDamageValue(Math.max(0, stack.getDamageValue() - FactionConfig.server().miEquipmentRepairAmount.get()));
                 }
             }
         }

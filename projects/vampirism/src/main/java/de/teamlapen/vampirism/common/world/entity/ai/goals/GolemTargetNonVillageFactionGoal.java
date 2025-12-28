@@ -61,7 +61,7 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
      */
     private boolean determineGolemFaction() {
         Holder<? extends IFaction<?>> faction = ModFactions.HUNTER;
-        if (ModConfig.BALANCE.golemAttackNonVillageFaction.get()) {
+        if (ModConfig.balance().golemAttackNonVillageFaction.get()) {
             Optional<Holder<? extends IFaction<?>>> tile = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level()), this.golem.blockPosition(), true).map(TotemBlockEntity::getControllingFaction);
             if (tile.isPresent()) {
                 faction = tile.get();

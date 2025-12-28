@@ -8,6 +8,7 @@ import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
 import de.teamlapen.factions.api.world.entities.minion.IMinionTask;
 import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.factions.common.core.FactionMinionTasks;
+import de.teamlapen.factions.common.core.FactionSkills;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.factions.common.server.commands.arguments.MinionArgument;
@@ -294,11 +295,11 @@ public class PlayerMinionController implements ValueIOSerializable {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             i.checkin();
-            i.deathCooldown = 20 * FactionConfig.SERVER.miDeathRecoveryTime.get();
+            i.deathCooldown = 20 * FactionConfig.server().miDeathRecoveryTime.get();
             getLord().filter(x -> x instanceof ISkillPlayer<?>).map(ISkillPlayer.class::cast).map(ISkillPlayer::getSkillHandler).ifPresent(s -> {
-//                if (s.isSkillEnabled(LordSkills.MINION_RECOVERY)) { FIXME
-//                    i.deathCooldown = (int) (i.deathCooldown * 0.8);
-//                }
+                if (s.isSkillEnabled(FactionSkills.MINION_RECOVERY)) {
+                    i.deathCooldown = (int) (i.deathCooldown * 0.8);
+                }
             });
             if (id < minionTokens.length) {
                 minionTokens[id] = Optional.empty();

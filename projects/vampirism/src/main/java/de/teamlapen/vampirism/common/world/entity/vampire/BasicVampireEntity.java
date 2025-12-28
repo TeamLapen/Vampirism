@@ -129,7 +129,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         }
 
         if (this.tickCount % 9 == 3) {
-            if (ModConfig.BALANCE.vpFireResistanceReplace.get() && this.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+            if (ModConfig.balance().vpFireResistanceReplace.get() && this.hasEffect(MobEffects.FIRE_RESISTANCE)) {
                 MobEffectInstance fireResistance = this.removeEffectNoUpdate(MobEffects.FIRE_RESISTANCE);
                 assert fireResistance != null;
                 onEffectRemoved(this, fireResistance);

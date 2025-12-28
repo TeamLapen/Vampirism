@@ -22,14 +22,14 @@ public class ActionCooldownOverlay<T extends ISkillPlayer<T>> extends BaseOverla
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (canRenderOverlays() && !FactionConfig.CLIENT.disableHudActionCooldownRendering.get()) {
+        if (canRenderOverlays() && !FactionConfig.client().disableHudActionCooldownRendering.get()) {
             FactionsApi.factionPlayerHandler(this.player()).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();
 
                 int y = this.mc.getWindow().getGuiScaledHeight() - 27;
                 int x = this.mc.getWindow().getGuiScaledWidth() - 12 - 16;
 
-                if (!FactionConfig.CLIENT.disableHudActionCooldownRendering.get()) {
+                if (!FactionConfig.client().disableHudActionCooldownRendering.get()) {
                     for (Holder<? extends IAction<T>> action : actionHandler.getUnlockedActionHolder()) {
                         if (!(action.value().showHudCooldown(this.player()))) continue;
                         if (!actionHandler.isActionOnCooldown(action)) continue;

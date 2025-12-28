@@ -45,7 +45,7 @@ public class BloodBottleFluidHandler extends ItemAccessResourceHandler<FluidReso
     @Override
     protected ItemResource update(ItemResource accessResource, int index, FluidResource newResource, int newAmount) {
         if (newAmount == 0) {
-            if (ModConfig.COMMON.autoConvertGlassBottles.get() && !accessResource.is(Items.GLASS_BOTTLE)) {
+            if (ModConfig.common().autoConvertGlassBottles.get() && !accessResource.is(Items.GLASS_BOTTLE)) {
                 return ItemResource.of(Items.GLASS_BOTTLE);
             } else {
                 return ItemResource.of(ModItems.BLOOD_BOTTLE.get()).with(ModDataComponents.BOTTLE_BLOOD, BottleBlood.EMPTY);
