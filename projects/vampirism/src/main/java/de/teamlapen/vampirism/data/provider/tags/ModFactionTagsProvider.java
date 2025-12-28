@@ -28,9 +28,11 @@ public class ModFactionTagsProvider extends KeyTagProvider<IFaction<?>> {
         this.tag(ModFactionTags.HAS_LORD_SKILLS).add(ModFactions.VAMPIRE.getRawKey(), ModFactions.HUNTER.getRawKey());
         this.tag(ModFactionTags.ALL_FACTIONS).addTag(ModFactionTags.IS_HUNTER).addTag(ModFactionTags.IS_VAMPIRE);
         this.tag(ModFactionTags.USE_GARLIC_BREAD).addTags(ModFactionTags.IS_HUNTER, ModFactionTags.IS_NEUTRAL);
-        this.tag(ModFactionTags.CAN_RAID).addTags(ModFactionTags.IS_HUNTER, ModFactionTags.IS_VAMPIRE);
         this.tag(ModFactionTags.HAS_RANDOM_RAID).addTag(ModFactionTags.CAN_RAID);
         this.tag(ModFactionTags.HUNTER_MINION_TARGETS).addTag(ModFactionTags.IS_VAMPIRE);
         this.tag(ModFactionTags.VAMPIRE_MINION_TARGETS).addTag(FactionTags.NOT_NEUTRAL).remove(ModFactionTags.IS_VAMPIRE);
+        this.tag(ModFactionTags.CAN_RAID)
+                .add(ModFactions.HUNTER.getRawKey())
+                .add(ModFactions.VAMPIRE.getRawKey());
     }
 }

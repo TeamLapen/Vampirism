@@ -149,5 +149,6 @@
   "stat_type.factions.action_time": "Action Active",
   "stat_type.factions.action_cooldown_time": "Action On Cooldown",
   "stat_type.factions.skill_unlocked": "Skill Unlocked",
-  "stat_type.factions.skill_forgotten": "Skill Forgotten"
+  "stat_type.factions.skill_forgotten": "Skill Forgotten",
+  "text.factions.raid.faction_not_able": "Your faction is not able to capture villages"
 }

@@ -211,7 +211,12 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 
     public void initiateCapture(Player player) {
         if (!player.isAlive()) return;
-        initiateCapture(FactionPlayerHandler.get(player).getFaction(), player::displayClientMessage, -1, -1f);
+        var faction = FactionPlayerHandler.get(player).getFaction();
+        if (IFaction.is(faction, FactionTags.CAN_RAID)) {
+            initiateCapture(faction, player::displayClientMessage, -1, -1f);
+        } else if (!IFaction.isNeutral(faction))  {
+            player.displayClientMessage(Component.translatable("text.factions.raid.faction_not_able"),true);
+        }
     }
 
     @Override
@@ -319,7 +324,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
      * @return true if the badomen effect should be consumed
      */
     public boolean initiateCaptureOrIncreaseBadOmenLevel(@NotNull Holder<? extends IFaction<?>> faction, @Nullable BiConsumer<Component, Boolean> feedback, int badOmenLevel, float strengthModifier) {
-        if (IFaction.is(faction, FactionTags.CAN_RAID)) {
+        if (!IFaction.is(faction, FactionTags.CAN_RAID)) {
             return false;
         }
         if (this.capturingFaction == null) {

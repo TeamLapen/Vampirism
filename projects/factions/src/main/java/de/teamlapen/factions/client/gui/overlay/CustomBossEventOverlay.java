@@ -55,7 +55,7 @@ public class CustomBossEventOverlay extends BaseOverlay {
             int l = this.mc().font.width(itextcomponent);
             int i1 = i / 2 - l / 2;
             int j1 = j - 9;
-            graphics.drawString(this.mc().font, itextcomponent, i1, j1, 16777215, true);
+            graphics.drawString(this.mc().font, itextcomponent, i1, j1, -1, true);
 
             if (j >= graphics.guiHeight() / 3) {
                 break;

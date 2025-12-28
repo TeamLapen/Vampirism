@@ -1,6 +1,6 @@
 {
   "values": [
-    "#vampirism:is_hunter",
-    "#vampirism:is_vampire"
+    "vampirism:hunter",
+    "vampirism:vampire"
   ]
 }
