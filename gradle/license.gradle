@@ -1,0 +1,6 @@
+tasks.withType(Jar).configureEach {
+    from rootProject.file("LICENSE")
+    from rootProject.file("licenses/CODE_LICENSE")
+    from rootProject.file("licenses/ASSET_LICENSE")
+    from rootProject.file("licenses/NARRATIVE_LICENSE")
+}

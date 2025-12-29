@@ -6,7 +6,7 @@ Vampirism for Minecraft 1.21 - Dev branch
 
 ## Mod Description
 
-Vampires are fast, strong and bloodthirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
+Vampires are fast, strong, and bloodthirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
 
 This mod allows you to become a vampire with all its benefits and drawbacks.
 
@@ -176,16 +176,20 @@ If you would like to compile your own versions or even contribute to Vampirism's
 The code style used in this project is the IntelliJ default one.
 
 ## License
-The source code and text in this repository are licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/CODE_LICENSE) ***except*** for the following parts:
+The content in this repository is licensed as follows:  
+*If not explicitly stated, the content is licensed under the [LGPLv3](licenses/CODE_LICENSE).*
 
-##### Textures
-Any textures included in this mod are licenced under the following terms:
-> Any textures (and models) included in the mod may be used, remixed and distributed for anything related to Vampirism (fan art, addon mods, forks, reviews, ...) excluding resource packs.
-> 
-> If you want to use them in a resource/texture pack, you must credit the Vampirism project or the individual creator where applicable and it must not be used commercially.
+##### Code
+All source code is licensed under [LGPLv3](licenses/CODE_LICENSE).
+
+##### Narrative Content
+All narrative content (in-game books, letters, dialogues, lore entries, and descriptive texts) is licensed under the [Vampirism Narrative Content License (VNCL)](licenses/NARRATIVE_LICENSE).
+
+##### Textures and Models
+All textures and models included in the mod are licensed under the [Vampirism Asset License](licenses/ASSET_LICENSE)
 
 ##### Sounds
-The sounds used in this mod are individual licensed and may only be used outside Vampirism under the respective licensing terms if noted as such.
+The sounds used in this mod are individually licensed and may only be used outside Vampirism under the respective licensing terms noted below.
 
 | Sound                     | Creator               | Link                                                                           | License        |
 |---------------------------|-----------------------|--------------------------------------------------------------------------------|----------------|
@@ -205,8 +209,8 @@ The sounds used in this mod are individual licensed and may only be used outside
 The code under `de.teamlapen.vampirism.misc.sit` is adapted from bl4ckscor4's Sit mod and licensed under GNU GPLv3 (see
 LICENSE.txt in that directory).
 
-##### Radial screen - `lib.*.radialmenu` package
+##### Radial screen - `radialmenu` package
 
-The code under `de.teamlapen.lib.lib.client.gui.screens.radialmenu` is adapted from David Quintana's Radial Menu and
+The code under `de.teamlapen.factions.client.gui.radialmenu` is adapted from David Quintana's Radial Menu and
 licensed under the terms of the LICENSE.txt file in that directory.
 

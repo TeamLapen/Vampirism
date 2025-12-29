@@ -1,0 +1,30 @@
+                      Vampirism Licensing Overview
+                             Version 1.0
+
+This repository contains content licensed under multiple licenses. Please review
+the appropriate license file for the specific content you wish to use:
+
+1. SOURCE CODE (CODE_LICENSE)
+   All source code, including but not limited to Java files, configuration files,
+   data formats, and technical documentation, is licensed under the GNU Lesser
+   General Public License (LGPL) v3.0 unless otherwise noted. See licenses/CODE_LICENSE for full terms.
+
+2. NARRATIVE CONTENT (NARRATIVE_LICENSE)
+   All narrative and story content, including in-game books, letters, lore entries,
+   dialogues, descriptive texts, and other authored storytelling material, is
+   licensed under the Vampirism Narrative Content License (VNCL).
+   See licenses/NARRATIVE_LICENSE for full terms.
+
+3. TEXTURES AND MODELS (ASSET_LICENSE)
+   All textures and models included in the mod are licensed under the Vampirism
+   Asset License, which permits use for Vampirism-related content with specific
+   restrictions on resource packs and commercial use.
+   See licenses/ASSET_LICENSE for full terms.
+
+4. SOUNDS
+   Individual sound files are licensed under their respective licenses as noted
+   in the README.md file. Each sound file's license is specified in the sound
+   attribution table.
+
+For questions about licensing or permissions, please contact the Vampirism project
+maintainers or refer to the individual license files.

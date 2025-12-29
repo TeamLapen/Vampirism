@@ -1,0 +1,239 @@
+Vampirism Narrative Content License (VNCL)
+                        Version 1.0, 30 December 2025
+
+    0. Preamble
+
+    Many Minecraft mods include original narrative content — such as in-game
+books, letters, dialogues, lore entries, and descriptive texts (collectively,
+the “Narrative Works”) — created by individual writers, developers, or community
+contributors. These works are distinct from the mod’s underlying code and deserve
+separate licensing to protect authors’ moral rights and ensure proper attribution.
+
+    While the mod’s software may be distributed under a standard open-source or
+modding license (e.g., MIT, LGPL, or All Rights Reserved), this Vampirism Narrative
+Content License (VNCL) governs only the Narrative Works, granting limited rights
+for their use within the mod ecosystem while preserving authors’ creative integrity
+and ensuring coherent narrative stewardship.
+
+    This license applies automatically to any mod that includes it in its distribution
+and explicitly designates its narrative content under VNCL.
+
+    1. Definitions
+
+    The "Licensed Mod" means any mod or software distribution that includes Narrative
+Works and expressly adopts this license in its documentation, source, or resource files.
+
+    "Narrative Works" means all original textual storytelling content (including
+but not limited to in-game books, lore entries, dialogues, and descriptive texts)
+included in the Licensed Mod and intended as creative expression.
+
+    All such content is presumed to have an author. If authorship is not
+explicitly attributed, the Mod Maintainers are designated as the administrative
+contact and rights steward for the purposes of this license, but this does not
+by itself imply or transfer original copyright ownership.
+
+    "Mod Maintainers" means the current official developers, maintainers, or owners
+of the Licensed Mod, as reasonably recognizable from the mod’s official distribution
+channels (e.g., project page, repository, or documentation).
+
+    "Narrative Stewardship" means the authority to:
+
+        (a) decide how Narrative Works are integrated into the Licensed Mod’s lore,
+        structure, and presentation;
+
+        (b) approve or perform Adaptations for lore consistency, technical reasons,
+        or localization;
+
+        (c) request removal or alteration of harmful or lore-breaking Adaptations;
+
+        (d) give or withhold permissions for uses of Narrative Works within the Licensed Mod
+and its forks that this license states require authorization from an author or, where
+applicable, the Mod Maintainers, but not for uses of Narrative Works outside the
+Licensed Mod or its forks.
+
+    For the Licensed Mod, Narrative Stewardship is held by the Mod Maintainers.
+
+    An "Adaptation" means any modification, translation, abridgment, or contextual
+adjustment of a Narrative Work for the purpose of integration into the mod, lore
+consistency, localization, or technical compatibility.
+
+    A "Commercial Use" refers to selling, licensing, or otherwise directly
+profiting from the Narrative Works themselves (e.g., printed books of lore, paid
+mods containing the texts, NFTs of story content). Revenue from ancillary
+activities (ads, donations, sponsorships) that feature the content as part of
+commentary, gameplay, or critique is permitted.
+
+    An author is considered "Unreachable" if, after reasonable good-faith efforts
+to contact them using the last known contact details or channels associated with
+their contribution, they do not respond within at least 60 days, or if their
+contact information is no longer valid or accessible.
+
+    2. Grant of Rights
+
+    Subject to the terms of this license, each author of a Narrative Work (including
+the Mod Maintainers, where applicable) grants you a worldwide, non-exclusive,
+royalty-free license to:
+
+    a) Reproduce the Narrative Works as part of the Licensed Mod or its recognized
+    distributions.
+
+    b) Create Adaptations of the Narrative Works, but only for the following purposes:
+
+        1) technical integration into the mod (e.g., formatting, line breaks, JSON
+        structure),
+
+        2) lore consistency adjustments approved or performed under Narrative
+        Stewardship by the Mod Maintainers,
+
+        3) translation into other languages by the Mod Maintainers, original authors,
+        or community members, subject to Narrative Stewardship by the Mod Maintainers.
+
+    c) Distribute the original or Adapted Narrative Works solely as embedded content
+    within the Licensed Mod or its forks.
+
+    d) Rely on the Mod Maintainers, acting under Narrative Stewardship, as the primary
+    decision-makers for questions of lore consistency, allowed Adaptations, and the
+    continued inclusion or removal of Narrative Works within the Licensed Mod.
+
+    3. Conditions
+
+    You must:
+
+    a) Respect original authorship.
+
+    If a Narrative Work includes a specific author attribution (e.g., "by Lena R.")
+    in its source, resource, or documentation files, you must preserve that credit in
+    a comparable manner to the original (e.g., in-game, in-file headers, or
+    documentation). Preserving the original author's name is required. Credit to
+    translators or editors is not required by this license but is appreciated and may
+    be included at the distributor's discretion, especially if the translated version
+    of the Narrative Work is used.
+
+    b) Do not falsely claim authorship.
+
+    You may not present any Narrative Work or Adaptation as your own original creation,
+    nor imply endorsement by the author or Mod Maintainers without permission.
+
+    c) Do not reuse Narrative Works outside the Licensed Mod in derivative software,
+    standalone publications, merchandise, or other mods without explicit written
+    permission from the author(s).
+
+    Where the author is Unreachable or not listed, this license does not grant any party,
+    including the Mod Maintainers, the authority to permit such uses outside the
+    Licensed Mod.
+
+    This restriction does not apply to short quotes, screenshots, or gameplay footage
+    used in reviews, guides, videos, or fan discussions, as long as the source
+    (Licensed Mod) is clearly credited or mentioned and no Commercial Use of the
+    Narrative Works themselves occurs.
+
+    d) Respect the right to request removal of harmful adaptations.
+
+    If an Adaptation of a Narrative Work is, in the reasonable and good-faith judgment
+    of the original author or the Mod Maintainers, demonstrably harmful — specifically
+    if it:
+
+        1) materially distorts, mutilates, or otherwise modifies the work in a way that
+        is prejudicial to the author's honor or reputation,
+
+        2) introduces hateful, defamatory, illegal, or commercially exploitative
+        content; or
+
+        3) significantly contradicts established lore in a manner that harms the
+        coherence of the Licensed Mod's universe,
+
+    then the author or Mod Maintainers may request, in good faith, that the distributor
+    or creator of such Adaptation cease its distribution and remove the offending content.
+
+    Such requests should be exceptional and based on clear harm, not stylistic,
+    interpretive, or minor continuity differences.
+
+    Where an author is Unreachable, the Mod Maintainers, acting under Narrative
+    Stewardship, may exercise this right on the author’s behalf to protect the work,
+    the coherence of the Licensed Mod’s universe, and the mod’s narrative direction.
+
+    e) Do not engage in Commercial Use of the Narrative Works or their Adaptations
+    (e.g., selling books, merch, paid mods/add-ons, or monetized reproductions) unless
+    separately authorized in writing by the author(s).
+
+    Where the author is Unreachable or not listed, this license does not grant any party,
+    including the Mod Maintainers, the authority to permit Commercial Use of the
+    Narrative Works or their Adaptations.
+
+    Non-monetized fan content (e.g., free wikis, YouTube videos with ads, Twitch streams)
+    is not considered Commercial Use under this license.
+
+    4. Rights Reserved
+
+    Except as expressly granted herein, all rights are reserved by the original authors (or
+Mod Maintainers, where authorship is unspecified), including but not limited to:
+
+    1) the exclusive right to publish the Narrative Works outside the Licensed Mod;
+
+    2) moral rights of integrity and attribution under applicable law;
+
+    3) rights to characters, settings, names, and lore elements introduced in the
+    Narrative Works, which are owned by their respective creators or are used in the mod
+    under implied or explicit non-exclusive permission.
+
+    Nothing in this license transfers ownership of copyright or related rights. Authors
+retain full ownership and may license their Narrative Works under additional terms outside the
+scope of this license.
+
+    Where applicable law recognizes moral rights, this license is granted with full respect
+to the author's right of attribution and integrity. Narrative Stewardship by the Mod Maintainers
+is intended to manage integration and coherence within the Licensed Mod, not to remove or
+override legal moral rights.
+
+    5. Narrative Control
+
+    a) Within the context of the Licensed Mod, the Mod Maintainers hold Narrative
+    Stewardship and have final say over:
+
+        1) which Narrative Works are included, excluded, or replaced in the Licensed Mod;
+
+        2) how Narrative Works are ordered, presented, and connected in the mod’s lore;
+
+        3) which Adaptations are accepted for official inclusion in the Licensed Mod.
+
+    b) Authors may request changes, corrections, or removals of their individual
+    contributions. The Mod Maintainers should consider such requests in good faith,
+    but the final decision on the mod’s overall narrative direction and internal
+    consistency rests with the Mod Maintainers.
+
+    c) Where an author is Unreachable, the Mod Maintainers may, in good faith and in
+    line with the established tone and lore of the Licensed Mod, act in their stead for
+    all practical decisions permitted or required by this license concerning the
+    inclusion, adaptation, or presentation of Narrative Works within the Licensed Mod
+    and its forks, including:
+
+    1) approving or declining Adaptations for inclusion in the Licensed Mod;
+    2) requesting removal or alteration of harmful or lore-breaking uses in the
+       Licensed Mod or its forks;
+    3) managing narrative coherence and integration of Narrative Works.
+
+    For the avoidance of doubt, Mod Maintainers may not grant permission for any use of
+    Narrative Works outside the Licensed Mod or its forks, or for Commercial Use, where
+    this license refers to authorization from the author(s).
+
+    6. Termination
+
+    If you break the terms of this license, your right to use the Narrative Works ends
+automatically. However, people who received lawful copies from you before the violation
+keep their rights.
+
+    7. No Warranty
+
+    The Narrative Works are shared "as is," with no promises of quality, accuracy, or
+safety. By using them, you agree not to hold the authors or Mod Maintainers liable for
+any issues.
+
+    8. Severability
+
+    If any part of this license is found unenforceable, the rest remains valid.
+
+    9. Contact
+
+    To ask about permissions, report concerns, or clarify authorship, contact the author
+listed with the work. If no author is listed, or the author is Unreachable, contact the
+Mod Maintainers, who may act under Narrative Stewardship for that work.
