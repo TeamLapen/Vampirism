@@ -10,7 +10,6 @@
   "text.vampirism.can_only_be_used_with_skill": "This can only be used with skill: %s",
   "text.vampirism.need_item_to_use": "You need \"%s\" to use this",
   "text.vampirism.immune_to": "You are immune to ",
-
   "text.vampirism.from_behind": "From behind.",
   "text.vampirism.unknown": "Unknown",
   "text.vampirism.i_am_busy_right_now": "I'm busy right now",
@@ -271,6 +270,7 @@
   "effect.vampirism.lord_attack_speed": "Attack Speed",
   "effect.vampirism.no_blood": "No Blood",
   "effect.vampirism.bleeding": "Bleeding",
+  "effect.vampirism.crucifix_suppression": "Crucifix Suppression",
   "__comment": "fluid",
   "fluid.vampirism.blood": "Blood",
   "fluid.vampirism.blood.vampirism": "Vampirism's Blood",

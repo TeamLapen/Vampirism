@@ -80,6 +80,13 @@ neoForge {
 
             systemProperty 'forge.enabledGameTestNamespaces', project.vampirism_mod_id
         }
+        clientAlternative {
+            client()
+
+            programArgument '--username=Dev2'
+
+            systemProperty 'forge.enabledGameTestNamespaces', project.vampirism_mod_id
+        }
         clientAuth {
             client()
 

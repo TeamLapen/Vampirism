@@ -7,6 +7,7 @@ import de.teamlapen.factions.api.factions.actions.IActionHandler;
 import de.teamlapen.factions.common.components.FactionRestriction;
 import de.teamlapen.factions.common.components.FactionSlayer;
 import de.teamlapen.factions.common.core.FactionDataComponents;
+import de.teamlapen.factions.common.core.FactionEffects;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;

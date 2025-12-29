@@ -112,6 +112,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private int remainingBarkTicks = 0;
     private boolean wasDead = false;
     private int feed_victim = -1;
+    private int crucifixTicks = 0;
     /** Holds a sound reference (client side only) for the feeding sound while feed_victim!=-1 */
     private @Nullable ISoundReference feedingSoundReference;
     private @Nullable BITE_TYPE feed_victim_bite_type;
@@ -819,6 +820,12 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (remainingBarkTicks > 0) {
             --remainingBarkTicks;
         }
+        if (crucifixTicks > 0) {
+            --crucifixTicks;
+            if (this.player.tickCount % 10 == 8 && crucifixTicks > 30) {
+                this.player.addEffect(new MobEffectInstance(ModEffects.CRUCIFIX_SUPPRESSION, 30));
+            }
+        }
     }
 
     @Override
@@ -1290,6 +1297,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData) b).setIncreasedStats(enabled));
             minion.sync();
         }));
+    }
+
+    public void effectCrucifixSuppression() {
+        this.crucifixTicks = Math.max(this.crucifixTicks + 25, 70);
     }
 
     public static double getNaturalArmorValue(int lvl) {

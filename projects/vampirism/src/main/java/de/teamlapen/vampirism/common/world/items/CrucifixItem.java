@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.factions.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.factions.common.components.FactionRestriction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
@@ -8,6 +9,7 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRefinements;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.vampire.AdvancedVampireEntity;
@@ -33,7 +35,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.UseCooldown;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -74,13 +78,42 @@ public class CrucifixItem extends Item implements IItemWithTier {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, EquipmentSlot slot) {
-        if (entity instanceof LivingEntity livingEntity && entity.tickCount % 16 == 8 && (livingEntity.getOffhandItem() == stack || livingEntity.getMainHandItem() == stack)) {
+    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
+        if (entity instanceof LivingEntity livingEntity && slot != null && slot.getType() == EquipmentSlot.Type.HAND && entity.tickCount % 16 == 8) {
             if (Helper.isVampire(entity)) {
                 livingEntity.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
                 if (entity instanceof Player player) {
                     player.getInventory().removeItem(stack);
                     player.drop(stack, true);
+                }
+            }
+            if (Helper.isHunter(livingEntity) && livingEntity instanceof Player player && player.getCooldowns().isOnCooldown(stack)) {
+                var nearbyVampires = livingEntity.level().getEntities(entity, new AABB(livingEntity.blockPosition()).inflate(6), Helper::isVampire);
+                var viewVector = livingEntity.getViewVector(1.0F).normalize();
+                for (Entity e : nearbyVampires) {
+                    if (e instanceof Player other && player.hasLineOfSight(other)) {
+                        var targetVector = other.position().subtract(livingEntity.position());
+                        Tier tier = getVampirismTier();
+                        if (IRefinementHandler.get(other).filter(s -> s.isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)).isPresent()) {
+                            int i = UtilLib.indexOf(Tier.values(), tier);
+                            if (i > 0) {
+                                tier = Tier.values()[i - 1];
+                            } else if(i == 0) {
+                                continue;
+                            }
+                        }
+
+                        double distance = targetVector.lengthSqr();
+                        double degrees = Math.toDegrees(Math.cos(viewVector.dot(targetVector.normalize())));
+                        boolean effect = switch (tier) {
+                            case ULTIMATE -> (distance < 100 && degrees < 20) || (distance < 56 && degrees < 55) || (distance < 25 && degrees < 70);
+                            case ENHANCED -> (distance < 56 && degrees < 45) || (distance < 25 && degrees < 55);
+                            case NORMAL -> (distance < 25 && degrees < 45);
+                        };
+                        if (effect) {
+                            VampirePlayer.get(other).effectCrucifixSuppression();
+                        }
+                    }
                 }
             }
         }

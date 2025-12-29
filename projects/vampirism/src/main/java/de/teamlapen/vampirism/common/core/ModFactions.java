@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.factions.api.FactionTagKeys;
 import de.teamlapen.factions.api.event.AddFactionTagEvent;
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.api.registries.factions.DeferredFaction;
@@ -97,6 +98,7 @@ public class ModFactions {
                 .add(FactionRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER)
                 .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.HUNTER_FOOD)
                 .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_HUNTER)
+                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_HUNTER)
         ;
 
         event.faction(VAMPIRE)
@@ -108,6 +110,7 @@ public class ModFactions {
                 .add(FactionRegistries.Keys.FACTION, ModFactionTags.IS_VAMPIRE)
                 .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.VAMPIRE_FOOD)
                 .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_VAMPIRE)
+                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_VAMPIRE)
         ;
 
     }

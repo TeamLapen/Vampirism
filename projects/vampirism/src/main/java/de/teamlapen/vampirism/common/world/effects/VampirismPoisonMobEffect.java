@@ -8,7 +8,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
-public class VampirismPoisonMobEffect extends VampirismMobEffect {
+public class VampirismPoisonMobEffect extends SimpleMobEffect {
 
     public static final int DEADLY_AMPLIFIER = 4;
 

@@ -12,7 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
-public class SanguinareMobEffect extends VampirismMobEffect {
+public class SanguinareMobEffect extends SimpleMobEffect {
 
     public SanguinareMobEffect(MobEffectCategory category, int color) {
         super(category, color, x -> ModParticles.SANGUINARE.get());
