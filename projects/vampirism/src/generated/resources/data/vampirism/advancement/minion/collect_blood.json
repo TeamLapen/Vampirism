@@ -1,0 +1,34 @@
+{
+  "parent": "vampirism:minion/become_lord",
+  "criteria": {
+    "task": {
+      "conditions": {
+        "task": "vampirism:collect_blood"
+      },
+      "trigger": "factions:minion_action"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.collect_blood.desc"
+    },
+    "icon": {
+      "components": {
+        "vampirism:bottle_blood": {
+          "blood": 5
+        }
+      },
+      "count": 1,
+      "id": "vampirism:blood_bottle"
+    },
+    "title": {
+      "translate": "advancement.vampirism.collect_blood"
+    }
+  },
+  "requirements": [
+    [
+      "task"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

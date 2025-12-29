@@ -1,0 +1,143 @@
+package de.teamlapen.vampirism.client.gui.screens;
+
+import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.client.gui.components.DropdownWidget;
+import de.teamlapen.factions.client.gui.components.IRenderLast;
+import de.teamlapen.factions.client.gui.screens.AppearanceScreen;
+import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.layouts.LayoutElement;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+
+import java.util.stream.IntStream;
+
+public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
+
+    private static final Component NAME = Component.translatable("gui.vampirism.appearance");
+
+    private int fangType;
+    private int eyeType;
+    private boolean glowingEyes;
+    private boolean titleGender;
+
+
+    public VampirePlayerAppearanceScreen(@Nullable Screen backScreen) {
+        super(NAME, Minecraft.getInstance().player, backScreen);
+    }
+
+    @Override
+    public void removed() {
+        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0, titleGender ? 1 : 0));
+        super.removed();
+    }
+
+    @Override
+    protected void init() {
+        VampirePlayer vampire = VampirePlayer.get(minecraft.player);
+        var customization = vampire.getCustomization();
+        this.fangType = customization.fangType();
+        this.eyeType = customization.eyeType();
+        this.glowingEyes = customization.glowingEyes();
+        this.titleGender = vampire.titleGender() == IPlayableFaction.TitleGender.FEMALE;
+        super.init();
+    }
+
+    @Override
+    public void render(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        for (Renderable renderable : this.renderables) {
+            if (renderable instanceof IRenderLast last) {
+                last.renderLast(guiGraphics, mouseX, mouseY, partialTicks);
+            }
+        }
+    }
+
+    @Override
+    protected @NotNull LayoutElement createLayout() {
+        LinearLayout vertical = LinearLayout.vertical();
+        vertical.spacing(4);
+
+        vertical.addChild(DropdownWidget.builder(0,0)
+                        .width(120)
+                        .itemHeight(20)
+                        .maxVisibleItems(5)
+                        .initialSelection(this.eyeType)
+                        .onSelect(this::eye)
+                        .onHover(this::hoverEye)
+                .items(IntStream.range(0, REFERENCE.EYE_TYPE_COUNT)
+                        .mapToObj(type -> (Component) Component.translatable("gui.vampirism.appearance.eye").append(" " + (type + 1)))
+                        .toList())
+                        .build());
+
+        vertical.addChild(DropdownWidget.builder(0,0)
+                        .width(120)
+                        .itemHeight(20)
+                        .maxVisibleItems(5)
+                        .initialSelection(this.fangType)
+                        .onSelect(this::fang)
+                        .onHover(this::hoverFang)
+                .items(IntStream.range(0, REFERENCE.FANG_TYPE_COUNT)
+                        .mapToObj(type -> (Component) Component.translatable("gui.vampirism.appearance.fang").append(" " + (type + 1)))
+                        .toList())
+                        .build());
+
+
+        vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.appearance.title_gender"), minecraft.font).selected(titleGender).onValueChange((button, selected) -> {
+            titleGender = selected;
+            FactionPlayerHandler.get(entity).setTitleGender(titleGender);
+        }).build());
+
+        vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.appearance.glowing_eye"), minecraft.font).selected(glowingEyes).onValueChange((button, selected) -> {
+            glowingEyes = selected;
+            VampirePlayer.get(entity).setGlowingEyes(glowingEyes);
+        }).build());
+
+
+        return vertical;
+    }
+
+    private void eye(int eyeType) {
+        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        vampire.setEyeType(this.eyeType = eyeType);
+    }
+
+    private void fang(int fangType) {
+        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        vampire.setFangType(this.fangType = fangType);
+    }
+
+    private void hoverEye(int eyeType, boolean hovered) {
+        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        if (hovered) {
+            vampire.setEyeType(eyeType);
+        } else {
+            if (vampire.getEyeType() == eyeType) {
+                vampire.setEyeType(this.eyeType);
+            }
+        }
+    }
+
+    private void hoverFang(int fangType, boolean hovered) {
+        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        if (hovered) {
+            vampire.setFangType(fangType);
+        } else {
+            if (vampire.getFangType() == fangType) {
+                vampire.setFangType(this.fangType);
+            }
+        }
+    }
+}

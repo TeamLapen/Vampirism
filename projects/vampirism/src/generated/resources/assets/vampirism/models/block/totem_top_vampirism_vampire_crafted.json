@@ -1,0 +1,6 @@
+{
+  "parent": "factions:block/totem_top",
+  "textures": {
+    "outer": "minecraft:block/obsidian"
+  }
+}

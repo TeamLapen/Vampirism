@@ -1,0 +1,29 @@
+{
+  "parent": "vampirism:minion/become_lord",
+  "criteria": {
+    "task": {
+      "conditions": {
+        "task": "factions:protect_lord"
+      },
+      "trigger": "factions:minion_action"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.protect_lord.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:shield"
+    },
+    "title": {
+      "translate": "advancement.vampirism.protect_lord"
+    }
+  },
+  "requirements": [
+    [
+      "task"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

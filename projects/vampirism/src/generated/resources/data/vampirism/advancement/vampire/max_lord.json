@@ -1,0 +1,32 @@
+{
+  "parent": "vampirism:vampire/max_level",
+  "criteria": {
+    "level": {
+      "conditions": {
+        "type": "lord",
+        "faction": "vampirism:vampire",
+        "level": 5
+      },
+      "trigger": "factions:faction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.max_lord_vampire.desc"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "vampirism:vampire_minion_upgrade_special"
+    },
+    "title": {
+      "translate": "advancement.vampirism.max_lord_vampire"
+    }
+  },
+  "requirements": [
+    [
+      "level"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

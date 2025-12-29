@@ -1,0 +1,203 @@
+package de.teamlapen.vampirism.common.world.entity.player.vampire.actions;
+
+import de.teamlapen.factions.api.factions.actions.IActionResult;
+import de.teamlapen.factions.api.factions.actions.ILastingAction;
+import de.teamlapen.factions.common.core.ModRegistries;
+import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModAttachments;
+import de.teamlapen.vampirism.common.core.ModEffects;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
+
+
+public class BatVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+
+    public final static float BAT_EYE_HEIGHT = 0.85F * 0.6f;
+    public static final EntityDimensions BAT_SIZE = EntityDimensions.fixed(0.55f, 0.8f).withEyeHeight(BAT_EYE_HEIGHT);
+
+    private static final float PLAYER_WIDTH = 0.6F;
+    private static final float PLAYER_HEIGHT = 1.8F;
+
+    public BatVampireAction() {
+        super();
+    }
+
+    @Override
+    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+        Player player = vampire.asEntity();
+        setModifier(player, true);
+        updatePlayer((VampirePlayer) vampire, true);
+        return IActionResult.SUCCESS;
+    }
+
+    @Override
+    public @NotNull IActionResult canBeUsedBy(@NotNull IVampirePlayer vampire) {
+        Player player = vampire.asEntity();
+        if (vampire.isGettingSundamage(player.level())) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_sun"));
+        } else if (ModItems.UMBRELLA.get() == player.getMainHandItem().getItem()) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.has_umbrella"));
+        } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE || vampire.asEntity().hasEffect(ModEffects.GARLIC) && vampire.asEntity().getEffect(ModEffects.GARLIC).getAmplifier() > 0) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.effected_by_garlic"));
+        } else if (ModConfig.server().batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.dimension"));
+        } else if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
+            return IActionResult.fail(Component.translatable("text.factions.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
+        } else if (player.isInWater()) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_water"));
+        } else if (player.getVehicle() != null) {
+            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_vehicle"));
+        } else {
+            return IActionResult.SUCCESS;
+        }
+    }
+
+    @Override
+    public int getCooldown(IVampirePlayer player) {
+        return ModConfig.balance().vaBatCooldown.get() * 20 + 1;
+    }
+
+    @Override
+    public int getDuration(IVampirePlayer player) {
+        return Mth.clamp(ModConfig.balance().vaBatDuration.get(), 10, Integer.MAX_VALUE / 20 - 1) * 20;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return ModConfig.balance().vaBatEnabled.get();
+    }
+
+    @Override
+    public void onActivatedClient(@NotNull IVampirePlayer vampire) {
+        if (!((VampirePlayer) vampire).getSkillProperties().bat) {
+            updatePlayer((VampirePlayer) vampire, true);
+        }
+        Identifier key = ModRegistries.ACTIONS.getKey(this);
+        AttributeInstance fly = vampire.asEntity().getAttribute(NeoForgeMod.CREATIVE_FLIGHT);
+        if (fly != null && !fly.hasModifier(key)) {
+            fly.addPermanentModifier(new AttributeModifier(key, 1, AttributeModifier.Operation.ADD_VALUE));
+        }
+    }
+
+    @Override
+    public void onDeactivated(@NotNull IVampirePlayer vampire) {
+        Player player = vampire.asEntity();
+        setModifier(player, false);
+        if (!player.onGround()) {
+            player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 20, 100, false, false));
+        }
+        //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
+        updatePlayer((VampirePlayer) vampire, false);
+        player.removeData(ModAttachments.VAMPIRE_BAT);
+    }
+
+    @Override
+    public void onReActivated(@NotNull IVampirePlayer vampire) {
+        setModifier(vampire.asEntity(), true);
+        if (!((VampirePlayer) vampire).getSkillProperties().bat) {
+            updatePlayer((VampirePlayer) vampire, true);
+        }
+    }
+
+    @Override
+    public boolean onUpdate(@NotNull IVampirePlayer vampire) {
+        if (vampire.asEntity() instanceof ServerPlayer player) {
+            if (vampire.isGettingSundamage(player.level()) && !vampire.isRemote()) {
+                player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_day"));
+                return true;
+            } else if (ModItems.UMBRELLA.get() == player.getMainHandItem().getItem() && !vampire.isRemote()) {
+                player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_umbrella"));
+                return true;
+            } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE && !vampire.isRemote()) {
+                player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_garlic"));
+                return true;
+            } else if (ModConfig.server().batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
+                player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_dimension"));
+                return true;
+            } else {
+                float exhaustion = ModConfig.balance().vaBatExhaustion.get().floatValue();
+                if (exhaustion > 0) vampire.addExhaustion(exhaustion);
+                return player.isInWater();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Set's flightspeed capability
+     */
+    private void setFlightSpeed(@NotNull Player player, float speed) {
+        player.getAbilities().setFlyingSpeed(speed);
+    }
+
+    private void setModifier(@NotNull Player player, boolean enabled) {
+        Identifier key = ModRegistries.ACTIONS.getKey(this);
+        if (key == null) {
+            return;
+        }
+        if (enabled) {
+            AttributeInstance armor = player.getAttribute(Attributes.ARMOR);
+            if (armor != null && !armor.hasModifier(key)) {
+                armor.addPermanentModifier(new AttributeModifier(key, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            }
+            AttributeInstance armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
+            if (armorToughness != null && !armorToughness.hasModifier(key)) {
+                armorToughness.addPermanentModifier(new AttributeModifier(key, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            }
+            AttributeInstance fly = player.getAttribute(NeoForgeMod.CREATIVE_FLIGHT);
+            if (fly != null && !fly.hasModifier(key)) {
+                fly.addPermanentModifier(new AttributeModifier(key, 1, AttributeModifier.Operation.ADD_VALUE));
+            }
+
+            setFlightSpeed(player, ModConfig.balance().vaBatFlightSpeed.get().floatValue());
+        } else {
+            Objects.requireNonNull(player.getAttribute(Attributes.ARMOR)).removeModifier(key);
+            Objects.requireNonNull(player.getAttribute(Attributes.ARMOR_TOUGHNESS)).removeModifier(key);
+            Objects.requireNonNull(player.getAttribute(NeoForgeMod.CREATIVE_FLIGHT)).removeModifier(key);
+
+            setFlightSpeed(player, 0.05F);
+        }
+        player.onUpdateAbilities();
+
+    }
+
+    /**
+     * Adjust the players size and eye height to fit to the bat model
+     */
+    private void updatePlayer(@NotNull VampirePlayer vampire, boolean bat) {
+        Player player = vampire.asEntity();
+        vampire.getSkillProperties().bat = bat;
+        player.setForcedPose(bat ? Pose.STANDING : null);
+        //Eye height is set in {@link ModPlayerEventHandler} on {@link EyeHeight} event
+        //Entity size is hacked in via {@link ASMHooks}
+        player.refreshDimensions();
+        if (bat) {
+            player.setPos(player.getX(), player.getY() + (PLAYER_HEIGHT - BAT_SIZE.height()), player.getZ());
+        }
+    }
+
+    @Override
+    public boolean showHudDuration(Player player) {
+        return true;
+    }
+
+}

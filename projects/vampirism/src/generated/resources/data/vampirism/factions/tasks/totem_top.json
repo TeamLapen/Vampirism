@@ -1,0 +1,53 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factions:item",
+        "description": {
+          "translate": "item.minecraft.diamond"
+        },
+        "id": "minecraft:diamond",
+        "item": {
+          "count": 1,
+          "id": "minecraft:diamond"
+        }
+      },
+      {
+        "type": "factions:item",
+        "description": {
+          "translate": "item.minecraft.obsidian"
+        },
+        "id": "minecraft:obsidian",
+        "item": {
+          "count": 32,
+          "id": "minecraft:obsidian"
+        }
+      },
+      {
+        "type": "factions:entity_type",
+        "amount": 32,
+        "description": {
+          "translate": "entity_tag.vampirism.zombies"
+        },
+        "entityType": "vampirism:zombies",
+        "id": "vampirism:zombies"
+      }
+    ]
+  },
+  "reward": {
+    "type": "factions:item",
+    "item": {
+      "count": 1,
+      "id": "factions:totem_top_crafted"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.totem_top"
+  },
+  "unlocker": [
+    {
+      "type": "factions:level",
+      "reqLevel": 5
+    }
+  ]
+}

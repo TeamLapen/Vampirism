@@ -1,0 +1,111 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "y": 90
+      },
+      "when": {
+        "east_type": "vertical"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side"
+      },
+      "when": {
+        "north_type": "vertical"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "y": 270
+      },
+      "when": {
+        "west_type": "vertical"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "y": 180
+      },
+      "when": {
+        "south_type": "vertical"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "y": 270
+      },
+      "when": {
+        "up_type": "vertical"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side",
+        "y": 90
+      },
+      "when": {
+        "down_type": "vertical"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "y": 90
+      },
+      "when": {
+        "east_type": "horizontal"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "y": 180
+      },
+      "when": {
+        "north_type": "horizontal"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "y": 270
+      },
+      "when": {
+        "west_type": "horizontal"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "y": 180
+      },
+      "when": {
+        "south_type": "horizontal"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "y": 270
+      },
+      "when": {
+        "up_type": "horizontal"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/cursed_bark_side_2",
+        "y": 90
+      },
+      "when": {
+        "down_type": "horizontal"
+      }
+    }
+  ]
+}

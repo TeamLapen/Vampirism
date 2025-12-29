@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "#minecraft:netherite_tool_materials",
+  "base": "vampirism:armor_of_swiftness_chest_enhanced",
+  "result": {
+    "id": "vampirism:armor_of_swiftness_chest_ultimate"
+  },
+  "template": "minecraft:netherite_upgrade_smithing_template"
+}

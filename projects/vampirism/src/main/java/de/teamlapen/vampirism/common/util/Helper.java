@@ -1,0 +1,254 @@
+package de.teamlapen.vampirism.common.util;
+
+import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.factions.api.factions.IFactionHelper;
+import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismApi;
+import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
+import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModFactions;
+import de.teamlapen.vampirism.common.tags.ModBiomeTags;
+import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
+import de.teamlapen.vampirism.common.world.attachments.LevelFog;
+import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
+import de.teamlapen.vampirism.common.world.items.StakeItem;
+import de.teamlapen.vampirism.common.world.items.crossbow.arrow.VampireKillerBehavior;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
+
+public class Helper {
+
+
+    private final static Logger LOGGER = LogManager.getLogger();
+
+    /**
+     * Checks if the entity can get sundamage at its current position.
+     * It is recommended to cache the value for a few ticks.
+     */
+    public static boolean gettingSundamge(LivingEntity entity, LevelAccessor world) {
+        if (entity instanceof Player && entity.isSpectator()) return false;
+        if (VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition())) {
+            if (!(world instanceof Level) || !((Level) world).isRaining()) {
+                //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
+                if (isDay(world, entity.blockPosition())) {
+                    BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
+                    if (canBlockSeeSun(world, pos)) {
+                        return world instanceof Level && !LevelFog.get(((Level) world)).isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()));
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isDay(LevelAccessor level, BlockPos pos) {
+        float angle = level.environmentAttributes().getValue(EnvironmentAttributes.SUN_ANGLE, pos) / 360;
+        return angle > 0.78 || angle < 0.24;
+    }
+
+    public static boolean canBlockSeeSun(@NotNull LevelAccessor world, @NotNull BlockPos pos) {
+        if (pos.getY() >= world.getSeaLevel()) {
+            return world.canSeeSky(pos);
+        } else {
+            BlockPos blockpos = new BlockPos(pos.getX(), world.getSeaLevel(), pos.getZ());
+            if (!world.canSeeSky(blockpos)) {
+                return false;
+            } else {
+                int liquidBlocks = 0;
+                for (blockpos = blockpos.below(); blockpos.getY() > pos.getY(); blockpos = blockpos.below()) {
+                    BlockState state = world.getBlockState(blockpos);
+                    if (state.liquid()) { // if fluid than it propagates the light until `vpSundamageWaterBlocks`
+                        liquidBlocks++;
+                        if (liquidBlocks >= ModConfig.balance().vpSundamageWaterblocks.get()) {
+                            return false;
+                        }
+                    } else if (state.canOcclude() && (state.isFaceSturdy(world, pos, Direction.DOWN) || state.isFaceSturdy(world, pos, Direction.UP))) { //solid block blocks the light (fence is solid too?)
+                        return false;
+                    } else if (state.getLightBlock() > 0) { //if not solid, but propagates no light
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+    }
+
+
+    @NotNull
+    public static EnumStrength getGarlicStrength(@NotNull Entity e, LevelAccessor world) {
+        return getGarlicStrengthAt(world, e.blockPosition());
+    }
+
+    @NotNull
+    public static EnumStrength getGarlicStrengthAt(LevelAccessor world, @NotNull BlockPos pos) {
+        return world instanceof Level ? VampirismApi.garlicHandler((Level) world).getStrengthAtChunk(new ChunkPos(pos)) : EnumStrength.NONE;
+    }
+
+    @NotNull
+    public static ResourceKey<Level> getWorldKey(LevelAccessor world) {
+        return world instanceof Level ? ((Level) world).dimension() : world instanceof ServerLevelAccessor ? ((ServerLevelAccessor) world).getLevel().dimension() : Level.OVERWORLD;
+    }
+
+    public static boolean canBecomeVampire(@NotNull Player player) {
+        return FactionPlayerHandler.get(player).canJoin(ModFactions.VAMPIRE);
+    }
+
+    public static boolean canTurnPlayer(IVampire biter, @Nullable Player target) {
+        if (target != null && (target.isCreative() || target.isSpectator())) return false;
+        if (biter instanceof IVampirePlayer player) {
+            if (!ModConfig.server().playerCanTurnPlayer.get()) return false;
+            return !(player instanceof ServerPlayer) || Permissions.INFECT_PLAYER.isAllowed((ServerPlayer) player);
+        } else {
+            return !ModConfig.server().disableMobBiteInfection.get();
+        }
+    }
+
+    /**
+     * Checks if
+     *
+     * @return If the given entity is a vampire (Either a player in the vampire faction or a vampire entity
+     */
+    public static boolean isVampire(Entity entity) {
+        return IFaction.is(ModFactions.VAMPIRE, IFactionHelper.get().getFaction(entity));
+    }
+
+    public static boolean isHunter(Entity entity) {
+        return IFaction.is(ModFactions.HUNTER, IFactionHelper.get().getFaction(entity));
+    }
+
+    public static boolean isHunter(@NotNull Player entity) {
+        return FactionPlayerHandler.get(entity).isInFaction(ModFactions.HUNTER);
+    }
+
+    public static boolean isVampire(Player entity) {
+        return FactionPlayerHandler.get(entity).isInFaction(ModFactions.VAMPIRE);
+    }
+
+    public static boolean appearsAsVampire(Entity entity, Entity viewer) {
+        if (entity instanceof Player player) {
+            return appearsAsVampire(player, viewer);
+        } else {
+            return isVampire(entity);
+        }
+    }
+
+    public static boolean appearsAsVampire(Player player, Entity viewer) {
+        return IFaction.is(ModFactions.VAMPIRE, viewedFaction(player, viewer));
+    }
+
+    public static Holder<? extends IFaction<?>> viewedFaction(Player player, Entity viewer) {
+        return FactionPlayerHandler.getCurrentFactionPlayer(player).map(IFactionPlayer::getDisguise).map(s -> s.getViewedFaction(IFactionHelper.get().getFaction(viewer))).orElse(null);
+    }
+
+    /**
+     * @return Checks if all given skills are enabled
+     */
+    public static boolean areSkillsEnabled(@NotNull ISkillHandler<?> skillHandler, @NotNull List<Holder<ISkill<?>>> skills) {
+        for (Holder<ISkill<?>> skill : skills) {
+            if (!skillHandler.isSkillEnabled(skill)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isEntityInVampireBiome(@Nullable Entity e) {
+        if (e == null) return false;
+        Level w = e.level();
+        return w.getBiome(e.blockPosition()).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
+    }
+
+    public static boolean isPosInVampireBiome(@NotNull BlockPos pos, @NotNull LevelAccessor level) {
+        Holder<Biome> biome = level.getBiome(pos);
+        return biome.is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
+    }
+
+    /**
+     * @return Whether the entity is in a vampire fog area (does not check for vampire biome)
+     */
+    public static boolean isEntityInArtificalVampireFogArea(@Nullable Entity e) {
+        if (e == null) return false;
+        Level w = e.level();
+        return LevelFog.get(w).isInsideArtificialVampireFogArea(e.blockPosition());
+    }
+
+    public static Identifier getBiomeId(@NotNull Entity e) {
+        return getBiomeId(e.level(), e.blockPosition());
+    }
+
+    public static Holder<Biome> getBiome(@NotNull Entity e) {
+        return e.level().getBiome(e.blockPosition());
+    }
+
+    public static Identifier getBiomeId(@NotNull CommonLevelAccessor world, @NotNull BlockPos pos) {
+        return getBiomeId(world, world.getBiome(pos));
+    }
+
+    public static Identifier getBiomeId(@NotNull CommonLevelAccessor world, @NotNull Holder<Biome> biome) {
+        return biome.unwrap().map(ResourceKey::identifier, b -> world.registryAccess().lookupOrThrow(Registries.BIOME).getKey(b));
+    }
+
+
+    /**
+     * blockpos to nbt
+     */
+    public static @NotNull ListTag newDoubleNBTList(double @NotNull ... numbers) {
+        ListTag listnbt = new ListTag();
+
+        for (double d0 : numbers) {
+            listnbt.add(DoubleTag.valueOf(d0));
+        }
+
+        return listnbt;
+    }
+
+    /**
+     * Check if
+     *
+     * @return Whether the given damage source can kill a vampire player or go to DBNO state instead
+     */
+    public static boolean canKillVampires(@NotNull DamageSource source) {
+        if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            if (source.is(ModDamageTypeTags.VAMPIRE_IMMORTAL) || ModConfig.balance().vpImmortalFromDamageSources.get().contains(source.getMsgId())) {
+                if (source.getDirectEntity() instanceof LivingEntity) {
+                    //Maybe use all IVampireFinisher??
+                    return source.getDirectEntity() instanceof IHunterMob || ((LivingEntity) source.getDirectEntity()).getMainHandItem().getItem() instanceof StakeItem;
+                } else if (source.getDirectEntity() instanceof CrossbowArrowEntity) {
+                    return ((CrossbowArrowEntity) source.getDirectEntity()).getArrowType() instanceof VampireKillerBehavior;
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+}

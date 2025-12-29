@@ -1,0 +1,50 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factions:item",
+        "description": {
+          "translate": "item.minecraft.potion"
+        },
+        "id": "minecraft:potion",
+        "item": {
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:poison"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:potion"
+        }
+      },
+      {
+        "type": "factions:item",
+        "description": {
+          "translate": "item.vampirism.pure_blood_1"
+        },
+        "id": "vampirism:pure_blood_1",
+        "item": {
+          "count": 1,
+          "id": "vampirism:pure_blood_1"
+        }
+      }
+    ]
+  },
+  "reward": {
+    "type": "factions:item",
+    "item": {
+      "count": 1,
+      "id": "factions:oblivion_potion"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.oblivion_potion_pure_blood_2"
+  },
+  "unlocker": [
+    {
+      "type": "factions:level",
+      "maxLevel": 6,
+      "reqLevel": 4
+    }
+  ]
+}

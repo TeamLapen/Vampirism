@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "#minecraft:netherite_tool_materials",
+  "base": "vampirism:hunter_axe_enhanced",
+  "result": {
+    "id": "vampirism:hunter_axe_ultimate"
+  },
+  "template": "minecraft:netherite_upgrade_smithing_template"
+}

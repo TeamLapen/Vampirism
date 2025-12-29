@@ -1,0 +1,74 @@
+plugins {
+    id 'net.neoforged.moddev' version '2.0.116'
+}
+
+group = project.vampirism_group_id
+version = project.mod_version
+
+base {
+    archivesName = "${project.vampirism_mod_name}-api"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(project.java_version)
+    }
+    withSourcesJar()
+}
+
+List<Project> dependencyProjects = [project(':factions-api')]
+
+dependencyProjects.forEach {
+    project.evaluationDependsOn(it.path)
+}
+
+dependencies {
+    dependencyProjects.forEach {
+        implementation(it)
+    }
+}
+
+neoForge {
+    version = project.neoforge_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    javaToolchains {
+        compilerFor{
+            languageVersion = JavaLanguageVersion.of(project.java_version)
+        }
+    }
+}
+
+tasks.jar {
+    from (sourceSets.main.output)
+}
+
+var sourcesJarTask = tasks.named("sourcesJar", Jar) {
+    from(sourceSets.main.allJava)
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier.set("sources")
+}
+
+artifacts {
+    archives(tasks.jar)
+    archives(sourcesJarTask.get())
+}
+
+publishing {
+    publications {
+        register("vampirism-api", MavenPublication) {
+            artifactId = "${project.vampirism_mod_name}-api"
+            artifact(tasks.jar)
+            artifact(sourcesJarTask.get())
+        }
+    }
+}

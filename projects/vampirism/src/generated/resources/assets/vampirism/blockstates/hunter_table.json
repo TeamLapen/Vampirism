@@ -1,0 +1,228 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table"
+      },
+      "when": {
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table",
+        "y": 90
+      },
+      "when": {
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table",
+        "y": 180
+      },
+      "when": {
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table",
+        "y": 270
+      },
+      "when": {
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_hammer"
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "north"
+          },
+          {
+            "weapon_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_hammer",
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "east"
+          },
+          {
+            "weapon_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_hammer",
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "south"
+          },
+          {
+            "weapon_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_hammer",
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "west"
+          },
+          {
+            "weapon_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_garlic"
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "north"
+          },
+          {
+            "alchemical_cauldron": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_garlic",
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "east"
+          },
+          {
+            "alchemical_cauldron": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_garlic",
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "south"
+          },
+          {
+            "alchemical_cauldron": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_garlic",
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "west"
+          },
+          {
+            "alchemical_cauldron": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_bottle"
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "north"
+          },
+          {
+            "potion_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_bottle",
+        "y": 90
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "east"
+          },
+          {
+            "potion_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_bottle",
+        "y": 180
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "south"
+          },
+          {
+            "potion_table": "true"
+          }
+        ]
+      }
+    },
+    {
+      "apply": {
+        "model": "vampirism:block/hunter_table/hunter_table_bottle",
+        "y": 270
+      },
+      "when": {
+        "AND": [
+          {
+            "facing": "west"
+          },
+          {
+            "potion_table": "true"
+          }
+        ]
+      }
+    }
+  ]
+}

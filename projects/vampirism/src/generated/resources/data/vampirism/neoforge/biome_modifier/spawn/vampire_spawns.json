@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#vampirism:has_spawn/vampire",
+  "spawners": {
+    "type": "vampirism:vampire",
+    "maxCount": 3,
+    "minCount": 1,
+    "weight": 80
+  }
+}

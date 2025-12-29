@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#vampirism:has_spawn/advanced_vampire",
+  "spawners": {
+    "type": "vampirism:advanced_vampire",
+    "maxCount": 3,
+    "minCount": 1,
+    "weight": 30
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factions:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "count": 64,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "factions:entity_type",
+        "amount": 75,
+        "description": {
+          "translate": "entity_tag.vampirism.vampire"
+        },
+        "entityType": "vampirism:vampire",
+        "id": "vampirism:vampire"
+      }
+    ]
+  },
+  "reward": {
+    "type": "factions:lord_level",
+    "description": {
+      "translate": "task_reward.factions.lord_level_reward",
+      "with": [
+        4
+      ]
+    },
+    "targetLevel": 4
+  },
+  "title": {
+    "translate": "task.vampirism.hunter_lord4"
+  },
+  "unlocker": [
+    {
+      "type": "factions:lord_level",
+      "exact": true,
+      "reqLordLevel": 3
+    }
+  ]
+}

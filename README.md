@@ -202,7 +202,7 @@ The sounds used in this mod are individual licensed and may only be used outside
 
 ##### Sit functionality - `sit` package
 
-The code under `de.teamlapen.vampirism.sit` is adapted from bl4ckscor4's Sit mod and licensed under GNU GPLv3 (see
+The code under `de.teamlapen.vampirism.misc.sit` is adapted from bl4ckscor4's Sit mod and licensed under GNU GPLv3 (see
 LICENSE.txt in that directory).
 
 ##### Radial screen - `lib.*.radialmenu` package

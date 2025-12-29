@@ -1,0 +1,40 @@
+{
+  "parent": "vampirism:vampire/become_vampire",
+  "criteria": {
+    "flower": {
+      "conditions": {
+        "action": "perform_ritual_inspiration"
+      },
+      "trigger": "vampirism:vampire_action"
+    },
+    "main": {
+      "conditions": {
+        "type": "level",
+        "faction": "vampirism:vampire",
+        "level": 1
+      },
+      "trigger": "factions:faction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.baptism_of_blood.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "vampirism:altar_inspiration"
+    },
+    "title": {
+      "translate": "advancement.vampirism.baptism_of_blood"
+    }
+  },
+  "requirements": [
+    [
+      "flower"
+    ],
+    [
+      "main"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

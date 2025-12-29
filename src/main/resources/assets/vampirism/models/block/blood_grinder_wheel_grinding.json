@@ -1,7 +1,0 @@
-{
-	"credit": "Made by GridExpert",
-	"parent": "vampirism:block/blood_grinder_wheel",
-	"textures": {
-		"wheel": "vampirism:block/blood_grinder_wheel_grinding"
-	}
-}

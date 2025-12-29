@@ -1,0 +1,11 @@
+{
+  "textures": [
+    "minecraft:generic_4",
+    "minecraft:spell_1",
+    "minecraft:spell_4",
+    "minecraft:spell_6",
+    "minecraft:effect_4",
+    "minecraft:effect_6",
+    "minecraft:drip_hang"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "criteria": {
+    "main": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:vampire_fang"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "second": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:garlic"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "vampirism:block/dark_stone_bricks.png",
+    "description": {
+      "translate": "advancement.vampirism.desc"
+    },
+    "icon": {
+      "count": 1,
+      "id": "vampirism:vampire_fang"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.vampirism"
+    }
+  },
+  "requirements": [
+    [
+      "main",
+      "second"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

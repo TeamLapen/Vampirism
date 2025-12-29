@@ -1,0 +1,8 @@
+{
+  "remove": [
+    "#factions:is_neutral"
+  ],
+  "values": [
+    "#factions:all"
+  ]
+}

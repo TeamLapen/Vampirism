@@ -1,0 +1,326 @@
+package de.teamlapen.vampirism.common.world.blockentity;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import de.teamlapen.factions.common.world.blockentity.NetworkedBlockEntity;
+import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.tags.ModBlockTags;
+import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.common.world.inventory.VampireBeaconMenu;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.LockCode;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.BeaconMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BeaconBeamOwner;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static net.minecraft.world.level.block.entity.BeaconBlockEntity.playSound;
+
+public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements MenuProvider, Nameable, BeaconBeamOwner {
+    private static final int MAX_LEVELS = 3;
+    public static final Holder<MobEffect>[][] BEACON_EFFECTS = new Holder[][]{{MobEffects.SPEED, MobEffects.SATURATION}, {MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING}, {MobEffects.REGENERATION, MobEffects.SATURATION}};
+    public static final int[][] BEACON_EFFECTS_AMPLIFIER = new int[][] {{0, 0}, {0, 0}, {0, 1}};
+    public static final Set<Holder<MobEffect>> NO_AMPLIFIER_EFFECTS = Set.of(MobEffects.NIGHT_VISION, MobEffects.WATER_BREATHING);
+    private static final Set<Holder<MobEffect>> VALID_EFFECTS = Arrays.stream(BEACON_EFFECTS).flatMap(Arrays::stream).collect(Collectors.toSet());
+    public static final int DATA_LEVELS = 0;
+    public static final int DATA_PRIMARY = 1;
+    public static final int DATA_AMPLIFIER = 2;
+    public static final int DATA_UPGRADED = 3;
+    public static final int NUM_DATA_VALUES = 4;
+    private static final int BLOCKS_CHECK_PER_TICK = 10;
+    private static final Component DEFAULT_NAME = Component.translatable("container.beacon");
+    private List<BeaconBeamOwner.Section> beamSections = Lists.newArrayList();
+    private List<BeaconBeamOwner.Section> checkingBeamSections = Lists.newArrayList();
+    private int levels;
+    private int lastCheckY;
+    @Nullable
+    private Holder<MobEffect> primaryPower;
+    private int effectAmplifier;
+    private boolean isUpgraded;
+    @Nullable
+    private Component name;
+    private LockCode lockKey = LockCode.NO_LOCK;
+    private final ContainerData dataAccess = new ContainerData() {
+        public int get(int slot) {
+            return switch (slot) {
+                case DATA_LEVELS -> VampireBeaconBlockEntity.this.levels;
+                case DATA_PRIMARY -> BeaconMenu.encodeEffect(VampireBeaconBlockEntity.this.primaryPower);
+                case DATA_AMPLIFIER -> VampireBeaconBlockEntity.this.effectAmplifier;
+                case DATA_UPGRADED -> VampireBeaconBlockEntity.this.isUpgraded ? 1 : 0;
+                default -> 0;
+            };
+        }
+
+        public void set(int slot, int value) {
+            switch (slot) {
+                case DATA_LEVELS:
+                    VampireBeaconBlockEntity.this.levels = value;
+                    break;
+                case DATA_PRIMARY:
+                    if (!VampireBeaconBlockEntity.this.level.isClientSide() && !VampireBeaconBlockEntity.this.beamSections.isEmpty()) {
+                        playSound(VampireBeaconBlockEntity.this.level, VampireBeaconBlockEntity.this.worldPosition, SoundEvents.BEACON_POWER_SELECT);
+                    }
+                    VampireBeaconBlockEntity.this.primaryPower = VampireBeaconBlockEntity.getValidEffectById(value);
+                    break;
+                case DATA_AMPLIFIER:
+                    VampireBeaconBlockEntity.this.effectAmplifier = value;
+                    break;
+                case DATA_UPGRADED:
+                    VampireBeaconBlockEntity.this.isUpgraded = value != 0;
+                    break;
+            }
+
+        }
+
+        public int getCount() {
+            return NUM_DATA_VALUES;
+        }
+    };
+
+    public VampireBeaconBlockEntity(BlockPos pPos, BlockState pBlockState) {
+        super(ModBlockEntities.VAMPIRE_BEACON.get(), pPos, pBlockState);
+    }
+
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, VampireBeaconBlockEntity pBlockEntity) {
+        int i = pPos.getX();
+        int j = pPos.getY();
+        int k = pPos.getZ();
+        BlockPos blockpos;
+        if (pBlockEntity.lastCheckY < j) {
+            blockpos = pPos;
+            pBlockEntity.checkingBeamSections = Lists.newArrayList();
+            pBlockEntity.lastCheckY = pPos.getY() - 1;
+        } else {
+            blockpos = new BlockPos(i, pBlockEntity.lastCheckY + 1, k);
+        }
+
+        BeaconBeamOwner.Section beaconblockentity$beaconbeamsection = pBlockEntity.checkingBeamSections.isEmpty()
+                ? null
+                : pBlockEntity.checkingBeamSections.getLast();
+        int l = pLevel.getHeight(Heightmap.Types.WORLD_SURFACE, i, k);
+
+        for (int i1 = 0; i1 < BLOCKS_CHECK_PER_TICK && blockpos.getY() <= l; i1++) {
+            BlockState blockstate = pLevel.getBlockState(blockpos);
+            Integer j1 = blockstate.getBeaconColorMultiplier(pLevel, blockpos, pPos);
+            if (j1 != null) {
+                if (pBlockEntity.checkingBeamSections.size() <= 1) {
+                    beaconblockentity$beaconbeamsection = new BeaconBeamOwner.Section(j1);
+                    pBlockEntity.checkingBeamSections.add(beaconblockentity$beaconbeamsection);
+                } else if (beaconblockentity$beaconbeamsection != null) {
+                    if (j1 == beaconblockentity$beaconbeamsection.getColor()) {
+                        beaconblockentity$beaconbeamsection.increaseHeight();
+                    } else {
+                        beaconblockentity$beaconbeamsection = new BeaconBeamOwner.Section(
+                                ARGB.average(beaconblockentity$beaconbeamsection.getColor(), j1)
+                        );
+                        pBlockEntity.checkingBeamSections.add(beaconblockentity$beaconbeamsection);
+                    }
+                }
+            } else {
+                if (beaconblockentity$beaconbeamsection == null || blockstate.getLightBlock() >= 15 && !blockstate.is(Blocks.BEDROCK)) {
+                    pBlockEntity.checkingBeamSections.clear();
+                    pBlockEntity.lastCheckY = l;
+                    break;
+                }
+
+                beaconblockentity$beaconbeamsection.increaseHeight();
+            }
+
+            blockpos = blockpos.above();
+            pBlockEntity.lastCheckY++;
+        }
+
+        int k1 = pBlockEntity.levels;
+        if (pLevel.getGameTime() % 80L == 0L) {
+            if (!pBlockEntity.beamSections.isEmpty()) {
+                Pair<Integer, Boolean> integerBooleanPair = updateBase(pLevel, i, j, k);
+                pBlockEntity.levels = integerBooleanPair.getLeft();
+                pBlockEntity.isUpgraded = integerBooleanPair.getRight();
+            }
+
+            if (pBlockEntity.levels > 0 && !pBlockEntity.beamSections.isEmpty()) {
+                pBlockEntity.applyEffects(pLevel, pPos, pBlockEntity.levels, pBlockEntity.primaryPower, pBlockEntity.isUpgraded ? pBlockEntity.effectAmplifier + 1 : pBlockEntity.effectAmplifier);
+                playSound(pLevel, pPos, SoundEvents.BEACON_AMBIENT);
+            }
+        }
+
+        if (pBlockEntity.lastCheckY >= l) {
+            pBlockEntity.lastCheckY = pLevel.getMinY() - 1;
+            boolean flag = k1 > 0;
+            pBlockEntity.beamSections = pBlockEntity.checkingBeamSections;
+            if (!pLevel.isClientSide()) {
+                boolean flag1 = pBlockEntity.levels > 0;
+                if (!flag && flag1) {
+                    playSound(pLevel, pPos, SoundEvents.BEACON_ACTIVATE);
+
+                    for (ServerPlayer serverplayer : pLevel.getEntitiesOfClass(
+                            ServerPlayer.class, new AABB(i, j, k, i, j - MAX_LEVELS, k).inflate(10.0, 5.0, 10.0)
+                    )) {
+                        CriteriaTriggers.CONSTRUCT_BEACON.trigger(serverplayer, pBlockEntity.levels);
+                    }
+                } else if (flag && !flag1) {
+                    playSound(pLevel, pPos, SoundEvents.BEACON_DEACTIVATE);
+                }
+            }
+        }
+    }
+
+    protected void applyEffects(Level level, BlockPos pos, int levels, @Nullable Holder<MobEffect> power, int effectAmplifier) {
+        if (!level.isClientSide() && power != null) {
+            if (NO_AMPLIFIER_EFFECTS.contains(power)) {
+                effectAmplifier = 0;
+            }
+            AABB aabb = (new AABB(pos)).inflate(levels * 10 + 10).expandTowards(0.0D, level.getHeight(), 0.0D);
+            int effectDuration = (9 + levels * 2) * 20;
+            List<Player> list = level.getEntitiesOfClass(Player.class, aabb, Helper::isHunter);
+            int finalEffectAmplifier = effectAmplifier;
+            list.forEach((player) -> player.addEffect(new MobEffectInstance(power, effectDuration, finalEffectAmplifier, true, true)));
+        }
+    }
+
+    private static Pair<Integer, Boolean> updateBase(Level pLevel, int pX, int pY, int pZ) {
+        int i = 0;
+        Optional<Boolean> upgradeFlag = Optional.empty();
+
+        for (int j = 1; j <= MAX_LEVELS; i = j++) {
+            int k = pY - j;
+            if (k < pLevel.getMinY()) {
+                break;
+            }
+
+            boolean flag = true;
+            boolean upgradeFlagLevel = upgradeFlag.orElse(true);
+
+            for (int l = pX - j; l <= pX + j && flag; ++l) {
+                for (int i1 = pZ - j; i1 <= pZ + j; ++i1) {
+                    BlockState blockState = pLevel.getBlockState(new BlockPos(l, k, i1));
+                    if (!blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_BLOCKS)) {
+                        flag = false;
+                        break;
+                    } else if (upgradeFlagLevel) {
+                        upgradeFlagLevel = blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS);
+                    }
+                }
+            }
+
+            if (!flag) {
+                break;
+            }
+            upgradeFlag = Optional.of(upgradeFlag.orElse(true) && upgradeFlagLevel);
+        }
+
+        return Pair.of(i, upgradeFlag.orElse(false));
+    }
+
+    @Override
+    public void setRemoved() {
+        playSound(this.level, this.worldPosition, SoundEvents.BEACON_DEACTIVATE);
+        super.setRemoved();
+    }
+
+    public List<BeaconBeamOwner.Section> getBeamSections() {
+        return this.levels == 0 ? ImmutableList.of() : this.beamSections;
+    }
+
+    @Nullable
+    static Holder<MobEffect> getValidEffectById(int pEffectId) {
+        Holder<MobEffect> mobeffect = BeaconMenu.decodeEffect(pEffectId);
+        return VALID_EFFECTS.contains(mobeffect) ? mobeffect : null;
+    }
+
+    @Override
+    public void loadAdditional(@NotNull ValueInput input) {
+        super.loadAdditional(input);
+        this.primaryPower = input.read("primary_effect", BuiltInRegistries.MOB_EFFECT.holderByNameCodec()).orElse(null);
+        input.read("CustomName", ComponentSerialization.CODEC).ifPresent(this::setCustomName);
+        this.effectAmplifier = input.getIntOr("Amplifier", 0);
+
+        this.lockKey = LockCode.fromTag(input);
+        this.isUpgraded = input.getBooleanOr("Upgraded", false);
+    }
+
+    @Override
+    protected void saveAdditional(@NotNull ValueOutput output) {
+        super.saveAdditional(output);
+        if (this.primaryPower != null) {
+            output.store("primary_effect", BuiltInRegistries.MOB_EFFECT.holderByNameCodec(), this.primaryPower);
+        }
+        output.putInt("Levels", this.levels);
+        if (this.name != null) {
+            output.store("CustomName", ComponentSerialization.CODEC, this.name);
+        }
+        output.putInt("Amplifier", this.effectAmplifier);
+
+        this.lockKey.addToTag(output);
+        output.putBoolean("Upgraded", this.isUpgraded);
+    }
+
+    public void setCustomName(@Nullable Component pName) {
+        this.name = pName;
+    }
+
+    @Override
+    @Nullable
+    public Component getCustomName() {
+        return this.name;
+    }
+
+    @Override
+    public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        if (this.lockKey.canUnlock(pPlayer)) {
+            return new BeaconMenu(pContainerId, pPlayerInventory, this.dataAccess, ContainerLevelAccess.create(this.level, this.getBlockPos()));
+        } else {
+            BaseContainerBlockEntity.sendChestLockedNotifications(this.getBlockPos().getCenter(), pPlayer, this.getDisplayName());
+            return null;
+        }
+    }
+
+    @Override
+    public @NotNull Component getDisplayName() {
+        return this.getName();
+    }
+
+    @Override
+    public @NotNull Component getName() {
+        return this.name != null ? this.name : DEFAULT_NAME;
+    }
+
+    @Override
+    public void setLevel(@NotNull Level pLevel) {
+        super.setLevel(pLevel);
+        this.lastCheckY = pLevel.getMinY() - 1;
+    }
+}

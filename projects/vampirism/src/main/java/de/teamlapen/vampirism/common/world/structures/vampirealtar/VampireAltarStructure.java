@@ -1,0 +1,31 @@
+package de.teamlapen.vampirism.common.world.structures.vampirealtar;
+
+import com.mojang.serialization.MapCodec;
+import de.teamlapen.vampirism.common.core.ModStructures;
+import de.teamlapen.vampirism.common.world.structures.StructureExtension;
+import net.minecraft.world.level.levelgen.structure.StructureType;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
+
+public class VampireAltarStructure extends StructureExtension {
+
+    public static final MapCodec<VampireAltarStructure> CODEC = simpleCodec(VampireAltarStructure::new);
+
+    public VampireAltarStructure(StructureSettings settings) {
+        super(settings);
+    }
+
+    @Override
+    protected @NotNull Optional<GenerationStub> findGenerationPoint(@NotNull GenerationContext pContext) {
+        return onSurface(pContext, (builder, pos) -> {
+            VampireAltarPieces.addPieces(pContext.structureTemplateManager(), builder, pContext.random(), pos);
+        });
+    }
+
+    @Override
+    public @NotNull StructureType<?> type() {
+        return ModStructures.VAMPIRE_ALTAR_TYPE.get();
+    }
+
+}

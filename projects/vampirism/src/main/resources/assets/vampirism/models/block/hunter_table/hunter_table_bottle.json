@@ -1,0 +1,23 @@
+{
+	"credit": "Made by Grid and FoxPrince",
+	"render_type": "minecraft:cutout",
+	"textures": {
+      "particle": "vampirism:block/vampire_blood_bottle",
+		"bottle": "vampirism:block/vampire_blood_bottle"
+	},
+	"elements": [
+		{
+			"from": [1, 9.6, 3],
+			"to": [7.5, 15.6, 3.0625],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, -0.4, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#bottle"},
+				"east": {"uv": [0, 0, 0, 0], "texture": "#bottle"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#bottle"},
+				"west": {"uv": [0, 0, 0, 0], "texture": "#bottle"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#bottle"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#bottle"}
+			}
+		}
+	]
+}

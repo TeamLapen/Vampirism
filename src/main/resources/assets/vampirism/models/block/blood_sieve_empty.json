@@ -1,7 +1,0 @@
-{
-	"credit": "Made by GridExpert",
-	"parent": "vampirism:block/blood_sieve",
-	"textures": {
-		"filter": "vampirism:block/blood_sieve_filter_empty"
-	}
-}
