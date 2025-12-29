@@ -25,7 +25,7 @@ public class TerraBlenderCompat  {
 
     @SubscribeEvent
     public static void registerBiomeProviderIfPresentUnsafe(FMLCommonSetupEvent event) {
-        if (!ModConfig.COMMON.addVampireForestToOverworld.get()) {
+        if (!ModConfig.common().addVampireForestToOverworld.get()) {
             return;
         }
         if (ModList.get().isLoaded(MOD_ID)) {
