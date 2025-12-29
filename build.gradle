@@ -2,8 +2,17 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.ALL
 }
 
+ext.registerJarFiles = { List<String> filePaths ->
+    tasks.withType(Jar).configureEach {
+        filePaths.each { path ->
+            from(rootProject.file(path))
+        }
+    }
+}
+
 subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'maven-publish'
     apply from: rootProject.file('gradle/idea.gradle')
+    apply from: rootProject.file('gradle/license.gradle')
 }
