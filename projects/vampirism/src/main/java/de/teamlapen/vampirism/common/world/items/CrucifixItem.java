@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.factions.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.factions.api.factions.skills.ISkillHandler;
 import de.teamlapen.factions.common.components.FactionRestriction;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
@@ -67,9 +68,28 @@ public class CrucifixItem extends Item implements IItemWithTier {
     }
 
     @Override
-    public InteractionResult use(Level world, Player player, InteractionHand hand) {
-        player.startUsingItem(hand);
-        return InteractionResult.CONSUME;
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (Helper.isHunter(player)) {
+            if (ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPEL)) {
+                ItemStack itemStack = player.getItemInHand(hand);
+                if (level instanceof ServerLevel serverLevel) {
+                    activePush(serverLevel, player, itemStack);
+                }
+                applyCooldown(player, itemStack);
+            } else {
+                player.startUsingItem(hand);
+            }
+            return InteractionResult.CONSUME;
+        }
+        return InteractionResult.FAIL;
+    }
+
+    protected void applyCooldown(Player player, ItemStack itemStack) {
+        UseCooldown useCooldown = itemStack.get(DataComponents.USE_COOLDOWN);
+        if (useCooldown == null) {
+            throw new IllegalStateException("Crucifix itemstack does not have a UseCooldown component");
+        }
+        player.getCooldowns().addCooldown(itemStack, useCooldown.ticks() * 2);
     }
 
     @Override
@@ -79,42 +99,17 @@ public class CrucifixItem extends Item implements IItemWithTier {
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
-        if (entity instanceof LivingEntity livingEntity && slot != null && slot.getType() == EquipmentSlot.Type.HAND && entity.tickCount % 16 == 8) {
-            if (Helper.isVampire(entity)) {
+        if (entity instanceof LivingEntity livingEntity && slot != null && slot.getType() == EquipmentSlot.Type.HAND) {
+            if (entity.tickCount % 16 == 8 && Helper.isVampire(entity)) {
                 livingEntity.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
                 if (entity instanceof Player player) {
                     player.getInventory().removeItem(stack);
                     player.drop(stack, true);
                 }
             }
-            if (Helper.isHunter(livingEntity) && livingEntity instanceof Player player && player.getCooldowns().isOnCooldown(stack)) {
-                var nearbyVampires = livingEntity.level().getEntities(entity, new AABB(livingEntity.blockPosition()).inflate(6), Helper::isVampire);
-                var viewVector = livingEntity.getViewVector(1.0F).normalize();
-                for (Entity e : nearbyVampires) {
-                    if (e instanceof Player other && player.hasLineOfSight(other)) {
-                        var targetVector = other.position().subtract(livingEntity.position());
-                        Tier tier = getVampirismTier();
-                        if (IRefinementHandler.get(other).filter(s -> s.isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)).isPresent()) {
-                            int i = UtilLib.indexOf(Tier.values(), tier);
-                            if (i > 0) {
-                                tier = Tier.values()[i - 1];
-                            } else if(i == 0) {
-                                continue;
-                            }
-                        }
 
-                        double distance = targetVector.lengthSqr();
-                        double degrees = Math.toDegrees(Math.cos(viewVector.dot(targetVector.normalize())));
-                        boolean effect = switch (tier) {
-                            case ULTIMATE -> (distance < 100 && degrees < 20) || (distance < 56 && degrees < 55) || (distance < 25 && degrees < 70);
-                            case ENHANCED -> (distance < 56 && degrees < 45) || (distance < 25 && degrees < 55);
-                            case NORMAL -> (distance < 25 && degrees < 45);
-                        };
-                        if (effect) {
-                            VampirePlayer.get(other).effectCrucifixSuppression();
-                        }
-                    }
-                }
+            if (entity instanceof Player player && player.getCooldowns().isOnCooldown(stack) && ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPEL)) {
+                passivePush(level, player, stack, true);
             }
         }
     }
@@ -148,12 +143,13 @@ public class CrucifixItem extends Item implements IItemWithTier {
         return (entity instanceof VampireBaronEntity) ? 3 : (entity instanceof AdvancedVampireEntity) ? 2 : 1;
     }
 
-    protected double determineSlowdown(int entityTier) {
-        return switch (tier) {
+    protected double determineSlowdown(int entityTier, boolean reducedStrength) {
+        var slowdown = switch (tier) {
             case NORMAL -> entityTier > 1 ? 0.1 : 0.5;
             case ENHANCED -> entityTier > 2 ? 0.1 : 0.5;
             case ULTIMATE -> entityTier > 3 ? 0.3 : 0.5;
         };
+        return reducedStrength ? slowdown * 0.25 : slowdown;
     }
 
     protected int getRange(ItemStack stack) {
@@ -166,16 +162,20 @@ public class CrucifixItem extends Item implements IItemWithTier {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        if (!(level instanceof ServerLevel serverLevel)) return;
+        if (level instanceof ServerLevel serverLevel) {
+            passivePush(serverLevel, livingEntity, stack, false);
+        }
+    }
 
-        for (LivingEntity nearbyEntity : serverLevel.getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), livingEntity, livingEntity.getBoundingBox().inflate(getRange(stack)))) {
-            Vec3 baseVector = livingEntity.position().subtract(nearbyEntity.position()).multiply(1, 0, 1).normalize(); //Normalized horizontal (xz) vector giving the direction towards the holder of this crucifix
+    protected void passivePush(ServerLevel level, LivingEntity entity, ItemStack stack, boolean reducedStrength) {
+        for (LivingEntity nearbyEntity : level.getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), entity, entity.getBoundingBox().inflate(getRange(stack)))) {
+            Vec3 baseVector = entity.position().subtract(nearbyEntity.position()).multiply(1, 0, 1).normalize(); //Normalized horizontal (xz) vector giving the direction towards the holder of this crucifix
             Vec3 oldDelta = nearbyEntity.getDeltaMovement();
             Vec3 horizontalDelta = oldDelta.multiply(1, 0, 1);
             double parallelScale = baseVector.dot(horizontalDelta);
             if (parallelScale > 0) {
                 Vec3 parallelPart = baseVector.scale(parallelScale); //Part of delta that is parallel to baseVector
-                double scale = determineSlowdown(determineEntityTier(nearbyEntity));
+                double scale = determineSlowdown(determineEntityTier(nearbyEntity), reducedStrength);
                 Vec3 newDelta = oldDelta.subtract(parallelPart.scale(scale)); //Substract parallel part from old Delta (scaled to still allow some movement)
                 if (newDelta.lengthSqr() > oldDelta.lengthSqr()) { //Just to make sure we do not speed up the movement even though this should not be possible
                     newDelta = Vec3.ZERO;
@@ -188,6 +188,47 @@ public class CrucifixItem extends Item implements IItemWithTier {
                 }
 
                 nearbyEntity.setDeltaMovement(newDelta);
+            }
+            applyEffect(entity, level, nearbyEntity, stack);
+        }
+    }
+
+    public void activePush(ServerLevel level, LivingEntity entity, ItemStack stack) {
+        for (LivingEntity nearbyEntity : level.getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().selector(this::affectsEntity), entity, entity.getBoundingBox().inflate(getRange(stack)))) {
+            Vec3 baseVector = entity.position().subtract(nearbyEntity.position()).multiply(1, 0, 1).normalize(); //Normalized horizontal (xz) vector giving the direction towards the holder of this crucifix
+            Vec3 oldDelta = nearbyEntity.getDeltaMovement();
+            double scale = determineSlowdown(determineEntityTier(nearbyEntity), false);
+            Vec3 newDelta = oldDelta.subtract(baseVector.scale(scale * 3));
+            Vec3 collisionDelta = ((EntityAccessor) nearbyEntity).invokeCollide(newDelta);
+            if (collisionDelta.y != newDelta.y && newDelta.y < 0) {
+                newDelta = newDelta.multiply(1, 0, 1);
+            }
+            nearbyEntity.setDeltaMovement(newDelta);
+        }
+    }
+
+    protected void applyEffect(LivingEntity owner, ServerLevel level, LivingEntity entity, ItemStack stack) {
+        if (entity instanceof Player player && Helper.isVampire(player)) {
+            Tier tier = getVampirismTier();
+            if (IRefinementHandler.get(player).filter(s -> s.isRefinementEquipped(ModRefinements.CRUCIFIX_RESISTANT)).isPresent()) {
+                int i = UtilLib.indexOf(Tier.values(), tier);
+                if (i > 0) {
+                    tier = Tier.values()[i - 1];
+                } else if(i == 0) {
+                    return;
+                }
+            }
+            var viewVector = owner.getViewVector(1.0F).normalize();
+            var targetVector = owner.position().subtract(entity.position());
+            double distance = targetVector.lengthSqr();
+            double degrees = Math.toDegrees(Math.cos(viewVector.dot(targetVector.normalize())));
+            boolean effect = switch (tier) {
+                case ULTIMATE -> (distance < 100 && degrees < 20) || (distance < 56 && degrees < 55) || (distance < 25 && degrees < 70);
+                case ENHANCED -> (distance < 56 && degrees < 45) || (distance < 25 && degrees < 55);
+                case NORMAL -> (distance < 25 && degrees < 45);
+            };
+            if (effect) {
+                VampirePlayer.get(player).effectCrucifixSuppression();
             }
         }
     }

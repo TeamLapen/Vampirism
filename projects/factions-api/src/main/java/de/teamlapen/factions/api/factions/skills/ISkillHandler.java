@@ -18,6 +18,10 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
         return FactionsApi.factionPlayerHandler(player).getSkillHandler();
     }
 
+    static boolean isSkillEnabled(Player player, Holder<ISkill<?>> skill) {
+        return get(player).map(handler -> handler.isSkillEnabled(skill)).orElse(false);
+    }
+
     /**
      * @return Returns false if the skill already is unlocked or the parent node is not unlocked or the skill is not found
      */
