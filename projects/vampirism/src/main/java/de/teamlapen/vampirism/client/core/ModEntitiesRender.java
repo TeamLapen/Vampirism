@@ -8,7 +8,10 @@ import de.teamlapen.vampirism.client.renderer.entities.*;
 import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.VampirePlayerHeadLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
+import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.core.ModEntities;
+import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -25,7 +28,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelType;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.BiConsumer;
 
 /**
  * Handles entity render registration
@@ -127,19 +133,8 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(CURSED_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
     }
 
-    private static void addArmor(EntityRenderersEvent.RegisterLayerDefinitions event, ArmorModelSet<LayerDefinition> armorModel, ArmorModelSet<ModelLayerLocation> set) {
-        event.registerLayerDefinition(set.head(), armorModel::head);
-        event.registerLayerDefinition(set.chest(), armorModel::chest);
-        event.registerLayerDefinition(set.legs(), armorModel::legs);
-        event.registerLayerDefinition(set.feet(), armorModel::feet);
-    }
-
     public static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
         _onAddLayers(event);
-    }
-
-    private static ArmorModelSet<ModelLayerLocation> createArmorSet(Identifier path) {
-        return new ArmorModelSet<>(new ModelLayerLocation(path, "helmet"), new ModelLayerLocation(path, "chestplate"), new ModelLayerLocation(path, "leggings"), new ModelLayerLocation(path, "boots"));
     }
 
     @SuppressWarnings("unchecked")
@@ -154,7 +149,7 @@ public class ModEntitiesRender {
         }
     }
 
-    private static @NotNull <T extends LivingEntity, U extends LivingEntityRenderState, Z extends EntityModel<? super U>, O extends LivingEntityRenderState & IConvertedOverlayRenderState, P extends EntityModel<O>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T,U,Z> provider) {
+    private static @NotNull <T extends LivingEntity, U extends LivingEntityRenderState, Z extends EntityModel<? super U>, O extends LivingEntityRenderState, P extends EntityModel<O>> EntityRendererProvider<T> convertedRenderer(LivingEntityRendererProvider<T,U,Z> provider) {
         return context -> {
             //noinspection unchecked
             var renderer = (LivingEntityRenderer<T, O, P>) provider.create(context);
@@ -167,6 +162,19 @@ public class ModEntitiesRender {
         @Override
         @NotNull
         LivingEntityRenderer<T, U, Z> create(EntityRendererProvider.@NotNull Context pContext);
+    }
+
+    public static void addRenderStateModifier(RegisterRenderStateModifiersEvent event) {
+        event.registerEntityModifier((Class<? extends EntityRenderer<? extends LivingEntity,? extends LivingEntityRenderState>>) (Object) LivingEntityRenderer.class, (t, u) -> ExtendedCreature.getSafe(t).ifPresent(creature -> {
+            u.setRenderData(IVampirismRenderState.BLOOD, creature.getBlood());
+            u.setRenderData(IVampirismRenderState.MAX_BLOOD, creature.getMaxBlood());
+            u.setRenderData(IVampirismRenderState.POISON_BLOOD, creature.hasPoisonousBlood());
+        }));
+        event.registerEntityModifier((Class<? extends EntityRenderer<? extends LivingEntity,? extends LivingEntityRenderState>>) (Object) LivingEntityRenderer.class, (t, u) -> {
+            if (Helper.isHunter(t)) {
+                u.setRenderData(IVampirismRenderState.HUNTER, true);
+            }
+        });
     }
 
 }

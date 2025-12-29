@@ -86,5 +86,11 @@
   ],
   "net/minecraft/world/entity/LivingEntity": [
     "de/teamlapen/vampirism/misc/injection/ILivingEntityVampirismMock"
+  ],
+  "net/minecraft/client/renderer/LevelRenderer": [
+    "de/teamlapen/vampirism/misc/injection/client/ILevelRendererVampirismMock"
+  ],
+  "net/minecraft/client/renderer/feature/FeatureRenderDispatcher": [
+    "de/teamlapen/vampirism/misc/injection/client/IFeatureRenderDispatcherVampirismMock"
   ]
 }

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.renderer.entities.layers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
+import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Render the vampire overlay for converted creatures
  */
-public class ConvertedVampireEntityLayer<Z extends LivingEntityRenderState & IConvertedOverlayRenderState, U extends EntityModel<Z>> extends RenderLayer<Z, U> {
+public class ConvertedVampireEntityLayer<Z extends LivingEntityRenderState, U extends EntityModel<Z>> extends RenderLayer<Z, U> {
 
     public final boolean checkIfRender;
 
@@ -29,9 +30,9 @@ public class ConvertedVampireEntityLayer<Z extends LivingEntityRenderState & ICo
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, Z renderState, float yRot, float xRot) {
         if (!renderState.isInvisible) {
-            Identifier texture = renderState.vampirism$convertedOverlay();
+            Identifier texture = renderState.getRenderData(IVampirismRenderState.CONVERTED_OVERLAY);
             if (texture == null) {
-                texture = renderState.vampirism$overlay();
+                texture = renderState.getRenderData(IVampirismRenderState.OVERLAY);
             }
             if (texture != null) {
                 renderColoredCutoutModel(this.getParentModel(), texture, poseStack, nodeCollector, packedLight, renderState, -1, 1);

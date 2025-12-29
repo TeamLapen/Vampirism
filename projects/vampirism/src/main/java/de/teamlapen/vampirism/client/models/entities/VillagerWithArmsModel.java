@@ -48,16 +48,17 @@ public class VillagerWithArmsModel extends VillagerModel implements ArmedModel {
         this.leftArm.xRot = -0.75F;
         this.rightArm.xRot = -0.75F;
 
-        if (((IVampirismRenderState)entityIn).vampirism$attackTime() > 0.0F) {
-            HumanoidArm enumhandside = ((IVampirismRenderState)entityIn).vampirism$attackArm();
+        float attackTime = entityIn.getRenderDataOrDefault(IVampirismRenderState.ATTACK_TIME, 0f);
+        if (attackTime > 0.0F) {
+            HumanoidArm enumhandside = entityIn.getRenderDataOrDefault(IVampirismRenderState.ATTACK_ARM, HumanoidArm.RIGHT);
             ModelPart modelrenderer = this.getArmForSide(enumhandside);
             float f1;
-            f1 = 1.0F - ((IVampirismRenderState)entityIn).vampirism$attackTime();
+            f1 = 1.0F - attackTime;
             f1 = f1 * f1;
             f1 = f1 * f1;
             f1 = 1.0F - f1;
             float f2 = Mth.sin(f1 * (float) Math.PI);
-            float f3 = Mth.sin(((IVampirismRenderState)entityIn).vampirism$attackTime() * (float) Math.PI) * -(this.getHead().xRot - 0.7F) * 0.75F;
+            float f3 = Mth.sin(attackTime * (float) Math.PI) * -(this.getHead().xRot - 0.7F) * 0.75F;
             modelrenderer.xRot = (float) ((double) modelrenderer.xRot - ((double) f2 * 1.2D + (double) f3));
         }
     }

@@ -61,7 +61,7 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRender
         HoldingEntityRenderState.extractHoldingEntityRenderState(entity, state, this.itemModelResolver);
         state.isUnhappy = entity.getUnhappyCounter() > 0;
         state.villagerData = entity.getVillagerData();
-        ((IVampirismRenderState) state).vampirism$attackTime(entity.getAttackAnim(p_361157_));
-        ((IVampirismRenderState) state).vampirism$attackArm(entity.swingingArm == InteractionHand.MAIN_HAND ? entity.getMainArm() : entity.getMainArm().getOpposite());
+        state.setRenderData(IVampirismRenderState.ATTACK_TIME, entity.getAttackAnim(p_361157_));
+        state.setRenderData(IVampirismRenderState.ATTACK_ARM, entity.swingingArm == InteractionHand.MAIN_HAND ? entity.getMainArm() : entity.getMainArm().getOpposite());
     }
 }

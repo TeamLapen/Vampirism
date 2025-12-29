@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.models.armor.ArmorModels;
-import de.teamlapen.vampirism.client.renderer.BloodVisionRenderer;
+import de.teamlapen.vampirism.client.renderer.bloodvision.BloodVisionRenderer;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
@@ -85,7 +85,6 @@ public class ClientServices extends Services {
     @Override
     protected void registerModBus(IEventBus bus) {
         bus.register(this.armorModels);
-        bus.addListener(this.bloodVisionRenderer::onClientSetup);
         bus.register(this.vampireBooks);
         bus.addListener(this.clientTooltips::registerTooltipRenderer);
         bus.addListener(this.modKeys::registerKeyMapping);
@@ -108,6 +107,8 @@ public class ClientServices extends Services {
         bus.addListener(ModClientFluids::registerClientExtensions);
         bus.addListener(ModItemsRender::registerClientExtensions);
         bus.addListener(ModRenderPipelines::registerRenderPipelines);
+        bus.addListener(this.bloodVisionRenderer::create);
+        bus.addListener(ModEntitiesRender::addRenderStateModifier);
     }
 
     @Override

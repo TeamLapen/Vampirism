@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.core.ModAttachments;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -35,19 +36,18 @@ public class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingE
 
     @Inject(method = "extractRenderState(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;F)V", at = @At("RETURN"))
     private void applyConvertedRenderState(T entity, S reusedState, float partialTick, CallbackInfo ci) {
-        IVampirismRenderState renderState = (IVampirismRenderState) reusedState;
         if (ConvertedCreatureRenderer.renderOverlay) {
             Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(Identifier::toString).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
-                renderState.vampirism$overlay(location);
+                reusedState.setRenderData(IVampirismRenderState.OVERLAY, location);
             });
         }
         if (entity instanceof IConvertedCreature<?> creature) {
             Optional.ofNullable(creature.getSourceEntityId()).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
-                renderState.vampirism$convertedOverlay(location);
+                reusedState.setRenderData(IVampirismRenderState.CONVERTED_OVERLAY, location);
             });
         }
         if (entity instanceof Player player) {
-            if (renderState instanceof IVampirePlayerState vampireState) {
+            if (reusedState instanceof IVampirePlayerState vampireState) {
                 var vampire = VampirePlayer.get(player);
                 vampireState.vampirism$vampire$setDisguised(vampire.isDisguised());
                 vampireState.vampirism$vampire$setVampireLevel(vampire.getLevel());
@@ -66,25 +66,11 @@ public class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingE
                 }
             }
 
-            if (renderState instanceof IHunterPlayerState hunterState) {
+            if (reusedState instanceof IHunterPlayerState hunterState) {
                 var hunter = HunterPlayer.get(player);
                 hunterState.vampirism$hunter$setDisguised(hunter.isDisguised());
                 hunterState.vampirism$hunter$setFullHunterCoat(hunter.getSpecialAttributes().fullHunterCoat == IItemWithTier.Tier.ENHANCED || hunter.getSpecialAttributes().fullHunterCoat == IItemWithTier.Tier.ULTIMATE);
             }
-        }
-        ExtendedCreature.getSafe(entity).ifPresent(creature -> {
-            renderState.vampirism$blood(creature.getBlood());
-            renderState.vampirism$poisonousBlood(creature.hasPoisonousBlood());
-        });
-        renderState.vampirism$hunter(entity instanceof IHunterMob);
-    }
-
-    @WrapOperation(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;shouldRenderLayers(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;)Z"))
-    private boolean skipLayersInBloodVision(LivingEntityRenderer<T, S, M> instance, S state, Operation<Boolean> original) {
-        if (VampirismModClient.services().bloodVisionRenderer().isInBloodVisionRendering()) {
-            return false;
-        } else {
-            return original.call(instance, state);
         }
     }
 }

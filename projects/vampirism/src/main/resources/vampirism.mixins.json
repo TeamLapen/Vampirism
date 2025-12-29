@@ -60,13 +60,14 @@
     "client.HunterAvatarRenderStateMixin",
     "client.LivingEntityRendererAccessor",
     "client.LivingEntityRendererMixin",
-    "client.LivingEntityRenderStateMixin",
     "client.MinecraftMixin",
     "client.MutableSpriteSetMixin",
     "client.ResourceLoadStateTrackerMixin",
     "client.SplashManagerMixin",
     "client.StatsScreenMixin",
-    "client.VampireAvatarRenderStateMixin"
+    "client.VampireAvatarRenderStateMixin",
+    "client.accessor.FeatureRenderDispatcherAccessor",
+    "client.accessor.LevelRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

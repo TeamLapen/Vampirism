@@ -156,7 +156,6 @@ public class RenderHandler implements IMinecraftAccessor {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.@NotNull Pre<AbstractClientPlayer> event) {
-        IVampirismRenderState vampState = (IVampirismRenderState) event.getRenderState();
         if (event.getRenderState() instanceof AvatarRenderState avatarRenderState) {
             if (avatarRenderState.vampirism$vampire$isDbno()) {
                 event.getPoseStack().translate(1.2, 0, 0);
@@ -199,14 +198,14 @@ public class RenderHandler implements IMinecraftAccessor {
         }
     }
 
-    public <I extends LivingEntity, S extends LivingEntityRenderState & IConvertedOverlayRenderState, U extends EntityModel<S>> void syncOverlays() {
+    public <I extends LivingEntity, S extends LivingEntityRenderState, U extends EntityModel<S>> void syncOverlays() {
         for (EntityType<?> type : VampirismMod.services().entityRegistry().getConvertibleOverlay().keySet()) {
             LivingEntityRenderer<I, S, U> render = (LivingEntityRenderer<I, S, U>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderers().get(type);
             if (render == null) {
                 LOGGER.error("Did not find renderer for {}", type);
                 continue;
             }
-            if (((ILivingEntityRenderer) render).getLayers().stream().noneMatch(s -> s instanceof ConvertedVampireEntityLayer<?, ?>)) {
+            if (render.getLayers().stream().noneMatch(s -> s instanceof ConvertedVampireEntityLayer<?, ?>)) {
                 render.addLayer(new ConvertedVampireEntityLayer<>(render, true));
             }
         }

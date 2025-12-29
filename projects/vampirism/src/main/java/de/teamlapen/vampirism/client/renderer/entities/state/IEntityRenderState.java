@@ -1,19 +1,11 @@
 package de.teamlapen.vampirism.client.renderer.entities.state;
 
+import de.teamlapen.vampirism.api.util.VResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.HumanoidArm;
 
 public interface IEntityRenderState {
 
-    boolean vampirism$hunter();
-
-    void vampirism$hunter(boolean hunter);
-
-    float vampirism$attackTime();
-
-    void vampirism$attackTime(float attackTime);
-
-    HumanoidArm vampirism$attackArm();
-
-    void vampirism$attackArm(HumanoidArm arm);
 
 }
