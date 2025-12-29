@@ -7,9 +7,13 @@ name: Qodana
 on:
   workflow_dispatch:
   pull_request:
+    paths:
+    - 'project/*/src/**'
   push:
     branches:
       - dev
+    paths:
+      - 'project/*/src/**'
 
 jobs:
   qodana:
