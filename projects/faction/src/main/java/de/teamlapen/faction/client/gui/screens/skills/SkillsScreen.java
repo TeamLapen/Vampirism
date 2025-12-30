@@ -31,12 +31,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.system.NonnullDefault;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Gui screen which displays the skills available to the player and allows them to unlock some.
@@ -46,6 +49,7 @@ import java.util.List;
  */
 @NonnullDefault
 public class SkillsScreen extends Screen {
+    private static final Logger LOGGER = LogManager.getLogger();
     public static final int SCREEN_WIDTH = 252;
     public static final int SCREEN_HEIGHT = 219;
     private static final Identifier WINDOW_LOCATION = FIdentifier.mod("textures/gui/skills/window.png");
@@ -79,6 +83,26 @@ public class SkillsScreen extends Screen {
         return false;
     }
 
+    protected List<Holder<ISkillTree>> getOrderedTrees(ClientSkillTreeData treeData, ISkillHandler<?> skillHandler) {
+
+        var allTrees = skillHandler.unlockedSkillTrees().stream().map(x -> Pair.of(treeData.getConfiguration(x), x)).collect(Collectors.toList());
+        var allTreeKeys = allTrees.stream().map(x -> x.key().skillTree().getKey()).collect(Collectors.toSet());
+        var sortedTrees = new ArrayList<Holder<ISkillTree>>();
+
+        while (!allTrees.isEmpty()) {
+            var newTrees = allTrees.stream().filter(x -> x.key().orderAfter().isEmpty() || x.key().orderAfter().stream().allMatch(y -> sortedTrees.stream().anyMatch(z -> z.is(y)) || !allTreeKeys.contains(y))).toList();
+            if (newTrees.isEmpty()) {
+                LOGGER.warn("Could not order skill trees: {}", allTrees.stream().map(x -> x.key().skillTree().getKey().toString()).collect(Collectors.joining(", ")) );
+                sortedTrees.addAll(allTrees.stream().map(Pair::value).toList());
+                break;
+            }
+            sortedTrees.addAll(newTrees.stream().map(Pair::value).toList());
+            allTrees.removeAll(newTrees);
+        }
+
+        return sortedTrees;
+    }
+
     @Override
     protected void init() {
         assert this.minecraft != null;
@@ -86,10 +110,12 @@ public class SkillsScreen extends Screen {
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
+        var treeData = ClientSkillTreeData.instance(factionPlayer.asEntity().level());
+        var skillHandler = this.factionPlayer.getSkillHandler();
+
         int index = 0;
-        SkillHandler<?> skillHandler = (SkillHandler<?>) this.factionPlayer.getSkillHandler();
-        for (Holder<ISkillTree> unlockedSkillTree : skillHandler.unlockedSkillTrees()) {
-            this.tabs.add(new SkillsTabComponent(this.minecraft, this, index++, unlockedSkillTree, this.factionPlayer.getSkillHandler(), ((ClientSkillTreeData) skillHandler.getTreeData())));
+        for (Holder<ISkillTree> unlockedSkillTree : getOrderedTrees(treeData, skillHandler)) {
+            this.tabs.add(new SkillsTabComponent(this.minecraft, this, index++, unlockedSkillTree, skillHandler, treeData));
         }
 
         if (!this.tabs.isEmpty()) {

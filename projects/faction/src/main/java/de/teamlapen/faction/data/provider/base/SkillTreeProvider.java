@@ -9,6 +9,8 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +23,8 @@ public abstract class SkillTreeProvider implements DataProvider {
     protected final PackOutput.PathProvider pathProvider;
     private final CompletableFuture<HolderLookup.Provider> lookupProvider;
     private final String modId;
+    private HolderLookup.@UnknownNullability RegistryLookup<ISkillTree> trees = null;
+    private HolderLookup.@UnknownNullability RegistryLookup<ISkillNode> nodes = null;
 
     public SkillTreeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId) {
         this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "faction/configured_skill_tree");
@@ -31,6 +35,9 @@ public abstract class SkillTreeProvider implements DataProvider {
     @Override
     public CompletableFuture<?> run(CachedOutput pOutput) {
         return this.lookupProvider.thenCompose(provider -> {
+            this.trees = provider.lookupOrThrow(FactionRegistries.Keys.SKILL_TREE);
+            this.nodes = provider.lookupOrThrow(FactionRegistries.Keys.SKILL_NODE);
+
             Set<Identifier> set = new HashSet<>();
             List<CompletableFuture<?>> list = new ArrayList<>();
             RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, provider);
@@ -44,6 +51,14 @@ public abstract class SkillTreeProvider implements DataProvider {
             });
             return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
         });
+    }
+
+    protected SkillTreeConfiguration.RootBuilder tree(ResourceKey<ISkillTree> tree, ResourceKey<ISkillNode> root) {
+        return SkillTreeConfiguration.builder(this.trees.getOrThrow(tree), this.nodes.getOrThrow(root));
+    }
+
+    protected SkillTreeConfiguration.RootBuilder.Builder node(ResourceKey<ISkillNode> root) {
+        return new SkillTreeConfiguration.RootBuilder.Builder(this.nodes.getOrThrow(root));
     }
 
     protected abstract void buildSkillTrees(HolderLookup.Provider provider, SkillTreeOutput output);

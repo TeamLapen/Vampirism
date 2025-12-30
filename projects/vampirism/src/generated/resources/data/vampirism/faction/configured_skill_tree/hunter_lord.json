@@ -19,5 +19,8 @@
     }
   ],
   "node": "vampirism:hunter/lord_root",
+  "orderAfter": [
+    "vampirism:hunter/level"
+  ],
   "skill_tree": "vampirism:hunter/lord"
 }

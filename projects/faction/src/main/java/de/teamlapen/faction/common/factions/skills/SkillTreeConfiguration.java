@@ -7,28 +7,37 @@ import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillNode;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryFixedCodec;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.UnknownNullability;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkillNode> root, List<SkillTreeNodeConfiguration> children) {
+public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkillNode> root, List<SkillTreeNodeConfiguration> children, List<ResourceKey<ISkillTree>> orderAfter) {
 
     public static final Codec<SkillTreeConfiguration> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
                     RegistryFixedCodec.create(FactionRegistries.Keys.SKILL_TREE).fieldOf("skill_tree").forGetter(SkillTreeConfiguration::skillTree),
                     RegistryFixedCodec.create(FactionRegistries.Keys.SKILL_NODE).fieldOf("node").forGetter(SkillTreeConfiguration::root),
-                    SkillTreeNodeConfiguration.CODEC.listOf().fieldOf("children").forGetter(SkillTreeConfiguration::children)
+                    SkillTreeNodeConfiguration.CODEC.listOf().fieldOf("children").forGetter(SkillTreeConfiguration::children),
+                    ResourceKey.codec(FactionRegistries.Keys.SKILL_TREE).listOf().optionalFieldOf("orderAfter", List.of()).forGetter(SkillTreeConfiguration::orderAfter)
             ).apply(inst, SkillTreeConfiguration::new)
     );
 
     public SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkillNode> root, SkillTreeNodeConfiguration... children) {
-        this(skillTree, root, List.of(children));
+        this(skillTree, root, List.of(children), List.of());
     }
 
     public SkillTreeConfiguration {
         children.forEach(c -> c.setTreeConfig(this));
+    }
+
+    public static RootBuilder builder(Holder<ISkillTree> skillTree, Holder<ISkillNode> root) {
+        return new RootBuilder(skillTree, root);
     }
 
     public Optional<SkillTreeNodeConfiguration> getNode(Holder<ISkill<?>> skill) {
@@ -113,6 +122,51 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
                 }
             }
             return Optional.empty();
+        }
+    }
+
+    public static class RootBuilder {
+
+        private final Holder<ISkillTree> skillTree;
+        private final Holder<ISkillNode> root;
+        private final List<Builder> children = new ArrayList<>();
+        private final List<ResourceKey<ISkillTree>> after = new ArrayList<>();
+
+        public RootBuilder(Holder<ISkillTree> skillTree, Holder<ISkillNode> root) {
+            this.skillTree = skillTree;
+            this.root = root;
+        }
+
+        public RootBuilder addNode(Builder node) {
+            this.children.add(node);
+            return this;
+        }
+
+        public RootBuilder addAfter(ResourceKey<ISkillTree> id) {
+            this.after.add(id);
+            return this;
+        }
+
+        public Identifier build(SkillTreeProvider.SkillTreeOutput output, Identifier id) {
+            return output.accept(id, new SkillTreeConfiguration(this.skillTree, this.root, this.children.stream().map(Builder::build).toList(), Collections.unmodifiableList(this.after)));
+        }
+
+        public static class Builder {
+            private final Holder<ISkillNode> node;
+            private final List<Builder> children = new ArrayList<>();
+
+            public Builder(Holder<ISkillNode> node) {
+                this.node = node;
+            }
+
+            public Builder addNode(Builder builder) {
+                children.add(builder);
+                return this;
+            }
+
+            private SkillTreeNodeConfiguration build() {
+                return new SkillTreeNodeConfiguration(this.node, this.children.stream().map(Builder::build).toArray(SkillTreeNodeConfiguration[]::new));
+            }
         }
     }
 }
