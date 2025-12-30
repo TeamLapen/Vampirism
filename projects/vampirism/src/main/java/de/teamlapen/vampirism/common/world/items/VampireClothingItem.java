@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.common.components.FactionRestriction;
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.Helper;

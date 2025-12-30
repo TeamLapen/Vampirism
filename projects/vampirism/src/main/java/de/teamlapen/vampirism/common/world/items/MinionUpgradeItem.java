@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;

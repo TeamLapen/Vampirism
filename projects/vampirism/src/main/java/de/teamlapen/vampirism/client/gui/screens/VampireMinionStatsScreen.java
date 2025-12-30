@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.factions.client.gui.screens.MinionStatsScreen;
+import de.teamlapen.faction.client.gui.screens.MinionStatsScreen;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;

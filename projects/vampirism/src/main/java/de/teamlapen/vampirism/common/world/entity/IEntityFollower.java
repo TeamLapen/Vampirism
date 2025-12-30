@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity;
 
-import de.teamlapen.factions.api.world.entities.IEntityLeader;
+import de.teamlapen.faction.api.world.entities.IEntityLeader;
 import net.minecraft.world.entity.LivingEntity;
 
 public interface IEntityFollower {

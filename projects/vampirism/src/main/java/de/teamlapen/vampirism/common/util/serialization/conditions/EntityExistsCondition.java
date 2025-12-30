@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.util.serialization.conditions;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -22,7 +22,7 @@ public class EntityExistsCondition implements ICondition {
     }
 
     public EntityExistsCondition(String namespace, String path) {
-        this(VResourceLocation.loc(namespace, path));
+        this(VIdentifier.loc(namespace, path));
     }
 
     public EntityExistsCondition(Identifier entity_type) {

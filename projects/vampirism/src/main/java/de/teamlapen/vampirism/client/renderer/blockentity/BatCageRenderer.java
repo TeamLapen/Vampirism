@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.blockentity.BatCageBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.BatCageBlock;
 import net.minecraft.client.model.ambient.BatModel;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity, BatCageRenderer.BatCageRenderState> {
 
-    public static final Identifier BAT_LOCATION = VResourceLocation.mc("textures/entity/bat.png");
+    public static final Identifier BAT_LOCATION = VIdentifier.mc("textures/entity/bat.png");
 
     private final BatModel model;
 

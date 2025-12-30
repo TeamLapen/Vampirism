@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.data.loot.functions;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.refinements.IRefinementSet;
-import de.teamlapen.factions.api.world.items.IRefinementItem;
-import de.teamlapen.factions.common.core.ModRegistries;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
+import de.teamlapen.faction.api.world.items.IRefinementItem;
+import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModLoot;
 import de.teamlapen.vampirism.common.world.items.RefinementItem;
 import net.minecraft.core.Holder;

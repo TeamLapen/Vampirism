@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.common.world.entity.converted;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.Dynamic;
-import de.teamlapen.factions.api.world.entities.ICaptureStrengthProvider;
-import de.teamlapen.factions.common.util.TotemHelper;
+import de.teamlapen.faction.api.world.entities.ICaptureStrengthProvider;
+import de.teamlapen.faction.common.util.TotemHelper;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;

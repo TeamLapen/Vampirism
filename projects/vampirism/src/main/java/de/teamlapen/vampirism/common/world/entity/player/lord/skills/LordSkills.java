@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.entity.player.lord.skills;
 
-import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.factions.skills.ISkill;
-import de.teamlapen.factions.common.tags.FactionSkillTreeTags;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.common.tags.FactionSkillTreeTags;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.world.entity.player.lord.actions.LordActions;
 import de.teamlapen.vampirism.common.world.entity.player.skills.ActionSkill;

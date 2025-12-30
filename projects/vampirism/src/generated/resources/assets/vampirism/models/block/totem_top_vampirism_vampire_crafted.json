@@ -1,5 +1,5 @@
 {
-  "parent": "factions:block/totem_top",
+  "parent": "factionapi:block/totem_top",
   "textures": {
     "outer": "minecraft:block/obsidian"
   }

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.factions.api.factions.refinements.IRefinementHandler;
-import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.FactionsMod;
+import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -125,7 +125,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
                 }
                 Vec3 center = Vec3.atLowerCornerOf(target.blockPosition());
                 center.add(0, target.getBbHeight() / 2d, 0);
-                ModParticles.spawnParticlesServer(target.level(), new GenericParticleOptions(VResourceLocation.mc("effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
+                ModParticles.spawnParticlesServer(target.level(), new GenericParticleOptions(VIdentifier.mc("effect_4"), 12, 0xE02020), center.x, center.y, center.z, 15, 0.5, 0.5, 0.5, 0);
             }
         }
         //Update training on kill

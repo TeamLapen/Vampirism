@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.factions.common.world.blockentity.MultipleItemHandler;
-import de.teamlapen.factions.common.world.blockentity.NetworkedBlockEntity;
+import de.teamlapen.faction.common.world.blockentity.MultipleItemHandler;
+import de.teamlapen.faction.common.world.blockentity.NetworkedBlockEntity;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModFluids;

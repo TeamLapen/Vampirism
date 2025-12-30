@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.BaronBaseModel;
 import de.teamlapen.vampirism.client.models.entities.BaronModel;
@@ -20,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
 
-    private static final Identifier textureLord = VResourceLocation.mod("textures/entity/baron.png");
-    private static final Identifier textureLady = VResourceLocation.mod("textures/entity/baroness.png");
-    private static final Identifier textureLordEnraged = VResourceLocation.mod("textures/entity/baron_enraged.png");
-    private static final Identifier textureLadyEnraged = VResourceLocation.mod("textures/entity/baroness_enraged.png");
+    private static final Identifier textureLord = VIdentifier.mod("textures/entity/baron.png");
+    private static final Identifier textureLady = VIdentifier.mod("textures/entity/baroness.png");
+    private static final Identifier textureLordEnraged = VIdentifier.mod("textures/entity/baron_enraged.png");
+    private static final Identifier textureLadyEnraged = VIdentifier.mod("textures/entity/baroness_enraged.png");
 
     private final BaronModel baronModel;
     private final BaronessModel baronessModel;

@@ -1,0 +1,8 @@
+{
+  "remove": [
+    "#factionapi:is_neutral"
+  ],
+  "values": [
+    "#factionapi:all"
+  ]
+}

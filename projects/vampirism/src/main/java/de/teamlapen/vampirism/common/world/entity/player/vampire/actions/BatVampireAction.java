@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.actions;
 
-import de.teamlapen.factions.api.factions.actions.IActionResult;
-import de.teamlapen.factions.api.factions.actions.ILastingAction;
-import de.teamlapen.factions.common.core.ModRegistries;
+import de.teamlapen.faction.api.factions.actions.IActionResult;
+import de.teamlapen.faction.api.factions.actions.ILastingAction;
+import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -61,7 +61,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (ModConfig.server().batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.dimension"));
         } else if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
-            return IActionResult.fail(Component.translatable("text.factions.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
+            return IActionResult.fail(Component.translatable("text.factionapi.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
         } else if (player.isInWater()) {
             return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_water"));
         } else if (player.getVehicle() != null) {

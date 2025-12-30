@@ -15,7 +15,7 @@
     "icon": {
       "components": {
         "minecraft:item_name": {
-          "translate": "filled_map.factions.ancient_remains"
+          "translate": "filled_map.factionapi.ancient_remains"
         },
         "minecraft:map_color": 8721929
       },

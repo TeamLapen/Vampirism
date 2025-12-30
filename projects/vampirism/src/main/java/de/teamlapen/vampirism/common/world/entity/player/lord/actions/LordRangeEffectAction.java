@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.common.world.entity.player.lord.actions;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionHelper;
-import de.teamlapen.factions.api.factions.actions.IActionResult;
-import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
-import de.teamlapen.factions.api.tags.FactionTags;
-import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.factions.actions.DefaultAction;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionHelper;
+import de.teamlapen.faction.api.factions.actions.IActionResult;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
+import de.teamlapen.faction.api.tags.FactionTags;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.actions.DefaultAction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;

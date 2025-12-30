@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.tags;
 
-import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.factions.actions.IAction;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.actions.IAction;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.tags.TagKey;
 
 public class ModActionTags {
@@ -12,7 +12,7 @@ public class ModActionTags {
     public static final TagKey<IAction<?>> DISABLE_BY_ULTIMATE_HOLY_WATER = tag("disabled_holy_water/ultimate");
 
     private static TagKey<IAction<?>> tag(String name) {
-        return TagKey.create(FactionRegistries.Keys.ACTION, VResourceLocation.mod(name));
+        return TagKey.create(FactionRegistries.Keys.ACTION, VIdentifier.mod(name));
     }
 }
 

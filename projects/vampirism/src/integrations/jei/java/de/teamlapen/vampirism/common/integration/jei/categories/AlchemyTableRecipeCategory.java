@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.integration.jei.categories;
 
-import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;

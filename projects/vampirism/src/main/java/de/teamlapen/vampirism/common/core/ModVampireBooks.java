@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -33,9 +33,9 @@ public class ModVampireBooks {
     public static final ResourceKey<IVampireBook> ASHES_OF_PAST_DAWNS = createKey("ashes_of_past_dawns");
     public static final ResourceKey<IVampireBook> PYROMANIACS_DIARY = createKey("pyromaniacs_diary");
 
-    public static final Identifier DIARY_BACKGROUND = VResourceLocation.mod("diary");
-    public static final Identifier LETTER_BACKGROUND = VResourceLocation.mod("letter");
-    public static final Identifier POSTER_BACKGROUND = VResourceLocation.mod("poster");
+    public static final Identifier DIARY_BACKGROUND = VIdentifier.mod("diary");
+    public static final Identifier LETTER_BACKGROUND = VIdentifier.mod("letter");
+    public static final Identifier POSTER_BACKGROUND = VIdentifier.mod("poster");
 
 
     public static void createVampireBooks(BootstrapContext<IVampireBook> context) {
@@ -62,7 +62,7 @@ public class ModVampireBooks {
     }
 
     private static ResourceKey<IVampireBook> createKey(String name) {
-        return ResourceKey.create(VampirismRegistries.Keys.VAMPIRE_BOOK, VResourceLocation.mod(name));
+        return ResourceKey.create(VampirismRegistries.Keys.VAMPIRE_BOOK, VIdentifier.mod(name));
     }
 
     private static void register(BootstrapContext<IVampireBook> context, VampireBook.Builder builder) {

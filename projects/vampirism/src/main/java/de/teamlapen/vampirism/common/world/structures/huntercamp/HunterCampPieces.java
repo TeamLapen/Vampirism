@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.common.world.structures.huntercamp;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.factions.common.util.StructureUtil;
+import de.teamlapen.faction.common.util.StructureUtil;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModStructures;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.blockentity.TentBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.TentBlock;
 import net.minecraft.core.BlockPos;

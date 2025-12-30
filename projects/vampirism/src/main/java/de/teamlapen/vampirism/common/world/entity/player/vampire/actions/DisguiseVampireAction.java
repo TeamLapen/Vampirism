@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.actions;
 
-import de.teamlapen.factions.api.factions.actions.IActionResult;
-import de.teamlapen.factions.api.factions.actions.ILastingAction;
-import de.teamlapen.factions.common.core.DefaultFactions;
+import de.teamlapen.faction.api.factions.actions.IActionResult;
+import de.teamlapen.faction.api.factions.actions.ILastingAction;
+import de.teamlapen.faction.common.core.DefaultFactions;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.world.entity.player.Player;

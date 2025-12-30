@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.entity;
 
-import de.teamlapen.factions.common.factions.minions.MinionEntity;
-import de.teamlapen.factions.common.util.TotemHelper;
-import de.teamlapen.factions.common.world.blockentity.TotemBlockEntity;
+import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.common.util.TotemHelper;
+import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
@@ -33,7 +33,6 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -69,9 +68,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 
 /**

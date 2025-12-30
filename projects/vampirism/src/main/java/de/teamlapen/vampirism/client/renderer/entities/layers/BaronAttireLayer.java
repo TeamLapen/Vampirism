@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.BaronAttireModel;
 import de.teamlapen.vampirism.client.models.entities.BaronBaseModel;
@@ -24,8 +24,8 @@ import java.util.function.Predicate;
 public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
     private final @NotNull BaronessAttireModel baroness;
     private final @NotNull BaronAttireModel baron;
-    private final Identifier textureBaroness = VResourceLocation.mod("textures/entity/baroness_attire.png");
-    private final Identifier textureBaron = VResourceLocation.mod("textures/entity/baron_attire.png");
+    private final Identifier textureBaroness = VIdentifier.mod("textures/entity/baroness_attire.png");
+    private final Identifier textureBaron = VIdentifier.mod("textures/entity/baron_attire.png");
     private final Predicate<VampireBaronRenderer.VampireBaronRenderState> predicateFemale;
 
     /**

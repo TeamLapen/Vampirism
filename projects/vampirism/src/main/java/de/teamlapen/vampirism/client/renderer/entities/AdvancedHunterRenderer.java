@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.PlayerFaceOverlayLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * Similar to {@link BasicHunterRenderer}
  */
 public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEntity, AdvancedHunterRenderer.AdvancedHunterRenderState, ClothedModel<AdvancedHunterRenderer.AdvancedHunterRenderState>> {
-    private static final PlayerSkin FALLBACK = new PlayerSkin(new ClientAsset.ResourceTexture(VResourceLocation.mod("fallback"), VResourceLocation.mod("textures/entity/hunter_base1.png")), null, null, PlayerModelType.WIDE, false);
+    private static final PlayerSkin FALLBACK = new PlayerSkin(new ClientAsset.ResourceTexture(VIdentifier.mod("fallback"), VIdentifier.mod("textures/entity/hunter_base1.png")), null, null, PlayerModelType.WIDE, false);
     private final @NotNull PlayerSkin[] textures;
 
 

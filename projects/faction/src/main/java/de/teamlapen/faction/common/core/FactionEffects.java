@@ -1,0 +1,23 @@
+package de.teamlapen.faction.common.core;
+
+import de.teamlapen.faction.api.util.REFERENCE;
+import de.teamlapen.faction.common.world.effects.OblivionMobEffect;
+import de.teamlapen.faction.common.world.effects.ResurrectionFatigueMobEffect;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+public class FactionEffects {
+    public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, REFERENCE.MOD_ID);
+
+    public static final DeferredHolder<MobEffect, MobEffect> OBLIVION = EFFECTS.register("oblivion", () -> new OblivionMobEffect<>(MobEffectCategory.NEUTRAL, 0x4E9331));
+    public static final DeferredHolder<MobEffect, MobEffect> RESURRECTION_FATIGUE = EFFECTS.register("resurrection_fatigue", ResurrectionFatigueMobEffect::new);
+
+
+    public static void register(IEventBus bus) {
+        EFFECTS.register(bus);
+    }
+}

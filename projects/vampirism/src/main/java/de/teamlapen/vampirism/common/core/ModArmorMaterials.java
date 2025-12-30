@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
@@ -39,7 +39,7 @@ public class ModArmorMaterials {
         public static final ResourceKey<EquipmentAsset> VAMPIRE_CLOTH_BOOTS = createId("vampire_clothing_boots");
 
         private static ResourceKey<EquipmentAsset> createId(String id) {
-            return ResourceKey.create(EquipmentAssets.ROOT_ID, VResourceLocation.mod(id));
+            return ResourceKey.create(EquipmentAssets.ROOT_ID, VIdentifier.mod(id));
         }
     }
 

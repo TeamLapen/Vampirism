@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.util.serialization;
 
-import de.teamlapen.factions.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.misc.mixin.accessor.MobEffectInstanceAccessor;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

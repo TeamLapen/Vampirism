@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
-import de.teamlapen.factions.common.components.FactionRestriction;
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.api.world.items.IOilItem;
 import de.teamlapen.vampirism.api.world.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.api.world.items.oil.IOil;

@@ -1,11 +1,8 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.factions.common.config.FactionConfig;
+import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
 import net.neoforged.neoforge.server.permission.nodes.PermissionNode;

@@ -1,0 +1,20 @@
+package de.teamlapen.faction.api.factions;
+
+import de.teamlapen.faction.api.FactionsApi;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+
+public interface IFactionHelper {
+
+    static IFactionHelper get() {
+        return FactionsApi.services().factionHelper();
+    }
+
+    Holder<? extends IFaction<?>> getFaction(Entity entity);
+
+    Holder<? extends IPlayableFaction<?>> getFaction(Player entity);
+
+    boolean isEntityOfFaction(Entity entity, Holder<? extends IFaction<?>> faction);
+
+}

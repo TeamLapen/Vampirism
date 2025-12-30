@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client;
 
-import de.teamlapen.factions.api.util.FResourceLocation;
-import de.teamlapen.factions.client.gui.overlay.TextureOverlay;
+import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.client.gui.overlay.TextureOverlay;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterSkillProperties;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DisguiseOverlay extends TextureOverlay {
 
-    public static final Identifier DISGUISE_TEXTURE = FResourceLocation.mod("textures/misc/disguise.png");
+    public static final Identifier DISGUISE_TEXTURE = FIdentifier.mod("textures/misc/disguise.png");
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {

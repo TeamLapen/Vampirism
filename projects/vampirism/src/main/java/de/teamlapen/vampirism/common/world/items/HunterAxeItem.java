@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.factions.common.components.FactionSlayer;
-import de.teamlapen.factions.common.core.FactionDataComponents;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.components.FactionSlayer;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;

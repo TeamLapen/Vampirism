@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": "#c:obsidians",
+    "Y": "#c:gems/diamond",
+    "Z": "vampirism:vampire_book"
+  },
+  "pattern": [
+    "X X",
+    " Y ",
+    "XZX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "factionapi:totem_top_crafted"
+  }
+}

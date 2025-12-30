@@ -7,7 +7,7 @@
         "faction": "vampirism:vampire",
         "level": 14
       },
-      "trigger": "factions:faction"
+      "trigger": "factionapi:faction"
     }
   },
   "display": {

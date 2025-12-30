@@ -1,0 +1,5 @@
+{
+  "exhaustion": 0.0,
+  "message_id": "factionapi.leave_faction",
+  "scaling": "when_caused_by_living_non_player"
+}

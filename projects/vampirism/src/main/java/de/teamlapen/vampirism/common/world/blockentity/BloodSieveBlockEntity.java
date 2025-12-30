@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.factions.common.world.blockentity.SingleItemHandler;
+import de.teamlapen.faction.common.world.blockentity.SingleItemHandler;
 import de.teamlapen.vampirism.api.datamaps.IFluidBloodConversion;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModFluids;

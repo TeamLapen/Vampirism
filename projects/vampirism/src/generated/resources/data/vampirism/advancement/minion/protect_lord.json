@@ -3,9 +3,9 @@
   "criteria": {
     "task": {
       "conditions": {
-        "task": "factions:protect_lord"
+        "task": "factionapi:protect_lord"
       },
-      "trigger": "factions:minion_action"
+      "trigger": "factionapi:minion_action"
     }
   },
   "display": {

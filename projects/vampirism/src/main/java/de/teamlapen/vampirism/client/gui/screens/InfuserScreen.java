@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.factions.client.gui.GuiRenderer;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.client.gui.GuiRenderer;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.inventory.InfuserMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -14,8 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class InfuserScreen extends AbstractContainerScreen<InfuserMenu> {
 
-    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/infuser.png");
-    private static final Identifier BURN_PROGRESS_SPRITE = VResourceLocation.mc("container/furnace/burn_progress");
+    private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/infuser.png");
+    private static final Identifier BURN_PROGRESS_SPRITE = VIdentifier.mc("container/furnace/burn_progress");
 
     public InfuserScreen(InfuserMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);

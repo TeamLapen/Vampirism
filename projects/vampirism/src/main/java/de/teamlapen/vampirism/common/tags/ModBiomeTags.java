@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.tags;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -40,6 +40,6 @@ public class ModBiomeTags {
     }
 
     private static TagKey<Biome> tag(String name) {
-        return TagKey.create(Registries.BIOME, VResourceLocation.mod(name));
+        return TagKey.create(Registries.BIOME, VIdentifier.mod(name));
     }
 }

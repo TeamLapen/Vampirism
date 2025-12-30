@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.hunter;
 
-import de.teamlapen.factions.common.world.entities.ForceLookEntityGoal;
-import de.teamlapen.factions.common.world.inventory.TaskBoardMenu;
+import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
+import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.Helper;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.api.datamaps.*;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataMaps;
 import de.teamlapen.vampirism.common.core.ModEntities;
@@ -129,7 +129,7 @@ public class ModDataMapProvider extends DataMapProvider {
     }
 
     protected void gatherEntityConverter(Builder<IConverterEntry, EntityType<?>> entityValues) {
-        Function<String, Identifier> overlay = (String name) -> VResourceLocation.mod(String.format("textures/entity/vanilla/%s_overlay.png", name));
+        Function<String, Identifier> overlay = (String name) -> VIdentifier.mod(String.format("textures/entity/vanilla/%s_overlay.png", name));
         Function<EntityType<?>, Holder<EntityType<?>>> holder = BuiltInRegistries.ENTITY_TYPE::wrapAsHolder;
 
         entityValues.add(holder.apply(EntityType.COW), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_COW), overlay.apply("cow")), false);

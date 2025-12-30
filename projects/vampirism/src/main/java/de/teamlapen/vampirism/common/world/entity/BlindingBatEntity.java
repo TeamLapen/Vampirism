@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity;
 
-import de.teamlapen.factions.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.network.packets.client;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public record ClientboundBossEventSoundPacket(UUID bossEventUuid, ResourceKey<SoundEvent> sound) implements CustomPacketPayload {
 
-    public static final Type<ClientboundBossEventSoundPacket> TYPE = new Type<>(VResourceLocation.mod("boss_event_sound"));
+    public static final Type<ClientboundBossEventSoundPacket> TYPE = new Type<>(VIdentifier.mod("boss_event_sound"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundBossEventSoundPacket> CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC, ClientboundBossEventSoundPacket::bossEventUuid,
             ResourceKey.streamCodec(Registries.SOUND_EVENT), ClientboundBossEventSoundPacket::sound,

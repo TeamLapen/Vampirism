@@ -1,6 +1,6 @@
 {
   "values": [
-    "#factions:disables_actions",
+    "#factionapi:disables_actions",
     "vampirism:crucifix_suppression"
   ]
 }

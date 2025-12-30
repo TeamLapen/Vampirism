@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HunterTrainerRenderer extends HumanoidMobRenderer<VampirismEntity, HunterTrainerRenderer.HunterTrainerRenderState, ClothedModel<HunterTrainerRenderer.HunterTrainerRenderState>> {
 
-    private final Identifier texture = VResourceLocation.mod("textures/entity/hunter_trainer.png");
+    private final Identifier texture = VIdentifier.mod("textures/entity/hunter_trainer.png");
 
     public HunterTrainerRenderer(EntityRendererProvider.@NotNull Context context, boolean renderEquipment) {
         super(context, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false), 0.5F);

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player.refinements;
 
-import de.teamlapen.factions.api.factions.refinements.IRefinement;
+import de.teamlapen.faction.api.factions.refinements.IRefinement;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;

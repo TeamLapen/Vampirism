@@ -16,7 +16,7 @@ java {
     withSourcesJar()
 }
 
-List<Project> dependencyProjects = [project(':factions-api')]
+List<Project> dependencyProjects = [project(':faction-api')]
 
 dependencyProjects.forEach {
     project.evaluationDependsOn(it.path)

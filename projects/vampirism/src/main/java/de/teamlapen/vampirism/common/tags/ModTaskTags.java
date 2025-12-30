@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.tags;
 
-import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.factions.tasks.Task;
-import de.teamlapen.factions.common.tags.FactionTaskTags;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.tasks.Task;
+import de.teamlapen.faction.common.tags.FactionTaskTags;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.tags.TagKey;
 
 public class ModTaskTags {
@@ -14,6 +14,6 @@ public class ModTaskTags {
     public static final TagKey<Task> AWARDS_LORD_LEVEL = FactionTaskTags.AWARDS_LORD_LEVEL;
 
     private static TagKey<Task> tag(String name) {
-        return TagKey.create(FactionRegistries.Keys.TASK, VResourceLocation.mod(name));
+        return TagKey.create(FactionRegistries.Keys.TASK, VIdentifier.mod(name));
     }
 }

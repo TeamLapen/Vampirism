@@ -9,8 +9,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.neoforged.neoforge.common.data.SoundDefinition;
 import net.neoforged.neoforge.common.data.SoundDefinitionsProvider;
 
-import static de.teamlapen.vampirism.api.util.VResourceLocation.mc;
-import static de.teamlapen.vampirism.api.util.VResourceLocation.mod;
+import static de.teamlapen.vampirism.api.util.VIdentifier.mc;
+import static de.teamlapen.vampirism.api.util.VIdentifier.mod;
 
 public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
 

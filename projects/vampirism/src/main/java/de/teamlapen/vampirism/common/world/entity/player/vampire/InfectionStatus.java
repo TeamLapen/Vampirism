@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
-import de.teamlapen.factions.misc.extensions.IEffectInstanceWithSource;
+import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;

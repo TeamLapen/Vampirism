@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 
-public class PlayerSkinHelper  extends de.teamlapen.factions.common.util.PlayerSkinHelper {
+public class PlayerSkinHelper  extends de.teamlapen.faction.common.util.PlayerSkinHelper {
 
     @SubscribeEvent
     public void onLoadLevel(LevelEvent.Load event) {

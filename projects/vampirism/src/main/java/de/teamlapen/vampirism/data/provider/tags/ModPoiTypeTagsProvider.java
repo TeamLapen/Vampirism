@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
-import de.teamlapen.factions.common.tags.FactionPoiTypeTags;
+import de.teamlapen.faction.common.tags.FactionPoiTypeTags;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.core.ModVillage;
 import de.teamlapen.vampirism.common.tags.ModPoiTypeTags;

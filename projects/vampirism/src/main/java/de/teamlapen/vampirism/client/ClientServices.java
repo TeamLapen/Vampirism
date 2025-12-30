@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client;
 
-import de.teamlapen.factions.Services;
+import de.teamlapen.faction.Services;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;

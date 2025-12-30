@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.entity;
 
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.api.world.entities.IEntityLeader;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.world.entities.IEntityLeader;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEntityFollower {
 
-    private static final Identifier SPEED_MODIFIER = VResourceLocation.mod("not_in_block");
+    private static final Identifier SPEED_MODIFIER = VIdentifier.mod("not_in_block");
     private IEntityLeader leader;
 
     public GhostEntity(@NotNull EntityType<? extends VampirismEntity> type, @NotNull Level world) {

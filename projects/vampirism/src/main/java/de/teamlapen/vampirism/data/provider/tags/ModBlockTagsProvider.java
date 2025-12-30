@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
-import de.teamlapen.factions.common.tags.FactionBlockTags;
+import de.teamlapen.faction.common.tags.FactionBlockTags;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;

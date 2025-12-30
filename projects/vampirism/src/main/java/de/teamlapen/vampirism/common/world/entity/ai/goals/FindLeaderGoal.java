@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.ai.goals;
 
-import de.teamlapen.factions.api.world.entities.IEntityLeader;
+import de.teamlapen.faction.api.world.entities.IEntityLeader;
 import de.teamlapen.vampirism.common.world.entity.IEntityFollower;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.world.entity.vampire;
 
-import de.teamlapen.factions.api.world.entities.IEntityLeader;
+import de.teamlapen.faction.api.world.entities.IEntityLeader;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import net.minecraft.world.entity.monster.Enemy;
 

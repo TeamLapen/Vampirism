@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.entity.ai.goals;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.common.util.TotemHelper;
-import de.teamlapen.factions.common.world.blockentity.TotemBlockEntity;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.common.util.TotemHelper;
+import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import net.minecraft.core.Holder;

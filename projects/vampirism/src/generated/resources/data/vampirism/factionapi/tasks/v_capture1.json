@@ -1,0 +1,26 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factionapi:stat",
+        "amount": 1,
+        "description": {
+          "translate": "stat.factionapi.capture_village"
+        },
+        "id": "factionapi:capture_village",
+        "stat": "factionapi:capture_village"
+      }
+    ]
+  },
+  "reward": {
+    "type": "factionapi:item",
+    "item": {
+      "count": 10,
+      "id": "minecraft:emerald"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.v_capture1"
+  },
+  "unlocker": []
+}

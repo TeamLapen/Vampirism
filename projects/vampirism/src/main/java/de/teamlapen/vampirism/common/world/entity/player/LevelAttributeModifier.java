@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LevelAttributeModifier {
 
-    public static final Identifier ID = VResourceLocation.mod("level_attribute_modifier");
+    public static final Identifier ID = VIdentifier.mod("level_attribute_modifier");
 
     /**
      * @param player      The player to be modified

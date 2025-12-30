@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.world.items.IRefinementItem;
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.factions.common.core.ModRegistries;
-import de.teamlapen.factions.common.world.items.consume.FactionBasedConsumeEffect;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.world.items.IRefinementItem;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.core.ModRegistries;
+import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.converted;
 
-import de.teamlapen.factions.common.util.SpawnUtil;
+import de.teamlapen.faction.common.util.SpawnUtil;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.common.core.ModEntities;

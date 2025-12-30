@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.config;
 
-import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.armor.*;
 import de.teamlapen.vampirism.client.models.blocks.CoffinModel;
 import de.teamlapen.vampirism.client.models.entities.*;
@@ -29,28 +29,28 @@ import org.jetbrains.annotations.NotNull;
  * Handles entity render registration
  */
 public class ModEntitiesRender {
-    public static final ModelLayerLocation COFFIN = new ModelLayerLocation(VResourceLocation.mod("coffin"), "main");
-    public static final ModelLayerLocation WING = new ModelLayerLocation(VResourceLocation.mod("wing"), "main");
-    public static final ModelLayerLocation BARON = new ModelLayerLocation(VResourceLocation.mod("baron"), "main");
-    public static final ModelLayerLocation BARONESS = new ModelLayerLocation(VResourceLocation.mod("baroness"), "main");
-    public static final ModelLayerLocation BARON_ATTIRE = new ModelLayerLocation(VResourceLocation.mod("baron"), "attire");
-    public static final ModelLayerLocation CLOAK = new ModelLayerLocation(VResourceLocation.mod("cloak"), "main");
-    public static final ModelLayerLocation BARONESS_ATTIRE = new ModelLayerLocation(VResourceLocation.mod("baroness"), "attire");
-    public static final ModelLayerLocation CLOTHING_BOOTS = new ModelLayerLocation(VResourceLocation.mod("clothing"), "boots");
-    public static final ModelLayerLocation CLOTHING_CROWN = new ModelLayerLocation(VResourceLocation.mod("clothing"), "crown");
-    public static final ModelLayerLocation CLOTHING_PANTS = new ModelLayerLocation(VResourceLocation.mod("clothing"), "pants");
-    public static final ModelLayerLocation CLOTHING_HAT = new ModelLayerLocation(VResourceLocation.mod("clothing"), "hat");
-    public static final ModelLayerLocation HUNTER_HAT_TALL = new ModelLayerLocation(VResourceLocation.mod("hunter_hat_tall"), "main");
-    public static final ModelLayerLocation HUNTER_HAT_BROAD = new ModelLayerLocation(VResourceLocation.mod("hunter_hat_broad"), "main");
-    public static final ModelLayerLocation HUNTER_EQUIPMENT = new ModelLayerLocation(VResourceLocation.mod("hunter_equipment"), "main");
-    public static final ModelLayerLocation VILLAGER_WITH_ARMS = new ModelLayerLocation(VResourceLocation.mod("villager_with_arms"), "main");
-    public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(VResourceLocation.mod("task_master"), "main");
-    public static final ModelLayerLocation REMAINS_DEFENDER = new ModelLayerLocation(VResourceLocation.mod("remains_defender"), "main");
-    public static final ModelLayerLocation GHOST = new ModelLayerLocation(VResourceLocation.mod("ghost"), "main");
-    public static final ModelLayerLocation DARK_SPRUCE_BOAT = new ModelLayerLocation(VResourceLocation.mod("boat/dark_spruce"), "main");
-    public static final ModelLayerLocation DARK_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VResourceLocation.mod("chest_boat/dark_spruce"), "main");
-    public static final ModelLayerLocation CURSED_SPRUCE_BOAT = new ModelLayerLocation(VResourceLocation.mod("boat/cursed_spruce"), "main");
-    public static final ModelLayerLocation CURSED_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VResourceLocation.mod("chest_boat/cursed_spruce"), "main");
+    public static final ModelLayerLocation COFFIN = new ModelLayerLocation(VIdentifier.mod("coffin"), "main");
+    public static final ModelLayerLocation WING = new ModelLayerLocation(VIdentifier.mod("wing"), "main");
+    public static final ModelLayerLocation BARON = new ModelLayerLocation(VIdentifier.mod("baron"), "main");
+    public static final ModelLayerLocation BARONESS = new ModelLayerLocation(VIdentifier.mod("baroness"), "main");
+    public static final ModelLayerLocation BARON_ATTIRE = new ModelLayerLocation(VIdentifier.mod("baron"), "attire");
+    public static final ModelLayerLocation CLOAK = new ModelLayerLocation(VIdentifier.mod("cloak"), "main");
+    public static final ModelLayerLocation BARONESS_ATTIRE = new ModelLayerLocation(VIdentifier.mod("baroness"), "attire");
+    public static final ModelLayerLocation CLOTHING_BOOTS = new ModelLayerLocation(VIdentifier.mod("clothing"), "boots");
+    public static final ModelLayerLocation CLOTHING_CROWN = new ModelLayerLocation(VIdentifier.mod("clothing"), "crown");
+    public static final ModelLayerLocation CLOTHING_PANTS = new ModelLayerLocation(VIdentifier.mod("clothing"), "pants");
+    public static final ModelLayerLocation CLOTHING_HAT = new ModelLayerLocation(VIdentifier.mod("clothing"), "hat");
+    public static final ModelLayerLocation HUNTER_HAT_TALL = new ModelLayerLocation(VIdentifier.mod("hunter_hat_tall"), "main");
+    public static final ModelLayerLocation HUNTER_HAT_BROAD = new ModelLayerLocation(VIdentifier.mod("hunter_hat_broad"), "main");
+    public static final ModelLayerLocation HUNTER_EQUIPMENT = new ModelLayerLocation(VIdentifier.mod("hunter_equipment"), "main");
+    public static final ModelLayerLocation VILLAGER_WITH_ARMS = new ModelLayerLocation(VIdentifier.mod("villager_with_arms"), "main");
+    public static final ModelLayerLocation TASK_MASTER = new ModelLayerLocation(VIdentifier.mod("task_master"), "main");
+    public static final ModelLayerLocation REMAINS_DEFENDER = new ModelLayerLocation(VIdentifier.mod("remains_defender"), "main");
+    public static final ModelLayerLocation GHOST = new ModelLayerLocation(VIdentifier.mod("ghost"), "main");
+    public static final ModelLayerLocation DARK_SPRUCE_BOAT = new ModelLayerLocation(VIdentifier.mod("boat/dark_spruce"), "main");
+    public static final ModelLayerLocation DARK_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VIdentifier.mod("chest_boat/dark_spruce"), "main");
+    public static final ModelLayerLocation CURSED_SPRUCE_BOAT = new ModelLayerLocation(VIdentifier.mod("boat/cursed_spruce"), "main");
+    public static final ModelLayerLocation CURSED_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VIdentifier.mod("chest_boat/cursed_spruce"), "main");
 
 
     public static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {

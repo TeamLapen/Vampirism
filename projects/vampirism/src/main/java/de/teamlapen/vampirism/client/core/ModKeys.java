@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.client.core;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.InputConstants;
-import de.teamlapen.factions.client.IMinecraftAccessor;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundStartFeedingPacket;
@@ -34,7 +34,7 @@ public class ModKeys implements IMinecraftAccessor {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(VResourceLocation.mod("main"));
+    public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(VIdentifier.mod("main"));
 
     public static final KeyMapping SUCK = new KeyMapping("keys.vampirism.suck", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
     public static final KeyMapping VISION = new KeyMapping("keys.vampirism.vision", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);

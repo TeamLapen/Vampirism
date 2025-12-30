@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.entity.minion.management;
 
 
-import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.world.entities.minion.IMinionTask;
-import de.teamlapen.factions.common.factions.minions.management.CollectResourcesTask;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.common.factions.minions.management.CollectResourcesTask;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBlocks;

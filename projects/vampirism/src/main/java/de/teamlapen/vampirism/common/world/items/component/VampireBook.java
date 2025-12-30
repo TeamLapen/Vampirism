@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.general.IBookBackground;
 import de.teamlapen.vampirism.api.general.IBookContents;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
@@ -31,7 +31,7 @@ public record VampireBook(Identifier id, Component author) implements IVampireBo
 
     public static final MutableComponent UNKNOWN_AUTHOR = Component.translatable("vampire_book.vampirism.unknown.author");
 
-    public static final VampireBook EMPTY = new VampireBook(VResourceLocation.mod("unknown"), UNKNOWN_AUTHOR);
+    public static final VampireBook EMPTY = new VampireBook(VIdentifier.mod("unknown"), UNKNOWN_AUTHOR);
 
     public static final Codec<IVampireBook> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Identifier.CODEC.fieldOf("id").forGetter(IVampireBook::id),

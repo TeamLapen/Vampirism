@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.core;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -34,7 +34,7 @@ public class ModLootTables {
     public static final ResourceKey<LootTable> INJECT_STRONGHOLD_LIBRARY = register("chests/inject/stronghold_library");
 
     private static ResourceKey<LootTable> register(String resourceName) {
-        return register(VResourceLocation.mod(resourceName));
+        return register(VIdentifier.mod(resourceName));
     }
 
     private static ResourceKey<LootTable> register(Identifier resourceLocation) {

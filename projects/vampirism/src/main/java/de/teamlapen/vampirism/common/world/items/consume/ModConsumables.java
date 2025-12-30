@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.items.consume;
 
-import de.teamlapen.factions.common.world.items.consume.FactionBasedConsumeEffect;
+import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;

@@ -1,0 +1,59 @@
+package de.teamlapen.faction.client.gui.screens;
+
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.world.entities.minion.IFactionMinionTask;
+import de.teamlapen.faction.api.world.entities.minion.INoGlobalCommandTask;
+import de.teamlapen.faction.client.config.ClientConfigHelper;
+import de.teamlapen.faction.client.gui.GuiRenderer;
+import de.teamlapen.faction.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
+import de.teamlapen.faction.common.core.ModRegistries;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.util.ItemOrdering;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static de.teamlapen.faction.client.gui.screens.SelectMinionTaskRadialScreen.CUSTOM_ENTRIES;
+
+public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMinionTaskRadialScreen.Entry> {
+
+    public EditSelectMinionTaskScreen(FactionPlayerHandler player) {
+        super(getOrdering(player), entry -> entry.getText().plainCopy(), EditSelectMinionTaskScreen::drawActionPart, (ordering) -> saveOrdering(player, ordering), (item) -> EditSelectMinionTaskScreen.isEnabled(player, item));
+    }
+
+    public static void show() {
+        Minecraft.getInstance().setScreen(new EditSelectMinionTaskScreen(FactionPlayerHandler.get(Minecraft.getInstance().player)));
+    }
+
+    private static void drawActionPart(@Nullable SelectMinionTaskRadialScreen.Entry entry, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
+        if (entry == null) return;
+        GuiRenderer.blit(graphics, entry.getIconLoc(), posX, posY, 16, 16, 16, 16);
+    }
+
+    private static boolean isEnabled(FactionPlayerHandler handler, @NotNull SelectMinionTaskRadialScreen.Entry item) {
+        return handler.getLordPlayer().flatMap(player -> Optional.ofNullable(item.getTask()).map(task -> task.isAvailable(player))).orElse(true);
+    }
+
+    private static ItemOrdering<SelectMinionTaskRadialScreen.Entry> getOrdering(FactionPlayerHandler player) {
+        return new ItemOrdering<>(ClientConfigHelper.getMinionTaskOrder(player.getFaction()), new ArrayList<>(), () -> Stream.concat(ModRegistries.MINION_TASKS.stream().filter(s -> !(s instanceof INoGlobalCommandTask)).filter(s -> {
+            if (s instanceof IFactionMinionTask<?, ?> factionTask) {
+                if (factionTask.getFaction() == null) {
+                    return true;
+                } else {
+                    return IFaction.is(factionTask.getFaction(), player.getFaction());
+                }
+            } else {
+                return true;
+            }
+        }).map(SelectMinionTaskRadialScreen.Entry::new), CUSTOM_ENTRIES.values().stream()).toList());
+    }
+
+    private static void saveOrdering(FactionPlayerHandler player, ItemOrdering<SelectMinionTaskRadialScreen.Entry> ordering) {
+        ClientConfigHelper.saveMinionTaskOrder(player.getFaction(), ordering.getOrdering());
+    }
+}

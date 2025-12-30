@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.factions.api.factions.LevelingChange;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.world.blockentity.InventoryBlockEntity;
-import de.teamlapen.factions.common.world.inventory.InventoryHelper;
+import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.world.blockentity.InventoryBlockEntity;
+import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.core.*;

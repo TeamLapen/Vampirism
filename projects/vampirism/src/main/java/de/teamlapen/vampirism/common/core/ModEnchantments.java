@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.factions.common.advancements.criterion.FactionSubPredicate;
+import de.teamlapen.faction.common.advancements.criterion.FactionSubPredicate;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismDataComponents;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.advancements.criterion.EntityPredicate;
@@ -34,8 +34,8 @@ import java.util.List;
 
 public class ModEnchantments {
     public static final DeferredRegister<DataComponentType<?>> ENCHANTMENT_DATA_COMPONENTS = DeferredRegister.create(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, VReference.MODID);
-    public static final ResourceKey<Enchantment> VAMPIRE_SLAYER = ResourceKey.create(Registries.ENCHANTMENT, VResourceLocation.mod("vampire_slayer"));
-    public static final ResourceKey<Enchantment> ARROW_FRUGALITY = ResourceKey.create(Registries.ENCHANTMENT, VResourceLocation.mod("arrow_frugality"));
+    public static final ResourceKey<Enchantment> VAMPIRE_SLAYER = ResourceKey.create(Registries.ENCHANTMENT, VIdentifier.mod("vampire_slayer"));
+    public static final ResourceKey<Enchantment> ARROW_FRUGALITY = ResourceKey.create(Registries.ENCHANTMENT, VIdentifier.mod("arrow_frugality"));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> FRUGALITY_DATA = ENCHANTMENT_DATA_COMPONENTS.register(VampirismDataComponents.Keys.FRUGALITY.getPath(), () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder().persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()).build());
 

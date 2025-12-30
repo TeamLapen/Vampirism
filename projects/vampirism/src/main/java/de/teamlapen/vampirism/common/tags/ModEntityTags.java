@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.tags;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
@@ -25,6 +25,6 @@ public class ModEntityTags {
     }
 
     private static TagKey<EntityType<?>> tag(String name) {
-        return tag(VResourceLocation.mod(name));
+        return tag(VIdentifier.mod(name));
     }
 }

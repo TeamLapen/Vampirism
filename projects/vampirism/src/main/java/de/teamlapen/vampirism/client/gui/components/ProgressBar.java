@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.components;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ProgressBar extends AbstractWidget {
 
-    private static final WidgetSprites SPRITES = new WidgetSprites(VResourceLocation.mod("widget/progress_bar"), VResourceLocation.mod("widget/progress_bar_inactive"), VResourceLocation.mod("widget/progress_bar_highlighted"));
-    private static final Identifier PROGRESS = VResourceLocation.mod("widget/progress_bar_progress");
+    private static final WidgetSprites SPRITES = new WidgetSprites(VIdentifier.mod("widget/progress_bar"), VIdentifier.mod("widget/progress_bar_inactive"), VIdentifier.mod("widget/progress_bar_highlighted"));
+    private static final Identifier PROGRESS = VIdentifier.mod("widget/progress_bar_progress");
     private float progress = 0;
     private int color = 0xFFFFFF;
 

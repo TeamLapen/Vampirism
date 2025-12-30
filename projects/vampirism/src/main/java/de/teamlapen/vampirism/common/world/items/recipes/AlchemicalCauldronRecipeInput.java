@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
-import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;

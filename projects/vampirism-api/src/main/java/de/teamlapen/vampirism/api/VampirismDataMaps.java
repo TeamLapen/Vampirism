@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api;
 
 import de.teamlapen.vampirism.api.datamaps.*;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
@@ -25,13 +25,13 @@ public class VampirismDataMaps {
     public static final Supplier<DataMapType<Item, IFogDiffuserFuel>> FOG_DIFFUSER_FUEL = supplyDataMap(Registries.ITEM, Keys.FOG_DIFFUSER_FUEL);
 
     public static class Keys {
-        public static final Identifier ITEM_BLOOD = VResourceLocation.mod("item_blood");
-        public static final Identifier ENTITY_BLOOD = VResourceLocation.mod("entity_blood");
-        public static final Identifier FLUID_BLOOD_CONVERSION = VResourceLocation.mod("fluid_blood_conversion");
-        public static final Identifier ENTITY_CONVERTER = VResourceLocation.mod("entity_converter");
-        public static final Identifier LIQUID_COLOR = VResourceLocation.mod("liquid_color");
-        public static final Identifier GARLIC_DIFFUSER_FUEL = VResourceLocation.mod("garlic_diffuser_fuel");
-        public static final Identifier FOG_DIFFUSER_FUEL = VResourceLocation.mod("fog_diffuser_fuel");
+        public static final Identifier ITEM_BLOOD = VIdentifier.mod("item_blood");
+        public static final Identifier ENTITY_BLOOD = VIdentifier.mod("entity_blood");
+        public static final Identifier FLUID_BLOOD_CONVERSION = VIdentifier.mod("fluid_blood_conversion");
+        public static final Identifier ENTITY_CONVERTER = VIdentifier.mod("entity_converter");
+        public static final Identifier LIQUID_COLOR = VIdentifier.mod("liquid_color");
+        public static final Identifier GARLIC_DIFFUSER_FUEL = VIdentifier.mod("garlic_diffuser_fuel");
+        public static final Identifier FOG_DIFFUSER_FUEL = VIdentifier.mod("fog_diffuser_fuel");
     }
 
 

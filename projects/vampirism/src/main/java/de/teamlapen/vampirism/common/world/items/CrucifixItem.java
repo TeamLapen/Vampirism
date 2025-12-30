@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.api.factions.refinements.IRefinementHandler;
-import de.teamlapen.factions.api.factions.skills.ISkillHandler;
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -36,7 +36,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.component.UseCooldown;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +45,7 @@ import java.util.function.Consumer;
 public class CrucifixItem extends Item implements IItemWithTier {
 
     private final Tier tier;
-    private static final Identifier COOLDOWN_GROUP = VResourceLocation.mod("crucifix");
+    private static final Identifier COOLDOWN_GROUP = VIdentifier.mod("crucifix");
 
     public CrucifixItem(Tier tier, Properties properties) {
         super(FactionRestriction.builder(ModFactionTags.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).apply(properties).stacksTo(1).component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {

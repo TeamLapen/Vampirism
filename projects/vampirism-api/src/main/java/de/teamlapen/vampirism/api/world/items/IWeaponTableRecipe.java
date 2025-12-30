@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.world.items;
 
-import de.teamlapen.factions.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.factions.skills.ISkill;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;

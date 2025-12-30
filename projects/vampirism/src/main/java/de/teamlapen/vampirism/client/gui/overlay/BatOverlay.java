@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.factions.api.factions.actions.IActionHandler;
-import de.teamlapen.factions.client.gui.overlay.TextureOverlay;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.factions.actions.IActionHandler;
+import de.teamlapen.faction.client.gui.overlay.TextureOverlay;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -13,7 +13,7 @@ import net.minecraft.resources.Identifier;
 
 public class BatOverlay extends TextureOverlay {
 
-    public static final Identifier BAT_TEXTURE = VResourceLocation.mod("textures/misc/bat.png");
+    public static final Identifier BAT_TEXTURE = VIdentifier.mod("textures/misc/bat.png");
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {

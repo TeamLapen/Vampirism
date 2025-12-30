@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.world.entity;
 
-import de.teamlapen.factions.api.world.entities.ICaptureStrengthProvider;
-import de.teamlapen.factions.api.world.entities.IVillageCaptureEntity;
+import de.teamlapen.faction.api.world.entities.ICaptureStrengthProvider;
+import de.teamlapen.faction.api.world.entities.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
 
 /**

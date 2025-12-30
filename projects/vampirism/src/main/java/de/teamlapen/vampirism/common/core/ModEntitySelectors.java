@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.common.core;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionEntity;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.common.core.ModRegistries;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionEntity;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.common.core.ModRegistries;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.commands.arguments.selector.options.EntitySelectorOptions;
 import net.minecraft.core.Holder;
@@ -27,7 +27,7 @@ public class ModEntitySelectors {
     private static final String MIN_LEVEL = "vampirism:minLevel";
     private static final String MAX_LEVEL = "vampirism:maxLevel";
 
-    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> Component.translatable("command.vampirism.argument.faction.notfound", p_208726_0_));
+    private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> Component.translatable("command.factionapi.argument.faction.notfound", p_208726_0_));
 
 
     public static void registerSelectors() {

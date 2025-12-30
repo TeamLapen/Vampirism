@@ -1,8 +1,0 @@
-{
-  "remove": [
-    "#vampirism:is_vampire"
-  ],
-  "values": [
-    "#factions:not_neutral"
-  ]
-}

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.extensions;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.fog.FogData;
@@ -16,12 +16,12 @@ public class FluidExtensions {
 
         @Override
         public Identifier getStillTexture() {
-            return VResourceLocation.mod("block/blood_still");
+            return VIdentifier.mod("block/blood_still");
         }
 
         @Override
         public Identifier getFlowingTexture() {
-            return VResourceLocation.mod("block/blood_flow");
+            return VIdentifier.mod("block/blood_flow");
         }
 
         @Override

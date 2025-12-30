@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.attachments;
 
 import com.google.common.base.Stopwatch;
-import de.teamlapen.factions.common.world.blockentity.TotemBlockEntity;
+import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModBiomes;
 import net.minecraft.core.BlockPos;

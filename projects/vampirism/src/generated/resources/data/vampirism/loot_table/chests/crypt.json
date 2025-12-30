@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "factions:oblivion_potion",
+          "name": "factionapi:oblivion_potion",
           "weight": 4
         },
         {
@@ -167,7 +167,7 @@
             {
               "function": "minecraft:set_name",
               "name": {
-                "translate": "filled_map.factions.ancient_remains"
+                "translate": "filled_map.factionapi.ancient_remains"
               },
               "target": "item_name"
             }

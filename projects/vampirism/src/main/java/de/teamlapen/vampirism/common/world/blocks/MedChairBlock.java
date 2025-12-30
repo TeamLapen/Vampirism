@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.UtilLib;

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.server.commands;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import de.teamlapen.factions.common.server.commands.BasicCommand;
+import de.teamlapen.faction.common.server.commands.BasicCommand;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
 import net.minecraft.commands.CommandSourceStack;
