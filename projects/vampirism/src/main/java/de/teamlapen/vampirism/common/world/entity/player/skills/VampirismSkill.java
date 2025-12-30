@@ -9,13 +9,10 @@ import de.teamlapen.faction.common.factions.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
-import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -53,7 +50,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
         return description.get();
     }
 
-    public @NotNull VampirismSkill<T> setDescription(Supplier<Component> descriptionIn) {
+    public VampirismSkill<T> setDescription(Supplier<Component> descriptionIn) {
         this.description = descriptionIn;
         return this;
     }
@@ -66,12 +63,12 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
     /**
      * Enable description using "text.vampirism.skill."+getID()+".desc" as unloc key
      */
-    public @NotNull VampirismSkill<T> setHasDefaultDescription() {
+    public VampirismSkill<T> setHasDefaultDescription() {
         description = () -> Component.translatable(getDescriptionId() + ".desc");
         return this;
     }
 
-    public @NotNull VampirismSkill<T> setToggleActions(Consumer<T> activateIn, Consumer<T> deactivateIn) {
+    public VampirismSkill<T> setToggleActions(Consumer<T> activateIn, Consumer<T> deactivateIn) {
         this.activate = activateIn;
         this.deactivate = deactivateIn;
         return this;
@@ -98,22 +95,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
          * @param desc Enable description using the default unlocalized key
          */
         public SimpleHunterSkill(int skillPointCost, boolean desc) {
-            super(Either.left(HunterSkills.Trees.LEVEL), skillPointCost, desc);
-        }
-
-        @Override
-        public TagKey<? extends IFaction<?>> factions() {
-            return ModFactionTags.IS_HUNTER;
-        }
-    }
-
-    public static class HunterLordSkill extends VampirismSkill<IHunterPlayer> {
-
-        /**
-         * @param desc Enable description using the default unlocalized key
-         */
-        public HunterLordSkill(int skillPointCost, boolean desc) {
-            super(Either.left(HunterSkills.Trees.LORD), skillPointCost, desc);
+            super(Either.right(ModSkillTreeTags.HUNTER), skillPointCost, desc);
         }
 
         @Override
@@ -128,33 +110,11 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
     public static class SimpleVampireSkill extends VampirismSkill<IVampirePlayer> {
 
         public SimpleVampireSkill(int skillPointCost, boolean desc) {
-            super(Either.left(VampireSkills.Trees.LEVEL), skillPointCost, desc);
+            super(Either.right(ModSkillTreeTags.VAMPIRE), skillPointCost, desc);
         }
 
         @Override
-        public @NonNull TagKey<? extends IFaction<?>> factions() {
-            return ModFactionTags.IS_VAMPIRE;
-        }
-    }
-
-    public static class VampireLordSkill extends VampirismSkill<IVampirePlayer> {
-        public VampireLordSkill(int skillPointCost, boolean desc) {
-            super(Either.left(VampireSkills.Trees.LORD), skillPointCost, desc);
-        }
-
-        @Override
-        public @NonNull TagKey<? extends IFaction<?>> factions() {
-            return ModFactionTags.IS_VAMPIRE;
-        }
-    }
-
-    public static class DraculaSkill extends VampirismSkill<IVampirePlayer> {
-        public DraculaSkill(int skillPointCost, boolean desc) {
-            super(Either.left(VampireSkills.Trees.DRACULA), skillPointCost, desc);
-        }
-
-        @Override
-        public @NonNull TagKey<? extends IFaction<?>> factions() {
+        public TagKey<? extends IFaction<?>> factions() {
             return ModFactionTags.IS_VAMPIRE;
         }
     }
