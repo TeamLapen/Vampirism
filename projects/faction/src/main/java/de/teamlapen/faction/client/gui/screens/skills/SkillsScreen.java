@@ -177,7 +177,7 @@ public class SkillsScreen extends Screen {
         if (this.tabs.size() > 1) {
 
             for (SkillsTabComponent skillTab : this.tabs) {
-                skillTab.drawTab(graphics, x, y, skillTab == this.selectedTab);
+                skillTab.drawTab(graphics, x, y, mouseX, mouseY, skillTab == this.selectedTab);
             }
 
             for (SkillsTabComponent skillTab : this.tabs) {
