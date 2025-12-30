@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.common.server.commands;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import de.teamlapen.factions.api.factions.LevelingChange;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.server.commands.BasicCommand;
+import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.server.commands.BasicCommand;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import net.minecraft.commands.CommandSourceStack;

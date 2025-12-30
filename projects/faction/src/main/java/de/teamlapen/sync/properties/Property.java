@@ -1,15 +1,12 @@
 package de.teamlapen.sync.properties;
 
-import com.google.common.base.Enums;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
-import de.teamlapen.factions.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.sync.PropertySync;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;

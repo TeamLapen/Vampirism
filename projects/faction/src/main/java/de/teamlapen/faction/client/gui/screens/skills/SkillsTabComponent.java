@@ -1,5 +1,6 @@
 package de.teamlapen.faction.client.gui.screens.skills;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.properties;
 
-import de.teamlapen.factions.api.world.entities.extensions.IPlayer;
+import de.teamlapen.faction.api.world.entities.extensions.IPlayer;
 import de.teamlapen.sync.PropertyParentSync;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.component.DataComponents;
@@ -26,8 +26,8 @@ public class DraculaData extends PropertyParentSync {
 
     @Override
     protected void registerProperties() {
-        this.registerProperty(VResourceLocation.mod("id_dracula")).simple(false, () -> this.isDracula, b -> this.isDracula = b);
-        this.registerProperty(VResourceLocation.mod("wings_state")).simple(IWingsEntity.WingsState.CLOSED, () -> this.wingsState, b -> this.wingsState = b);
+        this.registerProperty(VIdentifier.mod("id_dracula")).simple(false, () -> this.isDracula, b -> this.isDracula = b);
+        this.registerProperty(VIdentifier.mod("wings_state")).simple(IWingsEntity.WingsState.CLOSED, () -> this.wingsState, b -> this.wingsState = b);
     }
 
     public boolean isDracula() {

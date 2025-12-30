@@ -1,14 +1,15 @@
 package de.teamlapen.faction.data.provider.base;
 
-import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.skills.ISkillNode;
+import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.common.factions.skills.SkillTreeConfiguration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -27,7 +28,7 @@ public abstract class SkillTreeProvider implements DataProvider {
     private HolderLookup.@UnknownNullability RegistryLookup<ISkillNode> nodes = null;
 
     public SkillTreeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId) {
-        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "faction/configured_skill_tree");
+        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, REFERENCE.MOD_ID + "/configured_skill_tree");
         this.lookupProvider = lookupProvider;
         this.modId = modId;
     }
@@ -40,7 +41,6 @@ public abstract class SkillTreeProvider implements DataProvider {
 
             Set<Identifier> set = new HashSet<>();
             List<CompletableFuture<?>> list = new ArrayList<>();
-            RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, provider);
             this.buildSkillTrees(provider, (id, skillTree) -> {
                 if (!set.add(id)) {
                     throw new IllegalStateException("Duplicate skill tree " + id);

@@ -1,5 +1,6 @@
 package de.teamlapen.faction.api.world.entities.player;
 
+import de.teamlapen.faction.api.FactionsApi;
 import de.teamlapen.faction.api.factions.*;
 import de.teamlapen.faction.api.world.entities.extensions.IPlayer;
 import de.teamlapen.sync.api.IAttachmentSync;

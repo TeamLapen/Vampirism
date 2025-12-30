@@ -6,6 +6,7 @@ import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillNode;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.data.provider.base.SkillTreeProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryFixedCodec;

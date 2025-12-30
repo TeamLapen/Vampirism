@@ -1,6 +1,10 @@
 package de.teamlapen.faction.common.core;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.api.util.REFERENCE;
+import de.teamlapen.faction.common.advancements.criterion.FactionSubPredicate;
+import de.teamlapen.faction.common.advancements.criterion.PlayerFactionSubPredicate;
+import net.minecraft.advancements.criterion.EntitySubPredicate;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;

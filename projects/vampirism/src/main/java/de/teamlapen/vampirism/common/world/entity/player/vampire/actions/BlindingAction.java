@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.actions;
 
-import de.teamlapen.factions.api.factions.actions.IActionResult;
+import de.teamlapen.faction.api.factions.actions.IActionResult;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.world.effect.MobEffectInstance;

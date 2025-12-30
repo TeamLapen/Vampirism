@@ -7,6 +7,7 @@ import de.teamlapen.faction.common.core.DefaultFactions;
 import de.teamlapen.faction.common.core.FactionAttachments;
 import de.teamlapen.faction.common.factions.FactionBasePlayer;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.Nullable;

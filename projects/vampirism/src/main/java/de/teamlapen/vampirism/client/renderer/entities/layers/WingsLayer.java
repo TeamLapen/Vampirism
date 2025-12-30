@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import de.teamlapen.vampirism.client.models.layers.WingsModel;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q extends HumanoidModel<S>> extends RenderLayer<S, Q> {
 
     private final WingsModel model;
-    private final Identifier texture = VResourceLocation.mod("textures/entity/wings/wings.png");
+    private final Identifier texture = VIdentifier.mod("textures/entity/wings/wings.png");
 
     public WingsLayer(RenderLayerParent<S, Q> renderer, @NotNull EntityModelSet modelSet) {
         super(renderer);

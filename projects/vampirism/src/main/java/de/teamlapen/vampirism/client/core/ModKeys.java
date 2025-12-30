@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundStartFeedingPacket;
