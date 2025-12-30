@@ -125,5 +125,7 @@ public class ModSkillTreeProvider extends SkillTreeProvider {
                 new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(VampireSkills.Nodes.LORD_SKILL5))
         ));
 
+        output.accept(modId("vampire_dracula"), new SkillTreeConfiguration(trees.getOrThrow(VampireSkills.Trees.DRACULA), nodes.getOrThrow(VampireSkills.Nodes.DRACULA_ROOT)));
+
     }
 }

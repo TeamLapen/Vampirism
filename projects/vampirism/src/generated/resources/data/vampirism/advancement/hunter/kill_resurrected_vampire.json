@@ -12,7 +12,7 @@
                 "vampirism:neonatal": {}
               },
               "type_specific": {
-                "type": "vampirism:faction",
+                "type": "factions:faction",
                 "faction": "vampirism:vampire"
               }
             }

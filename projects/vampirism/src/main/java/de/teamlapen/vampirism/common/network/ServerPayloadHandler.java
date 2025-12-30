@@ -102,6 +102,8 @@ public class ServerPayloadHandler {
                 }
                 case RESURRECT -> vampirePlayer.tryResurrect();
                 case GIVE_UP -> vampirePlayer.giveUpDBNO();
+                case JUMP -> IDraculaPlayer.getDracula(player).ifPresent(IDraculaPlayer::swingWings);
+                case GROW_WINGS -> IDraculaPlayer.getDracula(player).ifPresent(IDraculaPlayer::toggleWings);
             }
         });
     }

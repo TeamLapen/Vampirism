@@ -25,6 +25,7 @@
     "ThrowablePotionItemMixin",
     "ThrownPotionMixin",
     "VibrationSystemUserMixin",
+    "accessor.AnimationStateAccessor",
     "accessor.AttributeInstanceAccessor",
     "accessor.EntityAccessor",
     "accessor.FoodDataAccessor",
@@ -64,7 +65,8 @@
     "client.SplashManagerMixin",
     "client.StatsScreenMixin",
     "client.accessor.FeatureRenderDispatcherAccessor",
-    "client.accessor.LevelRendererAccessor"
+    "client.accessor.LevelRendererAccessor",
+    "client.accessor.ModelPartAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,11 +1,15 @@
 package de.teamlapen.sync.properties;
 
+import com.google.common.base.Enums;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
+import de.teamlapen.factions.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.sync.PropertySync;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -176,6 +180,14 @@ public abstract class Property implements IProperty {
                 String old = valueProvider.get();
                 valueSetter.accept(x);
                 return Objects.equals(old, x);
+            }).register();
+        }
+
+        public <T extends Enum<T> & StringRepresentable> void simple(T defaultValue, Supplier<T> valueProvider, Consumer<T> valueSetter) {
+            simple(StringRepresentable.fromEnum(() -> defaultValue.getDeclaringClass().getEnumConstants())).defaultValue(defaultValue).provider(valueProvider).commonLoader(x -> {
+                T old = valueProvider.get();
+                valueSetter.accept(x);
+                return old != x;
             }).register();
         }
 

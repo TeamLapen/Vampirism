@@ -20,10 +20,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.*;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.config.BalanceConfig;
@@ -42,6 +39,7 @@ import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.Customization;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.DraculaData;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VampireDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VisionStatus;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampirePlayerSkillProperties;
@@ -99,7 +97,7 @@ import java.util.Optional;
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
+public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer, VampireDraculaPlayer {
     public static final Identifier NATURAL_ARMOR_UUID = VIdentifier.mod("natural_armor");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int FEED_TIMER = 20;
@@ -156,6 +154,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private final VampireDisguise disguise;
     private final RefinementHandler<IVampirePlayer> refinementHandler;
     private final Customization customization;
+    private final DraculaData draculaData;
 
 
     //</editor-fold>
@@ -167,6 +166,28 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.vision = new VisionStatus(this);
         this.refinementHandler = new RefinementHandler<>(this, de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE);
         this.customization = new Customization(this);
+        this.draculaData = new DraculaData(this);
+    }
+
+    @Override
+    public Component getShortLevelDisplay() {
+        if (this.draculaData.isDracula()) {
+            return Component.translatable("text.vampirism.dracula_title.short");
+        }
+        return super.getShortLevelDisplay();
+    }
+
+    @Override
+    public Component getLevelDisplay() {
+        if (this.draculaData.isDracula()) {
+            return Component.translatable("text.vampirism.dracula_title");
+        }
+        return super.getLevelDisplay();
+    }
+
+    @Override
+    public DraculaData draculaData() {
+        return this.draculaData;
     }
 
     @Override
@@ -297,7 +318,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return true;
     }
 
-    @NotNull
     public BITE_TYPE determineBiteType(LivingEntity entity) {
         if (player instanceof ServerPlayer && Permissions.FEED.isDisallowed(((ServerPlayer) player))) {
             return BITE_TYPE.NONE;
@@ -442,11 +462,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      */
     public void setGlowingEyes(boolean value) {
         this.customization.setGlowingEyes(value);
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return REFERENCE.HIGHEST_VAMPIRE_LEVEL;
     }
 
     public VampirePlayerSkillProperties getSkillProperties() {
@@ -669,6 +684,12 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         this.bloodStats.setMaxBlood(maxBlood);
 
+        if (changes.get(DraculaChange.KEY) != null) {
+            this.draculaData.makeDracula();
+        } else if (changes.getNewLevel() < getMaxLevel() || changes.getNewLordLevel() < getMaxLordLevel()){
+            this.draculaData.removeDracula();
+        }
+
         super.levelChanged(changes);
     }
 
@@ -814,6 +835,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 }
             }
         }
+        this.draculaData.tick();
+
         if (feed_victim == -1) {
             feedBiteTickCounter = 0;
         }
@@ -1053,6 +1076,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.registerProperty(VIdentifier.mod("disguise")).subProperty(() -> this.disguise).register();
         this.registerProperty(VIdentifier.mod("refinement_handler")).subProperty(() ->this.refinementHandler).register();
         this.registerProperty(VIdentifier.mod("customization")).subProperty(() -> this.customization).register();
+        this.registerProperty(VIdentifier.mod("dracula")).subProperty(() -> this.draculaData).register();
     }
 
     private void applyEntityAttributes() {

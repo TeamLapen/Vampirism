@@ -14,13 +14,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Interface for the player vampire data.
  * Attached to all players as capability
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, ITaskPlayer<IVampirePlayer>, IRefinementPlayer<IVampirePlayer>, ILordPlayer<IVampirePlayer>, IVampireVisionUser {
+public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, ITaskPlayer<IVampirePlayer>, IRefinementPlayer<IVampirePlayer>, ILordPlayer<IVampirePlayer>, IVampireVisionUser, IDraculaPlayer {
 
     /**
      * Increases exhaustion level by supplied amount
@@ -40,17 +39,14 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * @return The bite type which would be applied to the give entity
      */
-    @NotNull
     BITE_TYPE determineBiteType(LivingEntity entity);
 
     /**
      * @return The players vampire skill handler
      */
-    @NotNull
     IActionHandler<IVampirePlayer> getActionHandler();
 
     @Override
-    @NotNull
     default Holder<? extends IPlayableFaction<IVampirePlayer>> getFaction() {
         return VampirismFactions.VAMPIRE;
     }
@@ -60,7 +56,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * @return The players blood stats (similar to food stats)
      */
-    @NotNull
     IBloodStats getBloodStats();
 
     /**
@@ -101,7 +96,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
         }
 
         @Override
-        public @NotNull String getSerializedName() {
+        public String getSerializedName() {
             return this.name;
         }
     }

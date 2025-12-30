@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 public interface INeutralPlayer extends IFactionPlayer<INeutralPlayer> {
 
     @Override
-    @NotNull
     default Holder<? extends IPlayableFaction<?>> getFaction() {
         return Factions.NEUTRAL;
     }

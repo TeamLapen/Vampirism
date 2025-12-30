@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.gui.screens.SelectAmmoScreen;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundStartFeedingPacket;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import net.minecraft.client.KeyMapping;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Handles all key/input related stuff
@@ -39,6 +41,7 @@ public class ModKeys implements IMinecraftAccessor {
     public static final KeyMapping SUCK = new KeyMapping("keys.vampirism.suck", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
     public static final KeyMapping VISION = new KeyMapping("keys.vampirism.vision", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
     public static final KeyMapping SELECT_AMMO = new KeyMapping("keys.vampirism.select_ammo", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
+    public static final KeyMapping TOGGLE_WINGS = new KeyMapping("keys.vampirism.toggle_wings", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_COMMA, CATEGORY);
 
     public void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
         event.registerCategory(CATEGORY);
@@ -46,6 +49,7 @@ public class ModKeys implements IMinecraftAccessor {
         event.register(SUCK);
         event.register(VISION);
         event.register(SELECT_AMMO);
+        event.register(TOGGLE_WINGS);
     }
 
     private boolean suckKeyDown = false;
@@ -56,6 +60,7 @@ public class ModKeys implements IMinecraftAccessor {
         ImmutableList.Builder<KeyConfig> keyMappingActions = ImmutableList.builder();
         keyMappingActions.add(new KeyConfig(VISION, this::switchVision, true));
         keyMappingActions.add(new KeyConfig(SELECT_AMMO, this::selectAmmo, true));
+        keyMappingActions.add(new KeyConfig(TOGGLE_WINGS, this::growWings, true));
         this.keyMappingActions = keyMappingActions.build();
     }
 
@@ -83,6 +88,7 @@ public class ModKeys implements IMinecraftAccessor {
                 }
             }
         }
+        updateWingsFlying();
     }
 
     private void suck() {
@@ -105,6 +111,17 @@ public class ModKeys implements IMinecraftAccessor {
         }
     }
 
+    private void updateWingsFlying() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null && Helper.isVampire(player) && player.isFallFlying()) {
+            Optional<IDraculaPlayer> draculaOpt = IDraculaPlayer.getDracula(player).filter(x -> x.asEntity().isFallFlying()).filter(x -> Minecraft.getInstance().options.keyJump.consumeClick());
+            draculaOpt.ifPresent(dracula -> {
+                VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.JUMP));
+                dracula.swingWings();
+            });
+        }
+    }
+
     private void endSuck() {
         if (suckKeyDown) {
             suckKeyDown = false;
@@ -120,6 +137,10 @@ public class ModKeys implements IMinecraftAccessor {
         if (player().isAlive()) {
             SelectAmmoScreen.show();
         }
+    }
+
+    private void growWings() {
+        VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.GROW_WINGS));
     }
 
     private record KeyConfig(KeyMapping mapping, Runnable action, boolean consume) {

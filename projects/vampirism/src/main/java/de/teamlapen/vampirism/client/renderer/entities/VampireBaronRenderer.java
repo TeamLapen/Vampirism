@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.client.models.entities.BaronBaseModel;
 import de.teamlapen.vampirism.client.models.entities.BaronModel;
 import de.teamlapen.vampirism.client.models.entities.BaronessModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.BaronAttireLayer;
-import de.teamlapen.vampirism.client.renderer.entities.layers.WingsLayer;
+import de.teamlapen.vampirism.client.renderer.entities.layers.WingLayer;
 import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -32,7 +32,7 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, Vampir
         super(context, new BaronModel(context.bakeLayer(ModEntitiesRender.BARON)), 0.5F);
         this.baronModel = new BaronModel(context.bakeLayer(ModEntitiesRender.BARON));
         this.baronessModel = new BaronessModel(context.bakeLayer(ModEntitiesRender.BARONESS));
-        this.addLayer(new WingsLayer<>(this, context.getModelSet(), vampireBaronEntity -> true, (entity, model) -> model.getBody()));
+        this.addLayer(new WingLayer<>(this, context.getModelSet(), vampireBaronEntity -> true, (entity, model) -> model.getBody()));
         this.addLayer(new BaronAttireLayer(this, context, (VampireBaronRenderState state) -> state.isLady ));
     }
 

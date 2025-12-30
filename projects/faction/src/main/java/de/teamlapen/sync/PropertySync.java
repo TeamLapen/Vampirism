@@ -18,7 +18,7 @@ import java.util.*;
  * <p>
  * To make use of this class, you need to override {@link #registerProperties()}. In the implementation you can register properties.
  * <p>
- * Properties are registered using {@link #registerProperty(ResourceLocation)}.
+ * Properties are registered using {@link #registerProperty(Identifier)}.
  * <p>
  * To handle property changes, override {@link #onPropertyChanged()}.
  */
@@ -33,7 +33,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IP
 
     /**
      * This method is called in the constructor of this class.
-     * It should be used to register properties using {@link #registerProperty(ResourceLocation)}
+     * It should be used to register properties using {@link #registerProperty(Identifier)}
      */
     @ApiStatus.OverrideOnly
     protected void registerProperties() {

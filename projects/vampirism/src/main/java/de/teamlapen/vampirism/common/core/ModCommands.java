@@ -7,10 +7,7 @@ import de.teamlapen.faction.common.server.commands.arguments.FactionArgument;
 import de.teamlapen.faction.common.server.commands.arguments.MinionArgument;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.common.server.commands.AppearanceCommand;
-import de.teamlapen.vampirism.common.server.commands.BloodBarCommand;
-import de.teamlapen.vampirism.common.server.commands.ConfigCommand;
-import de.teamlapen.vampirism.common.server.commands.VampireSwordCommand;
+import de.teamlapen.vampirism.common.server.commands.*;
 import de.teamlapen.vampirism.common.server.commands.test.*;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -72,6 +69,11 @@ public class ModCommands {
                             )
             );
         }
+
+        dispatcher.register(Commands.literal("factions")
+                .then(Commands.literal("faction")
+                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .then(DraculaCommand.register())));
     }
 
 }

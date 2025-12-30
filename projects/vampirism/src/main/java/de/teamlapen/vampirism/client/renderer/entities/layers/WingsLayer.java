@@ -3,55 +3,49 @@ package de.teamlapen.vampirism.client.renderer.entities.layers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.client.models.armor.WingModel;
-import de.teamlapen.vampirism.client.renderer.entities.VampireBaronRenderer;
-import net.minecraft.client.model.EntityModel;
+import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
+import de.teamlapen.vampirism.client.models.layers.WingsModel;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
+public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q extends HumanoidModel<S>> extends RenderLayer<S, Q> {
 
+    private final WingsModel model;
+    private final Identifier texture = VResourceLocation.mod("textures/entity/wings/wings.png");
 
-public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q extends EntityModel<S>> extends RenderLayer<S, Q> {
-
-    private final @NotNull WingModel<S> model;
-    private final Predicate<S> predicateRender;
-    private final BiFunction<S, Q, ModelPart> bodyPartFunction;
-    private final Identifier texture = VIdentifier.mod("textures/entity/wings.png");
-
-    /**
-     * @param predicateRender  Decides if the layer is rendered
-     * @param bodyPartFunction Should return the main body part. The returned ModelRenderer is used to adjust the wing rotation
-     */
-    public WingsLayer(@NotNull RenderLayerParent<S, Q> entityRendererIn, @NotNull EntityModelSet modelSet, Predicate<S> predicateRender, BiFunction<S, Q, ModelPart> bodyPartFunction) {
-        super(entityRendererIn);
-        this.model = new WingModel<>(modelSet.bakeLayer(ModEntitiesRender.WING));
-        this.predicateRender = predicateRender;
-        this.bodyPartFunction = bodyPartFunction;
+    public WingsLayer(RenderLayerParent<S, Q> renderer, @NotNull EntityModelSet modelSet) {
+        super(renderer);
+        this.model = new WingsModel(modelSet.bakeLayer(ModEntitiesRender.WINGS));
     }
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, S renderState, float yRot, float xRot) {
         if (renderState.isInvisible) return;
-        if (!predicateRender.test(renderState)) return;
-
-        this.model.copyRotationFromBody(bodyPartFunction.apply(renderState, this.getParentModel()));
+        if (renderState.getRenderDataOrDefault(ModEntityRenderStates.DRACULA_WINGS_STATE, IWingsEntity.WingsState.CLOSED) == IWingsEntity.WingsState.CLOSED) return;
+        model.resetPose();
         float s = 1f;
-        if (renderState instanceof VampireBaronRenderer.VampireBaronRenderState baron) {
-            s = baron.enragedProgress;
-        }
+//        if (entity instanceof VampireBaronRenderer.VampireBaronRenderState baron) {
+//            s = baron.enragedProgress;
+//        }
+        WingsModel.State state = new WingsModel.State();
+        state.wingsState = renderState.getRenderDataOrThrow(ModEntityRenderStates.DRACULA_WINGS_STATE);
+        state.growState = renderState.getRenderDataOrThrow(ModEntityRenderStates.DRACULA_WINGS_GROW);
+        state.flyState = renderState.getRenderDataOrThrow(ModEntityRenderStates.DRACULA_WINGS_FLY);
+        state.ageInTicks = renderState.ageInTicks;
+
         poseStack.pushPose();
-        poseStack.translate(0f, 0, 0.02f);
+        poseStack.translate(0,-11/16f,2/16f);
         poseStack.scale(s, s, s);
-        coloredCutoutModelCopyLayerRender(model, texture, poseStack, nodeCollector, packedLight, renderState, 0, 0);
+        nodeCollector.submitModel(model, state, poseStack, RenderTypes.entityCutoutNoCull(texture), packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0), -1, null, 0, null);
         poseStack.popPose();
     }
 }

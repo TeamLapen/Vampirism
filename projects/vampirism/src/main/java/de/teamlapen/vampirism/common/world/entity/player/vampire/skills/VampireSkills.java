@@ -11,6 +11,7 @@ import de.teamlapen.faction.common.factions.skills.SkillTree;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.common.advancements.critereon.DraculaCriterion;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttributes;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -47,6 +48,7 @@ public class VampireSkills {
 
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LEVEL_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LORD_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DRACULA_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_dracula").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.register("advanced_biter", () -> new VampirismSkill.SimpleVampireSkill(2, false).setToggleActions(player -> ((VampirePlayer) player).getSkillProperties().advanced_biter = true, player -> ((VampirePlayer) player).getSkillProperties().advanced_biter = false).setHasDefaultDescription());
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> FLEDGLING = SKILLS.register("fledgling", () -> new VampirismSkill.SimpleVampireSkill(2, true) {
         @Override
@@ -130,6 +132,9 @@ public class VampireSkills {
         public static final ResourceKey<ISkillNode> LORD_SKILL4 = node("lord_skill4");
         public static final ResourceKey<ISkillNode> LORD_SKILL5 = node("lord_skill5");
 
+        public static final ResourceKey<ISkillNode> DRACULA_ROOT = node("dracula_root");
+
+
         private static ResourceKey<ISkillNode> node(String path) {
             return ResourceKey.create(FactionRegistries.Keys.SKILL_NODE, VIdentifier.mod("vampire/" + path));
         }
@@ -165,12 +170,15 @@ public class VampireSkills {
             context.register(LORD_SKILL3, new SkillNode(LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED));
             context.register(LORD_SKILL4, new SkillNode(MINION_COLLECT));
             context.register(LORD_SKILL5, new SkillNode(LordSkills.MINION_RECOVERY));
+
+            context.register(DRACULA_ROOT, new SkillNode(VampireSkills.DRACULA_ROOT));
         }
     }
 
     public static class Trees {
         public static final ResourceKey<ISkillTree> LEVEL = tree("level");
         public static final ResourceKey<ISkillTree> LORD = tree("lord");
+        public static final ResourceKey<ISkillTree> DRACULA = tree("dracula");
 
         private static ResourceKey<ISkillTree> tree(String path) {
             return ResourceKey.create(FactionRegistries.Keys.SKILL_TREE, VIdentifier.mod("vampire/" + path));
@@ -181,6 +189,7 @@ public class VampireSkills {
 
             context.register(LEVEL, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.faction(ModFactions.VAMPIRE)).build(), new ItemStack(ModItems.VAMPIRE_BOOK.get()), Component.translatable("text.vampirism.skills.level"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
             context.register(LORD, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.VAMPIRE)).build(), new ItemStack(ModItems.VAMPIRE_MINION_BINDING.get()), Component.translatable("text.vampirism.skills.lord"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
+            context.register(DRACULA, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(DraculaCriterion.INSTANCE).build(), new ItemStack(ModItems.VAMPIRE_CLOTHING_HAT.get()), Component.translatable("text.vampirism.skills.dracula"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
         }
     }
 }

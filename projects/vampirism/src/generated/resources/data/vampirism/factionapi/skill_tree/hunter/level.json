@@ -10,7 +10,7 @@
   },
   "unlock_predicate": {
     "type_specific": {
-      "type": "vampirism:player_faction",
+      "type": "factions:player_faction",
       "faction": "vampirism:hunter"
     }
   }

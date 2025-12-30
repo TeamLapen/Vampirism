@@ -89,5 +89,11 @@
   ],
   "net/minecraft/client/renderer/feature/FeatureRenderDispatcher": [
     "de/teamlapen/vampirism/misc/injection/client/IFeatureRenderDispatcherVampirismMock"
+  ],
+  "net/minecraft/world/entity/AnimationState": [
+    "de/teamlapen/vampirism/misc/injection/IAnimationStateVampirismMock"
+  ],
+  "net/minecraft/client/model/geom/ModelPart": [
+    "de/teamlapen/vampirism/misc/injection/client/IModelPartVampirismMock"
   ]
 }

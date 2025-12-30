@@ -23,11 +23,11 @@ public interface IVampireVisionUser {
     /**
      * Locks the vision again, preventing the player from using it
      */
-    void unUnlockVision(@NotNull ResourceKey<IVampireVision> vision);
+    void unUnlockVision(ResourceKey<IVampireVision> vision);
 
     /**
      * Unlocks the given vision, so the player can activate it.
      * Is not saved to nbt
      */
-    void unlockVision(@NotNull ResourceKey<IVampireVision> vision);
+    void unlockVision(ResourceKey<IVampireVision> vision);
 }

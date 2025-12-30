@@ -4,6 +4,7 @@ import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
 import de.teamlapen.vampirism.common.core.ModAttachments;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextKey;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
@@ -51,6 +53,9 @@ public class ModEntityRenderStates {
     public static final ContextKey<Bat> VAMPIRE_BAT = create("vampire/bat");
     public static final ContextKey<Boolean> VAMPIRE_DBNO = create("vampire/dbno");
     public static final ContextKey<Boolean> VAMPIRE_SLEEPING_IN_COFFIN = create("vampire/sleeping_in_coffin");
+    public static final ContextKey<IWingsEntity.WingsState> DRACULA_WINGS_STATE = create("dracula/wings_state");
+    public static final ContextKey<AnimationState> DRACULA_WINGS_FLY = create("dracula/wings_fly");
+    public static final ContextKey<AnimationState> DRACULA_WINGS_GROW = create("dracula/wings_grow");
 
     private static <T> ContextKey<T> create(String id) {
         return new ContextKey<>(VIdentifier.mod(id));
@@ -96,6 +101,12 @@ public class ModEntityRenderStates {
                     bat.yHeadRotO = player.yHeadRotO;
                     bat.yBodyRotO = player.yBodyRotO;
                     state.setRenderData(VAMPIRE_BAT, bat);
+                }
+
+                if (vampire.isDracula()) {
+                    state.setRenderData(DRACULA_WINGS_STATE, vampire.getWingsState());
+                    state.setRenderData(DRACULA_WINGS_GROW, vampire.growAnimationState());
+                    state.setRenderData(DRACULA_WINGS_FLY, vampire.flyAnimationState());
                 }
             }
         });

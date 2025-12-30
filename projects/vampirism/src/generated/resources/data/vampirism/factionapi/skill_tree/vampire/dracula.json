@@ -2,17 +2,15 @@
   "background": "vampirism:block/dark_stone_bricks",
   "display": {
     "count": 1,
-    "id": "vampirism:vampire_minion_binding"
+    "id": "vampirism:vampire_clothing_hat"
   },
   "faction": "vampirism:vampire",
   "name": {
-    "translate": "text.vampirism.skills.lord"
+    "translate": "text.vampirism.skills.dracula"
   },
   "unlock_predicate": {
     "type_specific": {
-      "type": "factions:player_faction",
-      "faction": "vampirism:vampire",
-      "lord_level": 1
+      "type": "vampirism:dracula"
     }
   }
 }
