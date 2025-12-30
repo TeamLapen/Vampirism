@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.components;
 
-import de.teamlapen.factions.client.gui.components.SimpleList;
+import de.teamlapen.faction.client.gui.components.SimpleList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
-import de.teamlapen.factions.common.core.FactionEffects;
-import de.teamlapen.factions.common.tags.FactionEffectTags;
+import de.teamlapen.faction.common.tags.FactionEffectTags;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.tags.ModEffectTags;

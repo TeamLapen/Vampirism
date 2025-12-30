@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.world.entity;
 
-import de.teamlapen.factions.api.world.entities.extensions.IEntity;
+import de.teamlapen.faction.api.world.entities.extensions.IEntity;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import org.jetbrains.annotations.Nullable;
 

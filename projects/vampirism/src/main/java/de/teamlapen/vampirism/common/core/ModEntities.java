@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.factions.common.advancements.criterion.FactionSubPredicate;
-import de.teamlapen.factions.common.advancements.criterion.PlayerFactionSubPredicate;
-import de.teamlapen.factions.common.event.PlayerEventHandlerEvent;
+import de.teamlapen.faction.common.advancements.criterion.FactionSubPredicate;
+import de.teamlapen.faction.common.advancements.criterion.PlayerFactionSubPredicate;
+import de.teamlapen.faction.common.event.PlayerEventHandlerEvent;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VampirismRegistries;

@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter;
 
-import de.teamlapen.factions.common.factions.actions.ActionHandler;
-import de.teamlapen.factions.common.factions.minions.MinionWorldData;
-import de.teamlapen.factions.common.factions.skills.SkillHandler;
-import de.teamlapen.factions.common.util.AttachmentSynchronization;
-import de.teamlapen.factions.misc.extensions.IEffectInstanceWithSource;
+import de.teamlapen.faction.common.factions.actions.ActionHandler;
+import de.teamlapen.faction.common.factions.minions.MinionWorldData;
+import de.teamlapen.faction.common.factions.skills.SkillHandler;
+import de.teamlapen.faction.common.util.AttachmentSynchronization;
+import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;

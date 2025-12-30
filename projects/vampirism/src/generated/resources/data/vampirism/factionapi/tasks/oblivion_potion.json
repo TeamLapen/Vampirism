@@ -1,0 +1,44 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factionapi:item",
+        "description": {
+          "translate": "item.minecraft.potion"
+        },
+        "id": "minecraft:potion",
+        "item": {
+          "components": {
+            "minecraft:potion_contents": {
+              "potion": "minecraft:poison"
+            }
+          },
+          "count": 1,
+          "id": "minecraft:potion"
+        }
+      },
+      {
+        "type": "factionapi:item",
+        "description": {
+          "translate": "item.vampirism.vampire_blood_bottle"
+        },
+        "id": "vampirism:vampire_blood_bottle",
+        "item": {
+          "count": 1,
+          "id": "vampirism:vampire_blood_bottle"
+        }
+      }
+    ]
+  },
+  "reward": {
+    "type": "factionapi:item",
+    "item": {
+      "count": 1,
+      "id": "factionapi:oblivion_potion"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.oblivion_potion"
+  },
+  "unlocker": []
+}

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.factions.common.world.blockentity.NetworkedBlockEntity;
+import de.teamlapen.faction.common.world.blockentity.NetworkedBlockEntity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;

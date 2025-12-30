@@ -5,7 +5,7 @@
       "conditions": {
         "action": "vampirism:bat"
       },
-      "trigger": "factions:action"
+      "trigger": "factionapi:action"
     },
     "main": {
       "conditions": {
@@ -13,7 +13,7 @@
         "faction": "vampirism:vampire",
         "level": 1
       },
-      "trigger": "factions:faction"
+      "trigger": "factionapi:faction"
     }
   },
   "display": {

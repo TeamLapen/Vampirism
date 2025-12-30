@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.misc.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import de.teamlapen.factions.client.gui.components.ActionStatisticsList;
+import de.teamlapen.faction.client.gui.components.ActionStatisticsList;
 import net.minecraft.client.gui.components.tabs.LoadingTab;
 import net.minecraft.client.gui.components.tabs.TabNavigationBar;
 import net.minecraft.client.gui.screens.Screen;

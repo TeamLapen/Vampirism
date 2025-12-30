@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player.lord.actions;
 
-import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import org.jetbrains.annotations.NotNull;

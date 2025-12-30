@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.common;
 
-import de.teamlapen.factions.Services;
-import de.teamlapen.factions.api.event.AddFactionTagEvent;
+import de.teamlapen.faction.Services;
+import de.teamlapen.faction.api.event.AddFactionTagEvent;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.IVampirismServices;
 import de.teamlapen.vampirism.api.world.entity.IVampirismEntityRegistry;
-import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModCreativeTabs;
 import de.teamlapen.vampirism.common.core.ModEntitySelectors;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -30,7 +29,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
 
 public class CommonServices extends Services implements IVampirismServices {
 

@@ -1,18 +1,15 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.factions.client.gui.components.DropdownWidget;
-import de.teamlapen.factions.client.gui.components.IRenderLast;
-import de.teamlapen.factions.client.gui.screens.AppearanceScreen;
-import de.teamlapen.factions.common.factions.minions.MinionData;
+import de.teamlapen.faction.client.gui.components.DropdownWidget;
+import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
+import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.renderer.entities.HunterMinionRenderer;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;

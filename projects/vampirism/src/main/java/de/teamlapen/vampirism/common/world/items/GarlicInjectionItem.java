@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;

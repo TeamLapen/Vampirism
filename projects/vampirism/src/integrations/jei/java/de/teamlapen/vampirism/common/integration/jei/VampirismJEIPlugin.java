@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.integration.jei;
 
-import de.teamlapen.factions.api.factions.tasks.Task;
-import de.teamlapen.factions.common.factions.tasks.TaskUtil;
+import de.teamlapen.faction.api.factions.tasks.Task;
+import de.teamlapen.faction.common.factions.tasks.TaskUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismApi;

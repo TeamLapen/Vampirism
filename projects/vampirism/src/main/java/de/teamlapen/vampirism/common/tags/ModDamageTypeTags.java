@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.tags;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
@@ -12,6 +12,6 @@ public class ModDamageTypeTags {
     public static final TagKey<DamageType> VAMPIRE_IMMORTAL = tag("vampire_immortal");
 
     private static TagKey<DamageType> tag(String name) {
-        return TagKey.create(Registries.DAMAGE_TYPE, VResourceLocation.mod(name));
+        return TagKey.create(Registries.DAMAGE_TYPE, VIdentifier.mod(name));
     }
 }

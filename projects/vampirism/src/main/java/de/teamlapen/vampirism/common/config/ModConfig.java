@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.common.config;
 
 
-import de.teamlapen.factions.Services;
-import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.faction.Services;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.client.config.ClientConfig;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.config.IConfigSpec;
 import net.neoforged.fml.config.ModConfig.Type;
 import net.neoforged.fml.event.config.ModConfigEvent;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.vampire;
 
-import de.teamlapen.factions.common.util.StructureUtil;
+import de.teamlapen.faction.common.util.StructureUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;

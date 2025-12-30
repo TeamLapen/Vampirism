@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.hunter;
 
-import de.teamlapen.factions.api.world.entities.ICaptureIgnore;
+import de.teamlapen.faction.api.world.entities.ICaptureIgnore;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaseEntity;

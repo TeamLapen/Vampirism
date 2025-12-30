@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.factions.common.advancements.criterion.ActionCriterionTrigger;
-import de.teamlapen.factions.common.advancements.criterion.FactionCriterionTrigger;
-import de.teamlapen.factions.common.advancements.criterion.FactionSubPredicate;
-import de.teamlapen.factions.common.advancements.criterion.MinionTaskCriterionTrigger;
-import de.teamlapen.factions.common.core.FactionMinionTasks;
-import de.teamlapen.factions.common.util.MapUtil;
+import de.teamlapen.faction.common.advancements.criterion.ActionCriterionTrigger;
+import de.teamlapen.faction.common.advancements.criterion.FactionCriterionTrigger;
+import de.teamlapen.faction.common.advancements.criterion.FactionSubPredicate;
+import de.teamlapen.faction.common.advancements.criterion.MinionTaskCriterionTrigger;
+import de.teamlapen.faction.common.core.FactionMinionTasks;
+import de.teamlapen.faction.common.util.MapUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.advancements.critereon.CuredVampireVillagerCriterionTrigger;
 import de.teamlapen.vampirism.common.advancements.critereon.HunterActionCriterionTrigger;
@@ -63,7 +63,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
         public void generate(HolderLookup.@NotNull Provider registries, Consumer<AdvancementHolder> consumer) {
 
             AdvancementHolder root = Advancement.Builder.advancement()
-                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), VResourceLocation.mod("block/dark_stone_bricks.png"), AdvancementType.TASK, false, false, false)
+                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), VIdentifier.mod("block/dark_stone_bricks.png"), AdvancementType.TASK, false, false, false)
                     .addCriterion("main", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_FANG.get()))
                     .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.GARLIC.get()))
                     .requirements(AdvancementRequirements.Strategy.OR)

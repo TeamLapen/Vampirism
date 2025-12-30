@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.blockentity.diffuser;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionHelper;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionHelper;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.DiffuserBlock;

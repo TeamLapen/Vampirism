@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.server.commands.test;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import de.teamlapen.factions.common.server.commands.BasicCommand;
+import de.teamlapen.faction.common.server.commands.BasicCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.apache.logging.log4j.LogManager;

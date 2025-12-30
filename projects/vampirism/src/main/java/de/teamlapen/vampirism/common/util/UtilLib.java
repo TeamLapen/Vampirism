@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.util;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.factions.common.util.SpawnUtil;
+import de.teamlapen.faction.common.util.SpawnUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

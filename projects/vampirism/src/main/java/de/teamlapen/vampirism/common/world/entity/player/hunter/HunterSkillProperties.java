@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter;
 
-import de.teamlapen.factions.common.sounds.ISoundReference;
+import de.teamlapen.faction.common.sounds.ISoundReference;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.DisguiseHunterAction;
 import de.teamlapen.vampirism.common.world.items.HunterCoatItem;

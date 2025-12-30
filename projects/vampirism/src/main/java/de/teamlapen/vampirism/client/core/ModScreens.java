@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.factions.api.util.FResourceLocation;
-import de.teamlapen.factions.client.core.FactionAppearanceScreens;
+import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.client.core.FactionAppearanceScreens;
 import de.teamlapen.vampirism.api.client.VampirismOverlays;
 import de.teamlapen.vampirism.client.DisguiseOverlay;
 import de.teamlapen.vampirism.client.VampirismModClient;
@@ -51,6 +51,6 @@ public class ModScreens {
     }
 
     public static void registerAppearanceScreens(FactionAppearanceScreens.RegisterFactionAppearanceScreensEvent event) {
-        event.register(ModFactions.VAMPIRE, VampirePlayerAppearanceScreen::new, new WidgetSprites(FResourceLocation.mod("widget/appearance"), FResourceLocation.mod("widget/appearance_highlighted")));
+        event.register(ModFactions.VAMPIRE, VampirePlayerAppearanceScreen::new, new WidgetSprites(FIdentifier.mod("widget/appearance"), FIdentifier.mod("widget/appearance_highlighted")));
     }
 }

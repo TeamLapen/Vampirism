@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.factions.api.factions.skills.ISkill;
-import de.teamlapen.factions.client.gui.GuiRenderer;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.client.gui.GuiRenderer;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.inventory.WeaponTableMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,11 +23,11 @@ import java.util.stream.Stream;
  */
 public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> {
 
-    public static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/weapon_table.png");
-    private static final Identifier LAVA_SPRITE = VResourceLocation.mod("container/weapon_table/lava");
-    private static final Identifier EMPTY_BUCKET_SPRITE = VResourceLocation.mod("container/weapon_table/empty_bucket");
-    private static final Identifier MISSING_LAVA_SPRITE = VResourceLocation.mod("container/weapon_table/missing_lava");
-    private static final Identifier ERROR_SPRITE = VResourceLocation.mc("container/anvil/error");
+    public static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/weapon_table.png");
+    private static final Identifier LAVA_SPRITE = VIdentifier.mod("container/weapon_table/lava");
+    private static final Identifier EMPTY_BUCKET_SPRITE = VIdentifier.mod("container/weapon_table/empty_bucket");
+    private static final Identifier MISSING_LAVA_SPRITE = VIdentifier.mod("container/weapon_table/missing_lava");
+    private static final Identifier ERROR_SPRITE = VIdentifier.mc("container/anvil/error");
 
     public WeaponTableScreen(@NotNull WeaponTableMenu inventorySlotsIn, @NotNull Inventory inventoryPlayer, @NotNull Component name) {
         super(inventorySlotsIn, inventoryPlayer, name);

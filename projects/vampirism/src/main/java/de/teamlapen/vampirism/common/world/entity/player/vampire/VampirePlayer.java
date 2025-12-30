@@ -1,22 +1,22 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
-import de.teamlapen.factions.api.factions.IDisguise;
-import de.teamlapen.factions.api.factions.LevelingChange;
-import de.teamlapen.factions.api.factions.refinements.IRefinementHandler;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.factions.actions.ActionHandler;
-import de.teamlapen.factions.common.factions.minions.MinionWorldData;
-import de.teamlapen.factions.common.factions.skills.RefinementHandler;
-import de.teamlapen.factions.common.factions.skills.SkillHandler;
-import de.teamlapen.factions.common.sounds.ISoundReference;
-import de.teamlapen.factions.common.util.AttachmentSynchronization;
-import de.teamlapen.factions.misc.extensions.IEffectInstanceWithSource;
+import de.teamlapen.faction.api.factions.IDisguise;
+import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.actions.ActionHandler;
+import de.teamlapen.faction.common.factions.minions.MinionWorldData;
+import de.teamlapen.faction.common.factions.skills.RefinementHandler;
+import de.teamlapen.faction.common.factions.skills.SkillHandler;
+import de.teamlapen.faction.common.sounds.ISoundReference;
+import de.teamlapen.faction.common.util.AttachmentSynchronization;
+import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
@@ -100,7 +100,7 @@ import java.util.Optional;
  * Main class for Vampire Players.
  */
 public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
-    public static final Identifier NATURAL_ARMOR_UUID = VResourceLocation.mod("natural_armor");
+    public static final Identifier NATURAL_ARMOR_UUID = VIdentifier.mod("natural_armor");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int FEED_TIMER = 20;
 
@@ -314,7 +314,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 return BITE_TYPE.SUCK_BLOOD_CREATURE;
             }
         } else if (entity instanceof Player) {
-            if (((Player) entity).getAbilities().instabuild || !de.teamlapen.factions.common.Permissions.isPvpEnabled(player)) {
+            if (((Player) entity).getAbilities().instabuild || !de.teamlapen.faction.common.Permissions.isPvpEnabled(player)) {
                 return BITE_TYPE.NONE;
             }
             if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.get((Player) entity).canBeBitten(this) && (!(player instanceof ServerPlayer) || Permissions.FEED_PLAYER.isAllowed((ServerPlayer) player))) {
@@ -844,7 +844,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             if (event.getEntity().level().isClientSide() && getTicksInSun() > 0 && !event.getEntity().hasEffect(ModEffects.SUNSCREEN)) {
                 int i = event.getEntity().isInvisible() ? 15 : 4;
                 if (event.getEntity().getRandom().nextInt(i) == 0) {
-                    event.getEntity().level().addParticle(new GenericParticleOptions(VResourceLocation.mc("drip_hang"),20,9145227, 0.2f), event.getEntity().getRandomX(0.5), event.getEntity().getRandomY(), event.getEntity().getRandomZ(0.5), 0, -3, 0);
+                    event.getEntity().level().addParticle(new GenericParticleOptions(VIdentifier.mc("drip_hang"),20,9145227, 0.2f), event.getEntity().getRandomX(0.5), event.getEntity().getRandomY(), event.getEntity().getRandomZ(0.5), 0, -3, 0);
                 }
             }
         }
@@ -1041,18 +1041,18 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     protected void registerProperties() {
         super.registerProperties();
-        this.registerProperty(VResourceLocation.mod("dbno_timer")).simple(0, this::getDbnoTimer, this::loadDBNOTimer);
-        this.registerProperty(VResourceLocation.mod("feed_victim")).simple(-1, () -> this.feed_victim, x -> this.feed_victim = x);
-        this.registerProperty(VResourceLocation.mod("dbno_message")).nullable(ComponentSerialization.CODEC).provider(() -> this.dbnoMessage).commonLoader(x -> {
+        this.registerProperty(VIdentifier.mod("dbno_timer")).simple(0, this::getDbnoTimer, this::loadDBNOTimer);
+        this.registerProperty(VIdentifier.mod("feed_victim")).simple(-1, () -> this.feed_victim, x -> this.feed_victim = x);
+        this.registerProperty(VIdentifier.mod("dbno_message")).nullable(ComponentSerialization.CODEC).provider(() -> this.dbnoMessage).commonLoader(x -> {
             var old = this.dbnoMessage;
             this.dbnoMessage = x;
             return !Objects.equals(old, x);
         }).register();
-        this.registerProperty(VResourceLocation.mod("blood_stats")).subProperty(() -> this.bloodStats).register();
-        this.registerProperty(VResourceLocation.mod("vision")).subProperty(() -> this.vision).register();
-        this.registerProperty(VResourceLocation.mod("disguise")).subProperty(() -> this.disguise).register();
-        this.registerProperty(VResourceLocation.mod("refinement_handler")).subProperty(() ->this.refinementHandler).register();
-        this.registerProperty(VResourceLocation.mod("customization")).subProperty(() -> this.customization).register();
+        this.registerProperty(VIdentifier.mod("blood_stats")).subProperty(() -> this.bloodStats).register();
+        this.registerProperty(VIdentifier.mod("vision")).subProperty(() -> this.vision).register();
+        this.registerProperty(VIdentifier.mod("disguise")).subProperty(() -> this.disguise).register();
+        this.registerProperty(VIdentifier.mod("refinement_handler")).subProperty(() ->this.refinementHandler).register();
+        this.registerProperty(VIdentifier.mod("customization")).subProperty(() -> this.customization).register();
     }
 
     private void applyEntityAttributes() {

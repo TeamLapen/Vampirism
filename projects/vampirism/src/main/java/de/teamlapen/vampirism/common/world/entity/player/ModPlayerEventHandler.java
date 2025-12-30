@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.common.world.entity.player;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionHelper;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.api.factions.actions.IActionHandler;
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.factions.common.components.FactionSlayer;
-import de.teamlapen.factions.common.core.FactionDataComponents;
-import de.teamlapen.factions.common.core.FactionEffects;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionHelper;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.actions.IActionHandler;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.components.FactionSlayer;
+import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.config.BalanceConfig;

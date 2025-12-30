@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.api;
 
 import com.google.common.base.Suppliers;
-import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionEntity;
-import de.teamlapen.factions.api.registries.factions.DeferredFaction;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionEntity;
+import de.teamlapen.faction.api.registries.factions.DeferredFaction;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,7 +35,7 @@ class APIUtil {
     }
 
     static <T> ResourceKey<Registry<T>> registryKey(String name) {
-        return ResourceKey.createRegistryKey(VResourceLocation.mod(name));
+        return ResourceKey.createRegistryKey(VIdentifier.mod(name));
     }
 
     @SuppressWarnings("unchecked")

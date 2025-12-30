@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.factions.api.FactionRegistries;
+import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;

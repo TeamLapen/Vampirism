@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.entity.hunter;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.api.world.entities.ICaptureIgnore;
-import de.teamlapen.factions.common.world.entities.ForceLookEntityGoal;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.world.entities.ICaptureIgnore;
+import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.HunterHurtByTargetGoal;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.OpenGateGoal;

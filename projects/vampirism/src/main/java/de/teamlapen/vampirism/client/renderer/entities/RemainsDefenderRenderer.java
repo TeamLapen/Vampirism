@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.RemainsDefenderModel;
 import de.teamlapen.vampirism.common.world.entity.RemainsDefenderEntity;
@@ -15,10 +15,10 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 public class RemainsDefenderRenderer extends MobRenderer<RemainsDefenderEntity, RemainsDefenderRenderer.RemainsDefenderRenderState, RemainsDefenderModel> {
-    private final Identifier TEX1 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender1.png");
-    private final Identifier TEX2 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender2.png");
-    private final Identifier TEX3 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender3.png");
-    private final Identifier TEX4 = VResourceLocation.mod("textures/entity/remains_defender/remains_defender4.png");
+    private final Identifier TEX1 = VIdentifier.mod("textures/entity/remains_defender/remains_defender1.png");
+    private final Identifier TEX2 = VIdentifier.mod("textures/entity/remains_defender/remains_defender2.png");
+    private final Identifier TEX3 = VIdentifier.mod("textures/entity/remains_defender/remains_defender3.png");
+    private final Identifier TEX4 = VIdentifier.mod("textures/entity/remains_defender/remains_defender4.png");
 
     public RemainsDefenderRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new RemainsDefenderModel(pContext.bakeLayer(ModEntitiesRender.REMAINS_DEFENDER)), 0f);

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.factions.api.world.entities.extensions.IEntity;
-import de.teamlapen.factions.common.util.AttachmentSynchronization;
-import de.teamlapen.factions.common.world.entities.EntitySyncHolder;
+import de.teamlapen.faction.api.world.entities.extensions.IEntity;
+import de.teamlapen.faction.common.util.AttachmentSynchronization;
+import de.teamlapen.faction.common.world.entities.EntitySyncHolder;
 import de.teamlapen.sync.PropertySync;
 import de.teamlapen.sync.api.IAttachmentSync;
 import de.teamlapen.vampirism.REFERENCE;

@@ -6,23 +6,20 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.Util;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModRenderPipelines {
 
     public static final RenderPipeline GUI_TEXTURED_BLEND = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
-            .withLocation(VResourceLocation.mod("pipeline/gui_textured"))
+            .withLocation(VIdentifier.mod("pipeline/gui_textured"))
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
             .withBlend(BlendFunction.ADDITIVE)
             .build();
@@ -36,7 +33,7 @@ public class ModRenderPipelines {
             .buildSnippet();
 
     public static final RenderPipeline SOLID_TRANSPARENCY_ENTITY = RenderPipeline.builder(SOLID_TRANSPARENCY)
-            .withLocation(VResourceLocation.mod("pipeline/entity_solid"))
+            .withLocation(VIdentifier.mod("pipeline/entity_solid"))
             .withBlend(BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA)
             .withCull(true)
             .build();
@@ -48,7 +45,7 @@ public class ModRenderPipelines {
             .createRenderSetup();
 
     public static final RenderPipeline CUTOUT_NO_DEPTH = RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-            .withLocation(VResourceLocation.mod("pipeline/entity_translucent"))
+            .withLocation(VIdentifier.mod("pipeline/entity_translucent"))
             .withSampler("Sampler0")
             .withSampler("Sampler2")
             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
@@ -63,10 +60,10 @@ public class ModRenderPipelines {
             .createRenderSetup();
 
     public static Supplier<RenderType> cutoutNoDepth() {
-        return Suppliers.memoize(() -> RenderType.create(VResourceLocation.modString("cutout_no_depth"), CUTOUT_NO_DEPTH_SETUP));
+        return Suppliers.memoize(() -> RenderType.create(VIdentifier.modString("cutout_no_depth"), CUTOUT_NO_DEPTH_SETUP));
     }
 
-    private static final RenderType ENTITY_TRANSPARENCY = RenderType.create(VResourceLocation.modString("solid_transparency_entity"), SOLID);
+    private static final RenderType ENTITY_TRANSPARENCY = RenderType.create(VIdentifier.modString("solid_transparency_entity"), SOLID);
 
     public static RenderType solidTransparencyEntity() {
         return ENTITY_TRANSPARENCY;

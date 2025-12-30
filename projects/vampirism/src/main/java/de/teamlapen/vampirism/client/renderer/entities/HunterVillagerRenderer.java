@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import de.teamlapen.vampirism.client.models.entities.VillagerWithArmsModel;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRenderState, VillagerWithArmsModel> {
 
-    private static final Identifier texture = VResourceLocation.mc("textures/entity/villager/villager.png");
+    private static final Identifier texture = VIdentifier.mc("textures/entity/villager/villager.png");
 
     public HunterVillagerRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerWithArmsModel(context.bakeLayer(ModEntitiesRender.VILLAGER_WITH_ARMS)), 0.5f);

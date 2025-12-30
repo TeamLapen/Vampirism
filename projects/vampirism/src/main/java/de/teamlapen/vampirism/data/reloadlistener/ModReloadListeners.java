@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.reloadlistener;
 
-import de.teamlapen.factions.data.listener.SkillTreeReloadListener;
+import de.teamlapen.faction.data.listener.SkillTreeReloadListener;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 

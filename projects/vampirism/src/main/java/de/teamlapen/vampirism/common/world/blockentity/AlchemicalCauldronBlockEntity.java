@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.factions.api.factions.skills.ISkillHandler;
-import de.teamlapen.factions.common.world.blockentity.NetworkedContainerBlockEntity;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.common.world.blockentity.NetworkedContainerBlockEntity;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModDataMaps;

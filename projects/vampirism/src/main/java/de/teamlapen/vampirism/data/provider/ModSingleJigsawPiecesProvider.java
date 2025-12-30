@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.provider;
 
 import com.google.common.collect.Sets;
 import com.mojang.serialization.JsonOps;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.structures.VanillaStructureModifications;
 import de.teamlapen.vampirism.data.reloadlistener.SingleJigsawReloadListener;
 import io.netty.handler.codec.DecoderException;
@@ -37,7 +37,7 @@ public class ModSingleJigsawPiecesProvider implements DataProvider {
         Set<Identifier> set = Sets.newHashSet();
         this.registerSingleJigsawPieces(set::add);
 
-        return DataProvider.saveStable(pOutput, SingleJigsawReloadListener.CODEC.encodeStart(JsonOps.INSTANCE, new ArrayList<>(set)).getOrThrow(DecoderException::new), pathProvider.json(VResourceLocation.loc(modId, "single_jigsaw_pieces")));
+        return DataProvider.saveStable(pOutput, SingleJigsawReloadListener.CODEC.encodeStart(JsonOps.INSTANCE, new ArrayList<>(set)).getOrThrow(DecoderException::new), pathProvider.json(VIdentifier.loc(modId, "single_jigsaw_pieces")));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ModSingleJigsawPiecesProvider implements DataProvider {
     }
 
     protected void registerSingleJigsawPieces(Consumer<Identifier> consumer) {
-        consumer.accept(VResourceLocation.mod("village/totem"));
-        Arrays.stream(VanillaStructureModifications.BiomeType.values()).map((type) -> VResourceLocation.mod("village/" + type.path + "/houses/hunter_trainer")).forEach(consumer);
+        consumer.accept(VIdentifier.mod("village/totem"));
+        Arrays.stream(VanillaStructureModifications.BiomeType.values()).map((type) -> VIdentifier.mod("village/" + type.path + "/houses/hunter_trainer")).forEach(consumer);
     }
 }

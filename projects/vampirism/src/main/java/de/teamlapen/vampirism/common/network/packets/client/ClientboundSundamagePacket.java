@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.network.packets.client;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public record ClientboundSundamagePacket(List<ResourceKey<DimensionType>> dimensions, List<ResourceKey<Biome>> biomes, List<ResourceKey<Level>> noSunDamageLevels, List<ResourceKey<Level>> sunDamageLevels) implements CustomPacketPayload {
 
-    public static final Type<ClientboundSundamagePacket> TYPE = new Type<>(VResourceLocation.mod("sundamage"));
+    public static final Type<ClientboundSundamagePacket> TYPE = new Type<>(VIdentifier.mod("sundamage"));
 
     public static final StreamCodec<FriendlyByteBuf, ClientboundSundamagePacket> CODEC = StreamCodec.composite(
             ResourceKey.streamCodec(Registries.DIMENSION_TYPE).apply(ByteBufCodecs.list()), ClientboundSundamagePacket::dimensions,

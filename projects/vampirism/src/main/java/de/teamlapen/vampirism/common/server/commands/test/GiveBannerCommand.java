@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.server.commands.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.common.server.commands.BasicCommand;
-import de.teamlapen.factions.common.server.commands.arguments.FactionArgument;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.common.server.commands.BasicCommand;
+import de.teamlapen.faction.common.server.commands.arguments.FactionArgument;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

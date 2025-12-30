@@ -4,7 +4,7 @@ import com.google.gson.JsonParser;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.api.general.IBookContents;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModVampireBooks;
 import io.netty.handler.codec.DecoderException;
 import net.minecraft.resources.Identifier;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class VampireBookContentsReloadListener extends SimplePreparableReloadListener<Map<Identifier, VampireBookContentsReloadListener.TranslatedBookContent>> {
 
-    public static final Identifier ID = VResourceLocation.mod("vampire_book_contents");
+    public static final Identifier ID = VIdentifier.mod("vampire_book_contents");
     private static final Logger LOGGER = LogUtils.getLogger();
 
     private Map<Identifier, VampireBookContentsReloadListener.TranslatedBookContent> translatedBookContents = Map.of();

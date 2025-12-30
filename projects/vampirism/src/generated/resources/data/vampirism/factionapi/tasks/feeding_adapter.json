@@ -1,0 +1,42 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factionapi:entity_type",
+        "amount": 10,
+        "description": {
+          "translate": "entity_tag.vampirism.advanced_hunter"
+        },
+        "entityType": "vampirism:advanced_hunter",
+        "id": "vampirism:advanced_hunter"
+      },
+      {
+        "type": "factionapi:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "count": 5,
+          "id": "minecraft:gold_ingot"
+        }
+      }
+    ]
+  },
+  "reward": {
+    "type": "factionapi:item",
+    "item": {
+      "count": 1,
+      "id": "vampirism:feeding_adapter"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.feeding_adapter"
+  },
+  "unlocker": [
+    {
+      "type": "factionapi:level",
+      "reqLevel": 4
+    }
+  ]
+}

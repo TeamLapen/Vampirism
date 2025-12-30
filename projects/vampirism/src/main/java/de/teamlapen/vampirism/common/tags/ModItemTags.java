@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.tags;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -77,11 +77,11 @@ public class ModItemTags {
     public static final TagKey<Item> VAMPIRE_SWORD_REPAIRABLE_ENHANCED = tag("repairable/vampire_sword/enhanced");
 
     private static TagKey<Item> tag(String name) {
-        return ItemTags.create(VResourceLocation.mod(name));
+        return ItemTags.create(VIdentifier.mod(name));
     }
 
     private static TagKey<Item> common(String name) {
-        return ItemTags.create(VResourceLocation.common(name));
+        return ItemTags.create(VIdentifier.common(name));
     }
 
     public static class Compatibility {

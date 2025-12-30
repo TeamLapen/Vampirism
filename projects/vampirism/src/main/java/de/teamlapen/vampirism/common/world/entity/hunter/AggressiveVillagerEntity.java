@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.entity.hunter;
 
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.api.world.ICaptureAttributes;
-import de.teamlapen.factions.api.world.entities.IVillageCaptureEntity;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.world.ICaptureAttributes;
+import de.teamlapen.faction.api.world.entities.IVillageCaptureEntity;
 import de.teamlapen.vampirism.api.world.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;

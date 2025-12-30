@@ -1,0 +1,34 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factionapi:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "count": 2,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "factionapi:entity",
+        "amount": 3,
+        "description": {
+          "translate": "entity.vampirism.vampire_baron"
+        },
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
+      }
+    ]
+  },
+  "reward": {
+    "type": "factionapi:refinement",
+    "faction": "#vampirism:is_vampire"
+  },
+  "title": {
+    "translate": "task.vampirism.random_refinement2"
+  },
+  "unlocker": []
+}

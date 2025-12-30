@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.entity.vampire;
 
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.common.world.entities.ForceLookEntityGoal;
-import de.teamlapen.factions.common.world.entities.goals.LookAtClosestVisibleGoal;
-import de.teamlapen.factions.common.world.inventory.TaskBoardMenu;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
+import de.teamlapen.faction.common.world.entities.goals.LookAtClosestVisibleGoal;
+import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.util.Helper;

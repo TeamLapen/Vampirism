@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;

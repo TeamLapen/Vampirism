@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.factions.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.items.IExtendedBrewingRecipeRegistry;

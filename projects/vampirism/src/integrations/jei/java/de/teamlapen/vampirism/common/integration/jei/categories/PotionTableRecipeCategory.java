@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.integration.jei.categories;
 
-import de.teamlapen.factions.common.util.Color;
+import de.teamlapen.faction.common.util.Color;
 import de.teamlapen.vampirism.client.gui.screens.PotionTableScreen;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.jei.JEIPotionMix;

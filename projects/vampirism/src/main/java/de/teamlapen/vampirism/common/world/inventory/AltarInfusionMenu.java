@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.inventory;
 
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;

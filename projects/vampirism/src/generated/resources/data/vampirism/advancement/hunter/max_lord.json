@@ -7,7 +7,7 @@
         "faction": "vampirism:hunter",
         "level": 5
       },
-      "trigger": "factions:faction"
+      "trigger": "factionapi:faction"
     },
     "main": {
       "conditions": {
@@ -15,7 +15,7 @@
         "faction": "vampirism:hunter",
         "level": 1
       },
-      "trigger": "factions:faction"
+      "trigger": "factionapi:faction"
     }
   },
   "display": {

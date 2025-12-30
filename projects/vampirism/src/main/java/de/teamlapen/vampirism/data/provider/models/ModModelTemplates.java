@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.data.provider.models;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.resources.Identifier;
 
-import static de.teamlapen.vampirism.api.util.VResourceLocation.mod;
+import static de.teamlapen.vampirism.api.util.VIdentifier.mod;
 
 public class ModModelTemplates extends ModelTemplates {
 
@@ -22,7 +22,7 @@ public class ModModelTemplates extends ModelTemplates {
     public static final ModelTemplate COFFIN_TOP = create(mod("coffin_top"), ModTextureSlots.TEXTURE0);
     public static final ModelTemplate TENT = create(mod("tent"), ModTextureSlots.FLOOR);
     public static final ModelTemplate BLOOD_SIEVE = create(mod("blood_sieve"), ModTextureSlots.FILTER);
-    public static final ModelTemplate BEACON_MODEL = create("beacon", ModTextureSlots.BEACON).extend().renderType(VResourceLocation.mc("cutout")).build();
+    public static final ModelTemplate BEACON_MODEL = create("beacon", ModTextureSlots.BEACON).extend().renderType(VIdentifier.mc("cutout")).build();
     public static final ModelTemplate ALCHEMICAL_CAULDRON = create(mod("alchemy_cauldron_liquid"), ModTextureSlots.LIQUID);
     public static final ModelTemplate DIRT_PATH = create("dirt_path", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE, TextureSlot.PARTICLE);
     public static final ModelTemplate CRUCIFIX = createItem(mod("crucifix"), TextureSlot.TEXTURE, TextureSlot.PARTICLE);

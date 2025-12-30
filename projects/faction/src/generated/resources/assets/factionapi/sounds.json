@@ -1,0 +1,30 @@
+{
+  "event.raid_failed": {
+    "sounds": [
+      "factionapi:reserved/event/raid_failed"
+    ]
+  },
+  "event.raid_won": {
+    "sounds": [
+      "factionapi:reserved/event/raid_won"
+    ]
+  },
+  "fx.level_up": {
+    "sounds": [
+      "factionapi:reserved/fx/level_up"
+    ]
+  },
+  "fx.unlock_skills": {
+    "sounds": [
+      "factionapi:reserved/fx/unlock_skills_1",
+      "factionapi:reserved/fx/unlock_skills_2",
+      "factionapi:reserved/fx/unlock_skills_3"
+    ]
+  },
+  "task_complete": {
+    "sounds": [
+      "factionapi:cc/fx/task_complete"
+    ],
+    "subtitle": "subtitles.factionapi.task_complete"
+  }
+}

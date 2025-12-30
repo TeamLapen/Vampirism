@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 
-public class RegUtil extends de.teamlapen.factions.common.util.RegUtil {
+public class RegUtil extends de.teamlapen.faction.common.util.RegUtil {
 
     public static Identifier id(@NotNull Item item) {
         return BuiltInRegistries.ITEM.getKey(item);

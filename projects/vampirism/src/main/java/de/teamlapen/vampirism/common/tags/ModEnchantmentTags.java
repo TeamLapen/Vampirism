@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.tags;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -13,6 +13,6 @@ public class ModEnchantmentTags {
     public static final TagKey<Enchantment> SEMI_AUTOMATIC_HUNTER_CROSSBOW_COMPATIBLE = tag("hunter_crossbow_compatible/semi");
 
     private static TagKey<Enchantment> tag(String name) {
-        return TagKey.create(Registries.ENCHANTMENT, VResourceLocation.mod(name));
+        return TagKey.create(Registries.ENCHANTMENT, VIdentifier.mod(name));
     }
 }

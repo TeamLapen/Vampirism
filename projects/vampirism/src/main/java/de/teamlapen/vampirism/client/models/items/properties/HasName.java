@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.models.items.properties;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.minecraft.core.component.DataComponents;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record HasName(String name) implements ConditionalItemModelProperty {
 
-    public static final Identifier ID = VResourceLocation.mod("has_name");
+    public static final Identifier ID = VIdentifier.mod("has_name");
     public static final MapCodec<HasName> CODEC = RecordCodecBuilder.mapCodec(
             inst -> inst.group(
                     Codec.STRING.fieldOf("name").forGetter(HasName::name))

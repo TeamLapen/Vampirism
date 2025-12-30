@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.factions.client.gui.overlay.TextureOverlay;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.client.gui.overlay.TextureOverlay;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -13,7 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 
 public class SunOverlay extends TextureOverlay {
 
-    public static final Identifier SUN_TEXTURE = VResourceLocation.mod("textures/misc/sun.png");
+    public static final Identifier SUN_TEXTURE = VIdentifier.mod("textures/misc/sun.png");
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {

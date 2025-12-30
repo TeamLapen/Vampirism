@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.common.core;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.factions.common.core.FactionBlocks;
-import de.teamlapen.factions.common.world.blocks.TotemTopBlock;
+import de.teamlapen.faction.common.core.FactionBlocks;
+import de.teamlapen.faction.common.world.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VEnums;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.world.structures.crypt.CryptStructurePieces;
 import de.teamlapen.vampirism.common.world.structures.huntercamp.HunterCampPieces;
@@ -79,15 +79,15 @@ public class ModStructures {
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<RandomCandleLitProcessor>> RANDOM_CANDLE_LIT = STRUCTURE_PROCESSOR_TYPES.register("random_candle_lit", () -> () -> RandomCandleLitProcessor.CODEC);
 
-    public static final ResourceKey<Structure> HUNTER_CAMP = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("hunter_camp"));
-    public static final ResourceKey<Structure> VAMPIRE_HUT = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("vampire_hut"));
-    public static final ResourceKey<Structure> HUNTER_OUTPOST_PLAINS = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("hunter_outpost_plains"));
-    public static final ResourceKey<Structure> HUNTER_OUTPOST_DESERT = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("hunter_outpost_desert"));
-    public static final ResourceKey<Structure> HUNTER_OUTPOST_VAMPIRE_FOREST = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("hunter_outpost_vampire_forest"));
-    public static final ResourceKey<Structure> HUNTER_OUTPOST_BADLANDS = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("hunter_outpost_badlands"));
-    public static final ResourceKey<Structure> VAMPIRE_ALTAR = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("vampire_altar"));
-    public static final ResourceKey<Structure> MOTHER = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("mother"));
-    public static final ResourceKey<Structure> CRYPT = ResourceKey.create(Registries.STRUCTURE, VResourceLocation.mod("crypt"));
+    public static final ResourceKey<Structure> HUNTER_CAMP = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_camp"));
+    public static final ResourceKey<Structure> VAMPIRE_HUT = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("vampire_hut"));
+    public static final ResourceKey<Structure> HUNTER_OUTPOST_PLAINS = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_outpost_plains"));
+    public static final ResourceKey<Structure> HUNTER_OUTPOST_DESERT = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_outpost_desert"));
+    public static final ResourceKey<Structure> HUNTER_OUTPOST_VAMPIRE_FOREST = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_outpost_vampire_forest"));
+    public static final ResourceKey<Structure> HUNTER_OUTPOST_BADLANDS = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_outpost_badlands"));
+    public static final ResourceKey<Structure> VAMPIRE_ALTAR = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("vampire_altar"));
+    public static final ResourceKey<Structure> MOTHER = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("mother"));
+    public static final ResourceKey<Structure> CRYPT = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("crypt"));
 
     public static final ResourceKey<StructureTemplatePool> HUNTER_TRAINER = createTemplatePool("village/entities/hunter_trainer");
 
@@ -102,15 +102,15 @@ public class ModStructures {
     public static final ResourceKey<StructureSet> CRYPT_SET = createStructureSetKey("crypt");
 
     private static ResourceKey<StructureSet> createStructureSetKey(String name) {
-        return ResourceKey.create(Registries.STRUCTURE_SET, VResourceLocation.mod(name));
+        return ResourceKey.create(Registries.STRUCTURE_SET, VIdentifier.mod(name));
     }
 
     public static ResourceKey<StructureTemplatePool> createTemplatePool(@SuppressWarnings("SameParameterValue") String name) {
-        return ResourceKey.create(Registries.TEMPLATE_POOL, VResourceLocation.mod(name));
+        return ResourceKey.create(Registries.TEMPLATE_POOL, VIdentifier.mod(name));
     }
 
     private static ResourceKey<StructureProcessorList> createProcessorList(@SuppressWarnings("SameParameterValue") String name) {
-        return ResourceKey.create(Registries.PROCESSOR_LIST, VResourceLocation.mod(name));
+        return ResourceKey.create(Registries.PROCESSOR_LIST, VIdentifier.mod(name));
     }
 
     static void register(IEventBus bus) {

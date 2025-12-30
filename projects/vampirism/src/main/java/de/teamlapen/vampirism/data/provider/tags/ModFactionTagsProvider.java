@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
-import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.tags.FactionTags;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.tags.FactionTags;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;

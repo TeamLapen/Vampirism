@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.entity;
 
-import de.teamlapen.factions.api.world.entities.ITaskMasterEntity;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.world.entities.ForceLookEntityGoal;
-import de.teamlapen.factions.common.world.inventory.TaskBoardMenu;
+import de.teamlapen.faction.api.world.entities.ITaskMasterEntity;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
+import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -15,7 +15,7 @@ import java.util.OptionalInt;
 
 public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMasterEntity {
 
-    Component NO_TASK = Component.translatable("text.factions.taskmaster.no_tasks");
+    Component NO_TASK = Component.translatable("text.factionapi.taskmaster.no_tasks");
 
     /**
      * @return The biome type based on where this entity was spawned

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.network.packets.server;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public record ServerboundAppearancePacket(int entityId, String name, List<Integer> data) implements CustomPacketPayload {
 
-    public static final Type<ServerboundAppearancePacket> TYPE = new Type<>(VResourceLocation.mod("appearance"));
+    public static final Type<ServerboundAppearancePacket> TYPE = new Type<>(VIdentifier.mod("appearance"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundAppearancePacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ServerboundAppearancePacket::entityId,
             ByteBufCodecs.STRING_UTF8, ServerboundAppearancePacket::name,

@@ -211,6 +211,6 @@ LICENSE.txt in that directory).
 
 ##### Radial screen - `radialmenu` package
 
-The code under `de.teamlapen.factions.client.gui.radialmenu` is adapted from David Quintana's Radial Menu and
+The code under `de.teamlapen.faction.client.gui.radialmenu` is adapted from David Quintana's Radial Menu and
 licensed under the terms of the LICENSE.txt file in that directory.
 

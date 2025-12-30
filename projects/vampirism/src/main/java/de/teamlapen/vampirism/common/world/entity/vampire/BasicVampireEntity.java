@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.common.world.entity.vampire;
 
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
-import de.teamlapen.factions.api.world.ICaptureAttributes;
-import de.teamlapen.factions.api.world.entities.IEntityLeader;
-import de.teamlapen.factions.common.core.FactionMinionTasks;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.factions.minions.MinionWorldData;
-import de.teamlapen.factions.common.util.SpawnUtil;
-import de.teamlapen.factions.common.world.effects.FactionBadOmenMobEffect;
-import de.teamlapen.factions.common.world.entities.goals.LookAtClosestVisibleGoal;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
+import de.teamlapen.faction.api.world.ICaptureAttributes;
+import de.teamlapen.faction.api.world.entities.IEntityLeader;
+import de.teamlapen.faction.common.core.FactionMinionTasks;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.minions.MinionWorldData;
+import de.teamlapen.faction.common.util.SpawnUtil;
+import de.teamlapen.faction.common.world.effects.FactionBadOmenMobEffect;
+import de.teamlapen.faction.common.world.entities.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;

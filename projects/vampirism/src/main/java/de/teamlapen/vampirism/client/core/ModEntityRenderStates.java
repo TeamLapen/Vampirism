@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.factions.api.util.SafeCast;
+import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.vampirism.api.VampirismApi;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
@@ -53,7 +53,7 @@ public class ModEntityRenderStates {
     public static final ContextKey<Boolean> VAMPIRE_SLEEPING_IN_COFFIN = create("vampire/sleeping_in_coffin");
 
     private static <T> ContextKey<T> create(String id) {
-        return new ContextKey<>(VResourceLocation.mod(id));
+        return new ContextKey<>(VIdentifier.mod(id));
     }
 
     public static void addRenderStateModifier(RegisterRenderStateModifiersEvent event) {

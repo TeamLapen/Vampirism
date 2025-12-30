@@ -11,7 +11,7 @@ public class ScoreboardUtil {
 
 
     public static void updateScoreboard(@NotNull Player player, @NotNull ObjectiveCriteria crit, int value) {
-        de.teamlapen.factions.common.util.ScoreboardUtil.updateScoreboard(player, crit, value);
+        de.teamlapen.faction.common.util.ScoreboardUtil.updateScoreboard(player, crit, value);
     }
 
 }

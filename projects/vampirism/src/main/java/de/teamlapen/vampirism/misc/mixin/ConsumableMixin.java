@@ -2,9 +2,8 @@ package de.teamlapen.vampirism.misc.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionHelper;
-import de.teamlapen.factions.api.factions.IFactionTags;
+import de.teamlapen.faction.api.factions.IFactionHelper;
+import de.teamlapen.faction.api.factions.IFactionTags;
 import de.teamlapen.vampirism.common.tags.ModDataComponentTags;
 import de.teamlapen.vampirism.common.util.FactionConsumable;
 import net.minecraft.core.Holder;
@@ -24,7 +23,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 

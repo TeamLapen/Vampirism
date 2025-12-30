@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.reloadlistener.vampirebook;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class VampireBookBackgroundReloadListener extends SimpleJsonResourceReloadListener<BookBackground> {
 
-    public static final Identifier ID = VResourceLocation.mod("vampire_book_backgrounds");
+    public static final Identifier ID = VIdentifier.mod("vampire_book_backgrounds");
 
     private Map<Identifier, BookBackground> backgrounds = Map.of();
 

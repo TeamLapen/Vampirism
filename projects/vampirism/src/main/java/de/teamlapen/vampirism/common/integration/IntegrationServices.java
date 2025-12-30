@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.integration;
 
 import com.google.common.base.Preconditions;
-import de.teamlapen.factions.Services;
+import de.teamlapen.faction.Services;
 import net.neoforged.fml.ModContainer;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;

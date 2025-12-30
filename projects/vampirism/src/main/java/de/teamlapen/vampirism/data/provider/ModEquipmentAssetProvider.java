@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.data.models.EquipmentAssetProvider;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.data.PackOutput;
@@ -42,7 +42,7 @@ public class ModEquipmentAssetProvider extends EquipmentAssetProvider {
         ).forEach(asset -> output.accept(asset, createCustomOnly(asset)));
 
         for (Map.Entry<DyeColor, ResourceKey<EquipmentAsset>> entry : VAMPIRE_CLOAKS.entrySet()) {
-            output.accept(entry.getValue(), EquipmentClientInfo.builder().addMainHumanoidLayer(VResourceLocation.mod("cloak/" + entry.getKey().getName()), false).build());
+            output.accept(entry.getValue(), EquipmentClientInfo.builder().addMainHumanoidLayer(VIdentifier.mod("cloak/" + entry.getKey().getName()), false).build());
         }
     }
 

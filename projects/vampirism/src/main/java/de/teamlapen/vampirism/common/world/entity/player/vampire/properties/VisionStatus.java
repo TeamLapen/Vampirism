@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.properties;
 
 import de.teamlapen.sync.PropertyParentSync;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -95,7 +95,7 @@ public class VisionStatus extends PropertyParentSync implements ValueIOSerializa
 
     @Override
     protected void registerProperties() {
-        this.registerProperty(VResourceLocation.mod("vision")).nullable(IVampireVision.CODEC).provider(() -> this.vision).commonLoader(v -> {
+        this.registerProperty(VIdentifier.mod("vision")).nullable(IVampireVision.CODEC).provider(() -> this.vision).commonLoader(v -> {
             var old = this.vision;
             this.vision = v;
             if (old != this.vision) {

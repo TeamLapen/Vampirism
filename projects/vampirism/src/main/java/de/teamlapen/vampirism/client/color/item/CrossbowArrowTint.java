@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.color.item;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.items.CrossbowArrowItem;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CrossbowArrowTint implements ItemTintSource {
 
-    public static final Identifier ID = VResourceLocation.mod("arrow_tint");
+    public static final Identifier ID = VIdentifier.mod("arrow_tint");
     public static final CrossbowArrowTint INSTANCE = new CrossbowArrowTint();
     public static final MapCodec<CrossbowArrowTint> CODEC = MapCodec.unit(INSTANCE);
 

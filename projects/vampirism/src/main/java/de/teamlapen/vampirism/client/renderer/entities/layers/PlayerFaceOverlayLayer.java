@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.factions.common.world.entities.IPlayerOverlay;
+import de.teamlapen.faction.common.world.entities.IPlayerOverlay;
 import de.teamlapen.vampirism.client.renderer.entities.state.IOverlayRenderState;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;

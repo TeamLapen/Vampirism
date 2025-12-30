@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.client.gui.components.DropdownWidget;
-import de.teamlapen.factions.client.gui.components.IRenderLast;
-import de.teamlapen.factions.client.gui.screens.AppearanceScreen;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.client.gui.components.DropdownWidget;
+import de.teamlapen.faction.client.gui.components.IRenderLast;
+import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;

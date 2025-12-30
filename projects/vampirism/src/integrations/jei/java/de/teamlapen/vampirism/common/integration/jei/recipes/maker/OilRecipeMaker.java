@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.integration.jei.recipes.maker;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.factions.common.core.FactionDataComponents;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.api.world.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.properties;
 
-import de.teamlapen.factions.api.factions.IDisguise;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.common.util.ModCodecs;
+import de.teamlapen.faction.api.factions.IDisguise;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.common.util.ModCodecs;
 import de.teamlapen.sync.PropertyParentSync;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.Holder;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +50,7 @@ public class VampireDisguise extends PropertyParentSync implements IDisguise {
 
     @Override
     protected void registerProperties() {
-        this.registerProperty(VResourceLocation.mod("disguise_faction")).nullable(ModCodecs.faction()).provider(() -> disguiseFaction).commonLoader(d -> {
+        this.registerProperty(VIdentifier.mod("disguise_faction")).nullable(ModCodecs.faction()).provider(() -> disguiseFaction).commonLoader(d -> {
             var old = this.disguiseFaction;
             this.disguiseFaction = d;
             this.isDisguised = disguiseFaction != null && !IFaction.is(this.disguiseFaction, actualFaction());

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.entity.villager;
 
 import com.google.common.base.Stopwatch;
 import com.mojang.datafixers.util.Pair;
-import de.teamlapen.factions.common.util.MapUtil;
+import de.teamlapen.faction.common.util.MapUtil;
 import de.teamlapen.vampirism.common.core.ModBiomes;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;

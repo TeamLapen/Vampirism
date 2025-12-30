@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.common.world.entity.player.skills;
 
 import com.mojang.datafixers.util.Either;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.actions.IAction;
-import de.teamlapen.factions.api.factions.skills.IActionSkill;
-import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
-import de.teamlapen.factions.api.factions.skills.ISkillTree;
-import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.actions.IAction;
+import de.teamlapen.faction.api.factions.skills.IActionSkill;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
+import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -63,7 +63,7 @@ public class ActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends 
         super(skillTree, skillPointCost, customDescription);
         this.action = action;
         if (!customDescription) {
-            this.setDescription(() -> Component.translatable("gui.factions.skill.unlocks_action"));
+            this.setDescription(() -> Component.translatable("gui.factionapi.skill.unlocks_action"));
         }
     }
 

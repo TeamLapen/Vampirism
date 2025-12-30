@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.world.items.components;
 
-import de.teamlapen.factions.api.annotations.FloatRange;
+import de.teamlapen.faction.api.annotations.FloatRange;
 
 /**
  * Interface for components that have a blood charge level.

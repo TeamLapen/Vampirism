@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter.properties;
 
-import de.teamlapen.factions.api.factions.IDisguise;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.IDisguise;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;

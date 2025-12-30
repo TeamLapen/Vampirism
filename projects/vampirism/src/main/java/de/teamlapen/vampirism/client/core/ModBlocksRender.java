@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.common.world.blockentity.TotemBlockEntity;
-import de.teamlapen.factions.common.world.blocks.TotemTopBlock;
+import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
+import de.teamlapen.faction.common.world.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.client.extensions.BlockExtensions;
 import de.teamlapen.vampirism.client.renderer.blockentity.*;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
@@ -11,7 +10,6 @@ import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.world.blockentity.AlchemicalCauldronBlockEntity;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;

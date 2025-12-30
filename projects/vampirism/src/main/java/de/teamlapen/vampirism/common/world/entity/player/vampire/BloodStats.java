@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
 import de.teamlapen.sync.PropertySync;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttributes;
@@ -175,11 +175,11 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
 
     @Override
     protected void registerProperties() {
-        this.registerProperty(VResourceLocation.mod("blood_level")).simple(0, () -> this.bloodLevel, level -> this.bloodLevel = level);
-        this.registerProperty(VResourceLocation.mod("blood_timer")).simple(0, () -> this.bloodTimer, level -> this.bloodTimer = level);
-        this.registerProperty(VResourceLocation.mod("blood_saturation")).simple(0F, () -> this.bloodSaturationLevel, level -> this.bloodSaturationLevel = level);
-        this.registerProperty(VResourceLocation.mod("blood_exhaustion")).simple(0F, () -> this.bloodExhaustionLevel, level -> this.bloodExhaustionLevel = level);
-        this.registerProperty(VResourceLocation.mod("max_blood")).simple(20, () -> this.maxBlood, level -> this.maxBlood = level);
+        this.registerProperty(VIdentifier.mod("blood_level")).simple(0, () -> this.bloodLevel, level -> this.bloodLevel = level);
+        this.registerProperty(VIdentifier.mod("blood_timer")).simple(0, () -> this.bloodTimer, level -> this.bloodTimer = level);
+        this.registerProperty(VIdentifier.mod("blood_saturation")).simple(0F, () -> this.bloodSaturationLevel, level -> this.bloodSaturationLevel = level);
+        this.registerProperty(VIdentifier.mod("blood_exhaustion")).simple(0F, () -> this.bloodExhaustionLevel, level -> this.bloodExhaustionLevel = level);
+        this.registerProperty(VIdentifier.mod("max_blood")).simple(20, () -> this.maxBlood, level -> this.maxBlood = level);
     }
 
     boolean removeBlood(int a, boolean allowPartial) {

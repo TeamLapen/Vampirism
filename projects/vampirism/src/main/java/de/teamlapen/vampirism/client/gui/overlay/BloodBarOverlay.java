@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.factions.client.gui.overlay.BaseOverlay;
+import de.teamlapen.faction.client.gui.overlay.BaseOverlay;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -14,11 +14,11 @@ import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class BloodBarOverlay extends BaseOverlay {
-    public static final Identifier BACKGROUND = VResourceLocation.mod("blood_bar/background");
-    public static final Identifier QUARTER = VResourceLocation.mod("blood_bar/quarter");
-    public static final Identifier HALF = VResourceLocation.mod("blood_bar/half");
-    public static final Identifier THREE_QUARTER = VResourceLocation.mod("blood_bar/three_quarter");
-    public static final Identifier FULL = VResourceLocation.mod("blood_bar/full");
+    public static final Identifier BACKGROUND = VIdentifier.mod("blood_bar/background");
+    public static final Identifier QUARTER = VIdentifier.mod("blood_bar/quarter");
+    public static final Identifier HALF = VIdentifier.mod("blood_bar/half");
+    public static final Identifier THREE_QUARTER = VIdentifier.mod("blood_bar/three_quarter");
+    public static final Identifier FULL = VIdentifier.mod("blood_bar/full");
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override

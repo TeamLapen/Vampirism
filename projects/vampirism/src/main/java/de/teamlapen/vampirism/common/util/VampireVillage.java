@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.factions.api.factions.village.IFactionVillageBuilder;
-import de.teamlapen.factions.common.core.FactionDataComponents;
+import de.teamlapen.faction.api.factions.village.IFactionVillageBuilder;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModEntities;

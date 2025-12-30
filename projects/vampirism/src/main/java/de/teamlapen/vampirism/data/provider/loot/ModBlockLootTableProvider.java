@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.data.provider.loot;
 
-import de.teamlapen.factions.common.core.FactionBlocks;
+import de.teamlapen.faction.common.core.FactionBlocks;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;

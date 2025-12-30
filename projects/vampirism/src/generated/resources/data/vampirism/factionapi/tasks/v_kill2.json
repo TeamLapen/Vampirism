@@ -1,0 +1,26 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factionapi:entity_type",
+        "amount": 4,
+        "description": {
+          "translate": "entity_tag.vampirism.advanced_hunter"
+        },
+        "entityType": "vampirism:advanced_hunter",
+        "id": "vampirism:advanced_hunter"
+      }
+    ]
+  },
+  "reward": {
+    "type": "factionapi:item",
+    "item": {
+      "count": 8,
+      "id": "vampirism:human_heart"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.v_kill2"
+  },
+  "unlocker": []
+}

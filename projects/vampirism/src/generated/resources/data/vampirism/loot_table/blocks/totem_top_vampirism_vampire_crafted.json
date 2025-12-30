@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "factions:totem_top_crafted"
+          "name": "factionapi:totem_top_crafted"
         }
       ],
       "rolls": 1.0

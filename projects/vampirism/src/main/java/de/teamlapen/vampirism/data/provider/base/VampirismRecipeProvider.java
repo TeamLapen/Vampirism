@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static de.teamlapen.vampirism.api.util.VResourceLocation.modString;
+import static de.teamlapen.vampirism.api.util.VIdentifier.modString;
 
 public abstract class VampirismRecipeProvider extends RecipeProvider {
 

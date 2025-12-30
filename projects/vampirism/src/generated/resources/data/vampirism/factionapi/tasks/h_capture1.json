@@ -1,0 +1,26 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factionapi:stat",
+        "amount": 2,
+        "description": {
+          "translate": "stat.factionapi.capture_village"
+        },
+        "id": "factionapi:capture_village",
+        "stat": "factionapi:capture_village"
+      }
+    ]
+  },
+  "reward": {
+    "type": "factionapi:item",
+    "item": {
+      "count": 10,
+      "id": "vampirism:vampire_blood_bottle"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.h_capture1"
+  },
+  "unlocker": []
+}

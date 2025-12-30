@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.converted;
 
-import de.teamlapen.factions.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
