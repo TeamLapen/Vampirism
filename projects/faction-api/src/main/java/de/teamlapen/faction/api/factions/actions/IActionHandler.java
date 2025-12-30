@@ -7,15 +7,21 @@ import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.sync.api.ISyncable;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface for player's faction's action handler
  */
 public interface IActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends ISyncable {
+
+    static <T extends IFactionPlayer<T> & ISkillPlayer<T>> Optional<IActionHandler<T>> get(Player player) {
+        return FactionsApi.factionPlayerHandler(player).getActionHandler();
+    }
 
     /**
      * Deactivate any active action and start cooldown timer

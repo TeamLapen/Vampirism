@@ -5,6 +5,10 @@ import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 
 public interface ISkillPlayer<T extends ISkillPlayer<T>> extends IFactionPlayer<T> {
 
+    static <T extends ISkillPlayer<T>> Optional<T> get(Player player) {
+        return FactionsApi.factionPlayerHandler(player).getCurrentSkillPlayer();
+    }
+
     /**
      * @return The skill handler for this player
      */
