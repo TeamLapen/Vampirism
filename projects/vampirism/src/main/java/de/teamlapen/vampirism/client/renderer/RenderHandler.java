@@ -4,16 +4,14 @@ import de.teamlapen.factions.client.IMinecraftAccessor;
 import de.teamlapen.factions.common.config.FactionConfig;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
+import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
-import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
-import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModRefinements;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.items.CrucifixItem;
-import de.teamlapen.vampirism.misc.extension.client.ILivingEntityRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus;
@@ -129,15 +127,13 @@ public class RenderHandler implements IMinecraftAccessor {
     }
 
     @SubscribeEvent
-    public void onRenderLivingPre(RenderLivingEvent.@NotNull Pre<Player, AvatarRenderState, PlayerModel> event) {
-        if (event.getRenderState() instanceof AvatarRenderState avatarRenderState) {
-            if (avatarRenderState.vampirism$hunter$isDisguised()) {
-                double dist = event.getRenderState().distanceToCameraSq;
-                if (dist > 64) {
-                    event.setCanceled(true);
-                } else if (dist > 16 && avatarRenderState.vampirism$hunter$fullHunterCoat()) {
-                    event.setCanceled(true);
-                }
+    public void onRenderLivingPre(RenderLivingEvent.@NotNull Pre<LivingEntity, LivingEntityRenderState, EntityModel<LivingEntityRenderState>> event) {
+        if (event.getRenderState().getRenderDataOrDefault(ModEntityRenderStates.HUNTER_DISGUISED, false)) {
+            double dist = event.getRenderState().distanceToCameraSq;
+            if (dist > 64) {
+                event.setCanceled(true);
+            } else if (dist > 16 && event.getRenderState().getRenderDataOrDefault(ModEntityRenderStates.HUNTER_FULL_COAT, false)) {
+                event.setCanceled(true);
             }
         }
     }
@@ -156,22 +152,20 @@ public class RenderHandler implements IMinecraftAccessor {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.@NotNull Pre<AbstractClientPlayer> event) {
-        if (event.getRenderState() instanceof AvatarRenderState avatarRenderState) {
-            if (avatarRenderState.vampirism$vampire$isDbno()) {
-                event.getPoseStack().translate(1.2, 0, 0);
-                PlayerModel m = event.getRenderer().getModel();
-                m.rightArm.visible = false;
-                m.rightSleeve.visible = false;
-                m.leftArm.visible = false;
-                m.leftSleeve.visible = false;
-                m.rightLeg.visible = false;
-                m.leftLeg.visible = false;
-                m.rightPants.visible = false;
-                m.leftPants.visible = false;
-            } else if (avatarRenderState.vampirism$vampire$sleepingInCoffin()) {
-                //Shrink player, so they fit into the coffin model
-                event.getPoseStack().scale(0.8f, 0.95f, 0.8f);
-            }
+        if (event.getRenderState().getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_DBNO, false)) {
+            event.getPoseStack().translate(1.2, 0, 0);
+            PlayerModel m = event.getRenderer().getModel();
+            m.rightArm.visible = false;
+            m.rightSleeve.visible = false;
+            m.leftArm.visible = false;
+            m.leftSleeve.visible = false;
+            m.rightLeg.visible = false;
+            m.leftLeg.visible = false;
+            m.rightPants.visible = false;
+            m.leftPants.visible = false;
+        } else if (event.getRenderState().getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_SLEEPING_IN_COFFIN, false)) {
+            //Shrink player, so they fit into the coffin model
+            event.getPoseStack().scale(0.8f, 0.95f, 0.8f);
         }
     }
 
@@ -184,9 +178,9 @@ public class RenderHandler implements IMinecraftAccessor {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderPlayerPreHigh(RenderPlayerEvent.@NotNull Pre<AbstractClientPlayer> event) {
         var renderState = event.getRenderState();
-        if (renderState.vampirism$vampire$invisible()) {
+        if (renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_INVISIBLE, false)) {
             event.setCanceled(true);
-        } else if (renderState.vampirism$vampire$getBat() instanceof Bat bat) {
+        } else if (renderState.getRenderData(ModEntityRenderStates.VAMPIRE_BAT) instanceof Bat bat) {
             event.setCanceled(true);
             float partialTicks = event.getPartialTick();
 

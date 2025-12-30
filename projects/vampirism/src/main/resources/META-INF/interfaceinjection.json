@@ -81,9 +81,6 @@
   "net/minecraft/client/renderer/entity/LivingEntityRenderer": [
     "de/teamlapen/vampirism/misc/injection/client/ILivingEntityRendererVampirismMock"
   ],
-  "net/minecraft/client/renderer/entity/state/AvatarRenderState": [
-    "de/teamlapen/vampirism/misc/injection/client/AvatarRenderStateVampirismMock"
-  ],
   "net/minecraft/world/entity/LivingEntity": [
     "de/teamlapen/vampirism/misc/injection/ILivingEntityVampirismMock"
   ],

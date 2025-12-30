@@ -31,7 +31,7 @@ public interface IDisguise {
      * @param faction the faction to disguise as
      * @apiNote the faction player does not need to implement an actual disguise
      */
-    void disguiseAs(Holder<? extends IFaction<?>> faction);
+    void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction);
 
     /**
      * removes the disguise of the player

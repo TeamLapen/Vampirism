@@ -23,13 +23,13 @@ public class VampireDisguise extends PropertyParentSync implements IDisguise {
 
     @Override
     public void unDisguise() {
-        disguiseAs(actualFaction());
+        disguiseAs(null);
     }
 
     @Override
-    public void disguiseAs(Holder<? extends IFaction<?>> faction) {
+    public void disguiseAs(@Nullable Holder<? extends IFaction<?>> faction) {
         this.disguiseFaction = faction;
-        this.isDisguised = !IFaction.is(faction, actualFaction());
+        this.isDisguised = faction != null && !IFaction.is(faction, actualFaction());
         this.vampire.asEntity().refreshDisplayName();
     }
 
@@ -53,7 +53,7 @@ public class VampireDisguise extends PropertyParentSync implements IDisguise {
         this.registerProperty(VResourceLocation.mod("disguise_faction")).nullable(ModCodecs.faction()).provider(() -> disguiseFaction).commonLoader(d -> {
             var old = this.disguiseFaction;
             this.disguiseFaction = d;
-            this.isDisguised = !IFaction.is(this.disguiseFaction, actualFaction());
+            this.isDisguised = disguiseFaction != null && !IFaction.is(this.disguiseFaction, actualFaction());
             return IFaction.is(old, this.disguiseFaction);
         }).register();
     }

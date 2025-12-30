@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.client.renderer.entities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import de.teamlapen.vampirism.client.models.entities.VillagerWithArmsModel;
-import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.CrossedArmsItemLayer;
@@ -61,7 +61,7 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRender
         HoldingEntityRenderState.extractHoldingEntityRenderState(entity, state, this.itemModelResolver);
         state.isUnhappy = entity.getUnhappyCounter() > 0;
         state.villagerData = entity.getVillagerData();
-        state.setRenderData(IVampirismRenderState.ATTACK_TIME, entity.getAttackAnim(p_361157_));
-        state.setRenderData(IVampirismRenderState.ATTACK_ARM, entity.swingingArm == InteractionHand.MAIN_HAND ? entity.getMainArm() : entity.getMainArm().getOpposite());
+        state.setRenderData(ModEntityRenderStates.ATTACK_TIME, entity.getAttackAnim(p_361157_));
+        state.setRenderData(ModEntityRenderStates.ATTACK_ARM, entity.swingingArm == InteractionHand.MAIN_HAND ? entity.getMainArm() : entity.getMainArm().getOpposite());
     }
 }

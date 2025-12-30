@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.models.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
+import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -48,9 +48,9 @@ public class VillagerWithArmsModel extends VillagerModel implements ArmedModel {
         this.leftArm.xRot = -0.75F;
         this.rightArm.xRot = -0.75F;
 
-        float attackTime = entityIn.getRenderDataOrDefault(IVampirismRenderState.ATTACK_TIME, 0f);
+        float attackTime = entityIn.getRenderDataOrDefault(ModEntityRenderStates.ATTACK_TIME, 0f);
         if (attackTime > 0.0F) {
-            HumanoidArm enumhandside = entityIn.getRenderDataOrDefault(IVampirismRenderState.ATTACK_ARM, HumanoidArm.RIGHT);
+            HumanoidArm enumhandside = entityIn.getRenderDataOrDefault(ModEntityRenderStates.ATTACK_ARM, HumanoidArm.RIGHT);
             ModelPart modelrenderer = this.getArmForSide(enumhandside);
             float f1;
             f1 = 1.0F - attackTime;

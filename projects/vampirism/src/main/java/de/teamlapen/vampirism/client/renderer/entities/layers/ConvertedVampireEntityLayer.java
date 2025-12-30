@@ -1,9 +1,8 @@
 package de.teamlapen.vampirism.client.renderer.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
-import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
-import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -30,9 +29,9 @@ public class ConvertedVampireEntityLayer<Z extends LivingEntityRenderState, U ex
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, Z renderState, float yRot, float xRot) {
         if (!renderState.isInvisible) {
-            Identifier texture = renderState.getRenderData(IVampirismRenderState.CONVERTED_OVERLAY);
+            Identifier texture = renderState.getRenderData(ModEntityRenderStates.CONVERTED_OVERLAY);
             if (texture == null) {
-                texture = renderState.getRenderData(IVampirismRenderState.OVERLAY);
+                texture = renderState.getRenderData(ModEntityRenderStates.OVERLAY);
             }
             if (texture != null) {
                 renderColoredCutoutModel(this.getParentModel(), texture, poseStack, nodeCollector, packedLight, renderState, -1, 1);

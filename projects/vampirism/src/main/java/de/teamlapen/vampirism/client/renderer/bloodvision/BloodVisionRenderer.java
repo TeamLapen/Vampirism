@@ -1,18 +1,14 @@
 package de.teamlapen.vampirism.client.renderer.bloodvision;
 
-import com.mojang.blaze3d.opengl.GlConst;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.factions.client.IMinecraftAccessor;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.OptifineHandler;
+import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import de.teamlapen.vampirism.client.core.ModRenderPipelines;
 import de.teamlapen.vampirism.client.renderer.bloodvision.entries.BloodEntityEntry;
 import de.teamlapen.vampirism.client.renderer.bloodvision.entries.IEntityEntry;
-import de.teamlapen.vampirism.client.renderer.bloodvision.entries.OtherEntityEntry;
 import de.teamlapen.vampirism.client.renderer.bloodvision.entries.PoisonBloodEntry;
-import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.MixinHooks;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -28,7 +24,6 @@ import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Util;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
@@ -79,11 +74,11 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
     }
 
     private void createEntry(EntityRenderState renderState, Consumer<IEntityEntry> consumer) {
-        Integer blood = renderState.getRenderDataOrDefault(IVampirismRenderState.BLOOD, 0);
-        Boolean poisonBlood = renderState.getRenderDataOrDefault(IVampirismRenderState.POISON_BLOOD, false);
+        Integer blood = renderState.getRenderDataOrDefault(ModEntityRenderStates.BLOOD, 0);
+        Boolean poisonBlood = renderState.getRenderDataOrDefault(ModEntityRenderStates.POISON_BLOOD, false);
         if (blood > 0 && !poisonBlood) {
-            consumer.accept(new BloodEntityEntry(renderState, (float) blood / renderState.getRenderDataOrDefault(IVampirismRenderState.MAX_BLOOD, 1)));
-        } else if (hasGarlicVision && (poisonBlood || renderState.getRenderDataOrDefault(IVampirismRenderState.HUNTER, false))) {
+            consumer.accept(new BloodEntityEntry(renderState, (float) blood / renderState.getRenderDataOrDefault(ModEntityRenderStates.MAX_BLOOD, 1)));
+        } else if (hasGarlicVision && (poisonBlood || renderState.getRenderDataOrDefault(ModEntityRenderStates.HUNTER, false))) {
             consumer.accept(new PoisonBloodEntry(renderState));
         } else {
 //            consumer.accept(new OtherEntityEntry(renderState));

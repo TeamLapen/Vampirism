@@ -7,11 +7,7 @@ import de.teamlapen.vampirism.client.models.entities.*;
 import de.teamlapen.vampirism.client.renderer.entities.*;
 import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.VampirePlayerHeadLayer;
-import de.teamlapen.vampirism.client.renderer.entities.state.IConvertedOverlayRenderState;
-import de.teamlapen.vampirism.client.renderer.entities.state.IVampirismRenderState;
 import de.teamlapen.vampirism.common.core.ModEntities;
-import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -23,15 +19,11 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelType;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.BiConsumer;
 
 /**
  * Handles entity render registration
@@ -162,19 +154,6 @@ public class ModEntitiesRender {
         @Override
         @NotNull
         LivingEntityRenderer<T, U, Z> create(EntityRendererProvider.@NotNull Context pContext);
-    }
-
-    public static void addRenderStateModifier(RegisterRenderStateModifiersEvent event) {
-        event.registerEntityModifier((Class<? extends EntityRenderer<? extends LivingEntity,? extends LivingEntityRenderState>>) (Object) LivingEntityRenderer.class, (t, u) -> ExtendedCreature.getSafe(t).ifPresent(creature -> {
-            u.setRenderData(IVampirismRenderState.BLOOD, creature.getBlood());
-            u.setRenderData(IVampirismRenderState.MAX_BLOOD, creature.getMaxBlood());
-            u.setRenderData(IVampirismRenderState.POISON_BLOOD, creature.hasPoisonousBlood());
-        }));
-        event.registerEntityModifier((Class<? extends EntityRenderer<? extends LivingEntity,? extends LivingEntityRenderState>>) (Object) LivingEntityRenderer.class, (t, u) -> {
-            if (Helper.isHunter(t)) {
-                u.setRenderData(IVampirismRenderState.HUNTER, true);
-            }
-        });
     }
 
 }
