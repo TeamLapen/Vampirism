@@ -29,6 +29,7 @@ public class VampireActions {
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, HissingAction> HISSING = ACTIONS.registerAction("hissing", HissingAction::new);
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, InfectAction> INFECT = ACTIONS.registerAction("infect", InfectAction::new);
     public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DarkStalker> DARK_STALKER = ACTIONS.registerAction("dark_stalker", DarkStalker::new);
+    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, BlindingAction> BLINDING = ACTIONS.registerAction("blinding", BlindingAction::new);
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {

@@ -43,6 +43,7 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.Drac
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VampireDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VisionStatus;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampirePlayerSkillProperties;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.world.items.HunterArmorItem;
 import net.minecraft.core.BlockPos;
@@ -499,7 +500,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sunDamageCache = Helper.gettingSundamge(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
+            sunDamageCache = !getSkillHandler().isSkillEnabled(VampireSkills.WANDER_THE_SUN) && Helper.gettingSundamge(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
         }
         return sunDamageCache;
     }

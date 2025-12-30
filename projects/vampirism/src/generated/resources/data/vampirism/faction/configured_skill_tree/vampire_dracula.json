@@ -1,5 +1,12 @@
 {
-  "children": [],
+  "children": [
+    {
+      "node": "vampirism:vampire/dracula_1"
+    },
+    {
+      "node": "vampirism:vampire/dracula_2"
+    }
+  ],
   "node": "vampirism:vampire/dracula_root",
   "orderAfter": [
     "vampirism:vampire/lord"

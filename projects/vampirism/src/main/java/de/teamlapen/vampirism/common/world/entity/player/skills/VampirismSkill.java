@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -131,7 +132,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
         }
 
         @Override
-        public TagKey<? extends IFaction<?>> factions() {
+        public @NonNull TagKey<? extends IFaction<?>> factions() {
             return ModFactionTags.IS_VAMPIRE;
         }
     }
@@ -142,7 +143,18 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
         }
 
         @Override
-        public TagKey<? extends IFaction<?>> factions() {
+        public @NonNull TagKey<? extends IFaction<?>> factions() {
+            return ModFactionTags.IS_VAMPIRE;
+        }
+    }
+
+    public static class DraculaSkill extends VampirismSkill<IVampirePlayer> {
+        public DraculaSkill(int skillPointCost, boolean desc) {
+            super(Either.left(VampireSkills.Trees.DRACULA), skillPointCost, desc);
+        }
+
+        @Override
+        public @NonNull TagKey<? extends IFaction<?>> factions() {
             return ModFactionTags.IS_VAMPIRE;
         }
     }

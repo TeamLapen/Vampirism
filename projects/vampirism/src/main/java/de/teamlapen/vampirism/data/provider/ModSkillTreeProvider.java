@@ -128,6 +128,8 @@ public class ModSkillTreeProvider extends SkillTreeProvider {
                 .build(output, modId("vampire_lord"));
 
         tree(VampireSkills.Trees.DRACULA, VampireSkills.Nodes.DRACULA_ROOT)
+                .addNode(node(VampireSkills.Nodes.DRACULA_1))
+                .addNode(node(VampireSkills.Nodes.DRACULA_2))
                 .addAfter(VampireSkills.Trees.LORD)
                 .build(output, modId("vampire_dracula"));
     }

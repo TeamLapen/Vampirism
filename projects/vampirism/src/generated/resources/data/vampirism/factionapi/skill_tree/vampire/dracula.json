@@ -8,6 +8,7 @@
   "name": {
     "translate": "text.vampirism.skills.dracula"
   },
+  "name_suffix": "vampirism:type/dracula",
   "unlock_predicate": {
     "type_specific": {
       "type": "vampirism:dracula"

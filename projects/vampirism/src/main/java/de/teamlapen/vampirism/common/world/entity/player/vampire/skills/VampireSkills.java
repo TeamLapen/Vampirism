@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttributes;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.common.world.entity.player.skills.ActionSkill;
 import de.teamlapen.vampirism.common.world.entity.player.skills.VampirismSkill;
@@ -94,6 +95,8 @@ public class VampireSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_COLLECT = SKILLS.register("vampire_minion_collect", () -> new VampirismSkill.VampireLordSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.VampireLordSkill(3, true).setToggleActions(vampire -> vampire.updateMinionAttributes(true), vampire -> vampire.updateMinionAttributes(false)));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DARK_STALKER = SKILLS.register("dark_stalker", () -> new ActionSkill<>(VampireActions.DARK_STALKER, Trees.LEVEL, 2, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> WANDER_THE_SUN = SKILLS.register("wander_the_sun", () -> new VampirismSkill.DraculaSkill(1, true));
+    public static final DeferredHolder<ISkill<?>, ActionSkill<IVampirePlayer>> BLINDING = SKILLS.register("blinding", () -> new ActionSkill<>(VampireActions.BLINDING, Trees.DRACULA, 1, true));
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {
@@ -133,6 +136,9 @@ public class VampireSkills {
         public static final ResourceKey<ISkillNode> LORD_SKILL5 = node("lord_skill5");
 
         public static final ResourceKey<ISkillNode> DRACULA_ROOT = node("dracula_root");
+        public static final ResourceKey<ISkillNode> DRACULA_1 = node("dracula_1");
+        public static final ResourceKey<ISkillNode> DRACULA_2 = node("dracula_2");
+
 
 
         private static ResourceKey<ISkillNode> node(String path) {
@@ -172,6 +178,8 @@ public class VampireSkills {
             context.register(LORD_SKILL5, new SkillNode(LordSkills.MINION_RECOVERY));
 
             context.register(DRACULA_ROOT, new SkillNode(VampireSkills.DRACULA_ROOT));
+            context.register(DRACULA_1, new SkillNode(BLINDING));
+            context.register(DRACULA_2, new SkillNode(WANDER_THE_SUN));
         }
     }
 
@@ -189,7 +197,7 @@ public class VampireSkills {
 
             context.register(LEVEL, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.faction(ModFactions.VAMPIRE)).build(), new ItemStack(ModItems.VAMPIRE_BOOK.get()), Component.translatable("text.vampirism.skills.level"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
             context.register(LORD, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.VAMPIRE)).build(), new ItemStack(ModItems.VAMPIRE_MINION_BINDING.get()), Component.translatable("text.vampirism.skills.lord"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
-            context.register(DRACULA, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(DraculaCriterion.INSTANCE).build(), new ItemStack(ModItems.VAMPIRE_CLOTHING_HAT.get()), Component.translatable("text.vampirism.skills.dracula"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
+            context.register(DRACULA, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(DraculaCriterion.INSTANCE).build(), new ItemStack(ModItems.VAMPIRE_CLOTHING_HAT.get()), Component.translatable("text.vampirism.skills.dracula"), Optional.of(VIdentifier.mod("block/dark_stone_bricks")), ModSkillTreeTags.DRACULA));
         }
     }
 }
