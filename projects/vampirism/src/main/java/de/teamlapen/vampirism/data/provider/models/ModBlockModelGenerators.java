@@ -77,6 +77,8 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         createCursedEarthPath();
         createInfuser();
         createGateways();
+        createVelmorraAltar();
+
 
         createTintedLeaves(ModBlocks.DARK_SPRUCE_LEAVES.get(), TexturedModel.LEAVES, -1);
 
@@ -546,5 +548,12 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.VELMORRA_PORTAL_ARCH.get())
                         .with(PropertyDispatch.initial(PortalGatewayBlock.TYPE).generate(type -> plainVariant(modelLocation.apply(type))))
                         .with(ROTATION_HORIZONTAL_FACING));
+    }
+
+    protected void createVelmorraAltar() {
+        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.VELMORRA_ALTAR.get())
+                        .with(PropertyDispatch.initial(VelmorraAltarBlock.HAS_BLOOD)
+                                .select(false, plainVariant(VIdentifier.mod("block/velmorra_altar")))
+                                .select(true, plainVariant(ModModelTemplates.VELMORRA_ALTAR.createWithSuffix(ModBlocks.VELMORRA_ALTAR.get(), "bloody" ,new TextureMapping().put(ModTextureSlots.TOP, mod("block/velmorra_altar_bloody")), this.modelOutput)))));
     }
 }

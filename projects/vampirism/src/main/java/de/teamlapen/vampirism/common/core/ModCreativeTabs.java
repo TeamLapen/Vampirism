@@ -80,12 +80,17 @@ public class ModCreativeTabs {
             add(CURSED_SPRUCE_BOAT);
             add(DARK_SPRUCE_CHEST_BOAT);
             add(CURSED_SPRUCE_CHEST_BOAT);
+
+
+            add(RITUAL_KNIFE);
+            add(RITUAL_KNIFE_HEART);
         }
 
         private void addBlocks() {
             addPlants();
             addBuildingBlocks();
             addDecorativeBlocks();
+            add(VELMORRA_ALTAR);
         }
 
         private void addPlants() {

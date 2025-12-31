@@ -302,7 +302,8 @@ public class ModItems {
     public static final DeferredItem<SpawnEggItem> HUNTER_TRAINER_SPAWN_EGG = ITEMS.registerItem("hunter_trainer_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.HUNTER_TRAINER.get()));
     public static final DeferredItem<SpawnEggItem> TASK_MASTER_HUNTER_SPAWN_EGG = ITEMS.registerItem("task_master_hunter_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.TASK_MASTER_HUNTER.get()));
     public static final DeferredItem<SpawnEggItem> GHOST_SPAWN_EGG = ITEMS.registerItem("ghost_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.GHOST.get()));
-
+    public static final DeferredItem<Item> RITUAL_KNIFE = ITEMS.registerItem("ritual_knife", Item::new);
+    public static final DeferredItem<Item> RITUAL_KNIFE_HEART = ITEMS.registerItem("ritual_knife_heart", Item::new);
 
     @SuppressWarnings("unchecked")
     public static Stream<Holder<Item>> listElements() {

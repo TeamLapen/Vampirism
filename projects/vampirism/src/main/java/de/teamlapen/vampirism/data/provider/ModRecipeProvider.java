@@ -51,6 +51,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.teamlapen.vampirism.api.util.VIdentifier.modString;
+import static net.minecraft.data.recipes.RecipeBuilder.getDefaultRecipeId;
 
 public class ModRecipeProvider extends VampirismRecipeProvider {
 
@@ -1462,6 +1463,17 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         for (int i = 0; i < 5; i++) {
             smithingPure(ModItems.HEART_SEEKER_ENHANCED, i, ModItems.HEART_SEEKER_ULTIMATE);
             smithingPure(ModItems.HEART_STRIKER_ENHANCED, i, ModItems.HEART_STRIKER_ULTIMATE);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            infuser(ModItems.RITUAL_KNIFE_HEART.toStack())
+                    .ingredient(i, Ingredient.of(ModItems.MOTHER_CORE))
+                    .input(Ingredient.of(ModItems.RITUAL_KNIFE))
+                    .results(ItemStack.EMPTY)
+                    .burnTime(600)
+                    .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
+                    .unlockedBy("has_ritual_knife", has(ModItems.RITUAL_KNIFE))
+                    .save(this.output, ResourceKey.create(Registries.RECIPE, getDefaultRecipeId(ModItems.RITUAL_KNIFE_HEART.get()).withSuffix("_" + i)));
         }
     }
 

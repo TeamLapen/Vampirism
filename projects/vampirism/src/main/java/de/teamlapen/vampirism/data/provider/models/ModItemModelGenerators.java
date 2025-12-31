@@ -272,7 +272,9 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.ADVANCED_VAMPIRE_HUNTER_SPAWN_EGG,
                 ModItems.HUNTER_TRAINER_SPAWN_EGG,
                 ModItems.TASK_MASTER_HUNTER_SPAWN_EGG,
-                ModItems.GHOST_SPAWN_EGG
+                ModItems.GHOST_SPAWN_EGG,
+                ModItems.RITUAL_KNIFE,
+                ModItems.RITUAL_KNIFE_HEART
                 ).map(DeferredItem::asItem);
     }
 
