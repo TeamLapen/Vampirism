@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.data.provider.models;
 
 import de.teamlapen.factions.client.color.tint.RefinementTint;
-import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
@@ -246,7 +245,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.HUNTER_MINION_UPGRADE_SIMPLE,
                 ModItems.HUNTER_MINION_UPGRADE_ENHANCED,
                 ModItems.HUNTER_MINION_UPGRADE_SPECIAL,
-                FactionItems.OBLIVION_POTION,
                 ModItems.VAMPIRE_CLOTHING_HAT,
                 ModItems.VAMPIRE_CLOTHING_BOOTS,
                 ModItems.VAMPIRE_CLOTHING_LEGS,
