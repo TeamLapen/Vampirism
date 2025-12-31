@@ -304,63 +304,63 @@ public class WingsModel extends Model<WingsModel.State> {
 
     public static final AnimationDefinition GROW_ANIMATION = AnimationDefinition.Builder.withLength(IWingsEntity.GROW_SECONDS)
             .addAnimation(WINGS, new AnimationChannel(AnimationChannel.Targets.SCALE,
-                    new Keyframe(0.0F, KeyframeAnimations.scaleVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.0833F, KeyframeAnimations.scaleVec(0.16F, 0.16F, 0.16F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.1667F, KeyframeAnimations.scaleVec(0.4F, 0.4F, 0.4F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.3333F, KeyframeAnimations.scaleVec(0.8F, 0.8F, 0.8F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.4167F, KeyframeAnimations.scaleVec(0.94F, 0.94F, 0.94F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.5F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.LINEAR)
+                    new Keyframe(0.0F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.0833F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.16F, 0.16F, 0.16F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.1667F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.4F, 0.4F, 0.4F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.3333F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.8F, 0.8F, 0.8F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.4167F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.94F, 0.94F, 0.94F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.5F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.LINEAR)
             ))
             .addAnimation(LEFT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, -75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.25F, KeyframeAnimations.degreeVec(0.0F, -75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(1.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+                    new Keyframe(0.0F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, -75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.25F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, -75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
             ))
             .addAnimation(RIGHT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.25F, KeyframeAnimations.degreeVec(0.0F, 75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(1.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+                    new Keyframe(0.0F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.25F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
             ))
             .addAnimation(OUTER_LEFT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.25F, KeyframeAnimations.degreeVec(0.0F, 125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(1.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+                    new Keyframe(0.0F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.25F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
             ))
             .addAnimation(OUTER_RIGHT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, -125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.25F, KeyframeAnimations.degreeVec(0.0F, -125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(1.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
+                    new Keyframe(0.0F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, -125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.25F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, -125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM)
             ))
             .build();
 
     public static final AnimationDefinition SHRINK_ANIMATION = AnimationDefinition.Builder.withLength(IWingsEntity.GROW_SECONDS)
             .addAnimation(WINGS, new AnimationChannel(AnimationChannel.Targets.SCALE,
-                    new Keyframe(0.5F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.5833F, KeyframeAnimations.scaleVec(0.94F, 0.94F, 0.94F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.6667F, KeyframeAnimations.scaleVec(0.8F, 0.8F, 0.8F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.8333F, KeyframeAnimations.scaleVec(0.2F, 0.2F, 0.2F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.9167F, KeyframeAnimations.scaleVec(0.06F, 0.06F, 0.06F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(1.0F, KeyframeAnimations.scaleVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+                    new Keyframe(0.5F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.5833F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.94F, 0.94F, 0.94F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.6667F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.8F, 0.8F, 0.8F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.8333F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.2F, 0.2F, 0.2F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.9167F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.06F, 0.06F, 0.06F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(IWingsEntity.GROW_SECONDS, KeyframeAnimations.scaleVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
             ))
             .addAnimation(LEFT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.75F, KeyframeAnimations.degreeVec(0.0F, -75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(1.0F, KeyframeAnimations.degreeVec(0.0F, -75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+                    new Keyframe(0.0F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.75F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, -75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, -75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
             ))
             .addAnimation(RIGHT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.75F, KeyframeAnimations.degreeVec(0.0F, 75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(1.0F, KeyframeAnimations.degreeVec(0.0F, 75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+                    new Keyframe(0.0F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.75F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 75.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
             ))
             .addAnimation(OUTER_LEFT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.75F, KeyframeAnimations.degreeVec(0.0F, 125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(1.0F, KeyframeAnimations.degreeVec(0.0F, 125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+                    new Keyframe(0.0F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.75F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
             ))
             .addAnimation(OUTER_RIGHT_WING, new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                    new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(0.75F, KeyframeAnimations.degreeVec(0.0F, -125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
-                    new Keyframe(1.0F, KeyframeAnimations.degreeVec(0.0F, -125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
+                    new Keyframe(0.0F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(0.75F * IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, -125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR),
+                    new Keyframe(IWingsEntity.GROW_SECONDS, KeyframeAnimations.degreeVec(0.0F, -125.0F, 0.0F), AnimationChannel.Interpolations.LINEAR)
             ))
             .build();
 

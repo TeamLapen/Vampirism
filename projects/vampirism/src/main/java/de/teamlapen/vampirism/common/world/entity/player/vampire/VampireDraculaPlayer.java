@@ -21,19 +21,6 @@ public interface VampireDraculaPlayer extends IDraculaPlayer {
     }
 
     @Override
-    default boolean wingsFunctionalOpen() {
-        return switch (this.getWingsState()) {
-            case OPEN, OPENING, FLYING -> true;
-            case CLOSING, CLOSED -> false;
-        };
-    }
-
-    @Override
-    default boolean wingsVisualOpen() {
-        return this.getWingsState() != WingsState.CLOSED;
-    }
-
-    @Override
     default boolean openWings() {
         return draculaData().openWings();
     }

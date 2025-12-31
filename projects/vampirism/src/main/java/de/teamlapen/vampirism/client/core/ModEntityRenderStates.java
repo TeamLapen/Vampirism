@@ -7,12 +7,14 @@ import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
+import de.teamlapen.vampirism.client.renderer.entities.VampireBaronRenderer;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
@@ -62,72 +64,96 @@ public class ModEntityRenderStates {
         return new ContextKey<>(VIdentifier.mod(id));
     }
 
+
+
     public static void addRenderStateModifier(RegisterRenderStateModifiersEvent event) {
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), (entity, renderState) ->
-                ExtendedCreature.getSafe(entity).ifPresent(creature -> {
-                    renderState.setRenderData(BLOOD, creature.getBlood());
-                    renderState.setRenderData(MAX_BLOOD, creature.getMaxBlood());
-                    renderState.setRenderData(POISON_BLOOD, creature.hasPoisonousBlood());
-                }));
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), (entity, renderState) -> {
-            if (Helper.isHunter(entity)) {
-                renderState.setRenderData(HUNTER, true);
-            }
-        });
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), (avatar, state) -> {
-            if (avatar instanceof Player player && Helper.isHunter(player)) {
-                HunterPlayer hunter = HunterPlayer.get(player);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractExtendedCreature);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractHunterEntity);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), ModEntityRenderStates::extractHunterPlayer);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), ModEntityRenderStates::extractVampirePlayer);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractConvertedCreature);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractConvertedOverlay);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractCoffinSleepPosition);
+        event.registerEntityModifier(VampireBaronRenderer.class, ModEntityRenderStates::extractWings);
+    }
 
-                state.setRenderData(HUNTER_DISGUISED, hunter.isDisguised());
-                state.setRenderData(HUNTER_FULL_COAT, hunter.getSpecialAttributes().fullHunterCoat == IItemWithTier.Tier.ENHANCED || hunter.getSpecialAttributes().fullHunterCoat == IItemWithTier.Tier.ULTIMATE);
-            }
-        });
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), (avatar, state) -> {
-            if (avatar instanceof Player player && Helper.isVampire(player)) {
+    private static void extractWings(VampireBaronEntity livingEntity, VampireBaronRenderer.VampireBaronRenderState livingEntityRenderState) {
+        livingEntityRenderState.setRenderData(ModEntityRenderStates.DRACULA_WINGS_STATE, livingEntity.getWingsState());
+        livingEntityRenderState.setRenderData(ModEntityRenderStates.DRACULA_WINGS_GROW, livingEntity.growAnimationState());
+        livingEntityRenderState.setRenderData(ModEntityRenderStates.DRACULA_WINGS_FLY, livingEntity.flyAnimationState());
+    }
 
-                VampirePlayer vampire = VampirePlayer.get(player);
-
-                state.setRenderData(VAMPIRE_DISGUISE, vampire.isDisguised());
-                state.setRenderData(VAMPIRE_LEVEL, vampire.getLevel());
-                state.setRenderData(VAMPIRE_EYE_TYPE, vampire.getEyeType());
-                state.setRenderData(VAMPIRE_FANG_TYPE, vampire.getFangType());
-                state.setRenderData(VAMPIRE_GLOWING_EYES, vampire.getGlowingEyes());
-                state.setRenderData(VAMPIRE_INVISIBLE, vampire.getSkillProperties().invisible);
-                state.setRenderData(VAMPIRE_DBNO, vampire.isDBNO());
-
-                if (vampire.getSkillProperties().bat) {
-                    Bat bat = player.getData(ModAttachments.VAMPIRE_BAT.get());
-                    bat.yHeadRot = player.yHeadRot;
-                    bat.yBodyRot = player.yBodyRot;
-                    bat.yHeadRotO = player.yHeadRotO;
-                    bat.yBodyRotO = player.yBodyRotO;
-                    state.setRenderData(VAMPIRE_BAT, bat);
-                }
-
-                if (vampire.isDracula()) {
-                    state.setRenderData(DRACULA_WINGS_STATE, vampire.getWingsState());
-                    state.setRenderData(DRACULA_WINGS_GROW, vampire.growAnimationState());
-                    state.setRenderData(DRACULA_WINGS_FLY, vampire.flyAnimationState());
-                    state.setRenderData(DRACULA_WINGS_TEXTURE, vampire.getCustomization().wingsTexture());
-                }
-            }
+    private static void extractExtendedCreature(LivingEntity entity, LivingEntityRenderState renderState) {
+        ExtendedCreature.getSafe(entity).ifPresent(creature -> {
+            renderState.setRenderData(BLOOD, creature.getBlood());
+            renderState.setRenderData(MAX_BLOOD, creature.getMaxBlood());
+            renderState.setRenderData(POISON_BLOOD, creature.hasPoisonousBlood());
         });
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), (entity, renderState) -> {
-            if (entity instanceof IConvertedCreature<?> creature) {
-                Optional.ofNullable(creature.getSourceEntityId()).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> renderState.setRenderData(CONVERTED_OVERLAY, location));
+    }
+
+    private static void extractHunterEntity(LivingEntity entity, LivingEntityRenderState renderState) {
+        if (Helper.isHunter(entity)) {
+            renderState.setRenderData(HUNTER, true);
+        }
+    }
+
+    private static void extractHunterPlayer(Avatar avatar, AvatarRenderState state) {
+        if (avatar instanceof Player player && Helper.isHunter(player)) {
+            HunterPlayer hunter = HunterPlayer.get(player);
+
+            state.setRenderData(HUNTER_DISGUISED, hunter.isDisguised());
+            state.setRenderData(HUNTER_FULL_COAT, hunter.getSpecialAttributes().fullHunterCoat == IItemWithTier.Tier.ENHANCED || hunter.getSpecialAttributes().fullHunterCoat == IItemWithTier.Tier.ULTIMATE);
+        }
+    }
+
+    private static void extractVampirePlayer(Avatar avatar, AvatarRenderState state) {
+        if (avatar instanceof Player player && Helper.isVampire(player)) {
+
+            VampirePlayer vampire = VampirePlayer.get(player);
+
+            state.setRenderData(VAMPIRE_DISGUISE, vampire.isDisguised());
+            state.setRenderData(VAMPIRE_LEVEL, vampire.getLevel());
+            state.setRenderData(VAMPIRE_EYE_TYPE, vampire.getEyeType());
+            state.setRenderData(VAMPIRE_FANG_TYPE, vampire.getFangType());
+            state.setRenderData(VAMPIRE_GLOWING_EYES, vampire.getGlowingEyes());
+            state.setRenderData(VAMPIRE_INVISIBLE, vampire.getSkillProperties().invisible);
+            state.setRenderData(VAMPIRE_DBNO, vampire.isDBNO());
+
+            if (vampire.getSkillProperties().bat) {
+                Bat bat = player.getData(ModAttachments.VAMPIRE_BAT.get());
+                bat.yHeadRot = player.yHeadRot;
+                bat.yBodyRot = player.yBodyRot;
+                bat.yHeadRotO = player.yHeadRotO;
+                bat.yBodyRotO = player.yBodyRotO;
+                state.setRenderData(VAMPIRE_BAT, bat);
             }
-        });
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), (entity, renderState) -> {
-            if (ConvertedCreatureRenderer.renderOverlay) {
-                Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(Identifier::toString).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
-                    renderState.setRenderData(ModEntityRenderStates.OVERLAY, location);
-                });
+
+            if (vampire.isDracula()) {
+                state.setRenderData(DRACULA_WINGS_STATE, vampire.getWingsState());
+                state.setRenderData(DRACULA_WINGS_GROW, vampire.growAnimationState());
+                state.setRenderData(DRACULA_WINGS_FLY, vampire.flyAnimationState());
+                state.setRenderData(DRACULA_WINGS_TEXTURE, vampire.getCustomization().wingsTexture());
             }
-        });
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), (entity, renderState) -> {
-            entity.getSleepingPos().map(x -> entity.level().getBlockState(x)).map(BlockBehaviour.BlockStateBase::getBlock).filter(CoffinBlock.class::isInstance).ifPresent(x -> {
-                renderState.setRenderData(VAMPIRE_SLEEPING_IN_COFFIN, true);
+        }
+    }
+
+    private static void extractConvertedCreature(LivingEntity entity, LivingEntityRenderState renderState) {
+        if (entity instanceof IConvertedCreature<?> creature) {
+            Optional.ofNullable(creature.getSourceEntityId()).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> renderState.setRenderData(CONVERTED_OVERLAY, location));
+        }
+    }
+
+    private static void extractConvertedOverlay(LivingEntity entity, LivingEntityRenderState renderState) {
+        if (ConvertedCreatureRenderer.renderOverlay) {
+            Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(Identifier::toString).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
+                renderState.setRenderData(ModEntityRenderStates.OVERLAY, location);
             });
+        }
+    }
+
+    private static void extractCoffinSleepPosition(LivingEntity entity, LivingEntityRenderState renderState) {
+        entity.getSleepingPos().map(x -> entity.level().getBlockState(x)).map(BlockBehaviour.BlockStateBase::getBlock).filter(CoffinBlock.class::isInstance).ifPresent(x -> {
+            renderState.setRenderData(VAMPIRE_SLEEPING_IN_COFFIN, true);
         });
     }
 }

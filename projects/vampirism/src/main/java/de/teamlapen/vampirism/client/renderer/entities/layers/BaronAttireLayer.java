@@ -43,7 +43,7 @@ public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBa
         if (!renderState.isInvisible) {
             boolean female = predicateFemale.test(renderState);
             EntityModel<VampireBaronRenderer.VampireBaronRenderState> model = female ? baroness : baron;
-            coloredCutoutModelCopyLayerRender(model, female ? textureBaroness : textureBaron, poseStack, nodeCollector, packedLight, renderState, 0, 0);
+            coloredCutoutModelCopyLayerRender(model, female ? textureBaroness : textureBaron, poseStack, nodeCollector, packedLight, renderState, -1, 1);
         }
     }
 }

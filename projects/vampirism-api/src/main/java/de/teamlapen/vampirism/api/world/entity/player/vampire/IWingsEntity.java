@@ -9,9 +9,16 @@ import java.util.Locale;
 
 public interface IWingsEntity {
 
-    boolean wingsFunctionalOpen();
+    default boolean wingsFunctionalOpen() {
+        return switch (this.getWingsState()) {
+            case OPEN, OPENING, FLYING -> true;
+            case CLOSING, CLOSED -> false;
+        };
+    }
 
-    boolean wingsVisualOpen();
+    default boolean wingsVisualOpen() {
+        return this.getWingsState() != WingsState.CLOSED;
+    }
 
     boolean openWings();
 
@@ -27,7 +34,7 @@ public interface IWingsEntity {
     WingsState getWingsState();
 
     float GROW_SPEED = 0.5f;
-    float GROW_SECONDS = 1f;
+    float GROW_SECONDS = 2f;
     float GROW_TICKS = 20 * GROW_SECONDS / GROW_SPEED;
 
     enum WingsState implements StringRepresentable {

@@ -141,7 +141,9 @@ public class ModEntitiesRender {
             if (renderPlayer != null && renderPlayer.getModel() instanceof PlayerModel) {
                 LivingEntityRenderer<S, T, PlayerModel> renderPlayer2 = (LivingEntityRenderer<S, T, PlayerModel>) renderPlayer;
                 renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));
-                renderPlayer.addLayer(new WingsLayer<>(renderPlayer, event.getEntityModels()));
+                renderPlayer.addLayer(new WingsLayer<>(renderPlayer, event.getEntityModels(), (state, poseStack) -> {
+                    poseStack.translate(0,-11/16f,2/16f);
+                }));
             }
         }
     }

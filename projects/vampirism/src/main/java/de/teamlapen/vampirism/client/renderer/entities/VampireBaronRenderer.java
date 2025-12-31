@@ -1,13 +1,14 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.BaronBaseModel;
 import de.teamlapen.vampirism.client.models.entities.BaronModel;
 import de.teamlapen.vampirism.client.models.entities.BaronessModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.BaronAttireLayer;
-import de.teamlapen.vampirism.client.renderer.entities.layers.WingLayer;
+import de.teamlapen.vampirism.client.renderer.entities.layers.WingsLayer;
 import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaronEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -32,8 +33,13 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, Vampir
         super(context, new BaronModel(context.bakeLayer(ModEntitiesRender.BARON)), 0.5F);
         this.baronModel = new BaronModel(context.bakeLayer(ModEntitiesRender.BARON));
         this.baronessModel = new BaronessModel(context.bakeLayer(ModEntitiesRender.BARONESS));
-        this.addLayer(new WingLayer<>(this, context.getModelSet(), vampireBaronEntity -> true, (entity, model) -> model.getBody()));
         this.addLayer(new BaronAttireLayer(this, context, (VampireBaronRenderState state) -> state.isLady ));
+        this.addLayer(new WingsLayer<>(this, context.getModelSet(), (state, poseStack) -> {
+            if (state.isLady) {
+                poseStack.mulPose(Axis.XP.rotationDegrees(20));
+            }
+            poseStack.translate(0,-11/16f,2/16f);
+        }));
     }
 
     @NotNull
@@ -58,13 +64,11 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, Vampir
         super.extractRenderState(entity, state, p_361157_);
         state.isEnraged = entity.isEnraged();
         state.isLady = entity.isLady();
-        state.enragedProgress = entity.getEnragedProgress();
     }
 
     public static class VampireBaronRenderState extends HumanoidRenderState {
         public boolean isEnraged;
         public boolean isLady;
-        public float enragedProgress;
         public AnimationState cloakState = new AnimationState();
     }
 }

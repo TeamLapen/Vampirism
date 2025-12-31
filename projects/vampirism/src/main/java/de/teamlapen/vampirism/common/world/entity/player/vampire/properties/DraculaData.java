@@ -15,7 +15,7 @@ public class DraculaData extends PropertyParentSync {
     private final AnimationState flyAnimationState = new AnimationState();
     private final AnimationState growAnimationState = new AnimationState();
     private IWingsEntity.WingsState wingsState = IWingsEntity.WingsState.CLOSED;
-    private int ticks;
+    private int growTicks;
 
     private final IPlayer player;
 
@@ -27,7 +27,7 @@ public class DraculaData extends PropertyParentSync {
     @Override
     protected void registerProperties() {
         this.registerProperty(VIdentifier.mod("id_dracula")).simple(false, () -> this.isDracula, b -> this.isDracula = b);
-        this.registerProperty(VIdentifier.mod("wings_state")).simple(IWingsEntity.WingsState.CLOSED, () -> this.wingsState, b -> this.wingsState = b);
+        this.registerProperty(VIdentifier.mod("wings_state")).simple(IWingsEntity.WingsState.CLOSED, () -> this.wingsState, this::switchState);
     }
 
     public boolean isDracula() {
@@ -48,10 +48,10 @@ public class DraculaData extends PropertyParentSync {
 
     public void tick() {
         if (this.isDracula) {
-            this.ticks++;
+            this.growTicks++;
             switch (this.wingsState) {
                 case OPENING -> {
-                    if (ticks > IWingsEntity.GROW_TICKS) {
+                    if (growTicks > IWingsEntity.GROW_TICKS) {
                         switchState(IWingsEntity.WingsState.OPEN);
                     }
                     if (player.asEntity().isFallFlying()) {
@@ -59,7 +59,7 @@ public class DraculaData extends PropertyParentSync {
                     }
                 }
                 case CLOSING -> {
-                    if (ticks > IWingsEntity.GROW_TICKS) {
+                    if (growTicks > IWingsEntity.GROW_TICKS) {
                         switchState(IWingsEntity.WingsState.CLOSED);
                     }
                 }
@@ -114,7 +114,7 @@ public class DraculaData extends PropertyParentSync {
 
     private void switchState(IWingsEntity.WingsState state) {
         this.wingsState = state;
-        this.ticks = 0;
+        this.growTicks = 0;
         switch (state) {
             case OPEN ->  {
                 this.flyAnimationState.start(player.asEntity().tickCount);
