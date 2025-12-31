@@ -870,6 +870,8 @@
   "block.vampirism.chandelier_green": "Green Chandelier",
   "block.vampirism.chandelier_red": "Red Chandelier",
   "block.vampirism.chandelier_black": "Black Chandelier",
+  "block.vampirism.velmorra_portal": "Velmorra Portal",
+  "block.vampirism.velmorra_portal_arch": "Velmorra Portal Arch",
   "__comment": "items",
   "item.vampirism.hunter_intel": "Hunter Intel",
   "item.vampirism.pure_blood": "Pure Blood",

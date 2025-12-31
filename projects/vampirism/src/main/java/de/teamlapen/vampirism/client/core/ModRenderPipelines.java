@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.client.renderer.blockentity.VelmorraPortalRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
@@ -73,6 +74,21 @@ public class ModRenderPipelines {
         event.registerPipeline(GUI_TEXTURED_BLEND);
         event.registerPipeline(SOLID_TRANSPARENCY_ENTITY);
         event.registerPipeline(CUTOUT_NO_DEPTH);
+        event.registerPipeline(VELMORRA_PORTAL_PIPELINE);
     }
+
+    public static final RenderPipeline.Snippet VELMORRA_PORTAL_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
+            .withVertexShader(VIdentifier.mod("core/rendertype_velmorra_portal"))
+            .withFragmentShader(VIdentifier.mod("core/rendertype_velmorra_portal"))
+            .withSampler("Sampler0")
+            .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+            .buildSnippet();
+    public static final RenderPipeline VELMORRA_PORTAL_PIPELINE = RenderPipeline.builder(VELMORRA_PORTAL_SNIPPET).withLocation(VIdentifier.mod("pipeline/velmorra_portal")).build();
+    public static final RenderType VELMORRA_PORTAL_RENDER_TYPE = RenderType.create(
+            VIdentifier.modString("velmorra_portal"),
+            RenderSetup.builder(VELMORRA_PORTAL_PIPELINE)
+                    .withTexture("Sampler0", VelmorraPortalRenderer.PORTAL_LOCATION)
+                    .createRenderSetup()
+    );
 
 }

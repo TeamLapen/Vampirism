@@ -1,0 +1,79 @@
+{
+  "variants": {
+    "facing=east,portal_arch_type=fifth": {
+      "model": "vampirism:block/velmorra_portal_arch_4",
+      "y": 90
+    },
+    "facing=east,portal_arch_type=first": {
+      "model": "vampirism:block/velmorra_portal_arch_0",
+      "y": 90
+    },
+    "facing=east,portal_arch_type=fourth": {
+      "model": "vampirism:block/velmorra_portal_arch_3",
+      "y": 90
+    },
+    "facing=east,portal_arch_type=second": {
+      "model": "vampirism:block/velmorra_portal_arch_1",
+      "y": 90
+    },
+    "facing=east,portal_arch_type=third": {
+      "model": "vampirism:block/velmorra_portal_arch_2",
+      "y": 90
+    },
+    "facing=north,portal_arch_type=fifth": {
+      "model": "vampirism:block/velmorra_portal_arch_4"
+    },
+    "facing=north,portal_arch_type=first": {
+      "model": "vampirism:block/velmorra_portal_arch_0"
+    },
+    "facing=north,portal_arch_type=fourth": {
+      "model": "vampirism:block/velmorra_portal_arch_3"
+    },
+    "facing=north,portal_arch_type=second": {
+      "model": "vampirism:block/velmorra_portal_arch_1"
+    },
+    "facing=north,portal_arch_type=third": {
+      "model": "vampirism:block/velmorra_portal_arch_2"
+    },
+    "facing=south,portal_arch_type=fifth": {
+      "model": "vampirism:block/velmorra_portal_arch_4",
+      "y": 180
+    },
+    "facing=south,portal_arch_type=first": {
+      "model": "vampirism:block/velmorra_portal_arch_0",
+      "y": 180
+    },
+    "facing=south,portal_arch_type=fourth": {
+      "model": "vampirism:block/velmorra_portal_arch_3",
+      "y": 180
+    },
+    "facing=south,portal_arch_type=second": {
+      "model": "vampirism:block/velmorra_portal_arch_1",
+      "y": 180
+    },
+    "facing=south,portal_arch_type=third": {
+      "model": "vampirism:block/velmorra_portal_arch_2",
+      "y": 180
+    },
+    "facing=west,portal_arch_type=fifth": {
+      "model": "vampirism:block/velmorra_portal_arch_4",
+      "y": 270
+    },
+    "facing=west,portal_arch_type=first": {
+      "model": "vampirism:block/velmorra_portal_arch_0",
+      "y": 270
+    },
+    "facing=west,portal_arch_type=fourth": {
+      "model": "vampirism:block/velmorra_portal_arch_3",
+      "y": 270
+    },
+    "facing=west,portal_arch_type=second": {
+      "model": "vampirism:block/velmorra_portal_arch_1",
+      "y": 270
+    },
+    "facing=west,portal_arch_type=third": {
+      "model": "vampirism:block/velmorra_portal_arch_2",
+      "y": 270
+    }
+  }
+}
