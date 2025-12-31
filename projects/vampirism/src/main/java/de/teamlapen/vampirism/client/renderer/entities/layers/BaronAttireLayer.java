@@ -24,8 +24,8 @@ import java.util.function.Predicate;
 public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
     private final @NotNull BaronessAttireModel baroness;
     private final @NotNull BaronAttireModel baron;
-    private final Identifier textureBaroness = VIdentifier.mod("textures/entity/baroness_attire.png");
-    private final Identifier textureBaron = VIdentifier.mod("textures/entity/baron_attire.png");
+    private final Identifier textureBaroness = VIdentifier.mod("textures/entity/baron/baroness_attire.png");
+    private final Identifier textureBaron = VIdentifier.mod("textures/entity/baron/baron_attire.png");
     private final Predicate<VampireBaronRenderer.VampireBaronRenderState> predicateFemale;
 
     /**

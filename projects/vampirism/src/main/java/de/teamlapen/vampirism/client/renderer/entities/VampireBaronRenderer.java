@@ -21,10 +21,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
 
-    private static final Identifier textureLord = VIdentifier.mod("textures/entity/baron.png");
-    private static final Identifier textureLady = VIdentifier.mod("textures/entity/baroness.png");
-    private static final Identifier textureLordEnraged = VIdentifier.mod("textures/entity/baron_enraged.png");
-    private static final Identifier textureLadyEnraged = VIdentifier.mod("textures/entity/baroness_enraged.png");
+    private static final Identifier textureLord = VIdentifier.mod("textures/entity/baron/baron.png");
+    private static final Identifier textureLady = VIdentifier.mod("textures/entity/baron/baroness.png");
+    private static final Identifier textureLordEnraged = VIdentifier.mod("textures/entity/baron/baron_enraged.png");
+    private static final Identifier textureLadyEnraged = VIdentifier.mod("textures/entity/baron/baroness_enraged.png");
 
     private final BaronModel baronModel;
     private final BaronessModel baronessModel;
