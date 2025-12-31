@@ -56,6 +56,7 @@ public class ModEntityRenderStates {
     public static final ContextKey<IWingsEntity.WingsState> DRACULA_WINGS_STATE = create("dracula/wings_state");
     public static final ContextKey<AnimationState> DRACULA_WINGS_FLY = create("dracula/wings_fly");
     public static final ContextKey<AnimationState> DRACULA_WINGS_GROW = create("dracula/wings_grow");
+    public static final ContextKey<IWingsEntity.Texture> DRACULA_WINGS_TEXTURE = create("dracula/wings_texture");
 
     private static <T> ContextKey<T> create(String id) {
         return new ContextKey<>(VIdentifier.mod(id));
@@ -107,6 +108,7 @@ public class ModEntityRenderStates {
                     state.setRenderData(DRACULA_WINGS_STATE, vampire.getWingsState());
                     state.setRenderData(DRACULA_WINGS_GROW, vampire.growAnimationState());
                     state.setRenderData(DRACULA_WINGS_FLY, vampire.flyAnimationState());
+                    state.setRenderData(DRACULA_WINGS_TEXTURE, vampire.getCustomization().wingsTexture());
                 }
             }
         });

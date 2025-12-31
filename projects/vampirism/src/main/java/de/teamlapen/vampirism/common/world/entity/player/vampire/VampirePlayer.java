@@ -157,7 +157,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private final Customization customization;
     private final DraculaData draculaData;
 
-
     //</editor-fold>
 
     public VampirePlayer(Player player) {
@@ -915,6 +914,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                     break;
                 case 3:
                     FactionPlayerHandler.get(this.player).setTitleGender(data.get(i) > 0);
+                    break;
+                case 4:
+                    this.customization.setWingsTexture(Texture.values()[data.get(i)]);
                     break;
             }
         }

@@ -268,10 +268,10 @@ public class WingsModel extends Model<WingsModel.State> {
         super.setupAnim(renderState);
 
         switch (renderState.wingsState) {
-            case OPENING -> this.growAnimation.apply(renderState.growState, renderState.ageInTicks);
-            case OPEN -> this.idleAnimation.apply(renderState.flyState, renderState.ageInTicks);
+            case OPENING -> this.growAnimation.apply(renderState.growState, renderState.ageInTicks, IWingsEntity.GROW_SPEED);
+            case OPEN -> this.idleAnimation.apply(renderState.flyState, renderState.ageInTicks, 0.25f);
             case FLYING -> this.flyAnimation.apply(renderState.flyState, renderState.ageInTicks);
-            case CLOSING -> this.shrinkAnimation.apply(renderState.growState, renderState.ageInTicks);
+            case CLOSING -> this.shrinkAnimation.apply(renderState.growState, renderState.ageInTicks, IWingsEntity.GROW_SPEED);
         }
     }
 

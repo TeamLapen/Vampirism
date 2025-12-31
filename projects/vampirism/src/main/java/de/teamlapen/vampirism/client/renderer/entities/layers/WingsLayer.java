@@ -15,13 +15,20 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q extends HumanoidModel<S>> extends RenderLayer<S, Q> {
 
     private final WingsModel model;
-    private final Identifier texture = VIdentifier.mod("textures/entity/wings/wings.png");
+
+    private static final Map<IWingsEntity.Texture, Identifier> TEXTURE_MAP = Util.makeEnumMap(IWingsEntity.Texture.class, x -> switch (x) {
+        case DEV -> VIdentifier.mod("textures/entity/wings/wings_dev.png");
+        default -> VIdentifier.mod("textures/entity/wings/wings.png");
+    });
 
     public WingsLayer(RenderLayerParent<S, Q> renderer, @NotNull EntityModelSet modelSet) {
         super(renderer);
@@ -32,7 +39,6 @@ public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, S renderState, float yRot, float xRot) {
         if (renderState.isInvisible) return;
         if (renderState.getRenderDataOrDefault(ModEntityRenderStates.DRACULA_WINGS_STATE, IWingsEntity.WingsState.CLOSED) == IWingsEntity.WingsState.CLOSED) return;
-        model.resetPose();
         float s = 1f;
 //        if (entity instanceof VampireBaronRenderer.VampireBaronRenderState baron) {
 //            s = baron.enragedProgress;
@@ -46,7 +52,7 @@ public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q
         poseStack.pushPose();
         poseStack.translate(0,-11/16f,2/16f);
         poseStack.scale(s, s, s);
-        nodeCollector.submitModel(model, state, poseStack, RenderTypes.entityCutoutNoCull(texture), packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0), -1, null, 0, null);
+        nodeCollector.submitModel(this.model, state, poseStack, RenderTypes.entityCutoutNoCull(TEXTURE_MAP.get(renderState.getRenderDataOrDefault(ModEntityRenderStates.DRACULA_WINGS_TEXTURE, IWingsEntity.Texture.DEFAULT))), packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0), -1, null, 0, null);
         poseStack.popPose();
     }
 }

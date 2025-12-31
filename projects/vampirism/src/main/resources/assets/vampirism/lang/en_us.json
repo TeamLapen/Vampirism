@@ -1849,5 +1849,9 @@
   "vampirism.configuration.common-server": "Common Server",
   "vampirism.configuration.render": "Render",
   "vampirism.configuration.renderTotemFactionName": "Render Totem Faction Name",
-  "vampirism.configuration.renderVampireSwordParticles": "Vampire Sword Particles"
+  "vampirism.configuration.renderVampireSwordParticles": "Vampire Sword Particles",
+  "wings.vampirism.default": "Default",
+  "wings.vampirism.dev": "Dev",
+  "wings.vampirism.contributor": "Contributor",
+  "wings.vampirism.special": "Special"
 }
