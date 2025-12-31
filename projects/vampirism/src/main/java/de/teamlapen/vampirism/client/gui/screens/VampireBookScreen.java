@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class VampireBookScreen extends Screen {
 
     private final int xSize;
@@ -279,14 +278,14 @@ public class VampireBookScreen extends Screen {
 
         @Override
         public void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            Identifier resourcelocation;
+            Identifier texture;
             if (this.isForward) {
-                resourcelocation = this.isHovered() ? PAGE_FORWARD_HIGHLIGHTED_SPRITE : PAGE_FORWARD_SPRITE;
+                texture = this.isHovered() ? PAGE_FORWARD_HIGHLIGHTED_SPRITE : PAGE_FORWARD_SPRITE;
             } else {
-                resourcelocation = this.isHovered() ? PAGE_BACKWARD_HIGHLIGHTED_SPRITE : PAGE_BACKWARD_SPRITE;
+                texture = this.isHovered() ? PAGE_BACKWARD_HIGHLIGHTED_SPRITE : PAGE_BACKWARD_SPRITE;
             }
 
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), WIDTH, HEIGHT);
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, this.getX(), this.getY(), WIDTH, HEIGHT);
         }
 
         @Override
