@@ -39,7 +39,12 @@ public class ModRegistries {
             .add(FactionRegistries.Keys.SKILL_TREE, ModSkills::createSkillTrees)
             .add(VAMPIRE_BOOK, ModVampireBooks::createVampireBooks)
             .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)
-            .add(Registries.TIMELINE, ModVillage::createTimelines);
+            .add(Registries.TIMELINE, ModVillage::createTimelines)
+            .add(Registries.DIMENSION_TYPE, ModDimensions::bootstrapDimensionTypes)
+            .add(Registries.LEVEL_STEM, ModDimensions::bootstrapLevelStem)
+            .add(Registries.NOISE_SETTINGS, ModDimensions::bootstrapNoise)
+            .add(Registries.DENSITY_FUNCTION, ModDimensions::bootstrapDensityFunctions)
+            ;
 
     static void registerRegistries(NewRegistryEvent event) {
         event.register(OILS);

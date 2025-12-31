@@ -65,6 +65,7 @@ public class ModRegistryManager {
         ModDataComponents.register(eventBus);
         ModFactions.register(eventBus);
         VampirismVampireVisions.register(eventBus);
+        ModDimensions.register(eventBus);
     }
 
     @SubscribeEvent

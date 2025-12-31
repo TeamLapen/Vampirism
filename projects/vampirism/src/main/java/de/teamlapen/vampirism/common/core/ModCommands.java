@@ -69,6 +69,7 @@ public class ModCommands {
                                     .then(TaskCommand.register())
                                     .then(SummonDummy.register())
                                     .then(GiveBannerCommand.register(buildContext))
+                                    .then(VelmorraCommand.register())
                             )
             );
         }

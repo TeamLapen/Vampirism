@@ -34,8 +34,8 @@ public class ModBiomeTagsProvider extends BiomeTagsProvider {
         tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST);
         tag(BiomeTags.IS_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
         tag(Tags.Biomes.IS_DENSE_VEGETATION_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
-        tag(Tags.Biomes.IS_MAGICAL).add(ModBiomes.VAMPIRE_FOREST);
-        tag(Tags.Biomes.IS_SPOOKY).add(ModBiomes.VAMPIRE_FOREST);
+        tag(Tags.Biomes.IS_MAGICAL).add(ModBiomes.VAMPIRE_FOREST, ModBiomes.VELMORRA);
+        tag(Tags.Biomes.IS_SPOOKY).add(ModBiomes.VAMPIRE_FOREST, ModBiomes.VELMORRA);
         tag(ModBiomeTags.HasStructure.VAMPIRE_DUNGEON).addTags(BiomeTags.IS_OVERWORLD);
         tag(ModBiomeTags.HasSpawn.VAMPIRE).addTags(BiomeTags.IS_OVERWORLD);
         tag(ModBiomeTags.NoSpawn.VAMPIRE).addTags(ModBiomeTags.HasFaction.IS_FACTION_BIOME, Tags.Biomes.IS_UNDERGROUND, Tags.Biomes.IS_MUSHROOM);
