@@ -35,6 +35,21 @@ for (var integration : integrations) {
     }
 }
 
+tasks.named("classes").configure {
+    integrations.each {
+        if (it.included) {
+            dependsOn(sourceSets[it.name].classesTaskName)
+        }
+    }
+}
+
+integrations.each {
+    if (it.included) {
+        sourceSets.main.compileClasspath += sourceSets[it.name].output
+        sourceSets.main.runtimeClasspath += sourceSets[it.name].output
+    }
+}
+
 List<Project> dependencyProjects = [
         project(':faction-api'),
         project(':faction'),
