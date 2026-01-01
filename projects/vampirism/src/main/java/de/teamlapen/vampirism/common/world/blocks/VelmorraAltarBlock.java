@@ -63,7 +63,7 @@ public class VelmorraAltarBlock extends BaseEntityBlock {
         if (stack.is(ModItems.RITUAL_KNIFE_HEART)) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof VelmorraAltarBlockEntity be && be.offerBlood(player)) {
-                return InteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS_SERVER;
             }
         }
 

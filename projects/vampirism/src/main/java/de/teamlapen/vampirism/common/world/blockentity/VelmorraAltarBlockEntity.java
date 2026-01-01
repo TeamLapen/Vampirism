@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.common.world.blocks.VelmorraAltarBlock;
 import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraDimension;
 import de.teamlapen.vampirism.common.world.portal.VelmorraPortalShape;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -31,10 +32,11 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
         FactionPlayerHandler factionPlayerHandler = FactionPlayerHandler.get(player);
         IPlayableFaction<?> faction = factionPlayerHandler.getFaction().value();
         if (factionPlayerHandler.getLordLevel() != faction.getHighestLordLevel()) {
+            player.displayClientMessage(Component.translatable("text.vampirism.velmorra_altar.weak"), true);
             return false;
         }
 
-        activatePortal();
+        activatePortal(serverLevel);
         return true;
     }
 
@@ -42,8 +44,8 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
         level.setBlock(worldPosition, level.getBlockState(worldPosition).setValue(VelmorraAltarBlock.HAS_BLOOD, true), 3);
     }
 
-    private void activatePortal() {
-        VelmorraDimension.createDimension(((ServerLevel) level).getServer());
-        VelmorraPortalShape.findEmptyPortalShape(level, worldPosition).ifPresent(x -> x.activate((ServerLevel) level));
+    private void activatePortal(ServerLevel level) {
+        VelmorraDimension.createDimension(level.getServer());
+        VelmorraPortalShape.findEmptyPortalShape(level, worldPosition).ifPresent(x -> x.activate(level));
     }
 }

@@ -31,6 +31,7 @@ public class ModBiomeTagsProvider extends BiomeTagsProvider {
         tag(ModBiomeTags.HasStructure.HUNTER_OUTPOST_DESERT).addTags(Tags.Biomes.IS_DESERT);
         tag(ModBiomeTags.HasStructure.HUNTER_OUTPOST_VAMPIRE_FOREST).add(ModBiomes.VAMPIRE_FOREST);
         tag(ModBiomeTags.HasStructure.HUNTER_OUTPOST_BADLANDS).addTags(BiomeTags.IS_BADLANDS);
+        tag(ModBiomeTags.HasStructure.VELMORRA_PORTAL).addTag(BiomeTags.IS_OVERWORLD);
         tag(BiomeTags.IS_FOREST).add(ModBiomes.VAMPIRE_FOREST);
         tag(BiomeTags.IS_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);
         tag(Tags.Biomes.IS_DENSE_VEGETATION_OVERWORLD).add(ModBiomes.VAMPIRE_FOREST);

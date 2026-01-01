@@ -57,7 +57,7 @@ public class ModDimensions {
         HolderGetter<Timeline> lookup = context.lookup(Registries.TIMELINE);
         context.register(VELMORRA_DIMENSION_TYPE, new DimensionType(
                         true,
-                        true,
+                        false,
                         false,
                         1.0,
                         0,

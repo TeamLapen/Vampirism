@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.common.world.structures.vampirealtar.VampireAltarP
 import de.teamlapen.vampirism.common.world.structures.vampirealtar.VampireAltarStructure;
 import de.teamlapen.vampirism.common.world.structures.vampirehut.VampireHutPieces;
 import de.teamlapen.vampirism.common.world.structures.vampirehut.VampireHutStructure;
+import de.teamlapen.vampirism.common.world.structures.velmorraportal.VelmorraPortalPools;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -81,6 +82,7 @@ public class ModStructures {
 
     public static final ResourceKey<Structure> HUNTER_CAMP = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_camp"));
     public static final ResourceKey<Structure> VAMPIRE_HUT = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("vampire_hut"));
+    public static final ResourceKey<Structure> VELMORRA_PORTAL = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("velmorra_portal"));
     public static final ResourceKey<Structure> HUNTER_OUTPOST_PLAINS = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_outpost_plains"));
     public static final ResourceKey<Structure> HUNTER_OUTPOST_DESERT = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_outpost_desert"));
     public static final ResourceKey<Structure> HUNTER_OUTPOST_VAMPIRE_FOREST = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("hunter_outpost_vampire_forest"));
@@ -95,6 +97,7 @@ public class ModStructures {
     public static final ResourceKey<StructureProcessorList> CRYPT_DEGRADATION = createProcessorList("crypt_degradation");
 
     public static final ResourceKey<StructureSet> HUNTER_CAMP_SET = createStructureSetKey("hunter_camp");
+    public static final ResourceKey<StructureSet> VELMORRA_PORTAL_SET = createStructureSetKey("velmorra_portal");
     public static final ResourceKey<StructureSet> VAMPIRE_HUT_SET = createStructureSetKey("vampire_hut");
     public static final ResourceKey<StructureSet> VAMPIRE_ALTAR_SET = createStructureSetKey("vampire_altar");
     public static final ResourceKey<StructureSet> HUNTER_OUTPOST = createStructureSetKey("hunter_outpost");
@@ -128,6 +131,7 @@ public class ModStructures {
         context.register(HUNTER_TRAINER, new StructureTemplatePool(empty, Lists.newArrayList(Pair.of(singleJigsawPieceFunction(processorList, "village/entities/hunter_trainer"), 1)), StructureTemplatePool.Projection.RIGID));
         CryptStructurePieces.bootstrap(context);
         HunterOutpostPools.bootstrap(context);
+        VelmorraPortalPools.bootstrap(context);
     }
 
     static void createStructureProcessorLists(BootstrapContext<StructureProcessorList> context) {
@@ -147,6 +151,7 @@ public class ModStructures {
     static void createStructureSets(BootstrapContext<StructureSet> context) {
         HolderGetter<Structure> structureLookup = context.lookup(Registries.STRUCTURE);
         HolderGetter<StructureSet> structureSetLookup = context.lookup(Registries.STRUCTURE_SET);
+        HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         var villageSet = structureSetLookup.getOrThrow(BuiltinStructureSets.VILLAGES);
         // hunter camp holder is not available in data generation see ModFeatures#createStructures
 //         context.register(HUNTER_CAMP_SET, new StructureSet(structureLookup.getOrThrow(HUNTER_CAMP), new RandomSpreadStructurePlacement(Vec3i.ZERO, StructurePlacement.FrequencyReductionMethod.DEFAULT, 1.0F, 1724616580, Optional.of(new StructurePlacement.ExclusionZone(villageSet,2)),9, 4, RandomSpreadType.LINEAR)));
@@ -155,6 +160,7 @@ public class ModStructures {
         context.register(MOTHER_SET, new StructureSet(structureLookup.getOrThrow(MOTHER), new RandomSpreadStructurePlacement(48, 6, RandomSpreadType.TRIANGULAR, 1897236459)));
         context.register(CRYPT_SET, new StructureSet(structureLookup.getOrThrow(CRYPT), new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 643510199)));
         context.register(HUNTER_OUTPOST, new StructureSet(List.of(StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_PLAINS)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_DESERT)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_VAMPIRE_FOREST)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_BADLANDS))), new RandomSpreadStructurePlacement(45, 25, RandomSpreadType.LINEAR, 36413509)));
+        context.register(VELMORRA_PORTAL_SET, new StructureSet(structureLookup.getOrThrow(VELMORRA_PORTAL), new RandomSpreadStructurePlacement(125, 100, RandomSpreadType.TRIANGULAR, 362367473)));
     }
 
     @SuppressWarnings("UnreachableCode")
@@ -173,5 +179,6 @@ public class ModStructures {
         context.register(VAMPIRE_ALTAR, new VampireAltarStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.VAMPIRE_ALTAR)).terrainAdapation(TerrainAdjustment.BEARD_BOX).build()));
         context.register(MOTHER, new MotherStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.MOTHER)).terrainAdapation(TerrainAdjustment.NONE).build()));
         context.register(CRYPT, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.CRYPT)).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), lookup1.getOrThrow(CryptStructurePieces.START), Optional.empty(), 9, ConstantHeight.of(VerticalAnchor.absolute(0)), false, Optional.of(Heightmap.Types.WORLD_SURFACE_WG), new JigsawStructure.MaxDistance(80, 80), List.of(), DimensionPadding.ZERO, LiquidSettings.IGNORE_WATERLOGGING));
+        context.register(VELMORRA_PORTAL, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.VELMORRA_PORTAL)).terrainAdapation(TerrainAdjustment.BURY).build(), lookup1.getOrThrow(VelmorraPortalPools.START),1, ConstantHeight.of(VerticalAnchor.absolute(0)), false));
     }
 }

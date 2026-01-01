@@ -21,6 +21,7 @@ public class ModBiomeTags {
         public static final TagKey<Biome> HUNTER_OUTPOST_VAMPIRE_FOREST = tag("has_structure/outpost/vampire_forest");
         public static final TagKey<Biome> HUNTER_OUTPOST_BADLANDS = tag("has_structure/outpost/badlands");
         public static final TagKey<Biome> VAMPIRE_ALTAR = tag("has_structure/vampire_altar");
+        public static final TagKey<Biome> VELMORRA_PORTAL = tag("has_structure/velmorra_portal");
         public static final TagKey<Biome> MOTHER = tag("has_structure/mother");
         public static final TagKey<Biome> CRYPT = tag("has_structure/crypt");
     }

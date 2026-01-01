@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 362367473,
+    "separation": 100,
+    "spacing": 125,
+    "spread_type": "triangular"
+  },
+  "structures": [
+    {
+      "structure": "vampirism:velmorra_portal",
+      "weight": 1
+    }
+  ]
+}

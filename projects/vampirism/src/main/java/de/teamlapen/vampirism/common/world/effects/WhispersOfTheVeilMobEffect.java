@@ -23,7 +23,7 @@ public class WhispersOfTheVeilMobEffect extends SimpleMobEffect {
     @Override
     public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
         if (!(entity instanceof ServerPlayer player)) return false;
-        BlockPos target = level.findNearestMapStructure(ModStructureTags.HUNTER_OUTPOST, entity.blockPosition(), 100, false);
+        BlockPos target = level.findNearestMapStructure(ModStructureTags.VELMORRA_PORTAL, entity.blockPosition(), 100, false);
         if (target == null) return true;
 
         RandomSource random = entity.getRandom();

@@ -59,7 +59,6 @@
   "text.vampirism.need_empty_bottle": "My lord, I need an empty bottle to collect blood",
   "text.vampirism.thanks": "Thanks",
   "text.vampirism.coming_back": "I am coming back, my lord",
-
   "text.vampirism.current_task": "Current task",
   "text.vampirism.lord.become": "You have been raised to the Vampire Lord",
   "text.vampirism.lord.other_player_become": "has defeated the current Vampire Lord and replaced them",
@@ -121,10 +120,9 @@
   "text.vampirism.argument.entity.options.faction.desc": "Faction selector",
   "text.vampirism.argument.entity.options.level.desc": "Level selector",
   "text.vampirism.when_equipped": "When equipped:",
+  "text.vampirism.velmorra_altar.weak": "The portal seems unaffected. Your blood is not strong enough to interest the portal.",
   "__comment": "block interaction texts",
   "text.vampirism.med_chair_other_faction": "You cannot become a Hunter since you already are a %s",
-  "__comment": "faction item texts",
-
   "__comment": "faction texts",
   "faction.vampirism.vampire": "Vampire",
   "faction.vampirism.vampire.plural": "Vampires",
@@ -135,10 +133,8 @@
   "faction.vampirism.neutral.plural": "Neutral",
   "text.vampirism.title": "Title",
   "__comment": "village totem texts",
-
   "text.vampirism.coffin.closed": "Coffin is closed",
   "__comment": "action response texts",
-
   "text.vampirism.action.bat.in_sun": "You cannot transform into a bat under the sun",
   "text.vampirism.action.bat.has_umbrella": "You cannot transform into a bat with an umbrella equipped",
   "text.vampirism.action.bat.effected_by_garlic": "You cannot transform into a bat under the effect of garlic",
