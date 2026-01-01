@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.integration.jei.categories;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.gui.screens.AlchemicalCauldronScreen;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFluids;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import static de.teamlapen.vampirism.common.integration.jei.categories.AlchemicalCauldronRecipeCategory.fixSprite;
 
 public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecipe> {
-    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/blood_grinder_jei.png");
+    private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/blood_grinder_jei.png");
     public static final int width = 78;
     public static final int height = 18;
 

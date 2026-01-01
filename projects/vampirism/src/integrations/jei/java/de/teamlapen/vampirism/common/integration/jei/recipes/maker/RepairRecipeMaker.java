@@ -167,7 +167,7 @@ public class RepairRecipeMaker {
                             damagedThreeQuartersSingletonList,
                             damagedThreeQuartersSingletonList,
                             List.of(damagedHalf),
-                            ResourceLocation.fromNamespaceAndPath(itemModId, "anvil.self_repair." + ingredientIdPath)
+                            Identifier.fromNamespaceAndPath(itemModId, "anvil.self_repair." + ingredientIdPath)
                     );
                     consumer.accept(repairWithSame);
 
@@ -178,7 +178,7 @@ public class RepairRecipeMaker {
                                 List.of(damagedFully),
                                 repairMaterials,
                                 damagedThreeQuartersSingletonList,
-                                ResourceLocation.fromNamespaceAndPath(itemModId, "anvil.materials_repair." + ingredientIdPath)
+                                Identifier.fromNamespaceAndPath(itemModId, "anvil.materials_repair." + ingredientIdPath)
                         );
                         consumer.accept(repairWithMaterial);
                     }
@@ -190,7 +190,7 @@ public class RepairRecipeMaker {
         boolean valid = true;
         for (int i = 0; i < charArray.length; i++) {
             char c = charArray[i];
-            if (!ResourceLocation.validPathChar(c)) {
+            if (!Identifier.validPathChar(c)) {
                 charArray[i] = '.';
                 valid = false;
             }
@@ -210,7 +210,7 @@ public class RepairRecipeMaker {
         for (Holder<Enchantment> e : enchantments.keySet()) {
             Optional<ResourceKey<Enchantment>> enchantmentResourceKey = e.unwrapKey();
             if (enchantmentResourceKey.isPresent()) {
-                String s = enchantmentResourceKey.orElseThrow().location() + ".lvl" + enchantments.getLevel(e);
+                String s = enchantmentResourceKey.orElseThrow().identifier() + ".lvl" + enchantments.getLevel(e);
                 strings.add(s);
             }
         }

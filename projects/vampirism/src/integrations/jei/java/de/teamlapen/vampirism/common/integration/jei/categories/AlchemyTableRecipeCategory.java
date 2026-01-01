@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.integration.jei.categories;
 
 import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
 import de.teamlapen.vampirism.common.util.UtilLib;
@@ -32,7 +32,7 @@ import java.util.List;
 
 public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<AlchemyTableRecipe>> {
 
-    private static final Identifier location = VResourceLocation.mod("textures/gui/container/alchemy_table.png");
+    private static final Identifier location = VIdentifier.mod("textures/gui/container/alchemy_table.png");
 
     private final @NotNull Component localizedName;
     private final @NotNull IDrawable icon;
