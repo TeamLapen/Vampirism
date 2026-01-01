@@ -28,6 +28,8 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> create(FlyingBloodEntityParticleOptions.CODEC,FlyingBloodEntityParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<GenericParticleOptions>> GENERIC = PARTICLE_TYPES.register("generic", () -> create(GenericParticleOptions.CODEC, GenericParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SANGUINARE = PARTICLE_TYPES.register("sanguinare", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<WhispersOfTheVeilParticleOptions>> WHISPERS_OF_THE_VEIL = PARTICLE_TYPES.register("whispers_of_the_veil", () -> create(WhispersOfTheVeilParticleOptions.CODEC, WhispersOfTheVeilParticleOptions.STREAM_CODEC));
+
 
     static void register(IEventBus bus) {
         PARTICLE_TYPES.register(bus);
