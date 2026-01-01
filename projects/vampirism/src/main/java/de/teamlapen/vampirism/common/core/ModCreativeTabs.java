@@ -53,10 +53,8 @@ public class ModCreativeTabs {
         @Override
         protected void addAll() {
             addItems();
-
             addBlocks();
         }
-
 
         private void addItems() {
             add(GARLIC_BREAD);
@@ -75,7 +73,6 @@ public class ModCreativeTabs {
             addIfPresent(VResourceLocation.loc(REFERENCE.GUIDEAPI_MODID, REFERENCE.GUIDEBOOK_ID));
             add(VAMPIRE_FANG);
 
-            add(FactionItems.OBLIVION_POTION);
             add(GARLIC_FINDER);
 
             add(DARK_SPRUCE_BOAT);
