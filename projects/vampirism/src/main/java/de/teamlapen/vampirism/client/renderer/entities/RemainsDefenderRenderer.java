@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
 
 public class RemainsDefenderRenderer extends MobRenderer<RemainsDefenderEntity, RemainsDefenderRenderer.RemainsDefenderRenderState, RemainsDefenderModel> {
     private final Identifier TEX1 = VIdentifier.mod("textures/entity/remains_defender/remains_defender1.png");
@@ -25,7 +24,7 @@ public class RemainsDefenderRenderer extends MobRenderer<RemainsDefenderEntity, 
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(@NotNull RemainsDefenderRenderState pEntity) {
+    public Identifier getTextureLocation(RemainsDefenderRenderState pEntity) {
         int t = ((int) pEntity.ageInTicks) % 20;
         if (t > 15) {
             return TEX4;
@@ -58,7 +57,7 @@ public class RemainsDefenderRenderer extends MobRenderer<RemainsDefenderEntity, 
     }
 
     @Override
-    public @NotNull RemainsDefenderRenderState createRenderState() {
+    public RemainsDefenderRenderState createRenderState() {
         return new RemainsDefenderRenderState();
     }
 

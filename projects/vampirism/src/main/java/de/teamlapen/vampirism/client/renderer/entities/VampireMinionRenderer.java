@@ -10,15 +10,14 @@ import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.world.entity.player.PlayerSkin;
-import org.jetbrains.annotations.NotNull;
 
 public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity, VampireMinionRenderer.VampireMinionRenderState, PlayerBodyOverlayLayer.VisibilityPlayerModel<VampireMinionRenderer.VampireMinionRenderState>> {
 
-    private final PlayerSkin @NotNull [] textures;
-    private final PlayerSkin @NotNull [] minionSpecificTextures;
+    private final PlayerSkin[] textures;
+    private final PlayerSkin[] minionSpecificTextures;
 
 
-    public VampireMinionRenderer(EntityRendererProvider.@NotNull Context context) {
+    public VampireMinionRenderer(EntityRendererProvider.Context context) {
         super(context, new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false), new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
         this.textures = gatherTextures("textures/entity/vampire", true);
         this.minionSpecificTextures = gatherTextures("textures/entity/minion/vampire", false);
@@ -39,12 +38,12 @@ public class VampireMinionRenderer extends DualBipedRenderer<VampireMinionEntity
     }
 
     @Override
-    public @NotNull VampireMinionRenderState createRenderState() {
+    public VampireMinionRenderState createRenderState() {
         return new VampireMinionRenderState();
     }
 
     @Override
-    protected PlayerSkin determineTextureAndModel(@NotNull VampireMinionRenderState state) {
+    protected PlayerSkin determineTextureAndModel(VampireMinionRenderState state) {
         return state.skin;
     }
 

@@ -19,7 +19,6 @@ import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.PlayerModelType;
 import net.minecraft.world.entity.player.PlayerSkin;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -28,10 +27,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEntity, AdvancedHunterRenderer.AdvancedHunterRenderState, ClothedModel<AdvancedHunterRenderer.AdvancedHunterRenderState>> {
     private static final PlayerSkin FALLBACK = new PlayerSkin(new ClientAsset.ResourceTexture(VIdentifier.mod("fallback"), VIdentifier.mod("textures/entity/hunter_base1.png")), null, null, PlayerModelType.WIDE, false);
-    private final @NotNull PlayerSkin[] textures;
+    private final PlayerSkin[] textures;
 
 
-    public AdvancedHunterRenderer(EntityRendererProvider.@NotNull Context context) {
+    public AdvancedHunterRenderer(EntityRendererProvider.Context context) {
         super(context, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false), new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
         this.addLayer(new ArmorLayer<HumanoidModel<AdvancedHunterRenderState>>(this,
                 ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), x -> new ClothedModel<>(x, true)),
@@ -46,7 +45,7 @@ public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEnti
     }
 
     @Override
-    protected PlayerSkin determineTextureAndModel(@NotNull AdvancedHunterRenderState entity) {
+    protected PlayerSkin determineTextureAndModel(AdvancedHunterRenderState entity) {
         return entity.skin;
     }
 
@@ -58,12 +57,12 @@ public class AdvancedHunterRenderer extends DualBipedRenderer<AdvancedHunterEnti
     }
 
     @Override
-    public @NotNull AdvancedHunterRenderState createRenderState() {
+    public AdvancedHunterRenderState createRenderState() {
         return new AdvancedHunterRenderState();
     }
 
     @Override
-    public void extractRenderState(@NotNull AdvancedHunterEntity entity, @NotNull AdvancedHunterRenderState state, float p_363123_) {
+    public void extractRenderState(AdvancedHunterEntity entity, AdvancedHunterRenderState state, float p_363123_) {
         super.extractRenderState(entity, state, p_363123_);
         state.skin = this.textures.length == 0 ? FALLBACK : textures[entity.getBodyTexture() % textures.length];
         state.hasCloak = entity.hasCloak();

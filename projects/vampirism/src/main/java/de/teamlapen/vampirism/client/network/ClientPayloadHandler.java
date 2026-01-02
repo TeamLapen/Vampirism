@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.network;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.gui.screens.VampireBookScreen;
 import de.teamlapen.vampirism.common.network.packets.client.*;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
@@ -65,4 +66,7 @@ public class ClientPayloadHandler {
         context.enqueueWork(() -> LevelFog.get(context.player().level()).remove(msg.position(), msg.tmp()));
     }
 
+    public static void handleDraculaEventPacket(ClientboundDraculaEventPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> VampirismModClient.services().draculaEventOverlay().handle(msg));
+    }
 }

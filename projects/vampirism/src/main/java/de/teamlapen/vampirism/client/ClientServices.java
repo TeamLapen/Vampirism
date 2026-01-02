@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client;
 import de.teamlapen.faction.Services;
 import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
+import de.teamlapen.vampirism.client.gui.overlay.DraculaEventOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.models.armor.ArmorModels;
@@ -29,6 +30,7 @@ public class ClientServices extends Services {
     private final PlayerSkinHelper playerSkinHelper = new PlayerSkinHelper();
     private final ClientTooltips clientTooltips = new ClientTooltips();
     private final FullScreenOverlay fullScreenOverlay = new FullScreenOverlay();
+    private final DraculaEventOverlay draculaEventOverlay = new DraculaEventOverlay();
 
     //</editor-fold>
 
@@ -76,6 +78,10 @@ public class ClientServices extends Services {
 
     public PlayerSkinHelper playerSkinHelper() {
         return this.playerSkinHelper;
+    }
+
+    public DraculaEventOverlay draculaEventOverlay() {
+        return this.draculaEventOverlay;
     }
 
     //</editor-fold>

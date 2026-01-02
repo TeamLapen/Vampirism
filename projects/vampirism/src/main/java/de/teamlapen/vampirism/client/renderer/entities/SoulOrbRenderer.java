@@ -5,17 +5,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import org.jetbrains.annotations.NotNull;
 
 
 public class SoulOrbRenderer extends ThrownItemRenderer<SoulOrbEntity> {
 
-    public SoulOrbRenderer(EntityRendererProvider.@NotNull Context context) {
+    public SoulOrbRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    public boolean shouldRender(@NotNull SoulOrbEntity livingEntity, @NotNull Frustum camera, double camX, double camY, double camZ) { //shouldRender
+    public boolean shouldRender(SoulOrbEntity livingEntity, Frustum camera, double camX, double camY, double camZ) { //shouldRender
         boolean flag = true;
         if (Minecraft.getInstance().player != null) {
             flag = !livingEntity.isInvisibleTo(Minecraft.getInstance().player);

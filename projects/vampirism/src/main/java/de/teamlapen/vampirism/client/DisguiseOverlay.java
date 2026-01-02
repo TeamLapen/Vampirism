@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DisguiseOverlay extends TextureOverlay {
 
-    public static final Identifier DISGUISE_TEXTURE = FIdentifier.mod("textures/misc/disguise.png");
+    public static final Identifier DISGUISE_TEXTURE = FIdentifier.mod("textures/gui/overlay/disguise.png");
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {

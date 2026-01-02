@@ -4,13 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.PlayerBodyOverlayLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.MinionRenderState;
-import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -22,18 +20,17 @@ import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * There are differently looking level 0 hunters.
  * Hunter as of level 1 look all the same, but have different weapons
  */
 public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, HunterMinionRenderer.HunterMinionRenderState, PlayerBodyOverlayLayer.VisibilityPlayerModel<HunterMinionRenderer.HunterMinionRenderState>> {
-    private final PlayerSkin @NotNull [] textures;
-    private final PlayerSkin @NotNull [] minionSpecificTextures;
+    private final PlayerSkin[] textures;
+    private final PlayerSkin[] minionSpecificTextures;
 
 
-    public HunterMinionRenderer(EntityRendererProvider.@NotNull Context context) {
+    public HunterMinionRenderer(EntityRendererProvider.Context context) {
         super(context, new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false), new PlayerBodyOverlayLayer.VisibilityPlayerModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
         this.textures = gatherTextures("textures/entity/hunter", true);
         this.minionSpecificTextures = gatherTextures("textures/entity/minion/hunter", false);
@@ -53,7 +50,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected PlayerSkin determineTextureAndModel(@NotNull HunterMinionRenderState entity) {
+    protected PlayerSkin determineTextureAndModel(HunterMinionRenderState entity) {
         return entity.skin;
     }
 
@@ -66,12 +63,12 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    public @NotNull HunterMinionRenderState createRenderState() {
+    public HunterMinionRenderState createRenderState() {
         return new HunterMinionRenderState();
     }
 
     @Override
-    public void extractRenderState(@NotNull HunterMinionEntity entity, @NotNull HunterMinionRenderState state, float p_363123_) {
+    public void extractRenderState(HunterMinionEntity entity, HunterMinionRenderState state, float p_363123_) {
         super.extractRenderState(entity, state, p_363123_);
         if (entity.getMinionData().filter(HunterMinionEntity.HunterMinionData::isUsingLordSkin).isPresent()) {
             state.lordSkin = entity.getLordID().map(x -> Minecraft.getInstance().getConnection().getPlayerInfo(x)).map(PlayerInfo::getSkin).orElse(null);
@@ -80,7 +77,7 @@ public class HunterMinionRenderer extends DualBipedRenderer<HunterMinionEntity, 
     }
 
     @Override
-    protected HumanoidModel.@NotNull ArmPose getArmPose(HunterMinionEntity entity, @NotNull HumanoidArm arm) {
+    protected HumanoidModel.ArmPose getArmPose(HunterMinionEntity entity, HumanoidArm arm) {
         var hand = arm == HumanoidArm.RIGHT ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         ItemStack itemstack = entity.getItemInHand(hand);
         if (itemstack.isEmpty()) {

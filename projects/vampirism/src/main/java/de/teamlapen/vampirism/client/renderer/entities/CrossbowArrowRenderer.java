@@ -6,23 +6,22 @@ import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.ArrowRenderState;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public class CrossbowArrowRenderer extends ArrowRenderer<CrossbowArrowEntity, ArrowRenderState> {
 
     private static final Identifier RES_ARROW = VIdentifier.mc("textures/entity/projectiles/arrow.png");
 
-    public CrossbowArrowRenderer(EntityRendererProvider.@NotNull Context context) {
+    public CrossbowArrowRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    protected @NotNull Identifier getTextureLocation(@NotNull ArrowRenderState state) {
+    protected Identifier getTextureLocation(ArrowRenderState state) {
         return RES_ARROW;
     }
 
     @Override
-    public @NotNull ArrowRenderState createRenderState() {
+    public ArrowRenderState createRenderState() {
         return new ArrowRenderState();
     }
 }

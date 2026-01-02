@@ -20,7 +20,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.PlayerModelType;
 import net.minecraft.world.entity.player.PlayerSkin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,22 +28,22 @@ import java.util.stream.Stream;
 
 
 public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRenderState, M extends HumanoidModel<S>> extends HumanoidMobRenderer<T, S, M> {
-    private final @NotNull M modelA;
+    private final M modelA;
     private final M modelB;
 
-    public DualBipedRenderer(EntityRendererProvider.@NotNull Context context, @NotNull M modelBipedInA, M modelBipedInB, float shadowSize) {
+    public DualBipedRenderer(EntityRendererProvider.Context context, M modelBipedInA, M modelBipedInB, float shadowSize) {
         super(context, modelBipedInA, shadowSize);
         this.modelA = modelBipedInA;
         this.modelB = modelBipedInB;
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(S renderState) {
+    public Identifier getTextureLocation(S renderState) {
         return renderState.skin.body().texturePath();
     }
 
     @Override
-    public void submit(S renderState, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodeCollector, @NotNull CameraRenderState cameraRenderState) {
+    public void submit(S renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
         this.model = switch (renderState.skin.model()) {
             case SLIM -> modelB;
             case WIDE -> modelA;
@@ -60,7 +59,7 @@ public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRende
     /**
      * @return Array of texture and slim status
      */
-    protected @NotNull PlayerSkin[] separateSlimTextures(@NotNull Stream<Identifier> set) {
+    protected PlayerSkin[] separateSlimTextures(Stream<Identifier> set) {
         return set.map(r -> {
             PlayerModelType b = r.getPath().endsWith("slim.png") ? PlayerModelType.SLIM : PlayerModelType.WIDE;
             return new PlayerSkin(new ClientAsset.ResourceTexture(r, r), null, null, b, false);
@@ -74,7 +73,7 @@ public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRende
      * @param required whether to throw an illegal state exception if none found
      * @return Array of texture and slim status
      */
-    protected @NotNull PlayerSkin[] gatherTextures(@NotNull String dirPath, boolean required) {
+    protected PlayerSkin[] gatherTextures(String dirPath, boolean required) {
         Collection<Identifier> hunterTextures = new ArrayList<>(Minecraft.getInstance().getResourceManager().listResources(dirPath, s -> s.getPath().endsWith(".png")).keySet());
         PlayerSkin[] textures = separateSlimTextures(hunterTextures.stream().filter(r -> REFERENCE.MODID.equals(r.getNamespace())));
         if (textures.length == 0 && required) {
@@ -99,7 +98,7 @@ public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRende
         }
 
         @Override
-        public @NotNull A getArmorModel(@NotNull S renderState, @NotNull EquipmentSlot slot) {
+        public A getArmorModel(S renderState, EquipmentSlot slot) {
             PlayerSkin b = determineTextureAndModel(renderState);
             return (switch (b.model()) {
                 case SLIM -> slimModelSet;

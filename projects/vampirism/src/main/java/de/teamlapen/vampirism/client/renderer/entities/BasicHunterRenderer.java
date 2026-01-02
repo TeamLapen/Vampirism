@@ -7,7 +7,6 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.player.PlayerSkin;
-import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -16,9 +15,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, BasicHunterEntity.BasicHunterRenderState, ClothedModel<BasicHunterEntity.BasicHunterRenderState>> {
 
-    private final @NotNull PlayerSkin[] textures;
+    private final PlayerSkin[] textures;
 
-    public BasicHunterRenderer(EntityRendererProvider.@NotNull Context context) {
+    public BasicHunterRenderer(EntityRendererProvider.Context context) {
         super(context, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false), new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
         this.addLayer(new ArmorLayer<HumanoidModel<BasicHunterEntity.BasicHunterRenderState>>(this,
                 ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), x -> new ClothedModel<>(x, true)),
@@ -29,17 +28,17 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
 
     @Override
-    protected PlayerSkin determineTextureAndModel(@NotNull BasicHunterEntity.BasicHunterRenderState entity) {
+    protected PlayerSkin determineTextureAndModel(BasicHunterEntity.BasicHunterRenderState entity) {
         return entity.skin;
     }
 
     @Override
-    public @NotNull BasicHunterEntity.BasicHunterRenderState createRenderState() {
+    public BasicHunterEntity.BasicHunterRenderState createRenderState() {
         return new BasicHunterEntity.BasicHunterRenderState();
     }
 
     @Override
-    public void extractRenderState(@NotNull BasicHunterEntity entity, BasicHunterEntity.@NotNull BasicHunterRenderState state, float p_363123_) {
+    public void extractRenderState(BasicHunterEntity entity, BasicHunterEntity.BasicHunterRenderState state, float p_363123_) {
         super.extractRenderState(entity, state, p_363123_);
         state.skin = textures[entity.getEntityTextureType() % textures.length];
         state.entityLevel = entity.getEntityLevel();

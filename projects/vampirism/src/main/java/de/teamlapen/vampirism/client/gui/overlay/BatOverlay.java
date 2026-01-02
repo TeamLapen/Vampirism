@@ -13,7 +13,7 @@ import net.minecraft.resources.Identifier;
 
 public class BatOverlay extends TextureOverlay {
 
-    public static final Identifier BAT_TEXTURE = VIdentifier.mod("textures/misc/bat.png");
+    public static final Identifier BAT_TEXTURE = VIdentifier.mod("textures/gui/overlay/bat.png");
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {

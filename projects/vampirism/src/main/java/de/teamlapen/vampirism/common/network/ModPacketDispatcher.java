@@ -5,8 +5,6 @@ import de.teamlapen.vampirism.client.network.ClientPayloadHandler;
 import de.teamlapen.vampirism.common.network.packets.client.*;
 import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -30,6 +28,7 @@ public class ModPacketDispatcher {
         registrar.playToClient(ClientboundUpdateFogEmitterPacket.TYPE, ClientboundUpdateFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateFogEmitterPacket(msg, context));
         registrar.playToClient(ClientboundAddFogEmitterPacket.TYPE, ClientboundAddFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleAddFogEmitterPacket(msg, context));
         registrar.playToClient(ClientboundRemoveFogEmitterPacket.TYPE, ClientboundRemoveFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleRemoveFogEmitterPacket(msg, context));
+        registrar.playToClient(ClientboundDraculaEventPacket.TYPE, ClientboundDraculaEventPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleDraculaEventPacket(msg, context));
 
         registrar.playToServer(ServerboundAppearancePacket.TYPE, ServerboundAppearancePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleAppearancePacket(msg, context));
         registrar.playToServer(ServerboundStartFeedingPacket.TYPE, ServerboundStartFeedingPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleStartFeedingPacket(msg, context));

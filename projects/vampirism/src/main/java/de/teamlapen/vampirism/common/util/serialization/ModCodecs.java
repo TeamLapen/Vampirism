@@ -7,14 +7,15 @@ import com.mojang.serialization.codecs.PrimitiveCodec;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.util.Unit;
 import net.minecraft.util.Util;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.AABB;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
@@ -57,6 +58,10 @@ public class ModCodecs {
         } else {
             return DataResult.success(aint);
         }
+    }
+
+    public static <T> Codec<Set<T>> set(Codec<T> codec) {
+        return Codec.unboundedMap(codec, Unit.CODEC).xmap(Map::keySet, x -> x.stream().collect(Collectors.toUnmodifiableMap(Function.identity(), o -> Unit.INSTANCE)));
     }
 
 

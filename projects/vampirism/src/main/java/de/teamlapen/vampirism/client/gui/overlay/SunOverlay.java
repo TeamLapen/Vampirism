@@ -13,7 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 
 public class SunOverlay extends TextureOverlay {
 
-    public static final Identifier SUN_TEXTURE = VIdentifier.mod("textures/misc/sun.png");
+    public static final Identifier SUN_TEXTURE = VIdentifier.mod("textures/gui/overlay/sun.png");
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {

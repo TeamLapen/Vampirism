@@ -11,7 +11,7 @@ import net.minecraft.resources.Identifier;
 
 public class RageOverlay extends TextureOverlay {
 
-    public static final Identifier RAGE_TEXTURE = VIdentifier.mod("textures/misc/rage.png");
+    public static final Identifier RAGE_TEXTURE = VIdentifier.mod("textures/gui/overlay/rage.png");
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
