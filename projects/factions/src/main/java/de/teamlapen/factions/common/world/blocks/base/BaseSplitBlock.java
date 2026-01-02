@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.common.world.blocks.base;
+package de.teamlapen.factions.common.world.blocks.base;
 
 
 import de.teamlapen.factions.common.util.ShapeUtil;

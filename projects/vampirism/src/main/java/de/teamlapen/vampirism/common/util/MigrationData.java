@@ -67,7 +67,7 @@ public class MigrationData {
         mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
         mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
         mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
-        mapping.remap("vampirism:item_med_chair", "vampirism:med_chair");
+        mapping.remap("vampirism:item_med_chair", "factions:med_chair");
         mapping.remap("vampirism:bloody_spruce_log", "vampirism:cursed_spruce_log");
         mapping.remap("vampirism:bloody_spruce_leaves", "vampirism:dark_spruce_leaves");
         mapping.remap("vampirism:coffin", "vampirism:coffin_red");
@@ -96,12 +96,12 @@ public class MigrationData {
         mapping.remap("vampirism:vampire_cloak_white_black", "vampirism:vampire_cloak_white");
         mapping.remap("vampirism:hunter_hat_head_0", "vampirism:hunter_hat_tall");
         mapping.remap("vampirism:hunter_hat_head_1", "vampirism:hunter_hat_broad");
-        mapping.remap("vampirism:injection_empty", "vampirism:syringe_empty");
+        mapping.remap("vampirism:injection_empty", "factions:syringe_empty");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {
         mapping.remap("vampirism:blood_potion_table", "vampirism:potion_table");
-        mapping.remap("vampirism:garlic_beacon_normal", "vampirism:totem_top_vampirism_hunter_crafted");
+        mapping.remap("vampirism:garlic_beacon_normal", "vampirism:garlic_diffuser_normal");
         mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
         mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
         mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
@@ -128,6 +128,10 @@ public class MigrationData {
         mapping.remap("vampirism:candelabra_wall", "vampirism:wall_candelabra_normal");
         mapping.remap("vampirism:cursed_spruce_log_cured", "vampirism:cursed_spruce_log");
         mapping.remap("vampirism:cursed_spruce_wood_cured", "vampirism:cursed_spruce_wood");
+        mapping.remap("vampirism:totem_base", "factions:totem_base");
+        mapping.remap("vampirism:totem_top", "factions:totem_top");
+        mapping.remap("vampirism:totem_top_crafted", "factions:totem_top_crafted");
+        mapping.remap("vampirism:med_chair", "factions:med_chair");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {

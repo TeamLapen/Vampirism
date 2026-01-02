@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.factions.api.world.blocks.IBlockWithDescription;
 import de.teamlapen.vampirism.common.world.blockentity.SunscreenBeaconBlockEntity;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseContainerBlock;
+import de.teamlapen.factions.common.world.blocks.base.BaseContainerBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

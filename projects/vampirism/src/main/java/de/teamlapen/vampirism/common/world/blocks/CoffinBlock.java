@@ -7,7 +7,7 @@ import de.teamlapen.factions.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.world.blockentity.CoffinBlockEntity;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseContainerBlock;
+import de.teamlapen.factions.common.world.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.misc.mixin.accessor.EntityAccessor;
 import net.minecraft.core.BlockPos;

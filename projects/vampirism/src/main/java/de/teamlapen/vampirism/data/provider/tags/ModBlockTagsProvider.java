@@ -54,7 +54,6 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 .add(ModBlocks.FIRE_PLACE.get())
                 .add(ModBlocks.GRAVE_CAGE.get())
                 .add(ModBlocks.ALCHEMICAL_CAULDRON.get())
-                .add(ModBlocks.MED_CHAIR.get())
                 .add(ModBlocks.GARLIC_DIFFUSER_WEAK.get())
                 .add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())
                 .add(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get())
@@ -100,8 +99,6 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(ModBlocks.ALTAR_TIP.get())
                 .add(ModBlocks.GRAVE_CAGE.get())
-                .add(ModBlocks.MED_CHAIR.get())
-                .add(ModBlocks.MED_CHAIR.get())
         ;
         tag(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.BLOOD_PEDESTAL.get())

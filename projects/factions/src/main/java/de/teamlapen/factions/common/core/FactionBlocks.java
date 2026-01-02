@@ -2,6 +2,7 @@ package de.teamlapen.factions.common.core;
 
 import de.teamlapen.factions.api.util.FResourceLocation;
 import de.teamlapen.factions.api.util.REFERENCE;
+import de.teamlapen.factions.common.world.blocks.MedChairBlock;
 import de.teamlapen.factions.common.world.blocks.TotemBaseBlock;
 import de.teamlapen.factions.common.world.blocks.TotemTopBlock;
 import net.minecraft.core.registries.Registries;
@@ -20,6 +21,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class FactionBlocks {
 
@@ -28,6 +30,7 @@ public class FactionBlocks {
     public static final DeferredBlock<TotemBaseBlock> TOTEM_BASE = registerWithItem("totem_base", TotemBaseBlock::new, () -> basicProperties().mapColor(MapColor.STONE).strength(40, 2000).sound(SoundType.STONE).noOcclusion().pushReaction(PushReaction.BLOCK));
     public static final DeferredBlock<TotemTopBlock> TOTEM_TOP = registerWithItem("totem_top", props -> new TotemTopBlock(props, false, null), () -> TotemTopBlock.properties(basicProperties()));
     public static final DeferredBlock<TotemTopBlock> TOTEM_TOP_CRAFTED = registerWithItem("totem_top_crafted", props -> new TotemTopBlock(props, true, null), () -> copyProperties(TOTEM_TOP));
+    public static final DeferredBlock<MedChairBlock> MED_CHAIR = registerWithItem("med_chair", MedChairBlock::new, x -> x.factions$withShiftDescription());
 
     public static void register(IEventBus bus) {
         BLOCKS.register(bus);
@@ -44,6 +47,12 @@ public class FactionBlocks {
 
     private static <T extends Block> DeferredBlock<T> registerWithItem(String name, Function<BlockBehaviour.Properties,T> supplier, Supplier<BlockBehaviour.Properties> blockProperties) {
         return registerWithItem(name, supplier, blockProperties, props -> props);
+    }
+
+    private static <T extends Block> DeferredBlock<T> registerWithItem(String name, Function<BlockBehaviour.Properties, T> supplier, Function<Item.Properties, Item.Properties> properties) {
+        DeferredBlock<T> block = BLOCKS.registerBlock(name, supplier);
+        createItem(name, block, (x, y) -> new BlockItem(x, properties.apply(y)), UnaryOperator.identity());
+        return block;
     }
 
     private static <T extends Block> DeferredBlock<T> registerWithItem(String name, Function<BlockBehaviour.Properties, T> supplier, Supplier<BlockBehaviour.Properties> blockProperties, Function<Item.Properties, Item.Properties> properties) {

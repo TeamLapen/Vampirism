@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.blocks;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
+import de.teamlapen.factions.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.vampirism.common.world.inventory.HunterTableMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

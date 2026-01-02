@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,part=bottom": {
+      "model": "factions:block/medchairbase",
+      "y": 90
+    },
+    "facing=east,part=top": {
+      "model": "factions:block/medchairhead",
+      "y": 90
+    },
+    "facing=north,part=bottom": {
+      "model": "factions:block/medchairbase"
+    },
+    "facing=north,part=top": {
+      "model": "factions:block/medchairhead"
+    },
+    "facing=south,part=bottom": {
+      "model": "factions:block/medchairbase",
+      "y": 180
+    },
+    "facing=south,part=top": {
+      "model": "factions:block/medchairhead",
+      "y": 180
+    },
+    "facing=west,part=bottom": {
+      "model": "factions:block/medchairbase",
+      "y": 270
+    },
+    "facing=west,part=top": {
+      "model": "factions:block/medchairhead",
+      "y": 270
+    }
+  }
+}

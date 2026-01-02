@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "minecraft:glass_bottle",
+    "I": "#c:ingots/iron",
+    "W": "#minecraft:wool"
+  },
+  "pattern": [
+    "IWI",
+    "III",
+    "IGI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "factions:med_chair"
+  }
+}

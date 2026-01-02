@@ -282,7 +282,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
             put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get(), mod("item/holy_water_splash_enhanced"));
             put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get(), mod("item/holy_water_splash_ultimate"));
             put(ModItems.GARLIC_BREAD.get(), mod("item/garlic_bread"));
-            put(ModBlocks.MED_CHAIR.get().asItem(), mod("item/med_chair"));
             put(ModItems.ITEM_TENT_SPAWNER.get(), mod("item/item_tent"));
             put(ModItems.VAMPIRE_BOOK.get(), mod("item/vampire_book"));
             put(ModBlocks.DIRECT_CURSED_BARK.get().asItem(), mod("block/cursed_bark"));

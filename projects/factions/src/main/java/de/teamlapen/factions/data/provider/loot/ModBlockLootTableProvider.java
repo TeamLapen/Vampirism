@@ -1,6 +1,7 @@
 package de.teamlapen.factions.data.provider.loot;
 
 import de.teamlapen.factions.common.core.FactionBlocks;
+import de.teamlapen.factions.common.world.blocks.MedChairBlock;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
@@ -28,6 +29,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(FactionBlocks.TOTEM_BASE.get());
         this.dropSelf(FactionBlocks.TOTEM_TOP.get());
         this.dropSelf(FactionBlocks.TOTEM_TOP_CRAFTED.get());
+        this.add(FactionBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM));
     }
 
     @Override

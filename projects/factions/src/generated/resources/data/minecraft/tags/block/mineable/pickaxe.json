@@ -1,6 +1,7 @@
 {
   "values": [
     "factions:totem_base",
-    "#factions:totem_top"
+    "#factions:totem_top",
+    "factions:med_chair"
   ]
 }

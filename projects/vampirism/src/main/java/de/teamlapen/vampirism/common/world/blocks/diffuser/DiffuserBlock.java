@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.blocks.diffuser;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.DiffuserBlockEntity;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseContainerBlock;
+import de.teamlapen.factions.common.world.blocks.base.BaseContainerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;

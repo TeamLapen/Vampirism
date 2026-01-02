@@ -35,6 +35,7 @@ public class FactionStats {
     public static final DeferredHolder<Identifier, Identifier> TASKS_ACCEPTED = add("tasks_accepted");
     public static final DeferredHolder<Identifier, Identifier> TASKS_COMPLETED = add("tasks_completed");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_TOTEM = add("interact_with_totem");
+    public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_INJECTION_CHAIR = add("interact_with_injection_chair");
     public static final DeferredHolder<Identifier, Identifier> CAPTURE_VILLAGE = add("capture_village");
     public static final DeferredHolder<Identifier, Identifier> DEFEND_VILLAGE = add("defend_village");
     public static final DeferredHolder<Identifier, Identifier> WIN_VILLAGE_CAPTURE = add("win_village_capture");

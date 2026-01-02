@@ -22,6 +22,7 @@ public class FactionCreativeTabs {
             insertAfter(FactionBlocks.TOTEM_BASE.get(), Blocks.BELL, event);
             insertAfter(FactionBlocks.TOTEM_TOP.get(), FactionBlocks.TOTEM_BASE.get(), event);
             insertAfter(FactionBlocks.TOTEM_TOP_CRAFTED.get(), FactionBlocks.TOTEM_TOP.get(), event);
+            insertAfter(FactionBlocks.MED_CHAIR.get(), FactionBlocks.TOTEM_TOP_CRAFTED.get(), event);
         } else if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
             insertBefore(FactionItems.SYRINGE_EMPTY, Items.FISHING_ROD, event);
         }

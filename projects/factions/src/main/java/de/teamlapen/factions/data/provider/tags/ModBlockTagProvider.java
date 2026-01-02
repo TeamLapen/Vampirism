@@ -20,8 +20,11 @@ public class ModBlockTagProvider extends BlockTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(FactionBlocks.TOTEM_BASE.get())
-                .addTag(FactionBlockTags.TOTEM_TOP);
+                .addTag(FactionBlockTags.TOTEM_TOP)
+                .add(FactionBlocks.MED_CHAIR.get());
 
+        tag(BlockTags.NEEDS_STONE_TOOL)
+                .add(FactionBlocks.MED_CHAIR.get());
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(FactionBlocks.TOTEM_BASE.get())
                 .addTag(FactionBlockTags.TOTEM_TOP_CRAFTED);

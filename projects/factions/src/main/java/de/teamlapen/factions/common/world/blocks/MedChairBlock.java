@@ -1,16 +1,14 @@
-package de.teamlapen.vampirism.common.world.blocks;
+package de.teamlapen.factions.common.world.blocks;
 
 import de.teamlapen.factions.api.factions.IPlayableFaction;
+import de.teamlapen.factions.common.core.FactionStats;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.factions.common.util.ShapeUtil;
-import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.factions.api.world.items.InjectionItem;
+import de.teamlapen.factions.common.world.blocks.base.BaseHorizontalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
@@ -26,6 +24,7 @@ import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -39,15 +38,12 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-/**
- * Block which represents the top and the bottom part of the "Injection Chair" used for injections
- */
 public class MedChairBlock extends BaseHorizontalBlock {
 
     public static final EnumProperty<EnumPart> PART = EnumProperty.create("part", EnumPart.class);
 
-    private static final VoxelShape SHAPE_TOP = box(2, 6, 0, 14, 16, 16);
-    private static final VoxelShape SHAPE_BOTTOM = box(1, 1, 0, 15, 10, 16);
+    private static final VoxelShape SHAPE_TOP = Block.box(2, 6, 0, 14, 16, 16);
+    private static final VoxelShape SHAPE_BOTTOM = Block.box(1, 1, 0, 15, 10, 16);
     private final VoxelShape NORTH1;
     private final VoxelShape EAST1;
     private final VoxelShape SOUTH1;
@@ -57,9 +53,9 @@ public class MedChairBlock extends BaseHorizontalBlock {
     private final VoxelShape SOUTH2;
     private final VoxelShape WEST2;
 
-    public MedChairBlock(Properties properties) {
+    public MedChairBlock(BlockBehaviour.Properties properties) {
         super(properties.mapColor(MapColor.METAL).pushReaction(PushReaction.DESTROY).strength(1).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(BaseHorizontalBlock.FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
         NORTH1 = SHAPE_BOTTOM;
         EAST1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.NINETY);
         SOUTH1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
@@ -78,8 +74,6 @@ public class MedChairBlock extends BaseHorizontalBlock {
                     return InteractionResult.SUCCESS_SERVER;
                 }
             }
-        } else if (level.isClientSide()) {
-            player.displayClientMessage(Component.translatable("text.vampirism.need_item_to_use", Component.translatable(ModItems.INJECTION_GARLIC.get().getDescriptionId())), true);
         }
         return InteractionResult.SUCCESS_SERVER;
     }
@@ -90,7 +84,7 @@ public class MedChairBlock extends BaseHorizontalBlock {
 
         if (injectionItem.handleInjection(level, pos, player, handler, faction)) {
             injectionItem.consumeInjectionItem(stack, player, hand);
-            player.awardStat(ModStats.INTERACT_WITH_INJECTION_CHAIR.get());
+            player.awardStat(FactionStats.INTERACT_WITH_INJECTION_CHAIR.get());
 
             return true;
         }
@@ -126,11 +120,11 @@ public class MedChairBlock extends BaseHorizontalBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         boolean main = state.getValue(PART) == EnumPart.BOTTOM;
-        return switch (state.getValue(FACING)) {
-            case NORTH -> main ? NORTH1 : NORTH2;
-            case EAST -> main ? EAST1 : EAST2;
-            case SOUTH -> main ? SOUTH1 : SOUTH2;
-            case WEST -> main ? WEST1 : WEST2;
+        return switch (state.getValue(BaseHorizontalBlock.FACING)) {
+            case Direction.NORTH -> main ? NORTH1 : NORTH2;
+            case Direction.EAST -> main ? EAST1 : EAST2;
+            case Direction.SOUTH -> main ? SOUTH1 : SOUTH2;
+            case Direction.WEST -> main ? WEST1 : WEST2;
             default -> NORTH1;
         };
     }
@@ -170,7 +164,7 @@ public class MedChairBlock extends BaseHorizontalBlock {
         if (!level.isClientSide()) {
             BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
             BlockState otherState = state.setValue(PART, EnumPart.TOP);
-            otherState = otherState.setValue(FACING, otherState.getValue(FACING));
+            otherState = otherState.setValue(BaseHorizontalBlock.FACING, otherState.getValue(BaseHorizontalBlock.FACING));
             level.setBlockAndUpdate(blockpos, otherState);
             state.updateNeighbourShapes(level, pos, 3);
         }
@@ -193,6 +187,6 @@ public class MedChairBlock extends BaseHorizontalBlock {
     }
 
     private Direction getOtherBlockDirection(BlockState blockState) {
-        return blockState.getValue(PART) == EnumPart.BOTTOM ? blockState.getValue(FACING).getOpposite() : blockState.getValue(FACING);
+        return blockState.getValue(PART) == EnumPart.BOTTOM ? blockState.getValue(BaseHorizontalBlock.FACING).getOpposite() : blockState.getValue(BaseHorizontalBlock.FACING);
     }
 }

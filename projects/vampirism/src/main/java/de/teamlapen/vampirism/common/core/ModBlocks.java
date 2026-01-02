@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.factions.common.core.FactionDataComponents;
+import de.teamlapen.factions.common.world.blocks.MedChairBlock;
 import de.teamlapen.factions.common.world.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -10,8 +11,8 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.factions.common.util.BlockDescription;
 import de.teamlapen.vampirism.common.util.VampirismVoxelShapes;
 import de.teamlapen.vampirism.common.world.blocks.*;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseSplitBlock;
+import de.teamlapen.factions.common.world.blocks.base.BaseHorizontalBlock;
+import de.teamlapen.factions.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.common.world.blocks.candle.*;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.FogDiffuserBlock;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.GarlicDiffuserBlock;
@@ -91,7 +92,6 @@ public class ModBlocks {
     public static final DeferredBlock<AlchemicalCauldronBlock> ALCHEMICAL_CAULDRON = registerWithItem("alchemical_cauldron", (props) -> new AlchemicalCauldronBlock(props.mapColor(MapColor.METAL).strength(4f).lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 13 : 0).noOcclusion()));
     public static final DeferredBlock<PotionTableBlock> POTION_TABLE = registerWithItem("potion_table", props -> new PotionTableBlock(props.mapColor(MapColor.METAL).strength(1f).noOcclusion()));
     public static final DeferredBlock<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new, () -> basicProperties().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(0.5F).lightLevel(state -> 1).noOcclusion());
-    public static final DeferredBlock<MedChairBlock> MED_CHAIR = registerWithItem("med_chair", MedChairBlock::new,  x -> x.factions$withShiftDescription());
     public static final DeferredBlock<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(0.5f).noOcclusion());
 
     public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = registerWithItem("garlic_diffuser_normal", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserNormalDist), () -> basicProperties().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion(), (item) -> item.factions$withShiftDescriptionParameter());

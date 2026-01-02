@@ -6,6 +6,7 @@
   "block.factions.totem_base": "Village Totem Base",
   "block.factions.totem_top": "Fragile Village Totem Top",
   "block.factions.totem_top_crafted": "Village Totem Top",
+  "block.factions.med_chair": "Injection Chair",
   "skill_tree.factions.default.skill_points": "%d skill points",
   "key.category.factions.main": "Factions",
   "keys.factions.action": "Open Action Radial Menu",
@@ -113,6 +114,7 @@
   "tooltip.factions.faction_specifics": "Faction Specifics:",
   "tooltip.factions.required_skill": "Required skill: %s",
   "tooltip.factions.required_level": "Required level: %s",
+  "tooltip.factions.med_chair": "A medical chair made specifically for injections. The hand restraints on the armrests ensure that the patient remains restrained during particularly hard moments.\n\nRight-click while holding the injection to use it.",
   "text.factions.restriction.can_only_be_used_by": "This can only be used by %s players",
   "text.factions.restriction.can_only_be_used_by_level": "This can only be used by %s players of level %s or higher",
   "text.factions.restriction.can_not_be_used_faction": "I do not get how this works",
@@ -150,5 +152,6 @@
   "stat_type.factions.action_cooldown_time": "Action On Cooldown",
   "stat_type.factions.skill_unlocked": "Skill Unlocked",
   "stat_type.factions.skill_forgotten": "Skill Forgotten",
-  "text.factions.raid.faction_not_able": "Your faction is not able to capture villages"
+  "text.factions.raid.faction_not_able": "Your faction is not able to capture villages",
+  "stat.factions.interact_with_injection_chair": "Interactions with Injection Chair"
 }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.data.provider.models;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quadrant;
+import de.teamlapen.factions.common.world.blocks.MedChairBlock;
 import de.teamlapen.factions.data.provider.model.FactionsModelTemplates;
 import de.teamlapen.factions.data.provider.model.FactionsTextureSlot;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -66,7 +67,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         createMotherTrophy();
         createAltarPillar();
         createTent();
-        createMedChair();
         createTotem();
         createAlchemicalCauldron();
         createCursedGrassBlock();
@@ -354,21 +354,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
                 ModBlocks.THRONE,
                 ModBlocks.FOG_DIFFUSER
         ).map(DeferredHolder::get).forEach(this::createNonTemplateBlockWithItem);
-    }
-
-    protected void createMedChair() {
-        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.MED_CHAIR.get())
-                .with(PropertyDispatch.initial(MedChairBlock.PART)
-                        .select(MedChairBlock.EnumPart.BOTTOM, plainVariant(VResourceLocation.mod("block/medchairbase")))
-                        .select(MedChairBlock.EnumPart.TOP, plainVariant(VResourceLocation.mod("block/medchairhead")))
-                )
-                .with(PropertyDispatch.modify(MedChairBlock.FACING)
-                        .select(Direction.NORTH, NOP)
-                        .select(Direction.EAST, Y_ROT_90)
-                        .select(Direction.SOUTH, Y_ROT_180)
-                        .select(Direction.WEST, Y_ROT_270)
-                )
-        );
     }
 
     protected void createTrivialBlocks() {

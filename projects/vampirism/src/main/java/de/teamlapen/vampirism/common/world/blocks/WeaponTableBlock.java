@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import com.google.common.collect.MapMaker;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
+import de.teamlapen.factions.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.inventory.WeaponTableMenu;

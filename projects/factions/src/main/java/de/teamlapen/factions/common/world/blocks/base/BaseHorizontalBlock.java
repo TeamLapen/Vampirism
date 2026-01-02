@@ -1,7 +1,6 @@
-package de.teamlapen.vampirism.common.world.blocks.base;
+package de.teamlapen.factions.common.world.blocks.base;
 
 import de.teamlapen.factions.common.util.ShapeUtil;
-import de.teamlapen.vampirism.data.provider.models.ModBlockModelGenerators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -22,7 +21,7 @@ import java.util.Map;
 
 /**
  * Implements some basic horizontal rotation functionality. <br>
- * Don't forget to use {@code horizontalBlock} in {@link ModBlockModelGenerators} so the model is actually rotated
+ * Don't forget to use {@code horizontalBlock} in the mod's block model data provider so the model is actually rotated
  * If your subclass adds additional states: <br>
  * - Add {@code FACING} to the defaultState in the constructor
  * {@code this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.NORTH));} <br>

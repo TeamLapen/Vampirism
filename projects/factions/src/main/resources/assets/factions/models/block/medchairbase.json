@@ -3,8 +3,8 @@
   "textures": {
     "particle": "block/iron_block",
     "metal": "block/iron_block",
-    "cover": "vampirism:block/med_chair_cover",
-    "side": "vampirism:block/dark_steel",
+    "cover": "factions:block/med_chair_cover",
+    "side": "block/anvil",
     "hand": "block/iron_block"
   },
   "render_type": "minecraft:cutout",
