@@ -457,92 +457,6 @@ public class UtilLib {
         }
     }
 
-
-    /**
-     * Rotate voxel. Credits to JTK222|Lukas
-     * Cache the result
-     */
-    public static @NotNull VoxelShape rotateShape(@NotNull VoxelShape shape, RotationAmount rotation) {
-        Set<VoxelShape> rotatedShapes = new HashSet<>();
-
-        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
-            x1 = (x1 * 16) - 8;
-            x2 = (x2 * 16) - 8;
-            z1 = (z1 * 16) - 8;
-            z2 = (z2 * 16) - 8;
-
-            if (rotation == RotationAmount.NINETY) {
-                rotatedShapes.add(blockBox(8 - z1, y1 * 16, 8 + x1, 8 - z2, y2 * 16, 8 + x2));
-            } else if (rotation == RotationAmount.HUNDRED_EIGHTY) {
-                rotatedShapes.add(blockBox(8 - x1, y1 * 16, 8 - z1, 8 - x2, y2 * 16, 8 - z2));
-            } else if (rotation == RotationAmount.TWO_HUNDRED_SEVENTY) {
-                rotatedShapes.add(blockBox(8 + z1, y1 * 16, 8 - x1, 8 + z2, y2 * 16, 8 - x2));
-            }
-        });
-
-        return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
-    }
-
-    /**
-     * modifies the rolls or pitch of the shape by 90 degree
-     */
-    public static @NotNull VoxelShape rollShape(@NotNull VoxelShape shape, @NotNull Direction direction) {
-        Set<VoxelShape> rotatedShapes = new HashSet<>();
-        shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
-            double yMin;
-            double yMax;
-            double zMin;
-            double zMax;
-            y1 = (y1 * 16) - 8;
-            y2 = (y2 * 16) - 8;
-            z1 = (z1 * 16) - 8;
-            z2 = (z2 * 16) - 8;
-            switch (direction) {
-                case NORTH -> {
-                    z1 = 8 - z1;
-                    z2 = 8 - z2;
-                    y1 = 8 + y1;
-                    y2 = 8 + y2;
-                    yMin = Math.min(y1, y2);
-                    yMax = Math.max(y1, y2);
-                    zMin = Math.min(z1, z2);
-                    zMax = Math.max(z1, z2);
-                    rotatedShapes.add(Block.box(x1 * 16, zMin, yMin, x2 * 16, zMax, yMax));
-                }
-                case SOUTH -> {
-                    z1 = 8 + z1;
-                    z2 = 8 + z2;
-                    y1 = 8 - y1;
-                    y2 = 8 - y2;
-                    yMin = Math.min(y1, y2);
-                    yMax = Math.max(y1, y2);
-                    zMin = Math.min(z1, z2);
-                    zMax = Math.max(z1, z2);
-                    rotatedShapes.add(Block.box(x1 * 16, zMin, yMin, x2 * 16, zMax, yMax));
-                }
-            }
-
-        });
-        return rotatedShapes.stream().reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(() -> Block.box(0, 0, 0, 16, 16, 16));
-    }
-
-    public static Map<Direction, VoxelShape> getShapesRotatedFromNorth(VoxelShape shapeOnNorth) {
-        return new EnumMap<>(Direction.class) {{
-            put(Direction.NORTH, shapeOnNorth);
-            put(Direction.WEST, UtilLib.rotateShape(shapeOnNorth, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY));
-            put(Direction.SOUTH, UtilLib.rotateShape(shapeOnNorth, UtilLib.RotationAmount.HUNDRED_EIGHTY));
-            put(Direction.EAST, UtilLib.rotateShape(shapeOnNorth, UtilLib.RotationAmount.NINETY));
-        }};
-    }
-
-    public static Pair<VoxelShape, VoxelShape> getShapesRotatedSymmetrically(VoxelShape shapeOnNorth) {
-        return Pair.of(shapeOnNorth, UtilLib.rotateShape(shapeOnNorth, UtilLib.RotationAmount.NINETY));
-    }
-
-    public static @NotNull VoxelShape blockBox(double pX1, double pY1, double pZ1, double pX2, double pY2, double pZ2) {
-        return Block.box(Math.min(pX1, pX2), Math.min(pY1, pY2), Math.min(pZ1, pZ2), Math.max(pX1, pX2), Math.max(pY1, pY2), Math.max(pZ1, pZ2));
-    }
-
     @Nullable
     public static StructureStart getStructureStartAt(@NotNull Entity entity, @NotNull Structure s) {
         return getStructureStartAt(entity.level(), entity.blockPosition(), s);
@@ -684,12 +598,6 @@ public class UtilLib {
 
     public static boolean matchesItem(@NotNull Ingredient ingredient, @NotNull ItemStack searchStack) {
         return ingredient.test(searchStack);
-    }
-
-    public enum RotationAmount {
-        NINETY,
-        HUNDRED_EIGHTY,
-        TWO_HUNDRED_SEVENTY
     }
 
     public static void forEachBlockPos(AABB area, Consumer<BlockPos> action) {

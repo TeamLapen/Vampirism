@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.blocks.base;
 
 
-import de.teamlapen.vampirism.common.util.UtilLib;
+import de.teamlapen.factions.common.util.ShapeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -44,13 +44,13 @@ public class BaseSplitBlock extends Block {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, Part.MAIN));
         NORTH1 = mainShape;
-        EAST1 = UtilLib.rotateShape(NORTH1, UtilLib.RotationAmount.NINETY);
-        SOUTH1 = UtilLib.rotateShape(NORTH1, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-        WEST1 = UtilLib.rotateShape(NORTH1, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+        EAST1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.NINETY);
+        SOUTH1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
+        WEST1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
         NORTH2 = subShape;
-        EAST2 = UtilLib.rotateShape(NORTH2, UtilLib.RotationAmount.NINETY);
-        SOUTH2 = UtilLib.rotateShape(NORTH2, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-        WEST2 = UtilLib.rotateShape(NORTH2, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+        EAST2 = ShapeUtil.rotateY(NORTH2, ShapeUtil.RotationAmount.NINETY);
+        SOUTH2 = ShapeUtil.rotateY(NORTH2, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
+        WEST2 = ShapeUtil.rotateY(NORTH2, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
         this.vertical = vertical;
     }
 

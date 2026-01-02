@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.factions.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.factions.api.world.items.InjectionItem;
 import net.minecraft.core.BlockPos;
@@ -61,13 +61,13 @@ public class MedChairBlock extends BaseHorizontalBlock {
         super(properties.mapColor(MapColor.METAL).pushReaction(PushReaction.DESTROY).strength(1).noOcclusion());
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
         NORTH1 = SHAPE_BOTTOM;
-        EAST1 = UtilLib.rotateShape(NORTH1, UtilLib.RotationAmount.NINETY);
-        SOUTH1 = UtilLib.rotateShape(NORTH1, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-        WEST1 = UtilLib.rotateShape(NORTH1, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+        EAST1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.NINETY);
+        SOUTH1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
+        WEST1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
         NORTH2 = SHAPE_TOP;
-        EAST2 = UtilLib.rotateShape(NORTH2, UtilLib.RotationAmount.NINETY);
-        SOUTH2 = UtilLib.rotateShape(NORTH2, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-        WEST2 = UtilLib.rotateShape(NORTH2, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+        EAST2 = ShapeUtil.rotateY(NORTH2, ShapeUtil.RotationAmount.NINETY);
+        SOUTH2 = ShapeUtil.rotateY(NORTH2, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
+        WEST2 = ShapeUtil.rotateY(NORTH2, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
     }
 
     @Override

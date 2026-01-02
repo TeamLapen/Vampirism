@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blocks.base;
 
-import de.teamlapen.vampirism.common.util.UtilLib;
+import de.teamlapen.factions.common.util.ShapeUtil;
 import de.teamlapen.vampirism.data.provider.models.ModBlockModelGenerators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,7 +39,7 @@ public class BaseHorizontalBlock extends Block {
      */
     public BaseHorizontalBlock(Properties properties, VoxelShape shape) {
         super(properties);
-        this.shapes = UtilLib.getShapesRotatedFromNorth(shape);
+        this.shapes = ShapeUtil.getShapesRotatedFromNorth(shape);
 
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }

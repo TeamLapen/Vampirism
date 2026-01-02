@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.common.world.blocks.candle;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.factions.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -38,8 +38,8 @@ public class WallCandelabraBlock extends CandleHolderBlock {
     private static final VoxelShape SHAPE = Stream.of(Block.box(6, 1, 15, 10, 5, 16), Block.box(7, 2, 13, 9, 4, 15), Block.box(2, 1, 11, 14, 7, 13), Block.box(11, 5, 10, 15, 7, 14), Block.box(6, 7, 10, 10, 9, 14), Block.box(1, 5, 10, 5, 7, 14)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     private static final VoxelShape SHAPE_WITH_CANDLE = Shapes.or(SHAPE, Stream.of(Block.box(12, 7, 11, 14, 12, 13), Block.box(7, 9, 11, 9, 14, 13), Block.box(2, 7, 11, 4, 12, 13)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get());
     
-    private static final Map<Direction, VoxelShape> SHAPES = UtilLib.getShapesRotatedFromNorth(SHAPE);
-    private static final Map<Direction, VoxelShape> SHAPES_WITH_CANDLE = UtilLib.getShapesRotatedFromNorth(SHAPE_WITH_CANDLE);
+    private static final Map<Direction, VoxelShape> SHAPES = ShapeUtil.getShapesRotatedFromNorth(SHAPE);
+    private static final Map<Direction, VoxelShape> SHAPES_WITH_CANDLE = ShapeUtil.getShapesRotatedFromNorth(SHAPE_WITH_CANDLE);
 
     private static final Map<Direction, Iterable<Vec3>> PARTICLE_OFFSET = new EnumMap<>(Direction.class) {{
         put(Direction.NORTH, ImmutableList.of(new Vec3(13 / 16d, 13.75 / 16d, 12 / 16d), new Vec3(8 / 16d, 15.75 / 16d, 12 / 16d), new Vec3(3 / 16d, 13.75 / 16d, 12 / 16d)));

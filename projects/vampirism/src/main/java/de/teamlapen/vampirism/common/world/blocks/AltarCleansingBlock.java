@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.factions.common.util.ShapeUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class AltarCleansingBlock extends BaseHorizontalBlock {
 
-    private static final Map<Direction, VoxelShape> SHAPES = UtilLib.getShapesRotatedFromNorth(Shapes.or(
+    private static final Map<Direction, VoxelShape> SHAPES = ShapeUtil.getShapesRotatedFromNorth(Shapes.or(
             Block.box(1, 0, 5, 15, 1, 12),
             Block.box(7, 1, 7, 9, 12, 11),
             Block.box(1, 9, 3, 15, 14, 13)
