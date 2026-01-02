@@ -13,7 +13,6 @@
     "EquippableMixin",
     "FoodPropertiesMixin",
     "ItemMixin",
-    "ItemPropertiesMixin",
     "ItemStackMixin",
     "JigsawPlacerMixin",
     "LivingEntityMixin",

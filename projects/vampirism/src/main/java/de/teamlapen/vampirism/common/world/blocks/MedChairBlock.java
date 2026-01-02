@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
-import de.teamlapen.vampirism.common.world.items.InjectionItem;
+import de.teamlapen.factions.api.world.items.InjectionItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;

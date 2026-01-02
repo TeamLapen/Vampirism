@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.factions.common.core.FactionBlocks;
+import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlocks;
@@ -498,25 +499,14 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_bread", has(BREAD))
                 .save(output);
 
-        shaped(RecipeCategory.MISC, ModItems.SYRINGE_EMPTY)
-                .pattern("I")
-                .pattern("G")
-                .pattern("N")
-                .define('I', IRON_INGOT)
-                .define('G', GLASS)
-                .define('N', IRON_NUGGET)
-                .unlockedBy("has_iron_ingot", has(IRON_INGOT))
-                .unlockedBy("has_glass", has(GLASS))
-                .unlockedBy("has_iron_nugget", has(IRON_NUGGET))
-                .save(output);
         shapeless(RecipeCategory.MISC, ModItems.INJECTION_GARLIC)
-                .requires(ModItems.SYRINGE_EMPTY)
+                .requires(FactionItems.SYRINGE_EMPTY)
                 .requires(GARLIC)
-                .unlockedBy("has_injection", has(ModItems.SYRINGE_EMPTY))
+                .unlockedBy("has_injection", has(FactionItems.SYRINGE_EMPTY))
                 .save(output);
         shapeless(RecipeCategory.MISC, ModItems.INJECTION_SANGUINARE)
-                .requires(ModItems.SYRINGE_EMPTY).requires(ModItems.VAMPIRE_FANG, 8)
-                .unlockedBy("has_injection", has(ModItems.SYRINGE_EMPTY))
+                .requires(FactionItems.SYRINGE_EMPTY).requires(ModItems.VAMPIRE_FANG, 8)
+                .unlockedBy("has_injection", has(FactionItems.SYRINGE_EMPTY))
                 .save(output);
 
         shaped(RecipeCategory.MISC, ModItems.FABRIC_FILTER)

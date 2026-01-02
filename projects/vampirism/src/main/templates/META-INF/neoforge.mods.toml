@@ -102,6 +102,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${ mod_id }]]
+modId="factions"
+type = "required"
+versionRange = "[${mod_version},)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.${ mod_id }]]
 modId = "jei"
 type = "optional"
 versionRange = "[${jei_version},)"

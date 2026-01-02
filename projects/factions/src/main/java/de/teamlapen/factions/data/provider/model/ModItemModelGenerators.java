@@ -13,5 +13,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     @Override
     public void run() {
         generateFlatItem(FactionItems.OBLIVION_POTION.get(), ModelTemplates.FLAT_ITEM);
+        generateFlatItem(FactionItems.SYRINGE_EMPTY.get(), ModelTemplates.FLAT_ITEM);
     }
 }

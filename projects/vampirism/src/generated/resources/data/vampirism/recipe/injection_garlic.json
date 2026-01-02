@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "vampirism:syringe_empty",
+    "factions:syringe_empty",
     "#c:crops/garlic"
   ],
   "result": {

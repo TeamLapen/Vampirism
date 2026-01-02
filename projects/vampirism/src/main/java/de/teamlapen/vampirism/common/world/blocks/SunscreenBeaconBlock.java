@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.blocks;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
-import de.teamlapen.vampirism.common.util.IBlockWithDescription;
+import de.teamlapen.factions.api.world.blocks.IBlockWithDescription;
 import de.teamlapen.vampirism.common.world.blockentity.SunscreenBeaconBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.base.BaseContainerBlock;
 import net.minecraft.ChatFormatting;

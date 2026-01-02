@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:syringe_empty"
+        "recipe": "factions:syringe_empty"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -48,7 +48,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:syringe_empty"
+      "factions:syringe_empty"
     ]
   }
 }

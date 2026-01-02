@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.common.world.items;
+package de.teamlapen.factions.api.world.items;
 
 import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
 import de.teamlapen.factions.api.factions.IPlayableFaction;

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "vampirism:item/syringe_empty"
+    "model": "factions:item/syringe_empty"
   }
 }

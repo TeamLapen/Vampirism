@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.util.BloodHelper;
-import de.teamlapen.vampirism.common.util.IBlockWithDescription;
+import de.teamlapen.factions.api.world.blocks.IBlockWithDescription;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.blockentity.BloodContainerBlockEntity;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;

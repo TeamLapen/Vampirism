@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModItems;
 import net.neoforged.neoforge.transfer.ItemAccessResourceHandler;
@@ -23,7 +24,7 @@ public class BloodSyringeFluidHandler extends ItemAccessResourceHandler<FluidRes
 
     @Override
     protected FluidResource getResourceFrom(ItemResource accessResource, int index) {
-        if (accessResource.is(ModItems.SYRINGE_EMPTY.get())) {
+        if (accessResource.is(FactionItems.SYRINGE_EMPTY.get())) {
             return FluidResource.EMPTY;
         } else if (accessResource.is(ModItems.SYRINGE_BLOOD.get())) {
             return FluidResource.of(ModFluids.BLOOD.get());
@@ -41,7 +42,7 @@ public class BloodSyringeFluidHandler extends ItemAccessResourceHandler<FluidRes
     @Override
     protected ItemResource update(ItemResource accessResource, int index, FluidResource newResource, int newAmount) {
         if (newAmount == 0) {
-            return ItemResource.of(ModItems.SYRINGE_EMPTY.get());
+            return ItemResource.of(FactionItems.SYRINGE_EMPTY.get());
         } else if (newAmount != CAPACITY) {
             return ItemResource.EMPTY;
         } else {

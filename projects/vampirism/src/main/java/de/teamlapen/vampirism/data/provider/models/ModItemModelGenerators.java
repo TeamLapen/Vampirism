@@ -206,7 +206,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.PURE_SALT,
                 ModItems.PURE_SALT_WATER,
                 ModItems.HUMAN_HEART,
-                ModItems.SYRINGE_EMPTY,
                 ModItems.SYRINGE_BLOOD,
                 ModItems.INJECTION_GARLIC,
                 ModItems.INJECTION_SANGUINARE,

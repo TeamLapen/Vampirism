@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items.dispenser;
 
+import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModSounds;
@@ -27,7 +28,7 @@ public class SyringeDispenseBehavior extends DefaultDispenseItemBehavior {
 
     @Override
     protected @NotNull ItemStack execute(@NotNull BlockSource source, ItemStack stack) {
-        if (!stack.is(ModItems.SYRINGE_EMPTY.get())) {
+        if (!stack.is(FactionItems.SYRINGE_EMPTY.get())) {
             return super.execute(source, stack);
         }
 

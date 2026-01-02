@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common;
 
+import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
@@ -22,7 +23,7 @@ public class ModCapabilities {
         // Items
         event.registerItem(Capabilities.Fluid.ITEM, (stack, access) -> new BloodBottleFluidHandler(access), ModItems.BLOOD_BOTTLE.get());
         event.registerItem(Capabilities.Fluid.ITEM, (stack, access) -> new ItemAccessFluidHandler(ItemAccess.forStack(stack), ModDataComponents.BLOOD_CONTAINER.get(), BloodContainerBlockEntity.CAPACITY), ModBlocks.BLOOD_CONTAINER.asItem());
-        event.registerItem(Capabilities.Fluid.ITEM, (stack, access) -> new BloodSyringeFluidHandler(access), ModItems.SYRINGE_EMPTY.get());
+        event.registerItem(Capabilities.Fluid.ITEM, (stack, access) -> new BloodSyringeFluidHandler(access), FactionItems.SYRINGE_EMPTY.get());
         event.registerItem(Capabilities.Fluid.ITEM, (stack, access) -> new BloodSyringeFluidHandler(access), ModItems.SYRINGE_BLOOD.get());
 
         // Blocks

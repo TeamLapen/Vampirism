@@ -1,14 +1,9 @@
-package de.teamlapen.vampirism.common.util;
+package de.teamlapen.factions.common.util;
 
-import de.teamlapen.vampirism.REFERENCE;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
 import java.util.List;

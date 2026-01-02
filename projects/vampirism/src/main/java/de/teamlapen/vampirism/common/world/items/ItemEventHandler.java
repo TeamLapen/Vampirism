@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModSounds;
@@ -18,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
@@ -44,7 +43,7 @@ public class ItemEventHandler {
         ItemStack heldStack = event.getItemStack();
         Entity target = event.getTarget();
 
-        if (heldStack.is(ModItems.SYRINGE_EMPTY)) {
+        if (heldStack.is(FactionItems.SYRINGE_EMPTY)) {
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.SUCCESS);
 

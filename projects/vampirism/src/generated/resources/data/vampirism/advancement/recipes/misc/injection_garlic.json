@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "vampirism:syringe_empty"
+            "items": "factions:syringe_empty"
           }
         ]
       },

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.core;
 import de.teamlapen.factions.api.factions.IFaction;
 import de.teamlapen.factions.api.world.items.IRefinementItem;
 import de.teamlapen.factions.common.components.FactionRestriction;
+import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.factions.common.core.ModRegistries;
 import de.teamlapen.factions.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.vampirism.REFERENCE;
@@ -159,7 +160,7 @@ public class ModItems {
     public static final DeferredItem<RefinementItem> OBI_BELT = ITEMS.registerItem("obi_belt",  props -> new RefinementItem(FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.OBI_BELT));
 
     // General
-    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build()).vampirism$withShiftDescription()));
+    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build()).factions$withShiftDescription()));
     public static final DeferredItem<BucketItem> BLOOD_BUCKET = ITEMS.registerItem("blood_bucket",  props -> new BucketItem(ModFluids.BLOOD.get(), props.craftRemainder(Items.BUCKET).stacksTo(1)));
 
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_IRON = ITEMS.registerItem("blood_infused_raw_iron", PureLevelItem::new);
@@ -200,10 +201,9 @@ public class ModItems {
     public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.component(DataComponents.FOOD, new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()).component(ModDataComponents.VAMPIRE_FOOD, new BloodFoodProperties.Builder().blood(20).saturationModifier(1.5F).build()).component(DataComponents.CONSUMABLE, Consumables.defaultFood().onConsume(new FactionBasedConsumeEffect(new NotHolderSet<>(ModRegistries.FACTIONS, HolderSet.direct((Holder<IFaction<?>>) (Object) ModFactions.VAMPIRE)), new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.NAUSEA, 20 * 20))))).build())));
     public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new VampirismItemBloodFoodItem(props.food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new BloodFoodProperties.Builder().blood(10).saturationModifier(0.9F).build()));
 
-    public static final DeferredItem<Item> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", x -> new Item(x.vampirism$withShiftDescription()));
-    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.vampirism$withShiftDescription()),props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
-    public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", x -> new GarlicInjectionItem(x.vampirism$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
-    public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", x -> new SanguinareInjectionItem(x.vampirism$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
+    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.factions$withShiftDescription()),props -> props.stacksTo(16).craftRemainder(FactionItems.SYRINGE_EMPTY.get()));
+    public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", x -> new GarlicInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(FactionItems.SYRINGE_EMPTY.get()));
+    public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", x -> new SanguinareInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(FactionItems.SYRINGE_EMPTY.get()));
 
     public static final DeferredItem<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = ITEMS.registerItem("item_alchemical_fire", AlchemicalFireItem::new);
 
@@ -234,7 +234,7 @@ public class ModItems {
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_ENHANCED = ITEMS.registerItem("vampire_minion_upgrade_enhanced",  props -> new MinionUpgradeItem(3, 4, ModFactions.VAMPIRE, props));
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = ITEMS.registerItem("vampire_minion_upgrade_special",  props -> new MinionUpgradeItem(5, 6, ModFactions.VAMPIRE, props));
 
-    public static final DeferredItem<Item> FABRIC_FILTER = ITEMS.registerItem("fabric_filter", x ->  new Item(x.vampirism$withShiftDescription()) ,props -> props.stacksTo(1).durability(4800));
+    public static final DeferredItem<Item> FABRIC_FILTER = ITEMS.registerItem("fabric_filter", x ->  new Item(x.factions$withShiftDescription()) ,props -> props.stacksTo(1).durability(4800));
 
     public static final DeferredItem<FeedingAdapterItem> FEEDING_ADAPTER = ITEMS.registerItem("feeding_adapter", FeedingAdapterItem::new, props -> props.stacksTo(1));
     public static final DeferredItem<Item> GARLIC_FINDER = ITEMS.registerItem("garlic_finder",  Item::new, props -> props.rarity(Rarity.RARE));
@@ -320,7 +320,7 @@ public class ModItems {
     }
 
     public static void registerDispenserBehaviour() {
-        DispenserBlock.registerBehavior(ModItems.SYRINGE_EMPTY.get(), new SyringeDispenseBehavior());
+        DispenserBlock.registerBehavior(FactionItems.SYRINGE_EMPTY.get(), new SyringeDispenseBehavior());
         DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_BOAT.get(), new BoatDispenseItemBehavior(ModEntities.DARK_SPRUCE_BOAT.get()));
         DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new BoatDispenseItemBehavior(ModEntities.CURSED_SPRUCE_BOAT.get()));
         DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(ModEntities.DARK_SPRUCE_CHEST_BOAT.get()));

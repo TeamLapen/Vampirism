@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.common.world.blocks;
+package de.teamlapen.factions.api.world;
 
 public interface IDescriptionProvider {
 

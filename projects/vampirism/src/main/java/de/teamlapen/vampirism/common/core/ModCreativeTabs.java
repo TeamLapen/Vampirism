@@ -12,8 +12,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -61,7 +59,7 @@ public class ModCreativeTabs {
             add(HUMAN_HEART);
             add(WEAK_HUMAN_HEART);
 
-            add(SYRINGE_EMPTY);
+            add(FactionItems.SYRINGE_EMPTY);
             add(SYRINGE_BLOOD);
             add(INJECTION_GARLIC);
             add(INJECTION_SANGUINARE);

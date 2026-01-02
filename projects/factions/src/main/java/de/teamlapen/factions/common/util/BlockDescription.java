@@ -1,7 +1,8 @@
-package de.teamlapen.vampirism.common.util;
+package de.teamlapen.factions.common.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.factions.api.world.blocks.IBlockWithDescription;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;

@@ -25,6 +25,7 @@ public class FactionDataComponents {
         public static final Identifier IS_FACTION_BANNER = FResourceLocation.mod("is_faction_banner");
         public static final Identifier FACTION_RESTRICTION = FResourceLocation.mod("faction_restriction");
         public static final Identifier FACTION_SLAYER = FResourceLocation.mod("faction_slayer");
-
+        public static final Identifier SHIFT_DESCRIPTION = FResourceLocation.mod("shift_description");
+        public static final Identifier BLOCK_DESCRIPTION = FResourceLocation.mod("block_description");
     }
 }

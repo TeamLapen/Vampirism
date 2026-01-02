@@ -47,7 +47,5 @@ public class VampirismDataComponents {
         public static final Identifier PURE_LEVEL = VResourceLocation.mod("pure_level");
         public static final Identifier QUARREL_POUCH_CONTENTS = VResourceLocation.mod("quarrel_pouch_contents");
         public static final Identifier ACTIVE = VResourceLocation.mod("active");
-        public static final Identifier SHIFT_DESCRIPTION = VResourceLocation.mod("shift_description");
-        public static final Identifier BLOCK_DESCRIPTION = VResourceLocation.mod("block_description");
     }
 }

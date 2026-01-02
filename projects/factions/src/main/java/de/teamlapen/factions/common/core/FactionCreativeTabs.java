@@ -22,6 +22,8 @@ public class FactionCreativeTabs {
             insertAfter(FactionBlocks.TOTEM_BASE.get(), Blocks.BELL, event);
             insertAfter(FactionBlocks.TOTEM_TOP.get(), FactionBlocks.TOTEM_BASE.get(), event);
             insertAfter(FactionBlocks.TOTEM_TOP_CRAFTED.get(), FactionBlocks.TOTEM_TOP.get(), event);
+        } else if (event.getTabKey().equals(CreativeModeTabs.INGREDIENTS)) {
+            insertBefore(FactionItems.SYRINGE_EMPTY, Items.FISHING_ROD, event);
         }
     }
 
@@ -31,5 +33,9 @@ public class FactionCreativeTabs {
 
     private static void insertAfter(ItemLike item, ItemLike insertAfterItem, BuildCreativeModeTabContentsEvent event) {
         event.insertAfter(new ItemStack(insertAfterItem), new ItemStack(item), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+    }
+
+    private static void insertBefore(ItemLike item, ItemLike insertAfterItem, BuildCreativeModeTabContentsEvent event) {
+        event.insertBefore(new ItemStack(insertAfterItem), new ItemStack(item), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
     }
 }

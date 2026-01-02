@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.inventory;
 
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModMenus;
-import de.teamlapen.vampirism.common.world.items.InjectionItem;
+import de.teamlapen.factions.api.world.items.InjectionItem;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.common.core;
 
+import de.teamlapen.factions.common.core.FactionDataComponents;
+import de.teamlapen.factions.common.core.FactionItems;
+import de.teamlapen.factions.common.util.ShiftDescription;
 import de.teamlapen.vampirism.common.util.serialization.CodecModifications;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
@@ -10,9 +13,11 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirismVampir
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.data.ModDataPacks;
+import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import org.jetbrains.annotations.ApiStatus;
@@ -100,5 +105,10 @@ public class ModRegistryManager {
         event.enqueueWork(ModItems::registerDispenserBehaviour);
         event.enqueueWork(ModBlocks::registerFlammables);
         event.enqueueWork(ModFluids::registerFluidInteractions);
+    }
+
+    @SubscribeEvent
+    private void onModifyDefaultComponents(ModifyDefaultComponentsEvent event) {
+        event.modify(FactionItems.SYRINGE_EMPTY, builder -> builder.set(FactionDataComponents.SHIFT_DESCRIPTION.get(), new ShiftDescription(Component.translatable("tooltip.vampirism.syringe_empty"))).build());
     }
 }

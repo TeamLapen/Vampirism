@@ -33,6 +33,7 @@ public class ModDataProvider {
         generator.addProvider(true, provider);
 
         ModTagsProvider.register(generator, packOutput, lookupProviderFuture);
+        generator.addProvider(true, new ModRecipeProvider.Runner(packOutput, lookupProviderFuture));
         generator.addProvider(true, ModLootTableProvider.getProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new SoundDefinitionsProvider(packOutput));
         generator.addProvider(true, new ModModelProvider(packOutput));

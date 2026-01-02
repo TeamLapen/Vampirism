@@ -1,10 +1,10 @@
-package de.teamlapen.vampirism.common.util;
+package de.teamlapen.factions.common.util;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.EitherCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.common.world.blocks.IDescriptionProvider;
+import de.teamlapen.factions.api.world.IDescriptionProvider;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;

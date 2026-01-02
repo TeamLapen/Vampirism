@@ -24,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
 public class HunterArmorItem extends ModArmorItem {
 
     public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props) {
-        super(materialIn, type, props.factions$restrictFaction(ModFactionTags.IS_HUNTER).vampirism$descriptionWithout("_normal|_enhanced|_ultimate"));
+        super(materialIn, type, props.factions$restrictFaction(ModFactionTags.IS_HUNTER).factions$descriptionWithout("_normal|_enhanced|_ultimate"));
     }
     public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props, ItemAttributeModifiers attributeModifiers) {
-        super(materialIn, type, props.factions$restrictFaction(ModFactionTags.IS_HUNTER).vampirism$descriptionWithout("_normal|_enhanced|_ultimate"), attributeModifiers);
+        super(materialIn, type, props.factions$restrictFaction(ModFactionTags.IS_HUNTER).factions$descriptionWithout("_normal|_enhanced|_ultimate"), attributeModifiers);
     }
 
     @Override
