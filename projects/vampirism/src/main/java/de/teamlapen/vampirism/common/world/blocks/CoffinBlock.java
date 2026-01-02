@@ -426,7 +426,7 @@ public class CoffinBlock extends BaseContainerBlock {
 
         private VoxelShape [] buildShapeVertical(VoxelShape shape, boolean vertical) {
             if (vertical) {
-                shape = ShapeUtil.rotateXZ(shape, Direction.NORTH);
+                shape = ShapeUtil.rollShape(shape, Direction.NORTH);
             }
             VoxelShape[] shapes = new VoxelShape[4];
             VoxelShape finalShape = shape;
