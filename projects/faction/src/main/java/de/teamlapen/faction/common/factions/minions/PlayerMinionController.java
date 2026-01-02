@@ -295,7 +295,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             i.checkin();
-            i.deathCooldown = 20 * FactionConfig.server().miDeathRecoveryTime.get();
+            i.deathCooldown = 20 * FactionConfig.server().minionDeathRecoveryTime.get();
             getLord().filter(x -> x instanceof ISkillPlayer<?>).map(ISkillPlayer.class::cast).map(ISkillPlayer::getSkillHandler).ifPresent(s -> {
                 if (s.isSkillEnabled(FactionSkills.MINION_RECOVERY)) {
                     i.deathCooldown = (int) (i.deathCooldown * 0.8);

@@ -18,8 +18,8 @@ public class FactionSkillPointProvider {
     public static final DeferredRegister<ISkillPointProvider> SKILL_POINT_PROVIDERS = DeferredRegister.create(FactionRegistries.Keys.SKILL_POINT_PROVIDER, REFERENCE.MOD_ID);
 
     public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> NONE = SKILL_POINT_PROVIDERS.register("none", () -> (factionPlayer, tree) -> 0);
-    public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> LEVELING = SKILL_POINT_PROVIDERS.register("leveling", () -> (factionPlayer, tree) -> tree.is(FactionSkillTreeTags.DEFAULT) ? (int) (Math.max(0, factionPlayer.getLevel() - 1) * FactionConfig.server().skillPointsPerLevel.get()) : 0);
-    public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> LORD_LEVELING = SKILL_POINT_PROVIDERS.register("lord_leveling", () -> (factionPlayer, tree) -> tree.is(FactionSkillTreeTags.DEFAULT) ? (int) (Math.max(0, FactionPlayerHandler.get(factionPlayer.asEntity()).getLordLevel() - 1) * FactionConfig.server().skillPointsPerLordLevel.get()) : 0);
+    public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> LEVELING = SKILL_POINT_PROVIDERS.register("leveling", () -> (factionPlayer, tree) -> tree.is(FactionSkillTreeTags.DEFAULT) ? (int) (Math.max(0, factionPlayer.getLevel() - 1) * FactionConfig.server().factionSkillPointsPerLevel.get()) : 0);
+    public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> LORD_LEVELING = SKILL_POINT_PROVIDERS.register("lord_leveling", () -> (factionPlayer, tree) -> tree.is(FactionSkillTreeTags.DEFAULT) ? (int) (Math.max(0, FactionPlayerHandler.get(factionPlayer.asEntity()).getLordLevel() - 1) * FactionConfig.server().factionSkillPointsPerLordLevel.get()) : 0);
     public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> CONFIG_UNLOCK_ALL = SKILL_POINT_PROVIDERS.register("config_unlock_all", () -> new ISkillPointProvider() {
 
         @Override
@@ -29,7 +29,7 @@ public class FactionSkillPointProvider {
 
         @Override
         public boolean ignoreSkillPointLimit(IFactionPlayer<?> factionPlayer, Holder<ISkillTree> skillTree) {
-            return FactionConfig.server().unlockAllSkills.get() && factionPlayer.getLevel() == factionPlayer.getMaxLevel();
+            return FactionConfig.server().factionUnlockAllSkills.get() && factionPlayer.getLevel() == factionPlayer.getMaxLevel();
         }
     });
 

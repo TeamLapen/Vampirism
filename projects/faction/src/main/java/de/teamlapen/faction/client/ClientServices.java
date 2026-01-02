@@ -1,7 +1,6 @@
 package de.teamlapen.faction.client;
 
 import de.teamlapen.faction.Services;
-import de.teamlapen.faction.client.config.ClientConfigHelper;
 import de.teamlapen.faction.client.core.*;
 import de.teamlapen.faction.client.entity.ClientEventHandler;
 import de.teamlapen.faction.client.gui.overlay.CustomBossEventOverlay;
@@ -39,7 +38,6 @@ public class ClientServices extends Services {
     @Override
     public void registerModBus(IEventBus bus) {
         bus.addListener(this.modKeys::registerKeyMapping);
-        bus.addListener(ClientConfigHelper::onConfigChanged);
         bus.addListener(FactionScreens::registerScreens);
         bus.addListener(FactionScreens::registerScreenOverlays);
         bus.addListener(FactionItemRenderer::registerColors);

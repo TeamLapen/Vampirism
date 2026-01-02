@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class MinionTaskCodec<Z extends IMinionData, I extends IMinionTask<U, Z>, U extends IMinionTask.IMinionTaskDesc<Z>> implements Codec<U> {
+public class MinionTaskDescCodec<Z extends IMinionData, I extends IMinionTask<U, Z>, U extends IMinionTask.IMinionTaskDesc<Z>> implements Codec<U> {
 
     private final InnerCodec inner = new InnerCodec();
 

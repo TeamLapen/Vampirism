@@ -42,8 +42,13 @@ public class CustomBossEventOverlay extends BaseOverlay {
     }
 
     @Override
+    protected boolean isEnabledInConfig() {
+        return FactionConfig.client().renderFactionRaidbarOverlay.get();
+    }
+
+    @Override
     public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (!canRenderOverlays() || !FactionConfig.client().enableVillageRaidOverlayRendering.get()) {
+        if (!canRenderOverlays()) {
             return;
         }
         int i = Minecraft.getInstance().getWindow().getGuiScaledWidth();

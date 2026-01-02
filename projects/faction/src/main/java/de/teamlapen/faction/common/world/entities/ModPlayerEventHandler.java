@@ -47,7 +47,7 @@ public class ModPlayerEventHandler {
             Holder<? extends IFaction<?>> f = handler.factionPlayer().getDisguise().getViewedFaction(Optional.ofNullable(FactionsMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
             if (!IFaction.is(f, FactionTags.IS_NEUTRAL)) {
                 MutableComponent displayName;
-                displayName = handler.getLordPlayer().filter(h -> h.getLordLevel() > 0).filter(x -> FactionConfig.server().lordPrefixInChat.get()).map(ILordPlayer::getLordTitle)
+                displayName = handler.getLordPlayer().filter(h -> h.getLordLevel() > 0).filter(x -> FactionConfig.server().factionLordPrefixInChat.get()).map(ILordPlayer::getLordTitle)
                         .map(x -> Component.literal("[").append(x).append("] ").append(event.getDisplayname()))
                         .orElseGet(() -> event.getDisplayname().copy());
                 event.setDisplayname(displayName.withStyle(style -> style.withColor((f.value().getChatColor()))));
@@ -81,7 +81,7 @@ public class ModPlayerEventHandler {
         if (!(event.getLevel() instanceof Level)) return;
         //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
         if (event.getPlayer().isCreative()) return;
-        if (FactionConfig.server().allowVillageDestroyBlocks.get()) return;
+        if (FactionConfig.server().villageAllowPoiDestruction.get()) return;
         Set<BlockPos> positions = new HashSet<>();
         BlockPos totemPos = TotemHelper.getTotemPosition(((Level) event.getLevel()).dimension(), event.getPos());
         Block block = event.getState().getBlock();
