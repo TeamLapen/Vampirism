@@ -1,6 +1,6 @@
 {
   "parent": "factions:block/totem_top",
   "textures": {
-    "outer": "minecraft:block/glowstone"
+    "core": "vampirism:block/totem_top_core_hunter"
   }
 }

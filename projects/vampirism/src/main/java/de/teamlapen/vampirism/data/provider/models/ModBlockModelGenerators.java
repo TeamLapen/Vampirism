@@ -2,9 +2,8 @@ package de.teamlapen.vampirism.data.provider.models;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quadrant;
-import de.teamlapen.factions.common.world.blocks.MedChairBlock;
 import de.teamlapen.factions.data.provider.model.FactionsModelTemplates;
-import de.teamlapen.factions.data.provider.model.FactionsTextureSlot;
+import de.teamlapen.factions.data.provider.model.FactionsTextureSlots;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
@@ -179,10 +178,11 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
     }
 
     protected void createTotem() {
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), plainVariant(FactionsModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), new TextureMapping().put(FactionsTextureSlot.OUTER, VResourceLocation.mc("block/glowstone")), this.modelOutput))));
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), plainVariant(FactionsModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), new TextureMapping().put(FactionsTextureSlot.OUTER, VResourceLocation.mc("block/glowstone")), this.modelOutput))));
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), new TextureMapping().put(FactionsTextureSlot.OUTER, VResourceLocation.mc("block/obsidian")), this.modelOutput))));
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), new TextureMapping().put(FactionsTextureSlot.OUTER, VResourceLocation.mc("block/obsidian")), this.modelOutput))));
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_vampire")), this.modelOutput))));
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_hunter")), this.modelOutput))));
+
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP_CRAFTED.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_vampire")), this.modelOutput))));
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP_CRAFTED.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_hunter")), this.modelOutput))));
     }
 
     protected void createCandleHolders() {
