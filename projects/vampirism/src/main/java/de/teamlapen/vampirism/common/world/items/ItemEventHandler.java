@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -42,6 +43,8 @@ public class ItemEventHandler {
         Level level = event.getLevel();
         ItemStack heldStack = event.getItemStack();
         Entity target = event.getTarget();
+
+        if (!(target instanceof LivingEntity)) return;
 
         if (heldStack.is(FactionItems.SYRINGE_EMPTY)) {
             event.setCanceled(true);
