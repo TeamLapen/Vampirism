@@ -103,7 +103,7 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${ mod_id }]]
-modId="factions"
+modId="${factions_mod_id}"
 type = "required"
 versionRange = "[${mod_version},)"
 ordering="AFTER"
