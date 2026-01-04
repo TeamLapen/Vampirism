@@ -73,6 +73,7 @@ public class ModCreativeTabs {
             add(VAMPIRE_FANG);
 
             add(GARLIC_FINDER);
+            add(FactionItems.OBLIVION_POTION);
 
             add(DARK_SPRUCE_BOAT);
             add(CURSED_SPRUCE_BOAT);
