@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.factions.common.core.FactionBlocks;
-import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.common.core.ModBlocks;
@@ -267,26 +265,6 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_obsidian", has(OBSIDIAN))
                 .unlockedBy("has_glass", has(GLASS))
                 .save(output);
-
-        shaped(RecipeCategory.DECORATIONS, FactionBlocks.TOTEM_BASE)
-                .pattern("XYX")
-                .pattern("XYX")
-                .pattern("ZZZ")
-                .define('X', PLANKS)
-                .define('Y', OBSIDIAN)
-                .define('Z', IRON_INGOT)
-                .unlockedBy("has_obsidian", has(OBSIDIAN))
-                .save(output);
-        shaped(RecipeCategory.DECORATIONS, FactionBlocks.TOTEM_TOP_CRAFTED)
-                .pattern("X X")
-                .pattern(" Y ")
-                .pattern("XZX")
-                .define('X', OBSIDIAN)
-                .define('Y', DIAMOND)
-                .define('Z', ModItems.VAMPIRE_BOOK)
-                .unlockedBy("has_diamond", has(DIAMOND_BLOCK))
-                .unlockedBy("has_obsidian", has(OBSIDIAN))
-                .save(output);
     }
 
     private void recipesDecorationalBlocks() {
@@ -490,14 +468,25 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_bread", has(BREAD))
                 .save(output);
 
+        shaped(RecipeCategory.MISC, ModItems.SYRINGE_EMPTY)
+                .pattern("I")
+                .pattern("G")
+                .pattern("N")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('G', Tags.Items.GLASS_BLOCKS)
+                .define('N', Tags.Items.NUGGETS_IRON)
+                .unlockedBy("has_iron_ingot", has(Tags.Items.INGOTS_IRON))
+                .unlockedBy("has_glass", has(Tags.Items.GLASS_BLOCKS))
+                .unlockedBy("has_iron_nugget", has(Tags.Items.NUGGETS_IRON))
+                .save(output);
         shapeless(RecipeCategory.MISC, ModItems.INJECTION_GARLIC)
-                .requires(FactionItems.SYRINGE_EMPTY)
+                .requires(ModItems.SYRINGE_EMPTY)
                 .requires(GARLIC)
-                .unlockedBy("has_injection", has(FactionItems.SYRINGE_EMPTY))
+                .unlockedBy("has_injection", has(ModItems.SYRINGE_EMPTY))
                 .save(output);
         shapeless(RecipeCategory.MISC, ModItems.INJECTION_SANGUINARE)
-                .requires(FactionItems.SYRINGE_EMPTY).requires(ModItems.VAMPIRE_FANG, 8)
-                .unlockedBy("has_injection", has(FactionItems.SYRINGE_EMPTY))
+                .requires(ModItems.SYRINGE_EMPTY).requires(ModItems.VAMPIRE_FANG, 8)
+                .unlockedBy("has_injection", has(ModItems.SYRINGE_EMPTY))
                 .save(output);
 
         shaped(RecipeCategory.MISC, ModItems.FABRIC_FILTER)

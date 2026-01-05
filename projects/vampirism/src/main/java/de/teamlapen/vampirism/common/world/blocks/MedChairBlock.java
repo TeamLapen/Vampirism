@@ -1,10 +1,10 @@
-package de.teamlapen.factions.common.world.blocks;
+package de.teamlapen.vampirism.common.world.blocks;
 
 import de.teamlapen.factions.api.factions.IPlayableFaction;
 import de.teamlapen.factions.common.core.FactionStats;
 import de.teamlapen.factions.common.factions.FactionPlayerHandler;
 import de.teamlapen.factions.common.util.ShapeUtil;
-import de.teamlapen.factions.api.world.items.InjectionItem;
+import de.teamlapen.vampirism.common.world.items.InjectionItem;
 import de.teamlapen.factions.common.world.blocks.base.BaseHorizontalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,8 +28,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -54,7 +52,7 @@ public class MedChairBlock extends BaseHorizontalBlock {
     private final VoxelShape WEST2;
 
     public MedChairBlock(BlockBehaviour.Properties properties) {
-        super(properties.mapColor(MapColor.METAL).pushReaction(PushReaction.DESTROY).strength(1).noOcclusion());
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(BaseHorizontalBlock.FACING, Direction.NORTH).setValue(PART, EnumPart.BOTTOM));
         NORTH1 = SHAPE_BOTTOM;
         EAST1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.NINETY);

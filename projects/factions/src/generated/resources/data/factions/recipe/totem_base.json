@@ -2,14 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": "#minecraft:planks",
-    "Y": "#c:obsidians",
-    "Z": "#c:ingots/iron"
+    "I": "#c:ingots/iron",
+    "O": "#c:obsidians",
+    "P": "#minecraft:planks"
   },
   "pattern": [
-    "XYX",
-    "XYX",
-    "ZZZ"
+    "POP",
+    "POP",
+    "III"
   ],
   "result": {
     "count": 1,

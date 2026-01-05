@@ -59,6 +59,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 .add(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get())
                 .add(ModBlocks.FOG_DIFFUSER.get())
                 .add(ModBlocks.ALCHEMY_TABLE.get())
+                .add(ModBlocks.MED_CHAIR.get())
                 .add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get())
                 .add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get())
                 .add(ModBlocks.VAMPIRE_SOUL_LANTERN.get())
@@ -99,6 +100,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(ModBlocks.ALTAR_TIP.get())
                 .add(ModBlocks.GRAVE_CAGE.get())
+                .add(ModBlocks.MED_CHAIR.get())
         ;
         tag(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.BLOOD_PEDESTAL.get())

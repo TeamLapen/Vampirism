@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": "#c:glass_blocks",
+    "D": "#c:storage_blocks/diamond",
     "I": "#c:ingots/iron",
-    "N": "#c:nuggets/iron"
+    "O": "#c:obsidians"
   },
   "pattern": [
-    "I",
-    "G",
-    "N"
+    "O O",
+    " D ",
+    "OIO"
   ],
   "result": {
     "count": 1,
-    "id": "factions:syringe_empty"
+    "id": "factions:totem_top_crafted"
   }
 }

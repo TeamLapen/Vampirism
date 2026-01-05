@@ -3,7 +3,7 @@
   "textures": {
     "particle": "block/iron_block",
     "metal": "block/iron_block",
-    "cover": "factions:block/med_chair_cover",
+    "cover": "vampirism:block/med_chair_cover",
     "side": "block/anvil",
     "hand": "block/iron_block"
   },

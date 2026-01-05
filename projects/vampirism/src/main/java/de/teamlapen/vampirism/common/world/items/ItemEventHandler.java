@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModSounds;
@@ -46,7 +45,7 @@ public class ItemEventHandler {
 
         if (!(target instanceof LivingEntity)) return;
 
-        if (heldStack.is(FactionItems.SYRINGE_EMPTY)) {
+        if (heldStack.is(ModItems.SYRINGE_EMPTY)) {
             event.setCanceled(true);
             event.setCancellationResult(InteractionResult.SUCCESS);
 

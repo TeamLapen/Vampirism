@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": "minecraft:glass_bottle",
+    "G": "#c:glass_blocks",
     "I": "#c:ingots/iron",
-    "W": "#minecraft:wool"
+    "N": "#c:nuggets/iron"
   },
   "pattern": [
-    "IWI",
-    "III",
-    "IGI"
+    "I",
+    "G",
+    "N"
   ],
   "result": {
     "count": 1,
-    "id": "factions:med_chair"
+    "id": "vampirism:syringe_empty"
   }
 }

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.data.provider.loot;
 
 import de.teamlapen.factions.common.core.FactionBlocks;
-import de.teamlapen.factions.common.world.blocks.MedChairBlock;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -141,6 +140,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
         this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
+        this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM));
         this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
         this.dropSelf(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());
         this.dropSelf(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());

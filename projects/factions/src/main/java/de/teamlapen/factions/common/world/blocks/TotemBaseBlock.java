@@ -16,7 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TotemBaseBlock extends Block {
 
-    private static final VoxelShape SHAPE = Shapes.join(Block.box(1, 0, 1, 15, 2, 15), Block.box(4, 2, 4, 12, 16, 12), BooleanOp.OR);
+    private static final VoxelShape SHAPE = Shapes.join(Block.box(1, 0, 1, 15, 3, 15), Block.box(4, 2, 4, 12, 16, 12), BooleanOp.OR);
 
     public TotemBaseBlock(Properties properties) {
         super(properties);

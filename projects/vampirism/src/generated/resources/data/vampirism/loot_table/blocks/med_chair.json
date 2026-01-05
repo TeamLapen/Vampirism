@@ -13,18 +13,18 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "block": "factions:med_chair",
+              "block": "vampirism:med_chair",
               "condition": "minecraft:block_state_property",
               "properties": {
                 "part": "bottom"
               }
             }
           ],
-          "name": "factions:med_chair"
+          "name": "vampirism:med_chair"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "factions:blocks/med_chair"
+  "random_sequence": "vampirism:blocks/med_chair"
 }

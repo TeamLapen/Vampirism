@@ -67,6 +67,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         createAltarPillar();
         createTent();
         createTotem();
+        createMedChair();
         createAlchemicalCauldron();
         createCursedGrassBlock();
         createAlchemicalFire();
@@ -183,6 +184,21 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP_CRAFTED.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_vampire")), this.modelOutput))));
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP_CRAFTED.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_hunter")), this.modelOutput))));
+    }
+
+    protected void createMedChair() {
+        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.MED_CHAIR.get())
+                .with(PropertyDispatch.initial(MedChairBlock.PART)
+                        .select(MedChairBlock.EnumPart.BOTTOM, plainVariant(VResourceLocation.mod("block/medchairbase")))
+                        .select(MedChairBlock.EnumPart.TOP, plainVariant(VResourceLocation.mod("block/medchairhead")))
+                )
+                .with(PropertyDispatch.modify(MedChairBlock.FACING)
+                        .select(Direction.NORTH, NOP)
+                        .select(Direction.EAST, Y_ROT_90)
+                        .select(Direction.SOUTH, Y_ROT_180)
+                        .select(Direction.WEST, Y_ROT_270)
+                )
+        );
     }
 
     protected void createCandleHolders() {

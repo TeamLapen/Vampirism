@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "factions:item/med_chair"
+    "model": "vampirism:item/med_chair"
   }
 }

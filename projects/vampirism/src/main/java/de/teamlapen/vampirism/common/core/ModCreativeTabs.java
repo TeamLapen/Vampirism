@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.factions.common.core.FactionBlocks;
 import de.teamlapen.factions.common.core.FactionItems;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VResourceLocation;
@@ -60,7 +59,7 @@ public class ModCreativeTabs {
             add(HUMAN_HEART);
             add(WEAK_HUMAN_HEART);
 
-            add(FactionItems.SYRINGE_EMPTY);
+            add(SYRINGE_EMPTY);
             add(SYRINGE_BLOOD);
             add(INJECTION_GARLIC);
             add(INJECTION_SANGUINARE);
@@ -413,7 +412,7 @@ public class ModCreativeTabs {
             add(ALCHEMICAL_CAULDRON);
             add(POTION_TABLE);
             add(ALCHEMY_TABLE);
-            add(FactionBlocks.MED_CHAIR);
+            add(MED_CHAIR);
             add(ALTAR_CLEANSING);
 
             add(GARLIC_DIFFUSER_NORMAL);

@@ -2,7 +2,7 @@
   "__comment": "Designed by Maxanier",
   "textures": {
     "particle": "block/iron_block",
-    "cover": "factions:block/med_chair_cover",
+    "cover": "vampirism:block/med_chair_cover",
     "metal": "block/iron_block",
     "side": "block/anvil",
     "hand": "block/iron_block"
