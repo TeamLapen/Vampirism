@@ -146,6 +146,7 @@ def generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_issue_tracker      : vampirism_issue_tracker,
             mod_url                : vampirism_url,
             mod_update_url         : vampirism_update_url,
+            factions_mod_id        : factions_mod_id,
             jei_version            : jei_version
     ]
     inputs.properties replaceProperties
