@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.world.blocks.*;
-import de.teamlapen.factions.common.world.blocks.base.BaseSplitBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.data.loot.conditions.TentSpawnerCondition;
 import de.teamlapen.vampirism.misc.mixin.accessor.VanillaBlockLootAccessor;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;

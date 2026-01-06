@@ -1,10 +1,10 @@
-package de.teamlapen.factions.common.util;
+package de.teamlapen.faction.common.util;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.EitherCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.factions.api.world.IDescriptionProvider;
+import de.teamlapen.faction.api.world.IDescriptionProvider;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;

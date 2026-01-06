@@ -1,6 +1,5 @@
 {
   "subtitles.factionapi.task_complete": "Task completed",
-  "itemGroup.factionapi": "Factions",
   "item.factionapi.oblivion_potion": "Oblivion Potion",
   "item.factionapi.oblivion_potion.description": "Resets skills on consume",
   "block.factionapi.totem_base": "Village Totem Base",
@@ -153,6 +152,7 @@
   "stat_type.factionapi.skill_unlocked": "Skill Unlocked",
   "stat_type.factionapi.skill_forgotten": "Skill Forgotten",
   "text.factionapi.raid.faction_not_able": "Your faction is not able to capture villages",
+  "stat.factions.interact_with_injection_chair": "Interactions with Injection Chair",
   "command.factionapi.base.bind_action.success": "Successfully bound action %s to action key %s",
   "command.factionapi.base.bind_action.not_existing": "The given action %s does not exist",
   "command.factionapi.base.bind_action.help": "You can bind custom actions (e.g. bat mode) to the two available action keys (see keybindings).",

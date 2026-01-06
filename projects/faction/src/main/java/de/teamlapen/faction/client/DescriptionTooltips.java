@@ -1,8 +1,8 @@
-package de.teamlapen.factions.client;
+package de.teamlapen.faction.client;
 
-import de.teamlapen.factions.common.core.FactionDataComponents;
-import de.teamlapen.factions.common.util.BlockDescription;
-import de.teamlapen.factions.common.util.ShiftDescription;
+import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.faction.common.util.BlockDescription;
+import de.teamlapen.faction.common.util.ShiftDescription;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.bus.api.SubscribeEvent;

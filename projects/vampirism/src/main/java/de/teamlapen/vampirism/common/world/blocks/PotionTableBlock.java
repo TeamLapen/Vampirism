@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.world.blockentity.PotionTableBlockEntity;
-import de.teamlapen.factions.common.world.blocks.base.BaseContainerBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseContainerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;

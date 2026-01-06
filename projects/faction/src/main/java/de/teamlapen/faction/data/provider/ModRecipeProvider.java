@@ -1,6 +1,6 @@
-package de.teamlapen.factions.data.provider;
+package de.teamlapen.faction.data.provider;
 
-import de.teamlapen.factions.common.core.FactionBlocks;
+import de.teamlapen.faction.common.core.FactionBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;

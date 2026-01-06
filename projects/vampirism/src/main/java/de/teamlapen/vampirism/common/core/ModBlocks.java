@@ -1,16 +1,17 @@
 package de.teamlapen.vampirism.common.core;
 
+import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.faction.common.util.BlockDescription;
 import de.teamlapen.faction.common.world.blocks.TotemTopBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.ModRegistryItems;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.factions.common.util.BlockDescription;
 import de.teamlapen.vampirism.common.util.VampirismVoxelShapes;
 import de.teamlapen.vampirism.common.world.blocks.*;
-import de.teamlapen.factions.common.world.blocks.base.BaseHorizontalBlock;
-import de.teamlapen.factions.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.common.world.blocks.candle.*;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.FogDiffuserBlock;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.GarlicDiffuserBlock;

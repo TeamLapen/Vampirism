@@ -189,8 +189,8 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
     protected void createMedChair() {
         this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.MED_CHAIR.get())
                 .with(PropertyDispatch.initial(MedChairBlock.PART)
-                        .select(MedChairBlock.EnumPart.BOTTOM, plainVariant(VResourceLocation.mod("block/medchairbase")))
-                        .select(MedChairBlock.EnumPart.TOP, plainVariant(VResourceLocation.mod("block/medchairhead")))
+                        .select(MedChairBlock.EnumPart.BOTTOM, plainVariant(VIdentifier.mod("block/medchairbase")))
+                        .select(MedChairBlock.EnumPart.TOP, plainVariant(VIdentifier.mod("block/medchairhead")))
                 )
                 .with(PropertyDispatch.modify(MedChairBlock.FACING)
                         .select(Direction.NORTH, NOP)

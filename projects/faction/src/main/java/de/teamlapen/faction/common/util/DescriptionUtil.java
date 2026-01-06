@@ -1,4 +1,4 @@
-package de.teamlapen.factions.common.util;
+package de.teamlapen.faction.common.util;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

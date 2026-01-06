@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.DiffuserBlockEntity;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.GarlicDiffuserBlockEntity;
-import de.teamlapen.factions.api.world.IDescriptionProvider;
+import de.teamlapen.faction.api.world.IDescriptionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;

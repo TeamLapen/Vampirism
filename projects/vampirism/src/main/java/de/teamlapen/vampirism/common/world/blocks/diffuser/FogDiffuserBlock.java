@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.DiffuserBlockEntity;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.FogDiffuserBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +13,7 @@ public class FogDiffuserBlock extends DiffuserBlock {
 
     public static final MapCodec<FogDiffuserBlock> CODEC = simpleCodec(FogDiffuserBlock::new);
 
-    public FogDiffuserBlock(Properties properties) {
+    public FogDiffuserBlock(BlockBehaviour.Properties properties) {
         super(properties, ModBlockEntities.FOG_DIFFUSER::get);
     }
 

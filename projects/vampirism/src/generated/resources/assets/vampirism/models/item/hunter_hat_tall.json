@@ -1,10 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-<<<<<<<< HEAD:projects/vampirism/src/generated/resources/assets/vampirism/models/item/hunter_hat_tall.json
     "layer0": "vampirism:item/hunter_hat_tall"
-========
-    "layer0": "factionapi:item/oblivion_potion"
->>>>>>>> origin/dev:projects/faction/src/generated/resources/assets/factionapi/models/item/oblivion_potion.json
   }
 }

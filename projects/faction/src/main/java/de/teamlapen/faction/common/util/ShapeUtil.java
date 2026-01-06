@@ -1,4 +1,4 @@
-package de.teamlapen.factions.common.util;
+package de.teamlapen.faction.common.util;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Direction;

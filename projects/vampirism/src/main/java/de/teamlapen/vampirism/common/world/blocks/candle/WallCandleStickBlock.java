@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.blocks.candle;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.factions.common.util.ShapeUtil;
+import de.teamlapen.faction.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

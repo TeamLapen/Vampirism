@@ -1,4 +1,4 @@
 @NullMarked
-package de.teamlapen.factions.common.world.blocks.base;
+package de.teamlapen.faction.common.world.blocks.base;
 
 import org.jspecify.annotations.NullMarked;

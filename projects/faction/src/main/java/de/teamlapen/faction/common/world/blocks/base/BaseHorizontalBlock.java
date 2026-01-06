@@ -1,6 +1,6 @@
-package de.teamlapen.factions.common.world.blocks.base;
+package de.teamlapen.faction.common.world.blocks.base;
 
-import de.teamlapen.factions.common.util.ShapeUtil;
+import de.teamlapen.faction.common.util.ShapeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;

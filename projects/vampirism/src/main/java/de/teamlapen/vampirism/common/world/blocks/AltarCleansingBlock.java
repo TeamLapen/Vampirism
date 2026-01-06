@@ -4,7 +4,7 @@ import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.util.ShapeUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.factions.common.world.blocks.base.BaseHorizontalBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;

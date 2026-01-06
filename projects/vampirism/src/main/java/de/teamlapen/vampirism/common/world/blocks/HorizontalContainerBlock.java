@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
-import de.teamlapen.factions.common.world.blocks.base.BaseHorizontalBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.level.Level;

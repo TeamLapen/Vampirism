@@ -1,5 +1,5 @@
 {
-  "parent": "factions:block/totem_top_crafted",
+  "parent": "factionapi:block/totem_top_crafted",
   "textures": {
     "core": "vampirism:block/totem_top_core_vampire"
   }

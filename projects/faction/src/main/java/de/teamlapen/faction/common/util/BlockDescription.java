@@ -1,8 +1,8 @@
-package de.teamlapen.factions.common.util;
+package de.teamlapen.faction.common.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.factions.api.world.blocks.IBlockWithDescription;
+import de.teamlapen.faction.api.world.blocks.IBlockWithDescription;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;

@@ -3,7 +3,7 @@
 	"parent": "block/block",
 	"texture_size": [32, 32],
 	"textures": {
-		"base": "factions:block/totem_base",
+		"base": "factionapi:block/totem_base",
 		"particle": "block/obsidian"
 	},
 	"elements": [

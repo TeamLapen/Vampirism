@@ -1,4 +1,4 @@
-package de.teamlapen.factions.api.world;
+package de.teamlapen.faction.api.world;
 
 public interface IDescriptionProvider {
 

@@ -3,10 +3,10 @@
 	"parent": "block/block",
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"inner": "factions:block/totem_inner",
-		"bottom": "factions:block/totem_top_bottom",
-		"side": "factions:block/totem_top_side",
-		"core": "factions:block/totem_top_core_neutral",
+		"inner": "factionapi:block/totem_inner",
+		"bottom": "factionapi:block/totem_top_bottom",
+		"side": "factionapi:block/totem_top_side",
+		"core": "factionapi:block/totem_top_core_neutral",
 		"particle": "block/glowstone"
 	},
 	"elements": [

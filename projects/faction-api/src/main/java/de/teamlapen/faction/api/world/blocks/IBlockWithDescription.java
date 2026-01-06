@@ -1,4 +1,4 @@
-package de.teamlapen.factions.api.world.blocks;
+package de.teamlapen.faction.api.world.blocks;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
