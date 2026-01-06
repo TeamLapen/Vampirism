@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.models.items.properties;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.world.items.component.ContainedProjectiles;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record ClipFilled() implements RangeSelectItemModelProperty {
 
-    public static final Identifier ID = VResourceLocation.mod("clip_filled");
+    public static final Identifier ID = VIdentifier.mod("clip_filled");
     public static final MapCodec<ClipFilled> CODEC = MapCodec.unit(ClipFilled::new);
 
     @Override

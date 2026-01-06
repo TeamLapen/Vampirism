@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.common.world.entity;
 
-import de.teamlapen.factions.common.util.AttachmentSynchronization;
-import de.teamlapen.factions.common.util.SpawnUtil;
+import de.teamlapen.faction.common.util.AttachmentSynchronization;
+import de.teamlapen.faction.common.util.SpawnUtil;
 import de.teamlapen.sync.AttachmentSync;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
@@ -40,7 +40,7 @@ import java.util.Optional;
  * Extended entity property which every {@link PathfinderMob} has
  */
 public class ExtendedCreature extends AttachmentSync implements IExtendedCreatureVampirism, BloodResourceHandler {
-    public static final Identifier SERIALIZER_ID = VResourceLocation.mod("extended_creature");
+    public static final Identifier SERIALIZER_ID = VIdentifier.mod("extended_creature");
 
     public static final int POISONOUS_BLOOD_DOSE_DURATION = 72000; // 3 in-game days
 
@@ -307,9 +307,9 @@ public class ExtendedCreature extends AttachmentSync implements IExtendedCreatur
 
     @Override
     protected void registerProperties() {
-        this.registerProperty(VResourceLocation.mod("blood")).simple(0, () -> this.blood, b -> this.blood = b);
-        this.registerProperty(VResourceLocation.mod("max_blood")).simple(0, () -> this.maxBlood, b -> this.maxBlood = b);
-        this.registerProperty(VResourceLocation.mod("poisonous_blood")).simple(0, () -> this.poisonousBlood, b -> this.poisonousBlood = b);
+        this.registerProperty(VIdentifier.mod("blood")).simple(0, () -> this.blood, b -> this.blood = b);
+        this.registerProperty(VIdentifier.mod("max_blood")).simple(0, () -> this.maxBlood, b -> this.maxBlood = b);
+        this.registerProperty(VIdentifier.mod("poisonous_blood")).simple(0, () -> this.poisonousBlood, b -> this.poisonousBlood = b);
     }
 
     public static class AttachmentOptions extends AttachmentSynchronization<ExtendedCreature, PathfinderMob> {

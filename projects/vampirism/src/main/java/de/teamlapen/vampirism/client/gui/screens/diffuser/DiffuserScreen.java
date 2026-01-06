@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens.diffuser;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.gui.components.ProgressBar;
 import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
 import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
@@ -18,8 +18,8 @@ import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractContainerScreen<T> {
-    private static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/diffuser.png");
-    private static final Identifier LIT_PROGRESS_SPRITE = VResourceLocation.mc("container/furnace/lit_progress");
+    private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/diffuser.png");
+    private static final Identifier LIT_PROGRESS_SPRITE = VIdentifier.mc("container/furnace/lit_progress");
 
     protected final int xSize = 176;
     protected final int ySize = 166;

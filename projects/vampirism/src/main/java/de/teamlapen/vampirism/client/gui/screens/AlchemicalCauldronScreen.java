@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.factions.api.factions.skills.ISkill;
-import de.teamlapen.factions.client.gui.GuiRenderer;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.client.gui.GuiRenderer;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.inventory.AlchemicalCauldronMenu;
@@ -23,11 +23,11 @@ import java.util.stream.Stream;
 
 
 public class AlchemicalCauldronScreen extends AbstractContainerScreen<AlchemicalCauldronMenu> {
-    public static final Identifier BACKGROUND = VResourceLocation.mod("textures/gui/container/alchemical_cauldron.png");
-    public static final Identifier LIT_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/lit_progress");
-    public static final Identifier BURN_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/burn_progress");
-    public static final Identifier BUBBLES_PROGRESS_SPRITE = VResourceLocation.mod("container/alchemical_cauldron/bubbles_progress");
-    private static final Identifier ERROR_SPRITE = VResourceLocation.mod("container/anvil/error");
+    public static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/alchemical_cauldron.png");
+    public static final Identifier LIT_PROGRESS_SPRITE = VIdentifier.mod("container/alchemical_cauldron/lit_progress");
+    public static final Identifier BURN_PROGRESS_SPRITE = VIdentifier.mod("container/alchemical_cauldron/burn_progress");
+    public static final Identifier BUBBLES_PROGRESS_SPRITE = VIdentifier.mod("container/alchemical_cauldron/bubbles_progress");
+    private static final Identifier ERROR_SPRITE = VIdentifier.mod("container/anvil/error");
 
     public AlchemicalCauldronScreen(@NotNull AlchemicalCauldronMenu inventorySlotsIn, @NotNull Inventory inventoryPlayer, @NotNull Component name) {
         super(inventorySlotsIn, inventoryPlayer, name);

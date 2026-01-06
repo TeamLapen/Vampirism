@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.Helper;
@@ -64,7 +64,7 @@ public class ClientEventHandler {
 
     public static void onModelRegistry(ModelEvent.RegisterStandalone standalone) {
         for (var cell : ModModels.COFFIN_KEYS.cellSet()) {
-            standalone.register(cell.getValue(), SimpleUnbakedStandaloneModel.blockStateModel(VResourceLocation.mod("block/coffin/coffin" + cell.getRowKey().getModelSuffix() + "_" + cell.getColumnKey().getName())));
+            standalone.register(cell.getValue(), SimpleUnbakedStandaloneModel.blockStateModel(VIdentifier.mod("block/coffin/coffin" + cell.getRowKey().getModelSuffix() + "_" + cell.getColumnKey().getName())));
         }
     }
 

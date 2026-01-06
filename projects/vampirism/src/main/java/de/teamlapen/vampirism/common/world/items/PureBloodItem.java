@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.api.FactionsApi;
-import de.teamlapen.factions.common.world.items.consume.FactionBasedConsumeEffect;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.FactionsApi;
+import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -40,7 +40,7 @@ public class PureBloodItem extends Item {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public PureBloodItem(int level, Properties properties) {
-        super(properties.stacksTo(16).overrideDescription(Util.makeDescriptionId("item", VResourceLocation.mod("pure_blood"))).component(DataComponents.CONSUMABLE, Consumables.defaultDrink()
+        super(properties.stacksTo(16).overrideDescription(Util.makeDescriptionId("item", VIdentifier.mod("pure_blood"))).component(DataComponents.CONSUMABLE, Consumables.defaultDrink()
                 .onConsume(
                         FactionBasedConsumeEffect.builder(ModFactionTags.IS_VAMPIRE)
                                 .add(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ModEffects.SATURATION)))

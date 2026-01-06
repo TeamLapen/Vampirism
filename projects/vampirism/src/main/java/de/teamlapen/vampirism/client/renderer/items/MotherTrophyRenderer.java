@@ -3,12 +3,11 @@ package de.teamlapen.vampirism.client.renderer.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.GhostModel;
 import de.teamlapen.vampirism.client.renderer.entities.GhostRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
@@ -16,15 +15,13 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class MotherTrophyRenderer implements NoDataSpecialModelRenderer {
 
-    public static final Identifier ID = VResourceLocation.mod("mother_trophy");
+    public static final Identifier ID = VIdentifier.mod("mother_trophy");
     private final GhostModel model;
 
     public MotherTrophyRenderer(GhostModel model) {

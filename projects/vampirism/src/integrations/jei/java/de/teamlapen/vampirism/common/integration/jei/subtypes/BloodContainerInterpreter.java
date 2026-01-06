@@ -9,9 +9,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class BloodContainerInterpreter implements ISubtypeInterpreter<ItemStack> {
 
+    public static final BloodContainerInterpreter INSTANCE = new BloodContainerInterpreter();
+
+    private BloodContainerInterpreter() {
+    }
+
     @Override
     public @Nullable Object getSubtypeData(ItemStack ingredient, @NotNull UidContext context) {
-        return ingredient.get(ModDataComponents.BLOOD_CONTAINER);
+        var container = ingredient.get(ModDataComponents.BLOOD_CONTAINER);
+        if (container == null) {
+            return null;
+        }
+        return container.getAmount();
     }
 
 }

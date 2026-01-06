@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter.actions;
 
-import de.teamlapen.factions.api.factions.actions.IActionResult;
-import de.teamlapen.factions.api.factions.actions.ILastingAction;
+import de.teamlapen.faction.api.factions.actions.IActionResult;
+import de.teamlapen.faction.api.factions.actions.ILastingAction;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.world.entity.player.Player;

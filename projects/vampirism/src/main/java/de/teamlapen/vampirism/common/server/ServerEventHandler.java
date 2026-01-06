@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.server;
 
-import de.teamlapen.factions.common.factions.minions.MinionWorldData;
-import de.teamlapen.factions.common.factions.skills.ClientboundSkillTreePacket;
-import de.teamlapen.factions.common.factions.skills.ServerSkillTreeData;
+import de.teamlapen.faction.common.factions.minions.MinionWorldData;
+import de.teamlapen.faction.common.factions.skills.ClientboundSkillTreePacket;
+import de.teamlapen.faction.common.factions.skills.ServerSkillTreeData;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.config.ModConfig;

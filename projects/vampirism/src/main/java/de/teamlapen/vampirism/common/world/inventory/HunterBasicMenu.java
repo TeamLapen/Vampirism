@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.inventory;
 
-import de.teamlapen.factions.api.factions.LevelingChange;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;

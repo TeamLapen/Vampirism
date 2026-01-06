@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.factions.skills.ISkillNode;
-import de.teamlapen.factions.api.factions.skills.ISkillTree;
-import de.teamlapen.factions.common.factions.skills.SkillTreeConfiguration;
-import de.teamlapen.factions.data.provider.base.SkillTreeProvider;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.skills.ISkillNode;
+import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.common.factions.skills.SkillTreeConfiguration;
+import de.teamlapen.faction.data.provider.base.SkillTreeProvider;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;

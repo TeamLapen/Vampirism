@@ -1,18 +1,18 @@
 package de.teamlapen.vampirism.common.world.entity.minion;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionEntity;
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.api.world.entities.minion.IMinionTask;
-import de.teamlapen.factions.common.core.FactionMinionTasks;
-import de.teamlapen.factions.common.factions.minions.MinionData;
-import de.teamlapen.factions.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionEntity;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.common.core.FactionMinionTasks;
+import de.teamlapen.faction.common.factions.minions.MinionData;
+import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
@@ -262,7 +262,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     }
 
     public static class VampireMinionData extends MinionData {
-        public static final Identifier ID = VResourceLocation.mod("vampire");
+        public static final Identifier ID = VIdentifier.mod("vampire");
 
         public static final int MAX_LEVEL = 6;
         public static final int MAX_LEVEL_INVENTORY = 2;
@@ -313,15 +313,15 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         @Override
         protected void registerProperties() {
             super.registerProperties();
-            registerProperty(VResourceLocation.mod("type")).simple(0, () -> type, t -> type = t);
-            registerProperty(VResourceLocation.mod("level")).simple(0, () -> level, t -> level = t);
-            registerProperty(VResourceLocation.mod("use_lord_skin")).simple(false, () -> useLordSkin, t -> useLordSkin = t);
-            registerProperty(VResourceLocation.mod("inventory_level")).simple(0, () -> inventoryLevel, t -> inventoryLevel = t);
-            registerProperty(VResourceLocation.mod("health_level")).simple(0, () -> healthLevel, t -> healthLevel = t);
-            registerProperty(VResourceLocation.mod("strength_level")).simple(0, () -> strengthLevel, t -> strengthLevel = t);
-            registerProperty(VResourceLocation.mod("speed_level")).simple(0, () -> speedLevel, t -> speedLevel = t);
-            registerProperty(VResourceLocation.mod("minion_skin")).simple(false, () -> minionSkin, t -> minionSkin = t);
-            registerProperty(VResourceLocation.mod("has_increased_stats")).simple(false, () -> hasIncreasedStats, t -> hasIncreasedStats = t);
+            registerProperty(VIdentifier.mod("type")).simple(0, () -> type, t -> type = t);
+            registerProperty(VIdentifier.mod("level")).simple(0, () -> level, t -> level = t);
+            registerProperty(VIdentifier.mod("use_lord_skin")).simple(false, () -> useLordSkin, t -> useLordSkin = t);
+            registerProperty(VIdentifier.mod("inventory_level")).simple(0, () -> inventoryLevel, t -> inventoryLevel = t);
+            registerProperty(VIdentifier.mod("health_level")).simple(0, () -> healthLevel, t -> healthLevel = t);
+            registerProperty(VIdentifier.mod("strength_level")).simple(0, () -> strengthLevel, t -> strengthLevel = t);
+            registerProperty(VIdentifier.mod("speed_level")).simple(0, () -> speedLevel, t -> speedLevel = t);
+            registerProperty(VIdentifier.mod("minion_skin")).simple(false, () -> minionSkin, t -> minionSkin = t);
+            registerProperty(VIdentifier.mod("has_increased_stats")).simple(false, () -> hasIncreasedStats, t -> hasIncreasedStats = t);
         }
 
         @Override

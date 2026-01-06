@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.AdvancedVampireEyeLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.AdvancedVampireFangLayer;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * Render the advanced vampire with overlays
  */
 public class AdvancedVampireRenderer extends DualBipedRenderer<AdvancedVampireEntity, AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> {
-    private static final PlayerSkin FALLBACK = new PlayerSkin(new ClientAsset.ResourceTexture(VResourceLocation.mod("fallback"), VResourceLocation.mod("textures/entity/advanced_vampire.png")), null, null, PlayerModelType.WIDE, false);
+    private static final PlayerSkin FALLBACK = new PlayerSkin(new ClientAsset.ResourceTexture(VIdentifier.mod("fallback"), VIdentifier.mod("textures/entity/advanced_vampire.png")), null, null, PlayerModelType.WIDE, false);
     private final @NotNull PlayerSkin[] textures;
 
 

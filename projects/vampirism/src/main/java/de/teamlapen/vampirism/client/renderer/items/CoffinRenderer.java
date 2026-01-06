@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.renderer.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModModels;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import net.minecraft.client.Minecraft;
@@ -17,17 +17,15 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class CoffinRenderer implements SpecialModelRenderer<CoffinBlock> {
 
-    public static final Identifier ID = VResourceLocation.mod("coffin");
+    public static final Identifier ID = VIdentifier.mod("coffin");
     private final BlockStateModel[] models;
 
     public CoffinRenderer(BlockStateModel[] models) {

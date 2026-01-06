@@ -2,11 +2,10 @@ package de.teamlapen.vampirism.common.world.blockentity;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import de.teamlapen.factions.common.world.blockentity.NetworkedBlockEntity;
+import de.teamlapen.faction.common.world.blockentity.NetworkedBlockEntity;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.world.inventory.VampireBeaconMenu;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.color.item;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class OilBottleTint implements ItemTintSource {
 
-    public static final Identifier ID = VResourceLocation.mod("oil_tint");
+    public static final Identifier ID = VIdentifier.mod("oil_tint");
     public static final OilBottleTint INSTANCE = new OilBottleTint();
     public static final MapCodec<OilBottleTint> CODEC = MapCodec.unit(INSTANCE);
 

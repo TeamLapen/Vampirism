@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
-import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.factions.actions.IAction;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.tags.ModActionTags;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.stats.StatFormatter;
@@ -48,7 +48,7 @@ public class ModStats {
     }
 
     private static DeferredHolder<Identifier, Identifier> add(String name, StatFormatter formatter) {
-        var id = VResourceLocation.loc(CUSTOM_STAT.getNamespace(), name);
+        var id = VIdentifier.loc(CUSTOM_STAT.getNamespace(), name);
         var holder = CUSTOM_STAT.register(name, () -> id);
         CUSTOM_STAT_FORMATTERS.put(id, formatter);
         return holder;

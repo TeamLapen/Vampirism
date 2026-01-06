@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.neoforged.bus.api.IEventBus;
@@ -19,6 +19,6 @@ public class ModMapDecorations {
     }
 
     private static DeferredHolder<MapDecorationType, MapDecorationType> register(String name, int color) {
-        return MAP_DECORATION_TYPES.register(name, () -> new MapDecorationType(VResourceLocation.mod(name), true, color, false, true));
+        return MAP_DECORATION_TYPES.register(name, () -> new MapDecorationType(VIdentifier.mod(name), true, color, false, true));
     }
 }

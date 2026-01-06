@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.factions.client.gui.components.DropdownWidget;
-import de.teamlapen.factions.client.gui.screens.AppearanceScreen;
-import de.teamlapen.factions.common.factions.minions.MinionData;
+import de.teamlapen.faction.client.gui.components.DropdownWidget;
+import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
+import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.renderer.entities.VampireMinionRenderer;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;

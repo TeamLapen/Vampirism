@@ -23,9 +23,9 @@ public class DBNODamageSource extends DamageSource {
     @Override
     public Component getLocalizedDeathMessage(@NotNull LivingEntity entityLivingBaseIn) {
         if (this.originalSource == null) {
-            return Component.translatable("death.attack.vampirism_dbno.missing");
+            return Component.translatable("death.attack.vampirism.dbno.missing");
         } else {
-            return Component.translatable("death.attack.vampirism_dbno", this.originalSource);
+            return Component.translatable("death.attack.vampirism.dbno", this.originalSource);
         }
     }
 }

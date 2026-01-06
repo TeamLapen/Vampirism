@@ -1,0 +1,20 @@
+{
+  "net/minecraft/client/gui/screens/achievement/StatsScreen": [
+    "de/teamlapen/faction/misc/injection/client/IStatsScreenFactionsMock"
+  ],
+  "net/minecraft/client/gui/components/ImageWidget$Sprite": [
+    "de/teamlapen/faction/misc/injection/client/IImageWidgetSpriteFactionsMock"
+  ],
+  "net/minecraft/client/gui/components/ImageWidget$Texture": [
+    "de/teamlapen/faction/misc/injection/client/IImageWidgetTextureFactionsMock"
+  ],
+  "net/minecraft/client/gui/components/BossHealthOverlay": [
+    "de/teamlapen/faction/misc/injection/client/IBossHealthOverlayFactionsMock"
+  ],
+  "net/minecraft/world/item/Item$Properties": [
+    "de/teamlapen/faction/misc/injection/IItemPropertiesFactionsMock"
+  ],
+  "net/minecraft/world/effect/MobEffectInstance": [
+    "de/teamlapen/faction/misc/injection/IEffectInstanceWithSourceFactionsMock"
+  ]
+}

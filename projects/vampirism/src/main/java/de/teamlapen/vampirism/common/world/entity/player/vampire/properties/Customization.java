@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.world.entity.player.vampire.properties;
 import de.teamlapen.sync.PropertyParentSync;
 import de.teamlapen.sync.PropertySync;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 
 public class Customization extends PropertyParentSync {
 
@@ -17,9 +17,9 @@ public class Customization extends PropertyParentSync {
 
     @Override
     protected void registerProperties() {
-        registerProperty(VResourceLocation.mod("eye_type")).simple(0, this::eyeType, this::setEyeType);
-        registerProperty(VResourceLocation.mod("fang_type")).simple(0, this::fangType, this::setFangType);
-        registerProperty(VResourceLocation.mod("glowing_eyes")).simple(false, this::glowingEyes, this::setGlowingEyes);
+        registerProperty(VIdentifier.mod("eye_type")).simple(0, this::eyeType, this::setEyeType);
+        registerProperty(VIdentifier.mod("fang_type")).simple(0, this::fangType, this::setFangType);
+        registerProperty(VIdentifier.mod("glowing_eyes")).simple(false, this::glowingEyes, this::setGlowingEyes);
     }
 
     public boolean setEyeType(int eyeType) {

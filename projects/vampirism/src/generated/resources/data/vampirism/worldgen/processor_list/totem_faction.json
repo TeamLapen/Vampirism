@@ -6,11 +6,11 @@
         {
           "default_state": {
             "state": {
-              "Name": "factions:totem_top"
+              "Name": "factionapi:totem_top"
             }
           },
           "input_predicate": {
-            "block": "factions:totem_top",
+            "block": "factionapi:totem_top",
             "predicate_type": "minecraft:random_block_match",
             "probability": 0.6
           },

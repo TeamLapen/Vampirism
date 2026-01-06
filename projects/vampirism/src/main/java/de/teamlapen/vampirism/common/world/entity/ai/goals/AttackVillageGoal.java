@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.ai.goals;
 
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.api.world.entities.IVillageCaptureEntity;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.world.entities.IVillageCaptureEntity;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;

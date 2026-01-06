@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.misc.injection.client;
 
-import de.teamlapen.factions.misc.extensions.client.ICamera;
+import de.teamlapen.faction.misc.extensions.client.ICamera;
 
 @Deprecated
 public interface ICameraVampirismMock extends ICamera {

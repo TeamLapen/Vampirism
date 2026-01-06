@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.world.entity.vampire;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionEntity;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismFactions;

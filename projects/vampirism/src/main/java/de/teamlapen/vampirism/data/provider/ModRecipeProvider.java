@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -49,7 +49,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.teamlapen.vampirism.api.util.VResourceLocation.modString;
+import static de.teamlapen.vampirism.api.util.VIdentifier.modString;
 
 public class ModRecipeProvider extends VampirismRecipeProvider {
 
@@ -651,7 +651,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_gold", has(GOLD_INGOT))
                 .save(output);
 
-        colorWithDye(ColorListsUtil.VAMPIRE_CLOAKS, RecipeCategory.COMBAT, VResourceLocation::modString);
+        colorWithDye(ColorListsUtil.VAMPIRE_CLOAKS, RecipeCategory.COMBAT, VIdentifier::modString);
         ColorListsUtil.VAMPIRE_CLOAKS.keySet().forEach(dye -> {
             VampireCloakItem cloakItem = ColorListsUtil.VAMPIRE_CLOAKS.get(dye);
             Item woolItem = ColorListsUtil.DYED_WOOL.get(dye);

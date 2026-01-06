@@ -35,9 +35,24 @@ for (var integration : integrations) {
     }
 }
 
+tasks.named("classes").configure {
+    integrations.each {
+        if (it.included) {
+            dependsOn(sourceSets[it.name].classesTaskName)
+        }
+    }
+}
+
+integrations.each {
+    if (it.included) {
+        sourceSets.main.compileClasspath += sourceSets[it.name].output
+        sourceSets.main.runtimeClasspath += sourceSets[it.name].output
+    }
+}
+
 List<Project> dependencyProjects = [
-        project(':factions-api'),
-        project(':factions'),
+        project(':faction-api'),
+        project(':faction'),
         project(':vampirism-api'),
 ]
 
@@ -47,11 +62,11 @@ dependencyProjects.forEach {
 
 dependencies {
     implementation project(':vampirism-api')
-    implementation project(':factions-api')
+    implementation project(':faction-api')
 
-    implementation project(':factions')
-    interfaceInjectionData project(':factions')
-    accessTransformers project(':factions')
+    implementation project(':faction')
+    interfaceInjectionData project(':faction')
+    accessTransformers project(':faction')
 }
 
 
@@ -119,8 +134,8 @@ neoForge {
             }
         }
         "${factions_mod_id}" {
-            sourceSet(project(':factions').sourceSets.main)
-            sourceSet(project(':factions-api').sourceSets.main)
+            sourceSet(project(':faction').sourceSets.main)
+            sourceSet(project(':faction-api').sourceSets.main)
         }
     }
 }

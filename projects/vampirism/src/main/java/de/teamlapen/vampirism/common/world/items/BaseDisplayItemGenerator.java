@@ -17,7 +17,7 @@ public abstract class BaseDisplayItemGenerator implements CreativeModeTab.Displa
     public CreativeModeTab.ItemDisplayParameters parameters;
 
     @Override
-    public void accept(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.@NotNull Output output) {
+    public void accept(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         this.output = output;
         this.parameters = parameters;
 

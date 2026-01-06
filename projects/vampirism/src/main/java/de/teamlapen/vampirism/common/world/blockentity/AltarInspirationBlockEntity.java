@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.factions.api.factions.LevelingChange;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.world.blockentity.NetworkedBlockEntity;
+import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.world.blockentity.NetworkedBlockEntity;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.core.*;

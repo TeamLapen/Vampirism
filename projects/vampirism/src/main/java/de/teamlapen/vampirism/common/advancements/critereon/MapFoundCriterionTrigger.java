@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.advancements.critereon;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.factions.common.util.MapUtil;
+import de.teamlapen.faction.common.util.MapUtil;
 import de.teamlapen.vampirism.common.core.ModAdvancements;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.criterion.ContextAwarePredicate;

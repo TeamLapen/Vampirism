@@ -1,16 +1,16 @@
 package de.teamlapen.vampirism.common.world.entity.minion;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionEntity;
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.api.factions.lord.ILordPlayer;
-import de.teamlapen.factions.api.world.entities.minion.IMinionTask;
-import de.teamlapen.factions.common.core.FactionMinionTasks;
-import de.teamlapen.factions.common.factions.minions.MinionData;
-import de.teamlapen.factions.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionEntity;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.common.core.FactionMinionTasks;
+import de.teamlapen.faction.common.factions.minions.MinionData;
+import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.world.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
@@ -251,7 +251,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     public static class HunterMinionData extends MinionData {
-        public static final Identifier ID = VResourceLocation.mod("hunter");
+        public static final Identifier ID = VIdentifier.mod("hunter");
 
         public static final int MAX_LEVEL = 6;
         public static final int MAX_LEVEL_INVENTORY = 2;
@@ -307,16 +307,16 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         @Override
         protected void registerProperties() {
             super.registerProperties();
-            this.registerProperty(VResourceLocation.mod("type")).simple(0, () -> type, x -> type = x);
-            this.registerProperty(VResourceLocation.mod("hat")).simple(0, () -> hat, x -> hat = x);
-            this.registerProperty(VResourceLocation.mod("level")).simple(0, () -> level, x -> level = x);
-            this.registerProperty(VResourceLocation.mod("use_lord_skin")).simple(false, () -> useLordSkin, x -> useLordSkin = x);
-            this.registerProperty(VResourceLocation.mod("inventory_level")).simple(0, () -> inventoryLevel, x -> inventoryLevel = x);
-            this.registerProperty(VResourceLocation.mod("health_level")).simple(0, () -> healthLevel, x -> healthLevel = x);
-            this.registerProperty(VResourceLocation.mod("strength_level")).simple(0, () -> strengthLevel, x -> strengthLevel = x);
-            this.registerProperty(VResourceLocation.mod("resource_efficiency_level")).simple(0, () -> resourceEfficiencyLevel, x -> resourceEfficiencyLevel = x);
-            this.registerProperty(VResourceLocation.mod("minion_skin")).simple(false, () -> minionSkin, x -> minionSkin = x);
-            this.registerProperty(VResourceLocation.mod("has_increased_stats")).simple(false, () -> hasIncreasedStats, x -> hasIncreasedStats = x);
+            this.registerProperty(VIdentifier.mod("type")).simple(0, () -> type, x -> type = x);
+            this.registerProperty(VIdentifier.mod("hat")).simple(0, () -> hat, x -> hat = x);
+            this.registerProperty(VIdentifier.mod("level")).simple(0, () -> level, x -> level = x);
+            this.registerProperty(VIdentifier.mod("use_lord_skin")).simple(false, () -> useLordSkin, x -> useLordSkin = x);
+            this.registerProperty(VIdentifier.mod("inventory_level")).simple(0, () -> inventoryLevel, x -> inventoryLevel = x);
+            this.registerProperty(VIdentifier.mod("health_level")).simple(0, () -> healthLevel, x -> healthLevel = x);
+            this.registerProperty(VIdentifier.mod("strength_level")).simple(0, () -> strengthLevel, x -> strengthLevel = x);
+            this.registerProperty(VIdentifier.mod("resource_efficiency_level")).simple(0, () -> resourceEfficiencyLevel, x -> resourceEfficiencyLevel = x);
+            this.registerProperty(VIdentifier.mod("minion_skin")).simple(false, () -> minionSkin, x -> minionSkin = x);
+            this.registerProperty(VIdentifier.mod("has_increased_stats")).simple(false, () -> hasIncreasedStats, x -> hasIncreasedStats = x);
         }
 
         @Override

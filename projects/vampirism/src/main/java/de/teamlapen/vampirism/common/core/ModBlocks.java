@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.factions.common.core.FactionDataComponents;
-import de.teamlapen.vampirism.common.world.blocks.MedChairBlock;
-import de.teamlapen.factions.common.world.blocks.TotemTopBlock;
+import de.teamlapen.faction.common.world.blocks.TotemTopBlock;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.ModRegistryItems;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.factions.common.util.BlockDescription;
 import de.teamlapen.vampirism.common.util.VampirismVoxelShapes;
@@ -367,7 +365,7 @@ public class ModBlocks {
      */
     @SuppressWarnings("JavadocReference")
     private static <T extends Block> DeferredBlock<T> registerWithItem(String name, Function<BlockBehaviour.Properties, T> supplier, Supplier<BlockBehaviour.Properties> blockProperties, Function<Item.@NotNull Properties, Item.Properties> properties) {
-        DeferredBlock<T> block = BLOCKS.registerBlock(name, prop -> supplier.apply(blockProperties.get().setId(ResourceKey.create(Registries.BLOCK, VResourceLocation.mod(name)))));
+        DeferredBlock<T> block = BLOCKS.registerBlock(name, prop -> supplier.apply(blockProperties.get().setId(ResourceKey.create(Registries.BLOCK, VIdentifier.mod(name)))));
         createItem(name, block, BlockItem::new, properties);
         return block;
     }
@@ -399,7 +397,7 @@ public class ModBlocks {
     }
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties,T> supplier, Supplier<BlockBehaviour.Properties> blockProperties) {
-        return BLOCKS.registerBlock(name, props -> supplier.apply(blockProperties.get().setId(ResourceKey.create(Registries.BLOCK, VResourceLocation.mod(name)))));
+        return BLOCKS.registerBlock(name, props -> supplier.apply(blockProperties.get().setId(ResourceKey.create(Registries.BLOCK, VIdentifier.mod(name)))));
     }
 
     private static DeferredBlock<FlowerPotBlock> registerPottedPlant(String name, DeferredBlock<?> plantBlock) {

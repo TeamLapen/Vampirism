@@ -1,26 +1,24 @@
 package de.teamlapen.vampirism.common.world.entity.player;
 
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.api.factions.LevelingChange;
-import de.teamlapen.factions.api.factions.lord.ILordPlayer;
-import de.teamlapen.factions.api.factions.lord.ILordTitleProvider;
-import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
-import de.teamlapen.factions.api.factions.tasks.ITaskPlayer;
-import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.factions.common.config.FactionConfig;
-import de.teamlapen.factions.common.core.FactionEffects;
-import de.teamlapen.factions.common.factions.FactionBasePlayer;
-import de.teamlapen.factions.common.factions.actions.ActionHandler;
-import de.teamlapen.factions.common.factions.skills.SkillHandler;
-import de.teamlapen.factions.common.factions.tasks.TaskManager;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.lord.ILordTitleProvider;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
+import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.faction.common.core.FactionEffects;
+import de.teamlapen.faction.common.factions.FactionBasePlayer;
+import de.teamlapen.faction.common.factions.actions.ActionHandler;
+import de.teamlapen.faction.common.factions.skills.SkillHandler;
+import de.teamlapen.faction.common.factions.tasks.TaskManager;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,7 +125,7 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     }
 
     public int getMaxMinions() {
-        return getLordLevel() * FactionConfig.server().miMinionPerLordLevel.get();
+        return getLordLevel() * FactionConfig.server().minionPerLordLevel.get();
     }
 
     @Override
@@ -158,9 +156,9 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     @MustBeInvokedByOverriders
     @Override
     protected void registerProperties() {
-        this.registerProperty(VResourceLocation.mod("action_handler")).subProperty(() -> this.actionHandler).register();
-        this.registerProperty(VResourceLocation.mod("skill_handler")).subProperty(() -> this.skillHandler).register();
+        this.registerProperty(VIdentifier.mod("action_handler")).subProperty(() -> this.actionHandler).register();
+        this.registerProperty(VIdentifier.mod("skill_handler")).subProperty(() -> this.skillHandler).register();
         //noinspection DataFlowIssue
-        this.registerProperty(VResourceLocation.mod("task_manager")).subProperty(() -> this.taskManager).disableClientSync().register();
+        this.registerProperty(VIdentifier.mod("task_manager")).subProperty(() -> this.taskManager).disableClientSync().register();
     }
 }

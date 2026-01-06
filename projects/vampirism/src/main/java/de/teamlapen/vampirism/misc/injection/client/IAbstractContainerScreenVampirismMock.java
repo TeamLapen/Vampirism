@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.misc.injection.client;
 
-import de.teamlapen.factions.misc.extensions.client.IAbstractContainerScreen;
+import de.teamlapen.faction.misc.extensions.client.IAbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 

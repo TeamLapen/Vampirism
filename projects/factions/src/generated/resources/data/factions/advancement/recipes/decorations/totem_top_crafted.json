@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "factions:totem_top_crafted"
+        "recipe": "factionapi:totem_top_crafted"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -37,7 +37,7 @@
   ],
   "rewards": {
     "recipes": [
-      "factions:totem_top_crafted"
+      "factionapi:totem_top_crafted"
     ]
   }
 }

@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.common.core.FactionStats;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.util.ShapeUtil;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.common.core.FactionStats;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.world.items.InjectionItem;
-import de.teamlapen.factions.common.world.blocks.base.BaseHorizontalBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;

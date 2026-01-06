@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "factions:totem_base"
+        "recipe": "factionapi:totem_base"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "factions:totem_base"
+      "factionapi:totem_base"
     ]
   }
 }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity;
 
-import de.teamlapen.factions.api.world.entities.IEntityLeader;
+import de.teamlapen.faction.api.world.entities.IEntityLeader;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModSounds;

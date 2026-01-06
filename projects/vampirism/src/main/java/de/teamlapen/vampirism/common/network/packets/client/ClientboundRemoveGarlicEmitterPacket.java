@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.network.packets.client;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 
 public record ClientboundRemoveGarlicEmitterPacket(int emitterId) implements CustomPacketPayload {
-    public static final Type<ClientboundRemoveGarlicEmitterPacket> TYPE = new Type<>(VResourceLocation.mod("remove_garlic_emitter"));
+    public static final Type<ClientboundRemoveGarlicEmitterPacket> TYPE = new Type<>(VIdentifier.mod("remove_garlic_emitter"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundRemoveGarlicEmitterPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, ClientboundRemoveGarlicEmitterPacket::emitterId,
             ClientboundRemoveGarlicEmitterPacket::new

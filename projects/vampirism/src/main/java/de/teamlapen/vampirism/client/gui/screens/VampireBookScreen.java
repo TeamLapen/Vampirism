@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.api.general.IBookBackground;
 import de.teamlapen.vampirism.api.general.IBookContents;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -261,10 +261,10 @@ public class VampireBookScreen extends Screen {
 
     public static class VampireBookPageButton extends Button {
 
-        private static final Identifier PAGE_FORWARD_HIGHLIGHTED_SPRITE = VResourceLocation.mod("widget/vampire_book_page_forward_highlighted");
-        private static final Identifier PAGE_FORWARD_SPRITE = VResourceLocation.mod("widget/vampire_book_page_forward");
-        private static final Identifier PAGE_BACKWARD_HIGHLIGHTED_SPRITE = VResourceLocation.mod("widget/vampire_book_page_backward_highlighted");
-        private static final Identifier PAGE_BACKWARD_SPRITE = VResourceLocation.mod("widget/vampire_book_page_backward");
+        private static final Identifier PAGE_FORWARD_HIGHLIGHTED_SPRITE = VIdentifier.mod("widget/vampire_book_page_forward_highlighted");
+        private static final Identifier PAGE_FORWARD_SPRITE = VIdentifier.mod("widget/vampire_book_page_forward");
+        private static final Identifier PAGE_BACKWARD_HIGHLIGHTED_SPRITE = VIdentifier.mod("widget/vampire_book_page_backward_highlighted");
+        private static final Identifier PAGE_BACKWARD_SPRITE = VIdentifier.mod("widget/vampire_book_page_backward");
 
         private static final int WIDTH = 23;
         private static final int HEIGHT = 13;

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.misc.mixin;
 
-import de.teamlapen.factions.common.util.TotemHelper;
+import de.teamlapen.faction.common.util.TotemHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;

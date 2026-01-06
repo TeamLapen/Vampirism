@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.network.packets.client;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public record ClientboundOpenVampireBookPacket(IVampireBook vampireBook) implements CustomPacketPayload {
 
-    public static final Type<ClientboundOpenVampireBookPacket> TYPE = new Type<>(VResourceLocation.mod("open_vampire_book"));
+    public static final Type<ClientboundOpenVampireBookPacket> TYPE = new Type<>(VIdentifier.mod("open_vampire_book"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundOpenVampireBookPacket> CODEC = StreamCodec.composite(VampireBook.STREAM_CODEC, ClientboundOpenVampireBookPacket::vampireBook, ClientboundOpenVampireBookPacket::new);
 
     @Override

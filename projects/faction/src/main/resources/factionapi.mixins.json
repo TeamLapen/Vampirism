@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "package": "de.teamlapen.faction.misc.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "client.ImageWidgetSpriteAccessor",
+    "client.ImageWidgetTextureAccessor",
+    "client.StatsScreenAccessor",
+    "client.accessor.AbstractContainerScreenAccessor",
+    "client.accessor.BossHealthOverlayAccessor",
+    "client.accessor.CameraAccessor",
+    "client.accessor.EntityRenderDispatcherAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "minVersion": "0.8.5",
+  "mixins": [
+    "ItemPropertiesMixin",
+    "MobEffectInstanceMixin"
+  ]
+}

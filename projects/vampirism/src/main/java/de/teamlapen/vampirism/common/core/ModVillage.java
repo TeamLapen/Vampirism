@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.common.core;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import de.teamlapen.factions.common.core.FactionBlocks;
-import de.teamlapen.factions.common.util.MapUtil;
+import de.teamlapen.faction.common.core.FactionBlocks;
+import de.teamlapen.faction.common.util.MapUtil;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.tags.ModPoiTypeTags;
 import de.teamlapen.vampirism.common.tags.ModStructureTags;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
@@ -53,7 +53,7 @@ public class ModVillage {
 
     public static final DeferredHolder<EnvironmentAttribute<?>, EnvironmentAttribute<Activity>> CONVERTED_DEFAULT = SCHEDULES.register("converted_default", () -> EnvironmentAttribute.builder(AttributeTypes.ACTIVITY).defaultValue(Activity.IDLE).build());
 
-    public static final ResourceKey<Timeline> VAMPIRE_VILLAGER_SCHEDULE = ResourceKey.create(Registries.TIMELINE, VResourceLocation.mod("vampire_villager_schedule"));
+    public static final ResourceKey<Timeline> VAMPIRE_VILLAGER_SCHEDULE = ResourceKey.create(Registries.TIMELINE, VIdentifier.mod("vampire_villager_schedule"));
 
     public static final DeferredHolder<VillagerProfession, VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () -> new VillagerProfession(Component.translatable(REFERENCE.MODID + ":vampire_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CARTOGRAPHER));
     public static final DeferredHolder<VillagerProfession, VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () -> new VillagerProfession(Component.translatable(REFERENCE.MODID + ":hunter_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(ModBlocks.HUNTER_TABLE.get(), ModBlocks.WEAPON_TABLE.get(), ModBlocks.GARLIC.get()), SoundEvents.VILLAGER_WORK_ARMORER));

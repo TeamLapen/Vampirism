@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.renderer.entities.layers.TaskMasterTypeLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.VampireEntityLayer;
@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
  * Render the advanced vampire with overlays
  */
 public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEntity, VampireTaskMasterRenderer.VampireTaskMasterRenderState, VillagerModel> {
-    private final static Identifier texture = VResourceLocation.mc("textures/entity/villager/villager.png");
-    private final static Identifier vampireOverlay = VResourceLocation.mod("textures/entity/vanilla/villager_overlay.png");
-    private final static Identifier overlay = VResourceLocation.mod("textures/entity/vampire_task_master_overlay.png");
+    private final static Identifier texture = VIdentifier.mc("textures/entity/villager/villager.png");
+    private final static Identifier vampireOverlay = VIdentifier.mod("textures/entity/vanilla/villager_overlay.png");
+    private final static Identifier overlay = VIdentifier.mod("textures/entity/vampire_task_master_overlay.png");
 
     public VampireTaskMasterRenderer(EntityRendererProvider.@NotNull Context context) {
         super(context, new VillagerModel(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);

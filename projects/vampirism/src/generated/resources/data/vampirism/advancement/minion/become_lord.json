@@ -6,7 +6,7 @@
         "type": "lord",
         "level": 1
       },
-      "trigger": "factions:faction"
+      "trigger": "factionapi:faction"
     }
   },
   "display": {

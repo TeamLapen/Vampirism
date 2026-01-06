@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.integration.terrablender;
 
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBiomes;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
@@ -35,7 +35,7 @@ public class TerraBlenderRegistration {
     static class ForestRegion extends Region {
 
         public ForestRegion() {
-            super(VResourceLocation.mod("overworld"), RegionType.OVERWORLD, ModConfig.common().vampireForestWeight_terrablender.get());
+            super(VIdentifier.mod("overworld"), RegionType.OVERWORLD, ModConfig.common().vampireForestWeight_terrablender.get());
         }
 
         @Override

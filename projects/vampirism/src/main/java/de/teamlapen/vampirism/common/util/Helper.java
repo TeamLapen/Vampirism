@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionHelper;
-import de.teamlapen.factions.api.factions.skills.ISkill;
-import de.teamlapen.factions.api.factions.skills.ISkillHandler;
-import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionHelper;
+import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;

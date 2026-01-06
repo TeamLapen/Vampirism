@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.tags;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -10,6 +10,6 @@ public class ModPoiTypeTags {
     public static final TagKey<PoiType> IS_HUNTER = tag("has_faction/is_hunter");
 
     private static TagKey<PoiType> tag(String name) {
-        return TagKey.create(Registries.POINT_OF_INTEREST_TYPE, VResourceLocation.mod(name));
+        return TagKey.create(Registries.POINT_OF_INTEREST_TYPE, VIdentifier.mod(name));
     }
 }

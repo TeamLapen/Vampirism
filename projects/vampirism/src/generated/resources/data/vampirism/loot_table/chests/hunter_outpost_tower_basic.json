@@ -70,7 +70,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "factions:oblivion_potion",
+          "name": "factionapi:oblivion_potion",
           "weight": 10
         },
         {

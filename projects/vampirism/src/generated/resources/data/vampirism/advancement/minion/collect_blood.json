@@ -5,7 +5,7 @@
       "conditions": {
         "task": "vampirism:collect_blood"
       },
-      "trigger": "factions:minion_action"
+      "trigger": "factionapi:minion_action"
     }
   },
   "display": {

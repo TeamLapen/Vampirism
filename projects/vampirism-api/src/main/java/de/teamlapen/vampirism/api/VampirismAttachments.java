@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.IFogHandler;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
@@ -21,16 +21,16 @@ public class VampirismAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<IFogHandler>> DAMAGE_HANDLER = DeferredHolder.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Keys.DAMAGE_HANDLER);
 
     public static class Keys {
-        public static final Identifier EXTENDED_CREATURE = VResourceLocation.mod("extended_creature");
-        public static final Identifier VAMPIRE_PLAYER = VResourceLocation.mod("vampire_player");
-        public static final Identifier HUNTER_PLAYER = VResourceLocation.mod("hunter_player");
-        public static final Identifier GARLIC_HANDLER = VResourceLocation.mod("garlic_handler");
-        public static final Identifier FOG_HANDLER = VResourceLocation.mod("fog_handler");
-        public static final Identifier DAMAGE_HANDLER = VResourceLocation.mod("damage_handler");
-        public static final Identifier VAMPIRE_BAT = VResourceLocation.mod("vampire_bat");
-        public static final Identifier INFECTION_STATUS = VResourceLocation.mod("infection_status");
-        public static final Identifier NEAREST_VILLAGE = VResourceLocation.mod("nearest_village");
-        public static final Identifier VAMPIRE_MINION_DATA = VResourceLocation.mod("vampire_minion_data");
-        public static final Identifier HUNTER_MINION_DATA = VResourceLocation.mod("hunter_minion_data");
+        public static final Identifier EXTENDED_CREATURE = VIdentifier.mod("extended_creature");
+        public static final Identifier VAMPIRE_PLAYER = VIdentifier.mod("vampire_player");
+        public static final Identifier HUNTER_PLAYER = VIdentifier.mod("hunter_player");
+        public static final Identifier GARLIC_HANDLER = VIdentifier.mod("garlic_handler");
+        public static final Identifier FOG_HANDLER = VIdentifier.mod("fog_handler");
+        public static final Identifier DAMAGE_HANDLER = VIdentifier.mod("damage_handler");
+        public static final Identifier VAMPIRE_BAT = VIdentifier.mod("vampire_bat");
+        public static final Identifier INFECTION_STATUS = VIdentifier.mod("infection_status");
+        public static final Identifier NEAREST_VILLAGE = VIdentifier.mod("nearest_village");
+        public static final Identifier VAMPIRE_MINION_DATA = VIdentifier.mod("vampire_minion_data");
+        public static final Identifier HUNTER_MINION_DATA = VIdentifier.mod("hunter_minion_data");
     }
 }

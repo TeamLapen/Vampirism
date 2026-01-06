@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import de.teamlapen.factions.common.server.commands.BasicCommand;
+import de.teamlapen.faction.common.server.commands.BasicCommand;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.server.commands.arguments.ModSuggestionProvider;
 import de.teamlapen.vampirism.common.util.RegUtil;

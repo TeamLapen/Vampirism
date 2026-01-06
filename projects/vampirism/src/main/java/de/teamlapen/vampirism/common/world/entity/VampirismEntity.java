@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.common.world.entity;
 
-import de.teamlapen.factions.FactionsMod;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionEntity;
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.api.world.entities.IEntityWithHome;
-import de.teamlapen.factions.api.world.entities.extensions.ILivingEntity;
-import de.teamlapen.factions.common.config.FactionConfig;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.util.SpawnUtil;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.FactionsMod;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionEntity;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.world.entities.IEntityWithHome;
+import de.teamlapen.faction.api.world.entities.extensions.ILivingEntity;
+import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.util.SpawnUtil;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.IVampirismEntity;
 import de.teamlapen.vampirism.common.core.ModParticles;
 import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
@@ -291,7 +291,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        ModParticles.spawnParticlesServer(this.level(), new GenericParticleOptions(VResourceLocation.mc("effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
+        ModParticles.spawnParticlesServer(this.level(), new GenericParticleOptions(VIdentifier.mc("effect_6"), 10, 0x0A0A0A, 0.6F), this.getX(), this.getY(), this.getZ(), 20, 1, 1, 1, 0);
         this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1, 1);
         this.discard();
     }
@@ -301,11 +301,11 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
             if (this.tickCount % 256 == 0 && this.isAlive()) {
                 boolean current = this instanceof Enemy;
                 boolean convert = false;
-                de.teamlapen.factions.common.config.ServerConfig.IMobOptions opt = FactionConfig.server().entityIMob.get();
+                de.teamlapen.faction.common.config.ServerConfig.IMobOptions opt = FactionConfig.server().entityIMob.get();
                 if (ServerLifecycleHooks.getCurrentServer().isDedicatedServer()) {
-                    convert = (opt == de.teamlapen.factions.common.config.ServerConfig.IMobOptions.ALWAYS_IMOB) != current;
+                    convert = (opt == de.teamlapen.faction.common.config.ServerConfig.IMobOptions.ALWAYS_IMOB) != current;
                 } else {
-                    if (opt == de.teamlapen.factions.common.config.ServerConfig.IMobOptions.SMART) {
+                    if (opt == de.teamlapen.faction.common.config.ServerConfig.IMobOptions.SMART) {
                         Player player = FactionsMod.proxy.getClientPlayer();
                         if (player != null && player.isAlive()) {
                             Holder<? extends IPlayableFaction<?>> f = FactionPlayerHandler.get(player).getFaction();
@@ -316,7 +316,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
 
                         }
                     } else {
-                        convert = (opt == de.teamlapen.factions.common.config.ServerConfig.IMobOptions.ALWAYS_IMOB) != current;
+                        convert = (opt == de.teamlapen.faction.common.config.ServerConfig.IMobOptions.ALWAYS_IMOB) != current;
                     }
                 }
                 if (convert) {

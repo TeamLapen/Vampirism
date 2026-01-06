@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.integration.jei.categories;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
 import de.teamlapen.vampirism.common.integration.jei.recipes.BlessableRecipe;
@@ -31,7 +31,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableRecipe> 
     private final @NotNull IDrawable icon;
 
     public BlessingRecipeCategory(@NotNull IGuiHelper guiHelper) {
-        this.background = guiHelper.drawableBuilder(VResourceLocation.mod("textures/gui/blessing_recipe_jei.png"), 0, 0, BACKGROUND_WIDTH, 49).setTextureSize(83, 49).addPadding(10, 20, 20, 20).build();
+        this.background = guiHelper.drawableBuilder(VIdentifier.mod("textures/gui/blessing_recipe_jei.png"), 0, 0, BACKGROUND_WIDTH, 49).setTextureSize(83, 49).addPadding(10, 20, 20, 20).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALTAR_CLEANSING.get()));
     }
 

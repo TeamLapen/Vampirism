@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.models.items.properties;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record BloodFilled() implements RangeSelectItemModelProperty {
 
-    public static final Identifier ID = VResourceLocation.mod("blood_filled");
+    public static final Identifier ID = VIdentifier.mod("blood_filled");
     public static final MapCodec<BloodFilled> CODEC = MapCodec.unit(BloodFilled::new);
 
     @Override

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.world.entity.hunter;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.IFactionEntity;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.VampirismFactions;
 import net.minecraft.core.Holder;
 import org.jetbrains.annotations.NotNull;

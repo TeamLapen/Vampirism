@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.*;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.Identifier;
@@ -30,22 +30,22 @@ public class VampirismDataComponents {
 
 
     public static class Keys {
-        public static final Identifier OIL_CONTENTS = VResourceLocation.mod( "oil_contents");
-        public static final Identifier APPLIED_OIL = VResourceLocation.mod( "applied_oil");
-        public static final Identifier VAMPIRE_BOOK = VResourceLocation.mod( "vampire_book");
-        public static final Identifier BLOOD_CONTAINER = VResourceLocation.mod( "blood_container");
-        public static final Identifier CONTAINED_PROJECTILES = VResourceLocation.mod( "contained_projectiles");
-        public static final Identifier DO_NOT_NAME = VResourceLocation.mod( "do_not_name");
-        public static final Identifier VAMPIRE_SWORD = VResourceLocation.mod( "vampire_sword");
-        public static final Identifier TRAINING_CACHE = VResourceLocation.mod( "training_cache");
-        public static final Identifier SELECTED_AMMUNITION = VResourceLocation.mod( "selected_ammunition");
-        public static final Identifier BLOOD_CHARGED = VResourceLocation.mod( "blood_charged");
-        public static final Identifier BOTTLE_BLOOD = VResourceLocation.mod( "bottle_blood");
-        public static final Identifier FRUGALITY = VResourceLocation.mod( "frugality");
-        public static final Identifier VAMPIRE_FOOD = VResourceLocation.mod("vampire_food");
-        public static final Identifier DROP_VAMPIRE_SOUL = VResourceLocation.mod("drop_vampire_soul");
-        public static final Identifier PURE_LEVEL = VResourceLocation.mod("pure_level");
-        public static final Identifier QUARREL_POUCH_CONTENTS = VResourceLocation.mod("quarrel_pouch_contents");
-        public static final Identifier ACTIVE = VResourceLocation.mod("active");
+        public static final Identifier OIL_CONTENTS = VIdentifier.mod( "oil_contents");
+        public static final Identifier APPLIED_OIL = VIdentifier.mod( "applied_oil");
+        public static final Identifier VAMPIRE_BOOK = VIdentifier.mod( "vampire_book");
+        public static final Identifier BLOOD_CONTAINER = VIdentifier.mod( "blood_container");
+        public static final Identifier CONTAINED_PROJECTILES = VIdentifier.mod( "contained_projectiles");
+        public static final Identifier DO_NOT_NAME = VIdentifier.mod( "do_not_name");
+        public static final Identifier VAMPIRE_SWORD = VIdentifier.mod( "vampire_sword");
+        public static final Identifier TRAINING_CACHE = VIdentifier.mod( "training_cache");
+        public static final Identifier SELECTED_AMMUNITION = VIdentifier.mod( "selected_ammunition");
+        public static final Identifier BLOOD_CHARGED = VIdentifier.mod( "blood_charged");
+        public static final Identifier BOTTLE_BLOOD = VIdentifier.mod( "bottle_blood");
+        public static final Identifier FRUGALITY = VIdentifier.mod( "frugality");
+        public static final Identifier VAMPIRE_FOOD = VIdentifier.mod("vampire_food");
+        public static final Identifier DROP_VAMPIRE_SOUL = VIdentifier.mod("drop_vampire_soul");
+        public static final Identifier PURE_LEVEL = VIdentifier.mod("pure_level");
+        public static final Identifier QUARREL_POUCH_CONTENTS = VIdentifier.mod("quarrel_pouch_contents");
+        public static final Identifier ACTIVE = VIdentifier.mod("active");
     }
 }

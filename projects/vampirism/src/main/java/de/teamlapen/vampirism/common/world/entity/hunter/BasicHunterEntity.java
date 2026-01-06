@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.common.world.entity.hunter;
 
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.api.world.ICaptureAttributes;
-import de.teamlapen.factions.common.core.FactionMinionTasks;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.factions.minions.MinionWorldData;
-import de.teamlapen.factions.common.factions.minions.PlayerMinionController;
-import de.teamlapen.factions.common.util.SpawnUtil;
-import de.teamlapen.factions.common.world.effects.FactionBadOmenMobEffect;
-import de.teamlapen.factions.common.world.entities.ForceLookEntityGoal;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.world.ICaptureAttributes;
+import de.teamlapen.faction.common.core.FactionMinionTasks;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.minions.MinionWorldData;
+import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
+import de.teamlapen.faction.common.util.SpawnUtil;
+import de.teamlapen.faction.common.world.effects.FactionBadOmenMobEffect;
+import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.world.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.entity.hunter.IVampirismCrossbowUser;

@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.api.world.entity.player.vampire;
 
-import de.teamlapen.factions.api.factions.IPlayableFaction;
-import de.teamlapen.factions.api.factions.actions.IActionHandler;
-import de.teamlapen.factions.api.factions.lord.ILordPlayer;
-import de.teamlapen.factions.api.factions.refinements.IRefinementPlayer;
-import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
-import de.teamlapen.factions.api.factions.tasks.ITaskPlayer;
-import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.actions.IActionHandler;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.refinements.IRefinementPlayer;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
+import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.VampirismFactions;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;

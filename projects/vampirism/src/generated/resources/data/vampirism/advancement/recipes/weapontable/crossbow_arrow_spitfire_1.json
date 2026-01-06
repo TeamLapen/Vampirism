@@ -15,7 +15,7 @@
       "conditions": {
         "skill": "vampirism:weapon_table"
       },
-      "trigger": "factions:skill_unlocked"
+      "trigger": "factionapi:skill_unlocked"
     },
     "has_the_recipe": {
       "conditions": {

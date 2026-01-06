@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.entity.hunter;
 
 import com.mojang.logging.LogUtils;
-import de.teamlapen.factions.api.factions.IFactionPredicate;
-import de.teamlapen.factions.api.world.ICaptureAttributes;
-import de.teamlapen.factions.common.world.entities.IPlayerOverlay;
+import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.world.ICaptureAttributes;
+import de.teamlapen.faction.common.world.entities.IPlayerOverlay;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.settings.Supporter;

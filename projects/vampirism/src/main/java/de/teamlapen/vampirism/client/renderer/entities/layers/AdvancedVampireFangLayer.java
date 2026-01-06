@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.renderer.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.AdvancedVampireRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -24,7 +24,7 @@ public class AdvancedVampireFangLayer extends RenderLayer<AdvancedVampireRendere
         super(renderer);
         overlays = new Identifier[REFERENCE.FANG_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
-            overlays[i] = VResourceLocation.mod("textures/entity/vanilla/fangs" + (i) + ".png");
+            overlays[i] = VIdentifier.mod("textures/entity/vanilla/fangs" + (i) + ".png");
         }
     }
 

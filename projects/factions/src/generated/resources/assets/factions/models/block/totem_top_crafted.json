@@ -1,8 +1,0 @@
-{
-  "parent": "factions:block/totem_top",
-  "textures": {
-    "bottom": "factions:block/totem_top_crafted_bottom",
-    "particle": "minecraft:block/obsidian",
-    "side": "factions:block/totem_top_crafted_side"
-  }
-}

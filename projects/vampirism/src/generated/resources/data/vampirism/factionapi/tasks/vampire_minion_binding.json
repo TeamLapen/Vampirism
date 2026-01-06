@@ -1,0 +1,52 @@
+{
+  "requirements": {
+    "requirements": [
+      {
+        "type": "factionapi:entity_type",
+        "amount": 4,
+        "description": {
+          "translate": "entity_tag.vampirism.advanced_hunter"
+        },
+        "entityType": "vampirism:advanced_hunter",
+        "id": "vampirism:advanced_hunter"
+      },
+      {
+        "type": "factionapi:item",
+        "description": {
+          "translate": "item.minecraft.gold_ingot"
+        },
+        "id": "minecraft:gold_ingot",
+        "item": {
+          "count": 32,
+          "id": "minecraft:gold_ingot"
+        }
+      },
+      {
+        "type": "factionapi:entity",
+        "amount": 5,
+        "description": {
+          "translate": "entity.vampirism.vampire_baron"
+        },
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
+      }
+    ]
+  },
+  "reward": {
+    "type": "factionapi:item",
+    "item": {
+      "count": 1,
+      "id": "vampirism:vampire_minion_binding"
+    }
+  },
+  "title": {
+    "translate": "task.vampirism.vampire_minion_binding"
+  },
+  "unlocker": [
+    {
+      "type": "factionapi:lord_level",
+      "exact": false,
+      "reqLordLevel": 1
+    }
+  ]
+}

@@ -1,30 +1,26 @@
 package de.teamlapen.vampirism.common.integration.jei;
 
-import de.teamlapen.factions.api.factions.tasks.Task;
-import de.teamlapen.factions.common.factions.tasks.TaskUtil;
+import de.teamlapen.faction.api.factions.tasks.Task;
+import de.teamlapen.faction.common.factions.tasks.TaskUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismApi;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
-import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.core.ModMenus;
-import de.teamlapen.vampirism.common.core.ModRecipes;
+import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.integration.jei.categories.*;
 import de.teamlapen.vampirism.common.integration.jei.recipes.*;
 import de.teamlapen.vampirism.common.integration.jei.recipes.maker.*;
-import de.teamlapen.vampirism.common.integration.jei.subtypes.BloodBottleInterpreter;
 import de.teamlapen.vampirism.common.integration.jei.subtypes.BloodContainerInterpreter;
-import de.teamlapen.vampirism.common.integration.jei.subtypes.ContainedOilInterpreter;
 import de.teamlapen.vampirism.common.world.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.common.world.inventory.WeaponTableMenu;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemyTableRecipe;
 import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
@@ -40,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-//@JeiPlugin
+@JeiPlugin
 public class VampirismJEIPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<IWeaponTableRecipe>> WEAPON_TABLE = createFromModded(ModRecipes.WEAPONTABLE_CRAFTING_TYPE);
     public static final IRecipeType<RecipeHolder<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = createFromModded(ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
@@ -53,7 +49,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     public static final IRecipeType<GrinderRecipe> GRINDER_RECIPE = IRecipeType.create(REFERENCE.MODID, "grinder", GrinderRecipe.class);
     public static final IRecipeType<BloodSieveRecipe> BLOOD_SIEVE_CONVERSION = IRecipeType.create(REFERENCE.MODID, "blood_sieve", BloodSieveRecipe.class);
 
-    private static final Identifier ID = VResourceLocation.mod("plugin");
+    private static final Identifier ID = VIdentifier.mod("plugin");
 
     @NotNull
     @Override
@@ -103,9 +99,11 @@ public class VampirismJEIPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(ModItems.OIL_BOTTLE.get(), new ContainedOilInterpreter());
-        registration.registerSubtypeInterpreter(ModItems.BLOOD_BOTTLE.get(), new BloodBottleInterpreter());
-        registration.registerSubtypeInterpreter(ModBlocks.BLOOD_CONTAINER.asItem(), new BloodContainerInterpreter());
+        registration.registerFromDataComponentTypes(ModItems.OIL_BOTTLE.get(), ModDataComponents.OIL.get());
+        registration.registerFromDataComponentTypes(ModItems.BLOOD_BOTTLE.get(), ModDataComponents.BOTTLE_BLOOD.get());
+        registration.registerFromDataComponentTypes(ModBlocks.CURSED_SPRUCE_WOOD.get().asItem(), ModDataComponents.ACTIVE.get());
+        registration.registerFromDataComponentTypes(ModBlocks.CURSED_SPRUCE_LOG.get().asItem(), ModDataComponents.ACTIVE.get());
+        registration.registerSubtypeInterpreter(ModBlocks.BLOOD_CONTAINER.asItem(), BloodContainerInterpreter.INSTANCE);
     }
 
     @Override

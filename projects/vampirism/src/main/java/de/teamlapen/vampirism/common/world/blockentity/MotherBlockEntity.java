@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.factions.api.factions.LevelingChange;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.util.SpawnUtil;
-import de.teamlapen.factions.common.world.blockentity.NetworkedBlockEntity;
+import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.util.SpawnUtil;
+import de.teamlapen.faction.common.world.blockentity.NetworkedBlockEntity;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundBossEventSoundPacket;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundPlayEventPacket;

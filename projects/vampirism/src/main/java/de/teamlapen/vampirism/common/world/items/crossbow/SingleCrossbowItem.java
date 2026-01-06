@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.items.crossbow;
 
-import de.teamlapen.factions.api.factions.skills.ISkill;
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.factions.common.core.FactionDataComponents;
+import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.Holder;

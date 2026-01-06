@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.armor.WingModel;
 import de.teamlapen.vampirism.client.renderer.entities.VampireBaronRenderer;
@@ -25,7 +25,7 @@ public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q
     private final @NotNull WingModel<S> model;
     private final Predicate<S> predicateRender;
     private final BiFunction<S, Q, ModelPart> bodyPartFunction;
-    private final Identifier texture = VResourceLocation.mod("textures/entity/wings.png");
+    private final Identifier texture = VIdentifier.mod("textures/entity/wings.png");
 
     /**
      * @param predicateRender  Decides if the layer is rendered

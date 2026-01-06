@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.world.items.recipes.*;
 import net.minecraft.core.registries.Registries;
@@ -25,7 +25,7 @@ public class ModRecipes {
     private static final DeferredRegister<MapCodec<? extends ICondition>> CONDITION_CODECS = DeferredRegister.create(NeoForgeRegistries.Keys.CONDITION_CODECS, REFERENCE.MODID);
     private static final DeferredRegister<RecipeBookCategory> RECIPE_BOOK_CATEGORIES = DeferredRegister.create(Registries.RECIPE_BOOK_CATEGORY, REFERENCE.MODID);
 
-    public static final ResourceKey<RecipePropertySet> INFUSER_SET = ResourceKey.create(RecipePropertySet.TYPE_KEY, VResourceLocation.mod("infuser"));
+    public static final ResourceKey<RecipePropertySet> INFUSER_SET = ResourceKey.create(RecipePropertySet.TYPE_KEY, VIdentifier.mod("infuser"));
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<IWeaponTableRecipe>> WEAPONTABLE_CRAFTING_TYPE = RECIPE_TYPES.register("weapon_table", () -> new RecipeType<>() {
         public @NotNull String toString() {

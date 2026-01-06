@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.common.world;
 
-import de.teamlapen.factions.api.event.FactionVillageEvent;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.world.ITotem;
-import de.teamlapen.factions.api.world.entities.ICaptureIgnore;
-import de.teamlapen.factions.common.util.SpawnUtil;
+import de.teamlapen.faction.api.event.FactionVillageEvent;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.world.ITotem;
+import de.teamlapen.faction.api.world.entities.ICaptureIgnore;
+import de.teamlapen.faction.common.util.SpawnUtil;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModFactions;

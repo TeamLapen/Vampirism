@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.items;
 
 
-import de.teamlapen.factions.api.factions.IFactionPlayerHandler;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
-import de.teamlapen.factions.common.sounds.ISoundHandler;
+import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.sounds.ISoundHandler;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModSounds;

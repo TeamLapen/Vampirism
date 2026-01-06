@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.refinements.IRefinement;
-import de.teamlapen.factions.common.RefinementSet;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.refinements.IRefinement;
+import de.teamlapen.faction.common.RefinementSet;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;

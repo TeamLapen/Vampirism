@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.tags;
 
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -47,11 +47,11 @@ public class ModBlockTags {
     public static final TagKey<Block> GARLIC = common("crops/garlic");
 
     private static TagKey<Block> tag(String name) {
-        return BlockTags.create(VResourceLocation.mod(name));
+        return BlockTags.create(VIdentifier.mod(name));
     }
 
     private static TagKey<Block> common(String name) {
-        return BlockTags.create(VResourceLocation.common(name));
+        return BlockTags.create(VIdentifier.common(name));
     }
 
     public static class Compatibility {

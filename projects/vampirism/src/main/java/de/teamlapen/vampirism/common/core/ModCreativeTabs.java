@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.factions.common.core.FactionItems;
+import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
@@ -68,7 +68,7 @@ public class ModCreativeTabs {
             add(MOTHER_CORE);
             add(VAMPIRE_BLOOD_BOTTLE);
             addItemGen(VAMPIRE_BOOK);
-            addIfPresent(VResourceLocation.loc(REFERENCE.GUIDEAPI_MODID, REFERENCE.GUIDEBOOK_ID));
+            addIfPresent(VIdentifier.loc(REFERENCE.GUIDEAPI_MODID, REFERENCE.GUIDEBOOK_ID));
             add(VAMPIRE_FANG);
 
             add(GARLIC_FINDER);

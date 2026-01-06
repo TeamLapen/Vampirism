@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.api.world.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.common.advancements.critereon.HunterActionCriterionTrigger;

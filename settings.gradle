@@ -13,13 +13,13 @@ rootProject.name= "Vampirism"
 // Enable multi-project build: separate mods/modules
 
 include(
-        ':factions-api',
-        ':factions',
+        ':faction-api',
+        ':faction',
         ':vampirism-api',
         ':vampirism'
 )
 
-project(':factions-api').projectDir = file("projects/factions-api")
-project(':factions').projectDir = file("projects/factions")
+project(':faction-api').projectDir = file("projects/faction-api")
+project(':faction').projectDir = file("projects/faction")
 project(':vampirism-api').projectDir = file("projects/vampirism-api")
 project(':vampirism').projectDir = file("projects/vampirism")

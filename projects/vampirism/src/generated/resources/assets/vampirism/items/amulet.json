@@ -8,7 +8,7 @@
         "value": -1
       },
       {
-        "type": "factions:refinement_tint"
+        "type": "factionapi:refinement_tint"
       }
     ]
   }

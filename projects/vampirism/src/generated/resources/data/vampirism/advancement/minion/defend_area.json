@@ -3,9 +3,9 @@
   "criteria": {
     "task": {
       "conditions": {
-        "task": "factions:defend_area"
+        "task": "factionapi:defend_area"
       },
-      "trigger": "factions:minion_action"
+      "trigger": "factionapi:minion_action"
     }
   },
   "display": {

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.misc.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import de.teamlapen.factions.FactionsMod;
+import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.MixinHooks;

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.factions.client.gui.GuiRenderer;
+import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSetVampireBeaconPacket;
 import de.teamlapen.vampirism.common.world.blockentity.VampireBeaconBlockEntity;
@@ -34,13 +34,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMenu> {
-    private static final Identifier BEACON_LOCATION = VResourceLocation.mod("textures/gui/container/vampire_beacon.png");
-    static final Identifier BUTTON_DISABLED_SPRITE = VResourceLocation.mc("container/beacon/button_disabled");
-    static final Identifier BUTTON_SELECTED_SPRITE = VResourceLocation.mc("container/beacon/button_selected");
-    static final Identifier BUTTON_HIGHLIGHTED_SPRITE = VResourceLocation.mc("container/beacon/button_highlighted");
-    static final Identifier BUTTON_SPRITE = VResourceLocation.mc("container/beacon/button");
-    static final Identifier CONFIRM_SPRITE = VResourceLocation.mc("container/beacon/confirm");
-    static final Identifier CANCEL_SPRITE = VResourceLocation.mc("container/beacon/cancel");
+    private static final Identifier BEACON_LOCATION = VIdentifier.mod("textures/gui/container/vampire_beacon.png");
+    static final Identifier BUTTON_DISABLED_SPRITE = VIdentifier.mc("container/beacon/button_disabled");
+    static final Identifier BUTTON_SELECTED_SPRITE = VIdentifier.mc("container/beacon/button_selected");
+    static final Identifier BUTTON_HIGHLIGHTED_SPRITE = VIdentifier.mc("container/beacon/button_highlighted");
+    static final Identifier BUTTON_SPRITE = VIdentifier.mc("container/beacon/button");
+    static final Identifier CONFIRM_SPRITE = VIdentifier.mc("container/beacon/confirm");
+    static final Identifier CANCEL_SPRITE = VIdentifier.mc("container/beacon/cancel");
     private static final Component EFFECT_LABEL = Component.translatable("container.vampirism.vampire_beacon.power");
     private final List<BeaconButton> beaconButtons = new ArrayList<>();
     @Nullable

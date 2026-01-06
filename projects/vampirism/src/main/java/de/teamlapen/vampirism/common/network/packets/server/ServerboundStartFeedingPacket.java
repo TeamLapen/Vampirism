@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.network.packets.server;
 
 import com.mojang.datafixers.util.Either;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record ServerboundStartFeedingPacket(Either<Integer, BlockContact> target) implements CustomPacketPayload {
 
-    public static final Type<ServerboundStartFeedingPacket> TYPE = new Type<>(VResourceLocation.mod("start_feeding"));
+    public static final Type<ServerboundStartFeedingPacket> TYPE = new Type<>(VIdentifier.mod("start_feeding"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundStartFeedingPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.either(ByteBufCodecs.VAR_INT, BlockContact.STREAM_CODEC), ServerboundStartFeedingPacket::target,

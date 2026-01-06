@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.factions.client.gui.overlay.BaseOverlay;
+import de.teamlapen.faction.client.gui.overlay.BaseOverlay;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;

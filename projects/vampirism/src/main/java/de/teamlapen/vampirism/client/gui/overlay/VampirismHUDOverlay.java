@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.Window;
-import de.teamlapen.factions.client.IMinecraftAccessor;
+import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
@@ -47,13 +47,13 @@ import java.util.Optional;
 
 public class VampirismHUDOverlay implements IMinecraftAccessor {
 
-    protected static final Identifier CROSSHAIR_SPRITE = VResourceLocation.mc("hud/crosshair");
-    protected static final Identifier CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_full");
-    protected static final Identifier CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_background");
-    protected static final Identifier CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE = VResourceLocation.mc("hud/crosshair_attack_indicator_progress");
-    public static final Identifier FANG_SPRITE = VResourceLocation.mod("fang/fang");
-    public static final Identifier PROGRESS_BACKGROUND_SPRITE = VResourceLocation.mod("fang/progress_background");
-    public static final Identifier PROGRESS_FOREGROUND_SPRITE = VResourceLocation.mod("fang/progress_foreground");
+    protected static final Identifier CROSSHAIR_SPRITE = VIdentifier.mc("hud/crosshair");
+    protected static final Identifier CROSSHAIR_ATTACK_INDICATOR_FULL_SPRITE = VIdentifier.mc("hud/crosshair_attack_indicator_full");
+    protected static final Identifier CROSSHAIR_ATTACK_INDICATOR_BACKGROUND_SPRITE = VIdentifier.mc("hud/crosshair_attack_indicator_background");
+    protected static final Identifier CROSSHAIR_ATTACK_INDICATOR_PROGRESS_SPRITE = VIdentifier.mc("hud/crosshair_attack_indicator_progress");
+    public static final Identifier FANG_SPRITE = VIdentifier.mod("fang/fang");
+    public static final Identifier PROGRESS_BACKGROUND_SPRITE = VIdentifier.mod("fang/progress_background");
+    public static final Identifier PROGRESS_FOREGROUND_SPRITE = VIdentifier.mod("fang/progress_foreground");
 
     private boolean addTempPoison;
     private MobEffectInstance addedTempPoison;

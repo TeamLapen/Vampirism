@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.ai.goals;
 
-import de.teamlapen.factions.api.world.entities.IEntityLeader;
+import de.teamlapen.faction.api.world.entities.IEntityLeader;
 import de.teamlapen.vampirism.common.world.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaseEntity;
 import net.minecraft.commands.arguments.EntityAnchorArgument;

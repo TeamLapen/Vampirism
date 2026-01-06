@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.integration.jei.recipes.maker;
 
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.common.components.FactionRestriction;
-import de.teamlapen.factions.common.core.FactionDataComponents;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -42,10 +42,10 @@ public class OilRecipeMaker {
                             var oilStack = AppliedOilContent.apply(stack.copy(), oil);
 
                             var applyRecipe = new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, oilStack, NonNullList.of(DataComponentIngredient.of(false, stack), DataComponentIngredient.of(false, ModDataComponents.OIL.get(), OilContent.of(oil), ModItems.OIL_BOTTLE)));
-                            consumer.accept(new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, VResourceLocation.mod((oil.unwrapKey().orElseThrow().location().toString() + RegUtil.id(stack.getItem())).replace(':', '_'))), applyRecipe));
+                            consumer.accept(new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, VIdentifier.mod((oil.unwrapKey().orElseThrow().identifier().toString() + RegUtil.id(stack.getItem())).replace(':', '_'))), applyRecipe));
 
                             var revertRecipe = new ShapelessRecipe("", CraftingBookCategory.EQUIPMENT, originalStack, NonNullList.of(Ingredient.of(Items.PAPER), DataComponentIngredient.of(false, oilStack)));
-                            consumer.accept(new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, VResourceLocation.mod(("clean_" + oil.unwrapKey().orElseThrow().location() + "_from_" + stack.getItemHolder().unwrapKey().orElseThrow().location()).replace(':', '_'))), revertRecipe));
+                            consumer.accept(new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, VIdentifier.mod(("clean_" + oil.unwrapKey().orElseThrow().identifier() + "_from_" + stack.getItemHolder().unwrapKey().orElseThrow().identifier()).replace(':', '_'))), revertRecipe));
                         })).toList();
     }
 }

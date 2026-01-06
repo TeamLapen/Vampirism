@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.skills;
 
-import de.teamlapen.factions.api.FactionRegistries;
-import de.teamlapen.factions.api.factions.actions.IAction;
-import de.teamlapen.factions.api.factions.skills.ISkill;
-import de.teamlapen.factions.api.factions.skills.ISkillNode;
-import de.teamlapen.factions.api.factions.skills.ISkillTree;
-import de.teamlapen.factions.common.advancements.criterion.PlayerFactionSubPredicate;
-import de.teamlapen.factions.common.factions.skills.SkillNode;
-import de.teamlapen.factions.common.factions.skills.SkillTree;
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.actions.IAction;
+import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.factions.skills.ISkillNode;
+import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.common.advancements.criterion.PlayerFactionSubPredicate;
+import de.teamlapen.faction.common.factions.skills.SkillNode;
+import de.teamlapen.faction.common.factions.skills.SkillTree;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttributes;
@@ -131,7 +131,7 @@ public class VampireSkills {
         public static final ResourceKey<ISkillNode> LORD_SKILL5 = node("lord_skill5");
 
         private static ResourceKey<ISkillNode> node(String path) {
-            return ResourceKey.create(FactionRegistries.Keys.SKILL_NODE, VResourceLocation.mod("vampire/" + path));
+            return ResourceKey.create(FactionRegistries.Keys.SKILL_NODE, VIdentifier.mod("vampire/" + path));
         }
 
         public static void createSkillNodes(BootstrapContext<ISkillNode> context) {
@@ -173,14 +173,14 @@ public class VampireSkills {
         public static final ResourceKey<ISkillTree> LORD = tree("lord");
 
         private static ResourceKey<ISkillTree> tree(String path) {
-            return ResourceKey.create(FactionRegistries.Keys.SKILL_TREE, VResourceLocation.mod("vampire/" + path));
+            return ResourceKey.create(FactionRegistries.Keys.SKILL_TREE, VIdentifier.mod("vampire/" + path));
         }
 
         public static void createSkillTrees(BootstrapContext<ISkillTree> context) {
             HolderGetter<ISkillNode> lookup = context.lookup(FactionRegistries.Keys.SKILL_NODE);
 
-            context.register(LEVEL, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.faction(ModFactions.VAMPIRE)).build(), new ItemStack(ModItems.VAMPIRE_BOOK.get()), Component.translatable("text.vampirism.skills.level"), Optional.of(VResourceLocation.mod("block/dark_stone_bricks"))));
-            context.register(LORD, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.VAMPIRE)).build(), new ItemStack(ModItems.VAMPIRE_MINION_BINDING.get()), Component.translatable("text.vampirism.skills.lord"), Optional.of(VResourceLocation.mod("block/dark_stone_bricks"))));
+            context.register(LEVEL, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.faction(ModFactions.VAMPIRE)).build(), new ItemStack(ModItems.VAMPIRE_BOOK.get()), Component.translatable("text.vampirism.skills.level"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
+            context.register(LORD, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.VAMPIRE)).build(), new ItemStack(ModItems.VAMPIRE_MINION_BINDING.get()), Component.translatable("text.vampirism.skills.lord"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
         }
     }
 }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.misc.mixin;
 
-import de.teamlapen.factions.common.components.FactionRestriction;
+import de.teamlapen.faction.common.components.FactionRestriction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

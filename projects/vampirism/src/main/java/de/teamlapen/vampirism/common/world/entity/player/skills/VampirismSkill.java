@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.common.world.entity.player.skills;
 
 import com.mojang.datafixers.util.Either;
-import de.teamlapen.factions.api.factions.IFaction;
-import de.teamlapen.factions.api.factions.skills.ISkillPlayer;
-import de.teamlapen.factions.api.factions.skills.ISkillTree;
-import de.teamlapen.factions.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.factions.common.factions.skills.DefaultSkill;
+import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
+import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.common.factions.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;

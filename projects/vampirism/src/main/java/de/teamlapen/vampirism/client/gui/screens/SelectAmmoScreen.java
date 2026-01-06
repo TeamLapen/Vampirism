@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.factions.client.gui.radialmenu.GuiRadialMenu;
-import de.teamlapen.factions.client.gui.radialmenu.IRadialMenuSlot;
-import de.teamlapen.factions.client.gui.radialmenu.RadialMenu;
-import de.teamlapen.factions.client.gui.radialmenu.RadialMenuSlot;
+import de.teamlapen.faction.client.gui.radialmenu.GuiRadialMenu;
+import de.teamlapen.faction.client.gui.radialmenu.IRadialMenuSlot;
+import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
+import de.teamlapen.faction.client.gui.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSelectAmmoTypePacket;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
 
-    private static final Identifier NO_RESTRICTION = VResourceLocation.mc("spectator/close");
+    private static final Identifier NO_RESTRICTION = VIdentifier.mc("spectator/close");
 
     public SelectAmmoScreen(Collection<AmmoType> ammoTypes) {
         super(getRadialMenu(ammoTypes), true);

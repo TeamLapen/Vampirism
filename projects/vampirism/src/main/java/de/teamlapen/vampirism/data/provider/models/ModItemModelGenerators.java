@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.data.provider.models;
 
-import de.teamlapen.factions.client.color.tint.RefinementTint;
-import de.teamlapen.vampirism.api.util.VResourceLocation;
+import de.teamlapen.faction.client.color.tint.RefinementTint;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.teamlapen.vampirism.api.util.VResourceLocation.mod;
+import static de.teamlapen.vampirism.api.util.VIdentifier.mod;
 
 public class ModItemModelGenerators extends ItemModelGenerators {
 
@@ -48,7 +48,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void generateNonTemplateItems() {
-        this.itemModelOutput.accept(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.asItem(), ItemModelUtils.plainModel(ModModelTemplates.GARLIC_DIFFUSER_CORE.create(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.get(), new TextureMapping().put(TextureSlot.TEXTURE, VResourceLocation.mod("block/garlic_diffuser_inside_improved")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.asItem(), ItemModelUtils.plainModel(ModModelTemplates.GARLIC_DIFFUSER_CORE.create(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.get(), new TextureMapping().put(TextureSlot.TEXTURE, VIdentifier.mod("block/garlic_diffuser_inside_improved")), this.modelOutput)));
     }
 
     protected void createDefaultModels() {
@@ -76,9 +76,9 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void generateCrucifix() {
-        generateCrucifix(ModItems.CRUCIFIX_NORMAL.get(), VResourceLocation.mod("item/crucifix_wooden"));
-        generateCrucifix(ModItems.CRUCIFIX_ENHANCED.get(), VResourceLocation.mod("item/crucifix_iron"));
-        generateCrucifix(ModItems.CRUCIFIX_ULTIMATE.get(), VResourceLocation.mod("item/crucifix_gold"));
+        generateCrucifix(ModItems.CRUCIFIX_NORMAL.get(), VIdentifier.mod("item/crucifix_wooden"));
+        generateCrucifix(ModItems.CRUCIFIX_ENHANCED.get(), VIdentifier.mod("item/crucifix_iron"));
+        generateCrucifix(ModItems.CRUCIFIX_ULTIMATE.get(), VIdentifier.mod("item/crucifix_gold"));
     }
 
     protected void generateCrucifix(Item item, Identifier texture) {
@@ -87,7 +87,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
 
     protected void generateArrows() {
         Stream.of(ModItems.CROSSBOW_ARROW_NORMAL, ModItems.CROSSBOW_ARROW_SPITFIRE, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, ModItems.CROSSBOW_ARROW_TELEPORT, ModItems.CROSSBOW_ARROW_BLEEDING, ModItems.CROSSBOW_ARROW_GARLIC).map(DeferredHolder::get).forEach(item -> {
-            var model = ModModelTemplates.TWO_LAYERED_ITEM.create(item, TextureMapping.layered(VResourceLocation.mod("item/crossbow_arrow"), VResourceLocation.mod("item/crossbow_arrow_tip")), this.modelOutput);
+            var model = ModModelTemplates.TWO_LAYERED_ITEM.create(item, TextureMapping.layered(VIdentifier.mod("item/crossbow_arrow"), VIdentifier.mod("item/crossbow_arrow_tip")), this.modelOutput);
             this.itemModelOutput.accept(item, ItemModelUtils.tintedModel(model, BLANK_LAYER, new CrossbowArrowTint()));
         });
     }
@@ -138,25 +138,25 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     protected void generateAmmoClip() {
         this.itemModelOutput.accept(ModItems.ARROW_CLIP.asItem(),
                 ItemModelUtils.rangeSelect(new ClipFilled(),
-                        ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("arrow_clip_0"), VResourceLocation.mod("item/arrow_clip0"))),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("arrow_clip_1"), VResourceLocation.mod("item/arrow_clip1"))), 0.01f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("arrow_clip_2"), VResourceLocation.mod("item/arrow_clip2"))), 0.55f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("arrow_clip_3"), VResourceLocation.mod("item/arrow_clip3"))), 0.99f)
+                        ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("arrow_clip_0"), VIdentifier.mod("item/arrow_clip0"))),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("arrow_clip_1"), VIdentifier.mod("item/arrow_clip1"))), 0.01f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("arrow_clip_2"), VIdentifier.mod("item/arrow_clip2"))), 0.55f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("arrow_clip_3"), VIdentifier.mod("item/arrow_clip3"))), 0.99f)
                 ));
     }
 
     protected void generateQuarrelPouch() {
         this.itemModelOutput.accept(ModItems.QUARREL_POUCH.asItem(),
                 ItemModelUtils.rangeSelect(new ClipFilled(),
-                        ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("quarrel_pouch_0"), VResourceLocation.mod("item/arrow_clip0"))),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("quarrel_pouch_1"), VResourceLocation.mod("item/arrow_clip1"))), 0.01f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("quarrel_pouch_2"), VResourceLocation.mod("item/arrow_clip2"))), 0.55f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VResourceLocation.mod("quarrel_pouch_3"), VResourceLocation.mod("item/arrow_clip3"))), 0.99f)
+                        ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_0"), VIdentifier.mod("item/arrow_clip0"))),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_1"), VIdentifier.mod("item/arrow_clip1"))), 0.01f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_2"), VIdentifier.mod("item/arrow_clip2"))), 0.55f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_3"), VIdentifier.mod("item/arrow_clip3"))), 0.99f)
                 ));
     }
 
     protected void generateHunterIntel() {
-        ModModelTemplates.FLAT_ITEM.create(ModelLocationUtils.decorateItemModelLocation(VResourceLocation.mod("hunter_intel").toString()), TextureMapping.layer0(mod("item/hunter_intel")), this.modelOutput);
+        ModModelTemplates.FLAT_ITEM.create(ModelLocationUtils.decorateItemModelLocation(VIdentifier.mod("hunter_intel").toString()), TextureMapping.layer0(mod("item/hunter_intel")), this.modelOutput);
 
         Stream.of(ModItems.HUNTER_INTEL_0, ModItems.HUNTER_INTEL_1, ModItems.HUNTER_INTEL_2, ModItems.HUNTER_INTEL_3, ModItems.HUNTER_INTEL_4, ModItems.HUNTER_INTEL_5, ModItems.HUNTER_INTEL_6, ModItems.HUNTER_INTEL_7, ModItems.HUNTER_INTEL_8, ModItems.HUNTER_INTEL_9).map(DeferredItem::asItem).forEach(item ->
                 this.itemModelOutput.accept(item, ItemModelUtils.plainModel(mod("item/hunter_intel")))
@@ -164,27 +164,27 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void generateAccessories() {
-        this.itemModelOutput.accept(ModItems.RING.asItem(), ItemModelUtils.tintedModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.RING.asItem(), TextureMapping.layered(VResourceLocation.mod("item/vampire_ring_layer0"), VResourceLocation.mod("item/vampire_ring_layer1")), this.modelOutput), BLANK_LAYER, new RefinementTint()));
-        this.itemModelOutput.accept(ModItems.AMULET.asItem(), ItemModelUtils.tintedModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.AMULET.asItem(), TextureMapping.layered(VResourceLocation.mod("item/vampire_amulet_layer0"), VResourceLocation.mod("item/vampire_amulet_layer1")), this.modelOutput), BLANK_LAYER, new RefinementTint()));
-        this.itemModelOutput.accept(ModItems.OBI_BELT.asItem(), ItemModelUtils.tintedModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.OBI_BELT.asItem(), TextureMapping.layered(VResourceLocation.mod("item/vampire_obi_belt_layer0"), VResourceLocation.mod("item/vampire_obi_belt_layer1")), this.modelOutput), BLANK_LAYER, new RefinementTint()));
+        this.itemModelOutput.accept(ModItems.RING.asItem(), ItemModelUtils.tintedModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.RING.asItem(), TextureMapping.layered(VIdentifier.mod("item/vampire_ring_layer0"), VIdentifier.mod("item/vampire_ring_layer1")), this.modelOutput), BLANK_LAYER, new RefinementTint()));
+        this.itemModelOutput.accept(ModItems.AMULET.asItem(), ItemModelUtils.tintedModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.AMULET.asItem(), TextureMapping.layered(VIdentifier.mod("item/vampire_amulet_layer0"), VIdentifier.mod("item/vampire_amulet_layer1")), this.modelOutput), BLANK_LAYER, new RefinementTint()));
+        this.itemModelOutput.accept(ModItems.OBI_BELT.asItem(), ItemModelUtils.tintedModel(ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.OBI_BELT.asItem(), TextureMapping.layered(VIdentifier.mod("item/vampire_obi_belt_layer0"), VIdentifier.mod("item/vampire_obi_belt_layer1")), this.modelOutput), BLANK_LAYER, new RefinementTint()));
     }
 
     protected void generateWeapons() {
-        this.itemModelOutput.accept(ModItems.HEART_SEEKER_NORMAL.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_SEEKER.create(ModItems.HEART_SEEKER_NORMAL.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_3, VResourceLocation.mod("item/heart_seeker_normal")), this.modelOutput)));
-        this.itemModelOutput.accept(ModItems.HEART_SEEKER_ENHANCED.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_SEEKER.create(ModItems.HEART_SEEKER_ENHANCED.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_3, VResourceLocation.mod("item/heart_seeker_enhanced")), this.modelOutput)));
-        this.itemModelOutput.accept(ModItems.HEART_SEEKER_ULTIMATE.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_SEEKER.create(ModItems.HEART_SEEKER_ULTIMATE.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_3, VResourceLocation.mod("item/heart_seeker_ultimate")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.HEART_SEEKER_NORMAL.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_SEEKER.create(ModItems.HEART_SEEKER_NORMAL.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_3, VIdentifier.mod("item/heart_seeker_normal")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.HEART_SEEKER_ENHANCED.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_SEEKER.create(ModItems.HEART_SEEKER_ENHANCED.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_3, VIdentifier.mod("item/heart_seeker_enhanced")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.HEART_SEEKER_ULTIMATE.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_SEEKER.create(ModItems.HEART_SEEKER_ULTIMATE.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_3, VIdentifier.mod("item/heart_seeker_ultimate")), this.modelOutput)));
 
-        this.itemModelOutput.accept(ModItems.HEART_STRIKER_NORMAL.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_STRIKER.create(ModItems.HEART_STRIKER_NORMAL.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_2, VResourceLocation.mod("item/heart_striker_normal")), this.modelOutput)));
-        this.itemModelOutput.accept(ModItems.HEART_STRIKER_ENHANCED.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_STRIKER.create(ModItems.HEART_STRIKER_ENHANCED.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_2, VResourceLocation.mod("item/heart_striker_enhanced")), this.modelOutput)));
-        this.itemModelOutput.accept(ModItems.HEART_STRIKER_ULTIMATE.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_STRIKER.create(ModItems.HEART_STRIKER_ULTIMATE.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_2, VResourceLocation.mod("item/heart_striker_ultimate")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.HEART_STRIKER_NORMAL.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_STRIKER.create(ModItems.HEART_STRIKER_NORMAL.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_2, VIdentifier.mod("item/heart_striker_normal")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.HEART_STRIKER_ENHANCED.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_STRIKER.create(ModItems.HEART_STRIKER_ENHANCED.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_2, VIdentifier.mod("item/heart_striker_enhanced")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.HEART_STRIKER_ULTIMATE.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HEART_STRIKER.create(ModItems.HEART_STRIKER_ULTIMATE.asItem(), new TextureMapping().put(ModTextureSlots.TEXTURE_2, VIdentifier.mod("item/heart_striker_ultimate")), this.modelOutput)));
 
-        this.itemModelOutput.accept(ModItems.HUNTER_AXE_NORMAL.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HUNTER_AXE.create(ModItems.HUNTER_AXE_NORMAL.asItem(), TextureMapping.defaultTexture(VResourceLocation.mod("item/hunter_axe_normal")), this.modelOutput)));
-        this.itemModelOutput.accept(ModItems.HUNTER_AXE_ENHANCED.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HUNTER_AXE.create(ModItems.HUNTER_AXE_ENHANCED.asItem(), TextureMapping.defaultTexture(VResourceLocation.mod("item/hunter_axe_enhanced")), this.modelOutput)));
-        this.itemModelOutput.accept(ModItems.HUNTER_AXE_ULTIMATE.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HUNTER_AXE.create(ModItems.HUNTER_AXE_ULTIMATE.asItem(), TextureMapping.defaultTexture(VResourceLocation.mod("item/hunter_axe_ultimate")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.HUNTER_AXE_NORMAL.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HUNTER_AXE.create(ModItems.HUNTER_AXE_NORMAL.asItem(), TextureMapping.defaultTexture(VIdentifier.mod("item/hunter_axe_normal")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.HUNTER_AXE_ENHANCED.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HUNTER_AXE.create(ModItems.HUNTER_AXE_ENHANCED.asItem(), TextureMapping.defaultTexture(VIdentifier.mod("item/hunter_axe_enhanced")), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.HUNTER_AXE_ULTIMATE.asItem(), ItemModelUtils.plainModel(ModModelTemplates.HUNTER_AXE.create(ModItems.HUNTER_AXE_ULTIMATE.asItem(), TextureMapping.defaultTexture(VIdentifier.mod("item/hunter_axe_ultimate")), this.modelOutput)));
     }
 
     protected void createAlchemicalFire() {
-        var model = ItemModelUtils.plainModel(ModelTemplates.TWO_LAYERED_ITEM.create(ModItems.ITEM_ALCHEMICAL_FIRE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, VResourceLocation.mod("item/alchemical_fire_layer0")).put(TextureSlot.LAYER1, VResourceLocation.mod("item/alchemical_fire_layer1")), this.modelOutput));
+        var model = ItemModelUtils.plainModel(ModelTemplates.TWO_LAYERED_ITEM.create(ModItems.ITEM_ALCHEMICAL_FIRE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, VIdentifier.mod("item/alchemical_fire_layer0")).put(TextureSlot.LAYER1, VIdentifier.mod("item/alchemical_fire_layer1")), this.modelOutput));
         this.itemModelOutput.accept(ModItems.ITEM_ALCHEMICAL_FIRE.get(), model);
     }
 
