@@ -13,18 +13,18 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "block": "vampirism:med_chair",
+              "block": "vampirism:injection_chair",
               "condition": "minecraft:block_state_property",
               "properties": {
-                "part": "bottom"
+                "part": "main"
               }
             }
           ],
-          "name": "vampirism:med_chair"
+          "name": "vampirism:injection_chair"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "vampirism:blocks/med_chair"
+  "random_sequence": "vampirism:blocks/injection_chair"
 }

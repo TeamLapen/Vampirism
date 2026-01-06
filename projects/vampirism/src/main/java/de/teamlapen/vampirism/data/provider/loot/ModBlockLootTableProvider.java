@@ -136,11 +136,11 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
         this.dropSelf(ModBlocks.DARK_SPRUCE_FENCE.get());
         this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE.get());
-        this.add(ModBlocks.CURSED_ROOTS.get(), (block) -> createShearsDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));
+        this.add(ModBlocks.CURSED_ROOTS.get(), block -> createShearsDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));
         this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
-        this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
+        this.add(ModBlocks.THRONE.get(), block -> createSinglePropConditionTable(block, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
-        this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM));
+        this.add(ModBlocks.INJECTION_CHAIR.get(), block -> createSinglePropConditionTable(block, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
         this.dropSelf(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());
         this.dropSelf(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());

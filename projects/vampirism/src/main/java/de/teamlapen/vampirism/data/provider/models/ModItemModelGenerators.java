@@ -301,7 +301,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         return new HashMap<>() {{
             put(ModItems.ITEM_TENT_SPAWNER.get(), mod("item/item_tent"));
             put(ModBlocks.DIRECT_CURSED_BARK.asItem(), mod("block/cursed_bark"));
-            put(ModBlocks.MED_CHAIR.asItem(), mod("item/med_chair"));
         }};
     }
 }

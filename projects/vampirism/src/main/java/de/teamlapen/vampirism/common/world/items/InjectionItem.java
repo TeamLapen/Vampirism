@@ -11,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class InjectionItem extends Item {
@@ -30,7 +29,7 @@ public abstract class InjectionItem extends Item {
                 player.setItemInHand(hand, stack.getCraftingRemainder());
             } else {
                 stack.shrink(1);
-                ItemHandlerHelper.giveItemToPlayer(player, stack.getCraftingRemainder());
+                player.getInventory().placeItemBackInInventory(stack.getCraftingRemainder());
             }
         }
     }

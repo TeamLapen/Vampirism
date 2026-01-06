@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "vampirism:item/med_chair"
+    "model": "vampirism:block/injection_chair"
   }
 }

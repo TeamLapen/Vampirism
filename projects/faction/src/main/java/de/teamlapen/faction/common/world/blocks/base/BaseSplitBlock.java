@@ -72,7 +72,6 @@ public class BaseSplitBlock extends Block {
     }
 
     @Override
-    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction direction = context.getHorizontalDirection();
         BlockPos relativePos = context.getClickedPos().relative(this.vertical ? Direction.UP : direction);
