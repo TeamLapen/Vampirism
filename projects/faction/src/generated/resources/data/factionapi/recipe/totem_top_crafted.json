@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": "#c:storage_blocks/diamond",
+    "I": "#c:ingots/iron",
+    "O": "#c:obsidians"
+  },
+  "pattern": [
+    "O O",
+    " D ",
+    "OIO"
+  ],
+  "result": {
+    "count": 1,
+    "id": "factionapi:totem_top_crafted"
+  }
+}

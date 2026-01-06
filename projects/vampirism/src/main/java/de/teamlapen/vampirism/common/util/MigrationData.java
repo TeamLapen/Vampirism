@@ -4,8 +4,6 @@ import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.resources.Identifier;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.jetbrains.annotations.NotNull;
@@ -101,7 +99,7 @@ public class MigrationData {
 
     private static void fixBlocks(@NotNull Mapping mapping) {
         mapping.remap("vampirism:blood_potion_table", "vampirism:potion_table");
-        mapping.remap("vampirism:garlic_beacon_normal", "vampirism:totem_top_vampirism_hunter_crafted");
+        mapping.remap("vampirism:garlic_beacon_normal", "vampirism:garlic_diffuser_normal");
         mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
         mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
         mapping.remap("vampirism:church_altar", "vampirism:altar_cleansing");
@@ -128,6 +126,9 @@ public class MigrationData {
         mapping.remap("vampirism:candelabra_wall", "vampirism:wall_candelabra_normal");
         mapping.remap("vampirism:cursed_spruce_log_cured", "vampirism:cursed_spruce_log");
         mapping.remap("vampirism:cursed_spruce_wood_cured", "vampirism:cursed_spruce_wood");
+        mapping.remap("vampirism:totem_base", "factions:totem_base");
+        mapping.remap("vampirism:totem_top", "factions:totem_top");
+        mapping.remap("vampirism:totem_top_crafted", "factions:totem_top_crafted");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {

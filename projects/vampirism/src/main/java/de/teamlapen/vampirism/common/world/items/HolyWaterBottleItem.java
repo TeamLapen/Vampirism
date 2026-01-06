@@ -22,7 +22,7 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier {
     private final Tier tier;
 
     public HolyWaterBottleItem(Tier tier, Properties props) {
-        super(props.factions$restrictFaction(ModFactionTags.IS_HUNTER).vampirism$descriptionWithout("_normal|_enhanced|_ultimate"));
+        super(props.factions$restrictFaction(ModFactionTags.IS_HUNTER).factions$descriptionWithout("_normal|_enhanced|_ultimate"));
         this.tier = tier;
     }
 

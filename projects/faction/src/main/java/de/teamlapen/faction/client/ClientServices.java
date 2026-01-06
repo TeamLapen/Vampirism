@@ -18,6 +18,7 @@ public class ClientServices extends Services {
     private final CustomBossEventOverlay bossInfoOverlay = new CustomBossEventOverlay();
     private final ClientLevelEventHandler worldEventHandler = new ClientLevelEventHandler();
     private final ClientEventHandler entityEventHandler = new ClientEventHandler();
+    private final DescriptionTooltips descriptionTooltips = new DescriptionTooltips();
 
     public ClientServices(ModContainer container) {
         super(container);
@@ -52,6 +53,6 @@ public class ClientServices extends Services {
         bus.register(this.modKeys);
         bus.register(this.worldEventHandler);
         bus.register(this.entityEventHandler);
+        bus.register(this.descriptionTooltips);
     }
-
 }

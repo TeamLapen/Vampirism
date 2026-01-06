@@ -63,7 +63,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
         public void generate(HolderLookup.@NotNull Provider registries, Consumer<AdvancementHolder> consumer) {
 
             AdvancementHolder root = Advancement.Builder.advancement()
-                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), VIdentifier.mod("block/dark_stone_bricks.png"), AdvancementType.TASK, false, false, false)
+                    .display(ModItems.VAMPIRE_FANG.get(), Component.translatable("advancement.vampirism"), Component.translatable("advancement.vampirism.desc"), VIdentifier.mod("block/dark_stone_bricks"), AdvancementType.TASK, false, false, false)
                     .addCriterion("main", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.VAMPIRE_FANG.get()))
                     .addCriterion("second", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.GARLIC.get()))
                     .requirements(AdvancementRequirements.Strategy.OR)

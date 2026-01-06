@@ -70,6 +70,7 @@ The following labeling scheme is used:
 - Grid _Code/Textures/Models/Structures/Lore_
 - T_Corvus _Textures_
 - Zeyke _Textures_
+- zozozrob _Textures/Models_
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more. For more information and an overview checkout the wiki https://wiki.vampirism.dev/docs/api/intro.

@@ -20,6 +20,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class FactionBlocks {
 
@@ -44,6 +45,12 @@ public class FactionBlocks {
 
     private static <T extends Block> DeferredBlock<T> registerWithItem(String name, Function<BlockBehaviour.Properties,T> supplier, Supplier<BlockBehaviour.Properties> blockProperties) {
         return registerWithItem(name, supplier, blockProperties, props -> props);
+    }
+
+    private static <T extends Block> DeferredBlock<T> registerWithItem(String name, Function<BlockBehaviour.Properties, T> supplier, Function<Item.Properties, Item.Properties> properties) {
+        DeferredBlock<T> block = BLOCKS.registerBlock(name, supplier);
+        createItem(name, block, (x, y) -> new BlockItem(x, properties.apply(y)), UnaryOperator.identity());
+        return block;
     }
 
     private static <T extends Block> DeferredBlock<T> registerWithItem(String name, Function<BlockBehaviour.Properties, T> supplier, Supplier<BlockBehaviour.Properties> blockProperties, Function<Item.Properties, Item.Properties> properties) {

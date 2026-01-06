@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
 import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseSplitBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.misc.sit.SitEntity;
 import de.teamlapen.vampirism.misc.sit.SitHandler;
 import de.teamlapen.vampirism.misc.sit.SitUtil;

@@ -25,6 +25,7 @@ public class FactionDataComponents {
         public static final Identifier IS_FACTION_BANNER = FIdentifier.mod("is_faction_banner");
         public static final Identifier FACTION_RESTRICTION = FIdentifier.mod("faction_restriction");
         public static final Identifier FACTION_SLAYER = FIdentifier.mod("faction_slayer");
-
+        public static final Identifier SHIFT_DESCRIPTION = FIdentifier.mod("shift_description");
+        public static final Identifier BLOCK_DESCRIPTION = FIdentifier.mod("block_description");
     }
 }

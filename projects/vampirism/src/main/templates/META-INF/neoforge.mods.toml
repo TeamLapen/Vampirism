@@ -51,6 +51,7 @@ credits = '''\n
      - Grid (code/textures/models/structures/lore)
      - T_Corvus (textures)
      - Zeyke (textures)
+     - zozozrob (textures/models)
      - freesound.org (sounds)
      - freeSFX.co.uk (sounds)'''
 
@@ -100,6 +101,13 @@ type = "required"
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.${ mod_id }]]
+modId="${factions_mod_id}"
+type = "required"
+versionRange = "[${mod_version},)"
+ordering="AFTER"
+side="BOTH"
 
 [[dependencies.${ mod_id }]]
 modId = "jei"

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.data.provider.models;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quadrant;
 import de.teamlapen.faction.data.provider.model.FactionsModelTemplates;
-import de.teamlapen.faction.data.provider.model.FactionsTextureSlot;
+import de.teamlapen.faction.data.provider.model.FactionsTextureSlots;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
@@ -66,8 +66,8 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         createMotherTrophy();
         createAltarPillar();
         createTent();
-        createMedChair();
         createTotem();
+        createMedChair();
         createAlchemicalCauldron();
         createCursedGrassBlock();
         createAlchemicalFire();
@@ -179,10 +179,26 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
     }
 
     protected void createTotem() {
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), plainVariant(FactionsModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), new TextureMapping().put(FactionsTextureSlot.OUTER, VIdentifier.mc("block/glowstone")), this.modelOutput))));
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), plainVariant(FactionsModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), new TextureMapping().put(FactionsTextureSlot.OUTER, VIdentifier.mc("block/glowstone")), this.modelOutput))));
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), new TextureMapping().put(FactionsTextureSlot.OUTER, VIdentifier.mc("block/obsidian")), this.modelOutput))));
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), new TextureMapping().put(FactionsTextureSlot.OUTER, VIdentifier.mc("block/obsidian")), this.modelOutput))));
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_vampire")), this.modelOutput))));
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_hunter")), this.modelOutput))));
+
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP_CRAFTED.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_vampire")), this.modelOutput))));
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP_CRAFTED.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_hunter")), this.modelOutput))));
+    }
+
+    protected void createMedChair() {
+        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.MED_CHAIR.get())
+                .with(PropertyDispatch.initial(MedChairBlock.PART)
+                        .select(MedChairBlock.EnumPart.BOTTOM, plainVariant(VIdentifier.mod("block/medchairbase")))
+                        .select(MedChairBlock.EnumPart.TOP, plainVariant(VIdentifier.mod("block/medchairhead")))
+                )
+                .with(PropertyDispatch.modify(MedChairBlock.FACING)
+                        .select(Direction.NORTH, NOP)
+                        .select(Direction.EAST, Y_ROT_90)
+                        .select(Direction.SOUTH, Y_ROT_180)
+                        .select(Direction.WEST, Y_ROT_270)
+                )
+        );
     }
 
     protected void createCandleHolders() {
@@ -354,21 +370,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
                 ModBlocks.THRONE,
                 ModBlocks.FOG_DIFFUSER
         ).map(DeferredHolder::get).forEach(this::createNonTemplateBlockWithItem);
-    }
-
-    protected void createMedChair() {
-        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.MED_CHAIR.get())
-                .with(PropertyDispatch.initial(MedChairBlock.PART)
-                        .select(MedChairBlock.EnumPart.BOTTOM, plainVariant(VIdentifier.mod("block/medchairbase")))
-                        .select(MedChairBlock.EnumPart.TOP, plainVariant(VIdentifier.mod("block/medchairhead")))
-                )
-                .with(PropertyDispatch.modify(MedChairBlock.FACING)
-                        .select(Direction.NORTH, NOP)
-                        .select(Direction.EAST, Y_ROT_90)
-                        .select(Direction.SOUTH, Y_ROT_180)
-                        .select(Direction.WEST, Y_ROT_270)
-                )
-        );
     }
 
     protected void createTrivialBlocks() {

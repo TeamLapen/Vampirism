@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.world.blocks.*;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseSplitBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.data.loot.conditions.TentSpawnerCondition;
 import de.teamlapen.vampirism.misc.mixin.accessor.VanillaBlockLootAccessor;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
@@ -87,7 +87,6 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
         this.dropSelf(ModBlocks.HUNTER_TABLE.get());
-        this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM));
         this.dropSelf(ModBlocks.SUNSCREEN_BEACON.get());
         this.add(ModBlocks.TENT_MAIN.get(), createSingleItemTable(ModItems.ITEM_TENT.get())
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(TentSpawnerCondition.builder())
@@ -141,6 +140,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
         this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
+        this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM));
         this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
         this.dropSelf(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());
         this.dropSelf(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
