@@ -2,12 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "minecraft:basalt",
-    "P": "#minecraft:planks"
+    "L": "#c:leathers",
+    "P": "#minecraft:planks",
+    "W": "#minecraft:wool"
   },
   "pattern": [
-    "B  ",
-    "BBB",
+    "PL ",
+    "PWP",
     "P P"
   ],
   "result": {

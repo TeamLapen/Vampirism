@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_basalt": {
+    "has_leather": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:basalt"
+            "items": "#c:leathers"
           }
         ]
       },
@@ -26,13 +26,24 @@
         "recipe": "vampirism:injection_chair"
       },
       "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_wool": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:wool"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "has_basalt",
-      "has_planks"
+      "has_planks",
+      "has_wool",
+      "has_leather"
     ]
   ],
   "rewards": {

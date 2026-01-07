@@ -8,10 +8,10 @@ package de.teamlapen.vampirism.misc.sit;
 import com.mojang.serialization.Codec;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -19,100 +19,111 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.SupportType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class SitEntity extends Entity {
 
-    public static @NotNull SitEntity newEntity(@NotNull Level level, @NotNull BlockPos pos, double offset, Vec3 playerPos) {
-        SitEntity e = ModEntities.SIT_DUMMY.get().create(level, EntitySpawnReason.MOB_SUMMONED);
-        e.setPos(pos.getX() + 0.5D, pos.getY() + offset, pos.getZ() + 0.5D);
-        e.noPhysics = true;
-        e.setPlayerPos(playerPos);
-        return e;
+    public static @Nullable SitEntity createEntity(Player player, Level level, BlockPos pos, double offset) {
+        SitEntity entity = ModEntities.SIT.get().create(level, EntitySpawnReason.MOB_SUMMONED);
+
+        if (entity == null) return null;
+
+        BlockState state = level.getBlockState(pos);
+
+        float rotation = 0.0f;
+        if (state.getBlock() instanceof ISittableBlock sittable) {
+            rotation = sittable.getSitRotation(state, entity, player);
+            entity.maxRotationAngle = sittable.getMaxSitRotationAngle(state, entity, player);
+            entity.shouldLockRotation = sittable.shouldLockSittingPlayerRotation(state, entity, player);
+        }
+        entity.setYRot(rotation);
+
+        entity.setPos(pos.getX() + 0.5D, pos.getY() + offset, pos.getZ() + 0.5D);
+        entity.noPhysics = true;
+
+        return entity;
     }
 
-    @Nullable
-    private Vec3 playerPos;
+    public static final String KEY_MAX_ROTATION_ANGLE = "MaxRotationAngle";
+    public static final String KEY_SHOULD_LOCK_ROTATION = "ShouldLockRotation";
 
-    public SitEntity(@NotNull EntityType<SitEntity> type, @NotNull Level level) {
+    private float maxRotationAngle = ISittableBlock.DEFAULT_MAX_SIT_ROTATION_ANGLE;
+    private boolean shouldLockRotation = true;
+
+    public SitEntity(EntityType<SitEntity> type, Level level) {
         super(type, level);
     }
 
     @Override
-    public @NotNull Vec3 getDismountLocationForPassenger(@NotNull LivingEntity passenger) {
-        if (passenger instanceof Player player) {
-            Vec3 resetPosition = this.getPlayerPos();
+    protected void positionRider(Entity passenger, MoveFunction callback) {
+        super.positionRider(passenger, callback);
 
-            if (resetPosition != null) {
-                BlockPos belowResetPos = BlockPos.containing(resetPosition.x, resetPosition.y - 1, resetPosition.z);
+        if (this.shouldLockRotation && !passenger.getType().is(EntityTypeTags.CAN_TURN_IN_BOATS)) {
+            this.clampEntityRotation(passenger);
+        }
+    }
 
-                discard();
+    protected void clampEntityRotation(Entity entity) {
+        entity.setYBodyRot(this.getYRot());
+        float yawDifference = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+        float clampedYaw = Mth.clamp(yawDifference, -this.maxRotationAngle, this.maxRotationAngle);
+        float correction = clampedYaw - yawDifference;
+        entity.yRotO += correction;
+        entity.setYRot(entity.getYRot() + correction);
+        entity.setYHeadRot(entity.getYRot());
+    }
 
-                if (!player.level().getBlockState(belowResetPos).isFaceSturdy(level(), belowResetPos, Direction.UP, SupportType.FULL)) {
-                    return new Vec3(resetPosition.x, resetPosition.y + 1, resetPosition.z);
-                } else {
-                    return resetPosition;
-                }
-            }
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        BlockPos pos = blockPosition();
+        BlockState state = level().getBlockState(pos);
+        Vec3 result = null;
+
+        if (state.getBlock() instanceof ISittableBlock sittable) {
+            result = sittable.getStandUpLocation(level(), pos, passenger, state.getValue(BlockStateProperties.HORIZONTAL_FACING));
         }
 
         discard();
-        return super.getDismountLocationForPassenger(passenger);
+        return result != null ? result : new Vec3(pos.getX() + 0.5, pos.getY() + 1.01, pos.getZ() + 0.5);
     }
 
     @Override
     public void onAddedToLevel() {
         super.onAddedToLevel();
-        SitUtil.addSitEntity(level(), blockPosition(), this);
+        SitUtil.registerSitEntity(level(), blockPosition(), this);
     }
 
     @Override
     public void remove(RemovalReason reason) {
         this.ejectPassengers();
-        SitUtil.removeSitEntity(level(), blockPosition());
+        SitUtil.unregisterSitEntity(level(), blockPosition());
 
         super.remove(reason);
     }
 
     @Override
-    public boolean hurtServer(ServerLevel p_376804_, DamageSource p_376155_, float p_376892_) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float v) {
         return false;
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder p_326003_) {
-
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
-        input.read("playerPos", Codec.DOUBLE.listOf(3, 3)).ifPresent(data -> this.playerPos = new Vec3(data.get(0), data.get(1), data.get(2)));
+        input.read(KEY_MAX_ROTATION_ANGLE, Codec.FLOAT).ifPresent(value -> this.maxRotationAngle = value);
+        input.read(KEY_SHOULD_LOCK_ROTATION, Codec.BOOL).ifPresent(value -> this.shouldLockRotation = value);
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull ValueOutput output) {
-        if (this.playerPos != null) {
-            output.store("playerPos", Codec.DOUBLE.listOf(3, 3), List.of(this.playerPos.x, this.playerPos.y, this.playerPos.z));
-        }
-    }
-
-    @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
-        super.recreateFromPacket(packet);
-    }
-
-    public void setPlayerPos(@Nullable Vec3 pos) {
-        this.playerPos = pos;
-    }
-
-    public @Nullable Vec3 getPlayerPos() {
-        return playerPos;
+    protected void addAdditionalSaveData(ValueOutput output) {
+        output.store(KEY_MAX_ROTATION_ANGLE, Codec.FLOAT, this.maxRotationAngle);
+        output.store(KEY_SHOULD_LOCK_ROTATION, Codec.BOOL, this.shouldLockRotation);
     }
 }

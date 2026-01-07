@@ -161,10 +161,17 @@ public class BaseSplitBlock extends Block {
             return name;
         }
 
-
         @Override
         public String toString() {
             return name;
+        }
+
+        public boolean isMain() {
+            return this == MAIN;
+        }
+
+        public boolean isSub() {
+            return this == SUB;
         }
     }
 }

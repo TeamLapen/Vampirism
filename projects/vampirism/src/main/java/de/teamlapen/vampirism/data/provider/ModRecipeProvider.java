@@ -216,17 +216,17 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_basalt", has(Blocks.BASALT))
                 .unlockedBy("has_planks", has(PLANKS))
                 .save(output);
-
         shaped(RecipeCategory.DECORATIONS, ModBlocks.INJECTION_CHAIR)
-                .pattern("B  ")
-                .pattern("BBB")
+                .pattern("PL ")
+                .pattern("PWP")
                 .pattern("P P")
-                .define('B', Blocks.BASALT)
                 .define('P', PLANKS)
-                .unlockedBy("has_basalt", has(Blocks.BASALT))
+                .define('W', WOOL)
+                .define('L', LEATHER)
                 .unlockedBy("has_planks", has(PLANKS))
+                .unlockedBy("has_wool", has(WOOL))
+                .unlockedBy("has_leather", has(LEATHER))
                 .save(output);
-
         shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_CLEANSING)
                 .pattern(" X ")
                 .pattern("YYY")

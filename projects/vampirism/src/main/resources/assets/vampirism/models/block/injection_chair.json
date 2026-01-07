@@ -256,7 +256,7 @@
 				"down": {"uv": [0, 16, 0, 16], "texture": "#arms"}
 			}
 		}
-	]
+	],
 	"display": {
 		"gui": {
 			"rotation": [30, -135, 0],
