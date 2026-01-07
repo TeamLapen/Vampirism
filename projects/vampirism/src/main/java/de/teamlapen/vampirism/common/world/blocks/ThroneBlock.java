@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -104,11 +103,5 @@ public class ThroneBlock extends BaseSplitBlock implements ISittableBlock {
         if (vec3.y < 0.0) {
             entity.setDeltaMovement(vec3.x, -vec3.y * 0.35F, vec3.z);
         }
-    }
-
-    // TODO: BaseSplitBlock's direction is away from the player, but changing it to the opposite might result in conflicts with diagonal blocks
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 }

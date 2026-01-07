@@ -17,7 +17,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -117,11 +116,5 @@ public class InjectionChairBlock extends BaseSplitBlock implements ISittableBloc
         if (entity != null) {
             entity.discard();
         }
-    }
-
-    // TODO: BaseSplitBlock's direction is away from the player, but changing it to the opposite might result in conflicts with diagonal blocks
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 }

@@ -71,11 +71,20 @@ public class BaseSplitBlock extends Block {
         };
     }
 
+    /*
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction direction = context.getHorizontalDirection();
         BlockPos relativePos = context.getClickedPos().relative(this.vertical ? Direction.UP : direction);
         return context.getLevel().getBlockState(relativePos).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, direction) : null;
+    }
+     */
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction direction = context.getHorizontalDirection();
+        BlockPos relativePos = context.getClickedPos().relative(this.vertical ? Direction.UP : direction);
+        return context.getLevel().getBlockState(relativePos).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, direction.getOpposite()) : null;
     }
 
     @Override
