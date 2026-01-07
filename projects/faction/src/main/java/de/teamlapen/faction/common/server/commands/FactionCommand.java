@@ -29,8 +29,9 @@ public class FactionCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
         HolderLookup.RegistryLookup<IFaction<?>> factions = buildContext.lookupOrThrow(FactionRegistries.Keys.FACTION);
 
-        var root = Commands.literal("faction")
-                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
+        var root = Commands.literal("faction").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
+
+        var setCommand = Commands.literal("set");
 
         for (var listHolder : factions.listElements().toList()) {
             if (!(listHolder.value() instanceof IPlayableFaction<?> faction)){
@@ -64,8 +65,17 @@ public class FactionCommand extends BasicCommand {
                         )
                 );
             }
-            root.then(factionCommand);
+
+            setCommand.then(factionCommand);
         }
+
+        root.then(setCommand);
+
+        root.then(Commands.literal("get")
+                .then(Commands.argument("player", EntityArgument.player())
+                        .executes(context -> getFactionInfo(context, EntityArgument.getPlayer(context, "player")))
+                )
+        );
 
         return root;
     }
@@ -91,6 +101,12 @@ public class FactionCommand extends BasicCommand {
             }
             context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.lord.successful", player.getName(), faction.value().getName(), handler.getLordLevel()), true);
         }
+        return 0;
+    }
+
+    private static int getFactionInfo(CommandContext<CommandSourceStack> context, ServerPlayer player) {
+        FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+        context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.get_level.successful", player.getDisplayName(), handler.getFaction().value().getName(), handler.getCurrentLevel(), handler.getLordLevel()), true);
         return 0;
     }
 }

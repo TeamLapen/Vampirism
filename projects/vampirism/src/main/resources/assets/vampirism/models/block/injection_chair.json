@@ -2,6 +2,7 @@
 	"credit": "Designed by GridExpert",
 	"parent": "block/block",
 	"render_type": "minecraft:cutout",
+	"ambientocclusion": false,
 	"texture_size": [32, 32],
 	"textures": {
 		"arms": "vampirism:block/injection_chair_arms",
@@ -261,7 +262,7 @@
 		"gui": {
 			"rotation": [30, -135, 0],
 			"translation": [-0.25, -1.35, 0],
-			"scale": [0.555, 0.555, 0.555]
+			"scale": [0.55, 0.55, 0.55]
 		}
 	}
 }

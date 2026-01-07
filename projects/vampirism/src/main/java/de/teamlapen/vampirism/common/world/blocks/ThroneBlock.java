@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -26,12 +27,12 @@ import java.util.stream.Stream;
 public class ThroneBlock extends BaseSplitBlock implements ISittableBlock {
 
     public static final VoxelShape BOTTOM_SHAPE = Stream.of(
-            Block.box(2.0, 0, 2.2, 13.5, 10.4, 14),
-            Block.box(2.0, 9, 1.2, 13.5, 16, 3),
-            Block.box(0.5, 13.5, 2.2, 2.7, 15.5, 14.2),
-            Block.box(13.3, 13.5, 2.2, 15.5, 15.5, 14.2)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElse(Shapes.empty());
-    public static final VoxelShape TOP_SHAPE = Block.box(2.0, 0, 1.2, 13.5, 10, 3);
+            Block.box(1, 0, 1, 15, 10, 16),
+            Block.box(0, 7, 2, 3, 15, 16),
+            Block.box(13, 7, 2, 16, 15, 16),
+            Block.box(1, 10, 14, 15, 16, 16)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+    public static final VoxelShape TOP_SHAPE = Block.box(1, 0, 14, 15, 11, 16);
 
     public ThroneBlock(Properties properties) {
         super(properties, BOTTOM_SHAPE, TOP_SHAPE, true);
@@ -103,5 +104,11 @@ public class ThroneBlock extends BaseSplitBlock implements ISittableBlock {
         if (vec3.y < 0.0) {
             entity.setDeltaMovement(vec3.x, -vec3.y * 0.35F, vec3.z);
         }
+    }
+
+    // TODO: BaseSplitBlock's direction is away from the player, but changing it to the opposite might result in conflicts with diagonal blocks
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 }
