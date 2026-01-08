@@ -49,6 +49,11 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
     }
 
     @Override
+    public @NotNull EntityType<Mule> getCuredEntityType() {
+        return EntityType.MULE;
+    }
+
+    @Override
     public Data<Mule> data() {
         return this.data;
     }
@@ -77,7 +82,7 @@ public class ConvertedMuleEntity extends Mule implements CurableConvertedCreatur
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.MULE);
+            aiStepC(serverLevel);
         }
         super.aiStep();
     }

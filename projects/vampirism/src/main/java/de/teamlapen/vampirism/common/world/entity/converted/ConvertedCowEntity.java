@@ -46,6 +46,11 @@ public class ConvertedCowEntity extends Cow implements CurableConvertedCreature<
     }
 
     @Override
+    public @NotNull EntityType<Cow> getCuredEntityType() {
+        return EntityType.COW;
+    }
+
+    @Override
     public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
     }
@@ -84,7 +89,7 @@ public class ConvertedCowEntity extends Cow implements CurableConvertedCreature<
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.COW);
+            aiStepC(serverLevel);
         }
         super.aiStep();
     }
