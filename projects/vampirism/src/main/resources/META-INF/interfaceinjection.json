@@ -86,8 +86,5 @@
   ],
   "net/minecraft/client/renderer/feature/FeatureRenderDispatcher": [
     "de/teamlapen/vampirism/misc/injection/client/IFeatureRenderDispatcherVampirismMock"
-  ],
-  "net/minecraft/world/item/Item$Properties": [
-    "de/teamlapen/vampirism/misc/injection/IItemPropertiesVampirismMock"
   ]
 }

@@ -27,6 +27,7 @@ public class ModRegistryManager {
 
     public void setupRegistries(IEventBus eventBus) {
         ModAttributes.register(eventBus);
+        ModFoodBehaviours.register(eventBus);
         ModBiomes.register(eventBus);
         ModBlocks.register(eventBus);
         ModMenus.register(eventBus);

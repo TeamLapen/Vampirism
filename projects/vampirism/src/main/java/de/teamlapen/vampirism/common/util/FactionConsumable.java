@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.util;
 
-import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.component.ConsumableListener;
 
@@ -29,6 +28,6 @@ public record FactionConsumable() {
 
     static {
         register(FOOD, FoodProperties.class);
-        register(FOOD, BloodFoodProperties.class);
+        //register(FOOD, BloodFoodProperties.class);
     }
 }

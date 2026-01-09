@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.tags.ModDataComponentTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
@@ -24,7 +23,7 @@ public class ModDataComponentTagsProvider extends KeyTagProvider<DataComponentTy
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         //noinspection unchecked
         this.tag(ModDataComponentTags.FACTION_FOOD).addTags(ModDataComponentTags.HUNTER_FOOD, ModDataComponentTags.VAMPIRE_FOOD, ModDataComponentTags.BASE_FOOD);
-        this.tag(ModDataComponentTags.VAMPIRE_FOOD).add(ModDataComponents.VAMPIRE_FOOD.getKey());
+        this.tag(ModDataComponentTags.VAMPIRE_FOOD);
         this.tag(ModDataComponentTags.HUNTER_FOOD);
         this.tag(ModDataComponentTags.BASE_FOOD).add(BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(DataComponents.FOOD).orElseThrow());
     }

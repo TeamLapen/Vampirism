@@ -145,7 +145,7 @@ public class ModItems {
     public static final DeferredItem<RefinementItem> OBI_BELT = ITEMS.registerItem("obi_belt",  props -> new RefinementItem(FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.OBI_BELT));
 
     // General
-    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build()).factions$withShiftDescription()));
+    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build())));
     public static final DeferredItem<BucketItem> BLOOD_BUCKET = ITEMS.registerItem("blood_bucket",  props -> new BucketItem(ModFluids.BLOOD.get(), props.craftRemainder(Items.BUCKET).stacksTo(1).factions$withShiftDescription()));
 
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_IRON = ITEMS.registerItem("blood_infused_raw_iron", PureLevelItem::new);
@@ -182,9 +182,9 @@ public class ModItems {
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_3 = ITEMS.registerItem("pure_blood_3",  props -> new PureBloodItem(3, props));
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_4 = ITEMS.registerItem("pure_blood_4",  props -> new PureBloodItem(4, props));
 
-    public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.food(ModFoods.GARLIC_BREAD_HUMAN).factions$factionFood(ModFoods.GARLIC_BREAD_HUNTER).component(DataComponents.CONSUMABLE, ModConsumables.GARLIC)));
-    public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.factions$defaultFood(ModFoods.HUMAN_HEART_HUMAN).vampirism$vampireFood(ModFoods.HUMAN_HEART_VAMPIRE).component(DataComponents.CONSUMABLE, ModConsumables.NASTY_NON_VAMPIRES)));
-    public static final DeferredItem<Item> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new Item(props.factions$defaultFood(ModFoods.WEAK_HUMAN_HEART_HUMAN).vampirism$vampireFood(ModFoods.WEAK_HUMAN_HEART_VAMPIRE).component(DataComponents.CONSUMABLE, ModConsumables.NASTY_NON_VAMPIRES)));
+    public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.factions$factionFood(ModFoods.GARLIC_BREAD, ModConsumables.GARLIC)));
+    public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.factions$factionFood(ModFoods.HUMAN_HEART, ModConsumables.NASTY_NON_VAMPIRES)));
+    public static final DeferredItem<Item> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new Item(props.factions$factionFood(ModFoods.WEAK_HUMAN_HEART, ModConsumables.NASTY_NON_VAMPIRES)));
 
     public static final DeferredItem<Item> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", x -> new Item(x.factions$withShiftDescription()));
     public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));

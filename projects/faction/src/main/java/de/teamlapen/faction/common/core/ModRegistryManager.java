@@ -9,6 +9,7 @@ public class ModRegistryManager {
 
     public void setupRegistries(IEventBus bus) {
         DefaultFactions.register(bus);
+        FactionFoodBehaviours.register(bus);
         FactionAdvancements.register(bus);
         FactionBlocks.register(bus);
         FactionBlockEntities.register(bus);

@@ -8,13 +8,13 @@ import de.teamlapen.vampirism.common.core.ModAttributes;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.util.BloodResourceHandler;
-import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
 import de.teamlapen.vampirism.misc.mixin.accessor.FoodDataAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import org.jetbrains.annotations.Nullable;
@@ -169,8 +169,8 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
     }
 
-    public void eat(BloodFoodProperties bloodFoodProperties) {
-        this.addBlood(bloodFoodProperties.blood(), bloodFoodProperties.saturation());
+    public void eat(FoodProperties foodProperties) {
+        this.addBlood(foodProperties.nutrition(), foodProperties.saturation());
     }
 
     @Override
