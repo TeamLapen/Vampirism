@@ -42,6 +42,7 @@ public class VampirismDataComponents {
         public static final Identifier BLOOD_CHARGED = VIdentifier.mod( "blood_charged");
         public static final Identifier BOTTLE_BLOOD = VIdentifier.mod( "bottle_blood");
         public static final Identifier FRUGALITY = VIdentifier.mod( "frugality");
+        public static final Identifier FACTION_FOOD = VIdentifier.mod("faction_food");
         public static final Identifier VAMPIRE_FOOD = VIdentifier.mod("vampire_food");
         public static final Identifier DROP_VAMPIRE_SOUL = VIdentifier.mod("drop_vampire_soul");
         public static final Identifier PURE_LEVEL = VIdentifier.mod("pure_level");

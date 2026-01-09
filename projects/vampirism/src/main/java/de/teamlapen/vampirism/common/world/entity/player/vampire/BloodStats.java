@@ -142,7 +142,7 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
         }
     }
 
-    int addBlood(int amount, float saturationModifier) {
+    public int addBlood(int amount, float saturationModifier) {
         int add = Math.min(amount, maxBlood - bloodLevel);
         bloodLevel += add;
         bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);

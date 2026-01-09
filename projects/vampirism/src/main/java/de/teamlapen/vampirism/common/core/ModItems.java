@@ -1,21 +1,14 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.components.FactionRestriction;
-import de.teamlapen.faction.common.core.FactionItems;
-import de.teamlapen.faction.common.core.ModRegistries;
-import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.*;
-import de.teamlapen.vampirism.common.world.items.consume.AffectGarlic;
-import de.teamlapen.vampirism.common.world.items.consume.BloodConsume;
-import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
-import de.teamlapen.vampirism.common.world.items.consume.ModConsumables;
+import de.teamlapen.vampirism.common.world.items.consume.*;
 import de.teamlapen.vampirism.common.world.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.common.world.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.SingleCrossbowItem;
@@ -25,16 +18,11 @@ import de.teamlapen.vampirism.common.world.items.dispenser.SyringeDispenseBehavi
 import de.teamlapen.vampirism.common.world.items.display.ItemStackWithSize;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Consumables;
-import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.equipment.ArmorType;
@@ -43,11 +31,9 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -60,7 +46,6 @@ public class ModItems {
     public static final DeferredRegister<SlotDisplay.Type<?>> SLOT_DISPLAYS = DeferredRegister.create(Registries.SLOT_DISPLAY, REFERENCE.MODID);
 
     // Consume Effects
-    public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<BloodConsume>> CONSUME_BLOOD_EFFECT = CONSUME_EFFECTS.register("blood_consume", () -> new ConsumeEffect.Type<>(BloodConsume.CODEC, BloodConsume.STREAM_CODEC));
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<AffectGarlic>> AFFECT_GARLIC = CONSUME_EFFECTS.register("affect_garlic", () -> new ConsumeEffect.Type<>(AffectGarlic.CODEC, AffectGarlic.STREAM_CODEC));
 
     // slot display
@@ -197,9 +182,9 @@ public class ModItems {
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_3 = ITEMS.registerItem("pure_blood_3",  props -> new PureBloodItem(3, props));
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_4 = ITEMS.registerItem("pure_blood_4",  props -> new PureBloodItem(4, props));
 
-    public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.7F).build()).component(DataComponents.CONSUMABLE, ModConsumables.GARLIC)));
-    public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.component(DataComponents.FOOD, new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()).component(ModDataComponents.VAMPIRE_FOOD, new BloodFoodProperties.Builder().blood(20).saturationModifier(1.5F).build()).component(DataComponents.CONSUMABLE, Consumables.defaultFood().onConsume(new FactionBasedConsumeEffect(new NotHolderSet<>(ModRegistries.FACTIONS, HolderSet.direct((Holder<IFaction<?>>) (Object) ModFactions.VAMPIRE)), new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.NAUSEA, 20 * 20))))).build())));
-    public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new VampirismItemBloodFoodItem(props.food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new BloodFoodProperties.Builder().blood(10).saturationModifier(0.9F).build()));
+    public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.food(ModFoods.GARLIC_BREAD_HUMAN).factions$factionFood(ModFoods.GARLIC_BREAD_HUNTER).component(DataComponents.CONSUMABLE, ModConsumables.GARLIC)));
+    public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.factions$defaultFood(ModFoods.HUMAN_HEART_HUMAN).vampirism$vampireFood(ModFoods.HUMAN_HEART_VAMPIRE).component(DataComponents.CONSUMABLE, ModConsumables.NASTY_NON_VAMPIRES)));
+    public static final DeferredItem<Item> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new Item(props.factions$defaultFood(ModFoods.WEAK_HUMAN_HEART_HUMAN).vampirism$vampireFood(ModFoods.WEAK_HUMAN_HEART_VAMPIRE).component(DataComponents.CONSUMABLE, ModConsumables.NASTY_NON_VAMPIRES)));
 
     public static final DeferredItem<Item> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", x -> new Item(x.factions$withShiftDescription()));
     public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));

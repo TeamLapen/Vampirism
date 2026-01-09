@@ -6,6 +6,7 @@ import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.components.FactionSlayer;
 import de.teamlapen.faction.common.util.BlockDescription;
 import de.teamlapen.faction.common.util.ShiftDescription;
+import de.teamlapen.faction.common.world.items.consume.FactionFoodProperties;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.StreamCodec;
@@ -24,6 +25,7 @@ public class FactionDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<EffectiveRefinementSet>> REFINEMENT_SET = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.REFINEMENT_SET.getPath(), builder -> builder.persistent(EffectiveRefinementSet.CODEC).networkSynchronized(EffectiveRefinementSet.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ShiftDescription>> SHIFT_DESCRIPTION = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.SHIFT_DESCRIPTION.getPath(), builder -> builder.persistent(ShiftDescription.CODEC).networkSynchronized(ShiftDescription.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockDescription>> BLOCK_DESCRIPTION = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.BLOCK_DESCRIPTION.getPath(), builder -> builder.persistent(BlockDescription.CODEC).networkSynchronized(BlockDescription.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FactionFoodProperties>> FACTION_FOOD = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.FACTION_FOOD.getPath(), builder -> builder.persistent(FactionFoodProperties.CODEC).networkSynchronized(FactionFoodProperties.STREAM_CODEC));
 
 
 

@@ -4,13 +4,16 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.util.ShiftDescription;
+import de.teamlapen.faction.common.world.items.consume.FactionFoodProperties;
 import de.teamlapen.faction.misc.extensions.IItemProperties;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.DependantName;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
@@ -66,6 +69,18 @@ public abstract class ItemPropertiesMixin implements IItemProperties {
     @Override
     public Item.Properties factions$withShiftDescription(Component component) {
         this.component(FactionDataComponents.SHIFT_DESCRIPTION.get(), new ShiftDescription(component));
+        return (Item.Properties) (Object) this;
+    }
+
+    @Override
+    public Item.Properties factions$defaultFood(FoodProperties foodProperties) {
+        this.component(DataComponents.FOOD, foodProperties);
+        return (Item.Properties) (Object) this;
+    }
+
+    @Override
+    public Item.Properties factions$factionFood(FactionFoodProperties factionFoodProperties) {
+        this.component(FactionDataComponents.FACTION_FOOD.get(), factionFoodProperties);
         return (Item.Properties) (Object) this;
     }
 }

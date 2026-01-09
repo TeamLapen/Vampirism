@@ -29,6 +29,7 @@ import de.teamlapen.vampirism.common.world.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.common.world.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
 import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
+import de.teamlapen.vampirism.common.world.items.consume.VampireFoodProperties;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -193,6 +194,10 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return false;
     }
 
+    public void eat(int blood) {
+        this.heal(blood / 2f);
+    }
+
     public void eat(@NotNull Level world, @NotNull ItemStack stack, BloodFoodProperties properties) {
         float healAmount = properties.blood() / 2f;
         this.heal(healAmount);
@@ -206,8 +211,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     protected boolean canConsume(@NotNull ItemStack stack, @NotNull Consumable consumable) {
         if (!super.canConsume(stack, consumable)) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        BloodFoodProperties bloodFoodProperties = stack.get(ModDataComponents.VAMPIRE_FOOD);
-        if (bloodFoodProperties != null && (!fullHealth || bloodFoodProperties.canAlwaysEat())) {
+        VampireFoodProperties vampireFoodProperties = stack.get(ModDataComponents.VAMPIRE_FOOD);
+        if (vampireFoodProperties != null && (!fullHealth || vampireFoodProperties.canAlwaysEat())) {
             return true;
         }
         BottleBlood bottleBlood = stack.get(ModDataComponents.BOTTLE_BLOOD);
