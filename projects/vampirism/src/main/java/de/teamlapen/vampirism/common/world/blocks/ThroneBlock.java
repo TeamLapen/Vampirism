@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
+import de.teamlapen.faction.common.world.blocks.base.WaterloggedSplitBlock;
 import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.misc.sit.ISittableBlock;
 import de.teamlapen.vampirism.misc.sit.SitEntity;
 import de.teamlapen.vampirism.misc.sit.SitUtil;
@@ -23,7 +23,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.stream.Stream;
 
-public class ThroneBlock extends BaseSplitBlock implements ISittableBlock {
+public class ThroneBlock extends WaterloggedSplitBlock implements ISittableBlock {
 
     public static final VoxelShape BOTTOM_SHAPE = Stream.of(
             Block.box(1, 0, 1, 15, 10, 16),

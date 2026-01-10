@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
+import de.teamlapen.faction.common.world.blocks.base.WaterloggedSplitBlock;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.world.items.InjectionItem;
 import de.teamlapen.vampirism.misc.sit.ISittableBlock;
@@ -28,7 +28,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.stream.Stream;
 
-public class InjectionChairBlock extends BaseSplitBlock implements ISittableBlock {
+public class InjectionChairBlock extends WaterloggedSplitBlock implements ISittableBlock {
 
     public static final VoxelShape BOTTOM_SHAPE = Stream.of(
             Block.box(0, 0, -1, 3, 13, 13),
