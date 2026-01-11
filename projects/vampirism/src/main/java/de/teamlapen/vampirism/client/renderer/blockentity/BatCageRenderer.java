@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.blockentity.BatCageBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.BatCageBlock;
 import net.minecraft.client.model.ambient.BatModel;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.entity.state.BatRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -25,14 +27,19 @@ public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity, 
 
     private final BatModel model;
 
+    public BatCageRenderer(EntityModelSet entityModelSet) {
+        model = new BatModel(entityModelSet.bakeLayer(ModelLayers.BAT));
+    }
+
     public BatCageRenderer(BlockEntityRendererProvider.Context context) {
-        model = new BatModel(context.bakeLayer(ModelLayers.BAT));
+        this(context.entityModelSet());
     }
 
     @Override
     public void extractRenderState(BatCageBlockEntity blockEntity, BatCageRenderState renderState, float partialTick, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
         renderState.containsBat = blockEntity.getBlockState().getValue(BatCageBlock.CONTAINS_BAT);
+        renderState.facing = blockEntity.getBlockState().getValue(BatCageBlock.FACING);
     }
 
     @Override
@@ -43,14 +50,14 @@ public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity, 
     @Override
     public void submit(BatCageRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
         if (renderState.containsBat) {
-            renderBat(poseStack, nodeCollector, renderState.lightCoords);
+            renderBat(poseStack, nodeCollector, renderState.lightCoords, renderState.facing);
         }
     }
 
-    private void renderBat(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight) {
+    public void renderBat(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, Direction direction) {
         poseStack.pushPose();
-        poseStack.translate(0.5F, 1F, 0.5F);
-        //pPoseStack.mulPose(Axis.YN.rotationDegrees(90 * direction.get2DDataValue()));
+        poseStack.translate(0.5F, 1.0625F, 0.5F);
+        poseStack.mulPose(Axis.YN.rotationDegrees(90 * direction.get2DDataValue()));
         poseStack.scale(0.65F, 0.65F, 0.65F);
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
         BatRenderState batRenderState = new BatRenderState();
@@ -63,5 +70,6 @@ public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity, 
 
     public static class BatCageRenderState extends BlockEntityRenderState {
         public boolean containsBat;
+        public Direction facing;
     }
 }

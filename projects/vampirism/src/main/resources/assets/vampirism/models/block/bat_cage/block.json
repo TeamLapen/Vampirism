@@ -1,6 +1,0 @@
-{
-  "parent": "vampirism:block/bat_cage/bat_cage",
-  "loader": "neoforge:obj",
-  "flip-v": true,
-  "model": "vampirism:models/block/bat_cage/bat_cage.obj"
-}

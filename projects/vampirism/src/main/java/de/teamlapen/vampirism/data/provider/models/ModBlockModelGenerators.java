@@ -5,6 +5,7 @@ import com.mojang.math.Quadrant;
 import de.teamlapen.faction.data.provider.model.FactionsModelTemplates;
 import de.teamlapen.faction.data.provider.model.FactionsTextureSlots;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.client.renderer.items.BatCageSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
 import de.teamlapen.vampirism.common.core.ModBlocks;
@@ -86,9 +87,9 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         Identifier infestedDarkStoneModel = ModModelTemplates.CUBE_ALL.create(ModBlocks.INFESTED_DARK_STONE.get(), new TextureMapping().put(TextureSlot.ALL, mod("block/dark_stone")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.INFESTED_DARK_STONE.get(), plainVariant(infestedDarkStoneModel)));
 
-        Identifier batCageModel = mod("block/bat_cage/block");
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BAT_CAGE.get(), plainVariant(batCageModel)));
-        createDefaultBlockItem(ModBlocks.BAT_CAGE.get(), batCageModel);
+        createNonTemplateHorizontalBlock(ModBlocks.BAT_CAGE.get());
+        Identifier batCageModel = ModelLocationUtils.getModelLocation(ModBlocks.BAT_CAGE.get());
+        this.itemModelOutput.accept(ModBlocks.BAT_CAGE.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(batCageModel), ItemModelUtils.specialModel(batCageModel, new BatCageSpecialRenderer.Unbaked())));
 
         Identifier bloodContainerModel = mod("block/blood_container/blood_container");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BLOOD_CONTAINER.get(), plainVariant(bloodContainerModel)));
