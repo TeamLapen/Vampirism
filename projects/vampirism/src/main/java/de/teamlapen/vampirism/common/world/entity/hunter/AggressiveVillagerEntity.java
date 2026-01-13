@@ -76,7 +76,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     public AggressiveVillagerEntity(EntityType<? extends AggressiveVillagerEntity> type, Level worldIn) {
         super(type, worldIn);
-        ((GroundPathNavigation) getNavigation()).setCanOpenDoors(true);
+        getNavigation().setCanOpenDoors(true);
     }
 
     @Override
