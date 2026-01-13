@@ -29,6 +29,7 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
     public GolemTargetNonVillageFactionGoal(@NotNull IronGolem creature) {
         super(creature, LivingEntity.class, 4, false, false, null);
         this.golem = creature;
+        this.targetConditions.selector((a,b) -> false); //Before determineGolemFaction is executed for the first time, we don't want to attack anybody
     }
 
     @Override
@@ -62,13 +63,13 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
     private boolean determineGolemFaction() {
         Holder<? extends IFaction<?>> faction = ModFactions.HUNTER;
         if (ModConfig.balance().golemAttackNonVillageFaction.get()) {
-            Optional<Holder<? extends IFaction<?>>> tile = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level()), this.golem.blockPosition(), true).map(TotemBlockEntity::getControllingFaction);
-            if (tile.isPresent()) {
-                faction = tile.get();
+            Optional<Holder<? extends IFaction<?>>> tileFaction = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level()), this.golem.blockPosition(), true).map(TotemBlockEntity::getControllingFaction);
+            if (tileFaction.isPresent()) {
+                faction = tileFaction.get();
             }
         }
 
-        if (IFaction.is(faction, this.faction)) {
+        if (!IFaction.is(faction, this.faction)) { //If faction has changed, update target condition selector
             this.targetConditions.selector(predicates.computeIfAbsent(this.faction = faction, faction1 -> IFactionPredicate.builder(faction1).notNeutral().build()));
             return true;
         }
