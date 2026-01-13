@@ -14,7 +14,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,10 @@ public class ActionOrderValue {
     }
 
     public List<Holder<IAction<?>>> get(Holder<? extends IFaction<?>> faction) {
-        return this.actions.computeIfAbsent(faction, item -> set(item, allowedValues(item)));
+        if(this.actions.containsKey(faction)){
+            return this.actions.get(faction);
+        }
+        return setAndSave(faction, allowedValues(faction));
     }
 
     public List<Holder<IAction<?>>> allowedValues(Holder<? extends IFaction<?>> faction) {
@@ -46,7 +48,12 @@ public class ActionOrderValue {
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<Holder<IAction<?>>> set(Holder<? extends IFaction<?>> faction, List<Holder<IAction<?>>> actions) {
+    /**
+     * @param faction The faction key to save the given actions for
+     * @param actions The list of available actions
+     * @return actions
+     */
+    public List<Holder<IAction<?>>> setAndSave(Holder<? extends IFaction<?>> faction, List<Holder<IAction<?>>> actions) {
         this.actions.put(faction, actions);
         save();
 
@@ -61,8 +68,6 @@ public class ActionOrderValue {
 
     public void refresh() {
         var result = CODEC.parse(JsonOps.INSTANCE, StrictJsonParser.parse(this.order.get()));
-        this.actions = Collections.unmodifiableMap(result
-                .resultOrPartial(error -> LOGGER.error("Failed to parse actions: {}", error))
-                .orElseGet(HashMap::new));
+        this.actions = result.resultOrPartial(error -> LOGGER.error("Failed to parse actions: {}", error)).map(HashMap::new).orElseGet(HashMap::new);
     }
 }
