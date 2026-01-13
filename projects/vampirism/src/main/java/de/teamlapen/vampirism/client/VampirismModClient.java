@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.client.config.ModFilter;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.renderer.items.BatCageSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
-import de.teamlapen.vampirism.client.renderer.items.CoffinRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.proxy.IProxy;
@@ -71,7 +70,6 @@ public class VampirismModClient {
     public void onRegisterSpecialModelRenderer(RegisterSpecialModelRendererEvent event) {
         event.register(MotherTrophyRenderer.ID, MotherTrophyRenderer.Unbaked.MAP_CODEC);
         event.register(BloodContainerRenderer.ID, BloodContainerRenderer.Unbaked.MAP_CODEC);
-        event.register(CoffinRenderer.ID, CoffinRenderer.Unbaked.MAP_CODEC);
         event.register(BatCageSpecialRenderer.ID, BatCageSpecialRenderer.Unbaked.MAP_CODEC);
     }
 }

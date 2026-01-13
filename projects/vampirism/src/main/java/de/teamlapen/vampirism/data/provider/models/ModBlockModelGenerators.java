@@ -430,14 +430,13 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
     protected void createCoffin() {
         Stream.of(ModBlocks.COFFIN_WHITE, ModBlocks.COFFIN_ORANGE, ModBlocks.COFFIN_MAGENTA, ModBlocks.COFFIN_LIGHT_BLUE, ModBlocks.COFFIN_YELLOW, ModBlocks.COFFIN_LIME, ModBlocks.COFFIN_PINK, ModBlocks.COFFIN_GRAY, ModBlocks.COFFIN_LIGHT_GRAY, ModBlocks.COFFIN_CYAN, ModBlocks.COFFIN_PURPLE, ModBlocks.COFFIN_BLUE, ModBlocks.COFFIN_BROWN, ModBlocks.COFFIN_GREEN, ModBlocks.COFFIN_RED, ModBlocks.COFFIN_BLACK).map(DeferredHolder::get).forEach(block -> {
-            // TODO: Coffin items should actually use the coffin full model, but for some reason, when putting it into itemModelOutput, it just doesn't work
-            ModModelTemplates.COFFIN.create(mod("block/coffin_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.INNER, mod("block/coffin/coffin_inner_" + block.getColor().getName())), this.modelOutput);
+            Identifier fullModel = ModModelTemplates.COFFIN.create(mod("block/coffin_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.INNER, mod("block/coffin/coffin_inner_" + block.getColor().getName())), this.modelOutput);
 
-            Identifier bottomModel = ModModelTemplates.COFFIN_BOTTOM.create(mod("block/coffin_bottom_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.INNER, mod("block/coffin/coffin_inner_" + block.getColor().getName())), this.modelOutput);
+            ModModelTemplates.COFFIN_BOTTOM.create(mod("block/coffin_bottom_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.INNER, mod("block/coffin/coffin_inner_" + block.getColor().getName())), this.modelOutput);
             Identifier emptyModel = mod("block/coffin_empty");
 
             this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(emptyModel)));
-            this.itemModelOutput.accept(block.asItem(), ItemModelUtils.plainModel(bottomModel));
+            this.itemModelOutput.accept(block.asItem(), ItemModelUtils.plainModel(fullModel));
         });
     }
 
