@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "vampirism:block/coffin/coffin_bottom_red"
+    "model": "vampirism:block/coffin_bottom_red"
   }
 }

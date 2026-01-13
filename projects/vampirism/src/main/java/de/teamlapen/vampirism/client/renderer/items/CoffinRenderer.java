@@ -19,7 +19,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3fc;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -58,12 +60,18 @@ public class CoffinRenderer implements SpecialModelRenderer<CoffinBlock> {
         @Override
         public @NotNull SpecialModelRenderer<?> bake(@NotNull BakingContext context) {
             ModelManager modelManager = Minecraft.getInstance().getModelManager();
-            var standaloneModelKeyStream = ModModels.COFFIN_KEYS.row(ModModels.CoffinType.BOTTOM).entrySet().stream()
+
+            List<BlockStateModel> models = new ArrayList<>(ModModels.COFFIN_BOTTOM_KEYS.size() + 1);
+
+            ModModels.COFFIN_BOTTOM_KEYS.entrySet().stream()
                     .sorted(Comparator.comparingInt(entry -> entry.getKey().getId()))
                     .map(Map.Entry::getValue)
                     .map(modelManager::getStandaloneModel)
-                    .toArray(BlockStateModel[]::new);
-            return new CoffinRenderer(standaloneModelKeyStream);
+                    .forEach(models::add);
+
+            models.add(modelManager.getStandaloneModel(ModModels.COFFIN_TOP_KEY));
+
+            return new CoffinRenderer(models.toArray(BlockStateModel[]::new));
         }
 
         @Override

@@ -308,7 +308,7 @@ public class TentBlock extends Block {
         }
 
         BedRule bedrule = world.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
-        if (!bedrule.explodes()) {
+        if (bedrule.explodes()) {
             world.removeBlock(pos, false);
             BlockPos blockpos = pos.relative(blockState.getValue(HORIZONTAL_FACING).getOpposite());
             if (world.getBlockState(blockpos).is(this)) {

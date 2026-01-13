@@ -17,9 +17,8 @@ public class ModModelTemplates extends ModelTemplates {
     public static final ModelTemplate CANDELABRA_FILLED = create(mod("candelabra_filled"), ModTextureSlots.CANDLE);
     public static final ModelTemplate WALL_CANDELABRA_FILLED = create(mod("wall_candelabra_filled"), ModTextureSlots.CANDLE);
     public static final ModelTemplate CHANDELIER_FILLED = create(mod("chandelier_filled"), ModTextureSlots.CANDLE);
-    public static final ModelTemplate COFFIN = create(mod("coffin"), ModTextureSlots.TEXTURE0);
-    public static final ModelTemplate COFFIN_BOTTOM = create(mod("coffin_bottom"), ModTextureSlots.TEXTURE0);
-    public static final ModelTemplate COFFIN_TOP = create(mod("coffin_top"), ModTextureSlots.TEXTURE0);
+    public static final ModelTemplate COFFIN = create(mod("coffin"), ModTextureSlots.INNER);
+    public static final ModelTemplate COFFIN_BOTTOM = create(mod("coffin_bottom"), ModTextureSlots.INNER);
     public static final ModelTemplate TENT = create(mod("tent"), ModTextureSlots.FLOOR);
     public static final ModelTemplate BLOOD_SIEVE = create(mod("blood_sieve"), ModTextureSlots.FILTER);
     public static final ModelTemplate BEACON_MODEL = create("beacon", ModTextureSlots.BEACON).extend().renderType(VIdentifier.mc("cutout")).build();

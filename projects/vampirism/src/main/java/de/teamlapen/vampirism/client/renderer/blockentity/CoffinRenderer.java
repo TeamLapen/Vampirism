@@ -42,20 +42,16 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
     private final Logger LOGGER = LogManager.getLogger();
 
     private final BlockStateModel[] bottom;
-    private final BlockStateModel[] top;
+    private final BlockStateModel top;
 
     public CoffinRenderer(BlockEntityRendererProvider.Context context) {
         ModelManager modelManager = Minecraft.getInstance().getModelManager();
-        bottom = ModModels.COFFIN_KEYS.row(ModModels.CoffinType.BOTTOM).entrySet().stream()
+        bottom = ModModels.COFFIN_BOTTOM_KEYS.entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> entry.getKey().getId()))
                 .map(Map.Entry::getValue)
                 .map(modelManager::getStandaloneModel)
                 .toArray(BlockStateModel[]::new);
-        top = ModModels.COFFIN_KEYS.row(ModModels.CoffinType.TOP).entrySet().stream()
-                .sorted(Comparator.comparingInt(entry -> entry.getKey().getId()))
-                .map(Map.Entry::getValue)
-                .map(modelManager::getStandaloneModel)
-                .toArray(BlockStateModel[]::new);
+        top = modelManager.getStandaloneModel(ModModels.COFFIN_TOP_KEY);
     }
 
     @Override
@@ -110,7 +106,7 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
             }
         }
 
-        nodeCollector.submitBlockModel(poseStack, RenderTypes.solidMovingBlock(), this.bottom[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        nodeCollector.submitBlockModel(poseStack, RenderTypes.cutoutMovingBlock(), this.bottom[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 
         poseStack.pushPose();
         if (renderState.isVertical) {
@@ -121,7 +117,7 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
             poseStack.translate(0, 0, -0.5 * renderState.lidPos);
         }
 
-        nodeCollector.submitBlockModel(poseStack, RenderTypes.solidMovingBlock(), this.top[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        nodeCollector.submitBlockModel(poseStack, RenderTypes.solidMovingBlock(), this.top, 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
 
         poseStack.popPose();
