@@ -330,10 +330,9 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public void readAdditionalSaveData(@NotNull ValueInput input) {
         super.readAdditionalSaveData(input);
-        setEntityLevel(input.getIntOr("level", 0));
+        input.getInt("level").ifPresent(this::setEntityLevel);
         this.attack = input.getBooleanOr("attack", false);
-        int type = input.getIntOr("type", 0);
-        getEntityData().set(TYPE, type < TYPES && type >= 0 ? type : -1);
+        input.getInt("type").ifPresent(t -> getEntityData().set(TYPE, t < TYPES && t >= 0 ? t : -1));
     }
 
     @Override
