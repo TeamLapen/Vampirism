@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.vampirism.client.particles.DarkSpruceParticleProvider;
 import de.teamlapen.vampirism.client.particles.FlyingBloodEntityParticle;
 import de.teamlapen.vampirism.client.particles.FlyingBloodParticle;
 import de.teamlapen.vampirism.client.particles.GenericParticle;
@@ -16,9 +17,9 @@ public class ModParticleFactories {
         event.registerSpriteSet(ModParticles.PEDESTAL.get(), FlyingBloodParticle.Provider::new);
         event.registerSpriteSet(ModParticles.MOTHER.get(), FlyingBloodParticle.Provider::new);
         event.registerSpriteSet(ModParticles.ALTAR_INFUSION.get(), FlyingBloodParticle.Provider::new);
-
         event.registerSpriteSet(ModParticles.FLYING_BLOOD_ENTITY.get(), FlyingBloodEntityParticle.Provider::new);
         event.registerSpriteSet(ModParticles.GENERIC.get(), GenericParticle.Provider::new);
         event.registerSpriteSet(ModParticles.SANGUINARE.get(), SpellParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.DARK_SPRUCE_OAK_LEAVES.get(), DarkSpruceParticleProvider::new);
     }
 }

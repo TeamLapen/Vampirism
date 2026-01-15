@@ -111,7 +111,7 @@ public class ModBlocks {
     public static final DeferredBlock<TotemTopBlock> TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED = registerBlock("totem_top_vampirism_hunter_crafted", props -> new TotemTopBlock(props, true, ModFactions.HUNTER), () -> TotemTopBlock.properties(basicProperties()));
 
     // Nature
-    public static final DeferredBlock<LeavesBlock> DARK_SPRUCE_LEAVES = registerWithItem("dark_spruce_leaves", props -> new TintedParticleLeavesBlock(0.01f, props), () -> copyProperties(Blocks.SPRUCE_LEAVES).mapColor(MapColor.COLOR_BLACK));
+    public static final DeferredBlock<LeavesBlock> DARK_SPRUCE_LEAVES = registerWithItem("dark_spruce_leaves", props -> new UntintedParticleLeavesBlock(0.01f, ModParticles.DARK_SPRUCE_OAK_LEAVES.get(), props), () -> copyProperties(Blocks.SPRUCE_LEAVES).mapColor(MapColor.COLOR_BLACK));
 
     public static final DeferredBlock<SaplingBlock> DARK_SPRUCE_SAPLING = registerWithItem("dark_spruce_sapling", props -> new DarkSpruceSaplingBlock(ModTreeGrower.DARK_SPRUCE, ModTreeGrower.CURSED_SPRUCE, props), () -> copyProperties(Blocks.SPRUCE_SAPLING).mapColor(MapColor.COLOR_BLACK));
     public static final DeferredBlock<SaplingBlock> CURSED_SPRUCE_SAPLING = registerWithItem("cursed_spruce_sapling", props -> new SaplingBlock(ModTreeGrower.CURSED_SPRUCE, props), () -> copyProperties(DARK_SPRUCE_SAPLING));

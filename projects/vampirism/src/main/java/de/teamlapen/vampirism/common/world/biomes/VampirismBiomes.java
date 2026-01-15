@@ -9,7 +9,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
 import net.minecraft.data.worldgen.placement.OrePlacements;
-import net.minecraft.sounds.Musics;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.attribute.*;
 import net.minecraft.world.entity.MobCategory;
@@ -32,7 +31,7 @@ public class VampirismBiomes {
         mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
         mobSpawnBuilder.addSpawn(MobCategory.CREATURE, 80, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 3, 6));
 
-        BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).foliageColorOverride(0x101010).grassColorOverride(0x101010);
+        BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).foliageColorOverride(0x1f1f1f).grassColorOverride(0x1f1f1f);
 
         var builder = prepareVampireForestBuilder(featureGetter, carverGetter, mobSpawnBuilder, biomeSpecialEffectsBuilder)
                 .setAttribute(EnvironmentAttributes.FOG_COLOR, 0x171717)
@@ -65,9 +64,8 @@ public class VampirismBiomes {
         addVampireTrees(builder);
 
         addWaterSprings(builder);
-        return new Biome.BiomeBuilder().hasPrecipitation(false).temperature(0.3F).downfall(0F).specialEffects(ambienceBuilder.build()).mobSpawnSettings(spawnBuilder.build()).generationSettings(builder.build());
+        return new Biome.BiomeBuilder().hasPrecipitation(false).temperature(0.3F).downfall(0.6F).specialEffects(ambienceBuilder.build()).mobSpawnSettings(spawnBuilder.build()).generationSettings(builder.build());
     }
-
 
     public static void addVampireFlower(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FLOWER_PLACED);
@@ -93,7 +91,8 @@ public class VampirismBiomes {
 
     public static void addBushPatch(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.CURSED_ROOT_PLACED);
-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.FOREST_GRASS_PLACED);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FOREST_GRASS_PLACED);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FOREST_TALL_GRASS_PLACED);
     }
 
 }
