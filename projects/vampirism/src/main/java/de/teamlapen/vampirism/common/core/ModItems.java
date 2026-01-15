@@ -155,9 +155,6 @@ public class ModItems {
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_DIAMOND = ITEMS.registerItem("blood_infused_diamond", PureLevelItem::new);
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_NETHERITE_INGOT = ITEMS.registerItem("blood_infused_netherite_ingot", PureLevelItem::new);
 
-    public static final DeferredItem<Item> GARLIC_DIFFUSER_CORE = ITEMS.registerItem("garlic_diffuser_core", Item::new);
-    public static final DeferredItem<Item> GARLIC_DIFFUSER_CORE_IMPROVED = ITEMS.registerItem("garlic_diffuser_core_improved", Item::new);
-
     public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = ITEMS.registerItem("holy_water_bottle_normal",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_bottle_enhanced",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ULTIMATE = ITEMS.registerItem("holy_water_bottle_ultimate",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ULTIMATE, props));

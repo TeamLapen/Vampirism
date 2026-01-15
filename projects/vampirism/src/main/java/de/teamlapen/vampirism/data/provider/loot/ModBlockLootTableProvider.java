@@ -83,6 +83,8 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                 .withPool(LootPool.lootPool()
                         .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.GARLIC.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicBlock.AGE, 7)))
                         .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).apply(ApplyBonusCount.addBonusBinomialDistributionCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE), 0.5714286F, 3))))));
+        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_CORE.get());
+        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.get());
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());

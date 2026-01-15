@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.common.world.blocks.*;
 import de.teamlapen.vampirism.common.world.blocks.candle.*;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.FogDiffuserBlock;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.GarlicDiffuserBlock;
+import de.teamlapen.vampirism.common.world.blocks.diffuser.GarlicDiffuserCoreBlock;
 import de.teamlapen.vampirism.common.world.blocks.mother.ActiveVulnerableRemainsBlock;
 import de.teamlapen.vampirism.common.world.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.common.world.blocks.mother.RemainsBlock;
@@ -94,6 +95,9 @@ public class ModBlocks {
     public static final DeferredBlock<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new, () -> basicProperties().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(0.5F).lightLevel(state -> 1).noOcclusion());
     public static final DeferredBlock<InjectionChairBlock> INJECTION_CHAIR = registerWithItem("injection_chair", InjectionChairBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).pushReaction(PushReaction.DESTROY).strength(2.5F).sound(SoundType.WOOD).ignitedByLava(), props -> props.factions$withShiftDescription());
     public static final DeferredBlock<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(0.5f).noOcclusion());
+
+    public static final DeferredBlock<GarlicDiffuserCoreBlock> GARLIC_DIFFUSER_CORE = registerWithItem("garlic_diffuser_core", props -> new GarlicDiffuserCoreBlock(props, EnumStrength.WEAK), () -> copyProperties(Blocks.WHITE_WOOL), x -> x.factions$withShiftDescription());
+    public static final DeferredBlock<GarlicDiffuserCoreBlock> GARLIC_DIFFUSER_CORE_IMPROVED = registerWithItem("garlic_diffuser_core_improved", props -> new GarlicDiffuserCoreBlock(props, EnumStrength.MEDIUM), () -> copyProperties(Blocks.LIGHT_BLUE_WOOL), x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
 
     public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = registerWithItem("garlic_diffuser_normal", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserNormalDist), () -> basicProperties().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion(), (item) -> item.factions$withShiftDescriptionParameter());
     public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_WEAK = registerWithItem("garlic_diffuser_weak", props -> new GarlicDiffuserBlock(props, EnumStrength.WEAK, ModConfig.balance().hsGarlicDiffuserWeakDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL), (item) -> item.factions$withShiftDescriptionParameter());

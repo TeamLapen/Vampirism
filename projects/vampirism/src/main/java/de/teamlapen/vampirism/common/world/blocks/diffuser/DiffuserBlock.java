@@ -38,7 +38,7 @@ public abstract class DiffuserBlock extends BaseContainerBlock {
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    private static final VoxelShape SHAPE = Shapes.or(Block.box(1, 0, 1, 15, 2, 15), Block.box(3, 2, 3, 13, 12, 13));
+    private static final VoxelShape SHAPE = Shapes.or(Block.box(1, 0, 1, 15, 3, 15), Block.box(2, 3, 2, 14, 12, 14));
 
     private final Supplier<BlockEntityType<? extends DiffuserBlockEntity>> blockEntityType;
 

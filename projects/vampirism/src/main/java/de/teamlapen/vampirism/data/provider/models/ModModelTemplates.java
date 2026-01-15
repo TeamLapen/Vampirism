@@ -10,7 +10,8 @@ import static de.teamlapen.vampirism.api.util.VIdentifier.mod;
 
 public class ModModelTemplates extends ModelTemplates {
 
-    public static final ModelTemplate GARLIC_DIFFUSER = create(mod("garlic_diffuser"), ModTextureSlots.GARLIC);
+    public static final ModelTemplate GARLIC_DIFFUSER = create(mod("garlic_diffuser"), ModTextureSlots.CORE);
+    public static final ModelTemplate GARLIC_DIFFUSER_CORE = create(mod("garlic_diffuser_core"), ModTextureSlots.CORE);
     public static final ModelTemplate ALTAR_PILLAR_FILLED = create(mod("altar_pillar_filled"), ModTextureSlots.FILLER);
     public static final ModelTemplate CANDLE_STICK_FILLED = create(mod("candle_stick_filled"), ModTextureSlots.CANDLE);
     public static final ModelTemplate WALL_CANDLE_STICK_FILLED = create(mod("wall_candle_stick_filled"), ModTextureSlots.CANDLE);
@@ -34,7 +35,6 @@ public class ModModelTemplates extends ModelTemplates {
     public static final ModelTemplate DOUBLE_CROSSBOW_UNLOADED = createItem(mod("double_crossbow_unloaded"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
     public static final ModelTemplate TECH_CROSSBOW = createItem(mod("tech_crossbow"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
     public static final ModelTemplate TECH_CROSSBOW_UNLOADED = createItem(mod("tech_crossbow_unloaded"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
-    public static final ModelTemplate GARLIC_DIFFUSER_CORE = createItem(mod("garlic_diffuser_core"), TextureSlot.TEXTURE);
 
     public static ModelTemplate createItem(Identifier modelName, TextureSlot... textures) {
         return ModelTemplates.createItem(modelName.toString(), textures);

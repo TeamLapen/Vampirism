@@ -252,7 +252,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('X', PLANKS)
                 .define('Y', DIAMOND)
                 .define('O', OBSIDIAN)
-                .define('Z', ModItems.GARLIC_DIFFUSER_CORE)
+                .define('Z', ModBlocks.GARLIC_DIFFUSER_CORE)
                 .unlockedBy("has_diamond", has(DIAMOND))
                 .save(output);
         shaped(RecipeCategory.DECORATIONS, ModBlocks.GARLIC_DIFFUSER_IMPROVED)
@@ -261,9 +261,9 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("OOO")
                 .define('X', PLANKS)
                 .define('Y', DIAMOND)
-                .define('Z', ModItems.GARLIC_DIFFUSER_CORE_IMPROVED)
+                .define('Z', ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED)
                 .define('O', OBSIDIAN)
-                .unlockedBy("has_garlic_diffuser", has(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED))
+                .unlockedBy("has_garlic_diffuser", has(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED))
                 .save(output);
         shaped(RecipeCategory.MISC, ModBlocks.VAMPIRE_BEACON)
                 .pattern("GGG")
@@ -847,13 +847,13 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
                 .save(output, modString("alchemical_fire_6"));
-        cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE)
+        cauldronRecipe(ModBlocks.GARLIC_DIFFUSER_CORE)
                 .withIngredient(WOOL)
                 .withFluid(GARLIC)
                 .withSkills(HunterSkills.GARLIC_DIFFUSER)
                 .save(output);
-        cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED)
-                .withIngredient(ModItems.GARLIC_DIFFUSER_CORE)
+        cauldronRecipe(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED)
+                .withIngredient(ModBlocks.GARLIC_DIFFUSER_CORE)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
                 .withSkills(HunterSkills.GARLIC_DIFFUSER_IMPROVED)
                 .experience(2.0f)

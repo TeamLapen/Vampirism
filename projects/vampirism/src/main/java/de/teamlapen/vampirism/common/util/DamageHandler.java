@@ -80,6 +80,23 @@ public class DamageHandler {
     }
 
     /**
+     * Affects the entity with garlic in case it is a vampire.
+     */
+    public static void tryAffectEntityGarlic(@NotNull LivingEntity entity, @NotNull EnumStrength strength, float multiplier, boolean ambient) {
+        if (Helper.isVampire(entity)) {
+            IVampire vampire = null;
+            if (entity instanceof IVampire) {
+                vampire = (IVampire) entity;
+            } else if (entity instanceof Player player) {
+                vampire = VampirePlayer.get(player);
+            }
+            if (vampire != null) {
+                affectVampireGarlic(vampire, strength, multiplier, ambient);
+            }
+        }
+    }
+
+    /**
      * @param vampire  The affected vampire
      * @param strength The strength of the ambient garlic
      * @param ticks    A tick related value like ticksExisted

@@ -1,0 +1,23 @@
+{
+	"credit": "Designed by Zozozrob",
+	"parent": "block/block",
+	"textures": {
+		"particle": "vampirism:block/garlic_diffuser_core",
+		"core": "vampirism:block/garlic_diffuser_core"
+	},
+	"elements": [
+		{
+			"from": [5, 0, 5],
+			"to": [11, 7, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7, 0, 7]},
+			"faces": {
+				"north": {"uv": [5, 8, 11, 15], "texture": "#core"},
+				"east": {"uv": [5, 8, 11, 15], "texture": "#core"},
+				"south": {"uv": [5, 8, 11, 15], "texture": "#core"},
+				"west": {"uv": [5, 8, 11, 15], "texture": "#core"},
+				"up": {"uv": [5, 1, 11, 7], "texture": "#core"},
+				"down": {"uv": [5, 1, 11, 7], "texture": "#core"}
+			}
+		}
+	]
+}
