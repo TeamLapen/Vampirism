@@ -25,10 +25,16 @@ public interface IFactionPredicate extends Predicate<LivingEntity>, TargetingCon
 
         Builder onlyNonPlayers();
 
+        /**
+         * For disguised entity, consider the actual faction no the one it is disguised as
+         */
         Builder ignoreDisguise();
 
         Builder allowOwnFaction();
 
+        /**
+         * Target all creatures that have a faction other than NEUTRAL
+         */
         Builder notNeutral();
 
         Builder targetFaction(Holder<? extends IFaction<?>> targetFaction);

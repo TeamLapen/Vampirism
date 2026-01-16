@@ -30,7 +30,7 @@ public class DefendVillageGoal<T extends PathfinderMob & IVillageCaptureEntity> 
                 }
                 return super.test(level, attackEntity, targetEntity);
             }
-        }.selector(IFactionPredicate.builder(creature.getFaction()).build()).ignoreInvisibilityTesting();
+        }.selector(IFactionPredicate.builder(creature.getFaction()).notNeutral().build()).ignoreInvisibilityTesting();
     }
 
     @Override

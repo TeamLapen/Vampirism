@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.common.world.entity.ai.goals;
 
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.tags.FactionTags;
 import de.teamlapen.faction.common.util.TotemHelper;
 import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModFactions;
+import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -70,7 +72,8 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
         }
 
         if (!IFaction.is(faction, this.faction)) { //If faction has changed, update target condition selector
-            this.targetConditions.selector(predicates.computeIfAbsent(this.faction = faction, faction1 -> IFactionPredicate.builder(faction1).notNeutral().build()));
+            this.faction = faction;
+            this.targetConditions.selector(predicates.computeIfAbsent(faction, faction1 -> IFactionPredicate.builder(faction1).targetFaction(faction1 == ModFactions.HUNTER ? ModFactionTags.HOSTILE_TOWARDS_NEUTRAL : FactionTags.NOT_NEUTRAL).build()));
             return true;
         }
         return false;
