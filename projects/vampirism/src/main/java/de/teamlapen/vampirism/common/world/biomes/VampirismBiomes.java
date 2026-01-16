@@ -31,7 +31,7 @@ public class VampirismBiomes {
         mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
         mobSpawnBuilder.addSpawn(MobCategory.CREATURE, 80, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 3, 6));
 
-        BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).foliageColorOverride(0x1f1f1f).grassColorOverride(0x1f1f1f);
+        BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).foliageColorOverride(0x1f1f1f).grassColorOverride(0x242424).dryFoliageColorOverride(0x383838);
 
         var builder = prepareVampireForestBuilder(featureGetter, carverGetter, mobSpawnBuilder, biomeSpecialEffectsBuilder)
                 .setAttribute(EnvironmentAttributes.FOG_COLOR, 0x171717)
@@ -55,6 +55,7 @@ public class VampirismBiomes {
 
         addVampireFlower(builder);
         addBushPatch(builder);
+        BiomeDefaultFeatures.addBushes(builder);
         BiomeDefaultFeatures.addForestGrass(builder);
 
         addUndergroundVariety(builder);
@@ -94,5 +95,4 @@ public class VampirismBiomes {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FOREST_GRASS_PLACED);
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FOREST_TALL_GRASS_PLACED);
     }
-
 }

@@ -29,10 +29,11 @@
     "minecraft:canyon"
   ],
   "creature_spawn_probability": 0.25,
-  "downfall": 0.0,
+  "downfall": 0.6,
   "effects": {
+    "dry_foliage_color": "#383838",
     "foliage_color": "#1f1f1f",
-    "grass_color": "#1f1f1f",
+    "grass_color": "#242424",
     "water_color": "#670717"
   },
   "features": [
@@ -81,6 +82,7 @@
       "vampirism:cursed_root",
       "vampirism:vampire_forest_grass",
       "vampirism:vampire_forest_tall_grass",
+      "minecraft:patch_bush",
       "minecraft:patch_grass_forest",
       "vampirism:vampire_trees"
     ]
