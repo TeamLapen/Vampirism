@@ -24,6 +24,7 @@ public class ModFactionTagProvider extends KeyTagProvider<IFaction<?>> {
         this.tag(FactionTags.CAN_RAID);
         this.tag(FactionTags.HAS_LORD_SKILLS);
         this.tag(FactionTags.HOSTILE_TOWARDS_NEUTRAL);
+        this.tag(FactionTags.FRIENDLY_TOWARDS_NEUTRAL);
         this.tag(FactionTags.NOT_NEUTRAL)
                 .addTag(FactionTags.ALL_FACTIONS)
                 .remove(FactionTags.IS_NEUTRAL);

@@ -73,7 +73,8 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
 
         if (!IFaction.is(faction, this.faction)) { //If faction has changed, update target condition selector
             this.faction = faction;
-            this.targetConditions.selector(predicates.computeIfAbsent(faction, faction1 -> IFactionPredicate.builder(faction1).targetFaction(faction1 == ModFactions.HUNTER ? ModFactionTags.HOSTILE_TOWARDS_NEUTRAL : FactionTags.NOT_NEUTRAL).build()));
+            //If the current village faction is friendly towards neutral creatures, we only want to attack factions that attack neutral creatures. Otherwise, we want to attack any other faction. However, we never want the golem to attack neutral creatures
+            this.targetConditions.selector(predicates.computeIfAbsent(faction, faction1 -> IFactionPredicate.builder(faction1).targetFaction(((Holder<IFaction<?>>)faction1).is(ModFactionTags.FRIENDLY_TOWARDS_NEUTRAL) ? ModFactionTags.HOSTILE_TOWARDS_NEUTRAL : FactionTags.NOT_NEUTRAL).build()));
             return true;
         }
         return false;

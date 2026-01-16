@@ -9,6 +9,7 @@ import net.minecraft.tags.TagKey;
 
 public class ModFactionTags {
     public static final TagKey<IFaction<?>> HOSTILE_TOWARDS_NEUTRAL = FactionTags.HOSTILE_TOWARDS_NEUTRAL;
+    public static final TagKey<IFaction<?>> FRIENDLY_TOWARDS_NEUTRAL = FactionTags.FRIENDLY_TOWARDS_NEUTRAL;
     public static final TagKey<IFaction<?>> ALL_FACTIONS = FactionTags.ALL_FACTIONS;
     public static final TagKey<IFaction<?>> IS_HUNTER = VampirismTags.Factions.IS_HUNTER;
     public static final TagKey<IFaction<?>> IS_VAMPIRE = VampirismTags.Factions.IS_VAMPIRE;

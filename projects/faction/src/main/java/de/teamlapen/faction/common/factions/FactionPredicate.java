@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-// TODO add default target factions based on tags. -> hunter ignore neutral by default. better compatibility between additional factions
+// TODO add default target factions based on tags. -> hunter ignore neutral by default. better compatibility between additional factions -> maybe use FRIENDLY_TOWARDS_NEUTRAL
 public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFaction, Predicate<LivingEntity> predicate, boolean ignoreDisguise, HolderSet<IFaction<?>> targetFaction, Function<LivingEntity, Holder<? extends IFaction<?>>> factionFallback) implements IFactionPredicate {
 
     @Override

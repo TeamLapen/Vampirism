@@ -23,6 +23,7 @@ public class ModFactionTagsProvider extends KeyTagProvider<IFaction<?>> {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
         this.tag(ModFactionTags.HOSTILE_TOWARDS_NEUTRAL).add(ModFactions.VAMPIRE.getRawKey());
+        this.tag(ModFactionTags.FRIENDLY_TOWARDS_NEUTRAL).add(ModFactions.HUNTER.getRawKey());
         this.tag(ModFactionTags.IS_HUNTER).add(ModFactions.HUNTER.getRawKey());
         this.tag(ModFactionTags.IS_VAMPIRE).add(ModFactions.VAMPIRE.getRawKey());
         this.tag(ModFactionTags.HAS_LORD_SKILLS).add(ModFactions.VAMPIRE.getRawKey(), ModFactions.HUNTER.getRawKey());
