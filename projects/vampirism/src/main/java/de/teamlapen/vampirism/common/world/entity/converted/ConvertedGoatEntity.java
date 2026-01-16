@@ -45,6 +45,11 @@ public class ConvertedGoatEntity extends Goat implements CurableConvertedCreatur
     }
 
     @Override
+    public @NotNull EntityType<Goat> getCuredEntityType() {
+        return EntityType.GOAT;
+    }
+
+    @Override
     public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
     }
@@ -83,7 +88,7 @@ public class ConvertedGoatEntity extends Goat implements CurableConvertedCreatur
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.GOAT);
+            aiStepC(serverLevel);
         }
         super.aiStep();
     }

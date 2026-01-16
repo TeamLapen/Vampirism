@@ -478,8 +478,10 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             int villagerCount = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea().inflate(20)).size();
             int max = Math.min(beds, FactionConfig.server().villageMaxSpawnableVillagers.get());
             if (villagerCount < max) {
-                var villager = FactionEventFactory.fireSpawnNewVillagerEvent(this, null, EntityType.VILLAGER.create(this.level, EntitySpawnReason.EVENT), false);
-                spawnEntity(villager);
+                var villager = FactionEventFactory.fireSpawnNewVillagerEvent(this, EntityType.VILLAGER, null);
+                if(villager!=null){
+                    spawnEntity(villager);
+                }
             } else {
                 spawnTaskMaster = true;
             }
@@ -828,9 +830,8 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
                 if (action == FactionVillageEvent.UpdateCreaturesOnCaptureFinishEvent.Action.KILL) {
                     livingEntity.discard();
                 } else if (action == FactionVillageEvent.UpdateCreaturesOnCaptureFinishEvent.Action.REPLACE) {
-                    Villager villager = EntityType.VILLAGER.create(this.level, EntitySpawnReason.EVENT);
+                    Villager villager = FactionEventFactory.fireSpawnNewVillagerEvent(this, EntityType.VILLAGER, livingEntity);
                     if (villager == null) return;
-                    villager = FactionEventFactory.fireSpawnNewVillagerEvent(this, livingEntity, villager, fullConvert);
                     spawnEntity(villager, livingEntity);
                 }
             }));

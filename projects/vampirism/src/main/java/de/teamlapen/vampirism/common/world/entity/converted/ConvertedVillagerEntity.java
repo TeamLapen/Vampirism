@@ -85,6 +85,11 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
+    public @NotNull EntityType<Villager> getCuredEntityType() {
+        return EntityType.VILLAGER;
+    }
+
+    @Override
     public float getCaptureStrength() {
         return 0.5f;
     }
@@ -98,7 +103,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.VILLAGER);
+            aiStepC(serverLevel);
         }
         bloodTimer++;
         super.aiStep();
@@ -120,8 +125,8 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public @NotNull Villager cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<Villager> newType) {
-        Villager villager = CurableConvertedCreature.super.cureEntity(world, entity, newType);
+    public @NotNull Villager cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity) {
+        Villager villager = CurableConvertedCreature.super.cureEntity(world, entity);
         if (this.data().conversationStarter != null) {
             Player playerentity = world.getPlayerByUUID(this.data().conversationStarter);
             if (playerentity instanceof ServerPlayer) {

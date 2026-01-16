@@ -144,12 +144,12 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     /**
      * call in {@link PathfinderMob#aiStep()}
      */
-    default void aiStepC(ServerLevel level, @NotNull EntityType<T> originalType) {
+    default void aiStepC(ServerLevel level) {
         PathfinderMob entity = ((PathfinderMob) this);
         if (entity.isAlive() && this.isConverting(entity)) {
             --data().conversionTime;
-            if (data().conversionTime <= 0 && net.neoforged.neoforge.event.EventHooks.canLivingConvert(entity, originalType, (timer) -> data().conversionTime = timer)) {
-                this.cureEntity((ServerLevel) entity.level(), entity, originalType);
+            if (data().conversionTime <= 0 && net.neoforged.neoforge.event.EventHooks.canLivingConvert(entity, getCuredEntityType(), (timer) -> data().conversionTime = timer)) {
+                this.cureEntity((ServerLevel) entity.level(), entity);
             }
         }
         if (entity.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 1) {

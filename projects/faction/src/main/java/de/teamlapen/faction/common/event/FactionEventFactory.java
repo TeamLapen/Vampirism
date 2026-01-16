@@ -15,6 +15,7 @@ import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.world.ITotem;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.phys.AABB;
@@ -34,10 +35,10 @@ public class FactionEventFactory {
         return event.isEntityConversionDisabled();
     }
 
-    public static @NotNull Villager fireSpawnNewVillagerEvent(@NotNull ITotem totem, @Nullable LivingEntity oldEntity, @NotNull Villager newEntity, boolean replaceOld) {
-        FactionVillageEvent.SpawnNewVillager event = new FactionVillageEvent.SpawnNewVillager(totem, oldEntity, newEntity, replaceOld);
+    public static @Nullable Villager fireSpawnNewVillagerEvent(@NotNull ITotem totem, @NotNull EntityType<? extends Villager> newVillagerType, @Nullable LivingEntity replacedEntity) {
+        FactionVillageEvent.SpawnNewVillager event = new FactionVillageEvent.SpawnNewVillager(totem, newVillagerType, replacedEntity);
         NeoForge.EVENT_BUS.post(event);
-        return event.getNewVillager();
+        return event.getOrCreateNewVillager();
     }
 
     public static void fireMakeAggressive(@NotNull ITotem totem, @NotNull Villager entity) {
