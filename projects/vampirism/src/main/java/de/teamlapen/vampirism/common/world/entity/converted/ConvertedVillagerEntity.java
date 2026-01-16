@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.common.world.entity.villager.VampirismTrades;
 import de.teamlapen.vampirism.misc.mixin.accessor.VillagerAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -226,6 +227,11 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public void readAdditionalSaveData(@NotNull ValueInput input) {
         super.readAdditionalSaveData(input);
         this.readAdditionalSaveDataC(input);
+        String source = getSourceEntityId();
+        if(source == null || source.isEmpty()) {
+            //Converted villager entity should always have the villager source entity id. However, if summoned this field is not yet set, so setting it here
+            this.asEntity().getEntityData().set(this.getSourceEntityDataParam(), BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VILLAGER).toString());
+        }
     }
 
     @Override
