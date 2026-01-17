@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
+import de.teamlapen.vampirism.client.renderer.entities.DualSplitBipedRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.HunterVillagerRenderer;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.util.Helper;
@@ -54,6 +55,7 @@ public class ModEntityRenderStates {
     public static final ContextKey<Bat> VAMPIRE_BAT = create("vampire/bat");
     public static final ContextKey<Boolean> VAMPIRE_DBNO = create("vampire/dbno");
     public static final ContextKey<Boolean> VAMPIRE_SLEEPING_IN_COFFIN = create("vampire/sleeping_in_coffin");
+    public static final ContextKey<DualSplitBipedRenderer.RenderPart> SPLIT_RENDER_PART = create("split_render_part");
 
     private static <T> ContextKey<T> create(String id) {
         return new ContextKey<>(VIdentifier.mod(id));

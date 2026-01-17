@@ -79,7 +79,6 @@ public class ModFactions {
                     .commandBuilder(ModEntities.HUNTER_MINION, builder -> builder
                             .with("name", "Hunter", StringArgumentType.string(), MinionData::setName, StringArgumentType::getString)
                             .with("texture", -1, IntegerArgumentType.integer(-1, IBasicHunter.TYPES), HunterMinionEntity.HunterMinionData::setType, IntegerArgumentType::getInteger)
-                            .with("hat", 0, IntegerArgumentType.integer(-1, 3), HunterMinionEntity.HunterMinionData::setHat, IntegerArgumentType::getInteger)
                             .with("use_lord_skin", false, BoolArgumentType.bool(), HunterMinionEntity.HunterMinionData::setUseLordSkin, BoolArgumentType::getBool)).build());
 
     static void register(IEventBus bus) {

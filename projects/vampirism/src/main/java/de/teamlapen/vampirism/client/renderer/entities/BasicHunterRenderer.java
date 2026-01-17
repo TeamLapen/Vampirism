@@ -29,11 +29,6 @@ public class BasicHunterRenderer extends DualBipedRenderer<BasicHunterEntity, Ba
 
 
     @Override
-    protected PlayerSkin determineTextureAndModel(@NotNull BasicHunterEntity.BasicHunterRenderState entity) {
-        return entity.skin;
-    }
-
-    @Override
     public @NotNull BasicHunterEntity.BasicHunterRenderState createRenderState() {
         return new BasicHunterEntity.BasicHunterRenderState();
     }

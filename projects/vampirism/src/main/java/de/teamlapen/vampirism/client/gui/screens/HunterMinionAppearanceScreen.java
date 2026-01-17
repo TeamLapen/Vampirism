@@ -23,7 +23,6 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private static final Component NAME = Component.translatable("gui.vampirism.minion_appearance");
 
     private int skinType;
-    private int hatType;
     private boolean useLordSkin;
     private boolean isMinionSpecificSkin;
     private int normalSkinCount;
@@ -41,7 +40,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         if (name.isEmpty()) {
             name = Component.translatable("text.vampirism.minion").toString() + entity.getMinionId().orElse(0);
         }
-        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), name, this.skinType, this.hatType, (this.isMinionSpecificSkin ? 0b10 : 0b0) | (this.useLordSkin ? 0b1 : 0b0)));
+        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), name, this.skinType, (this.isMinionSpecificSkin ? 0b10 : 0b0) | (this.useLordSkin ? 0b1 : 0b0)));
         super.removed();
     }
 
@@ -58,7 +57,6 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
             this.skinType = this.skinType % this.normalSkinCount;
             this.isMinionSpecificSkin = false; //If this.isMinionSpecificSkin && this.minionSkinCount==0
         }
-        this.hatType = this.entity.getHatType();
         this.useLordSkin = this.entity.shouldRenderLordSkin();
 
         super.init();
@@ -82,17 +80,6 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
                 .width(99)
                         .itemHeight(20)
                         .maxVisibleItems(5)
-                        .initialSelection(this.hatType)
-                        .onSelect(this::hat)
-                        .onHover(this::previewHat)
-                        .items(IntStream.range(0, 3)
-                                .mapToObj(type -> (Component) Component.translatable("gui.vampirism.minion_appearance.hat").append(" " + (type + 1)))
-                                .toList())
-                .build());
-        vertical.addChild(DropdownWidget.builder(0,0)
-                .width(99)
-                        .itemHeight(20)
-                        .maxVisibleItems(5)
                         .initialSelection(this.skinType)
                         .onSelect(this::skin)
                         .onHover(this::previewSkin)
@@ -109,23 +96,9 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         return vertical;
     }
 
-    private void hat(int type) {
-        this.entity.setHatType(this.hatType = type);
-    }
-
     private void onNameChanged(String newName) {
         this.minionName = newName;
         this.entity.changeMinionName(newName);
-    }
-
-    private void previewHat(int type, boolean hovered) {
-        if (hovered) {
-            this.entity.setHatType(type);
-        } else {
-            if (this.entity.getHatType() == type) {
-                this.entity.setHatType(this.hatType);
-            }
-        }
     }
 
     private void previewSkin(int type, boolean hovered) {

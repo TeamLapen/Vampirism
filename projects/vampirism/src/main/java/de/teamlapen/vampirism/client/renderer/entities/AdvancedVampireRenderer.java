@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.AdvancedVampireEyeLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.AdvancedVampireFangLayer;
-import de.teamlapen.vampirism.client.renderer.entities.layers.PlayerFaceOverlayLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.client.renderer.entities.state.IOverlayRenderState;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -19,21 +18,19 @@ import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.PlayerModelType;
 import net.minecraft.world.entity.player.PlayerSkin;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Render the advanced vampire with overlays
  */
-public class AdvancedVampireRenderer extends DualBipedRenderer<AdvancedVampireEntity, AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> {
+public class AdvancedVampireRenderer extends DualSplitBipedRenderer<AdvancedVampireEntity, AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> {
     private static final PlayerSkin FALLBACK = new PlayerSkin(new ClientAsset.ResourceTexture(VIdentifier.mod("fallback"), VIdentifier.mod("textures/entity/advanced_vampire.png")), null, null, PlayerModelType.WIDE, false);
-    private final @NotNull PlayerSkin[] textures;
+    private final PlayerSkin[] textures;
 
 
-    public AdvancedVampireRenderer(EntityRendererProvider.@NotNull Context context) {
-        super(context, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false), new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
+    public AdvancedVampireRenderer(EntityRendererProvider.Context context) {
+        super(context, ModelLayers.PLAYER, ModelLayers.PLAYER_SLIM, ClothedModel::new, 0.5F);
         if (ModConfig.client().renderAdvancedMobPlayerFaces.get()) {
-            this.addLayer(new PlayerFaceOverlayLayer<>(this, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false)));
             this.addLayer(new AdvancedVampireEyeLayer(this));
             this.addLayer(new AdvancedVampireFangLayer(this));
         }
@@ -41,17 +38,29 @@ public class AdvancedVampireRenderer extends DualBipedRenderer<AdvancedVampireEn
     }
 
     @Override
-    protected PlayerSkin determineTextureAndModel(@NotNull AdvancedVampireRenderer.AdvancedVampireRenderState entity) {
-        return entity.skin;
+    protected boolean splitRenderingEnabled() {
+        return ModConfig.client().renderAdvancedMobPlayerFaces.get();
     }
 
     @Override
-    public @NotNull AdvancedVampireRenderState createRenderState() {
+    protected Identifier getTexture(AdvancedVampireRenderer.AdvancedVampireRenderState renderState, RenderPart part) {
+        Identifier texture = null;
+        if (part == RenderPart.HEAD) {
+            texture = renderState.overlay;
+        }
+        if (texture != null) {
+            return texture;
+        }
+        return renderState.skin.body().texturePath();
+    }
+
+    @Override
+    public AdvancedVampireRenderState createRenderState() {
         return new AdvancedVampireRenderState();
     }
 
     @Override
-    public void extractRenderState(@NotNull AdvancedVampireEntity entity, @NotNull AdvancedVampireRenderState renderState, float p_363123_) {
+    public void extractRenderState(AdvancedVampireEntity entity, AdvancedVampireRenderState renderState, float p_363123_) {
         super.extractRenderState(entity, renderState, p_363123_);
         renderState.skin = this.textures.length == 0 ? FALLBACK : this.textures[entity.getBodyTexture() % this.textures.length];
         renderState.fangType = entity.getFangType();
@@ -60,7 +69,7 @@ public class AdvancedVampireRenderer extends DualBipedRenderer<AdvancedVampireEn
     }
 
     @Override
-    protected void submitNameTag(AdvancedVampireRenderState renderState, @NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodeCollector, @NotNull CameraRenderState cameraRenderState) {
+    protected void submitNameTag(AdvancedVampireRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
         if (renderState.distanceToCameraSq <= 256) {
             super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
         }
