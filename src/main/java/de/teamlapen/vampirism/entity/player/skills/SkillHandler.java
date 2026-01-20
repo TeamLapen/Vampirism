@@ -16,23 +16,18 @@ import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModStats;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.refinements.Refinement;
-import de.teamlapen.vampirism.entity.player.refinements.RefinementSet;
-import de.teamlapen.vampirism.items.RefinementItem;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -126,7 +121,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     public void damageRefinements() {
         this.refinementItems.stream().filter(s -> !s.isEmpty()).forEach(stack -> {
             IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
-            int damage = 40 + (set.getRarity().weight - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRandom().nextInt(60);
+            int rarity = set != null ? set.getRarity().weight : 1;
+            int damage = 40 + (rarity - 1) * 10 + this.getPlayer().getRepresentingPlayer().getRandom().nextInt(60);
             Integer unbreakingLevel = EnchantmentHelper.getEnchantments(stack).get(Enchantments.UNBREAKING);
             if (unbreakingLevel != null) {
                 damage = (int) (damage / (1f/(1.6f/(unbreakingLevel + 1f))));
@@ -466,15 +462,21 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                     this.activeRefinements.add(x);
                     if (!this.player.isRemote() && x.getAttribute() != null) {
                         AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(x.getAttribute());
-                        double value = x.getModifierValue();
-                        AttributeModifier t = attributeInstance.getModifier(x.getUUID());
-                        if (t != null) {
-                            attributeInstance.removeModifier(t);
-                            value += t.getAmount();
+                        if (attributeInstance != null) {
+                            double value = x.getModifierValue();
+                            AttributeModifier existingModifier = attributeInstance.getModifier(x.getUUID());
+                            if (existingModifier != null) {
+                                attributeInstance.removeModifier(existingModifier);
+                                value += existingModifier.getAmount();
+                            }
+                            AttributeModifier newModifier = x.createAttributeModifier(x.getUUID(), value);
+                            if (newModifier != null) {
+                                this.refinementModifier.put(x, newModifier);
+                                attributeInstance.addTransientModifier(newModifier);
+                            }
+                        } else {
+                            LOGGER.warn("Player object does not have attribute %s".formatted(x.getAttribute().getDescriptionId()));
                         }
-                        t = x.createAttributeModifier(x.getUUID(), value);
-                        this.refinementModifier.put(x, t);
-                        attributeInstance.addTransientModifier(t);
                     }
                 });
             }
@@ -492,13 +494,20 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                         this.activeRefinements.remove(x);
                         if (!this.player.isRemote() && x.getAttribute() != null) {
                             AttributeInstance attributeInstance = this.player.getRepresentingPlayer().getAttribute(x.getAttribute());
-                            AttributeModifier t = this.refinementModifier.remove(x);
-                            attributeInstance.removeModifier(t);
-                            double value = t.getAmount() - x.getModifierValue();
-                            if (value != 0) {
-                                attributeInstance.addTransientModifier(t = x.createAttributeModifier(t.getId(), value));
-                                this.refinementModifier.put(x, t);
-                                this.activeRefinements.add(x);
+                            if (attributeInstance != null) {
+                                AttributeModifier t = this.refinementModifier.remove(x);
+                                if (t != null) {
+                                    attributeInstance.removeModifier(t);
+                                    double value = t.getAmount() - x.getModifierValue();
+                                    if (value != 0) {
+                                        AttributeModifier updatedModifier = x.createAttributeModifier(t.getId(), value);
+                                        if (updatedModifier != null) {
+                                            attributeInstance.addTransientModifier(updatedModifier);
+                                            this.refinementModifier.put(x, updatedModifier);
+                                            this.activeRefinements.add(x);
+                                        }
+                                    }
+                                }
                             }
                         }
                     });
