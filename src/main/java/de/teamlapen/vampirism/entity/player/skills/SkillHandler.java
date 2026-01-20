@@ -120,7 +120,8 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
         Holder.Reference<Enchantment> unbreaking = enchantments.getHolderOrThrow(Enchantments.UNBREAKING);
         this.refinementItems.stream().filter(s -> !s.isEmpty()).forEach(stack -> {
             IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
-            int damage = 40 + (set.getRarity().weight - 1) * 10 + this.getPlayer().asEntity().getRandom().nextInt(60);
+            int rarity = set != null ? set.getRarity().weight : 1;
+            int damage = 40 + (rarity - 1) * 10 + this.getPlayer().asEntity().getRandom().nextInt(60);
             int unbreakingLevel = stack.getEnchantmentLevel(unbreaking);
             if (unbreakingLevel > 0) {
                 damage = (int) (damage / (1f/(1.6f/(unbreakingLevel + 1f))));
@@ -473,15 +474,21 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                     if (!this.player.isRemote() && x.getAttribute() != null) {
                         ResourceLocation key = ModRegistries.REFINEMENTS.getKey(x);
                         AttributeInstance attributeInstance = this.player.asEntity().getAttribute(x.getAttribute());
-                        double value = x.getModifierValue();
-                        AttributeModifier t = attributeInstance.getModifier(key);
-                        if (t != null) {
-                            attributeInstance.removeModifier(key);
-                            value += t.amount();
+                        if (attributeInstance != null) {
+                            double value = x.getModifierValue();
+                            AttributeModifier t = attributeInstance.getModifier(key);
+                            if (t != null) {
+                                attributeInstance.removeModifier(key);
+                                value += t.amount();
+                            }
+                            t = x.createAttributeModifier(value);
+                            if (t != null) {
+                                this.refinementModifier.put(key, t);
+                                attributeInstance.addTransientModifier(t);
+                            }
+                        } else {
+                            LOGGER.warn("Player object does not have attribute %s".formatted(x.getAttribute().getKey()));
                         }
-                        t = x.createAttributeModifier(value);
-                        this.refinementModifier.put(key, t);
-                        attributeInstance.addTransientModifier(t);
                     }
                 });
             }
@@ -500,14 +507,21 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                         if (!this.player.isRemote() && x.getAttribute() != null) {
                             ResourceLocation key = ModRegistries.REFINEMENTS.getKey(x);
                             AttributeInstance attributeInstance = this.player.asEntity().getAttribute(x.getAttribute());
-                            AttributeModifier t = this.refinementModifier.remove(key);
-                            attributeInstance.removeModifier(key);
-                            ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
-                            double value = t.amount() - x.getModifierValue();
-                            if (value != 0) {
-                                attributeInstance.addTransientModifier(t = x.createAttributeModifier(value));
-                                this.refinementModifier.put(key, t);
-                                this.activeRefinements.add(x);
+                            if (attributeInstance != null) {
+                                AttributeModifier t = this.refinementModifier.remove(key);
+                                if (t != null) {
+                                    attributeInstance.removeModifier(key);
+                                    ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
+                                    double value = t.amount() - x.getModifierValue();
+                                    if (value != 0) {
+                                        AttributeModifier updatedModifier = x.createAttributeModifier(value);
+                                        if (updatedModifier != null) {
+                                            attributeInstance.addTransientModifier(updatedModifier);
+                                            this.refinementModifier.put(key, updatedModifier);
+                                            this.activeRefinements.add(x);
+                                        }
+                                    }
+                                }
                             }
                         }
                     });

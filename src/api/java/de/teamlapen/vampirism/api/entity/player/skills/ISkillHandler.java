@@ -25,6 +25,9 @@ public interface ISkillHandler<T extends IFactionPlayer<T>> {
 
     NonNullList<ItemStack> getRefinementItems();
 
+    /**
+     * Damage the player's refinements by a randomized amount. This is called on player death
+     */
     void damageRefinements();
 
     /**
