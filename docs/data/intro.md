@@ -4,7 +4,10 @@ title: Data Packs
 ---
 
 Vampirism uses data packs for vanilla related content as well as for some custom content. This allows users and content creators to further customized their Vampirism experience or even built new challenges.  
-Have a look at the mod data directory [main](https://github.com/TeamLapen/Vampirism/tree/1.16-1.8/src/main/resources/data) and [generated](https://github.com/TeamLapen/Vampirism/tree/1.16-1.8/src/generated/resources). Or at the incomplete and outdated example repository [here](https://github.com/TeamLapen/VampirismDatapackExamples)
+Have a look at the mod data
+directory [main](https://github.com/TeamLapen/Vampirism/tree/version/1.21/latest/src/main/resources/data/vampirism)
+and [generated](https://github.com/TeamLapen/Vampirism/tree/version/1.21/latest/src/generated/resources/data).
+Or at the incomplete and outdated example repository [here](https://github.com/TeamLapen/VampirismDatapackExamples)
 
 ## How it works
 Checkout the Minecraft Wiki to see how [datapacks](https://minecraft.gamepedia.com/Data_pack) work.  
@@ -21,3 +24,6 @@ Besides the already mentioned vanilla contents you can also customize:
   - Alchemical Cauldron Recipes (+ Craft Tweaker support)
   - Weapon Table Recipes (+ Craft Tweaker support)
   - Alchemy Table Recipes
+- Mob spawns
+- Advancements
+- Much more
