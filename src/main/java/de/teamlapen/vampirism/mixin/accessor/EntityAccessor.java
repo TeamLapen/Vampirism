@@ -11,9 +11,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface EntityAccessor {
 
     @Accessor("eyeHeight")
-    float getEyeHeight();
-
-    @Accessor("eyeHeight")
     void setEyeHeight(float eyeHeight);
 
     @Invoker("collide")
