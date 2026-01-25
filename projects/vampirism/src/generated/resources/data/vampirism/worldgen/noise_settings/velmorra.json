@@ -9,7 +9,7 @@
   "disable_mob_generation": false,
   "legacy_random_source": true,
   "noise": {
-    "height": 128,
+    "height": 256,
     "min_y": 0,
     "size_horizontal": 1,
     "size_vertical": 2
@@ -56,9 +56,9 @@
                       "argument1": {
                         "type": "minecraft:y_clamped_gradient",
                         "from_value": 1.0,
-                        "from_y": 56,
+                        "from_y": 184,
                         "to_value": 0.0,
-                        "to_y": 312
+                        "to_y": 440
                       },
                       "argument2": {
                         "type": "minecraft:add",

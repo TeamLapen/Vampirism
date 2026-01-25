@@ -74,8 +74,8 @@ public class ModDimensions {
                         .set(EnvironmentAttributes.WATER_FOG_COLOR, 0x670717)
                         .set(EnvironmentAttributes.SKY_COLOR, 0x131313)
                         .set(EnvironmentAttributes.SKY_LIGHT_FACTOR, 0.5F)
-                        .set(EnvironmentAttributes.FOG_START_DISTANCE, 10.0F) // adjust
-                        .set(EnvironmentAttributes.FOG_END_DISTANCE, 96.0F) // adjust
+//                        .set(EnvironmentAttributes.FOG_START_DISTANCE, 10.0F) // adjust
+//                        .set(EnvironmentAttributes.FOG_END_DISTANCE, 96.0F) // adjust
                         .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
                         .set(EnvironmentAttributes.AMBIENT_SOUNDS, new AmbientSounds(Optional.empty(), Optional.of(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)), List.of(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D))))
                         .set(EnvironmentAttributes.BED_RULE, BedRule.EXPLODES)
@@ -92,7 +92,7 @@ public class ModDimensions {
     }
 
     static void bootstrapNoise(BootstrapContext<NoiseGeneratorSettings> context) {
-        context.register(VELMORRA_NOISE_GENERATOR, new NoiseGeneratorSettings(new NoiseSettings(0,128,1,2), ModBlocks.DARK_STONE.get().defaultBlockState(), Blocks.AIR.defaultBlockState(), rute(context.lookup(Registries.DENSITY_FUNCTION), context.lookup(Registries.NOISE)), rule(), List.of(), 0, false, false, false, true));
+        context.register(VELMORRA_NOISE_GENERATOR, new NoiseGeneratorSettings(new NoiseSettings(0,256,1,2), ModBlocks.DARK_STONE.get().defaultBlockState(), Blocks.AIR.defaultBlockState(), rute(context.lookup(Registries.DENSITY_FUNCTION), context.lookup(Registries.NOISE)), rule(), List.of(), 0, false, false, false, true));
     }
 
     static void bootstrapDensityFunctions(BootstrapContext<DensityFunction> context) {
@@ -116,7 +116,7 @@ public class ModDimensions {
 
     private static NoiseRouter rute(HolderGetter<DensityFunction> density, HolderGetter<NormalNoise.NoiseParameters> noise) {
         DensityFunction erosion = DensityFunctions.cache2d(new VelmorraDensityFunction(0));
-        DensityFunction finalDensity = NoiseRouterData.postProcess(NoiseRouterData.slideEnd(NoiseRouterData.getFunction(density, VELMORRA_DENSITY_FUNCTION)));
+        DensityFunction finalDensity = NoiseRouterData.postProcess(NoiseRouterData.slideEndLike(NoiseRouterData.getFunction(density, VELMORRA_DENSITY_FUNCTION), 0, 256));
 
         DensityFunction vegetationXShift = NoiseRouterData.getFunction(density, NoiseRouterData.SHIFT_X);
         DensityFunction vegerationZShift = NoiseRouterData.getFunction(density, NoiseRouterData.SHIFT_Z);

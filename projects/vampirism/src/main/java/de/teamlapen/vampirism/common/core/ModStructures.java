@@ -10,11 +10,15 @@ import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.world.structures.crypt.CryptStructurePieces;
+import de.teamlapen.vampirism.common.world.structures.draculacastle.DraculaCastlePieces;
+import de.teamlapen.vampirism.common.world.structures.draculacastle.DraculaCastleStructure;
+import de.teamlapen.vampirism.common.world.structures.draculacastle.DraculaCaveStructure;
 import de.teamlapen.vampirism.common.world.structures.huntercamp.HunterCampPieces;
 import de.teamlapen.vampirism.common.world.structures.huntercamp.HunterCampStructure;
 import de.teamlapen.vampirism.common.world.structures.hunteroutpost.*;
 import de.teamlapen.vampirism.common.world.structures.mother.MotherPiece;
 import de.teamlapen.vampirism.common.world.structures.mother.MotherStructure;
+import de.teamlapen.vampirism.common.world.structures.placement.SingleOccurrenceStructurePlacement;
 import de.teamlapen.vampirism.common.world.structures.templatesystem.BiomeTopBlockProcessor;
 import de.teamlapen.vampirism.common.world.structures.templatesystem.RandomBlockStateRule;
 import de.teamlapen.vampirism.common.world.structures.templatesystem.RandomCandleLitProcessor;
@@ -43,6 +47,7 @@ import net.minecraft.world.level.levelgen.structure.*;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
+import net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType;
 import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
@@ -62,12 +67,17 @@ public class ModStructures {
 
     public static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES = DeferredRegister.create(Registries.STRUCTURE_TYPE, REFERENCE.MODID);
     public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister.create(Registries.STRUCTURE_PIECE, REFERENCE.MODID);
+    public static final DeferredRegister<StructurePlacementType<?>> STRUCTURE_PLACEMENT_TYPES = DeferredRegister.create(Registries.STRUCTURE_PLACEMENT, REFERENCE.MODID);
     public static final DeferredRegister<StructureProcessorType<?>> STRUCTURE_PROCESSOR_TYPES = DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, REFERENCE.MODID);
 
     public static final DeferredHolder<StructureType<?>, StructureType<HunterCampStructure>> HUNTER_CAMP_TYPE = STRUCTURE_TYPES.register("hunter_camp", () -> () -> HunterCampStructure.CODEC);
     public static final DeferredHolder<StructureType<?>, StructureType<VampireHutStructure>> VAMPIRE_HUT_TYPE = STRUCTURE_TYPES.register("vampire_hut", () -> () -> VampireHutStructure.CODEC);
     public static final DeferredHolder<StructureType<?>, StructureType<VampireAltarStructure>> VAMPIRE_ALTAR_TYPE = STRUCTURE_TYPES.register("vampire_altar", () -> () -> VampireAltarStructure.CODEC);
     public static final DeferredHolder<StructureType<?>, StructureType<MotherStructure>> MOTHER_TYPE = STRUCTURE_TYPES.register("mother", () -> () -> MotherStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<DraculaCastleStructure>> DRACULA_CASTLE_TYPE = STRUCTURE_TYPES.register("dracula_castle", () -> () -> DraculaCastleStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<DraculaCaveStructure>> DRACULA_CAVE_TYPE = STRUCTURE_TYPES.register("dracula_cave", () -> () -> DraculaCaveStructure.CODEC);
+
+    public static final DeferredHolder<StructurePlacementType<?>, StructurePlacementType<SingleOccurrenceStructurePlacement>> SINGLE_OCCURRENCE_PLACEMENT_TYPE = STRUCTURE_PLACEMENT_TYPES.register("single_occurrence", () -> () -> SingleOccurrenceStructurePlacement.CODEC);
 
     public static final DeferredHolder<StructurePieceType, StructurePieceType> HUNTER_CAMP_FIREPLACE = STRUCTURE_PIECES.register("hunter_camp_fireplace", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Fireplace::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> HUNTER_CAMP_TENT = STRUCTURE_PIECES.register("hunter_camp_tent", () -> (StructurePieceType.ContextlessType) HunterCampPieces.Tent::new);
@@ -75,6 +85,8 @@ public class ModStructures {
     public static final DeferredHolder<StructurePieceType, StructurePieceType> VAMPIRE_HUT_PIECE = STRUCTURE_PIECES.register("vampire_hut", () -> (StructurePieceType.StructureTemplateType) VampireHutPieces.VampireHutPiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> VAMPIRE_ALTAR_PIECE = STRUCTURE_PIECES.register("vampire_altar", () -> (StructurePieceType.StructureTemplateType) VampireAltarPieces.VampireAltarPiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> MOTHER_PIECE = STRUCTURE_PIECES.register("mother", () -> (StructurePieceType.ContextlessType) MotherPiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> DRACULA_CASTLE_PIECE = STRUCTURE_PIECES.register("dracula_castle", () -> (StructurePieceType.StructureTemplateType) DraculaCastlePieces.CastlePiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> DRACULA_CAVE_PIECE = STRUCTURE_PIECES.register("dracula_cave", () -> (StructurePieceType.StructureTemplateType) DraculaCastlePieces.CavePiece::new);
 
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
@@ -90,6 +102,8 @@ public class ModStructures {
     public static final ResourceKey<Structure> VAMPIRE_ALTAR = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("vampire_altar"));
     public static final ResourceKey<Structure> MOTHER = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("mother"));
     public static final ResourceKey<Structure> CRYPT = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("crypt"));
+    public static final ResourceKey<Structure> DRACULA_CASTLE = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("dracula_castle"));
+    public static final ResourceKey<Structure> DRACULA_CAVE = ResourceKey.create(Registries.STRUCTURE, VIdentifier.mod("dracula_cave"));
 
     public static final ResourceKey<StructureTemplatePool> HUNTER_TRAINER = createTemplatePool("village/entities/hunter_trainer");
 
@@ -103,6 +117,8 @@ public class ModStructures {
     public static final ResourceKey<StructureSet> HUNTER_OUTPOST = createStructureSetKey("hunter_outpost");
     public static final ResourceKey<StructureSet> MOTHER_SET = createStructureSetKey("mother");
     public static final ResourceKey<StructureSet> CRYPT_SET = createStructureSetKey("crypt");
+    public static final ResourceKey<StructureSet> DRACULA_CASTLE_SET = createStructureSetKey("dracula_castle");
+    public static final ResourceKey<StructureSet> DRACULA_CAVE_SET = createStructureSetKey("dracula_cave");
 
     private static ResourceKey<StructureSet> createStructureSetKey(String name) {
         return ResourceKey.create(Registries.STRUCTURE_SET, VIdentifier.mod(name));
@@ -119,6 +135,7 @@ public class ModStructures {
     static void register(IEventBus bus) {
         STRUCTURE_TYPES.register(bus);
         STRUCTURE_PIECES.register(bus);
+        STRUCTURE_PLACEMENT_TYPES.register(bus);
         STRUCTURE_PROCESSOR_TYPES.register(bus);
     }
 
@@ -161,6 +178,8 @@ public class ModStructures {
         context.register(CRYPT_SET, new StructureSet(structureLookup.getOrThrow(CRYPT), new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 643510199)));
         context.register(HUNTER_OUTPOST, new StructureSet(List.of(StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_PLAINS)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_DESERT)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_VAMPIRE_FOREST)), StructureSet.entry(structureLookup.getOrThrow(HUNTER_OUTPOST_BADLANDS))), new RandomSpreadStructurePlacement(45, 25, RandomSpreadType.LINEAR, 36413509)));
         context.register(VELMORRA_PORTAL_SET, new StructureSet(structureLookup.getOrThrow(VELMORRA_PORTAL), new RandomSpreadStructurePlacement(125, 100, RandomSpreadType.TRIANGULAR, 362367473)));
+        context.register(DRACULA_CASTLE_SET, new StructureSet(structureLookup.getOrThrow(DRACULA_CASTLE), new SingleOccurrenceStructurePlacement(0, 0)));
+        context.register(DRACULA_CAVE_SET, new StructureSet(structureLookup.getOrThrow(DRACULA_CAVE), new SingleOccurrenceStructurePlacement(0, 0)));
     }
 
     @SuppressWarnings("UnreachableCode")
@@ -180,5 +199,7 @@ public class ModStructures {
         context.register(MOTHER, new MotherStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.MOTHER)).terrainAdapation(TerrainAdjustment.NONE).build()));
         context.register(CRYPT, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.CRYPT)).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), lookup1.getOrThrow(CryptStructurePieces.START), Optional.empty(), 9, ConstantHeight.of(VerticalAnchor.absolute(0)), false, Optional.of(Heightmap.Types.WORLD_SURFACE_WG), new JigsawStructure.MaxDistance(80, 80), List.of(), DimensionPadding.ZERO, LiquidSettings.IGNORE_WATERLOGGING));
         context.register(VELMORRA_PORTAL, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.VELMORRA_PORTAL)).terrainAdapation(TerrainAdjustment.BURY).build(), lookup1.getOrThrow(VelmorraPortalPools.START),1, ConstantHeight.of(VerticalAnchor.absolute(0)), false));
+        context.register(DRACULA_CASTLE, new DraculaCastleStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.DRACULA_CASTLE)).terrainAdapation(TerrainAdjustment.BEARD_BOX).build()));
+        context.register(DRACULA_CAVE, new DraculaCaveStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.DRACULA_CASTLE)).terrainAdapation(TerrainAdjustment.BURY).build()));
     }
 }

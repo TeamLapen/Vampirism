@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "vampirism:single_occurrence",
+    "chunk_x": 0,
+    "chunk_z": 0,
+    "salt": 0
+  },
+  "structures": [
+    {
+      "structure": "vampirism:dracula_castle",
+      "weight": 1
+    }
+  ]
+}

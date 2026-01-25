@@ -22,7 +22,7 @@ public class VelmorraDimension {
         });
     }
 
-    public static final BlockPos SPAWN_POINT = new BlockPos(100, 60, 0);
+    public static final BlockPos SPAWN_POINT = new BlockPos(9, 197, -148);
 
     public static class VelmorraPortalPos implements Function<IAttachmentHolder, GlobalPos> {
 

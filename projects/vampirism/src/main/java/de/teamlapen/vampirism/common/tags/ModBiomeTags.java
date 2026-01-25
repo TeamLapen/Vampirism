@@ -24,6 +24,7 @@ public class ModBiomeTags {
         public static final TagKey<Biome> VELMORRA_PORTAL = tag("has_structure/velmorra_portal");
         public static final TagKey<Biome> MOTHER = tag("has_structure/mother");
         public static final TagKey<Biome> CRYPT = tag("has_structure/crypt");
+        public static final TagKey<Biome> DRACULA_CASTLE = tag("has_structure/dracula_castle");
     }
 
     public static class HasSpawn {
