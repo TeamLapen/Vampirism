@@ -8,9 +8,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.rendertype.RenderSetup;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.rendertype.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
@@ -64,9 +62,19 @@ public class ModRenderPipelines {
     }
 
     private static final RenderType ENTITY_TRANSPARENCY = RenderType.create(VIdentifier.modString("solid_transparency_entity"), SOLID);
+    private static final RenderType BLOCK_AURA = RenderType.create(VIdentifier.modString("block_aura"), RenderSetup.builder(RenderPipelines.DEBUG_FILLED_BOX)
+            .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
+            .setOutputTarget(OutputTarget.OUTLINE_TARGET)
+            .sortOnUpload()
+            .bufferSize(256)
+            .createRenderSetup());
 
     public static RenderType solidTransparencyEntity() {
         return ENTITY_TRANSPARENCY;
+    }
+
+    public static RenderType blockAura() {
+        return BLOCK_AURA;
     }
 
     public static void registerRenderPipelines(RegisterRenderPipelinesEvent event) {
