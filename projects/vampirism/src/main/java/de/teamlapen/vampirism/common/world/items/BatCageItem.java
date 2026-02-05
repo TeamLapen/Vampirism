@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.world.items;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.world.blockentity.BatCageBlockEntity;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -27,7 +26,6 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -52,7 +50,6 @@ public class BatCageItem extends BlockItem implements IEntityInteractable {
         return InteractionResult.PASS;
     }
 
-    // TODO: Fix this. The entity just doesn't get released
     public boolean releaseEntity(ItemStack stack, Level level, Vec3 pos, Direction direction, @Nullable Player player) {
         if (level.isClientSide() || !(level instanceof ServerLevel serverLevel)) return false;
 
@@ -60,25 +57,24 @@ public class BatCageItem extends BlockItem implements IEntityInteractable {
         if (entityTag == null) return false;
 
         ValueInput valueInput = TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), entityTag);
-        Optional<EntityType<?>> typeOpt = EntityType.by(valueInput);
 
-        if (typeOpt.isPresent()) {
-            Mob mob = (Mob) typeOpt.get().create(serverLevel, EntityType.createDefaultStackConfig(level, stack, null), new BlockPos((int) pos.x(), (int) pos.y(), (int) pos.z()), EntitySpawnReason.BUCKET, true, false);
+        Entity entity = EntityType.loadEntityRecursive(valueInput, serverLevel, EntitySpawnReason.BUCKET, e -> e);
 
-            if (mob != null) {
-                Quaternionf rotation = direction.getRotation();
-                mob.setXRot(rotation.x());
-                mob.setYRot(rotation.y());
+        if (entity instanceof Mob mob) {
+            mob.setPos(pos.x(), pos.y(), pos.z());
+            mob.forceSetRotation(direction.toYRot(), false, 0.0F, false);
 
-                serverLevel.addFreshEntityWithPassengers(mob);
-                mob.playAmbientSound();
+            mob.yHeadRot = direction.toYRot();
+            mob.yBodyRot = direction.toYRot();
 
-                if (player == null || !player.getAbilities().instabuild) {
-                    stack.remove(ModDataComponents.HELD_ENTITY);
-                }
+            serverLevel.addFreshEntityWithPassengers(mob);
+            mob.playAmbientSound();
 
-                return true;
+            if (player == null || !player.getAbilities().instabuild) {
+                stack.remove(ModDataComponents.HELD_ENTITY);
             }
+
+            return true;
         }
 
         return false;
@@ -111,7 +107,7 @@ public class BatCageItem extends BlockItem implements IEntityInteractable {
         }
 
         TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
-        if (!entity.saveAsPassenger(output)) {
+        if (!entity.save(output)) {
             return false;
         }
 

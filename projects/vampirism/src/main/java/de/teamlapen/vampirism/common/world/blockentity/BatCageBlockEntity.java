@@ -67,7 +67,20 @@ public class BatCageBlockEntity extends NetworkedBlockEntity {
 
     public static CompoundTag sanitizeEntityTag(CompoundTag tag) {
         tag = tag.copy();
-        Stream.of("UUID", "Pos", "Motion", "Rotation").forEach(tag::remove);
+        Stream.of(
+                "UUID",
+                "Pos",
+                "Motion",
+                "Rotation",
+                "FallDistance",
+                "Fire",
+                "Air",
+                "OnGround",
+                "Dimension",
+                "PortalCooldown",
+                "Leash"
+        ).forEach(tag::remove);
+
         return tag;
     }
 
