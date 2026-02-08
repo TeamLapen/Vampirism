@@ -2,7 +2,7 @@ package de.teamlapen.faction.common.factions.actions;
 
 import de.teamlapen.faction.api.FactionTagKeys;
 import de.teamlapen.faction.api.factions.IFaction;
-import de.teamlapen.faction.api.factions.IFactionTags;
+import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.ModRegistries;
@@ -23,7 +23,7 @@ public class ActionHelper {
     }
 
     public static boolean checkActionDisableEffect(IFactionPlayer<?> player) {
-        var disableTag = IFactionTags.get().getCustom(player.getFaction(), FactionTagKeys.ACTION_DISABLES, FactionEffectTags.DISABLES_ACTIONS);
+        var disableTag = IFactionSpecificTags.get().getCustom(player.getFaction(), FactionTagKeys.ACTION_DISABLES, FactionEffectTags.DISABLES_ACTIONS);
         return player.asEntity().getActiveEffects().stream().anyMatch(x -> x.getEffect().is(disableTag));
     }
 

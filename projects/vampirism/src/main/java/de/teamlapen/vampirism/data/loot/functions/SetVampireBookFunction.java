@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.data.loot.functions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.factions.IFactionHelper;
-import de.teamlapen.faction.api.factions.IFactionTags;
+import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
@@ -77,7 +77,7 @@ public class SetVampireBookFunction extends LootItemConditionalFunction {
                     LOGGER.warn("Vampire Book \"{}\" does not exist, cannot add it to a loot table", id.getPath());
                 }
             } else {
-                var tag = IFactionTags.get().get(IFactionHelper.get().getFaction(entity), VampirismRegistries.Keys.VAMPIRE_BOOK).orElse(ModVampireBookTags.IS_GENERAL);
+                var tag = IFactionSpecificTags.get().get(IFactionHelper.get().getFaction(entity), VampirismRegistries.Keys.VAMPIRE_BOOK).orElse(ModVampireBookTags.IS_GENERAL);
                 vampireBook = VampireBook.getRandomBook(tag, lootContext);
             }
         }

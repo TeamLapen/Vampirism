@@ -7,7 +7,6 @@ import de.teamlapen.faction.common.util.TotemHelper;
 import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -74,7 +73,7 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
         if (!IFaction.is(faction, this.faction)) { //If faction has changed, update target condition selector
             this.faction = faction;
             //If the current village faction is friendly towards neutral creatures, we only want to attack factions that attack neutral creatures. Otherwise, we want to attack any other faction. However, we never want the golem to attack neutral creatures
-            this.targetConditions.selector(predicates.computeIfAbsent(faction, faction1 -> IFactionPredicate.builder(faction1).targetFaction(((Holder<IFaction<?>>)faction1).is(ModFactionTags.FRIENDLY_TOWARDS_NEUTRAL) ? ModFactionTags.HOSTILE_TOWARDS_NEUTRAL : FactionTags.NOT_NEUTRAL).build()));
+            this.targetConditions.selector(predicates.computeIfAbsent(faction, faction1 -> IFactionPredicate.builder(faction1).targetFaction(IFaction.is(faction1, FactionTags.FRIENDLY_TOWARDS_NEUTRAL) ? FactionTags.HOSTILE_TOWARDS_NEUTRAL : FactionTags.NOT_NEUTRAL).build()));
             return true;
         }
         return false;

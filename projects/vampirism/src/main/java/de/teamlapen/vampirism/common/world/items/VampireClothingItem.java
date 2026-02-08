@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class VampireClothingItem extends Item {
 
     public VampireClothingItem(ArmorType type, ArmorMaterial material, Properties properties) {
-        super(FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(properties).humanoidArmor(material, type));
+        super(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).apply(properties).humanoidArmor(material, type));
     }
 
     @Override

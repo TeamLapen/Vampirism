@@ -4,7 +4,6 @@ import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.common.core.DefaultFactions;
-import de.teamlapen.faction.common.tags.FactionTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.KeyTagProvider;
@@ -19,17 +18,17 @@ public class ModFactionTagProvider extends KeyTagProvider<IFaction<?>> {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        this.tag(FactionTags.ALL_FACTIONS)
-                .addTag(FactionTags.IS_NEUTRAL);
-        this.tag(FactionTags.CAN_RAID);
-        this.tag(FactionTags.HAS_LORD_SKILLS);
-        this.tag(FactionTags.HOSTILE_TOWARDS_NEUTRAL);
-        this.tag(FactionTags.FRIENDLY_TOWARDS_NEUTRAL);
-        this.tag(FactionTags.NOT_NEUTRAL)
-                .addTag(FactionTags.ALL_FACTIONS)
-                .remove(FactionTags.IS_NEUTRAL);
-        this.tag(FactionTags.IS_NEUTRAL)
+        this.tag(de.teamlapen.faction.api.tags.FactionTags.ALL_FACTIONS)
+                .addTag(de.teamlapen.faction.api.tags.FactionTags.IS_NEUTRAL);
+        this.tag(de.teamlapen.faction.api.tags.FactionTags.CAN_RAID);
+        this.tag(de.teamlapen.faction.api.tags.FactionTags.HAS_LORD_SKILLS);
+        this.tag(de.teamlapen.faction.api.tags.FactionTags.HOSTILE_TOWARDS_NEUTRAL);
+        this.tag(de.teamlapen.faction.api.tags.FactionTags.FRIENDLY_TOWARDS_NEUTRAL);
+        this.tag(de.teamlapen.faction.api.tags.FactionTags.NOT_NEUTRAL)
+                .addTag(de.teamlapen.faction.api.tags.FactionTags.ALL_FACTIONS)
+                .remove(de.teamlapen.faction.api.tags.FactionTags.IS_NEUTRAL);
+        this.tag(de.teamlapen.faction.api.tags.FactionTags.IS_NEUTRAL)
                 .add(DefaultFactions.NEUTRAL.getRawKey());
-        this.tag(FactionTags.HAS_RANDOM_RAID);
+        this.tag(de.teamlapen.faction.api.tags.FactionTags.HAS_RANDOM_RAID);
     }
 }
