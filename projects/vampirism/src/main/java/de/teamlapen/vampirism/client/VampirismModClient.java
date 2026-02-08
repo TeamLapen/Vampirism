@@ -73,12 +73,4 @@ public class VampirismModClient {
         event.register(BloodContainerRenderer.ID, BloodContainerRenderer.Unbaked.MAP_CODEC);
         event.register(CoffinRenderer.ID, CoffinRenderer.Unbaked.MAP_CODEC);
     }
-
-    public static @NotNull String getActiveLanguage() {
-        return Minecraft.getInstance().getLanguageManager().getSelected();
-    }
-
-    public static String getActiveLanguageCode() {
-        return Minecraft.getInstance().getLanguageManager().getSelected();
-    }
 }

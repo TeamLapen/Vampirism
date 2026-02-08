@@ -23,7 +23,7 @@ public record BookBackground(Identifier texture, Optional<Identifier> textureFir
 
     public record TextProperties(int textColor, int textWidth, int textHeight, int firstPageTextX, int leftPageTextX, int rightPageTextX, int textY) {
 
-        public static final TextProperties DEFAULT = new TextProperties(0x362511, 134, 150, 156, 20, 160, 16);
+        public static final TextProperties DEFAULT = new TextProperties(0xff362511, 134, 150, 156, 20, 160, 16);
 
         public static final Codec<TextProperties> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.INT.optionalFieldOf("textColor", DEFAULT.textColor()).forGetter(TextProperties::textColor),
@@ -116,7 +116,7 @@ public record BookBackground(Identifier texture, Optional<Identifier> textureFir
         private @Nullable Identifier textureFirstPage = null;
         private @Nullable Identifier textureLastPage = null;
         private boolean twoPages = true;
-        private int textColor = 0x362511;
+        private int textColor = 0xff362511;
         private int textWidth = 134;
         private int textHeight = 150;
         private int firstPageTextX = 156;

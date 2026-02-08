@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.world.blockentity.PedestalBlockEntity;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseContainerBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.world.items.VampireSwordItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

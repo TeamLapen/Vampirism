@@ -4,20 +4,20 @@ import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
-import de.teamlapen.faction.client.config.ClientConfigHelper;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.radialmenu.IRadialMenuSlot;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenuSlot;
 import de.teamlapen.faction.client.gui.screens.radial.DualSwitchingRadialMenu;
+import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionKeys;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
-import de.teamlapen.faction.common.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -62,9 +62,9 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
 
     private static List<Entry> getTasks(ILordPlayer<?> lord) {
         if (lord.getLordLevel() == 0) return List.of();
-        return ClientConfigHelper.getMinionTaskOrder(lord.getFaction()).stream().filter(entry -> {
-            return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(lord)).orElse(true);
-        }).collect(Collectors.toList());
+        return FactionConfig.client().minionTaskOrder.get(lord.getFaction()).stream()
+                .filter(x -> Optional.ofNullable(x.getTask()).map(s -> s.value().isAvailable(lord)).orElse(true))
+                .collect(Collectors.toList());
     }
 
     private static RadialMenu<Entry> getRadialMenu(Collection<Entry> playerHandler) {
@@ -90,8 +90,8 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.SHOW_MINION_CALL_SELECTION));
     }
 
-    private static void sendTask(IMinionTask<?, ?> task) {
-        FactionsMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(-1, RegUtil.id(task)));
+    private static void sendTask(Holder<IMinionTask<?, ?>> task) {
+        FactionsMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(-1, task.getKey().identifier()));
     }
 
     public static class Entry {
@@ -100,13 +100,13 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         private final Component text;
         private final Identifier loc;
         private final Runnable onSelected;
-        private final IMinionTask<?, ?> task;
+        private final Holder<IMinionTask<?, ?>> task;
 
-        public Entry(@NotNull IMinionTask<?, ?> task) {
-            this(RegUtil.id(task), task.getName(), FIdentifier.loc(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)), task);
+        public Entry(@NotNull Holder<IMinionTask<?, ?>> task) {
+            this(task.getKey().identifier(), task.value().getName(), task.getKey().identifier().withPath(path -> "textures/minion_tasks/" + path + ".png"), (() -> sendTask(task)), task);
         }
 
-        public Entry(@NotNull Identifier id, @NotNull Component text, @NotNull Identifier icon, @NotNull Runnable onSelected, @Nullable IMinionTask<?, ?> task) {
+        public Entry(@NotNull Identifier id, @NotNull Component text, @NotNull Identifier icon, @NotNull Runnable onSelected, @Nullable Holder<IMinionTask<?, ?>> task) {
             this.id = id;
             this.text = text;
             this.loc = icon;
@@ -134,7 +134,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         }
 
         @Nullable
-        public IMinionTask<?, ?> getTask() {
+        public Holder<IMinionTask<?, ?>> getTask() {
             return this.task;
         }
 

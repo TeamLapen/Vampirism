@@ -220,7 +220,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
-        if (FactionConfig.server().pvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
+        if (FactionConfig.server().factionPvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
             Holder<? extends IPlayableFaction<?>> otherFaction = get((Player) src.getEntity()).getFaction();
             return !IFaction.is(this.currentFaction, otherFaction);
         }

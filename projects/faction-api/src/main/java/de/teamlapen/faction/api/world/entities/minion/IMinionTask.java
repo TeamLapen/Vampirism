@@ -90,7 +90,7 @@ public interface IMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends
      */
     interface IMinionTaskDesc<Q extends IMinionData> {
 
-        Codec<IMinionTask.IMinionTaskDesc<IMinionData>> TASK_CODEC = new MinionTaskCodec<>();
+        Codec<IMinionTask.IMinionTaskDesc<IMinionData>> TASK_CODEC = new MinionTaskDescCodec<>();
 
         /**
          * @return The task this belongs to

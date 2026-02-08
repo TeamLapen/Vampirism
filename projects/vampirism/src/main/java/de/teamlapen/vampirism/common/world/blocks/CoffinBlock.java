@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.common.world.blocks;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.faction.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.blockentity.CoffinBlockEntity;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseContainerBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.misc.mixin.accessor.EntityAccessor;
 import net.minecraft.core.BlockPos;
@@ -426,7 +426,7 @@ public class CoffinBlock extends BaseContainerBlock {
 
         private VoxelShape [] buildShapeVertical(VoxelShape shape, boolean vertical) {
             if (vertical) {
-                shape = UtilLib.rollShape(shape, Direction.NORTH);
+                shape = ShapeUtil.rollShape(shape, Direction.NORTH);
             }
             VoxelShape[] shapes = new VoxelShape[4];
             VoxelShape finalShape = shape;
@@ -437,9 +437,9 @@ public class CoffinBlock extends BaseContainerBlock {
         private VoxelShape buildShapeDirectional(VoxelShape shape, Direction direction) {
             return switch (direction) {
                 case NORTH -> shape;
-                case EAST -> UtilLib.rotateShape(shape, UtilLib.RotationAmount.NINETY);
-                case SOUTH -> UtilLib.rotateShape(shape, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-                case WEST -> UtilLib.rotateShape(shape, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+                case EAST -> ShapeUtil.rotateY(shape, ShapeUtil.RotationAmount.NINETY);
+                case SOUTH -> ShapeUtil.rotateY(shape, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
+                case WEST -> ShapeUtil.rotateY(shape, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
                 default -> throw new IllegalArgumentException("Wrong direction argument");
             };
         }

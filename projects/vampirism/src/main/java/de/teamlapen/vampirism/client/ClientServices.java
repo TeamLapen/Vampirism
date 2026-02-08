@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.client;
 
 import de.teamlapen.faction.Services;
 import de.teamlapen.vampirism.client.core.*;
+import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
-import de.teamlapen.vampirism.client.models.armor.ArmorModels;
-import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.bloodvision.BloodVisionRenderer;
+import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
 import net.neoforged.bus.api.IEventBus;
@@ -22,7 +22,6 @@ public class ClientServices extends Services {
     private final RenderHandler renderHandler = new RenderHandler();
     private final BloodVisionRenderer bloodVisionRenderer = new BloodVisionRenderer();
     private final VampireBooks vampireBooks = new VampireBooks();
-    private final ArmorModels armorModels = new ArmorModels();
     private final ModKeys modKeys = new ModKeys();
     private final ScreenEventHandler screenEventHandler = new ScreenEventHandler();
     private final ClientEventHandler clientEventHandler = new ClientEventHandler();
@@ -58,10 +57,6 @@ public class ClientServices extends Services {
         return this.vampireBooks;
     }
 
-    public ArmorModels armorModels() {
-        return this.armorModels;
-    }
-
     public ModKeys modKeys() {
         return this.modKeys;
     }
@@ -84,7 +79,6 @@ public class ClientServices extends Services {
 
     @Override
     protected void registerModBus(IEventBus bus) {
-        bus.register(this.armorModels);
         bus.register(this.vampireBooks);
         bus.addListener(this.clientTooltips::registerTooltipRenderer);
         bus.addListener(this.modKeys::registerKeyMapping);
@@ -109,6 +103,7 @@ public class ClientServices extends Services {
         bus.addListener(ModRenderPipelines::registerRenderPipelines);
         bus.addListener(this.bloodVisionRenderer::create);
         bus.addListener(ModEntityRenderStates::addRenderStateModifier);
+        bus.register(ItemExtensions.VampireArmorItemExtension.class);
     }
 
     @Override

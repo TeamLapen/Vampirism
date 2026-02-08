@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "vampirism:item/holy_water_splash_ultimate"
+    "layer0": "vampirism:item/holy_water_splash_bottle_ultimate"
   }
 }

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.core;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.vampirism.REFERENCE;
@@ -49,7 +50,7 @@ import java.util.stream.Stream;
 /**
  * Handles all item registrations and reference.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused"})
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(REFERENCE.MODID);
     public static final DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECTS = DeferredRegister.create(Registries.CONSUME_EFFECT_TYPE, REFERENCE.MODID);
@@ -93,7 +94,7 @@ public class ModItems {
     public static final DeferredItem<Item> QUARREL_POUCH = ITEMS.registerItem("quarrel_pouch",  props -> new QuarrelPouch(props.stacksTo(1)));
 
     public static final DeferredItem<Item> PITCHFORK = ITEMS.registerSimpleItem("pitchfork", props -> props.sword(ToolMaterial.IRON, 6, -3));
-    public static final DeferredItem<StakeItem> STAKE = ITEMS.registerItem("stake", StakeItem::new);
+    public static final DeferredItem<StakeItem> STAKE = ITEMS.registerItem("stake", props -> new StakeItem(props.factions$withShiftDescription()));
 
     public static final DeferredItem<CrucifixItem> CRUCIFIX_NORMAL = ITEMS.registerItem("crucifix_normal",  props -> new CrucifixItem(IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<CrucifixItem> CRUCIFIX_ENHANCED = ITEMS.registerItem("crucifix_enhanced",  props -> new CrucifixItem(IItemWithTier.Tier.ENHANCED, props));
@@ -156,8 +157,8 @@ public class ModItems {
     public static final DeferredItem<RefinementItem> OBI_BELT = ITEMS.registerItem("obi_belt",  props -> new RefinementItem(FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.OBI_BELT));
 
     // General
-    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build()).vampirism$withShiftDescription()));
-    public static final DeferredItem<BucketItem> BLOOD_BUCKET = ITEMS.registerItem("blood_bucket",  props -> new BucketItem(ModFluids.BLOOD.get(), props.craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build()).factions$withShiftDescription()));
+    public static final DeferredItem<BucketItem> BLOOD_BUCKET = ITEMS.registerItem("blood_bucket",  props -> new BucketItem(ModFluids.BLOOD.get(), props.craftRemainder(Items.BUCKET).stacksTo(1).factions$withShiftDescription()));
 
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_IRON = ITEMS.registerItem("blood_infused_raw_iron", PureLevelItem::new);
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_GOLD = ITEMS.registerItem("blood_infused_raw_gold", PureLevelItem::new);
@@ -197,10 +198,10 @@ public class ModItems {
     public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.component(DataComponents.FOOD, new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()).component(ModDataComponents.VAMPIRE_FOOD, new BloodFoodProperties.Builder().blood(20).saturationModifier(1.5F).build()).component(DataComponents.CONSUMABLE, Consumables.defaultFood().onConsume(new FactionBasedConsumeEffect(new NotHolderSet<>(ModRegistries.FACTIONS, HolderSet.direct((Holder<IFaction<?>>) (Object) ModFactions.VAMPIRE)), new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.NAUSEA, 20 * 20))))).build())));
     public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new VampirismItemBloodFoodItem(props.food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new BloodFoodProperties.Builder().blood(10).saturationModifier(0.9F).build()));
 
-    public static final DeferredItem<Item> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", x -> new Item(x.vampirism$withShiftDescription()));
-    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.vampirism$withShiftDescription()),props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
-    public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", x -> new GarlicInjectionItem(x.vampirism$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
-    public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", x -> new SanguinareInjectionItem(x.vampirism$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
+    public static final DeferredItem<Item> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", x -> new Item(x.factions$withShiftDescription()));
+    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
+    public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", x -> new GarlicInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
+    public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", x -> new SanguinareInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
 
     public static final DeferredItem<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = ITEMS.registerItem("item_alchemical_fire", AlchemicalFireItem::new);
 
@@ -215,7 +216,7 @@ public class ModItems {
 
     public static final DeferredItem<Item> SOUL_ORB_VAMPIRE = ITEMS.registerItem("soul_orb_vampire", Item::new);
     public static final DeferredItem<Item> MOTHER_CORE = ITEMS.registerItem("mother_core",  Item::new, props -> props.rarity(Rarity.UNCOMMON));
-    public static final DeferredItem<Item> VAMPIRE_BLOOD_BOTTLE = ITEMS.registerItem("vampire_blood_bottle", Item::new);
+    public static final DeferredItem<Item> VAMPIRE_BLOOD_BOTTLE = ITEMS.registerItem("vampire_blood_bottle", props -> new Item(props.factions$withShiftDescription()));
     public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = ITEMS.registerItem("vampire_book", VampireBookItem::new, props -> props.rarity(Rarity.UNCOMMON).stacksTo(1));
     public static final DeferredItem<VampireFangItem> VAMPIRE_FANG = ITEMS.registerItem("vampire_fang", VampireFangItem::new);
 
@@ -231,10 +232,10 @@ public class ModItems {
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_ENHANCED = ITEMS.registerItem("vampire_minion_upgrade_enhanced",  props -> new MinionUpgradeItem(3, 4, ModFactions.VAMPIRE, props));
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = ITEMS.registerItem("vampire_minion_upgrade_special",  props -> new MinionUpgradeItem(5, 6, ModFactions.VAMPIRE, props));
 
-    public static final DeferredItem<Item> FABRIC_FILTER = ITEMS.registerItem("fabric_filter", x ->  new Item(x.vampirism$withShiftDescription()) ,props -> props.stacksTo(1).durability(4800));
+    public static final DeferredItem<Item> FABRIC_FILTER = ITEMS.registerItem("fabric_filter", x ->  new Item(x.factions$withShiftDescription()) ,props -> props.stacksTo(1).durability(4800));
 
     public static final DeferredItem<FeedingAdapterItem> FEEDING_ADAPTER = ITEMS.registerItem("feeding_adapter", FeedingAdapterItem::new, props -> props.stacksTo(1));
-    public static final DeferredItem<Item> GARLIC_FINDER = ITEMS.registerItem("garlic_finder",  Item::new, props -> props.rarity(Rarity.RARE));
+    public static final DeferredItem<Item> GARLIC_FINDER = ITEMS.registerItem("garlic_finder", Item::new);
 
     public static final DeferredItem<OilBottleItem> OIL_BOTTLE = ITEMS.registerItem("oil_bottle",  OilBottleItem::new, props -> props.stacksTo(1));
 

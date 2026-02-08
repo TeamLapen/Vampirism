@@ -15,8 +15,13 @@ import net.minecraft.util.ARGB;
 public class FactionLevelOverlay extends BaseOverlay {
 
     @Override
+    protected boolean isEnabledInConfig() {
+        return FactionConfig.client().renderFactionLevelOverlay.get();
+    }
+
+    @Override
     public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
-        if (canRenderOverlays() && this.player().jumpableVehicle() == null && !this.mc().options.hideGui && FactionConfig.client().enableFactionLevelOverlayRendering.get()) {
+        if (canRenderOverlays() && this.player().jumpableVehicle() == null && !this.mc().options.hideGui) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(this.player());
             Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
             if (this.mc().gameMode != null && this.mc().gameMode.hasExperience() && !IFaction.is(faction, FactionTags.IS_NEUTRAL)) {
@@ -29,8 +34,8 @@ public class FactionLevelOverlay extends BaseOverlay {
                     text = Component.literal(String.valueOf(handler.getCurrentLevel()));
                 }
 
-                int x = (this.mc().getWindow().getGuiScaledWidth() - this.mc().font.width(text)) / 2 + FactionConfig.client().guiLevelOffsetX.get();
-                int y = this.mc().getWindow().getGuiScaledHeight() - FactionConfig.client().guiLevelOffsetY.get();
+                int x = (this.mc().getWindow().getGuiScaledWidth() - this.mc().font.width(text)) / 2 + FactionConfig.client().factionLevelOverlayXPos.get();
+                int y = this.mc().getWindow().getGuiScaledHeight() - FactionConfig.client().factionLevelOverlayYPos.get();
                 graphics.drawString(font(), text, x + 1, y, backGroundColor, false);
                 graphics.drawString(font(), text, x - 1, y, backGroundColor, false);
                 graphics.drawString(font(), text, x, y + 1, backGroundColor, false);

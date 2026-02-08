@@ -31,7 +31,6 @@ public class ModStats {
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_RESEARCH_TABLE = add("interact_with_research_table");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_ANCIENT_BEACON = add("interact_with_ancient_beacon");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_POTION_TABLE = add("interact_with_potion_table");
-    public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_INJECTION_CHAIR = add("interact_with_injection_chair");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_COFFIN = add("interact_with_coffin");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_THRONE = add("interact_with_throne");
     public static final DeferredHolder<Identifier, Identifier> INFECTED_CREATURES = add("infected_creatures");

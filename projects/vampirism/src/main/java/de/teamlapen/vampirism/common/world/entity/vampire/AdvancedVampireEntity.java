@@ -234,7 +234,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Override
     public void readAdditionalSaveData(@NotNull ValueInput input) {
         super.readAdditionalSaveData(input);
-        setEntityLevel(input.getIntOr("level", 0));
+        input.getInt("level").ifPresent(this::setEntityLevel);
         getEntityData().set(TYPE, input.getIntOr("type", 0));
         getEntityData().set(NAME, input.getStringOr("name", "none"));
         getEntityData().set(TEXTURE, input.getStringOr("texture", "none"));

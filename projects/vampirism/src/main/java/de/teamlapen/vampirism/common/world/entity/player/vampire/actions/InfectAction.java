@@ -15,6 +15,8 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.npc.villager.AbstractVillager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +40,7 @@ public class InfectAction extends DefaultVampireAction {
         Player player = vampire.asEntity();
         Entity creature = context.targetEntity().orElse(null);
         if (creature instanceof LivingEntity target) {
-            if (UtilLib.canReallySee(target, player, false)) {
+            if ((creature instanceof Player || creature instanceof AbstractVillager) &&  UtilLib.canReallySee(target, player, false)) {
                 return IActionResult.fail(Component.translatable("text.vampirism.action.infect.sees_you"));
             }
             if(!deriveBiteableEntry(target).map(b -> b.tryInfect(vampire)).orElse(false)) {

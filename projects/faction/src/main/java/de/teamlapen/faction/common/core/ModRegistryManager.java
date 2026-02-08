@@ -25,7 +25,6 @@ public class ModRegistryManager {
         FactionCommands.register(bus);
         FactionAttachments.register(bus);
         FactionSkills.register(bus);
-        FactionCreativeTabs.register(bus);
         FactionSkillPointProvider.register(bus);
 
         registerModEventHandler(bus);
@@ -35,5 +34,6 @@ public class ModRegistryManager {
         eventBus.addListener(ModRegistries::registerRegistries);
         eventBus.addListener(ModRegistries::registerDatapackRegistries);
         eventBus.addListener(FMLCommonSetupEvent.class, e -> e.enqueueWork(FactionStats::registerFormatter));
+        eventBus.addListener(FactionCreativeTabs::addToExistingCreativeTabs);
     }
 }

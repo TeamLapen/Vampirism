@@ -155,10 +155,10 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
         @Override
         public int hashCode() {
             int result = sourceFaction == null ? 0 : sourceFaction.getKey().identifier().hashCode();
-            result = 31 * result + Boolean.hashCode(targetPlayers);
-            result = 31 * result + Boolean.hashCode(targetNonPlayers);
-            result = 31 * result + Boolean.hashCode(ignoreDisguise);
-            result = 31 * result + Boolean.hashCode(allowOwnFaction);
+            result = result << 1 | (targetPlayers ? 0b1: 0b0);
+            result = result << 1 | (targetNonPlayers ? 0b1: 0b0);
+            result = result << 1 | (ignoreDisguise ? 0b1: 0b0);
+            result = result << 1 | (allowOwnFaction ? 0b1: 0b0);
             result = 31 * result + (targetFaction == null ? 0 : Objects.hashCode(targetFaction.location()));
             result = 31 * result + targetFactions.hashCode();
             result = 31 * result + other.hashCode();

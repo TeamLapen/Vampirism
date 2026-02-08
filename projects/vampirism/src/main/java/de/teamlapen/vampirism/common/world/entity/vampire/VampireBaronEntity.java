@@ -280,7 +280,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     @Override
     public void readAdditionalSaveData(@NotNull ValueInput input) {
         super.readAdditionalSaveData(input);
-        setEntityLevel(input.getInt("level").map(x -> Mth.clamp(x, 0, MAX_LEVEL)).orElse(-1));
+        input.getInt("level").map(x -> Mth.clamp(x, 0, MAX_LEVEL)).ifPresent(this::setEntityLevel);
         this.getEntityData().set(LADY, input.getBooleanOr("lady", false));
     }
 

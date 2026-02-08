@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModSounds;
@@ -11,6 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -18,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
@@ -43,6 +42,8 @@ public class ItemEventHandler {
         Level level = event.getLevel();
         ItemStack heldStack = event.getItemStack();
         Entity target = event.getTarget();
+
+        if (!(target instanceof LivingEntity)) return;
 
         if (heldStack.is(ModItems.SYRINGE_EMPTY)) {
             event.setCanceled(true);

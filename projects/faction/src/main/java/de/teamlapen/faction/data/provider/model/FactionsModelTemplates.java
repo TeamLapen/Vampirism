@@ -8,7 +8,8 @@ import net.minecraft.resources.Identifier;
 
 public class FactionsModelTemplates {
 
-    public static final ModelTemplate TOTEM = create(FIdentifier.mod("totem_top"), FactionsTextureSlot.OUTER);
+    public static final ModelTemplate TOTEM_TOP = create(FIdentifier.mod("totem_top"));
+    public static final ModelTemplate TOTEM_TOP_CRAFTED = create(FIdentifier.mod("totem_top_crafted"));
 
     public static ModelTemplate create(Identifier modelName, TextureSlot... textures) {
         return ModelTemplates.create(modelName.toString(), textures);

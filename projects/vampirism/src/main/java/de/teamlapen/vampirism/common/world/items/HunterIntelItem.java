@@ -18,7 +18,7 @@ public class HunterIntelItem extends Item {
     private final int level;
 
     public HunterIntelItem(int level, Properties properties) {
-        super(properties.vampirism$descriptionWithout("_\\d"));
+        super(properties.factions$descriptionWithout("_\\d"));
         this.level = level;
     }
 

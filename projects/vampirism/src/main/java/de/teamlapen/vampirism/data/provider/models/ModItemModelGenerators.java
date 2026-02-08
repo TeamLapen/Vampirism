@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.data.provider.models;
 
 import de.teamlapen.faction.client.color.tint.RefinementTint;
-import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
@@ -53,7 +52,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void createDefaultModels() {
-        Stream.of(ModItems.STAKE, ModItems.HUNTER_HAT_TALL, ModItems.HUNTER_HAT_BROAD, ModItems.GARLIC_DIFFUSER_CORE, ModItems.PITCHFORK, ModItems.UMBRELLA).map(DeferredHolder::get).forEach(this::createDefaultModel);
+        Stream.of(ModItems.STAKE, ModItems.GARLIC_DIFFUSER_CORE, ModItems.PITCHFORK, ModItems.UMBRELLA).map(DeferredHolder::get).forEach(this::createDefaultModel);
     }
 
     protected void createDefaultModel(Item item) {
@@ -203,6 +202,8 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.HUNTER_COAT_LEGS_NORMAL,
                 ModItems.HUNTER_COAT_LEGS_ENHANCED,
                 ModItems.HUNTER_COAT_LEGS_ULTIMATE,
+                ModItems.HUNTER_HAT_TALL,
+                ModItems.HUNTER_HAT_BROAD,
                 ModItems.BLOOD_BUCKET,
                 ModItems.PURE_SALT,
                 ModItems.PURE_SALT_WATER,
@@ -231,7 +232,9 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.VAMPIRE_CLOAK_MAGENTA,
                 ModItems.VAMPIRE_CLOAK_PINK,
                 ModItems.VAMPIRE_FANG,
+                ModItems.VAMPIRE_BOOK,
                 ModItems.WEAK_HUMAN_HEART,
+                ModItems.GARLIC_BREAD,
                 ModItems.ITEM_TENT,
                 ModItems.PURE_BLOOD_0,
                 ModItems.PURE_BLOOD_1,
@@ -246,7 +249,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.HUNTER_MINION_UPGRADE_SIMPLE,
                 ModItems.HUNTER_MINION_UPGRADE_ENHANCED,
                 ModItems.HUNTER_MINION_UPGRADE_SPECIAL,
-                FactionItems.OBLIVION_POTION,
                 ModItems.VAMPIRE_CLOTHING_HAT,
                 ModItems.VAMPIRE_CLOTHING_BOOTS,
                 ModItems.VAMPIRE_CLOTHING_LEGS,
@@ -258,6 +260,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.DARK_SPRUCE_CHEST_BOAT,
                 ModItems.CURSED_SPRUCE_CHEST_BOAT,
                 ModItems.FEEDING_ADAPTER,
+                ModItems.MOTHER_CORE,
                 ModItems.BLOOD_INFUSED_RAW_IRON,
                 ModItems.BLOOD_INFUSED_RAW_GOLD,
                 ModItems.BLOOD_INFUSED_IRON_INGOT,
@@ -273,6 +276,24 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.HUNTER_TRAINER_SPAWN_EGG,
                 ModItems.TASK_MASTER_HUNTER_SPAWN_EGG,
                 ModItems.GHOST_SPAWN_EGG,
+                ModItems.HOLY_WATER_BOTTLE_NORMAL,
+                ModItems.HOLY_WATER_BOTTLE_ENHANCED,
+                ModItems.HOLY_WATER_BOTTLE_ULTIMATE,
+                ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL,
+                ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED,
+                ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE,
+                ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL,
+                ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED,
+                ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE,
+                ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL,
+                ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED,
+                ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE,
+                ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL,
+                ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED,
+                ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE,
+                ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL,
+                ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED,
+                ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE,
                 ModItems.RITUAL_KNIFE,
                 ModItems.RITUAL_KNIFE_HEART
                 ).map(DeferredItem::asItem);
@@ -280,32 +301,9 @@ public class ModItemModelGenerators extends ItemModelGenerators {
 
     protected Map<Item, Identifier> getFlatItemWithTexture() {
         return new HashMap<>() {{
-            put(ModItems.HOLY_WATER_BOTTLE_NORMAL.get(), mod("item/holy_water_normal"));
-            put(ModItems.HOLY_WATER_BOTTLE_ENHANCED.get(), mod("item/holy_water_enhanced"));
-            put(ModItems.HOLY_WATER_BOTTLE_ULTIMATE.get(), mod("item/holy_water_ultimate"));
-            put(ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get(), mod("item/holy_water_splash_normal"));
-            put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get(), mod("item/holy_water_splash_enhanced"));
-            put(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get(), mod("item/holy_water_splash_ultimate"));
-            put(ModItems.GARLIC_BREAD.get(), mod("item/garlic_bread"));
-            put(ModBlocks.MED_CHAIR.get().asItem(), mod("item/med_chair"));
             put(ModItems.ITEM_TENT_SPAWNER.get(), mod("item/item_tent"));
-            put(ModItems.VAMPIRE_BOOK.get(), mod("item/vampire_book"));
-            put(ModBlocks.DIRECT_CURSED_BARK.get().asItem(), mod("block/cursed_bark"));
-            put(ModItems.MOTHER_CORE.get(), mod("item/mother_core"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.asItem(), mod("item/armor_of_swiftness_head"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.asItem(), mod("item/armor_of_swiftness_head_enhanced"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.asItem(), mod("item/armor_of_swiftness_head_ultimate"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.asItem(), mod("item/armor_of_swiftness_chest"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.asItem(), mod("item/armor_of_swiftness_chest_enhanced"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.asItem(), mod("item/armor_of_swiftness_chest_ultimate"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.asItem(), mod("item/armor_of_swiftness_legs"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.asItem(), mod("item/armor_of_swiftness_legs_enhanced"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.asItem(), mod("item/armor_of_swiftness_legs_ultimate"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.asItem(), mod("item/armor_of_swiftness_feet"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.asItem(), mod("item/armor_of_swiftness_feet_enhanced"));
-            put(ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.asItem(), mod("item/armor_of_swiftness_feet_ultimate"));
+            put(ModBlocks.DIRECT_CURSED_BARK.asItem(), mod("block/cursed_bark"));
+            put(ModBlocks.MED_CHAIR.asItem(), mod("item/med_chair"));
         }};
     }
-
-
 }

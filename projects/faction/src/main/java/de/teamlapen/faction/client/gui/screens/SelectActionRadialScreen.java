@@ -4,12 +4,12 @@ import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.client.config.ClientConfigHelper;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.radialmenu.IRadialMenuSlot;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenuSlot;
 import de.teamlapen.faction.client.gui.screens.radial.DualSwitchingRadialMenu;
+import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionKeys;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionHelper;
@@ -44,7 +44,7 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
     public static <T extends ISkillPlayer<T>> void show(KeyMapping keyMapping) {
         FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(player -> {
             //noinspection rawtypes
-            List<Holder<IAction<?>>> actions = ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(f -> ((IActionHandler) player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
+            List<Holder<IAction<?>>> actions = FactionConfig.client().actionOrder.get(player.getFaction()).stream().filter(f -> ((IActionHandler) player.getActionHandler()).isActionUnlocked(f)).collect(Collectors.toList());
             if (!actions.isEmpty()) {
                 Minecraft.getInstance().setScreen(new SelectActionRadialScreen<>(player, actions, keyMapping));
             } else {
@@ -60,7 +60,7 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
 
     private static RadialMenu<Holder<IAction<?>>> getRadialMenu(List<Holder<IAction<?>>> actions) {
         Player player = Minecraft.getInstance().player;
-        List<IRadialMenuSlot<Holder<IAction<?>>>> parts = actions.stream().filter(s -> s.value().showInSelectAction(player)).map(a -> (IRadialMenuSlot<Holder<IAction<?>>>) new RadialMenuSlot<>(a.value().getName(), a, Collections.emptyList())).toList();
+        List<IRadialMenuSlot<Holder<IAction<?>>>> parts = actions.stream().map(a -> (IRadialMenuSlot<Holder<IAction<?>>>) new RadialMenuSlot<>(a.value().getName(), a, Collections.emptyList())).toList();
         return new RadialMenu<>((i) -> {
             FactionsMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(parts.get(i).primarySlotIcon(), Minecraft.getInstance().hitResult));
         }, parts, SelectActionRadialScreen::drawActionPart, 0);

@@ -5,13 +5,13 @@ import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.faction.client.config.ClientConfigHelper;
+import de.teamlapen.faction.client.config.values.ActionOrderValue;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.components.ColoredImageWidget;
 import de.teamlapen.faction.client.gui.components.EmptyComponent;
 import de.teamlapen.faction.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
+import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionKeys;
-import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionKeys;
 import de.teamlapen.faction.common.network.packets.server.ServerboundActionBindingPacket;
@@ -38,7 +38,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends ReorderingGuiRadialMenu<Holder<IAction<?>>> {
 
@@ -61,11 +60,12 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     }
 
     private static <T extends IFactionPlayer<T>> ItemOrdering<Holder<IAction<?>>> getOrdering(T player) {
-        return new ItemOrdering<>(ClientConfigHelper.getActionOrder(player.getFaction()).stream().filter(s -> s.value().showInSelectAction(player.asEntity())).toList(), new ArrayList<>(), () -> ModRegistries.ACTIONS.listElements().filter(action -> action.value().matchesFaction(player.getFaction())).filter(s -> s.value().showInSelectAction(player.asEntity())).collect(Collectors.toList()));
+        ActionOrderValue actionOrder = FactionConfig.client().actionOrder;
+        return new ItemOrdering<>(actionOrder.get(player.getFaction()), new ArrayList<>(), () -> actionOrder.allowedValues(player.getFaction()));
     }
 
     private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<Holder<IAction<?>>> ordering) {
-        ClientConfigHelper.saveActionOrder(player.getFaction().unwrapKey().map(ResourceKey::identifier).orElseThrow(), ordering.getOrdering());
+        FactionConfig.client().actionOrder.setAndSave(player.getFaction(), ordering.getOrdering());
     }
 
     private KeyBindingList keyBindingList;

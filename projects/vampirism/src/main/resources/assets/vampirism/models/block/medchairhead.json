@@ -4,7 +4,7 @@
     "particle": "block/iron_block",
     "cover": "vampirism:block/med_chair_cover",
     "metal": "block/iron_block",
-    "side": "vampirism:block/dark_steel",
+    "side": "block/anvil",
     "hand": "block/iron_block"
   },
   "render_type": "minecraft:cutout",

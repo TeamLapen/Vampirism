@@ -70,12 +70,12 @@ public abstract class MobEffectInstanceMixin implements IEffectInstanceWithSourc
     @Inject(method = "update(Lnet/minecraft/world/effect/MobEffectInstance;)Z", at = @At(value = "JUMP", ordinal = 2))
     private void copySource(@NotNull MobEffectInstance other, CallbackInfoReturnable<Boolean> cir) {
         this.factions$properties.clear();
-        this.factions$properties.addAll(((IEffectInstanceWithSource) other).factions$getProperties());
+        this.factions$properties.addAll(other.factions$getProperties());
     }
 
     @Inject(method = "setDetailsFrom(Lnet/minecraft/world/effect/MobEffectInstance;)V", at = @At("TAIL"))
     private void copySource1(@NotNull MobEffectInstance other, CallbackInfo ci) {
         this.factions$properties.clear();
-        this.factions$properties.addAll(((IEffectInstanceWithSource) other).factions$getProperties());
+        this.factions$properties.addAll(other.factions$getProperties());
     }
 }

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
-import de.teamlapen.vampirism.common.util.UtilLib;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
+import de.teamlapen.faction.common.util.ShapeUtil;
+import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -106,11 +106,11 @@ public class PortalGatewayBlock extends BaseHorizontalBlock {
             Shapes.box(1.125, 1.6875, 0.3125, 1.3125, 2, 0.6875),
             Shapes.box(1.3125, 1.6875, 0.3125, 1.5, 2, 0.6875));
 
-    private static final Map<Direction, VoxelShape> FIRST_SHAPES = UtilLib.getShapesRotatedFromNorth(FIRST_SHAPE);
-    private static final Map<Direction, VoxelShape> SECOND_SHAPES = UtilLib.getShapesRotatedFromNorth(SECOND_SHAPE);
-    private static final Map<Direction, VoxelShape> THIRD_SHAPES = UtilLib.getShapesRotatedFromNorth(THIRD_SHAPE);
-    private static final Map<Direction, VoxelShape> FORTH_SHAPES = UtilLib.getShapesRotatedFromNorth(FORTH_SHAPE);
-    private static final Map<Direction, VoxelShape> FIFTH_SHAPES = UtilLib.getShapesRotatedFromNorth(FIFTH_SHAPE);
+    private static final Map<Direction, VoxelShape> FIRST_SHAPES = ShapeUtil.getShapesRotatedFromNorth(FIRST_SHAPE);
+    private static final Map<Direction, VoxelShape> SECOND_SHAPES = ShapeUtil.getShapesRotatedFromNorth(SECOND_SHAPE);
+    private static final Map<Direction, VoxelShape> THIRD_SHAPES = ShapeUtil.getShapesRotatedFromNorth(THIRD_SHAPE);
+    private static final Map<Direction, VoxelShape> FORTH_SHAPES = ShapeUtil.getShapesRotatedFromNorth(FORTH_SHAPE);
+    private static final Map<Direction, VoxelShape> FIFTH_SHAPES = ShapeUtil.getShapesRotatedFromNorth(FIFTH_SHAPE);
 
     public static final EnumProperty<Type> TYPE = EnumProperty.create("portal_arch_type", Type.class);
 

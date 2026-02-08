@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
+import de.teamlapen.faction.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +23,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,9 +59,9 @@ public class TentBlock extends Block {
 
     static {
         VoxelShape NORTH = makeShape();
-        VoxelShape EAST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.NINETY);
-        VoxelShape SOUTH = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-        VoxelShape WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+        VoxelShape EAST = ShapeUtil.rotateY(NORTH, ShapeUtil.RotationAmount.NINETY);
+        VoxelShape SOUTH = ShapeUtil.rotateY(NORTH, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
+        VoxelShape WEST = ShapeUtil.rotateY(NORTH, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
         VoxelShape BACK = makeShapeBack1();
         VoxelShape BACKMIRROR = makeShapeBack2();
         VoxelShape SOUTHR = Shapes.or(SOUTH, BACK);
@@ -72,19 +71,19 @@ public class TentBlock extends Block {
         shapeBuilder.put(Direction.NORTH, 0, NORTH);
         shapeBuilder.put(Direction.NORTH, 1, NORTH);
         shapeBuilder.put(Direction.NORTH, 2, NORTHL);
-        shapeBuilder.put(Direction.NORTH, 3, UtilLib.rotateShape(SOUTHR, UtilLib.RotationAmount.HUNDRED_EIGHTY));
+        shapeBuilder.put(Direction.NORTH, 3, ShapeUtil.rotateY(SOUTHR, ShapeUtil.RotationAmount.HUNDRED_EIGHTY));
         shapeBuilder.put(Direction.EAST, 0, EAST);
         shapeBuilder.put(Direction.EAST, 1, EAST);
-        shapeBuilder.put(Direction.EAST, 2, UtilLib.rotateShape(NORTHL, UtilLib.RotationAmount.NINETY));
-        shapeBuilder.put(Direction.EAST, 3, UtilLib.rotateShape(SOUTHR, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY));
+        shapeBuilder.put(Direction.EAST, 2, ShapeUtil.rotateY(NORTHL, ShapeUtil.RotationAmount.NINETY));
+        shapeBuilder.put(Direction.EAST, 3, ShapeUtil.rotateY(SOUTHR, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY));
         shapeBuilder.put(Direction.SOUTH, 0, SOUTH);
         shapeBuilder.put(Direction.SOUTH, 1, SOUTH);
-        shapeBuilder.put(Direction.SOUTH, 2, UtilLib.rotateShape(NORTHL, UtilLib.RotationAmount.HUNDRED_EIGHTY));
+        shapeBuilder.put(Direction.SOUTH, 2, ShapeUtil.rotateY(NORTHL, ShapeUtil.RotationAmount.HUNDRED_EIGHTY));
         shapeBuilder.put(Direction.SOUTH, 3, SOUTHR);
         shapeBuilder.put(Direction.WEST, 0, WEST);
         shapeBuilder.put(Direction.WEST, 1, WEST);
-        shapeBuilder.put(Direction.WEST, 2, UtilLib.rotateShape(NORTHL, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY));
-        shapeBuilder.put(Direction.WEST, 3, UtilLib.rotateShape(SOUTHR, UtilLib.RotationAmount.NINETY));
+        shapeBuilder.put(Direction.WEST, 2, ShapeUtil.rotateY(NORTHL, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY));
+        shapeBuilder.put(Direction.WEST, 3, ShapeUtil.rotateY(SOUTHR, ShapeUtil.RotationAmount.NINETY));
         shapes = shapeBuilder.build();
 
         ImmutableTable.Builder<Integer, Direction, Pair<Double, Double>> offsetsBuilder = ImmutableTable.builder();

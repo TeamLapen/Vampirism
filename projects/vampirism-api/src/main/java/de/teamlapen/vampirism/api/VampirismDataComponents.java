@@ -47,7 +47,5 @@ public class VampirismDataComponents {
         public static final Identifier PURE_LEVEL = VIdentifier.mod("pure_level");
         public static final Identifier QUARREL_POUCH_CONTENTS = VIdentifier.mod("quarrel_pouch_contents");
         public static final Identifier ACTIVE = VIdentifier.mod("active");
-        public static final Identifier SHIFT_DESCRIPTION = VIdentifier.mod("shift_description");
-        public static final Identifier BLOCK_DESCRIPTION = VIdentifier.mod("block_description");
     }
 }
