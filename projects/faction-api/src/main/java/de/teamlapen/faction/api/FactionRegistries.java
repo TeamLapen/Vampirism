@@ -16,6 +16,7 @@ import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerBooleanSupplier;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
+import de.teamlapen.faction.api.world.items.consume.IFactionFoodBehavior;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
@@ -44,6 +45,8 @@ public class FactionRegistries {
     public static final RegistryProvider<MapCodec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENT = retrieveRegistry(Keys.TASK_REQUIREMENT);
     public static final RegistryProvider<MapCodec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCE = retrieveRegistry(Keys.TASK_REWARD_INSTANCE);
 
+    public static final RegistryProvider<IFactionFoodBehavior> FOOD_BEHAVIOUR = retrieveRegistry(Keys.FOOD_BEHAVIOUR);
+
 
     public static class Keys {
         public static final ResourceKey<Registry<IFaction<?>>> FACTION = registryKey(FIdentifier.mod("faction"));
@@ -63,6 +66,8 @@ public class FactionRegistries {
         public static final ResourceKey<Registry<MapCodec<? extends TaskUnlocker>>> TASK_UNLOCKER = registryKey(FIdentifier.mod("task_unlocker"));
         public static final ResourceKey<Registry<MapCodec<? extends TaskRequirement.Requirement<?>>>> TASK_REQUIREMENT = registryKey(FIdentifier.mod("task_requirement"));
         public static final ResourceKey<Registry<MapCodec<? extends ITaskRewardInstance>>> TASK_REWARD_INSTANCE = registryKey(FIdentifier.mod("task_reward_instance"));
+
+        public static final ResourceKey<Registry<IFactionFoodBehavior>> FOOD_BEHAVIOUR = registryKey(FIdentifier.mod("food_behaviour"));
 
         // Data-Gen registries
         public static final ResourceKey<Registry<Task>> TASK = registryKey(FIdentifier.mod("tasks"));

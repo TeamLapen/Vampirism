@@ -28,6 +28,7 @@ public class ModStats {
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_BLOOD_GRINDER = add("interact_with_blood_grinder");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_GARLIC_DIFFUSER = add("interact_with_garlic_diffuser");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_FOG_DIFFUSER = add("interact_with_fog_diffuser");
+    public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_INJECTION_CHAIR = add("interact_with_injection_chair");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_RESEARCH_TABLE = add("interact_with_research_table");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_ANCIENT_BEACON = add("interact_with_ancient_beacon");
     public static final DeferredHolder<Identifier, Identifier> INTERACT_WITH_POTION_TABLE = add("interact_with_potion_table");

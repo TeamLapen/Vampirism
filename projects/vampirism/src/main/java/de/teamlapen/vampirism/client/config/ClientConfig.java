@@ -14,6 +14,7 @@ public class ClientConfig {
 
     // World rendering
     public final ModConfigSpec.BooleanValue renderVampireForestFog;
+    public final ModConfigSpec.ConfigValue<String> garlicFinderAuraColor;
 
     // Overlay rendering
     public final ModConfigSpec.BooleanValue renderScreenOverlay;
@@ -37,6 +38,7 @@ public class ClientConfig {
         this.renderVampireEyes = builder.comment("Render vampire eye/fang face overlay").define("vampireEyes", true);
         this.renderVampireForestFog = builder.comment("Render fog in vampire biome. Might be enforced server side").define("vampireForestFog", true);
         this.renderScreenOverlay = builder.comment("Render full screen colored overlays for effects like vampire levelup").define("renderScreenOverlay", true);
+        this.garlicFinderAuraColor = builder.comment("The color the garlic finder highlights blocks with in HEX. No alpha channel").define("garlicFinderAuraColor", "#e0b74f");
         builder.pop();
 
         builder.comment("Configure GUI").push("gui");
@@ -45,7 +47,6 @@ public class ClientConfig {
         this.disableBloodVisionRendering = builder.comment("Disable the effect of blood vision. It can still be unlocked and activated but does not have any effect").define("disableBloodVisionRendering", false);
 
         builder.pop();
-
 
         builder.comment("Overlay rendering").push("overlay");
 

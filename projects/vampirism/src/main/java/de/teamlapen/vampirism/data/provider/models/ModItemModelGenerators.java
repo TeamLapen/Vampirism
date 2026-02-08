@@ -42,17 +42,12 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         generateCrossbows();
         generateOilBottle();
         generateCrucifix();
-        generateNonTemplateItems();
         createDefaultModels();
         createAlchemicalFire();
     }
 
-    protected void generateNonTemplateItems() {
-        this.itemModelOutput.accept(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.asItem(), ItemModelUtils.plainModel(ModModelTemplates.GARLIC_DIFFUSER_CORE.create(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED.get(), new TextureMapping().put(TextureSlot.TEXTURE, VIdentifier.mod("block/garlic_diffuser_inside_improved")), this.modelOutput)));
-    }
-
     protected void createDefaultModels() {
-        Stream.of(ModItems.STAKE, ModItems.GARLIC_DIFFUSER_CORE, ModItems.PITCHFORK, ModItems.UMBRELLA).map(DeferredHolder::get).forEach(this::createDefaultModel);
+        Stream.of(ModItems.STAKE, ModItems.PITCHFORK, ModItems.UMBRELLA).map(DeferredHolder::get).forEach(this::createDefaultModel);
     }
 
     protected void createDefaultModel(Item item) {
@@ -301,7 +296,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         return new HashMap<>() {{
             put(ModItems.ITEM_TENT_SPAWNER.get(), mod("item/item_tent"));
             put(ModBlocks.DIRECT_CURSED_BARK.asItem(), mod("block/cursed_bark"));
-            put(ModBlocks.MED_CHAIR.asItem(), mod("item/med_chair"));
         }};
     }
 }

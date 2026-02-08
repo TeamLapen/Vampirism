@@ -412,7 +412,7 @@ public class ModCreativeTabs {
             add(ALCHEMICAL_CAULDRON);
             add(POTION_TABLE);
             add(ALCHEMY_TABLE);
-            add(MED_CHAIR);
+            add(INJECTION_CHAIR);
             add(ALTAR_CLEANSING);
 
             add(GARLIC_DIFFUSER_NORMAL);

@@ -124,6 +124,9 @@ public class ModConfig extends Services {
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);
         }
+        if (configEvent.getConfig().getSpec() == client.spec()) {
+            helper.onClientConfigChanged(configEvent);
+        }
     }
 
     public void onReload(final ModConfigEvent.@NotNull Reloading configEvent) {
@@ -132,6 +135,9 @@ public class ModConfig extends Services {
         }
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);
+        }
+        if (configEvent.getConfig().getSpec() == client.spec()) {
+            helper.onClientConfigChanged(configEvent);
         }
     }
 

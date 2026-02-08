@@ -15,10 +15,12 @@ import de.teamlapen.vampirism.common.world.blocks.*;
 import de.teamlapen.vampirism.common.world.blocks.candle.*;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.FogDiffuserBlock;
 import de.teamlapen.vampirism.common.world.blocks.diffuser.GarlicDiffuserBlock;
+import de.teamlapen.vampirism.common.world.blocks.diffuser.GarlicDiffuserCoreBlock;
 import de.teamlapen.vampirism.common.world.blocks.mother.ActiveVulnerableRemainsBlock;
 import de.teamlapen.vampirism.common.world.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.common.world.blocks.mother.RemainsBlock;
 import de.teamlapen.vampirism.common.world.features.ModTreeGrower;
+import de.teamlapen.vampirism.common.world.items.BatCageItem;
 import de.teamlapen.vampirism.common.world.items.BloodContainerItem;
 import de.teamlapen.vampirism.common.world.items.CursedSpruceItem;
 import de.teamlapen.vampirism.common.world.items.PureLevelBlockItem;
@@ -91,8 +93,11 @@ public class ModBlocks {
     public static final DeferredBlock<AlchemicalCauldronBlock> ALCHEMICAL_CAULDRON = registerWithItem("alchemical_cauldron", (props) -> new AlchemicalCauldronBlock(props.mapColor(MapColor.METAL).strength(4f).lightLevel(state -> state.getValue(BlockStateProperties.LIT) ? 13 : 0).noOcclusion()));
     public static final DeferredBlock<PotionTableBlock> POTION_TABLE = registerWithItem("potion_table", props -> new PotionTableBlock(props.mapColor(MapColor.METAL).strength(1f).noOcclusion()));
     public static final DeferredBlock<AlchemyTableBlock> ALCHEMY_TABLE = registerWithItem("alchemy_table", AlchemyTableBlock::new, () -> basicProperties().mapColor(MapColor.METAL).requiresCorrectToolForDrops().strength(0.5F).lightLevel(state -> 1).noOcclusion());
-    public static final DeferredBlock<MedChairBlock> MED_CHAIR = registerWithItem("med_chair", MedChairBlock::new, () -> basicProperties().mapColor(MapColor.METAL).pushReaction(PushReaction.DESTROY).strength(1).noOcclusion(), x -> x.factions$withShiftDescription());
+    public static final DeferredBlock<InjectionChairBlock> INJECTION_CHAIR = registerWithItem("injection_chair", InjectionChairBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).pushReaction(PushReaction.DESTROY).strength(2.5F).sound(SoundType.WOOD).ignitedByLava(), props -> props.factions$withShiftDescription());
     public static final DeferredBlock<AltarCleansingBlock> ALTAR_CLEANSING = registerWithItem("altar_cleansing", AltarCleansingBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(0.5f).noOcclusion());
+
+    public static final DeferredBlock<GarlicDiffuserCoreBlock> GARLIC_DIFFUSER_CORE = registerWithItem("garlic_diffuser_core", props -> new GarlicDiffuserCoreBlock(props, EnumStrength.WEAK), () -> copyProperties(Blocks.WHITE_WOOL), x -> x.factions$withShiftDescription());
+    public static final DeferredBlock<GarlicDiffuserCoreBlock> GARLIC_DIFFUSER_CORE_IMPROVED = registerWithItem("garlic_diffuser_core_improved", props -> new GarlicDiffuserCoreBlock(props, EnumStrength.MEDIUM), () -> copyProperties(Blocks.LIGHT_BLUE_WOOL), x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
 
     public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = registerWithItem("garlic_diffuser_normal", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserNormalDist), () -> basicProperties().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion(), (item) -> item.factions$withShiftDescriptionParameter());
     public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_WEAK = registerWithItem("garlic_diffuser_weak", props -> new GarlicDiffuserBlock(props, EnumStrength.WEAK, ModConfig.balance().hsGarlicDiffuserWeakDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL), (item) -> item.factions$withShiftDescriptionParameter());
@@ -106,7 +111,7 @@ public class ModBlocks {
     public static final DeferredBlock<TotemTopBlock> TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED = registerBlock("totem_top_vampirism_hunter_crafted", props -> new TotemTopBlock(props, true, ModFactions.HUNTER), () -> TotemTopBlock.properties(basicProperties()));
 
     // Nature
-    public static final DeferredBlock<LeavesBlock> DARK_SPRUCE_LEAVES = registerWithItem("dark_spruce_leaves", props -> new TintedParticleLeavesBlock(0.01f, props), () -> copyProperties(Blocks.SPRUCE_LEAVES).mapColor(MapColor.COLOR_BLACK));
+    public static final DeferredBlock<LeavesBlock> DARK_SPRUCE_LEAVES = registerWithItem("dark_spruce_leaves", props -> new UntintedParticleLeavesBlock(0.01f, ModParticles.DARK_SPRUCE_OAK_LEAVES.get(), props), () -> copyProperties(Blocks.SPRUCE_LEAVES).mapColor(MapColor.COLOR_BLACK));
 
     public static final DeferredBlock<SaplingBlock> DARK_SPRUCE_SAPLING = registerWithItem("dark_spruce_sapling", props -> new DarkSpruceSaplingBlock(ModTreeGrower.DARK_SPRUCE, ModTreeGrower.CURSED_SPRUCE, props), () -> copyProperties(Blocks.SPRUCE_SAPLING).mapColor(MapColor.COLOR_BLACK));
     public static final DeferredBlock<SaplingBlock> CURSED_SPRUCE_SAPLING = registerWithItem("cursed_spruce_sapling", props -> new SaplingBlock(ModTreeGrower.CURSED_SPRUCE, props), () -> copyProperties(DARK_SPRUCE_SAPLING));
@@ -322,7 +327,7 @@ public class ModBlocks {
 
     public static final DeferredBlock<BaseHorizontalBlock> VAMPIRE_RACK = registerWithItem("vampire_rack", props -> new BaseHorizontalBlock(props.ignitedByLava().strength(2, 3), VampirismVoxelShapes.VAMPIRE_RACK));
     public static final DeferredBlock<ThroneBlock> THRONE = registerWithItem("throne", ThroneBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().pushReaction(PushReaction.DESTROY).strength(2, 3));
-    public static final DeferredBlock<BatCageBlock> BAT_CAGE = registerWithItem("bat_cage", BatCageBlock::new, () -> basicProperties().strength(5.0F, 6.0F).sound(SoundType.METAL).noOcclusion());
+    public static final DeferredBlock<BatCageBlock> BAT_CAGE = registerWithItem("bat_cage", BatCageBlock::new, () -> basicProperties().strength(3.0F, 4.0F).sound(SoundType.CHAIN).noOcclusion(), BatCageItem::new);
     public static final DeferredBlock<MotherTrophyBlock> MOTHER_TROPHY = registerWithItem("mother_trophy", MotherTrophyBlock::new, () -> basicProperties().mapColor(MapColor.COLOR_GRAY).strength(3, 9).lightLevel(s -> 1).noOcclusion(), itemProps -> itemProps.factions$withShiftDescription().rarity(Rarity.EPIC).stacksTo(1));
 
     public static final DeferredBlock<TentBlock> TENT = registerBlock("tent", TentBlock::new, () -> basicProperties().mapColor(MapColor.WOOL).ignitedByLava().strength(0.6f).sound(SoundType.WOOL).noOcclusion());

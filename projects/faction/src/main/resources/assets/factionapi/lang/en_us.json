@@ -129,6 +129,7 @@
   "text.factionapi.action.cooldown_not_over": "Cooldown is not over yet",
   "text.factionapi.action.cancelled": "Can not activate action for unknown reason",
   "command.factionapi.base.level.successful": "%s is now a %s level %s",
+  "command.factionapi.base.get_level.successful": "%s is a %s level %s and lord level %s",
   "text.factionapi.minion.minion_is_still_recovering": "%s is still recovering",
   "text.factionapi.minion.sorry_i_died_while_doing": "My lord, I am sorry, but I died while fulfilling your task",
   "text.factionapi.minion..n_minions_are_still_recovering": "%s minions are still recovering",

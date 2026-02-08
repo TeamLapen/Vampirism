@@ -23,7 +23,9 @@ displayName = "${mod_name}" #mandatory
 logoFile = "logo.png" #optional
 
 # A text field displayed in the mod UI
-credits = ''''''
+credits = '''\n
+    - Grid (logo/code)
+    - zozozrob (textures/models)'''
 
 # A text field displayed in the mod UI
 authors = "${mod_authors}" #optional

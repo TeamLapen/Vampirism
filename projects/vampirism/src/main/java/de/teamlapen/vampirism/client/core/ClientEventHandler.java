@@ -63,9 +63,9 @@ public class ClientEventHandler {
     }
 
     public static void onModelRegistry(ModelEvent.RegisterStandalone standalone) {
-        for (var cell : ModModels.COFFIN_KEYS.cellSet()) {
-            standalone.register(cell.getValue(), SimpleUnbakedStandaloneModel.blockStateModel(VIdentifier.mod("block/coffin/coffin" + cell.getRowKey().getModelSuffix() + "_" + cell.getColumnKey().getName())));
-        }
+        ModModels.COFFIN_BOTTOM_KEYS.forEach((color, key) -> {
+            standalone.register(key, SimpleUnbakedStandaloneModel.blockStateModel(VIdentifier.mod("block/coffin_bottom_" + color.getName())));
+        });
+        standalone.register(ModModels.COFFIN_TOP_KEY, SimpleUnbakedStandaloneModel.blockStateModel(VIdentifier.mod("block/coffin_top")));
     }
-
 }

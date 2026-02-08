@@ -98,4 +98,11 @@ public class ItemEventHandler {
             level.playSound(null, player.blockPosition(), ModSounds.VAMPIRE_BITE.get(), SoundSource.PLAYERS, 1.0f,  1.0f);
         }
     }
+
+    @SubscribeEvent
+    public void handleEntityInteractableItems(PlayerInteractEvent.EntityInteract event) {
+        if (event.getItemStack().getItem() instanceof IEntityInteractable interactable) {
+            interactable.onEntityInteract(event.getItemStack(), event.getTarget(), event.getEntity(), event.getLevel(), event.getHand());
+        }
+    }
 }

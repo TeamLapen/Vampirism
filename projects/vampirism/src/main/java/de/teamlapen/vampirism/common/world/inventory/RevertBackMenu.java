@@ -38,7 +38,7 @@ public class RevertBackMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(@NotNull Player player) {
-        return stillValid(this.pAccess, player, ModBlocks.MED_CHAIR.get());
+        return stillValid(this.pAccess, player, ModBlocks.INJECTION_CHAIR.get());
     }
 
     public void consume(Player player) {

@@ -120,7 +120,7 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 HUNTER_MINION,
                 GHOST,
                 THROWABLE_ITEM,
-                SIT_DUMMY,
+                SIT,
                 CROSSBOW_ARROW,
                 DARK_BLOOD_PROJECTILE,
                 SOUL_ORB,

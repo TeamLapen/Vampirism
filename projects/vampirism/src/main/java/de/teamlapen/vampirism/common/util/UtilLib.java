@@ -69,9 +69,10 @@ import java.util.regex.Pattern;
 @Deprecated
 public class UtilLib {
 
-    private final static Logger LOGGER = LogManager.getLogger();
-    private final static Pattern oldFormatPattern = Pattern.compile("%[sd]");
+    //private final static Logger LOGGER = LogManager.getLogger();
+    //private final static Pattern oldFormatPattern = Pattern.compile("%[sd]");
 
+    /*
     public static @NotNull String entityToString(@Nullable Entity e) {
         if (e == null) {
             return "Entity is null";
@@ -82,6 +83,7 @@ public class UtilLib {
     public static boolean doesBlockHaveSolidTopSurface(@NotNull Level worldIn, @NotNull BlockPos pos) {
         return worldIn.getBlockState(pos).isFaceSturdy(worldIn, pos, Direction.UP);
     }
+     */
 
     /**
      * Gets players looking spot (blocks only).
@@ -114,6 +116,7 @@ public class UtilLib {
         return player.level().clip(new ClipContext(vector1, vector2, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
     }
 
+    /*
     public static @NotNull BlockPos getRandomPosInBox(@NotNull Level w, @NotNull AABB box) {
         int x = (int) box.minX + w.random.nextInt((int) (box.maxX - box.minX) + 1);
         int z = (int) box.minZ + w.random.nextInt((int) (box.maxZ - box.minZ) + 1);
@@ -128,10 +131,12 @@ public class UtilLib {
         }
         return pos.above();
     }
+     */
 
     /**
      * @return Number of chunks loaded by players
      */
+    /*
     public static int countPlayerLoadedChunks(@NotNull Level world) {
         List<ChunkPos> chunks = Lists.newArrayList();
         int i = 0;
@@ -157,6 +162,7 @@ public class UtilLib {
         }
         return i;
     }
+     */
 
     /**
      * Returns an approximate absolute (world) position of the held item.
@@ -176,6 +182,7 @@ public class UtilLib {
 
     }
 
+    /*
     public static <T extends Mob> @Nullable Entity spawnEntityBehindEntity(@NotNull LivingEntity entity, @NotNull EntityType<T> toSpawn, @NotNull EntitySpawnReason reason) {
 
         BlockPos behind = getPositionBehindEntity(entity, 2);
@@ -199,10 +206,12 @@ public class UtilLib {
         e.remove(Entity.RemovalReason.DISCARDED);
         return null;
     }
+     */
 
     /**
      * Call {@link Mob#finalizeSpawn(ServerLevelAccessor, DifficultyInstance, MobSpawnType, SpawnGroupData, CompoundTag)} if applicable
      */
+    /*
     private static void onInitialSpawn(@NotNull ServerLevel level, Entity e, @NotNull EntitySpawnReason reason) {
         if (e instanceof Mob mob && level instanceof ServerLevel serverLevel) {
             mob.finalizeSpawn(level, serverLevel.getCurrentDifficultyAt(e.blockPosition()), reason, null);
@@ -217,6 +226,7 @@ public class UtilLib {
         double z = p.getZ() + cosYaw * distance;
         return new BlockPos((int) x, (int) p.getY(), (int) z);
     }
+     */
 
     /**
      * @param world           World
@@ -436,6 +446,7 @@ public class UtilLib {
 //
 //    }
 
+    /*
     private static @NotNull String replaceDeprecatedFormatter(@NotNull String text) {
         StringBuilder sb = null;
         Matcher m = oldFormatPattern.matcher(text);
@@ -456,6 +467,7 @@ public class UtilLib {
             return sb.toString();
         }
     }
+     */
 
     @Nullable
     public static StructureStart getStructureStartAt(@NotNull Entity entity, @NotNull Structure s) {
@@ -513,6 +525,7 @@ public class UtilLib {
         return StructureStart.INVALID_START;
     }
 
+    /*
     public static float[] getColorComponents(int color) {
         int i = (color & 16711680) >> 16;
         int j = (color & 65280) >> 8;
@@ -562,6 +575,7 @@ public class UtilLib {
     public static boolean isValidResourceLocation(@NotNull String loc) {
         return Identifier.tryParse(loc) != null;
     }
+     */
 
     public static boolean checkRegistryObjectExistence(ResourceKey<? extends Registry<?>> key, Object obj) {
         if (obj instanceof String string) {
@@ -589,12 +603,14 @@ public class UtilLib {
      * Creates a LinkedHashSet from the given elements.
      * It isn't a {@link SortedSet} but should keep the order anyway
      */
+    /*
     @SafeVarargs
     public static <T> @NotNull Set<T> newSortedSet(T... elements) {
         Set<T> s = new LinkedHashSet<>();
         Collections.addAll(s, elements);
         return s;
     }
+     */
 
     public static boolean matchesItem(@NotNull Ingredient ingredient, @NotNull ItemStack searchStack) {
         return ingredient.test(searchStack);
@@ -649,10 +665,12 @@ public class UtilLib {
         return d;
     }
 
+    /*
     public static <T> T getRandomElement(List<T> list) {
         Random rand = new Random();
         return list.get(rand.nextInt(list.size()));
     }
+     */
 
     public static <T> T getRandomElementOr(List<T> list, Supplier<T> ifEmpty) {
         if (list.isEmpty()) {
@@ -662,6 +680,7 @@ public class UtilLib {
         return list.get(rand.nextInt(list.size()));
     }
 
+    /*
     public static CompoundTag tagOf(String key, int value) {
         CompoundTag tag = new CompoundTag();
         tag.putInt(key, value);
@@ -673,6 +692,7 @@ public class UtilLib {
         tag.putString(key, value);
         return tag;
     }
+     */
 
     public static int indexOf(Object[] array, Object obj) {
         for (int i = 0; i < array.length; i++) {

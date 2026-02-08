@@ -5,6 +5,7 @@ import com.mojang.math.Quadrant;
 import de.teamlapen.faction.data.provider.model.FactionsModelTemplates;
 import de.teamlapen.faction.data.provider.model.FactionsTextureSlots;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.client.renderer.items.BatCageSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
 import de.teamlapen.vampirism.common.core.ModBlocks;
@@ -51,7 +52,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
     public void run() {
         createFamilies(ModBlockFamilies.getFamilies());
 
-        createGarlicDiffuser();
+        createGarlicDiffusers();
         createCandleHolders();
         createVampireSoulLantern();
         createBloodGrinder();
@@ -67,7 +68,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         createAltarPillar();
         createTent();
         createTotem();
-        createMedChair();
         createAlchemicalCauldron();
         createCursedGrassBlock();
         createAlchemicalFire();
@@ -87,9 +87,9 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         Identifier infestedDarkStoneModel = ModModelTemplates.CUBE_ALL.create(ModBlocks.INFESTED_DARK_STONE.get(), new TextureMapping().put(TextureSlot.ALL, mod("block/dark_stone")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.INFESTED_DARK_STONE.get(), plainVariant(infestedDarkStoneModel)));
 
-        Identifier batCageModel = mod("block/bat_cage/block");
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BAT_CAGE.get(), plainVariant(batCageModel)));
-        createDefaultBlockItem(ModBlocks.BAT_CAGE.get(), batCageModel);
+        createNonTemplateHorizontalBlock(ModBlocks.BAT_CAGE.get());
+        Identifier batCageModel = ModelLocationUtils.getModelLocation(ModBlocks.BAT_CAGE.get());
+        this.itemModelOutput.accept(ModBlocks.BAT_CAGE.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(batCageModel), ItemModelUtils.specialModel(batCageModel, new BatCageSpecialRenderer.Unbaked())));
 
         Identifier bloodContainerModel = mod("block/blood_container/blood_container");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BLOOD_CONTAINER.get(), plainVariant(bloodContainerModel)));
@@ -136,16 +136,25 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.createHangingSign(ModBlocks.CURSED_SPRUCE_LOG.get(), ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get());
     }
 
-    protected void createGarlicDiffuser() {
-        Identifier normalModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), new TextureMapping().put(ModTextureSlots.GARLIC, mod("block/garlic_diffuser_inside")), this.modelOutput);
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), plainVariant(normalModel)));
-//        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), normalModel);
-        Identifier weakModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), new TextureMapping().put(ModTextureSlots.GARLIC, mod("block/garlic_diffuser_inside")), this.modelOutput);
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), plainVariant(weakModel)));
-//        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), weakModel);
-        Identifier improvedModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), new TextureMapping().put(ModTextureSlots.GARLIC, mod("block/garlic_diffuser_inside_improved")), this.modelOutput);
+    protected void createGarlicDiffusers() {
+        Identifier defaultModel = mod("block/garlic_diffuser");
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), plainVariant(defaultModel)));
+        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), defaultModel);
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), plainVariant(defaultModel)));
+        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_WEAK.get(), defaultModel);
+
+        Identifier improvedModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), new TextureMapping().put(ModTextureSlots.CORE, mod("block/garlic_diffuser_core_improved")), this.modelOutput);
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), plainVariant(improvedModel)));
-//        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), improvedModel);
+        createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), improvedModel);
+
+        createNonTemplateModelBlock(ModBlocks.GARLIC_DIFFUSER_CORE.get());
+        registerSimpleItemModel(ModBlocks.GARLIC_DIFFUSER_CORE.get(), mod("item/garlic_diffuser_core"));
+        createFlatItemModel(ModBlocks.GARLIC_DIFFUSER_CORE.asItem());
+
+        Identifier improvedCoreModel = ModModelTemplates.GARLIC_DIFFUSER_CORE.create(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.get(), new TextureMapping().put(ModTextureSlots.CORE, mod("block/garlic_diffuser_core_improved")), this.modelOutput);
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.get(), plainVariant(improvedCoreModel)));
+        registerSimpleItemModel(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.get(), mod("item/garlic_diffuser_core_improved"));
+        createFlatItemModel(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.asItem());
     }
 
     protected void createAltarPillar() {
@@ -184,21 +193,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP_CRAFTED.create(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_vampire")), this.modelOutput))));
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), plainVariant(FactionsModelTemplates.TOTEM_TOP_CRAFTED.create(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED.get(), new TextureMapping().putForced(FactionsTextureSlots.CORE, mod("block/totem_top_core_hunter")), this.modelOutput))));
-    }
-
-    protected void createMedChair() {
-        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.MED_CHAIR.get())
-                .with(PropertyDispatch.initial(MedChairBlock.PART)
-                        .select(MedChairBlock.EnumPart.BOTTOM, plainVariant(VIdentifier.mod("block/medchairbase")))
-                        .select(MedChairBlock.EnumPart.TOP, plainVariant(VIdentifier.mod("block/medchairhead")))
-                )
-                .with(PropertyDispatch.modify(MedChairBlock.FACING)
-                        .select(Direction.NORTH, NOP)
-                        .select(Direction.EAST, Y_ROT_90)
-                        .select(Direction.SOUTH, Y_ROT_180)
-                        .select(Direction.WEST, Y_ROT_270)
-                )
-        );
     }
 
     protected void createCandleHolders() {
@@ -368,6 +362,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
                 ModBlocks.GRAVE_CAGE,
                 ModBlocks.VAMPIRE_RACK,
                 ModBlocks.THRONE,
+                ModBlocks.INJECTION_CHAIR,
                 ModBlocks.FOG_DIFFUSER
         ).map(DeferredHolder::get).forEach(this::createNonTemplateBlockWithItem);
     }
@@ -444,12 +439,13 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
     protected void createCoffin() {
         Stream.of(ModBlocks.COFFIN_WHITE, ModBlocks.COFFIN_ORANGE, ModBlocks.COFFIN_MAGENTA, ModBlocks.COFFIN_LIGHT_BLUE, ModBlocks.COFFIN_YELLOW, ModBlocks.COFFIN_LIME, ModBlocks.COFFIN_PINK, ModBlocks.COFFIN_GRAY, ModBlocks.COFFIN_LIGHT_GRAY, ModBlocks.COFFIN_CYAN, ModBlocks.COFFIN_PURPLE, ModBlocks.COFFIN_BLUE, ModBlocks.COFFIN_BROWN, ModBlocks.COFFIN_GREEN, ModBlocks.COFFIN_RED, ModBlocks.COFFIN_BLACK).map(DeferredHolder::get).forEach(block -> {
-            var coffin = ModModelTemplates.COFFIN.create(VIdentifier.mod("block/coffin/coffin_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
-            var coffinBottom = ModModelTemplates.COFFIN_BOTTOM.create(VIdentifier.mod("block/coffin/coffin_bottom_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
-            var coffinTop = ModModelTemplates.COFFIN_TOP.create(VIdentifier.mod("block/coffin/coffin_top_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.TEXTURE0, mod("block/coffin/coffin_" + block.getColor().getName())), this.modelOutput);
-            Identifier model = decorateBlockModelLocation(modString("coffin_empty"));
-            this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(model)));
-            this.itemModelOutput.accept(block.asItem(), ItemModelUtils.plainModel(coffinBottom));
+            Identifier fullModel = ModModelTemplates.COFFIN.create(mod("block/coffin_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.INNER, mod("block/coffin/coffin_inner_" + block.getColor().getName())), this.modelOutput);
+
+            ModModelTemplates.COFFIN_BOTTOM.create(mod("block/coffin_bottom_" + block.getColor().getName()), new TextureMapping().put(ModTextureSlots.INNER, mod("block/coffin/coffin_inner_" + block.getColor().getName())), this.modelOutput);
+            Identifier emptyModel = mod("block/coffin_empty");
+
+            this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(emptyModel)));
+            this.itemModelOutput.accept(block.asItem(), ItemModelUtils.plainModel(fullModel));
         });
     }
 

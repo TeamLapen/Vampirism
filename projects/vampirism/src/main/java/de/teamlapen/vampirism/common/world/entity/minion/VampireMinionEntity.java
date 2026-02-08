@@ -5,9 +5,12 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
+import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -28,7 +31,6 @@ import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.world.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.common.world.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
-import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -193,22 +195,25 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         return false;
     }
 
-    public void eat(@NotNull Level world, @NotNull ItemStack stack, BloodFoodProperties properties) {
-        float healAmount = properties.blood() / 2f;
-        this.heal(healAmount);
+    public void eat(int blood) {
+        this.heal(blood / 2f);
     }
 
-    @Override
     public void eat(@NotNull Level world, @NotNull ItemStack stack, FoodProperties properties) {
+        float healAmount = properties.nutrition() / 2f;
+        this.heal(healAmount);
     }
 
     @Override
     protected boolean canConsume(@NotNull ItemStack stack, @NotNull Consumable consumable) {
         if (!super.canConsume(stack, consumable)) return false;
         boolean fullHealth = this.getHealth() == this.getMaxHealth();
-        BloodFoodProperties bloodFoodProperties = stack.get(ModDataComponents.VAMPIRE_FOOD);
-        if (bloodFoodProperties != null && (!fullHealth || bloodFoodProperties.canAlwaysEat())) {
-            return true;
+        FactionFoodList factionFoodList = stack.get(FactionDataComponents.FACTION_FOOD);
+        if (factionFoodList != null) {
+            List<FactionFoodEntry> factionFoodEntries = factionFoodList.findMatchingEntries(this);
+            if (!fullHealth || factionFoodEntries.stream().anyMatch(entry -> entry.foodProperties().canAlwaysEat())) {
+                return true;
+            }
         }
         BottleBlood bottleBlood = stack.get(ModDataComponents.BOTTLE_BLOOD);
         if (bottleBlood != null && bottleBlood.blood() > 0) {
