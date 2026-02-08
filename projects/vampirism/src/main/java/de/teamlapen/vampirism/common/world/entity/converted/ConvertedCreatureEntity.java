@@ -110,7 +110,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     public @NotNull Component getTypeName() {
-        return this.entityCreature.map(creature -> this.getNameC(creature.getType()::getDescription)).orElseGet(super::getName);
+        return this.entityCreature.map(creature -> this.getNameC(creature.getType()::getDescription)).orElseGet(super::getTypeName);
     }
 
     @Override

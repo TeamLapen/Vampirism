@@ -41,7 +41,7 @@ public class PureBloodItem extends Item {
         super(properties.stacksTo(16).overrideDescription(Util.makeDescriptionId("item", VIdentifier.mod("pure_blood")))
                 .factions$factionFood(new FactionFoodList(
                         new FoodProperties.Builder().build(),
-                        new FactionFoodEntry(ModFactionTags.IS_VAMPIRE, new FoodProperties.Builder().nutrition(50).saturationModifier(0.4f + (0.15f * level)).build(), ModFoodBehaviours.VAMPIRE_FOOD.getId())
+                        new FactionFoodEntry(ModFactionTags.IS_VAMPIRE, new FoodProperties.Builder().nutrition(50).saturationModifier(0.4f + (0.15f * level)).build(), ModFoodBehaviours.VAMPIRE_FOOD)
                 ), Consumables.defaultDrink().onConsume(FactionBasedConsumeEffect.builder(ModFactionTags.IS_VAMPIRE).add(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ModEffects.SATURATION))).build()).build())
                 .component(ModDataComponents.PURE_LEVEL, new PureLevel(level)));
     }

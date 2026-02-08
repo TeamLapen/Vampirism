@@ -2,10 +2,8 @@ package de.teamlapen.faction.common.world.items.consume;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionHelper;
-import de.teamlapen.faction.api.world.items.consume.IFactionFoodBehavior;
 import de.teamlapen.faction.common.core.FactionFoodBehaviours;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -44,10 +42,7 @@ public record FactionFoodList(FoodProperties defaultFood, List<FactionFoodEntry>
         List<FactionFoodEntry> matching = findMatchingEntries(livingEntity);
         if (!matching.isEmpty()) {
             matching.forEach(entry -> {
-                IFactionFoodBehavior behavior = FactionRegistries.FOOD_BEHAVIOUR.get().getValue(entry.behaviour());
-                if (behavior == null) behavior = FactionFoodBehaviours.DEFAULT.get();
-
-                behavior.apply(level, livingEntity, itemStack, consumable, entry.foodProperties());
+                entry.behaviour().value().apply(level, livingEntity, itemStack, consumable, entry.foodProperties());
             });
         } else {
             FactionFoodBehaviours.DEFAULT.get().apply(level, livingEntity, itemStack, consumable, defaultFood);

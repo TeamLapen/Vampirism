@@ -20,7 +20,7 @@ public class ModFoods {
     public static final FactionFoodList WEAK_HUMAN_HEART = new FactionFoodList(WEAK_HUMAN_HEART_HUMAN, vampireFood(WEAK_HUMAN_HEART_VAMPIRE));
 
     public static FactionFoodEntry vampireFood(FoodProperties foodProperties) {
-        return new FactionFoodEntry(ModFactionTags.IS_VAMPIRE, foodProperties, ModFoodBehaviours.VAMPIRE_FOOD.getId());
+        return new FactionFoodEntry(ModFactionTags.IS_VAMPIRE, foodProperties, ModFoodBehaviours.VAMPIRE_FOOD);
     }
 
     public static FactionFoodEntry hunterFood(FoodProperties foodProperties) {
