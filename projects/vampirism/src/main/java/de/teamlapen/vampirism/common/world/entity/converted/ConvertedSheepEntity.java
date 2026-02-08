@@ -46,6 +46,11 @@ public class ConvertedSheepEntity extends Sheep implements CurableConvertedCreat
     }
 
     @Override
+    public @NotNull EntityType<Sheep> getCuredEntityType() {
+        return EntityType.SHEEP;
+    }
+
+    @Override
     public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
     }
@@ -84,7 +89,7 @@ public class ConvertedSheepEntity extends Sheep implements CurableConvertedCreat
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.SHEEP);
+            aiStepC(serverLevel);
         }
         super.aiStep();
     }

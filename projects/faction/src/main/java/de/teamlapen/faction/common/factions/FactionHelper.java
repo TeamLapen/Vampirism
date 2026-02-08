@@ -28,7 +28,7 @@ public class FactionHelper implements IFactionHelper {
     }
 
     public Holder<? extends IFaction<?>> getFallbackFaction(EntityType<?> entity) {
-        Map<Holder<? extends IFaction<?>>, TagKey<EntityType<?>>> all = IFactionTags.get().all(Registries.ENTITY_TYPE);
+        Map<Holder<? extends IFaction<?>>, TagKey<EntityType<?>>> all = IFactionSpecificTags.get().all(Registries.ENTITY_TYPE);
         for (var entry : all.entrySet()) {
             if (entity.is(entry.getValue())) {
                 return entry.getKey();

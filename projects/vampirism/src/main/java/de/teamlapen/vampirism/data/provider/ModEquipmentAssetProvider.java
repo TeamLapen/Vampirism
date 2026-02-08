@@ -34,12 +34,13 @@ public class ModEquipmentAssetProvider extends EquipmentAssetProvider {
 
         Stream.of(
                 VAMPIRE_CLOTH_BOOTS,
-                VAMPIRE_CLOTH_LEGS,
                 VAMPIRE_CLOTH_HAT,
                 VAMPIRE_CLOTH_CROWN,
                 HUNTER_HAT_TALL,
                 HUNTER_HAT_BROAD
         ).forEach(asset -> output.accept(asset, createCustomOnly(asset)));
+
+        output.accept(VAMPIRE_CLOTH_LEGS, EquipmentClientInfo.builder().addLayers(EquipmentClientInfo.LayerType.HUMANOID_LEGGINGS, EquipmentClientInfo.Layer.leatherDyeable(VAMPIRE_CLOTH_LEGS.identifier(), false)).build());
 
         for (Map.Entry<DyeColor, ResourceKey<EquipmentAsset>> entry : VAMPIRE_CLOAKS.entrySet()) {
             output.accept(entry.getValue(), EquipmentClientInfo.builder().addMainHumanoidLayer(VIdentifier.mod("cloak/" + entry.getKey().getName()), false).build());

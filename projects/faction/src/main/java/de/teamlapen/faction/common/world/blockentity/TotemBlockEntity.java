@@ -20,7 +20,6 @@ import de.teamlapen.faction.common.event.FactionEventFactory;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.client.ClientboundPlaySoundEventPacket;
 import de.teamlapen.faction.common.tags.FactionProfessionTags;
-import de.teamlapen.faction.common.tags.FactionTags;
 import de.teamlapen.faction.common.util.*;
 import de.teamlapen.faction.common.world.ServerMultiBossEvent;
 import de.teamlapen.faction.common.world.blocks.TotemBaseBlock;
@@ -159,14 +158,14 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
                 return false;
             }
         } else if (IFaction.is(this.capturingFaction, faction)) {
-            if (IFaction.is(this.controllingFaction, FactionTags.IS_NEUTRAL)) {
+            if (IFaction.is(this.controllingFaction, de.teamlapen.faction.api.tags.FactionTags.IS_NEUTRAL)) {
                 return true;
             } else {
                 player.displayClientMessage(Component.translatable("text.factionapi.village.totem_destroy.fail_other_faction"), true);
                 return false;
             }
         } else {
-            if (!(this.capturingFaction == null && IFaction.is(this.controllingFaction, FactionTags.IS_NEUTRAL))) {
+            if (!(this.capturingFaction == null && IFaction.is(this.controllingFaction, de.teamlapen.faction.api.tags.FactionTags.IS_NEUTRAL))) {
                 player.displayClientMessage(Component.translatable("text.factionapi.village.totem_destroy.fail_other_faction"), true);
                 return false;
             }
@@ -212,7 +211,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     public void initiateCapture(Player player) {
         if (!player.isAlive()) return;
         var faction = FactionPlayerHandler.get(player).getFaction();
-        if (IFaction.is(faction, FactionTags.CAN_RAID)) {
+        if (IFaction.is(faction, de.teamlapen.faction.api.tags.FactionTags.CAN_RAID)) {
             initiateCapture(faction, player::displayClientMessage, -1, -1f);
         } else if (!IFaction.isNeutral(faction))  {
             player.displayClientMessage(Component.translatable("text.factionapi.raid.faction_not_able"),true);
@@ -324,7 +323,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
      * @return true if the badomen effect should be consumed
      */
     public boolean initiateCaptureOrIncreaseBadOmenLevel(@NotNull Holder<? extends IFaction<?>> faction, @Nullable BiConsumer<Component, Boolean> feedback, int badOmenLevel, float strengthModifier) {
-        if (!IFaction.is(faction, FactionTags.CAN_RAID)) {
+        if (!IFaction.is(faction, de.teamlapen.faction.api.tags.FactionTags.CAN_RAID)) {
             return false;
         }
         if (this.capturingFaction == null) {
@@ -478,8 +477,10 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             int villagerCount = this.level.getEntitiesOfClass(Villager.class, this.getVillageArea().inflate(20)).size();
             int max = Math.min(beds, FactionConfig.server().villageMaxSpawnableVillagers.get());
             if (villagerCount < max) {
-                var villager = FactionEventFactory.fireSpawnNewVillagerEvent(this, null, EntityType.VILLAGER.create(this.level, EntitySpawnReason.EVENT), false);
-                spawnEntity(villager);
+                var villager = FactionEventFactory.fireSpawnNewVillagerEvent(this, EntityType.VILLAGER, null);
+                if(villager!=null){
+                    spawnEntity(villager);
+                }
             } else {
                 spawnTaskMaster = true;
             }
@@ -501,7 +502,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 
         //Random raids
         if (timeSinceLastRaid > 12000 && this.level.getDifficulty() != Difficulty.PEACEFUL && this.level.random.nextFloat() < FactionConfig.server().raidRandomChance.get() * 20) {
-            List<Holder<IFaction<?>>> factions = ModRegistries.FACTIONS.get(FactionTags.HAS_RANDOM_RAID).stream().flatMap(HolderSet.ListBacked::stream).collect(Collectors.toList());
+            List<Holder<IFaction<?>>> factions = ModRegistries.FACTIONS.get(de.teamlapen.faction.api.tags.FactionTags.HAS_RANDOM_RAID).stream().flatMap(HolderSet.ListBacked::stream).collect(Collectors.toList());
             factions.remove(this.controllingFaction);
             this.initiateCapture(factions.get(this.level.random.nextInt(factions.size())), null, 0, -1f);
         }
@@ -828,9 +829,8 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
                 if (action == FactionVillageEvent.UpdateCreaturesOnCaptureFinishEvent.Action.KILL) {
                     livingEntity.discard();
                 } else if (action == FactionVillageEvent.UpdateCreaturesOnCaptureFinishEvent.Action.REPLACE) {
-                    Villager villager = EntityType.VILLAGER.create(this.level, EntitySpawnReason.EVENT);
+                    Villager villager = FactionEventFactory.fireSpawnNewVillagerEvent(this, EntityType.VILLAGER, livingEntity);
                     if (villager == null) return;
-                    villager = FactionEventFactory.fireSpawnNewVillagerEvent(this, livingEntity, villager, fullConvert);
                     spawnEntity(villager, livingEntity);
                 }
             }));

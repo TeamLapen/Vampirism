@@ -4,9 +4,14 @@ import de.teamlapen.faction.api.FactionsApi;
 import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModEffects;
+import de.teamlapen.vampirism.common.core.ModFactions;
+import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import net.minecraft.ChatFormatting;
@@ -41,8 +46,8 @@ public class PureBloodItem extends Item {
         super(properties.stacksTo(16).overrideDescription(Util.makeDescriptionId("item", VIdentifier.mod("pure_blood")))
                 .factions$factionFood(new FactionFoodList(
                         new FoodProperties.Builder().build(),
-                        new FactionFoodEntry(ModFactionTags.IS_VAMPIRE, new FoodProperties.Builder().nutrition(50).saturationModifier(0.4f + (0.15f * level)).build(), ModFoodBehaviours.VAMPIRE_FOOD)
-                ), Consumables.defaultDrink().onConsume(FactionBasedConsumeEffect.builder(ModFactionTags.IS_VAMPIRE).add(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ModEffects.SATURATION))).build()).build())
+                        new FactionFoodEntry(VampirismTags.Factions.IS_VAMPIRE, new FoodProperties.Builder().nutrition(50).saturationModifier(0.4f + (0.15f * level)).build(), ModFoodBehaviours.VAMPIRE_FOOD)
+                ), Consumables.defaultDrink().onConsume(FactionBasedConsumeEffect.builder(VampirismTags.Factions.IS_VAMPIRE).add(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ModEffects.SATURATION))).build()).build())
                 .component(ModDataComponents.PURE_LEVEL, new PureLevel(level)));
     }
 

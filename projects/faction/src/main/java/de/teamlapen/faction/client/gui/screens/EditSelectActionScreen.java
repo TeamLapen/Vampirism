@@ -65,7 +65,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     }
 
     private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<Holder<IAction<?>>> ordering) {
-        FactionConfig.client().actionOrder.set(player.getFaction(), ordering.getOrdering());
+        FactionConfig.client().actionOrder.setAndSave(player.getFaction(), ordering.getOrdering());
     }
 
     private KeyBindingList keyBindingList;

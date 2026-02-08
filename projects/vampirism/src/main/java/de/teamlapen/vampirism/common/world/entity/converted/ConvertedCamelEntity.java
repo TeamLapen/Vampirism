@@ -50,6 +50,11 @@ public class ConvertedCamelEntity extends Camel implements CurableConvertedCreat
     }
 
     @Override
+    public @NotNull EntityType<Camel> getCuredEntityType() {
+        return EntityType.CAMEL;
+    }
+
+    @Override
     public Data<Camel> data() {
         return this.data;
     }
@@ -78,7 +83,7 @@ public class ConvertedCamelEntity extends Camel implements CurableConvertedCreat
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.CAMEL);
+            aiStepC(serverLevel);
         }
         super.aiStep();
     }

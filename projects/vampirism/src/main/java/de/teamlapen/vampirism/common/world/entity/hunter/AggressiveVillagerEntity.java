@@ -25,7 +25,6 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -76,7 +75,7 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     public AggressiveVillagerEntity(EntityType<? extends AggressiveVillagerEntity> type, Level worldIn) {
         super(type, worldIn);
-        ((GroundPathNavigation) getNavigation()).setCanOpenDoors(true);
+        getNavigation().setCanOpenDoors(true);
     }
 
     @Override

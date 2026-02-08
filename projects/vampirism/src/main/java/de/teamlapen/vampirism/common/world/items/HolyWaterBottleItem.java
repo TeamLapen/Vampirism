@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +22,7 @@ public class HolyWaterBottleItem extends Item implements IItemWithTier {
     private final Tier tier;
 
     public HolyWaterBottleItem(Tier tier, Properties props) {
-        super(props.factions$restrictFaction(ModFactionTags.IS_HUNTER).factions$descriptionWithout("_normal|_enhanced|_ultimate"));
+        super(props.factions$restrictFaction(VampirismTags.Factions.IS_HUNTER).factions$descriptionWithout("_normal|_enhanced|_ultimate"));
         this.tier = tier;
     }
 

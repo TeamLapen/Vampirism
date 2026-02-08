@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.items.consume;
 
 import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
@@ -18,6 +19,6 @@ public class ModConsumables {
             .build();
     public static final Consumable GARLIC = Consumables.defaultFood()
             .onConsume(new RemoveStatusEffectsConsumeEffect(ModEffects.SANGUINARE))
-            .onConsume(FactionBasedConsumeEffect.build(ModFactionTags.IS_VAMPIRE, new AffectGarlic(EnumStrength.MEDIUM)))
+            .onConsume(FactionBasedConsumeEffect.build(VampirismTags.Factions.IS_VAMPIRE, new AffectGarlic(EnumStrength.MEDIUM)))
             .build();
 }

@@ -77,7 +77,7 @@ public class GhostEntity extends VampirismEntity implements IRemainsEntity, IEnt
         NearestAttackableTargetGoal<Player> goal = new NearestAttackableTargetGoal<>(this, Player.class, 0, false, false, IFactionPredicate.builder(ModFactions.VAMPIRE).onlyPlayer().build());
         goal.vampirism$ignoreLineOfSight();
         this.targetSelector.addGoal(3, goal);
-        NearestAttackableTargetGoal<?> goal2 = new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, false, false, IFactionPredicate.builder(ModFactions.VAMPIRE).notNeutral().notNeutral().build()) {
+        NearestAttackableTargetGoal<?> goal2 = new NearestAttackableTargetGoal<>(this, PathfinderMob.class, 5, false, false, IFactionPredicate.builder(ModFactions.VAMPIRE).notNeutral().build()) {
             @Override
             protected double getFollowDistance() {
                 return super.getFollowDistance() / 2;

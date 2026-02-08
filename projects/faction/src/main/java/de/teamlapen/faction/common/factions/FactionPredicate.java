@@ -5,10 +5,10 @@ import com.google.common.base.Preconditions;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.tags.FactionTags;
 import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.DefaultFactions;
-import de.teamlapen.faction.common.tags.FactionTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-// TODO add default target factions based on tags. -> hunter ignore neutral by default. better compatibility between additional factions
+// TODO add default target factions based on tags. -> hunter ignore neutral by default. better compatibility between additional factions -> maybe use FRIENDLY_TOWARDS_NEUTRAL
 public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFaction, Predicate<LivingEntity> predicate, boolean ignoreDisguise, HolderSet<IFaction<?>> targetFaction, Function<LivingEntity, Holder<? extends IFaction<?>>> factionFallback) implements IFactionPredicate {
 
     @Override
@@ -155,10 +155,10 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
         @Override
         public int hashCode() {
             int result = sourceFaction == null ? 0 : sourceFaction.getKey().identifier().hashCode();
-            result = 31 * result + Boolean.hashCode(targetPlayers);
-            result = 31 * result + Boolean.hashCode(targetNonPlayers);
-            result = 31 * result + Boolean.hashCode(ignoreDisguise);
-            result = 31 * result + Boolean.hashCode(allowOwnFaction);
+            result = result << 1 | (targetPlayers ? 0b1: 0b0);
+            result = result << 1 | (targetNonPlayers ? 0b1: 0b0);
+            result = result << 1 | (ignoreDisguise ? 0b1: 0b0);
+            result = result << 1 | (allowOwnFaction ? 0b1: 0b0);
             result = 31 * result + (targetFaction == null ? 0 : Objects.hashCode(targetFaction.location()));
             result = 31 * result + targetFactions.hashCode();
             result = 31 * result + other.hashCode();

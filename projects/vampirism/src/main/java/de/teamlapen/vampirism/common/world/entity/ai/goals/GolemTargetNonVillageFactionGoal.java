@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.entity.ai.goals;
 
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.tags.FactionTags;
 import de.teamlapen.faction.common.util.TotemHelper;
 import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -29,6 +30,7 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
     public GolemTargetNonVillageFactionGoal(@NotNull IronGolem creature) {
         super(creature, LivingEntity.class, 4, false, false, null);
         this.golem = creature;
+        this.targetConditions.selector((a,b) -> false); //Before determineGolemFaction is executed for the first time, we don't want to attack anybody
     }
 
     @Override
@@ -62,14 +64,16 @@ public class GolemTargetNonVillageFactionGoal extends NearestAttackableTargetGoa
     private boolean determineGolemFaction() {
         Holder<? extends IFaction<?>> faction = ModFactions.HUNTER;
         if (ModConfig.balance().golemAttackNonVillageFaction.get()) {
-            Optional<Holder<? extends IFaction<?>>> tile = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level()), this.golem.blockPosition(), true).map(TotemBlockEntity::getControllingFaction);
-            if (tile.isPresent()) {
-                faction = tile.get();
+            Optional<Holder<? extends IFaction<?>>> tileFaction = TotemHelper.getTotemNearPos(((ServerLevel) this.golem.level()), this.golem.blockPosition(), true).map(TotemBlockEntity::getControllingFaction);
+            if (tileFaction.isPresent()) {
+                faction = tileFaction.get();
             }
         }
 
-        if (IFaction.is(faction, this.faction)) {
-            this.targetConditions.selector(predicates.computeIfAbsent(this.faction = faction, faction1 -> IFactionPredicate.builder(faction1).notNeutral().build()));
+        if (!IFaction.is(faction, this.faction)) { //If faction has changed, update target condition selector
+            this.faction = faction;
+            //If the current village faction is friendly towards neutral creatures, we only want to attack factions that attack neutral creatures. Otherwise, we want to attack any other faction. However, we never want the golem to attack neutral creatures
+            this.targetConditions.selector(predicates.computeIfAbsent(faction, faction1 -> IFactionPredicate.builder(faction1).targetFaction(IFaction.is(faction1, FactionTags.FRIENDLY_TOWARDS_NEUTRAL) ? FactionTags.HOSTILE_TOWARDS_NEUTRAL : FactionTags.NOT_NEUTRAL).build()));
             return true;
         }
         return false;

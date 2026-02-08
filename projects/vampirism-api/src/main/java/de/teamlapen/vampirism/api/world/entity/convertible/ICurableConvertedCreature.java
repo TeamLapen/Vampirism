@@ -49,8 +49,8 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @param newType the entity type of the cured entity
      * @return the new entity
      */
-    default T createCuredEntity(@NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
-        T newEntity = newType.create(entity.level(), EntitySpawnReason.CONVERSION);
+    default T createCuredEntity(@NotNull PathfinderMob entity) {
+        T newEntity = getCuredEntityType().create(entity.level(), EntitySpawnReason.CONVERSION);
         assert newEntity != null;
         TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess());
         entity.saveWithoutId(output);
@@ -60,6 +60,12 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
         newEntity.setUUID(UUID.randomUUID());
         return newEntity;
     }
+
+    /**
+     * @return The entity type this creature is cured to
+     */
+    @NotNull
+    EntityType<T> getCuredEntityType();
 
     /**
      * creates the cured entity and copies attributes <p>
@@ -72,8 +78,8 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      * @param newType the entity type of the cured entity
      * @return the new cured entity
      */
-    default T cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
-        T newEntity = createCuredEntity(entity, newType);
+    default T cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity) {
+        T newEntity = createCuredEntity(entity);
         entity.remove(Entity.RemovalReason.DISCARDED);
         entity.level().addFreshEntity(newEntity);
         newEntity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200, 0));

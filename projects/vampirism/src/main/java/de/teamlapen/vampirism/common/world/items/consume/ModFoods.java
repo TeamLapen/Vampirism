@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.common.world.items.consume;
 
 import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.common.core.ModFoodBehaviours;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.world.food.FoodProperties;
 
 public class ModFoods {
@@ -20,10 +20,10 @@ public class ModFoods {
     public static final FactionFoodList WEAK_HUMAN_HEART = new FactionFoodList(WEAK_HUMAN_HEART_HUMAN, vampireFood(WEAK_HUMAN_HEART_VAMPIRE));
 
     public static FactionFoodEntry vampireFood(FoodProperties foodProperties) {
-        return new FactionFoodEntry(ModFactionTags.IS_VAMPIRE, foodProperties, ModFoodBehaviours.VAMPIRE_FOOD);
+        return new FactionFoodEntry(VampirismTags.Factions.IS_VAMPIRE, foodProperties, ModFoodBehaviours.VAMPIRE_FOOD);
     }
 
     public static FactionFoodEntry hunterFood(FoodProperties foodProperties) {
-        return new FactionFoodEntry(ModFactionTags.IS_HUNTER, foodProperties);
+        return new FactionFoodEntry(VampirismTags.Factions.IS_HUNTER, foodProperties);
     }
 }

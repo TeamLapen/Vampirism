@@ -44,10 +44,6 @@ public class ExtendedCreature extends AttachmentSync implements IExtendedCreatur
 
     public static final int POISONOUS_BLOOD_DOSE_DURATION = 72000; // 3 in-game days
 
-    private final static String KEY_BLOOD = "bloodLevel";
-    private final static String KEY_MAX_BLOOD = "max_blood";
-    private final static String KEY_POISONOUS_BLOOD = "poisonousBlood";
-
     public static @NotNull Optional<ExtendedCreature> getSafe(@NotNull Entity mob) {
         if (mob instanceof PathfinderMob pathfinderMob) {
             return Optional.of(pathfinderMob.getData(ModAttachments.EXTENDED_CREATURE));

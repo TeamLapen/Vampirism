@@ -20,7 +20,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +42,10 @@ public class MinionTaskOrderValue {
     }
 
     public List<SelectMinionTaskRadialScreen.Entry> get(Holder<? extends IFaction<?>> faction) {
-        return this.minionTasks.computeIfAbsent(faction, item -> set(item, allowedValues(item)));
+        if(this.minionTasks.containsKey(faction)){
+            return this.minionTasks.get(faction);
+        }
+        return setAndSave(faction, allowedValues(faction));
     }
 
     public List<SelectMinionTaskRadialScreen.Entry> allowedValues(Holder<? extends IFaction<?>> faction) {
@@ -55,10 +57,14 @@ public class MinionTaskOrderValue {
                 .toList();
     }
 
-    public List<SelectMinionTaskRadialScreen.Entry> set(Holder<? extends IFaction<?>> faction, List<SelectMinionTaskRadialScreen.Entry> tasks) {
+    /**
+     * @param faction The minion faction to save the given list for
+     * @param tasks A list of available minions tasks
+     * return The given task list
+     */
+    public List<SelectMinionTaskRadialScreen.Entry> setAndSave(Holder<? extends IFaction<?>> faction, List<SelectMinionTaskRadialScreen.Entry> tasks) {
         this.minionTasks.put(faction, tasks);
         save();
-
         return tasks;
     }
 
@@ -70,9 +76,9 @@ public class MinionTaskOrderValue {
 
     public void refresh() {
         var result = CODEC.parse(JsonOps.INSTANCE, StrictJsonParser.parse(this.order.get()));
-        this.minionTasks = Collections.unmodifiableMap(result
-                .resultOrPartial(error -> LOGGER.error("Failed to parse minion task order: {}\n", error))
-                .orElseGet(HashMap::new));
+        this.minionTasks = result
+                .resultOrPartial(error -> LOGGER.error("Failed to parse minion task order: {}\n", error)).map(HashMap::new)
+                .orElseGet(HashMap::new);
     }
 
     private static class EntryCodec implements Codec<SelectMinionTaskRadialScreen.Entry> {

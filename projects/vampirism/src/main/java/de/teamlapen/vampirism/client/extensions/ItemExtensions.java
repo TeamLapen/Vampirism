@@ -3,17 +3,14 @@ package de.teamlapen.vampirism.client.extensions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
-import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.core.ModClientEnums;
-import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.common.util.RegUtil;
 import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.misc.mixin.client.accessor.ItemInHandRendererAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.util.Mth;
@@ -22,9 +19,15 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.IArmPoseTransformer;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 public class ItemExtensions {
 
@@ -38,49 +41,6 @@ public class ItemExtensions {
             return null;
         }
     };
-
-    public static final IClientItemExtensions VAMPIRE_CLOTHING = new CustomArmorItemExtension() {
-
-        @Override
-        public ModelLayerLocation getArmorModelLocation(ItemStack itemStack) {
-            return switch (RegUtil.id(itemStack.getItem()).getPath()) {
-                case "vampire_clothing_crown" -> ModEntitiesRender.CLOTHING_CROWN;
-                case "vampire_clothing_legs" -> ModEntitiesRender.CLOTHING_PANTS;
-                case "vampire_clothing_boots" -> ModEntitiesRender.CLOTHING_BOOTS;
-                case "vampire_clothing_hat" -> ModEntitiesRender.CLOTHING_HAT;
-                default -> ModelLayers.PLAYER;
-            };
-        }
-    };
-
-    public static final IClientItemExtensions VAMPIRE_CLOAK = new CustomArmorItemExtension() {
-        @Override
-        public ModelLayerLocation getArmorModelLocation(ItemStack itemStack) {
-            return ModEntitiesRender.CLOAK;
-        }
-    };
-
-    public static final IClientItemExtensions HUNTER_HAT = new CustomArmorItemExtension() {
-
-        @Override
-        public ModelLayerLocation getArmorModelLocation(ItemStack itemStack) {
-            return switch (RegUtil.id(itemStack.getItem()).getPath()) {
-                case "hunter_hat_tall" -> ModEntitiesRender.HUNTER_HAT_TALL;
-                case "hunter_hat_broad" -> ModEntitiesRender.HUNTER_HAT_BROAD;
-                default -> ModelLayers.PLAYER;
-            };
-        }
-    };
-
-    public static abstract class CustomArmorItemExtension implements IClientItemExtensions {
-
-        public abstract ModelLayerLocation getArmorModelLocation(ItemStack itemStack);
-
-        @Override
-        public Model getHumanoidArmorModel(ItemStack itemStack, EquipmentClientInfo.LayerType layerType, Model original) {
-            return VampirismModClient.services().armorModels().getModel(getArmorModelLocation(itemStack));
-        }
-    }
 
     public static final IArmPoseTransformer DOUBLE_CROSSBOW_CHARGE_ARM_POSE_TRANSFORMER = (model, entity, arm) -> {
 //        AnimationUtils.animateCrossbowCharge(model.rightArm, model.leftArm, entity, arm == HumanoidArm.LEFT);
@@ -239,4 +199,28 @@ public class ItemExtensions {
             }
         }
     };
+
+    public static class VampireArmorItemExtension implements IClientItemExtensions {
+
+        private static final Map<ModelLayerLocation, Model<?>> MODELS = new HashMap<>();
+        private static final Map<ModelLayerLocation, Function<ModelPart, Model<?>>> MODEL_FACTORIES = new HashMap<>();
+
+        private final ModelLayerLocation location;
+
+        public VampireArmorItemExtension(ModelLayerLocation location, Function<ModelPart, Model<?>> modelFactory) {
+            MODEL_FACTORIES.put(location, modelFactory);
+            this.location = location;
+        }
+
+        @Override
+        public Model<?> getHumanoidArmorModel(ItemStack itemStack, EquipmentClientInfo.LayerType layerType, Model original) {
+            return MODELS.getOrDefault(this.location, original);
+        }
+
+        @SubscribeEvent
+        public static void onLayersLoaded(EntityRenderersEvent.AddLayers event) {
+            MODELS.clear();
+            MODEL_FACTORIES.forEach((location, factory) -> MODELS.put(location, factory.apply(event.getEntityModels().bakeLayer(location))));
+        }
+    }
 }

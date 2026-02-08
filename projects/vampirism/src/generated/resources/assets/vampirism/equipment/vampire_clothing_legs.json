@@ -1,6 +1,6 @@
 {
   "layers": {
-    "humanoid": [
+    "humanoid_leggings": [
       {
         "texture": "vampirism:vampire_clothing_legs"
       }

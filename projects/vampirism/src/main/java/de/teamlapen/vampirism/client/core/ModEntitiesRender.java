@@ -107,12 +107,12 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(BARON_ATTIRE, BaronAttireModel::createLayer);
         event.registerLayerDefinition(CLOAK, CloakModel::createCloakLayer);
         event.registerLayerDefinition(BARONESS_ATTIRE, BaronessAttireModel::createLayer);
-        event.registerLayerDefinition(CLOTHING_BOOTS, ClothingBootsModel::createLayer);
-        event.registerLayerDefinition(CLOTHING_CROWN, ClothingCrownModel::createLayer);
-        event.registerLayerDefinition(CLOTHING_PANTS, ClothingPantsModel::createLayer);
-        event.registerLayerDefinition(CLOTHING_HAT, VampireHatModel::createLayer);
-        event.registerLayerDefinition(HUNTER_HAT_TALL, HunterHatModel::createTallHatLayer);
-        event.registerLayerDefinition(HUNTER_HAT_BROAD, HunterHatModel::createBroadHatLayer);
+        event.registerLayerDefinition(CLOTHING_BOOTS, VampirismArmorLayerDefinitions::vampireBootsDefinition);
+        event.registerLayerDefinition(CLOTHING_CROWN, VampirismArmorLayerDefinitions::vampireCrownDefinition);
+        event.registerLayerDefinition(CLOTHING_PANTS, VampirismArmorLayerDefinitions::vampirePantsDefinition);
+        event.registerLayerDefinition(CLOTHING_HAT, VampirismArmorLayerDefinitions::vampireHatDefinition);
+        event.registerLayerDefinition(HUNTER_HAT_TALL, VampirismArmorLayerDefinitions::hunterTallHatDefinition);
+        event.registerLayerDefinition(HUNTER_HAT_BROAD, VampirismArmorLayerDefinitions::hunterBroadHatLayer);
         event.registerLayerDefinition(VILLAGER_WITH_ARMS, () -> VillagerWithArmsModel.createLayer(0));
         event.registerLayerDefinition(TASK_MASTER, () -> LayerDefinition.create(VillagerModel.createBodyModel(), 64, 64));
         event.registerLayerDefinition(REMAINS_DEFENDER, RemainsDefenderModel::createBodyLayer);

@@ -83,6 +83,9 @@
     },
     "minecraft:wolf": {
       "blood": 5
+    },
+    "vampirism:villager_angry": {
+      "blood": 15
     }
   }
 }

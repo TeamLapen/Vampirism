@@ -45,6 +45,11 @@ public class ConvertedFoxEntity extends Fox implements CurableConvertedCreature<
     }
 
     @Override
+    public @NotNull EntityType<Fox> getCuredEntityType() {
+        return EntityType.FOX;
+    }
+
+    @Override
     public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
     }
@@ -83,7 +88,7 @@ public class ConvertedFoxEntity extends Fox implements CurableConvertedCreature<
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.FOX);
+            aiStepC(serverLevel);
         }
         super.aiStep();
     }

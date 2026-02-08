@@ -127,6 +127,7 @@ public class ModEntityEventHandler {
     public void onEntityJoinWorld(@NotNull EntityJoinLevelEvent event) {
         if (!event.getLevel().isClientSide()) {
             if (event.getEntity() instanceof IAdjustableLevel entity) {
+                int l2 = entity.getEntityLevel();
                 if (entity.getEntityLevel() == -1) {
                     Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getLevel(), event.getEntity().blockPosition(), 30);
                     int l = entity.suggestEntityLevel(d);
