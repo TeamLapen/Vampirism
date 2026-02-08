@@ -26,4 +26,9 @@ public class VampirismOverlays {
     public static final Identifier DISGUISE = VIdentifier.mod("disguise");
     public static final Identifier SUN = VIdentifier.mod("sun");
     public static final Identifier FULL_SCREEN = VIdentifier.mod("fullscreen");
+    public static final Identifier BLOOD_CHARGED = VIdentifier.mod("blood_charged");
+    /**
+     * Vertical charged crossbow bolts overlay for each held item
+     */
+    public static final Identifier TECH_CROSSBOW_CHARGED = VIdentifier.mod("tech_crossbow_charged");
 }
