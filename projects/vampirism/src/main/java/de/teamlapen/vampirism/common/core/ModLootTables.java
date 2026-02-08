@@ -25,6 +25,17 @@ public class ModLootTables {
     public static final ResourceKey<LootTable> CHEST_HUNTER_OUTPOST_TOWER_FOOD = register("chests/hunter_outpost_tower_food");
     public static final ResourceKey<LootTable> CHEST_HUNTER_OUTPOST_TOWER_BASIC = register("chests/hunter_outpost_tower_basic");
     public static final ResourceKey<LootTable> CHEST_HUNTER_OUTPOST_TOWER_SPECIAL = register("chests/hunter_outpost_tower_special");
+    public static final ResourceKey<LootTable> DRACULA_CASTLE = register("chests/dracula_castle");
+    public static final ResourceKey<LootTable> DRACULA_CASTLE_LIBRARY = register("chests/dracula_castle/library");
+    public static final ResourceKey<LootTable> DRACULA_CASTLE_KITCHEN = register("chests/dracula_castle/kitchen");
+    public static final ResourceKey<LootTable> DRACULA_CASTLE_KITCHEN_BARREL = register("chests/dracula_castle/kitchen_barrel");
+    public static final ResourceKey<LootTable> DRACULA_CASTLE_DUNGEON = register("chests/dracula_castle/dungeon");
+    public static final ResourceKey<LootTable> DRACULA_CASTLE_PANTRY = register("chests/dracula_castle/pantry");
+    public static final ResourceKey<LootTable> DRACULA_CASTLE_BEDROOM = register("chests/dracula_castle/bedroom");
+    public static final ResourceKey<LootTable> DRACULA_CASTLE_GUARDTOWER = register("chests/dracula_castle/guardtower");
+    public static final ResourceKey<LootTable> DRACULA_CASTLE_HUNTERCAMP = register("chests/dracula_castle/huntercamp");
+    public static final ResourceKey<LootTable> DRACULA_CAVE_CHEST = register("chests/dracula_cave/chest");
+    public static final ResourceKey<LootTable> DRACULA_CAVE_BARREL = register("chests/dracula_cave/barrel");
 
     // Injects
     public static final ResourceKey<LootTable> INJECT_ABANDONED_MINESHAFT = register("chests/inject/abandoned_mineshaft");

@@ -80,7 +80,7 @@ public class RenderHandler implements IMinecraftAccessor {
 
         //Vampire biome/village fog
         if (player().tickCount % 10 == 0) {
-            if ((ModConfig.client().renderVampireForestFog.get() || ModConfig.server().enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(player()) || Helper.isEntityInVampireBiome(player()))) {
+            if (!mc().player.isSpectator() && (ModConfig.client().renderVampireForestFog.get() || ModConfig.server().enforceRenderForestFog.get()) && (Helper.isEntityInArtificalVampireFogArea(player()) || Helper.isEntityInVampireBiome(player()))) {
                 insideFog = true;
                 vampireBiomeFogDistanceMultiplier = vampire.getLevel() > 0 ? 2 : 1;
                 vampireBiomeFogDistanceMultiplier += vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.VISTA) ? ModConfig.balance().vrVistaMod.get().floatValue() : 0;

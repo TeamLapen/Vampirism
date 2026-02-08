@@ -174,6 +174,11 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(ModBlockTags.CANDELABRA).addTags(ModBlockTags.STANDING_CANDELABRA, ModBlockTags.WALL_CANDELABRA);
         ColorListsUtil.HANGING_CHANDELIERS.forEach(block -> tag(ModBlockTags.CHANDELIER).add(block));
         tag(BlockTags.CANDLES).addTag(ModBlockTags.CANDLE_STICK).addTag(ModBlockTags.CANDELABRA).addTag(ModBlockTags.CHANDELIER);
+        tag(BlockTags.DRAGON_IMMUNE).add(ModBlocks.VELMORRA_PORTAL.get());
+        tag(BlockTags.WITHER_IMMUNE).add(ModBlocks.VELMORRA_PORTAL.get());
+        tag(BlockTags.PORTALS).add(ModBlocks.VELMORRA_PORTAL.get());
+        tag(BlockTags.INVALID_SPAWN_INSIDE).add(ModBlocks.VELMORRA_PORTAL.get());
+
 
         addCompatibilityTags();
     }

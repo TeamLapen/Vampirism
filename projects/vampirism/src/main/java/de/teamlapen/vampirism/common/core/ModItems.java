@@ -11,10 +11,7 @@ import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.*;
-import de.teamlapen.vampirism.common.world.items.consume.AffectGarlic;
-import de.teamlapen.vampirism.common.world.items.consume.BloodConsume;
-import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
-import de.teamlapen.vampirism.common.world.items.consume.ModConsumables;
+import de.teamlapen.vampirism.common.world.items.consume.*;
 import de.teamlapen.vampirism.common.world.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.common.world.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.SingleCrossbowItem;
@@ -302,7 +299,8 @@ public class ModItems {
     public static final DeferredItem<SpawnEggItem> HUNTER_TRAINER_SPAWN_EGG = ITEMS.registerItem("hunter_trainer_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.HUNTER_TRAINER.get()));
     public static final DeferredItem<SpawnEggItem> TASK_MASTER_HUNTER_SPAWN_EGG = ITEMS.registerItem("task_master_hunter_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.TASK_MASTER_HUNTER.get()));
     public static final DeferredItem<SpawnEggItem> GHOST_SPAWN_EGG = ITEMS.registerItem("ghost_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.GHOST.get()));
-
+    public static final DeferredItem<Item> RITUAL_KNIFE = ITEMS.registerItem("ritual_knife", Item::new);
+    public static final DeferredItem<Item> RITUAL_KNIFE_HEART = ITEMS.registerItem("ritual_knife_heart", Item::new);
 
     @SuppressWarnings("unchecked")
     public static Stream<Holder<Item>> listElements() {

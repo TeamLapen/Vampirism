@@ -64,6 +64,7 @@ public class ModBlocksRender {
         event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_CONTAINER.get(), BloodContainerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ALTAR_INSPIRATION.get(), AltarInspirationRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_GRINDER.get(), BloodGrinderRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.VELMORRA_PORTAL.get(), VelmorraPortalRenderer::new);
     }
 
     private static void registerRenderType() {

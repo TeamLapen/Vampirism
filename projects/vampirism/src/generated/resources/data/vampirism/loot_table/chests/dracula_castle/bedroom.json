@@ -1,0 +1,75 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_ingot",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:vampire_clothing_crown",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:vampire_clothing_hat",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:empty",
+          "weight": 10
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 3.0,
+        "min": 1.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
+            }
+          ],
+          "name": "vampirism:amulet"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
+            }
+          ],
+          "name": "vampirism:ring"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "faction": "vampirism:vampire",
+              "function": "vampirism:add_refinement_set"
+            }
+          ],
+          "name": "vampirism:obi_belt"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "vampirism:chests/dracula_castle/bedroom"
+}

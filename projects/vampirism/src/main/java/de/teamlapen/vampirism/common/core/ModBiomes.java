@@ -26,6 +26,7 @@ public class ModBiomes {
     public static final DeferredRegister<MapCodec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, REFERENCE.MODID);
 
     public static final ResourceKey<Biome> VAMPIRE_FOREST = ResourceKey.create(Registries.BIOME, VIdentifier.mod("vampire_forest"));
+    public static final ResourceKey<Biome> VELMORRA = ResourceKey.create(Registries.BIOME, VIdentifier.mod("velmorra"));
 
 
     static void register(IEventBus bus) {
@@ -37,5 +38,6 @@ public class ModBiomes {
         HolderGetter<ConfiguredWorldCarver<?>> configuredCarvers = context.lookup(Registries.CONFIGURED_CARVER);
 
         context.register(ModBiomes.VAMPIRE_FOREST, VampirismBiomes.createVampireForest(placedFeatures, configuredCarvers));
+        context.register(ModBiomes.VELMORRA, VampirismBiomes.createVelmorra(placedFeatures, configuredCarvers));
     }
 }

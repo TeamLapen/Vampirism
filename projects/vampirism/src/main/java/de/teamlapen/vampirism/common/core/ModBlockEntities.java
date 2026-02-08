@@ -40,6 +40,9 @@ public class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FogDiffuserBlockEntity>> FOG_DIFFUSER = BLOCK_ENTITY_TYPES.register("fog_diffuser", () -> create(FogDiffuserBlockEntity::new, ModBlocks.FOG_DIFFUSER.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VampireBeaconBlockEntity>> VAMPIRE_BEACON = BLOCK_ENTITY_TYPES.register("vampire_beacon", () -> create(VampireBeaconBlockEntity::new, ModBlocks.VAMPIRE_BEACON.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InfuserBlockEntity>> INFUSER = BLOCK_ENTITY_TYPES.register("infuser", () -> create(InfuserBlockEntity::new, ModBlocks.INFUSER.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VelmorraPortalBlockEntity>> VELMORRA_PORTAL = BLOCK_ENTITY_TYPES.register("velmorra_portal", () -> create(VelmorraPortalBlockEntity::new, ModBlocks.VELMORRA_PORTAL.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VelmorraAltarBlockEntity>> VELMORRA_ALTAR = BLOCK_ENTITY_TYPES.register("velmorra_altar", () -> create(VelmorraAltarBlockEntity::new, ModBlocks.VELMORRA_ALTAR.get()));
+
 
     private static <T extends BlockEntity> @NotNull BlockEntityType<T> create(BlockEntityType.@NotNull BlockEntitySupplier<T> factoryIn, Block... blocks) {
         return new BlockEntityType<>(factoryIn, blocks);

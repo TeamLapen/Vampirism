@@ -349,6 +349,9 @@ public class ModBlocks {
     public static final DeferredBlock<RemainsBlock> VULNERABLE_REMAINS = registerBlock("vulnerable_remains", props -> new RemainsBlock(props, true, true), () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable());
     public static final DeferredBlock<ActiveVulnerableRemainsBlock> ACTIVE_VULNERABLE_REMAINS = registerBlock("active_vulnerable_remains", ActiveVulnerableRemainsBlock::new, () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).randomTicks().sound(SoundType.ROOTED_DIRT).noLootTable());
     public static final DeferredBlock<RemainsBlock> INCAPACITATED_VULNERABLE_REMAINS = registerBlock("incapacitated_vulnerable_remains", props -> new RemainsBlock(props, false, true), () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1.0F, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable());
+    public static final DeferredBlock<VelmorraPortalBlock> VELMORRA_PORTAL = registerBlock("velmorra_portal", VelmorraPortalBlock::new, () -> basicProperties().noCollision().strength(-1, 3600000.0F).sound(SoundType.GLASS).pushReaction(PushReaction.IGNORE).lightLevel(p -> 11).noLootTable());
+    public static final DeferredBlock<PortalGatewayBlock> VELMORRA_PORTAL_ARCH = registerBlock("velmorra_portal_arch", props -> new PortalGatewayBlock(props.strength(-1, 3600000.0F).mapColor(MapColor.DEEPSLATE).pushReaction(PushReaction.IGNORE).noLootTable()), ModBlocks::basicProperties);
+    public static final DeferredBlock<VelmorraAltarBlock> VELMORRA_ALTAR = registerWithItem("velmorra_altar", VelmorraAltarBlock::new, ModBlocks::basicProperties);
 
 
     /**

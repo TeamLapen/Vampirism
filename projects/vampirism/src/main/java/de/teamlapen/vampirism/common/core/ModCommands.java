@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.common.server.commands.AppearanceCommand;
 import de.teamlapen.vampirism.common.server.commands.BloodBarCommand;
 import de.teamlapen.vampirism.common.server.commands.ConfigCommand;
 import de.teamlapen.vampirism.common.server.commands.VampireSwordCommand;
+import de.teamlapen.vampirism.common.server.commands.dev.DevFactionCommand;
 import de.teamlapen.vampirism.common.server.commands.test.*;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -47,6 +48,7 @@ public class ModCommands {
         List<String> vampirism = Lists.newArrayList("vampirism");
         if (VampirismMod.inDev) {
             vampirism.add("v");
+            dispatcher.register(DevFactionCommand.register());
         }
 
         //Vampirism commands
@@ -69,6 +71,7 @@ public class ModCommands {
                                     .then(TaskCommand.register())
                                     .then(SummonDummy.register())
                                     .then(GiveBannerCommand.register(buildContext))
+                                    .then(VelmorraCommand.register())
                             )
             );
         }

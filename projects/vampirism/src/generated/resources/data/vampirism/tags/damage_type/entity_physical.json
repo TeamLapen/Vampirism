@@ -6,6 +6,7 @@
     "minecraft:mob_projectile",
     "minecraft:arrow",
     "minecraft:sting",
-    "minecraft:thorns"
+    "minecraft:thorns",
+    "vampirism:ritual_knife"
   ]
 }

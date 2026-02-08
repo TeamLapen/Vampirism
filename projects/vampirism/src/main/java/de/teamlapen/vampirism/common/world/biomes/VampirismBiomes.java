@@ -9,11 +9,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
 import net.minecraft.data.worldgen.placement.OrePlacements;
-import net.minecraft.sounds.Musics;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.attribute.*;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -73,6 +75,42 @@ public class VampirismBiomes {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FLOWER_PLACED);
     }
 
+    public static Biome createVelmorra(HolderGetter<PlacedFeature> placedFeatures, HolderGetter<ConfiguredWorldCarver<?>> configuredCarvers) {
+
+        var mobSettings = new MobSpawnSettings.Builder()
+                .creatureGenerationProbability(0.25f)
+                .addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
+
+        var specialEffects = new BiomeSpecialEffects.Builder()
+                .waterColor(0x670717)
+                .foliageColorOverride(0x101010)
+                .grassColorOverride(0x101010);
+
+        var generation = new BiomeGenerationSettings.Builder(placedFeatures, configuredCarvers);
+        BiomeDefaultFeatures.addDefaultCarversAndLakes(generation);
+
+        addVampireFlower(generation);
+        addBushPatch(generation);
+        BiomeDefaultFeatures.addForestGrass(generation);
+
+        addUndergroundVariety(generation);
+
+        BiomeDefaultFeatures.addDefaultSoftDisks(generation);
+
+        addVampireTreesSparse(generation);
+
+        addWaterSprings(generation);
+
+        return new Biome.BiomeBuilder()
+                .hasPrecipitation(false)
+                .temperature(0.6f)
+                .downfall(0)
+                .specialEffects(specialEffects.build())
+                .mobSpawnSettings(mobSettings.build())
+                .generationSettings(generation.build())
+                .build();
+    }
+
     public static void addWaterSprings(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.FLUID_SPRINGS, MiscOverworldPlacements.SPRING_WATER);
     }
@@ -83,6 +121,10 @@ public class VampirismBiomes {
 
     public static void addVampireTrees(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_TREES_PLACED);
+    }
+
+    public static void addVampireTreesSparse(BiomeGenerationSettings.@NotNull Builder builder) {
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_TREES_SPARSE_PLACED);
     }
 
     public static void addUndergroundVariety(BiomeGenerationSettings.@NotNull Builder builder) {

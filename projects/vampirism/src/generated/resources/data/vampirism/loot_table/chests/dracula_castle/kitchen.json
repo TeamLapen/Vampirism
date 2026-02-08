@@ -1,0 +1,63 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bread",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:porkchop",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:cooked_porkchop",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:beef",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:cooked_beef",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bowl",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "vampirism:set_blood",
+              "maxBlood": 5,
+              "minBlood": 3
+            }
+          ],
+          "name": "vampirism:blood_bottle",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:human_heart",
+          "weight": 30
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 6.0,
+        "min": 3.0
+      }
+    }
+  ],
+  "random_sequence": "vampirism:chests/dracula_castle/kitchen"
+}
