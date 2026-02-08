@@ -44,7 +44,7 @@ public class ModScreens {
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.BAT, new BatOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.DISGUISE, new DisguiseOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.SUN, new SunOverlay());
-        event.registerAbove(VanillaGuiLayers.HOTBAR, VampirismOverlays.BLOOD_CHARGED, new BloodChargeOverlay());
+        event.registerAbove(VanillaGuiLayers.HOTBAR, VampirismOverlays.ITEM_CHARGE, new ItemChargeOverlay());
         event.registerAbove(VanillaGuiLayers.HOTBAR, VampirismOverlays.TECH_CROSSBOW_CHARGED, new TechCrossbowChargedOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.FULL_SCREEN, VampirismModClient.services().fullScreenOverlay());
     }
