@@ -1,8 +1,8 @@
-package de.teamlapen;
+package de.teamlapen.faction.api;
 
 import de.teamlapen.faction.api.factions.IFactionPredicates;
 import de.teamlapen.faction.api.factions.IFactionHelper;
-import de.teamlapen.faction.api.factions.IFactionTags;
+import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 
 public interface IFactionServices {
 
@@ -10,5 +10,5 @@ public interface IFactionServices {
 
     IFactionPredicates factionPredicates();
 
-    IFactionTags factionTags();
+    IFactionSpecificTags factionTags();
 }

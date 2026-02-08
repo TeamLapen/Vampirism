@@ -3,7 +3,7 @@ package de.teamlapen.faction.common.factions;
 import com.google.common.collect.Table;
 import de.teamlapen.faction.api.event.AddFactionTagEvent;
 import de.teamlapen.faction.api.factions.IFaction;
-import de.teamlapen.faction.api.factions.IFactionTags;
+import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.faction.api.util.SafeCast;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.Map;
 import java.util.Optional;
 
-public class FactionTags implements IFactionTags {
+public class FactionSpecificTags implements IFactionSpecificTags {
 
     @UnknownNullability
     private Table<Holder<? extends IFaction<?>>, ResourceKey<?>, TagKey<?>> tags;

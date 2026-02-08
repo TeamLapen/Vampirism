@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.misc.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import de.teamlapen.faction.api.factions.IFactionHelper;
-import de.teamlapen.faction.api.factions.IFactionTags;
+import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.vampirism.common.tags.ModDataComponentTags;
 import de.teamlapen.vampirism.common.util.FactionConsumable;
 import net.minecraft.core.Holder;
@@ -48,7 +48,7 @@ public class ConsumableMixin {
         // consume all that are not registered as FactionConsumable
         defaultConsumable.forEach(consumer);
 
-        var tag = IFactionTags.get().get(entityFaction, Registries.DATA_COMPONENT_TYPE).orElse(null);
+        var tag = IFactionSpecificTags.get().get(entityFaction, Registries.DATA_COMPONENT_TYPE).orElse(null);
 
         for (var classListEntry : factionBasedConsumables.entrySet()) {
 

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.integration.jei.categories;
 
 
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.IFactionTags;
+import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.factions.tasks.TaskReward;
 import de.teamlapen.faction.api.factions.tasks.TaskUnlocker;
@@ -48,7 +48,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         int y = 40;
         graphics.vampirism$drawCenteredString(minecraft.font, task.title(), getWidth()/2, 2, Color.GRAY.getRGB(), false);
         Registry<Task> tasks = minecraft.level.registryAccess().lookupOrThrow(FactionRegistries.Keys.TASK);
-        Component taskmasterComponent = ModRegistries.FACTIONS.listElements().filter(s -> IFactionTags.get().get(s, FactionRegistries.Keys.TASK).filter(t -> tasks.wrapAsHolder(task).is(t)).isPresent()).map(a -> a.value().getVillageData().getTaskMasterEntity()).filter(Objects::nonNull).map(EntityType::getDescriptionId).map(Component::translatable).reduce((comp1, comp2) -> comp1.append(", ").append(comp2)).orElse(Component.translatable("text.vampirism.faction_representative"));
+        Component taskmasterComponent = ModRegistries.FACTIONS.listElements().filter(s -> IFactionSpecificTags.get().get(s, FactionRegistries.Keys.TASK).filter(t -> tasks.wrapAsHolder(task).is(t)).isPresent()).map(a -> a.value().getVillageData().getTaskMasterEntity()).filter(Objects::nonNull).map(EntityType::getDescriptionId).map(Component::translatable).reduce((comp1, comp2) -> comp1.append(", ").append(comp2)).orElse(Component.translatable("text.vampirism.faction_representative"));
         Component text = Component.translatable("text.vampirism.task.reward_obtain", taskmasterComponent);
 
         y += UtilLib.renderMultiLine(minecraft.font, graphics, text, 160, x, y, Color.GRAY.getRGB());

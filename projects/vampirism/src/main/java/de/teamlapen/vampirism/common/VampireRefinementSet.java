@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.refinements.IRefinement;
 import de.teamlapen.faction.common.RefinementSet;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
+import de.teamlapen.vampirism.api.VampirismTags;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
 
@@ -21,6 +21,6 @@ public class VampireRefinementSet extends RefinementSet {
 
     @Override
     public TagKey<IFaction<?>> getFaction() {
-        return ModFactionTags.IS_VAMPIRE;
+        return VampirismTags.Factions.IS_VAMPIRE;
     }
 }

@@ -14,7 +14,6 @@ import de.teamlapen.faction.api.world.items.components.IFactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.faction.common.tags.FactionTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
 
 public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<HolderSet<ISkill<?>>> skills, Optional<Integer> minLevel) implements IFactionRestriction, IFactionRestrictionProvider {
 
-    public static final FactionRestriction ALL = FactionRestriction.builder(FactionTags.ALL_FACTIONS).build();
+    public static final FactionRestriction ALL = FactionRestriction.builder(de.teamlapen.faction.api.tags.FactionTags.ALL_FACTIONS).build();
     public static final Codec<FactionRestriction> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
                     RegistryCodecs.homogeneousList(FactionRegistries.Keys.FACTION).fieldOf("factions").forGetter(FactionRestriction::factions),

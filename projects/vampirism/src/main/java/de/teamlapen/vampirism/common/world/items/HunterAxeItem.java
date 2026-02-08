@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.common.world.items;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.components.FactionSlayer;
 import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -33,7 +33,7 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     private final Tier tier;
 
     public HunterAxeItem(ToolMaterial material, Tier tier, Properties properties) {
-        super(material, 3, -2.9f, FactionRestriction.builder(ModFactionTags.IS_HUNTER).minLevel(getMinLevel(tier)).apply(properties).component(FactionDataComponents.FACTION_SLAYER, FactionSlayer.create(ModFactionTags.IS_VAMPIRE, getVampireMult(tier))).component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE), 5);
+        super(material, 3, -2.9f, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).minLevel(getMinLevel(tier)).apply(properties).component(FactionDataComponents.FACTION_SLAYER, FactionSlayer.create(VampirismTags.Factions.IS_VAMPIRE, getVampireMult(tier))).component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE), 5);
         this.tier = tier;
     }
 
