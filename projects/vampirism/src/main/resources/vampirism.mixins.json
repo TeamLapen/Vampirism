@@ -63,6 +63,7 @@
     "client.SplashManagerMixin",
     "client.StatsScreenMixin",
     "client.accessor.FeatureRenderDispatcherAccessor",
+    "client.accessor.ItemInHandRendererAccessor",
     "client.accessor.LevelRendererAccessor"
   ],
   "injectors": {

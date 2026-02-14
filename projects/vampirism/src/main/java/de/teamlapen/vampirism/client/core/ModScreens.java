@@ -5,10 +5,7 @@ import de.teamlapen.faction.client.core.FactionAppearanceScreens;
 import de.teamlapen.vampirism.api.client.VampirismOverlays;
 import de.teamlapen.vampirism.client.DisguiseOverlay;
 import de.teamlapen.vampirism.client.VampirismModClient;
-import de.teamlapen.vampirism.client.gui.overlay.BatOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.BloodBarOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.RageOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.SunOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
@@ -47,6 +44,7 @@ public class ModScreens {
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.BAT, new BatOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.DISGUISE, new DisguiseOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.SUN, new SunOverlay());
+        event.registerAbove(VanillaGuiLayers.HOTBAR, VampirismOverlays.ITEM_CHARGE, new ItemChargeOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.FULL_SCREEN, VampirismModClient.services().fullScreenOverlay());
     }
 
