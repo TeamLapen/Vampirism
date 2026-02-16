@@ -95,6 +95,10 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BLOOD_CONTAINER.get(), plainVariant(bloodContainerModel)));
         this.itemModelOutput.accept(ModBlocks.BLOOD_CONTAINER.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(bloodContainerModel), ItemModelUtils.specialModel(bloodContainerModel, new BloodContainerRenderer.Unbaked())));
 
+        createNonTemplateModelBlock(ModBlocks.ALTAR_INFUSION.get());
+        Identifier altarInfusionInventory = mod("block/altar_infusion_inventory");
+        createDefaultBlockItem(ModBlocks.ALTAR_INFUSION.get(), altarInfusionInventory);
+
         Identifier inspirationModel = mod("block/altar_inspiration/altar_inspiration");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.ALTAR_INSPIRATION.get(), plainVariant(inspirationModel)));
         createDefaultBlockItem(ModBlocks.ALTAR_INSPIRATION.get(), inspirationModel);
@@ -350,7 +354,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
     protected void createNonTemplateBlocks() {
         Stream.of(
                 ModBlocks.ALTAR_CLEANSING,
-                ModBlocks.ALTAR_INFUSION,
                 ModBlocks.ALTAR_TIP,
                 ModBlocks.BLOOD_PEDESTAL,
                 ModBlocks.POTION_TABLE,

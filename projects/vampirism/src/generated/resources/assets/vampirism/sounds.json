@@ -64,12 +64,23 @@
       }
     ]
   },
+  "block.sphere_spinning": {
+    "sounds": [
+      "vampirism:cc/block/sphere_spinning"
+    ],
+    "subtitle": "subtitles.vampirism.sphere_spinning"
+  },
   "block.weapon_table_crafting": {
     "sounds": [
       {
         "name": "vampirism:reserved/block/weapon_table_crafting",
         "stream": true
       }
+    ]
+  },
+  "choir_short": {
+    "sounds": [
+      "vampirism:cc/fx/choir_short"
     ]
   },
   "entity.bat_swarm": {

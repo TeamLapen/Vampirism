@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "vampirism:block/altar_infusion"
+    "model": "vampirism:block/altar_infusion_inventory"
   }
 }
