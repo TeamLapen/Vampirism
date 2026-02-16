@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 
-public class BloodSphereModel extends Model<Object> {
+public class BloodSphereModel extends Model<BloodSphereModel.BloodSphereRenderState> {
 
     private final ModelPart sphere;
 
@@ -27,12 +27,19 @@ public class BloodSphereModel extends Model<Object> {
         return LayerDefinition.create(mesh, 32, 32);
     }
 
-    public void setupAnim(float rotationY, float bobbingOffset) {
-        this.sphere.yRot = rotationY;
-        this.sphere.y = bobbingOffset;
-    }
-
     public ModelPart getSphere() {
         return this.sphere;
+    }
+
+    @Override
+    public void setupAnim(BloodSphereRenderState renderState) {
+        super.setupAnim(renderState);
+        this.sphere.yRot = renderState.rotationY;
+        this.sphere.y = renderState.bobbingOffset;
+    }
+
+    public static class BloodSphereRenderState {
+        private float rotationY;
+        private float bobbingOffset;
     }
 }

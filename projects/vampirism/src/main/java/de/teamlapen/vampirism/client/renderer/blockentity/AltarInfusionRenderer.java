@@ -80,9 +80,8 @@ public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionB
 
         poseStack.mulPose(Axis.YP.rotation(-interpolatedRot));
 
-        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.entitySolid(SPHERE_TEXTURE), (pose, vertexBuilder) -> {
-            this.sphereModel.renderToBuffer(poseStack, vertexBuilder, 0xF000F0, OverlayTexture.NO_OVERLAY);
-        });
+        BloodSphereModel.BloodSphereRenderState sphereState = new BloodSphereModel.BloodSphereRenderState();
+        nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entitySolid(SPHERE_TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0xF000F0,null,0, null);
 
         poseStack.popPose();
     }

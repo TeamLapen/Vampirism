@@ -48,5 +48,8 @@ public class ModParticleDescriptionProvider extends ParticleDescriptionProvider 
                 8,
                 false
         );
+        this.spriteSet(ModParticles.BLOOD_SHRED.get(),
+                VIdentifier.mod("shred"),
+                4,false);
     }
 }
