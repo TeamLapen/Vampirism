@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.common.world.blockentity;
 
 import com.mojang.serialization.Codec;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.world.blockentity.NetworkedContainerBlockEntity;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModDataMaps;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blocks.AlchemicalCauldronBlock;
@@ -139,7 +141,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     public boolean canOpen(Player player) {
         if (super.canOpen(player)) {
             if (!Helper.isHunter(player)) {
-                player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+                player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
                 return false;
             }
             if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.BASIC_ALCHEMY)) {
@@ -152,7 +154,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
                     player.displayClientMessage(Component.translatable("text.vampirism.alchemical_cauldron.other", getOwnerName()), true);
                 }
             } else {
-                player.displayClientMessage(Component.translatable("text.vampirism.not_learned"), true);
+                player.displayClientMessage(FactionRestriction.MESSAGE_MISSING_SKILLS, true);
             }
         }
         return false;

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -23,11 +24,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HunterArmorItem extends ModArmorItem {
 
+    public static final Component MASSAGE_RESTRICTION_HUNTER_CLOTHING = Component.translatable("text.vampirism.restriction.hunter_clothing");
+
     public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props) {
-        super(materialIn, type, props.factions$restrictFaction(VampirismTags.Factions.IS_HUNTER).factions$descriptionWithout("_normal|_enhanced|_ultimate"));
+        super(materialIn, type, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HUNTER_CLOTHING).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")));
     }
+
     public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props, ItemAttributeModifiers attributeModifiers) {
-        super(materialIn, type, props.factions$restrictFaction(VampirismTags.Factions.IS_HUNTER).factions$descriptionWithout("_normal|_enhanced|_ultimate"), attributeModifiers);
+        super(materialIn, type, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HUNTER_CLOTHING).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")), attributeModifiers);
     }
 
     @Override

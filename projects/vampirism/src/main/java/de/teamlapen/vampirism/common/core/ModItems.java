@@ -142,9 +142,9 @@ public class ModItems {
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_RED = ITEMS.registerItem("vampire_cloak_red",  props -> new VampireCloakItem(DyeColor.RED, props));
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_BLACK = ITEMS.registerItem("vampire_cloak_black",  props -> new VampireCloakItem(DyeColor.BLACK, props));
 
-    public static final DeferredItem<RefinementItem> AMULET = ITEMS.registerItem("amulet",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.AMULET));
-    public static final DeferredItem<RefinementItem> RING = ITEMS.registerItem("ring",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.RING));
-    public static final DeferredItem<RefinementItem> OBI_BELT = ITEMS.registerItem("obi_belt",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.OBI_BELT));
+    public static final DeferredItem<RefinementItem> AMULET = ITEMS.registerItem("amulet",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.AMULET));
+    public static final DeferredItem<RefinementItem> RING = ITEMS.registerItem("ring",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.RING));
+    public static final DeferredItem<RefinementItem> OBI_BELT = ITEMS.registerItem("obi_belt",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.OBI_BELT));
 
     // General
     public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build())));

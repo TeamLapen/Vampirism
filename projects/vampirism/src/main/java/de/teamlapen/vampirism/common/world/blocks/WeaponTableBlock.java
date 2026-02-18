@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
 import com.google.common.collect.MapMaker;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
@@ -82,7 +84,7 @@ public class WeaponTableBlock extends BaseHorizontalBlock {
             if (canUse(player)) {
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), NAME), pos);
             } else {
-                player.displayClientMessage(Component.translatable("text.vampirism.not_learned"), true);
+                player.displayClientMessage(Helper.isHunter(player) ? FactionRestriction.MESSAGE_MISSING_SKILLS : FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
             }
         }
 

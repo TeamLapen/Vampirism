@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.items.IExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
@@ -105,7 +107,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
                     player.displayClientMessage(Component.translatable("text.vampirism.potion_table.other", getOwnerName()), true);
                 }
             } else {
-                player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+                player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
             }
             return false;
         }

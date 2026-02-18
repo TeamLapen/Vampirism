@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
@@ -72,7 +74,7 @@ public class HunterTableBlock extends BaseHorizontalBlock {
                 if (Helper.isHunter(serverPlayer)) {
                     player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), Component.translatable("container.crafting")), pos);
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+                    player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
                 }
             }
         }

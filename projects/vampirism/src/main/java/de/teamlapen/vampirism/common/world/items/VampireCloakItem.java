@@ -20,7 +20,7 @@ import net.minecraft.world.item.equipment.Equippable;
 public class VampireCloakItem extends Item {
 
     public VampireCloakItem(DyeColor color, Properties properties) {
-        super(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).apply(properties.stacksTo(1)).component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.CHEST).setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER).setAsset(ModArmorMaterials.Asset.VAMPIRE_CLOAKS.get(color)).build()));
+        super(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(properties.stacksTo(1)).component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.CHEST).setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER).setAsset(ModArmorMaterials.Asset.VAMPIRE_CLOAKS.get(color)).build()));
     }
 
     @Override
