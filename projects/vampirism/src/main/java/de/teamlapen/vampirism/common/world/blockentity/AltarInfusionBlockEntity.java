@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.blockentity;
 
 import de.teamlapen.faction.api.factions.LevelingChange;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.world.blockentity.NetworkedContainerBlockEntity;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.VampirismModClient;
@@ -16,14 +17,9 @@ import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.world.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.common.world.items.PureBloodItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -43,7 +39,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -51,7 +46,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
-public class AltarInfusionBlockEntity extends BaseContainerBlockEntity {
+public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
 
     public static final String KEY_PLAYER_UUID = "PlayerUUID";
     public static final String KEY_RUN_TIME = "RunTime";
@@ -66,7 +61,7 @@ public class AltarInfusionBlockEntity extends BaseContainerBlockEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
     private @Nullable Player player;
     private @Nullable UUID playerToLoadUUID;
-    private List<BlockPos> tips;
+    private List<BlockPos> tips = List.of();
     private int runTime;
     private int targetLevel;
     public int animationTime;
@@ -208,11 +203,9 @@ public class AltarInfusionBlockEntity extends BaseContainerBlockEntity {
             movementSpeedAttribute.addPermanentModifier(new AttributeModifier(ID_MOVEMENT_SLOWDOWN, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
 
-        this.level.playSound(null, this.worldPosition, ModSounds.SPHERE_SPINNING.get(), SoundSource.BLOCKS, 0.5f, 1.0f);
-
         if (!this.tips.isEmpty()) {
             for (BlockPos tip : this.tips) {
-                ModParticles.spawnParticlesServer(this.level, new BloodShredParticleOptions(tip.getCenter(), 60, false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5, 5, 0.1, 0.1, 0.1, 0);
+                ModParticles.spawnParticlesServer(this.level, new BloodShredParticleOptions(tip.getCenter(), 60, false, BloodShredParticleOptions.PURE_BLOOD_COLOR), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5, 5, 0.1, 0.1, 0.1, 0);
             }
         }
 
@@ -265,16 +258,24 @@ public class AltarInfusionBlockEntity extends BaseContainerBlockEntity {
     }
 
     private void handleClientEffects(Phase phase) {
-        if (phase == Phase.PARTICLE_SPREAD && this.runTime % 15 == 0 && this.level != null) {
+        if (this.level == null) return;
+
+        if (this.runTime == DURATION_TICK - 5) {
+            this.level.playLocalSound(this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5, ModSounds.SPHERE_SPINNING.get(), SoundSource.BLOCKS, 0.75f, 1.0f, false);
+        }
+
+        if (phase == Phase.PARTICLE_SPREAD && this.runTime % 15 == 0) {
             BlockPos pos = this.worldPosition;
             RandomSource random = RandomSource.create();
 
             for (BlockPos tip : this.tips) {
-                ModParticles.spawnParticlesClient(this.level, new BloodShredParticleOptions(tip.getCenter(), 60, false), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 8, 0.1, random);
+                ModParticles.spawnParticlesClient(this.level, new BloodShredParticleOptions(tip.getCenter(), 60, false, BloodShredParticleOptions.PURE_BLOOD_COLOR), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0, 8, 0.1, random);
             }
         }
 
-        if (this.runTime == DURATION_TICK - 200 && this.player != null && this.player.isLocalPlayer() && this.level != null) {
+        if (this.runTime == DURATION_TICK - 200 && this.player != null && this.player.isLocalPlayer()) {
+            this.level.playLocalSound(this.player.getX(), this.player.getY(), this.player.getZ(), ModSounds.BEAM_ENTER_PLAYER.get(), SoundSource.PLAYERS, 1.0f, 1.0f, false);
+
             VampirismModClient.services().fullScreenOverlay().start(this.level, DURATION_TICK - 250, 50, 0xFF0000);
         }
     }
@@ -456,14 +457,12 @@ public class AltarInfusionBlockEntity extends BaseContainerBlockEntity {
     public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         ContainerHelper.loadAllItems(input, this.items);
-        int time = input.getIntOr(KEY_RUN_TIME, 0);
-        //This is used on both client and server side and has to be prepared for the world not being available yet
+        this.runTime = input.getIntOr(KEY_RUN_TIME, 0);
         if (isRunning() && player == null) {
             input.read(KEY_PLAYER_UUID, UUIDUtil.CODEC).ifPresent(uuid -> {
                 if (!loadRitual(uuid)) {
                     this.playerToLoadUUID = uuid;
                 }
-                this.runTime = time;
             });
         }
     }
@@ -476,38 +475,6 @@ public class AltarInfusionBlockEntity extends BaseContainerBlockEntity {
         if (player != null) {
             output.store(KEY_PLAYER_UUID, UUIDUtil.CODEC, player.getUUID());
         }
-    }
-
-    @Override
-    public void setChanged() {
-        super.setChanged();
-        if (this.level != null) {
-            if (this.level.isClientSide()) {
-                requestModelDataUpdate();
-            } else {
-                this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
-            }
-        }
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return this.saveUpdate(registries);
-    }
-
-    protected CompoundTag saveUpdate(HolderLookup.Provider registries) {
-        return this.saveCustomOnly(registries);
-    }
-
-    @Override
-    public void handleUpdateTag(ValueInput input) {
-        this.loadCustomOnly(input);
     }
 
     @Override

@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.blocks.BloodSphereModel;
 import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -30,6 +31,9 @@ public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionB
     private static final Identifier SPHERE_TEXTURE = VIdentifier.mod("textures/entity/blood_sphere.png");
     private static final Identifier INFUSION_BEAM_LOCATION = VIdentifier.mod("textures/entity/infusion_beam.png");
     private static final Identifier BEACON_BEAM_LOCATION = VIdentifier.mc("textures/entity/beacon_beam.png");
+
+    private static final int BEAM_SIDES = 8;
+    private static final float BEAM_NEAR_RADIUS = 0.2F;
 
     private final BloodSphereModel sphereModel;
 
@@ -81,110 +85,81 @@ public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionB
         poseStack.mulPose(Axis.YP.rotation(-interpolatedRot));
 
         BloodSphereModel.BloodSphereRenderState sphereState = new BloodSphereModel.BloodSphereRenderState();
-        nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entitySolid(SPHERE_TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0xF000F0,null,0, null);
+        nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entitySolid(SPHERE_TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, -1, null,0, renderState.breakProgress);
+        nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entityTranslucentEmissive(SPHERE_TEXTURE), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, -1, null,0, renderState.breakProgress);
 
         poseStack.popPose();
     }
 
-    private void submitBeam(AltarInfusionRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector) {
-        AltarInfusionBlockEntity.Phase phase = renderState.phase;
-        if (phase != AltarInfusionBlockEntity.Phase.BEAM_CONNECT && phase != AltarInfusionBlockEntity.Phase.BEAM_PLAYER) {
-            return; // Render the beam only when the ritual is running
-        }
+    private static void submitBeam(AltarInfusionRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector) {
+        var phase = renderState.phase;
+        if (phase != AltarInfusionBlockEntity.Phase.BEAM_CONNECT && phase != AltarInfusionBlockEntity.Phase.BEAM_PLAYER) return;
 
-        BlockPos blockPos = renderState.blockPos;
-        float centerX = blockPos.getX() + 0.5f;
-        float centerY = blockPos.getY() + 3.0f;
-        float centerZ = blockPos.getZ() + 0.5f;
+        float centerX = renderState.blockPos.getX() + 0.5f;
+        float centerY = renderState.blockPos.getY() + 3f;
+        float centerZ = renderState.blockPos.getZ() + 0.5f;
+        float textureOffset = -(renderState.runningTicks + 1);
 
         poseStack.pushPose();
-        poseStack.translate(0.5, 3.0, 0.5);
-
-        float animationOffset = -(renderState.runningTicks + renderState.partialTick);
+        poseStack.translate(0.5, 3, 0.5);
 
         List<BlockPos> tips = renderState.tips;
-        if (tips != null && !tips.isEmpty()) {
+        if (tips != null) {
             for (BlockPos tip : tips) {
                 float dx = tip.getX() + 0.5f - centerX;
                 float dy = tip.getY() + 0.5f - centerY;
                 float dz = tip.getZ() + 0.5f - centerZ;
-                renderBeam(poseStack, nodeCollector, animationOffset, dx, dy, dz, renderState.lightCoords, true);
+                renderBeam(poseStack, nodeCollector, textureOffset, dx, dy, dz, 0xF000F0, true);
             }
         }
 
-        if (phase == AltarInfusionBlockEntity.Phase.BEAM_PLAYER) {
-            Player player = renderState.player;
-            if (player != null) {
-                float dx = (float) player.getX() - centerX;
-                float dy = (float) player.getY() + 1.2f - centerY;
-                float dz = (float) player.getZ() - centerZ;
-                renderBeam(poseStack, nodeCollector, animationOffset, dx, dy, dz, renderState.lightCoords, false);
-            }
+        if (phase == AltarInfusionBlockEntity.Phase.BEAM_PLAYER && renderState.player != null) {
+            float dx = (float) renderState.player.getX() - centerX;
+            float dy = (float) renderState.player.getY() + 1.2f - centerY;
+            float dz = (float) renderState.player.getZ() - centerZ;
+            renderBeam(poseStack, nodeCollector, textureOffset, dx, dy, dz, 0xF000F0, false);
         }
 
         poseStack.popPose();
     }
 
-    private void renderBeam(PoseStack poseStack, SubmitNodeCollector nodeCollector, float tickOffset, float dx, float dy, float dz, int packedLight, boolean beacon) {
+    private static void renderBeam(PoseStack poseStack, SubmitNodeCollector nodeCollector, float textureOffset, float dx, float dy, float dz, int packedLight, boolean beacon) {
         float distFlat = Mth.sqrt(dx * dx + dz * dz);
         float dist = Mth.sqrt(dx * dx + dy * dy + dz * dz);
 
+        Identifier texture = beacon ? BEACON_BEAM_LOCATION : INFUSION_BEAM_LOCATION;
+        float uvScrollV = textureOffset * 0.05f;
+        float uvScrollVFar = dist / 32.0F + textureOffset * 0.05f;
+
         poseStack.pushPose();
+        poseStack.mulPose(Axis.YP.rotation((float) -Math.atan2(dz, dx) - (float) (Math.PI / 2)));
+        poseStack.mulPose(Axis.XP.rotation((float) -Math.atan2(distFlat, dy) - (float) (Math.PI / 2)));
 
-        poseStack.mulPose(Axis.YP.rotation((float) (-Math.atan2(dz, dx)) - (float) Math.PI / 2F));
-        poseStack.mulPose(Axis.XP.rotation((float) (-Math.atan2(distFlat, dy)) - (float) Math.PI / 2F));
-
-        float texStart = tickOffset * 0.05f;
-        float texEnd = dist / 32.0F + texStart;
-
-        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.entitySmoothCutout(beacon ? BEACON_BEAM_LOCATION : INFUSION_BEAM_LOCATION), (pose, vertexBuilder) -> {
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.entitySmoothCutout(texture), (pose, vertexBuilder) -> {
             Matrix4f matrix = pose.pose();
 
-            float prevX = 0.0F;
-            float prevY = 0.2F;
+            float prevSin = 0.0F;
+            float prevCos = 0.2F;
             float prevU = 0.0F;
 
-            for (int i = 1; i <= 8; i++) {
-                float angle = (float) (i * Math.PI * 2F / 8.0F);
-                float x = Mth.sin(angle) * 0.2F;
-                float y = Mth.cos(angle) * 0.2F;
-                float u = i / 8.0F;
+            for (int side = 1; side <= BEAM_SIDES; side++) {
+                float angle = side * ((float) Math.PI * 2F) / BEAM_SIDES;
+                float sin = Mth.sin(angle) * BEAM_NEAR_RADIUS;
+                float cos = Mth.cos(angle) * BEAM_NEAR_RADIUS;
+                float u = (float) side / BEAM_SIDES;
 
-                vertexBuilder.addVertex(matrix, prevX, prevY, 0.0F)
-                        .setColor(75, 0, 0, 255)
-                        .setUv(prevU, texStart)
-                        .setOverlay(OverlayTexture.NO_OVERLAY)
-                        .setLight(packedLight)
-                        .setNormal(pose, 0.0F, -1.0F, 0.0F);
+                vertexBuilder.addVertex(matrix, prevSin, prevCos, 0.0F).setColor( 75, 0, 0, 255).setUv(prevU, uvScrollV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(pose, 0, -1, 0);
+                vertexBuilder.addVertex(matrix, prevSin * 0.5f, prevCos * 0.5f, dist).setColor(255, 0, 0, 255).setUv(prevU, uvScrollVFar).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(pose, 0, -1, 0);
+                vertexBuilder.addVertex(matrix, sin * 0.5f, cos * 0.5f, dist).setColor(255, 0, 0, 255).setUv(u, uvScrollVFar).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(pose, 0, -1, 0);
+                vertexBuilder.addVertex(matrix, sin, cos, 0.0F).setColor( 75, 0, 0, 255).setUv(u, uvScrollV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(packedLight).setNormal(pose, 0, -1, 0);
 
-                vertexBuilder.addVertex(matrix, prevX * 0.5f, prevY * 0.5f, dist)
-                        .setColor(255, 0, 0, 255)
-                        .setUv(prevU, texEnd)
-                        .setOverlay(OverlayTexture.NO_OVERLAY)
-                        .setLight(packedLight)
-                        .setNormal(pose, 0.0F, -1.0F, 0.0F);
-
-                vertexBuilder.addVertex(matrix, x * 0.5f, y * 0.5f, dist)
-                        .setColor(255, 0, 0, 255)
-                        .setUv(u, texEnd)
-                        .setOverlay(OverlayTexture.NO_OVERLAY)
-                        .setLight(packedLight)
-                        .setNormal(pose, 0.0F, -1.0F, 0.0F);
-
-                vertexBuilder.addVertex(matrix, x, y, 0.0F)
-                        .setColor(75, 0, 0, 255)
-                        .setUv(u, texStart)
-                        .setOverlay(OverlayTexture.NO_OVERLAY)
-                        .setLight(packedLight)
-                        .setNormal(pose, 0.0F, -1.0F, 0.0F);
-
-                prevX = x;
-                prevY = y;
+                prevSin = sin;
+                prevCos = cos;
                 prevU = u;
             }
-
-            poseStack.popPose();
         });
+
+        poseStack.popPose();
     }
 
     @Override

@@ -35,6 +35,7 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> BLESSING_MUSIC = create("block.blessing_music");
     public static final DeferredHolder<SoundEvent, SoundEvent> BLOOD_PROJECTILE_HIT = create("fx.blood_projectile_hit");
     public static final DeferredHolder<SoundEvent, SoundEvent> SPHERE_SPINNING = create("block.sphere_spinning");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BEAM_ENTER_PLAYER = create("block.beam_enter_player");
     public static final DeferredHolder<SoundEvent, SoundEvent> WEAPON_TABLE_CRAFTING = create("block.weapon_table_crafting");
     public static final DeferredHolder<SoundEvent, SoundEvent> STAKE = create("fx.stake");
     public static final DeferredHolder<SoundEvent, SoundEvent> TELEPORT_AWAY = create("fx.teleport_away");

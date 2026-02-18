@@ -33,6 +33,7 @@ public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
         this.add(ModSounds.BLESSING_MUSIC, definition().subtitle("subtitles.vampirism.blessing_music").with(sound(mod("cc/block/church_organ")).stream()));
         this.add(ModSounds.BLOOD_PROJECTILE_HIT, definition().subtitle("subtitles.vampirism.blood_projectile_hit").with(sound(mod("reserved/fx/blood_projectile_hit"))));
         this.add(ModSounds.SPHERE_SPINNING, definition().subtitle("subtitles.vampirism.sphere_spinning").with(sound(mod("cc/block/sphere_spinning"))));
+        this.add(ModSounds.BEAM_ENTER_PLAYER, definition().subtitle("subtitles.vampirism.beam_enter_player").with(sound(mod("cc/block/beam_enter_player"))));
         this.add(ModSounds.WEAPON_TABLE_CRAFTING, definition().with(sound(mod("reserved/block/weapon_table_crafting")).stream()));
         this.add(ModSounds.STAKE, definition().with(sound(mod("reserved/fx/stake"))));
         this.add(ModSounds.TELEPORT_AWAY, definition().subtitle("subtitles.vampirism.teleport_away").with(sound(mod("reserved/fx/teleport1"))));

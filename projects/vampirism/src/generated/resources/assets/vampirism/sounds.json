@@ -22,6 +22,12 @@
       }
     ]
   },
+  "block.beam_enter_player": {
+    "sounds": [
+      "vampirism:cc/block/beam_enter_player"
+    ],
+    "subtitle": "subtitles.vampirism.beam_enter_player"
+  },
   "block.blessing_music": {
     "sounds": [
       {

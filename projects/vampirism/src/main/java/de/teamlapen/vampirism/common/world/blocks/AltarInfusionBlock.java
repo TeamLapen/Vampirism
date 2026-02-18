@@ -1,14 +1,15 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
 import de.teamlapen.faction.common.world.blocks.base.BaseContainerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -103,8 +104,7 @@ public class AltarInfusionBlock extends BaseContainerBlock implements SimpleWate
         if (!(level.getBlockEntity(pos) instanceof AltarInfusionBlockEntity blockEntity) || level.isClientSide()) return InteractionResult.SUCCESS;
 
         if (!Helper.isVampire(player)) {
-            //player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.VAMPIRE.get()), true);
-            player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual.wrong_faction"), true);
+            player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.VAMPIRE.get()), true);
             return InteractionResult.SUCCESS;
         }
 

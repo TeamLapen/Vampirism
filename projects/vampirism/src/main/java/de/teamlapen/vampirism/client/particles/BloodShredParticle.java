@@ -12,7 +12,7 @@ public class BloodShredParticle extends SingleQuadParticle {
     private final Vec3 destination;
     private final SpriteSet sprites;
 
-    public BloodShredParticle(ClientLevel level, double x, double y, double z, Vec3 destination, SpriteSet sprites, int arrivalInTicks, boolean straight) {
+    public BloodShredParticle(ClientLevel level, double x, double y, double z, Vec3 destination, SpriteSet sprites, int arrivalInTicks, boolean straight, int packedColor) {
         super(level, x, y, z, sprites.first());
         this.destination = destination;
         this.sprites = sprites;
@@ -37,7 +37,11 @@ public class BloodShredParticle extends SingleQuadParticle {
         }
 
         this.setSpriteFromAge(sprites);
-        this.setColor(148 / 255f, 4 / 255f, 36 / 255f);
+
+        float r = ((packedColor >> 16) & 0xFF) / 255f;
+        float g = ((packedColor >> 8) & 0xFF) / 255f;
+        float b = (packedColor & 0xFF) / 255f;
+        this.setColor(r, g, b);
     }
 
     @Override
@@ -81,8 +85,8 @@ public class BloodShredParticle extends SingleQuadParticle {
         }
 
         @Override
-        public @Nullable Particle createParticle(BloodShredParticleOptions bloodShredParticleOptions, ClientLevel clientLevel, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource randomSource) {
-            return new BloodShredParticle(clientLevel, x, y, z, bloodShredParticleOptions.destination(), this.sprites, bloodShredParticleOptions.arrivalInTicks(), bloodShredParticleOptions.straight());
+        public @Nullable Particle createParticle(BloodShredParticleOptions options, ClientLevel clientLevel, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource randomSource) {
+            return new BloodShredParticle(clientLevel, x, y, z, options.destination(), this.sprites, options.arrivalInTicks(), options.straight(), options.color());
         }
     }
 }
