@@ -139,9 +139,9 @@
 			}
 		},
 		{
-			"from": [5, 7, 5],
-			"to": [11, 13, 11],
-			"rotation": {"angle": 0, "axis": "y", "origin": [5, 7, 5]},
+			"from": [5, 9, 5],
+			"to": [11, 15, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 9, 5]},
 			"faces": {
 				"north": {"uv": [9, 4, 12, 7], "texture": "#altar"},
 				"east": {"uv": [12, 4, 15, 7], "texture": "#altar"},

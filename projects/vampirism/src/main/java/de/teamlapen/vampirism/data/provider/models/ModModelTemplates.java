@@ -12,7 +12,7 @@ public class ModModelTemplates extends ModelTemplates {
 
     public static final ModelTemplate GARLIC_DIFFUSER = create(mod("garlic_diffuser"), ModTextureSlots.CORE);
     public static final ModelTemplate GARLIC_DIFFUSER_CORE = create(mod("garlic_diffuser_core"), ModTextureSlots.CORE);
-    public static final ModelTemplate ALTAR_PILLAR_FILLED = create(mod("altar_pillar_filled"), ModTextureSlots.FILLER);
+    public static final ModelTemplate ALTAR_PILLAR_FILLED = create(mod("altar_pillar_filled"), TextureSlot.SIDE);
     public static final ModelTemplate CANDLE_STICK_FILLED = create(mod("candle_stick_filled"), ModTextureSlots.CANDLE);
     public static final ModelTemplate WALL_CANDLE_STICK_FILLED = create(mod("wall_candle_stick_filled"), ModTextureSlots.CANDLE);
     public static final ModelTemplate CANDELABRA_FILLED = create(mod("candelabra_filled"), ModTextureSlots.CANDLE);
