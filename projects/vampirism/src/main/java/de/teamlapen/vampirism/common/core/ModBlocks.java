@@ -74,8 +74,8 @@ public class ModBlocks {
     // Functional Blocks
     public static final DeferredBlock<AltarInspirationBlock> ALTAR_INSPIRATION = registerWithItem("altar_inspiration", AltarInspirationBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(2f, 3f).noOcclusion());
     public static final DeferredBlock<AltarInfusionBlock> ALTAR_INFUSION = registerWithItem("altar_infusion", AltarInfusionBlock::new, () -> basicProperties().mapColor(MapColor.STONE).strength(5).noOcclusion());
-    public static final DeferredBlock<AltarPillarBlock> ALTAR_PILLAR = registerWithItem("altar_pillar", AltarPillarBlock::new, () -> basicProperties().mapColor(MapColor.STONE).strength(0.9f).noOcclusion());
-    public static final DeferredBlock<AltarTipBlock> ALTAR_TIP = registerWithItem("altar_tip", AltarTipBlock::new, () -> basicProperties().mapColor(MapColor.METAL).strength(1f).noOcclusion());
+    public static final DeferredBlock<AltarPillarBlock> ALTAR_PILLAR = registerWithItem("altar_pillar", AltarPillarBlock::new, () -> basicProperties().mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion());
+    public static final DeferredBlock<AltarTipBlock> ALTAR_TIP = registerWithItem("altar_tip", AltarTipBlock::new, () -> basicProperties().mapColor(MapColor.METAL).forceSolidOn().strength(3.5F, 6.0F).pushReaction(PushReaction.DESTROY).noOcclusion());
 
     public static final DeferredBlock<PedestalBlock> BLOOD_PEDESTAL = registerWithItem("blood_pedestal", PedestalBlock::new, () -> basicProperties().mapColor(MapColor.STONE).strength(3f).noOcclusion());
     public static final DeferredBlock<BloodContainerBlock> BLOOD_CONTAINER = registerWithItem("blood_container", BloodContainerBlock::new, () -> copyProperties(Blocks.DARK_OAK_PLANKS).strength(1.0f), BloodContainerItem::new);

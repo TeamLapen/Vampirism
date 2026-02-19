@@ -162,8 +162,8 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
     }
 
     protected void createAltarPillars() {
-        AltarPillarBlock block = ModBlocks.ALTAR_PILLAR.get();
-        Identifier baseModel = ModelLocationUtils.getModelLocation(block);
+        AltarPillarBlock pillarBlock = ModBlocks.ALTAR_PILLAR.get();
+        Identifier baseModel = ModelLocationUtils.getModelLocation(pillarBlock);
 
         var dispatch = PropertyDispatch.modify(AltarPillarBlock.PILLAR_TYPE);
 
@@ -171,16 +171,15 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
             if (type == AltarPillarBlock.EnumPillarType.NONE) continue;
 
             Identifier sideTexture = mod("block/altar_pillar_" + type.getSerializedName());
-            Identifier model = ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(block, "_" + type.getSerializedName(), new TextureMapping().put(TextureSlot.SIDE, sideTexture), this.modelOutput);
+            Identifier model = ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(pillarBlock, "_" + type.getSerializedName(), new TextureMapping().put(TextureSlot.SIDE, sideTexture), this.modelOutput);
 
             dispatch.select(type, variant -> variant.withModel(model));
         }
 
         dispatch.select(AltarPillarBlock.EnumPillarType.NONE, variant -> variant.withModel(baseModel));
 
-        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(VIdentifier.mod("altar_pillar"))).with(dispatch));
-
-        createDefaultBlockItem(block, baseModel);
+        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(pillarBlock, plainVariant(VIdentifier.mod("altar_pillar"))).with(dispatch));
+        createDefaultBlockItem(pillarBlock, baseModel);
     }
 
     protected void createAlchemicalCauldron() {

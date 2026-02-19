@@ -128,7 +128,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
 
                     while (height < 3) {
                         BlockState stateBelow = this.level.getBlockState(tip.below(height + 1));
-                        if (!stateBelow.is(ModBlocks.ALTAR_PILLAR.get())) break;
+                        if (!(stateBelow.getBlock() instanceof AltarPillarBlock)) break;
 
                         AltarPillarBlock.EnumPillarType type = stateBelow.getValue(AltarPillarBlock.PILLAR_TYPE);
                         totalValue += type.getValue();
