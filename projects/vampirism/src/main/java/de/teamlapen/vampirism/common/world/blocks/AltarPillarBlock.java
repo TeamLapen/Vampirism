@@ -168,25 +168,37 @@ public class AltarPillarBlock extends Block implements SimpleWaterloggedBlock {
         return false;
     }
 
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
+        return state.getValue(PILLAR_TYPE).redstoneSignal;
+    }
+
     public static boolean isGlued(BlockState state) {
         return state.getValue(GLUED);
     }
 
     public enum FillType implements StringRepresentable, IExtensibleEnum {
-        NONE("none", 0, Blocks.AIR),
-        STONE("stone", 1, Blocks.STONE_BRICKS),
-        BONE("bone", 1.5F, Blocks.BONE_BLOCK),
-        IRON("iron", 2, Blocks.IRON_BLOCK),
-        GOLD("gold", 3, Blocks.GOLD_BLOCK);
+        NONE("none", 0, Blocks.AIR, 0),
+        STONE("stone", 1, Blocks.STONE_BRICKS, 1),
+        BONE("bone", 1.5F, Blocks.BONE_BLOCK, 2),
+        IRON("iron", 2, Blocks.IRON_BLOCK, 4),
+        GOLD("gold", 3, Blocks.GOLD_BLOCK, 5);
 
         public final String name;
-        public final Block fillerBlock;
         private final float value;
+        public final Block fillerBlock;
+        private final int redstoneSignal;
 
-        FillType(String name, float value, Block fillerBlock) {
+        FillType(String name, float value, Block fillerBlock, int redstoneSignal) {
             this.name = name;
-            this.fillerBlock = fillerBlock;
             this.value = value;
+            this.fillerBlock = fillerBlock;
+            this.redstoneSignal = redstoneSignal;
         }
 
         public String getName() {
