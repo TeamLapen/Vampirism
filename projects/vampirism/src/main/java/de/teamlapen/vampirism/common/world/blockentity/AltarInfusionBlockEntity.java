@@ -130,7 +130,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
                         BlockState stateBelow = this.level.getBlockState(tip.below(height + 1));
                         if (!(stateBelow.getBlock() instanceof AltarPillarBlock)) break;
 
-                        AltarPillarBlock.EnumPillarType type = stateBelow.getValue(AltarPillarBlock.PILLAR_TYPE);
+                        AltarPillarBlock.FillType type = stateBelow.getValue(AltarPillarBlock.PILLAR_TYPE);
                         totalValue += type.getValue();
                         height++;
                     }

@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class AltarPillarBlock extends Block implements SimpleWaterloggedBlock {
 
-    public static final EnumProperty<EnumPillarType> PILLAR_TYPE = EnumProperty.create("type", EnumPillarType.class);
+    public static final EnumProperty<FillType> PILLAR_TYPE = EnumProperty.create("type", FillType.class);
     public static final BooleanProperty GLUED = BooleanProperty.create("glued");
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -50,7 +50,7 @@ public class AltarPillarBlock extends Block implements SimpleWaterloggedBlock {
 
     public AltarPillarBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(PILLAR_TYPE, EnumPillarType.NONE).setValue(GLUED, false).setValue(WATERLOGGED, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PILLAR_TYPE, FillType.NONE).setValue(GLUED, false).setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -84,7 +84,7 @@ public class AltarPillarBlock extends Block implements SimpleWaterloggedBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (stack.is(Items.SLIME_BALL)) {
-            if (state.getValue(PILLAR_TYPE) != EnumPillarType.NONE && !isGlued(state)) {
+            if (state.getValue(PILLAR_TYPE) != FillType.NONE && !isGlued(state)) {
                 if (!level.isClientSide()) {
                     level.setBlockAndUpdate(pos, state.setValue(GLUED, true));
                 }
@@ -97,9 +97,9 @@ public class AltarPillarBlock extends Block implements SimpleWaterloggedBlock {
             return InteractionResult.PASS;
         }
 
-        if (state.getValue(PILLAR_TYPE) == EnumPillarType.NONE && !isGlued(state)) {
-            for (EnumPillarType type : EnumPillarType.values()) {
-                if (type == EnumPillarType.NONE) continue;
+        if (state.getValue(PILLAR_TYPE) == FillType.NONE && !isGlued(state)) {
+            for (FillType type : FillType.values()) {
+                if (type == FillType.NONE) continue;
 
                 if (stack.getItem().equals(type.fillerBlock.asItem())) {
                     if (!level.isClientSide()) {
@@ -123,9 +123,9 @@ public class AltarPillarBlock extends Block implements SimpleWaterloggedBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        EnumPillarType type = state.getValue(PILLAR_TYPE);
+        FillType type = state.getValue(PILLAR_TYPE);
 
-        if (type != EnumPillarType.NONE && !isGlued(state)) {
+        if (type != FillType.NONE && !isGlued(state)) {
             if (!level.isClientSide()) {
                 Block fillerBlock = type.fillerBlock;
 
@@ -133,7 +133,7 @@ public class AltarPillarBlock extends Block implements SimpleWaterloggedBlock {
                     player.drop(new ItemStack(fillerBlock), false);
                 }
 
-                level.setBlockAndUpdate(pos, state.setValue(PILLAR_TYPE, EnumPillarType.NONE));
+                level.setBlockAndUpdate(pos, state.setValue(PILLAR_TYPE, FillType.NONE));
 
                 SoundEvent sound = fillerBlock.getSoundType(fillerBlock.defaultBlockState(), level, pos, player).getBreakSound();
                 level.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -172,7 +172,7 @@ public class AltarPillarBlock extends Block implements SimpleWaterloggedBlock {
         return state.getValue(GLUED);
     }
 
-    public enum EnumPillarType implements StringRepresentable, IExtensibleEnum {
+    public enum FillType implements StringRepresentable, IExtensibleEnum {
         NONE("none", 0, Blocks.AIR),
         STONE("stone", 1, Blocks.STONE_BRICKS),
         BONE("bone", 1.5F, Blocks.BONE_BLOCK),
@@ -183,7 +183,7 @@ public class AltarPillarBlock extends Block implements SimpleWaterloggedBlock {
         public final Block fillerBlock;
         private final float value;
 
-        EnumPillarType(String name, float value, Block fillerBlock) {
+        FillType(String name, float value, Block fillerBlock) {
             this.name = name;
             this.fillerBlock = fillerBlock;
             this.value = value;

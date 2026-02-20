@@ -38,8 +38,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static de.teamlapen.vampirism.api.util.VIdentifier.mod;
-import static de.teamlapen.vampirism.api.util.VIdentifier.modString;
-import static net.minecraft.client.data.models.model.ModelLocationUtils.decorateBlockModelLocation;
 import static net.minecraft.client.data.models.model.ModelLocationUtils.getModelLocation;
 
 public class ModBlockModelGenerators extends BaseBlockModelGenerators {
@@ -167,8 +165,8 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
         var dispatch = PropertyDispatch.modify(AltarPillarBlock.PILLAR_TYPE);
 
-        for (AltarPillarBlock.EnumPillarType type : AltarPillarBlock.EnumPillarType.values()) {
-            if (type == AltarPillarBlock.EnumPillarType.NONE) continue;
+        for (AltarPillarBlock.FillType type : AltarPillarBlock.FillType.values()) {
+            if (type == AltarPillarBlock.FillType.NONE) continue;
 
             Identifier sideTexture = mod("block/altar_pillar_" + type.getSerializedName());
             Identifier model = ModModelTemplates.ALTAR_PILLAR_FILLED.createWithSuffix(pillarBlock, "_" + type.getSerializedName(), new TextureMapping().put(TextureSlot.SIDE, sideTexture), this.modelOutput);
@@ -176,7 +174,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
             dispatch.select(type, variant -> variant.withModel(model));
         }
 
-        dispatch.select(AltarPillarBlock.EnumPillarType.NONE, variant -> variant.withModel(baseModel));
+        dispatch.select(AltarPillarBlock.FillType.NONE, variant -> variant.withModel(baseModel));
 
         this.blockStateOutput.accept(MultiVariantGenerator.dispatch(pillarBlock, plainVariant(VIdentifier.mod("altar_pillar"))).with(dispatch));
         createDefaultBlockItem(pillarBlock, baseModel);
