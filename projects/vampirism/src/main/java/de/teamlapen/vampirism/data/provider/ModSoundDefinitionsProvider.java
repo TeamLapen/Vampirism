@@ -39,7 +39,7 @@ public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
         this.add(ModSounds.TELEPORT_AWAY, definition().subtitle("subtitles.vampirism.teleport_away").with(sound(mod("reserved/fx/teleport1"))));
         this.add(ModSounds.TELEPORT_HERE, definition().subtitle("subtitles.vampirism.teleport_here").with(sound(mod("reserved/fx/teleport2"))));
         this.add(ModSounds.FREEZE, definition().subtitle("subtitles.vampirism.freeze").with(sound(mod("reserved/fx/freeze"))));
-        this.add(ModSounds.POTION_TABLE_CRAFTING, definition().with(sound(mod("reserved/block/potion_table_crafting")).stream()));
+        this.add(ModSounds.VAPOR_STILL_CRAFTING, definition().with(sound(mod("reserved/block/vapor_still_crafting")).stream()));
         this.add(ModSounds.MOTHER_DEATH, definition().with(sound(mod("reserved/fx/mother_death"))));
         this.add(ModSounds.MOTHER_AMBIENT, definition().with(sound(mod("reserved/ambient/mother")).stream()));
         this.add(ModSounds.GHOST_AMBIENT, definition().subtitle("subtitles.vampirism.ghost.ambient").with(sound(mc("mob/vex/idle1")), sound(mc("mob/vex/idle2")), sound(mc("mob/vex/idle3")), sound(mc("mob/vex/idle4"))));

@@ -358,7 +358,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
                 ModBlocks.ALTAR_CLEANSING,
                 ModBlocks.ALTAR_TIP,
                 ModBlocks.BLOOD_PEDESTAL,
-                ModBlocks.POTION_TABLE,
+                ModBlocks.VAPOR_STILL,
                 ModBlocks.FIRE_PLACE,
                 ModBlocks.CROSS,
                 ModBlocks.TOMBSTONE1,
@@ -415,7 +415,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         withHorizontalRotation(generator, null, plainVariant(hunterTable));
         withHorizontalRotation(generator, condition(HunterTableBlock.WEAPON_TABLE, true), plainVariant(mod("block/hunter_table/hunter_table_hammer")));
         withHorizontalRotation(generator, condition(HunterTableBlock.ALCHEMICAL_CAULDRON, true), plainVariant(mod("block/hunter_table/hunter_table_garlic")));
-        withHorizontalRotation(generator, condition(HunterTableBlock.POTION_TABLE, true), plainVariant(mod("block/hunter_table/hunter_table_bottle")));
+        withHorizontalRotation(generator, condition(HunterTableBlock.VAPOR_STILL, true), plainVariant(mod("block/hunter_table/hunter_table_bottle")));
         this.blockStateOutput.accept(generator);
         createDefaultBlockItem(ModBlocks.HUNTER_TABLE.get(), hunterTable);
     }

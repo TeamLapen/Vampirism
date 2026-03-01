@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:potion_table"
+          "name": "vampirism:vapor_still"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "vampirism:blocks/potion_table"
+  "random_sequence": "vampirism:blocks/vapor_still"
 }

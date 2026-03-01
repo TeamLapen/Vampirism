@@ -41,7 +41,7 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> TELEPORT_AWAY = create("fx.teleport_away");
     public static final DeferredHolder<SoundEvent, SoundEvent> TELEPORT_HERE = create("fx.teleport_here");
     public static final DeferredHolder<SoundEvent, SoundEvent> FREEZE = create("fx.freeze");
-    public static final DeferredHolder<SoundEvent, SoundEvent> POTION_TABLE_CRAFTING = create("block.potion_table_crafting");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VAPOR_STILL_CRAFTING = create("block.vapor_still_crafting");
     public static final DeferredHolder<SoundEvent, SoundEvent> MOTHER_DEATH = create("fx.mother_death");
     public static final DeferredHolder<SoundEvent, SoundEvent> MOTHER_AMBIENT = create("ambient.mother");
     public static final DeferredHolder<SoundEvent, SoundEvent> VAMPIRE_FOREST_AMBIENT = create("ambient.forest");

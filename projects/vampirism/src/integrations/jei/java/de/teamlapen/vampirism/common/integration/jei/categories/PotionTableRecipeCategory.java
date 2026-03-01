@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.integration.jei.categories;
 
 import de.teamlapen.faction.common.util.Color;
-import de.teamlapen.vampirism.client.gui.screens.PotionTableScreen;
+import de.teamlapen.vampirism.client.gui.screens.VaporStillScreen;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.jei.JEIPotionMix;
 import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
@@ -38,23 +38,23 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
     private final @NotNull IDrawable icon;
     private final @NotNull IDrawable slotDrawable;
     private final @NotNull IDrawable arrow;
-    private final @NotNull IDrawable bubbles;
+    //private final @NotNull IDrawable bubbles;
     private final @NotNull IDrawable blazeHeat;
 
 
     public PotionTableRecipeCategory(@NotNull IGuiHelper guiHelper) {
-        this.localizedName = Component.translatable(ModBlocks.POTION_TABLE.get().getDescriptionId());
-        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.POTION_TABLE.get()));
-        this.background = guiHelper.drawableBuilder(PotionTableScreen.BACKGROUND, 65, 6, 103, 73).addPadding(0, 33, 0, 25).build();
+        this.localizedName = Component.translatable(ModBlocks.VAPOR_STILL.get().getDescriptionId());
+        this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.VAPOR_STILL.get()));
+        this.background = guiHelper.drawableBuilder(VaporStillScreen.BACKGROUND_NORMAL, 65, 6, 103, 73).addPadding(0, 33, 0, 25).build();
         this.slotDrawable = guiHelper.getSlotDrawable();
 
-        var bubbles = guiHelper.drawableBuilder(fixSprite(PotionTableScreen.BUBBLES_SPRITE), 0, 0, 12, 29).setTextureSize(12, 29).build();
-        this.bubbles = guiHelper.createAnimatedDrawable(bubbles, 400, IDrawableAnimated.StartDirection.BOTTOM, false);
+        //var bubbles = guiHelper.drawableBuilder(fixSprite(VaporStillScreen.SPRITE_BUBBLES), 0, 0, 12, 29).setTextureSize(12, 29).build();
+        //this.bubbles = guiHelper.createAnimatedDrawable(bubbles, 400, IDrawableAnimated.StartDirection.BOTTOM, false);
 
-        var blaze = guiHelper.drawableBuilder(fixSprite(PotionTableScreen.FUEL_SPRITE), 0, 0, 18, 4).setTextureSize(18, 4).build();
+        var blaze = guiHelper.drawableBuilder(fixSprite(VaporStillScreen.SPRITE_FUEL), 0, 0, 18, 4).setTextureSize(18, 4).build();
         this.blazeHeat = guiHelper.createAnimatedDrawable(blaze, 400, IDrawableAnimated.StartDirection.LEFT, false);
 
-        var progress = guiHelper.drawableBuilder(fixSprite(PotionTableScreen.PROGRESS_SPRITE), 0, 0, 9, 28).setTextureSize(9, 28).build();
+        var progress = guiHelper.drawableBuilder(fixSprite(VaporStillScreen.SPRITE_PROGRESS), 0, 0, 9, 28).setTextureSize(9, 28).build();
         this.arrow = guiHelper.createAnimatedDrawable(progress, 400, IDrawableAnimated.StartDirection.TOP, false);
     }
 
@@ -67,7 +67,7 @@ public class PotionTableRecipeCategory implements IRecipeCategory<JEIPotionMix> 
         this.background.draw(graphics);
         graphics.pose().pushMatrix();
         this.blazeHeat.draw(graphics, 1, 35);
-        this.bubbles.draw(graphics, 3, 4);
+        //this.bubbles.draw(graphics, 3, 4);
         this.arrow.draw(graphics, 80, 10);
 
         int y = 75;

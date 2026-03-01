@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.world.inventory.PotionTableMenu;
+import de.teamlapen.vampirism.common.world.inventory.VaporStillMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -26,7 +26,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 
-public class PotionTableBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider {
+public class VaporStillBlockEntity extends BaseContainerBlockEntity implements WorldlyContainer, MenuProvider {
 
     /*
      * 0: Fuel
@@ -68,27 +67,27 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     protected final ContainerData syncedProperties = new ContainerData() {
         public int get(int index) {
             return switch (index) {
-                case 0 -> PotionTableBlockEntity.this.brewTime;
-                case 1 -> PotionTableBlockEntity.this.fuel;
+                case 0 -> VaporStillBlockEntity.this.brewTime;
+                case 1 -> VaporStillBlockEntity.this.fuel;
+                case 2 -> VaporStillBlockEntity.this.getMaxBrewTime();
                 default -> 0;
             };
         }
 
         public void set(int index, int value) {
             switch (index) {
-                case 0 -> PotionTableBlockEntity.this.brewTime = value;
-                case 1 -> PotionTableBlockEntity.this.fuel = value;
+                case 0 -> VaporStillBlockEntity.this.brewTime = value;
+                case 1 -> VaporStillBlockEntity.this.fuel = value;
             }
-
         }
 
         public int getCount() {
-            return 2;
+            return 3;
         }
     };
 
-    public PotionTableBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.POTION_TABLE.get(), pos, state);
+    public VaporStillBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.VAPOR_STILL.get(), pos, state);
     }
 
     @Override
@@ -104,7 +103,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
                     this.config.deriveFromHunter(hunter);
                     return true;
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.potion_table.other", getOwnerName()), true);
+                    player.displayClientMessage(Component.translatable("text.vampirism.vapor_still.other", getOwnerName()), true);
                 }
             } else {
                 player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
@@ -159,7 +158,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("tile.vampirism.potion_table.display", ownerName, Component.translatable("tile.vampirism.potion_table"));
+        return Component.translatable("tile.vampirism.vapor_still.display", ownerName, Component.translatable("tile.vampirism.vapor_still"));
     }
 
     public Component getOwnerName() {
@@ -261,7 +260,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         }
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, PotionTableBlockEntity blockEntity) {
+    public static void tick(Level level, BlockPos pos, BlockState state, VaporStillBlockEntity blockEntity) {
         ItemStack itemstack = blockEntity.brewingItemStacks.getFirst();
         if (blockEntity.fuel <= 0 && itemstack.getItem() == Items.BLAZE_POWDER) {
             blockEntity.fuel = 20;
@@ -290,7 +289,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
             }
         } else if (canBrew && blockEntity.fuel > 0) {
             --blockEntity.fuel;
-            blockEntity.brewTime = blockEntity.config.isSwiftBrewing() ? 400 : 200;
+            blockEntity.brewTime = blockEntity.getMaxBrewTime();
             blockEntity.ingredientID = blockEntity.brewingItemStacks.get(2).getItem();
             blockEntity.extraIngredientID = blockEntity.brewingItemStacks.get(1).getItem();
             blockEntity.setChanged();
@@ -300,7 +299,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
     @Override
     protected AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new PotionTableMenu(id, player, ContainerLevelAccess.create(this.level, this.getBlockPos()), this, this.config.multiTaskBrewing, syncedProperties);
+        return new VaporStillMenu(id, player, this, this.config.multiTaskBrewing, syncedProperties);
     }
 
     @Override
@@ -355,7 +354,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
 
         this.brewingItemStacks.set(2, ingredientStack);
         this.brewingItemStacks.set(1, extraIngredient);
-        this.level.playSound(null, blockpos.getX(), blockpos.getY(), blockpos.getZ(), ModSounds.POTION_TABLE_CRAFTING.get(), SoundSource.BLOCKS, 1f, 1f);
+        this.level.playSound(null, blockpos.getX(), blockpos.getY(), blockpos.getZ(), ModSounds.VAPOR_STILL_CRAFTING.get(), SoundSource.BLOCKS, 1f, 1f);
 
         this.level.levelEvent(1035, blockpos, 0);
     }
@@ -368,6 +367,10 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         }
 
         return false;
+    }
+
+    public int getMaxBrewTime() {
+        return config.isSwiftBrewing() ? 400 : 200;
     }
 
     protected static class BrewingCapabilities implements IExtendedBrewingRecipeRegistry.IExtendedBrewingCapabilities {
