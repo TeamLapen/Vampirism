@@ -50,6 +50,9 @@ public class StakeItem extends VampirismSwordItem implements IVampireFinisher {
             return !(VampirismConfig.BALANCE.hsInstantKill2OnlyNPC.get() && target instanceof Player) && target.getMaxHealth() < VampirismConfig.BALANCE.hsInstantKill2MaxHealth.get();
         }
         if (instaKillLowHealth && target.getHealth() <= (VampirismConfig.BALANCE.hsInstantKill1MaxHealth.get() * target.getMaxHealth())) {
+            if (target instanceof Player && !VampirismConfig.BALANCE.hsInstantKill1Player.get()) {
+                return false;
+            }
             return !VampirismConfig.BALANCE.hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true);
 
         }

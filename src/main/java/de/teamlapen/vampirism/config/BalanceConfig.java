@@ -88,6 +88,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue hsMajorAttackSpeedModifier;
     public final ModConfigSpec.DoubleValue hsSmallAttackDamageModifier;
     public final ModConfigSpec.BooleanValue hsInstantKill1FromBehind;
+    public final ModConfigSpec.BooleanValue hsInstantKill1Player;
     public final ModConfigSpec.DoubleValue hsInstantKill1MaxHealth;
     public final ModConfigSpec.IntValue hsInstantKill2MaxHealth;
     public final ModConfigSpec.BooleanValue hsInstantKill2OnlyNPC;
@@ -105,6 +106,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vsSundamageReduction1;
     public final ModConfigSpec.DoubleValue vsBloodThirstReduction1;
     public final ModConfigSpec.DoubleValue vsSwordFinisherMaxHealth;
+    public final ModConfigSpec.BooleanValue vsSwordFinisherOnPlayer;
     public final ModConfigSpec.IntValue vsJumpBoost;
     public final ModConfigSpec.DoubleValue vsSpeedBoost;
     public final ModConfigSpec.IntValue vsBloodVisionDistanceSq;
@@ -308,6 +310,7 @@ public class BalanceConfig {
         hsMajorAttackSpeedModifier = builder.comment("Advanced skill - Weapon cooldown = 1/(oldvalue*(1+modifier)").defineInRange("majorAttackSpeedModifier", 0.4, 0, 3);
         hsSmallAttackDamageModifier = builder.comment("Increase damage - Added to base damage").defineInRange("smallAttackDamageModifier", 1d, 0, 10);
         hsInstantKill1FromBehind = builder.comment("First stake skill - If it is required to attack from behind to instant kill low level vampires").define("instantKill1FromBehind", false);
+        hsInstantKill1Player = builder.comment("Allow killing players").define("instantKill1Player", true);
         hsInstantKill1MaxHealth = builder.comment("First stake skill -The maximal relative health a entity may have to be instantly killed").defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
         hsInstantKill2MaxHealth = builder.comment("Second stake skill - The max (not the actual) health of an entity that can be one hit killed from behind").defineInRange("instantKill2MaxHealth", 200, 0, Integer.MAX_VALUE);
         hsInstantKill2OnlyNPC = builder.comment("Second stake skill - Whether only NPCs can be one hit killed with this skill").define("instantKill2OnlyNPC", true);
@@ -330,6 +333,7 @@ public class BalanceConfig {
         vsSundamageReduction1 = builder.comment("Sundamage is multiplied with (value+1)").defineInRange("sundamageReduction1", -0.5, -1, 0);
         vsBloodThirstReduction1 = builder.comment("Blood exhaustion is multiplied with (value+1)").defineInRange("bloodThirstReduction1", -0.4, -1, 0);
         vsSwordFinisherMaxHealth = builder.comment("The max relative health for sword finisher kill").defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
+        vsSwordFinisherOnPlayer = builder.comment("If the sword finisher works on players").define("swordFinisherOnPlayer", true);
         vsJumpBoost = builder.comment("Similar to potion effect amplifier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
         vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
         vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);

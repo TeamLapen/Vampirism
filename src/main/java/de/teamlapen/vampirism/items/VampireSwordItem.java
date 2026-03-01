@@ -140,8 +140,11 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
         //Vampire Finisher skill
         if (attacker instanceof Player player && !Helper.isVampire(target) && !target.getType().is(ModTags.Entities.IGNORE_VAMPIRE_SWORD_FINISHER)) {
+            double relTh = 0;
             ISkillHandler<IVampirePlayer> skillHandler = VampirePlayer.get(player).getSkillHandler();
-            double relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * (skillHandler.isSkillEnabled(VampireSkills.SWORD_FINISHER.get()) ? (skillHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER.get()) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d) : 0d);
+            if (skillHandler.isSkillEnabled(VampireSkills.SWORD_FINISHER.get()) && !(target instanceof Player) || VampirismConfig.BALANCE.vsSwordFinisherOnPlayer.get()) {
+                relTh = VampirismConfig.BALANCE.vsSwordFinisherMaxHealth.get() * (skillHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER.get()) ? VampirismConfig.BALANCE.vrSwordFinisherThresholdMod.get() : 1d);
+            }
             List<IItemWithTier.TIER> hunterCoatArmor = Streams.stream(target.getArmorSlots()).filter(s -> s.getItem() instanceof HunterCoatItem).map(s -> ((HunterCoatItem) s.getItem()).getVampirismTier()).toList();
             if (hunterCoatArmor.size() == 4) {
                 var level = hunterCoatArmor.stream().min(Comparator.comparingInt(Enum::ordinal)).orElse(IItemWithTier.TIER.NORMAL);
