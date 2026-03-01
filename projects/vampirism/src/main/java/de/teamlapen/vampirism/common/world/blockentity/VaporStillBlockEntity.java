@@ -233,7 +233,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
         return switch (index) {
             case 0 -> stack.getItem() == Items.BLAZE_POWDER;
             case 1 -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidExtraIngredient(stack);
-            case 2 -> this.level != null && this.level.potionBrewing().isIngredient(stack);
+            case 2 -> this.level != null && VampirismApi.services().extendedBrewingRecipeRegistry().isValidIngredient(this.level.potionBrewing(), stack);
             default -> this.level != null && this.level.potionBrewing().isInput(stack) && this.getItem(index).isEmpty();
         };
     }
