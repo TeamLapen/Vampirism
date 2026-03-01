@@ -57,7 +57,7 @@ public class FullScreenOverlay extends BaseOverlay {
         } else if (gameTime < this.startTicks + this.onTicks + this.mainTicks) {
             this.percentage = 1;
         } else if (gameTime < this.startTicks + this.onTicks + this.mainTicks + this.offTicks) {
-            this.percentage = (gameTime - this.startTicks - this.onTicks - this.mainTicks) / (float) this.offTicks;
+            this.percentage = 1f - (gameTime - this.startTicks - this.onTicks - this.mainTicks) / (float) this.offTicks;
         } else {
             this.startTicks = -1;
             this.percentage = 0;

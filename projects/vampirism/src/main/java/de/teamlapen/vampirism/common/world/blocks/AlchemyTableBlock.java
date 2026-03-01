@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blockentity.AlchemyTableBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -65,7 +66,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
                     player.awardStat(ModStats.INTERACT_WITH_ALCHEMY_TABLE.get());
                 }
             } else {
-                player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+                player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
             }
 
             return InteractionResult.CONSUME;

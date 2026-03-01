@@ -48,7 +48,7 @@ public class CrucifixItem extends Item implements IItemWithTier {
     private static final Identifier COOLDOWN_GROUP = VIdentifier.mod("crucifix");
 
     public CrucifixItem(Tier tier, Properties properties) {
-        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).apply(properties).stacksTo(1).component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {
+        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).message(HolyWaterBottleItem.MASSAGE_RESTRICTION_HOLY).apply(properties).stacksTo(1).component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {
             case NORMAL -> 7;
             case ENHANCED -> 5;
             case ULTIMATE -> 3;

@@ -42,4 +42,12 @@ public class ModModels {
             return "coffin_top";
         }
     }
+
+    public record BloodSphereModelKey() implements ModelDebugName {
+
+        @Override
+        public @NotNull String debugName() {
+            return "blood_sphere";
+        }
+    }
 }

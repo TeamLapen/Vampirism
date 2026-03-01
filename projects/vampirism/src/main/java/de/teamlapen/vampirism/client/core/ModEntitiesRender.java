@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.armor.*;
+import de.teamlapen.vampirism.client.models.blocks.BloodSphereModel;
 import de.teamlapen.vampirism.client.models.blocks.CoffinModel;
 import de.teamlapen.vampirism.client.models.entities.*;
 import de.teamlapen.vampirism.client.renderer.entities.*;
@@ -30,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ModEntitiesRender {
     public static final ModelLayerLocation COFFIN = new ModelLayerLocation(VIdentifier.mod("coffin"), "main");
+    public static final ModelLayerLocation BLOOD_SPHERE = new ModelLayerLocation(VIdentifier.mod("blood_sphere"), "main");
     public static final ModelLayerLocation WING = new ModelLayerLocation(VIdentifier.mod("wing"), "main");
     public static final ModelLayerLocation BARON = new ModelLayerLocation(VIdentifier.mod("baron"), "main");
     public static final ModelLayerLocation BARONESS = new ModelLayerLocation(VIdentifier.mod("baroness"), "main");
@@ -101,6 +103,7 @@ public class ModEntitiesRender {
 
     public static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
         event.registerLayerDefinition(COFFIN, CoffinModel::createLayer);
+        event.registerLayerDefinition(BLOOD_SPHERE, BloodSphereModel::createLayer);
         event.registerLayerDefinition(WING, WingModel::createLayer);
         event.registerLayerDefinition(BARON, BaronModel::createLayer);
         event.registerLayerDefinition(BARONESS, BaronessModel::createLayer);
