@@ -276,6 +276,9 @@ public class TagProvider {
             tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(ModItems.PITCHFORK.get());
             tag(ItemTags.AXES).add(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get());
             tag(ModTags.Items.CROSSBOW_ENCHANTABLE).addTag(ModTags.Items.CROSSBOWS);
+            tag(ItemTags.CROSSBOW_ENCHANTABLE).addTag(ModTags.Items.CROSSBOWS);
+            tag(ItemTags.BOW_ENCHANTABLE).addTag(ModTags.Items.CROSSBOWS);
+            tag(ItemTags.DURABILITY_ENCHANTABLE).addTag(ModTags.Items.CROSSBOWS);
             tag(ModTags.Items.CROSSBOWS).addTags(ModTags.Items.BASIC_CROSSBOWS, ModTags.Items.ENHANCED_CROSSBOWS, ModTags.Items.SINGLE_CROSSBOWS, ModTags.Items.DOUBLE_CROSSBOWS, ModTags.Items.TECH_CROSSBOWS);
             tag(ModTags.Items.BASIC_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get());
             tag(ModTags.Items.ENHANCED_CROSSBOWS).add(ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
@@ -541,9 +544,9 @@ public class TagProvider {
             this.tag(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS).add(ModEnchantments.VAMPIRE_SLAYER);
             this.tag(ModTags.Enchantments.CROSSBOW_INCOMPATIBLE).add(Enchantments.INFINITY);
             this.tag(EnchantmentTags.NON_TREASURE).add(ModEnchantments.VAMPIRE_SLAYER, ModEnchantments.ARROW_FRUGALITY);
-            this.tag(ModTags.Enchantments.SINGLE_CROSSBOW).add(Enchantments.PUNCH, Enchantments.POWER, Enchantments.INFINITY);
-            this.tag(ModTags.Enchantments.DOUBLE_CROSSBOW).add(Enchantments.PUNCH, Enchantments.POWER, Enchantments.INFINITY);
-            this.tag(ModTags.Enchantments.TECH_CROSSBOW).add(Enchantments.PUNCH, Enchantments.POWER);
+            this.tag(ModTags.Enchantments.SINGLE_CROSSBOW).add(Enchantments.PUNCH, Enchantments.POWER, Enchantments.QUICK_CHARGE, Enchantments.UNBREAKING, Enchantments.MENDING);
+            this.tag(ModTags.Enchantments.DOUBLE_CROSSBOW).add(Enchantments.PUNCH, Enchantments.POWER, Enchantments.QUICK_CHARGE, Enchantments.UNBREAKING, Enchantments.MENDING);
+            this.tag(ModTags.Enchantments.TECH_CROSSBOW).add(Enchantments.PUNCH, Enchantments.PIERCING, Enchantments.UNBREAKING, Enchantments.MENDING, ModEnchantments.ARROW_FRUGALITY);
 
         }
     }

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.util.ModEnchantmentHelper;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +55,11 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
     }
 
     @Override
+    public ItemEnchantments getAllEnchantments(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup) {
+        return super.getAllEnchantments(stack, lookup);
+    }
+
+    @Override
     protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
         if (ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
             crossbow.set(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED, Unit.INSTANCE);
@@ -84,7 +91,7 @@ public class TechCrossbowItem extends VampirismCrossbowItem {
 
     @Override
     public boolean isPrimaryItemFor(@NotNull ItemStack stack, Holder<Enchantment> enchantment) {
-        return enchantment.is(ModTags.Enchantments.TECH_CROSSBOW) || super.isPrimaryItemFor(stack, enchantment);
+        return enchantment.is(ModTags.Enchantments.TECH_CROSSBOW);
     }
 
 }

@@ -44,6 +44,6 @@ public class DoubleCrossbowItem extends VampirismCrossbowItem {
 
     @Override
     public boolean isPrimaryItemFor(@NotNull ItemStack stack, Holder<Enchantment> enchantment) {
-        return enchantment.is(ModTags.Enchantments.DOUBLE_CROSSBOW) || super.isPrimaryItemFor(stack, enchantment);
+        return enchantment.is(ModTags.Enchantments.DOUBLE_CROSSBOW);
     }
 }

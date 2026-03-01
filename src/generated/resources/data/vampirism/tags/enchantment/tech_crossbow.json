@@ -2,11 +2,18 @@
   "values": [
     "minecraft:punch",
     "minecraft:power",
-    "minecraft:infinity",
+    "minecraft:quick_charge",
+    "minecraft:unbreaking",
+    "minecraft:mending",
     "minecraft:punch",
     "minecraft:power",
-    "minecraft:infinity",
+    "minecraft:quick_charge",
+    "minecraft:unbreaking",
+    "minecraft:mending",
     "minecraft:punch",
-    "minecraft:power"
+    "minecraft:piercing",
+    "minecraft:unbreaking",
+    "minecraft:mending",
+    "vampirism:arrow_frugality"
   ]
 }
