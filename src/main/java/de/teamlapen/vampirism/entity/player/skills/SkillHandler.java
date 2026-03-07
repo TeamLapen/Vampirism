@@ -134,10 +134,17 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
     }
 
     public void disableAllSkills() {
-        for (ISkill<T> skill : enabledSkills) {
+        ArrayList<ISkill<T>> skills = new ArrayList<>(enabledSkills);
+        for (Holder<ISkillTree> unlockedTree : unlockedTrees) {
+            SkillTreeConfiguration.SkillTreeNodeConfiguration root = this.treeData.root(unlockedTree);
+            for (Holder<ISkill<?>> element : root.elements()) {
+                skills.remove(element.value());
+            }
+        }
+        for (ISkill<T> skill : skills) {
             skill.onDisable(player);
         }
-        enabledSkills.clear();
+        enabledSkills.removeAll(skills);
         dirty = true;
     }
 
