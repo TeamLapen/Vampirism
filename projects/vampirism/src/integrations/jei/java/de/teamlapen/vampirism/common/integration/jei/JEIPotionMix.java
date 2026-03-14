@@ -17,13 +17,28 @@ import java.util.Collection;
 import java.util.List;
 
 public class JEIPotionMix {
-    public static @NotNull Collection<JEIPotionMix> createFromMix(@NotNull ExtendedPotionMix mix) {
 
+    public static @NotNull Collection<JEIPotionMix> createFromMix(@NotNull ExtendedPotionMix mix) {
         List<JEIPotionMix> recipes = new ArrayList<>(3);
-        recipes.add(build(mix, Items.POTION, mix.input, mix.output, new IngredientWithAmount(mix.reagent1.get(), mix.reagent1Count), new IngredientWithAmount(mix.reagent2.get(), mix.reagent2Count)));
+
+        var potion = build(mix, Items.POTION, mix.input, mix.output,
+                new IngredientWithAmount(mix.reagent1.get(), mix.reagent1Count),
+                new IngredientWithAmount(mix.reagent2.get(), mix.reagent2Count));
+        PotionBrewingStepCounter.INSTANCE.addVaporStillRecipe(potion.getPotionInput(), potion.getPotionOutput());
+        recipes.add(potion);
+
         if (mix.output.value().getEffects().stream().noneMatch(s -> s.getEffect().value().getCategory() != MobEffectCategory.HARMFUL)) {
-            recipes.add(build(mix, Items.LINGERING_POTION, mix.input, mix.output, new IngredientWithAmount(mix.reagent1.get(), mix.reagent1Count), new IngredientWithAmount(mix.reagent2.get(), mix.reagent2Count)));
-            recipes.add(build(mix, Items.SPLASH_POTION, mix.input, mix.output, new IngredientWithAmount(mix.reagent1.get(), mix.reagent1Count), new IngredientWithAmount(mix.reagent2.get(), mix.reagent2Count)));
+            var splash = build(mix, Items.SPLASH_POTION, mix.input, mix.output,
+                    new IngredientWithAmount(mix.reagent1.get(), mix.reagent1Count),
+                    new IngredientWithAmount(mix.reagent2.get(), mix.reagent2Count));
+            PotionBrewingStepCounter.INSTANCE.addVaporStillRecipe(splash.getPotionInput(), splash.getPotionOutput());
+            recipes.add(splash);
+
+            var lingering = build(mix, Items.LINGERING_POTION, mix.input, mix.output,
+                    new IngredientWithAmount(mix.reagent1.get(), mix.reagent1Count),
+                    new IngredientWithAmount(mix.reagent2.get(), mix.reagent2Count));
+            PotionBrewingStepCounter.INSTANCE.addVaporStillRecipe(lingering.getPotionInput(), lingering.getPotionOutput());
+            recipes.add(lingering);
         }
         return recipes;
     }
@@ -74,6 +89,10 @@ public class JEIPotionMix {
 
     public ItemStack getPotionOutput() {
         return potionOutput;
+    }
+
+    public int getBrewingSteps() {
+        return PotionBrewingStepCounter.INSTANCE.getBrewingSteps(potionOutput);
     }
 
     private record IngredientWithAmount(Ingredient ingredient, int amount) {}

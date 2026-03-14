@@ -26,12 +26,12 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.types.IRecipeHolderType;
 import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -42,28 +42,24 @@ public class VampirismJEIPlugin implements IModPlugin {
     public static final IRecipeType<RecipeHolder<AlchemicalCauldronRecipe>> ALCHEMICAL_CAULDRON = createFromModded(ModRecipes.ALCHEMICAL_CAULDRON_TYPE);
     public static final IRecipeType<Task> TASK = IRecipeType.create("vampirism", "task", Task.class);
     public static final IRecipeType<BlessableRecipe> BLESSING = IRecipeType.create("vampirism", "blessing", BlessableRecipe.class);
-    public static final IRecipeType<JEIPotionMix> POTION = IRecipeType.create("vampirism", "potion", JEIPotionMix.class);
+    public static final IRecipeType<JEIPotionMix> DISTILLING = IRecipeType.create("vampirism", "distilling", JEIPotionMix.class);
     public static final IRecipeType<RecipeHolder<AlchemyTableRecipe>> ALCHEMY_TABLE = createFromModded(ModRecipes.ALCHEMICAL_TABLE_TYPE);
     public static final IRecipeType<GarlicDiffuserRecipe> GARLIC_DIFFUSER = IRecipeType.create(REFERENCE.MODID, "garlic_diffuser", GarlicDiffuserRecipe.class);
     public static final IRecipeType<FogDiffuserRecipe> FOG_DIFFUSER = IRecipeType.create(REFERENCE.MODID, "fog_diffuser", FogDiffuserRecipe.class);
     public static final IRecipeType<GrinderRecipe> GRINDER_RECIPE = IRecipeType.create(REFERENCE.MODID, "grinder", GrinderRecipe.class);
     public static final IRecipeType<BloodSieveRecipe> BLOOD_SIEVE_CONVERSION = IRecipeType.create(REFERENCE.MODID, "blood_sieve", BloodSieveRecipe.class);
 
-    private static final Identifier ID = VIdentifier.mod("plugin");
-
-    @NotNull
     @Override
     public Identifier getPluginUid() {
-        return ID;
+        return VIdentifier.mod("vampirism");
     }
 
     public static <R extends Recipe<?>> IRecipeType<RecipeHolder<R>> createFromModded(DeferredHolder<net.minecraft.world.item.crafting.RecipeType<?>, net.minecraft.world.item.crafting.RecipeType<R>> vanillaRecipeType) {
         return IRecipeHolderType.create(vanillaRecipeType.getId());
     }
 
-
     @Override
-    public void registerCategories(@NotNull IRecipeCategoryRegistration registration) {
+    public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
         registration.addRecipeCategories(
                 new AlchemicalCauldronRecipeCategory(helper),
@@ -79,10 +75,10 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerGuiHandlers(@NotNull IGuiHandlerRegistration registration) {
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addRecipeClickArea(AlchemicalCauldronScreen.class, 80, 34, 20, 15, ALCHEMICAL_CAULDRON);
         registration.addRecipeClickArea(WeaponTableScreen.class, 114, 46, 20, 15, WEAPON_TABLE);
-        registration.addRecipeClickArea(VaporStillScreen.class, 145, 17, 9, 28, POTION);
+        registration.addRecipeClickArea(VaporStillScreen.class, 145, 17, 9, 28, DISTILLING);
         registration.addRecipeClickArea(AlchemyTableScreen.class, 73, 57, 28, 8, ALCHEMY_TABLE);
         registration.addRecipeClickArea(AlchemyTableScreen.class, 104, 36, 32, 32, ALCHEMY_TABLE);
         registration.addRecipeClickArea(GarlicDiffuserScreen.class, 45, 55, 14, 14, GARLIC_DIFFUSER);
@@ -91,14 +87,14 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerRecipeTransferHandlers(@NotNull IRecipeTransferRegistration registration) {
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
         registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModMenus.ALCHEMICAL_CAULDRON.get(), ALCHEMICAL_CAULDRON, 0, 2, 4, 36);
         registration.addRecipeTransferHandler(AlchemicalCauldronMenu.class, ModMenus.ALCHEMICAL_CAULDRON.get(), RecipeTypes.BLASTING, 3, 1, 4, 36);
         registration.addRecipeTransferHandler(WeaponTableMenu.class, ModMenus.WEAPON_TABLE.get(), WEAPON_TABLE, 1, 16, 17, 36);
     }
 
     @Override
-    public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerFromDataComponentTypes(ModItems.OIL_BOTTLE.get(), ModDataComponents.OIL.get());
         registration.registerFromDataComponentTypes(ModItems.BLOOD_BOTTLE.get(), ModDataComponents.BOTTLE_BLOOD.get());
         registration.registerFromDataComponentTypes(ModBlocks.CURSED_SPRUCE_WOOD.get().asItem(), ModDataComponents.ACTIVE.get());
@@ -107,13 +103,15 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerRecipes(@NotNull IRecipeRegistration registration) {
+    public void registerRecipes(IRecipeRegistration registration) {
         var recipes = VampirismMod.services().recipes().getRecipes();
         var level = Minecraft.getInstance().level;
+        if (level == null) return;
+
         registration.addRecipes(ALCHEMICAL_CAULDRON, recipes.byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).stream().toList());
         registration.addRecipes(WEAPON_TABLE, recipes.byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).stream().toList());
         registration.addRecipes(TASK, TaskUtil.getItemRewardTasks(level.registryAccess()));
-        registration.addRecipes(POTION, VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
+        registration.addRecipes(DISTILLING, VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
         registration.addRecipes(RecipeTypes.ANVIL, RepairRecipeMaker.getRecipes(registration.getVanillaRecipeFactory(), registration.getIngredientManager()));
         registration.addRecipes(ALCHEMY_TABLE, recipes.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().toList());
         registration.addRecipes(RecipeTypes.CRAFTING, OilRecipeMaker.getRecipes(registration.getIngredientManager()));
@@ -125,7 +123,18 @@ public class VampirismJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerVanillaCategoryExtensions(@NotNull IVanillaCategoryExtensionRegistration registration) {
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addCraftingStation(DISTILLING, ModBlocks.VAPOR_STILL);
+    }
 
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime runtime) {
+        runtime.getRecipeManager()
+                .createRecipeLookup(RecipeTypes.BREWING)
+                .get()
+                .forEach(recipe -> PotionBrewingStepCounter.INSTANCE.addVanillaRecipe(
+                        recipe.getPotionInputs(),
+                        recipe.getPotionOutput()
+                ));
     }
 }
