@@ -69,7 +69,7 @@ public class VampirismJEIPlugin implements IModPlugin {
                 new AlchemicalCauldronRecipeCategory(helper),
                 new WeaponTableRecipeCategory(helper),
                 new TaskRecipeCategory(helper),
-                new PotionTableRecipeCategory(helper),
+                new VaporStillRecipeCategory(helper),
                 new AlchemyTableRecipeCategory(helper),
                 new BlessingRecipeCategory(helper),
                 new GarlicDiffuserRecipeCategory(helper),
