@@ -209,6 +209,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vrSunscreenDurationMod;
     public final ModConfigSpec.IntValue vrRageFuryDurationBonus;
     public final ModConfigSpec.DoubleValue vrTeleportDistanceMod;
+    public final ModConfigSpec.DoubleValue vrTeleportCooldownMod;
     public final ModConfigSpec.DoubleValue vrHalfInvulnerableThresholdMod;
     public final ModConfigSpec.DoubleValue vrSwordFinisherThresholdMod;
 
@@ -444,6 +445,7 @@ public class BalanceConfig {
         vrSunscreenDurationMod = builder.defineInRange("sunscreenDurationMod", 1.5D, 1, Double.MAX_VALUE);
         vrRageFuryDurationBonus = builder.comment("For every kill the rage duration is extended by this amount. In seconds.").defineInRange("rageFuryDurationBonus", 5, 0, Integer.MAX_VALUE);
         vrTeleportDistanceMod = builder.defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
+        vrTeleportCooldownMod = builder.defineInRange("teleportCooldownMod", 0.5, 1, Double.MAX_VALUE);
         vrHalfInvulnerableThresholdMod = builder.comment("Threshold for attacks that are considered high damage is multiplied by this value").defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);
         vrSwordFinisherThresholdMod = builder.comment("Threshold for instant kill is modified by this amount").defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
 
