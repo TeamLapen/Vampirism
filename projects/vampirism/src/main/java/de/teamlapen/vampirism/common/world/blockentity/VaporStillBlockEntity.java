@@ -255,16 +255,16 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("tile.vampirism.vapor_still.display", getOwnerName(), getDefaultName());
+        return Component.translatable("container.vampirism.vapor_still.owner", getOwnerName());
     }
 
     public Component getOwnerName() {
-        return this.ownerName != null ? this.ownerName : Component.translatable("text.vampirism.unknown");
+        return this.ownerName != null ? this.ownerName : Component.translatable("misc.vampirism.unknown");
     }
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("tile.vampirism.vapor_still");
+        return Component.translatable("container.vampirism.vapor_still");
     }
 
     @Override
@@ -288,7 +288,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
             return true;
         }
 
-        player.displayClientMessage(Component.translatable("text.vampirism.vapor_still.other", getOwnerName()), true);
+        player.displayClientMessage(Component.translatable("message.vampirism.vapor_still.other_owner", getOwnerName()), true);
         return false;
     }
 

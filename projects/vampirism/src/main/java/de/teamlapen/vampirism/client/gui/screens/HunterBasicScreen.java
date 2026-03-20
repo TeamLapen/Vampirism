@@ -33,9 +33,9 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
     protected void renderErrorIcon(@NotNull GuiGraphics guiGraphics, int x, int y) {
 
         Component component = switch (this.menu.canLevelUp()) {
-            case WRONG_LEVEL -> Component.translatable("text.vampirism.basic_hunter.cannot_train_you_any_further");
-            case NEED_BLOOD ->  Component.translatable("text.vampirism.basic_hunter.pay_n_vampire_blood_more", this.menu.requiredBloodBottles());
-            case CAN_LEVEL_UP -> Component.translatable("text.vampirism.basic_hunter.i_will_train_you");
+            case WRONG_LEVEL -> Component.translatable("dialogue.vampirism.hunter.cannot_train_further");
+            case NEED_BLOOD ->  Component.translatable("dialogue.vampirism.hunter.pay_vampire_blood", this.menu.requiredBloodBottles());
+            case CAN_LEVEL_UP -> Component.translatable("dialogue.vampirism.hunter.will_train_you");
         };
 
         guiGraphics.setTooltipForNextFrame(this.font, this.font.split(component, 120), x + 45, y + 23);
@@ -49,7 +49,7 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
     public void init() {
         super.init();
 
-        Component name = Component.translatable("text.vampirism.level_up");
+        Component name = Component.translatable("container.vampirism.level_up");
         int wid = this.font.width(name) + 10;
         int i = (this.imageWidth - wid) / 2;
         int j = (this.height - this.imageHeight) / 2;

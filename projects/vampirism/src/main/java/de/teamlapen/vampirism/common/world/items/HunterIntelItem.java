@@ -10,9 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-/**
- * Item used in the hunter leveling process. Is created in a hunter table.
- */
 public class HunterIntelItem extends Item {
 
     private final int level;
@@ -24,17 +21,14 @@ public class HunterIntelItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flagIn) {
-        tooltips.accept(Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(": " + (level + 5))).withStyle(ChatFormatting.RED));
-    }
-
-    public Component getCustomName() {
-        return Component.translatable(this.getDescriptionId()).append(Component.literal(" ")).append(Component.translatable("text.vampirism.for_up_to_level").append(Component.literal(" " + (level + 5))));
+        tooltips.accept(Component.translatable("tooltip.vampirism.for_level", level + 5).withStyle(ChatFormatting.RED));
     }
 
     public int getLevel() {
         return level;
     }
 
+    @Override
     public boolean isFoil(ItemStack stack) {
         return true;
     }

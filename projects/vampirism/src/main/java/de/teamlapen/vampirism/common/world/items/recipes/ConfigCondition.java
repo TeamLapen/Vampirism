@@ -36,7 +36,7 @@ public record ConfigCondition(@NotNull String option, @NotNull Function<IContext
     private static @NotNull Function<IContext, Boolean> getTester(@NotNull String option) {
         return switch (option) {
             case "auto_convert" -> (context) -> ModConfig.common().autoConvertGlassBottles.get();
-            case "umbrella" -> (context) -> ModConfig.common().umbrella.get();
+            case "umbrella" -> (context) -> ModConfig.common().enableUmbrella.get();
             default -> throw new JsonSyntaxException("Unknown config option: " + option);
         };
     }

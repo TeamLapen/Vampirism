@@ -73,7 +73,7 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
             Block orDefault = this.fullHolderByContent.getOrDefault(BuiltInRegistries.ITEM.getKey(item), () -> Blocks.AIR).get();
             if (orDefault != Blocks.AIR) {
                 if (stack.getCount() < getNumberOfCandles() && !player.isCreative()) {
-                    player.displayClientMessage(Component.translatable("text.vampirism.candle_holder.not_enough_candles", getNumberOfCandles()), true);
+                    player.displayClientMessage(Component.translatable("message.vampirism.candle_holder.not_enough_candles", getNumberOfCandles()), true);
                 } else {
                     level.setBlock(pos, getFilledState(state, orDefault), Block.UPDATE_ALL);
                     if (!player.getAbilities().instabuild) {

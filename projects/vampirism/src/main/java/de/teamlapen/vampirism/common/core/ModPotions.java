@@ -59,25 +59,25 @@ public class ModPotions {
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_LEAPING = POTIONS.register("long_strong_leaping", () -> new HunterPotion("leaping", new MobEffectInstance(MobEffects.JUMP_BOOST, 9600, 1)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_INVISIBILITY = POTIONS.register("very_long_invisibility", () -> new HunterPotion("invisibility", new MobEffectInstance(MobEffects.INVISIBILITY, 96000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_NIGHT_VISION = POTIONS.register("very_long_night_vision", () -> new HunterPotion("night_vision", new MobEffectInstance(MobEffects.NIGHT_VISION, 96000)));
-    public static final DeferredHolder<Potion, HunterPotion> NAUSEA = POTIONS.register("nausea", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.NAUSEA, 1200)));
+    public static final DeferredHolder<Potion, HunterPotion> NAUSEA = POTIONS.register("nausea", () -> new HunterPotion("nausea", new MobEffectInstance(MobEffects.NAUSEA, 1200)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_NAUSEA = POTIONS.register("long_nausea", () -> new HunterPotion("nausea", new MobEffectInstance(MobEffects.NAUSEA, 2400)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_NAUSEA = POTIONS.register("very_long_nausea", () -> new HunterPotion("nausea", new MobEffectInstance(MobEffects.NAUSEA, 24000)));
-    public static final DeferredHolder<Potion, HunterPotion> BLINDNESS = POTIONS.register("blindness", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.BLINDNESS, 1200)));
+    public static final DeferredHolder<Potion, HunterPotion> BLINDNESS = POTIONS.register("blindness", () -> new HunterPotion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 1200)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_BLINDNESS = POTIONS.register("long_blindness", () -> new HunterPotion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 4800)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_BLINDNESS = POTIONS.register("very_long_blindness", () -> new HunterPotion("blindness", new MobEffectInstance(MobEffects.BLINDNESS, 24000)));
-    public static final DeferredHolder<Potion, HunterPotion> HEALTH_BOOST = POTIONS.register("health_boost", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.HEALTH_BOOST, 1200)));
+    public static final DeferredHolder<Potion, HunterPotion> HEALTH_BOOST = POTIONS.register("health_boost", () -> new HunterPotion("health_boost", new MobEffectInstance(MobEffects.HEALTH_BOOST, 1200)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_HEALTH_BOOST = POTIONS.register("long_health_boost", () -> new HunterPotion("health_boost", new MobEffectInstance(MobEffects.HEALTH_BOOST, 4800)));
     public static final DeferredHolder<Potion, HunterPotion> STRONG_HEALTH_BOOST = POTIONS.register("strong_health_boost", () -> new HunterPotion("health_boost", new MobEffectInstance(MobEffects.HEALTH_BOOST, 400, 1)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_HEALTH_BOOST = POTIONS.register("very_long_health_boost", () -> new HunterPotion("health_boost", new MobEffectInstance(MobEffects.HEALTH_BOOST, 48000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HEALTH_BOOST = POTIONS.register("very_strong_health_boost", () -> new HunterPotion("health_boost", new MobEffectInstance(MobEffects.HEALTH_BOOST, 400, 2)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_HEALTH_BOOST = POTIONS.register("long_strong_health_boost", () -> new HunterPotion("health_boost", new MobEffectInstance(MobEffects.HEALTH_BOOST, 1200, 1)));
-    public static final DeferredHolder<Potion, HunterPotion> RESISTANCE = POTIONS.register("resistance", () -> new HunterPotion(null, new MobEffectInstance(MobEffects.RESISTANCE, 1800)));
+    public static final DeferredHolder<Potion, HunterPotion> RESISTANCE = POTIONS.register("resistance", () -> new HunterPotion("resistance", new MobEffectInstance(MobEffects.RESISTANCE, 1800)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_RESISTANCE = POTIONS.register("long_resistance", () -> new HunterPotion("resistance", new MobEffectInstance(MobEffects.RESISTANCE, 4800)));
     public static final DeferredHolder<Potion, HunterPotion> STRONG_RESISTANCE = POTIONS.register("strong_resistance", () -> new HunterPotion("resistance", new MobEffectInstance(MobEffects.RESISTANCE, 1800, 1)));
     public static final DeferredHolder<Potion, Potion> GARLIC = POTIONS.register("garlic", () -> new Potion("garlic", new MobEffectInstance(ModEffects.GARLIC, 1200)));
 
     //Vampire
-    public static final DeferredHolder<Potion, BasePotion> VAMPIRE_FIRE_RESISTANCE = POTIONS.register("vampire_fire_resistance", () -> new BasePotion(null, new MobEffectInstance(ModEffects.FIRE_PROTECTION, 3600, 5)));
+    public static final DeferredHolder<Potion, BasePotion> VAMPIRE_FIRE_RESISTANCE = POTIONS.register("vampire_fire_resistance", () -> new BasePotion("vampire_fire_resistance", new MobEffectInstance(ModEffects.FIRE_PROTECTION, 3600, 5)));
     public static final DeferredHolder<Potion, BasePotion> LONG_VAMPIRE_FIRE_RESISTANCE = POTIONS.register("long_vampire_fire_resistance", () -> new BasePotion("vampire_fire_resistance", new MobEffectInstance(ModEffects.FIRE_PROTECTION, 9600, 5)));
 
     static void register(IEventBus bus) {

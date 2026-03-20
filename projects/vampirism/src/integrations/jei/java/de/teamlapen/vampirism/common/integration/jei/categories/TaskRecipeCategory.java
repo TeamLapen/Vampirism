@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.integration.jei.categories;
 
-
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.faction.api.factions.tasks.Task;
@@ -28,32 +27,31 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
 
 public class TaskRecipeCategory implements IRecipeCategory<Task> {
 
-    private final @NotNull IDrawable icon;
+    private final IDrawable icon;
 
-    public TaskRecipeCategory(@NotNull IGuiHelper guiHelper) {
+    public TaskRecipeCategory(IGuiHelper guiHelper) {
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModItems.VAMPIRE_FANG.get()));
     }
 
     @Override
-    public void draw(@NotNull Task task, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(Task task, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
         graphics.vampirism$drawCenteredString(minecraft.font, task.title(), getWidth()/2, 2, Color.GRAY.getRGB(), false);
         Registry<Task> tasks = minecraft.level.registryAccess().lookupOrThrow(FactionRegistries.Keys.TASK);
-        Component taskmasterComponent = ModRegistries.FACTIONS.listElements().filter(s -> IFactionSpecificTags.get().get(s, FactionRegistries.Keys.TASK).filter(t -> tasks.wrapAsHolder(task).is(t)).isPresent()).map(a -> a.value().getVillageData().getTaskMasterEntity()).filter(Objects::nonNull).map(EntityType::getDescriptionId).map(Component::translatable).reduce((comp1, comp2) -> comp1.append(", ").append(comp2)).orElse(Component.translatable("text.vampirism.faction_representative"));
-        Component text = Component.translatable("text.vampirism.task.reward_obtain", taskmasterComponent);
+        Component taskmasterComponent = ModRegistries.FACTIONS.listElements().filter(s -> IFactionSpecificTags.get().get(s, FactionRegistries.Keys.TASK).filter(t -> tasks.wrapAsHolder(task).is(t)).isPresent()).map(a -> a.value().getVillageData().getTaskMasterEntity()).filter(Objects::nonNull).map(EntityType::getDescriptionId).map(Component::translatable).reduce((comp1, comp2) -> comp1.append(", ").append(comp2)).orElse(Component.translatable("gui.vampirism.jei.task.representative"));
+        Component text = Component.translatable("gui.vampirism.jei.task.reward_obtain", taskmasterComponent);
 
         y += UtilLib.renderMultiLine(minecraft.font, graphics, text, 160, x, y, Color.GRAY.getRGB());
 
-        MutableComponent prerequisites = Component.translatable("text.vampirism.task.prerequisites").append(":\n");
+        MutableComponent prerequisites = Component.translatable("gui.vampirism.jei.task.prerequisites").append(":\n");
         List<TaskUnlocker> unlockers = task.unlocker();
         if (!unlockers.isEmpty()) {
             Component newLine = Component.literal("\n");
@@ -61,7 +59,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
                 prerequisites.append(Component.literal("- ")).append(u.getDescription()).append(newLine);
             }
         } else {
-            prerequisites.append(Component.translatable("text.vampirism.task.prerequisites.none"));
+            prerequisites.append(Component.translatable("gui.vampirism.jei.task.prerequisites.none"));
         }
         UtilLib.renderMultiLine(minecraft.font, graphics, prerequisites, 160, x, y, Color.GRAY.getRGB());
     }
@@ -76,25 +74,23 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         return 168;
     }
 
-    @NotNull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
-    @NotNull
     @Override
     public Component getTitle() {
-        return Component.translatable("text.vampirism.task.reward");
+        return Component.translatable("gui.vampirism.jei.task.reward");
     }
 
     @Override
-    public @NotNull IRecipeType<Task> getRecipeType() {
+    public IRecipeType<Task> getRecipeType() {
         return VampirismJEIPlugin.TASK;
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull Task recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, Task recipe, IFocusGroup focuses) {
         TaskReward reward = recipe.reward();
         if (reward instanceof ItemReward itemReward) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 76, 15).setStandardSlotBackground().addItemStacks(itemReward.getAllPossibleRewards());

@@ -67,7 +67,7 @@ public class PureBloodItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.accept(Component.translatable("item.vampirism.pure_blood.purity").append(Component.literal(": " + (getLevel(stack) + 1 + "/" + COUNT))).withStyle(ChatFormatting.RED));
+        tooltipComponents.accept(Component.translatable("tooltip.vampirism.purity", getLevel(stack) + 1 + "/" + COUNT).withStyle(ChatFormatting.RED));
     }
 
     public int getLevel(ItemStack stack) {

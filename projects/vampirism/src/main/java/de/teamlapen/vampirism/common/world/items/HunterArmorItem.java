@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HunterArmorItem extends ModArmorItem {
 
-    public static final Component MASSAGE_RESTRICTION_HUNTER_CLOTHING = Component.translatable("text.vampirism.restriction.hunter_clothing");
+    public static final Component MASSAGE_RESTRICTION_HUNTER_CLOTHING = Component.translatable("message.vampirism.restriction.hunter_clothing");
 
     public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props) {
         super(materialIn, type, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HUNTER_CLOTHING).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")));

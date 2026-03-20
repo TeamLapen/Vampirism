@@ -33,7 +33,7 @@ public class VaporStillMenu extends AbstractContainerMenu {
     private final ContainerData syncedProperties;
     private final boolean extended;
 
-    public VaporStillMenu(int id, @NotNull Inventory playerInventory, @NotNull Container inventory, boolean extended, @Nullable ContainerData syncedProperties) {
+    public VaporStillMenu(int id, Inventory playerInventory, Container inventory, boolean extended, @Nullable ContainerData syncedProperties) {
         super(ModMenus.EXTENDED_VAPOR_STILL.get(), id);
 
         int expectedSize = extended ? SLOT_COUNT_EXTENDED : SLOT_COUNT_NORMAL;
@@ -72,18 +72,18 @@ public class VaporStillMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(@NotNull Player player) {
+    public boolean stillValid(Player player) {
         return this.inventory.stillValid(player);
     }
 
     @Override
-    public void removed(@NotNull Player player) {
+    public void removed(Player player) {
         super.removed(player);
         this.inventory.stopOpen(player);
     }
 
     @Override
-    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack result = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 
@@ -151,7 +151,7 @@ public class VaporStillMenu extends AbstractContainerMenu {
         }
 
         @Override
-        public boolean mayPlace(@NotNull ItemStack stack) {
+        public boolean mayPlace(ItemStack stack) {
             return filter.test(stack);
         }
 
@@ -164,7 +164,7 @@ public class VaporStillMenu extends AbstractContainerMenu {
     public static class Factory implements IContainerFactory<VaporStillMenu> {
 
         @Override
-        public @NotNull VaporStillMenu create(int windowId, @NotNull Inventory inv, @Nullable RegistryFriendlyByteBuf data) {
+        public VaporStillMenu create(int windowId, Inventory inv, @Nullable RegistryFriendlyByteBuf data) {
             if (data == null) {
                 return new VaporStillMenu(windowId, inv, new SimpleContainer(SLOT_COUNT_NORMAL), false, null);
             }

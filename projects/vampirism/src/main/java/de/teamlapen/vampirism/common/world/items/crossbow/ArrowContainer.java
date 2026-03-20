@@ -41,8 +41,8 @@ public class ArrowContainer extends Item implements IArrowContainer {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> texts, TooltipFlag flag) {
         getArrows(stack).stream().map(ItemStack::getItem).collect(Collectors.groupingBy(a -> a)).forEach((item, items) -> texts.accept(item.getName(item.getDefaultInstance()).copy().append(" " + items.size())));
-        texts.accept(Component.translatable("item.vampirism.tech_crossbow_ammo_package.tooltip", Component.translatable(ModItems.BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
-        texts.accept(Component.translatable("item.vampirism.arrow_clip.right_click").withStyle(ChatFormatting.GRAY));
+        texts.accept(Component.translatable("tooltip.vampirism.arrow_clip.desc1", Component.translatable(ModItems.BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
+        texts.accept(Component.translatable("tooltip.vampirism.arrow_clip.desc2").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

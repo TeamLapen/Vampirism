@@ -81,7 +81,7 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
         IRefinementSet set = getRefinementSet(stack);
         if (set != null) {
             tooltipComponents.accept(Component.empty());
-            tooltipComponents.accept(Component.translatable("text.vampirism.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
+            tooltipComponents.accept(Component.translatable("tooltip.vampirism.refinement.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
             for (Holder<IRefinement> holder : set.getRefinements()) {
                 IRefinement refinement = holder.value();
                 var mapper = refinement.attributeFactory();

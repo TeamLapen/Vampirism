@@ -126,7 +126,7 @@ public class BatCageItem extends BlockItem implements IEntityInteractable {
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
         CompoundTag entityTag =  stack.get(ModDataComponents.HELD_ENTITY);
         if (entityTag != null) {
-            Component name = Component.translatable("text.vampirism.unknown");
+            Component name = Component.translatable("misc.vampirism.unknown");
             if (entityTag.contains("CustomName")) {
                 name = Component.literal(entityTag.getString("CustomName").orElse(""));
             } else if (entityTag.contains("id")) {

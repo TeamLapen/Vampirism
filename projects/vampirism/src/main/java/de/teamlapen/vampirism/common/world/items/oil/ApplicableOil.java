@@ -48,7 +48,7 @@ public abstract class ApplicableOil extends Oil implements IApplicableOil {
             if (flag.isAdvanced()) {
                 component.append(" ").append(Component.literal("%s/%s".formatted( duration, maxDuration)).withStyle(status));
             } else {
-                component.append(" ").append(Component.translatable("text.vampirism.oil.wetting_status").withStyle(status));
+                component.append(" ").append(Component.translatable("tooltip.vampirism.oil.wetting").withStyle(status));
             }
         }
         return Optional.of(component);

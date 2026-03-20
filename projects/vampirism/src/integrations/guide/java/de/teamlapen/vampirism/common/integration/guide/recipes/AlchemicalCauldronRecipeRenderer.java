@@ -79,7 +79,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
 
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
-            Component level = Component.translatable("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            Component level = Component.translatable("container.vampirism.hunter_table.level", recipe.getRequiredLevel());
             guiGraphics.drawString(font, level, guiLeft + 50, y, Color.GRAY.getRGB(), false);
             y += font.lineHeight + 2;
         }

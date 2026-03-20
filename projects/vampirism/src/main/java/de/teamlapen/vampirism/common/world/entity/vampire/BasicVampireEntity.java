@@ -400,22 +400,22 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     ItemStack heldItem = player.getItemInHand(hand);
                     //noinspection Convert2MethodRef
                     boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(c -> c.hasFreeMinionSlot()).orElse(false);
-                    player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.available"), true);
+                    player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire.minion.available"), true);
                     if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
                         if (!freeSlot) {
-                            player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.no_free_slot"), true);
+                            player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire.minion.no_free_slot"), true);
                         } else {
                             String key = switch (this.getRandom().nextInt(3)) {
-                                case 0 -> "text.vampirism.basic_vampire.minion.start_serving1";
-                                case 1 -> "text.vampirism.basic_vampire.minion.start_serving2";
-                                default -> "text.vampirism.basic_vampire.minion.start_serving3";
+                                case 0 -> "dialogue.vampirism.vampire.minion.start_serving1";
+                                case 1 -> "dialogue.vampirism.vampire.minion.start_serving2";
+                                default -> "dialogue.vampirism.vampire.minion.start_serving3";
                             };
                             player.displayClientMessage(Component.translatable(key), false);
                             convertToMinion(player);
                             if (!player.getAbilities().instabuild) heldItem.shrink(1);
                         }
                     } else if (freeSlot) {
-                        player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.require_binding", Component.translatable(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
+                        player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire.minion.require_binding", Component.translatable(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
                     }
                     return InteractionResult.SUCCESS;
                 }).orElse(InteractionResult.PASS);

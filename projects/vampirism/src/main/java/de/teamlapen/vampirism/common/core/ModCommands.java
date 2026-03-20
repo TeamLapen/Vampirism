@@ -22,7 +22,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class ModCommands {
     }
 
 
-    static void registerCommands(@NotNull RegisterCommandsEvent event) {
+    static void registerCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         CommandBuildContext buildContext = event.getBuildContext();
 

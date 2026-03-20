@@ -36,10 +36,10 @@ public class FactionKeys implements IMinecraftAccessor {
 
     public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(FIdentifier.mod("main"));
 
-    public static final KeyMapping ACTION = new KeyMapping("keys.factions.action", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);
-    public static final KeyMapping MINION = new KeyMapping("keys.factions.minion_task", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping FACTION_MENU = new KeyMapping("keys.factions.faction_menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
-    public static final KeyMapping SKILL_SCREEN = new KeyMapping("keys.factions.skill_screen", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION = new KeyMapping("key.factions.action", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);
+    public static final KeyMapping MINION = new KeyMapping("key.factions.minion_task", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping FACTION_MENU = new KeyMapping("key.factions.faction_menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
+    public static final KeyMapping SKILL_SCREEN = new KeyMapping("key.factions.skill_screen", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
 
     public static final Map<ActionKeys, KeyMapping> ACTION_KEYS;

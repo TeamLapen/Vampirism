@@ -49,7 +49,7 @@ public class SpitfireBehavior implements IVampirismCrossbowArrow.ICrossbowArrowB
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> textComponents, TooltipFlag tooltipFlag) {
-        textComponents.accept(Component.translatable("item.vampirism.crossbow_arrow_spitfire.tooltip").withStyle(ChatFormatting.GRAY));
+        textComponents.accept(Component.translatable("tooltip.vampirism.quarrel_spitfire").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

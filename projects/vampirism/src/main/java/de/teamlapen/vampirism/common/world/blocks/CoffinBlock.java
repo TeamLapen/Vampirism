@@ -70,7 +70,7 @@ public class CoffinBlock extends BaseContainerBlock {
     
     private static final ShapeTable SHAPES = new ShapeTable();
     
-    private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(new Player.BedSleepingProblem(BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(Component.empty())), Component.translatable("text.vampirism.coffin.no_sleep"), Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("text.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("text.vampirism.coffin.obstructed"));
+    private static final Map<Player.BedSleepingProblem, Component> sleepResults = ImmutableMap.of(new Player.BedSleepingProblem(BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(Component.empty())), Component.translatable("message.vampirism.coffin.day_only"), Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("message.vampirism.coffin.too_far_away"), Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("message.vampirism.coffin.obstructed"));
 
     public CoffinBlock(Properties properties, DyeColor color) {
         this(color, properties);
@@ -200,13 +200,13 @@ public class CoffinBlock extends BaseContainerBlock {
                 worldIn.setBlock(otherPos, worldIn.getBlockState(otherPos).setValue(CLOSED, !state.getValue(CLOSED)), 3);
                 return InteractionResult.CONSUME;
             } else if (VampirePlayer.get(player).getLevel() == 0) {
-                player.displayClientMessage(Component.translatable("text.vampirism.coffin.cant_use"), true);
+                player.displayClientMessage(Component.translatable("message.vampirism.coffin.cant_use"), true);
                 return InteractionResult.CONSUME;
             } else if (state.getValue(BedBlock.OCCUPIED)) {
-                player.displayClientMessage(Component.translatable("text.vampirism.coffin.occupied"), true);
+                player.displayClientMessage(Component.translatable("message.vampirism.coffin.occupied"), true);
                 return InteractionResult.CONSUME;
             } else if (state.getValue(CLOSED)) {
-                player.displayClientMessage(Component.translatable("text.vampirism.coffin.closed"), true);
+                player.displayClientMessage(Component.translatable("message.vampirism.coffin.closed"), true);
                 return InteractionResult.CONSUME;
             }
 
@@ -221,7 +221,7 @@ public class CoffinBlock extends BaseContainerBlock {
                 worldIn.explode(null, worldIn.damageSources().badRespawnPointExplosion(vec3), null, vec3, 5.0F, true, Level.ExplosionInteraction.BLOCK);
                 return InteractionResult.CONSUME;
             } else if (state.getValue(BedBlock.OCCUPIED)) {
-                player.displayClientMessage(Component.translatable("text.vampirism.coffin.occupied"), true);
+                player.displayClientMessage(Component.translatable("message.vampirism.coffin.occupied"), true);
                 return InteractionResult.CONSUME;
             } else {
                 final BlockPos finalPos = pos;

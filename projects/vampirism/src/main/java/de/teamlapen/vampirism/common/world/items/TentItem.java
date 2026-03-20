@@ -74,7 +74,7 @@ public class TentItem extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltipComponents, flagIn);
         if (spawner) {
-            tooltipComponents.accept(Component.translatable("tile.vampirism.tent.spawner").withStyle(ChatFormatting.GRAY));
+            tooltipComponents.accept(Component.translatable("tooltip.vampirism.tent.spawner").withStyle(ChatFormatting.GRAY));
         }
     }
 

@@ -79,7 +79,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final Component name = Component.translatable("container.hunter");
+    private static final Component name = Component.translatable("container.vampirism.hunter");
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder()
@@ -368,7 +368,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                         trainee = player;
                         this.getNavigation().stop();
                     } else {
-                        player.displayClientMessage(Component.translatable("text.vampirism.i_am_busy_right_now"), true);
+                        player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.occupied"), true);
                     }
                     return InteractionResult.SUCCESS;
                 } else if (hunterLevel > 0) {
@@ -379,25 +379,25 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
                         if (this.getEntityLevel() > 0) {
                             if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
-                                player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.unavailable"), true);
+                                player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.unavailable"), true);
                             }
                         } else {
                             boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
-                            player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.available"), false);
+                            player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.available"), false);
                             if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
                                 if (!freeSlot) {
-                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.no_free_slot"), false);
+                                    player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.no_free_slot"), false);
                                 } else {
-                                    player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.start_serving"), false);
+                                    player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.start_serving"), false);
                                     convertToMinion(player);
                                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                 }
                             } else if (freeSlot) {
-                                player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.minion.require_equipment", Component.translatable(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
+                                player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.require_equipment", Component.translatable(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
                             }
                         }
                     } else {
-                        player.displayClientMessage(Component.translatable("text.vampirism.basic_hunter.cannot_train_you_any_further"), false);
+                        player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.cannot_train_further"), false);
                     }
                     return InteractionResult.SUCCESS;
                 }

@@ -126,10 +126,10 @@ public class Helper {
     public static boolean canTurnPlayer(IVampire biter, @Nullable Player target) {
         if (target != null && (target.isCreative() || target.isSpectator())) return false;
         if (biter instanceof IVampirePlayer player) {
-            if (!ModConfig.server().playerCanTurnPlayer.get()) return false;
+            if (!ModConfig.server().playerCanInfectPlayers.get()) return false;
             return !(player instanceof ServerPlayer) || Permissions.INFECT_PLAYER.isAllowed((ServerPlayer) player);
         } else {
-            return !ModConfig.server().disableMobBiteInfection.get();
+            return ModConfig.server().mobBiteInfection.get();
         }
     }
 

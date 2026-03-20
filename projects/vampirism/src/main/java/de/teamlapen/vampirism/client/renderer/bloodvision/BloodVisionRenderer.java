@@ -155,7 +155,7 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
         if (this.level() == null || this.player() == null || !player().isAlive()) return;
         this.lastBloodVisionTicks = this.bloodVisionTicks;
         VampirePlayer vampire = VampirePlayer.get(player());
-        if (vampire.getSkillProperties().blood_vision && !ModConfig.client().disableBloodVisionRendering.get() && !vampire.isGettingSundamage(level())) {
+        if (vampire.getSkillProperties().blood_vision && ModConfig.client().renderBloodVision.get() && !vampire.isGettingSundamage(level())) {
             if (this.bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
                 this.bloodVisionTicks++;
 

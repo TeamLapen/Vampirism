@@ -63,11 +63,11 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.accept(Component.translatable("text.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level() + 1).withStyle(ChatFormatting.DARK_RED));
+        tooltipComponents.accept(Component.translatable("tooltip.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level() + 1).withStyle(ChatFormatting.DARK_RED));
         float charged = getChargePercentage(stack);
         float trained = getTrained(stack, FactionsMod.proxy.getClientPlayer());
-        tooltipComponents.accept(Component.translatable("text.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
-        tooltipComponents.accept(Component.translatable("text.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
+        tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
+        tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
     }
 
     @Override

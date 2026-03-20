@@ -121,8 +121,8 @@ public class ModBlocks {
     public static final DeferredBlock<CursedRootsBlock> CURSED_ROOTS = registerWithItem("cursed_roots", CursedRootsBlock::new, () -> copyProperties(Blocks.CRIMSON_ROOTS).mapColor(MapColor.CRIMSON_HYPHAE));
     public static final DeferredBlock<CursedHangingRootsBlock> CURSED_HANGING_ROOTS = registerWithItem("cursed_hanging_roots", CursedHangingRootsBlock::new, () -> copyProperties(Blocks.HANGING_ROOTS).mapColor(MapColor.CRIMSON_HYPHAE));
     
-    public static final DeferredBlock<DirectCursedBarkBlock> DIRECT_CURSED_BARK = registerWithItem("direct_cursed_bark", DirectCursedBarkBlock::new, () -> basicProperties().sound(SoundType.WOOD));
-    public static final DeferredBlock<DiagonalCursedBarkBlock> DIAGONAL_CURSED_BARK = registerBlock("diagonal_cursed_bark", DiagonalCursedBarkBlock::new, () -> basicProperties().sound(SoundType.EMPTY));
+    public static final DeferredBlock<DirectCursedBarkBlock> DIRECT_CURSED_BARK = registerWithItem("direct_cursed_bark", DirectCursedBarkBlock::new, () -> basicProperties().sound(SoundType.WOOD).overrideDescription("block.vampirism.cursed_bark"));
+    public static final DeferredBlock<DiagonalCursedBarkBlock> DIAGONAL_CURSED_BARK = registerBlock("diagonal_cursed_bark", DiagonalCursedBarkBlock::new, () -> basicProperties().sound(SoundType.EMPTY).overrideDescription("block.vampirism.cursed_bark"));
 
     public static final DeferredBlock<FlowerPotBlock> POTTED_DARK_SPRUCE_SAPLING = registerPottedPlant("potted_dark_spruce_sapling", DARK_SPRUCE_SAPLING);
     public static final DeferredBlock<FlowerPotBlock> POTTED_CURSED_SPRUCE_SAPLING = registerPottedPlant("potted_cursed_spruce_sapling", CURSED_SPRUCE_SAPLING);
@@ -331,7 +331,7 @@ public class ModBlocks {
     public static final DeferredBlock<MotherTrophyBlock> MOTHER_TROPHY = registerWithItem("mother_trophy", MotherTrophyBlock::new, () -> basicProperties().mapColor(MapColor.COLOR_GRAY).strength(3, 9).lightLevel(s -> 1).noOcclusion(), itemProps -> itemProps.factions$withShiftDescription().rarity(Rarity.EPIC).stacksTo(1));
 
     public static final DeferredBlock<TentBlock> TENT = registerBlock("tent", TentBlock::new, () -> basicProperties().mapColor(MapColor.WOOL).ignitedByLava().strength(0.6f).sound(SoundType.WOOL).noOcclusion());
-    public static final DeferredBlock<TentMainBlock> TENT_MAIN = registerBlock("tent_main", TentMainBlock::new, () -> copyProperties(TENT));
+    public static final DeferredBlock<TentMainBlock> TENT_MAIN = registerBlock("tent_main", TentMainBlock::new, () -> copyProperties(TENT).overrideDescription(TENT.get().getDescriptionId()));
 
     public static final DeferredBlock<CoffinBlock> COFFIN_WHITE = registerWithItem("coffin_white", props -> new CoffinBlock(props, DyeColor.WHITE), coffinProperties());
     public static final DeferredBlock<CoffinBlock> COFFIN_ORANGE = registerWithItem("coffin_orange", props -> new CoffinBlock(props, DyeColor.ORANGE), coffinProperties());
@@ -353,8 +353,8 @@ public class ModBlocks {
     public static final DeferredBlock<MotherBlock> MOTHER = registerBlock("mother", MotherBlock::new, () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(5, 3600000.0F).sound(SoundType.CHAIN));
     public static final DeferredBlock<RemainsBlock> REMAINS = registerBlock("remains", props -> new RemainsBlock(props, false, false), () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable());
     public static final DeferredBlock<RemainsBlock> VULNERABLE_REMAINS = registerBlock("vulnerable_remains", props -> new RemainsBlock(props, true, true), () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable());
-    public static final DeferredBlock<ActiveVulnerableRemainsBlock> ACTIVE_VULNERABLE_REMAINS = registerBlock("active_vulnerable_remains", ActiveVulnerableRemainsBlock::new, () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).randomTicks().sound(SoundType.ROOTED_DIRT).noLootTable());
-    public static final DeferredBlock<RemainsBlock> INCAPACITATED_VULNERABLE_REMAINS = registerBlock("incapacitated_vulnerable_remains", props -> new RemainsBlock(props, false, true), () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1.0F, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable());
+    public static final DeferredBlock<ActiveVulnerableRemainsBlock> ACTIVE_VULNERABLE_REMAINS = registerBlock("active_vulnerable_remains", ActiveVulnerableRemainsBlock::new, () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1, 3600000.0F).randomTicks().sound(SoundType.ROOTED_DIRT).noLootTable().overrideDescription(VULNERABLE_REMAINS.get().getDescriptionId()));
+    public static final DeferredBlock<RemainsBlock> INCAPACITATED_VULNERABLE_REMAINS = registerBlock("incapacitated_vulnerable_remains", props -> new RemainsBlock(props, false, true), () -> basicProperties().mapColor(MapColor.TERRACOTTA_BROWN).strength(-1.0F, 3600000.0F).sound(SoundType.ROOTED_DIRT).randomTicks().noLootTable().overrideDescription(VULNERABLE_REMAINS.get().getDescriptionId()));
 
 
     /**

@@ -30,8 +30,8 @@ public class AlchemicalFireItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
-        tooltip.accept(Component.translatable("item.vampirism.item_alchemical_fire.desc1").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.translatable("item.vampirism.item_alchemical_fire.desc2").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.vampirism.alchemical_fire.desc1").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.vampirism.alchemical_fire.desc2").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

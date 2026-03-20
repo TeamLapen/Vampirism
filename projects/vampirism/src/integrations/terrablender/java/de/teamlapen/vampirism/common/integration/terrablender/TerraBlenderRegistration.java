@@ -35,7 +35,7 @@ public class TerraBlenderRegistration {
     static class ForestRegion extends Region {
 
         public ForestRegion() {
-            super(VIdentifier.mod("overworld"), RegionType.OVERWORLD, ModConfig.common().vampireForestWeight_terrablender.get());
+            super(VIdentifier.mod("overworld"), RegionType.OVERWORLD, ModConfig.common().vampireForestWeightTerrablender.get());
         }
 
         @Override

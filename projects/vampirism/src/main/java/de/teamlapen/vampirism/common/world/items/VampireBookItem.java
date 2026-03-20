@@ -41,7 +41,7 @@ public class VampireBookItem extends Item implements BaseDisplayItemGenerator.Cr
 
         if (vampireBook.isEmpty()) {
             if (level.isClientSide()) {
-                player.displayClientMessage(Component.translatable("text.vampirism.vampire_book.failed_to_load"), true);
+                player.displayClientMessage(Component.translatable("gui.vampirism.vampire_book.failed_to_load"), true);
             }
             return InteractionResult.FAIL;
         }
@@ -62,7 +62,7 @@ public class VampireBookItem extends Item implements BaseDisplayItemGenerator.Cr
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.accept((Component.translatable("book.byAuthor", VampireBook.get(stack).author())).withStyle(ChatFormatting.GRAY));
-        tooltipComponents.accept((Component.translatable("text.vampirism.vampire_book_description").withStyle(ChatFormatting.GRAY)));
+        tooltipComponents.accept((Component.translatable(stack.getItem().getDescriptionId()).withStyle(ChatFormatting.GRAY)));
     }
 
     @Override

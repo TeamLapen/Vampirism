@@ -64,7 +64,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe> extend
 
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
-            Component level = Component.translatable("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            Component level = Component.translatable("container.vampirism.hunter_table.level", recipe.getRequiredLevel());
             guiGraphics.drawString(fontRenderer, level, guiLeft + 40, y, Color.GRAY.getRGB(), false);
             y += fontRenderer.lineHeight + 2;
         }

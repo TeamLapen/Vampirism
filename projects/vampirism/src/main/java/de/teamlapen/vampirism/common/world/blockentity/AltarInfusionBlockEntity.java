@@ -82,7 +82,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("tile.vampirism.altar_infusion");
+        return Component.translatable("container.vampirism.altar_infusion");
     }
 
     @Override
@@ -516,7 +516,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         }
 
         public Component getMessage() {
-            return Component.translatable("text.vampirism.altar_infusion.ritual." + name);
+            return Component.translatable("message.vampirism.altar_infusion.ritual." + name);
         }
 
         @Override

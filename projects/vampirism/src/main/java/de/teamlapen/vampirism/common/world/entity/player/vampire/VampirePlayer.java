@@ -1057,7 +1057,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     private void applyEntityAttributes() {
         BalanceConfig config = ModConfig.balance();
-        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(config.vpSundamage.get());
+        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(config.vpSundamagePerTick.get());
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION).setBaseValue(config.vpBloodExhaustionFactor.get());
         player.getAttribute(ModAttributes.NEONATAL_DURATION).setBaseValue(config.vpNeonatalDuration.get() * 20);
         player.getAttribute(ModAttributes.DBNO_DURATION).setBaseValue(config.vpDbnoDuration.get() * 20);
@@ -1074,16 +1074,16 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * Apply the armor unaffected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersA(int level) {
-        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), ModConfig.balance().vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
-        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), ModConfig.balance().vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), ModConfig.balance().vpHealthMaxLevelMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), ModConfig.balance().vpExhaustionMaxLevelMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
     /**
      * Apply the armor affected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersB(int level, boolean heavyArmor) {
-        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
-        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpSpeedMaxLevelMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpAttackSpeedMaxLevelMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
     private void biteBlock(BlockPos pos, BlockState state, Direction side, @Nullable BlockEntity blockEntity) {

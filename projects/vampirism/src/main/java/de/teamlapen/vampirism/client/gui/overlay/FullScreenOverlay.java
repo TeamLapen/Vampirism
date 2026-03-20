@@ -31,7 +31,7 @@ public class FullScreenOverlay extends BaseOverlay {
 
     @Override
     public boolean canRenderOverlays() {
-        return super.canRenderOverlays() && ModConfig.client().renderScreenOverlay.get();
+        return super.canRenderOverlays() && ModConfig.client().showFullScreenOverlay.get();
     }
 
     @Override

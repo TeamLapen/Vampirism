@@ -40,7 +40,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         double oz = player.getZ();
         if (target.getType() == HitResult.Type.MISS) {
             player.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), 1, 1);
-            return IActionResult.fail(Component.translatable("text.vampirism.action.teleport.no_target"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.teleport.no_target"));
         }
         BlockPos pos = null;
         if (target.getType() == HitResult.Type.BLOCK) {
@@ -64,7 +64,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         if (pos == null) {
             player.setPos(ox, oy, oz);
             player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 1, 1);
-            return IActionResult.fail(Component.translatable("text.vampirism.action.teleport.no_target"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.teleport.no_target"));
         }
         if (player instanceof ServerPlayer playerMp) {
             playerMp.disconnect();

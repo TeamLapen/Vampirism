@@ -17,7 +17,7 @@ public class SunOverlay extends TextureOverlay {
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
-        if (canRenderOverlays() && ModConfig.client().enableSunOverlayRendering.get()) {
+        if (canRenderOverlays() && ModConfig.client().showSunHUDOverlay.get()) {
             AbstractClientPlayer player = this.player();
             VampirePlayer vampire = VampirePlayer.get(player);
             MobEffectInstance effect = player.getEffect(ModEffects.SUNSCREEN);

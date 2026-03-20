@@ -85,9 +85,9 @@ public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionMe
                 Component tooltip = null;
 
                 if (slot == 0 && !stack.isEmpty() && stack.getItem() instanceof PureBloodItem pureBloodItem && pureBloodItem.getLevel(stack) != requirements.pureBloodLevel()) {
-                    tooltip = Component.translatable("text.vampirism.altar_infusion.ritual_wrong_purity", requirements.pureBloodLevel() + 1);
+                    tooltip = Component.translatable("container.vampirism.altar_infusion.ritual_wrong_purity", requirements.pureBloodLevel() + 1);
                 } else if (stack.isEmpty() || stack.getCount() < requiredCount) {
-                    tooltip = Component.translatable("text.vampirism.altar_infusion.ritual_missing_" + requiredId, requiredCount - stack.getCount(), requirements.pureBloodLevel() + 1);
+                    tooltip = Component.translatable("container.vampirism.altar_infusion.ritual_missing_" + requiredId, requiredCount - stack.getCount(), requirements.pureBloodLevel() + 1);
                 }
 
                 if (tooltip != null && requiredCount> 0) {

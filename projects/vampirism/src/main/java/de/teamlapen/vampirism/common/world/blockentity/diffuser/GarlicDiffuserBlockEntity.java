@@ -56,7 +56,7 @@ public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
 
     @Override
     protected @NotNull Component getDefaultName() {
-        return getBlockState().getBlock().getName();
+        return Component.translatable("container.vampirism.garlic_diffuser");
     }
 
     @Override

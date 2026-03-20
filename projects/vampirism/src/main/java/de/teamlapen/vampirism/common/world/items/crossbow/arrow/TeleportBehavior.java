@@ -55,7 +55,7 @@ public class TeleportBehavior implements IVampirismCrossbowArrow.ICrossbowArrowB
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> textComponents, TooltipFlag tooltipFlag) {
-        textComponents.accept(Component.translatable("item.vampirism.crossbow_arrow_teleport.tooltip").withStyle(ChatFormatting.GRAY));
+        textComponents.accept(Component.translatable("tooltip.vampirism.quarrel_teleport").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

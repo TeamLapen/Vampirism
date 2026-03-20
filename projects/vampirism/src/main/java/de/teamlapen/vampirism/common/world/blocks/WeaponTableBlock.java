@@ -50,7 +50,7 @@ public class WeaponTableBlock extends BaseHorizontalBlock {
 
     private static final VoxelShape SHAPE = Shapes.or(Block.box(3, 0, 0, 13, 2, 8), Block.box(4, 2, 1, 12, 3, 7), Block.box(5, 3, 2, 11, 6, 6), Block.box(3, 6, 0, 13, 9.5, 8), Block.box(0, 1, 9, 7, 2, 16), Block.box(0, 0, 9, 2, 1, 11), Block.box(5, 0, 9, 7, 1, 11), Block.box(0, 0, 14, 2, 1, 16), Block.box(5, 0, 14, 7, 1, 16), Block.box(0, 1, 9, 1, 7, 16), Block.box(0, 1, 9, 7, 7, 10), Block.box(0, 1, 15, 7, 7, 16), Block.box(6, 1, 9, 7, 7, 16), Block.box(10, 0, 11, 15, 3, 14), Block.box(12, 3, 12, 13, 10, 13));
 
-    private static final Component NAME = Component.translatable("gui.vampirism.hunter_weapon_table");
+    private static final Component NAME = Component.translatable("container.vampirism.weapon_table");
 
     public WeaponTableBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LAVA) == 0 ? 0 : state.getValue(LAVA) * 2 + 5), SHAPE);

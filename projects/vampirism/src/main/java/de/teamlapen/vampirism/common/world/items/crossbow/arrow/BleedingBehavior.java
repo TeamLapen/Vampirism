@@ -32,7 +32,7 @@ public class BleedingBehavior implements IVampirismCrossbowArrow.ICrossbowArrowB
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> textComponents, TooltipFlag tooltipFlag) {
-        textComponents.accept(Component.translatable("item.vampirism.crossbow_arrow_bleeding.tooltip").withStyle(ChatFormatting.GRAY));
+        textComponents.accept(Component.translatable("tooltip.vampirism.quarrel_bleeding").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

@@ -41,10 +41,10 @@ public class InfectAction extends DefaultVampireAction {
         Entity creature = context.targetEntity().orElse(null);
         if (creature instanceof LivingEntity target) {
             if ((creature instanceof Player || creature instanceof AbstractVillager) &&  UtilLib.canReallySee(target, player, false)) {
-                return IActionResult.fail(Component.translatable("text.vampirism.action.infect.sees_you"));
+                return IActionResult.fail(Component.translatable("message.vampirism.action.infect.sees_you"));
             }
             if(!deriveBiteableEntry(target).map(b -> b.tryInfect(vampire)).orElse(false)) {
-                return IActionResult.fail(Component.translatable("text.vampirism.action.infect.can_not_infect"));
+                return IActionResult.fail(Component.translatable("message.vampirism.action.infect.can_not_infect"));
             }
 
             player.awardStat(ModStats.INFECTED_CREATURES.get());
@@ -52,26 +52,26 @@ public class InfectAction extends DefaultVampireAction {
 
             return IActionResult.SUCCESS;
         }
-        return IActionResult.fail(Component.translatable("text.vampirism.action.infect.no_target"));
+        return IActionResult.fail(Component.translatable("message.vampirism.action.infect.no_target"));
     }
 
 
     @Override
     public IActionResult canBeUsedBy(@NotNull IVampirePlayer player) {
         if (player.asEntity().level().getDifficulty() == Difficulty.PEACEFUL) {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.infect.peaceful"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.infect.peaceful"));
         }
         if (player.isRemote()) {
             Entity target = VampirismMod.proxy.getMouseOverEntity();
             if (target instanceof LivingEntity living) {
                 if (UtilLib.canReallySee(living, player.asEntity(), false)) {
-                    return IActionResult.fail(Component.translatable("text.vampirism.action.infect.sees_you"));
+                    return IActionResult.fail(Component.translatable("message.vampirism.action.infect.sees_you"));
                 }
                 if(!deriveBiteableEntry(target).map(b -> b.canBeInfected(player)).orElse(false)) {
-                    return IActionResult.fail(Component.translatable("text.vampirism.action.infect.can_not_infect"));
+                    return IActionResult.fail(Component.translatable("message.vampirism.action.infect.can_not_infect"));
                 }
             } else {
-                return IActionResult.fail(Component.translatable("text.vampirism.action.infect.no_target"));
+                return IActionResult.fail(Component.translatable("message.vampirism.action.infect.no_target"));
             }
         }
         return IActionResult.SUCCESS;

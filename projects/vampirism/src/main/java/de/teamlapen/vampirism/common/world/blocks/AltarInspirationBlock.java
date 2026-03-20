@@ -82,7 +82,7 @@ public class AltarInspirationBlock extends BaseContainerBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof AltarInspirationBlockEntity altarBlockEntity) {
-            player.awardStat(ModStats.ALTAR_OF_INSPIRATION_RITUALS_PERFORMED.get());
+            player.awardStat(ModStats.ALTAR_INSPIRATION_RITUALS_PERFORMED.get());
             altarBlockEntity.startRitual(player);
 
             return InteractionResult.SUCCESS;

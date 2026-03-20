@@ -10,6 +10,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -18,106 +21,115 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
-/**
- * Gui for the Hunter Trainer interaction
- */
 public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
-    private static final Identifier INGOT_SLOT_SPRITE = VIdentifier.mc("container/slot/ingot");
-    private static final Identifier HUNTER_INTEL_SLOT_SPRITE = VIdentifier.mod("container/slot/hunter_intel");
-    private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/hunter_trainer.png");
 
-    private Button buttonLevelup;
+    private static final Identifier EMPTY_SLOT_INGOT = VIdentifier.mc("container/slot/ingot");
+    private static final Identifier EMPTY_SLOT_HUNTER_INTEL = VIdentifier.mod("container/slot/hunter_intel");
+    private static final Identifier BACKGROUND_LOCATION = VIdentifier.mod("textures/gui/container/hunter_trainer.png");
+
+    private Button buttonLevelUp;
 
     private final CyclingSlotBackground ironIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground goldIcon = new CyclingSlotBackground(1);
-    private final CyclingSlotBackground hunterIntel = new CyclingSlotBackground(2);
+    private final CyclingSlotBackground hunterIntelIcon = new CyclingSlotBackground(2);
 
-    private final ItemStack iron;
-    private final ItemStack gold;
-
-
-    public HunterTrainerScreen(@NotNull HunterTrainerMenu inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
-        super(inventorySlotsIn, playerInventory, name, BACKGROUND);
-        this.iron = Items.IRON_INGOT.getDefaultInstance();
-        this.gold = Items.GOLD_INGOT.getDefaultInstance();
+    public HunterTrainerScreen(HunterTrainerMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title, BACKGROUND_LOCATION);
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
         var requirement = this.menu.getRequirement();
-        this.ironIcon.tick(requirement.filter(s -> s.ironQuantity() > 0).map(s -> List.of(INGOT_SLOT_SPRITE)).orElse(List.of()));
-        this.goldIcon.tick(requirement.filter(s -> s.goldQuantity() > 0).map(s -> List.of(INGOT_SLOT_SPRITE)).orElse(List.of()));
-        this.hunterIntel.tick(requirement.map(s -> List.of(HUNTER_INTEL_SLOT_SPRITE)).orElse(List.of()));
+        this.ironIcon.tick(requirement.filter(r -> r.ironQuantity() > 0).map(r -> List.of(EMPTY_SLOT_INGOT)).orElse(List.of()));
+        this.goldIcon.tick(requirement.filter(r -> r.goldQuantity() > 0).map(r -> List.of(EMPTY_SLOT_INGOT)).orElse(List.of()));
+        this.hunterIntelIcon.tick(requirement.map(r -> List.of(EMPTY_SLOT_HUNTER_INTEL)).orElse(List.of()));
     }
 
     @Override
-    public void slotChanged(@NotNull AbstractContainerMenu pContainerToSend, int pSlotInd, @NotNull ItemStack pStack) {
-        this.buttonLevelup.active = this.menu.canLevelup();
+    public void slotChanged(AbstractContainerMenu container, int slotIndex, ItemStack stack) {
+        this.buttonLevelUp.active = this.menu.canLevelup();
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(graphics, pMouseX, pMouseY, pPartialTick);
-        this.renderOnBoardingTooltips(graphics, pMouseX, pMouseY);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(graphics, mouseX, mouseY);
     }
 
-    private void renderOnBoardingTooltips(GuiGraphics graphics, int pMouseX, int pMouseY) {
-        if (this.hoveredSlot != null && this.hoveredSlot.index < 3) {
-            Optional<Component> optional = Optional.empty();
-            var req = this.menu.getRequirement();
-            ItemStack stack = this.hoveredSlot.getItem();
-            var missing = req.map(s -> switch (this.hoveredSlot.index) {
-                case 0 -> s.ironQuantity() - stack.getCount();
-                case 1 -> s.goldQuantity() - stack.getCount();
-                case 2 -> 1 - stack.getCount();
-                default -> 0;
-            }).orElse(0);
-            if (missing > 0) {
-                optional = Optional.of(Component.translatable("text.vampirism.hunter_trainer.ritual_missing_items", missing, (switch (this.hoveredSlot.index) {
-                    case 0 -> this.iron.getHoverName();
-                    case 1 -> this.gold.getHoverName();
-                    case 2 -> req.map(s -> s.tableRequirement().resultIntelItem().get().getCustomName()).orElseGet(Component::empty);
-                    default -> throw new IllegalStateException("Unexpected value: " + this.hoveredSlot.index);
-                }).getString()));
+    @Override
+    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        if (this.hoveredSlot != null && this.hoveredSlot.index >= 0 && this.hoveredSlot.index < 3) {
+            var requirementOpt = this.menu.getRequirement();
+            if (requirementOpt.isPresent()) {
+                var requirement = requirementOpt.get();
+                int slot = this.hoveredSlot.index;
+                ItemStack stack = this.hoveredSlot.getItem();
+                Component tooltip = null;
+
+                switch (slot) {
+                    case 0 -> {
+                        int missing = requirement.ironQuantity() - stack.getCount();
+                        if (missing > 0) {
+                            tooltip = Component.translatable("container.vampirism.hunter_trainer.ritual_missing_iron", missing);
+                        }
+                    }
+                    case 1 -> {
+                        int missing = requirement.goldQuantity() - stack.getCount();
+                        if (missing > 0) {
+                            tooltip = Component.translatable("container.vampirism.hunter_trainer.ritual_missing_gold", missing);
+                        }
+                    }
+                    case 2 -> {
+                        int requiredLevel = requirement.targetLevel();
+                        if (stack.isEmpty()) {
+                            tooltip = Component.translatable("container.vampirism.hunter_trainer.ritual_missing_hunter_intel", requiredLevel);
+                        }
+                    }
+                }
+
+                if (tooltip != null) {
+                    ClientTooltipComponent clientTooltip = ClientTooltipComponent.create(tooltip.getVisualOrderText());
+                    graphics.renderTooltip(this.font, List.of(clientTooltip), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, stack.get(DataComponents.TOOLTIP_STYLE));
+                    return;
+                }
             }
-            optional.ifPresent((p_274684_) -> {
-                graphics.setTooltipForNextFrame(this.font, this.font.split(p_274684_, 115), pMouseX, pMouseY);
-            });
         }
+
+        super.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
     protected void subInit() {
-        Component name = Component.translatable("text.vampirism.level_up");
+        Component name = Component.translatable("container.vampirism.level_up");
         int buttonWidth = this.font.width(name) + 10;
-        this.addRenderableWidget(this.buttonLevelup = new ExtendedButton(this.leftPos + imageWidth - buttonWidth - 6, this.topPos + 45, buttonWidth, 20, name, (context) -> {
-            VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.TRAINER_LEVELUP));
-            Player player = Minecraft.getInstance().player;
-            UtilLib.spawnParticles(player.level(), ParticleTypes.ENCHANT, player.getX(), player.getY(), player.getZ(), 1, 1, 1, 100, 1);
-            player.playSound(SoundEvents.NOTE_BLOCK_HARP.value(), 4.0F, (1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F) * 0.7F);
-            this.onClose();
-        }));
-        this.buttonLevelup.active = false;
+        this.addRenderableWidget(this.buttonLevelUp = new ExtendedButton(
+                this.leftPos + imageWidth - buttonWidth - 6, this.topPos + 45,
+                buttonWidth, 20, name,
+                button -> {
+                    VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.TRAINER_LEVELUP));
+                    Player player = Minecraft.getInstance().player;
+                    UtilLib.spawnParticles(player.level(), ParticleTypes.ENCHANT, player.getX(), player.getY(), player.getZ(), 1, 1, 1, 100, 1);
+                    player.playSound(SoundEvents.NOTE_BLOCK_HARP.value(), 4.0F, (1.0F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F) * 0.7F);
+                    this.onClose();
+                }
+        ));
+        this.buttonLevelUp.active = false;
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float var1, int var2, int var3) {
-        super.renderBg(graphics, var1, var2, var3);
-        this.ironIcon.render(this.menu, graphics, var1, this.leftPos, this.topPos);
-        this.goldIcon.render(this.menu, graphics, var1, this.leftPos, this.topPos);
-        this.hunterIntel.render(this.menu, graphics, var1, this.leftPos, this.topPos);
+    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+        super.renderBg(graphics, partialTick, mouseX, mouseY);
+        this.ironIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
+        this.goldIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
+        this.hunterIntelIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderErrorIcon(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-
+    protected void renderErrorIcon(GuiGraphics graphics, int mouseX, int mouseY) {
     }
 }

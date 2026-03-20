@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.items.crossbow.arrow;
 import de.teamlapen.vampirism.api.world.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -25,13 +26,13 @@ public class GarlicBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBeh
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> textComponents, TooltipFlag tooltipFlag) {
-
+    public void onHitEntity(ItemStack arrow, LivingEntity entity, AbstractArrow arrowEntity, Entity shootingEntity) {
+        entity.addEffect(new MobEffectInstance(ModEffects.GARLIC, 100, 1));
     }
 
     @Override
-    public void onHitEntity(ItemStack arrow, LivingEntity entity, AbstractArrow arrowEntity, Entity shootingEntity) {
-        entity.addEffect(new MobEffectInstance(ModEffects.GARLIC, 100, 1));
+    public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> textComponents, TooltipFlag tooltipFlag) {
+        textComponents.accept(Component.translatable("tooltip.vampirism.quarrel_garlic").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

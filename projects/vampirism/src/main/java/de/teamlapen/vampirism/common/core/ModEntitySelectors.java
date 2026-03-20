@@ -22,10 +22,9 @@ import java.util.List;
  */
 public class ModEntitySelectors {
 
-    private static final String FACTION = "vampirism:faction";
-    private static final String LEVEL = "vampirism:level";
-    private static final String MIN_LEVEL = "vampirism:minLevel";
-    private static final String MAX_LEVEL = "vampirism:maxLevel";
+    // ":" don't work here, so an "_" is used
+    private static final String FACTION = "vampirism_faction";
+    private static final String LEVEL = "vampirism_level";
 
     private static final DynamicCommandExceptionType FACTION_NOT_FOUND = new DynamicCommandExceptionType((p_208726_0_) -> Component.translatable("command.factionapi.argument.faction.notfound", p_208726_0_));
 
@@ -51,7 +50,7 @@ public class ModEntitySelectors {
                 }
             }
             throw FACTION_NOT_FOUND.createWithContext(parser.getReader(), factionID);
-        }, (parser) -> true, Component.translatable("text.vampirism.argument.entity.options.faction.desc"));
+        }, (parser) -> true, Component.translatable("command.vampirism.argument.selector.faction"));
 
         EntitySelectorOptions.register(LEVEL, (parser) -> {
             StringReader reader = parser.getReader();
@@ -68,7 +67,7 @@ public class ModEntitySelectors {
                 throw EntitySelectorOptions.ERROR_LEVEL_NEGATIVE.createWithContext(reader);
             }
 
-        }, (parser) -> true, Component.translatable("text.vampirism.argument.entity.options.level.desc"));
+        }, (parser) -> true, Component.translatable("command.vampirism.argument.selector.level"));
 
     }
 }

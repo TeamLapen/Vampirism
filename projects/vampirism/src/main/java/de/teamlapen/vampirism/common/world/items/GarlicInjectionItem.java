@@ -32,7 +32,7 @@ public class GarlicInjectionItem extends InjectionItem {
             return true;
         } else if (currentFaction != null) {
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.sendSystemMessage(Component.translatable("text.vampirism.injection_chair_other_faction", currentFaction.value().getName()));
+                serverPlayer.sendSystemMessage(Component.translatable("message.vampirism.injection_chair.already_non_hunter", currentFaction.value().getName()));
             }
         }
         return false;

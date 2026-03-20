@@ -26,7 +26,7 @@ public class FogDiffuserBlockEntity extends DiffuserBlockEntity {
 
     @Override
     protected @NotNull Component getDefaultName() {
-        return Component.translatable("block.vampirism.fog_diffuser");
+        return Component.translatable("container.vampirism.fog_diffuser");
     }
 
     @Override

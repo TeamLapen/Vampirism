@@ -26,8 +26,8 @@ public class ModConfig extends Services {
     public static final Logger LOGGER = LogManager.getLogger();
 
     private final Config<ClientConfig> client;
-    private final Config<ServerConfig> server;
     private final Config<CommonConfig> common;
+    private final Config<ServerConfig> server;
     private final BalanceConfig balance;
     private final ConfigHelper helper = new ConfigHelper();
 
@@ -37,8 +37,8 @@ public class ModConfig extends Services {
     public ModConfig(ModContainer container) {
         super(container);
         this.client = Config.create(ClientConfig::new);
-        this.server = Config.create(ServerConfig::new);
         this.common = Config.create(CommonConfig::new);
+        this.server = Config.create(ServerConfig::new);
 
         this.balanceBuilder = new BalanceBuilder();
         this.balance = new BalanceConfig(balanceBuilder);
@@ -89,12 +89,12 @@ public class ModConfig extends Services {
         return client.config();
     }
 
-    public ServerConfig serverConfig() {
-        return server.config();
-    }
-
     public CommonConfig commonConfig() {
         return common.config();
+    }
+
+    public ServerConfig serverConfig() {
+        return server.config();
     }
 
     public BalanceConfig balanceConfig() {
@@ -149,10 +149,7 @@ public class ModConfig extends Services {
         Build balance configuration
          */
         final Pair<BalanceConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure((builder) -> {
-            builder.comment("A ton of options which allow you to balance the mod to your desire");
-            builder.push("balance");
             balanceBuilder.build(balance, builder);
-            builder.pop();
             return balance;
         });
         balanceSpec = specPair.getRight();

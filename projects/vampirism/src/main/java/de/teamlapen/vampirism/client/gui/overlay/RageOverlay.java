@@ -15,7 +15,7 @@ public class RageOverlay extends TextureOverlay {
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
-        if (canRenderOverlays() && ModConfig.client().enableRageOverlayRendering.get()) {
+        if (canRenderOverlays() && ModConfig.client().showVampireRageHUDOverlay.get()) {
             if (VampirePlayer.get(this.player()).getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
                 renderTextureOverlay(graphics, RAGE_TEXTURE, 1.0F);
             }

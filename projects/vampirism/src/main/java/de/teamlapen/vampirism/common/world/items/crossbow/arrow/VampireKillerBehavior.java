@@ -40,7 +40,7 @@ public class VampireKillerBehavior implements IVampirismCrossbowArrow.ICrossbowA
 
     @Override
     public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> textComponents, TooltipFlag tooltipFlag) {
-        textComponents.accept(Component.translatable("item.vampirism.crossbow_arrow_vampire_killer.tooltip").withStyle(ChatFormatting.GRAY));
+        textComponents.accept(Component.translatable("tooltip.vampirism.quarrel_vampire_killer").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

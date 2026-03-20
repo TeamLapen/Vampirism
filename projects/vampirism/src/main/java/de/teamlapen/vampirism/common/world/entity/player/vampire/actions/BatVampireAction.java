@@ -53,19 +53,19 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public @NotNull IActionResult canBeUsedBy(@NotNull IVampirePlayer vampire) {
         Player player = vampire.asEntity();
         if (vampire.isGettingSundamage(player.level())) {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_sun"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.bat.in_sun"));
         } else if (ModItems.UMBRELLA.get() == player.getMainHandItem().getItem()) {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.has_umbrella"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.bat.has_umbrella"));
         } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE || vampire.asEntity().hasEffect(ModEffects.GARLIC) && vampire.asEntity().getEffect(ModEffects.GARLIC).getAmplifier() > 0) {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.effected_by_garlic"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.bat.effected_by_garlic"));
         } else if (ModConfig.server().batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.dimension"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.bat.dimension"));
         } else if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
             return IActionResult.fail(Component.translatable("text.factionapi.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
         } else if (player.isInWater()) {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_water"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.bat.in_water"));
         } else if (player.getVehicle() != null) {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.bat.in_vehicle"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.bat.in_vehicle"));
         } else {
             return IActionResult.SUCCESS;
         }
@@ -122,16 +122,16 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public boolean onUpdate(@NotNull IVampirePlayer vampire) {
         if (vampire.asEntity() instanceof ServerPlayer player) {
             if (vampire.isGettingSundamage(player.level()) && !vampire.isRemote()) {
-                player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_day"));
+                player.sendSystemMessage(Component.translatable("message.vampirism.action.bat.cant_fly_day"));
                 return true;
             } else if (ModItems.UMBRELLA.get() == player.getMainHandItem().getItem() && !vampire.isRemote()) {
-                player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_umbrella"));
+                player.sendSystemMessage(Component.translatable("message.vampirism.action.bat.cant_fly_umbrella"));
                 return true;
             } else if (vampire.isGettingGarlicDamage(player.level()) != EnumStrength.NONE && !vampire.isRemote()) {
-                player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_garlic"));
+                player.sendSystemMessage(Component.translatable("message.vampirism.action.bat.cant_fly_garlic"));
                 return true;
             } else if (ModConfig.server().batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
-                player.sendSystemMessage(Component.translatable("text.vampirism.cant_fly_dimension"));
+                player.sendSystemMessage(Component.translatable("message.vampirism.action.bat.cant_fly_dimension"));
                 return true;
             } else {
                 float exhaustion = ModConfig.balance().vaBatExhaustion.get().floatValue();

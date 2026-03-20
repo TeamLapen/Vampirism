@@ -210,7 +210,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            this.setCustomName(getTypeName().plainCopy().append(Component.translatable("entity.vampirism.vampire_baron.level", level + 1)));
+            this.setCustomName(Component.translatable("entity.vampirism.vampire_baron.leveled", level + 1));
         } else {
             this.setCustomName(null);
         }
