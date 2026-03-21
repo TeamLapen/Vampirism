@@ -6,16 +6,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 public interface IVampirismCrossbowArrow<T extends AbstractArrow & IEntityCrossbowArrow> extends ItemLike {
 
@@ -60,7 +55,9 @@ public interface IVampirismCrossbowArrow<T extends AbstractArrow & IEntityCrossb
 
         }
 
-        void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> textComponents, TooltipFlag tooltipFlag);
+        default Component getEffectDescription() {
+            return Component.empty();
+        }
 
         boolean canBeInfinite();
 
