@@ -58,10 +58,13 @@ public abstract class DiffuserBlock extends BaseContainerBlock {
         } else {
             if (player instanceof ServerPlayer serverPlayer) {
                 getBlockEntity(level, pos).ifPresent(blockEntity -> serverPlayer.openMenu(blockEntity, blockEntity::writeExtraData));
+                onSuccessfullyOpened(state, level, pos, serverPlayer, hitResult);
             }
             return InteractionResult.CONSUME;
         }
     }
+
+    protected void onSuccessfullyOpened(BlockState state, Level level, BlockPos pos, ServerPlayer player, BlockHitResult hitResult) {}
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {

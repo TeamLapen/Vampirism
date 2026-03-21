@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import de.teamlapen.faction.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -307,6 +308,7 @@ public class TentBlock extends Block {
             return InteractionResult.SUCCESS;
         }
 
+        player.awardStat(ModStats.INTERACT_WITH_TENT.get());
         BedRule bedrule = world.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
         if (bedrule.explodes()) {
             world.removeBlock(pos, false);

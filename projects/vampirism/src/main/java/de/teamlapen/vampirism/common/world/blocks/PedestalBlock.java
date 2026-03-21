@@ -109,6 +109,7 @@ public class PedestalBlock extends BaseContainerBlock {
                 playerInventoryWrapper.drop(itemResource, 1, true, false, transaction);
             }
             transaction.commit();
+            player.awardStat(ModStats.INTERACT_WITH_BLOOD_PEDESTAL.get());
             return InteractionResult.SUCCESS;
         }
     }
@@ -125,6 +126,7 @@ public class PedestalBlock extends BaseContainerBlock {
 
             if (count > 0) {
                 transaction.commit();
+                player.awardStat(ModStats.INTERACT_WITH_BLOOD_PEDESTAL.get());
                 return InteractionResult.SUCCESS;
             } else {
                 return InteractionResult.FAIL;
