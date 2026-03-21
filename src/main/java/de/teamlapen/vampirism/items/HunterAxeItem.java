@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -98,6 +99,11 @@ public class HunterAxeItem extends HunterSwordItem implements IItemWithTier, Mod
             case ULTIMATE, ENHANCED -> 1.3F;
             default -> 1.2F;
         };
+    }
+
+    @Override
+    public boolean isPrimaryItemFor(ItemStack stack, Holder<Enchantment> enchantment) {
+        return super.isPrimaryItemFor(stack, enchantment) || enchantment.value().isSupportedItem(stack);
     }
 
     @Override

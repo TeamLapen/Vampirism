@@ -1,0 +1,11 @@
+{
+  "remove": [
+    "#vampirism:swords/heart_seeker",
+    "#vampirism:swords/heart_striker"
+  ],
+  "values": [
+    "vampirism:hunter_axe_normal",
+    "vampirism:hunter_axe_enhanced",
+    "vampirism:hunter_axe_ultimate"
+  ]
+}

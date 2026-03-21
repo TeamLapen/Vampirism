@@ -300,7 +300,9 @@ public class TagProvider {
             tag(ItemTags.FOOT_ARMOR).add(ModItems.HUNTER_COAT_FEET_NORMAL.get(), ModItems.HUNTER_COAT_FEET_ENHANCED.get(), ModItems.HUNTER_COAT_FEET_ULTIMATE.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.get(), ModItems.VAMPIRE_CLOTHING_BOOTS.get());
             tag(ModTags.Items.VAMPIRE_CLOTHING).addTag(ModTags.Items.VAMPIRE_CLOAK);
             tag(ItemTags.MEAT).add(ModItems.HUMAN_HEART.get(), ModItems.WEAK_HUMAN_HEART.get());
-            tag(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get());
+            tag(ItemTags.DURABILITY_ENCHANTABLE).add(ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get(), ModItems.STAKE.get());
+            tag(ItemTags.FIRE_ASPECT_ENCHANTABLE).add(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get()).remove(ModTags.Items.HEART_SEEKER).remove(ModTags.Items.HEART_STRIKER);
+            tag(ItemTags.SWORD_ENCHANTABLE).add(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get());
         }
     }
 
