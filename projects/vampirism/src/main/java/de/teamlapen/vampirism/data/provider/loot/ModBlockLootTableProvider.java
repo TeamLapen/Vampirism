@@ -57,7 +57,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.BLOOD_CONTAINER.get());
         this.dropSelf(ModBlocks.BLOOD_GRINDER.get());
         this.dropSelf(ModBlocks.BLOOD_PEDESTAL.get());
-        this.dropSelf(ModBlocks.POTION_TABLE.get());
+        this.dropSelf(ModBlocks.VAPOR_STILL.get());
         this.dropSelf(ModBlocks.BLOOD_SIEVE.get());
         this.dropSelf(ModBlocks.DARK_STONE_BRICKS.get());
         this.dropSelf(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());

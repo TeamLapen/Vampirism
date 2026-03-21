@@ -29,7 +29,7 @@ public class ModScreens {
         event.register(ModMenus.HUNTER_BASIC.get(), HunterBasicScreen::new);
         event.register(ModMenus.ALTAR_INFUSION.get(), AltarInfusionScreen::new);
         event.register(ModMenus.BLOOD_GRINDER.get(), BloodGrinderScreen::new);
-        event.register(ModMenus.EXTENDED_POTION_TABLE.get(), PotionTableScreen::new);
+        event.register(ModMenus.EXTENDED_VAPOR_STILL.get(), VaporStillScreen::new);
         event.register(ModMenus.ALCHEMICAL_TABLE.get(), AlchemyTableScreen::new);
         event.register(ModMenus.VAMPIRE_BEACON.get(), VampireBeaconScreen::new);
         event.register(ModMenus.REVERT_BACK.get(), InjectionChairRevertBackScreen::new);

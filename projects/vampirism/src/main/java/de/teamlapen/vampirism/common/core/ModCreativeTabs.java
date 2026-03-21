@@ -410,7 +410,7 @@ public class ModCreativeTabs {
             add(HUNTER_TABLE);
             add(WEAPON_TABLE);
             add(ALCHEMICAL_CAULDRON);
-            add(POTION_TABLE);
+            add(VAPOR_STILL);
             add(ALCHEMY_TABLE);
             add(INJECTION_CHAIR);
             add(ALTAR_CLEANSING);

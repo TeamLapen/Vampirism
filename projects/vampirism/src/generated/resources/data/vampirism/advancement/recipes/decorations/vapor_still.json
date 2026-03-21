@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_glass_bottle": {
+    "has_copper_ingot": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:glass_bottle"
+            "items": "#c:ingots/copper"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:potion_table"
+        "recipe": "vampirism:vapor_still"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_glass_bottle"
+      "has_copper_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:potion_table"
+      "vampirism:vapor_still"
     ]
   }
 }

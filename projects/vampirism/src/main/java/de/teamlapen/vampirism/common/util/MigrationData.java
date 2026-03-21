@@ -98,7 +98,7 @@ public class MigrationData {
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {
-        mapping.remap("vampirism:blood_potion_table", "vampirism:potion_table");
+        mapping.remap("vampirism:blood_potion_table", "vampirism:vapor_still");
         mapping.remap("vampirism:garlic_beacon_normal", "vampirism:garlic_diffuser_normal");
         mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
         mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
@@ -130,6 +130,7 @@ public class MigrationData {
         mapping.remap("vampirism:totem_top", "factions:totem_top");
         mapping.remap("vampirism:totem_top_crafted", "factions:totem_top_crafted");
         mapping.remap("vampirism:med_chair", "vampirism:injection_chair");
+        mapping.remap("vampirism:potion_table", "vampirism:vapor_still");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {

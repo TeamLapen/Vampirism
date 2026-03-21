@@ -24,7 +24,7 @@ public class ModMenus {
     public static final DeferredHolder<MenuType<?>, MenuType<WeaponTableMenu>> WEAPON_TABLE = MENUS.register("weapon_table", () -> create(new WeaponTableMenu.Factory()));
     public static final DeferredHolder<MenuType<?>, MenuType<AltarInfusionMenu>> ALTAR_INFUSION = MENUS.register("altar_infusion", () -> create(AltarInfusionMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<BloodGrinderMenu>> BLOOD_GRINDER = MENUS.register("blood_grinder", () -> create(BloodGrinderMenu::new));
-    public static final DeferredHolder<MenuType<?>, MenuType<PotionTableMenu>> EXTENDED_POTION_TABLE = MENUS.register("extended_potion_table", () -> create(new PotionTableMenu.Factory()));
+    public static final DeferredHolder<MenuType<?>, MenuType<VaporStillMenu>> EXTENDED_VAPOR_STILL = MENUS.register("extended_vapor_still", () -> create(new VaporStillMenu.Factory()));
     public static final DeferredHolder<MenuType<?>, MenuType<AlchemyTableMenu>> ALCHEMICAL_TABLE = MENUS.register("alchemical_table", () -> create(AlchemyTableMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<VampireBeaconMenu>> VAMPIRE_BEACON = MENUS.register("vampire_beacon", () -> create(VampireBeaconMenu::new));
     public static final DeferredHolder<MenuType<?>, MenuType<RevertBackMenu>> REVERT_BACK = MENUS.register("revert_back", () -> create(RevertBackMenu::new));

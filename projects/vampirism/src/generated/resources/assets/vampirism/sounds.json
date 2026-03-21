@@ -62,19 +62,19 @@
     ],
     "subtitle": "subtitles.vampirism.coffin_lid"
   },
-  "block.potion_table_crafting": {
-    "sounds": [
-      {
-        "name": "vampirism:reserved/block/potion_table_crafting",
-        "stream": true
-      }
-    ]
-  },
   "block.sphere_spinning": {
     "sounds": [
       "vampirism:cc/block/sphere_spinning"
     ],
     "subtitle": "subtitles.vampirism.sphere_spinning"
+  },
+  "block.vapor_still_crafting": {
+    "sounds": [
+      {
+        "name": "vampirism:reserved/block/vapor_still_crafting",
+        "stream": true
+      }
+    ]
   },
   "block.weapon_table_crafting": {
     "sounds": [

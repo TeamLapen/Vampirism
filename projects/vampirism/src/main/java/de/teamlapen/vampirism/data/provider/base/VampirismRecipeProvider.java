@@ -44,16 +44,19 @@ import static de.teamlapen.vampirism.api.util.VIdentifier.modString;
 
 public abstract class VampirismRecipeProvider extends RecipeProvider {
 
+    protected static final TagKey<Item> COPPER_INGOT = Tags.Items.INGOTS_COPPER;
     protected static final TagKey<Item> IRON_INGOT = Tags.Items.INGOTS_IRON;
     protected static final TagKey<Item> GOLD_INGOT = Tags.Items.INGOTS_GOLD;
     protected static final TagKey<Item> COAL = ItemTags.COALS;
     protected static final TagKey<Item> DIAMOND = Tags.Items.GEMS_DIAMOND;
     protected static final TagKey<Item> NETHERITE_INGOT = Tags.Items.INGOTS_NETHERITE;
     protected static final TagKey<Item> REDSTONE_DUST = Tags.Items.DUSTS_REDSTONE;
+    protected static final TagKey<Item> COPPER_BLOCK = Tags.Items.STORAGE_BLOCKS_COPPER;
     protected static final TagKey<Item> IRON_BLOCK = Tags.Items.STORAGE_BLOCKS_IRON;
     protected static final TagKey<Item> GOLD_BLOCK = Tags.Items.STORAGE_BLOCKS_GOLD;
     protected static final TagKey<Item> COAL_BLOCK = Tags.Items.STORAGE_BLOCKS_COAL;
     protected static final TagKey<Item> DIAMOND_BLOCK = Tags.Items.STORAGE_BLOCKS_DIAMOND;
+    protected static final TagKey<Item> COPPER_NUGGET = Tags.Items.NUGGETS_COPPER;
     protected static final TagKey<Item> IRON_NUGGET = Tags.Items.NUGGETS_IRON;
     protected static final TagKey<Item> GOLD_NUGGET = Tags.Items.NUGGETS_GOLD;
     protected static final TagKey<Item> GARLIC = ModItemTags.GARLIC;
