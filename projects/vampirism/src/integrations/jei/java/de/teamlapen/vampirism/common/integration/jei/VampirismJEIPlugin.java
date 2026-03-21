@@ -78,7 +78,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addRecipeClickArea(AlchemicalCauldronScreen.class, 80, 34, 20, 15, ALCHEMICAL_CAULDRON);
         registration.addRecipeClickArea(WeaponTableScreen.class, 114, 46, 20, 15, WEAPON_TABLE);
-        registration.addRecipeClickArea(VaporStillScreen.class, 145, 17, 9, 28, DISTILLING);
+        registration.addRecipeClickArea(VaporStillScreen.class, 102, 16, 9, 29, DISTILLING);
         registration.addRecipeClickArea(AlchemyTableScreen.class, 73, 57, 28, 8, ALCHEMY_TABLE);
         registration.addRecipeClickArea(AlchemyTableScreen.class, 104, 36, 32, 32, ALCHEMY_TABLE);
         registration.addRecipeClickArea(GarlicDiffuserScreen.class, 45, 55, 14, 14, GARLIC_DIFFUSER);
