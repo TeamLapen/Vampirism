@@ -42,7 +42,7 @@ public class SanguinareInjectionItem extends InjectionItem {
                     player.displayClientMessage(Component.translatable("message.vampirism.infection_disabled_server"), true);
                 } else {
                     SanguinareMobEffect.addRandom(player, true, true);
-                    player.addEffect(new MobEffectInstance(ModEffects.POISON, 60));
+                    player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 60));
                     return true;
                 }
             }

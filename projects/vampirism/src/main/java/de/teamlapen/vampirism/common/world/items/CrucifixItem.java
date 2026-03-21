@@ -100,7 +100,7 @@ public class CrucifixItem extends Item implements IItemWithTier {
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
         if (entity instanceof LivingEntity livingEntity && slot != null && slot.getType() == EquipmentSlot.Type.HAND) {
             if (entity.tickCount % 16 == 8 && Helper.isVampire(entity)) {
-                livingEntity.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
+                livingEntity.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
                 if (entity instanceof Player player) {
                     player.getInventory().removeItem(stack);
                     player.drop(stack, true);

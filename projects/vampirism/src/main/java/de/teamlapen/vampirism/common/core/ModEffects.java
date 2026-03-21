@@ -24,7 +24,7 @@ public class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> DISGUISE_AS_VAMPIRE = EFFECTS.register("disguise_as_vampire", () -> new SimpleMobEffect(MobEffectCategory.NEUTRAL, 0x999900));
     public static final DeferredHolder<MobEffect, MobEffect> FIRE_PROTECTION = EFFECTS.register("fire_protection", () -> new SimpleMobEffect(MobEffectCategory.BENEFICIAL, 14981690));
     public static final DeferredHolder<MobEffect, MobEffect> GARLIC = EFFECTS.register("garlic", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0xFFFFFF));
-    public static final DeferredHolder<MobEffect, MobEffect> POISON = EFFECTS.register("poison", () -> new VampirismPoisonMobEffect(MobEffectCategory.HARMFUL, 0x4E9331));
+    public static final DeferredHolder<MobEffect, MobEffect> TOXICANT = EFFECTS.register("toxicant", () -> new VampirismPoisonMobEffect(MobEffectCategory.HARMFUL, 0x4E9331));
     public static final DeferredHolder<MobEffect, MobEffect> FREEZE = EFFECTS.register("freeze", () -> new FreezeMobEffect(MobEffectCategory.HARMFUL, 0xFFFFFF));
     public static final DeferredHolder<MobEffect, MobEffect> NEONATAL = EFFECTS.register("neonatal", () -> new SimpleMobEffect(MobEffectCategory.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, ModEffects.NEONATAL.getId(), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, ModEffects.NEONATAL.getId(), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> ARMOR_REGENERATION = EFFECTS.register("armor_regeneration", () -> new ArmorRegenerationMobEffect(MobEffectCategory.NEUTRAL, 0xD17642));

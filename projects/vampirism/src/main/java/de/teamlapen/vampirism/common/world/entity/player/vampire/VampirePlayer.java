@@ -251,7 +251,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 player.awardStat(ModStats.AMOUNT_BITTEN.get());
                 switch (feed_victim_bite_type) {
                     case HUNTER_CREATURE:
-                        player.addEffect(new MobEffectInstance(ModEffects.POISON, 60));
+                        player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 60));
                         if (player instanceof ServerPlayer) {
                             ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.POISONOUS_BITE);
                         }

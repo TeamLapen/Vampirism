@@ -33,7 +33,7 @@ public class VampireCloakItem extends Item {
         if (entity instanceof LivingEntity living && equipmentSlot == EquipmentSlot.CHEST) {
             if (living.tickCount % 16 == 8) {
                 if (!Helper.isVampire(living)) {
-                    living.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
+                    living.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
                 }
             }
         }

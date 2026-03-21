@@ -37,7 +37,7 @@ public class HunterArmorItem extends ModArmorItem {
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
         if (entity.tickCount % 16 == 8 && slot != null && slot.isArmor() && entity instanceof Player player && !FactionPlayerHandler.get(player).isInFaction(ModFactions.HUNTER)) {
-            player.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
+            player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
         }
     }
 

@@ -27,7 +27,7 @@ public class GarlicInjectionItem extends InjectionItem {
                 VampirismModClient.services().fullScreenOverlay().start(level, 4, 30, 0xBBBBBBFF);
             } else {
                 handler.joinFaction(ModFactions.HUNTER);
-                player.addEffect(new MobEffectInstance(ModEffects.POISON, 200, 1));
+                player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 200, 1));
             }
             return true;
         } else if (currentFaction != null) {

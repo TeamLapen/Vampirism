@@ -142,6 +142,7 @@ public class MigrationData {
 
     private static void fixEffects(@NotNull Mapping mapping) {
         mapping.remap("vampirism:thirst", "hunger");
+        mapping.remap("vampirism:poison", "vampirism:toxicant");
     }
 
     private static void fixPoiTypes(@NotNull Mapping mapping) {

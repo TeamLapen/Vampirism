@@ -34,7 +34,7 @@ public class VampireClothingItem extends Item {
         if (entity instanceof LivingEntity living && slot != null && slot.isArmor()) {
             if (living.tickCount % 16 == 8) {
                 if (!Helper.isVampire(living)) {
-                    living.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
+                    living.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
                 }
             }
         }

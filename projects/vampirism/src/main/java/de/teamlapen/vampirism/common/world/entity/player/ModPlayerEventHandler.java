@@ -209,7 +209,7 @@ public class ModPlayerEventHandler {
             if (stack.getItem() == Items.POTION) {
                 PotionContents contents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
                 if (contents.potion().map(s -> s.value() instanceof BasePotion.HunterPotion).orElse(false) && StreamSupport.stream(contents.getAllEffects().spliterator(), false).map(MobEffectInstance::getEffect).map(Holder::value).anyMatch(MobEffect::isBeneficial)) {
-                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.POISON, Integer.MAX_VALUE, VampirismPoisonMobEffect.DEADLY_AMPLIFIER));
+                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.TOXICANT, Integer.MAX_VALUE, VampirismPoisonMobEffect.DEADLY_AMPLIFIER));
                 }
             }
         }
