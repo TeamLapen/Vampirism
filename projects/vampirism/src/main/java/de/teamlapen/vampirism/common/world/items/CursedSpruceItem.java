@@ -36,7 +36,7 @@ public class CursedSpruceItem extends BlockItem {
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltipComponents, tooltipFlag);
         if (stack.has(ModDataComponents.ACTIVE)) {
-            tooltipComponents.accept(Component.translatable("text.vampirism.active").withStyle(ChatFormatting.DARK_RED));
+            tooltipComponents.accept(Component.translatable("tooltip.vampirism.active").withStyle(ChatFormatting.DARK_RED));
         }
     }
 }

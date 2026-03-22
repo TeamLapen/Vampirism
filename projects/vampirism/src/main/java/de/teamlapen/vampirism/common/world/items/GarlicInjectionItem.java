@@ -27,12 +27,12 @@ public class GarlicInjectionItem extends InjectionItem {
                 VampirismModClient.services().fullScreenOverlay().start(level, 4, 30, 0xBBBBBBFF);
             } else {
                 handler.joinFaction(ModFactions.HUNTER);
-                player.addEffect(new MobEffectInstance(ModEffects.POISON, 200, 1));
+                player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 200, 1));
             }
             return true;
         } else if (currentFaction != null) {
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.sendSystemMessage(Component.translatable("text.vampirism.injection_chair_other_faction", currentFaction.value().getName()));
+                serverPlayer.sendSystemMessage(Component.translatable("message.vampirism.injection_chair.already_non_hunter", currentFaction.value().getName()));
             }
         }
         return false;

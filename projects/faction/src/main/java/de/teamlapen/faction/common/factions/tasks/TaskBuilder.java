@@ -61,7 +61,7 @@ public class TaskBuilder {
     }
 
     public TaskBuilder addRequirement(TagKey<EntityType<?>> entityType, int amount) {
-        return this.addRequirement(new EntityTypeRequirement(entityType, amount, Component.translatable(Util.makeDescriptionId("entity_tag", entityType.location()))));
+        return this.addRequirement(new EntityTypeRequirement(entityType, amount, Component.translatable(Util.makeDescriptionId("task_tag", entityType.location()))));
     }
 
     public TaskBuilder addRequirement(Identifier stat, int amount, Component description) {

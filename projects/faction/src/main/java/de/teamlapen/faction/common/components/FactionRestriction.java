@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 
 public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<HolderSet<ISkill<?>>> skills, Optional<Integer> minLevel, Optional<Component> customMessage) implements IFactionRestriction, IFactionRestrictionProvider {
 
-    private static final Component MESSAGE_WRONG_FACTION = Component.translatable("text.factionapi.restriction.faction");
-    public static final Component MESSAGE_MISSING_SKILLS = Component.translatable("text.factionapi.restriction.skill");
-    public static final Component MESSAGE_MISSING_LEVEL = Component.translatable("text.factionapi.restriction.level");
+    private static final Component MESSAGE_WRONG_FACTION = Component.translatable("message.factionapi.restriction.faction");
+    public static final Component MESSAGE_MISSING_SKILLS = Component.translatable("message.factionapi.restriction.skill");
+    public static final Component MESSAGE_MISSING_LEVEL = Component.translatable("message.factionapi.restriction.level");
 
     public static final FactionRestriction ALL = FactionRestriction.builder(de.teamlapen.faction.api.tags.FactionTags.ALL_FACTIONS).build();
     public static final Codec<FactionRestriction> CODEC = RecordCodecBuilder.create(inst ->

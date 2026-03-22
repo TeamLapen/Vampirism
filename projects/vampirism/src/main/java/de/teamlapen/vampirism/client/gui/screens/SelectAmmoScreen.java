@@ -78,7 +78,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         }
 
         public Component getDisplayName() {
-            return renderStack != null ? renderStack.getHoverName() : Component.translatable("text.vampirism.crossbow.no_restriction");
+            return renderStack != null ? renderStack.getHoverName() : Component.translatable("gui.vampirism.select_ammo.no_restriction");
         }
     }
 }

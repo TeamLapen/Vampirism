@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  */
 public class HolyWaterBottleItem extends Item implements IItemWithTier {
 
-    public static final Component MASSAGE_RESTRICTION_HOLY = Component.translatable("text.vampirism.restriction.holy");
+    public static final Component MASSAGE_RESTRICTION_HOLY = Component.translatable("message.vampirism.restriction.holy");
 
     private final Tier tier;
 

@@ -170,7 +170,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         if (event.getName() != VanillaGuiLayers.PLAYER_HEALTH) {
             return;
         }
-        addTempPoison = mc().player.hasEffect(ModEffects.POISON) && !player().vampirism$activeEffects().containsKey(MobEffects.POISON);
+        addTempPoison = mc().player.hasEffect(ModEffects.TOXICANT) && !player().vampirism$activeEffects().containsKey(MobEffects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {

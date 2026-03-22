@@ -32,11 +32,11 @@ public class ServerEventHandler {
 
         if (isAdminLikePlayer && player instanceof ServerPlayer serverPlayer) {
             if (!ModList.get().isLoaded("guideapi_vp")) {
-                if (ModConfig.server().infoAboutGuideAPI.get()) {
-                    serverPlayer.sendSystemMessage(Component.translatable("text.vampirism.guideapi_available.first"));
-                    serverPlayer.sendSystemMessage(Component.translatable("text.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent.OpenUrl(REFERENCE.GUIDEAPI_LINK)).withUnderlined(true)));
+                if (ModConfig.server().informAboutGuideAPI.get()) {
+                    serverPlayer.sendSystemMessage(Component.translatable("notification.vampirism.guideapi_available"));
+                    serverPlayer.sendSystemMessage(Component.translatable("notification.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent.OpenUrl(REFERENCE.GUIDEAPI_LINK)).withUnderlined(true)));
 
-                    ModConfig.server().infoAboutGuideAPI.set(false);
+                    ModConfig.server().informAboutGuideAPI.set(false);
                 }
             }
         }

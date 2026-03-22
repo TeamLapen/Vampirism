@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 
 public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
-    public static final Component MASSAGE_RESTRICTION_HEAVY = Component.translatable("text.vampirism.restriction.heavy");
+    public static final Component MASSAGE_RESTRICTION_HEAVY = Component.translatable("message.vampirism.restriction.heavy");
 
     public static final ToolMaterial NORMAL = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, 250, 3.5f, 6.0F, 14, Tags.Items.INGOTS_IRON);
     public static final ToolMaterial ENHANCED = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.4f, 7.0F, 14, Tags.Items.GEMS_DIAMOND);
@@ -42,7 +42,7 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flagIn) {
         addTierInformation(tooltip);
-        tooltip.accept(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100), ModFactions.VAMPIRE.value().getNamePlural()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.vampirism.more_damage_against", Math.round((getVampireMult(tier) - 1) * 100), ModFactions.VAMPIRE.value().getNamePlural()).withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
     }
 

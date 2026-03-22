@@ -5,11 +5,15 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.DiffuserBlockEntity;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.GarlicDiffuserBlockEntity;
 import de.teamlapen.faction.api.world.IDescriptionProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -37,6 +41,11 @@ public class GarlicDiffuserBlock extends DiffuserBlock implements IDescriptionPr
     @Override
     protected MapCodec<? extends DiffuserBlock> codec() {
         return CODEC;
+    }
+
+    @Override
+    protected void onSuccessfullyOpened(BlockState state, Level level, BlockPos pos, ServerPlayer player, BlockHitResult hitResult) {
+        player.awardStat(ModStats.INTERACT_WITH_GARLIC_DIFFUSER.get());
     }
 
     @Override

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class VampireClothingItem extends Item {
 
-    public static final Component MASSAGE_RESTRICTION_VAMPIRE_CLOTHING = Component.translatable("text.vampirism.restriction.vampire_clothing");
+    public static final Component MASSAGE_RESTRICTION_VAMPIRE_CLOTHING = Component.translatable("message.vampirism.restriction.vampire_clothing");
 
     public VampireClothingItem(ArmorType type, ArmorMaterial material, Properties properties) {
         super(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(properties).humanoidArmor(material, type));
@@ -34,7 +34,7 @@ public class VampireClothingItem extends Item {
         if (entity instanceof LivingEntity living && slot != null && slot.isArmor()) {
             if (living.tickCount % 16 == 8) {
                 if (!Helper.isVampire(living)) {
-                    living.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
+                    living.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
                 }
             }
         }

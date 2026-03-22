@@ -57,7 +57,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     protected boolean testPreconditions(@NotNull WorldGenLevel worldIn, @NotNull StructureManager manager, @NotNull ChunkPos chunkPos) {
-        if (!ModConfig.common().enableHunterTentGeneration.get()) return false;
+        if (!ModConfig.common().generateHunterCamps.get()) return false;
         return StructureUtil.getStructureStartAt(worldIn.getLevel(), this.pos, StructureTags.VILLAGE).isEmpty();
     }
 

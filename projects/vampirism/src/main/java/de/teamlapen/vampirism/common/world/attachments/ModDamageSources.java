@@ -74,10 +74,6 @@ public class ModDamageSources {
         return new DamageSource(this.damageTypes.getOrThrow(ModDamageTypes.STAKE), attacker);
     }
 
-    public MinionDamageSource minion(@NotNull MinionEntity<?> entity) {
-        return new MinionDamageSource(this.damageTypes.getOrThrow(ModDamageTypes.MINION), entity);
-    }
-
     public DBNODamageSource dbno(@Nullable Component originalSource) {
         return new DBNODamageSource(this.damageTypes.getOrThrow(ModDamageTypes.DBNO), originalSource);
     }

@@ -93,7 +93,7 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
             if (flag.isAdvanced()) {
                 component.append(" ").append(Component.literal("%s/%s".formatted(duration, maxDuration)).withStyle(status));
             } else {
-                component.append(" ").append(Component.translatable("text.vampirism.oil.wetting_status").withStyle(status));
+                component.append(" ").append(Component.translatable("tooltip.vampirism.oil.wetting").withStyle(status));
             }
         }
         tooltip.add(component);

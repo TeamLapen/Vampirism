@@ -36,15 +36,15 @@ public class ModKeys implements IMinecraftAccessor {
 
     public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(VIdentifier.mod("main"));
 
-    public static final KeyMapping SUCK = new KeyMapping("keys.vampirism.suck", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
-    public static final KeyMapping VISION = new KeyMapping("keys.vampirism.vision", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
-    public static final KeyMapping SELECT_AMMO = new KeyMapping("keys.vampirism.select_ammo", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
+    public static final KeyMapping SUCK_BLOOD = new KeyMapping("key.vampirism.suck_blood", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
+    public static final KeyMapping TOGGLE_VISION = new KeyMapping("key.vampirism.toggle_vision", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, CATEGORY);
+    public static final KeyMapping SELECT_AMMO = new KeyMapping("key.vampirism.select_ammo", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
 
     public void registerKeyMapping(@NotNull RegisterKeyMappingsEvent event) {
         event.registerCategory(CATEGORY);
 
-        event.register(SUCK);
-        event.register(VISION);
+        event.register(SUCK_BLOOD);
+        event.register(TOGGLE_VISION);
         event.register(SELECT_AMMO);
     }
 
@@ -54,7 +54,7 @@ public class ModKeys implements IMinecraftAccessor {
 
     public ModKeys() {
         ImmutableList.Builder<KeyConfig> keyMappingActions = ImmutableList.builder();
-        keyMappingActions.add(new KeyConfig(VISION, this::switchVision, true));
+        keyMappingActions.add(new KeyConfig(TOGGLE_VISION, this::switchVision, true));
         keyMappingActions.add(new KeyConfig(SELECT_AMMO, this::selectAmmo, true));
         this.keyMappingActions = keyMappingActions.build();
     }
@@ -70,7 +70,7 @@ public class ModKeys implements IMinecraftAccessor {
     }
 
     public void handleInputEvent(InputEvent event, int action) {
-        if (SUCK.isDown()) {
+        if (SUCK_BLOOD.isDown()) {
             suck();
         } else {
             endSuck();

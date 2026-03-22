@@ -42,8 +42,8 @@ public class SunscreenBeaconBlock extends BaseContainerBlock implements IBlockWi
 
     @Override
     public void appendHoverText(ItemStack stack, Item.@Nullable TooltipContext context, TooltipDisplay display, TooltipFlag tooltipFlag, Consumer<Component> tooltips) {
-        tooltips.accept(Component.translatable(getDescriptionId() + ".tooltip1").withStyle(ChatFormatting.GRAY));
-        tooltips.accept(Component.translatable(getDescriptionId() + ".tooltip2", ModConfig.server().sunscreenBeaconDistance.get()).withStyle(ChatFormatting.GRAY)); //Only add this if a world is present. Otherwise, the config might not be ready as this is also called during search tree population before setup
+        tooltips.accept(Component.translatable("tooltip.vampirism.sunscreen_beacon.desc1").withStyle(ChatFormatting.GRAY));
+        tooltips.accept(Component.translatable("tooltip.vampirism.sunscreen_beacon.desc2", ModConfig.server().sunscreenBeaconRadius.get()).withStyle(ChatFormatting.GRAY)); //Only add this if a world is present. Otherwise, the config might not be ready as this is also called during search tree population before setup
     }
 
     @Override

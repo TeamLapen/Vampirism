@@ -27,7 +27,7 @@ public class SanguinareInjectionItem extends InjectionItem {
     @Override
     public boolean handleInjection(Level level, BlockPos pos, Player player, IFactionPlayerHandler handler, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction) {
         if (IFaction.is(ModFactions.VAMPIRE, currentFaction)) {
-            player.displayClientMessage(Component.translatable("text.vampirism.already_vampire"), false);
+            player.displayClientMessage(Component.translatable("message.vampirism.already_vampire"), false);
             return false;
         }
         if (ModFactions.HUNTER.match(currentFaction)) {
@@ -38,11 +38,11 @@ public class SanguinareInjectionItem extends InjectionItem {
         }
         if (currentFaction == null) {
             if (handler.canJoin(ModFactions.VAMPIRE)) {
-                if (ModConfig.server().disableFangInfection.get()) {
-                    player.displayClientMessage(Component.translatable("text.vampirism.deactivated_by_serveradmin"), true);
+                if (!ModConfig.server().fangInfection.get()) {
+                    player.displayClientMessage(Component.translatable("message.vampirism.infection_disabled_server"), true);
                 } else {
                     SanguinareMobEffect.addRandom(player, true, true);
-                    player.addEffect(new MobEffectInstance(ModEffects.POISON, 60));
+                    player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 60));
                     return true;
                 }
             }

@@ -13,7 +13,7 @@ public class ModFilter implements Filter {
     @Override
     public @Nullable Element filterEntry(Context context, String key, Element original) {
         return switch (key) {
-            case "integrationsNotifier", "optifineBloodvisionWarning", "actionOrder", "minionTaskOrder", "infoAboutGuideAPI", "oldVampireBiomeGen" -> null;
+            case "notifyAvailableIntegrations", "optifineBloodVisionWarning", "actionOrder", "minionTaskOrder", "informAboutGuideAPI", "oldVampireBiomeGen" -> null;
             default -> original;
         };
     }

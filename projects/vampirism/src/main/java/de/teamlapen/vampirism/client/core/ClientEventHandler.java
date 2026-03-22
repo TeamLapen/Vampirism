@@ -32,7 +32,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onFovOffsetUpdate(@NotNull ComputeFovModifierEvent event) {
-        if (ModConfig.client().disableFovChange.get() && Helper.isVampire(event.getPlayer())) {
+        if (!ModConfig.client().correctVampireFOV.get() && Helper.isVampire(event.getPlayer())) {
             AttributeInstance speed = event.getPlayer().getAttribute(Attributes.MOVEMENT_SPEED);
             AttributeModifier vampirespeed = speed.getModifier(LevelAttributeModifier.ID);
             if (vampirespeed == null) {
@@ -52,13 +52,13 @@ public class ClientEventHandler {
         AppliedOilContent.addTooltipIfExist(player, stack, tooltip, event.getFlags());
 
         if (BasePotion.isHunterPotion(stack, true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(s -> s.value().isBeneficial())).orElse(false) && (player == null || !Helper.isHunter(player))) {
-            tooltip.add(Component.translatable("text.vampirism.hunter_potion.deadly").withStyle(ChatFormatting.DARK_RED));
+            tooltip.add(Component.translatable("tooltip.vampirism.deadly_hunter_potion").withStyle(ChatFormatting.DARK_RED));
         }
 
         if (stack.is(ModItemTags.NO_SPAWN)) {
-            tooltip.add(Component.translatable("block.vampirism.castle_block.no_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("tooltip.vampirism.no_entity_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
         } else if (stack.is(ModItemTags.VAMPIRE_SPAWN)) {
-            tooltip.add(Component.translatable("block.vampirism.castle_block.vampire_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("tooltip.vampirism.only_vampire_spawn").withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY));
         }
     }
 

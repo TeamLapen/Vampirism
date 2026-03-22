@@ -68,7 +68,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
             this.bucket.draw(graphics, 83, 11);
         }
         if (recipe.getRequiredLevel() > 1) {
-            Component level = Component.translatable("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            Component level = Component.translatable("container.vampirism.hunter_table.level", recipe.getRequiredLevel());
 
             graphics.drawString(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight + 2;

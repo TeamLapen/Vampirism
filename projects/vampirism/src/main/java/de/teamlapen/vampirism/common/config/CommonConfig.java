@@ -1,58 +1,73 @@
 package de.teamlapen.vampirism.common.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.jetbrains.annotations.NotNull;
 
 public class CommonConfig {
 
-    public final ModConfigSpec.BooleanValue collectStats;
-
-
-    // Recipes server
+    public final ModConfigSpec.BooleanValue collectData;
     public final ModConfigSpec.BooleanValue autoConvertGlassBottles;
-    public final ModConfigSpec.BooleanValue umbrella;
+    public final ModConfigSpec.BooleanValue enableUmbrella;
 
-    // World generation
     public final ModConfigSpec.BooleanValue addVampireForestToOverworld;
-    public final ModConfigSpec.IntValue vampireForestWeight_terrablender;
-    public final ModConfigSpec.BooleanValue enableHunterTentGeneration;
+    public final ModConfigSpec.IntValue vampireForestWeightTerrablender;
+    public final ModConfigSpec.BooleanValue generateHunterCamps;
     public final ModConfigSpec.BooleanValue useVanillaCampfire;
 
-    // Internal - Hidden
-    public final ModConfigSpec.ConfigValue<String> integrationsNotifier;
-    public final ModConfigSpec.BooleanValue optifineBloodvisionWarning;
-
+    public final ModConfigSpec.BooleanValue replaceVillageTemples;
     public final ModConfigSpec.IntValue villageTotemWeight;
-    public final ModConfigSpec.BooleanValue villageReplaceTemples;
     public final ModConfigSpec.IntValue villageHunterTrainerWeight;
 
-    CommonConfig(ModConfigSpec.@NotNull Builder builder) {
-        builder.comment("Common configuration settings. Most other configuration can be found in the world (server)configuration folder")
-                .push("common");
-        this.collectStats = builder.comment("Send mod version, MC version and mod count to mod author").gameRestart().define("collectStats", true);
+    // Internal - Hidden
+    public final ModConfigSpec.ConfigValue<String> notifyAvailableIntegrations;
+    public final ModConfigSpec.BooleanValue optifineBloodVisionWarning;
+
+    CommonConfig(ModConfigSpec.Builder builder) {
+        this.collectData = builder
+                .comment("Send the mod version, the MC version and the mod count to the mod authors. This allows us to identify the high-priority versions players play the most.")
+                .gameRestart()
+                .define("collectData", true);
+        this.autoConvertGlassBottles = builder
+                .comment("When enabled, automatically converts glass bottles to blood bottles when needed.")
+                .define("autoConvertGlassBottles", true);
+        this.enableUmbrella = builder
+                .comment("When enabled, unlocks the crafting recipe of an umbrella that allows to slowly walk under sunlight without taking damage.")
+                .define("enableUmbrella", false);
+
+        builder.push("world");
+        this.addVampireForestToOverworld = builder
+                .comment("When enabled, injects the vampire forest into the default overworld generation, replacing some taiga areas.")
+                .gameRestart()
+                .define("addVampireForestToOverworld", true);
+        this.vampireForestWeightTerrablender = builder
+                .comment("Only considered if TerraBlender is installed. Higher values increase the Vampirism region weight, making it more likely to appear.")
+                .gameRestart()
+                .defineInRange("vampireForestWeightTerrablender", 4, 1, 1000);
+        this.generateHunterCamps = builder
+                .comment("When enabled, generates hunter camps in the world.")
+                .define("generateHunterCamps", true);
+        this.useVanillaCampfire = builder
+                .comment("Set to true to use the vanilla campfire block in hunter camps instead of Vampirism's custom one.")
+                .define("useVanillaCampfire", false);
+        builder.push("village");
+        this.villageTotemWeight = builder
+                .comment("The weight of the totem building in village generation.")
+                .defineInRange("villageTotemWeight", 20, 0, 140);
+        this.villageHunterTrainerWeight = builder
+                .comment("The weight of the hunter trainer building in village generation.")
+                .defineInRange("villageHunterTrainerWeight", 50, 0, 140);
+        this.replaceVillageTemples = builder
+                .comment("When enabled, replaces village temples with versions that contain church altars from this mod.")
+                .define("replaceVillageTemples", true);
+        builder.pop();
+        builder.pop();
 
         builder.push("internal");
-        this.integrationsNotifier = builder.comment("INTERNAL - Set to 'never' if you don't want to be notified about integration mods").define("integrationsNotifier", "");
-        this.optifineBloodvisionWarning = builder.comment("INTERNAL").define("optifineBloodvisionWarning", false);
-        builder.pop();
-        builder.pop();
-
-        builder.comment("Affects all worlds. This is only considered on server (or in singleplayer), but Forge requires us to put it here")
-                .push("common-server");
-        this.autoConvertGlassBottles = builder.comment("Whether glass bottles should be automatically be converted to blood bottles when needed").define("autoConvertGlassBottles", true);
-        this.umbrella = builder.comment("If enabled adds a craftable umbrella that can be used to slowly walk though sunlight without taking damage").define("umbrella", false);
-
-        builder.comment("Settings here require a game restart").push("world");
-        this.addVampireForestToOverworld = builder.comment("Whether to inject the vampire forest into the default overworld generation and to replace some Taiga areas").gameRestart().define("addVampireForestToOverworld", true);
-        this.vampireForestWeight_terrablender = builder.comment("Only considered if terrablender installed. Heigher values increase Vampirism region weight (likelyhood to appear)").gameRestart().defineInRange("vampireForestWeight_terrablender", 2, 1, 1000);
-        this.enableHunterTentGeneration = builder.comment("Control hunter camp generation. If disabled you should set hunterSpawnChance to 75.").define("enableHunterTentGeneration", true);
-        this.useVanillaCampfire = builder.comment("Use the vanilla campfire block instead of Vampirism's much cooler one").define("useVanillaCampfire", false);
-        builder.push("village");
-        villageTotemWeight = builder.comment("Weight of the Totem Building inside the Village").defineInRange("totemWeight", 20, 0, 140);
-        villageHunterTrainerWeight = builder.comment("Weight of the Hunter Trainer Building inside the Village").defineInRange("villageHunterTrainerWeight", 50, 0, 140);
-        villageReplaceTemples = builder.comment("Whether village Temples should be replaced with versions that contain church altars.").define("villageReplaceTemples", true);
-        builder.pop();
+        this.notifyAvailableIntegrations = builder
+                .comment("INTERNAL - Set to 'never' to disable notifications about available integration mods.")
+                .define("notifyAvailableIntegrations", "");
+        this.optifineBloodVisionWarning = builder
+                .comment("INTERNAL - Warns once if OptiFine is installed, as it breaks blood vision rendering.")
+                .define("optifineBloodVisionWarning", false);
         builder.pop();
     }
-
 }

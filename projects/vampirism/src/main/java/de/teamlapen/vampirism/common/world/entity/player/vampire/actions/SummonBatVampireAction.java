@@ -48,7 +48,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
         if (res) {
             return IActionResult.SUCCESS;
         } else {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.bat_swarm.no_bat_mode"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.bat_swarm.no_bat_mode"));
         }
     }
 

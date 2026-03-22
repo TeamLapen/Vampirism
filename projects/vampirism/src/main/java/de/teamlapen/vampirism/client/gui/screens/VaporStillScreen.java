@@ -26,19 +26,19 @@ public class VaporStillScreen extends AbstractContainerScreen<VaporStillMenu> {
 
     private static final int FLAMES_FRAME_COUNT = 7;
 
-    public VaporStillScreen(@NotNull VaporStillMenu menu, @NotNull Inventory playerInventory, @NotNull Component title) {
+    public VaporStillScreen(VaporStillMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.titleLabelY = 5;
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         Identifier background = menu.isExtended() ? BACKGROUND_EXTENDED : BACKGROUND_NORMAL;
         graphics.blit(RenderPipelines.GUI_TEXTURED, background, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 

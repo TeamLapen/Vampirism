@@ -17,11 +17,11 @@ public class VampirismPoisonMobEffect extends SimpleMobEffect {
     }
 
     public static MobEffectInstance createThrowableEffect() {
-        return new MobEffectInstance(ModEffects.POISON, 40, 1);
+        return new MobEffectInstance(ModEffects.TOXICANT, 40, 1);
     }
 
     public static MobEffectInstance createEffectCloudEffect() {
-        return new MobEffectInstance(ModEffects.POISON, 60, 1);
+        return new MobEffectInstance(ModEffects.TOXICANT, 60, 1);
     }
 
     @Override

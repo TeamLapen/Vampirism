@@ -84,7 +84,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
                 var blood = ResourceHandlerUtil.extractFirst(fluidInventory, x -> x.is(ModFluids.BLOOD), neededBlood, transaction);
 
                 if (blood == null || blood.amount() < neededBlood) {
-                    player.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
+                    player.displayClientMessage(Component.translatable("message.vampirism.altar_inspiration.not_enough_blood"), true);
                     return;
                 }
             }

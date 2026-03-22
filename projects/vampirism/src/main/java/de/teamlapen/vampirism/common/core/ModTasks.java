@@ -28,8 +28,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.neoforged.bus.api.IEventBus;
 
-@SuppressWarnings("unused")
 public class ModTasks {
+
     // Vampire
 
     // Lord Tasks

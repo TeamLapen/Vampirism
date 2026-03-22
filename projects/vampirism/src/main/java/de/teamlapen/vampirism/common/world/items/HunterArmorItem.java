@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HunterArmorItem extends ModArmorItem {
 
-    public static final Component MASSAGE_RESTRICTION_HUNTER_CLOTHING = Component.translatable("text.vampirism.restriction.hunter_clothing");
+    public static final Component MASSAGE_RESTRICTION_HUNTER_CLOTHING = Component.translatable("message.vampirism.restriction.hunter_clothing");
 
     public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props) {
         super(materialIn, type, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HUNTER_CLOTHING).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")));
@@ -37,7 +37,7 @@ public class HunterArmorItem extends ModArmorItem {
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
         if (entity.tickCount % 16 == 8 && slot != null && slot.isArmor() && entity instanceof Player player && !FactionPlayerHandler.get(player).isInFaction(ModFactions.HUNTER)) {
-            player.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
+            player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
         }
     }
 

@@ -233,10 +233,10 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
-                    player.displayClientMessage(Component.translatable("text.vampirism.vampire_minion.binding_upgrade"), false);
+                    player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire_minion.upgrade"), false);
                     sync();
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.vampire_minion.binding_wrong"), false);
+                    player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire_minion.wrong_upgrade"), false);
 
                 }
                 return InteractionResult.SUCCESS;

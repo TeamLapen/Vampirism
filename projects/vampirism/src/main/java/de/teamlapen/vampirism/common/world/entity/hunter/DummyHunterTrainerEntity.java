@@ -59,9 +59,9 @@ public class DummyHunterTrainerEntity extends VampirismEntity implements ICaptur
         if (!flag && this.isAlive() && !player.isShiftKeyDown()) {
             if (player instanceof ServerPlayer serverPlayer) {
                 if (Helper.isHunter(player)) {
-                    serverPlayer.sendSystemMessage(Component.translatable("text.vampirism.trainer_disabled_hunter"));
+                    serverPlayer.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_trainer.undercover.hunter"));
                 } else {
-                    serverPlayer.sendSystemMessage(Component.translatable("text.vampirism.trainer_disabled"));
+                    serverPlayer.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_trainer.undercover"));
                 }
             }
             return InteractionResult.SUCCESS;

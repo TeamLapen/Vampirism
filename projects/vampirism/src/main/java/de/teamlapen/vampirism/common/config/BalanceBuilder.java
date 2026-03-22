@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -16,85 +15,88 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * Intermediate builder stage for Vampirism's balance configuration ({@link BalanceConfig})
+ * Intermediate builder stage for Vampirism's balance configuration ({@link BalanceConfig}).
+ * <p>
  * The balance configuration is statically built with this builder.
- * Then, during mod construct, addon mods can register modifications to this configuration setup (the default values and comments in particular)
- * Finally, during RegistryEvent<Block>, the configuration is transferred to the Forge system respecting the registered modifications and thereby finalized.
+ * During mod construction, addon mods can register modifications to the default values and comments.
+ * Finally, during RegistryEvent&lt;Block&gt;, the configuration is transferred to the NeoForge system
+ * respecting the registered modifications and thereby finalized.
  */
 public class BalanceBuilder {
+
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static void setVal(BalanceConfig conf, @NotNull String name, Object value) {
+    private static void setVal(BalanceConfig conf, String name, Object value) {
         try {
-            Field f = BalanceConfig.class.getDeclaredField(name);
-            f.setAccessible(true);
-            f.set(conf, value);
+            Field field = BalanceConfig.class.getDeclaredField(name);
+            field.setAccessible(true);
+            field.set(conf, value);
         } catch (NoSuchFieldException e) {
-            LOGGER.error("Failed to set Balance value as expected", e);
+            LOGGER.error("Failed to set balance config value '{}'", name, e);
         } catch (IllegalAccessException e) {
-            LOGGER.error("Illegal access when trying to set Balance value as expected", e);
+            LOGGER.error("Illegal access when setting balance config value '{}'", name, e);
         }
     }
 
-    private final @NotNull Map<String, Map<String, Conf>> categoryConfigMap;
-    private final @NotNull Map<String, String> categoryPrefixMap;
     /**
-     * Holds (potentially concurrently) added config modifications that are applied during build
+     * Ordered map of categories to their config entries, preserving declaration order.
+     */
+    private final SequencedMap<String, SequencedMap<String, Conf>> categoryConfigMap = new LinkedHashMap<>();
+    private final Map<String, String> categoryPrefixMap = new HashMap<>();
+
+    /**
+     * Holds (potentially concurrently) added config modifications that are applied during build.
      */
     private final ConcurrentHashMap<String, Consumer<? extends Conf>> balanceModifications = new ConcurrentHashMap<>();
+
     /**
-     * Holds the latest created category config map
+     * The active category map, updated each time {@link #category(String, String)} is called.
      */
-    private Map<String, BalanceBuilder.Conf> activeCategory;
+    private SequencedMap<String, Conf> activeCategory;
+
     /**
-     * The latest added comment. Is added to the next config option and reset afterwards
+     * The pending comment to attach to the next config entry, reset after use.
      */
     @Nullable
     private String currentComment;
 
-    public BalanceBuilder() {
-        categoryConfigMap = new HashMap<>();
-        categoryPrefixMap = new HashMap<>();
-    }
-
-    public void addBalanceModifier(@NotNull String key, @NotNull Consumer<? extends Conf> modifier) {
+    /**
+     * Registers a modification to a config entry identified by its full key (category prefix + field name).
+     * If a modifier for the given key already exists, it will be overridden with a warning in dev environments.
+     */
+    public void addBalanceModifier(String key, Consumer<? extends Conf> modifier) {
         if (balanceModifications.put(key, modifier) != null) {
-            if (VampirismMod.inDev) LOGGER.warn("Overriding existing config modifier for {}", key);
+            if (VampirismMod.inDev) LOGGER.warn("Overriding existing config modifier for '{}'", key);
         }
     }
 
     /**
-     * Build the registered configuration considering the modifiers using the give Forge level and inject the created {@link ModConfigSpec.ConfigValue} into the given BalanceConfig using reflection
+     * Builds the registered configuration, applying any registered modifiers, and injects
+     * the resulting {@link ModConfigSpec.ConfigValue} instances into the given {@link BalanceConfig}
+     * via reflection.
      */
-    public void build(BalanceConfig conf, ModConfigSpec.@NotNull Builder builder) {
+    public void build(BalanceConfig conf, ModConfigSpec.Builder builder) {
         if (!balanceModifications.isEmpty()) {
-            LOGGER.info("Building balance configuration with {} modifications", balanceModifications.size());
+            LOGGER.info("Building balance configuration with {} modifier(s)", balanceModifications.size());
         }
-        for (Map.Entry<String, Map<String, Conf>> stringMapEntry : categoryConfigMap.entrySet()) {
-            String category = stringMapEntry.getKey();
+        for (Map.Entry<String, SequencedMap<String, Conf>> categoryEntry : categoryConfigMap.entrySet()) {
+            String category = categoryEntry.getKey();
             String catPrefix = categoryPrefixMap.getOrDefault(category, category);
             builder.push(category);
-            for (Map.Entry<String, Conf> stringConfEntry : stringMapEntry.getValue().entrySet()) {
-                String fullName;
-                String name = stringConfEntry.getKey();
-                if (catPrefix.isEmpty()) {
-                    fullName = name;
-                } else {
-                    fullName = catPrefix + name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
-
-                }
-                Conf c = stringConfEntry.getValue();
+            for (Map.Entry<String, Conf> confEntry : categoryEntry.getValue().entrySet()) {
+                String name = confEntry.getKey();
+                String fullName = catPrefix.isEmpty() ? name : catPrefix + name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
+                Conf c = confEntry.getValue();
                 @SuppressWarnings("unchecked")
                 Consumer<Conf> modifier = (Consumer<Conf>) balanceModifications.get(fullName);
                 if (modifier != null) {
                     try {
                         modifier.accept(c);
                     } catch (Exception e) {
-                        LOGGER.error("Failed to apply balance config modifier for {}", fullName, e);
+                        LOGGER.error("Failed to apply balance config modifier for '{}'", fullName, e);
                     }
                 }
-                ModConfigSpec.ConfigValue<?> val = c.build(builder);
-                setVal(conf, fullName, val);
+                setVal(conf, fullName, c.build(builder));
             }
             builder.pop();
         }
@@ -104,98 +106,122 @@ public class BalanceBuilder {
         currentComment = null;
     }
 
-    public @NotNull BalanceBuilder category(String name, String prefix) {
-        activeCategory = new HashMap<>();
+    /**
+     * Starts a new config category. All entries defined after this call belong to this category
+     * until the next call to {@code category()}.
+     *
+     * @param name   the category name used as the TOML section header
+     * @param prefix the prefix prepended to field names to form the full config key (use {@code ""} for none)
+     */
+    public BalanceBuilder category(String name, String prefix) {
+        activeCategory = new LinkedHashMap<>();
         categoryConfigMap.put(name, activeCategory);
         categoryPrefixMap.put(name, prefix);
         return this;
     }
 
     /**
-     * Checks if all fields in {@link BalanceConfig} have been set. Throws otherwise
+     * Checks that all fields in {@link BalanceConfig} have been assigned a value.
      *
-     * @throws IllegalStateException If an unset field is found
+     * @throws IllegalStateException if any field is still {@code null}
      */
     public void checkFields(BalanceConfig config) throws IllegalStateException {
         try {
-            for (Field declaredField : BalanceConfig.class.getDeclaredFields()) {
-                declaredField.setAccessible(true);
-                if (declaredField.get(config) == null) {
-                    throw new IllegalStateException("Config value " + declaredField.getName() + " is not set");
+            for (Field field : BalanceConfig.class.getDeclaredFields()) {
+                field.setAccessible(true);
+                if (field.get(config) == null) {
+                    throw new IllegalStateException("Balance config value '" + field.getName() + "' was not set.");
                 }
             }
         } catch (IllegalAccessException e) {
-            LOGGER.error("Illegal access when checking balance fields", e);
+            LOGGER.error("Illegal access when checking balance config fields", e);
         }
     }
 
     /**
-     * Add a comment to the next config entry
+     * Attaches a comment to the next config entry defined via {@link #define}, {@link #defineInRange}, or {@link #defineList}.
      */
-    public @NotNull BalanceBuilder comment(String comment) {
+    public BalanceBuilder comment(String comment) {
         this.currentComment = comment;
         return this;
     }
 
-    public @NotNull BalanceBuilder config(BalanceBuilder.@NotNull Conf value) {
+    /**
+     * Adds a pre-built {@link Conf} directly to the active category.
+     * Prefer using {@link #define}, {@link #defineInRange}, and {@link #defineList} where possible.
+     */
+    public BalanceBuilder config(Conf value) {
         activeCategory.put(value.name, value);
         return this;
     }
 
     /**
-     * @return null, for drop-in replacement
+     * Defines a boolean config entry in the active category.
+     *
+     * @return {@code null} — acts as a drop-in replacement for {@link ModConfigSpec.Builder#define(String, boolean)}
      */
     @SuppressWarnings("SameReturnValue")
     public ModConfigSpec.@UnknownNullability BooleanValue define(String name, boolean defaultValue) {
-        add(new BalanceBuilder.BoolConf(name, defaultValue));
+        add(new BoolConf(name, defaultValue));
         return null;
     }
 
     /**
-     * @return null, for drop-in replacement
+     * Defines an integer config entry with a range in the active category.
+     *
+     * @return {@code null} — acts as a drop-in replacement for {@link ModConfigSpec.Builder#defineInRange(String, int, int, int)}
      */
     @SuppressWarnings("SameReturnValue")
     public ModConfigSpec.@UnknownNullability IntValue defineInRange(String name, int def, int min, int max) {
-        add(new BalanceBuilder.IntConf(name, def, min, max));
+        add(new IntConf(name, def, min, max));
         return null;
     }
 
     /**
-     * @return null, for drop-in replacement
+     * Defines a double config entry with a range in the active category.
+     *
+     * @return {@code null} — acts as a drop-in replacement for {@link ModConfigSpec.Builder#defineInRange(String, double, double, double)}
      */
     @SuppressWarnings("SameReturnValue")
     public ModConfigSpec.@UnknownNullability DoubleValue defineInRange(String name, double def, double min, double max) {
-        add(new BalanceBuilder.DoubleConf(name, def, min, max));
+        add(new DoubleConf(name, def, min, max));
         return null;
     }
 
     /**
-     * @return null, for drop-in replacement
+     * Defines a string list config entry in the active category.
+     *
+     * @return {@code null} — acts as a drop-in replacement for {@link ModConfigSpec.Builder#defineList}
      */
     @SuppressWarnings("SameReturnValue")
-    public ModConfigSpec.@UnknownNullability ConfigValue<List<? extends String>> defineList(String name, @NotNull List<String> defaultValues, Supplier<String> emptyValueSupplier, Predicate<Object> validator) {
-        add(new BalanceBuilder.StringList(name, defaultValues, emptyValueSupplier, validator));
+    public ModConfigSpec.@UnknownNullability ConfigValue<List<? extends String>> defineList(String name, List<String> defaultValues, Supplier<String> emptyValueSupplier, Predicate<Object> validator) {
+        add(new StringList(name, defaultValues, emptyValueSupplier, validator));
         return null;
     }
 
-    private void add(@NotNull Conf c) {
+    private void add(Conf c) {
         if (currentComment != null) {
             c.comment(currentComment);
             currentComment = null;
         }
-        this.activeCategory.put(c.name, c);
+        activeCategory.put(c.name, c);
     }
 
+    /**
+     * Base class for all config entry descriptors.
+     */
     public static abstract class Conf {
+
         protected final String name;
+
         @Nullable
-        private String comment = null;
+        private String comment;
 
         protected Conf(String name) {
             this.name = name;
         }
 
-        public final ModConfigSpec.ConfigValue<?> build(ModConfigSpec.@NotNull Builder builder) {
+        public final ModConfigSpec.ConfigValue<?> build(ModConfigSpec.Builder builder) {
             if (comment != null) builder.comment(comment);
             return buildInternal(builder);
         }
@@ -210,13 +236,13 @@ public class BalanceBuilder {
         }
 
         protected abstract ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.Builder builder);
-
     }
 
     /**
-     * Builds a {@link net.neoforged.neoforge.common.ModConfigSpec.DoubleValue}
+     * Builds a {@link ModConfigSpec.DoubleValue}.
      */
     public static class DoubleConf extends Conf {
+
         private final double min;
         private final double max;
         private double defaultValue;
@@ -237,13 +263,13 @@ public class BalanceBuilder {
         }
 
         @Override
-        protected ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.@NotNull Builder builder) {
+        protected ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.Builder builder) {
             return builder.defineInRange(name, defaultValue, min, max);
         }
     }
 
     /**
-     * Builds a {@link ModConfigSpec.BooleanValue}
+     * Builds a {@link ModConfigSpec.BooleanValue}.
      */
     public static class BoolConf extends Conf {
 
@@ -263,15 +289,16 @@ public class BalanceBuilder {
         }
 
         @Override
-        protected ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.@NotNull Builder builder) {
+        protected ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.Builder builder) {
             return builder.define(name, defaultValue);
         }
     }
 
     /**
-     * Builds a {@link net.neoforged.neoforge.common.ModConfigSpec.IntValue}
+     * Builds a {@link ModConfigSpec.IntValue}.
      */
     public static class IntConf extends Conf {
+
         private final int minValue;
         private final int maxValue;
         private int defaultValue;
@@ -283,11 +310,6 @@ public class BalanceBuilder {
             this.maxValue = maxValue;
         }
 
-        @Override
-        public ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.@NotNull Builder builder) {
-            return builder.defineInRange(name, defaultValue, minValue, maxValue);
-        }
-
         public int getDefaultValue() {
             return defaultValue;
         }
@@ -295,17 +317,23 @@ public class BalanceBuilder {
         public void setDefaultValue(int defaultValue) {
             this.defaultValue = defaultValue;
         }
+
+        @Override
+        public ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.Builder builder) {
+            return builder.defineInRange(name, defaultValue, minValue, maxValue);
+        }
     }
 
     /**
-     * Builds a {@link net.neoforged.neoforge.common.ModConfigSpec.IntValue}
+     * Builds a string list config value via {@link ModConfigSpec.Builder#defineList}.
      */
     public static class StringList extends Conf {
-        private final @NotNull List<String> defaultValue;
+
+        private final List<String> defaultValue;
         private final Predicate<Object> elementValidator;
         private final Supplier<String> emptyValueSupplier;
 
-        StringList(String name, @NotNull List<String> defaultValue, Supplier<String> emptyValueSupplier, Predicate<Object> validator) {
+        StringList(String name, List<String> defaultValue, Supplier<String> emptyValueSupplier, Predicate<Object> validator) {
             super(name);
             this.defaultValue = new ArrayList<>(defaultValue);
             this.elementValidator = validator;
@@ -318,15 +346,13 @@ public class BalanceBuilder {
             }
         }
 
-        @Override
-        public ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.@NotNull Builder builder) {
-            return builder.defineList(name, Collections.unmodifiableList(defaultValue), emptyValueSupplier, elementValidator);
-        }
-
         public void removeValue(String s) {
             defaultValue.remove(s);
         }
 
-
+        @Override
+        public ModConfigSpec.ConfigValue<?> buildInternal(ModConfigSpec.Builder builder) {
+            return builder.defineList(name, Collections.unmodifiableList(defaultValue), emptyValueSupplier, elementValidator);
+        }
     }
 }

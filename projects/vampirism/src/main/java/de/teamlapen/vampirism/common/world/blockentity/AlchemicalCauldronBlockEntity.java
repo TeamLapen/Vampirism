@@ -151,7 +151,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
                 } else if (ownerID.equals(player.getUUID())) {
                     return true;
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.alchemical_cauldron.other", getOwnerName()), true);
+                    player.displayClientMessage(Component.translatable("message.vampirism.alchemical_cauldron.other_owner", getOwnerName()), true);
                 }
             } else {
                 player.displayClientMessage(FactionRestriction.MESSAGE_MISSING_SKILLS, true);
@@ -170,16 +170,14 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
         return this.items;
     }
 
-    @NotNull
     @Override
     public Component getCustomName() {
-        return Component.translatable("tile.vampirism.alchemical_cauldron");
+        return Component.translatable("container.vampirism.alchemical_cauldron");
     }
 
-    @NotNull
     @Override
     public Component getDisplayName() {
-        return Component.translatable("tile.vampirism.alchemical_cauldron.display", ownerName, Component.translatable("tile.vampirism.alchemical_cauldron"));
+        return Component.translatable("container.vampirism.alchemical_cauldron.owner", getOwnerName());
     }
 
     public int getLiquidColorClient() {
@@ -198,7 +196,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     }
 
     @Override
-    public int @NotNull [] getSlotsForFace(Direction side) {
+    public int [] getSlotsForFace(Direction side) {
         if (side == Direction.DOWN) {
             return SLOTS_DOWN;
         } else {
@@ -245,7 +243,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     }
 
     @Override
-    public void saveAdditional(@NotNull ValueOutput output) {
+    public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putInt("BurnTime", this.litTime);
         output.putInt("CookTime", this.cookingProgress);
@@ -295,7 +293,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
         }
     }
 
-    public void setOwnerID(@NotNull Player player) {
+    public void setOwnerID(Player player) {
         ownerID = player.getUUID();
         ownerName = player.getGameProfile().name();
         this.setChanged();
@@ -308,7 +306,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     /**
      * copy of AbstractFurnaceTileEntity#tick() with modification
      */
-    public static void serverTick(@NotNull Level pLevel, BlockPos pPos, BlockState pState, @NotNull AlchemicalCauldronBlockEntity pBlockEntity) {
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, AlchemicalCauldronBlockEntity pBlockEntity) {
         boolean flag = pBlockEntity.isLit();
         boolean flag1 = false;
         if (pBlockEntity.isLit()) {
@@ -379,14 +377,14 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
 
     @NotNull
     @Override
-    protected AbstractContainerMenu createMenu(int id, @NotNull Inventory player) {
+    protected AbstractContainerMenu createMenu(int id, Inventory player) {
         return new AlchemicalCauldronMenu(id, player, this, this.dataAccess);
     }
 
     @NotNull
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("tile.vampirism.alchemical_cauldron");
+        return Component.translatable("container.vampirism.alchemical_cauldron");
     }
 
     private boolean canPlayerCook(@Nullable RecipeHolder<AlchemicalCauldronRecipe> recipe) {

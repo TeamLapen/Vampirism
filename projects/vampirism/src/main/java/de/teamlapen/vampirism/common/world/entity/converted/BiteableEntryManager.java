@@ -105,7 +105,7 @@ public class BiteableEntryManager {
      * @return weather the entity type is blacklisted by the server config or not
      */
     private boolean isConfigBlackListed(@NotNull Identifier id) {
-        List<? extends String> list = ModConfig.server().blacklistedBloodEntity.get();
+        List<? extends String> list = ModConfig.server().blacklistedBloodEntities.get();
         return list.contains(id.toString());
     }
 

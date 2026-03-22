@@ -76,7 +76,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("block.vampirism.blood_infuser");
+        return Component.translatable("container.vampirism.blood_infuser");
     }
 
     @Override

@@ -62,7 +62,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     protected void addAmmunitionTypeHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flag) {
-        getAmmunition(stack).ifPresent(ammunition -> tooltips.accept(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY)));
+        getAmmunition(stack).ifPresent(ammunition -> tooltips.accept(Component.translatable("tooltip.vampirism.crossbow.selected_ammo", ammunition.getName(stack)).withStyle(ChatFormatting.GRAY)));
     }
 
     @Override

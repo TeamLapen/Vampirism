@@ -196,7 +196,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                         j = 3;
                     }
                     if (getRandom().nextInt((4 - j) * 2) == 0) {
-                        addEffect(new MobEffectInstance(ModEffects.POISON, (int) (20 * Math.sqrt(j)), j));
+                        addEffect(new MobEffectInstance(ModEffects.TOXICANT, (int) (20 * Math.sqrt(j)), j));
                     }
                 }
             }

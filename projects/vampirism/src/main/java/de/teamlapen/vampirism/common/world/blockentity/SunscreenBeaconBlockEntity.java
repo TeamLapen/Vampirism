@@ -33,7 +33,7 @@ public class SunscreenBeaconBlockEntity extends BlockEntity {
             if (blockEntity.oldPos == null || blockEntity.selector == null || !blockEntity.oldPos.equals(pos)) {
                 blockEntity.oldPos = pos;
                 final BlockPos center = new BlockPos(pos.getX(), 0, pos.getZ());
-                final int distSq = ModConfig.server().sunscreenBeaconDistance.get() * ModConfig.server().sunscreenBeaconDistance.get();
+                final int distSq = ModConfig.server().sunscreenBeaconRadius.get() * ModConfig.server().sunscreenBeaconRadius.get();
                 blockEntity.selector = input -> {
                     if (input == null) return false;
                     BlockPos player = new BlockPos((int) input.getX(), 0, (int) input.getZ());

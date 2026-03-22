@@ -42,7 +42,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableRecipe> 
 
     @Override
     public @NotNull Component getTitle() {
-        return Component.translatable("text.vampirism.blessing");
+        return Component.translatable("gui.vampirism.jei.category.blessing");
     }
 
 

@@ -265,7 +265,7 @@ public class ModEntityEventHandler {
     public void onStartAttackHit(AttackEntityEvent event) {
         if (!Helper.isHunter(event.getEntity()) && OilUtils.getAppliedOil(event.getEntity().getMainHandItem()).isPresent()) {
             event.setCanceled(true);
-            event.getEntity().displayClientMessage(Component.translatable("text.vampirism.oils.cannot_use"), true);
+            event.getEntity().displayClientMessage(Component.translatable("message.vampirism.restriction.oiled"), true);
         }
     }
 

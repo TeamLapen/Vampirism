@@ -17,7 +17,7 @@ public interface IItemWithTier extends ItemLike {
         Tier tier = getVampirismTier();
         if (tier != Tier.NORMAL) {
             ChatFormatting format = tier == Tier.ENHANCED ? ChatFormatting.YELLOW : ChatFormatting.AQUA;
-            tooltip.accept(Component.translatable("item.vampirism.item.tier." + tier.getSerializedName().toLowerCase()).withStyle(format));
+            tooltip.accept(Component.translatable("tooltip.vampirism.tier." + tier.getSerializedName().toLowerCase()).withStyle(format));
         }
     }
 

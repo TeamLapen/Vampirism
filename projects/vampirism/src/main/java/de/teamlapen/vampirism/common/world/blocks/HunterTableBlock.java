@@ -47,6 +47,8 @@ public class HunterTableBlock extends BaseHorizontalBlock {
             Block.box(2, 10, 6, 8, 13, 14)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
+    private static final Component NAME = Component.translatable("container.vampirism.hunter_table");
+
     public HunterTableBlock(Properties properties) {
         super(properties, SHAPE);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(WEAPON_TABLE, false).setValue(ALCHEMICAL_CAULDRON, false).setValue(VAPOR_STILL, false));
@@ -72,7 +74,7 @@ public class HunterTableBlock extends BaseHorizontalBlock {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(ModStats.INTERACT_WITH_RESEARCH_TABLE.get());
                 if (Helper.isHunter(serverPlayer)) {
-                    player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), Component.translatable("container.crafting")), pos);
+                    player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), NAME), pos);
                 } else {
                     player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
                 }
