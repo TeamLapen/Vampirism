@@ -164,6 +164,7 @@ public class VampirismMenu extends InventoryContainerMenu implements TaskMenu {
 
     public void setRefinement(int slot, @NotNull ItemStack stack) {
         this.refinementStacks.set(slot, stack);
+        this.factionPlayer.getSkillHandler().equipRefinementItem(stack);
     }
 
     @Override

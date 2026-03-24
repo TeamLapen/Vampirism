@@ -479,22 +479,26 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                 set.getRefinements().stream().map(Supplier::get).forEach(x -> {
                     this.activeRefinements.add(x);
                     if (!this.player.isRemote() && x.getAttribute() != null) {
-                        ResourceLocation key = ModRegistries.REFINEMENTS.getKey(x);
+                        ResourceLocation legacyKey = ModRegistries.REFINEMENTS.getKey(x);
+                        ResourceLocation key = legacyKey.withPath(p -> "slot"+slot + "_" + p);
                         AttributeInstance attributeInstance = this.player.asEntity().getAttribute(x.getAttribute());
                         if (attributeInstance != null) {
-                            double value = x.getModifierValue();
-                            AttributeModifier t = attributeInstance.getModifier(key);
-                            if (t != null) {
+                            attributeInstance.removeModifier(legacyKey); // for removing old attributes
+
+                            double newValue = x.getModifierValue();
+                            AttributeModifier existing = attributeInstance.getModifier(key);
+                            if (existing != null && existing.amount() != newValue) {
                                 attributeInstance.removeModifier(key);
-                                value += t.amount();
+                            } else if (existing != null) {
+                                return;
                             }
-                            t = x.createAttributeModifier(value);
-                            if (t != null) {
-                                this.refinementModifier.put(key, t);
-                                attributeInstance.addTransientModifier(t);
+                            existing = x.createAttributeModifier(newValue);
+                            if (existing != null) {
+                                this.refinementModifier.put(key, existing);
+                                attributeInstance.addTransientModifier(existing);
                             }
                         } else {
-                            LOGGER.warn("Player object does not have attribute %s".formatted(x.getAttribute().getKey()));
+                            LOGGER.warn("Player object does not have attribute {}", x.getAttribute().getKey());
                         }
                     }
                 });
@@ -512,23 +516,10 @@ public class SkillHandler<T extends IFactionPlayer<T>> implements ISkillHandler<
                     set.getRefinements().stream().map(Supplier::get).forEach(x -> {
                         this.activeRefinements.remove(x);
                         if (!this.player.isRemote() && x.getAttribute() != null) {
-                            ResourceLocation key = ModRegistries.REFINEMENTS.getKey(x);
+                            ResourceLocation key = ModRegistries.REFINEMENTS.getKey(x).withPath(p -> "slot"+slot + "_" + p);
                             AttributeInstance attributeInstance = this.player.asEntity().getAttribute(x.getAttribute());
                             if (attributeInstance != null) {
                                 AttributeModifier t = this.refinementModifier.remove(key);
-                                if (t != null) {
-                                    attributeInstance.removeModifier(key);
-                                    ((AttributeInstanceAccessor) attributeInstance).invoke_removeModifier(t);
-                                    double value = t.amount() - x.getModifierValue();
-                                    if (value != 0) {
-                                        AttributeModifier updatedModifier = x.createAttributeModifier(value);
-                                        if (updatedModifier != null) {
-                                            attributeInstance.addTransientModifier(updatedModifier);
-                                            this.refinementModifier.put(key, updatedModifier);
-                                            this.activeRefinements.add(x);
-                                        }
-                                    }
-                                }
                             }
                         }
                     });
