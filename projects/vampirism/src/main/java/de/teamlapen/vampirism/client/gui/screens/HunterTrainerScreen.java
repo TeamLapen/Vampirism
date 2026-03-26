@@ -75,19 +75,19 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
                     case 0 -> {
                         int missing = requirement.ironQuantity() - stack.getCount();
                         if (missing > 0) {
-                            tooltip = Component.translatable("container.vampirism.hunter_trainer.ritual_missing_iron", missing);
+                            tooltip = Component.translatable("gui.vampirism.hunter_trainer.ritual_missing_iron", missing);
                         }
                     }
                     case 1 -> {
                         int missing = requirement.goldQuantity() - stack.getCount();
                         if (missing > 0) {
-                            tooltip = Component.translatable("container.vampirism.hunter_trainer.ritual_missing_gold", missing);
+                            tooltip = Component.translatable("gui.vampirism.hunter_trainer.ritual_missing_gold", missing);
                         }
                     }
                     case 2 -> {
                         int requiredLevel = requirement.targetLevel();
                         if (stack.isEmpty()) {
-                            tooltip = Component.translatable("container.vampirism.hunter_trainer.ritual_missing_hunter_intel", requiredLevel);
+                            tooltip = Component.translatable("gui.vampirism.hunter_trainer.ritual_missing_hunter_intel", requiredLevel);
                         }
                     }
                 }
@@ -105,7 +105,7 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
 
     @Override
     protected void subInit() {
-        Component name = Component.translatable("container.vampirism.level_up");
+        Component name = Component.translatable("gui.vampirism.level_up");
         int buttonWidth = this.font.width(name) + 10;
         this.addRenderableWidget(this.buttonLevelUp = new ExtendedButton(
                 this.leftPos + imageWidth - buttonWidth - 6, this.topPos + 45,

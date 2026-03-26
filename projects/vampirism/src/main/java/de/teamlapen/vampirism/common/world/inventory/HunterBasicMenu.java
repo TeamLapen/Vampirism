@@ -62,7 +62,7 @@ public class HunterBasicMenu extends ItemCombinerMenu {
             int required = req.vampireBloodAmount();
             getSlot(0).remove(required);
             FactionPlayerHandler.get(player).setFaction(LevelingChange.builder().faction(ModFactions.HUNTER).level(targetLevel));
-            player.displayClientMessage(Component.translatable("container.vampirism.hunter.levelup"), false);
+            player.displayClientMessage(Component.translatable("gui.vampirism.hunter.level_up"), false);
             player.closeContainer();
         });
     }

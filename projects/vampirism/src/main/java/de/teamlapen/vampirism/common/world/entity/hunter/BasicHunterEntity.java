@@ -379,21 +379,21 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
                         if (this.getEntityLevel() > 0) {
                             if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
-                                player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.unavailable"), true);
+                                player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.unavailable"), true);
                             }
                         } else {
                             boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
-                            player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.available"), false);
+                            player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.available"), false);
                             if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
                                 if (!freeSlot) {
-                                    player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.no_free_slot"), false);
+                                    player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.no_free_slot"), false);
                                 } else {
-                                    player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.start_serving"), false);
+                                    player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.start_serving"), false);
                                     convertToMinion(player);
                                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                 }
                             } else if (freeSlot) {
-                                player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.minion.require_equipment", Component.translatable(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
+                                player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.require_equipment", Component.translatable(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
                             }
                         }
                     } else {

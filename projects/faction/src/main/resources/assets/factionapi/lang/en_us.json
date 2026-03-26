@@ -10,14 +10,6 @@
   "effect.factionapi.oblivion": "Oblivion",
   "effect.factionapi.resurrection_fatigue": "Resurrection Fatigue",
 
-  "task_reward.factionapi.lord_level": "Lord Level %s",
-
-  "task_requirement.factionapi.lord_level.min": "Lord Level %s or Higher",
-  "task_requirement.factionapi.lord_level.exact": "Lord Level %s",
-  "task_requirement.factionapi.level.min": "Level %s or Higher",
-  "task_requirement.factionapi.level.range": "Level %1$s to %2$s",
-  "task_requirement.factionapi.parent": "Complete %s first",
-
   "stat_type.factionapi.action_used": "Action Activated",
   "stat_type.factionapi.action_time": "Action Active",
   "stat_type.factionapi.action_cooldown_time": "Action On Cooldown",
@@ -55,13 +47,13 @@
   "minion_task.factionapi.call_all": "Call all",
   "minion_task.factionapi.respawn": "Respawn dead",
 
-  "message.factionapi.minion.still_recovering": "%s is still recovering",
-  "message.factionapi.minion.minions_recovering": "%s minions are still recovering",
-  "message.factionapi.minion_task.could_not_activate": "Command could not be activated",
+  "task_reward.factionapi.lord_level": "Lord Level %s",
 
-  "dialogue.factionapi.minion.can_respawn": "%s: My Lord, I have recovered",
-  "dialogue.factionapi.minion.died": "%s: My Lord, I have died",
-  "dialogue.factionapi.minion.died_on_task": "My lord, I am sorry, but I died while fulfilling your task",
+  "task_requirement.factionapi.lord_level.min": "Lord Level %s or Higher",
+  "task_requirement.factionapi.lord_level.exact": "Lord Level %s",
+  "task_requirement.factionapi.level.min": "Level %s or Higher",
+  "task_requirement.factionapi.level.range": "Level %1$s to %2$s",
+  "task_requirement.factionapi.parent": "Complete %s first",
 
   "gui.factionapi.faction_menu.appearance_menu": "Appearance Menu",
   "gui.factionapi.faction_menu.locate_taskmaster": "Last Known Position",
@@ -129,6 +121,8 @@
   "gui.factionapi.reset": "Reset",
   "gui.factionapi.reset_question": "Are you sure?",
 
+  "narration.factionapi.skill": "Skill",
+
   "message.factionapi.restriction.faction.neutral": "How do those humans even use this thing...",
   "message.factionapi.restriction.faction": "How do they even use this thing...",
   "message.factionapi.restriction.level": "I am not yet experienced enough to use this",
@@ -168,14 +162,20 @@
 
   "message.factionapi.taskmaster.no_tasks": "No tasks available at the moment",
 
+  "message.factionapi.minion.still_recovering": "%s is still recovering",
+  "message.factionapi.minion.minions_recovering": "%s minions are still recovering",
+  "message.factionapi.minion_task.could_not_activate": "Command could not be activated",
+
+  "dialogue.factionapi.minion.can_respawn": "%s: My Lord, I have recovered",
+  "dialogue.factionapi.minion.died": "%s: My Lord, I have died",
+  "dialogue.factionapi.minion.died_on_task": "My lord, I am sorry, but I died while fulfilling your task",
+
+  "subtitles.factionapi.task_complete": "Task completed",
+
   "tooltip.factionapi.faction_specifics": "Faction Specifics:",
   "tooltip.factionapi.required_skill": "Required skill: %s",
   "tooltip.factionapi.required_level": "Required level: %s",
   "tooltip.factionapi.oblivion_potion.desc": "Resets skills on consume",
-
-  "subtitles.factionapi.task_complete": "Task completed",
-
-  "narration.factionapi.skill": "Skill",
 
   "command.factionapi.base.level.successful": "%s is now a %s level %s",
   "command.factionapi.base.get_level.successful": "%s is a %s level %s and lord level %s",

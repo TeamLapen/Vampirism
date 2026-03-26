@@ -400,10 +400,10 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     ItemStack heldItem = player.getItemInHand(hand);
                     //noinspection Convert2MethodRef
                     boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(c -> c.hasFreeMinionSlot()).orElse(false);
-                    player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire.minion.available"), true);
+                    player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire_minion.available"), true);
                     if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
                         if (!freeSlot) {
-                            player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire.minion.no_free_slot"), true);
+                            player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire_minion.no_free_slot"), true);
                         } else {
                             String key = switch (this.getRandom().nextInt(3)) {
                                 case 0 -> "dialogue.vampirism.vampire.minion.start_serving1";
@@ -415,7 +415,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                             if (!player.getAbilities().instabuild) heldItem.shrink(1);
                         }
                     } else if (freeSlot) {
-                        player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire.minion.require_binding", Component.translatable(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
+                        player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire_minion.require_binding", Component.translatable(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
                     }
                     return InteractionResult.SUCCESS;
                 }).orElse(InteractionResult.PASS);

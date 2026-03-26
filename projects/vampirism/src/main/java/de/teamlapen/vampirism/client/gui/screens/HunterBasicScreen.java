@@ -49,7 +49,7 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
     public void init() {
         super.init();
 
-        Component name = Component.translatable("container.vampirism.level_up");
+        Component name = Component.translatable("gui.vampirism.level_up");
         int wid = this.font.width(name) + 10;
         int i = (this.imageWidth - wid) / 2;
         int j = (this.height - this.imageHeight) / 2;
