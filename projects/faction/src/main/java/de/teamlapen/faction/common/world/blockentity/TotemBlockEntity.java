@@ -30,6 +30,7 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.StructureTags;
@@ -72,7 +73,7 @@ import java.util.stream.Collectors;
 public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final RandomSource RNG = RandomSource.create();
-    private final ServerMultiBossEvent captureInfo = new ServerMultiBossEvent(Component.translatable("text.factionapi.village.bossinfo.raid"), BossEvent.BossBarOverlay.NOTCHED_10);
+    private final ServerMultiBossEvent captureInfo = new ServerMultiBossEvent(Component.translatable("message.factionapi.village_raid.neutral"), BossEvent.BossBarOverlay.NOTCHED_10);
     public long timeSinceLastRaid = 0;
     //block attributes
     private boolean isComplete;
@@ -126,7 +127,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 
     public void abortCapture() {
         this.applyVictoryBonus(false);
-        notifyNearbyPlayers(Component.translatable("text.factionapi.village.defended"));
+        notifyNearbyPlayers(Component.translatable("message.factionapi.village_raid.defended"));
         breakCapture();
     }
 
@@ -154,19 +155,19 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             if (this.capturingFaction == null) {
                 return true;
             } else {
-                player.displayClientMessage(Component.translatable("text.factionapi.village.totem_destroy.fail_other_capturing"), true);
+                player.displayClientMessage(Component.translatable("message.factionapi.village_totem.fail_other_capturing"), true);
                 return false;
             }
         } else if (IFaction.is(this.capturingFaction, faction)) {
             if (IFaction.is(this.controllingFaction, de.teamlapen.faction.api.tags.FactionTags.IS_NEUTRAL)) {
                 return true;
             } else {
-                player.displayClientMessage(Component.translatable("text.factionapi.village.totem_destroy.fail_other_faction"), true);
+                player.displayClientMessage(Component.translatable("message.factionapi.village_totem.fail_other_faction"), true);
                 return false;
             }
         } else {
             if (!(this.capturingFaction == null && IFaction.is(this.controllingFaction, de.teamlapen.faction.api.tags.FactionTags.IS_NEUTRAL))) {
-                player.displayClientMessage(Component.translatable("text.factionapi.village.totem_destroy.fail_other_faction"), true);
+                player.displayClientMessage(Component.translatable("message.factionapi.village_totem.fail_other_faction"), true);
                 return false;
             }
             return true;
@@ -214,7 +215,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         if (IFaction.is(faction, de.teamlapen.faction.api.tags.FactionTags.CAN_RAID)) {
             initiateCapture(faction, player::displayClientMessage, -1, -1f);
         } else if (!IFaction.isNeutral(faction))  {
-            player.displayClientMessage(Component.translatable("text.factionapi.raid.faction_not_able"),true);
+            player.displayClientMessage(Component.translatable("message.factionapi.village_totem.non_village_faction"),true);
         }
     }
 
@@ -255,14 +256,10 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         this.calculateAttackStrength(badOmenLevel, strengthModifier);
         this.timeSinceLastRaid = 0;
 
-        if (IFaction.isNeutral(this.controllingFaction)) {
-            this.phase = CAPTURE_PHASE.PHASE_1_NEUTRAL;
-            this.notifyNearbyPlayers(Component.translatable("text.factionapi.village.neutral_village_under_attack", faction.value().getNamePlural()));
-        } else {
-            this.phase = CAPTURE_PHASE.PHASE_1_OPPOSITE;
-            this.notifyNearbyPlayers(Component.translatable("text.factionapi.village.faction_village_under_attack", this.controllingFaction.value().getNamePlural(), faction.value().getNamePlural()));
-        }
+        this.phase = IFaction.isNeutral(this.controllingFaction) ? CAPTURE_PHASE.PHASE_1_NEUTRAL : CAPTURE_PHASE.PHASE_1_OPPOSITE;
 
+        Identifier currentFactionId = this.controllingFaction.unwrapKey().orElseThrow().identifier();
+        this.notifyNearbyPlayers(Component.translatable("message." + currentFactionId.getNamespace() + ".village_raid.attacked." + currentFactionId.getPath(), faction.value().getNamePlural()));
 
         this.setChanged();
 
@@ -591,7 +588,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
                         captureTimer = 1;
                         this.setupPhase2();
                         this.setChanged();
-                        this.notifyNearbyPlayers(Component.translatable("text.factionapi.village.almost_captured", currentDefender));
+                        this.notifyNearbyPlayers(Component.translatable("message.factionapi.village_raid.almost_captured", currentDefender));
                     } else {
                         if (captureTimer % 2 == 0) {
                             float max = attackerStrength + defenderStrength;
@@ -754,15 +751,15 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
 
     private boolean capturePreconditions(@Nullable Holder<? extends IFaction<?>> faction, @NotNull BiConsumer<Component, Boolean> feedback) {
         if (faction == null) {
-            feedback.accept(Component.translatable("text.factionapi.village.no_faction"), true);
+            feedback.accept(Component.translatable("message.factionapi.village_totem.no_faction"), true);
             return false;
         }
         if (capturingFaction != null) {
-            feedback.accept(Component.translatable("text.factionapi.village.capturing_in_progress"), true);
+            feedback.accept(Component.translatable("message.factionapi.village_totem.already_capturing"), true);
             return false;
         }
         if (faction.equals(controllingFaction)) {
-            feedback.accept(Component.translatable("text.factionapi.village.same_faction"), true);
+            feedback.accept(Component.translatable("message.factionapi.village_totem.same_faction"), true);
             return false;
         }
         if (!isInsideVillage) {
@@ -773,21 +770,15 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             //noinspection ConstantConditions
             Map<Integer, Integer> stats = TotemHelper.getVillageStats(TotemHelper.getVillagePointsOfInterest((ServerLevel) level, this.worldPosition), this.level);
             int status = TotemHelper.isVillage(stats, !IFaction.isNeutral(this.controllingFaction) || this.capturingFaction != null);
-            MutableComponent text = Component.translatable("text.factionapi.village.missing_components");
+            MutableComponent text = Component.translatable("message.factionapi.village_totem.no_village");
             if ((status & 1) == 0) {
-                text.append("\n  - ");
-                text.append(Component.translatable("text.factionapi.village.missing_components.home"));
-                text.append(" " + stats.get(1) + "/" + TotemHelper.MIN_HOMES);
+                text.append("\n").append(Component.translatable("message.factionapi.village_totem.no_village.homes", stats.get(1), TotemHelper.MIN_HOMES));
             }
             if ((status & 2) == 0) {
-                text.append("\n  - ");
-                text.append(Component.translatable("text.factionapi.village.missing_components.workstations"));
-                text.append(" " + stats.get(2) + "/" + TotemHelper.MIN_WORKSTATIONS);
+                text.append("\n").append(Component.translatable("message.factionapi.village_totem.no_village.workstations", stats.get(2), TotemHelper.MIN_WORKSTATIONS));
             }
             if ((status & 4) == 0) {
-                text.append("\n  - ");
-                text.append(Component.translatable("text.factionapi.village.missing_components.villager"));
-                text.append(" " + stats.get(4) + "/" + TotemHelper.MIN_VILLAGER);
+                text.append("\n").append(Component.translatable("message.factionapi.village_totem.no_village.villagers", stats.get(4), TotemHelper.MIN_VILLAGER));
             }
             feedback.accept(text, false);
 
@@ -795,7 +786,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             return false;
         }
         if (isDisabled) {
-            feedback.accept(Component.translatable("text.factionapi.village.othertotem"), true);
+            feedback.accept(Component.translatable("message.factionapi.village_totem.disabled"), true);
             return false;
         }
         FactionVillageEvent.InitiateCapture event = new FactionVillageEvent.InitiateCapture(this, faction);
@@ -837,7 +828,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         }
 
         if (notifyPlayer) {
-            this.notifyNearbyPlayers(Component.translatable("text.factionapi.village.village_captured_by", controllingFaction.value().getNamePlural()));
+            this.notifyNearbyPlayers(Component.translatable("message.factionapi.village_raid.captured_by", controllingFaction.value().getNamePlural()));
         }
         this.updateBossinfoPlayers(null);
         this.setChanged();
@@ -907,7 +898,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             case PHASE_1_NEUTRAL, PHASE_1_OPPOSITE -> neutralPerc = this.captureTimer / (float) FactionConfig.server().raidPhaseOneDuration.get();
             case PHASE_2 -> {
                 neutralPerc = 1f;
-                this.captureInfo.setName(Component.translatable("text.factionapi.village.bossinfo.remaining"));
+                this.captureInfo.setName(Component.translatable("message.vampirism.village_raid.participants_remaining"));
             }
             default -> neutralPerc = 0;
         }
@@ -920,7 +911,8 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         this.progressColor = faction != null ? new Color(faction.value().getColor()).getRGB() : DyeColor.WHITE.getTextureDiffuseColor();
         if (faction != null) {
             this.captureInfo.setColors(new Color(faction.value().getColor()), Color.WHITE, new Color(this.controllingFaction.value().getColor()));
-            this.captureInfo.setName(Component.translatable("text.factionapi.village.bossinfo.raid", faction.value().getName().plainCopy().withStyle(style -> style.withColor((faction.value().getChatColor())))));
+            Identifier capturingFactionId = faction.unwrapKey().orElseThrow().identifier();
+            this.captureInfo.setName(Component.translatable("message." + capturingFactionId.getNamespace() + ".village_raid." + capturingFactionId.getPath()).withStyle(style -> style.withColor(faction.value().getChatColor())));
         }
     }
 
@@ -944,7 +936,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     private void setupPhase2() {
         if (this.phase != CAPTURE_PHASE.PHASE_2) {
             this.phase = CAPTURE_PHASE.PHASE_2;
-            this.captureInfo.setName(Component.translatable("text.factionapi.village.bossinfo.remaining"));
+            this.captureInfo.setName(Component.translatable("message.vampirism.village_raid.participants_remaining"));
         }
     }
 

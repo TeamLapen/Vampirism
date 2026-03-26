@@ -55,7 +55,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
         LinearLayout contentLayout = this.mainLayout.addChild(LinearLayout.vertical(), 0, 0, this.mainLayout.newCellSettings().padding(6));
 
         // Title
-        contentLayout.addChild(new StringWidget(Component.translatable("text.factionapi.tasks"), this.font), contentLayout.newCellSettings().alignHorizontallyCenter());
+        contentLayout.addChild(new StringWidget(Component.translatable("gui.factionapi.task_board.tasks"), this.font), contentLayout.newCellSettings().alignHorizontallyCenter());
         contentLayout.addChild(new SeparatorWidget(TASK_LIST_WIDTH), contentLayout.newCellSettings().alignHorizontallyCenter().paddingVertical(2));
 
         // Task list

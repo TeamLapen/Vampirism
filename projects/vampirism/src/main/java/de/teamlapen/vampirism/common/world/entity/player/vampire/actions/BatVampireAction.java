@@ -61,7 +61,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else if (ModConfig.server().batDimensionBlacklist.get().contains(player.level().dimension().identifier().toString())) {
             return IActionResult.fail(Component.translatable("message.vampirism.action.bat.dimension"));
         } else if (vampire.getActionHandler().isActionActive(VampireActions.VAMPIRE_RAGE)) {
-            return IActionResult.fail(Component.translatable("text.factionapi.action.other_action", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
+            return IActionResult.fail(Component.translatable("message.factionapi.action.conflicts_with", Component.translatable(Util.makeDescriptionId("action", VampireActions.VAMPIRE_RAGE.getId()))));
         } else if (player.isInWater()) {
             return IActionResult.fail(Component.translatable("message.vampirism.action.bat.in_water"));
         } else if (player.getVehicle() != null) {

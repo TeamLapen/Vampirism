@@ -200,7 +200,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (this.playerMinionController != null) {
-            this.getLordOpt().map(ILordPlayer::asEntity).ifPresent(p -> p.displayClientMessage(Component.translatable("text.factionapi.minion.died", this.getDisplayName()), true));
+            this.getLordOpt().map(ILordPlayer::asEntity).ifPresent(p -> p.displayClientMessage(Component.translatable("dialogue.factionapi.minion.died", this.getDisplayName()), true));
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);
             this.playerMinionController = null;
         }
@@ -534,7 +534,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
-                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("text.factionapi.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
             return InteractionResult.SUCCESS;
         }

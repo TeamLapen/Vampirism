@@ -378,7 +378,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
         if (!wrapper.tasks.isEmpty()) {
             this.removeLockedTasks(wrapper.getTaskInstances());
         }
-        wrapper.taskAmount = wrapper.taskAmount < 0 ? player.getRandom().nextInt(FactionConfig.server().taskMasterMaxTaskAmount.get()) + 1 - wrapper.lessTasks : wrapper.taskAmount;
+        wrapper.taskAmount = wrapper.taskAmount < 0 ? player.getRandom().nextInt(FactionConfig.server().taskMasterMaxTasks.get()) + 1 - wrapper.lessTasks : wrapper.taskAmount;
         if (wrapper.tasks.size() < wrapper.taskAmount) {
             List<Holder.Reference<Task>> tasks = this.registry.listElements().collect(Collectors.toList());
             Collections.shuffle(tasks);

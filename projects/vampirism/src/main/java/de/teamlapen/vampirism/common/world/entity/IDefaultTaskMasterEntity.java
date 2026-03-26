@@ -15,7 +15,7 @@ import java.util.OptionalInt;
 
 public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMasterEntity {
 
-    Component NO_TASK = Component.translatable("text.factionapi.taskmaster.no_tasks");
+    Component NO_TASK = Component.translatable("message.factionapi.taskmaster.no_tasks");
 
     /**
      * @return The biome type based on where this entity was spawned

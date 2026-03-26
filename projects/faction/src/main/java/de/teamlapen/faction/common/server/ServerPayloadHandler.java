@@ -68,7 +68,7 @@ public class ServerPayloadHandler {
                         if (controller.recallMinion(msg.minionID())) {
                             controller.createMinionEntityAtPlayer(msg.minionID(), context.player());
                         } else {
-                            context.player().displayClientMessage(Component.translatable("text.factionapi.minion.minion_is_still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))), true);
+                            context.player().displayClientMessage(Component.translatable("message.factionapi.minion.still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))), true);
                         }
                     }
                 } else if (RESPAWN.equals(msg.taskID())) {

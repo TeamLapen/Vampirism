@@ -48,7 +48,7 @@ public class SelectActionRadialScreen<T extends ISkillPlayer<T>> extends DualSwi
             if (!actions.isEmpty()) {
                 Minecraft.getInstance().setScreen(new SelectActionRadialScreen<>(player, actions, keyMapping));
             } else {
-                Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.factionapi.no_actions"), true);
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("gui.factionapi.action_radial.no_actions"), true);
                 Minecraft.getInstance().setScreen(null);
             }
         });

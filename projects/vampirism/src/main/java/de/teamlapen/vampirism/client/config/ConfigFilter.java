@@ -8,12 +8,12 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class ModFilter implements Filter {
+public class ConfigFilter implements Filter {
 
     @Override
     public @Nullable Element filterEntry(Context context, String key, Element original) {
         return switch (key) {
-            case "notifyAvailableIntegrations", "optifineBloodVisionWarning", "actionOrder", "minionTaskOrder", "informAboutGuideAPI", "oldVampireBiomeGen" -> null;
+            case "notifyAvailableIntegrations", "optifineBloodVisionWarning", "informAboutGuideAPI", "oldVampireBiomeGen" -> null;
             default -> original;
         };
     }

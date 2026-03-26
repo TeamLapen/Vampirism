@@ -22,7 +22,7 @@ public class ActionDurationOverlay<T extends ISkillPlayer<T>> extends BaseOverla
 
     @Override
     protected boolean isEnabledInConfig() {
-        return FactionConfig.client().renderActionDurationOverlay.get();
+        return FactionConfig.client().showActionDurationOverlay.get();
     }
 
     @Override

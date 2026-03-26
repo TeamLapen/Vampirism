@@ -7,8 +7,6 @@ import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
 import de.teamlapen.faction.api.factions.tasks.TaskUnlocker;
 import de.teamlapen.faction.common.core.FactionTasks;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import org.jetbrains.annotations.NotNull;
 
 public record LvlUnlocker(int reqLevel, int maxLevel) implements TaskUnlocker {
 
@@ -31,11 +29,10 @@ public record LvlUnlocker(int reqLevel, int maxLevel) implements TaskUnlocker {
 
     @Override
     public Component getDescription() {
-        MutableComponent t = Component.translatable("text.factionapi.level_min", reqLevel);
         if (maxLevel > 0) {
-            t.append(" ").append(Component.translatable("text.factionapi.level_max", maxLevel));
+            return Component.translatable("message.factionapi.task_requirement.level.range", reqLevel, maxLevel);
         }
-        return t;
+        return Component.translatable("message.factionapi.task_requirement.level.min", reqLevel);
     }
 
     @Override

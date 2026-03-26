@@ -26,9 +26,9 @@ public record ServerboundSelectMinionTaskPacket(int minionID, Identifier taskID)
 
     public static void printRecoveringMinions(@NotNull ServerPlayer player, @NotNull List<MutableComponent> recoveringMinions) {
         if (recoveringMinions.size() == 1) {
-            player.displayClientMessage(Component.translatable("text.factionapi.minion.minion_is_still_recovering", recoveringMinions.getFirst()), true);
+            player.displayClientMessage(Component.translatable("message.factionapi.minion.still_recovering", recoveringMinions.getFirst()), true);
         } else if (recoveringMinions.size() > 1) {
-            player.displayClientMessage(Component.translatable("text.factionapi.minion..n_minions_are_still_recovering", recoveringMinions.size()), true);
+            player.displayClientMessage(Component.translatable("message.factionapi.minion.minions_recovering", recoveringMinions.size()), true);
         }
     }
 

@@ -214,15 +214,11 @@ public class SkillsTabComponent {
     }
 
     public Component getRemainingPointsText() {
-        int remainingPoints1 = this.getRemainingPoints();
-        Component remainingPoints;
-        var skillPointId = this.skillTree.value().skillPointTag().location();
-        if (remainingPoints1 == Integer.MAX_VALUE) {
-            remainingPoints = Component.translatable(skillPointId.toLanguageKey("skill_tree", "skill_points"), "∞");
-        } else {
-            remainingPoints = Component.translatable(skillPointId.toLanguageKey("skill_tree", remainingPoints1 == 1 ? "skill_point" : "skill_points"), remainingPoints1);
+        int remainingPoints = this.getRemainingPoints();
+        if (remainingPoints == Integer.MAX_VALUE) {
+            return Component.translatable("gui.factionapi.skill_tree.skill_points", "∞");
         }
-        return remainingPoints;
+        return Component.translatable(remainingPoints == 1 ? "gui.factionapi.skill_tree.skill_point" : "gui.factionapi.skill_tree.skill_points", remainingPoints);
     }
 
     public Holder<ISkillTree> getSkillTree() {
