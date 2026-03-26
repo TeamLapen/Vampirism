@@ -216,7 +216,7 @@ public class SkillsTabComponent {
     public Component getRemainingPointsText() {
         int remainingPoints = this.getRemainingPoints();
         if (remainingPoints == Integer.MAX_VALUE) {
-            return Component.translatable("gui.factionapi.skill_tree.skill_points", "∞");
+            return Component.translatable("gui.factionapi.skills.skill_points", "∞");
         }
         return Component.translatable(remainingPoints == 1 ? "gui.factionapi.skill_tree.skill_point" : "gui.factionapi.skill_tree.skill_points", remainingPoints);
     }
@@ -226,7 +226,7 @@ public class SkillsTabComponent {
     }
 
     public void drawDisableText(GuiGraphics graphics, int x, int y) {
-        Component f = Component.translatable("gui.factionapi.skill.unlock_unavailable").withStyle(ChatFormatting.WHITE);
+        Component f = Component.translatable("gui.factionapi.skills.unlock_unavailable").withStyle(ChatFormatting.WHITE);
         FormattedCharSequence s = Language.getInstance().getVisualOrder(f);
 
         int tooltipTextWidth = 219;

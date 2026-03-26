@@ -234,10 +234,10 @@ public class SkillNodeComponent {
             if (state == SkillNodeState.LOCKED || state == SkillNodeState.VISIBLE) {
                 List<Component> text = new ArrayList<>();
                 if (state == SkillNodeState.VISIBLE) {
-                    MutableComponent t1 = Component.translatable("gui.factionapi.skill.unlock_parent_first").withStyle(ChatFormatting.DARK_RED);
+                    MutableComponent t1 = Component.translatable("gui.factionapi.skills.unlock_parent_first").withStyle(ChatFormatting.DARK_RED);
                     text.add(t1);
                 } else {
-                    text.add(Component.translatable("gui.factionapi.skill.locked"));
+                    text.add(Component.translatable("gui.factionapi.skills.locked"));
                     lockingSkills.stream().map(a -> a.value().getName().copy().withStyle(ChatFormatting.DARK_RED)).forEach(text::add);
                 }
                 int width = text.stream().mapToInt(this.minecraft.font::width).max().getAsInt();
@@ -252,7 +252,7 @@ public class SkillNodeComponent {
 
             if (!lockingSkills.isEmpty()) {
                 List<Component> text = new ArrayList<>();
-                text.add(Component.translatable("gui.factionapi.skill.excluding"));
+                text.add(Component.translatable("gui.factionapi.skills.excluding"));
                 lockingSkills.stream().map(a -> a.value().getName().copy().withStyle(ChatFormatting.YELLOW)).forEach(text::add);
                 int width = Math.min(this.width[hoveredSkillIndex], text.stream().mapToInt(this.minecraft.font::width).max().getAsInt());
 

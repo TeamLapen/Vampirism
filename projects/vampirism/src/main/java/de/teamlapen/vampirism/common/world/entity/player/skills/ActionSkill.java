@@ -63,7 +63,7 @@ public class ActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends 
         super(skillTree, skillPointCost, customDescription);
         this.action = action;
         if (!customDescription) {
-            this.setDescription(() -> Component.translatable("gui.factionapi.skill.unlocks_action"));
+            this.setDescription(() -> Component.translatable("gui.factionapi.skills.unlocks_action"));
         }
     }
 

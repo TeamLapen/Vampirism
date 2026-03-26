@@ -898,7 +898,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             case PHASE_1_NEUTRAL, PHASE_1_OPPOSITE -> neutralPerc = this.captureTimer / (float) FactionConfig.server().raidPhaseOneDuration.get();
             case PHASE_2 -> {
                 neutralPerc = 1f;
-                this.captureInfo.setName(Component.translatable("message.vampirism.village_raid.participants_remaining"));
+                this.captureInfo.setName(Component.translatable("message.factionapi.village_raid.participants_remaining"));
             }
             default -> neutralPerc = 0;
         }
@@ -936,7 +936,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     private void setupPhase2() {
         if (this.phase != CAPTURE_PHASE.PHASE_2) {
             this.phase = CAPTURE_PHASE.PHASE_2;
-            this.captureInfo.setName(Component.translatable("message.vampirism.village_raid.participants_remaining"));
+            this.captureInfo.setName(Component.translatable("message.factionapi.village_raid.participants_remaining"));
         }
     }
 

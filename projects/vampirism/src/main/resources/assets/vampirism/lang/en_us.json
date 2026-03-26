@@ -837,7 +837,7 @@
   "stat.vampirism.killed_with_stake": "Vampires Killed with Stake",
   "stat.vampirism.mother_defeated": "Ancient Remains Defeated",
 
-  "key.vampirism.category": "Vampirism",
+  "key.vampirism.category.main": "Vampirism",
   "key.vampirism.suck_blood": "Suck Blood",
   "key.vampirism.toggle_vision": "Toggle Vampire Vision",
   "key.vampirism.select_ammo": "Select Quarrel Type",
@@ -1119,6 +1119,11 @@
   "gui.vampirism.jei.task.representative": "Faction representative",
   "gui.vampirism.jei.task.prerequisites": "Prerequisites",
   "gui.vampirism.jei.task.prerequisites.none": "None",
+
+  "message.vampirism.village_raid.attacked.vampire": "%s attacked a nearby vampire village",
+  "message.vampirism.village_raid.attacked.hunter": "%s attacked a nearby hunter village",
+  "message.vampirism.village_raid.vampire": "Vampire Raid",
+  "message.vampirism.village_raid.hunter": "Hunter Raid",
 
   "tooltip.vampirism.tier.normal": "Normal",
   "tooltip.vampirism.tier.enhanced": "Enhanced",

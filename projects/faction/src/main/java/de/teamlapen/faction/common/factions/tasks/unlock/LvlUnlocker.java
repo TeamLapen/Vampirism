@@ -30,9 +30,9 @@ public record LvlUnlocker(int reqLevel, int maxLevel) implements TaskUnlocker {
     @Override
     public Component getDescription() {
         if (maxLevel > 0) {
-            return Component.translatable("message.factionapi.task_requirement.level.range", reqLevel, maxLevel);
+            return Component.translatable("task_requirement.factionapi.level.range", reqLevel, maxLevel);
         }
-        return Component.translatable("message.factionapi.task_requirement.level.min", reqLevel);
+        return Component.translatable("task_requirement.factionapi.level.min", reqLevel);
     }
 
     @Override

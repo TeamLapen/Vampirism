@@ -10,6 +10,14 @@
   "effect.factionapi.oblivion": "Oblivion",
   "effect.factionapi.resurrection_fatigue": "Resurrection Fatigue",
 
+  "task_reward.factionapi.lord_level": "Lord Level %s",
+
+  "task_requirement.factionapi.lord_level.min": "Lord Level %s or Higher",
+  "task_requirement.factionapi.lord_level.exact": "Lord Level %s",
+  "task_requirement.factionapi.level.min": "Level %s or Higher",
+  "task_requirement.factionapi.level.range": "Level %1$s to %2$s",
+  "task_requirement.factionapi.parent": "Complete %s first",
+
   "stat_type.factionapi.action_used": "Action Activated",
   "stat_type.factionapi.action_time": "Action Active",
   "stat_type.factionapi.action_cooldown_time": "Action On Cooldown",
@@ -43,42 +51,50 @@
   "minion_task.factionapi.follow_lord": "Follow",
   "minion_task.factionapi.protect_lord": "Defend Lord",
   "minion_task.factionapi.nothing": "Nothing",
+  "minion_task.factionapi.call_single": "Call single",
+  "minion_task.factionapi.call_all": "Call all",
+  "minion_task.factionapi.respawn": "Respawn dead",
 
-  "gui.factionapi.taskmaster.not_accepted": "Not accepted",
+  "message.factionapi.minion.still_recovering": "%s is still recovering",
+  "message.factionapi.minion.minions_recovering": "%s minions are still recovering",
+  "message.factionapi.minion_task.could_not_activate": "Command could not be activated",
+
+  "dialogue.factionapi.minion.can_respawn": "%s: My Lord, I have recovered",
+  "dialogue.factionapi.minion.died": "%s: My Lord, I have died",
+  "dialogue.factionapi.minion.died_on_task": "My lord, I am sorry, but I died while fulfilling your task",
+
   "gui.factionapi.faction_menu.appearance_menu": "Appearance Menu",
   "gui.factionapi.faction_menu.locate_taskmaster": "Last Known Position",
   "gui.factionapi.faction_menu.distance": " (%s blocks away)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Unknown",
   "gui.factionapi.faction_menu.last_known_pos": "Last known position: ",
-  "gui.factionapi.edit_action.open_keybinding_settings": "Open Keybinding",
-  "gui.factionapi.edit_action.key_shortcuts": "Key Shortcuts",
   "gui.factionapi.faction_menu.skill_screen": "Skill Screen",
   "gui.factionapi.faction_menu.edit_actions": "Edit Actions",
   "gui.factionapi.faction_menu.edit_tasks": "Edit Minion Tasks",
   "gui.factionapi.faction_menu.no_tasks": "No accepted tasks",
   "gui.factionapi.faction_menu.destroy_item": "Destroys equipped item",
-  "gui.factionapi.minion.appearance": "Change minion appearance",
-  "gui.factionapi.minion.lock_action": "Ignore global commands",
-  "gui.factionapi.minion.active_task": "Current task",
-  "gui.factionapi.minion.stats": "Minion Stats",
-  "gui.factionapi.reordering.excluded": "Excluded",
-  "gui.factionapi.reset": "Reset",
-  "gui.factionapi.reset_question": "Are you sure?",
-  "gui.factionapi.skill.resetall": "Reset skills",
-  "gui.factionapi.skill.unlocked": "Unlocked",
-  "gui.factionapi.skill.locked": "Locked by other skill:",
-  "gui.factionapi.skill.excluding": "Excluding each other:",
-  "gui.factionapi.skill.incompatible": "Incompatible with:",
-  "gui.factionapi.skill.unlocks_action": "Unlocks action",
-  "gui.factionapi.skill.unlock_parent_first": "Unlock parent first",
-  "gui.factionapi.skill.skills_reset": "Your skills have been reset",
-  "gui.factionapi.skill.deactivated_by_serveradmin": "This skill is deactivated by your server admin",
-  "gui.factionapi.skill.unlock_unavailable": "Unlocking skills is currently unavailable",
+  "gui.factionapi.faction_menu.level": "Level %1$s",
+
+  "gui.factionapi.edit_action.open_keybinding_settings": "Open Keybinding",
+  "gui.factionapi.edit_action.key_shortcuts": "Key Shortcuts",
+
+  "gui.factionapi.skills.no_tab": "You cannot learn skills",
+  "gui.factionapi.skills.resetall": "Reset skills",
+  "gui.factionapi.skills.unlocked": "Unlocked",
+  "gui.factionapi.skills.locked": "Locked by other skill:",
+  "gui.factionapi.skills.excluding": "Excluding each other:",
+  "gui.factionapi.skills.incompatible": "Incompatible with:",
+  "gui.factionapi.skills.unlocks_action": "Unlocks action",
+  "gui.factionapi.skills.unlock_parent_first": "Unlock parent first",
+  "gui.factionapi.skills.skills_reset": "Your skills have been reset",
+  "gui.factionapi.skills.deactivated_by_serveradmin": "This skill is deactivated by your server admin",
+  "gui.factionapi.skills.unlock_unavailable": "Unlocking skills is currently unavailable",
   "gui.factionapi.skills.reset_req": "You need a '%s' to reset your skills",
   "gui.factionapi.skills.reset_consume": "This consumes a '%s'",
-  "gui.factionapi.skill_tree.skill_points": "%d skill points",
-  "gui.factionapi.skill_tree.skill_point": "%d skill point",
-  "gui.factionapi.skill_screen.no_tab": "You cannot learn Skills",
+  "gui.factionapi.skills.skill_points": "%d skill points",
+  "gui.factionapi.skills.skill_point": "%d skill point",
+
+  "gui.factionapi.taskmaster.not_accepted": "Not accepted",
   "gui.factionapi.taskmaster.task_failed": "Task failed",
   "gui.factionapi.taskmaster.item_req": "Items to acquire",
   "gui.factionapi.taskmaster.entity_req": "Entities to kill",
@@ -91,111 +107,32 @@
   "gui.factionapi.taskmaster.remove_task": "Remove",
   "gui.factionapi.taskmaster.requirement": "Requirement: ",
   "gui.factionapi.taskmaster.reward": "Reward:",
-  "gui.factionapi.minion_stats": "Minion Stats",
 
-  "narration.factionapi.skill": "Skill",
+  "gui.factionapi.task_board.tasks": "Tasks",
+
+  "gui.factionapi.minion.appearance": "Change minion appearance",
+  "gui.factionapi.minion.lock_action": "Ignore global commands",
+  "gui.factionapi.minion.active_task": "Current task",
+  "gui.factionapi.minion.stats": "Minion Stats",
+  "gui.factionapi.minion.name": "Name: ",
+  "gui.factionapi.minion_screen.reset_stats": "Reset stats. This consumes '%s'",
+  "gui.factionapi.minion_stats": "Minion Stats",
+  "gui.factionapi.minion_stats.level": "Level",
+  "gui.factionapi.minion_stats.stat_level": "Lvl %1$s/%2$s",
+
+  "gui.factionapi.radial_menu.excluded_actions": "Excluded Actions",
+  "gui.factionapi.radial_menu.place_exclude": "Place here to exclude",
+  "gui.factionapi.action_radial.no_actions": "No assigned actions",
+  "gui.factionapi.minion_radial.no_minion_tasks": "No assigned minion tasks",
+
+  "gui.factionapi.reordering.excluded": "Excluded",
+  "gui.factionapi.reset": "Reset",
+  "gui.factionapi.reset_question": "Are you sure?",
 
   "message.factionapi.restriction.faction.neutral": "How do those humans even use this thing...",
   "message.factionapi.restriction.faction": "How do they even use this thing...",
   "message.factionapi.restriction.level": "I am not yet experienced enough to use this",
   "message.factionapi.restriction.skill": "I have not yet acquired the skill to use this",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  "gui.factionapi.radial_menu.excluded_actions": "Excluded Actions",
-  "gui.factionapi.radial_menu.place_exclude": "Place here to exclude",
-
-
-
-  "gui.factionapi.task_board.tasks": "Tasks",
-  "gui.factionapi.minion_screen.reset_stats": "Reset stats. This consumes '%s'",
-  "gui.factionapi.minion.name": "Name: ",
-
-
-  "gui.factionapi.minion_stats.level": "Level",
-
-  "gui.factionapi.faction_menu.level": "Level %1$s",
-
-
-  "gui.factionapi.minion_stats.stat_level": "Lvl %1$s/%2$s",
-
-
-  "gui.factionapi.action_radial.no_actions": "No assigned actions",
-  "gui.factionapi.minion_radial.no_minion_tasks": "No assigned minion tasks",
-
-
-
-  "dialogue.factionapi.minion.can_respawn": "%s: My Lord, I have recovered",
-  "dialogue.factionapi.minion.died": "%s: My Lord, I have died",
-
-
-  "minion_task.factionapi.call_single": "Call single",
-  "minion_task.factionapi.call_all": "Call all",
-  "minion_task.factionapi.respawn": "Respawn dead",
-
-  "message.factionapi.minion_task.could_not_activate": "Command could not be activated",
-
-
-
-
-  "message.factionapi.village_raid.defended": "Village successfully defended",
-
-
-
-  "message.factionapi.village_raid.attacked.neutral": "%s attacked a nearby neutral village",
-  "message.vampirism.village_raid.attacked.vampire": "%s attacked a nearby vampire village",
-  "message.vampirism.village_raid.attacked.hunter": "%s attacked a nearby hunter village",
-
-
-  "message.factionapi.village_raid.captured_by": "%s captured a nearby village",
-
-
-  "message.factionapi.village_raid.almost_captured": "Village almost captured. %s defenders left",
-
-  "message.factionapi.village_raid.abandoned": "A nearby village has been abandoned",
-
-
-  "message.factionapi.village_raid.neutral": "Neutral Raid",
-  "message.vampirism.village_raid.vampire": "Vampire Raid",
-  "message.vampirism.village_raid.hunter": "Hunter Raid",
-
-  "message.vampirism.village_raid.participants_remaining": "Participants Remaining",
-
-
-  "message.factionapi.village_totem.fail_other_capturing": "Cannot destroy totem while another faction is capturing it",
-  "message.factionapi.village_totem.fail_other_faction": "Cannot destroy a totem of another faction",
-  "message.factionapi.village_totem.fail_other_component": "Cannot destroy village component of another faction's village",
-
-
-  "message.factionapi.village_totem.no_faction": "You have to be in a faction",
-  "message.factionapi.village_totem.already_capturing": "There is already a capture in progress",
-  "message.factionapi.village_totem.same_faction": "You cannot attack a village owned by your faction",
-
-
-
-  "message.factionapi.village_totem.no_village": "No nearby village or the village is too small:",
-  "message.factionapi.village_totem.no_village.homes": "— Not enough beds: %1$s/%2$s",
-  "message.factionapi.village_totem.no_village.workstations": "— Not enough workstations: %1$s/%2$s",
-  "message.factionapi.village_totem.no_village.villagers": "— Not enough villagers: %1$s/%2$s",
-
-
-  "message.factionapi.village_totem.disabled": "This totem doesn't work. Search for another one",
-
-
-  "message.factionapi.village_totem.non_village_faction": "Your faction is not able to capture villages",
-
-
 
   "message.factionapi.action.not_unlocked": "This action has not been unlocked yet",
   "message.factionapi.action.disabled_by_admin": "This action has been disabled by the server administrator",
@@ -208,42 +145,28 @@
   "message.factionapi.action.on_cooldown": "This action is still on cooldown",
   "message.factionapi.action.cancelled": "This action could not be activated",
 
+  "message.factionapi.village_raid.defended": "Village successfully defended",
+  "message.factionapi.village_raid.attacked.neutral": "%s attacked a nearby neutral village",
+  "message.factionapi.village_raid.captured_by": "%s captured a nearby village",
+  "message.factionapi.village_raid.almost_captured": "Village almost captured. %s defenders left",
+  "message.factionapi.village_raid.abandoned": "A nearby village has been abandoned",
+  "message.factionapi.village_raid.neutral": "Neutral Raid",
+  "message.factionapi.village_raid.participants_remaining": "Participants Remaining",
 
-
-  "message.factionapi.minion.still_recovering": "%s is still recovering",
-  "dialogue.factionapi.minion.died_on_task": "My lord, I am sorry, but I died while fulfilling your task",
-  "message.factionapi.minion.minions_recovering": "%s minions are still recovering",
-
-  "task_reward.factionapi.lord_level": "Lord Level %s",
-
-  "message.factionapi.task_requirement.lord_level.min": "Lord Level %s or Higher",
-  "message.factionapi.task_requirement.lord_level.exact": "Lord Level %s",
-
-  "message.factionapi.task_requirement.level.min": "Level %s or Higher",
-  "message.factionapi.task_requirement.level.range": "Level %1$s to %2$s",
-
-
+  "message.factionapi.village_totem.fail_other_capturing": "Cannot destroy totem while another faction is capturing it",
+  "message.factionapi.village_totem.fail_other_faction": "Cannot destroy a totem of another faction",
+  "message.factionapi.village_totem.fail_other_component": "Cannot destroy village component of another faction's village",
+  "message.factionapi.village_totem.no_faction": "You have to be in a faction",
+  "message.factionapi.village_totem.already_capturing": "There is already a capture in progress",
+  "message.factionapi.village_totem.same_faction": "You cannot attack a village owned by your faction",
+  "message.factionapi.village_totem.no_village": "No nearby village or the village is too small:",
+  "message.factionapi.village_totem.no_village.homes": "— Not enough beds: %1$s/%2$s",
+  "message.factionapi.village_totem.no_village.workstations": "— Not enough workstations: %1$s/%2$s",
+  "message.factionapi.village_totem.no_village.villagers": "— Not enough villagers: %1$s/%2$s",
+  "message.factionapi.village_totem.disabled": "This totem doesn't work. Search for another one",
+  "message.factionapi.village_totem.non_village_faction": "Your faction is not able to capture villages",
 
   "message.factionapi.taskmaster.no_tasks": "No tasks available at the moment",
-
-  "message.factionapi.task_requirement.parent": "Complete %s first",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   "tooltip.factionapi.faction_specifics": "Faction Specifics:",
   "tooltip.factionapi.required_skill": "Required skill: %s",
@@ -252,22 +175,18 @@
 
   "subtitles.factionapi.task_complete": "Task completed",
 
+  "narration.factionapi.skill": "Skill",
+
   "command.factionapi.base.level.successful": "%s is now a %s level %s",
   "command.factionapi.base.get_level.successful": "%s is a %s level %s and lord level %s",
-  "command.factionapi.test.village.no_village": "No village nearby",
   "command.factionapi.base.bind_action.success": "Successfully bound action %s to action key %s",
   "command.factionapi.base.bind_action.not_existing": "The given action %s does not exist",
   "command.factionapi.base.bind_action.help": "You can bind custom actions (e.g. bat mode) to the two available action keys (see keybindings).",
-  "command.factionapi.argument.faction.notfound": "The given faction %s does not exist",
-  "command.factionapi.argument.faction.notplayable": "You cannot play as %s",
   "command.factionapi.base.gender.success": "Successfully set gender for lord title display",
   "command.factionapi.base.lord.successful": "%s is now a %s lord level %s",
   "command.factionapi.base.lord.no_faction": "You have to be in a faction to become a lord",
   "command.factionapi.base.lord.level_failed": "Failed setting faction level",
   "command.factionapi.base.lord.failed": "Failed setting lord level",
-  "command.factionapi.argument.skill.notfound": "The given skill %s does not exist",
-  "command.factionapi.argument.action.notfound": "The given action %s does not exist",
-  "command.factionapi.argument.minion.notfound": "Minion not found",
   "command.factionapi.base.minion_inventory.no_minion": "Minion could not be found",
   "command.factionapi.base.minion_inventory.no_player": "Player could not be found",
   "command.factionapi.base.minion_inventory.add_success": "Successfully added %s %s to %s's inventory",
@@ -275,6 +194,13 @@
   "command.factionapi.base.minion_inventory.item_not_found": "Item was not found in the inventory",
   "command.factionapi.base.minion_inventory.content": "Inventory of %s:",
   "command.factionapi.base.minion_inventory.empty": "Inventory of %s is empty",
+  "command.factionapi.argument.faction.notfound": "The given faction %s does not exist",
+  "command.factionapi.argument.faction.notplayable": "You cannot play as %s",
+  "command.factionapi.argument.skill.notfound": "The given skill %s does not exist",
+  "command.factionapi.argument.action.notfound": "The given action %s does not exist",
+  "command.factionapi.argument.minion.notfound": "Minion not found",
+  "command.factionapi.test.village.no_village": "No village nearby",
+  "command.factionapi.test.village.success": "Successfully converted village to faction %s",
   "command.factionapi.test.resetactions": "Reset Timers",
   "command.factionapi.test.skill.enabled": "Successfully enabled skill %s",
   "command.factionapi.test.skill.alreadyenabled": "Skill is already enabled (%s)",
@@ -291,7 +217,6 @@
   "command.factionapi.test.skill.all_unlocked": "All skills are now unlocked",
   "command.factionapi.test.skill.all_locked": "All skills are now locked",
   "command.factionapi.test.skill.not_enabled": "Skill %s was not enabled",
-  "command.factionapi.test.village.success": "Successfully converted village to faction %s",
   "command.factionapi.failed_to_execute": "Failed to execute command. Internal error.",
   "command.factionapi.failed_to_execute.players": "Failed to execute command for %s. Internal error.",
 
