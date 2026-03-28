@@ -19,7 +19,7 @@ public record ParentUnlocker(Holder<Task> parent) implements TaskUnlocker {
 
     @Override
     public Component getDescription() {
-        return Component.translatable("text.factionapi.task.require_parent", this.parent.value().title());
+        return Component.translatable("task_requirement.factionapi.parent", this.parent.value().title());
     }
 
     @Override

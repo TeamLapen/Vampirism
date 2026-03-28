@@ -102,7 +102,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.reset = layout.addChild(new ImageButton(18,18, RESET, s -> {
             FactionsMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
-        }, Component.translatable("text.factionapi.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))) {
+        }, Component.translatable("gui.factionapi.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))) {
             @Override
             public boolean shouldTakeFocusAfterInteraction() {
                 return false;
@@ -116,7 +116,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         statsLayout.defaultCellSetting()
                 .alignHorizontallyCenter();
 
-        statsLayout.addChild(new StringWidget(Component.translatable("text.factionapi.level"), this.font), 0, 0);
+        statsLayout.addChild(new StringWidget(Component.translatable("gui.factionapi.minion_stats.level"), this.font), 0, 0);
         this.levelWidget = statsLayout.addChild(new StringWidget(Component.empty(), this.font), 0, 1);
         this.skillPointWidget = statsLayout.addChild(new StringWidget(Component.empty(), this.font), 0, 3);
 
@@ -165,7 +165,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
         statRow.subscribe(() -> {
             value.setMessage(Component.literal(statRow.value));
-            level.setMessage(Component.translatable("text.factionapi.level_short").append(" ").append(String.valueOf(statRow.currentLevel + 1)).append("/").append(String.valueOf(statRow.totalLevels + 1)));
+            level.setMessage(Component.translatable("gui.factionapi.minion_stats.stat_level", statRow.currentLevel + 1, statRow.totalLevels + 1));
             button.active = statRow.canUpgrade() && this.getRemainingStatPoints() > 0;
         });
     }

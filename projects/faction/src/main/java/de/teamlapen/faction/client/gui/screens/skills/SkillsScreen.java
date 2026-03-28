@@ -51,7 +51,7 @@ public class SkillsScreen extends Screen {
     private static final Identifier WINDOW_LOCATION = FIdentifier.mod("textures/gui/skills/window.png");
     private static final Identifier TABS_LOCATION = FIdentifier.mc("textures/gui/advancements/tabs.png");
     private static final Component VERY_SAD_LABEL = Component.translatable("advancements.sad_label");
-    private static final Component NO_TABS_LABEL = Component.translatable("gui.factionapi.skill_screen.no_tab");
+    private static final Component NO_TABS_LABEL = Component.translatable("gui.factionapi.skills.no_tab");
     private static final Component TITLE = Component.translatable("gui.factionapi.faction_menu.skill_screen");
 
     private final ISkillPlayer<?> factionPlayer;
@@ -108,7 +108,7 @@ public class SkillsScreen extends Screen {
 
         //server syncs after the screen is closed
         @Nullable
-        Button resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("gui.factionapi.skill.resetall"), (context) -> {
+        Button resetSkills = this.addRenderableWidget(new ExtendedButton(guiLeft + 85, guiTop + 194, 80, 20, Component.translatable("gui.factionapi.skills.resetall"), (context) -> {
             FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.RESET_SKILLS));
             InventoryHelper.removeItemFromInventory(this.factionPlayer.asEntity().getInventory(), new ItemStack(FactionItems.OBLIVION_POTION.get())); //server syncs after the screen is closed
             if ((this.factionPlayer.getLevel() < 2 || this.minecraft.player.getInventory().countItem(FactionItems.OBLIVION_POTION.get()) <= 1) && !test) {

@@ -22,7 +22,7 @@ public class ActionCooldownOverlay<T extends ISkillPlayer<T>> extends BaseOverla
 
     @Override
     protected boolean isEnabledInConfig() {
-        return FactionConfig.client().renderActionCooldownOverlay.get();
+        return FactionConfig.client().showActionCooldownOverlay.get();
     }
 
     @Override

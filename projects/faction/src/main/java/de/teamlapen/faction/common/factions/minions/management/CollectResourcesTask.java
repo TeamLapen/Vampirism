@@ -97,7 +97,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     public void tickBackground(@NotNull Desc<Q> desc, @NotNull Q data) {
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
-            desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * FactionConfig.server().minionResourceCooldownOfflineMult.get());
+            desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * FactionConfig.server().minionOfflineResourceCooldownMultiplier.get());
             WeightedList.of(resources).getRandom(rng).ifPresent(s -> data.getInventory().addItemStack(s));
             List<ItemStack> stacks = Stream.of(data.getInventory().getInventoryArmor(), data.getInventory().getInventoryHands()).flatMap(Collection::stream).filter(stack -> !stack.isEmpty()).toList();
             if (!stacks.isEmpty()) {

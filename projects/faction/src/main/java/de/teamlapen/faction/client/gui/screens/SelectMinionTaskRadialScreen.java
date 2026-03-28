@@ -32,9 +32,10 @@ import java.util.stream.Stream;
 
 public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<SelectMinionTaskRadialScreen.Entry> {
 
-    public static final Map<Identifier, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_single"), Component.translatable("text.factionapi.minion.call_single"), FIdentifier.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
-            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_all"), Component.translatable("text.factionapi.minion.call_all"), FIdentifier.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
-            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("respawn"), Component.translatable("text.factionapi.minion.respawn"), FIdentifier.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
+    public static final Map<Identifier, Entry> CUSTOM_ENTRIES = Stream.of(
+            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_single"), Component.translatable("minion_task.factionapi.call_single"), FIdentifier.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
+            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_all"), Component.translatable("minion_task.factionapi.call_all"), FIdentifier.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
+            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("respawn"), Component.translatable("minion_task.factionapi.respawn"), FIdentifier.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
 
     private SelectMinionTaskRadialScreen(Collection<Entry> entries, KeyMapping keyMapping) {
         super(getRadialMenu(entries), keyMapping, SelectActionRadialScreen::show);
@@ -48,7 +49,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         FactionPlayerHandler.get(Minecraft.getInstance().player).getLordPlayer().filter(x -> x.getLordLevel() > 0).ifPresent(lord -> {
             Collection<Entry> tasks = getTasks(lord);
             if (tasks.isEmpty()) {
-                Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.factionapi.no_minion_tasks"), true);
+                Minecraft.getInstance().player.displayClientMessage(Component.translatable("gui.factionapi.minion_radial.no_minion_tasks"), true);
                 Minecraft.getInstance().setScreen(null);
             } else {
                 Minecraft.getInstance().setScreen(new SelectMinionTaskRadialScreen(tasks, mapping));

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.client.config.ModFilter;
+import de.teamlapen.vampirism.client.config.ConfigFilter;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.renderer.items.BatCageSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
@@ -34,7 +34,7 @@ public class VampirismModClient {
         SERVICES = new ClientServices(modContainer);
         SERVICES.register(modEventBus);
 
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ModFilter()));
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ConfigFilter()));
 
         modEventBus.register(this);
         NeoForge.EVENT_BUS.addListener(this::onDataMapsUpdated);
@@ -42,7 +42,6 @@ public class VampirismModClient {
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
-
     }
 
     public static ClientServices services() {

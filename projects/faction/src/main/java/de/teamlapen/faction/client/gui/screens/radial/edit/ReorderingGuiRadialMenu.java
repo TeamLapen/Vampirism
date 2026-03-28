@@ -90,7 +90,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
         GridLayout.RowHelper rowHelper = excludes.createRowHelper(1);
         rowHelper.defaultCellSetting().alignHorizontallyCenter();
-        rowHelper.addChild(new StringWidget(Component.translatable("text.factionapi.excluded_actions"), Minecraft.getInstance().font), rowHelper.newCellSettings().alignHorizontallyCenter().paddingVertical(1));
+        rowHelper.addChild(new StringWidget(Component.translatable("gui.factionapi.radial_menu.excluded_actions"), Minecraft.getInstance().font), rowHelper.newCellSettings().alignHorizontallyCenter().paddingVertical(1));
 
         this.excludedList = rowHelper.addChild(new ExcludedItemList(excludesWidth - 8, this.height - 55 - 11));
         this.repositionCallback.add((width1, height1) -> excludedList.setHeight(height1 - 55 - 11));
@@ -299,7 +299,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
                 guiGraphics.pose().pushMatrix();
                 guiGraphics.pose().translate(i, j);
                 guiGraphics.fillGradient(0, 0, this.getWidth(), this.getHeight(), -1072689136, -804253680);
-                guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("text.factionapi.place_exclude"), this.width / 2, this.height / 2, -1);
+                guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("gui.factionapi.radial_menu.place_exclude"), this.width / 2, this.height / 2, -1);
                 guiGraphics.pose().popMatrix();
             }
         }

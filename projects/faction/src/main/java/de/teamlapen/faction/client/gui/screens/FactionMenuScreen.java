@@ -148,7 +148,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
         super.init();
         if (factionPlayer.getLevel() > 0) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(factionPlayer.asEntity());
-            MutableComponent component = handler.getLordPlayer().filter(x -> x.getLordLevel() > 0).map(ILordPlayer::getLordTitle).map(x -> x.plainCopy().append(" (" + handler.getLordLevel() + ")")).orElseGet(() -> Component.translatable("text.factionapi.level").append(" " + factionPlayer.getLevel()));
+            MutableComponent component = handler.getLordPlayer().filter(x -> x.getLordLevel() > 0).map(ILordPlayer::getLordTitle).map(x -> x.plainCopy().append(" (" + handler.getLordLevel() + ")")).orElseGet(() -> Component.translatable("gui.factionapi.faction_menu.level", factionPlayer.getLevel()));
             this.level = component.withStyle(style -> style.withColor(factionPlayer.getFaction().value().getChatColor()));
         } else {
             this.level = Component.empty();

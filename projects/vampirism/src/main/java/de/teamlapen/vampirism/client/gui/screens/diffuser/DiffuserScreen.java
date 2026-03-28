@@ -54,11 +54,11 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     private Component getLockText() {
         if (this.menu.isOwner(minecraft.player)) {
             return switch (this.menu.getLockStatus()) {
-                case PUBLIC -> Component.translatable("container.vampirism.diffuser.unlocked_for_others");
-                case PRIVATE -> Component.translatable("container.vampirism.diffuser.locked_for_others");
+                case PUBLIC -> Component.translatable("gui.vampirism.diffuser.unlocked_for_others");
+                case PRIVATE -> Component.translatable("gui.vampirism.diffuser.locked_for_others");
             };
         } else {
-            return Component.translatable("container.vampirism.diffuser.not_the_owner");
+            return Component.translatable("gui.vampirism.diffuser.not_the_owner");
         }
     }
 
@@ -94,11 +94,11 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
 
     protected Component getBootMessage(float progress) {
         if (progress == 1f) {
-            return Component.translatable("container.vampirism.diffuser.active");
+            return Component.translatable("gui.vampirism.diffuser.active");
         } else if (progress == 0) {
-            return Component.translatable("container.vampirism.diffuser.idle");
+            return Component.translatable("gui.vampirism.diffuser.idle");
         } else {
-            return Component.translatable("container.vampirism.diffuser.booting");
+            return Component.translatable("gui.vampirism.diffuser.booting");
         }
     }
 

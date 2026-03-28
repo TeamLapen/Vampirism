@@ -15,7 +15,7 @@ public class FactionLevelOverlay extends BaseOverlay {
 
     @Override
     protected boolean isEnabledInConfig() {
-        return FactionConfig.client().renderFactionLevelOverlay.get();
+        return FactionConfig.client().showFactionLevelOverlay.get();
     }
 
     @Override

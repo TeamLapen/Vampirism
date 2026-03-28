@@ -65,30 +65,30 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
                     case 0 -> {
                         int missing = requirement.bookQuantity() - stack.getCount();
                         if (missing > 0) {
-                            tooltip = Component.translatable("container.vampirism.hunter_table.ritual_missing_book", missing);
+                            tooltip = Component.translatable("gui.vampirism.hunter_table.ritual_missing_book", missing);
                         }
                     }
                     case 1 -> {
                         int missing = requirement.vampireFangQuantity() - stack.getCount();
                         if (missing > 0) {
-                            tooltip = Component.translatable("container.vampirism.hunter_table.ritual_missing_vampire_fang", missing);
+                            tooltip = Component.translatable("gui.vampirism.hunter_table.ritual_missing_vampire_fang", missing);
                         }
                     }
                     case 2 -> {
                         int requiredLevel = requirement.pureBloodLevel();
                         if (!stack.isEmpty() && stack.getItem() instanceof PureBloodItem pureBloodItem && pureBloodItem.getLevel(stack) != requiredLevel) {
-                            tooltip = Component.translatable("container.vampirism.hunter_table.ritual_wrong_purity", requiredLevel + 1);
+                            tooltip = Component.translatable("gui.vampirism.hunter_table.ritual_wrong_purity", requiredLevel + 1);
                         } else {
                             int missing = requirement.pureBloodQuantity() - stack.getCount();
                             if (missing > 0) {
-                                tooltip = Component.translatable("container.vampirism.hunter_table.ritual_missing_pure_blood", missing, requiredLevel + 1);
+                                tooltip = Component.translatable("gui.vampirism.hunter_table.ritual_missing_pure_blood", missing, requiredLevel + 1);
                             }
                         }
                     }
                     case 3 -> {
                         int missing = requirement.vampireBookQuantity() - stack.getCount();
                         if (missing > 0) {
-                            tooltip = Component.translatable("container.vampirism.hunter_table.ritual_missing_vampire_book", missing);
+                            tooltip = Component.translatable("gui.vampirism.hunter_table.ritual_missing_vampire_book", missing);
                         }
                     }
                 }
@@ -118,9 +118,9 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
         Optional<Component> component = Optional.empty();
         Optional<HunterLeveling.HunterTableRequirement> requirement = this.menu.getRequirement();
         if (requirement.isEmpty()) {
-            component = Optional.of(Component.translatable("container.vampirism.hunter_table.level_wrong"));
+            component = Optional.of(Component.translatable("gui.vampirism.hunter_table.level_wrong"));
         } else if (requirement.filter(this.menu::doesTableFulfillRequirement).isEmpty()) {
-            component = Optional.of(Component.translatable("container.vampirism.hunter_table.structure_level_wrong"));
+            component = Optional.of(Component.translatable("gui.vampirism.hunter_table.structure_level_wrong"));
         }
         component.ifPresent(c -> graphics.setTooltipForNextFrame(this.font, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60));
     }

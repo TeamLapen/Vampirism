@@ -36,10 +36,10 @@ public class FactionKeys implements IMinecraftAccessor {
 
     public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(FIdentifier.mod("main"));
 
-    public static final KeyMapping ACTION = new KeyMapping("key.factions.action", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);
-    public static final KeyMapping MINION = new KeyMapping("key.factions.minion_task", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
-    public static final KeyMapping FACTION_MENU = new KeyMapping("key.factions.faction_menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
-    public static final KeyMapping SKILL_SCREEN = new KeyMapping("key.factions.skill_screen", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ACTION = new KeyMapping("key.factionapi.action", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY);
+    public static final KeyMapping MINION = new KeyMapping("key.factionapi.minion_task", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping FACTION_MENU = new KeyMapping("key.factionapi.faction_menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
+    public static final KeyMapping SKILL_SCREEN = new KeyMapping("key.factionapi.skill_screen", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
 
 
     public static final Map<ActionKeys, KeyMapping> ACTION_KEYS;
@@ -58,9 +58,9 @@ public class FactionKeys implements IMinecraftAccessor {
         ImmutableMap.Builder<ActionKeys, KeyMapping> builder = ImmutableMap.builder();
         Arrays.stream(ActionKeys.values()).forEach(x -> {
             if (x.getDefaultKey().isPresent()) {
-                builder.put(x, new KeyMapping("keys.factions.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, x.getDefaultKey().getAsInt(), CATEGORY));
+                builder.put(x, new KeyMapping("keys.factionapi.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, x.getDefaultKey().getAsInt(), CATEGORY));
             } else {
-                builder.put(x, new KeyMapping("keys.factions.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY));
+                builder.put(x, new KeyMapping("keys.factionapi.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY));
             }
         });
         ACTION_KEYS = builder.build();
@@ -135,11 +135,11 @@ public class FactionKeys implements IMinecraftAccessor {
 
     private void toggleBoundAction(IFactionPlayer<?> player, @Nullable Holder<IAction<?>> action) {
         if (action == null) {
-            player.asEntity().displayClientMessage(Component.translatable("text.factionapi.action.not_bound", "/factions bind-action"), true);
+            player.asEntity().displayClientMessage(Component.translatable("message.factionapi.action.not_bound", "/factions bind-action"), true);
         } else {
             IAction<?> value = action.value();
             if (!IFaction.is(player.getFaction(), value.factions())) {
-                player.asEntity().displayClientMessage(Component.translatable("text.factionapi.action.wrong_faction"), true);
+                player.asEntity().displayClientMessage(Component.translatable("message.factionapi.action.wrong_faction"), true);
             } else {
                 FactionsMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(action, Minecraft.getInstance().hitResult));
             }

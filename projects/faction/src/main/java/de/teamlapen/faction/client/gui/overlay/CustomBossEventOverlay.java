@@ -43,7 +43,7 @@ public class CustomBossEventOverlay extends BaseOverlay {
 
     @Override
     protected boolean isEnabledInConfig() {
-        return FactionConfig.client().renderFactionRaidbarOverlay.get();
+        return FactionConfig.client().showFactionRaidBarOverlay.get();
     }
 
     @Override
