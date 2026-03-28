@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.inventory.AlchemyTableMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -29,13 +29,13 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+    protected void renderBg(@NotNull GuiGraphicsExtractor graphics, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         GuiRenderer.blit(graphics, BREWING_STAND_LOCATION, i, j, this.imageWidth, this.imageHeight);

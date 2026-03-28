@@ -54,7 +54,7 @@
   ],
   "client": [
     "client.CapeLayerMixin",
-    "client.GuiGraphicsMixin",
+    "client.GuiGraphicsExtractorMixin",
     "client.HumanoidArmorLayerMixin",
     "client.LivingEntityRendererAccessor",
     "client.MinecraftMixin",

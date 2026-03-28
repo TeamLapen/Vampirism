@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInp
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.inventory.HunterTrainerMenu;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
@@ -56,13 +56,13 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.hoveredSlot != null && this.hoveredSlot.index >= 0 && this.hoveredSlot.index < 3) {
             var requirementOpt = this.menu.getRequirement();
             if (requirementOpt.isPresent()) {
@@ -122,7 +122,7 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
         super.renderBg(graphics, partialTick, mouseX, mouseY);
         this.ironIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
         this.goldIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
@@ -130,6 +130,6 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     }
 
     @Override
-    protected void renderErrorIcon(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderErrorIcon(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
     }
 }

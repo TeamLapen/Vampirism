@@ -135,11 +135,11 @@ public class FactionKeys implements IMinecraftAccessor {
 
     private void toggleBoundAction(IFactionPlayer<?> player, @Nullable Holder<IAction<?>> action) {
         if (action == null) {
-            player.asEntity().displayClientMessage(Component.translatable("message.factionapi.action.not_bound", "/factions bind-action"), true);
+            player.asEntity().sendOverlayMessage(Component.translatable("message.factionapi.action.not_bound", "/factions bind-action"));
         } else {
             IAction<?> value = action.value();
             if (!IFaction.is(player.getFaction(), value.factions())) {
-                player.asEntity().displayClientMessage(Component.translatable("message.factionapi.action.wrong_faction"), true);
+                player.asEntity().sendOverlayMessage(Component.translatable("message.factionapi.action.wrong_faction"));
             } else {
                 FactionsMod.proxy.sendToServer(ServerboundToggleActionPacket.createFromRaytrace(action, Minecraft.getInstance().hitResult));
             }

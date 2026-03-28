@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.rendertype.RenderType;
@@ -13,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.textures.FluidSpriteCache;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +39,6 @@ public class VertexUtils {
             case SOLID -> RenderTypes.solidMovingBlock();
             case TRANSLUCENT -> RenderTypes.translucentMovingBlock();
             case CUTOUT -> RenderTypes.cutoutMovingBlock();
-            case TRIPWIRE -> RenderTypes.tripwireMovingBlock();
         };
 
         TextureAtlasSprite still = sprites[0];

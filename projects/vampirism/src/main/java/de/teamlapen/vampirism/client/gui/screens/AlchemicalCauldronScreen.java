@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.inventory.AlchemicalCauldronMenu;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
@@ -34,13 +34,13 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull GuiGraphicsExtractor graphics, float partialTicks, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         GuiRenderer.blit(graphics, BACKGROUND, i, j, this.imageWidth, this.imageHeight);
@@ -63,8 +63,8 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
-        super.renderTooltip(pGuiGraphics, pX, pY);
+    protected void renderTooltip(GuiGraphicsExtractor pGuiGraphicsExtractor, int pX, int pY) {
+        super.renderTooltip(pGuiGraphicsExtractor, pX, pY);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         if (pX > i + 77 && pX < i + 77 + 28 && pY > j + 32 && pY < j + 32 + 21) {
@@ -72,14 +72,14 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
                 List<Holder<ISkill<?>>> missingSkills = holder.value().getRequiredSkills().stream().filter(s -> !HunterPlayer.get(this.minecraft.player).getSkillHandler().isSkillEnabled(s)).toList();
                 if (!missingSkills.isEmpty()) {
                     List<Component> components = Stream.concat(Stream.of(Component.translatable("gui.vampirism.alchemical_cauldron.missing_skills").withStyle(ChatFormatting.RED)), missingSkills.stream().map(skill -> Component.literal("p- ").append(skill.value().getName()).withStyle(ChatFormatting.RED))).collect(Collectors.toUnmodifiableList());
-                    pGuiGraphics.setComponentTooltipForNextFrame(getFont(), components, i + 77, j + 23);
+                    pGuiGraphicsExtractor.setComponentTooltipForNextFrame(getFont(), components, i + 77, j + 23);
                 }
             });
         }
     }
 
     @Override
-    protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         Component name = Component.translatable("container.vampirism.alchemical_cauldron.display", minecraft.player.getDisplayName().copy().withStyle(ChatFormatting.DARK_BLUE), ModBlocks.ALCHEMICAL_CAULDRON.get().getName());
         graphics.drawString(this.font, name, 5, 6, 0x404040, false);
         graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);

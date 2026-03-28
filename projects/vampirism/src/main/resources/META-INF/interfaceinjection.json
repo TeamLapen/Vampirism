@@ -63,8 +63,8 @@
   "net/minecraft/world/entity/WalkAnimationState": [
     "de/teamlapen/vampirism/misc/injection/IWalkAnimationStateVampirismMock"
   ],
-  "net/minecraft/client/gui/GuiGraphics": [
-    "de/teamlapen/vampirism/misc/injection/client/IGuiGraphicsVampirismMock"
+  "net/minecraft/client/gui/GuiGraphicsExtractor": [
+    "de/teamlapen/vampirism/misc/injection/client/IGuiGraphicsExtractorVampirismMock"
   ],
   "net/minecraft/world/item/ItemStack": [
     "de/teamlapen/vampirism/misc/injection/IItemStackVampirismMock"

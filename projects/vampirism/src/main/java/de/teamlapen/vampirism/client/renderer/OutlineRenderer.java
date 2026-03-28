@@ -37,7 +37,7 @@ public class OutlineRenderer {
     private static boolean wasHoldingFinder = false;
 
     @SubscribeEvent
-    public static void onRenderLevelStage(RenderLevelStageEvent.AfterEntities event) {
+    public static void onRenderLevelStage(RenderLevelStageEvent.AfterOpaqueFeatures event) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         ClientLevel level = mc.level;

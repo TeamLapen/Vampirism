@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.layouts.LayoutElement;
@@ -56,11 +56,11 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     @Override
-    public void render(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+    public void render(@NonNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
+        super.render(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
         for (Renderable renderable : this.renderables) {
             if (renderable instanceof IRenderLast last) {
-                last.renderLast(guiGraphics, mouseX, mouseY, partialTicks);
+                last.renderLast(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
             }
         }
     }

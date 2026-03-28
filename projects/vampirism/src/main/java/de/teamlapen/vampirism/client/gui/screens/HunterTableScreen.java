@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.common.world.inventory.HunterTableMenu;
 import de.teamlapen.vampirism.common.world.items.PureBloodItem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -46,13 +46,13 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.hoveredSlot != null && this.hoveredSlot.index >= 0 && this.hoveredSlot.index < 4) {
             var requirementOpt = this.menu.getTableRequirement();
             if (requirementOpt.isPresent()) {
@@ -105,7 +105,7 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
         super.renderBg(graphics, partialTick, mouseX, mouseY);
         this.bookIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
         this.fangsIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
@@ -114,7 +114,7 @@ public class HunterTableScreen extends ItemCombinerScreen<HunterTableMenu> {
     }
 
     @Override
-    protected void renderErrorIcon(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderErrorIcon(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         Optional<Component> component = Optional.empty();
         Optional<HunterLeveling.HunterTableRequirement> requirement = this.menu.getRequirement();
         if (requirement.isEmpty()) {

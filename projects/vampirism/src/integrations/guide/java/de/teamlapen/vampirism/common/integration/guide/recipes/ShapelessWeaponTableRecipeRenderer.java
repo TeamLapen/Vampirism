@@ -8,7 +8,7 @@ import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.common.world.items.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,8 +25,8 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void draw(@NotNull GuiGraphics guiGraphics, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
-        super.draw(guiGraphics, registryAccess, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
+    public void draw(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
+        super.draw(GuiGraphicsExtractor, registryAccess, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 int i = 3 * y + x;
@@ -35,7 +35,7 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
                     int stackY = (y + 1) * 17 + (guiTop + 30);
                     Ingredient ingredient = recipe.getIngredients().get(i);
                     ingredientCycler.getCycledIngredientStack(ingredient, i).ifPresent(itemStack -> {
-                        GuiHelper.drawItemStack(guiGraphics, itemStack, stackX, stackY);
+                        GuiHelper.drawItemStack(GuiGraphicsExtractor, itemStack, stackX, stackY);
                         if (GuiHelper.isMouseBetween(mouseX, mouseY, stackX, stackY, 15, 15)) {
                             tooltips = GuiHelper.getTooltip(itemStack);
                         }

@@ -67,7 +67,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
             minion.recallMinion();
         }
         if (lord != null) {
-            lord.displayClientMessage(Component.translatable(Util.makeDescriptionId("minion_task", RegUtil.id(this)) + ".start"), true);
+            lord.sendOverlayMessage(Component.translatable(Util.makeDescriptionId("minion_task", RegUtil.id(this)) + ".start"));
         }
         return new Desc<>(this, this.coolDownSupplier.apply(data), lord != null ? lord.getUUID() : null);
     }

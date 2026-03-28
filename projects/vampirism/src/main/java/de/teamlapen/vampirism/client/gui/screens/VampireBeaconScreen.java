@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundSetVampir
 import de.teamlapen.vampirism.common.world.blockentity.VampireBeaconBlockEntity;
 import de.teamlapen.vampirism.common.world.inventory.VampireBeaconMenu;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -109,27 +109,27 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         });
     }
 
-    protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
-        pGuiGraphics.drawCenteredString(this.font, EFFECT_LABEL, 62 + 55, 10, 14737632);
+    protected void renderLabels(GuiGraphicsExtractor pGuiGraphicsExtractor, int pMouseX, int pMouseY) {
+        pGuiGraphicsExtractor.drawCenteredString(this.font, EFFECT_LABEL, 62 + 55, 10, 14737632);
     }
 
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphicsExtractor pGuiGraphicsExtractor, float pPartialTick, int pMouseX, int pMouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        GuiRenderer.blit(pGuiGraphics, BEACON_LOCATION, i, j, this.imageWidth, this.imageHeight);
-        pGuiGraphics.pose().pushMatrix();
-        pGuiGraphics.pose().translate(0.0F, 0.0F/*, 100.0F*/);
-        pGuiGraphics.renderItem(new ItemStack(ModItems.PURE_BLOOD_0.get()), i + 41, j + 109);
-        pGuiGraphics.renderItem(new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get()), i + 41 + 22, j + 109);
-        pGuiGraphics.renderItem(new ItemStack(ModItems.HUMAN_HEART.get()), i + 42 + 44, j + 109);
-        pGuiGraphics.renderItem(new ItemStack(ModItems.WEAK_HUMAN_HEART.get()), i + 42 + 66, j + 109);
-        pGuiGraphics.pose().popMatrix();
+        GuiRenderer.blit(pGuiGraphicsExtractor, BEACON_LOCATION, i, j, this.imageWidth, this.imageHeight);
+        pGuiGraphicsExtractor.pose().pushMatrix();
+        pGuiGraphicsExtractor.pose().translate(0.0F, 0.0F/*, 100.0F*/);
+        pGuiGraphicsExtractor.renderItem(new ItemStack(ModItems.PURE_BLOOD_0.get()), i + 41, j + 109);
+        pGuiGraphicsExtractor.renderItem(new ItemStack(ModItems.SOUL_ORB_VAMPIRE.get()), i + 41 + 22, j + 109);
+        pGuiGraphicsExtractor.renderItem(new ItemStack(ModItems.HUMAN_HEART.get()), i + 42 + 44, j + 109);
+        pGuiGraphicsExtractor.renderItem(new ItemStack(ModItems.WEAK_HUMAN_HEART.get()), i + 42 + 66, j + 109);
+        pGuiGraphicsExtractor.pose().popMatrix();
     }
 
-    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    public void render(@NotNull GuiGraphicsExtractor pGuiGraphicsExtractor, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(pGuiGraphicsExtractor, pMouseX, pMouseY, pPartialTick);
+        super.render(pGuiGraphicsExtractor, pMouseX, pMouseY, pPartialTick);
+        this.renderTooltip(pGuiGraphicsExtractor, pMouseX, pMouseY);
     }
 
     interface BeaconButton {
@@ -212,8 +212,8 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
             }
         }
 
-        protected void renderIcon(GuiGraphics pGuiGraphics) {
-            pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX() + 2, this.getY() + 2, 18, 18);
+        protected void renderIcon(GuiGraphicsExtractor pGuiGraphicsExtractor) {
+            pGuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX() + 2, this.getY() + 2, 18, 18);
         }
 
         public void updateStatus(int pBeaconTier) {
@@ -238,7 +238,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
         }
 
         @Override
-        public void renderContents(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        public void renderContents(@NotNull GuiGraphicsExtractor pGuiGraphicsExtractor, int pMouseX, int pMouseY, float pPartialTick) {
             Identifier resourcelocation;
             if (!this.active) {
                 resourcelocation = BUTTON_DISABLED_SPRITE;
@@ -250,11 +250,11 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
                 resourcelocation = BUTTON_SPRITE;
             }
 
-            pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), this.width, this.height);
-            this.renderIcon(pGuiGraphics);
+            pGuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), this.width, this.height);
+            this.renderIcon(pGuiGraphicsExtractor);
         }
 
-        protected abstract void renderIcon(GuiGraphics pGuiGraphics);
+        protected abstract void renderIcon(GuiGraphicsExtractor pGuiGraphicsExtractor);
 
         public boolean isSelected() {
             return this.selected;
@@ -278,8 +278,8 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
 
         }
 
-        protected void renderIcon(GuiGraphics pGuiGraphics) {
-            pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX() + 2, this.getY() + 2, 18, 18);
+        protected void renderIcon(GuiGraphicsExtractor pGuiGraphicsExtractor) {
+            pGuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX() + 2, this.getY() + 2, 18, 18);
         }
     }
 

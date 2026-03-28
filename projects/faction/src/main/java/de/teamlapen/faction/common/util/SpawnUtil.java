@@ -83,8 +83,8 @@ public class SpawnUtil {
     }
 
     private static BlockPos getRandomPosInBox(Level w, AABB box) {
-        int x = (int) box.minX + w.random.nextInt((int) (box.maxX - box.minX) + 1);
-        int z = (int) box.minZ + w.random.nextInt((int) (box.maxZ - box.minZ) + 1);
+        int x = (int) box.minX + w.getRandom().nextInt((int) (box.maxX - box.minX) + 1);
+        int z = (int) box.minZ + w.getRandom().nextInt((int) (box.maxZ - box.minZ) + 1);
         int y = w.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z) + 5;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, y, z);
         while (y > box.minY && !w.getBlockState(pos).isRedstoneConductor(w, pos)) {
@@ -92,7 +92,7 @@ public class SpawnUtil {
         }
 
         if (y < box.minY || y > box.maxY - 1) {
-            pos.set(x, (int) box.minY + w.random.nextInt((int) (box.maxY - box.minY) + 1), z);
+            pos.set(x, (int) box.minY + w.getRandom().nextInt((int) (box.maxY - box.minY) + 1), z);
         }
         return pos.above();
     }

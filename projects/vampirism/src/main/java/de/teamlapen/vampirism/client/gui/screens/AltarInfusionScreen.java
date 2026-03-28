@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.common.world.items.PureBloodItem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -42,13 +42,13 @@ public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionMe
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_LOCATION, this.leftPos, this.topPos, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
         this.pureBloodIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
         this.humanHeartIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
@@ -56,7 +56,7 @@ public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionMe
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.hoveredSlot != null && hoveredSlot.index >= 0 && this.hoveredSlot.index < 3) {
             var requirementsOpt = this.menu.getRequirements();
             if (requirementsOpt.isPresent()) {

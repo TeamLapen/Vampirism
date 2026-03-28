@@ -10,7 +10,7 @@ import de.maxanier.guideapi.api.util.PageHelper;
 import de.maxanier.guideapi.gui.BaseScreen;
 import de.teamlapen.vampirism.api.world.items.ExtendedPotionMix;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -60,7 +60,7 @@ public class PagePotionTableMix extends Page {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(@NotNull GuiGraphics guiGraphics, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, Font font) {
+    public void draw(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, Font font) {
         //Update cycle
         long time = guiBase.getMinecraft().level != null ? guiBase.getMinecraft().level.getGameTime() : 0L;
         if (this.lastCycle < 0L || this.lastCycle < time - 60L) {
@@ -74,35 +74,35 @@ public class PagePotionTableMix extends Page {
 
         int xStart = guiLeft + guiBase.xSize / 2 - 44;
         int yStart = guiTop + 20;
-        POTION_GRID.draw(guiGraphics, xStart, yStart);
+        POTION_GRID.draw(GuiGraphicsExtractor, xStart, yStart);
 
         List<Component> tooltip = null;
         int x = xStart + 7;
         int y = yStart + 55;
-        GuiHelper.drawItemStack(guiGraphics, input, x, y);
+        GuiHelper.drawItemStack(GuiGraphicsExtractor, input, x, y);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, x, y, 15, 15)) tooltip = GuiHelper.getTooltip(input);
         x += 21;
-        GuiHelper.drawItemStack(guiGraphics, input, x, y);
+        GuiHelper.drawItemStack(GuiGraphicsExtractor, input, x, y);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, x, y, 15, 15)) tooltip = GuiHelper.getTooltip(input);
         x += 21;
-        GuiHelper.drawItemStack(guiGraphics, input, x, y);
+        GuiHelper.drawItemStack(GuiGraphicsExtractor, input, x, y);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, x, y, 15, 15)) tooltip = GuiHelper.getTooltip(input);
         x = xStart + 29;
         y = yStart + 4;
-        GuiHelper.drawItemStack(guiGraphics, in1, x, y);
+        GuiHelper.drawItemStack(GuiGraphicsExtractor, in1, x, y);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, x, y, 15, 15)) tooltip = GuiHelper.getTooltip(in1);
         x = xStart + 4;
         y = yStart + 12;
-        GuiHelper.drawItemStack(guiGraphics, in2, x, y);
+        GuiHelper.drawItemStack(GuiGraphicsExtractor, in2, x, y);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, x, y, 15, 15)) tooltip = GuiHelper.getTooltip(in2);
         x = xStart + 71;
         y = yStart + 29;
-        GuiHelper.drawItemStack(guiGraphics, output, x, y);
+        GuiHelper.drawItemStack(GuiGraphicsExtractor, output, x, y);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, x, y, 15, 15)) tooltip = GuiHelper.getTooltip(output);
-        PageHelper.drawFormattedText(guiGraphics, guiLeft + 43, yStart + 80, guiBase, description);
+        PageHelper.drawFormattedText(GuiGraphicsExtractor, guiLeft + 43, yStart + 80, guiBase, description);
 
         if (tooltip != null) {
-            guiGraphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
+            GuiGraphicsExtractor.renderComponentTooltip(font, tooltip, mouseX, mouseY);
         }
 
     }

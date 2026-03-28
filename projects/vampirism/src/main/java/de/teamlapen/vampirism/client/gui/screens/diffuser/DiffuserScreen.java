@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.client.gui.components.ProgressBar;
 import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
 import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.common.world.inventory.diffuser.DiffuserMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.LockIconButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -76,9 +76,9 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+    public void render(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+        super.render(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
+        this.renderTooltip(GuiGraphicsExtractor, mouseX, mouseY);
     }
 
     @Override
@@ -103,11 +103,11 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.xSize, this.ySize, 256, 256);
+    protected void renderBg(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, float partialTick, int mouseX, int mouseY) {
+        GuiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.xSize, this.ySize, 256, 256);
         if (this.menu.isLit()) {
             int l = Mth.ceil(this.menu.getLitProgress() * 13.0F) + 1;
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - l, getGuiLeft() + 26 + 19, getGuiTop() + 53 + 2 + (14 - l), 14, l);
+            GuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - l, getGuiLeft() + 26 + 19, getGuiTop() + 53 + 2 + (14 - l), 14, l);
         }
     }
 }

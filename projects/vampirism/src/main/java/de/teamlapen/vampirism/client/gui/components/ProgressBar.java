@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui.components;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -28,7 +28,7 @@ public class ProgressBar extends AbstractWidget {
 
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, progress > 0), this.getX(), this.getY(), this.width, 20, ARGB.color(alpha, color));

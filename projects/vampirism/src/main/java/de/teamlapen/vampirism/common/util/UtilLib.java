@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import de.teamlapen.faction.common.util.SpawnUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -656,7 +656,7 @@ public class UtilLib {
         return null;
     }
 
-    public static int renderMultiLine(@NotNull Font fontRenderer, @NotNull GuiGraphics graphics, @NotNull Component text, int textLength, int x, int y, int color) {
+    public static int renderMultiLine(@NotNull Font fontRenderer, @NotNull GuiGraphicsExtractor graphics, @NotNull Component text, int textLength, int x, int y, int color) {
         int d = 0;
         for (FormattedCharSequence sequence : fontRenderer.split(text, textLength)) {
             graphics.drawString(fontRenderer, sequence, x, y + d, color, false);

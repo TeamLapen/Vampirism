@@ -12,7 +12,7 @@ import de.teamlapen.faction.common.world.inventory.ITaskMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -118,17 +118,17 @@ public class TaskIconWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.renderItem(displayStack, getX(), getY());
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+        GuiGraphicsExtractor.item(displayStack, getX(), getY());
 
         // Render progress text below the item if present
         if (progressText != null) {
             // Scale down the text to fit
-            guiGraphics.pose().pushMatrix();
-            guiGraphics.pose().translate(getX() + (width/2f), getY() + 16);
-            guiGraphics.pose().scale(0.7f, 0.7f);
-            guiGraphics.drawCenteredString(font, progressText, 0, 0, progressColor);
-            guiGraphics.pose().popMatrix();
+            GuiGraphicsExtractor.pose().pushMatrix();
+            GuiGraphicsExtractor.pose().translate(getX() + (width/2f), getY() + 16);
+            GuiGraphicsExtractor.pose().scale(0.7f, 0.7f);
+            GuiGraphicsExtractor.text(font, progressText, 0, 0, progressColor);
+            GuiGraphicsExtractor.pose().popMatrix();
         }
 
         // Render tooltip when hovered
@@ -136,7 +136,7 @@ public class TaskIconWidget extends AbstractWidget {
             List<Component> tooltip = new ArrayList<>();
             tooltip.add(tooltipTitle);
             tooltip.addAll(tooltipLines);
-            guiGraphics.setComponentTooltipForNextFrame(font, tooltip, mouseX, mouseY);
+            GuiGraphicsExtractor.setComponentTooltipForNextFrame(font, tooltip, mouseX, mouseY);
         }
     }
 

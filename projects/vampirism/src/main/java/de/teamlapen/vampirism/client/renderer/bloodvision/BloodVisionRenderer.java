@@ -20,7 +20,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Util;
@@ -112,8 +112,8 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
                 submitEntities(poseStack, event.getLevelRenderState(), List.of(entry.renderState()), this.nodeCollector, levelRenderer.vampirism$entityRenderDispatcher());
 
                 for (SubmitNodeCollection value : this.nodeCollector.getSubmitsPerOrder().values()) {
-                    parts.render(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
-                    models.render(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                    parts.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                    models.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
                 }
 
                 this.nodeCollector.clear();

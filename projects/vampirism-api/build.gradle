@@ -1,5 +1,5 @@
 plugins {
-    id 'net.neoforged.moddev' version '2.0.116'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 
 group = project.vampirism_group_id
@@ -30,12 +30,6 @@ dependencies {
 
 neoForge {
     version = project.neoforge_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
-
 }
 
 tasks.withType(JavaCompile).configureEach {

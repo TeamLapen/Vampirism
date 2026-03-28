@@ -3,8 +3,9 @@ package de.teamlapen.faction.client.gui.screens.taskboard;
 import de.teamlapen.faction.api.factions.tasks.ITaskInstance;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.world.inventory.ITaskMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractContainerWidget;
+import net.minecraft.client.gui.components.AbstractScrollArea;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -26,7 +27,7 @@ public class TaskListWidget extends AbstractContainerWidget {
     private Component emptyMessage;
 
     public TaskListWidget(ITaskMenu menu, IFactionPlayer<?> factionPlayer, int width, int height) {
-        super(0, 0, width, height, Component.empty());
+        super(0, 0, width, height, Component.empty(), AbstractScrollArea.defaultSettings(9));
         this.menu = menu;
         this.factionPlayer = factionPlayer;
     }
@@ -97,12 +98,12 @@ public class TaskListWidget extends AbstractContainerWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
 
-        guiGraphics.fill(getX() + 4, getY(), getX() + getWidth() - 4, getY() + getHeight(), 0x55000000);
+        GuiGraphicsExtractor.fill(getX() + 4, getY(), getX() + getWidth() - 4, getY() + getHeight(), 0x55000000);
 
         if (entries.isEmpty() && emptyMessage != null) {
-            guiGraphics.drawCenteredString(
+            GuiGraphicsExtractor.centeredText(
                     net.minecraft.client.Minecraft.getInstance().font,
                     emptyMessage,
                     getX() + getWidth() / 2,
@@ -110,22 +111,22 @@ public class TaskListWidget extends AbstractContainerWidget {
                     0x404040
             );
         } else {
-            guiGraphics.enableScissor(getX(), getY(), getX() + getWidth(), getY() + getHeight());
+            GuiGraphicsExtractor.enableScissor(getX(), getY(), getX() + getWidth(), getY() + getHeight());
             for (TaskEntryWidget entry : this.entries) {
                 if (entry.getY() + entry.getHeight() > getY() && entry.getY() < getY() + getHeight()) {
-                    entry.render(guiGraphics, mouseX, mouseY, partialTick);
+                    entry.extractWidgetRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
                 }
             }
-            guiGraphics.disableScissor();
+            GuiGraphicsExtractor.disableScissor();
 
             // Render scrollbar if needed
             if (this.contentHeight > getHeight()) {
-                renderScrollbar(guiGraphics);
+                renderScrollbar(GuiGraphicsExtractor);
             }
         }
     }
 
-    private void renderScrollbar(GuiGraphics graphics) {
+    private void renderScrollbar(GuiGraphicsExtractor graphics) {
         int scrollbarX = getX() + getWidth() - 4;
         int maxScroll = Math.max(1, this.contentHeight - getHeight());
         int scrollbarHeight = Math.max(20, (int) ((float) getHeight() / this.contentHeight * getHeight()));

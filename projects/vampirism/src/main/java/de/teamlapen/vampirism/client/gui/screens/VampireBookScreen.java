@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -80,7 +80,7 @@ public class VampireBookScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
 
         pageNumber = Mth.clamp(pageNumber, 0, content.size() - 1);
@@ -126,7 +126,7 @@ public class VampireBookScreen extends Screen {
         }
     }
 
-    private void drawPage(GuiGraphics graphics, int x, int y, FormattedText text) {
+    private void drawPage(GuiGraphicsExtractor graphics, int x, int y, FormattedText text) {
         List<FormattedCharSequence> lines = this.font.split(text, background.textWidth());
         int currentY = y;
         for (FormattedCharSequence line : lines) {
@@ -135,13 +135,13 @@ public class VampireBookScreen extends Screen {
         }
     }
 
-    private void drawPageNumber(GuiGraphics graphics, int x, String number) {
+    private void drawPageNumber(GuiGraphicsExtractor graphics, int x, String number) {
         graphics.drawString(this.font, number, x - this.font.width(number) / 2, this.guiTop + this.ySize - background.pageNumberYOffset(), background.textColor(), false);
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void renderBackground(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
 
         Identifier backgroundTexture = null;
         if (pageNumber == 0 && background.textureFirstPage().isPresent()) {
@@ -153,11 +153,11 @@ public class VampireBookScreen extends Screen {
             backgroundTexture = background.texture();
         }
 
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
+        GuiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
 
         for (IBookContents.IImageEntry entry : images) {
             if (entry.page() == pageNumber || (background.twoPages() && (entry.page() == pageNumber + 1))) {
-                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, entry.texture(), guiLeft + entry.xOffset(), guiTop + entry.yOffset(), 0, 0, entry.width(), entry.height(), entry.width(), entry.height());
+                GuiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, entry.texture(), guiLeft + entry.xOffset(), guiTop + entry.yOffset(), 0, 0, entry.width(), entry.height(), entry.width(), entry.height());
             }
         }
     }
@@ -277,7 +277,7 @@ public class VampireBookScreen extends Screen {
         }
 
         @Override
-        public void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void renderContents(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
             Identifier texture;
             if (this.isForward) {
                 texture = this.isHovered() ? PAGE_FORWARD_HIGHLIGHTED_SPRITE : PAGE_FORWARD_SPRITE;
@@ -285,7 +285,7 @@ public class VampireBookScreen extends Screen {
                 texture = this.isHovered() ? PAGE_BACKWARD_HIGHLIGHTED_SPRITE : PAGE_BACKWARD_SPRITE;
             }
 
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, this.getX(), this.getY(), WIDTH, HEIGHT);
+            GuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, texture, this.getX(), this.getY(), WIDTH, HEIGHT);
         }
 
         @Override

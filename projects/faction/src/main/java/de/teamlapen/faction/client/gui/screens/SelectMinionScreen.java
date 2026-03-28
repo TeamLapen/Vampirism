@@ -5,7 +5,7 @@ import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.client.gui.components.SimpleList;
 import de.teamlapen.faction.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -26,11 +26,11 @@ public class SelectMinionScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int p_render_1_, int p_render_2_, float p_render_3_) {
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int p_render_1_, int p_render_2_, float p_render_3_) {
         if (this.minecraft != null) {
-            renderBackground(graphics, p_render_1_, p_render_2_, p_render_3_);
+            extractBackground(graphics, p_render_1_, p_render_2_, p_render_3_);
         }
-        super.render(graphics, p_render_1_, p_render_2_, p_render_3_);
+        super.extractRenderState(graphics, p_render_1_, p_render_2_, p_render_3_);
     }
 
     @Override

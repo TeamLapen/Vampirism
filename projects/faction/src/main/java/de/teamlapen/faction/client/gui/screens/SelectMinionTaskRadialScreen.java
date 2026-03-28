@@ -16,12 +16,13 @@ import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinio
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -49,7 +50,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         FactionPlayerHandler.get(Minecraft.getInstance().player).getLordPlayer().filter(x -> x.getLordLevel() > 0).ifPresent(lord -> {
             Collection<Entry> tasks = getTasks(lord);
             if (tasks.isEmpty()) {
-                Minecraft.getInstance().player.displayClientMessage(Component.translatable("gui.factionapi.minion_radial.no_minion_tasks"), true);
+                Minecraft.getInstance().player.sendOverlayMessage(Component.translatable("gui.factionapi.minion_radial.no_minion_tasks"));
                 Minecraft.getInstance().setScreen(null);
             } else {
                 Minecraft.getInstance().setScreen(new SelectMinionTaskRadialScreen(tasks, mapping));
@@ -58,7 +59,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(@NonNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
     }
 
     private static List<Entry> getTasks(ILordPlayer<?> lord) {
@@ -73,7 +74,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskRadialScreen::drawActionPart, 0);
     }
 
-    private static void drawActionPart(Entry t, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
+    private static void drawActionPart(Entry t, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
         GuiRenderer.blit(graphics, t.getIconLoc(), posX, posY, 16, 16, 16, 16);
     }
 

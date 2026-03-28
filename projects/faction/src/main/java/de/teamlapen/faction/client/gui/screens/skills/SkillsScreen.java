@@ -16,7 +16,7 @@ import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInput
 import de.teamlapen.faction.common.network.packets.server.ServerboundUnlockSkillPacket;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import net.minecraft.client.GameNarrator;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -33,7 +33,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.system.NonnullDefault;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ import java.util.List;
  * <p>
  * relevant classes {@link SkillsScreen} {@link SkillsTabComponent} {@link SkillNodeComponent}
  */
-@NonnullDefault
+@NullMarked
 public class SkillsScreen extends Screen {
     public static final int SCREEN_WIDTH = 252;
     public static final int SCREEN_HEIGHT = 219;
@@ -124,14 +124,14 @@ public class SkillsScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         this.renderInside(graphics, mouseX, mouseY, guiLeft, guiTop);
         this.renderWindow(graphics, mouseX, mouseY, guiLeft, guiTop);
-        super.render(graphics, mouseX, mouseY, partialTicks);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY, guiLeft, guiTop);
     }
 
-    public void renderInside(GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
+    public void renderInside(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int x, int y) {
         var pose = graphics.pose();
         if (this.selectedTab != null) {
             this.selectedTab.drawContents(graphics, x + 9, y + 18, mouseX - 9 - guiLeft, mouseY - 18 - guiTop);
@@ -140,13 +140,13 @@ public class SkillsScreen extends Screen {
             pose.translate(x + 9, y + 18);
             graphics.fill(0, 0, SCREEN_WIDTH - 18, SCREEN_HEIGHT - 27, -16777216);
             int i = 117;
-            graphics.drawCenteredString(this.font, NO_TABS_LABEL, i, 56 - 9 / 2, -1);
-            graphics.drawCenteredString(this.font, VERY_SAD_LABEL, i, 113 - 9, -1);
+            graphics.centeredText(this.font, NO_TABS_LABEL, i, 56 - 9 / 2, -1);
+            graphics.centeredText(this.font, VERY_SAD_LABEL, i, 113 - 9, -1);
             pose.popMatrix();
         }
     }
 
-    public void renderWindow(GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
+    public void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int x, int y) {
         GuiRenderer.blit(graphics, WINDOW_LOCATION, x, y, SCREEN_WIDTH, SCREEN_HEIGHT);
         if (this.tabs.size() > 1) {
 
@@ -160,12 +160,12 @@ public class SkillsScreen extends Screen {
         }
         if (this.selectedTab != null) {
             Component remainingPoints = this.selectedTab.getRemainingPointsText();
-            graphics.drawString(this.font, remainingPoints, x + 240 - this.font.width(remainingPoints), y + 6, 0xff000000, false);
+            graphics.text(this.font, remainingPoints, x + 240 - this.font.width(remainingPoints), y + 6, 0xff000000, false);
         }
-        graphics.drawString(this.font, TITLE, x + 8, y + 6, 0xff000000, false);
+        graphics.text(this.font, TITLE, x + 8, y + 6, 0xff000000, false);
     }
 
-    public void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY, int guiLeft, int guiTop) {
+    public void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int guiLeft, int guiTop) {
         if (this.minecraft.player.getEffect(FactionEffects.OBLIVION) != null) return;
         if (this.selectedTab != null) {
             var pose = graphics.pose();

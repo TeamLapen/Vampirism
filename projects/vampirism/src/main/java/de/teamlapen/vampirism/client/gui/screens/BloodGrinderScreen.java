@@ -4,7 +4,7 @@ import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.inventory.BloodGrinderMenu;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -21,13 +21,13 @@ public class BloodGrinderScreen extends AbstractContainerScreen<BloodGrinderMenu
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float var1, int var2, int var3) {
+    protected void renderBg(@NotNull GuiGraphicsExtractor graphics, float var1, int var2, int var3) {
         GuiRenderer.blit(graphics, BACKGROUND, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, VIdentifier.mod("container/grinder/progress_background"), this.leftPos + 80, this.topPos + 55, 16, 16);
 

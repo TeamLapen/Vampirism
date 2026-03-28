@@ -13,10 +13,9 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.AnimationState;
-import org.jetbrains.annotations.NotNull;
 
 public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
 
@@ -28,7 +27,7 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, Vampir
     private final BaronModel baronModel;
     private final BaronessModel baronessModel;
 
-    public VampireBaronRenderer(EntityRendererProvider.@NotNull Context context) {
+    public VampireBaronRenderer(EntityRendererProvider.Context context) {
         super(context, new BaronModel(context.bakeLayer(ModEntitiesRender.BARON)), 0.5F);
         this.baronModel = new BaronModel(context.bakeLayer(ModEntitiesRender.BARON));
         this.baronessModel = new BaronessModel(context.bakeLayer(ModEntitiesRender.BARONESS));
@@ -36,9 +35,8 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, Vampir
         this.addLayer(new BaronAttireLayer(this, context, (VampireBaronRenderState state) -> state.isLady ));
     }
 
-    @NotNull
     @Override
-    public Identifier getTextureLocation(@NotNull VampireBaronRenderState entity) {
+    public Identifier getTextureLocation(VampireBaronRenderState entity) {
         return entity.isEnraged ? (entity.isLady ? textureLadyEnraged : textureLordEnraged) : (entity.isLady ? textureLady : textureLord);
     }
 

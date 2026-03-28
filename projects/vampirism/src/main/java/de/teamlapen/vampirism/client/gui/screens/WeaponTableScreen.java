@@ -5,7 +5,7 @@ import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.inventory.WeaponTableMenu;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
@@ -37,13 +37,13 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull GuiGraphicsExtractor graphics, float partialTicks, int mouseX, int mouseY) {
         int i = this.leftPos;
         int j = (this.height - this.imageHeight) / 2;
         GuiRenderer.blit(graphics, BACKGROUND, i, j, this.imageWidth, this.imageHeight);
@@ -63,15 +63,15 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+    protected void renderTooltip(GuiGraphicsExtractor pGuiGraphicsExtractor, int pX, int pY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         List<Holder<ISkill<?>>> missingSkills = this.menu.missingSkills().orElse(List.of());
         if (pX > i + 110 && pX < i + 110 + 28 && pY > j + 43 && pY < j + 43 + 21 && !missingSkills.isEmpty()) {
             List<Component> components = Stream.concat(Stream.of(Component.translatable("gui.vampirism.weapon_table.missing_skills").withStyle(ChatFormatting.RED)), missingSkills.stream().map(skill -> Component.literal("- ").append(skill.value().getName()).withStyle(ChatFormatting.RED))).collect(Collectors.toUnmodifiableList());
-            pGuiGraphics.setComponentTooltipForNextFrame(this.font, components, i + 110, j + 43);
+            pGuiGraphicsExtractor.setComponentTooltipForNextFrame(this.font, components, i + 110, j + 43);
         } else {
-            super.renderTooltip(pGuiGraphics, pX, pY);
+            super.renderTooltip(pGuiGraphicsExtractor, pX, pY);
         }
     }
 }

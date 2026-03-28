@@ -109,7 +109,7 @@ public class ModPlayerEventHandler {
             BlockEntity totem = (event.getLevel().getBlockEntity(totemPos));
             if (totem instanceof TotemBlockEntity blockEntity && !IFaction.isNeutral(blockEntity.getControllingFaction()) && IFaction.is(FactionPlayerHandler.get(event.getPlayer()).getFaction(), blockEntity.getControllingFaction())) {
                 event.setCanceled(true);
-                event.getPlayer().displayClientMessage(Component.translatable("message.factionapi.village_totem.fail_other_component"), true);
+                event.getPlayer().sendOverlayMessage(Component.translatable("message.factionapi.village_totem.fail_other_component"));
                 if (!positions.isEmpty() && event.getPlayer() instanceof ServerPlayer player) {
                     positions.forEach(pos -> {
                         player.connection.send(new ClientboundBlockUpdatePacket(event.getLevel(), pos));

@@ -13,7 +13,7 @@ import de.teamlapen.faction.common.util.RegUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -24,12 +24,12 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.system.NonnullDefault;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@NonnullDefault
+@NullMarked
 public class SkillNodeComponent {
     private static final Identifier SKILL_BACKGROUND_SPRITE = FIdentifier.mod("skills_screen/node");
     private static final Identifier START_SKILL_BACKGROUND_SPRITE = FIdentifier.mod("skills_screen/start_node");
@@ -128,7 +128,7 @@ public class SkillNodeComponent {
         return skillNode;
     }
 
-    public void draw(GuiGraphics graphics, int i, int j) {
+    public void draw(GuiGraphicsExtractor graphics, int i, int j) {
         var pose = graphics.pose();
         pose.pushMatrix();
         SkillNodeState state = getState();
@@ -165,7 +165,7 @@ public class SkillNodeComponent {
         }
     }
 
-    public void drawConnectivity(GuiGraphics graphics, int startX, int startY, boolean outerLine) {
+    public void drawConnectivity(GuiGraphicsExtractor graphics, int startX, int startY, boolean outerLine) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         if (this.parent != null) {
@@ -186,16 +186,16 @@ public class SkillNodeComponent {
             int j5 = startY + this.y;
             int i3 = startX + this.parent.x;
             if (outerLine) {
-                graphics.hLine(i, i1, j - 1, color);
-                graphics.hLine(i, i1, j + 1, color);
-                graphics.vLine(i1 - 1, j2, j3, color);
-                graphics.vLine(i3 + 1, j2, j3, color);
-                graphics.vLine(i - 1, j4, j5 + 1, color);
-                graphics.vLine(i2 + 1, j4, j5 + 1, color);
+                graphics.horizontalLine(i, i1, j - 1, color);
+                graphics.horizontalLine(i, i1, j + 1, color);
+                graphics.verticalLine(i1 - 1, j2, j3, color);
+                graphics.verticalLine(i3 + 1, j2, j3, color);
+                graphics.verticalLine(i - 1, j4, j5 + 1, color);
+                graphics.verticalLine(i2 + 1, j4, j5 + 1, color);
             } else {
-                graphics.hLine(i, i1, j, color);
-                graphics.vLine(i1, j2, j3, color);
-                graphics.vLine(i, j4, j5 + 1, color);
+                graphics.horizontalLine(i, i1, j, color);
+                graphics.verticalLine(i1, j2, j3, color);
+                graphics.verticalLine(i, j4, j5 + 1, color);
             }
             pose.popMatrix();
 
@@ -210,7 +210,7 @@ public class SkillNodeComponent {
         return 26 * this.skillNode.elementCount() + (this.skillNode.elementCount() - 1) * 10;
     }
 
-    public void drawHover(GuiGraphics graphics, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
+    public void drawHover(GuiGraphicsExtractor graphics, double mouseX, double mouseY, float fade, int scrollX, int scrollY) {
         SkillNodeState state = getState();
         if (state == SkillNodeState.HIDDEN) return;
         Holder<ISkill<?>>[] elements = this.skillNode.elements().toArray(Holder[]::new);
@@ -244,7 +244,7 @@ public class SkillNodeComponent {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DESCRIPTION_SPRITE, scrollX + x - 3, scrollY + this.y - 3 - text.size() * 9, width + 8, 10 + text.size() * 10);
                 int fontY = scrollY + this.y + 1 - text.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
-                    graphics.drawString(this.minecraft.font, text.get(i), scrollX + x + 2, fontY + i * 9, -1, true);
+                    graphics.text(this.minecraft.font, text.get(i), scrollX + x + 2, fontY + i * 9, -1, true);
                 }
             }
 
@@ -260,7 +260,7 @@ public class SkillNodeComponent {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DESCRIPTION_SPRITE, scrollX + x - 3, scrollY + this.y + 3 + 7 + description.size() * 9, width + 8, 10 + text.size() * 10 + yOffset);
                 int fontY = scrollY + this.y + 3 + yOffset + 8 + description.size() * 9;
                 for (int i = 0; i < text.size(); i++) {
-                    graphics.drawString(this.minecraft.font, text.get(i), scrollX + x + 2, fontY + i * 9, -1, true);
+                    graphics.text(this.minecraft.font, text.get(i), scrollX + x + 2, fontY + i * 9, -1, true);
                 }
             }
 
@@ -268,7 +268,7 @@ public class SkillNodeComponent {
             if (!description.isEmpty()) {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DESCRIPTION_SPRITE, scrollX + x - 5, scrollY + this.y + 3, this.width[hoveredSkillIndex], 30 + description.size() * 9);
                 for (int i = 0; i < description.size(); i++) {
-                    graphics.drawString(this.minecraft.font, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1, true);
+                    graphics.text(this.minecraft.font, description.get(i), scrollX + x + 2, scrollY + this.y + 3 + 24 + i * 9, -1, true);
                 }
             }
 
@@ -278,7 +278,7 @@ public class SkillNodeComponent {
                 texture = SkillNodeState.LOCKED.sprite;
             }
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, scrollX + x - 5, scrollY + this.y + 3, this.width[hoveredSkillIndex], 20);
-            graphics.drawString(this.minecraft.font, this.titles[hoveredSkillIndex], scrollX + x + 40, scrollY + this.y + 9, -1, true);
+            graphics.text(this.minecraft.font, this.titles[hoveredSkillIndex], scrollX + x + 40, scrollY + this.y + 9, -1, true);
 
             //draw skill point cost
             if (!this.skillNode.isRoot()) {
@@ -286,7 +286,7 @@ public class SkillNodeComponent {
                 int costWidth = this.minecraft.font.width(String.valueOf(cost));
                 int costHeight = this.minecraft.font.lineHeight;
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, DESCRIPTION_SPRITE, scrollX + x + 24, scrollY + this.y + ((26 - costHeight) / 2) - 1, costWidth + 5, costHeight + 4);
-                graphics.drawString(this.minecraft.font, Component.literal(String.valueOf(cost)), scrollX + x + 27, (int) (scrollY + this.y + ((26 - costHeight) / 2f) + 1), -1, true);
+                graphics.text(this.minecraft.font, Component.literal(String.valueOf(cost)), scrollX + x + 27, (int) (scrollY + this.y + ((26 - costHeight) / 2f) + 1), -1, true);
             }
 
             //draw skill

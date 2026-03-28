@@ -1,5 +1,5 @@
 plugins {
-    id 'net.neoforged.moddev' version '2.0.116'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 
 group = project.factions_group_id
@@ -45,11 +45,6 @@ neoForge {
     accessTransformers {
         from project.file("src/main/resources/META-INF/accesstransformer.cfg")
         publish project.file("src/main/resources/META-INF/accesstransformer.cfg")
-    }
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
     }
 
     runs {

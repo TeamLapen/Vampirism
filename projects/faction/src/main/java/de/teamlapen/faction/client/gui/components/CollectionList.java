@@ -1,7 +1,7 @@
 package de.teamlapen.faction.client.gui.components;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -61,8 +61,8 @@ public abstract class CollectionList<T extends CollectionList.Entry<T>> extends 
         }
 
         @Override
-        public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-            widgets().forEach(w -> w.render(guiGraphics, mouseX, mouseY, partialTick));
+        public void extractContent(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+            widgets().forEach(w -> w.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick));
         }
 
         @Override

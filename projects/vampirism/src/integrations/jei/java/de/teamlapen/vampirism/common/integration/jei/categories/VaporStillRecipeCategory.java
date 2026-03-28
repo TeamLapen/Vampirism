@@ -25,7 +25,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -77,7 +77,7 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
     }
 
     @Override
-    public void draw(JEIPotionMix recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(JEIPotionMix recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         this.background.draw(graphics, 0, 0);
 
         this.flames.draw(graphics, 20, 24);

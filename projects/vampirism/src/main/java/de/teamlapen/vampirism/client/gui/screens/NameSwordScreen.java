@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundNameItemPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.component.DataComponents;
@@ -73,7 +73,7 @@ public class NameSwordScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
         graphics.drawCenteredString(this.font, this.text1, this.width / 2, 70, 16777215);
         int i = 90;

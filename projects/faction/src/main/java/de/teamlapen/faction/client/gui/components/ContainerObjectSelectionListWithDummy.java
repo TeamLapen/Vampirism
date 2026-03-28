@@ -1,7 +1,7 @@
 package de.teamlapen.faction.client.gui.components;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.NotNull;
@@ -21,18 +21,18 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
     }
 
     @Override
-    protected void renderListBackground(@NotNull GuiGraphics p_331297_) {
+    protected void extractListBackground(GuiGraphicsExtractor graphics) {
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int p_283242_, int p_282891_, float p_283683_) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int p_283242_, int p_282891_, float p_283683_) {
         int color = 0xFFFFFFFF;
-        graphics.hLine(this.getX() - 1, this.getRight() - 6, this.getY() - 1, color);
-        graphics.hLine(this.getX() - 1, this.getRight() - 6, this.getBottom(), color);
-        graphics.vLine(this.getX() - 1, this.getY() - 1, this.getBottom() + 1, color);
-        graphics.vLine(this.getRight() - 6, this.getY() - 1, this.getBottom() + 1, color);
+        graphics.horizontalLine(this.getX() - 1, this.getRight() - 6, this.getY() - 1, color);
+        graphics.horizontalLine(this.getX() - 1, this.getRight() - 6, this.getBottom(), color);
+        graphics.verticalLine(this.getX() - 1, this.getY() - 1, this.getBottom() + 1, color);
+        graphics.verticalLine(this.getRight() - 6, this.getY() - 1, this.getBottom() + 1, color);
         graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getBottom(), 0xFF000000, 0xFF000000);
-        super.renderWidget(graphics, p_283242_, p_282891_, p_283683_);
+        super.extractWidgetRenderState(graphics, p_283242_, p_282891_, p_283683_);
     }
 
     @Override
@@ -46,7 +46,7 @@ public abstract class ContainerObjectSelectionListWithDummy<Z, T extends Contain
     }
 
     @Override
-    protected int scrollBarY() {
+    public int scrollBarY() {
         return this.getRight() - 5;
     }
 

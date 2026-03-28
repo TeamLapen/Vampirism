@@ -10,7 +10,7 @@ import de.teamlapen.faction.common.world.inventory.ITaskMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -97,7 +97,7 @@ public class TaskEntryWidget extends AbstractWidget {
         } else {
             message = Component.translatable("gui.factionapi.faction_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD);
         }
-        Minecraft.getInstance().player.displayClientMessage(message, false);
+        Minecraft.getInstance().player.sendOverlayMessage(message);
     }
 
     private void buildWidgets() {
@@ -182,10 +182,10 @@ public class TaskEntryWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
         // Background
         int bgColor = getBackgroundColor();
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, TASK_ITEM_BACKGROUND, getX(), getY(), getWidth(), COLLAPSED_HEIGHT, bgColor);
+        GuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, TASK_ITEM_BACKGROUND, getX(), getY(), getWidth(), COLLAPSED_HEIGHT, bgColor);
 
         // Title
         Component title = task.title();
@@ -193,11 +193,11 @@ public class TaskEntryWidget extends AbstractWidget {
         if (font.width(title) > maxTitleWidth) {
             title = Component.literal(font.plainSubstrByWidth(title.getString(), maxTitleWidth - 6) + "...");
         }
-        guiGraphics.drawString(font, title, getX() + 4, getY() + (COLLAPSED_HEIGHT - font.lineHeight) / 2, 0xFFFFFFFF, true);
+        GuiGraphicsExtractor.text(font, title, getX() + 4, getY() + (COLLAPSED_HEIGHT - font.lineHeight) / 2, 0xFFFFFFFF, true);
 
         if (locateButton != null) {
             locateButton.setPosition(getX() + getWidth() - 12, getY() + 2);
-            locateButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            locateButton.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
         // Timer (for non-unique accepted tasks)
@@ -206,37 +206,37 @@ public class TaskEntryWidget extends AbstractWidget {
             int timerX = getX() + getWidth() - 26;
             int timerY = getY() + 13;
             // Scale down the timer
-            guiGraphics.pose().pushMatrix();
-            guiGraphics.pose().translate(timerX, timerY);
-            guiGraphics.pose().scale(0.75f, 0.75f);
-            guiGraphics.drawString(font, timer, 0, 0, 0xFFFFFFFF, false);
-            guiGraphics.pose().popMatrix();
+            GuiGraphicsExtractor.pose().pushMatrix();
+            GuiGraphicsExtractor.pose().translate(timerX, timerY);
+            GuiGraphicsExtractor.pose().scale(0.75f, 0.75f);
+            GuiGraphicsExtractor.text(font, timer, 0, 0, 0xFFFFFFFF, false);
+            GuiGraphicsExtractor.pose().popMatrix();
         }
 
         // Expanded details
         if (expanded) {
-            renderExpandedDetails(guiGraphics, mouseX, mouseY, partialTick);
+            renderExpandedDetails(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
         // Tooltip on hover (only when collapsed and not over button)
         if (isHovered && !expanded && !actionButton.isHovered() && (locateButton == null || !locateButton.isHovered())) {
-            renderTaskTooltip(guiGraphics, mouseX, mouseY);
+            renderTaskTooltip(GuiGraphicsExtractor, mouseX, mouseY);
         }
     }
 
-    private void renderExpandedDetails(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderExpandedDetails(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
         int detailY = getY() + COLLAPSED_HEIGHT;
         int detailHeight = getHeight() - COLLAPSED_HEIGHT;
 
         // Detail background
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, TASK_DETAIL_BACKGROUND,
+        GuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, TASK_DETAIL_BACKGROUND,
                 getX() + 2, detailY, getWidth() - 4, detailHeight);
 
         int iconX = getX() + 6;
         int iconY = detailY;
         for (TaskIconWidget widget : requirementWidgets) {
             widget.setPosition(iconX, iconY);
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
             iconX += 20;
         }
 
@@ -245,16 +245,16 @@ public class TaskEntryWidget extends AbstractWidget {
 
         if (rewardWidget != null) {
             rewardWidget.setPosition(rewardLabelX, detailY);
-            rewardWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            rewardWidget.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
         // Action button at the end of expanded entry (right side)
         actionButton.setPosition(getX() + getWidth() - 18, detailY + (detailHeight - 13) / 2);
         actionButton.setTooltip(Tooltip.create(Component.translatable(menu.buttonAction(taskInstance).getTranslationKey())));
-        actionButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        actionButton.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
     }
 
-    private void renderTaskTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderTaskTooltip(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(task.title().plainCopy().withStyle(style -> style.withColor(menu.getFactionColor())));
 
@@ -285,7 +285,7 @@ public class TaskEntryWidget extends AbstractWidget {
             }
         }
 
-        guiGraphics.setComponentTooltipForNextFrame(font, tooltip, mouseX, mouseY);
+        GuiGraphicsExtractor.setComponentTooltipForNextFrame(font, tooltip, mouseX, mouseY);
     }
 
     private Component getTimerComponent() {

@@ -437,7 +437,7 @@ public class PlayerMinionController implements ValueIOSerializable {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
                     i.data.setHealth(i.data.getMaxHealth());
-                    getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("dialogue.factionapi.minion.can_respawn", i.data.getFormattedName()), true));
+                    getLordPlayer().ifPresent(player -> player.sendOverlayMessage(Component.translatable("dialogue.factionapi.minion.can_respawn", i.data.getFormattedName())));
                 }
             } else {
                 IMinionTask.IMinionTaskDesc<MinionData> taskDesc = i.data.getCurrentTaskDesc();
@@ -450,7 +450,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         @Nullable
         IMinionTask.IMinionTaskDesc<MinionData> desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("message.factionapi.minion_task.could_not_activate"), false));
+            getLordPlayer().ifPresent(player -> player.sendOverlayMessage(Component.translatable("message.factionapi.minion_task.could_not_activate")));
         } else {
             MinionData d = info.data;
             d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
