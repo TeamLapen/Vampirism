@@ -49,6 +49,12 @@ public interface IBiteableEntity extends IEntity {
     int onSyringeUse(int amount);
 
     /**
+     * @param amount The amount of blood the availability of which is checked
+     * @return Whether the requested amount is present
+     */
+    boolean canDrain(int amount);
+
+    /**
      * @return Whether this creatures can be turned in general and whether the given vampire is able to do so
      */
     default boolean canBeInfected(IVampire vampire) {

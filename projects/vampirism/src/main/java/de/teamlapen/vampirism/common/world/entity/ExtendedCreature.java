@@ -236,6 +236,16 @@ public class ExtendedCreature extends AttachmentSync implements IExtendedCreatur
     }
 
     @Override
+    public boolean canDrain(int amount) {
+        int available = getBlood();
+        if (entity instanceof AgeableMob ageableMob && ageableMob.getAge() < 0) {
+            available /= 3;
+        }
+
+        return available > amount;
+    }
+
+    @Override
     public boolean hasPoisonousBlood() {
         return poisonousBlood > 0;
     }
