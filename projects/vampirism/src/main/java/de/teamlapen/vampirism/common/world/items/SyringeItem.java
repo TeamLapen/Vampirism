@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
+import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
@@ -45,7 +47,7 @@ public class SyringeItem extends Item {
         }
 
         Optional<? extends IBiteableEntity> biteableOpt = getBiteable(interactionTarget);
-        if (biteableOpt.isEmpty() || !biteableOpt.get().canBeBitten(null) || !biteableOpt.get().canDrain(BloodSyringeFluidHandler.LEVELS_PER_FILL)) {
+        if (biteableOpt.isEmpty() || !biteableOpt.get().canBeBitten(null) || !biteableOpt.get().canDrain(BloodSyringeFluidHandler.LEVELS_PER_FILL) || isPoisonous(interactionTarget)) {
             return InteractionResult.PASS;
         }
 
@@ -113,7 +115,7 @@ public class SyringeItem extends Item {
         return false;
     }
 
-    private static boolean isPlayerFacingEntity(Player player, LivingEntity target) {
+    public static boolean isPlayerFacingEntity(Player player, Entity target) {
         Vec3 lookVec = player.getLookAngle();
         Vec3 toTarget = target.position().add(0, target.getBbHeight() / 2.0, 0).subtract(player.getEyePosition()).normalize();
         double dot = lookVec.dot(toTarget);
@@ -135,13 +137,17 @@ public class SyringeItem extends Item {
         attribute.removeModifier(SLOWDOWN_ID);
     }
 
-    private static Optional<? extends IBiteableEntity> getBiteable(Entity target) {
+    public static Optional<? extends IBiteableEntity> getBiteable(Entity target) {
         return switch (target) {
             case PathfinderMob mob when mob.isAlive() -> ExtendedCreature.getSafe(mob);
             case Player targetPlayer -> Optional.of(VampirePlayer.get(targetPlayer));
             case IBiteableEntity biteableEntity -> Optional.of(biteableEntity);
             default -> Optional.empty();
         };
+    }
+
+    public static boolean isPoisonous(Entity entity) {
+        return entity instanceof IHunterMob || ExtendedCreature.getSafe(entity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false);
     }
 
     @Override
