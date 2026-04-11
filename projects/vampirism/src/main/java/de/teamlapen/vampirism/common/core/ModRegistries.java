@@ -39,7 +39,9 @@ public class ModRegistries {
             .add(FactionRegistries.Keys.SKILL_TREE, ModSkills::createSkillTrees)
             .add(VAMPIRE_BOOK, ModVampireBooks::createVampireBooks)
             .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)
-            .add(Registries.TIMELINE, ModVillage::createTimelines);
+            .add(Registries.TIMELINE, ModVillage::createTimelines)
+            .add(Registries.VILLAGER_TRADE, ModTrades::bootstrap)
+            .add(Registries.TRADE_SET, ModTrades::bootstrapTradeSets);
 
     static void registerRegistries(NewRegistryEvent event) {
         event.register(OILS);
