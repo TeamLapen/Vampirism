@@ -101,7 +101,10 @@
       }
     ],
     "misc": [],
-    "monster": [
+    "monster": [],
+    "underground_water_creature": [],
+    "vampirism:hunter": [],
+    "vampirism:vampire": [
       {
         "type": "vampirism:vampire",
         "maxCount": 3,
@@ -115,9 +118,6 @@
         "weight": 27
       }
     ],
-    "underground_water_creature": [],
-    "vampirism_hunter": [],
-    "vampirism_vampire": [],
     "water_ambient": [],
     "water_creature": []
   },

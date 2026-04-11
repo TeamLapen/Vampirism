@@ -51,14 +51,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob, Npc/*mainly for JourneyMap*/ {
 
-    public static boolean spawnPredicateVampire(@NotNull EntityType<? extends VampirismEntity> entityType, @NotNull ServerLevelAccessor world, MobSpawnType spawnReason, @NotNull BlockPos blockPos, @NotNull RandomSource random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && (Monster.isDarkEnoughToSpawn(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
-    }
-
-    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
-        return VampirismEntity.getAttributeBuilder().add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
-    }
-
     private final boolean countAsMonsterForSpawn;
     protected @NotNull EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
@@ -74,7 +66,6 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * No need to store this in NBT as it is only set during onDeath() so basically 20 ticks beforehand.
      */
     private boolean dropSoul = false;
-
     /**
      * @param countAsMonsterForSpawn If this entity should be counted as vampire and as monster during spawning
      */
@@ -82,6 +73,14 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
         super(type, world);
         this.countAsMonsterForSpawn = countAsMonsterForSpawn;
 
+    }
+
+    public static boolean spawnPredicateVampire(@NotNull EntityType<? extends VampirismEntity> entityType, @NotNull ServerLevelAccessor world, MobSpawnType spawnReason, @NotNull BlockPos blockPos, @NotNull RandomSource random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && (Monster.isDarkEnoughToSpawn(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
+    }
+
+    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
+        return VampirismEntity.getAttributeBuilder().add(ModAttributes.SUNDAMAGE.get(), BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
     @Override
@@ -207,10 +206,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public MobCategory getClassification(boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonsterForSpawn) {
-            return MobCategory.MONSTER;
-        }
-        return super.getClassification(forSpawnCount);
+        return VReference.VAMPIRE_CREATURE_TYPE;
     }
 
     @Override

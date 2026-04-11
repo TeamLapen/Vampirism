@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.advancements.critereon.VampireActionCriterionTrigger;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModEffects;
@@ -32,24 +33,20 @@ import java.util.function.Supplier;
  */
 public abstract class HunterBaseEntity extends VampirismEntity implements IHunterMob, Npc/*mainly for JourneyMap*/ {
 
-    public static boolean spawnPredicateHunter(@NotNull EntityType<? extends HunterBaseEntity> entityType, @NotNull LevelAccessor world, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
-        return world.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
-    }
-
     protected final int MOVE_TO_RESTRICT_PRIO = 3;
     private final boolean countAsMonster;
-
     public HunterBaseEntity(EntityType<? extends HunterBaseEntity> type, Level world, boolean countAsMonster) {
         super(type, world);
         this.countAsMonster = countAsMonster;
     }
 
+    public static boolean spawnPredicateHunter(@NotNull EntityType<? extends HunterBaseEntity> entityType, @NotNull LevelAccessor world, MobSpawnType spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
+        return world.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
+    }
+
     @Override
     public MobCategory getClassification(boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonster) {
-            return MobCategory.MONSTER;
-        }
-        return super.getClassification(forSpawnCount);
+        return VReference.HUNTER_CREATURE_TYPE;
     }
 
     @Override
@@ -106,6 +103,14 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
             this.offHand = offHand;
         }
 
+        public static @NotNull EquipmentType get(String value) {
+            try {
+                return EquipmentType.valueOf(value.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                return NONE;
+            }
+        }
+
         public ItemStack getMainHand() {
             if (this.mainHand == null) {
                 return ItemStack.EMPTY;
@@ -118,14 +123,6 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
                 return ItemStack.EMPTY;
             }
             return this.offHand.get().getDefaultInstance();
-        }
-
-        public static @NotNull EquipmentType get(String value) {
-            try {
-                return EquipmentType.valueOf(value.toUpperCase(Locale.ROOT));
-            } catch (IllegalArgumentException e) {
-                return NONE;
-            }
         }
     }
 
@@ -140,19 +137,19 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
             this.headItem = headItem;
         }
 
-        public ItemStack getHeadItem() {
-            if (this.headItem == null) {
-                return ItemStack.EMPTY;
-            }
-            return this.headItem.get().getDefaultInstance();
-        }
-
         public static @NotNull HatType get(String value) {
             try {
                 return HatType.valueOf(value.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
                 return NONE;
             }
+        }
+
+        public ItemStack getHeadItem() {
+            if (this.headItem == null) {
+                return ItemStack.EMPTY;
+            }
+            return this.headItem.get().getDefaultInstance();
         }
     }
 }

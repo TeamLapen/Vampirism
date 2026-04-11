@@ -2,13 +2,13 @@
   "requirements": {
     "requirements": [
       {
-        "type": "vampirism:entity",
-        "amount": 5,
+        "type": "vampirism:entity_type",
+        "amount": 4,
         "description": {
-          "translate": "entity.vampirism.vampire_baron"
+          "translate": "entity_tag.vampirism.advanced_vampire"
         },
-        "entityType": "vampirism:vampire_baron",
-        "id": "vampirism:vampire_baron"
+        "entityType": "vampirism:advanced_vampire",
+        "id": "vampirism:advanced_vampire"
       },
       {
         "type": "vampirism:item",
@@ -22,13 +22,13 @@
         }
       },
       {
-        "type": "vampirism:entity_type",
-        "amount": 4,
+        "type": "vampirism:entity",
+        "amount": 5,
         "description": {
-          "translate": "entity_tag.vampirism.advanced_vampire"
+          "translate": "entity.vampirism.vampire_baron"
         },
-        "entityType": "vampirism:advanced_vampire",
-        "id": "vampirism:advanced_vampire"
+        "entityType": "vampirism:vampire_baron",
+        "id": "vampirism:vampire_baron"
       }
     ]
   },
