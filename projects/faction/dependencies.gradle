@@ -1,0 +1,15 @@
+repositories {
+    maven {
+        name = "RyanLiptak"
+        url = "https://maven.ryanliptak.com/"
+        content {
+            includeGroupAndSubgroups "squeek"
+        }
+    }
+}
+
+dependencies {
+    if (include_appleskin.toBoolean()) {
+        implementation "squeek.appleskin:appleskin-neoforge:${appleskin_version}"
+    }
+}

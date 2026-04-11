@@ -9,6 +9,8 @@ base {
     archivesName = project.factions_mod_name
 }
 
+apply from: file('integrations.gradle')
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(project.java_version)
@@ -19,6 +21,23 @@ java {
 sourceSets {
     main {
         resources.srcDirs += file('src/generated/resources')
+    }
+}
+
+for (var integration : integrations) {
+    if (integration.included) {
+        sourceSets.create(integration.name) {
+            java.srcDir "src/integrations/${integration.name}/java"
+
+            compileClasspath += sourceSets.main.output + configurations.compileClasspath
+            runtimeClasspath += output + compileClasspath + sourceSets.main.output
+        }
+    }
+}
+
+integrations.each {
+    if (it.included) {
+        sourceSets.main.runtimeClasspath += sourceSets[it.name].output
     }
 }
 
@@ -73,9 +92,16 @@ neoForge {
         "${factions_mod_id}" {
             sourceSet(sourceSets.main)
             sourceSet(project(':faction-api').sourceSets.main)
+            integrations.each {
+                if (it.included) {
+                    sourceSet(sourceSets[it.name])
+                }
+            }
         }
     }
 }
+
+apply from: file('dependencies.gradle')
 
 // Mod metadata generation (templates located in root/src/main/templates)
 def generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
@@ -83,13 +109,13 @@ def generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             minecraft_version           : minecraft_version,
             minecraft_version_range     : minecraft_version_range,
             neoforge_version            : neoforge_version,
-            mod_id             : factions_mod_id,
-            mod_name           : factions_mod_name,
-            mod_license            : factions_license,
-            mod_version            : mod_version,
-            mod_authors            : factions_authors,
-            mod_description        : factions_description,
-            mod_issue_tracker      : factions_issue_tracker,
+            mod_id                      : factions_mod_id,
+            mod_name                    : factions_mod_name,
+            mod_license                 : factions_license,
+            mod_version                 : mod_version,
+            mod_authors                 : factions_authors,
+            mod_description             : factions_description,
+            mod_issue_tracker           : factions_issue_tracker,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
@@ -115,12 +141,24 @@ tasks.jar {
     from (sourceSets.main.output)
     from (project(':faction-api').sourceSets.main.output)
 
+    integrations.each {
+        if (it.included) {
+            from(sourceSets[it.name].output)
+        }
+    }
+
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 var sourcesJarTask = tasks.named("sourcesJar", Jar) {
     from(sourceSets.main.allJava)
     from (project(':faction-api').sourceSets.main.allJava)
+
+    integrations.each {
+        if (it.included) {
+            from(sourceSets[it.name].allJava)
+        }
+    }
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier.set("sources")

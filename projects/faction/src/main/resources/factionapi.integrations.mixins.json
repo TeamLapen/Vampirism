@@ -1,0 +1,11 @@
+{
+  "required": false,
+  "minVersion": "0.8.5",
+  "package": "de.teamlapen.faction.misc.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "FoodHelperMixin"
+  ],
+  "client": [
+  ]
+}

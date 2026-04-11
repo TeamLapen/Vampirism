@@ -1,0 +1,5 @@
+record Integration(String name, boolean included) {}
+
+ext.integrations = [
+        new Integration("appleskin", include_appleskin.toBoolean())
+]

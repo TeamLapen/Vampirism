@@ -28,6 +28,13 @@ repositories {
             includeGroup "com.github.glitchfiend"
         }
     }
+    maven {
+        name = "RyanLiptak"
+        url = "https://maven.ryanliptak.com/"
+        content {
+            includeGroupAndSubgroups "squeek"
+        }
+    }
 }
 
 dependencies {
@@ -50,5 +57,9 @@ dependencies {
 
     if (include_jade.toBoolean()) {
         runtimeOnly "curse.maven:jade-324717:" + project.jade_version
+    }
+
+    if (include_appleskin.toBoolean()) {
+        implementation "squeek.appleskin:appleskin-neoforge:${appleskin_version}"
     }
 }

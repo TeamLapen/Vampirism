@@ -2,10 +2,13 @@ package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
+import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.*;
 import de.teamlapen.vampirism.common.world.items.consume.*;
@@ -21,6 +24,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
@@ -183,7 +187,7 @@ public class ModItems {
     public static final DeferredItem<Item> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new Item(props.factions$factionFood(ModFoods.WEAK_HUMAN_HEART, ModConsumables.NASTY_NON_VAMPIRES)));
 
     public static final DeferredItem<SyringeItem> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", x -> new SyringeItem(x.factions$withShiftDescription()));
-    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
+    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()).factions$factionFood(new FactionFoodList(new FoodProperties.Builder().build(), new FactionFoodEntry(VampirismTags.Factions.IS_VAMPIRE, new FoodProperties.Builder().nutrition(BloodSyringeFluidHandler.CAPACITY / IBottleBlood.MULTIPLIER).saturationModifier(0.8F).build(), ModFoodBehaviours.VAMPIRE_FOOD)), Consumables.defaultDrink().build()));
     public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", x -> new GarlicInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
     public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", x -> new SanguinareInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
 
