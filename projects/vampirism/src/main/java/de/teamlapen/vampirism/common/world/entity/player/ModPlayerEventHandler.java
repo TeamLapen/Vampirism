@@ -40,6 +40,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.clock.ClockTimeMarkers;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
@@ -62,6 +63,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
+import net.neoforged.neoforge.common.util.ClockAdjustment;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -73,7 +75,6 @@ import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -120,12 +121,12 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onBlockBreak(BlockEvent.@NotNull BreakEvent event) {
+    public void onBlockBreak(BlockEvent.BreakEvent event) {
         HunterPlayer.get(event.getPlayer()).breakDisguise();
     }
 
     @SubscribeEvent
-    public void onBlockPlaced(BlockEvent.@NotNull EntityPlaceEvent event) {
+    public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof Player player) || !event.getEntity().isAlive()) return;
         if (event.getPlacedBlock().isAir()) return; //If for some reason, cough Create cough, a block is removed (so air is placed) we don't want to prevent that.
         try {
@@ -216,7 +217,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onLivingAttack(@NotNull LivingIncomingDamageEvent event) {
+    public void onLivingAttack(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             if (event.getEntity().isAlive() && !FactionPlayerHandler.get((Player) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
                 event.setCanceled(true);
@@ -400,27 +401,21 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void sleepTimeFinish(@NotNull SleepFinishedTimeEvent event) {
+    public void sleepTimeFinish(SleepFinishedTimeEvent event) {
         if (event.getLevel() instanceof ServerLevel && Helper.isDay(event.getLevel(), BlockPos.ZERO)) {
             boolean sleepingInCoffin = event.getLevel().players().stream().anyMatch(player -> {
                 Optional<BlockPos> pos = player.getSleepingPos();
                 return pos.isPresent() && event.getLevel().getBlockState(pos.get()).getBlock() instanceof CoffinBlock;
             });
             if (sleepingInCoffin) {
-                long dist = ((ServerLevel) event.getLevel()).getDayTime() % 24000L > 12000L ? 13000 : -11000; //Make sure we don't go backwards in time (in special case sleeping at 23500)
-                event.setTimeAddition(event.getNewTime() + dist);
-
+                event.setAdjustment(new ClockAdjustment.Marker(ClockTimeMarkers.NIGHT));
             }
         }
     }
 
-    private boolean checkExceptions(@NotNull Player player, Holder<? extends IPlayableFaction<?>> currentFaction, @NotNull ItemStack stack) { // stupid implementation. Otherwise we would need a better IFactionExclusiveItem#getExclusiveFaction method.
-        return !stack.is(ModItems.GARLIC_BREAD) || currentFaction != null;
-    }
-
 
     @SubscribeEvent
-    public void onPlayerAttackCritical(@NotNull CriticalHitEvent event) {
+    public void onPlayerAttackCritical(CriticalHitEvent event) {
         ItemStack stack = event.getEntity().getMainHandItem();
         if (!stack.isEmpty()) {
             FactionSlayer factionSlayer = stack.get(FactionDataComponents.FACTION_SLAYER);

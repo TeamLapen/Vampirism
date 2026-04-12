@@ -100,7 +100,7 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull InfuserRecipeInput input, HolderLookup.@NotNull Provider registries) {
+    public @NotNull ItemStack assemble(@NotNull InfuserRecipeInput input) {
         int level = Stream.of(input.input1, input.input2, input.input3, input.input4).map(s -> s.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.EMPTY)).mapToInt(PureLevel::level).min().orElse(-1);
         var result = this.result.map(ItemStack::copy).orElseGet(input.item::copy);
         if (result.has(ModDataComponents.BLOOD_CHARGED)) {
@@ -152,45 +152,32 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
         }
     }
 
-    public static class Serializer implements RecipeSerializer<InfuserRecipe> {
+    public static final MapCodec<InfuserRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.STRING.optionalFieldOf("group", "").forGetter(s -> s.group),
+            Ingredient.CODEC.fieldOf("ingredient1").forGetter(x -> x.ingredient1),
+            Ingredient.CODEC.fieldOf("ingredient2").forGetter(x -> x.ingredient2),
+            Ingredient.CODEC.fieldOf("ingredient3").forGetter(x -> x.ingredient3),
+            Ingredient.CODEC.fieldOf("ingredient4").forGetter(x -> x.ingredient4),
+            Ingredient.CODEC.fieldOf("item").forGetter(x -> x.ingredient),
+            ItemStack.CODEC.optionalFieldOf("result1", ItemStack.EMPTY).forGetter(x -> x.result1),
+            ItemStack.CODEC.optionalFieldOf("result2", ItemStack.EMPTY).forGetter(x -> x.result2),
+            ItemStack.CODEC.optionalFieldOf("result3", ItemStack.EMPTY).forGetter(x -> x.result3),
+            ItemStack.CODEC.optionalFieldOf("result").forGetter(x -> x.result),
+            Codec.INT.optionalFieldOf("cookingtime", 200).forGetter(x -> x.cookingTime)
+    ).apply(instance, InfuserRecipe::new));
 
-        public static final MapCodec<InfuserRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.STRING.optionalFieldOf("group", "").forGetter(s -> s.group),
-                Ingredient.CODEC.fieldOf("ingredient1").forGetter(x -> x.ingredient1),
-                Ingredient.CODEC.fieldOf("ingredient2").forGetter(x -> x.ingredient2),
-                Ingredient.CODEC.fieldOf("ingredient3").forGetter(x -> x.ingredient3),
-                Ingredient.CODEC.fieldOf("ingredient4").forGetter(x -> x.ingredient4),
-                Ingredient.CODEC.fieldOf("item").forGetter(x -> x.ingredient),
-                ItemStack.CODEC.optionalFieldOf("result1", ItemStack.EMPTY).forGetter(x -> x.result1),
-                ItemStack.CODEC.optionalFieldOf("result2", ItemStack.EMPTY).forGetter(x -> x.result2),
-                ItemStack.CODEC.optionalFieldOf("result3", ItemStack.EMPTY).forGetter(x -> x.result3),
-                ItemStack.CODEC.optionalFieldOf("result").forGetter(x -> x.result),
-                Codec.INT.optionalFieldOf("cookingtime", 200).forGetter(x -> x.cookingTime)
-        ).apply(instance, InfuserRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, InfuserRecipe> STREAM_CODEC = StreamCodecExtension.composite(
-                ByteBufCodecs.STRING_UTF8, s -> s.group,
-                Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient1,
-                Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient2,
-                Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient3,
-                Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient4,
-                Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
-                ItemStack.OPTIONAL_STREAM_CODEC, s -> s.result1,
-                ItemStack.OPTIONAL_STREAM_CODEC, s -> s.result2,
-                ItemStack.OPTIONAL_STREAM_CODEC, s -> s.result3,
-                ByteBufCodecs.optional(ItemStack.STREAM_CODEC), s -> s.result,
-                ByteBufCodecs.INT, s -> s.cookingTime,
-                InfuserRecipe::new
-        );
-
-        @Override
-        public @NotNull MapCodec<InfuserRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, InfuserRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, InfuserRecipe> STREAM_CODEC = StreamCodecExtension.composite(
+            ByteBufCodecs.STRING_UTF8, s -> s.group,
+            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient1,
+            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient2,
+            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient3,
+            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient4,
+            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
+            ItemStack.OPTIONAL_STREAM_CODEC, s -> s.result1,
+            ItemStack.OPTIONAL_STREAM_CODEC, s -> s.result2,
+            ItemStack.OPTIONAL_STREAM_CODEC, s -> s.result3,
+            ByteBufCodecs.optional(ItemStack.STREAM_CODEC), s -> s.result,
+            ByteBufCodecs.INT, s -> s.cookingTime,
+            InfuserRecipe::new
+    );
 }

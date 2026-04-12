@@ -16,6 +16,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
@@ -35,7 +36,7 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
     private final @NotNull CraftingBookCategory category;
     private final @NotNull String group;
     private final @NotNull List<Ingredient> recipeItems;
-    private final @NotNull ItemStack recipeOutput;
+    private final @NotNull ItemStackTemplate recipeOutput;
     private final int requiredLevel;
     private final List<Holder<ISkill<?>>> requiredSkills;
     private final int requiredLava;
@@ -43,7 +44,7 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
     @Nullable
     private PlacementInfo placementInfo;
 
-    public ShapelessWeaponTableRecipe(@NotNull String group, @NotNull CraftingBookCategory category, @NotNull List<Ingredient> ingredients, @NotNull ItemStack result, int level, int lava, @NotNull List<Holder<ISkill<?>>> skills) {
+    public ShapelessWeaponTableRecipe(@NotNull String group, @NotNull CraftingBookCategory category, @NotNull List<Ingredient> ingredients, @NotNull ItemStackTemplate result, int level, int lava, @NotNull List<Holder<ISkill<?>>> skills) {
         this.category = category;
         this.group = group;
         this.recipeItems = ingredients;
@@ -54,16 +55,12 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
         this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
     }
 
-    @Override
-    public ItemStack getResult() {
-        return this.recipeOutput;
-    }
-
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingInput inv, @NotNull HolderLookup.Provider registryAccess) {
-        return this.recipeOutput.copy();
+    public ItemStack assemble(@NotNull CraftingInput inv) {
+        return this.recipeOutput.create();
     }
+
 
     @Override
     public @NotNull PlacementInfo placementInfo() {
@@ -77,7 +74,7 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
     public @NotNull List<RecipeDisplay> display() {
         return List.of(new ShapelessCraftingRecipeDisplay(
                 this.getIngredients().stream().map(Ingredient::display).toList(),
-                new SlotDisplay.ItemStackSlotDisplay(this.getResult()),
+                new SlotDisplay.ItemStackSlotDisplay(this.recipeOutput),
                 new SlotDisplay.ItemSlotDisplay(ModBlocks.WEAPON_TABLE.asItem())
         ));
     }
@@ -136,39 +133,26 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
         }
     }
 
-    public static class Serializer implements RecipeSerializer<ShapelessWeaponTableRecipe> {
+    public static final MapCodec<ShapelessWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
+        return inst.group(
+                Codec.STRING.optionalFieldOf("group", "").forGetter(p_301127_ -> p_301127_.group),
+                CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_301133_ -> p_301133_.category),
+                Codec.lazyInitialized(() -> Ingredient.CODEC.listOf(1, MAX_WIDTH * MAX_HEIGHT)).fieldOf("ingredients").forGetter(x -> x.recipeItems),
+                ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
+                Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
+                Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava),
+                ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+        ).apply(inst, ShapelessWeaponTableRecipe::new);
+    });
 
-        public static final MapCodec<ShapelessWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
-            return inst.group(
-                    Codec.STRING.optionalFieldOf("group", "").forGetter(p_301127_ -> p_301127_.group),
-                    CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_301133_ -> p_301133_.category),
-                    Codec.lazyInitialized(() -> Ingredient.CODEC.listOf(1, MAX_WIDTH * MAX_HEIGHT)).fieldOf("ingredients").forGetter(x -> x.recipeItems),
-                    ItemStack.CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
-                    Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
-                    Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava),
-                    ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
-            ).apply(inst, ShapelessWeaponTableRecipe::new);
-        });
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> STREAM_CODEC = StreamCodecExtension.composite(
-                ByteBufCodecs.STRING_UTF8, s -> s.group,
-                CraftingBookCategory.STREAM_CODEC, s -> s.category,
-                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), s -> s.recipeItems,
-                ItemStack.STREAM_CODEC, s -> s.recipeOutput,
-                ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
-                ByteBufCodecs.VAR_INT, s -> s.requiredLava,
-                ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
-                ShapelessWeaponTableRecipe::new
-        );
-
-        @Override
-        public @NotNull MapCodec<ShapelessWeaponTableRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> STREAM_CODEC = StreamCodecExtension.composite(
+            ByteBufCodecs.STRING_UTF8, s -> s.group,
+            CraftingBookCategory.STREAM_CODEC, s -> s.category,
+            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), s -> s.recipeItems,
+            ItemStackTemplate.STREAM_CODEC, s -> s.recipeOutput,
+            ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
+            ByteBufCodecs.VAR_INT, s -> s.requiredLava,
+            ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+            ShapelessWeaponTableRecipe::new
+    );
 }

@@ -35,6 +35,7 @@
     "accessor.MobEffectInstanceAccessor",
     "accessor.MultiNoiseBiomeSourceParameterListPresetAccessor",
     "accessor.NearestAttackableTargetGoalAccessor",
+    "accessor.NormalCraftingRecipeAccessor",
     "accessor.ObjectiveCriteriaAccessor",
     "accessor.OrePlacementAccessor",
     "accessor.ProcessorListsAccessor",

@@ -70,33 +70,20 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
         return ModRecipes.ALCHEMICAL_TABLE.get();
     }
 
-    public static class Serializer implements RecipeSerializer<AlchemyTableRecipe> {
-        public static final MapCodec<AlchemyTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-                Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
-                Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300831_ -> p_300831_.ingredient),
-                Ingredient.CODEC.fieldOf("input").forGetter(p_300830_ -> p_300830_.input),
-                ItemStack.CODEC.fieldOf("result").forGetter(p_300829_ -> p_300829_.result),
-                ModRegistries.SKILLS.byNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
-        ).apply(inst, AlchemyTableRecipe::new));
+    public static final MapCodec<AlchemyTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+            Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
+            Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300831_ -> p_300831_.ingredient),
+            Ingredient.CODEC.fieldOf("input").forGetter(p_300830_ -> p_300830_.input),
+            ItemStack.CODEC.fieldOf("result").forGetter(p_300829_ -> p_300829_.result),
+            ModRegistries.SKILLS.byNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+    ).apply(inst, AlchemyTableRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).map(s -> s.orElse(""), Optional::of), s -> s.group,
-                Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
-                Ingredient.CONTENTS_STREAM_CODEC, s -> s.input,
-                ItemStack.STREAM_CODEC, s -> s.result,
-                ByteBufCodecs.registry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
-                AlchemyTableRecipe::new
-        );
-
-        @Override
-        public @NotNull MapCodec<AlchemyTableRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).map(s -> s.orElse(""), Optional::of), s -> s.group,
+            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
+            Ingredient.CONTENTS_STREAM_CODEC, s -> s.input,
+            ItemStack.STREAM_CODEC, s -> s.result,
+            ByteBufCodecs.registry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+            AlchemyTableRecipe::new
+    );
 }

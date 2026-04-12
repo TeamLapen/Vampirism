@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.misc.extension;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 
 public interface IShapedRecipe {
 
-    ItemStack getResult();
+    ItemStackTemplate getResult();
 
     ShapedRecipePattern getPattern();
 }

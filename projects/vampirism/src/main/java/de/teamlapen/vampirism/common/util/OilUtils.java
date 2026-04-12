@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.world.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.api.world.items.oil.IArmorOil;
 import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +21,7 @@ public class OilUtils {
         return Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).map(OilUtils::getAppliedOil).filter(o -> o.isPresent() && o.get() instanceof IArmorOil).map(iApplicableOil -> (IArmorOil) iApplicableOil.get()).collect(Collectors.toList());
     }
 
-    public static @NotNull Optional<IApplicableOil> getAppliedOil(@NotNull ItemStack stack) {
+    public static @NotNull Optional<IApplicableOil> getAppliedOil(@NotNull DataComponentGetter stack) {
         return AppliedOilContent.getAppliedOil(stack).map(AppliedOilContent::oil).map(Holder::value);
     }
 

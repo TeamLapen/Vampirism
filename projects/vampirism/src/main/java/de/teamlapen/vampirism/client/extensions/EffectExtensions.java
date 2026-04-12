@@ -19,10 +19,10 @@ public class EffectExtensions {
         }
 
         @Override
-        public boolean renderInventoryText(MobEffectInstance instance, AbstractContainerScreen<?> screen, GuiGraphicsExtractor GuiGraphicsExtractor, int x, int y, int blitOffset) {
+        public boolean renderInventoryText(MobEffectInstance instance, AbstractContainerScreen<?> screen, GuiGraphicsExtractor guiGraphics, int x, int y, int blitOffset) {
             MutableComponent component = instance.getEffect().value().getDisplayName().copy();
-            GuiGraphicsExtractor.drawString(screen.getFont(), component, x + 10 + 18, y + 6, 16777215);
-            GuiGraphicsExtractor.drawString(screen.getFont(), Component.translatable("effect.duration.infinite"), x + 10 + 18, y + 6 + 10, 8355711);
+            guiGraphics.text(screen.getFont(), component, x + 10 + 18, y + 6, 16777215);
+            guiGraphics.text(screen.getFont(), Component.translatable("effect.duration.infinite"), x + 10 + 18, y + 6 + 10, 8355711);
             return true;
         }
     };

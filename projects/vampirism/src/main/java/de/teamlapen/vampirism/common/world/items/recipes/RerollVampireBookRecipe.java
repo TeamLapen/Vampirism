@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -9,6 +11,8 @@ import de.teamlapen.vampirism.common.world.items.VampireBookItem;
 import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;

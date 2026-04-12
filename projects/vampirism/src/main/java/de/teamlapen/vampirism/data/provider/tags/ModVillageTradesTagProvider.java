@@ -1,15 +1,11 @@
 package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.core.ModTrades;
 import de.teamlapen.vampirism.common.tags.ModVillagerTradeTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.KeyTagProvider;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.VillagerTradeTags;
 import net.minecraft.world.item.trading.VillagerTrade;
 
@@ -141,5 +137,10 @@ public class ModVillageTradesTagProvider extends KeyTagProvider<VillagerTrade> {
                 .add(WANDERER_1_EMERALD_DARK_SAPLING)
                 .add(WANDERER_1_EMERALD_CURSED_SAPLING)
                 .add(WANDERER_1_EMERALD_EARTH);
+
+        this.tag(ModVillagerTradeTags.VAMPIRE_VILLAGER)
+                .add(VAMPIRE_VILLAGER_EMERALDS_HEARTS)
+                .add(VAMPIRE_VILLAGER_HEARTS_EMERALDS)
+                .add(VAMPIRE_VILLAGER_BLOOD_BOTTLES);
     }
 }

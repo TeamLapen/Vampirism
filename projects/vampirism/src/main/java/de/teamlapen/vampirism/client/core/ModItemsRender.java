@@ -49,7 +49,7 @@ public class ModItemsRender {
                     Matrix3x2fStack posestack = graphics.pose();
                     posestack.translate(xOffset, yOffset + 8);
                     posestack.scale(0.5f);
-                    graphics.renderItem(ammo.getDefaultInstance(), 0, 0);
+                    graphics.item(ammo.getDefaultInstance(), 0, 0);
                 });
                 return false;
             });

@@ -14,6 +14,7 @@ public class FluidExtensions {
 
     public static final IClientFluidTypeExtensions BLOOD = new IClientFluidTypeExtensions() {
 
+
         @Override
         public Identifier getStillTexture() {
             return VIdentifier.mod("block/blood_still");

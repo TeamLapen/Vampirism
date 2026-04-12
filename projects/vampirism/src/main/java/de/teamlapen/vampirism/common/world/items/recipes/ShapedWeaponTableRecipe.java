@@ -16,6 +16,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay;
@@ -38,7 +39,7 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
     private final CraftingBookCategory category;
     private final String group;
     private final ShapedRecipePattern pattern;
-    private final ItemStack recipeOutput;
+    private final ItemStackTemplate recipeOutput;
     private final int requiredLevel;
     @NotNull
     private final List<Holder<ISkill<?>>> requiredSkills;
@@ -46,7 +47,7 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
     @Nullable
     private PlacementInfo placementInfo;
 
-    public ShapedWeaponTableRecipe(String groupIn, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack recipeOutputIn, int requiredLevel, @NotNull List<Holder<ISkill<?>>> requiredSkills, int requiredLava) {
+    public ShapedWeaponTableRecipe(String groupIn, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStackTemplate recipeOutputIn, int requiredLevel, @NotNull List<Holder<ISkill<?>>> requiredSkills, int requiredLava) {
         this.category = category;
         this.group = groupIn;
         this.pattern = pattern;
@@ -56,15 +57,10 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
         this.requiredLava = requiredLava;
     }
 
-    @Override
-    public ItemStack getResult() {
-        return this.recipeOutput;
-    }
-
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingInput inv, @NotNull HolderLookup.Provider registryAccess) {
-        return this.recipeOutput.copy();
+    public ItemStack assemble(@NotNull CraftingInput inv) {
+        return this.recipeOutput.create();
     }
 
     @Override
@@ -83,7 +79,7 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
                         this.pattern.width(),
                         this.pattern.height(),
                         this.pattern.ingredients().stream().map(x -> x.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE)).toList(),
-                        new SlotDisplay.ItemStackSlotDisplay(this.getResult()),
+                        new SlotDisplay.ItemStackSlotDisplay(this.recipeOutput),
                         new SlotDisplay.ItemSlotDisplay(ModBlocks.WEAPON_TABLE.asItem())
                 )
         );
@@ -144,39 +140,26 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
     }
 
 
-    public static class Serializer implements RecipeSerializer<ShapedWeaponTableRecipe> {
+    public static final MapCodec<ShapedWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
+        return inst.group(
+                Codec.STRING.optionalFieldOf("group", "").forGetter(p_311729_ -> p_311729_.group),
+                CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_311732_ -> p_311732_.category),
+                ShapedRecipePattern.MAP_CODEC.forGetter(p_311733_ -> p_311733_.pattern),
+                ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_311730_ -> p_311730_.recipeOutput),
+                Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
+                ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills),
+                Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava)
+        ).apply(inst, ShapedWeaponTableRecipe::new);
+    });
 
-        public static final MapCodec<ShapedWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
-            return inst.group(
-                    Codec.STRING.optionalFieldOf("group", "").forGetter(p_311729_ -> p_311729_.group),
-                    CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_311732_ -> p_311732_.category),
-                    ShapedRecipePattern.MAP_CODEC.forGetter(p_311733_ -> p_311733_.pattern),
-                    ItemStack.CODEC.fieldOf("result").forGetter(p_311730_ -> p_311730_.recipeOutput),
-                    Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
-                    ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills),
-                    Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava)
-            ).apply(inst, ShapedWeaponTableRecipe::new);
-        });
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, ShapedWeaponTableRecipe> STREAM_CODEC = StreamCodecExtension.composite(
-                ByteBufCodecs.STRING_UTF8, s -> s.group,
-                CraftingBookCategory.STREAM_CODEC, s -> s.category,
-                ShapedRecipePattern.STREAM_CODEC, s -> s.pattern,
-                ItemStack.STREAM_CODEC, s -> s.recipeOutput,
-                ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
-                ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
-                ByteBufCodecs.VAR_INT, s -> s.requiredLava,
-                ShapedWeaponTableRecipe::new
-        );
-
-        @Override
-        public @NotNull MapCodec<ShapedWeaponTableRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, ShapedWeaponTableRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, ShapedWeaponTableRecipe> STREAM_CODEC = StreamCodecExtension.composite(
+            ByteBufCodecs.STRING_UTF8, s -> s.group,
+            CraftingBookCategory.STREAM_CODEC, s -> s.category,
+            ShapedRecipePattern.STREAM_CODEC, s -> s.pattern,
+            ItemStackTemplate.STREAM_CODEC, s -> s.recipeOutput,
+            ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
+            ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+            ByteBufCodecs.VAR_INT, s -> s.requiredLava,
+            ShapedWeaponTableRecipe::new
+    );
 }

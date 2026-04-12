@@ -37,5 +37,4 @@ public interface IWeaponTableRecipe extends Recipe<CraftingInput> {
     @NotNull
     List<Holder<ISkill<?>>> getRequiredSkills();
 
-    ItemStack getResult();
 }

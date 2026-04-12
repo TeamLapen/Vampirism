@@ -16,7 +16,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
@@ -26,8 +25,6 @@ import net.minecraft.world.item.trading.TradeSets;
 import net.minecraft.world.item.trading.VillagerTrade;
 import net.minecraft.world.level.storage.loot.functions.*;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.List;
@@ -114,6 +111,10 @@ public class ModTrades {
     public static final ResourceKey<VillagerTrade> PRIEST_5_CANDELABRA_EMERALD = trade("hunter_expert/1/candelabra_emerald");
     public static final ResourceKey<VillagerTrade> PRIEST_5_EMERALD_CRUCIFIX = trade("hunter_expert/1/emerald_crucifix");
 
+    public static final ResourceKey<VillagerTrade> VAMPIRE_VILLAGER_HEARTS_EMERALDS = trade("vampire_villager/heart_emeralds");
+    public static final ResourceKey<VillagerTrade> VAMPIRE_VILLAGER_EMERALDS_HEARTS = trade("vampire_villager/emeralds_hearts");
+    public static final ResourceKey<VillagerTrade> VAMPIRE_VILLAGER_BLOOD_BOTTLES = trade("vampire_villager/blood_bottles");
+
     public static final ResourceKey<TradeSet> VAMPIRE_EXPERT_LEVEL_1 = tradeSet("vampire_expert/level_1");
     public static final ResourceKey<TradeSet> VAMPIRE_EXPERT_LEVEL_2 = tradeSet("vampire_expert/level_2");
     public static final ResourceKey<TradeSet> VAMPIRE_EXPERT_LEVEL_3 = tradeSet("vampire_expert/level_3");
@@ -131,6 +132,9 @@ public class ModTrades {
     public static final ResourceKey<TradeSet> PRIEST_LEVEL_3 = tradeSet("priest/level_3");
     public static final ResourceKey<TradeSet> PRIEST_LEVEL_4 = tradeSet("priest/level_4");
     public static final ResourceKey<TradeSet> PRIEST_LEVEL_5 = tradeSet("priest/level_5");
+
+    public static final ResourceKey<TradeSet> VAMPIRE_VILLAGER = tradeSet("vampire_villager");
+
 
     public static ResourceKey<VillagerTrade> trade(String path) {
         return ResourceKey.create(Registries.VILLAGER_TRADE, VIdentifier.mod(path));
@@ -155,6 +159,7 @@ public class ModTrades {
         TradeSets.register(context, PRIEST_LEVEL_3, ModVillagerTradeTags.PRIEST_LEVEL_3);
         TradeSets.register(context, PRIEST_LEVEL_4, ModVillagerTradeTags.PRIEST_LEVEL_4);
         TradeSets.register(context, PRIEST_LEVEL_5, ModVillagerTradeTags.PRIEST_LEVEL_5);
+        TradeSets.register(context, VAMPIRE_VILLAGER, ModVillagerTradeTags.VAMPIRE_VILLAGER);
     }
 
     static void bootstrap(BootstrapContext<VillagerTrade> context) {
@@ -173,6 +178,9 @@ public class ModTrades {
         register(context, WANDERER_1_EMERALD_DARK_SAPLING, trade(new TradeCost(Items.EMERALD, 8), new ItemStackTemplate(ModBlocks.DARK_SPRUCE_SAPLING.asItem(), 1), 6, 5));
         register(context, WANDERER_1_EMERALD_CURSED_SAPLING, trade(new TradeCost(Items.EMERALD, 8), new ItemStackTemplate(ModBlocks.CURSED_SPRUCE_SAPLING.asItem(), 1), 6, 5));
         register(context, WANDERER_1_EMERALD_EARTH, trade(new TradeCost(Items.EMERALD, 4), new ItemStackTemplate(ModBlocks.CURSED_EARTH.asItem(), 4), 4, 5));
+        register(context, VAMPIRE_VILLAGER_HEARTS_EMERALDS, trade(new TradeCost(Items.EMERALD, 1), new ItemStackTemplate(ModItems.HUMAN_HEART.get(), 8), 12, 5));
+        register(context, VAMPIRE_VILLAGER_EMERALDS_HEARTS, trade(new TradeCost(ModItems.HUMAN_HEART, 1), new ItemStackTemplate(Items.EMERALD, 3), 12, 5));
+        register(context, VAMPIRE_VILLAGER_BLOOD_BOTTLES, trade(new TradeCost(Items.EMERALD, 1), new ItemStackTemplate(ModItems.BLOOD_BOTTLE.get(), 1, DataComponentPatch.builder().set(ModDataComponents.BOTTLE_BLOOD.get(), new BottleBlood(5)).build()), 12, 5));
     }
 
     static void bootstrapPriest(BootstrapContext<VillagerTrade> context) {

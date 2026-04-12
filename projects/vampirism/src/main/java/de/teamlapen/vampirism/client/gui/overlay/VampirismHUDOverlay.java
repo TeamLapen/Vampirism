@@ -85,7 +85,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
                         int color = (targetEntity instanceof IHunterMob || ExtendedCreature.getSafe(targetEntity).map(IExtendedCreatureVampirism::hasPoisonousBlood).orElse(false))
                                 ? ARGB.color(9, 144, 34)
                                 : ARGB.color(255, 0, 0);
-                        renderBloodFangs(event.getGuiGraphicsExtractor(), window.getGuiScaledWidth(), window.getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
+                        renderBloodFangs(event.getGuiGraphics(), window.getGuiScaledWidth(), window.getGuiScaledHeight(), Mth.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F), color);
                         event.setCanceled(true);
                     });
                 }
@@ -95,7 +95,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
                 if (hunter.getLevel() > 0 && !player.isSpectator() && player.getMainHandItem().getItem() == ModItems.STAKE.get()) {
                     if (targetEntity instanceof LivingEntity livingTargetEntity && targetEntity instanceof IVampireMob && StakeItem.canKillInstantly(livingTargetEntity, player)) {
                         if (StakeItem.canKillInstantly(livingTargetEntity, player) && livingTargetEntity.getHealth() > 0) {
-                            this.renderStakeInstantKill(event.getGuiGraphicsExtractor(), window.getGuiScaledWidth(), window.getGuiScaledHeight());
+                            this.renderStakeInstantKill(event.getGuiGraphics(), window.getGuiScaledWidth(), window.getGuiScaledHeight());
                             event.setCanceled(true);
                         }
                     }
@@ -115,7 +115,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
                     Optional.ofNullable(level.getCapability(Capabilities.Fluid.BLOCK, pos, state, blockEntity, null)).ifPresent(handler -> {
                         try(Transaction transaction = Transaction.openRoot()) {
                             if (ResourceHandlerUtil.move(handler, vampire.getBloodStats(),x -> x.is(ModFluids.BLOOD.get()) ,1000, transaction) > 0) {
-                                renderBloodFangs(event.getGuiGraphicsExtractor(), window.getGuiScaledWidth(), window.getGuiScaledHeight(), 1, ARGB.color(255, 0, 0));
+                                renderBloodFangs(event.getGuiGraphics(), window.getGuiScaledWidth(), window.getGuiScaledHeight(), 1, ARGB.color(255, 0, 0));
                                 event.setCanceled(true);
                             }
                         }
@@ -134,8 +134,8 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
                     int y = window.getGuiScaledHeight() / 2 + 9;
                     int l = (int) (progress * 14.0F) + 2;
 
-                    event.getGuiGraphicsExtractor().blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS_BACKGROUND_SPRITE, x, y, 16, 2);
-                    event.getGuiGraphicsExtractor().blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS_FOREGROUND_SPRITE, 16, 2, 0, 0, x, y, l, 2);
+                    event.getGuiGraphics().blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS_BACKGROUND_SPRITE, x, y, 16, 2);
+                    event.getGuiGraphics().blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS_FOREGROUND_SPRITE, 16, 2, 0, 0, x, y, l, 2);
                 }
             }
         }

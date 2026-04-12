@@ -304,7 +304,7 @@ public class TentBlock extends Block {
     public InteractionResult useWithoutItem(BlockState blockState, Level world, final BlockPos pos, Player player, BlockHitResult rayTraceResult) {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         if (HunterPlayer.get(player).getLevel() == 0) {
-            player.displayClientMessage(Component.translatable("message.vampirism.tent.cant_use"), true);
+            player.sendOverlayMessage(Component.translatable("message.vampirism.tent.cant_use"));
             return InteractionResult.SUCCESS;
         }
 
@@ -321,7 +321,7 @@ public class TentBlock extends Block {
             world.explode(null, world.damageSources().badRespawnPointExplosion(vec3), null, vec3, 5.0F, true, Level.ExplosionInteraction.BLOCK);
             return InteractionResult.SUCCESS;
         } else if (blockState.getValue(OCCUPIED)) {
-            player.displayClientMessage(Component.translatable("message.vampirism.tent.occupied"), true);
+            player.sendOverlayMessage(Component.translatable("message.vampirism.tent.occupied"));
             return InteractionResult.SUCCESS;
         } else {
             BlockState targetState = blockState;
@@ -344,7 +344,7 @@ public class TentBlock extends Block {
             BlockPos finalTargetPos = targetPos;
             player.startSleepInBed(finalTargetPos).ifLeft(sleepResult1 -> {
                 if (sleepResult1.message() != null) {
-                    player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.message()), true);
+                    player.sendOverlayMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.message()));
                 }
             }).ifRight(u -> {
                 this.setBedOccupied(finalTargetState, world, finalTargetPos, null, true);

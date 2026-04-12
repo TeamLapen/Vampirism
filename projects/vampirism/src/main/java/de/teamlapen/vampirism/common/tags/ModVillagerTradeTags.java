@@ -25,6 +25,8 @@ public class ModVillagerTradeTags {
     public static final TagKey<VillagerTrade> PRIEST_LEVEL_4 = tag("priest/level_4");
     public static final TagKey<VillagerTrade> PRIEST_LEVEL_5 = tag("priest/level_5");
 
+    public static final TagKey<VillagerTrade> VAMPIRE_VILLAGER = tag("vampire_villager");
+
     private static TagKey<VillagerTrade> tag(String name) {
         return TagKey.create(Registries.VILLAGER_TRADE, VIdentifier.mod(name));
     }

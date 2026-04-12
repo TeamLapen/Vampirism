@@ -9,17 +9,14 @@ import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
-import de.teamlapen.vampirism.common.core.ModAdvancements;
-import de.teamlapen.vampirism.common.core.ModAi;
-import de.teamlapen.vampirism.common.core.ModAttributes;
-import de.teamlapen.vampirism.common.core.ModVillage;
+import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.tags.ModVillagerTradeTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.attachments.NearestVillage;
 import de.teamlapen.vampirism.common.world.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
-import de.teamlapen.vampirism.common.world.entity.villager.VampirismTrades;
 import de.teamlapen.vampirism.misc.mixin.accessor.VillagerAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -271,7 +268,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
      */
     @NotNull
     @Override
-    protected Brain<?> makeBrain(@NotNull Dynamic<?> dynamicIn) {
+    protected Brain<Villager> makeBrain(@NotNull Brain.Packed dynamicIn) {
         Brain<Villager> brain = Brain.provider(VillagerAccessor.getMemoryTypes(), SENSOR_TYPES).makeBrain(dynamicIn);
         this.registerBrainGoals(brain);
         return brain;
@@ -282,7 +279,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         super.updateTrades(level);
         Holder<VillagerProfession> profession = this.getVillagerData().profession();
         if (!this.getOffers().isEmpty() && !profession.is(ModVillage.VAMPIRE_EXPERT) && !profession.is(VillagerProfession.BUTCHER) && this.getRandom().nextInt(3) == 0) {
-            this.addOffersFromItemListings(level, this.getOffers(), VampirismTrades.getConvertedTrades(), 1);
+            this.addOffersFromItemListings(level, this.getOffers(), level.registryAccess().getOrThrow(ModVillagerTradeTags.VAMPIRE_VILLAGER), 1);
         }
     }
 

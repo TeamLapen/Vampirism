@@ -11,7 +11,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
 public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu> {
 
@@ -22,20 +21,14 @@ public class AlchemyTableScreen extends AbstractContainerScreen<AlchemyTableMenu
 
     private static final int[] BUBBLELENGTHS = new int[] {29, 24, 20, 16, 11, 6, 0};
 
-    public AlchemyTableScreen(@NotNull AlchemyTableMenu menu, @NotNull Inventory inventory, @NotNull Component title) {
-        super(menu, inventory, title);
-        this.imageHeight = 181;
+    public AlchemyTableScreen(AlchemyTableMenu menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, 176, 181);
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(graphics, mouseX, mouseY);
-    }
-
-    @Override
-    protected void renderBg(@NotNull GuiGraphicsExtractor graphics, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         GuiRenderer.blit(graphics, BREWING_STAND_LOCATION, i, j, this.imageWidth, this.imageHeight);

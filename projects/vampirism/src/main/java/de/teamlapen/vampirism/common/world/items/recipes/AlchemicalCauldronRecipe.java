@@ -140,40 +140,27 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
         } && inv.skills().map(s -> s.areSkillsEnabled(this.skills)).orElse(true);
     }
 
-    public static class Serializer implements RecipeSerializer<AlchemicalCauldronRecipe> {
+    public static final MapCodec<AlchemicalCauldronRecipe> CODEC = RecordCodecBuilder.mapCodec(inst ->
+            inst.group(
+                    Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
+                    Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
+                    Codec.either(Ingredient.CODEC, FluidStack.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
+                    ItemStack.CODEC.fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
+                    ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.skills),
+                    Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.reqLevel),
+                    Codec.INT.optionalFieldOf("cookTime", 200).forGetter(p -> p.cookingTime),
+                    Codec.FLOAT.optionalFieldOf("experience", 0.2F).forGetter(p -> p.experience)
+            ).apply(inst, AlchemicalCauldronRecipe::new));
 
-        public static final MapCodec<AlchemicalCauldronRecipe> CODEC = RecordCodecBuilder.mapCodec(inst ->
-                inst.group(
-                        Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
-                        Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
-                        Codec.either(Ingredient.CODEC, FluidStack.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
-                        ItemStack.CODEC.fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
-                        ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.skills),
-                        Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.reqLevel),
-                        Codec.INT.optionalFieldOf("cookTime", 200).forGetter(p -> p.cookingTime),
-                        Codec.FLOAT.optionalFieldOf("experience", 0.2F).forGetter(p -> p.experience)
-                ).apply(inst, AlchemicalCauldronRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, AlchemicalCauldronRecipe> STREAM_CODEC = StreamCodecExtension.composite(
-                ByteBufCodecs.STRING_UTF8, AlchemicalCauldronRecipe::group,
-                Ingredient.CONTENTS_STREAM_CODEC, AlchemicalCauldronRecipe::getIngredient,
-                ByteBufCodecs.either(Ingredient.CONTENTS_STREAM_CODEC, FluidStack.STREAM_CODEC), AlchemicalCauldronRecipe::getFluid,
-                ItemStack.STREAM_CODEC, AlchemicalCauldronRecipe::result,
-                ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), AlchemicalCauldronRecipe::getRequiredSkills,
-                ByteBufCodecs.INT, AlchemicalCauldronRecipe::getRequiredLevel,
-                ByteBufCodecs.INT, AlchemicalCauldronRecipe::getCookingTime,
-                ByteBufCodecs.FLOAT, AlchemicalCauldronRecipe::getExperience,
-                AlchemicalCauldronRecipe::new
-        );
-
-        @Override
-        public @NotNull MapCodec<AlchemicalCauldronRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, AlchemicalCauldronRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, AlchemicalCauldronRecipe> STREAM_CODEC = StreamCodecExtension.composite(
+            ByteBufCodecs.STRING_UTF8, AlchemicalCauldronRecipe::group,
+            Ingredient.CONTENTS_STREAM_CODEC, AlchemicalCauldronRecipe::getIngredient,
+            ByteBufCodecs.either(Ingredient.CONTENTS_STREAM_CODEC, FluidStack.STREAM_CODEC), AlchemicalCauldronRecipe::getFluid,
+            ItemStack.STREAM_CODEC, AlchemicalCauldronRecipe::result,
+            ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), AlchemicalCauldronRecipe::getRequiredSkills,
+            ByteBufCodecs.INT, AlchemicalCauldronRecipe::getRequiredLevel,
+            ByteBufCodecs.INT, AlchemicalCauldronRecipe::getCookingTime,
+            ByteBufCodecs.FLOAT, AlchemicalCauldronRecipe::getExperience,
+            AlchemicalCauldronRecipe::new
+    );
 }
