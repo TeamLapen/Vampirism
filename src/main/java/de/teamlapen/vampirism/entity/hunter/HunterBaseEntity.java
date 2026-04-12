@@ -45,11 +45,6 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     }
 
     @Override
-    public MobCategory getClassification(boolean forSpawnCount) {
-        return VReference.HUNTER_CREATURE_TYPE;
-    }
-
-    @Override
     public @NotNull LivingEntity getRepresentingEntity() {
         return this;
     }
