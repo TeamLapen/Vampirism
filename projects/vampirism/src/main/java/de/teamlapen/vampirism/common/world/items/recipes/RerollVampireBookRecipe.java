@@ -16,7 +16,6 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +29,7 @@ public class RerollVampireBookRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(@NotNull CraftingInput input, @NotNull Level level) {
+    public boolean matches(CraftingInput input, Level level) {
         if (level.registryAccess().lookup(VampirismRegistries.Keys.VAMPIRE_BOOK).isEmpty()) return false;
 
         int bookCount = 0;
@@ -55,7 +54,7 @@ public class RerollVampireBookRecipe extends CustomRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider registries) {
+    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
         Optional<? extends HolderLookup.RegistryLookup<IVampireBook>> registryLookup = registries.lookup(VampirismRegistries.Keys.VAMPIRE_BOOK);
 
         if (registryLookup.isPresent()) {
@@ -67,7 +66,7 @@ public class RerollVampireBookRecipe extends CustomRecipe {
     }
 
     @Override
-    public @NotNull RecipeSerializer<? extends CustomRecipe> getSerializer() {
+    public RecipeSerializer<? extends CustomRecipe> getSerializer() {
         return ModRecipes.REROLL_VAMPIRE_BOOK.get();
     }
 }

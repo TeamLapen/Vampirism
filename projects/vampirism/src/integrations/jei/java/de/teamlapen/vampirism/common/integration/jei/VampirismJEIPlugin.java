@@ -114,7 +114,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(DISTILLING, VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
         registration.addRecipes(RecipeTypes.ANVIL, RepairRecipeMaker.getRecipes(registration.getVanillaRecipeFactory(), registration.getIngredientManager()));
         registration.addRecipes(ALCHEMY_TABLE, recipes.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().toList());
-        registration.addRecipes(RecipeTypes.CRAFTING, OilRecipeMaker.getRecipes(registration.getIngredientManager()));
+        registration.addRecipes(RecipeTypes.CRAFTING, SpecialRecipeMaker.getAllCraftingRecipes());
         registration.addRecipes(BLESSING, BlessableRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(GARLIC_DIFFUSER, GarlicDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(FOG_DIFFUSER, FogDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));

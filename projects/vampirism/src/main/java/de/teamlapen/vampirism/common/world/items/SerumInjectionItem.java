@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
