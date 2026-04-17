@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 
 public class SerumInjectionItem extends Item {
@@ -21,7 +22,7 @@ public class SerumInjectionItem extends Item {
     @Override
     public ItemStack getDefaultInstance() {
         ItemStack stack = super.getDefaultInstance();
-        stack.set(ModDataComponents.OIL, OilContent.EMPTY);
+        stack.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.WATER));
         return stack;
     }
 
