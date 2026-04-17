@@ -24,7 +24,7 @@ public class BloodShredParticle extends SingleQuadParticle {
         double deltaY = destination.y - this.y;
         double deltaZ = destination.z - this.z;
 
-        RandomSource random = this.level.random;
+        RandomSource random = this.level.getRandom();
 
         if (straight) {
             this.xd = deltaX / arrivalInTicks;

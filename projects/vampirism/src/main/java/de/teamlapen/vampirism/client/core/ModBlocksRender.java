@@ -6,50 +6,47 @@ import de.teamlapen.vampirism.client.extensions.BlockExtensions;
 import de.teamlapen.vampirism.client.renderer.blockentity.*;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.world.blockentity.AlchemicalCauldronBlockEntity;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.client.color.block.BlockTintSource;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
+
+import java.util.List;
 
 /**
  * Handles all block render registration including TileEntities
  */
 public class ModBlocksRender {
 
-    public static void register() {
-        registerRenderType();
-    }
+    public static void registerBlockColors(RegisterColorHandlersEvent.@NotNull BlockTintSources event) {
+        event.register(List.of(_ -> 0x8855FF,_ -> 0x9966FF), ModBlocks.ALCHEMICAL_FIRE.get());
+        event.register(List.of(_ -> 0xFFFFFF, new BlockTintSource() {
+            @Override
+            public int color(@NonNull BlockState state) {
+                return 0xFFFFFF;
+            }
+            @Override
+            public int colorInWorld(@NonNull BlockState state, @NonNull BlockAndTintGetter level, @NonNull BlockPos pos) {
+                return level.getBlockEntity(pos) instanceof AlchemicalCauldronBlockEntity totem ? totem.getLiquidColorClient() : 0xFFFFFF;
+            }
+        }), ModBlocks.ALCHEMICAL_CAULDRON.get());
+        event.register(List.of(_ -> 0xFFFFFF, new BlockTintSource() {
+            @Override
+            public int color(@NonNull BlockState state) {
+                return 0xFFFFFF;
+            }
 
-    public static void registerBlockColors(RegisterColorHandlersEvent.@NotNull Block event) {
-        event.register((state, worldIn, pos, tintIndex) -> {
-            if (tintIndex == 1) {
-                return 0x9966FF;
+            @Override
+            public int colorInWorld(@NonNull BlockState state, @NonNull BlockAndTintGetter level, @NonNull BlockPos pos) {
+                return level.getBlockEntity(pos) instanceof TotemBlockEntity totem ? totem.getControllingFaction().value().getColor() : 0xFFFFFF;
             }
-            return 0x8855FF;
-        }, ModBlocks.ALCHEMICAL_FIRE.get());
-        event.register((state, worldIn, pos, tintIndex) -> {
-            if (tintIndex == 255) {
-                BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
-                if (tile instanceof AlchemicalCauldronBlockEntity) {
-                    return ((AlchemicalCauldronBlockEntity) tile).getLiquidColorClient();
-                }
-            }
-            return 0xFFFFFF;
-        }, ModBlocks.ALCHEMICAL_CAULDRON.get());
-        event.register((state, worldIn, pos, tintIndex) -> {
-            if (tintIndex == 255) {
-                BlockEntity tile = (worldIn == null || pos == null) ? null : worldIn.getBlockEntity(pos);
-                if (tile instanceof TotemBlockEntity totem) {
-                    return totem.getControllingFaction().value().getColor();
-                }
-            }
-            return 0xFFFFFF;
-        }, TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
+        }),TotemTopBlock.getBlocks().toArray(new TotemTopBlock[0]));
     }
 
     public static void registerBlockEntityRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
@@ -63,10 +60,6 @@ public class ModBlocksRender {
         event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_CONTAINER.get(), BloodContainerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.ALTAR_INSPIRATION.get(), AltarInspirationRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.BLOOD_GRINDER.get(), BloodGrinderRenderer::new);
-    }
-
-    private static void registerRenderType() {
-        ItemBlockRenderTypes.setRenderLayer(ModFluids.BLOOD.get(), ChunkSectionLayer.TRANSLUCENT);
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {

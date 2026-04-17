@@ -304,7 +304,7 @@ public class ModEntityEventHandler {
         if (event.getSource().is(ModDamageTypeTags.ENTITY_PHYSICAL) && !event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) {
             for (ItemStack armorStack : Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(x -> event.getEntity().getItemBySlot(x)).toList()) {
                 if (OilUtils.getAppliedOil(armorStack).map(oil -> {
-                    if (oil instanceof EvasionOil evasionOil && evasionOil.evasionChance() > Optional.ofNullable(event.getSource().getEntity()).map(entity -> entity.level().random.nextFloat()).orElse(1f)) {
+                    if (oil instanceof EvasionOil evasionOil && evasionOil.evasionChance() > Optional.ofNullable(event.getSource().getEntity()).map(entity -> entity.level().getRandom().nextFloat()).orElse(1f)) {
                         event.setAmount(0);
                         oil.reduceDuration(armorStack, oil, oil.getDurationReduction());
                         return true;

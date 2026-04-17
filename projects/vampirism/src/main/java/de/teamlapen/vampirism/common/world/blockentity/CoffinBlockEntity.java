@@ -12,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * TileEntity for coffins. Handles coffin lid position and color
@@ -22,11 +21,11 @@ public class CoffinBlockEntity extends NetworkedBlockEntity {
     public DyeColor color = DyeColor.RED;
     private boolean playLidSoundFlag;
 
-    public CoffinBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public CoffinBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.COFFIN.get(), pos, state);
     }
 
-    public CoffinBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state, DyeColor color) {
+    public CoffinBlockEntity(BlockPos pos, BlockState state, DyeColor color) {
         super(ModBlockEntities.COFFIN.get(), pos, state);
         this.color = color;
     }
@@ -37,7 +36,7 @@ public class CoffinBlockEntity extends NetworkedBlockEntity {
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input) {
+    public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.color = input.read("color", DyeColor.CODEC).orElse(DyeColor.BLACK);
         this.lidPos = input.getFloatOr("lidPos", 0);
@@ -45,16 +44,16 @@ public class CoffinBlockEntity extends NetworkedBlockEntity {
     }
 
     @Override
-    public void saveAdditional(@NotNull ValueOutput output) {
+    public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.store("color", DyeColor.CODEC, this.color);
         output.putFloat("lidPos", this.lidPos);
     }
 
-    public static void clientTickHead(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull CoffinBlockEntity blockEntity) {
+    public static void clientTickHead(Level level, BlockPos pos, BlockState state, CoffinBlockEntity blockEntity) {
         boolean occupied = CoffinBlock.isClosed(level, pos);
         if (blockEntity.playLidSoundFlag != occupied) {
-            level.playLocalSound(pos.getX(), (double) pos.getY() + 0.5D, pos.getZ(), ModSounds.COFFIN_LID.get(), SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F, true);
+            level.playLocalSound(pos.getX(), (double) pos.getY() + 0.5D, pos.getZ(), ModSounds.COFFIN_LID.get(), SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F, true);
             blockEntity.playLidSoundFlag = CoffinBlock.isClosed(level, pos);
         }
 

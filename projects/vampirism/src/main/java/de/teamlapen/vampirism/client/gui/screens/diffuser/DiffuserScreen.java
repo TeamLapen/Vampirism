@@ -76,12 +76,6 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     }
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
-        super.render(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
-        this.renderTooltip(GuiGraphicsExtractor, mouseX, mouseY);
-    }
-
-    @Override
     protected void containerTick() {
         this.updateProgress();
     }
@@ -103,11 +97,12 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, float partialTick, int mouseX, int mouseY) {
-        GuiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.xSize, this.ySize, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.xSize, this.ySize, 256, 256);
         if (this.menu.isLit()) {
             int l = Mth.ceil(this.menu.getLitProgress() * 13.0F) + 1;
-            GuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - l, getGuiLeft() + 26 + 19, getGuiTop() + 53 + 2 + (14 - l), 14, l);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - l, getGuiLeft() + 26 + 19, getGuiTop() + 53 + 2 + (14 - l), 14, l);
         }
     }
 }

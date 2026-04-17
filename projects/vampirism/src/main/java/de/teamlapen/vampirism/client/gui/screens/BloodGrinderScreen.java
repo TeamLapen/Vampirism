@@ -10,24 +10,23 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
 public class BloodGrinderScreen extends AbstractContainerScreen<BloodGrinderMenu> {
 
     private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/blood_grinder.png");
 
-    public BloodGrinderScreen(@NotNull BloodGrinderMenu inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
+    public BloodGrinderScreen(BloodGrinderMenu inventorySlotsIn, Inventory playerInventory, Component name) {
         super(inventorySlotsIn, playerInventory, name);
     }
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(graphics, mouseX, mouseY);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphicsExtractor graphics, float var1, int var2, int var3) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
         GuiRenderer.blit(graphics, BACKGROUND, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, VIdentifier.mod("container/grinder/progress_background"), this.leftPos + 80, this.topPos + 55, 16, 16);
 

@@ -18,9 +18,7 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 import java.util.stream.IntStream;
 
@@ -56,8 +54,9 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     @Override
-    public void render(@NonNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
-        super.render(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
+
         for (Renderable renderable : this.renderables) {
             if (renderable instanceof IRenderLast last) {
                 last.renderLast(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
@@ -66,7 +65,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     }
 
     @Override
-    protected @NotNull LayoutElement createLayout() {
+    protected LayoutElement createLayout() {
         LinearLayout vertical = LinearLayout.vertical();
         vertical.spacing(4);
 

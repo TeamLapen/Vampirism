@@ -39,13 +39,13 @@ public class FlyingBloodEntityParticle extends SingleQuadParticle {
         }
 
         if (direct) {
-            this.xd = ((this.level.random.nextDouble() - 0.5F) / 5f);
-            this.yd = (this.level.random.nextDouble() / 5f);
-            this.zd = ((this.level.random.nextDouble() - 0.5F) / 5f);
+            this.xd = ((this.level.getRandom().nextDouble() - 0.5F) / 5f);
+            this.yd = (this.level.getRandom().nextDouble() / 5f);
+            this.zd = ((this.level.getRandom().nextDouble() - 0.5F) / 5f);
         } else {
-            this.xd = (this.level.random.nextDouble() - 0.5);
-            this.yd = (this.level.random.nextDouble() + 0.2);
-            this.zd = (this.level.random.nextDouble() - 0.5);
+            this.xd = (this.level.getRandom().nextDouble() - 0.5);
+            this.yd = (this.level.getRandom().nextDouble() + 0.2);
+            this.zd = (this.level.getRandom().nextDouble() - 0.5);
         }
     }
 

@@ -32,7 +32,7 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
                 return true;
             }
         } else {
-            playerEntity.displayClientMessage(NO_TASK, true);
+            playerEntity.sendOverlayMessage(NO_TASK);
         }
         return false;
     }

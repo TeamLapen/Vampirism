@@ -1263,7 +1263,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             vec31 = vec31.yRot(-player.getYRot() * (float) Math.PI / 180.0F);
             vec31 = vec31.add(player.getX(), player.getY() + (double) player.getEyeHeight(), player.getZ());
 
-            player.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
+            player.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, Items.APPLE), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
     }
 

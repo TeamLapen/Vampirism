@@ -13,12 +13,12 @@ import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.serialization.StreamCodecExtension;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -27,6 +27,7 @@ import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,8 +45,10 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     protected final int cookingTime;
     @Nullable
     private PlacementInfo placementInfo;
+    private final CommonInfo info;
 
-    public AlchemicalCauldronRecipe(@NotNull String groupIn, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull List<Holder<ISkill<?>>> skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+    public AlchemicalCauldronRecipe(CommonInfo info, @NotNull String groupIn, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull List<Holder<ISkill<?>>> skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+        this.info = info;
         this.group = groupIn;
         this.ingredient = ingredientIn;
         this.result = resultIn;
@@ -54,6 +57,11 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
         this.fluid = fluidIn;
         this.skills = skillsIn;
         this.reqLevel = reqLevelIn;
+    }
+
+    @Override
+    public boolean showNotification() {
+        return this.info.showNotification();
     }
 
     public boolean canBeCooked(int level, @NotNull ISkillHandler<IHunterPlayer> skillHandler) {
@@ -75,7 +83,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     }
 
     @Override
-    public ItemStack assemble(AlchemicalCauldronRecipeInput p_345149_, HolderLookup.Provider p_346030_) {
+    public ItemStack assemble(AlchemicalCauldronRecipeInput p_345149_) {
         return this.result.copy();
     }
 
@@ -117,6 +125,8 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
         return this.group;
     }
 
+
+
     @NotNull
     @Override
     public RecipeSerializer<AlchemicalCauldronRecipe> getSerializer() {
@@ -142,6 +152,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
 
     public static final MapCodec<AlchemicalCauldronRecipe> CODEC = RecordCodecBuilder.mapCodec(inst ->
             inst.group(
+                    CommonInfo.MAP_CODEC.fieldOf("info").forGetter(p -> p.info),
                     Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
                     Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
                     Codec.either(Ingredient.CODEC, FluidStack.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
@@ -153,6 +164,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
             ).apply(inst, AlchemicalCauldronRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AlchemicalCauldronRecipe> STREAM_CODEC = StreamCodecExtension.composite(
+            CommonInfo.STREAM_CODEC, x -> x.info,
             ByteBufCodecs.STRING_UTF8, AlchemicalCauldronRecipe::group,
             Ingredient.CONTENTS_STREAM_CODEC, AlchemicalCauldronRecipe::getIngredient,
             ByteBufCodecs.either(Ingredient.CONTENTS_STREAM_CODEC, FluidStack.STREAM_CODEC), AlchemicalCauldronRecipe::getFluid,

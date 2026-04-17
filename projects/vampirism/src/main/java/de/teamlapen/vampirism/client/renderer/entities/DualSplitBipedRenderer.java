@@ -39,7 +39,7 @@ public abstract class DualSplitBipedRenderer<TEntity extends Mob,TRenderState ex
     protected abstract boolean splitRenderingEnabled();
 
     private void setHeadVisibility(TModel model, boolean visible) {
-        model.setAllVisible(!visible);
+        model.allParts().forEach(part -> part.visible = !visible);
         model.head.visible = visible;
         model.hat.visible = visible;
     }

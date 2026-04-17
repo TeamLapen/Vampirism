@@ -368,7 +368,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                         trainee = player;
                         this.getNavigation().stop();
                     } else {
-                        player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.occupied"), true);
+                        player.sendOverlayMessage(Component.translatable("dialogue.vampirism.hunter.occupied"));
                     }
                     return InteractionResult.SUCCESS;
                 } else if (hunterLevel > 0) {
@@ -379,25 +379,25 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
 
                         if (this.getEntityLevel() > 0) {
                             if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
-                                player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.unavailable"), true);
+                                player.sendOverlayMessage(Component.translatable("dialogue.vampirism.hunter_minion.unavailable"));
                             }
                         } else {
                             boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(PlayerMinionController::hasFreeMinionSlot).orElse(false);
-                            player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.available"), false);
+                            player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_minion.available"));
                             if (heldItem.getItem() == ModItems.HUNTER_MINION_EQUIPMENT.get()) {
                                 if (!freeSlot) {
-                                    player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.no_free_slot"), false);
+                                    player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_minion.no_free_slot"));
                                 } else {
-                                    player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.start_serving"), false);
+                                    player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_minion.start_serving"));
                                     convertToMinion(player);
                                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
                                 }
                             } else if (freeSlot) {
-                                player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_minion.require_equipment", Component.translatable(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())), false);
+                                player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_minion.require_equipment", Component.translatable(ModItems.HUNTER_MINION_EQUIPMENT.get().getDescriptionId())));
                             }
                         }
                     } else {
-                        player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.cannot_train_further"), false);
+                        player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter.cannot_train_further"));
                     }
                     return InteractionResult.SUCCESS;
                 }

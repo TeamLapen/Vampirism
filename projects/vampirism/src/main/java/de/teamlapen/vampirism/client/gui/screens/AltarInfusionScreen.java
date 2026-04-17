@@ -42,21 +42,15 @@ public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionMe
     }
 
     @Override
-    public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(graphics, mouseX, mouseY);
-    }
-
-    @Override
-    protected void renderBg(GuiGraphicsExtractor graphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_LOCATION, this.leftPos, this.topPos, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
-        this.pureBloodIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
-        this.humanHeartIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
-        this.vampireBookIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
+        this.pureBloodIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
+        this.humanHeartIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
+        this.vampireBookIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.hoveredSlot != null && hoveredSlot.index >= 0 && this.hoveredSlot.index < 3) {
             var requirementsOpt = this.menu.getRequirements();
             if (requirementsOpt.isPresent()) {
@@ -92,12 +86,12 @@ public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionMe
 
                 if (tooltip != null && requiredCount> 0) {
                     ClientTooltipComponent clientTooltip = ClientTooltipComponent.create(tooltip.getVisualOrderText());
-                    graphics.renderTooltip(font, List.of(clientTooltip), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, stack.get(DataComponents.TOOLTIP_STYLE));
+                    graphics.tooltip(font, List.of(clientTooltip), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, stack.get(DataComponents.TOOLTIP_STYLE));
                     return;
                 }
             }
         }
 
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
     }
 }

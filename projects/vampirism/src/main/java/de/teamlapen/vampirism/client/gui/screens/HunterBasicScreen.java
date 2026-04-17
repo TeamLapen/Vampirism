@@ -30,7 +30,7 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
     }
 
     @Override
-    protected void renderErrorIcon(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int x, int y) {
+    protected void extractErrorIcon(GuiGraphicsExtractor graphics, int xo, int yo) {
 
         Component component = switch (this.menu.canLevelUp()) {
             case WRONG_LEVEL -> Component.translatable("dialogue.vampirism.hunter.cannot_train_further");
@@ -38,7 +38,7 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
             case CAN_LEVEL_UP -> Component.translatable("dialogue.vampirism.hunter.will_train_you");
         };
 
-        GuiGraphicsExtractor.setTooltipForNextFrame(this.font, this.font.split(component, 120), x + 45, y + 23);
+        graphics.setTooltipForNextFrame(this.font, this.font.split(component, 120), xo + 45, yo + 23);
 
 //        GuiGraphicsExtractor.drawWordWrap(this.font, component, x + 50, y + 12, 120, -1);
     }
@@ -70,8 +70,8 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, float partialTicks, int x, int y) {
-        super.renderBg(GuiGraphicsExtractor, partialTicks, x, y);
-        this.bloodIcon.render(this.menu, GuiGraphicsExtractor, partialTicks, this.leftPos, this.topPos);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
+        this.bloodIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
     }
 }

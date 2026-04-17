@@ -59,7 +59,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
         super(type, world, false);
         saveHome = true;
         hasArms = true;
-        ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
+        this.getNavigation().setCanOpenDoors(true);
         this.peaceful = true;
         this.setDontDropEquipment();
     }
@@ -137,10 +137,10 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                         this.trainee = player;
                         this.getNavigation().stop();
                     } else {
-                        player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter.occupied"), false);
+                        player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter.occupied"));
                     }
                 } else {
-                    player.displayClientMessage(Component.translatable("dialogue.vampirism.hunter_trainer.wrong_level"), false);
+                    player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_trainer.wrong_level"));
                 }
 
             }
