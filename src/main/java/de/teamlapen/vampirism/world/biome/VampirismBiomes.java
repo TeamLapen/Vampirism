@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.world.biome;
 
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.world.gen.VampirismFeatures;
@@ -22,8 +23,8 @@ public class VampirismBiomes {
     public static @NotNull Biome createVampireForest(HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
         MobSpawnSettings.Builder mobSpawnBuilder = new MobSpawnSettings.Builder();
         mobSpawnBuilder.creatureGenerationProbability(0.25f);
-        mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 80, 1, 3));
-        mobSpawnBuilder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE_BARON.get(), 27, 1, 1));
+        mobSpawnBuilder.addSpawn(VReference.VAMPIRE_CREATURE_TYPE, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 80, 1, 3));
+        mobSpawnBuilder.addSpawn(VReference.VAMPIRE_CREATURE_TYPE, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE_BARON.get(), 27, 1, 1));
         mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 60, 2, 4));
         mobSpawnBuilder.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 80, 3, 6));
 

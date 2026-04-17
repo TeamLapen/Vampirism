@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.world.gen;
 
 import com.google.common.collect.ImmutableList;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModFeatures;
@@ -116,8 +117,8 @@ public class VampirismFeatures {
     public static void createBiomeModifier(BootstapContext<BiomeModifier> context) {
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<PlacedFeature> placedFeatureLookup = context.lookup(Registries.PLACED_FEATURE);
-        context.register(VAMPIRE_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModTags.Biomes.HasSpawn.VAMPIRE), biomeLookup.getOrThrow(ModTags.Biomes.NoSpawn.VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.VAMPIRE.get(), 80, 1, 3, MobCategory.MONSTER)));
-        context.register(ADVANCED_VAMPIRE_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModTags.Biomes.HasSpawn.ADVANCED_VAMPIRE), biomeLookup.getOrThrow(ModTags.Biomes.NoSpawn.ADVANCED_VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.ADVANCED_VAMPIRE.get(), 30, 1, 3, MobCategory.MONSTER)));
+        context.register(VAMPIRE_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModTags.Biomes.HasSpawn.VAMPIRE), biomeLookup.getOrThrow(ModTags.Biomes.NoSpawn.VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.VAMPIRE.get(), 80, 1, 3, VReference.VAMPIRE_CREATURE_TYPE)));
+        context.register(ADVANCED_VAMPIRE_SPAWN, ExtendedAddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModTags.Biomes.HasSpawn.ADVANCED_VAMPIRE), biomeLookup.getOrThrow(ModTags.Biomes.NoSpawn.ADVANCED_VAMPIRE), new ExtendedAddSpawnsBiomeModifier.ExtendedSpawnData(ModEntities.ADVANCED_VAMPIRE.get(), 30, 1, 3, VReference.VAMPIRE_CREATURE_TYPE)));
         context.register(VAMPIRE_DUNGEON_MODIFIER, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(biomeLookup.getOrThrow(ModTags.Biomes.HasStructure.VAMPIRE_DUNGEON), HolderSet.direct(placedFeatureLookup.getOrThrow(VampirismFeatures.VAMPIRE_DUNGEON_PLACED)), GenerationStep.Decoration.UNDERGROUND_STRUCTURES));
     }
 }

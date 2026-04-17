@@ -3,7 +3,7 @@
   "biomes": "#vampirism:has_spawn/advanced_vampire",
   "excludedBiomes": "#vampirism:no_spawn/advanced_vampire",
   "spawners": {
-    "category": "monster",
+    "category": "vampirism:vampire",
     "super": {
       "type": "vampirism:advanced_vampire",
       "maxCount": 3,
