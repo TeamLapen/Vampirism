@@ -41,6 +41,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         generateWeapons();
         generateCrossbows();
         generateOilBottle();
+        generateSerumInjection();
         generateCrucifix();
         createDefaultModels();
         createAlchemicalFire();
@@ -90,6 +91,11 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     protected void generateOilBottle() {
         var bloodBottle = ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.OIL_BOTTLE.asItem(), TextureMapping.layered(mod("item/oil_bottle"), mod("item/oil_bottle_overlay")), this.modelOutput);
         this.itemModelOutput.accept(ModItems.OIL_BOTTLE.asItem(), ItemModelUtils.tintedModel(bloodBottle, BLANK_LAYER, new OilBottleTint()));
+    }
+
+    public void generateSerumInjection() {
+        Identifier identifier = this.generateLayeredItem(ModItems.SERUM_INJECTION.get(), ModelLocationUtils.getModelLocation(ModItems.SERUM_INJECTION.get()).withSuffix("_overlay"), ModelLocationUtils.getModelLocation(ModItems.SERUM_INJECTION.get()));
+        this.addPotionTint(ModItems.SERUM_INJECTION.get(), identifier);
     }
 
     protected void generateCrossbows() {

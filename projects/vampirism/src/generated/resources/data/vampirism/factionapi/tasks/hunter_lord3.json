@@ -26,7 +26,7 @@
   "reward": {
     "type": "factionapi:lord_level",
     "description": {
-      "translate": "task_reward.factionapi.lord_level_reward",
+      "translate": "task_reward.factionapi.lord_level",
       "with": [
         3
       ]
