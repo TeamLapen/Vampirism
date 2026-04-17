@@ -3,12 +3,12 @@
   "biomes": "#vampirism:has_spawn/vampire",
   "excludedBiomes": "#vampirism:no_spawn/vampire",
   "spawners": {
-    "category": "vampirism:vampire",
+    "category": "vampirism_vampire",
     "super": {
       "type": "vampirism:vampire",
       "maxCount": 3,
       "minCount": 1,
-      "weight": 60
+      "weight": 80
     }
   }
 }

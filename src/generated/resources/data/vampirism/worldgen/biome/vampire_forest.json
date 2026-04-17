@@ -103,8 +103,8 @@
     "misc": [],
     "monster": [],
     "underground_water_creature": [],
-    "vampirism:hunter": [],
-    "vampirism:vampire": [
+    "vampirism_hunter": [],
+    "vampirism_vampire": [
       {
         "type": "vampirism:vampire",
         "maxCount": 3,
