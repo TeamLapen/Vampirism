@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.common.world.items.recipes;
 
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModRecipes;
+import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
@@ -29,6 +31,10 @@ public class SerumFromPotionRecipe extends CustomRecipe {
             if (stack.isEmpty()) continue;
 
             if (stack.is(Items.POTION)) {
+                PotionContents contents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+                if (contents.potion().isPresent() && SerumInjectionItem.isBlockedPotion(contents.potion().get())) {
+                    return false;
+                }
                 hasPotion = true;
             } else if (stack.is(ModItems.SYRINGE_EMPTY.get())) {
                 hasSyringe = true;

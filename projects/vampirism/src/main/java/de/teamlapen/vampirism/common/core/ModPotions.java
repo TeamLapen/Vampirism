@@ -33,7 +33,6 @@ public class ModPotions {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, REFERENCE.MODID);
 
     //Hunter
-
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SLOW_FALLING = POTIONS.register("very_long_slow_falling", () -> new HunterPotion("slow_falling", new MobEffectInstance(MobEffects.SLOW_FALLING, 48000)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_LUCK = POTIONS.register("long_luck", () -> new HunterPotion("luck", new MobEffectInstance(MobEffects.LUCK, 60000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WEAKNESS = POTIONS.register("very_long_weakness", () -> new HunterPotion("weakness", new MobEffectInstance(MobEffects.WEAKNESS, 48000)));

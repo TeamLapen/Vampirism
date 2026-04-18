@@ -1063,7 +1063,8 @@
   "message.vampirism.restriction.hunter_clothing": "The stench of garlic is so pungent that I'm wasting away...",
   "message.vampirism.restriction.holy": "Something sinful within me recoils in agony... I shouldn't use this",
   "message.vampirism.restriction.heavy": "This is too heavy for me... I cannot wield it",
-  "message.vampirism.restriction.oiled": "I cannot handle oiled items",
+  "message.vampirism.restriction.oiled": "It's oily... I'm not going to wield it",
+  "message.vampirism.restriction.syringe": "I feel like I'm going to pierce my arm with this...",
 
   "message.vampirism.action.bat.in_sun": "You cannot transform into a bat under the sun",
   "message.vampirism.action.bat.has_umbrella": "You cannot transform into a bat with an umbrella equipped",
@@ -1732,6 +1733,8 @@
   "vampirism.configuration.applicableOilPickaxeReverse.tooltip": "When enabled, the applicable oil pickaxe item tag acts as a whitelist instead of a blacklist for pickaxe oil application.",
   "vampirism.configuration.applicableOilSwordReverse": "Applicable Oil Sword Reverse",
   "vampirism.configuration.applicableOilSwordReverse.tooltip": "When enabled, the applicable oil sword item tag acts as a whitelist instead of a blacklist for sword oil application.",
+  "vampirism.configuration.blockedSerumPotions": "Blocked Serum Potions",
+  "vampirism.configuration.blockedSerumPotions.tooltip": "List of potion ids that cannot be crafted into or used as serum injections. Uses potion IDs e.g. [\"minecraft:healing\"]. Use wiki or commands to check the actual ids, some may not match their names.",
 
   "vampirism.configuration.lordSpeedEnabled": "Lord Speed Enabled",
   "vampirism.configuration.lordSpeedEnabled.tooltip": "When enabled, vampire lords can use the speed action.",

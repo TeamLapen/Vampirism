@@ -5,11 +5,11 @@ import net.neoforged.fml.event.config.ModConfigEvent;
 
 public class ConfigHelper {
 
-    private int ticksPerBlood;
+    private int darkStalkerTicksPerBlood;
     private int garlicFinderAuraColor;
 
-    public int getTicksPerBlood() {
-        return this.ticksPerBlood;
+    public int getDarkStalkerTicksPerBlood() {
+        return this.darkStalkerTicksPerBlood;
     }
 
     public int getGarlicFinderAuraColor() {
@@ -17,8 +17,8 @@ public class ConfigHelper {
     }
 
     void onBalanceConfigChanged(ModConfigEvent event) {
-        double asDouble = ModConfig.balance().vaDarkStalkerBloodConsumption.getAsDouble();
-        this.ticksPerBlood = (int) (VReference.FOOD_TO_FLUID_BLOOD / asDouble);
+        double darkStalkerBloodConsumption = ModConfig.balance().vaDarkStalkerBloodConsumption.getAsDouble();
+        this.darkStalkerTicksPerBlood = (int) (VReference.FOOD_TO_FLUID_BLOOD / darkStalkerBloodConsumption);
     }
 
     void onClientConfigChanged(ModConfigEvent event) {

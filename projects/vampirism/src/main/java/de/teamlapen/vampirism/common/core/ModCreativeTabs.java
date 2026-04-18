@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
+import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -452,6 +453,7 @@ public class ModCreativeTabs {
     private static void insertPotionTypes(BuildCreativeModeTabContentsEvent event, HolderLookup<Potion> potions, Item item, CreativeModeTab.TabVisibility tabVisibility, FeatureFlagSet requiredFeatures) {
         potions.listElements()
                 .filter(potion -> potion.value().isEnabled(requiredFeatures))
+                .filter(potion -> !SerumInjectionItem.isBlockedPotion(potion))
                 .map(potion -> PotionContents.createItemStack(item, potion))
                 .forEach(stack -> event.accept(stack, tabVisibility));
     }

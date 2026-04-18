@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.util.RegUtil;
 import de.teamlapen.vampirism.common.world.items.BloodBottleItem;
+import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
 import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import net.minecraft.core.Holder;
@@ -64,6 +65,7 @@ public class SpecialRecipeMaker {
 
     public static List<RecipeHolder<CraftingRecipe>> makeSerumFromPotionRecipes() {
         return BuiltInRegistries.POTION.listElements()
+                .filter(potion -> !SerumInjectionItem.isBlockedPotion(potion))
                 .map(potion -> {
                     ItemStack potionStack = new ItemStack(Items.POTION);
                     potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
