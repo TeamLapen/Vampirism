@@ -22,6 +22,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -33,18 +34,18 @@ import java.util.*;
 public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
 
     public static @NotNull ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemLike result, int count) {
-        return new ShapelessWeaponTableRecipeBuilder(holderGetter, category, new ItemStack(result, count));
+        return new ShapelessWeaponTableRecipeBuilder(holderGetter, category, new ItemStackTemplate(result.asItem(), count));
     }
 
     public static @NotNull ShapelessWeaponTableRecipeBuilder shapelessWeaponTable(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemLike result) {
-        return new ShapelessWeaponTableRecipeBuilder(holderGetter, category, new ItemStack(result));
+        return new ShapelessWeaponTableRecipeBuilder(holderGetter, category, new ItemStackTemplate(result.asItem()));
     }
 
     private int lava = 1;
     private final List<Holder<ISkill<?>>> skills = new LinkedList<>();
     private int level = 1;
 
-    public ShapelessWeaponTableRecipeBuilder(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStack resultIn) {
+    public ShapelessWeaponTableRecipeBuilder(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStackTemplate resultIn) {
         super(holderGetter, category, resultIn);
     }
 
@@ -95,10 +96,10 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
         this.skills.forEach(skill -> {
             advancement$builder.addCriterion("has_skill_" + skill.unwrapKey().map(ResourceKey::identifier).map(Identifier::toString).orElseThrow().replace(":", "_"), FactionAdvancements.TRIGGER_SKILL_UNLOCKED.get().createCriterion(new SkillUnlockedCriterionTrigger.TriggerInstance(Optional.empty(), skill.value())));
         });
-        this.criteria.forEach(advancement$builder::addCriterion);
+        this.advancementBuilder.criteria.forEach(advancement$builder::addCriterion);
         ShapelessWeaponTableRecipe shapelessrecipe = new ShapelessWeaponTableRecipe(
-                Objects.requireNonNullElse(this.group, ""),
-                RecipeBuilder.determineBookCategory(this.category),
+                RecipeBuilder.createCraftingCommonInfo(true),
+                RecipeBuilder.createCraftingBookInfo(this.category, this.group),
                 NonNullList.copyOf(this.ingredients),
                 this.result,
                 level,
@@ -130,7 +131,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     private void ensureValidMod(ResourceKey<Recipe<?>> p_379745_) {
-        if (this.criteria.isEmpty()) {
+        if (this.advancementBuilder.criteria.isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + p_379745_.identifier());
         }
     }

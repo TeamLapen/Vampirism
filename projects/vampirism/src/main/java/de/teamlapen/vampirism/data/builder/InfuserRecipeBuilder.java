@@ -16,6 +16,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
@@ -101,8 +102,8 @@ public class InfuserRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public @NotNull Item getResult() {
-        return this.result.getItem();
+    public @NonNull ResourceKey<Recipe<?>> defaultId() {
+        return RecipeBuilder.getDefaultRecipeId(this.result);
     }
 
     @Override
@@ -112,7 +113,8 @@ public class InfuserRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(key))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
-        var recipe = new InfuserRecipe(this.group, this.ingredients.get(0), this.ingredients.get(1), this.ingredients.get(2), this.ingredients.get(3), this.input, this.results.get(0), this.results.get(1), this.results.get(2), Optional.ofNullable(this.result), this.burnTime);
+        Recipe.CommonInfo commonInfo = RecipeBuilder.createCraftingCommonInfo(true);
+        var recipe = new InfuserRecipe(commonInfo, this.group, this.ingredients.get(0), this.ingredients.get(1), this.ingredients.get(2), this.ingredients.get(3), this.input, this.results.get(0), this.results.get(1), this.results.get(2), Optional.ofNullable(this.result), this.burnTime);
         recipeOutput.accept(key, recipe, advancement.build(key.identifier().withPrefix("recipes/infuser/")));
     }
 

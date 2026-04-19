@@ -10,9 +10,11 @@ import de.teamlapen.vampirism.common.world.items.BloodBottleItem;
 import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -30,6 +32,12 @@ public class ItemDataUtils {
 
     public static ItemStack createPotion(Holder<Potion> potion) {
         return PotionContents.createItemStack(Items.POTION, potion);
+    }
+
+    public static ItemStackTemplate template(Holder<Potion> potion) {
+        return new ItemStackTemplate(Items.POTION, DataComponentPatch.builder()
+                .set(DataComponents.POTION_CONTENTS, new PotionContents(potion))
+                .build());
     }
 
     public static ItemStack setEnchantment(ItemStack stack, Holder<Enchantment> enchantment, int level) {
@@ -57,24 +65,23 @@ public class ItemDataUtils {
         return setOil(itemStack, oil);
     }
 
-    public static ItemStack createBloodBottle(int blood) {
-        ItemStack itemStack = new ItemStack(ModItems.BLOOD_BOTTLE.get());
-        itemStack.set(ModDataComponents.BOTTLE_BLOOD.get(), new BottleBlood(blood));
-        return itemStack;
+    public static ItemStackTemplate createBloodBottle(int blood) {
+        return new ItemStackTemplate(ModItems.BLOOD_BOTTLE.get(), DataComponentPatch.builder()
+                .set(ModDataComponents.BOTTLE_BLOOD.get(), new BottleBlood(blood))
+                .build());
     }
 
-    public static ItemStack createFilledBloodBottle() {
+    public static ItemStackTemplate createFilledBloodBottle() {
         return createBloodBottle(BloodBottleItem.AMOUNT);
     }
 
-    public static ItemStack createBloodContainer(int blood) {
-        ItemStack itemStack = new ItemStack(ModBlocks.BLOOD_CONTAINER.get());
-        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), Math.clamp(blood, 0, BloodContainerBlockEntity.CAPACITY));
-        itemStack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
-        return itemStack;
+    public static ItemStackTemplate createBloodContainer(int blood) {
+        return new ItemStackTemplate(ModBlocks.BLOOD_CONTAINER.asItem(), DataComponentPatch.builder()
+                .set(ModDataComponents.BLOOD_CONTAINER.get(), SimpleFluidContent.copyOf(new FluidStack(ModFluids.BLOOD.get(), Math.clamp(blood, 0, BloodContainerBlockEntity.CAPACITY))))
+                .build());
     }
 
-    public static ItemStack createFilledBloodContainer() {
+    public static ItemStackTemplate createFilledBloodContainer() {
         return createBloodContainer(BloodContainerBlockEntity.CAPACITY);
     }
 }

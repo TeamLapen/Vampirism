@@ -71,9 +71,9 @@ public abstract class DiffuserBlock extends BaseContainerBlock {
         getBlockEntity(level, pos).ifPresent(blockEntity -> {
             if (state.getValue(LIT)) {
                 for (int i = 0; i < blockEntity.getParticleNumber(level, pos, state, blockEntity); i++) {
-                    double x = pos.getX() - 0.15 + level.random.nextDouble() * 1.3;
-                    double y = pos.getY() + 4 / 16d + level.random.nextDouble() / 3;
-                    double z = pos.getZ() - 0.15 + level.random.nextDouble() * 1.3;
+                    double x = pos.getX() - 0.15 + level.getRandom().nextDouble() * 1.3;
+                    double y = pos.getY() + 4 / 16d + level.getRandom().nextDouble() / 3;
+                    double z = pos.getZ() - 0.15 + level.getRandom().nextDouble() * 1.3;
 
                     level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 0.02, 0.0);
                 }

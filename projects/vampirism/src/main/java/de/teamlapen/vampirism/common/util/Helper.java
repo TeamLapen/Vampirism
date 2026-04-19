@@ -94,7 +94,7 @@ public class Helper {
                         }
                     } else if (state.canOcclude() && (state.isFaceSturdy(world, pos, Direction.DOWN) || state.isFaceSturdy(world, pos, Direction.UP))) { //solid block blocks the light (fence is solid too?)
                         return false;
-                    } else if (state.getLightBlock() > 0) { //if not solid, but propagates no light
+                    } else if (state.getLightDampening() > 0) { //if not solid, but propagates no light
                         return false;
                     }
                 }
@@ -111,7 +111,7 @@ public class Helper {
 
     @NotNull
     public static EnumStrength getGarlicStrengthAt(LevelAccessor world, @NotNull BlockPos pos) {
-        return world instanceof Level ? VampirismApi.garlicHandler((Level) world).getStrengthAtChunk(new ChunkPos(pos)) : EnumStrength.NONE;
+        return world instanceof Level ? VampirismApi.garlicHandler((Level) world).getStrengthAtChunk(ChunkPos.containing(pos)) : EnumStrength.NONE;
     }
 
     @NotNull

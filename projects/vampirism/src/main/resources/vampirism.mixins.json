@@ -44,11 +44,9 @@
     "accessor.ShapedRecipeAccessor",
     "accessor.ShapedRecipeBuilderAccessor",
     "accessor.SlotAccessor",
-    "accessor.SpreadingSnowyDirtBlockAccessor",
     "accessor.StructureTemplatePoolAccessor",
     "accessor.TargetConditionAccessor",
     "accessor.VanillaBlockLootAccessor",
-    "accessor.VillagerAccessor",
     "accessor.VillagerHostilesSensorAccessor",
     "accessor.WalkAnimationStateAccessor",
     "client.ItemInHandRendererMixin"

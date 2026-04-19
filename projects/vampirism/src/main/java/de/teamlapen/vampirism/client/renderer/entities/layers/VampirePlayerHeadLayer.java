@@ -41,7 +41,7 @@ public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends Playe
             int fangType = Math.max(0, Math.min(renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_FANG_TYPE, 0), fangOverlays.length - 1));
             ModelPart head = this.getParentModel().head;
 
-            nodeCollector.submitModelPart(head, poseStack,renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_GLOWING_EYES, false) ? RenderTypes.eyes(eyeOverlays[eyeType]) : RenderTypes.entityCutoutNoCull(eyeOverlays[eyeType]),packedLight, OverlayTexture.NO_OVERLAY, null);
+            nodeCollector.submitModelPart(head, poseStack,renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_GLOWING_EYES, false) ? RenderTypes.eyes(eyeOverlays[eyeType]) : RenderTypes.entityCutout(eyeOverlays[eyeType]),packedLight, OverlayTexture.NO_OVERLAY, null);
             nodeCollector.submitModelPart(head, poseStack,RenderTypes.entityCutout(fangOverlays[fangType]),packedLight, OverlayTexture.NO_OVERLAY, null);
         }
     }

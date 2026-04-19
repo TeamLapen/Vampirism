@@ -141,7 +141,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     public boolean canOpen(Player player) {
         if (super.canOpen(player)) {
             if (!Helper.isHunter(player)) {
-                player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
+                player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
                 return false;
             }
             if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.BASIC_ALCHEMY)) {
@@ -151,10 +151,10 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
                 } else if (ownerID.equals(player.getUUID())) {
                     return true;
                 } else {
-                    player.displayClientMessage(Component.translatable("message.vampirism.alchemical_cauldron.other_owner", getOwnerName()), true);
+                    player.sendOverlayMessage(Component.translatable("message.vampirism.alchemical_cauldron.other_owner", getOwnerName()));
                 }
             } else {
-                player.displayClientMessage(FactionRestriction.MESSAGE_MISSING_SKILLS, true);
+                player.sendOverlayMessage(FactionRestriction.MESSAGE_MISSING_SKILLS);
             }
         }
         return false;
@@ -166,7 +166,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return this.items;
     }
 
@@ -178,17 +178,6 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     @Override
     public Component getDisplayName() {
         return Component.translatable("container.vampirism.alchemical_cauldron.owner", getOwnerName());
-    }
-
-    public int getLiquidColorClient() {
-        return Optional.ofNullable(this.items.getFirst().getCapability(Capabilities.Fluid.ITEM, null))
-                .map(fluidHandler -> ResourceHandlerUtil.findExtractableResource(fluidHandler, x -> true, null))
-                .map(resource -> resource.toStack(1))
-                .map(stack -> IClientFluidTypeExtensions.of(stack.getFluid()).getTintColor(stack))
-                .orElseGet(() -> {
-                    var color = this.items.getFirst().getItemHolder().getData(ModDataMaps.LIQUID_COLOR_MAP);
-                    return color != null ? color : 0x00003B;
-                });
     }
 
     public Component getOwnerName() {
@@ -333,7 +322,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
                 pBlockEntity.litDuration = pBlockEntity.litTime;
                 if (pBlockEntity.isLit()) {
                     flag1 = true;
-                    var remainder = fuel.getCraftingRemainder();
+                    var remainder = fuel.getCraftingRemainder().create();
                     if (!remainder.isEmpty()) {
                         pBlockEntity.items.set(3, remainder);
                     } else if (flag3) {
@@ -407,7 +396,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
 
     private static boolean canBurn(RegistryAccess pRegistryAccess, @Nullable RecipeHolder<AlchemicalCauldronRecipe> pRecipe, NonNullList<ItemStack> pInventory, int pMaxStackSize, AlchemicalCauldronBlockEntity furnace) {
         if (!pInventory.get(0).isEmpty() && pRecipe != null) {
-            ItemStack itemstack = pRecipe.value().assemble(new AlchemicalCauldronRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
+            ItemStack itemstack = pRecipe.value().assemble(new AlchemicalCauldronRecipeInput(furnace.getIngredient(), furnace.getFluid()));
             if (itemstack.isEmpty()) {
                 return false;
             } else {
@@ -430,7 +419,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
         if (pRecipe != null && canBurn(pRegistryAccess, pRecipe, pInventory, pMaxStackSize, furnace)) {
             ItemStack fluid = pInventory.get(AlchemicalCauldronMenu.FLUID_SLOT);
             ItemStack ingredient = pInventory.get(AlchemicalCauldronMenu.INGREDIENT_SLOT);
-            ItemStack newResult = pRecipe.value().assemble(new AlchemicalCauldronRecipeInput(furnace.getIngredient(), furnace.getFluid()), pRegistryAccess);
+            ItemStack newResult = pRecipe.value().assemble(new AlchemicalCauldronRecipeInput(furnace.getIngredient(), furnace.getFluid()));
             ItemStack currentResult = pInventory.get(AlchemicalCauldronMenu.RESULT_SLOT);
             if (currentResult.isEmpty()) {
                 pInventory.set(AlchemicalCauldronMenu.RESULT_SLOT, newResult.copy());

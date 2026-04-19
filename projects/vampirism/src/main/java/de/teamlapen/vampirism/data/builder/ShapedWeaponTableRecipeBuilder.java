@@ -103,13 +103,15 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 
     @Override
     public void save(RecipeOutput output, @NotNull ResourceKey<Recipe<?>> recipeId) {
-        ShapedRecipePattern shapedRecipePattern = this.ensureValid(recipeId);
+        ShapedRecipePattern shapedRecipePattern = ShapedRecipePattern.of(key(), rows());
         Advancement.Builder advancement = output.advancement()
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId))
                 .rewards(AdvancementRewards.Builder.recipe(recipeId))
                 .requirements(AdvancementRequirements.Strategy.OR);
-        this.criteria.forEach(advancement::addCriterion);
-        ShapedWeaponTableRecipe recipe = new ShapedWeaponTableRecipe(Objects.requireNonNullElse(this.group, ""), RecipeBuilder.determineBookCategory(((ShapedRecipeBuilderAccessor) this).getCategory()), shapedRecipePattern, new ItemStack(result, count), level, skills, lava);
+        this.advancementBuilder().criteria.forEach(advancement::addCriterion);
+        ShapedWeaponTableRecipe recipe = new ShapedWeaponTableRecipe(
+                RecipeBuilder.createCraftingCommonInfo(this.showNotification),
+                RecipeBuilder.createCraftingBookInfo(this.category, this.group), shapedRecipePattern, result, level, skills, lava);
         output.accept(recipeId, recipe, advancement.build(recipeId.identifier().withPrefix("recipes/weapontable/")));
     }
 

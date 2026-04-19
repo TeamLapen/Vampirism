@@ -104,7 +104,7 @@ public class AltarInfusionBlock extends BaseContainerBlock implements SimpleWate
         if (!(level.getBlockEntity(pos) instanceof AltarInfusionBlockEntity blockEntity) || level.isClientSide()) return InteractionResult.SUCCESS;
 
         if (!Helper.isVampire(player)) {
-            player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.VAMPIRE.get()), true);
+            player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.VAMPIRE.get()));
             return InteractionResult.SUCCESS;
         }
 
@@ -116,7 +116,7 @@ public class AltarInfusionBlock extends BaseContainerBlock implements SimpleWate
                 blockEntity.startRitual(player);
                 return InteractionResult.SUCCESS;
             } else if (result != AltarInfusionBlockEntity.Result.MISSING_ITEMS) {
-                player.displayClientMessage(result.getMessage(), true);
+                player.sendOverlayMessage(result.getMessage());
                 return InteractionResult.SUCCESS;
             }
         }

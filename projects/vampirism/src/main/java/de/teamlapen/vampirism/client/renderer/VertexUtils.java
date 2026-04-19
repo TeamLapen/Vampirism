@@ -1,17 +1,21 @@
 package de.teamlapen.vampirism.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.fluid.FluidTintSource;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,9 +35,11 @@ public class VertexUtils {
 
 
         FluidState fluidState = fluidStack.getFluid().defaultFluidState();
-        TextureAtlasSprite[] sprites = FluidSpriteCache.getFluidSprites(level, pos, fluidState);
-        int tintColor = IClientFluidTypeExtensions.of(fluidState).getTintColor(fluidState, level, pos);
-        ChunkSectionLayer renderLayer = ItemBlockRenderTypes.getRenderLayer(fluidState);
+
+        FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluidState);
+        ChunkSectionLayer renderLayer = fluidModel.layer();
+        int tintColor = fluidModel.fluidTintSource() instanceof FluidTintSource source ? source.color(fluidState) : 0;
+        TextureAtlasSprite still = fluidModel.stillMaterial().sprite();
 
         RenderType type = switch (renderLayer) {
             case SOLID -> RenderTypes.solidMovingBlock();
@@ -41,7 +47,6 @@ public class VertexUtils {
             case CUTOUT -> RenderTypes.cutoutMovingBlock();
         };
 
-        TextureAtlasSprite still = sprites[0];
 
         float u1 = still.getU(0);
         float u2 = still.getU(1);

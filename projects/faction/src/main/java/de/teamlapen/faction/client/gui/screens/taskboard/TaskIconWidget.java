@@ -19,6 +19,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
@@ -88,9 +89,9 @@ public class TaskIconWidget extends AbstractWidget {
     public static TaskIconWidget createReward(ITaskMenu menu, ITaskInstance taskInstance, Task task) {
         ItemStack stack;
         String progressText = null;
-        if (taskInstance.getReward() instanceof ItemReward.Instance(ItemStack rewardStack)) {
-            stack = rewardStack;
-            progressText = String.valueOf(rewardStack.getCount());
+        if (taskInstance.getReward() instanceof ItemReward.Instance(ItemStackTemplate rewardStack)) {
+            stack = rewardStack.create();
+            progressText = String.valueOf(rewardStack.count());
         } else {
             stack = PAPER;
         }

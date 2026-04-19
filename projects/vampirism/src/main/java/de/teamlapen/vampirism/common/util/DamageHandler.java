@@ -137,7 +137,7 @@ public class DamageHandler {
         if (!(entity.level() instanceof ServerLevel level)) return;
         if (!entity.isAlive()) return;
         boolean vampire = Helper.isVampire(entity);
-        if (entity.isAffectedByPotions() && (vampire || entity.getType().is(EntityTypeTags.UNDEAD))) {
+        if (entity.isAffectedByPotions() && (vampire || entity.typeHolder().is(EntityTypeTags.UNDEAD))) {
             if (distSq < 16.0D) {
                 double affect = 1.0D - Math.sqrt(distSq) / 4.0D;
 

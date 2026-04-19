@@ -84,7 +84,7 @@ public class WeaponTableBlock extends BaseHorizontalBlock {
             if (canUse(player)) {
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), NAME), pos);
             } else {
-                player.displayClientMessage(Helper.isHunter(player) ? FactionRestriction.MESSAGE_MISSING_SKILLS : FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
+                player.sendOverlayMessage(Helper.isHunter(player) ? FactionRestriction.MESSAGE_MISSING_SKILLS : FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
             }
         }
 

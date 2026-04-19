@@ -11,36 +11,37 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
-public record ItemRequirement(Identifier id, ItemStack stack, Component description) implements TaskRequirement.Requirement<Item> {
+public record ItemRequirement(Identifier id, ItemStackTemplate stack, Component description) implements TaskRequirement.Requirement<Item> {
 
     public static final MapCodec<ItemRequirement> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
                 Identifier.CODEC.optionalFieldOf("id").forGetter(i -> java.util.Optional.of(i.id)),
-                ItemStack.CODEC.fieldOf("item").forGetter(i -> i.stack),
+                ItemStackTemplate.CODEC.fieldOf("item").forGetter(i -> i.stack),
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(i -> i.description)
-        ).apply(inst, (id, item, desc) -> new ItemRequirement(id.orElseGet(() -> RegUtil.id(item.getItem())), item, desc));
+        ).apply(inst, (id, item, desc) -> new ItemRequirement(id.orElseGet(() -> RegUtil.id(item.item())), item, desc));
     });
 
-    public ItemRequirement(ItemStack itemRequirement, Component description) {
-        this(RegUtil.id(itemRequirement.getItem()), itemRequirement, description);
+    public ItemRequirement(ItemStackTemplate itemRequirement, Component description) {
+        this(RegUtil.id(itemRequirement.item()), itemRequirement, description);
     }
 
     @Override
     public int getAmount(IFactionPlayer<?> player) {
-        return this.stack.getCount();
+        return this.stack.count();
     }
 
     /**
      * @return a copy of the required itemStack
      */
     public ItemStack getItemStack() {
-        return this.stack;
+        return this.stack.create();
     }
 
     @Override
     public Item getStat(IFactionPlayer<?> player) {
-        return this.stack.getItem();
+        return this.stack.item().value();
     }
 
     @Override

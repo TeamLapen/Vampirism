@@ -11,15 +11,13 @@ import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(GuiGraphicsExtractor.class)
 public abstract class GuiGraphicsExtractorMixin implements IGuiGraphicsExtractor {
-
-    @Shadow
-    public abstract void drawString(Font font, FormattedCharSequence text, int x, int y, int color, boolean drawShadow);
 
     @Shadow
     @Final
@@ -36,11 +34,8 @@ public abstract class GuiGraphicsExtractorMixin implements IGuiGraphicsExtractor
     @Shadow
     public abstract void blitSprite(RenderPipeline pipeline, Identifier sprite, int x, int y, int width, int height, int color);
 
-    @Override
-    public void vampirism$drawCenteredString(Font font, Component text, int x, int y, int color, boolean shadow) {
-        FormattedCharSequence formattedcharsequence = text.getVisualOrderText();
-        this.drawString(font, formattedcharsequence, x - font.width(formattedcharsequence) / 2, y, color, shadow);
-    }
+    @Shadow
+    public abstract void text(Font font, FormattedCharSequence str, int x, int y, int color, boolean dropShadow);
 
     @Override
     public void vampirism$blitSpriteTiledOffset(Identifier texture, int x, int y, int width, int height, int xOffset, int yOffset, int color) {

@@ -204,7 +204,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/sniped");
             AdvancementHolder yuck = Advancement.Builder.advancement()
-                    .display(new DisplayInfo(ItemDataUtils.createPotion(Potions.POISON), Component.translatable("advancement.vampirism.yuck"), Component.translatable("advancement.vampirism.yuck.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
+                    .display(new DisplayInfo(ItemDataUtils.template(Potions.POISON), Component.translatable("advancement.vampirism.yuck"), Component.translatable("advancement.vampirism.yuck.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(first_blood)
                     .addCriterion("flower", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.POISONOUS_BITE))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))

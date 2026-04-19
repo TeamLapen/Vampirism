@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.util.serialization.StreamCodecExtension;
 import de.teamlapen.vampirism.common.world.items.component.BloodCharged;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,6 +16,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
 
-    @NotNull
+    private final CommonInfo commonInfo;
     private final String group;
     private final Ingredient ingredient1;
     private final Ingredient ingredient2;
@@ -40,7 +40,8 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     @Nullable
     private PlacementInfo placementInfo;
 
-    public InfuserRecipe(@NotNull String groupIn, Ingredient ingredient1, Ingredient ingredient2, Ingredient ingredient3, Ingredient ingredient4, Ingredient ingredient, ItemStack result1, ItemStack result2, ItemStack result3, Optional<ItemStack> result, int cookingTime) {
+    public InfuserRecipe(CommonInfo commonInfo, @NotNull String groupIn, Ingredient ingredient1, Ingredient ingredient2, Ingredient ingredient3, Ingredient ingredient4, Ingredient ingredient, ItemStack result1, ItemStack result2, ItemStack result3, Optional<ItemStack> result, int cookingTime) {
+        this.commonInfo = commonInfo;
         this.group = groupIn;
         this.ingredient1 = ingredient1;
         this.ingredient2 = ingredient2;
@@ -92,6 +93,16 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
 
     public int cookingTime() {
         return cookingTime;
+    }
+
+    @Override
+    public boolean showNotification() {
+        return this.commonInfo.showNotification();
+    }
+
+    @Override
+    public @NonNull String group() {
+        return this.group;
     }
 
     @Override
@@ -153,6 +164,7 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     }
 
     public static final MapCodec<InfuserRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            CommonInfo.MAP_CODEC.fieldOf("commoninfo").forGetter(s -> s.commonInfo),
             Codec.STRING.optionalFieldOf("group", "").forGetter(s -> s.group),
             Ingredient.CODEC.fieldOf("ingredient1").forGetter(x -> x.ingredient1),
             Ingredient.CODEC.fieldOf("ingredient2").forGetter(x -> x.ingredient2),
@@ -167,6 +179,7 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     ).apply(instance, InfuserRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, InfuserRecipe> STREAM_CODEC = StreamCodecExtension.composite(
+            CommonInfo.STREAM_CODEC, s -> s.commonInfo,
             ByteBufCodecs.STRING_UTF8, s -> s.group,
             Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient1,
             Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient2,

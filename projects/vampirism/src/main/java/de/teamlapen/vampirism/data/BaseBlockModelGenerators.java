@@ -89,7 +89,7 @@ public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
      */
     @Override
     public void createCrossBlock(@NotNull Block block, PlantType plantType, @NotNull TextureMapping textureMapping) {
-        MultiVariant multivariant = plainVariant(plantType.getCross().extend().renderType(CUTOUT).build().create(block, textureMapping, this.modelOutput));
+        MultiVariant multivariant = plainVariant(plantType.getCross().extend()/*.renderType(CUTOUT)*/.build().create(block, textureMapping, this.modelOutput));
         this.blockStateOutput.accept(createSimpleBlock(block, multivariant));
     }
 
@@ -135,7 +135,7 @@ public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
     public void createPlant(@NotNull Block block, @NotNull Block pottedBlock, @NotNull PlantType plantType) {
         this.createCrossBlock(block, plantType);
         TextureMapping texturemapping = plantType.getPlantTextureMapping(block);
-        MultiVariant multivariant = plainVariant(plantType.getCrossPot().extend().renderType(CUTOUT).build().create(pottedBlock, texturemapping, this.modelOutput));
+        MultiVariant multivariant = plainVariant(plantType.getCrossPot().extend()/*.renderType(CUTOUT)*/.build().create(pottedBlock, texturemapping, this.modelOutput));
         this.blockStateOutput.accept(createSimpleBlock(pottedBlock, multivariant));
     }
 
@@ -149,13 +149,13 @@ public abstract class BaseBlockModelGenerators extends BlockModelGenerators {
             this.blockStateOutput.accept(MultiVariantGenerator.dispatch(cropBlock)
                     .with(PropertyDispatch.initial(ageProperty).generate(p_408977_ -> {
                         int i = ageToVisualStageMapping[p_408977_];
-                        return plainVariant(int2objectmap.computeIfAbsent(i, p_387308_ -> this.createSuffixedVariant(cropBlock, "_stage" + p_387308_, ModelTemplates.CROP.extend().renderType(CUTOUT).build(), TextureMapping::crop)));
+                        return plainVariant(int2objectmap.computeIfAbsent(i, p_387308_ -> this.createSuffixedVariant(cropBlock, "_stage" + p_387308_, ModelTemplates.CROP.extend()/*.renderType(CUTOUT)*/.build(), TextureMapping::crop)));
                     })));
         }
     }
 
     protected static ModelTemplate copy(ModelTemplate template, Identifier renderType) {
-        return template.extend().renderType(renderType).build();
+        return template.extend()/*.renderType(renderType)*/.build();
     }
 
 }

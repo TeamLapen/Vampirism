@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -37,19 +38,18 @@ public class SmeltItemLootModifier extends LootModifier {
     @NotNull
     @Override
     protected ObjectArrayList<ItemStack> doApply(@NotNull ObjectArrayList<ItemStack> generatedLoot, @NotNull LootContext context) {
-        ItemStack stack = context.getOptionalParameter(LootContextParams.TOOL);
+        ItemInstance stack = context.getOptionalParameter(LootContextParams.TOOL);
         Entity entity = context.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if (!(entity instanceof LivingEntity) || stack == null || OilUtils.getAppliedOil(stack).filter(oil -> oil == ModOils.SMELT.get()).isEmpty()) {
             return generatedLoot;
         }
-        stack = ((LivingEntity) entity).getMainHandItem();
-        OilUtils.reduceAppliedOilDuration(stack);
+        OilUtils.reduceAppliedOilDuration(((LivingEntity) entity).getMainHandItem());
         return trySmelting(generatedLoot, context.getLevel());
     }
 
     private ObjectArrayList<ItemStack> trySmelting(@NotNull ObjectArrayList<ItemStack> generatedLoot, @NotNull ServerLevel level) {
         RecipeManager recipeManager = level.recipeAccess();
-        return generatedLoot.stream().map(stack -> recipeManager.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(stack), level).map(recipe -> recipe.value().assemble(new SingleRecipeInput(ItemStack.EMPTY), level.registryAccess())).filter(result -> !result.isEmpty()).orElse(stack)).collect(Collector.of(ObjectArrayList::new, ObjectArrayList::add, (left, right) -> {
+        return generatedLoot.stream().map(stack -> recipeManager.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(stack), level).map(recipe -> recipe.value().assemble(new SingleRecipeInput(ItemStack.EMPTY))).filter(result -> !result.isEmpty()).orElse(stack)).collect(Collector.of(ObjectArrayList::new, ObjectArrayList::add, (left, right) -> {
             left.addAll(right);
             return left;
         }));

@@ -67,7 +67,7 @@ public class VampireBeaconBlock extends BaseContainerBlock implements BeaconBeam
                         player.openMenu(vampireBeaconBlockEntity);
                     }
                 } else {
-                    player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
+                    player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
                 }
                 return InteractionResult.CONSUME;
             }

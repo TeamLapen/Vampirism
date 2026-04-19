@@ -114,7 +114,7 @@ public class CrucifixItem extends Item implements IItemWithTier {
     }
 
     protected boolean affectsEntity(LivingEntity entity, Level level) {
-        return entity.getType().is(EntityTypeTags.UNDEAD) || Helper.isVampire(entity);
+        return entity.typeHolder().is(EntityTypeTags.UNDEAD) || Helper.isVampire(entity);
     }
 
     @Override

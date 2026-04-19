@@ -25,6 +25,8 @@ import net.minecraft.world.item.trading.TradeSets;
 import net.minecraft.world.item.trading.VillagerTrade;
 import net.minecraft.world.level.storage.loot.functions.*;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.List;
@@ -159,7 +161,7 @@ public class ModTrades {
         TradeSets.register(context, PRIEST_LEVEL_3, ModVillagerTradeTags.PRIEST_LEVEL_3);
         TradeSets.register(context, PRIEST_LEVEL_4, ModVillagerTradeTags.PRIEST_LEVEL_4);
         TradeSets.register(context, PRIEST_LEVEL_5, ModVillagerTradeTags.PRIEST_LEVEL_5);
-        TradeSets.register(context, VAMPIRE_VILLAGER, ModVillagerTradeTags.VAMPIRE_VILLAGER);
+        TradeSets.register(context, VAMPIRE_VILLAGER, ModVillagerTradeTags.VAMPIRE_VILLAGER, ConstantValue.exactly(1));
     }
 
     static void bootstrap(BootstrapContext<VillagerTrade> context) {

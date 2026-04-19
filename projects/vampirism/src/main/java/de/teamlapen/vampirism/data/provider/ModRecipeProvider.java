@@ -1,12 +1,15 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModOils;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
+import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.util.RegUtil;
@@ -18,6 +21,7 @@ import de.teamlapen.vampirism.common.world.items.recipes.*;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.provider.base.VampirismRecipeProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -43,6 +47,9 @@ import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
+import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
+import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 import org.jetbrains.annotations.Range;
 
 import java.util.concurrent.CompletableFuture;
@@ -80,8 +87,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
 
         SpecialRecipeBuilder.special(ApplicableOilRecipe::new).save(output, modString("applicable_oil"));
         SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, modString("clean_oil"));
-        SpecialRecipeBuilder.special(RerollVampireBookRecipe::new).save(output, modString("reroll_vampire_book"));
         SpecialRecipeBuilder.special(FillBottleFromSyringeRecipe::new).save(output, modString("fill_bottle_from_syringe"));
+
+        HolderLookup.RegistryLookup<IVampireBook> books = registries.lookupOrThrow(VampirismRegistries.Keys.VAMPIRE_BOOK);
+        var bookCondition = new AndHolderSet<>(books.getOrThrow(ModVampireBookTags.IS_GENERAL), new NotHolderSet<>(books, books.getOrThrow(ModVampireBookTags.NON_TREASURE)));
+        SpecialRecipeBuilder.special(() -> new RerollVampireBookRecipe(bookCondition)).save(output, modString("reroll_vampire_book"));
     }
 
     private void recipesFunctionalBlocks() {
@@ -1412,7 +1422,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         fiveTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_GOLD, ModItems.BLOOD_INFUSED_GOLD_INGOT);
 
         for (int i = 0; i < 5; i++) {
-            shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, i))
+            shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, i))
                     .requires(Items.NETHERITE_SCRAP, 4)
                     .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(i), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
                     .unlockedBy("has_blood_infused_gold_ingot", has(ModItems.BLOOD_INFUSED_GOLD_INGOT))
@@ -1437,7 +1447,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         fiveTieredInfusedSwordCrafting(ModItems.HEART_STRIKER_ULTIMATE, ModItems.BLOOD_INFUSED_NETHERITE_INGOT, heartStrikerPattern);
 
         for (int i = 0; i < 5; i++) {
-            nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(ModItems.BLOOD_INFUSED_IRON_INGOT, i), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(i == 4 ? ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK : ModBlocks.BLOOD_INFUSED_IRON_BLOCK, i), "_purity_" + i);
+            nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_IRON_INGOT, i), RecipeCategory.BUILDING_BLOCKS, PureLevel.template(i == 4 ? ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK : ModBlocks.BLOOD_INFUSED_IRON_BLOCK, i), "_purity_" + i);
         }
 
         for (int i = 0; i < 5; i++) {

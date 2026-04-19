@@ -33,8 +33,8 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
     protected static final int MAX_WIDTH = 4;
     protected static final int MAX_HEIGHT = 4;
 
-    private final @NotNull CraftingBookCategory category;
-    private final @NotNull String group;
+    private final @NotNull CraftingRecipe.CraftingBookInfo category;
+    private final CommonInfo commonInfo;
     private final @NotNull List<Ingredient> recipeItems;
     private final @NotNull ItemStackTemplate recipeOutput;
     private final int requiredLevel;
@@ -44,9 +44,9 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
     @Nullable
     private PlacementInfo placementInfo;
 
-    public ShapelessWeaponTableRecipe(@NotNull String group, @NotNull CraftingBookCategory category, @NotNull List<Ingredient> ingredients, @NotNull ItemStackTemplate result, int level, int lava, @NotNull List<Holder<ISkill<?>>> skills) {
+    public ShapelessWeaponTableRecipe(CommonInfo commonInfo, @NotNull CraftingRecipe.CraftingBookInfo category, @NotNull List<Ingredient> ingredients, @NotNull ItemStackTemplate result, int level, int lava, @NotNull List<Holder<ISkill<?>>> skills) {
         this.category = category;
-        this.group = group;
+        this.commonInfo = commonInfo;
         this.recipeItems = ingredients;
         this.recipeOutput = result;
         this.requiredLevel = level;
@@ -98,6 +98,16 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
         return requiredLevel;
     }
 
+    @Override
+    public boolean showNotification() {
+        return this.commonInfo.showNotification();
+    }
+
+    @Override
+    public String group() {
+        return this.category.group();
+    }
+
     @NotNull
     @Override
     public List<Holder<ISkill<?>>> getRequiredSkills() {
@@ -135,8 +145,8 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
 
     public static final MapCodec<ShapelessWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
-                Codec.STRING.optionalFieldOf("group", "").forGetter(p_301127_ -> p_301127_.group),
-                CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_301133_ -> p_301133_.category),
+                CommonInfo.MAP_CODEC.fieldOf("commoninfo").forGetter(s -> s.commonInfo),
+                CraftingRecipe.CraftingBookInfo.MAP_CODEC.fieldOf("category").forGetter(p_301133_ -> p_301133_.category),
                 Codec.lazyInitialized(() -> Ingredient.CODEC.listOf(1, MAX_WIDTH * MAX_HEIGHT)).fieldOf("ingredients").forGetter(x -> x.recipeItems),
                 ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
                 Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
@@ -146,8 +156,8 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
     });
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> STREAM_CODEC = StreamCodecExtension.composite(
-            ByteBufCodecs.STRING_UTF8, s -> s.group,
-            CraftingBookCategory.STREAM_CODEC, s -> s.category,
+            CommonInfo.STREAM_CODEC, s -> s.commonInfo,
+            CraftingRecipe.CraftingBookInfo.STREAM_CODEC, s -> s.category,
             Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), s -> s.recipeItems,
             ItemStackTemplate.STREAM_CODEC, s -> s.recipeOutput,
             ByteBufCodecs.VAR_INT, s -> s.requiredLevel,

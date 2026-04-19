@@ -8,6 +8,7 @@ import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.FactionTasks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,13 +16,13 @@ import java.util.List;
 public class ItemReward implements TaskReward {
 
     public static final MapCodec<ItemReward> CODEC = RecordCodecBuilder.mapCodec(inst -> {
-        return inst.group(ItemStack.CODEC.fieldOf("item").forGetter(i -> i.reward)
+        return inst.group(ItemStackTemplate.CODEC.fieldOf("item").forGetter(i -> i.reward)
         ).apply(inst, ItemReward::new);
     });
 
-    protected final ItemStack reward;
+    protected final ItemStackTemplate reward;
 
-    public ItemReward(ItemStack reward) {
+    public ItemReward(ItemStackTemplate reward) {
         this.reward = reward;
     }
 
@@ -31,7 +32,7 @@ public class ItemReward implements TaskReward {
     }
 
     public List<ItemStack> getAllPossibleRewards() {
-        return Collections.singletonList(this.reward);
+        return Collections.singletonList(this.reward.create());
     }
 
     @Override
@@ -41,23 +42,23 @@ public class ItemReward implements TaskReward {
 
     @Override
     public Component description() {
-        return Component.translatable(this.reward.getItem().getDescriptionId());
+        return Component.translatable(this.reward.item().value().getDescriptionId());
     }
 
-    public record Instance(ItemStack reward) implements ITaskRewardInstance {
+    public record Instance(ItemStackTemplate reward) implements ITaskRewardInstance {
 
         public static final MapCodec<Instance> CODEC = RecordCodecBuilder.mapCodec(inst -> {
-            return inst.group(ItemStack.CODEC.fieldOf("item").forGetter(i -> i.reward)).apply(inst, Instance::new);
+            return inst.group(ItemStackTemplate.CODEC.fieldOf("item").forGetter(i -> i.reward)).apply(inst, Instance::new);
         });
 
-        public Instance(ItemStack reward) {
+        public Instance(ItemStackTemplate reward) {
             this.reward = reward;
         }
 
         @Override
         public void applyReward(IFactionPlayer<?> player) {
-            if (!player.asEntity().addItem(this.reward.copy())) {
-                player.asEntity().drop(this.reward.copy(), true);
+            if (!player.asEntity().addItem(this.reward.create())) {
+                player.asEntity().drop(this.reward.create(), true);
             }
         }
 

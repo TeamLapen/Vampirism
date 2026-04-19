@@ -23,7 +23,7 @@ import java.util.function.UnaryOperator;
 public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     public ShapedItemWithTierRepair(@NotNull ShapedRecipe shaped) {
-        super(shaped.getCommonInfo(), shaped.getCraftingBookInfo(), shaped.getPattern(), shaped.getResult());
+        super(shaped.getCommonInfo(), shaped.getBookInfo(), shaped.getPattern(), shaped.getResult());
     }
 
     @NotNull
@@ -50,7 +50,7 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
     @NotNull
     @Override
     public RecipeSerializer<ShapedRecipe> getSerializer() {
-        return ModRecipes.REPAIR_IITEMWITHTIER.get();
+        return (RecipeSerializer<ShapedRecipe>)(Object) ModRecipes.REPAIR_IITEMWITHTIER.get();
     }
 
     public static final MapCodec<ShapedItemWithTierRepair> CODEC = ShapedRecipe.MAP_CODEC.xmap(ShapedItemWithTierRepair::new, x -> x);

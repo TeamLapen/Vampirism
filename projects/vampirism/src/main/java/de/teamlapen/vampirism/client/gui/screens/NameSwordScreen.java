@@ -49,12 +49,12 @@ public class NameSwordScreen extends Screen {
                 VampirismMod.proxy.sendToServer(new ServerboundNameItemPacket(Optional.of(nameField.getValue())));
             }
             this.minecraft.setScreen(null);
-            this.minecraft.isWindowActive().setWindowActive(true);
+//            this.minecraft.isWindowActive().setWindowActive(true);
         }));
         this.addRenderableWidget(new ExtendedButton(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, this.no, (context) -> {
             VampirismMod.proxy.sendToServer(new ServerboundNameItemPacket(Optional.empty()));
             this.minecraft.setScreen(null);
-            this.minecraft.setWindowActive(true);
+//            this.minecraft.setWindowActive(true);
         }));
 
         this.listLines.clear();

@@ -27,10 +27,10 @@ public abstract class InjectionItem extends Item {
     public void consumeInjectionItem(ItemStack stack, Player player, InteractionHand hand) {
         if (!player.isCreative()) {
             if (stack.getCount() == 1) {
-                player.setItemInHand(hand, stack.getCraftingRemainder());
+                player.setItemInHand(hand, stack.getCraftingRemainder().create());
             } else {
                 stack.shrink(1);
-                player.getInventory().placeItemBackInInventory(stack.getCraftingRemainder());
+                player.getInventory().placeItemBackInInventory(stack.getCraftingRemainder().create());
             }
         }
     }

@@ -22,6 +22,7 @@ import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
@@ -58,19 +59,20 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
-        var recipe = new AlchemicalCauldronRecipe(Objects.requireNonNullElse(this.group, ""), this.ingredient, this.fluid, this.result, this.skills, this.reqLevel, this.cookTime, this.exp);
+        Recipe.CommonInfo commonInfo = RecipeBuilder.createCraftingCommonInfo(true);
+        var recipe = new AlchemicalCauldronRecipe(commonInfo, Objects.requireNonNullElse(this.group, ""), this.ingredient, this.fluid, this.result, this.skills, this.reqLevel, this.cookTime, this.exp);
         recipeOutput.accept(resourceLocation, recipe, builder.build(resourceLocation.identifier().withPrefix("recipes/alchemical_cauldron/")));
+    }
+
+    @Override
+    public @NonNull ResourceKey<Recipe<?>> defaultId() {
+        return RecipeBuilder.getDefaultRecipeId(this.result);
     }
 
     @Override
     public @NotNull RecipeBuilder unlockedBy(@NotNull String name, @NotNull Criterion<?> criterion) {
         this.criteria.put(name, criterion);
         return this;
-    }
-
-    @Override
-    public @NotNull Item getResult() {
-        return result.getItem();
     }
 
     public @NotNull AlchemicalCauldronRecipeBuilder cookTime(int cookTime) {

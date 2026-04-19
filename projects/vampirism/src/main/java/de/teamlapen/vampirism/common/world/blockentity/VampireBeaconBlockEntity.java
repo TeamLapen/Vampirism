@@ -149,7 +149,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
                     }
                 }
             } else {
-                if (beaconblockentity$beaconbeamsection == null || blockstate.getLightBlock() >= 15 && !blockstate.is(Blocks.BEDROCK)) {
+                if (beaconblockentity$beaconbeamsection == null || blockstate.getLightDampening() >= 15 && !blockstate.is(Blocks.BEDROCK)) {
                     pBlockEntity.checkingBeamSections.clear();
                     pBlockEntity.lastCheckY = l;
                     break;

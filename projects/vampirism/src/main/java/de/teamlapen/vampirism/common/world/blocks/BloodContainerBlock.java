@@ -106,7 +106,7 @@ public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayI
 
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
-        return ItemDataUtils.createBloodContainer(level.getBlockEntity(pos) instanceof BloodContainerBlockEntity blockEntity ? blockEntity.getFluid().getAmount() : 0);
+        return ItemDataUtils.createBloodContainer(level.getBlockEntity(pos) instanceof BloodContainerBlockEntity blockEntity ? blockEntity.getFluid().getAmount() : 0).create();
     }
 
     @Override

@@ -76,7 +76,7 @@ public class HunterTableBlock extends BaseHorizontalBlock {
                 if (Helper.isHunter(serverPlayer)) {
                     player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), NAME), pos);
                 } else {
-                    player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
+                    player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
                 }
             }
         }

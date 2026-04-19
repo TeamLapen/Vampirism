@@ -26,7 +26,6 @@ import net.minecraft.world.timeline.Timeline;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -49,26 +48,26 @@ public class ModVillage {
     public static final DeferredHolder<VillagerProfession, VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () ->
             new VillagerProfession(Component.translatable("entity.vampirism.villager.vampire_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CARTOGRAPHER, Int2ObjectMap.ofEntries(
                     Int2ObjectMap.entry(1, ModTrades.VAMPIRE_EXPERT_LEVEL_1),
-                    Int2ObjectMap.entry(1, ModTrades.VAMPIRE_EXPERT_LEVEL_2),
-                    Int2ObjectMap.entry(1, ModTrades.VAMPIRE_EXPERT_LEVEL_3),
-                    Int2ObjectMap.entry(1, ModTrades.VAMPIRE_EXPERT_LEVEL_4),
-                    Int2ObjectMap.entry(1, ModTrades.VAMPIRE_EXPERT_LEVEL_5)
+                    Int2ObjectMap.entry(2, ModTrades.VAMPIRE_EXPERT_LEVEL_2),
+                    Int2ObjectMap.entry(3, ModTrades.VAMPIRE_EXPERT_LEVEL_3),
+                    Int2ObjectMap.entry(4, ModTrades.VAMPIRE_EXPERT_LEVEL_4),
+                    Int2ObjectMap.entry(5, ModTrades.VAMPIRE_EXPERT_LEVEL_5)
             )));
     public static final DeferredHolder<VillagerProfession, VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () ->
             new VillagerProfession(Component.translatable("entity.vampirism.villager.hunter_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(ModBlocks.HUNTER_TABLE.get(), ModBlocks.WEAPON_TABLE.get(), ModBlocks.GARLIC.get()), SoundEvents.VILLAGER_WORK_ARMORER, Int2ObjectMap.ofEntries(
                     Int2ObjectMap.entry(1, ModTrades.HUNTER_EXPERT_LEVEL_1),
-                    Int2ObjectMap.entry(1, ModTrades.HUNTER_EXPERT_LEVEL_2),
-                    Int2ObjectMap.entry(1, ModTrades.HUNTER_EXPERT_LEVEL_3),
-                    Int2ObjectMap.entry(1, ModTrades.HUNTER_EXPERT_LEVEL_4),
-                    Int2ObjectMap.entry(1, ModTrades.HUNTER_EXPERT_LEVEL_5)
+                    Int2ObjectMap.entry(2, ModTrades.HUNTER_EXPERT_LEVEL_2),
+                    Int2ObjectMap.entry(3, ModTrades.HUNTER_EXPERT_LEVEL_3),
+                    Int2ObjectMap.entry(4, ModTrades.HUNTER_EXPERT_LEVEL_4),
+                    Int2ObjectMap.entry(5, ModTrades.HUNTER_EXPERT_LEVEL_5)
             )));
     public static final DeferredHolder<VillagerProfession, VillagerProfession> PRIEST = PROFESSIONS.register("priest", () ->
             new VillagerProfession(Component.translatable("entity.vampirism.villager.priest"), holder -> holder.is(ALTAR_CLEANSING.getKey()), holder -> holder.is(ALTAR_CLEANSING.getKey()), ImmutableSet.of(), ImmutableSet.of(), ModSounds.BLESSING_MUSIC.get(), Int2ObjectMap.ofEntries(
             Int2ObjectMap.entry(1, ModTrades.PRIEST_LEVEL_1),
-            Int2ObjectMap.entry(1, ModTrades.PRIEST_LEVEL_2),
-            Int2ObjectMap.entry(1, ModTrades.PRIEST_LEVEL_3),
-            Int2ObjectMap.entry(1, ModTrades.PRIEST_LEVEL_4),
-            Int2ObjectMap.entry(1, ModTrades.PRIEST_LEVEL_5)
+            Int2ObjectMap.entry(2, ModTrades.PRIEST_LEVEL_2),
+            Int2ObjectMap.entry(3, ModTrades.PRIEST_LEVEL_3),
+            Int2ObjectMap.entry(4, ModTrades.PRIEST_LEVEL_4),
+            Int2ObjectMap.entry(5, ModTrades.PRIEST_LEVEL_5)
     )));
 
     static void register(IEventBus bus) {
@@ -93,7 +92,7 @@ public class ModVillage {
                 .build());
     }
 
-    private static Set<BlockState> getAllStates(Block @NotNull ... blocks) {
+    private static Set<BlockState> getAllStates(Block... blocks) {
         return Arrays.stream(blocks).flatMap(block -> block.getStateDefinition().getPossibleStates().stream()).collect(ImmutableSet.toImmutableSet());
     }
 

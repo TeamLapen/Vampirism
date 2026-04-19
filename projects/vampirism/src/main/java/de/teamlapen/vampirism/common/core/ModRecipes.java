@@ -66,7 +66,7 @@ public class ModRecipes {
 
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigCondition>> CONFIG_CONDITION = CONDITION_CODECS.register("config", () -> ConfigCondition.CODEC);
 
-    static void register(@NotNull IEventBus bus) {
+    static void register(IEventBus bus) {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         CONDITION_CODECS.register(bus);

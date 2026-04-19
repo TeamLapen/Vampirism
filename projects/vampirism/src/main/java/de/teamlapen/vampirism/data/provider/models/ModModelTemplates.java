@@ -22,7 +22,7 @@ public class ModModelTemplates extends ModelTemplates {
     public static final ModelTemplate COFFIN_BOTTOM = create(mod("coffin_bottom"), ModTextureSlots.INNER);
     public static final ModelTemplate TENT = create(mod("tent"), ModTextureSlots.FLOOR);
     public static final ModelTemplate BLOOD_SIEVE = create(mod("blood_sieve"), ModTextureSlots.FILTER);
-    public static final ModelTemplate BEACON_MODEL = create("beacon", ModTextureSlots.BEACON).extend().renderType(VIdentifier.mc("cutout")).build();
+    public static final ModelTemplate BEACON_MODEL = create("beacon", ModTextureSlots.BEACON).extend()/*.renderType(VIdentifier.mc("cutout"))*/.build();
     public static final ModelTemplate ALCHEMICAL_CAULDRON = create(mod("alchemy_cauldron_liquid"), ModTextureSlots.LIQUID);
     public static final ModelTemplate DIRT_PATH = create("dirt_path", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE, TextureSlot.PARTICLE);
     public static final ModelTemplate CRUCIFIX = createItem(mod("crucifix"), TextureSlot.TEXTURE, TextureSlot.PARTICLE);
@@ -45,6 +45,6 @@ public class ModModelTemplates extends ModelTemplates {
     }
 
     public static ModelTemplate copy(ModelTemplate template, Identifier renderType) {
-        return template.extend().renderType(renderType).build();
+        return template.extend()/*.renderType(renderType)*/.build();
     }
 }

@@ -22,12 +22,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
@@ -105,23 +103,23 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
     }
 
     protected void smeltingAndBlasting(RecipeCategory category, String name, ItemLike toSmelt, ItemLike result, float experience) {
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category, result, experience, 200)
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category, CookingBookCategory.MISC, result, experience, 200)
                 .unlockedBy("has_" + RegUtil.id(toSmelt.asItem()).getPath(), has(toSmelt))
                 .save(output, modString(name + "_from_smelting"));
 
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category, result, experience, 100)
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category, CookingBookCategory.MISC,result, experience, 100)
                 .unlockedBy("has_" + RegUtil.id(toSmelt.asItem()).getPath(), has(toSmelt))
                 .save(output, modString(name + "_from_blasting"));
     }
 
     protected void smeltingAndBlasting(RecipeCategory category, String name, ItemLike[] toSmelt, ItemLike result, float experience) {
-        SimpleCookingRecipeBuilder smelting = SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category, result, experience, 200);
+        SimpleCookingRecipeBuilder smelting = SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category,CookingBookCategory.MISC, result, experience, 200);
         for (ItemLike item : toSmelt) {
             smelting.unlockedBy("has_" + RegUtil.id(item.asItem()).getPath(), has(item));
         }
         smelting.save(output, modString(name + "_from_smelting"));
 
-        SimpleCookingRecipeBuilder blasting = SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category, result, experience, 100);
+        SimpleCookingRecipeBuilder blasting = SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category,CookingBookCategory.MISC, result, experience, 100);
         for (ItemLike item : toSmelt) {
             blasting.unlockedBy("has_" + RegUtil.id(item.asItem()).getPath(), has(item));
         }
@@ -220,11 +218,11 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
         String ingredientName = RegUtil.id(rawIngredient.asItem()).getPath();
         String resultName = RegUtil.id(result.asItem()).getPath();
         SimpleCookingRecipeBuilder
-                .smelting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), rawIngredient), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(result, level), (float) Math.pow(2F, level), 200 + level * 100)
+                .smelting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), rawIngredient), RecipeCategory.BUILDING_BLOCKS,CookingBookCategory.MISC, PureLevel.template(result, level), (float) Math.pow(2F, level), 200 + level * 100)
                 .unlockedBy("has_" + resultName, has(rawIngredient))
                 .save(this.output, modString(ingredientName + "_pure_" + level + "_smelting"));
         SimpleCookingRecipeBuilder
-                .blasting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), rawIngredient), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(result, level), (float) Math.pow(2F, level), 100 + level * 50)
+                .blasting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), rawIngredient), RecipeCategory.BUILDING_BLOCKS, CookingBookCategory.MISC, PureLevel.template(result, level), (float) Math.pow(2F, level), 100 + level * 50)
                 .unlockedBy("has_" + resultName, has(rawIngredient))
                 .save(this.output, modString(ingredientName + "_pure_" + level + "_blasting"));
     }
@@ -247,7 +245,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
      * Y - Stick.
      */
     protected void infusedSwordCrafting(ItemLike result, ItemLike metalIngredient, String pattern, int level) {
-        ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(result, level));
+        ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.template(result, level));
         for (String row : pattern.split("\n")) {
             builder.pattern(row);
         }
@@ -279,14 +277,14 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
                 .save(output, RegUtil.id(arrow) + "_" + quantity);
     }
 
-    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStack unpacked, RecipeCategory packedCategory, ItemStack packed, String pathSuffix) {
-        this.nineBlockStorageRecipes(unpackedCategory, unpacked, packedCategory, packed, RegUtil.id(packed.getItem()).withSuffix(pathSuffix), null, RegUtil.id(unpacked.getItem()).withSuffix(pathSuffix), null);
+    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStackTemplate unpacked, RecipeCategory packedCategory, ItemStackTemplate packed, String pathSuffix) {
+        this.nineBlockStorageRecipes(unpackedCategory, unpacked, packedCategory, packed, packed.item().getKey().identifier().withSuffix(pathSuffix), null, unpacked.item().getKey().identifier().withSuffix(pathSuffix), null);
     }
 
-    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStack unpacked, RecipeCategory packedCategory, ItemStack packed, Identifier packedName, @Nullable String packedGroup, Identifier unpackedName, @Nullable String unpackedGroup) {
+    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStackTemplate unpacked, RecipeCategory packedCategory, ItemStackTemplate packed, Identifier packedName, @Nullable String packedGroup, Identifier unpackedName, @Nullable String unpackedGroup) {
         this.shapeless(unpackedCategory, unpacked)
                 .requires(DataComponentIngredient.of(false, packed))
-                .group(unpackedGroup).unlockedBy(getHasName(packed.getItem()), this.has(packed.getItem()))
+                .group(unpackedGroup).unlockedBy(getHasName(packed.item().value()), this.has(packed.item().value()))
                 .save(this.output, ResourceKey.create(Registries.RECIPE, unpackedName));
         ShapedRecipeBuilder
                 .shaped(this.itemLookup, packedCategory, packed)
@@ -295,7 +293,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
                 .pattern("###")
                 .pattern("###")
                 .group(packedGroup)
-                .unlockedBy(getHasName(unpacked.getItem()), this.has(unpacked.getItem()))
+                .unlockedBy(getHasName(unpacked.item().value()), this.has(unpacked.item().value()))
                 .save(this.output, ResourceKey.create(Registries.RECIPE, packedName));
     }
 

@@ -66,12 +66,12 @@ public class GarlicDiffuserBlockEntity extends DiffuserBlockEntity {
 
     @Override
     protected int getBurnDuration(ItemStack itemStack) {
-        IGarlicDiffuserFuel data = itemStack.getItemHolder().getData(ModDataMaps.GARLIC_DIFFUSER_FUEL_MAP);
+        IGarlicDiffuserFuel data = itemStack.typeHolder().getData(ModDataMaps.GARLIC_DIFFUSER_FUEL_MAP);
         return data != null ? data.burnDuration() : 0;
     }
 
     public boolean isInRange(BlockPos blockPos) {
-        return new ChunkPos(this.getBlockPos()).getChessboardDistance(new ChunkPos(blockPos)) <= this.radius;
+        return ChunkPos.containing(this.getBlockPos()).getChessboardDistance(ChunkPos.containing(blockPos)) <= this.radius;
     }
 
     @Override

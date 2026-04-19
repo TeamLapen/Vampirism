@@ -85,7 +85,7 @@ public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionB
 
         BloodSphereModel.BloodSphereRenderState sphereState = new BloodSphereModel.BloodSphereRenderState();
         nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entitySolid(SPHERE_TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, -1, null,0, renderState.breakProgress);
-        nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entityTranslucentEmissive(SPHERE_TEXTURE), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, -1, null,0, renderState.breakProgress);
+        nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entityTranslucentEmissive(SPHERE_TEXTURE), 15728880, OverlayTexture.NO_OVERLAY, -1, null,0, renderState.breakProgress);
 
         poseStack.popPose();
     }

@@ -6,7 +6,5 @@ import net.minecraft.resources.Identifier;
 
 public interface IGuiGraphicsExtractor {
 
-    void vampirism$drawCenteredString(Font font, Component text, int x, int y, int color, boolean shadow);
-
     void vampirism$blitSpriteTiledOffset(Identifier texture, int x, int y, int width, int height, int xOffset, int yOffset, int color);
 }

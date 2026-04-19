@@ -29,13 +29,13 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
     @Nullable
     private PlacementInfo placementInfo;
 
-    public AlchemyTableRecipe(String group, Ingredient ingredient, Ingredient input, ItemStack result, List<ISkill<?>> skills) {
-        super(ModRecipes.ALCHEMICAL_TABLE_TYPE.get(), group, ingredient, input, result);
+    public AlchemyTableRecipe(CommonInfo commonInfo, String group, Ingredient ingredient, Ingredient input, ItemStack result, List<ISkill<?>> skills) {
+        super(ModRecipes.ALCHEMICAL_TABLE_TYPE.get(), commonInfo, group, ingredient, input, result);
         this.requiredSkills = skills;
     }
 
     public boolean isInput(@NotNull ItemStack input) {
-        return UtilLib.matchesItem(this.input, input);
+        return this.input.test(input);
     }
 
     public boolean isIngredient(@NotNull ItemStack ingredient) {
@@ -71,6 +71,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
     }
 
     public static final MapCodec<AlchemyTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+            CommonInfo.MAP_CODEC.fieldOf("common_info").forGetter(p -> p.commonInfo),
             Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
             Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300831_ -> p_300831_.ingredient),
             Ingredient.CODEC.fieldOf("input").forGetter(p_300830_ -> p_300830_.input),
@@ -79,6 +80,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
     ).apply(inst, AlchemyTableRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> STREAM_CODEC = StreamCodec.composite(
+            CommonInfo.STREAM_CODEC, s -> s.commonInfo,
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).map(s -> s.orElse(""), Optional::of), s -> s.group,
             Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
             Ingredient.CONTENTS_STREAM_CODEC, s -> s.input,

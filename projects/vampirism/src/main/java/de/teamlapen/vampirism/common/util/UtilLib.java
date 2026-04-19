@@ -328,7 +328,7 @@ public class UtilLib {
         double z = zCoord;
         for (int i = 0; i < amount; i++) {
             world.addParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
-            RandomSource ran = world.random;
+            RandomSource ran = world.getRandom();
             x = xCoord + (ran.nextGaussian() * maxOffset);
             y = yCoord + (ran.nextGaussian() * maxOffset);
             z = zCoord + (ran.nextGaussian() * maxOffset);
@@ -358,7 +358,7 @@ public class UtilLib {
     public static void sendMessageToAllExcept(Player player, @NotNull Component message) {
         for (Player o : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
-                o.displayClientMessage(message, false);
+                o.sendSystemMessage(message);
             }
         }
     }
@@ -508,7 +508,7 @@ public class UtilLib {
     public static @NotNull Optional<StructureStart> getStructureStartAt(Level level, @NotNull BlockPos pos, @NotNull TagKey<Structure> structureTag) {
         if (level instanceof ServerLevel serverLevel && serverLevel.isLoaded(pos)) {
             Registry<Structure> registry = serverLevel.registryAccess().lookupOrThrow(Registries.STRUCTURE);
-            return serverLevel.structureManager().startsForStructure(new ChunkPos(pos), structure -> {
+            return serverLevel.structureManager().startsForStructure(ChunkPos.containing(pos), structure -> {
                 return registry.get(registry.getId(structure)).map(a -> a.is(structureTag)).orElse(false);
             }).stream().findFirst();
         }
@@ -659,7 +659,7 @@ public class UtilLib {
     public static int renderMultiLine(@NotNull Font fontRenderer, @NotNull GuiGraphicsExtractor graphics, @NotNull Component text, int textLength, int x, int y, int color) {
         int d = 0;
         for (FormattedCharSequence sequence : fontRenderer.split(text, textLength)) {
-            graphics.drawString(fontRenderer, sequence, x, y + d, color, false);
+            graphics.text(fontRenderer, sequence, x, y + d, color, false);
             d += fontRenderer.lineHeight;
         }
         return d;
