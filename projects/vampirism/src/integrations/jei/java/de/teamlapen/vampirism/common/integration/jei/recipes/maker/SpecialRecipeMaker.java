@@ -14,6 +14,8 @@ import de.teamlapen.vampirism.common.world.items.BloodBottleItem;
 import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
 import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
+import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
+import de.teamlapen.vampirism.common.world.items.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
@@ -38,9 +40,12 @@ public class SpecialRecipeMaker {
     public static List<RecipeHolder<CraftingRecipe>> getAllCraftingRecipes() {
         return Stream.of(
                 makeOilRecipes().stream(),
-                makeSerumFromPotionRecipes().stream(),
                 makeBloodBottleFromSyringesRecipes().stream()
         ).flatMap(s -> s).toList();
+    }
+
+    public static List<RecipeHolder<IWeaponTableRecipe>> getAllWeaponTableRecipes() {
+        return makeSerumFromPotionRecipes();
     }
 
     public static List<RecipeHolder<CraftingRecipe>> makeOilRecipes() {
@@ -63,27 +68,6 @@ public class SpecialRecipeMaker {
                         })).toList();
     }
 
-    public static List<RecipeHolder<CraftingRecipe>> makeSerumFromPotionRecipes() {
-        return BuiltInRegistries.POTION.listElements()
-                .filter(potion -> !SerumInjectionItem.isBlockedPotion(potion))
-                .map(potion -> {
-                    ItemStack potionStack = new ItemStack(Items.POTION);
-                    potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
-
-                    ItemStack result = ModItems.SERUM_INJECTION.get().getDefaultInstance();
-                    result.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
-
-                    NonNullList<Ingredient> ingredients = NonNullList.create();
-                    ingredients.add(DataComponentIngredient.of(false, potionStack));
-                    ingredients.add(Ingredient.of(ModItems.SYRINGE_EMPTY.get()));
-
-                    ShapelessRecipe recipe = new ShapelessRecipe("", CraftingBookCategory.MISC, result, ingredients);
-                    Identifier id = VIdentifier.mod("serum_from_potion_" + potion.unwrapKey().orElseThrow().identifier().getPath());
-                    return new RecipeHolder<CraftingRecipe>(ResourceKey.create(Registries.RECIPE, id), recipe);
-                })
-                .toList();
-    }
-
     private static List<RecipeHolder<CraftingRecipe>> makeBloodBottleFromSyringesRecipes() {
         return IntStream.rangeClosed(1, BloodBottleItem.AMOUNT)
                 .mapToObj(syringes -> {
@@ -94,6 +78,29 @@ public class SpecialRecipeMaker {
                     ItemStack result = BloodBottleItem.createStackWithBlood(syringes);
                     ShapelessRecipe recipe = new ShapelessRecipe("", CraftingBookCategory.MISC, result, ingredients);
                     return new RecipeHolder<CraftingRecipe>(ResourceKey.create(Registries.RECIPE, VIdentifier.mod("fill_bottle_from_syringe_" + syringes)), recipe);
+                })
+                .toList();
+    }
+
+    public static List<RecipeHolder<IWeaponTableRecipe>> makeSerumFromPotionRecipes() {
+        return BuiltInRegistries.POTION.listElements()
+                .filter(potion -> !SerumInjectionItem.isBlockedPotion(potion))
+                .map(potion -> {
+                    ItemStack potionStack = new ItemStack(Items.POTION);
+                    potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
+
+                    ItemStack result = ModItems.SERUM_INJECTION.get().getDefaultInstance();
+                    result.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
+
+                    List<Ingredient> ingredients = List.of(
+                            DataComponentIngredient.of(false, potionStack),
+                            Ingredient.of(ModItems.SYRINGE_EMPTY.get())
+                    );
+
+                    ShapelessWeaponTableRecipe recipe = new ShapelessWeaponTableRecipe("", ingredients, result, 1, 0, List.of());
+
+                    Identifier id = VIdentifier.mod("serum_from_potion_" + potion.unwrapKey().orElseThrow().identifier().getPath());
+                    return new RecipeHolder<IWeaponTableRecipe>(ResourceKey.create(Registries.RECIPE, id), recipe);
                 })
                 .toList();
     }

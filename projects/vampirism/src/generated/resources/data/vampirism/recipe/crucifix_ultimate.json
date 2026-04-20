@@ -1,6 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "category": "equipment",
   "key": {
     "A": "vampirism:stake",
     "X": "vampirism:item_alchemical_fire",

@@ -1,6 +1,5 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "category": "equipment",
   "key": {
     "X": "#c:ingots/iron",
     "Y": "#c:leathers",
