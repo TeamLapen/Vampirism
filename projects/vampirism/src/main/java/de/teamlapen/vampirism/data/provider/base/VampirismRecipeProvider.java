@@ -130,12 +130,12 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
         return AlchemyTableRecipeBuilder.builder(this.itemLookup, oilStack);
     }
 
-    protected AlchemicalCauldronRecipeBuilder cauldronRecipe(ItemLike item) {
-        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(this.itemLookup, item.asItem());
+    protected AlchemicalCauldronRecipeBuilder cauldronRecipe(Holder<Item> item) {
+        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(this.itemLookup, new ItemStackTemplate(item, 1));
     }
 
-    protected AlchemicalCauldronRecipeBuilder cauldronRecipe(ItemLike item, int count) {
-        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(this.itemLookup, item.asItem(), count);
+    protected AlchemicalCauldronRecipeBuilder cauldronRecipe(Holder<Item> item, int count) {
+        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(this.itemLookup, new ItemStackTemplate(item, count));
     }
 
     protected ShapedWeaponTableRecipeBuilder shapedWeaponTable(RecipeCategory category, ItemLike item) {

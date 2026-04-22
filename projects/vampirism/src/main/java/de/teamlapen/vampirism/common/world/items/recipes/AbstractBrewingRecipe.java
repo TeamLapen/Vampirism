@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -15,9 +16,9 @@ public abstract class AbstractBrewingRecipe implements Recipe<BrewingRecipeInput
     protected final String group;
     protected final Ingredient ingredient;
     protected final Ingredient input;
-    protected final ItemStack result;
+    protected final ItemStackTemplate result;
 
-    public AbstractBrewingRecipe(RecipeType<? extends AbstractBrewingRecipe> type, CommonInfo commonInfo, String group, Ingredient ingredient, Ingredient input, ItemStack result) {
+    public AbstractBrewingRecipe(RecipeType<? extends AbstractBrewingRecipe> type, CommonInfo commonInfo, String group, Ingredient ingredient, Ingredient input, ItemStackTemplate result) {
         this.type = type;
         this.commonInfo = commonInfo;
         this.group = group;
@@ -39,7 +40,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<BrewingRecipeInput
         return input;
     }
 
-    public ItemStack getResultItem() {
+    public ItemStackTemplate getResultItem() {
         return result;
     }
 
@@ -56,7 +57,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<BrewingRecipeInput
     @NotNull
     @Override
     public ItemStack assemble(@NotNull BrewingRecipeInput inventory) {
-        return this.result.copy();
+        return this.result.create();
     }
 
     @Override

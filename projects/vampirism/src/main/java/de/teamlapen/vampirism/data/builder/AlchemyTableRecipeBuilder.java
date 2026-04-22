@@ -19,7 +19,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -32,16 +32,16 @@ import java.util.*;
 
 public class AlchemyTableRecipeBuilder implements RecipeBuilder {
 
-    public static @NotNull AlchemyTableRecipeBuilder builder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStack stack) {
+    public static @NotNull AlchemyTableRecipeBuilder builder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStackTemplate stack) {
         return new AlchemyTableRecipeBuilder(itemLookup, stack);
     }
 
     public static @NotNull AlchemyTableRecipeBuilder builder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull Holder<IOil> oilStack) {
-        return new AlchemyTableRecipeBuilder(itemLookup, OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oilStack));
+        return new AlchemyTableRecipeBuilder(itemLookup, OilContent.createTemplate(ModItems.OIL_BOTTLE.get(), oilStack));
     }
 
     protected HolderLookup.RegistryLookup<Item> itemLookup;
-    protected final @NotNull ItemStack result;
+    protected final @NotNull ItemStackTemplate result;
     protected String group;
     protected Ingredient ingredient;
     protected final @NotNull IOil ingredientOil = ModOils.EMPTY.get();
@@ -49,7 +49,7 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
     protected final List<ISkill<?>> skills = new LinkedList<>();
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public AlchemyTableRecipeBuilder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStack result) {
+    public AlchemyTableRecipeBuilder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStackTemplate result) {
         this.itemLookup = itemLookup;
         this.result = result;
     }

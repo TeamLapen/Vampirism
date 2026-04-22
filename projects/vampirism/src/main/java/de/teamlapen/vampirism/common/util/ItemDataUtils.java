@@ -77,7 +77,7 @@ public class ItemDataUtils {
 
     public static ItemStackTemplate createBloodContainer(int blood) {
         return new ItemStackTemplate(ModBlocks.BLOOD_CONTAINER.asItem(), DataComponentPatch.builder()
-                .set(ModDataComponents.BLOOD_CONTAINER.get(), SimpleFluidContent.copyOf(new FluidStack(ModFluids.BLOOD.get(), Math.clamp(blood, 0, BloodContainerBlockEntity.CAPACITY))))
+//                .set(ModDataComponents.BLOOD_CONTAINER.get(), SimpleFluidContent.copyOf(new FluidStack(ModFluids.BLOOD.get(), Math.clamp(blood, 0, BloodContainerBlockEntity.CAPACITY))))
                 .build());
     }
 

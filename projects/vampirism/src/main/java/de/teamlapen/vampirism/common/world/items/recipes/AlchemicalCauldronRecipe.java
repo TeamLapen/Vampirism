@@ -17,8 +17,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
-import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -37,7 +37,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     protected final String group;
     private final Either<Ingredient, FluidStack> fluid;
     protected final Ingredient ingredient;
-    protected final ItemStack result;
+    protected final ItemStackTemplate result;
     @NotNull
     private final List<Holder<ISkill<?>>> skills;
     private final int reqLevel;
@@ -47,7 +47,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     private PlacementInfo placementInfo;
     private final CommonInfo info;
 
-    public AlchemicalCauldronRecipe(CommonInfo info, @NotNull String groupIn, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStack resultIn, @NotNull List<Holder<ISkill<?>>> skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+    public AlchemicalCauldronRecipe(CommonInfo info, @NotNull String groupIn, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStack> fluidIn, @NotNull ItemStackTemplate resultIn, @NotNull List<Holder<ISkill<?>>> skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
         this.info = info;
         this.group = groupIn;
         this.ingredient = ingredientIn;
@@ -83,8 +83,8 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     }
 
     @Override
-    public ItemStack assemble(AlchemicalCauldronRecipeInput p_345149_) {
-        return this.result.copy();
+    public @NonNull ItemStack assemble(@NonNull AlchemicalCauldronRecipeInput p_345149_) {
+        return this.result.create();
     }
 
     public float getExperience() {
@@ -117,7 +117,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
         return skills;
     }
 
-    public ItemStack result() {
+    public ItemStackTemplate result() {
         return result;
     }
 
@@ -156,7 +156,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
                     Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
                     Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
                     Codec.either(Ingredient.CODEC, FluidStack.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
-                    ItemStack.CODEC.fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
+                    ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
                     ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.skills),
                     Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.reqLevel),
                     Codec.INT.optionalFieldOf("cookTime", 200).forGetter(p -> p.cookingTime),
@@ -168,7 +168,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
             ByteBufCodecs.STRING_UTF8, AlchemicalCauldronRecipe::group,
             Ingredient.CONTENTS_STREAM_CODEC, AlchemicalCauldronRecipe::getIngredient,
             ByteBufCodecs.either(Ingredient.CONTENTS_STREAM_CODEC, FluidStack.STREAM_CODEC), AlchemicalCauldronRecipe::getFluid,
-            ItemStack.STREAM_CODEC, AlchemicalCauldronRecipe::result,
+            ItemStackTemplate.STREAM_CODEC, AlchemicalCauldronRecipe::result,
             ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), AlchemicalCauldronRecipe::getRequiredSkills,
             ByteBufCodecs.INT, AlchemicalCauldronRecipe::getRequiredLevel,
             ByteBufCodecs.INT, AlchemicalCauldronRecipe::getCookingTime,

@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayItemGenerator.CreativeTabItemProvider, IBlockWithDescription {
+public class BloodContainerBlock extends BaseEntityBlock implements IBlockWithDescription {
 
     public static final MapCodec<BloodContainerBlock> CODEC = simpleCodec(BloodContainerBlock::new);
 
@@ -107,16 +107,6 @@ public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayI
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
         return ItemDataUtils.createBloodContainer(level.getBlockEntity(pos) instanceof BloodContainerBlockEntity blockEntity ? blockEntity.getFluid().getAmount() : 0).create();
-    }
-
-    @Override
-    public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        ItemStack stack = new ItemStack(this, 1);
-        output.accept(stack);
-        stack = stack.copy();
-        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
-        stack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
-        output.accept(stack);
     }
 
     @Override

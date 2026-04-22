@@ -25,13 +25,6 @@
       "translate": "advancement.vampirism.extra_storage.desc"
     },
     "icon": {
-      "components": {
-        "vampirism:blood_container": {
-          "amount": 5000,
-          "id": "vampirism:blood"
-        }
-      },
-      "count": 1,
       "id": "vampirism:blood_container"
     },
     "title": {

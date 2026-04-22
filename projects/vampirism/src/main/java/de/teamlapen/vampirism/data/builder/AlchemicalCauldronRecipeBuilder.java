@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -28,16 +29,12 @@ import java.util.*;
 
 public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
 
-    public static @NotNull AlchemicalCauldronRecipeBuilder cauldronRecipe(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull Item item) {
-        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(itemLookup, item, 1);
-    }
-
-    public static @NotNull AlchemicalCauldronRecipeBuilder cauldronRecipe(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull Item item, int count) {
-        return new AlchemicalCauldronRecipeBuilder(itemLookup, item, count);
+    public static @NotNull AlchemicalCauldronRecipeBuilder cauldronRecipe(HolderLookup.RegistryLookup<Item> itemLookup, ItemStackTemplate item) {
+        return new AlchemicalCauldronRecipeBuilder(itemLookup, item);
     }
 
     private final HolderLookup.RegistryLookup<Item> itemLookup;
-    protected final @NotNull ItemStack result;
+    protected final @NotNull ItemStackTemplate result;
     protected String group;
     protected Ingredient ingredient;
     protected Either<Ingredient, FluidStack> fluid;
@@ -47,9 +44,9 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
     protected float exp = 0.2f;
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public AlchemicalCauldronRecipeBuilder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull Item result, int count) {
+    public AlchemicalCauldronRecipeBuilder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStackTemplate result) {
         this.itemLookup = itemLookup;
-        this.result = new ItemStack(result, count);
+        this.result = result;
     }
 
     @Override

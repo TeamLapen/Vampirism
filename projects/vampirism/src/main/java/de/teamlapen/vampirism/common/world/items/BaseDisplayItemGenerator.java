@@ -43,11 +43,7 @@ public abstract class BaseDisplayItemGenerator implements CreativeModeTab.Displa
         item.get().generateCreativeTab(this.parameters, this.output);
     }
 
-    protected <T extends Block & CreativeTabItemProvider> void addBlockGen(DeferredHolder<Block, T> item) {
-        item.get().generateCreativeTab(this.parameters, this.output);
-    }
-
     public interface CreativeTabItemProvider {
-        void generateCreativeTab(CreativeModeTab.@NotNull ItemDisplayParameters parameters, CreativeModeTab.Output output);
+        void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output);
     }
 }

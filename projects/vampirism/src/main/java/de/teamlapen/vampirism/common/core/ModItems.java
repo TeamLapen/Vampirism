@@ -2,12 +2,15 @@ package de.teamlapen.vampirism.common.core;
 
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.faction.common.util.BlockDescription;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.*;
+import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import de.teamlapen.vampirism.common.world.items.consume.*;
 import de.teamlapen.vampirism.common.world.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.common.world.items.crossbow.DoubleCrossbowItem;
@@ -21,11 +24,13 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -33,6 +38,9 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Collection;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 /**
@@ -285,6 +293,146 @@ public class ModItems {
     public static final DeferredItem<SpawnEggItem> TASK_MASTER_HUNTER_SPAWN_EGG = ITEMS.registerItem("task_master_hunter_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.TASK_MASTER_HUNTER.get()));
     public static final DeferredItem<SpawnEggItem> GHOST_SPAWN_EGG = ITEMS.registerItem("ghost_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.GHOST.get()));
 
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE, x -> x.useBlockDescriptionPrefix().factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED, x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
+    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, PureLevel.LOW)));
+    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK,  (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, new PureLevel(4))));
+    public static final DeferredItem<BlockItem> ALTAR_INSPIRATION = fromBlock(ModBlocks.ALTAR_INSPIRATION);
+    public static final DeferredItem<BlockItem> ALTAR_INFUSION = fromBlock(ModBlocks.ALTAR_INFUSION);
+    public static final DeferredItem<BlockItem> ALTAR_PILLAR = fromBlock(ModBlocks.ALTAR_PILLAR);
+    public static final DeferredItem<BlockItem> ALTAR_TIP = fromBlock(ModBlocks.ALTAR_TIP);
+    public static final DeferredItem<BlockItem> BLOOD_PEDESTAL = fromBlock(ModBlocks.BLOOD_PEDESTAL);
+    public static final DeferredItem<BloodContainerItem> BLOOD_CONTAINER = fromBlock(ModBlocks.BLOOD_CONTAINER, BloodContainerItem::new);
+    public static final DeferredItem<BlockItem> BLOOD_GRINDER = fromBlock(ModBlocks.BLOOD_GRINDER, x -> x.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> BLOOD_SIEVE = fromBlock(ModBlocks.BLOOD_SIEVE, x -> x.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> INFUSER = fromBlock(ModBlocks.INFUSER);
+    public static final DeferredItem<BlockItem> FOG_DIFFUSER = fromBlock(ModBlocks.FOG_DIFFUSER);
+    public static final DeferredItem<BlockItem> SUNSCREEN_BEACON = fromBlock(ModBlocks.SUNSCREEN_BEACON, itemProps -> itemProps.rarity(Rarity.RARE).component(FactionDataComponents.BLOCK_DESCRIPTION, BlockDescription.INSTANCE));
+    public static final DeferredItem<BlockItem> HUNTER_TABLE = fromBlock(ModBlocks.HUNTER_TABLE, x -> x.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> WEAPON_TABLE = fromBlock(ModBlocks.WEAPON_TABLE);
+    public static final DeferredItem<BlockItem> ALCHEMICAL_CAULDRON = fromBlock(ModBlocks.ALCHEMICAL_CAULDRON);
+    public static final DeferredItem<BlockItem> VAPOR_STILL = fromBlock(ModBlocks.VAPOR_STILL, x -> x.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> ALCHEMY_TABLE = fromBlock(ModBlocks.ALCHEMY_TABLE);
+    public static final DeferredItem<BlockItem> INJECTION_CHAIR = fromBlock(ModBlocks.INJECTION_CHAIR, props -> props.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> ALTAR_CLEANSING = fromBlock(ModBlocks.ALTAR_CLEANSING);
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_NORMAL = fromBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL, (item) -> item.factions$withShiftDescriptionParameter());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_WEAK = fromBlock(ModBlocks.GARLIC_DIFFUSER_WEAK, (item) -> item.factions$withShiftDescriptionParameter());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED, (item) -> item.factions$withShiftDescriptionParameter());
+    public static final DeferredItem<BlockItem> VAMPIRE_BEACON = fromBlock(ModBlocks.VAMPIRE_BEACON, itemProps -> itemProps.rarity(Rarity.RARE));
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_LEAVES = fromBlock(ModBlocks.DARK_SPRUCE_LEAVES);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_SAPLING = fromBlock(ModBlocks.DARK_SPRUCE_SAPLING);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_SAPLING = fromBlock(ModBlocks.CURSED_SPRUCE_SAPLING);
+    public static final DeferredItem<BlockItem> VAMPIRE_ORCHID = fromBlock(ModBlocks.VAMPIRE_ORCHID);
+    public static final DeferredItem<BlockItem> CURSED_ROOTS = fromBlock(ModBlocks.CURSED_ROOTS);
+    public static final DeferredItem<BlockItem> CURSED_HANGING_ROOTS = fromBlock(ModBlocks.CURSED_HANGING_ROOTS);
+    public static final DeferredItem<BlockItem> DIRECT_CURSED_BARK = fromBlock(ModBlocks.DIRECT_CURSED_BARK);
+    public static final DeferredItem<BlockItem> GARLIC = fromBlock(ModBlocks.GARLIC);
+    public static final DeferredItem<BlockItem> CURSED_GRASS = fromBlock(ModBlocks.CURSED_GRASS);
+    public static final DeferredItem<BlockItem> CURSED_EARTH = fromBlock(ModBlocks.CURSED_EARTH);
+    public static final DeferredItem<BlockItem> CURSED_EARTH_PATH = fromBlock(ModBlocks.CURSED_EARTH_PATH);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_LOG = fromBlock(ModBlocks.DARK_SPRUCE_LOG);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_WOOD = fromBlock(ModBlocks.DARK_SPRUCE_WOOD);
+    public static final DeferredItem<BlockItem> STRIPPED_DARK_SPRUCE_LOG = fromBlock(ModBlocks.STRIPPED_DARK_SPRUCE_LOG);
+    public static final DeferredItem<BlockItem> STRIPPED_DARK_SPRUCE_WOOD = fromBlock(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_PLANKS = fromBlock(ModBlocks.DARK_SPRUCE_PLANKS);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_STAIRS = fromBlock(ModBlocks.DARK_SPRUCE_STAIRS);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_SLAB = fromBlock(ModBlocks.DARK_SPRUCE_SLAB);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_FENCE = fromBlock(ModBlocks.DARK_SPRUCE_FENCE);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_FENCE_GATE = fromBlock(ModBlocks.DARK_SPRUCE_FENCE_GATE);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_DOOR = fromBlock(ModBlocks.DARK_SPRUCE_DOOR);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_TRAPDOOR = fromBlock(ModBlocks.DARK_SPRUCE_TRAPDOOR);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_PRESSURE_PLACE = fromBlock(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_BUTTON = fromBlock(ModBlocks.DARK_SPRUCE_BUTTON);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_LOG = fromBlock(ModBlocks.CURSED_SPRUCE_LOG, CursedSpruceItem::new);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_WOOD = fromBlock(ModBlocks.CURSED_SPRUCE_WOOD, CursedSpruceItem::new);
+    public static final DeferredItem<BlockItem> STRIPPED_CURSED_SPRUCE_LOG = fromBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG);
+    public static final DeferredItem<BlockItem> STRIPPED_CURSED_SPRUCE_WOOD = fromBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_PLANKS = fromBlock(ModBlocks.CURSED_SPRUCE_PLANKS);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_STAIRS = fromBlock(ModBlocks.CURSED_SPRUCE_STAIRS);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_SLAB = fromBlock(ModBlocks.CURSED_SPRUCE_SLAB);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_FENCE = fromBlock(ModBlocks.CURSED_SPRUCE_FENCE);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_FENCE_GATE = fromBlock(ModBlocks.CURSED_SPRUCE_FENCE_GATE);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_DOOR = fromBlock(ModBlocks.CURSED_SPRUCE_DOOR);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_TRAPDOOR = fromBlock(ModBlocks.CURSED_SPRUCE_TRAPDOOR);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_PRESSURE_PLACE = fromBlock(ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_BUTTON = fromBlock(ModBlocks.CURSED_SPRUCE_BUTTON);
+    public static final DeferredItem<BlockItem> DARK_STONE = fromBlock(ModBlocks.DARK_STONE);
+    public static final DeferredItem<BlockItem> DARK_STONE_STAIRS = fromBlock(ModBlocks.DARK_STONE_STAIRS);
+    public static final DeferredItem<BlockItem> DARK_STONE_SLAB = fromBlock(ModBlocks.DARK_STONE_SLAB);
+    public static final DeferredItem<BlockItem> DARK_STONE_WALL = fromBlock(ModBlocks.DARK_STONE_WALL);
+    public static final DeferredItem<BlockItem> INFESTED_DARK_STONE = fromBlock(ModBlocks.INFESTED_DARK_STONE);
+    public static final DeferredItem<BlockItem> DARK_STONE_BRICKS = fromBlock(ModBlocks.DARK_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> DARK_STONE_BRICK_STAIRS = fromBlock(ModBlocks.DARK_STONE_BRICK_STAIRS);
+    public static final DeferredItem<BlockItem> DARK_STONE_BRICK_SLAB = fromBlock(ModBlocks.DARK_STONE_BRICK_SLAB);
+    public static final DeferredItem<BlockItem> DARK_STONE_BRICK_WALL = fromBlock(ModBlocks.DARK_STONE_BRICK_WALL);
+    public static final DeferredItem<BlockItem> CRACKED_DARK_STONE_BRICKS = fromBlock(ModBlocks.CRACKED_DARK_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> CHISELED_DARK_STONE_BRICKS = fromBlock(ModBlocks.CHISELED_DARK_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> BLOODY_DARK_STONE_BRICKS = fromBlock(ModBlocks.BLOODY_DARK_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> COBBLED_DARK_STONE = fromBlock(ModBlocks.COBBLED_DARK_STONE);
+    public static final DeferredItem<BlockItem> COBBLED_DARK_STONE_STAIRS = fromBlock(ModBlocks.COBBLED_DARK_STONE_STAIRS);
+    public static final DeferredItem<BlockItem> COBBLED_DARK_STONE_SLAB = fromBlock(ModBlocks.COBBLED_DARK_STONE_SLAB);
+    public static final DeferredItem<BlockItem> COBBLED_DARK_STONE_WALL = fromBlock(ModBlocks.COBBLED_DARK_STONE_WALL);
+    public static final DeferredItem<BlockItem> POLISHED_DARK_STONE = fromBlock(ModBlocks.POLISHED_DARK_STONE);
+    public static final DeferredItem<BlockItem> POLISHED_DARK_STONE_STAIRS = fromBlock(ModBlocks.POLISHED_DARK_STONE_STAIRS);
+    public static final DeferredItem<BlockItem> POLISHED_DARK_STONE_SLAB = fromBlock(ModBlocks.POLISHED_DARK_STONE_SLAB);
+    public static final DeferredItem<BlockItem> POLISHED_DARK_STONE_WALL = fromBlock(ModBlocks.POLISHED_DARK_STONE_WALL);
+    public static final DeferredItem<BlockItem> DARK_STONE_TILES = fromBlock(ModBlocks.DARK_STONE_TILES);
+    public static final DeferredItem<BlockItem> DARK_STONE_TILES_STAIRS = fromBlock(ModBlocks.DARK_STONE_TILES_STAIRS);
+    public static final DeferredItem<BlockItem> DARK_STONE_TILES_SLAB = fromBlock(ModBlocks.DARK_STONE_TILES_SLAB);
+    public static final DeferredItem<BlockItem> DARK_STONE_TILES_WALL = fromBlock(ModBlocks.DARK_STONE_TILES_WALL);
+    public static final DeferredItem<BlockItem> CRACKED_DARK_STONE_TILES = fromBlock(ModBlocks.CRACKED_DARK_STONE_TILES);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_BRICKS = fromBlock(ModBlocks.PURPLE_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_BRICK_STAIRS = fromBlock(ModBlocks.PURPLE_STONE_BRICK_STAIRS);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_BRICK_SLAB = fromBlock(ModBlocks.PURPLE_STONE_BRICK_SLAB);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_BRICK_WALL = fromBlock(ModBlocks.PURPLE_STONE_BRICK_WALL);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_TILES = fromBlock(ModBlocks.PURPLE_STONE_TILES);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_STAIRS = fromBlock(ModBlocks.PURPLE_STONE_TILES_STAIRS);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_SLAB = fromBlock(ModBlocks.PURPLE_STONE_TILES_SLAB);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_WALL = fromBlock(ModBlocks.PURPLE_STONE_TILES_WALL);
+    public static final DeferredItem<BlockItem> FIRE_PLACE = fromBlock(ModBlocks.FIRE_PLACE);
+    public static final DeferredItem<BlockItem> CHANDELIER = fromBlock(ModBlocks.CHANDELIER, (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix().factions$withShiftDescription()));
+    public static final DeferredItem<BlockItem> VAMPIRE_SOUL_LANTERN = fromBlock(ModBlocks.VAMPIRE_SOUL_LANTERN);
+    public static final DeferredItem<BlockItem> CROSS = fromBlock(ModBlocks.CROSS);
+    public static final DeferredItem<BlockItem> TOMBSTONE1 = fromBlock(ModBlocks.TOMBSTONE1);
+    public static final DeferredItem<BlockItem> TOMBSTONE2 = fromBlock(ModBlocks.TOMBSTONE2);
+    public static final DeferredItem<BlockItem> TOMBSTONE3 = fromBlock(ModBlocks.TOMBSTONE3);
+    public static final DeferredItem<BlockItem> GRAVE_CAGE = fromBlock(ModBlocks.GRAVE_CAGE);
+    public static final DeferredItem<BlockItem> VAMPIRE_RACK = fromBlock(ModBlocks.VAMPIRE_RACK);
+    public static final DeferredItem<BlockItem> THRONE = fromBlock(ModBlocks.THRONE);
+    public static final DeferredItem<BlockItem> BAT_CAGE = fromBlock(ModBlocks.BAT_CAGE, BatCageItem::new);
+    public static final DeferredItem<BlockItem> MOTHER_TROPHY = fromBlock(ModBlocks.MOTHER_TROPHY, itemProps -> itemProps.factions$withShiftDescription().rarity(Rarity.EPIC).stacksTo(1));
+    public static final DeferredItem<BlockItem> COFFIN_WHITE = fromBlock(ModBlocks.COFFIN_WHITE);
+    public static final DeferredItem<BlockItem> COFFIN_ORANGE = fromBlock(ModBlocks.COFFIN_ORANGE);
+    public static final DeferredItem<BlockItem> COFFIN_MAGENTA = fromBlock(ModBlocks.COFFIN_MAGENTA);
+    public static final DeferredItem<BlockItem> COFFIN_YELLOW = fromBlock(ModBlocks.COFFIN_YELLOW);
+    public static final DeferredItem<BlockItem> COFFIN_LIME = fromBlock(ModBlocks.COFFIN_LIME);
+    public static final DeferredItem<BlockItem> COFFIN_PINK = fromBlock(ModBlocks.COFFIN_PINK);
+    public static final DeferredItem<BlockItem> COFFIN_GRAY = fromBlock(ModBlocks.COFFIN_GRAY);
+    public static final DeferredItem<BlockItem> COFFIN_LIGHT_GRAY = fromBlock(ModBlocks.COFFIN_LIGHT_GRAY);
+    public static final DeferredItem<BlockItem> COFFIN_CYAN = fromBlock(ModBlocks.COFFIN_CYAN);
+    public static final DeferredItem<BlockItem> COFFIN_PURPLE = fromBlock(ModBlocks.COFFIN_PURPLE);
+    public static final DeferredItem<BlockItem> COFFIN_BLUE = fromBlock(ModBlocks.COFFIN_BLUE);
+    public static final DeferredItem<BlockItem> COFFIN_BROWN = fromBlock(ModBlocks.COFFIN_BROWN);
+    public static final DeferredItem<BlockItem> COFFIN_GREEN = fromBlock(ModBlocks.COFFIN_GREEN);
+    public static final DeferredItem<BlockItem> COFFIN_RED = fromBlock(ModBlocks.COFFIN_RED);
+    public static final DeferredItem<BlockItem> COFFIN_BLACK = fromBlock(ModBlocks.COFFIN_BLACK);
+    public static final DeferredItem<BlockItem> CHANDELIER_NORMAL = fromChandelier(ModBlocks.CHANDELIER_NORMAL);
+    public static final DeferredItem<BlockItem> CHANDELIER_WHITE = fromChandelier(ModBlocks.CHANDELIER_WHITE);
+    public static final DeferredItem<BlockItem> CHANDELIER_ORANGE = fromChandelier(ModBlocks.CHANDELIER_ORANGE);
+    public static final DeferredItem<BlockItem> CHANDELIER_MAGENTA = fromChandelier(ModBlocks.CHANDELIER_MAGENTA);
+    public static final DeferredItem<BlockItem> CHANDELIER_LIGHT_BLUE = fromChandelier(ModBlocks.CHANDELIER_LIGHT_BLUE);
+    public static final DeferredItem<BlockItem> CHANDELIER_YELLOW = fromChandelier(ModBlocks.CHANDELIER_YELLOW);
+    public static final DeferredItem<BlockItem> CHANDELIER_PINK = fromChandelier(ModBlocks.CHANDELIER_PINK);
+    public static final DeferredItem<BlockItem> CHANDELIER_GRAY = fromChandelier(ModBlocks.CHANDELIER_GRAY);
+    public static final DeferredItem<BlockItem> CHANDELIER_LIGHT_GRAY = fromChandelier(ModBlocks.CHANDELIER_LIGHT_GRAY);
+    public static final DeferredItem<BlockItem> CHANDELIER_CYAN = fromChandelier(ModBlocks.CHANDELIER_CYAN);
+    public static final DeferredItem<BlockItem> CHANDELIER_PURPLE = fromChandelier(ModBlocks.CHANDELIER_PURPLE);
+    public static final DeferredItem<BlockItem> CHANDELIER_BLUE = fromChandelier(ModBlocks.CHANDELIER_BLUE);
+    public static final DeferredItem<BlockItem> CHANDELIER_BROWN = fromChandelier(ModBlocks.CHANDELIER_BROWN);
+    public static final DeferredItem<BlockItem> CHANDELIER_GREEN = fromChandelier(ModBlocks.CHANDELIER_GREEN);
+    public static final DeferredItem<BlockItem> CHANDELIER_RED = fromChandelier(ModBlocks.CHANDELIER_RED);
+    public static final DeferredItem<BlockItem> CHANDELIER_BLACK = fromChandelier(ModBlocks.CHANDELIER_BLACK);
+
 
     @SuppressWarnings("unchecked")
     public static Stream<Holder<Item>> listElements() {
@@ -314,6 +462,26 @@ public class ModItems {
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get());
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get());
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get());
+    }
+
+    private static DeferredItem<BlockItem> fromBlock(Holder<Block> block) {
+        return ITEMS.registerSimpleBlockItem(block);
+    }
+
+    private static DeferredItem<BlockItem> fromBlock(Holder<Block> block, UnaryOperator<Item.Properties> properties) {
+        return ITEMS.registerSimpleBlockItem(block, properties);
+    }
+
+    private static <T extends BlockItem> DeferredItem<T> fromBlock(Holder<Block> block, BiFunction<Block,Item.Properties, T> itemCreator) {
+        return ITEMS.registerItem(block.getKey().identifier().getPath(), prop -> itemCreator.apply(block.value(), prop));
+    }
+
+    private static <T extends BlockItem> DeferredItem<T> fromBlock(Holder<Block> block, Function<Item.Properties, T> itemCreator, UnaryOperator<Item.Properties> properties) {
+        return ITEMS.registerItem(block.getKey().identifier().getPath(), itemCreator, properties);
+    }
+
+    private static DeferredItem<BlockItem> fromChandelier(Holder<Block> block) {
+        return fromBlock(block, (b, itemProps) -> new BlockItem(b, itemProps.useBlockDescriptionPrefix().factions$withShiftDescription(Component.translatable("tooltip.vampirism.chandelier.filled"))));
     }
 
 }
