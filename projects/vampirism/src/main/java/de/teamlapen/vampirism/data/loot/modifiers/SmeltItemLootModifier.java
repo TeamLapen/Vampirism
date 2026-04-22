@@ -31,8 +31,8 @@ public class SmeltItemLootModifier extends LootModifier {
      *
      * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
      */
-    public SmeltItemLootModifier(LootItemCondition... conditionsIn) {
-        super(conditionsIn);
+    public SmeltItemLootModifier(LootItemCondition[] conditionsIn, int priority) {
+        super(conditionsIn,priority);
     }
 
     @NotNull

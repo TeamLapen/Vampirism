@@ -30,6 +30,7 @@ import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -76,7 +77,7 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void blockDestroyed(BlockEvent.@NotNull BreakEvent event) {
+    public void blockDestroyed(BreakBlockEvent event) {
         if (!(event.getLevel() instanceof Level)) return;
         //don't allow player to destroy blocks with PointOfInterests that are owned by a totem with different faction as the player
         if (event.getPlayer().isCreative()) return;

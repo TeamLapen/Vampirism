@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import java.util.Collections;
 import java.util.List;
 
-public class ItemReward implements TaskReward {
+public class ItemReward implements IItemReward {
 
     public static final MapCodec<ItemReward> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(ItemStackTemplate.CODEC.fieldOf("item").forGetter(i -> i.reward)
@@ -31,6 +31,7 @@ public class ItemReward implements TaskReward {
         return new Instance(this.reward);
     }
 
+    @Override
     public List<ItemStack> getAllPossibleRewards() {
         return Collections.singletonList(this.reward.create());
     }
@@ -45,26 +46,4 @@ public class ItemReward implements TaskReward {
         return Component.translatable(this.reward.item().value().getDescriptionId());
     }
 
-    public record Instance(ItemStackTemplate reward) implements ITaskRewardInstance {
-
-        public static final MapCodec<Instance> CODEC = RecordCodecBuilder.mapCodec(inst -> {
-            return inst.group(ItemStackTemplate.CODEC.fieldOf("item").forGetter(i -> i.reward)).apply(inst, Instance::new);
-        });
-
-        public Instance(ItemStackTemplate reward) {
-            this.reward = reward;
-        }
-
-        @Override
-        public void applyReward(IFactionPlayer<?> player) {
-            if (!player.asEntity().addItem(this.reward.create())) {
-                player.asEntity().drop(this.reward.create(), true);
-            }
-        }
-
-        @Override
-        public MapCodec<? extends ITaskRewardInstance> codec() {
-            return FactionTasks.ITEM_REWARD_INSTANCE.get();
-        }
-    }
 }

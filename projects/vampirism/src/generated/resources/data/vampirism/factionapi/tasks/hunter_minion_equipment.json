@@ -35,7 +35,6 @@
   "reward": {
     "type": "factionapi:item",
     "item": {
-      "count": 1,
       "id": "vampirism:hunter_minion_equipment"
     }
   },

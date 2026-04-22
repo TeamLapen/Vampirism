@@ -61,7 +61,7 @@ public class SkillsTabComponent {
         this.skillHandler = skillHandler;
         ISkillTree tree = skillTree.value();
         this.index = index;
-        this.icon = tree.display();
+        this.icon = tree.display().create();
         this.title = tree.name();
         this.position = AdvancementTabType.LEFT;
         this.treeWidth = skillTreeData.getTreeWidth(skillTree);

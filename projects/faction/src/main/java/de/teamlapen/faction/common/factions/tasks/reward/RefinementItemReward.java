@@ -19,6 +19,7 @@ import de.teamlapen.faction.common.util.RegUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.random.Weighted;
@@ -37,19 +38,15 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class RefinementItemReward extends ItemReward {
+public class RefinementItemReward implements IItemReward {
 
-    public static final MapCodec<RefinementItemReward> CODEC = RecordCodecBuilder.mapCodec(inst -> {
-        return inst.group(BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item").forGetter(i -> Optional.ofNullable(i.item.get()).map(IRefinementItem::asItem)),
-                ModCodecs.playableFactionSet().fieldOf("faction").forGetter(i -> i.faction),
-                StringRepresentable.fromEnum(IRefinementSet.Rarity::values).optionalFieldOf("rarity").forGetter(i -> Optional.ofNullable(i.rarity))
-        ).apply(inst, (reward, faction, rarity) -> {
-            Preconditions.checkArgument(reward.isEmpty() || reward.get() instanceof IRefinementItem, "Item must be a refinement item");
-            return new RefinementItemReward((IRefinementItem) reward.orElse(null), faction, rarity.orElse(null));
-        });
-    });
+    public static final MapCodec<RefinementItemReward> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+            ModCodecs.playableFactionSet().fieldOf("faction").forGetter(i -> i.faction),
+            ItemStackTemplate.CODEC.optionalFieldOf("item").forGetter(i -> Optional.ofNullable(i.item)),
+            StringRepresentable.fromEnum(IRefinementSet.Rarity::values).optionalFieldOf("rarity").forGetter(i -> Optional.ofNullable(i.rarity))
+    ).apply(inst, (a,b,c) -> new RefinementItemReward(a,b.orElse(null),c.orElse(null))));
 
-    private final Supplier<@Nullable IRefinementItem> item;
+    private final @Nullable ItemStackTemplate item;
     private final HolderSet<? extends IPlayableFaction<?>> faction;
     @Nullable
     private final IRefinementSet.Rarity rarity;
@@ -59,21 +56,18 @@ public class RefinementItemReward extends ItemReward {
     }
 
     public RefinementItemReward(HolderSet<? extends IPlayableFaction<?>> faction, @Nullable IRefinementSet.Rarity refinementRarity) {
-        this(faction, () -> null, refinementRarity);
+        this(faction, null, refinementRarity);
     }
 
-    public RefinementItemReward(HolderSet<? extends IPlayableFaction<?>> faction, Supplier<@Nullable IRefinementItem> item, @Nullable IRefinementSet.Rarity refinementRarity) {
-        super(new ItemStackTemplate(Items.AIR));
+    public RefinementItemReward(HolderSet<? extends IPlayableFaction<?>> faction, @Nullable ItemStackTemplate item, @Nullable IRefinementSet.Rarity refinementRarity) {
         this.item = item;
         this.faction = faction;
         this.rarity = refinementRarity;
     }
 
-    private RefinementItemReward(@Nullable IRefinementItem reward, HolderSet<? extends IPlayableFaction<?>> faction, IRefinementSet.@Nullable Rarity rarity) {
-        super(new ItemStackTemplate(Items.AIR));
-        this.item = () -> reward;
-        this.faction = faction;
-        this.rarity = rarity;
+    @Override
+    public Component description() {
+        return this.item != null ? Component.translatable(this.item.item().value().getDescriptionId()) : Component.translatable("task_reward.factionapi.refinement_item");
     }
 
     @Override
@@ -83,14 +77,14 @@ public class RefinementItemReward extends ItemReward {
 
     @Override
     public List<ItemStack> getAllPossibleRewards() {
-        return this.reward.count() >0 ? Collections.singletonList(this.reward.create()) : getAllRefinementItems();
+        return this.item != null ? Collections.singletonList(this.item.create()) : getAllRefinementItems();
     }
 
     protected <Z extends Item & IRefinementItem> ItemStackTemplate createItem(RandomSource random) {
         @SuppressWarnings("unchecked")
         HolderSet<IPlayableFaction<?>> rewardFactions = (HolderSet<IPlayableFaction<?>>) this.faction;
 
-        if (this.item.get() instanceof IRefinementItem iRefinementItem && iRefinementItem.asItem().getDefaultInstance().get(FactionDataComponents.FACTION_RESTRICTION) instanceof FactionRestriction restriction) {
+        if (this.item != null && this.item.item() instanceof IRefinementItem iRefinementItem && iRefinementItem.asItem().getDefaultInstance().get(FactionDataComponents.FACTION_RESTRICTION) instanceof FactionRestriction restriction) {
             //noinspection unchecked
             rewardFactions = new AndHolderSet<>(rewardFactions, HolderSet.direct(x -> (Holder<IPlayableFaction<?>>) (Object) x,restriction.factions().stream().toList()));
         }
@@ -101,7 +95,7 @@ public class RefinementItemReward extends ItemReward {
         if (randomFaction == null) return new ItemStackTemplate(Items.AIR);
 
         @SuppressWarnings("unchecked")
-        Z item = this.item.get() != null ? (Z) this.item.get() : randomFaction.value().getRandomRefinementItem(random, IRefinementItem.AccessorySlotType.values()[random.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
+        Z item = this.item != null ? (Z) this.item.item() : randomFaction.value().getRandomRefinementItem(random, IRefinementItem.AccessorySlotType.values()[random.nextInt(IRefinementItem.AccessorySlotType.values().length)]);
         IRefinementItem.AccessorySlotType slot = (item).getSlotType();
         List<Weighted<IRefinementSet>> sets = RegUtil.values(ModRegistries.REFINEMENT_SETS).stream()
                 .filter(set -> IFaction.is(randomFaction, set.getFaction()))

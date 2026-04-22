@@ -7,6 +7,7 @@ import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.factions.tasks.requirements.EntityRequirement;
 import de.teamlapen.faction.common.factions.tasks.requirements.EntityTypeRequirement;
 import de.teamlapen.faction.common.factions.tasks.requirements.ItemRequirement;
+import de.teamlapen.faction.common.factions.tasks.reward.IItemReward;
 import de.teamlapen.faction.common.factions.tasks.reward.ItemReward;
 import de.teamlapen.faction.common.world.inventory.ITaskMenu;
 import net.minecraft.ChatFormatting;
@@ -89,7 +90,7 @@ public class TaskIconWidget extends AbstractWidget {
     public static TaskIconWidget createReward(ITaskMenu menu, ITaskInstance taskInstance, Task task) {
         ItemStack stack;
         String progressText = null;
-        if (taskInstance.getReward() instanceof ItemReward.Instance(ItemStackTemplate rewardStack)) {
+        if (taskInstance.getReward() instanceof IItemReward.Instance(ItemStackTemplate rewardStack)) {
             stack = rewardStack.create();
             progressText = String.valueOf(rewardStack.count());
         } else {

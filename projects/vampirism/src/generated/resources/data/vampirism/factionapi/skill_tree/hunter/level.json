@@ -1,7 +1,6 @@
 {
   "background": "minecraft:block/spruce_planks",
   "display": {
-    "count": 1,
     "id": "vampirism:vampire_book"
   },
   "faction": "vampirism:hunter",

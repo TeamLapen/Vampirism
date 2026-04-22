@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.common.world.items.loot.BiomeMapFunction;
 import de.teamlapen.vampirism.data.loot.conditions.*;
 import de.teamlapen.vampirism.data.loot.functions.*;
 import de.teamlapen.vampirism.data.loot.modifiers.SmeltItemLootModifier;
@@ -25,6 +26,7 @@ public class ModLoot {
     public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<RefinementSetFunction>> ADD_REFINEMENT_SET = LOOT_FUNCTION_TYPES.register("add_refinement_set", () -> RefinementSetFunction.CODEC);
     public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<SetOilFunction>> SET_OIL = LOOT_FUNCTION_TYPES.register("set_oil", () -> SetOilFunction.CODEC);
     public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<SetBloodFunction>> SET_BLOOD = LOOT_FUNCTION_TYPES.register("set_blood", () -> SetBloodFunction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<BiomeMapFunction>> BIOME_MAP = LOOT_FUNCTION_TYPES.register("biome_map", () -> BiomeMapFunction.MAP_CODEC);
 
     public static final DeferredHolder<MapCodec<? extends LootItemCondition>, MapCodec<StakeCondition>> WITH_STAKE = LOOT_CONDITION_TYPES.register("with_stake", () -> StakeCondition.CODEC);
     public static final DeferredHolder<MapCodec<? extends LootItemCondition>, MapCodec<AdjustableLevelCondition>> ADJUSTABLE_LEVEL = LOOT_CONDITION_TYPES.register("adjustable_level", () -> AdjustableLevelCondition.CODEC);

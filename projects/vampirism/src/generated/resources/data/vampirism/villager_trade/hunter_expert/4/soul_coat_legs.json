@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "vampirism:hunter_coat_legs_enhanced"
+  },
+  "max_uses": 7.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 35.0,
+      "min": 25.0
+    },
+    "id": "vampirism:soul_orb_vampire"
+  },
+  "xp": 10.0
+}
