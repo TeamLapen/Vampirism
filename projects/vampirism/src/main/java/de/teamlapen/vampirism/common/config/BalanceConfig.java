@@ -1,21 +1,15 @@
 package de.teamlapen.vampirism.common.config;
 
-
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.common.core.ModPotions;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.UtilLib;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.alchemy.Potions;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Values are null until after RegistryEvent<Block>.
@@ -208,7 +202,6 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue itApplicableOilArmorReverse;
     public final ModConfigSpec.BooleanValue itApplicableOilPickaxeReverse;
     public final ModConfigSpec.BooleanValue itApplicableOilSwordReverse;
-    public final ModConfigSpec.ConfigValue<List<? extends String>> itBlockedSerumPotions;
 
     // Lord Actions
     public final ModConfigSpec.BooleanValue laLordSpeedEnabled;
@@ -746,19 +739,6 @@ public class BalanceConfig {
         itApplicableOilSwordReverse = builder
                 .comment(String.format("When enabled, the '%s' item tag acts as a whitelist instead of a blacklist for sword oil application.", ModItemTags.APPLICABLE_OIL_SWORD.location()))
                 .define("applicableOilSwordReverse", false);
-        itBlockedSerumPotions = builder
-                .comment("List of potion ids that cannot be crafted into or used as serum injections. Uses potion IDs e.g. [\"minecraft:healing\"]. Use wiki or commands to check the actual ids, some may not match their names.")
-                .defineList("blockedSerumPotions", Stream.of(
-                        ModPotions.RESISTANCE,
-                        ModPotions.STRONG_RESISTANCE,
-                        ModPotions.LONG_RESISTANCE,
-                        Potions.HEALING,
-                        ModPotions.VERY_STRONG_HEALING,
-                        Potions.STRONG_HEALING,
-                        Potions.TURTLE_MASTER,
-                        Potions.STRONG_TURTLE_MASTER,
-                        Potions.LONG_TURTLE_MASTER
-                ).map(Holder::getRegisteredName).toList(), () -> "", c -> UtilLib.checkRegistryObjectExistence(Registries.POTION, c));
 
         builder.category("lordActions", "la");
 

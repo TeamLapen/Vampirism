@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.items;
 
-import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.tags.ModPotionTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -24,7 +24,7 @@ public class SerumInjectionItem extends Item {
     }
 
     public static boolean isBlockedPotion(Holder<Potion> potion) {
-        return ModConfig.balance().itBlockedSerumPotions.get().contains(potion.getRegisteredName());
+        return potion.is(ModPotionTags.SERUM_BLOCKED);
     }
 
     @Override

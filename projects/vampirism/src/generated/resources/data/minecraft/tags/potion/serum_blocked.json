@@ -1,0 +1,13 @@
+{
+  "values": [
+    "vampirism:resistance",
+    "vampirism:strong_resistance",
+    "vampirism:long_resistance",
+    "minecraft:healing",
+    "vampirism:very_strong_healing",
+    "minecraft:strong_healing",
+    "minecraft:turtle_master",
+    "minecraft:strong_turtle_master",
+    "minecraft:long_turtle_master"
+  ]
+}
