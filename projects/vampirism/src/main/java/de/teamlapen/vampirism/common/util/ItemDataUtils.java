@@ -29,7 +29,11 @@ public class ItemDataUtils {
     }
 
     public static ItemStack createPotion(Holder<Potion> potion) {
-        return PotionContents.createItemStack(Items.POTION, potion);
+        return createPotion(potion, Items.POTION);
+    }
+
+    public static ItemStack createPotion(Holder<Potion> potion, Item baseItem) {
+        return PotionContents.createItemStack(baseItem, potion);
     }
 
     public static ItemStack setEnchantment(ItemStack stack, Holder<Enchantment> enchantment, int level) {

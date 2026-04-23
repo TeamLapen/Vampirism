@@ -10,12 +10,10 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
-import de.teamlapen.vampirism.common.advancements.critereon.CuredVampireVillagerCriterionTrigger;
-import de.teamlapen.vampirism.common.advancements.critereon.HunterActionCriterionTrigger;
-import de.teamlapen.vampirism.common.advancements.critereon.MapFoundCriterionTrigger;
-import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
+import de.teamlapen.vampirism.common.advancements.critereon.*;
 import de.teamlapen.vampirism.common.components.predicates.VampireBookPredicate;
 import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.tags.ModEffectTags;
 import de.teamlapen.vampirism.common.tags.ModEntityTags;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
@@ -273,6 +271,18 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .requirements(AdvancementRequirements.Strategy.AND)
                     .save(consumer, REFERENCE.MODID + ":hunter/technology");
+            AdvancementHolder mainline = Advancement.Builder.advancement()
+                    .display(ItemDataUtils.createPotion(Potions.REGENERATION, ModItems.SERUM_INJECTION.get()), Component.translatable("advancement.vampirism.mainline"), Component.translatable("advancement.vampirism.mainline.desc"), null, AdvancementType.TASK, true, true, false)
+                    .parent(become_hunter)
+                    .addCriterion("injection", SerumInjectedCriterionTrigger.TriggerInstance.injectedSerumAny())
+                    .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .save(consumer, REFERENCE.MODID + ":hunter/mainline");
+            AdvancementHolder worth_it = Advancement.Builder.advancement()
+                    .display(ModBlocks.TOMBSTONE1, Component.translatable("advancement.vampirism.worth_it"), Component.translatable("advancement.vampirism.worth_it.desc"), null, AdvancementType.CHALLENGE, true, true, true)
+                    .parent(mainline)
+                    .addCriterion("injection", SerumInjectedCriterionTrigger.TriggerInstance.injectedSerum(ModEffectTags.SELF_HARM_SERUMS))
+                    .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .save(consumer, REFERENCE.MODID + ":hunter/worth_it");
             AdvancementHolder max_lord = Advancement.Builder.advancement()
                     .display(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get(), Component.translatable("advancement.vampirism.max_lord_hunter"), Component.translatable("advancement.vampirism.max_lord_hunter.desc"), null, AdvancementType.CHALLENGE, true, true, false)
                     .parent(max_level)

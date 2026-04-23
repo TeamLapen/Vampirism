@@ -1,0 +1,42 @@
+{
+  "parent": "vampirism:hunter/mainline",
+  "criteria": {
+    "injection": {
+      "conditions": {
+        "effect": "minecraft:self_harm_serums"
+      },
+      "trigger": "vampirism:serum_injected"
+    },
+    "main": {
+      "conditions": {
+        "type": "level",
+        "faction": "vampirism:hunter",
+        "level": 1
+      },
+      "trigger": "factionapi:faction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.worth_it.desc"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "vampirism:tombstone1"
+    },
+    "title": {
+      "translate": "advancement.vampirism.worth_it"
+    }
+  },
+  "requirements": [
+    [
+      "injection"
+    ],
+    [
+      "main"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

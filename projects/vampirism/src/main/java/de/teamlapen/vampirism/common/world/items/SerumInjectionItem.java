@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModPotionTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -43,6 +45,11 @@ public class SerumInjectionItem extends Item {
         ItemStack emptySyringe = ModItems.SYRINGE_EMPTY.get().getDefaultInstance();
         if (!player.hasInfiniteMaterials() && !player.getInventory().add(emptySyringe)) {
             player.drop(emptySyringe, false);
+        }
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            System.out.println("Tried to trigger");
+            ModAdvancements.TRIGGER_SERUM_INJECTED.get().trigger(serverPlayer, potionContents);
         }
 
         return InteractionResult.SUCCESS.withoutItem();
