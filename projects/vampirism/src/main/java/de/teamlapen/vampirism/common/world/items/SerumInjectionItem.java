@@ -48,7 +48,6 @@ public class SerumInjectionItem extends Item {
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
-            System.out.println("Tried to trigger");
             ModAdvancements.TRIGGER_SERUM_INJECTED.get().trigger(serverPlayer, potionContents);
         }
 
