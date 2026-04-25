@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - 'dev'
-      - '1.21*'
       - 'feature/*'
+      - 'version/*'
   pull_request:
     branches:
       - 'dev'
-      - '1.21*'
       - 'feature/*'
+      - 'version/*'
 
 jobs:
   build:
@@ -23,7 +23,7 @@ jobs:
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '25'
           distribution: 'adopt'
           cache: 'gradle'
       - name: Setup Gradle
