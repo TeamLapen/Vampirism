@@ -4,9 +4,8 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
-import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModOils;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
@@ -47,6 +46,7 @@ import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
 import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
 import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
@@ -95,30 +95,30 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     }
 
     private void recipesFunctionalBlocks() {
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_INSPIRATION)
+        shaped(RecipeCategory.DECORATIONS, ModItems.ALTAR_INSPIRATION)
                 .pattern("X X")
                 .pattern("XYX")
                 .pattern("XXX")
                 .define('X', PLANKS)
-                .define('Y', ModBlocks.BLOOD_CONTAINER)
+                .define('Y', ModItems.BLOOD_CONTAINER)
                 .unlockedBy("has_planks", has(PLANKS))
-                .unlockedBy("has_blood_container", has(ModBlocks.BLOOD_CONTAINER))
+                .unlockedBy("has_blood_container", has(ModItems.BLOOD_CONTAINER))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_INFUSION)
+        shaped(RecipeCategory.DECORATIONS, ModItems.ALTAR_INFUSION)
                 .pattern("YZY")
                 .pattern("ZZZ")
                 .define('Y', GOLD_INGOT)
                 .define('Z', OBSIDIAN)
                 .unlockedBy("has_gold", has(GOLD_INGOT))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_PILLAR)
+        shaped(RecipeCategory.DECORATIONS, ModItems.ALTAR_PILLAR)
                 .pattern("X X")
                 .pattern("   ")
                 .pattern("XXX")
                 .define('X', Blocks.STONE_BRICKS)
                 .unlockedBy("has_stones", has(Blocks.STONE_BRICKS))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_TIP)
+        shaped(RecipeCategory.DECORATIONS, ModItems.ALTAR_TIP)
                 .pattern(" X ")
                 .pattern("XYX")
                 .define('X', IRON_INGOT)
@@ -126,7 +126,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .save(output);
 
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_PEDESTAL)
+        shaped(RecipeCategory.DECORATIONS, ModItems.BLOOD_PEDESTAL)
                 .pattern("GYG")
                 .pattern("YZY")
                 .pattern("XXX")
@@ -136,7 +136,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('G', GOLD_INGOT)
                 .unlockedBy("has_gold", has(GOLD_INGOT))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_CONTAINER)
+        shaped(RecipeCategory.DECORATIONS, ModItems.BLOOD_CONTAINER)
                 .pattern("XYX")
                 .pattern("YZY")
                 .pattern("XYX")
@@ -145,7 +145,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Z', IRON_INGOT)
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_GRINDER)
+        shaped(RecipeCategory.DECORATIONS, ModItems.BLOOD_GRINDER)
                 .pattern("PIP")
                 .pattern("PSP")
                 .pattern("PIP")
@@ -156,31 +156,31 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_planks", has(PLANKS))
                 .unlockedBy("has_stone_slab", has(Blocks.STONE_SLAB))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.BLOOD_SIEVE)
+        shaped(RecipeCategory.DECORATIONS, ModItems.BLOOD_SIEVE)
                 .pattern(" I ")
                 .pattern("PCP")
                 .pattern(" I ")
                 .define('I', IRON_INGOT)
                 .define('P', PLANKS)
-                .define('C', ModBlocks.BLOOD_CONTAINER)
+                .define('C', ModItems.BLOOD_CONTAINER)
                 .unlockedBy("has_iron_ingot", has(IRON_INGOT))
                 .unlockedBy("has_planks", has(PLANKS))
-                .unlockedBy("has_blood_container", has(ModBlocks.BLOOD_CONTAINER))
+                .unlockedBy("has_blood_container", has(ModItems.BLOOD_CONTAINER))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.FOG_DIFFUSER)
+        shaped(RecipeCategory.DECORATIONS, ModItems.FOG_DIFFUSER)
                 .pattern("XYX")
                 .pattern("YZY")
                 .pattern("OOO")
-                .define('X', ModBlocks.CURSED_SPRUCE_PLANKS)
+                .define('X', ModItems.CURSED_SPRUCE_PLANKS)
                 .define('Y', DIAMOND)
                 .define('O', OBSIDIAN)
                 .define('Z', ModItems.MOTHER_CORE)
                 .unlockedBy("has_diamond", has(DIAMOND))
-                .unlockedBy("has_cursed_plank", has(ModBlocks.CURSED_SPRUCE_PLANKS))
+                .unlockedBy("has_cursed_plank", has(ModItems.CURSED_SPRUCE_PLANKS))
                 .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
                 .save(output);
 
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.HUNTER_TABLE)
+        shaped(RecipeCategory.DECORATIONS, ModItems.HUNTER_TABLE)
                 .pattern("XYW")
                 .pattern("ZZZ")
                 .pattern("Z Z")
@@ -190,7 +190,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('W', GARLIC)
                 .unlockedBy("has_fang", has(ModItems.VAMPIRE_FANG))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.WEAPON_TABLE)
+        shaped(RecipeCategory.DECORATIONS, ModItems.WEAPON_TABLE)
                 .pattern("X  ")
                 .pattern("YYY")
                 .pattern(" Z ")
@@ -199,7 +199,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Z', IRON_BLOCK)
                 .unlockedBy("has_iron_ingot", has(IRON_INGOT))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALCHEMICAL_CAULDRON)
+        shaped(RecipeCategory.DECORATIONS, ModItems.ALCHEMICAL_CAULDRON)
                 .pattern("XZX")
                 .pattern("XXX")
                 .pattern("Y Y")
@@ -208,7 +208,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Z', GARLIC)
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.VAPOR_STILL)
+        shaped(RecipeCategory.DECORATIONS, ModItems.VAPOR_STILL)
                 .pattern("CBG")
                 .pattern("CIG")
                 .define('C', COPPER_INGOT)
@@ -217,7 +217,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('G', Items.GLASS_BOTTLE)
                 .unlockedBy("has_copper_ingot", has(COPPER_INGOT))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALCHEMY_TABLE)
+        shaped(RecipeCategory.DECORATIONS, ModItems.ALCHEMY_TABLE)
                 .pattern("B  ")
                 .pattern("BBB")
                 .pattern("P P")
@@ -226,7 +226,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_basalt", has(Blocks.BASALT))
                 .unlockedBy("has_planks", has(PLANKS))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.INJECTION_CHAIR)
+        shaped(RecipeCategory.DECORATIONS, ModItems.INJECTION_CHAIR)
                 .pattern("PL ")
                 .pattern("PWP")
                 .pattern("P P")
@@ -237,7 +237,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_wool", has(WOOL))
                 .unlockedBy("has_leather", has(LEATHER))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_CLEANSING)
+        shaped(RecipeCategory.DECORATIONS, ModItems.ALTAR_CLEANSING)
                 .pattern(" X ")
                 .pattern("YYY")
                 .pattern(" Y ")
@@ -245,7 +245,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', PLANKS)
                 .unlockedBy("has_vampire_book", has(PLANKS))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.ALTAR_CLEANSING)
+        shaped(RecipeCategory.DECORATIONS, ModItems.ALTAR_CLEANSING)
                 .pattern("XZX")
                 .pattern("YYY")
                 .pattern(" Y ")
@@ -255,27 +255,27 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(output, modString("altar_cleansing_fang"));
 
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.GARLIC_DIFFUSER_NORMAL)
+        shaped(RecipeCategory.DECORATIONS, ModItems.GARLIC_DIFFUSER_NORMAL)
                 .pattern("XYX")
                 .pattern("YZY")
                 .pattern("OOO")
                 .define('X', PLANKS)
                 .define('Y', DIAMOND)
                 .define('O', OBSIDIAN)
-                .define('Z', ModBlocks.GARLIC_DIFFUSER_CORE)
+                .define('Z', ModItems.GARLIC_DIFFUSER_CORE)
                 .unlockedBy("has_diamond", has(DIAMOND))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.GARLIC_DIFFUSER_IMPROVED)
+        shaped(RecipeCategory.DECORATIONS, ModItems.GARLIC_DIFFUSER_IMPROVED)
                 .pattern("XYX")
                 .pattern("YZY")
                 .pattern("OOO")
                 .define('X', PLANKS)
                 .define('Y', DIAMOND)
-                .define('Z', ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED)
+                .define('Z', ModItems.GARLIC_DIFFUSER_CORE_IMPROVED)
                 .define('O', OBSIDIAN)
-                .unlockedBy("has_garlic_diffuser", has(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED))
+                .unlockedBy("has_garlic_diffuser", has(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED))
                 .save(output);
-        shaped(RecipeCategory.MISC, ModBlocks.VAMPIRE_BEACON)
+        shaped(RecipeCategory.MISC, ModItems.VAMPIRE_BEACON)
                 .pattern("GGG")
                 .pattern("GCG")
                 .pattern("OOO")
@@ -289,7 +289,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     }
 
     private void recipesDecorationalBlocks() {
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.FIRE_PLACE)
+        shaped(RecipeCategory.DECORATIONS, ModItems.FIRE_PLACE)
                 .pattern(" X ")
                 .pattern("XYX")
                 .define('X', LOG)
@@ -312,7 +312,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .unlockedBy("has_nugget", has(IRON_NUGGET))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.CHANDELIER)
+        shaped(RecipeCategory.DECORATIONS, ModItems.CHANDELIER)
                 .pattern(" A ")
                 .pattern("ICI")
                 .define('C', ModItems.CANDELABRA)
@@ -321,7 +321,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .unlockedBy("has_candelabra", has(ModItems.CANDELABRA))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_SOUL_LANTERN)
+        shaped(RecipeCategory.DECORATIONS, ModItems.VAMPIRE_SOUL_LANTERN)
                 .pattern("GGG")
                 .pattern("GSG")
                 .pattern("GGG")
@@ -329,7 +329,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('G', GOLD_NUGGET)
                 .unlockedBy("has_soul_orb", has(ModItems.SOUL_ORB_VAMPIRE))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.CROSS)
+        shaped(RecipeCategory.DECORATIONS, ModItems.CROSS)
                 .pattern(" X ")
                 .pattern("XYX")
                 .pattern(" X ")
@@ -338,11 +338,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_planks", has(PLANKS))
                 .unlockedBy("has_holy", has(HOLY_WATER))
                 .save(output);
-        shapeless(RecipeCategory.DECORATIONS, ModBlocks.TOMBSTONE1)
-                .requires(ModBlocks.TOMBSTONE2)
-                .unlockedBy("has_tomb", has(ModBlocks.TOMBSTONE2))
+        shapeless(RecipeCategory.DECORATIONS, ModItems.TOMBSTONE1)
+                .requires(ModItems.TOMBSTONE2)
+                .unlockedBy("has_tomb", has(ModItems.TOMBSTONE2))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.TOMBSTONE2)
+        shaped(RecipeCategory.DECORATIONS, ModItems.TOMBSTONE2)
                 .pattern("XX ")
                 .pattern("XYX")
                 .pattern("XXX")
@@ -351,12 +351,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_coble", has(COBBLESTONE))
                 .unlockedBy("has_stone", has(STONE))
                 .save(output);
-        shapeless(RecipeCategory.DECORATIONS, ModBlocks.TOMBSTONE3)
-                .requires(ModBlocks.TOMBSTONE2)
+        shapeless(RecipeCategory.DECORATIONS, ModItems.TOMBSTONE3)
+                .requires(ModItems.TOMBSTONE2)
                 .requires(Blocks.COBBLESTONE)
-                .unlockedBy("has_tomb", has(ModBlocks.TOMBSTONE2))
+                .unlockedBy("has_tomb", has(ModItems.TOMBSTONE2))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.GRAVE_CAGE)
+        shaped(RecipeCategory.DECORATIONS, ModItems.GRAVE_CAGE)
                 .pattern(" X ")
                 .pattern("XYX")
                 .pattern("XYX")
@@ -365,7 +365,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_iron", has(IRON_INGOT))
                 .unlockedBy("has_coal", has(COAL))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.VAMPIRE_RACK)
+        shaped(RecipeCategory.DECORATIONS, ModItems.VAMPIRE_RACK)
                 .pattern("XYX")
                 .pattern("ABC")
                 .pattern("XYX")
@@ -380,7 +380,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_honey", has(Items.HONEYCOMB))
                 .unlockedBy("has_potion", has(Items.GLASS_BOTTLE))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.THRONE)
+        shaped(RecipeCategory.DECORATIONS, ModItems.THRONE)
                 .pattern(" WP")
                 .pattern("PWP")
                 .pattern("S S")
@@ -391,7 +391,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_planks", has(PLANKS))
                 .unlockedBy("has_stick", has(STICK))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModBlocks.BAT_CAGE)
+        shaped(RecipeCategory.DECORATIONS, ModItems.BAT_CAGE)
                 .pattern("GGG")
                 .pattern("GPG")
                 .pattern("PPP")
@@ -410,11 +410,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_bed", has(BED))
                 .save(output);
 
-        coffinFromWool(output, ModBlocks.COFFIN_WHITE, Items.WHITE_WOOL);
+        coffinFromWool(output, ModItems.COFFIN_WHITE, Items.WHITE_WOOL);
         ColorListsUtil.COFFINS.forEach(coffin -> {
-            DyeColor color = coffin.getColor();
+            DyeColor color = coffin.value().getColor();
             if (color != DyeColor.WHITE) {
-                coffinFromWoolOrDye(output, coffin, ColorListsUtil.DYED_WOOL.get(color), ColorListsUtil.DYE_ITEMS.get(color));
+                coffinFromWoolOrDye(output, coffin.get(), ColorListsUtil.DYED_WOOL.get(color), ColorListsUtil.DYE_ITEMS.get(color));
             }
         });
     }
@@ -433,9 +433,9 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     private void coffinFromWoolOrDye(RecipeOutput consumer, ItemLike coffin, ItemLike wool, ItemLike dye) {
         coffinFromWool(consumer, coffin, wool);
         shapeless(RecipeCategory.DECORATIONS, coffin)
-                .requires(ModBlocks.COFFIN_WHITE)
+                .requires(ModItems.COFFIN_WHITE)
                 .requires(dye)
-                .unlockedBy("has_coffin", has(ModBlocks.COFFIN_WHITE))
+                .unlockedBy("has_coffin", has(ModItems.COFFIN_WHITE))
                 .unlockedBy("has_dye", has(dye))
                 .save(consumer, modString(RegUtil.id(coffin).getPath()) + "_from_white");
     }
@@ -453,32 +453,32 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 ModBlockFamilies.PURPLE_STONE_TILES
         ).forEach(blockFamily -> generateRecipes(blockFamily, FeatureFlagSet.of(FeatureFlags.VANILLA)));
 
-        shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.DARK_STONE_BRICKS, 4)
-                .define('#', ModBlocks.DARK_STONE)
+        shaped(RecipeCategory.BUILDING_BLOCKS, ModItems.DARK_STONE_BRICKS, 4)
+                .define('#', ModItems.DARK_STONE)
                 .pattern("##")
                 .pattern("##")
-                .unlockedBy("has_dark_stone", has(ModBlocks.DARK_STONE))
+                .unlockedBy("has_dark_stone", has(ModItems.DARK_STONE))
                 .save(output);
-        shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.PURPLE_STONE_BRICKS, 8)
-                .requires(ModBlocks.DARK_STONE_BRICKS, 8)
-                .requires(ModBlocks.VAMPIRE_ORCHID)
-                .unlockedBy("has_dark_stone_bricks", has(ModBlocks.DARK_STONE_BRICKS))
+        shapeless(RecipeCategory.BUILDING_BLOCKS, ModItems.PURPLE_STONE_BRICKS, 8)
+                .requires(ModItems.DARK_STONE_BRICKS, 8)
+                .requires(ModItems.VAMPIRE_ORCHID)
+                .unlockedBy("has_dark_stone_bricks", has(ModItems.DARK_STONE_BRICKS))
                 .save(output);
 
-        planksFromLog(ModBlocks.DARK_SPRUCE_PLANKS, ModItemTags.DARK_SPRUCE_LOG, 4);
-        planksFromLog(ModBlocks.CURSED_SPRUCE_PLANKS, ModItemTags.CURSED_SPRUCE_LOG, 4);
-        woodFromLogs(ModBlocks.DARK_SPRUCE_WOOD, ModBlocks.DARK_SPRUCE_LOG);
-        woodFromLogs(ModBlocks.CURSED_SPRUCE_WOOD, ModBlocks.CURSED_SPRUCE_LOG);
-        woodFromLogs(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD, ModBlocks.STRIPPED_DARK_SPRUCE_LOG);
-        woodFromLogs(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD, ModBlocks.STRIPPED_CURSED_SPRUCE_LOG);
-        woodenBoat(ModItems.DARK_SPRUCE_BOAT, ModBlocks.DARK_SPRUCE_PLANKS);
-        woodenBoat(ModItems.CURSED_SPRUCE_BOAT, ModBlocks.CURSED_SPRUCE_PLANKS);
+        planksFromLog(ModItems.DARK_SPRUCE_PLANKS, ModItemTags.DARK_SPRUCE_LOG, 4);
+        planksFromLog(ModItems.CURSED_SPRUCE_PLANKS, ModItemTags.CURSED_SPRUCE_LOG, 4);
+        woodFromLogs(ModItems.DARK_SPRUCE_WOOD, ModItems.DARK_SPRUCE_LOG);
+        woodFromLogs(ModItems.CURSED_SPRUCE_WOOD, ModItems.CURSED_SPRUCE_LOG);
+        woodFromLogs(ModItems.STRIPPED_DARK_SPRUCE_WOOD, ModItems.STRIPPED_DARK_SPRUCE_LOG);
+        woodFromLogs(ModItems.STRIPPED_CURSED_SPRUCE_WOOD, ModItems.STRIPPED_CURSED_SPRUCE_LOG);
+        woodenBoat(ModItems.DARK_SPRUCE_BOAT, ModItems.DARK_SPRUCE_PLANKS);
+        woodenBoat(ModItems.CURSED_SPRUCE_BOAT, ModItems.CURSED_SPRUCE_PLANKS);
         chestBoat(ModItems.DARK_SPRUCE_CHEST_BOAT, ModItems.DARK_SPRUCE_BOAT);
         chestBoat(ModItems.CURSED_SPRUCE_CHEST_BOAT, ModItems.CURSED_SPRUCE_BOAT);
-        hangingSign(ModItems.DARK_SPRUCE_HANGING_SIGN, ModBlocks.STRIPPED_DARK_SPRUCE_LOG);
-        hangingSign(ModItems.CURSED_SPRUCE_HANGING_SIGN, ModBlocks.STRIPPED_CURSED_SPRUCE_LOG);
+        hangingSign(ModItems.DARK_SPRUCE_HANGING_SIGN, ModItems.STRIPPED_DARK_SPRUCE_LOG);
+        hangingSign(ModItems.CURSED_SPRUCE_HANGING_SIGN, ModItems.STRIPPED_CURSED_SPRUCE_LOG);
 
-        smeltingAndBlasting(RecipeCategory.BUILDING_BLOCKS, "dark_stone_from_cobbled_dark_stone", ModBlocks.COBBLED_DARK_STONE, ModBlocks.DARK_STONE, 0.1f);
+        smeltingAndBlasting(RecipeCategory.BUILDING_BLOCKS, "dark_stone_from_cobbled_dark_stone", ModItems.COBBLED_DARK_STONE, ModItems.DARK_STONE, 0.1f);
     }
 
     private void recipesMisc() {
@@ -620,7 +620,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern(" A ")
                 .define('#', WOOL)
                 .define('A', STICK)
-                .define('B', ModBlocks.VAMPIRE_ORCHID)
+                .define('B', ModItems.VAMPIRE_ORCHID)
                 .unlockedBy("has_wool", has(WOOL))
                 .save(output.withConditions(new ConfigCondition("umbrella")));
         shaped(RecipeCategory.MISC, ModItems.GARLIC_FINDER)
@@ -695,49 +695,49 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     }
 
     private void recipesStonecutter() {
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_WALL, ModBlocks.PURPLE_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_SLAB, ModBlocks.PURPLE_STONE_BRICKS, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_BRICK_STAIRS, ModBlocks.PURPLE_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES, ModBlocks.PURPLE_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_WALL, ModBlocks.PURPLE_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_WALL, ModBlocks.PURPLE_STONE_TILES);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_SLAB, ModBlocks.PURPLE_STONE_BRICKS, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_SLAB, ModBlocks.PURPLE_STONE_TILES, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_STAIRS, ModBlocks.PURPLE_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.PURPLE_STONE_TILES_STAIRS, ModBlocks.PURPLE_STONE_TILES);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_SLAB, ModBlocks.DARK_STONE_BRICKS, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_SLAB, ModBlocks.DARK_STONE_TILES, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_SLAB, ModBlocks.COBBLED_DARK_STONE, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.COBBLED_DARK_STONE_SLAB, ModBlocks.COBBLED_DARK_STONE, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.COBBLED_DARK_STONE_STAIRS, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.COBBLED_DARK_STONE_WALL, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_SLAB, ModBlocks.POLISHED_DARK_STONE, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_STAIRS, ModBlocks.POLISHED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_WALL, ModBlocks.POLISHED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_SLAB, ModBlocks.COBBLED_DARK_STONE, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_STAIRS, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.POLISHED_DARK_STONE_WALL, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICKS, ModBlocks.POLISHED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICKS, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS, ModBlocks.DARK_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_STAIRS, ModBlocks.POLISHED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB, ModBlocks.COBBLED_DARK_STONE, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB, ModBlocks.DARK_STONE_BRICKS, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_SLAB, ModBlocks.POLISHED_DARK_STONE, 2);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL, ModBlocks.DARK_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_BRICK_WALL, ModBlocks.POLISHED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES, ModBlocks.POLISHED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES, ModBlocks.DARK_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_STAIRS, ModBlocks.DARK_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_STAIRS, ModBlocks.DARK_STONE_TILES);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_STAIRS, ModBlocks.COBBLED_DARK_STONE);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL, ModBlocks.DARK_STONE_BRICKS);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL, ModBlocks.DARK_STONE_TILES);
-        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModBlocks.DARK_STONE_TILES_WALL, ModBlocks.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_BRICK_WALL, ModItems.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_BRICK_SLAB, ModItems.PURPLE_STONE_BRICKS, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_BRICK_STAIRS, ModItems.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_TILES, ModItems.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_TILES_WALL, ModItems.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_TILES_WALL, ModItems.PURPLE_STONE_TILES);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_TILES_SLAB, ModItems.PURPLE_STONE_BRICKS, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_TILES_SLAB, ModItems.PURPLE_STONE_TILES, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_TILES_STAIRS, ModItems.PURPLE_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.PURPLE_STONE_TILES_STAIRS, ModItems.PURPLE_STONE_TILES);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES_SLAB, ModItems.DARK_STONE_BRICKS, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES_SLAB, ModItems.DARK_STONE_TILES, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES_SLAB, ModItems.COBBLED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.COBBLED_DARK_STONE_SLAB, ModItems.COBBLED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.COBBLED_DARK_STONE_STAIRS, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.COBBLED_DARK_STONE_WALL, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.POLISHED_DARK_STONE, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.POLISHED_DARK_STONE_SLAB, ModItems.POLISHED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.POLISHED_DARK_STONE_STAIRS, ModItems.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.POLISHED_DARK_STONE_WALL, ModItems.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.POLISHED_DARK_STONE_SLAB, ModItems.COBBLED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.POLISHED_DARK_STONE_STAIRS, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.POLISHED_DARK_STONE_WALL, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICKS, ModItems.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICKS, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICK_STAIRS, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICK_STAIRS, ModItems.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICK_STAIRS, ModItems.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICK_SLAB, ModItems.COBBLED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICK_SLAB, ModItems.DARK_STONE_BRICKS, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICK_SLAB, ModItems.POLISHED_DARK_STONE, 2);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICK_WALL, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICK_WALL, ModItems.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_BRICK_WALL, ModItems.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES, ModItems.POLISHED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES, ModItems.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES_STAIRS, ModItems.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES_STAIRS, ModItems.DARK_STONE_TILES);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES_STAIRS, ModItems.COBBLED_DARK_STONE);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES_WALL, ModItems.DARK_STONE_BRICKS);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES_WALL, ModItems.DARK_STONE_TILES);
+        stonecutterResultFromBase(RecipeCategory.DECORATIONS, ModItems.DARK_STONE_TILES_WALL, ModItems.COBBLED_DARK_STONE);
     }
 
     private void recipesAlchemyTable() {
@@ -841,7 +841,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     private void recipesAlchemyCauldron() {
         cauldronRecipe(ModItems.PURE_SALT, 4)
                 .withIngredient(GARLIC)
-                .withFluid(new FluidStack(Fluids.WATER, 1))
+                .withFluid(new FluidStackTemplate(Fluids.WATER, 1))
                 .withSkills(HunterSkills.BASIC_ALCHEMY)
                 .cookTime(1200)
                 .save(output);
@@ -863,7 +863,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .withSkills(HunterSkills.GARLIC_DIFFUSER)
                 .save(output);
         cauldronRecipe(ModItems.GARLIC_DIFFUSER_CORE_IMPROVED)
-                .withIngredient(ModBlocks.GARLIC_DIFFUSER_CORE)
+                .withIngredient(ModItems.GARLIC_DIFFUSER_CORE)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
                 .withSkills(HunterSkills.GARLIC_DIFFUSER_IMPROVED)
                 .experience(2.0f)
@@ -1336,7 +1336,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('L', LEATHER)
                 .define('P', PLANKS)
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_NORMAL.get(), enchantments.getOrThrow(Enchantments.KNOCKBACK), 1))
+        shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_NORMAL, enchantments.getOrThrow(Enchantments.KNOCKBACK), 1))
                 .lava(5)
                 .pattern("XXZY")
                 .pattern("XXZY")
@@ -1347,7 +1347,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('Y', GARLIC)
                 .define('Z', STICK)
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_ENHANCED.get(), enchantments.getOrThrow(Enchantments.KNOCKBACK), 2))
+        shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_ENHANCED, enchantments.getOrThrow(Enchantments.KNOCKBACK), 2))
                 .lava(5)
                 .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("XWZY")
@@ -1360,7 +1360,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('W', DIAMOND)
                 .define('Z', STICK)
                 .save(output);
-        shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_ULTIMATE.get(), enchantments.getOrThrow(Enchantments.KNOCKBACK), 3))
+        shapedWeaponTable(RecipeCategory.COMBAT, ItemDataUtils.createEnchantment(ModItems.HUNTER_AXE_ULTIMATE, enchantments.getOrThrow(Enchantments.KNOCKBACK), 3))
                 .lava(5)
                 .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("XWZY")
@@ -1447,7 +1447,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         fiveTieredInfusedSwordCrafting(ModItems.HEART_STRIKER_ULTIMATE, ModItems.BLOOD_INFUSED_NETHERITE_INGOT, heartStrikerPattern);
 
         for (int i = 0; i < 5; i++) {
-            nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_IRON_INGOT, i), RecipeCategory.BUILDING_BLOCKS, PureLevel.template(i == 4 ? ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK : ModBlocks.BLOOD_INFUSED_IRON_BLOCK, i), "_purity_" + i);
+            nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_IRON_INGOT, i), RecipeCategory.BUILDING_BLOCKS, PureLevel.template(i == 4 ? ModItems.BLOOD_INFUSED_ENHANCED_IRON_BLOCK : ModItems.BLOOD_INFUSED_IRON_BLOCK, i), "_purity_" + i);
         }
 
         for (int i = 0; i < 5; i++) {
@@ -1459,7 +1459,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     private void swordInfuse(ItemLike item, @Range(from = 1, to = 4) int level) {
         infuserUpgrade()
                 .ingredients(Ingredient.of(PureBloodItem.getBloodItemForLevel(level)))
-                .results(ItemStack.EMPTY)
+                .results(null)
                 .burnTime(200)
                 .unlockedBy("has_pure_blood", has(PureBloodItem.getBloodItemForLevel(level)))
                 .input(CompoundIngredient.of(IntStream.range(0, level).mapToObj(x -> DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(x), item)).toArray(Ingredient[]::new)))

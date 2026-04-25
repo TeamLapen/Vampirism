@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.*;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
@@ -315,9 +316,9 @@ public class ModItems {
     public static final DeferredItem<BlockItem> ALCHEMY_TABLE = fromBlock(ModBlocks.ALCHEMY_TABLE);
     public static final DeferredItem<BlockItem> INJECTION_CHAIR = fromBlock(ModBlocks.INJECTION_CHAIR, props -> props.factions$withShiftDescription());
     public static final DeferredItem<BlockItem> ALTAR_CLEANSING = fromBlock(ModBlocks.ALTAR_CLEANSING);
-    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_NORMAL = fromBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL, (item) -> item.factions$withShiftDescriptionParameter());
-    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_WEAK = fromBlock(ModBlocks.GARLIC_DIFFUSER_WEAK, (item) -> item.factions$withShiftDescriptionParameter());
-    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED, (item) -> item.factions$withShiftDescriptionParameter());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_NORMAL = fromBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL, (item) -> item.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_WEAK = fromBlock(ModBlocks.GARLIC_DIFFUSER_WEAK, (item) -> item.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED, (item) -> item.factions$withShiftDescription());
     public static final DeferredItem<BlockItem> VAMPIRE_BEACON = fromBlock(ModBlocks.VAMPIRE_BEACON, itemProps -> itemProps.rarity(Rarity.RARE));
     public static final DeferredItem<BlockItem> DARK_SPRUCE_LEAVES = fromBlock(ModBlocks.DARK_SPRUCE_LEAVES);
     public static final DeferredItem<BlockItem> DARK_SPRUCE_SAPLING = fromBlock(ModBlocks.DARK_SPRUCE_SAPLING);
@@ -390,7 +391,6 @@ public class ModItems {
     public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_SLAB = fromBlock(ModBlocks.PURPLE_STONE_TILES_SLAB);
     public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_WALL = fromBlock(ModBlocks.PURPLE_STONE_TILES_WALL);
     public static final DeferredItem<BlockItem> FIRE_PLACE = fromBlock(ModBlocks.FIRE_PLACE);
-    public static final DeferredItem<BlockItem> CHANDELIER = fromBlock(ModBlocks.CHANDELIER, (block, itemProps) -> new BlockItem(block, itemProps.useBlockDescriptionPrefix().factions$withShiftDescription()));
     public static final DeferredItem<BlockItem> VAMPIRE_SOUL_LANTERN = fromBlock(ModBlocks.VAMPIRE_SOUL_LANTERN);
     public static final DeferredItem<BlockItem> CROSS = fromBlock(ModBlocks.CROSS);
     public static final DeferredItem<BlockItem> TOMBSTONE1 = fromBlock(ModBlocks.TOMBSTONE1);
@@ -401,27 +401,30 @@ public class ModItems {
     public static final DeferredItem<BlockItem> THRONE = fromBlock(ModBlocks.THRONE);
     public static final DeferredItem<BlockItem> BAT_CAGE = fromBlock(ModBlocks.BAT_CAGE, BatCageItem::new);
     public static final DeferredItem<BlockItem> MOTHER_TROPHY = fromBlock(ModBlocks.MOTHER_TROPHY, itemProps -> itemProps.factions$withShiftDescription().rarity(Rarity.EPIC).stacksTo(1));
-    public static final DeferredItem<BlockItem> COFFIN_WHITE = fromBlock(ModBlocks.COFFIN_WHITE);
-    public static final DeferredItem<BlockItem> COFFIN_ORANGE = fromBlock(ModBlocks.COFFIN_ORANGE);
-    public static final DeferredItem<BlockItem> COFFIN_MAGENTA = fromBlock(ModBlocks.COFFIN_MAGENTA);
-    public static final DeferredItem<BlockItem> COFFIN_YELLOW = fromBlock(ModBlocks.COFFIN_YELLOW);
-    public static final DeferredItem<BlockItem> COFFIN_LIME = fromBlock(ModBlocks.COFFIN_LIME);
-    public static final DeferredItem<BlockItem> COFFIN_PINK = fromBlock(ModBlocks.COFFIN_PINK);
-    public static final DeferredItem<BlockItem> COFFIN_GRAY = fromBlock(ModBlocks.COFFIN_GRAY);
-    public static final DeferredItem<BlockItem> COFFIN_LIGHT_GRAY = fromBlock(ModBlocks.COFFIN_LIGHT_GRAY);
-    public static final DeferredItem<BlockItem> COFFIN_CYAN = fromBlock(ModBlocks.COFFIN_CYAN);
-    public static final DeferredItem<BlockItem> COFFIN_PURPLE = fromBlock(ModBlocks.COFFIN_PURPLE);
-    public static final DeferredItem<BlockItem> COFFIN_BLUE = fromBlock(ModBlocks.COFFIN_BLUE);
-    public static final DeferredItem<BlockItem> COFFIN_BROWN = fromBlock(ModBlocks.COFFIN_BROWN);
-    public static final DeferredItem<BlockItem> COFFIN_GREEN = fromBlock(ModBlocks.COFFIN_GREEN);
-    public static final DeferredItem<BlockItem> COFFIN_RED = fromBlock(ModBlocks.COFFIN_RED);
-    public static final DeferredItem<BlockItem> COFFIN_BLACK = fromBlock(ModBlocks.COFFIN_BLACK);
+    public static final DeferredItem<CoffinItem> COFFIN_WHITE = fromCoffin(ModBlocks.COFFIN_WHITE);
+    public static final DeferredItem<CoffinItem> COFFIN_ORANGE = fromCoffin(ModBlocks.COFFIN_ORANGE);
+    public static final DeferredItem<CoffinItem> COFFIN_MAGENTA = fromCoffin(ModBlocks.COFFIN_MAGENTA);
+    public static final DeferredItem<CoffinItem> COFFIN_YELLOW = fromCoffin(ModBlocks.COFFIN_YELLOW);
+    public static final DeferredItem<CoffinItem> COFFIN_LIME = fromCoffin(ModBlocks.COFFIN_LIME);
+    public static final DeferredItem<CoffinItem> COFFIN_PINK = fromCoffin(ModBlocks.COFFIN_PINK);
+    public static final DeferredItem<CoffinItem> COFFIN_GRAY = fromCoffin(ModBlocks.COFFIN_GRAY);
+    public static final DeferredItem<CoffinItem> COFFIN_LIGHT_GRAY = fromCoffin(ModBlocks.COFFIN_LIGHT_GRAY);
+    public static final DeferredItem<CoffinItem> COFFIN_CYAN = fromCoffin(ModBlocks.COFFIN_CYAN);
+    public static final DeferredItem<CoffinItem> COFFIN_LIGHT_BLUE = fromCoffin(ModBlocks.COFFIN_LIGHT_BLUE);
+    public static final DeferredItem<CoffinItem> COFFIN_PURPLE = fromCoffin(ModBlocks.COFFIN_PURPLE);
+    public static final DeferredItem<CoffinItem> COFFIN_BLUE = fromCoffin(ModBlocks.COFFIN_BLUE);
+    public static final DeferredItem<CoffinItem> COFFIN_BROWN = fromCoffin(ModBlocks.COFFIN_BROWN);
+    public static final DeferredItem<CoffinItem> COFFIN_GREEN = fromCoffin(ModBlocks.COFFIN_GREEN);
+    public static final DeferredItem<CoffinItem> COFFIN_RED = fromCoffin(ModBlocks.COFFIN_RED);
+    public static final DeferredItem<CoffinItem> COFFIN_BLACK = fromCoffin(ModBlocks.COFFIN_BLACK);
+    public static final DeferredItem<BlockItem> CHANDELIER = fromChandelier(ModBlocks.CHANDELIER);
     public static final DeferredItem<BlockItem> CHANDELIER_NORMAL = fromChandelier(ModBlocks.CHANDELIER_NORMAL);
     public static final DeferredItem<BlockItem> CHANDELIER_WHITE = fromChandelier(ModBlocks.CHANDELIER_WHITE);
     public static final DeferredItem<BlockItem> CHANDELIER_ORANGE = fromChandelier(ModBlocks.CHANDELIER_ORANGE);
     public static final DeferredItem<BlockItem> CHANDELIER_MAGENTA = fromChandelier(ModBlocks.CHANDELIER_MAGENTA);
     public static final DeferredItem<BlockItem> CHANDELIER_LIGHT_BLUE = fromChandelier(ModBlocks.CHANDELIER_LIGHT_BLUE);
     public static final DeferredItem<BlockItem> CHANDELIER_YELLOW = fromChandelier(ModBlocks.CHANDELIER_YELLOW);
+    public static final DeferredItem<BlockItem> CHANDELIER_LIME = fromChandelier(ModBlocks.CHANDELIER_LIME);
     public static final DeferredItem<BlockItem> CHANDELIER_PINK = fromChandelier(ModBlocks.CHANDELIER_PINK);
     public static final DeferredItem<BlockItem> CHANDELIER_GRAY = fromChandelier(ModBlocks.CHANDELIER_GRAY);
     public static final DeferredItem<BlockItem> CHANDELIER_LIGHT_GRAY = fromChandelier(ModBlocks.CHANDELIER_LIGHT_GRAY);
@@ -482,6 +485,10 @@ public class ModItems {
 
     private static DeferredItem<BlockItem> fromChandelier(Holder<Block> block) {
         return fromBlock(block, (b, itemProps) -> new BlockItem(b, itemProps.useBlockDescriptionPrefix().factions$withShiftDescription(Component.translatable("tooltip.vampirism.chandelier.filled"))));
+    }
+
+    private static DeferredItem<CoffinItem> fromCoffin(DeferredHolder<Block, CoffinBlock> block) {
+        return fromBlock(block, (block1, itemProps) -> new CoffinItem((CoffinBlock) block1, itemProps.factions$withShiftDescription().rarity(Rarity.RARE).stacksTo(1)));
     }
 
 }

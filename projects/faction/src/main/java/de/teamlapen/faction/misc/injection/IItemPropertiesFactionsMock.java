@@ -1,6 +1,7 @@
 package de.teamlapen.faction.misc.injection;
 
 import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.common.util.ShiftDescription;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
 import de.teamlapen.faction.misc.extensions.IItemProperties;
 import net.minecraft.core.Holder;
@@ -38,17 +39,12 @@ public interface IItemPropertiesFactionsMock extends IItemProperties {
     }
 
     @Override
-    default Item.Properties factions$withShiftDescriptionParameter() {
-        throw new IllegalStateException("This class is only supported as injection class");
-    }
-
-    @Override
-    default Item.Properties factions$withShiftDescriptionParameter(Object[] parameters) {
-        throw new IllegalStateException("This class is only supported as injection class");
-    }
-
-    @Override
     default Item.Properties factions$withShiftDescription(Component component) {
+        throw new IllegalStateException("This class is only supported as injection class");
+    }
+
+    @Override
+    default Item.Properties factions$withShiftDescription(ShiftDescription description) {
         throw new IllegalStateException("This class is only supported as injection class");
     }
 

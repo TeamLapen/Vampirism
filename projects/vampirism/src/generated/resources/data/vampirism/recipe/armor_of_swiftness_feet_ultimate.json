@@ -1,6 +1,9 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "category": "equipment",
+  "category": {
+    "category": "equipment"
+  },
+  "commoninfo": {},
   "key": {
     "X": "#c:leathers",
     "Y": "#c:crops/garlic",
@@ -13,7 +16,6 @@
     "XXXX"
   ],
   "result": {
-    "count": 1,
     "id": "vampirism:armor_of_swiftness_feet_ultimate"
   },
   "skill": [

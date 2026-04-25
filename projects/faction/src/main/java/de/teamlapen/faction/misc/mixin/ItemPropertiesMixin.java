@@ -57,23 +57,17 @@ public abstract class ItemPropertiesMixin implements IItemProperties {
 
     @Override
     public Item.Properties factions$withShiftDescription() {
-        return this.factions$withShiftDescription(Component.translatable(this.id.identifier().toLanguageKey("tooltip")));
-    }
-
-    @Override
-    public Item.Properties factions$withShiftDescriptionParameter() {
-        this.component(FactionDataComponents.SHIFT_DESCRIPTION.get(), new ShiftDescription(this.id.identifier().toLanguageKey("tooltip")));
-        return (Item.Properties) (Object) this;
-    }
-
-    @Override
-    public Item.Properties factions$withShiftDescriptionParameter(Object[] parameters) {
-        return this.factions$withShiftDescription(Component.translatable(this.id.identifier().toLanguageKey("tooltip"), parameters));
+        return factions$withShiftDescription(ShiftDescription.of());
     }
 
     @Override
     public Item.Properties factions$withShiftDescription(Component component) {
-        this.component(FactionDataComponents.SHIFT_DESCRIPTION.get(), new ShiftDescription(component));
+        return factions$withShiftDescription(ShiftDescription.of(component));
+    }
+
+    @Override
+    public Item.Properties factions$withShiftDescription(ShiftDescription description) {
+        this.component(FactionDataComponents.SHIFT_DESCRIPTION.get(), description);
         return (Item.Properties) (Object) this;
     }
 

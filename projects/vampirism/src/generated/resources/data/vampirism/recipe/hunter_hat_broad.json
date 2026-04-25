@@ -1,6 +1,9 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "category": "equipment",
+  "category": {
+    "category": "equipment"
+  },
+  "commoninfo": {},
   "key": {
     "X": "#c:ingots/iron",
     "Y": "minecraft:black_wool"
@@ -11,7 +14,6 @@
     "XXXX"
   ],
   "result": {
-    "count": 1,
     "id": "vampirism:hunter_hat_broad"
   }
 }

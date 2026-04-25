@@ -23,6 +23,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -41,11 +42,12 @@ public class ChandelierBlock extends CandleHolderBlock {
             new Vec3(3 / 16d, 11.75 / 16d, 13 / 16d)
     );
 
-    public ChandelierBlock(Block emptyBlock, Item candle, Properties properties) {
-        this(() -> emptyBlock, () -> candle, properties);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    protected ChandelierBlock(Optional<Block> emptyBlock, Optional<Item> candle, Properties properties) {
+        super(emptyBlock, candle, properties);
     }
 
-    public ChandelierBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<Item> candle, Properties properties) {
+    public ChandelierBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<@Nullable Item> candle, Properties properties) {
         super(emptyBlock, candle, properties);
     }
 

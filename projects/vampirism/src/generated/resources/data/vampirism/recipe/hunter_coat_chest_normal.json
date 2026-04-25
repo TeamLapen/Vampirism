@@ -1,6 +1,9 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "category": "equipment",
+  "category": {
+    "category": "equipment"
+  },
+  "commoninfo": {},
   "key": {
     "W": "vampirism:vampire_fang",
     "X": "#c:ingots/iron",
@@ -15,7 +18,6 @@
     "XYYX"
   ],
   "result": {
-    "count": 1,
     "id": "vampirism:hunter_coat_chest_normal"
   }
 }

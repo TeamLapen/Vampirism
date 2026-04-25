@@ -12,6 +12,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.NotNull;
@@ -23,15 +24,15 @@ import java.util.*;
 public class InfuserRecipeBuilder implements RecipeBuilder {
     private final HolderLookup.RegistryLookup<Item> itemLookup;
     @Nullable
-    private final ItemStack result;
+    private final ItemStackTemplate result;
     protected String group = "";
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     private final List<Ingredient> ingredients = Arrays.asList(new Ingredient[4]);
     private Ingredient input;
-    private final List<ItemStack> results = Arrays.asList(new ItemStack[3]);
+    private final List<ItemStackTemplate> results = Arrays.asList(new ItemStackTemplate[3]);
     private int burnTime = 200;
 
-    public InfuserRecipeBuilder(HolderLookup.RegistryLookup<Item> itemLookup, ItemStack result) {
+    public InfuserRecipeBuilder(HolderLookup.RegistryLookup<Item> itemLookup, ItemStackTemplate result) {
         this.itemLookup = itemLookup;
         this.result = result;
     }
@@ -82,7 +83,7 @@ public class InfuserRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public InfuserRecipeBuilder result(ItemStack result) {
+    public InfuserRecipeBuilder result(ItemStackTemplate result) {
         int i = results.indexOf(null);
         if (i == -1) {
             throw new IllegalArgumentException("Results are already filled");
@@ -91,12 +92,12 @@ public class InfuserRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public InfuserRecipeBuilder result(int number, ItemStack result) {
+    public InfuserRecipeBuilder result(int number, ItemStackTemplate result) {
         this.results.set(number, result);
         return this;
     }
 
-    public InfuserRecipeBuilder results(ItemStack result) {
+    public InfuserRecipeBuilder results(ItemStackTemplate result) {
         Collections.fill(this.results, result);
         return this;
     }
@@ -118,7 +119,7 @@ public class InfuserRecipeBuilder implements RecipeBuilder {
         recipeOutput.accept(key, recipe, advancement.build(key.identifier().withPrefix("recipes/infuser/")));
     }
 
-    public static InfuserRecipeBuilder infuserRecipe(HolderLookup.RegistryLookup<Item> itemLookup, ItemStack result) {
+    public static InfuserRecipeBuilder infuserRecipe(HolderLookup.RegistryLookup<Item> itemLookup, ItemStackTemplate result) {
         return new InfuserRecipeBuilder(itemLookup, result);
     }
 

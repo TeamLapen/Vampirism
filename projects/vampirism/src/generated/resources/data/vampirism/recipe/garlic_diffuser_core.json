@@ -1,9 +1,9 @@
 {
   "type": "vampirism:alchemical_cauldron",
   "fluid": "#c:crops/garlic",
+  "info": {},
   "ingredient": "#minecraft:wool",
   "result": {
-    "count": 1,
     "id": "vampirism:garlic_diffuser_core"
   },
   "skill": [

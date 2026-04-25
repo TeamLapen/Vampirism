@@ -21,6 +21,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -37,7 +38,7 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
     protected final @NotNull ItemStackTemplate result;
     protected String group;
     protected Ingredient ingredient;
-    protected Either<Ingredient, FluidStack> fluid;
+    protected Either<Ingredient, FluidStackTemplate> fluid;
     protected List<Holder<ISkill<?>>> skills = new LinkedList<>();
     protected int reqLevel = 1;
     protected int cookTime = 200;
@@ -97,7 +98,7 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public @NotNull AlchemicalCauldronRecipeBuilder withFluid(@NotNull FluidStack fluid) {
+    public @NotNull AlchemicalCauldronRecipeBuilder withFluid(@NotNull FluidStackTemplate fluid) {
         this.fluid = Either.right(fluid);
         return this;
     }

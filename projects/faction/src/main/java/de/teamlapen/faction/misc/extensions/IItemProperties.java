@@ -1,6 +1,7 @@
 package de.teamlapen.faction.misc.extensions;
 
 import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.common.util.ShiftDescription;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentInitializers;
@@ -27,11 +28,9 @@ public interface IItemProperties {
 
     Item.Properties factions$withShiftDescription();
 
-    Item.Properties factions$withShiftDescriptionParameter();
-
-    Item.Properties factions$withShiftDescriptionParameter(Object[] parameters);
-
     Item.Properties factions$withShiftDescription(Component component);
+
+    Item.Properties factions$withShiftDescription(ShiftDescription description);
 
     Item.Properties factions$factionFood(FactionFoodList factionFoodList);
 

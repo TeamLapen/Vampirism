@@ -403,7 +403,7 @@ public class ModCreativeTabs {
         private void addBlocks() {
             addFunctionalBlocks();
 
-            ColorListsUtil.COFFINS.forEach(this::add);
+            ColorListsUtil.COFFINS.forEach(d -> add(d.get()));
         }
 
         private void addFunctionalBlocks() {

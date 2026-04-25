@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
@@ -61,6 +62,19 @@ public class PureBloodItem extends Item {
             default -> {
                 LOGGER.warn("Pure blood of level {} does not exist", level);
                 yield ModItems.PURE_BLOOD_4.get();
+            }
+        };
+    }
+
+    public static Holder<Item> getPureBloodHolder(int level) {
+        return switch (level) {
+            case 0 -> ModItems.PURE_BLOOD_0;
+            case 1 -> ModItems.PURE_BLOOD_1;
+            case 2 -> ModItems.PURE_BLOOD_2;
+            case 3 -> ModItems.PURE_BLOOD_3;
+            case 4 -> ModItems.PURE_BLOOD_4;
+            default -> {
+                throw new IllegalArgumentException("Pure blood of level " + level + " does not exist");
             }
         };
     }

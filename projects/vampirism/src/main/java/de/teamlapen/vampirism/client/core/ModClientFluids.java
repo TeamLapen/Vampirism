@@ -15,6 +15,7 @@ public class ModClientFluids {
 
     public static void registerFluidModels(RegisterFluidModelsEvent event) {
         event.register(BLOOD_MODEL, ModFluids.BLOOD.get());
+        event.register(BLOOD_MODEL, ModFluids.FLOWING_BLOOD.get());
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {

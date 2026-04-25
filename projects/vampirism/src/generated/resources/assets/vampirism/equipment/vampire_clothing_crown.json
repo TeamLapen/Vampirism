@@ -4,6 +4,11 @@
       {
         "texture": "vampirism:vampire_clothing_crown"
       }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "vampirism:vampire_clothing_crown"
+      }
     ]
   }
 }

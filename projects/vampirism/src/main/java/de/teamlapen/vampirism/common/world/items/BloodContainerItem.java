@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.world.blockentity.BloodContainerBlockEntity;
 import net.minecraft.world.item.BlockItem;
@@ -24,6 +25,6 @@ public class BloodContainerItem extends BlockItem implements BaseDisplayItemGene
     @Override
     public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         output.accept(this);
-        output.accept(BloodBottleItem.createStackWithBlood(BloodContainerBlockEntity.CAPACITY));
+        output.accept(BloodBottleItem.createStackWithBlood(IBottleBlood.MAX_VALUE));
     }
 }

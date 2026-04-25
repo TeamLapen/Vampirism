@@ -47,12 +47,12 @@ public class ItemDataUtils {
         return stack;
     }
 
-    public static ItemStack createEnchantment(Item item, Holder<Enchantment> enchantment, int level) {
+    public static ItemStackTemplate createEnchantment(Holder<Item> item, Holder<Enchantment> enchantment, int level) {
         ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
         mutable.set(enchantment, level);
-        ItemStack itemStack = item.getDefaultInstance();
-        itemStack.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
-        return itemStack;
+        return new ItemStackTemplate(item, DataComponentPatch.builder()
+                .set(DataComponents.ENCHANTMENTS, mutable.toImmutable())
+                .build());
     }
 
     public static ItemStack setOil(ItemStack stack, Holder<IOil> oil) {

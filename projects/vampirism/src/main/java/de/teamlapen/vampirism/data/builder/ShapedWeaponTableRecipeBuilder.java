@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
@@ -40,7 +41,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return new ShapedWeaponTableRecipeBuilder(holderGetter, category, item, count);
     }
 
-    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStack stack) {
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStackTemplate stack) {
         return new ShapedWeaponTableRecipeBuilder(holderGetter, category, stack);
     }
 
@@ -52,8 +53,8 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         super(holderGetter, category, item, count);
     }
 
-    public ShapedWeaponTableRecipeBuilder(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStack itemStack) {
-        super(holderGetter, category, itemStack.getItem(), itemStack.getCount());
+    public ShapedWeaponTableRecipeBuilder(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStackTemplate itemStack) {
+        super(holderGetter, category, itemStack);
     }
 
     @NotNull
