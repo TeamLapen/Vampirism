@@ -309,7 +309,7 @@ public class GuideBook implements IGuideBook {
         entries.put(VResourceLocation.mod(base + "leveling"), new EntryText(levelingPages, translateComponent(base + "leveling")));
 
         List<IPage> skillPages = new ArrayList<>();
-        skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.intro")), VResourceLocation.mod(base + "vampirism_menu")));
+        skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.intro", ModKeys.SKILL_SCREEN.getTranslatedKeyMessage())), VResourceLocation.mod(base + "vampirism_menu")));
         String disguise = String.format("§l%s§r\n", HunterActions.DISGUISE_HUNTER.get().getName().getString());
         disguise += translate(base + "skills.disguise.text", ModKeys.ACTION.getTranslatedKeyMessage());
         skillPages.addAll(PageHelper.pagesForLongText(Component.literal(disguise)));
