@@ -327,7 +327,7 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CURSED_ROOTS = fromBlock(ModBlocks.CURSED_ROOTS);
     public static final DeferredItem<BlockItem> CURSED_HANGING_ROOTS = fromBlock(ModBlocks.CURSED_HANGING_ROOTS);
     public static final DeferredItem<BlockItem> DIRECT_CURSED_BARK = fromBlock(ModBlocks.DIRECT_CURSED_BARK);
-    public static final DeferredItem<BlockItem> GARLIC = fromBlock(ModBlocks.GARLIC);
+    public static final DeferredItem<BlockItem> GARLIC = fromBlock(ModBlocks.GARLIC, GarlicItem::new);
     public static final DeferredItem<BlockItem> CURSED_GRASS = fromBlock(ModBlocks.CURSED_GRASS);
     public static final DeferredItem<BlockItem> CURSED_EARTH = fromBlock(ModBlocks.CURSED_EARTH);
     public static final DeferredItem<BlockItem> CURSED_EARTH_PATH = fromBlock(ModBlocks.CURSED_EARTH_PATH);

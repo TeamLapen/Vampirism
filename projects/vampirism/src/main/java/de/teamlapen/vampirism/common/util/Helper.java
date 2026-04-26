@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
@@ -32,9 +33,12 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
@@ -250,5 +254,27 @@ public class Helper {
             }
         }
         return true;
+    }
+
+    /**
+     * Call this in Item inventoryTick to make Vampires drop this item and get a short poison effect when held
+     *
+     * @param stack  item
+     * @param entity Entity holding the item
+     * @param slot   Equipment slot holding the item
+     * @return If entity is vampire
+     */
+    public static boolean handleHeldNonVampireItem(ItemStack stack, Entity entity, @Nullable EquipmentSlot slot) {
+        if (entity instanceof LivingEntity living && (slot != null && slot.getType() == EquipmentSlot.Type.HAND) && entity.tickCount % 16 == 8 ) {
+            if (Helper.isVampire(living)) {
+                living.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
+                if (living instanceof Player player) {
+                    player.getInventory().removeItem(stack);
+                    player.drop(stack, true);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }
