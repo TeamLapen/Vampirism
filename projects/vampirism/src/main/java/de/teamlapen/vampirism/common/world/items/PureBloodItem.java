@@ -106,7 +106,7 @@ public class PureBloodItem extends Item {
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         int playerLevel = FactionsApi.factionPlayerHandler(player).getCurrentLevel(ModFactions.VAMPIRE);
-        if (VampireLeveling.getInfusionRequirement(playerLevel).filter(x -> x.pureBloodLevel() < getLevel(getDefaultInstance())).isPresent()) {
+        if (VampireLeveling.getInfusionRequirement(playerLevel).filter(x -> x.pureBloodLevel() <= getLevel(getDefaultInstance())).isPresent()) {
             player.startUsingItem(hand);
             return InteractionResult.SUCCESS_SERVER;
         }
