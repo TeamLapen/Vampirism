@@ -90,6 +90,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public void onActivatedClient(@NotNull IVampirePlayer vampire) {
         if (!((VampirePlayer) vampire).getSkillProperties().bat) {
             updatePlayer((VampirePlayer) vampire, true);
+            setModifier(vampire.asEntity(), true);
         }
         Identifier key = ModRegistries.ACTIONS.getKey(this);
         AttributeInstance fly = vampire.asEntity().getAttribute(NeoForgeMod.CREATIVE_FLIGHT);
