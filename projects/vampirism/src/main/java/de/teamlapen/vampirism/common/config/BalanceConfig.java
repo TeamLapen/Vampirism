@@ -83,6 +83,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue hsSmallAttackSpeedModifier;
     public final ModConfigSpec.DoubleValue hsSmallAttackDamageModifier;
     public final ModConfigSpec.BooleanValue hsInstantKill1FromBehind;
+    public final ModConfigSpec.BooleanValue hsInstantKill1Player;
     public final ModConfigSpec.DoubleValue hsInstantKill1MaxHealth;
     public final ModConfigSpec.IntValue hsInstantKill2MaxHealth;
     public final ModConfigSpec.BooleanValue hsInstantKill2OnlyNPC;
@@ -94,6 +95,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vsSundamageReduction1;
     public final ModConfigSpec.DoubleValue vsBloodThirstReduction1;
     public final ModConfigSpec.DoubleValue vsSwordFinisherMaxHealth;
+    public final ModConfigSpec.BooleanValue vsSwordFinisherOnPlayer;
     public final ModConfigSpec.IntValue vsJumpBoost;
     public final ModConfigSpec.DoubleValue vsSpeedBoost;
     public final ModConfigSpec.IntValue vsBloodVisionDistanceSq;
@@ -398,6 +400,9 @@ public class BalanceConfig {
         hsInstantKill1FromBehind = builder
                 .comment("When enabled, the first stake skill requires attacking from behind to instantly kill low-level vampires.")
                 .define("instantKill1FromBehind", false);
+        hsInstantKill1Player = builder
+                .comment("Allow killing players")
+                .define("instantKill1Player", true);
         hsInstantKill1MaxHealth = builder
                 .comment("Maximum relative health an entity may have to be instantly killed by the first stake skill.")
                 .defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
@@ -428,6 +433,9 @@ public class BalanceConfig {
         vsSwordFinisherMaxHealth = builder
                 .comment("Maximum relative health a target may have to be finished by the vampire sword finisher skill.")
                 .defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
+        vsSwordFinisherOnPlayer = builder
+                .comment("If the sword finisher works on players")
+                .define("swordFinisherOnPlayer", true);
         vsJumpBoost = builder
                 .comment("Jump boost level granted by the vampire jump skill. Equivalent to the potion effect amplifier, where -1 is no boost.")
                 .defineInRange("jumpBoost", 1, -1, 5);
