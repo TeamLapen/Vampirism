@@ -61,16 +61,9 @@ public class Helper {
      */
     public static boolean gettingSundamge(LivingEntity entity, LevelAccessor world) {
         if (entity instanceof Player && entity.isSpectator()) return false;
-        if (VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition())) {
-            if (!(world instanceof Level) || !((Level) world).isRaining()) {
-                //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
-                if (isDay(world, entity.blockPosition())) {
-                    BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
-                    if (canBlockSeeSun(world, pos)) {
-                        return world instanceof Level && !LevelFog.get(((Level) world)).isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()));
-                    }
-                }
-            }
+        if (world instanceof Level level && !level.isRaining() && VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition()) && isDay(world, entity.blockPosition())) {
+            BlockPos pos = new BlockPos(entity.getBlockX(), entity.getBlockY() + (int) entity.getEyeHeight(), entity.getBlockZ());
+            return canBlockSeeSun(world, pos) && !LevelFog.get(level).isInsideArtificialVampireFogArea(pos);
         }
         return false;
     }
