@@ -89,7 +89,11 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown(@NotNull IVampirePlayer player) {
-        return (int) ((player.getRefinementHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE) ? 0.5 : 1) * ModConfig.balance().vaTeleportCooldown.get() * 20);
+        int cooldown = ModConfig.balance().vaTeleportCooldown.get() * 20;
+        if (player.getRefinementHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE)) {
+            cooldown = (int)(cooldown * ModConfig.balance().vrTeleportCooldownMod.get());
+        }
+        return cooldown;
     }
 
     @Override
