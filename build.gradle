@@ -15,4 +15,21 @@ subprojects {
     apply plugin: 'maven-publish'
     apply from: rootProject.file('gradle/idea.gradle')
     apply from: rootProject.file('gradle/license.gradle')
+
+    afterEvaluate {
+        def mavenUrl = System.getenv("MAVEN_URL")
+        if (mavenUrl) {
+            publishing {
+                repositories {
+                    maven {
+                        url = mavenUrl
+                        credentials {
+                            username = System.getenv("MAVEN_USERNAME") ?: ""
+                            password = System.getenv("MAVEN_PASSWORD") ?: ""
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

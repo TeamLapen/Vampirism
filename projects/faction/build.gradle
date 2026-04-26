@@ -3,7 +3,7 @@ plugins {
 }
 
 group = project.factions_group_id
-version = project.mod_version
+version = project.factions_version
 
 base {
     archivesName = project.factions_mod_name
@@ -107,10 +107,11 @@ def generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_id                      : factions_mod_id,
             mod_name                    : factions_mod_name,
             mod_license                 : factions_license,
-            mod_version                 : mod_version,
+            mod_version                 : factions_version,
             mod_authors                 : factions_authors,
             mod_description             : factions_description,
             mod_issue_tracker           : factions_issue_tracker,
+            mod_update_url           : factions_update_url,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
@@ -170,6 +171,9 @@ publishing {
             artifactId = "${project.factions_mod_name}"
             artifact(tasks.jar)
             artifact(sourcesJarTask.get())
+            artifact(project(':faction-api').tasks.jar) {
+                classifier = "api"
+            }
         }
     }
 }
