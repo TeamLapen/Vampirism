@@ -945,7 +945,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
         if (faction == null) return;
 
         LivingEntity entity = FactionEventFactory.fireCreateCaptureEntityEvent(this, faction);
-        List<? extends Player> players = this.level.players();
+        List<? extends Player> players = new ArrayList<>(this.level.players());
         players.removeIf(Player::isSpectator);
         if (entity != null && !SpawnUtil.spawnEntityInWorld((ServerLevel) this.level, this.getVillageAreaReduced(), entity, 50, players, EntitySpawnReason.EVENT)) {
             entity.discard();
