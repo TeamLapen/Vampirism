@@ -50,8 +50,7 @@ public class VampirismBiomes {
 
     public static Biome.@NotNull BiomeBuilder prepareVampireForestBuilder(HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter, MobSpawnSettings.@NotNull Builder spawnBuilder, BiomeSpecialEffects.@NotNull Builder ambienceBuilder) {
         BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder(featureGetter, carverGetter);
-        BiomeDefaultFeatures.addDefaultCarversAndLakes(builder); //carver
-        addModdedWaterLake(builder);
+        BiomeDefaultFeatures.addDefaultCarversAndLakes(builder);
 
         addVampireFlower(builder);
         addBushPatch(builder);
@@ -59,8 +58,8 @@ public class VampirismBiomes {
         BiomeDefaultFeatures.addForestGrass(builder);
 
         addUndergroundVariety(builder);
-        BiomeDefaultFeatures.addDefaultOres(builder); //ore
-        BiomeDefaultFeatures.addDefaultSoftDisks(builder); //disks
+        BiomeDefaultFeatures.addDefaultOres(builder);
+        BiomeDefaultFeatures.addDefaultSoftDisks(builder);
 
         addVampireTrees(builder);
 
@@ -74,10 +73,6 @@ public class VampirismBiomes {
 
     public static void addWaterSprings(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.FLUID_SPRINGS, MiscOverworldPlacements.SPRING_WATER);
-    }
-
-    public static void addModdedWaterLake(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.addFeature(GenerationStep.Decoration.LAKES, VampirismFeatures.WATER_LAKE_PLACED);
     }
 
     public static void addVampireTrees(BiomeGenerationSettings.@NotNull Builder builder) {
