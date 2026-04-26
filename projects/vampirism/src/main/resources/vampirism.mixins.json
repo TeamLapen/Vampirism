@@ -21,6 +21,7 @@
     "PotionBrewingMixin",
     "PowderSnowBlockMixin",
     "SpawnStateMixin",
+    "SweetBerryBushBlockMixin",
     "ThrowablePotionItemMixin",
     "ThrownPotionMixin",
     "VibrationSystemUserMixin",
