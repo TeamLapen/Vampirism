@@ -4,5 +4,4 @@ ext.integrations = [
         new Integration("jei", include_jei.toBoolean()),
         new Integration("guide", include_guideapi.toBoolean()),
         new Integration("terrablender", include_terrablender.toBoolean()),
-        new Integration("appleskin", include_appleskin.toBoolean())
 ]
