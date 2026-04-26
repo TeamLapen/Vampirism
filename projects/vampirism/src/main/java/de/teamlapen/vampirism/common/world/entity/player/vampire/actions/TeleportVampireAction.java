@@ -67,7 +67,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
             return IActionResult.fail(Component.translatable("message.vampirism.action.teleport.no_target"));
         }
         if (player instanceof ServerPlayer playerMp) {
-            playerMp.disconnect();
+            playerMp.removeVehicle();
             playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
         AreaParticleCloud particleCloud = new AreaParticleCloud(ModEntities.PARTICLE_CLOUD.get(), player.level());
