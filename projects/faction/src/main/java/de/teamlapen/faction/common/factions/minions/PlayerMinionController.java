@@ -203,6 +203,7 @@ public class PlayerMinionController implements ValueIOSerializable {
                 } else {
                     m.claimMinionSlot(id, this);
                     m.copyPosition(p);
+                    checkDeathStatus(id, m);
                     p.level().addFreshEntity(m);
                     activateTask(id, FactionMinionTasks.STAY.get());
                     return m;
@@ -212,6 +213,17 @@ public class PlayerMinionController implements ValueIOSerializable {
 
         }
         return null;
+    }
+
+    /**
+     * tmp fix to heal minions that are not dead but have negative health
+     */
+    @Deprecated
+    private void checkDeathStatus(int id, MinionEntity<?> minion) {
+        MinionData data = minions[id].data;
+        if (data.getHealth() <= 0) {
+            data.setHealth(data.getMaxHealth());
+        }
     }
 
     /**
