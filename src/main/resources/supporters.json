@@ -104,10 +104,21 @@
   },
   {
     "faction": "vampirism:vampire",
+    "name": "Cultist Courn",
+    "texture": "CournBread",
+    "type": 15,
+    "status": "Contributor",
+    "bookId": null,
+    "appearance": {
+      "eye": "15"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
     "name": "Marchioness Spade",
     "texture": "F_Spade",
     "type": 15,
-    "status": "Temporary",
+    "status": "Contributor",
     "bookId": null,
     "appearance": {
       "eye": "15"
@@ -140,7 +151,7 @@
     "name": "The nightmarish Krab",
     "texture": "God_Seth_Big",
     "type": 13,
-    "status": "Temporary",
+    "status": "Contributor",
     "bookId": null,
     "appearance": {
       "eye": "13"
