@@ -93,6 +93,17 @@
   },
   {
     "faction": "vampirism:vampire",
+    "name": "Sinister Solace",
+    "texture": "S_olace",
+    "type": 15,
+    "status": "Contributor",
+    "bookId": "s_olace",
+    "appearance": {
+      "eye": "15"
+    }
+  },
+  {
+    "faction": "vampirism:vampire",
     "name": "Marchioness Spade",
     "texture": "F_Spade",
     "type": 15,
