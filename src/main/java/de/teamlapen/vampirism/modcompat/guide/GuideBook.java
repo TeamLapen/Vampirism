@@ -483,7 +483,7 @@ public class GuideBook implements IGuideBook {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.blocks.";
         //General
-        helper.info(ModBlocks.DARK_STONE_BRICKS.get()).recipes("general/castle_block_dark_brick_0", "general/castle_block_dark_brick_1", "general/castle_block_dark_stone", "general/castle_block_normal_brick", "general/castle_block_purple_brick", "general/castle_slab_dark_brick", "general/castle_stairs_dark_brick").build(entries);
+        helper.info(ModBlocks.DARK_STONE_BRICKS.get()).recipes("dark_stone_tiles_stairs", "dark_stone_tiles_slab", "dark_stone_tiles_wall", "polished_dark_stone", "polished_dark_stone_stairs", "polished_dark_stone_slab", "polished_dark_stone_wall", "dark_stone_brick_stairs", "dark_stone_brick_slab", "dark_stone_brick_wall").build(entries);
         helper.info(ModBlocks.VAMPIRE_ORCHID.get()).build(entries);
         //Vampire
         helper.info(ModBlocks.BLOOD_CONTAINER.get()).recipes("vampire/blood_container").build(entries);

@@ -156,7 +156,7 @@
   "guide.vampirism.items.accessories.text": "Vampire accessories are unique items that can be equipped in the Vampirism menu.\nThey can be obtained as task reward, found in chests or as loot.\nEach accessory provides a specific set of buffs, debuffs or changes to your abilities and skills\nOnce equipped they are bound to you and cannot be unequipped, only destroyed.\nWhen you respawn, they are damaged.",
   "guide.vampirism.items.crucifix.text": "Hunter players can actively use this to fend off Vampires and undead creatures. It exists in three tiers with increasing range and strength.",
   "guide.vampirism.blocks.title": "Blocks",
-  "guide.vampirism.blocks.castle_block_dark_brick.text": "Decorative block. Prevents non vampire mobs from spawning on it. The Dark Stone variant allows no entity to spawn on it.",
+  "guide.vampirism.blocks.dark_stone_bricks.text": "Decorative block. Prevents non vampire mobs from spawning on it. The Dark Stone variant allows no entity to spawn on it.",
   "guide.vampirism.blocks.vampire_orchid.text": "Vampire Orchid is a flower that can be found in Vampire biome.",
   "guide.vampirism.blocks.altar_infusion.text": "Multi-block structure. Used to level up as a Vampire.",
   "guide.vampirism.blocks.hunter_table.text": "Used to craft %s",
