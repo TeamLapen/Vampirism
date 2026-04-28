@@ -132,7 +132,7 @@
   "guide.vampirism.items.crossbows.text": "There are several different crossbows, some of them require special skills to be crafted or used. They use a %s. (The Tech bows use an %s).\\n§4Crossbows can only be used by Vampire Hunters.§r",
   "guide.vampirism.items.crossbow_arrow_normal.text": "Used in crossbows.",
   "guide.vampirism.items.armor_of_swiftness": "Armor of Swiftness",
-  "guide.vampirism.items.armor_of_swiftness.text": "This armor is very light and allows you to run faster. It exists in different versions and the better ones even give you a jump boost. §4Can only be used by Vampire Hunters§r",
+  "guide.vampirism.items.armor_of_swiftness_chest_normal.text": "This armor is very light and allows you to run faster. It exists in different versions and the better ones even give you a jump boost. §4Can only be used by Vampire Hunters§r",
   "guide.vampirism.items.hunter_coat": "Hunter Coat",
   "guide.vampirism.items.hunter_coat.text": "Armor specifically designed for Vampire Hunters. If fully equipped it hides your from Vampire’s blood vision and protects you from the \"Freeze\" skill. A Vampire baron is still able to slow down you a little bit.\\nThe enhanced and special version additionally improve your concealment in disguise mode and increases your looting level by one (but not higher than 3) if fully equipped.\\n§4Can only be used by Vampire Hunters§r",
   "guide.vampirism.items.hunter_axe.text": "Has a high knockback and deals extra damage to Vampires. §4Can only be used by Vampire Hunters§r",
