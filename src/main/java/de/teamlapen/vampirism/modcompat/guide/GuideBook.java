@@ -339,7 +339,7 @@ public class GuideBook implements IGuideBook {
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_HUNTER.get().getDescription().getString(), VReference.HUNTER_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString(), VReference.HUNTER_FACTION.getLordTitle(VReference.HUNTER_FACTION.getHighestLordLevel(), IPlayableFaction.TitleGender.MALE).getString())), VResourceLocation.mod("guide.vampirism.entity.taskmaster")));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(2);
         lordTitleBuilder.setHeadline(translateComponent(base + "lord.titles"));
-        lordTitleBuilder.addLine(Component.translatable("text.vampirism.level"), "text.vampirism.title");
+        lordTitleBuilder.addLine(Component.translatable("text.vampirism.level"), Component.translatable("text.vampirism.title"));
         lordTitleBuilder.addLine(1, VReference.HUNTER_FACTION.getLordTitle(1, IPlayableFaction.TitleGender.MALE).getString());
         lordTitleBuilder.addLine(2, VReference.HUNTER_FACTION.getLordTitle(2, IPlayableFaction.TitleGender.MALE).getString());
         lordTitleBuilder.addLine(3, VReference.HUNTER_FACTION.getLordTitle(3, IPlayableFaction.TitleGender.MALE).getString());
