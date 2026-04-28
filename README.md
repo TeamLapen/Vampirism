@@ -40,7 +40,7 @@ The following labeling scheme is used:
 - [maxanier](https://maxanier.de)
 - [Cheaterpaul](https://paube.de)
 - [lunofe](https://github.com/lunofe) _Triage/Support/Community/Official Server/Art_
-- [Piklach](https://twitter.com/Piklach) _Community/Official Server_
+- [Piklach](https://github.com/Piklach) _Community/Official Server_
 - [Mike](https://github.com/supermike1999) _Balancing/Ideas_
 
 
@@ -61,7 +61,7 @@ The following labeling scheme is used:
 - F_Spade _Textures_
 - Matheo _Lore_
 - special_krab _Lore_
-- cournualllama2 _Lore_
+- CournBread _Lore_
 - Random _Textures/Models_
 - Shumnik _Textures/Models_
 - BugraaK _Textures/Models_
