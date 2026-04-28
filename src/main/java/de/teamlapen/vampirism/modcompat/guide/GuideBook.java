@@ -291,7 +291,7 @@ public class GuideBook implements IGuideBook {
         HunterLeveling.getTrainerRequirements().forEach(requirement -> {
             var tableReq = requirement.tableRequirement();
             String pure = "";
-            if (tableReq.pureBloodLevel() > 0) {
+            if (tableReq.pureBloodLevel() >= 0) {
                 pure = tableReq.pureBloodQuantity() + " Purity(" + (tableReq.pureBloodLevel() + 1) + ")";
             }
             builder.addLine(requirement.targetLevel(), tableReq.vampireFangQuantity(), pure, tableReq.vampireBookQuantity());
