@@ -159,4 +159,9 @@ public class ClientProxy extends CommonProxy {
         return this.bossEventSounds.get(bossEventUuid);
     }
 
+    @Override
+    public @NotNull String getActiveLanguage() {
+        return Minecraft.getInstance().getLanguageManager().getSelected();
+    }
+
 }

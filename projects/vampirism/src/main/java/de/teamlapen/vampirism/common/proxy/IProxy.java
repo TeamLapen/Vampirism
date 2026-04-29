@@ -72,4 +72,11 @@ public interface IProxy {
     default void displayHunterMinionStatsScreen(HunterMinionEntity entity) {
 
     }
+
+    /**
+     * @return The string describing the currently active language. "English" on server side
+     */
+    default String getActiveLanguage(){
+        return "English";
+    }
 }
