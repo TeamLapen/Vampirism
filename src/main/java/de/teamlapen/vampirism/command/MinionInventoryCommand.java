@@ -54,8 +54,8 @@ public class MinionInventoryCommand extends BasicCommand {
         ItemStack itemStack = item.createItemStack(count, true);
         getInventory(playerMinionIdentifier).ifPresent(minionInventory -> {
             minionInventory.addItemStack(itemStack.copy());
-            VampirismLogger.info(VampirismLogger.MINION_INVENTORY, "{} added {} {} to inventory of {}", player.getName().getString(), itemStack.getCount(), itemStack.getDisplayName().getString(), playerMinionIdentifier);
-            source.sendSystemMessage(Component.translatable("command.vampirism.base.minion_inventory.add_success", itemStack.getCount(), itemStack.getDisplayName().getString(), playerMinionIdentifier).withStyle(ChatFormatting.AQUA));
+            VampirismLogger.info(VampirismLogger.MINION_INVENTORY, "{} added {} {} to inventory of {}", player.getName().getString(), itemStack.getCount(), itemStack.getDisplayName().getString(), playerMinionIdentifier.toString());
+            source.sendSystemMessage(Component.translatable("command.vampirism.base.minion_inventory.add_success", itemStack.getCount(), itemStack.getDisplayName().getString(), playerMinionIdentifier.toString()).withStyle(ChatFormatting.AQUA));
         });
 
         return 0;
@@ -68,8 +68,8 @@ public class MinionInventoryCommand extends BasicCommand {
             if (!itemStacks.isEmpty()) {
                 ItemStack stack = itemStacks.getFirst().split(count);
                 player.addItem(stack.copy());
-                VampirismLogger.info(VampirismLogger.MINION_INVENTORY, "{} removed {} {} from inventory of {}", player.getName().getString(), stack.getCount(), stack.getDisplayName().getString(), playerMinionIdentifier);
-                source.sendSuccess(() -> Component.translatable("command.vampirism.base.minion_inventory.item_removed", stack.getCount(), stack.getDisplayName().getString(), playerMinionIdentifier).withStyle(ChatFormatting.AQUA), false);
+                VampirismLogger.info(VampirismLogger.MINION_INVENTORY, "{} removed {} {} from inventory of {}", player.getName().getString(), stack.getCount(), stack.getDisplayName().getString(), playerMinionIdentifier.toString());
+                source.sendSuccess(() -> Component.translatable("command.vampirism.base.minion_inventory.item_removed", stack.getCount(), stack.getDisplayName().getString(), playerMinionIdentifier.toString()).withStyle(ChatFormatting.AQUA), false);
             } else {
                 source.sendFailure(Component.translatable("command.vampirism.base.minion_inventory.item_not_found"));
             }
@@ -83,10 +83,10 @@ public class MinionInventoryCommand extends BasicCommand {
             Map<Item, Integer> count = new HashMap<>();
             inv.getAllInventorys().stream().flatMap(Collection::stream).filter(stack -> !stack.isEmpty()).forEach(item -> count.merge(item.getItem(), item.getCount(), Integer::sum));
             if (count.isEmpty()) {
-                source.sendSuccess(() -> Component.translatable("command.vampirism.base.minion_inventory.empty", playerMinionIdentifier).withStyle(ChatFormatting.AQUA), false);
+                source.sendSuccess(() -> Component.translatable("command.vampirism.base.minion_inventory.empty", playerMinionIdentifier.toString()).withStyle(ChatFormatting.AQUA), false);
             } else {
-                VampirismLogger.info(VampirismLogger.MINION_INVENTORY, "{} views inventory of {}", player.getName().getString(), playerMinionIdentifier);
-                source.sendSuccess(() -> Component.translatable("command.vampirism.base.minion_inventory.content", playerMinionIdentifier).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.UNDERLINE), false);
+                VampirismLogger.info(VampirismLogger.MINION_INVENTORY, "{} views inventory of {}", player.getName().getString(), playerMinionIdentifier.toString());
+                source.sendSuccess(() -> Component.translatable("command.vampirism.base.minion_inventory.content", playerMinionIdentifier.toString()).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.UNDERLINE), false);
                 source.sendSuccess(() -> Component.literal(count.entrySet().stream().map(a -> a.getValue() + " " + RegUtil.id(a.getKey())).collect(Collectors.joining("\n"))).withStyle(ChatFormatting.AQUA), false);
             }
         });
