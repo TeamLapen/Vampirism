@@ -48,9 +48,9 @@ public class ModArmorMaterials {
     public static final ArmorMaterial VAMPIRE_CLOTH_HAT = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOTH_HAT);
     public static final ArmorMaterial VAMPIRE_CLOTH_LEGS = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOTH_LEGS);
     public static final ArmorMaterial VAMPIRE_CLOTH_BOOTS = copyWithNewLayer(VAMPIRE_CLOTH, Asset.VAMPIRE_CLOTH_BOOTS);
-    public static final ArmorMaterial NORMAL_HUNTER_COAT = register(4, createReduction(2, 6, 5, 2), 10, SoundEvents.ARMOR_EQUIP_IRON, 1, 0, Tags.Items.INGOTS_IRON, Asset.HUNTER_COAT_NORMAL );
-    public static final ArmorMaterial ENHANCED_HUNTER_COAT = register(4, createReduction(3, 8, 6, 3), 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2, 0.1f, Tags.Items.GEMS_DIAMOND, Asset.HUNTER_COAT_ENHANCED);
-    public static final ArmorMaterial ULTIMATE_HUNTER_COAT = register(4, createReduction(3, 9, 6, 3), 15, SoundEvents.ARMOR_EQUIP_NETHERITE, 3, 0.2f, Tags.Items.INGOTS_NETHERITE, Asset.HUNTER_COAT_ULTIMATE);
+    public static final ArmorMaterial NORMAL_HUNTER_COAT = register(4, createReduction(3, 6, 5, 3), 10, SoundEvents.ARMOR_EQUIP_IRON, 1, 0, Tags.Items.INGOTS_IRON, Asset.HUNTER_COAT_NORMAL );
+    public static final ArmorMaterial ENHANCED_HUNTER_COAT = register(4, createReduction(4, 8, 6, 4), 10, SoundEvents.ARMOR_EQUIP_DIAMOND, 2, 0.1f, Tags.Items.GEMS_DIAMOND, Asset.HUNTER_COAT_ENHANCED);
+    public static final ArmorMaterial ULTIMATE_HUNTER_COAT = register(4, createReduction(4, 9, 6, 4), 15, SoundEvents.ARMOR_EQUIP_NETHERITE, 3, 0.2f, Tags.Items.INGOTS_NETHERITE, Asset.HUNTER_COAT_ULTIMATE);
     public static final ArmorMaterial NORMAL_SWIFTNESS = register(4, createReduction(1, 3, 2, 1), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0, 0, Tags.Items.LEATHERS, Asset.SWIFTNESS_NORMAL);
     public static final ArmorMaterial ENHANCED_SWIFTNESS = register(4, createReduction(2, 6, 5, 2), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0, 0, Tags.Items.LEATHERS, Asset.SWIFTNESS_ENHANCED);
     public static final ArmorMaterial ULTIMATE_SWIFTNESS = register(4, createReduction(3, 8, 6, 3), 12, SoundEvents.ARMOR_EQUIP_LEATHER, 0, 0, Tags.Items.LEATHERS, Asset.SWIFTNESS_ULTIMATE);

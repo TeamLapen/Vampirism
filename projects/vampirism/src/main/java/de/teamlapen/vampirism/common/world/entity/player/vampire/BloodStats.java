@@ -111,16 +111,18 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
                 ++this.bloodTimer;
                 if (this.bloodTimer >= 10) {
                     float f = Math.min(this.bloodSaturationLevel, 6F);
-                    player.heal(f / 6F);
+                    player.heal((f / 6F) * getHealModifier());
                     this.addExhaustion(f);
                     this.bloodTimer = 0;
                 }
-            } else if (regen && this.bloodLevel >= (18) && player.isHurt()) {
+            } else if (regen && this.bloodLevel > 0 && player.isHurt()) {
                 ++this.bloodTimer;
 
-                if (this.bloodTimer >= 80) {
-                    player.heal(1.0F);
-                    this.addExhaustion(6F);
+                boolean betterHeal = this.bloodLevel >= (18) && this.bloodTimer >= 80;
+                boolean heal = this.bloodTimer >= 300;
+                if (betterHeal || heal) {
+                    player.heal(betterHeal ? getHealModifier() : 0.5F * getHealModifier());
+                    this.addExhaustion(betterHeal ? 6F : 3F);
                     this.bloodTimer = 0;
                 }
             } else if (this.bloodLevel <= 0) {
@@ -140,6 +142,11 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
         if (this.prevBloodLevel != this.bloodLevel) {
             this.changed = true;
         }
+    }
+
+    private float getHealModifier() {
+        VampirePlayer vampire = VampirePlayer.get(this.player);
+        return 1 + (vampire.getLevel() / (float) vampire.getMaxLevel()) * 0.5f;
     }
 
     public int addBlood(int amount, float saturationModifier) {

@@ -98,7 +98,7 @@ public class DamageHandler {
      * @param ticks    A tick related value like ticksExisted
      */
     public static void affectVampireGarlicAmbient(@NotNull IVampire vampire, @NotNull EnumStrength strength, int ticks) {
-        if (ticks % 37 == 7) {
+        if (ticks % 17 == 7) {
             affectVampireGarlic(vampire, strength, 5, true);
         }
     }

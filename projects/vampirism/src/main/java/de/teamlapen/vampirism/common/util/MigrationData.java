@@ -45,9 +45,6 @@ public class MigrationData {
     }
 
     private static void fixPotions(@NotNull Mapping mapping) {
-        mapping.remap("vampirism:long_strong_resistance", "vampirism:long_resistance");
-        mapping.remap("vampirism:very_long_resistance", "vampirism:long_resistance");
-        mapping.remap("vampirism:very_strong_resistance", "vampirism:strong_resistance");
         mapping.remap("vampirism:very_strong_harming", "strong_harming");
     }
 

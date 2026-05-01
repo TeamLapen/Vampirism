@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player;
 
+import com.google.common.collect.Streams;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionHelper;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
@@ -13,6 +14,7 @@ import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.config.BalanceConfig;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
@@ -44,6 +46,7 @@ import net.minecraft.world.clock.ClockTimeMarkers;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.skeleton.Stray;
@@ -77,6 +80,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -254,11 +258,29 @@ public class ModPlayerEventHandler {
             }
         }
 
-        // reduce damage dor vampires
+        // reduce damage for vampires
         if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
             VampirePlayer vampire = VampirePlayer.get(player);
             float mod = (float) (0.2 * (float)vampire.getLevel()/ (float)vampire.getMaxLevel());
             d.setNewDamage(d.getNewDamage() * (1 - mod));
+        }
+
+        if (event.getEntity() instanceof Player player && Helper.isHunter(player)) {
+            float swiftnessDodgeChance = (float) Arrays.stream(EquipmentSlot.values()).filter(EquipmentSlot::isArmor).map(player::getItemBySlot).filter(s -> s.is(ModItemTags.ARMOR_OF_SWIFTNESS)).mapToDouble(x -> 0.025d).sum();
+            if (swiftnessDodgeChance == 0.1f) {
+                swiftnessDodgeChance = 0.2f;
+            }
+            if (player.getRandom().nextFloat() < swiftnessDodgeChance) {
+                event.setNewDamage(0);
+                return;
+            }
+            if (event.getSource().getEntity() != null && !Helper.isHunter(event.getSource().getEntity())) {
+                float coatReduction = (float) Arrays.stream(EquipmentSlot.values()).filter(EquipmentSlot::isArmor).map(player::getItemBySlot).filter(s -> s.is(ModItemTags.HUNTER_COAT)).mapToDouble(x -> 0.025d).sum();
+                if (coatReduction == 0.1f) {
+                    coatReduction = 0.2f;
+                }
+                event.setNewDamage(event.getNewDamage() * (1f - coatReduction));
+            }
         }
     }
 

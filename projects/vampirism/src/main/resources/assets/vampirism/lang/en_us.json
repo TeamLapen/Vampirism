@@ -537,6 +537,7 @@
   "action.vampirism.lord_speed.desc": "Boost the movement speed of nearby faction members",
   "action.vampirism.lord_attack_speed": "Lord Attack Speed",
   "action.vampirism.lord_attack_speed.desc": "Boost the attack speed of nearby faction members",
+  "action.vampirism.jump_boost": "Jump Boost",
 
   "skill.vampirism.vampire": "Becoming a Vampire",
   "skill.vampirism.night_vision": "Night Vision",

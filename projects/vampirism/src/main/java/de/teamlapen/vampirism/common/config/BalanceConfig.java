@@ -100,6 +100,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vsSpeedBoost;
     public final ModConfigSpec.IntValue vsBloodVisionDistanceSq;
     public final ModConfigSpec.DoubleValue vsSmallAttackDamageModifier;
+    public final ModConfigSpec.DoubleValue vsSmallAttackDamageMultiplier;
     public final ModConfigSpec.DoubleValue vsSmallAttackSpeedModifier;
     public final ModConfigSpec.DoubleValue vsNeonatalReduction;
     public final ModConfigSpec.DoubleValue vsDbnoReduction;
@@ -179,6 +180,9 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vaHalfInvulnerableEnabled;
     public final ModConfigSpec.BooleanValue vaHissingEnabled;
     public final ModConfigSpec.IntValue vaHissingCooldown;
+    public final ModConfigSpec.BooleanValue vaJumpBoostEnabled;
+    public final ModConfigSpec.IntValue vaJumpBoostCooldown;
+    public final ModConfigSpec.IntValue vaJumpBoostDuration;
     public final ModConfigSpec.BooleanValue vaDarkStalkerEnabled;
     public final ModConfigSpec.IntValue vaDarkStalkerCooldown;
     public final ModConfigSpec.IntValue vaDarkStalkerDuration;
@@ -449,6 +453,9 @@ public class BalanceConfig {
         vsSmallAttackDamageModifier = builder
                 .comment("Flat damage added to base attack damage by the vampire basic damage skill.")
                 .defineInRange("smallAttackDamageModifier", 1d, 0, 10d);
+        vsSmallAttackDamageMultiplier = builder
+                .comment("Damage to multiply as total (value + 1)")
+                .defineInRange("smallAttackDamageMultiplier", 0.1f,0,1);
         vsSmallAttackSpeedModifier = builder
                 .comment("Attack speed modifier from the vampire basic attack speed skill. Final cooldown = 1 / (base * (1 + modifier)).")
                 .defineInRange("smallAttackSpeedModifier", 0.15, 0, 3);
@@ -469,7 +476,7 @@ public class BalanceConfig {
                 .defineInRange("attackSpeedMaxLevelMod", 0.15, 0, 2);
         vpSpeedMaxLevelMod = builder
                 .comment("Maximum movement speed modifier for vampires at max level. This is a multiplicative modifier applied as (1 + modifier).")
-                .defineInRange("speedMaxLevelMod", 0.3, 0, 5);
+                .defineInRange("speedMaxLevelMod", 0.5, 0, 5);
         vpExhaustionMaxLevelMod = builder
                 .comment("Maximum exhaustion reduction modifier for vampires at max level. This is a multiplicative modifier applied as (1 + modifier).")
                 .defineInRange("exhaustionMaxLevelMod", 1.0, 0, 10);
@@ -680,6 +687,14 @@ public class BalanceConfig {
         vaHissingCooldown = builder
                 .comment("Cooldown for the vampire hissing action, in seconds.")
                 .defineInRange("hissingCooldown", 60, 0, 10000);
+        vaJumpBoostEnabled = builder
+                .define("jumpBoostEnabled", true);
+        vaJumpBoostCooldown = builder
+                .comment("In seconds")
+                .defineInRange("jumpBoostCooldown", 0, 0, 10000);
+        vaJumpBoostDuration = builder
+                .comment("In seconds")
+                .defineInRange("jumpBoostDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
         vaDarkStalkerEnabled = builder
                 .comment("When enabled, vampires can use the dark stalker action.")
                 .define("darkStalkerEnabled", true);

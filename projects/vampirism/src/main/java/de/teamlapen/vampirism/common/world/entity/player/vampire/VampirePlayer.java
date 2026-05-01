@@ -101,6 +101,7 @@ import java.util.Optional;
  */
 public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
     public static final Identifier NATURAL_ARMOR_UUID = VIdentifier.mod("natural_armor");
+    private static final Identifier LEVEL_DAMAGE_UUID = VIdentifier.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int FEED_TIMER = 20;
 
@@ -1076,6 +1077,12 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private void applyLevelModifiersA(int level) {
         LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), ModConfig.balance().vpHealthMaxLevelMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
         LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), ModConfig.balance().vpExhaustionMaxLevelMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        AttributeInstance attribute = player.getAttribute(Attributes.ATTACK_DAMAGE);
+        attribute.removeModifier(LEVEL_DAMAGE_UUID);
+        int damage = level >= 7 ? level >= 14 ? 2 : 1 : 0;
+        if (damage > 0) {
+            attribute.addPermanentModifier(new AttributeModifier(LEVEL_DAMAGE_UUID, damage, AttributeModifier.Operation.ADD_VALUE));
+        }
     }
 
     /**
