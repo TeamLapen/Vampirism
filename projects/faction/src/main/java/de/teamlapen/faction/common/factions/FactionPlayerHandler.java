@@ -317,6 +317,9 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
             newLevel = newFaction.value().getHighestReachableLevel();
         }
 
+        newLevel = Math.clamp(newLevel, 0, newFaction.value().getHighestReachableLevel());
+        newLordLevel = Math.clamp(newLordLevel, 0, newFaction.value().getHighestLordLevel());
+
         if (changedFaction) {
             if (!this.currentFaction.value().getPlayerCapability(player).canLeaveFaction()) {
                 LOGGER.info("You cannot leave faction {}, it is prevented by respective mod", currentFaction.getRegisteredName());
