@@ -41,7 +41,7 @@ public class ModEffects {
     );
     public static final DeferredHolder<MobEffect, BleedingMobEffect> BLEEDING = EFFECTS.register("bleeding", () -> new BleedingMobEffect(MobEffectCategory.HARMFUL, 0x740000));
     public static final DeferredHolder<MobEffect, MobEffect> CRUCIFIX_SUPPRESSION = EFFECTS.register("crucifix_suppression", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0x8B0000));
-    public static final DeferredHolder<MobEffect, MobEffect> EXPOSED = EFFECTS.register("exposed", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0x8D2919));
+    public static final DeferredHolder<MobEffect, MobEffect> EXPOSED = EFFECTS.register("exposed", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0x762D45));
 
     static void register(IEventBus bus) {
         EFFECTS.register(bus);
