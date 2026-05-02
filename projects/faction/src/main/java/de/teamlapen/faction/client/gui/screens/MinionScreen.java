@@ -5,7 +5,7 @@ import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.components.DropdownWidget;
 import de.teamlapen.faction.client.gui.components.IRenderLast;
 import de.teamlapen.faction.common.world.inventory.MinionContainer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -33,9 +33,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     private LockIconButton lockActionButton;
 
     public MinionScreen(MinionContainer screenContainer, @NotNull Inventory inv, @NotNull Component titleIn) {
-        super(screenContainer, inv, titleIn);
-        this.imageWidth = 214;
-        this.imageHeight = 185;
+        super(screenContainer, inv, titleIn, 214, 185);
         this.extraSlots = screenContainer.getExtraSlots();
     }
 
@@ -46,17 +44,17 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(graphics, mouseX, mouseY);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+        this.extractTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractContents(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+        super.extractContents(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         for (Renderable renderable : this.renderables) {
             if (renderable instanceof IRenderLast last) {
-                last.renderLast(guiGraphics, mouseX, mouseY, partialTick);
+                last.renderLast(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
             }
         }
     }
@@ -75,7 +73,9 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    public void extractBackground(@NotNull GuiGraphicsExtractor graphics,int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
+
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         GuiRenderer.blit(graphics, BACKGROUND, i, j, this.imageWidth, this.imageHeight);
@@ -85,14 +85,14 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(this.font, title, 5, 6, 0x404040, false);
-        graphics.drawString(this.font, Component.translatable("gui.factionapi.minion.active_task"), 120, 10, 0x404040, false);
+    protected void extractLabels(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        graphics.text(this.font, title, 5, 6, 0x404040, false);
+        graphics.text(this.font, Component.translatable("gui.factionapi.minion.active_task"), 120, 10, 0x404040, false);
 
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void extractTooltip(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.lockActionButton.isMouseOver(mouseX, mouseY)) {
             drawButtonTip(graphics, Component.translatable("gui.factionapi.minion.lock_action"), mouseX, mouseY);
         } else if (this.appearanceButton.isMouseOver(mouseX, mouseY)) {
@@ -100,11 +100,11 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         } else if (this.statButton.isMouseOver(mouseX, mouseY)) {
             drawButtonTip(graphics, Component.translatable("gui.factionapi.minion_stats"), mouseX, mouseY);
         } else {
-            super.renderTooltip(graphics, mouseX, mouseY);
+            super.extractTooltip(graphics, mouseX, mouseY);
         }
     }
 
-    private void drawButtonTip(@NotNull GuiGraphics graphics, Component text, int mouseX, int mouseY) {
+    private void drawButtonTip(@NotNull GuiGraphicsExtractor graphics, Component text, int mouseX, int mouseY) {
         graphics.setTooltipForNextFrame(this.font, Collections.singletonList(text), Optional.empty(), mouseX, mouseY);
     }
 

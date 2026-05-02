@@ -27,6 +27,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -48,8 +49,9 @@ public class WallCandleStickBlock extends CandleHolderBlock {
         put(Direction.EAST, ImmutableList.of(new Vec3(4 / 16d, 14.75 / 16d, 8 / 16d)));
     }};
 
-    private WallCandleStickBlock(Block emptyBlock, Item candle, Properties properties) {
-        this(() -> emptyBlock, () -> candle, properties);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    protected WallCandleStickBlock(Optional<Block> emptyBlock, Optional<Item> candle, Properties properties) {
+        super(emptyBlock, candle, properties);
     }
 
     public WallCandleStickBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<Item> candle, Properties properties) {

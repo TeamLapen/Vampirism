@@ -1,6 +1,18 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "vampirism:block/bat_cage/block"
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "vampirism:block/bat_cage"
+      },
+      {
+        "type": "minecraft:special",
+        "base": "vampirism:block/bat_cage",
+        "model": {
+          "type": "vampirism:bat_cage"
+        }
+      }
+    ]
   }
 }

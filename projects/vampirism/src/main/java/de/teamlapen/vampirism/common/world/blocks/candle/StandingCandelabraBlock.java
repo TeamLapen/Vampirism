@@ -25,6 +25,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -41,11 +42,12 @@ public class StandingCandelabraBlock extends CandleHolderBlock {
             ImmutableList.of(new Vec3(8 / 16d, 14.75 / 16d, 13 / 16d), new Vec3(8 / 16d, 16.75 / 16d, 8 / 16d), new Vec3(8 / 16d, 14.75 / 16d, 3 / 16d))
     );
 
-    public StandingCandelabraBlock(Block emptyBlock, Item candle, Properties properties) {
-        this(() -> emptyBlock, () -> candle, properties);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    protected StandingCandelabraBlock(Optional<Block> emptyBlock, Optional<Item> candle, Properties properties) {
+        super(emptyBlock, candle, properties);
     }
 
-    public StandingCandelabraBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<Item> candle, Properties properties) {
+    public StandingCandelabraBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<@Nullable Item> candle, Properties properties) {
         super(emptyBlock, candle, properties);
     }
 

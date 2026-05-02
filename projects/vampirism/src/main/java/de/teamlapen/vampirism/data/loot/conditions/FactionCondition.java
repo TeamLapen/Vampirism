@@ -8,7 +8,6 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
 import de.teamlapen.faction.common.core.DefaultFactions;
 import de.teamlapen.faction.common.core.ModRegistries;
-import de.teamlapen.vampirism.common.core.ModLoot;
 import net.minecraft.core.Holder;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
@@ -16,8 +15,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 
@@ -81,8 +80,8 @@ public class FactionCondition implements LootItemCondition {
     }
 
     @Override
-    public @NotNull LootItemConditionType getType() {
-        return ModLoot.FACTION.get();
+    public @NonNull MapCodec<? extends LootItemCondition> codec() {
+        return CODEC;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package de.teamlapen.faction.common.factions.minions.management;
 
+import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.factions.IFaction;
@@ -42,7 +43,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     @NotNull
     private final Function<Q, Integer> coolDownSupplier;
     @NotNull
-    private final List<Weighted<ItemStack>> resources;
+    private final Supplier<List<Weighted<ItemStack>>> resources;
     private final RandomSource rng = RandomSource.create();
     @Nullable
     private final Holder<? extends IFaction<?>> faction;
@@ -52,11 +53,11 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     /**
      * @param faction If given, only available to this faction
      */
-    public CollectResourcesTask(Supplier<CollectResourcesTask<Q>> taskSupplier, @Nullable Holder<? extends IFaction<?>> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull List<Weighted<ItemStack>> resources, @NotNull Holder<ISkill<?>> requiredSkill) {
+    public CollectResourcesTask(Supplier<CollectResourcesTask<Q>> taskSupplier, @Nullable Holder<? extends IFaction<?>> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull Supplier<List<Weighted<ItemStack>>> resources, @NotNull Holder<ISkill<?>> requiredSkill) {
         super(requiredSkill);
         this.descriptionCodec = Desc.createCodec(taskSupplier);
         this.coolDownSupplier = coolDownSupplier;
-        this.resources = resources;
+        this.resources = Suppliers.memoize(resources::get);
         this.faction = faction;
     }
 
@@ -67,7 +68,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
             minion.recallMinion();
         }
         if (lord != null) {
-            lord.displayClientMessage(Component.translatable(Util.makeDescriptionId("minion_task", RegUtil.id(this)) + ".start"), true);
+            lord.sendOverlayMessage(Component.translatable(Util.makeDescriptionId("minion_task", RegUtil.id(this)) + ".start"));
         }
         return new Desc<>(this, this.coolDownSupplier.apply(data), lord != null ? lord.getUUID() : null);
     }
@@ -97,8 +98,8 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     public void tickBackground(@NotNull Desc<Q> desc, @NotNull Q data) {
         if (--desc.coolDown <= 0) {
             boolean lordOnline = desc.lordEntityID != null && ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayer(desc.lordEntityID) != null;
-            desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * FactionConfig.server().minionResourceCooldownOfflineMult.get());
-            WeightedList.of(resources).getRandom(rng).ifPresent(s -> data.getInventory().addItemStack(s));
+            desc.coolDown = lordOnline ? coolDownSupplier.apply(data) : (int) (coolDownSupplier.apply(data) * FactionConfig.server().minionOfflineResourceCooldownMultiplier.get());
+            WeightedList.of(resources.get()).getRandom(rng).ifPresent(s -> data.getInventory().addItemStack(s));
             List<ItemStack> stacks = Stream.of(data.getInventory().getInventoryArmor(), data.getInventory().getInventoryHands()).flatMap(Collection::stream).filter(stack -> !stack.isEmpty()).toList();
             if (!stacks.isEmpty()) {
                 ItemStack stack = stacks.get(rng.nextInt(stacks.size()));

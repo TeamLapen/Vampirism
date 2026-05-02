@@ -6,9 +6,9 @@ import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.factions.skills.DefaultSkill;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import net.minecraft.network.chat.Component;
@@ -102,7 +102,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
 
         @Override
         public TagKey<? extends IFaction<?>> factions() {
-            return ModFactionTags.IS_HUNTER;
+            return VampirismTags.Factions.IS_HUNTER;
         }
     }
 
@@ -117,7 +117,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
 
         @Override
         public TagKey<? extends IFaction<?>> factions() {
-            return ModFactionTags.IS_HUNTER;
+            return VampirismTags.Factions.IS_HUNTER;
         }
     }
 
@@ -132,7 +132,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
 
         @Override
         public TagKey<? extends IFaction<?>> factions() {
-            return ModFactionTags.IS_VAMPIRE;
+            return VampirismTags.Factions.IS_VAMPIRE;
         }
     }
 
@@ -143,7 +143,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
 
         @Override
         public TagKey<? extends IFaction<?>> factions() {
-            return ModFactionTags.IS_VAMPIRE;
+            return VampirismTags.Factions.IS_VAMPIRE;
         }
     }
 

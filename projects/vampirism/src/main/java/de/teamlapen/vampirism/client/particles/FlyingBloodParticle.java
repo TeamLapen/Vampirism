@@ -37,9 +37,9 @@ public class FlyingBloodParticle extends SingleQuadParticle {
             this.yd = wayY / maxage;
             this.zd = wayZ / maxage;
         } else {
-            this.xd = (this.level.random.nextDouble() / 10 - 0.05) + wayX / lifetime;
-            this.yd = (this.level.random.nextDouble() / 10 - 0.01) + wayY / lifetime;
-            this.zd = (this.level.random.nextDouble() / 10 - 0.05) + wayZ / lifetime;
+            this.xd = (this.level.getRandom().nextDouble() / 10 - 0.05) + wayX / lifetime;
+            this.yd = (this.level.getRandom().nextDouble() / 10 - 0.01) + wayY / lifetime;
+            this.zd = (this.level.getRandom().nextDouble() / 10 - 0.05) + wayZ / lifetime;
         }
 
         this.scale(scale);

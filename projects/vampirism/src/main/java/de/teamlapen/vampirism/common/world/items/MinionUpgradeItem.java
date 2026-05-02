@@ -27,8 +27,8 @@ public class MinionUpgradeItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
-        tooltip.accept(Component.translatable("item.vampirism.minion_upgrade_item.desc").withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.translatable("text.vampirism.for_to_levels", minLevel + 1, maxLevel + 1).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.vampirism.minion_upgrade").withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.vampirism.for_to_levels", minLevel + 1, maxLevel + 1).withStyle(ChatFormatting.GRAY));
     }
 
     public Holder<? extends IFaction<?>> getFaction() {

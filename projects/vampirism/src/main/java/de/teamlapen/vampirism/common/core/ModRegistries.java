@@ -40,6 +40,8 @@ public class ModRegistries {
             .add(VAMPIRE_BOOK, ModVampireBooks::createVampireBooks)
             .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)
             .add(Registries.TIMELINE, ModVillage::createTimelines)
+            .add(Registries.VILLAGER_TRADE, ModTrades::bootstrap)
+            .add(Registries.TRADE_SET, ModTrades::bootstrapTradeSets)
             .add(Registries.DIMENSION_TYPE, ModDimensions::bootstrapDimensionTypes)
             .add(Registries.LEVEL_STEM, ModDimensions::bootstrapLevelStem)
             .add(Registries.NOISE_SETTINGS, ModDimensions::bootstrapNoise)

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.components;
 
 import de.teamlapen.faction.client.gui.components.SimpleList;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -60,8 +60,8 @@ public class HoverList<T extends HoverList.Entry<T>> extends SimpleList<T> {
         }
 
         @Override
-        public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-            super.renderContent(guiGraphics, mouseX, mouseY, isHovering, partialTick);
+        public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+            super.extractContent(guiGraphics, mouseX, mouseY, isHovering, partialTick);
             boolean newHovered = this.isMouseOver(mouseX, mouseY);
             if (newHovered != this.hovered) {
                 this.hovered = newHovered;

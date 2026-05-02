@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.api.world.entity.IVampirismEntity;
 import de.teamlapen.vampirism.common.core.ModParticles;
 import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -301,7 +300,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
             if (this.tickCount % 256 == 0 && this.isAlive()) {
                 boolean current = this instanceof Enemy;
                 boolean convert = false;
-                de.teamlapen.faction.common.config.ServerConfig.IMobOptions opt = FactionConfig.server().entityIMob.get();
+                de.teamlapen.faction.common.config.ServerConfig.IMobOptions opt = FactionConfig.server().entitiesIMob.get();
                 if (ServerLifecycleHooks.getCurrentServer().isDedicatedServer()) {
                     convert = (opt == de.teamlapen.faction.common.config.ServerConfig.IMobOptions.ALWAYS_IMOB) != current;
                 } else {
@@ -311,7 +310,7 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
                             Holder<? extends IPlayableFaction<?>> f = FactionPlayerHandler.get(player).getFaction();
                             Holder<IFaction<?>> thisFaction = (Holder<IFaction<?>>) ((IFactionEntity) this).getFaction();
 
-                            boolean hostile = IFaction.isNeutral(f) ? thisFaction.is(ModFactionTags.HOSTILE_TOWARDS_NEUTRAL) : !thisFaction.equals(f);
+                            boolean hostile = IFaction.isNeutral(f) ? thisFaction.is(de.teamlapen.faction.api.tags.FactionTags.HOSTILE_TOWARDS_NEUTRAL) : !thisFaction.equals(f);
                             convert = hostile != current;
 
                         }

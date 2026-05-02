@@ -11,8 +11,8 @@ import net.minecraft.world.item.ToolMaterial;
 
 public class HeartStrikerItem extends VampireSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
-    public static final ToolMaterial IRON = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, 500, -4.1f, 3.2F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_SIMPLE);
-    public static final ToolMaterial DIAMOND = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1750, -4.0f, 5.2F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_ENHANCED);
+    public static final ToolMaterial IRON = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, 500, -3.9f, 3.2F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_SIMPLE);
+    public static final ToolMaterial DIAMOND = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1750, -3.9f, 5.2F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_ENHANCED);
     public static final ToolMaterial NETHERITE = new ToolMaterial(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2500, -3.9f, 7.2F, 14, ModItemTags.VAMPIRE_SWORD_REPAIRABLE_ENHANCED);
 
     private final Tier tier;

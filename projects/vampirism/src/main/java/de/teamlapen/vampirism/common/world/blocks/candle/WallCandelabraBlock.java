@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -48,11 +49,12 @@ public class WallCandelabraBlock extends CandleHolderBlock {
         put(Direction.EAST, ImmutableList.of(new Vec3(4 / 16d, 13.75 / 16d, 13 / 16d), new Vec3(4 / 16d, 15.75 / 16d, 8 / 16d), new Vec3(4 / 16d, 13.75 / 16d, 3 / 16d)));
     }};
 
-    public WallCandelabraBlock(Block emptyBlock, Item candle, Properties properties) {
-        this(() -> emptyBlock, () -> candle, properties);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    protected WallCandelabraBlock(Optional<Block> emptyBlock, Optional<Item> candle, Properties properties) {
+        super(emptyBlock, candle, properties);
     }
 
-    public WallCandelabraBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<Item> candle, Properties properties) {
+    public WallCandelabraBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<@Nullable Item> candle, Properties properties) {
         super(emptyBlock, candle, properties);
     }
 

@@ -87,15 +87,22 @@ public class ItemEventHandler {
 
             if (!player.isCreative()) {
                 if (heldStack.getCount() == 1) {
-                    player.setItemInHand(event.getHand(), heldStack.getCraftingRemainder());
+                    player.setItemInHand(event.getHand(), heldStack.getCraftingRemainder().create());
                 } else {
                     heldStack.shrink(1);
-                    player.addItem(heldStack.getCraftingRemainder());
+                    player.addItem(heldStack.getCraftingRemainder().create());
                 }
             }
 
             // TODO: Find some other sound for vaccinating mobs
             level.playSound(null, player.blockPosition(), ModSounds.VAMPIRE_BITE.get(), SoundSource.PLAYERS, 1.0f,  1.0f);
+        }
+    }
+
+    @SubscribeEvent
+    public void handleEntityInteractableItems(PlayerInteractEvent.EntityInteract event) {
+        if (event.getItemStack().getItem() instanceof IEntityInteractable interactable) {
+            interactable.onEntityInteract(event.getItemStack(), event.getTarget(), event.getEntity(), event.getLevel(), event.getHand());
         }
     }
 }

@@ -21,7 +21,6 @@
       "translate": "advancement.vampirism.freeze_kill.desc"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:clock"
     },
     "title": {

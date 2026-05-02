@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.BloodHelper;
 import de.teamlapen.vampirism.common.world.blockentity.BloodGrinderBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -76,6 +77,7 @@ public class BloodGrinderBlock extends BaseEntityBlock {
                 if (!player.getAbilities().instabuild) heldItem.shrink(1);
                 blockEntity.updateFilterState(level, pos);
                 blockEntity.setChanged();
+                player.awardStat(ModStats.INTERACT_WITH_BLOOD_GRINDER.get());
 
                 return InteractionResult.SUCCESS;
             }
@@ -95,6 +97,7 @@ public class BloodGrinderBlock extends BaseEntityBlock {
             blockEntity.filterStack = ItemStack.EMPTY;
             blockEntity.updateFilterState(level, pos);
             blockEntity.setChanged();
+            player.awardStat(ModStats.INTERACT_WITH_BLOOD_GRINDER.get());
 
             return (InteractionResult) InteractionResult.SUCCESS;
         }).orElse(InteractionResult.PASS);

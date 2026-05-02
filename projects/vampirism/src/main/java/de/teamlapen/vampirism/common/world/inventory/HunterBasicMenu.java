@@ -18,14 +18,13 @@ import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Container for interacting with basic hunters to level up as a hunter
  */
 public class HunterBasicMenu extends ItemCombinerMenu {
-    private final @NotNull IHunterPlayer player;
+    private final IHunterPlayer player;
     @Nullable
     private final BasicHunterEntity entity;
 
@@ -34,45 +33,45 @@ public class HunterBasicMenu extends ItemCombinerMenu {
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
-    public HunterBasicMenu(int id, @NotNull Inventory playerInventory) {
+    public HunterBasicMenu(int id, Inventory playerInventory) {
         this(id, playerInventory, null);
     }
 
-    public HunterBasicMenu(int id, @NotNull Inventory playerInventory, @Nullable BasicHunterEntity hunter) {
+    public HunterBasicMenu(int id, Inventory playerInventory, @Nullable BasicHunterEntity hunter) {
         super(ModMenus.HUNTER_BASIC.get(), id, playerInventory, hunter == null ? ContainerLevelAccess.NULL : ContainerLevelAccess.create(hunter.level(), hunter.blockPosition()), createInputSlotDefinitions(playerInventory.player));
         this.player = HunterPlayer.get(playerInventory.player);
         this.entity = hunter;
     }
 
-    protected static @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions(Player player) {
+    protected static ItemCombinerMenuSlotDefinition createInputSlotDefinitions(Player player) {
         return ModifiedItemCombinerMenuSlotDefinition.createWithoutResult()
                 .withSlot(0, 27, 32, stack -> stack.is(ModItems.VAMPIRE_BLOOD_BOTTLE.get()))
                 .build();
     }
 
     @Override
-    protected boolean mayPickup(@NotNull Player player, boolean hasStack) {
+    protected boolean mayPickup(Player player, boolean hasStack) {
         return true;
     }
 
     @Override
-    protected void onTake(@NotNull Player player, @NotNull ItemStack stack) {
+    protected void onTake(Player player, ItemStack stack) {
         int targetLevel = this.player.getLevel() + 1;
         HunterLeveling.getBasicHunterRequirement(targetLevel).ifPresent(req -> {
             int required = req.vampireBloodAmount();
             getSlot(0).remove(required);
             FactionPlayerHandler.get(player).setFaction(LevelingChange.builder().faction(ModFactions.HUNTER).level(targetLevel));
-            player.displayClientMessage(Component.translatable("container.vampirism.basic_hunter.levelup"), false);
+            player.sendOverlayMessage(Component.translatable("gui.vampirism.hunter.level_up"));
             player.closeContainer();
         });
     }
 
-    public void onLevelUpClicked(@NotNull Player player) {
+    public void onLevelUpClicked(Player player) {
         this.onTake(player, ItemStack.EMPTY);
     }
 
     @Override
-    protected boolean isValidBlock(@NotNull BlockState state) {
+    protected boolean isValidBlock(BlockState state) {
         return true;
     }
 
@@ -96,7 +95,7 @@ public class HunterBasicMenu extends ItemCombinerMenu {
     }
 
     @Override
-    public boolean stillValid(@NotNull Player playerIn) {
+    public boolean stillValid(Player playerIn) {
         if (this.entity == null) return false;
         return new Vec3(playerIn.getX(), playerIn.getY(), playerIn.getZ()).distanceTo(this.entity.position()) < 5;
     }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.armor.*;
+import de.teamlapen.vampirism.client.models.blocks.BloodSphereModel;
 import de.teamlapen.vampirism.client.models.blocks.CoffinModel;
 import de.teamlapen.vampirism.client.models.entities.*;
 import de.teamlapen.vampirism.client.renderer.entities.*;
@@ -10,6 +11,7 @@ import de.teamlapen.vampirism.client.renderer.entities.layers.VampirePlayerHeadL
 import de.teamlapen.vampirism.common.core.ModEntities;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.npc.VillagerModel;
 import net.minecraft.client.model.object.boat.BoatModel;
@@ -19,6 +21,7 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelType;
@@ -30,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ModEntitiesRender {
     public static final ModelLayerLocation COFFIN = new ModelLayerLocation(VIdentifier.mod("coffin"), "main");
+    public static final ModelLayerLocation BLOOD_SPHERE = new ModelLayerLocation(VIdentifier.mod("blood_sphere"), "main");
     public static final ModelLayerLocation WING = new ModelLayerLocation(VIdentifier.mod("wing"), "main");
     public static final ModelLayerLocation BARON = new ModelLayerLocation(VIdentifier.mod("baron"), "main");
     public static final ModelLayerLocation BARONESS = new ModelLayerLocation(VIdentifier.mod("baroness"), "main");
@@ -58,8 +62,8 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE_IMOB.get(), ConvertedCreatureRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE.get(), (ConvertedCreatureRenderer::new));
         event.registerEntityRenderer(ModEntities.CONVERTED_HORSE.get(), convertedRenderer(context -> new HorseRenderer(context)));
-        event.registerEntityRenderer(ModEntities.CONVERTED_DONKEY.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, DonkeyRenderer.Type.DONKEY)));
-        event.registerEntityRenderer(ModEntities.CONVERTED_MULE.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, DonkeyRenderer.Type.MULE)));
+        event.registerEntityRenderer(ModEntities.CONVERTED_DONKEY.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, EquipmentClientInfo.LayerType.DONKEY_SADDLE, ModelLayers.DONKEY_SADDLE, DonkeyRenderer.Type.DONKEY, DonkeyRenderer.Type.DONKEY_BABY)));
+        event.registerEntityRenderer(ModEntities.CONVERTED_MULE.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, EquipmentClientInfo.LayerType.MULE_SADDLE, ModelLayers.MULE_SADDLE, DonkeyRenderer.Type.MULE, DonkeyRenderer.Type.MULE_BABY)));
         event.registerEntityRenderer(ModEntities.CONVERTED_SHEEP.get(), convertedRenderer(SheepRenderer::new));
         event.registerEntityRenderer(ModEntities.CONVERTED_COW.get(), convertedRenderer(CowRenderer::new));
         event.registerEntityRenderer(ModEntities.HUNTER.get(), (BasicHunterRenderer::new));
@@ -85,7 +89,7 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.HUNTER_MINION.get(), (HunterMinionRenderer::new));
         event.registerEntityRenderer(ModEntities.TASK_MASTER_VAMPIRE.get(), (VampireTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.TASK_MASTER_HUNTER.get(), (HunterTaskMasterRenderer::new));
-        event.registerEntityRenderer(ModEntities.SIT_DUMMY.get(), DummyRenderer::new);
+        event.registerEntityRenderer(ModEntities.SIT.get(), DummyRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_FOX.get(), convertedRenderer(FoxRenderer::new));
         event.registerEntityRenderer(ModEntities.CONVERTED_GOAT.get(), convertedRenderer(GoatRenderer::new));
         event.registerEntityRenderer(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), DummyRenderer::new);
@@ -101,6 +105,7 @@ public class ModEntitiesRender {
 
     public static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
         event.registerLayerDefinition(COFFIN, CoffinModel::createLayer);
+        event.registerLayerDefinition(BLOOD_SPHERE, BloodSphereModel::createLayer);
         event.registerLayerDefinition(WING, WingModel::createLayer);
         event.registerLayerDefinition(BARON, BaronModel::createLayer);
         event.registerLayerDefinition(BARONESS, BaronessModel::createLayer);

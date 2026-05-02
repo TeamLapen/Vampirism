@@ -13,7 +13,6 @@
       "translate": "advancement.vampirism.collect_hunter_items.desc"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:bundle"
     },
     "title": {

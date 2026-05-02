@@ -34,7 +34,7 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
 
     public LordLevelReward(int targetLevel) {
         this.targetLevel = targetLevel;
-        this.description = Component.translatable("task_reward.factionapi.lord_level_reward", targetLevel);
+        this.description = Component.translatable("task_reward.factionapi.lord_level", targetLevel);
     }
 
     @Override

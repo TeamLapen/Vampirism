@@ -10,7 +10,7 @@ import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
 import de.teamlapen.faction.common.util.ItemOrdering;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.StringWidget;
@@ -90,7 +90,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
         GridLayout.RowHelper rowHelper = excludes.createRowHelper(1);
         rowHelper.defaultCellSetting().alignHorizontallyCenter();
-        rowHelper.addChild(new StringWidget(Component.translatable("text.factionapi.excluded_actions"), Minecraft.getInstance().font), rowHelper.newCellSettings().alignHorizontallyCenter().paddingVertical(1));
+        rowHelper.addChild(new StringWidget(Component.translatable("gui.factionapi.radial_menu.excluded_actions"), Minecraft.getInstance().font), rowHelper.newCellSettings().alignHorizontallyCenter().paddingVertical(1));
 
         this.excludedList = rowHelper.addChild(new ExcludedItemList(excludesWidth - 8, this.height - 55 - 11));
         this.repositionCallback.add((width1, height1) -> excludedList.setHeight(height1 - 55 - 11));
@@ -107,7 +107,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
     }
 
     @Override
@@ -222,7 +222,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     @Override
-    public void drawSlice(IRadialMenuSlot<ItemWrapper<T>> slot, boolean highlighted, GuiGraphics buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
+    public void drawSlice(IRadialMenuSlot<ItemWrapper<T>> slot, boolean highlighted, GuiGraphicsExtractor buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         if (this.movingItem == null && !slot.primarySlotIcon().getOptional().map(this.isEnabled).orElse(true)) {
             r = 80;
         }
@@ -230,14 +230,15 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     }
 
     @Override
-    public void drawSliceName(GuiGraphics graphics, String sliceName, ItemStack stack, int posX, int posY) {
+    public void drawSliceName(GuiGraphicsExtractor graphics, String sliceName, ItemStack stack, int posX, int posY) {
     }
 
+
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTicks);
-        graphics.drawCenteredString(this.font, Component.translatable("gui.factionapi.reordering.excluded"), 70, 5, -1);
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        this.extractBackground(graphics, mouseX, mouseY, partialTicks);
+        graphics.centeredText(this.font, Component.translatable("gui.factionapi.reordering.excluded"), 70, 5, -1);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         if (this.movingItem != null) {
             this.drawCallback.accept(this.movingItem.get(), graphics, mouseX - 8, mouseY - 8, 16, false);
         }
@@ -291,16 +292,16 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }
 
         @Override
-        public void renderWidget(@NotNull GuiGraphics guiGraphics, int p_283242_, int p_282891_, float p_283683_) {
-            super.renderWidget(guiGraphics, p_283242_, p_282891_, p_283683_);
+        public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int p_283242_, int p_282891_, float p_283683_) {
+            super.extractWidgetRenderState(GuiGraphicsExtractor, p_283242_, p_282891_, p_283683_);
             if (this.visible && ReorderingGuiRadialMenu.this.movingItem != null) {
                 int i = this.getX();
                 int j = this.getY();
-                guiGraphics.pose().pushMatrix();
-                guiGraphics.pose().translate(i, j);
-                guiGraphics.fillGradient(0, 0, this.getWidth(), this.getHeight(), -1072689136, -804253680);
-                guiGraphics.drawCenteredString(Minecraft.getInstance().font, Component.translatable("text.factionapi.place_exclude"), this.width / 2, this.height / 2, -1);
-                guiGraphics.pose().popMatrix();
+                GuiGraphicsExtractor.pose().pushMatrix();
+                GuiGraphicsExtractor.pose().translate(i, j);
+                GuiGraphicsExtractor.fillGradient(0, 0, this.getWidth(), this.getHeight(), -1072689136, -804253680);
+                GuiGraphicsExtractor.centeredText(Minecraft.getInstance().font, Component.translatable("gui.factionapi.radial_menu.place_exclude"), this.width / 2, this.height / 2, -1);
+                GuiGraphicsExtractor.pose().popMatrix();
             }
         }
     }
@@ -355,8 +356,8 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         }
 
         @Override
-        public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
-            this.button.render(guiGraphics, mouseX, mouseY, partialTick);
+        public void extractContent(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+            this.button.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         }
 
         @Override

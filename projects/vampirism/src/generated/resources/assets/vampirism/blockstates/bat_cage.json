@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
-      "model": "vampirism:block/bat_cage/block"
+    "facing=east": {
+      "model": "vampirism:block/bat_cage",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "vampirism:block/bat_cage"
+    },
+    "facing=south": {
+      "model": "vampirism:block/bat_cage",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/bat_cage",
+      "y": 270
     }
   }
 }

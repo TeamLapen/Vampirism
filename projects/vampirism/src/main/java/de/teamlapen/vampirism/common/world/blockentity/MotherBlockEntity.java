@@ -19,6 +19,7 @@ import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -116,7 +117,7 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
     }
 
 
-    private final ServerBossEvent bossEvent = new ServerBossEvent(Component.translatable("block.vampirism.mother"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
+    private final ServerBossEvent bossEvent = new ServerBossEvent(Mth.createInsecureUUID(this.level.getRandom()),Component.translatable("block.vampirism.mother"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
     private final Set<ServerPlayer> activePlayers = new HashSet<>();
     private final Set<UUID> involvedPlayers = new HashSet<>();
     /**
@@ -215,9 +216,11 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
         List<Triple<BlockPos, BlockState, IRemainsBlock>> remaining = vuls.stream().filter(vul -> vul.getRight().isVulnerable(vul.getMiddle())).toList();
         if (!remaining.isEmpty()) {
             var remainingHealth = remaining.stream().mapToInt(s -> {
-                var entity = level.getBlockEntity(s.getLeft());
-                if (entity instanceof VulnerableRemainsBlockEntity vulnerable) {
-                    return vulnerable.getHealth();
+                if (level.isLoaded(s.getLeft())) { //Check whether still loaded
+                    var entity = level.getBlockEntity(s.getLeft());
+                    if (entity instanceof VulnerableRemainsBlockEntity vulnerable) {
+                        return vulnerable.getHealth();
+                    }
                 }
                 return VulnerableRemainsBlockEntity.MAX_HEALTH;
             }).sum();

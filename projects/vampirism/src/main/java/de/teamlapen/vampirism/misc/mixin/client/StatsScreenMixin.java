@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 public abstract class StatsScreenMixin extends Screen {
 
     @Unique
-    private static final Component ACTIONS_BUTTON = Component.translatable("text.vampirism.actions");
+    private static final Component ACTIONS_BUTTON = Component.translatable("gui.vampirism.actions");
 
     @Shadow
     @Final

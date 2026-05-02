@@ -21,7 +21,6 @@
       "translate": "advancement.vampirism.baptism_of_blood.desc"
     },
     "icon": {
-      "count": 1,
       "id": "vampirism:altar_inspiration"
     },
     "title": {

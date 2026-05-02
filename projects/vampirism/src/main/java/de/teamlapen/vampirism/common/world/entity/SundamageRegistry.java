@@ -96,9 +96,9 @@ public class SundamageRegistry implements ISundamageRegistry {
 
     public void reloadConfiguration() {
         ServerConfig config = ModConfig.server();
-        Set<ResourceKey<Biome>> biomes = config.sundamageDisabledBiomes.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.BIOME, s)).collect(Collectors.toUnmodifiableSet());
-        Set<ResourceKey<Level>> levels = config.sundamageDimensionsOverrideNegative.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
-        Set<ResourceKey<Level>> positiveLevels = config.sundamageDimensionsOverridePositive.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Biome>> biomes = config.noSundamageBiomes.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.BIOME, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> levels = config.noSundamageDimensions.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
+        Set<ResourceKey<Level>> positiveLevels = config.enforceSundamageDimensions.get().stream().map(Identifier::parse).map(s -> ResourceKey.create(Registries.DIMENSION, s)).collect(Collectors.toUnmodifiableSet());
         this.configSettings = new ConfigSettings(levels, positiveLevels, biomes);
         reloadSettings();
     }
@@ -110,7 +110,7 @@ public class SundamageRegistry implements ISundamageRegistry {
         } else if (this.noSunDamageLevels.contains(dim)) {
             return false;
         } else {
-            return ModConfig.server().sundamageUnknownDimension.get();
+            return ModConfig.server().sundamageInUnknownDimensions.get();
         }
     }
 

@@ -5,6 +5,7 @@
     "amount": 1,
     "id": "minecraft:water"
   },
+  "info": {},
   "ingredient": "#c:crops/garlic",
   "result": {
     "count": 4,

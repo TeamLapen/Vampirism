@@ -234,7 +234,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             }
         }
         BlockPos blockpos = this.getBlockPos();
-        ItemStack craftingRemainder = itemstack.getCraftingRemainder();
+        ItemStack craftingRemainder = itemstack.getCraftingRemainder().create();
         if (!craftingRemainder.isEmpty()) {
             itemstack.shrink(1);
             if (itemstack.isEmpty()) {

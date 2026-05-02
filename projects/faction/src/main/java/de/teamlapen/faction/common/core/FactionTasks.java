@@ -32,7 +32,7 @@ public class FactionTasks {
     public static final DeferredHolder<MapCodec<? extends TaskReward>, MapCodec<ConsumerReward>> CONSUMER = TASK_REWARDS.register("consumer", () -> ConsumerReward.CODEC);
     public static final DeferredHolder<MapCodec<? extends TaskReward>, MapCodec<MapReward>> MAP_REWARD = TASK_REWARDS.register("map", () -> MapReward.CODEC);
 
-    public static final DeferredHolder<MapCodec<? extends ITaskRewardInstance>, MapCodec<ItemReward.Instance>> ITEM_REWARD_INSTANCE = TASK_REWARD_INSTANCES.register("item", () -> ItemReward.Instance.CODEC);
+    public static final DeferredHolder<MapCodec<? extends ITaskRewardInstance>, MapCodec<IItemReward.Instance>> ITEM_REWARD_INSTANCE = TASK_REWARD_INSTANCES.register("item", () -> IItemReward.Instance.CODEC);
     public static final DeferredHolder<MapCodec<? extends ITaskRewardInstance>, MapCodec<LordLevelReward>> LORD_LEVEL_REWARD_INSTANCE = TASK_REWARD_INSTANCES.register("lord_level", () -> LordLevelReward.CODEC);
     public static final DeferredHolder<MapCodec<? extends ITaskRewardInstance>, MapCodec<ConsumerReward>> CONSUMER_INSTANCE = TASK_REWARD_INSTANCES.register("consumer", () -> ConsumerReward.CODEC);
     public static final DeferredHolder<MapCodec<? extends ITaskRewardInstance>, MapCodec<MapReward.Instance>> MAP_REWARD_INSTANCE = TASK_REWARD_INSTANCES.register("map", () -> MapReward.Instance.CODEC);

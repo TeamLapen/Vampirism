@@ -24,12 +24,12 @@ public class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> DISGUISE_AS_VAMPIRE = EFFECTS.register("disguise_as_vampire", () -> new SimpleMobEffect(MobEffectCategory.NEUTRAL, 0x999900));
     public static final DeferredHolder<MobEffect, MobEffect> FIRE_PROTECTION = EFFECTS.register("fire_protection", () -> new SimpleMobEffect(MobEffectCategory.BENEFICIAL, 14981690));
     public static final DeferredHolder<MobEffect, MobEffect> GARLIC = EFFECTS.register("garlic", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0xFFFFFF));
-    public static final DeferredHolder<MobEffect, MobEffect> POISON = EFFECTS.register("poison", () -> new VampirismPoisonMobEffect(MobEffectCategory.HARMFUL, 0x4E9331));
+    public static final DeferredHolder<MobEffect, MobEffect> TOXICANT = EFFECTS.register("toxicant", GarlicEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> FREEZE = EFFECTS.register("freeze", () -> new FreezeMobEffect(MobEffectCategory.HARMFUL, 0xFFFFFF));
     public static final DeferredHolder<MobEffect, MobEffect> NEONATAL = EFFECTS.register("neonatal", () -> new SimpleMobEffect(MobEffectCategory.NEUTRAL, 0xFFBBBB).addAttributeModifier(Attributes.ATTACK_DAMAGE, ModEffects.NEONATAL.getId(), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL).addAttributeModifier(Attributes.MOVEMENT_SPEED, ModEffects.NEONATAL.getId(), -0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> ARMOR_REGENERATION = EFFECTS.register("armor_regeneration", () -> new ArmorRegenerationMobEffect(MobEffectCategory.NEUTRAL, 0xD17642));
-    public static final DeferredHolder<MobEffect, MobEffect> BAD_OMEN_HUNTER = EFFECTS.register("bad_omen_hunter", () -> new FactionBadOmenMobEffect(ModFactions.HUNTER));
     public static final DeferredHolder<MobEffect, MobEffect> BAD_OMEN_VAMPIRE = EFFECTS.register("bad_omen_vampire", () -> new FactionBadOmenMobEffect(ModFactions.VAMPIRE));
+    public static final DeferredHolder<MobEffect, MobEffect> BAD_OMEN_HUNTER = EFFECTS.register("bad_omen_hunter", () -> new FactionBadOmenMobEffect(ModFactions.HUNTER));
     public static final DeferredHolder<MobEffect, MobEffect> LORD_SPEED = EFFECTS.register("lord_speed", () -> new SimpleMobEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.MOVEMENT_SPEED, ModEffects.LORD_SPEED.getId(), 0.07F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> LORD_ATTACK_SPEED = EFFECTS.register("lord_attack_speed", () -> new SimpleMobEffect(MobEffectCategory.BENEFICIAL, 0xffffff).addAttributeModifier(Attributes.ATTACK_SPEED, ModEffects.LORD_ATTACK_SPEED.getId(), 0.05F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> NO_BLOOD = EFFECTS.register("no_blood", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0x191919)

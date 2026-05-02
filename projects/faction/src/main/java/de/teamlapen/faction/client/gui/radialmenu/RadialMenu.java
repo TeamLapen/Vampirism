@@ -28,7 +28,7 @@
 
 package de.teamlapen.faction.client.gui.radialmenu;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -98,7 +98,7 @@ public class RadialMenu<T> {
         return this.secondaryIconStartingPosition;
     }
 
-    public void drawIcon(T objectToBeDrawn, GuiGraphics graphics, int positionX, int positionY, int size) {
+    public void drawIcon(T objectToBeDrawn, GuiGraphicsExtractor graphics, int positionX, int positionY, int size) {
         this.drawCallback.accept(objectToBeDrawn, graphics, positionX, positionY, size, false);
     }
 

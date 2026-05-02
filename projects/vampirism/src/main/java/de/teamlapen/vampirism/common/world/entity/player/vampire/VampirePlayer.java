@@ -101,6 +101,7 @@ import java.util.Optional;
  */
 public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
     public static final Identifier NATURAL_ARMOR_UUID = VIdentifier.mod("natural_armor");
+    private static final Identifier LEVEL_DAMAGE_UUID = VIdentifier.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int FEED_TIMER = 20;
 
@@ -251,7 +252,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 player.awardStat(ModStats.AMOUNT_BITTEN.get());
                 switch (feed_victim_bite_type) {
                     case HUNTER_CREATURE:
-                        player.addEffect(new MobEffectInstance(ModEffects.POISON, 60));
+                        player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 60));
                         if (player instanceof ServerPlayer) {
                             ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.POISONOUS_BITE);
                         }
@@ -1057,7 +1058,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     private void applyEntityAttributes() {
         BalanceConfig config = ModConfig.balance();
-        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(config.vpSundamage.get());
+        player.getAttribute(ModAttributes.SUNDAMAGE).setBaseValue(config.vpSundamagePerTick.get());
         player.getAttribute(ModAttributes.BLOOD_EXHAUSTION).setBaseValue(config.vpBloodExhaustionFactor.get());
         player.getAttribute(ModAttributes.NEONATAL_DURATION).setBaseValue(config.vpNeonatalDuration.get() * 20);
         player.getAttribute(ModAttributes.DBNO_DURATION).setBaseValue(config.vpDbnoDuration.get() * 20);
@@ -1074,16 +1075,22 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
      * Apply the armor unaffected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersA(int level) {
-        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), ModConfig.balance().vpHealthMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
-        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), ModConfig.balance().vpExhaustionMaxMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.MAX_HEALTH, "Vampire", level, getMaxLevel(), ModConfig.balance().vpHealthMaxLevelMod.get(), 0.5, AttributeModifier.Operation.ADD_VALUE, true);
+        LevelAttributeModifier.applyModifier(player, ModAttributes.BLOOD_EXHAUSTION, "Vampire", level, getMaxLevel(), ModConfig.balance().vpExhaustionMaxLevelMod.get(), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        AttributeInstance attribute = player.getAttribute(Attributes.ATTACK_DAMAGE);
+        attribute.removeModifier(LEVEL_DAMAGE_UUID);
+        int damage = level >= 7 ? level >= 14 ? 2 : 1 : 0;
+        if (damage > 0) {
+            attribute.addPermanentModifier(new AttributeModifier(LEVEL_DAMAGE_UUID, damage, AttributeModifier.Operation.ADD_VALUE));
+        }
     }
 
     /**
      * Apply the armor affected level scaled entity attribute modifiers
      */
     private void applyLevelModifiersB(int level, boolean heavyArmor) {
-        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
-        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpAttackSpeedMaxMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.MOVEMENT_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpSpeedMaxLevelMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_SPEED, "Vampire", level, getMaxLevel(), ModConfig.balance().vpAttackSpeedMaxLevelMod.get() * (heavyArmor ? 0.5f : 1), 0.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
     private void biteBlock(BlockPos pos, BlockState state, Direction side, @Nullable BlockEntity blockEntity) {
@@ -1263,7 +1270,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             vec31 = vec31.yRot(-player.getYRot() * (float) Math.PI / 180.0F);
             vec31 = vec31.add(player.getX(), player.getY() + (double) player.getEyeHeight(), player.getZ());
 
-            player.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, new ItemStack(Items.APPLE)), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
+            player.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, Items.APPLE), vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z);
         }
     }
 

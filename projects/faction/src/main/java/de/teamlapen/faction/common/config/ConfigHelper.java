@@ -8,6 +8,6 @@ public class ConfigHelper {
     }
 
     public boolean preventRenderingDebugBoundingBoxes() {
-        return this.factionConfig.serverConfig().isLoaded() && this.factionConfig.serverConfig().config().preventRenderingDebugBoundingBoxes.get();
+        return this.factionConfig.serverConfig().isLoaded() && this.factionConfig.serverConfig().config().preventDebugBoundingBoxes.get();
     }
 }

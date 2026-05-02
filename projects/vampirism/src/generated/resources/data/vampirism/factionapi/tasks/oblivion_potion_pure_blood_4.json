@@ -13,7 +13,6 @@
               "potion": "minecraft:poison"
             }
           },
-          "count": 1,
           "id": "minecraft:potion"
         }
       },
@@ -24,7 +23,6 @@
         },
         "id": "vampirism:pure_blood_3",
         "item": {
-          "count": 1,
           "id": "vampirism:pure_blood_3"
         }
       }
@@ -33,7 +31,6 @@
   "reward": {
     "type": "factionapi:item",
     "item": {
-      "count": 1,
       "id": "factionapi:oblivion_potion"
     }
   },

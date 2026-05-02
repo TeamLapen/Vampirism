@@ -1,6 +1,9 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "category": "equipment",
+  "category": {
+    "category": "equipment"
+  },
+  "commoninfo": {},
   "key": {
     "X": "#c:ingots/iron",
     "Y": "#c:strings",
@@ -14,7 +17,6 @@
     " ZZ "
   ],
   "result": {
-    "count": 1,
     "id": "vampirism:basic_double_crossbow"
   },
   "skill": [

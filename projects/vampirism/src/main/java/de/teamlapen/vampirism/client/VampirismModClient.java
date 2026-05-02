@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.client;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.client.config.ModFilter;
+import de.teamlapen.vampirism.client.config.ConfigFilter;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
+import de.teamlapen.vampirism.client.renderer.items.BatCageSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
-import de.teamlapen.vampirism.client.renderer.items.CoffinRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.proxy.IProxy;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -35,7 +34,7 @@ public class VampirismModClient {
         SERVICES = new ClientServices(modContainer);
         SERVICES.register(modEventBus);
 
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ModFilter()));
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ConfigFilter()));
 
         modEventBus.register(this);
         NeoForge.EVENT_BUS.addListener(this::onDataMapsUpdated);
@@ -43,7 +42,6 @@ public class VampirismModClient {
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
         }
-
     }
 
     public static ClientServices services() {
@@ -52,7 +50,6 @@ public class VampirismModClient {
 
     @SubscribeEvent
     public void setupClient(@NotNull FMLClientSetupEvent event) {
-        event.enqueueWork(ModBlocksRender::register);
         event.enqueueWork(() -> {
             Sheets.addWoodType(ModBlocks.WoodTypes.DARK_SPRUCE);
             Sheets.addWoodType(ModBlocks.WoodTypes.CURSED_SPRUCE);
@@ -71,6 +68,6 @@ public class VampirismModClient {
     public void onRegisterSpecialModelRenderer(RegisterSpecialModelRendererEvent event) {
         event.register(MotherTrophyRenderer.ID, MotherTrophyRenderer.Unbaked.MAP_CODEC);
         event.register(BloodContainerRenderer.ID, BloodContainerRenderer.Unbaked.MAP_CODEC);
-        event.register(CoffinRenderer.ID, CoffinRenderer.Unbaked.MAP_CODEC);
+        event.register(BatCageSpecialRenderer.ID, BatCageSpecialRenderer.Unbaked.MAP_CODEC);
     }
 }

@@ -3,7 +3,7 @@ package de.teamlapen.faction.client.gui.components;
 import de.teamlapen.faction.api.factions.skills.IActionSkill;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -32,24 +32,24 @@ public class SkillDisplayWidget extends AbstractWidget {
 
     @SuppressWarnings({"DataFlowIssue", "SwitchStatementWithTooFewBranches"})
     @Override
-    protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
         Identifier texture = switch (this.skill.value()) {
             case IActionSkill<?> actionSkill -> actionSkill.actionHolder().getKey().identifier().withPath(path -> "textures/actions/" + path + ".png");
             default -> this.skill.getKey().identifier().withPath(path -> "textures/skills/" + path + ".png");
         };
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, this.getX() + this.xOffset, this.getY() + this.yOffset, 0, 0, 16, 16, 16, 16);
+        GuiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, texture, this.getX() + this.xOffset, this.getY() + this.yOffset, 0, 0, 16, 16, 16, 16);
 
         if (this.isFocused()) {
-            guiGraphics.renderOutline(this.getX(), this.getY(), this.getWidth(), this.getHeight(), -1);
+            GuiGraphicsExtractor.outline(this.getX(), this.getY(), this.getWidth(), this.getHeight(), -1);
         }
 
         if (this.tooltip && this.isHoveredOrFocused()) {
-            this.renderTooltip(guiGraphics, mouseX, mouseY);
+            this.renderTooltip(GuiGraphicsExtractor, mouseX, mouseY);
         }
     }
 
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.setTooltipForNextFrame(this.minecraft.font, this.skill.value().getName(), mouseX, mouseY);
+    protected void renderTooltip(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+        GuiGraphicsExtractor.setTooltipForNextFrame(this.minecraft.font, this.skill.value().getName(), mouseX, mouseY);
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.Collections;
 public class VampirismArmorModel extends Model<Object> {
 
     public VampirismArmorModel(ModelPart root) {
-        super(root, RenderTypes::entityCutoutNoCull);
+        super(root, RenderTypes::entityCutout);
     }
 
 

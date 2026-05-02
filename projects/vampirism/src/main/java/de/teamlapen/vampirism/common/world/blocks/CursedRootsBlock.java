@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.DryVegetationBlock;
-import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CursedRootsBlock extends DryVegetationBlock {
@@ -20,6 +20,6 @@ public class CursedRootsBlock extends DryVegetationBlock {
     }
 
     public static boolean isProperSoil(BlockState state) {
-        return state.is(BlockTags.DIRT) || state.is(ModBlockTags.CURSED_EARTH) || state.getBlock() instanceof FarmBlock;
+        return state.is(BlockTags.DIRT) || state.is(ModBlockTags.CURSED_EARTH) || state.getBlock() instanceof FarmlandBlock;
     }
 }

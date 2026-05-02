@@ -1,7 +1,6 @@
 package de.teamlapen.faction.api;
 
 import com.google.common.base.Preconditions;
-import de.teamlapen.IFactionServices;
 import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;

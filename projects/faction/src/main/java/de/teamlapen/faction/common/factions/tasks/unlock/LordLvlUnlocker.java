@@ -24,7 +24,7 @@ public record LordLvlUnlocker(int reqLordLevel, boolean exact) implements TaskUn
 
     @Override
     public Component getDescription() {
-        return Component.translatable("text.factionapi.lord").append(Component.literal(" ")).append(Component.translatable("text.factionapi.level")).append(Component.literal((exact ? " = " : " ") + reqLordLevel));
+        return Component.translatable(exact ? "message.factionapi.task_unlocker.lord_level.exact" : "message.factionapi.task_unlocker.lord_level.min", reqLordLevel);
     }
 
     @Override

@@ -6,7 +6,7 @@ import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.util.ItemOrdering;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +23,7 @@ public class EditSelectMinionTaskScreen extends ReorderingGuiRadialMenu<SelectMi
         Minecraft.getInstance().setScreen(new EditSelectMinionTaskScreen(FactionPlayerHandler.get(Minecraft.getInstance().player)));
     }
 
-    private static void drawActionPart(@Nullable SelectMinionTaskRadialScreen.Entry entry, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
+    private static void drawActionPart(@Nullable SelectMinionTaskRadialScreen.Entry entry, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
         if (entry == null) return;
         GuiRenderer.blit(graphics, entry.getIconLoc(), posX, posY, 16, 16, 16, 16);
     }

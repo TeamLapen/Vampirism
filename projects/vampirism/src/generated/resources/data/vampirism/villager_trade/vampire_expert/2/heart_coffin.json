@@ -1,0 +1,15 @@
+{
+  "gives": {
+    "id": "vampirism:coffin_black"
+  },
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 15.0,
+      "min": 3.0
+    },
+    "id": "vampirism:human_heart"
+  },
+  "xp": 5.0
+}

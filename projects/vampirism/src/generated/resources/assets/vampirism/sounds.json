@@ -22,6 +22,12 @@
       }
     ]
   },
+  "block.beam_enter_player": {
+    "sounds": [
+      "vampirism:cc/block/beam_enter_player"
+    ],
+    "subtitle": "subtitles.vampirism.beam_enter_player"
+  },
   "block.blessing_music": {
     "sounds": [
       {
@@ -56,10 +62,16 @@
     ],
     "subtitle": "subtitles.vampirism.coffin_lid"
   },
-  "block.potion_table_crafting": {
+  "block.sphere_spinning": {
+    "sounds": [
+      "vampirism:cc/block/sphere_spinning"
+    ],
+    "subtitle": "subtitles.vampirism.sphere_spinning"
+  },
+  "block.vapor_still_crafting": {
     "sounds": [
       {
-        "name": "vampirism:reserved/block/potion_table_crafting",
+        "name": "vampirism:reserved/block/vapor_still_crafting",
         "stream": true
       }
     ]
@@ -70,6 +82,11 @@
         "name": "vampirism:reserved/block/weapon_table_crafting",
         "stream": true
       }
+    ]
+  },
+  "choir_short": {
+    "sounds": [
+      "vampirism:cc/fx/choir_short"
     ]
   },
   "entity.bat_swarm": {

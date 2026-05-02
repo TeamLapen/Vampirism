@@ -8,14 +8,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 public class GarlicBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBehavior {
 
@@ -25,13 +20,13 @@ public class GarlicBehavior implements IVampirismCrossbowArrow.ICrossbowArrowBeh
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> textComponents, TooltipFlag tooltipFlag) {
-
+    public void onHitEntity(ItemStack arrow, LivingEntity entity, AbstractArrow arrowEntity, Entity shootingEntity) {
+        entity.addEffect(new MobEffectInstance(ModEffects.GARLIC, 100, 1));
     }
 
     @Override
-    public void onHitEntity(ItemStack arrow, LivingEntity entity, AbstractArrow arrowEntity, Entity shootingEntity) {
-        entity.addEffect(new MobEffectInstance(ModEffects.GARLIC, 100, 1));
+    public Component getEffectDescription() {
+        return Component.translatable("tooltip.vampirism.quarrel_garlic");
     }
 
     @Override

@@ -16,12 +16,13 @@ import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinio
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,9 +33,10 @@ import java.util.stream.Stream;
 
 public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<SelectMinionTaskRadialScreen.Entry> {
 
-    public static final Map<Identifier, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_single"), Component.translatable("text.factionapi.minion.call_single"), FIdentifier.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
-            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_all"), Component.translatable("text.factionapi.minion.call_all"), FIdentifier.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
-            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("respawn"), Component.translatable("text.factionapi.minion.respawn"), FIdentifier.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
+    public static final Map<Identifier, Entry> CUSTOM_ENTRIES = Stream.of(
+            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_single"), Component.translatable("minion_task.factionapi.call_single"), FIdentifier.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
+            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_all"), Component.translatable("minion_task.factionapi.call_all"), FIdentifier.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
+            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("respawn"), Component.translatable("minion_task.factionapi.respawn"), FIdentifier.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
 
     private SelectMinionTaskRadialScreen(Collection<Entry> entries, KeyMapping keyMapping) {
         super(getRadialMenu(entries), keyMapping, SelectActionRadialScreen::show);
@@ -48,7 +50,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         FactionPlayerHandler.get(Minecraft.getInstance().player).getLordPlayer().filter(x -> x.getLordLevel() > 0).ifPresent(lord -> {
             Collection<Entry> tasks = getTasks(lord);
             if (tasks.isEmpty()) {
-                Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.factionapi.no_minion_tasks"), true);
+                Minecraft.getInstance().player.sendOverlayMessage(Component.translatable("gui.factionapi.minion_radial.no_minion_tasks"));
                 Minecraft.getInstance().setScreen(null);
             } else {
                 Minecraft.getInstance().setScreen(new SelectMinionTaskRadialScreen(tasks, mapping));
@@ -57,7 +59,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(@NonNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
     }
 
     private static List<Entry> getTasks(ILordPlayer<?> lord) {
@@ -72,7 +74,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskRadialScreen::drawActionPart, 0);
     }
 
-    private static void drawActionPart(Entry t, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
+    private static void drawActionPart(Entry t, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
         GuiRenderer.blit(graphics, t.getIconLoc(), posX, posY, 16, 16, 16, 16);
     }
 

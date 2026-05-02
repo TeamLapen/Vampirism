@@ -14,10 +14,9 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the advanced vampire with overlays
@@ -26,37 +25,37 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     private final static Identifier texture = VIdentifier.mc("textures/entity/villager/villager.png");
     private final static Identifier overlay = VIdentifier.mod("textures/entity/hunter_task_master_overlay.png");
 
-    public HunterTaskMasterRenderer(EntityRendererProvider.@NotNull Context context) {
+    public HunterTaskMasterRenderer(EntityRendererProvider.Context context) {
         super(context, new VillagerModel(context.bakeLayer(ModEntitiesRender.TASK_MASTER)), 0.5F);
         this.addLayer(new TaskMasterTypeLayer<>(this, overlay));
         this.addLayer(new HelmetLayer(this));
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(@NotNull HunterTaskMasterRenderState state) {
+    public Identifier getTextureLocation(HunterTaskMasterRenderState state) {
         return texture;
     }
 
     @Override
-    protected void submitNameTag(HunterTaskMasterRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        if (renderState.distanceToCameraSq <= 128) {
-            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
+    protected void submitNameDisplay(HunterTaskMasterRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        if (state.distanceToCameraSq <= 256) {
+            super.submitNameDisplay(state, poseStack, submitNodeCollector, camera);
         }
     }
 
     @Override
-    public void extractRenderState(@NotNull HunterTaskMasterEntity entity, @NotNull HunterTaskMasterRenderState renderState, float partialTicks) {
+    public void extractRenderState(HunterTaskMasterEntity entity, HunterTaskMasterRenderState renderState, float partialTicks) {
         super.extractRenderState(entity, renderState, partialTicks);
         renderState.villagerData = entity.getVillageData();
     }
 
     @Override
-    public @NotNull HunterTaskMasterRenderState createRenderState() {
+    public HunterTaskMasterRenderState createRenderState() {
         return new HunterTaskMasterRenderState();
     }
 
     @Override
-    protected boolean shouldShowName(@NotNull HunterTaskMasterEntity entity, double distance) {
+    protected boolean shouldShowName(HunterTaskMasterEntity entity, double distance) {
         return Helper.isHunter(entity) && super.shouldShowName(entity, distance);
     }
 
@@ -67,7 +66,7 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
         }
 
         @Override
-        public void submit(@NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodeCollector, int packedLight, HunterTaskMasterRenderState state, float yRot, float xRot) {
+        public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, HunterTaskMasterRenderState state, float yRot, float xRot) {
             if (!state.headItem.isEmpty()) {
                 poseStack.pushPose();
                 this.getParentModel().getHead().translateAndRotate(poseStack);

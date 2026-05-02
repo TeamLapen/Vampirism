@@ -5,7 +5,7 @@
         "type": "factionapi:entity_type",
         "amount": 10,
         "description": {
-          "translate": "entity_tag.vampirism.advanced_hunter"
+          "translate": "task_tag.vampirism.advanced_hunter"
         },
         "entityType": "vampirism:advanced_hunter",
         "id": "vampirism:advanced_hunter"
@@ -26,7 +26,6 @@
   "reward": {
     "type": "factionapi:item",
     "item": {
-      "count": 1,
       "id": "vampirism:feeding_adapter"
     }
   },

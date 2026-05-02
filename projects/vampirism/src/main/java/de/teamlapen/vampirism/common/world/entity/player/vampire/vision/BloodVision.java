@@ -25,10 +25,10 @@ public class BloodVision implements IVampireVision {
         Player entity = player.asEntity();
         if (entity.level().isClientSide() && OptifineHandler.isShaders()) {
             CommonConfig config = ModConfig.common();
-            if (!config.optifineBloodvisionWarning.get()) {
-                config.optifineBloodvisionWarning.set(true);
-                config.optifineBloodvisionWarning.save();
-                entity.displayClientMessage(Component.translatable("text.vampirism.warning_optifine_bloodvision"), false);
+            if (!config.optifineBloodVisionWarning.get()) {
+                config.optifineBloodVisionWarning.set(true);
+                config.optifineBloodVisionWarning.save();
+                entity.sendSystemMessage(Component.translatable("notification.vampirism.warning_optifine_blood_vision"));
             }
         }
     }

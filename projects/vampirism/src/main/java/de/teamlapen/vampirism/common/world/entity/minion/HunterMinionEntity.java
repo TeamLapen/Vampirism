@@ -157,9 +157,9 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
-                    player.displayClientMessage(Component.translatable("text.vampirism.hunter_minion.equipment_upgrade"), false);
+                    player.sendOverlayMessage(Component.translatable("dialogue.vampirism.hunter_minion.upgrade"));
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.hunter_minion.equipment_wrong"), false);
+                    player.sendOverlayMessage(Component.translatable("dialogue.vampirism.hunter_minion.wrong_upgrade"));
                     sync();
                 }
                 return InteractionResult.SUCCESS;
@@ -223,7 +223,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         if (stack.getItem() instanceof IHunterCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
                 var clip = ModItems.ARROW_CLIP.get().getDefaultInstance();
-                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance()));
+                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance())); //Careful, all entries of the list are the same object, not copies
                 return clip;
             } else {
                 return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -18,7 +19,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 
-import static de.teamlapen.vampirism.common.core.ModBlocks.*;
 import static de.teamlapen.vampirism.common.core.ModItems.*;
 
 @SuppressWarnings("unused")
@@ -129,8 +129,8 @@ public class ModCreativeTabs {
 
             add(CURSED_SPRUCE_LOG);
             add(CURSED_SPRUCE_WOOD);
-            add(CURSED_SPRUCE_LOG.get().getActiveBlockItem());
-            add(CURSED_SPRUCE_WOOD.get().getActiveBlockItem());
+            add(CURSED_SPRUCE_LOG.toStack().vampirism$with(ModDataComponents.ACTIVE, Unit.INSTANCE));
+            add(CURSED_SPRUCE_WOOD.toStack().vampirism$with(ModDataComponents.ACTIVE, Unit.INSTANCE));
             add(STRIPPED_CURSED_SPRUCE_LOG);
             add(STRIPPED_CURSED_SPRUCE_WOOD);
             add(CURSED_SPRUCE_PLANKS);
@@ -292,7 +292,7 @@ public class ModCreativeTabs {
             add(ALTAR_TIP);
 
             add(BLOOD_PEDESTAL);
-            addBlockGen(BLOOD_CONTAINER);
+            addItemGen(BLOOD_CONTAINER);
             add(BLOOD_GRINDER);
             add(BLOOD_SIEVE);
             add(INFUSER);
@@ -408,16 +408,16 @@ public class ModCreativeTabs {
         private void addBlocks() {
             addFunctionalBlocks();
 
-            ColorListsUtil.COFFINS.forEach(this::add);
+            ColorListsUtil.COFFINS.forEach(d -> add(d.get()));
         }
 
         private void addFunctionalBlocks() {
             add(HUNTER_TABLE);
             add(WEAPON_TABLE);
             add(ALCHEMICAL_CAULDRON);
-            add(POTION_TABLE);
+            add(VAPOR_STILL);
             add(ALCHEMY_TABLE);
-            add(MED_CHAIR);
+            add(INJECTION_CHAIR);
             add(ALTAR_CLEANSING);
 
             add(GARLIC_DIFFUSER_NORMAL);

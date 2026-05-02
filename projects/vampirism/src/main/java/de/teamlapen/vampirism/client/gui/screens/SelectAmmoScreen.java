@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.common.world.items.QuarrelPouch;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.world.items.crossbow.CrossbowArrowHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -55,17 +55,17 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         }, parts, SelectAmmoScreen::drawAmmoTypePart, 0);
     }
 
-    private static void drawAmmoTypePart(AmmoType action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
+    private static void drawAmmoTypePart(AmmoType action, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
         if (action.renderStack != null) {
-            graphics.renderItem(action.renderStack, posX, posY);
-            graphics.renderItemDecorations(Minecraft.getInstance().screen.font, action.renderStack, posX, posY, String.valueOf(action.count));
+            graphics.item(action.renderStack, posX, posY);
+            graphics.itemDecorations(Minecraft.getInstance().screen.font, action.renderStack, posX, posY, String.valueOf(action.count));
         } else {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NO_RESTRICTION, posX, posY, 16, 16);
         }
     }
 
     @Override
-    public void drawSliceName(GuiGraphics graphics, String sliceName, ItemStack stack, int posX, int posY) {
+    public void drawSliceName(GuiGraphicsExtractor graphics, String sliceName, ItemStack stack, int posX, int posY) {
     }
 
     public static class AmmoType {
@@ -78,7 +78,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         }
 
         public Component getDisplayName() {
-            return renderStack != null ? renderStack.getHoverName() : Component.translatable("text.vampirism.crossbow.no_restriction");
+            return renderStack != null ? renderStack.getHoverName() : Component.translatable("gui.vampirism.select_ammo.no_restriction");
         }
     }
 }

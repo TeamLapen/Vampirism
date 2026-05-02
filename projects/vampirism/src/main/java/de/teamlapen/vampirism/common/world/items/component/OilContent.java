@@ -9,11 +9,15 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModOils;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentHolder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 public record OilContent(Holder<IOil> oil) implements IOilContent {
     public static final OilContent EMPTY = new OilContent(ModOils.EMPTY);
@@ -27,10 +31,10 @@ public record OilContent(Holder<IOil> oil) implements IOilContent {
             ByteBufCodecs.holderRegistry(VampirismRegistries.Keys.OIL), OilContent::oil, OilContent::new
     );
 
-    public static ItemStack createItemStack(Item item, Holder<? extends IOil> oil) {
-        ItemStack stack = new ItemStack(item);
-        stack.set(ModDataComponents.OIL.get(), new OilContent((Holder<IOil>) oil));
-        return stack;
+    public static ItemStackTemplate createTemplate(Item item, Holder<? extends IOil> oil) {
+        return new ItemStackTemplate(item, DataComponentPatch.builder()
+                .set(ModDataComponents.OIL.get(), new OilContent((Holder<IOil>) oil))
+                .build());
     }
 
     public OilContent withOil(Holder<IOil> oil) {
@@ -42,7 +46,7 @@ public record OilContent(Holder<IOil> oil) implements IOilContent {
         return new OilContent((Holder<IOil>) oil);
     }
 
-    public static Holder<IOil> getOil(ItemStack stack) {
+    public static Holder<IOil> getOil(DataComponentGetter stack) {
         return stack.getOrDefault(ModDataComponents.OIL, EMPTY).oil();
     }
 }

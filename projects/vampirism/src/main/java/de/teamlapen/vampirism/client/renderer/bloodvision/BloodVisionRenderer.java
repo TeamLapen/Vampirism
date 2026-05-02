@@ -20,7 +20,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Util;
@@ -112,8 +112,8 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
                 submitEntities(poseStack, event.getLevelRenderState(), List.of(entry.renderState()), this.nodeCollector, levelRenderer.vampirism$entityRenderDispatcher());
 
                 for (SubmitNodeCollection value : this.nodeCollector.getSubmitsPerOrder().values()) {
-                    parts.render(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
-                    models.render(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                    parts.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                    models.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
                 }
 
                 this.nodeCollector.clear();
@@ -155,7 +155,7 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
         if (this.level() == null || this.player() == null || !player().isAlive()) return;
         this.lastBloodVisionTicks = this.bloodVisionTicks;
         VampirePlayer vampire = VampirePlayer.get(player());
-        if (vampire.getSkillProperties().blood_vision && !ModConfig.client().disableBloodVisionRendering.get() && !vampire.isGettingSundamage(level())) {
+        if (vampire.getSkillProperties().blood_vision && ModConfig.client().renderBloodVision.get() && !vampire.isGettingSundamage(level())) {
             if (this.bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
                 this.bloodVisionTicks++;
 

@@ -5,7 +5,7 @@
         "type": "factionapi:entity_type",
         "amount": 10,
         "description": {
-          "translate": "entity_tag.vampirism.hunter"
+          "translate": "task_tag.vampirism.hunter"
         },
         "entityType": "vampirism:hunter",
         "id": "vampirism:hunter"
@@ -31,7 +31,6 @@
           "potion": "vampirism:vampire_fire_resistance"
         }
       },
-      "count": 1,
       "id": "minecraft:potion"
     }
   },

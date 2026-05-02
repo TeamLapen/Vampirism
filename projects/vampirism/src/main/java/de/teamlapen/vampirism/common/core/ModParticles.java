@@ -26,8 +26,10 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, ParticleType<MotherParticleOptions>> MOTHER = PARTICLE_TYPES.register("mother", () -> create(MotherParticleOptions.CODEC, MotherParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<AltarInfusionParticleOptions>> ALTAR_INFUSION = PARTICLE_TYPES.register("altar_infusion", () -> create(AltarInfusionParticleOptions.CODEC, AltarInfusionParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> create(FlyingBloodEntityParticleOptions.CODEC,FlyingBloodEntityParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<BloodShredParticleOptions>> BLOOD_SHRED = PARTICLE_TYPES.register("blood_shred", () -> create(BloodShredParticleOptions.CODEC, BloodShredParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<GenericParticleOptions>> GENERIC = PARTICLE_TYPES.register("generic", () -> create(GenericParticleOptions.CODEC, GenericParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SANGUINARE = PARTICLE_TYPES.register("sanguinare", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> DARK_SPRUCE_OAK_LEAVES = PARTICLE_TYPES.register("dark_spruce_leaves", () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, ParticleType<WhispersOfTheVeilParticleOptions>> WHISPERS_OF_THE_VEIL = PARTICLE_TYPES.register("whispers_of_the_veil", () -> create(WhispersOfTheVeilParticleOptions.CODEC, WhispersOfTheVeilParticleOptions.STREAM_CODEC));
 
 

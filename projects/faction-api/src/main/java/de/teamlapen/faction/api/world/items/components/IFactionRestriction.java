@@ -25,12 +25,13 @@ public interface IFactionRestriction {
      */
     Optional<Integer> minLevel();
 
+    /**
+     * A custom message that appears when the object is restricted to be used.
+     */
+    Optional<Component> customMessage();
+
     Result canUse(IFactionPlayerHandler player);
 
     record Result(Optional<Component> message, boolean success) {
-        public static final Result SUCCESS = new Result(Optional.empty(), true);
-        public static final Result WRONG_FACTION = new Result(Optional.of(Component.translatable("text.factionapi.restriction.can_not_be_used_faction")), false);
-        public static final Result MISSING_SKILLS = new Result(Optional.of(Component.translatable("text.factionapi.restriction.can_not_be_used_skill")), false);
-        public static final Result MISSING_LEVEL = new Result(Optional.of(Component.translatable("text.factionapi.restriction.can_not_be_used_level")), false);
     }
 }

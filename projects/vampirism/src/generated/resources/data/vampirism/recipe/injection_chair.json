@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": "#c:leathers",
+    "P": "#minecraft:planks",
+    "W": "#minecraft:wool"
+  },
+  "pattern": [
+    "PL ",
+    "PWP",
+    "P P"
+  ],
+  "result": {
+    "id": "vampirism:injection_chair"
+  }
+}

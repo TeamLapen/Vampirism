@@ -8,7 +8,7 @@ import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.common.config.FactionConfig;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -22,11 +22,11 @@ public class ActionDurationOverlay<T extends ISkillPlayer<T>> extends BaseOverla
 
     @Override
     protected boolean isEnabledInConfig() {
-        return FactionConfig.client().renderActionDurationOverlay.get();
+        return FactionConfig.client().showActionDurationOverlay.get();
     }
 
     @Override
-    public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker partialTicks) {
         if (canRenderOverlays()) {
             FactionsApi.factionPlayerHandler(this.player()).<T>getCurrentSkillPlayer().ifPresent(factionPlayer -> {
                 IActionHandler<T> actionHandler = factionPlayer.getActionHandler();

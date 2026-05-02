@@ -2,7 +2,7 @@ package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.gui.components.IRenderLast;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -39,11 +39,11 @@ public abstract class AppearanceScreen<T extends LivingEntity> extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
         for (Renderable renderable : this.renderables) {
             if (renderable instanceof IRenderLast last) {
-                last.renderLast(guiGraphics, mouseX, mouseY, partialTicks);
+                last.renderLast(GuiGraphicsExtractor, mouseX, mouseY, partialTicks);
             }
         }
     }
@@ -98,8 +98,8 @@ public abstract class AppearanceScreen<T extends LivingEntity> extends Screen {
         }
 
         @Override
-        protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, this.getX(), this.getY(), this.getX() + getWidth(), this.getY() + getHeight(), 50, 0.0625F, mouseX, mouseY, entity);
+        protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+            InventoryScreen.extractEntityInInventoryFollowsMouse(GuiGraphicsExtractor, this.getX(), this.getY(), this.getX() + getWidth(), this.getY() + getHeight(), 50, 0.0625F, mouseX, mouseY, entity);
         }
 
         @Override

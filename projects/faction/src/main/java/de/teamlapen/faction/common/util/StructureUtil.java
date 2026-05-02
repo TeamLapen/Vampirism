@@ -21,7 +21,7 @@ public class StructureUtil {
     public static Optional<StructureStart> getStructureStartAt(Level level, BlockPos pos, TagKey<Structure> structureTag) {
         if (level instanceof ServerLevel serverLevel && serverLevel.isLoaded(pos)) {
             Registry<Structure> registry = serverLevel.registryAccess().lookupOrThrow(Registries.STRUCTURE);
-            return serverLevel.structureManager().startsForStructure(new ChunkPos(pos), structure -> {
+            return serverLevel.structureManager().startsForStructure(new ChunkPos(pos.getX(), pos.getZ()), structure -> {
                 return registry.get(registry.getId(structure)).map(a -> a.is(structureTag)).orElse(false);
             }).stream().findFirst();
         }

@@ -26,7 +26,6 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.IContainerFactory;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,14 +36,14 @@ import java.util.Optional;
  */
 public class WeaponTableMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess worldPos;
-    private final @NotNull HunterPlayer hunterPlayer;
-    private final @NotNull Player player;
+    private final HunterPlayer hunterPlayer;
+    private final Player player;
     private final CraftingContainer craftMatrix = new TransientCraftingContainer(this, 4, 4);
     private final ResultContainer craftResult = new ResultContainer();
     private final BooleanDataSlot missingLava = new BooleanDataSlot();
     private final RecipeManager.CachedCheck<CraftingInput, IWeaponTableRecipe> quickCheck;
 
-    public WeaponTableMenu(int id, @NotNull Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
+    public WeaponTableMenu(int id, Inventory playerInventory, ContainerLevelAccess worldPosCallable) {
         super(ModMenus.WEAPON_TABLE.get(), id);
         this.worldPos = worldPosCallable;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
@@ -76,7 +75,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
      * Called to determine if the current slot is valid for the stack merging (double-click) code. The stack passed in
      * is null for the initial slot that was double-clicked.
      */
-    public boolean canTakeItemForPickAll(@NotNull ItemStack stack, @NotNull Slot slotIn) {
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
         return slotIn.container != this.craftResult && super.canTakeItemForPickAll(stack, slotIn);
     }
 
@@ -84,8 +83,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
         return worldPos.evaluate(((world, blockPos) -> world.getBlockState(blockPos).getValue(WeaponTableBlock.LAVA) > 0), false);
     }
 
-    @NotNull
-    public ItemStack quickMoveStack(@NotNull Player playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemStackCopy = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 
@@ -134,7 +132,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public void removed(@NotNull Player playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         this.worldPos.execute((world, pos) -> {
             this.clearContainer(playerIn, craftMatrix);
@@ -150,12 +148,12 @@ public class WeaponTableMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public void slotsChanged(@NotNull Container inventoryIn) {
+    public void slotsChanged(Container inventoryIn) {
         this.worldPos.execute((world, pos) -> slotChangedCraftingGrid(world, this.player, this.hunterPlayer, CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), this.craftResult));
     }
 
     @Override
-    public boolean stillValid(@NotNull Player playerIn) {
+    public boolean stillValid(Player playerIn) {
         return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
     }
 
@@ -175,7 +173,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
         });
     }
 
-    private void slotChangedCraftingGrid(@NotNull Level worldIn, Player playerIn, @NotNull HunterPlayer hunter, @NotNull CraftingInput craftMatrixIn, @NotNull ResultContainer craftResultIn) {
+    private void slotChangedCraftingGrid(Level worldIn, Player playerIn, HunterPlayer hunter, CraftingInput craftMatrixIn, ResultContainer craftResultIn) {
         if (!worldIn.isClientSide() && playerIn instanceof ServerPlayer serverPlayer) {
             Optional<RecipeHolder<IWeaponTableRecipe>> optional;
             if (worldIn instanceof ServerLevel serverLevel) {
@@ -190,7 +188,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
                 if ((craftResultIn.setRecipeUsed(serverPlayer, recipe) || ModList.get().isLoaded("fastbench")) && recipe.value().getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.value().getRequiredSkills())) {
                     this.worldPos.execute((world, pos) -> {
                         if (world.getBlockState(pos).getValue(WeaponTableBlock.LAVA) >= recipe.value().getRequiredLavaUnits()) {
-                            craftResultIn.setItem(0, recipe.value().assemble(craftMatrixIn, world.registryAccess()));
+                            craftResultIn.setItem(0, recipe.value().assemble(craftMatrixIn));
                         } else {
                             this.missingLava.set(true);
                         }
@@ -205,7 +203,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
     public static class Factory implements IContainerFactory<WeaponTableMenu> {
 
         @Override
-        public @NotNull WeaponTableMenu create(int windowId, @NotNull Inventory inv, @NotNull RegistryFriendlyByteBuf data) {
+        public WeaponTableMenu create(int windowId, Inventory inv, RegistryFriendlyByteBuf data) {
             BlockPos pos = data.readBlockPos();
             return new WeaponTableMenu(windowId, inv, ContainerLevelAccess.create(inv.player.level(), pos));
         }

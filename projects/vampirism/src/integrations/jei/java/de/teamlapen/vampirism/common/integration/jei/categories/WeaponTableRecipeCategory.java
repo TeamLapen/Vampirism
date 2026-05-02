@@ -19,7 +19,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -53,7 +53,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
     }
 
     @Override
-    public void draw(@NotNull RecipeHolder<IWeaponTableRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(@NotNull RecipeHolder<IWeaponTableRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 //        this.background.draw(graphics);
 
         IDrawableStatic recipeArrow = this.guiHelper.getRecipeArrow();
@@ -68,7 +68,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
             this.bucket.draw(graphics, 83, 11);
         }
         if (recipe.getRequiredLevel() > 1) {
-            Component level = Component.translatable("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            Component level = Component.translatable("container.vampirism.hunter_table.level", recipe.getRequiredLevel());
 
             graphics.drawString(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight + 2;

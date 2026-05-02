@@ -62,7 +62,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     protected void addAmmunitionTypeHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flag) {
-        getAmmunition(stack).ifPresent(ammunition -> tooltips.accept(Component.translatable("text.vampirism.crossbow.ammo_type").append(" ").append(ammunition.getName(stack)).withStyle(ChatFormatting.GRAY)));
+        getAmmunition(stack).ifPresent(ammunition -> tooltips.accept(Component.translatable("tooltip.vampirism.crossbow.selected_ammo", ammunition.getName(stack)).withStyle(ChatFormatting.GRAY)));
     }
 
     @Override
@@ -108,12 +108,12 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
             if (shooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(crossbow, shooter.level(), player, 1, true) < 0) return;
             ChargedProjectiles chargedprojectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (!chargedprojectiles.isEmpty()) {
-                List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.getItems());
+                List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.itemCopies());
                 List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles);
                 ItemStack otherStack = shooter.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
                 this.shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow), shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
-                crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(availableProjectiles));
+                crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(availableProjectiles));
 
                 if (hand == InteractionHand.MAIN_HAND) {
                     if (shooter instanceof Player player && canUseDoubleCrossbow(player) && otherStack.getItem() instanceof HunterCrossbowItem otherCrossbow && CrossbowItem.isCharged(otherStack)) {
@@ -185,7 +185,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
                 tryLoadProjectiles(entity, otherStack);
             }
             SoundSource source = entity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-            level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_END, source, 1.0F, 1.0F / (level.random.nextFloat() * 0.5F + 1.0F) + 0.2F);
+            level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_END, source, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
         }
         return false;
     }
@@ -208,9 +208,9 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     protected boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
         List<ItemStack> list = drawMod(pCrossbowStack, pShooter.getProjectile(pCrossbowStack), pShooter);
         if (!list.isEmpty()) {
-            ArrayList<ItemStack> itemStacks = new ArrayList<>(pCrossbowStack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).getItems());
+            ArrayList<ItemStack> itemStacks = new ArrayList<>(pCrossbowStack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).itemCopies());
             itemStacks.addAll(list);
-            pCrossbowStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(itemStacks));
+            pCrossbowStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(itemStacks));
             return true;
         } else {
             return false;

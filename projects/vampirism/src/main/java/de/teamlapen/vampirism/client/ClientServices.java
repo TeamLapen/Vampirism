@@ -99,6 +99,7 @@ public class ClientServices extends Services {
         bus.addListener(ModClientEffects::registerClientExtensions);
         bus.addListener(ModBlocksRender::registerClientExtensions);
         bus.addListener(ModClientFluids::registerClientExtensions);
+        bus.addListener(ModClientFluids::registerFluidModels);
         bus.addListener(ModItemsRender::registerClientExtensions);
         bus.addListener(ModRenderPipelines::registerRenderPipelines);
         bus.addListener(this.bloodVisionRenderer::create);

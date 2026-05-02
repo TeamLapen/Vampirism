@@ -29,6 +29,7 @@ public class ModTagsProvider {
         generator.addProvider(true, new ModVampireBookTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModGameEventTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModDataComponentTagsProvider(output, lookupProviderFuture));
+        generator.addProvider(true, new ModVillageTradesTagProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModTimelineTagProvider(output, lookupProviderFuture));
     }
 }

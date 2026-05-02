@@ -38,8 +38,10 @@ public class StakeItem extends VampirismSwordItem {
             instaKillLowHealth = true;// make more out of this
         }
         if (instaKillLowHealth && target.getHealth() <= (ModConfig.balance().hsInstantKill1MaxHealth.get() * target.getMaxHealth())) {
+            if (target instanceof Player && !ModConfig.balance().hsInstantKill1Player.get()) {
+                return false;
+            }
             return !ModConfig.balance().hsInstantKill1FromBehind.get() || !UtilLib.canReallySee(target, attacker, true);
-
         }
         return false;
     }

@@ -1,11 +1,10 @@
 {
   "type": "minecraft:smelting",
-  "category": "blocks",
+  "category": "misc",
   "cookingtime": 200,
   "experience": 0.1,
   "ingredient": "vampirism:cobbled_dark_stone",
   "result": {
-    "count": 1,
     "id": "vampirism:dark_stone"
   }
 }

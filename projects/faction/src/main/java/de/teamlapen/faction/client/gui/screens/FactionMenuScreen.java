@@ -18,7 +18,7 @@ import de.teamlapen.faction.misc.mixin.client.accessor.AbstractContainerScreenAc
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
@@ -60,9 +60,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
     private Component level;
 
     public FactionMenuScreen(@NotNull FactionMenu container, @NotNull Inventory playerInventory, @NotNull Component titleIn) {
-        super(container, playerInventory, titleIn);
-        this.imageWidth = WIDTH;
-        this.imageHeight = HEIGHT;
+        super(container, playerInventory, titleIn, WIDTH, HEIGHT);
         this.inventoryLabelX = 36;
         this.inventoryLabelY = this.imageHeight - 93;
         this.menu.setReloadListener(this::refreshTaskList);
@@ -107,8 +105,8 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
         if (this.menu.areRefinementsAvailable()) {
             for (int i = 0; i < this.menu.getRefinementStacks().size(); i++) {
@@ -116,23 +114,23 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
                 Slot slot = this.menu.getSlot(i);
                 int x = slot.x + this.leftPos;
                 int y = slot.y + this.topPos;
-                graphics.renderItem(stack, x, y);
-                graphics.renderItemDecorations(this.font, stack, x, y, null);
+                graphics.item(stack, x, y);
+                graphics.itemDecorations(this.font, stack, x, y, null);
             }
         }
 
         this.renderAccessorySlots(graphics, mouseX, mouseY, partialTicks);
 
-        this.renderTooltip(graphics, mouseX, mouseY);
+        this.extractTooltip(graphics, mouseX, mouseY);
         if (this.menu.areRefinementsAvailable()) {
             this.renderHoveredRefinementTooltip(graphics, mouseX, mouseY);
         }
     }
 
-    protected void renderAccessorySlots(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderAccessorySlots(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         for (Slot slot : this.menu.slots) {
             if (((AbstractContainerScreenAccessor) this).invokeIsHovering(slot, mouseX, mouseY) && slot instanceof FactionMenu.RemovingSelectorSlot && refinementRemoveButtons.containsKey(slot.getSlotIndex()) && !this.menu.getRefinementStacks().get(slot.getSlotIndex()).isEmpty()) {
-                this.refinementRemoveButtons.get(slot.getSlotIndex()).render(graphics, mouseX, mouseY, partialTicks);
+                this.refinementRemoveButtons.get(slot.getSlotIndex()).extractRenderState(graphics, mouseX, mouseY, partialTicks);
             }
         }
     }
@@ -148,7 +146,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
         super.init();
         if (factionPlayer.getLevel() > 0) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(factionPlayer.asEntity());
-            MutableComponent component = handler.getLordPlayer().filter(x -> x.getLordLevel() > 0).map(ILordPlayer::getLordTitle).map(x -> x.plainCopy().append(" (" + handler.getLordLevel() + ")")).orElseGet(() -> Component.translatable("text.factionapi.level").append(" " + factionPlayer.getLevel()));
+            MutableComponent component = handler.getLordPlayer().filter(x -> x.getLordLevel() > 0).map(ILordPlayer::getLordTitle).map(x -> x.plainCopy().append(" (" + handler.getLordLevel() + ")")).orElseGet(() -> Component.translatable("gui.factionapi.faction_menu.level", factionPlayer.getLevel()));
             this.level = component.withStyle(style -> style.withColor(factionPlayer.getFaction().value().getChatColor()));
         } else {
             this.level = Component.empty();
@@ -198,9 +196,9 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
                     }, Component.empty()) {
 
                         @Override
-                        public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+                        public void extractContents(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
                             if (!refinementList.get(slot.index).isEmpty() && ((AbstractContainerScreenAccessor) FactionMenuScreen.this).getDraggingItem().isEmpty() && overSlot(slot, mouseX, mouseY)) {
-                                super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+                                super.extractWidgetRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
                             }
                         }
 
@@ -219,20 +217,21 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
     }
 
     @Override
-    protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-        super.renderLabels(graphics, mouseX, mouseY);
+    protected void extractLabels(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        super.extractLabels(graphics, mouseX, mouseY);
         int width = this.font.width(this.level);
-        graphics.drawString(this.font, this.level, (int) Math.max(5, 31 - (float) width / 2), 81, -1, false);
+        graphics.text(this.font, this.level, (int) Math.max(5, 31 - (float) width / 2), 81, -1, false);
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float pPartialTick, int mouseX, int mouseY) {
+    public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
         var texture = this.menu.areRefinementsAvailable() ? BACKGROUND_REFINEMENTS : BACKGROUND;
         GuiRenderer.blit(graphics, texture, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.leftPos + 7, this.topPos + 8, this.leftPos + 56, this.topPos + 78, 30, 0.0625f, mouseX, mouseY, this.minecraft.player);
+        InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, this.leftPos + 7, this.topPos + 8, this.leftPos + 56, this.topPos + 78, 30, 0.0625f, mouseX, mouseY, this.minecraft.player);
     }
 
-    protected void renderHoveredRefinementTooltip(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderHoveredRefinementTooltip(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.hoveredSlot != null) {
             int index = this.hoveredSlot.index;
             NonNullList<ItemStack> list = this.menu.getRefinementStacks();

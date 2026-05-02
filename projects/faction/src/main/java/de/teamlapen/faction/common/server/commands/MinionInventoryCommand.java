@@ -49,7 +49,7 @@ public class MinionInventoryCommand extends BasicCommand {
     }
 
     private static int addItem(CommandSourceStack source, ServerPlayer player, MinionArgument.MinionId playerMinionIdentifier, ItemInput item, int count) throws CommandSyntaxException {
-        ItemStack itemStack = item.createItemStack(count, true);
+        ItemStack itemStack = item.createItemStack(count);
         getInventory(playerMinionIdentifier).ifPresent(minionInventory -> {
             minionInventory.addItemStack(itemStack.copy());
             FactionLogger.info(FactionLogger.MINION_INVENTORY, "{} added {} {} to inventory of {}", player.getName().getString(), itemStack.getCount(), itemStack.getDisplayName().getString(), playerMinionIdentifier);
@@ -60,7 +60,7 @@ public class MinionInventoryCommand extends BasicCommand {
     }
 
     private static int removeItem(CommandSourceStack source, ServerPlayer player, MinionArgument.MinionId playerMinionIdentifier, ItemInput item, int count) throws CommandSyntaxException {
-        ItemStack itemStack = item.createItemStack(1, false);
+        ItemStack itemStack = item.createItemStack(1);
         getInventory(playerMinionIdentifier).ifPresent(minionInventory -> {
             List<ItemStack> itemStacks = minionInventory.getAllInventories().stream().flatMap(Collection::stream).filter(s -> ItemStack.isSameItemSameComponents(s, itemStack)).toList();
             if (!itemStacks.isEmpty()) {

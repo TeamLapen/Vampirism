@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.common.core.ModArmorMaterials;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
@@ -20,7 +20,7 @@ import net.minecraft.world.item.equipment.Equippable;
 public class VampireCloakItem extends Item {
 
     public VampireCloakItem(DyeColor color, Properties properties) {
-        super(FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(properties.stacksTo(1)).component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.CHEST).setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER).setAsset(ModArmorMaterials.Asset.VAMPIRE_CLOAKS.get(color)).build()));
+        super(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(properties.stacksTo(1)).component(DataComponents.EQUIPPABLE, Equippable.builder(EquipmentSlot.CHEST).setEquipSound(SoundEvents.ARMOR_EQUIP_LEATHER).setAsset(ModArmorMaterials.Asset.VAMPIRE_CLOAKS.get(color)).build()));
     }
 
     @Override
@@ -33,7 +33,7 @@ public class VampireCloakItem extends Item {
         if (entity instanceof LivingEntity living && equipmentSlot == EquipmentSlot.CHEST) {
             if (living.tickCount % 16 == 8) {
                 if (!Helper.isVampire(living)) {
-                    living.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
+                    living.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
                 }
             }
         }

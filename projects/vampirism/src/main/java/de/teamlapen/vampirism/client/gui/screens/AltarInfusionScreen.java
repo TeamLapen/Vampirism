@@ -1,91 +1,97 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.common.world.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.common.world.items.PureBloodItem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
-import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
-public class AltarInfusionScreen extends ItemCombinerScreen<AltarInfusionMenu> {
-    private static final Identifier PURE_BLOOD_BOTTLE_SLOT_SPRITE = VIdentifier.mod("container/slot/pure_blood_bottle");
-    private static final Identifier HUMAN_HEART_SLOT_SPRITE = VIdentifier.mod("container/slot/human_heart");
-    private static final Identifier VAMPIRE_BOOK_SLOT_SPRITE = VIdentifier.mod("container/slot/vampire_book");
-    private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/altar_of_infusion.png");
+public class AltarInfusionScreen extends AbstractContainerScreen<AltarInfusionMenu> {
+
+    private static final Identifier EMPTY_SLOT_PURE_BLOOD_BOTTLE = VIdentifier.mod("container/slot/pure_blood_bottle");
+    private static final Identifier EMPTY_SLOT_HUMAN_HEART = VIdentifier.mod("container/slot/human_heart");
+    private static final Identifier EMPTY_SLOT_VAMPIRE_BOOK = VIdentifier.mod("container/slot/vampire_book");
+    private static final Identifier BACKGROUND_LOCATION = VIdentifier.mod("textures/gui/container/altar_of_infusion.png");
 
     private final CyclingSlotBackground pureBloodIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground humanHeartIcon = new CyclingSlotBackground(1);
     private final CyclingSlotBackground vampireBookIcon = new CyclingSlotBackground(2);
 
-    public AltarInfusionScreen(@NotNull AltarInfusionMenu inventorySlotsIn, @NotNull Inventory playerInventory, @NotNull Component name) {
-        super(inventorySlotsIn, playerInventory, name, BACKGROUND);
+    public AltarInfusionScreen(AltarInfusionMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
-        var requirement = this.menu.getRequirement();
-        this.pureBloodIcon.tick(requirement.filter(s -> s.pureBloodQuantity() > 0).map(s -> List.of(PURE_BLOOD_BOTTLE_SLOT_SPRITE)).orElse(List.of()));
-        this.humanHeartIcon.tick(requirement.filter(s -> s.humanHeartQuantity() > 0).map(s -> List.of(HUMAN_HEART_SLOT_SPRITE)).orElse(List.of()));
-        this.vampireBookIcon.tick(requirement.filter(s -> s.vampireBookQuantity() > 0).map(s -> List.of(VAMPIRE_BOOK_SLOT_SPRITE)).orElse(List.of()));
+        var requirementsOpt = this.menu.getRequirements();
+        this.pureBloodIcon.tick(requirementsOpt.filter(requirements -> requirements.pureBloodQuantity() > 0).map(requirements -> List.of(EMPTY_SLOT_PURE_BLOOD_BOTTLE)).orElse(List.of()));
+        this.humanHeartIcon.tick(requirementsOpt.filter(requirements -> requirements.humanHeartQuantity() > 0).map(requirements -> List.of(EMPTY_SLOT_HUMAN_HEART)).orElse(List.of()));
+        this.vampireBookIcon.tick(requirementsOpt.filter(requirements -> requirements.vampireBookQuantity() > 0).map(requirements -> List.of(EMPTY_SLOT_VAMPIRE_BOOK)).orElse(List.of()));
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(graphics, pMouseX, pMouseY, pPartialTick);
-        this.renderOnBoardingTooltips(graphics, pMouseX, pMouseY);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_LOCATION, this.leftPos, this.topPos, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
+        this.pureBloodIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
+        this.humanHeartIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
+        this.vampireBookIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
     }
 
-    private void renderOnBoardingTooltips(GuiGraphics graphics, int pMouseX, int pMouseY) {
-        if (this.hoveredSlot != null && this.hoveredSlot.index < 3) {
-            Optional<Component> optional = Optional.empty();
-            var req = this.menu.getRequirement();
-            ItemStack stack = this.hoveredSlot.getItem();
-            var missing = req.map(s -> switch (this.hoveredSlot.index) {
-                case 0 -> s.pureBloodQuantity() - stack.getCount();
-                case 1 -> s.humanHeartQuantity() - stack.getCount();
-                case 2 -> s.vampireBookQuantity() - stack.getCount();
-                default -> 0;
-            }).orElse(0);
-            if (missing > 0) {
-                optional = Optional.of(Component.translatable("text.vampirism.altar_infusion.ritual_missing_items", missing, (switch (this.hoveredSlot.index) {
-                    case 0 -> req.map(VampireLeveling.AltarInfusionRequirements::pureBloodLevel).map(PureBloodItem::getBloodItemForLevel).map(s -> s.getCustomName(s.getDefaultInstance())).orElseGet(Component::empty);
-                    case 1 -> ModItems.HUMAN_HEART.get().getDefaultInstance().getHoverName();
-                    case 2 -> ModItems.VAMPIRE_BOOK.get().getDefaultInstance().getHoverName();
-                    default -> null;
-                })));
+    @Override
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        if (this.hoveredSlot != null && hoveredSlot.index >= 0 && this.hoveredSlot.index < 3) {
+            var requirementsOpt = this.menu.getRequirements();
+            if (requirementsOpt.isPresent()) {
+                var requirements = requirementsOpt.get();
+                int slot = this.hoveredSlot.index;
+                ItemStack stack = this.hoveredSlot.getItem();
+
+                int requiredCount = 0;
+                String requiredId = "";
+
+                switch (slot) {
+                    case 0 -> {
+                        requiredCount = requirements.pureBloodQuantity();
+                        requiredId = "pure_blood";
+                    }
+                    case 1 -> {
+                        requiredCount = requirements.humanHeartQuantity();
+                        requiredId = "human_heart";
+                    }
+                    case 2 -> {
+                        requiredCount = requirements.vampireBookQuantity();
+                        requiredId = "vampire_book";
+                    }
+                }
+
+                Component tooltip = null;
+
+                if (slot == 0 && !stack.isEmpty() && stack.getItem() instanceof PureBloodItem pureBloodItem && pureBloodItem.getLevel(stack) != requirements.pureBloodLevel()) {
+                    tooltip = Component.translatable("gui.vampirism.altar_infusion.ritual_wrong_purity", requirements.pureBloodLevel() + 1);
+                } else if (stack.isEmpty() || stack.getCount() < requiredCount) {
+                    tooltip = Component.translatable("gui.vampirism.altar_infusion.ritual_missing_" + requiredId, requiredCount - stack.getCount(), requirements.pureBloodLevel() + 1);
+                }
+
+                if (tooltip != null && requiredCount> 0) {
+                    ClientTooltipComponent clientTooltip = ClientTooltipComponent.create(tooltip.getVisualOrderText());
+                    graphics.tooltip(font, List.of(clientTooltip), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, stack.get(DataComponents.TOOLTIP_STYLE));
+                    return;
+                }
             }
-            optional.ifPresent(component -> {
-                graphics.setTooltipForNextFrame(this.font, component, pMouseX, pMouseY);
-            });
         }
-    }
 
-    @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float pPartialTick, int pX, int pY) {
-        super.renderBg(graphics, pPartialTick, pX, pY);
-        this.pureBloodIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
-        this.humanHeartIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
-        this.vampireBookIcon.render(this.menu, graphics, pPartialTick, this.leftPos, this.topPos);
-    }
-
-    @Override
-    protected void renderErrorIcon(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-        Optional<Component> component = Optional.empty();
-        var requirement = this.menu.getRequirement();
-        if (requirement.isEmpty()) {
-            component = Optional.of(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"));
-        }
-        component.ifPresent(c -> graphics.setTooltipForNextFrame(this.font, this.font.split(c, 115), this.leftPos + 10, this.topPos + 60));
+        super.extractTooltip(graphics, mouseX, mouseY);
     }
 }

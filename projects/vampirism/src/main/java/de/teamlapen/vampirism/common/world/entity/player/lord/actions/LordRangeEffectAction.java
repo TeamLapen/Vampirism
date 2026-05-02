@@ -39,7 +39,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T> & ISkill
             entity.addEffect(new MobEffectInstance(effect, getEffectDuration(player), getEffectAmplifier(player)));
         }
         if (entitiesOfClass.isEmpty()) {
-            return IActionResult.fail(Component.translatable("text.vampirism.action.lord_range.no_target"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.lord_range.no_target"));
         } else {
             return IActionResult.SUCCESS;
         }

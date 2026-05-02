@@ -1,16 +1,19 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.misc.mixin.accessor.ShapedRecipeAccessor;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.UnaryOperator;
 
 /**
  * This recipe copies the {@link net.minecraft.nbt.CompoundTag} from the first found {@link IItemWithTier} and inserts it into the manufacturing result with damage = 0
@@ -20,12 +23,12 @@ import org.jetbrains.annotations.NotNull;
 public class ShapedItemWithTierRepair extends ShapedRecipe {
 
     public ShapedItemWithTierRepair(@NotNull ShapedRecipe shaped) {
-        super(shaped.group(), CraftingBookCategory.EQUIPMENT, ((ShapedRecipeAccessor) shaped).getPattern(), ((ShapedRecipeAccessor) shaped).getResult(), shaped.showNotification());
+        super(shaped.getCommonInfo(), shaped.getBookInfo(), shaped.getPattern(), shaped.getResult());
     }
 
     @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingInput inv, @NotNull HolderLookup.Provider provider) {
+    public ItemStack assemble(@NotNull CraftingInput inv) {
         ItemStack stack = null;
         search:
         for (int i = 0; i <= inv.width(); ++i) {
@@ -36,7 +39,7 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
                 }
             }
         }
-        ItemStack result = super.assemble(inv, provider);
+        ItemStack result = super.assemble(inv);
         if (stack != null) {
             result.applyComponents(stack.getComponents());
             result.setDamageValue(0);
@@ -47,17 +50,9 @@ public class ShapedItemWithTierRepair extends ShapedRecipe {
     @NotNull
     @Override
     public RecipeSerializer<ShapedRecipe> getSerializer() {
-        return ModRecipes.REPAIR_IITEMWITHTIER.get();
+        return (RecipeSerializer<ShapedRecipe>)(Object) ModRecipes.REPAIR_IITEMWITHTIER.get();
     }
 
-    public static class Serializer extends ShapedRecipe.Serializer {
-
-        public static final MapCodec<ShapedRecipe> CODEC = ShapedRecipe.Serializer.CODEC.xmap(ShapedItemWithTierRepair::new, ShapedItemWithTierRepair::new);
-
-        @Override
-        public @NotNull MapCodec<ShapedRecipe> codec() {
-            return CODEC;
-        }
-
-    }
+    public static final MapCodec<ShapedItemWithTierRepair> CODEC = ShapedRecipe.MAP_CODEC.xmap(ShapedItemWithTierRepair::new, x -> x);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ShapedItemWithTierRepair> STREAM_CODEC = ShapedRecipe.STREAM_CODEC.map(ShapedItemWithTierRepair::new, x -> x);
 }

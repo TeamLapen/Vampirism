@@ -3,7 +3,7 @@
 	"render_type": "minecraft:cutout",
 	"textures": {
       "particle": "vampirism:block/garlic",
-		"garlic": "vampirism:block/garlic"
+	  "garlic": "vampirism:block/garlic"
 	},
 	"elements": [
 		{

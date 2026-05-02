@@ -1,6 +1,5 @@
 package de.teamlapen.faction.common.world.blocks.base;
 
-
 import de.teamlapen.faction.common.util.ShapeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,29 +28,26 @@ public class BaseSplitBlock extends Block {
 
     public static final EnumProperty<Direction> FACING = HORIZONTAL_FACING;
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
-    
-    private final VoxelShape NORTH1;
-    private final VoxelShape EAST1;
-    private final VoxelShape SOUTH1;
-    private final VoxelShape WEST1;
-    private final VoxelShape NORTH2;
-    private final VoxelShape EAST2;
-    private final VoxelShape SOUTH2;
-    private final VoxelShape WEST2;
+
+    private final VoxelShape NORTH_MAIN, EAST_MAIN, SOUTH_MAIN, WEST_MAIN;
+    private final VoxelShape NORTH_SUB,  EAST_SUB,  SOUTH_SUB,  WEST_SUB;
+
     private final boolean vertical;
 
     public BaseSplitBlock(Properties properties, VoxelShape mainShape, VoxelShape subShape, boolean vertical) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, Part.MAIN));
-        NORTH1 = mainShape;
-        EAST1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.NINETY);
-        SOUTH1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
-        WEST1 = ShapeUtil.rotateY(NORTH1, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
-        NORTH2 = subShape;
-        EAST2 = ShapeUtil.rotateY(NORTH2, ShapeUtil.RotationAmount.NINETY);
-        SOUTH2 = ShapeUtil.rotateY(NORTH2, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
-        WEST2 = ShapeUtil.rotateY(NORTH2, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
         this.vertical = vertical;
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, Part.MAIN));
+
+        NORTH_MAIN = mainShape;
+        EAST_MAIN  = ShapeUtil.rotateY(mainShape, ShapeUtil.RotationAmount.NINETY);
+        SOUTH_MAIN = ShapeUtil.rotateY(mainShape, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
+        WEST_MAIN  = ShapeUtil.rotateY(mainShape, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
+
+        NORTH_SUB = subShape;
+        EAST_SUB  = ShapeUtil.rotateY(subShape, ShapeUtil.RotationAmount.NINETY);
+        SOUTH_SUB = ShapeUtil.rotateY(subShape, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
+        WEST_SUB  = ShapeUtil.rotateY(subShape, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
     }
 
     @Override
@@ -61,69 +57,14 @@ public class BaseSplitBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        boolean main = state.getValue(PART) == Part.MAIN;
+        boolean main = state.getValue(PART).isMain();
         return switch (state.getValue(FACING)) {
-            case NORTH -> main ? NORTH1 : NORTH2;
-            case EAST -> main ? EAST1 : EAST2;
-            case SOUTH -> main ? SOUTH1 : SOUTH2;
-            case WEST -> main ? WEST1 : WEST2;
-            default -> NORTH1;
+            case NORTH -> main ? NORTH_MAIN : NORTH_SUB;
+            case EAST  -> main ? EAST_MAIN  : EAST_SUB;
+            case SOUTH -> main ? SOUTH_MAIN : SOUTH_SUB;
+            case WEST  -> main ? WEST_MAIN  : WEST_SUB;
+            default -> NORTH_MAIN;
         };
-    }
-
-    @Override
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction direction = context.getHorizontalDirection();
-        BlockPos relativePos = context.getClickedPos().relative(this.vertical ? Direction.UP : direction);
-        return context.getLevel().getBlockState(relativePos).canBeReplaced(context) ? this.defaultBlockState().setValue(HORIZONTAL_FACING, direction) : null;
-    }
-
-    @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
-        return false;
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
-    }
-
-    @Override
-    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        if (!level.isClientSide() && player.isCreative()) {
-            Part part = state.getValue(PART);
-            if (part == Part.SUB) {
-                BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
-                BlockState neighborState = level.getBlockState(blockpos);
-                if (neighborState.getBlock() == this && neighborState.getValue(PART) == Part.MAIN) {
-                    level.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-                    level.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockpos, Block.getId(neighborState));
-                }
-            }
-        }
-
-        return super.playerWillDestroy(level, pos, state, player);
-    }
-
-    @Override
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
-    }
-
-    @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(level, pos, state, placer, stack);
-
-        if (!level.isClientSide()) {
-            BlockPos blockpos = pos.relative(getOtherBlockDirection(state));
-            BlockState neighborState = state.setValue(PART, Part.SUB);
-            if (!this.vertical) {
-                neighborState = neighborState.setValue(FACING, neighborState.getValue(FACING).getOpposite());
-            }
-            level.setBlockAndUpdate(blockpos, neighborState);
-            state.updateNeighbourShapes(level, pos, 3);
-        }
     }
 
     @Override
@@ -135,16 +76,87 @@ public class BaseSplitBlock extends Block {
         }
     }
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
-    }
-
     protected Direction getOtherBlockDirection(BlockState state) {
         if (vertical) {
             return state.getValue(PART) == Part.MAIN ? Direction.UP : Direction.DOWN;
         }
         return state.getValue(FACING);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level level = context.getLevel();
+        Direction direction = context.getHorizontalDirection();
+        BlockPos subPos = context.getClickedPos().relative(this.vertical ? Direction.UP : direction);
+
+        if (!level.getBlockState(subPos).canBeReplaced(context) || !level.getWorldBorder().isWithinBounds(subPos)) {
+            return null;
+        }
+
+        return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+
+        if (level.isClientSide()) return;
+
+        BlockPos subPos = pos.relative(getOtherBlockDirection(state));
+        BlockState subState = getSubStateForPlacement(level, subPos, state);
+
+        level.setBlock(subPos, subState, Block.UPDATE_ALL);
+        state.updateNeighbourShapes(level, pos, Block.UPDATE_ALL);
+    }
+
+    protected BlockState getSubStateForPlacement(Level level, BlockPos subPos, BlockState mainState) {
+        BlockState subState = mainState.setValue(PART, Part.SUB);
+
+        if (!this.vertical) {
+            subState = subState.setValue(FACING, subState.getValue(FACING).getOpposite());
+        }
+
+        return subState;
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide() && player.isCreative() && state.getValue(PART).isSub()) {
+            BlockPos mainPos = pos.relative(getOtherBlockDirection(state));
+            BlockState mainState = level.getBlockState(mainPos);
+
+            if (mainState.getBlock() == this && mainState.getValue(PART).isMain()) {
+                level.setBlock(mainPos, Blocks.AIR.defaultBlockState(), 35);
+                level.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, mainPos, Block.getId(mainState));
+            }
+        }
+
+        return super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, PART);
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
+    }
+
+    public boolean isVertical() {
+        return this.vertical;
     }
 
     public enum Part implements StringRepresentable {
@@ -162,10 +174,17 @@ public class BaseSplitBlock extends Block {
             return name;
         }
 
-
         @Override
         public String toString() {
             return name;
+        }
+
+        public boolean isMain() {
+            return this == MAIN;
+        }
+
+        public boolean isSub() {
+            return this == SUB;
         }
     }
 }

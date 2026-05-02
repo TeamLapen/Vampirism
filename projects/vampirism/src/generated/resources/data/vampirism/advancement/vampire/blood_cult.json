@@ -21,7 +21,6 @@
       "translate": "advancement.vampirism.blood_cult.desc"
     },
     "icon": {
-      "count": 1,
       "id": "vampirism:altar_infusion"
     },
     "title": {

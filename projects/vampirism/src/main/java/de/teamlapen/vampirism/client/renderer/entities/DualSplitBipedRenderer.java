@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Mob;
 
@@ -39,7 +39,7 @@ public abstract class DualSplitBipedRenderer<TEntity extends Mob,TRenderState ex
     protected abstract boolean splitRenderingEnabled();
 
     private void setHeadVisibility(TModel model, boolean visible) {
-        model.setAllVisible(!visible);
+        model.allParts().forEach(part -> part.visible = !visible);
         model.head.visible = visible;
         model.hat.visible = visible;
     }
@@ -78,6 +78,7 @@ public abstract class DualSplitBipedRenderer<TEntity extends Mob,TRenderState ex
     }
 
     //</editor-fold>
+
 
     @Override
     public void submit(TRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {

@@ -46,7 +46,7 @@ public class ModCapabilities {
         });
         event.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlockEntities.ALTAR_INSPIRATION.get(), (blockEntity, side) -> blockEntity.fluidInventory);
         event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.BLOOD_PEDESTAL.get(), (blockEntity, side) -> blockEntity.new ItemWrapper());
-        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.POTION_TABLE.get(), WorldlyContainerWrapper::new);
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.VAPOR_STILL.get(), WorldlyContainerWrapper::new);
         event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.ALTAR_INFUSION.get(), (blockEntity, side) -> VanillaContainerWrapper.of(blockEntity));
         event.registerBlock(Capabilities.Fluid.BLOCK, WeaponTableBlock::getResourceHandler, ModBlocks.WEAPON_TABLE.get());
     }

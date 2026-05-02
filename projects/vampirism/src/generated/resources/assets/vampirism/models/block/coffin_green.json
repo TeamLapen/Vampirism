@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:block/coffin",
+  "textures": {
+    "inner": "vampirism:block/coffin/coffin_inner_green"
+  }
+}

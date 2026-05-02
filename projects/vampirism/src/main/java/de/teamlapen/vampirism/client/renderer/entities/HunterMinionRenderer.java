@@ -11,7 +11,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
@@ -72,11 +72,12 @@ public class HunterMinionRenderer extends DualSplitBipedRenderer<HunterMinionEnt
         return this.minionSpecificTextures.length;
     }
 
+
     @Override
-    protected void submitNameTag(MinionRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+    protected void submitNameDisplay(MinionRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
         poseStack.pushPose();
         poseStack.translate(0, 0.2f, 0);
-        super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
+        super.submitNameDisplay(state, poseStack, submitNodeCollector, camera);
         poseStack.popPose();
     }
 

@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -19,10 +20,13 @@ import java.util.function.Consumer;
  * Exists in different tiers and as splash versions.
  */
 public class HolyWaterBottleItem extends Item implements IItemWithTier {
+
+    public static final Component MASSAGE_RESTRICTION_HOLY = Component.translatable("message.vampirism.restriction.holy");
+
     private final Tier tier;
 
     public HolyWaterBottleItem(Tier tier, Properties props) {
-        super(props.factions$restrictFaction(ModFactionTags.IS_HUNTER).factions$descriptionWithout("_normal|_enhanced|_ultimate"));
+        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HOLY).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")));
         this.tier = tier;
     }
 

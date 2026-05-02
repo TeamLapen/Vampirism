@@ -2,7 +2,7 @@ package de.teamlapen.faction.client.gui.components;
 
 import de.teamlapen.faction.api.util.FIdentifier;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarratedElementType;
@@ -54,7 +54,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // Check if mouse left the entire dropdown area and close if needed
         if (expanded && !isMouseOverDropdownArea(mouseX, mouseY)) {
             expanded = false;
@@ -66,11 +66,11 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
 
         // Render the selected text on the button
         int textColor = this.active ? 0xFFFFFFFF : 0xFFA0A0A0;
-        graphics.drawCenteredString(Minecraft.getInstance().font, this.getMessage(), this.getX() + this.getWidth() / 2, this.getY() + (this.itemHeight - 8) / 2, textColor);
+        graphics.centeredText(Minecraft.getInstance().font, this.getMessage(), this.getX() + this.getWidth() / 2, this.getY() + (this.itemHeight - 8) / 2, textColor);
 
         // Render dropdown arrow
         String arrow = expanded ? "▲" : "▼";
-        graphics.drawString(Minecraft.getInstance().font, arrow, this.getX() + this.getWidth() - 12, this.getY() + (this.itemHeight - 8) / 2, textColor);
+        graphics.text(Minecraft.getInstance().font, arrow, this.getX() + this.getWidth() - 12, this.getY() + (this.itemHeight - 8) / 2, textColor);
 
         // Render expanded dropdown list
         if (expanded) {
@@ -78,7 +78,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
         }
     }
 
-    public void renderLast(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void renderLast(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (this.expanded) {
             renderDropdownList(graphics, mouseX, mouseY);
         }
@@ -103,7 +103,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
         return false;
     }
 
-    private void renderDropdownList(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+    private void renderDropdownList(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         int visibleItems = Math.min(maxVisibleItems, entries.size());
         int listHeight = visibleItems * itemHeight;
         int listY = this.getY() + this.itemHeight;
@@ -135,7 +135,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
 
             // Render entry text
             int textColor = isHovered ? 0xFFFFFFFF : 0xFFE0E0E0;
-            graphics.drawCenteredString(Minecraft.getInstance().font, entry.text, this.getX() + this.getWidth() / 2, entryY + (itemHeight - 8) / 2, textColor);
+            graphics.centeredText(Minecraft.getInstance().font, entry.text, this.getX() + this.getWidth() / 2, entryY + (itemHeight - 8) / 2, textColor);
         }
 
         // Handle hover callbacks
@@ -155,7 +155,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
         }
     }
 
-    private void renderScrollbar(@NotNull GuiGraphics graphics, int listY, int listHeight) {
+    private void renderScrollbar(@NotNull GuiGraphicsExtractor graphics, int listY, int listHeight) {
         int scrollbarWidth = 4;
         int scrollbarX = this.getX() + this.getWidth() - scrollbarWidth - 2;
 

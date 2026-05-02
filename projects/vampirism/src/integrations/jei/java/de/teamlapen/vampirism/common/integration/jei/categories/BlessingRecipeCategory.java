@@ -15,7 +15,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableRecipe> 
 
     @Override
     public @NotNull Component getTitle() {
-        return Component.translatable("text.vampirism.blessing");
+        return Component.translatable("gui.vampirism.jei.category.blessing");
     }
 
 
@@ -62,7 +62,7 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableRecipe> 
     }
 
     @Override
-    public void draw(@NotNull BlessableRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(@NotNull BlessableRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         this.background.draw(graphics, (getWidth() - BACKGROUND_WIDTH)/2, 0);
         if (recipe.enhanced()) {
             graphics.drawWordWrap(Minecraft.getInstance().font, Component.translatable("gui.vampirism.skill_required", HunterSkills.ENHANCED_BLESSING.get().getName()), 7, 52, 100, Color.gray.getRGB(), false);

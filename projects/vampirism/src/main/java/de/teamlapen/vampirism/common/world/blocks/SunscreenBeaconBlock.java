@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -42,8 +43,8 @@ public class SunscreenBeaconBlock extends BaseContainerBlock implements IBlockWi
 
     @Override
     public void appendHoverText(ItemStack stack, Item.@Nullable TooltipContext context, TooltipDisplay display, TooltipFlag tooltipFlag, Consumer<Component> tooltips) {
-        tooltips.accept(Component.translatable(getDescriptionId() + ".tooltip1").withStyle(ChatFormatting.GRAY));
-        tooltips.accept(Component.translatable(getDescriptionId() + ".tooltip2", ModConfig.server().sunscreenBeaconDistance.get()).withStyle(ChatFormatting.GRAY)); //Only add this if a world is present. Otherwise, the config might not be ready as this is also called during search tree population before setup
+        tooltips.accept(Component.translatable("tooltip.vampirism.sunscreen_beacon.desc1").withStyle(ChatFormatting.GRAY));
+        tooltips.accept(Component.translatable("tooltip.vampirism.sunscreen_beacon.desc2", ModConfig.server().sunscreenBeaconRadius.get()).withStyle(ChatFormatting.GRAY)); //Only add this if a world is present. Otherwise, the config might not be ready as this is also called during search tree population before setup
     }
 
     @Override
@@ -57,7 +58,7 @@ public class SunscreenBeaconBlock extends BaseContainerBlock implements IBlockWi
     }
 
     @Override
-    public float getExplosionResistance() {
+    public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
         return ModConfig.server().sunscreenBeaconMineable.get() ? 50 : 3600000;
     }
 

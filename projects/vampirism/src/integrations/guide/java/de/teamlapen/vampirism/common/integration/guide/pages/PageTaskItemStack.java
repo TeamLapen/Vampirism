@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.entity.player.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.common.tags.ModTaskTags;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -70,11 +70,11 @@ public class PageTaskItemStack extends PageItemStack {
     }
 
     @Override
-    public void draw(GuiGraphics guiGraphics, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, Font fontRendererObj) {
+    public void draw(GuiGraphicsExtractor GuiGraphicsExtractor, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, BaseScreen guiBase, Font fontRendererObj) {
         if (!this.setup) {
             this.setupTask(registryAccess);
         }
-        super.draw(guiGraphics, registryAccess, book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
+        super.draw(GuiGraphicsExtractor, registryAccess, book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
     }
 
     @Override

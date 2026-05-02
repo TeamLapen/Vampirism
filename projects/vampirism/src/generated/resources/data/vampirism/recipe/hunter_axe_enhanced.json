@@ -1,6 +1,9 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
-  "category": "equipment",
+  "category": {
+    "category": "equipment"
+  },
+  "commoninfo": {},
   "key": {
     "W": "#c:gems/diamond",
     "X": "#c:ingots/iron",
@@ -15,7 +18,11 @@
     "  Z "
   ],
   "result": {
-    "count": 1,
+    "components": {
+      "minecraft:enchantments": {
+        "minecraft:knockback": 2
+      }
+    },
     "id": "vampirism:hunter_axe_enhanced"
   },
   "skill": [

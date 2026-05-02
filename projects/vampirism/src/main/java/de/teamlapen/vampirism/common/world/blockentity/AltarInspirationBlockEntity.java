@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.particles.FlyingBloodEntityParticleOptions;
+import de.teamlapen.vampirism.common.tags.ModFluidTags;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling.AltarInspirationRequirement;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -72,7 +73,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
         Optional<AltarInspirationRequirement> requirement = VampireLeveling.getInspirationRequirement(targetLevel);
         if (requirement.isEmpty()) {
             if (player.level().isClientSide()) {
-                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"), true);
+                player.sendOverlayMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"));
             }
             return;
         }
@@ -84,7 +85,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
                 var blood = ResourceHandlerUtil.extractFirst(fluidInventory, x -> x.is(ModFluids.BLOOD), neededBlood, transaction);
 
                 if (blood == null || blood.amount() < neededBlood) {
-                    player.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
+                    player.sendOverlayMessage(Component.translatable("message.vampirism.altar_inspiration.not_enough_blood"));
                     return;
                 }
             }

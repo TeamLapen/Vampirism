@@ -27,7 +27,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -86,7 +85,7 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends MinionData> int spawnNewMinionExtra(@NotNull CommandContext<CommandSourceStack> source, @NotNull CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, @NotNull Supplier<T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<T, ?>> contextProvider, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<T, ?>> defaultProvider) throws CommandSyntaxException {
+    private static <T extends MinionData> int spawnNewMinionExtra(CommandContext<CommandSourceStack> source, CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, Supplier<T> data, Supplier<EntityType<? extends IMinionEntity>> type, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<T, ?>> contextProvider, Collection<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<T, ?>> defaultProvider) throws CommandSyntaxException {
         T t = data.get();
         for (IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<T, ?> tiCommandEntry : contextProvider) {
             ((BiConsumer<T, Object>) tiCommandEntry.setter()).accept(t, tiCommandEntry.getter().apply(source, tiCommandEntry.name()));
@@ -99,7 +98,7 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static <T extends IMinionData> int spawnNewMinion(@NotNull CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, @NotNull T data, EntityType<? extends IMinionEntity> type) throws CommandSyntaxException {
+    private static <T extends IMinionData> int spawnNewMinion(CommandSourceStack ctx, Holder<? extends IPlayableFaction<?>> faction, T data, EntityType<? extends IMinionEntity> type) throws CommandSyntaxException {
         Player p = ctx.getPlayerOrException();
         FactionPlayerHandler handler = FactionPlayerHandler.get(p);
         if(!handler.isInFaction(faction)) {
@@ -134,7 +133,7 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int recall(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
+    private static int recall(CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
         ILordPlayer<?> factionPlayerHandler = handler(player);
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(factionPlayerHandler);
         Collection<Integer> ids = controller.recallMinions(true);
@@ -147,7 +146,7 @@ public class MinionCommand extends BasicCommand {
 
 
     @SuppressWarnings("SameReturnValue")
-    private static int respawn(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
+    private static int respawn(CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
         ILordPlayer<?> fph = handler(player);
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
         Collection<Integer> ids = controller.getUnclaimedMinions();
@@ -158,9 +157,9 @@ public class MinionCommand extends BasicCommand {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private static int purge(@NotNull CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
+    private static int purge(CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
         MinionWorldData.getData(ctx.getServer()).purgeController(player.getUUID());
-        player.displayClientMessage(Component.literal("Reload world"), false);
+        player.sendSystemMessage(Component.literal("Reload world"), false);
         return 0;
     }
 }

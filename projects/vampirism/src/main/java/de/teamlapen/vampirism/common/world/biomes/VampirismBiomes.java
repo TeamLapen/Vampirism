@@ -34,7 +34,7 @@ public class VampirismBiomes {
         mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
         mobSpawnBuilder.addSpawn(MobCategory.CREATURE, 80, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 3, 6));
 
-        BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).foliageColorOverride(0x101010).grassColorOverride(0x101010);
+        BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).foliageColorOverride(0x1f1f1f).grassColorOverride(0x242424).dryFoliageColorOverride(0x383838);
 
         var builder = prepareVampireForestBuilder(featureGetter, carverGetter, mobSpawnBuilder, biomeSpecialEffectsBuilder)
                 .setAttribute(EnvironmentAttributes.FOG_COLOR, 0x171717)
@@ -53,23 +53,22 @@ public class VampirismBiomes {
 
     public static Biome.@NotNull BiomeBuilder prepareVampireForestBuilder(HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter, MobSpawnSettings.@NotNull Builder spawnBuilder, BiomeSpecialEffects.@NotNull Builder ambienceBuilder) {
         BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder(featureGetter, carverGetter);
-        BiomeDefaultFeatures.addDefaultCarversAndLakes(builder); //carver
-        addModdedWaterLake(builder);
+        BiomeDefaultFeatures.addDefaultCarversAndLakes(builder);
 
         addVampireFlower(builder);
         addBushPatch(builder);
+        BiomeDefaultFeatures.addBushes(builder);
         BiomeDefaultFeatures.addForestGrass(builder);
 
         addUndergroundVariety(builder);
-        BiomeDefaultFeatures.addDefaultOres(builder); //ore
-        BiomeDefaultFeatures.addDefaultSoftDisks(builder); //disks
+        BiomeDefaultFeatures.addDefaultOres(builder);
+        BiomeDefaultFeatures.addDefaultSoftDisks(builder);
 
         addVampireTrees(builder);
 
         addWaterSprings(builder);
-        return new Biome.BiomeBuilder().hasPrecipitation(false).temperature(0.3F).downfall(0F).specialEffects(ambienceBuilder.build()).mobSpawnSettings(spawnBuilder.build()).generationSettings(builder.build());
+        return new Biome.BiomeBuilder().hasPrecipitation(false).temperature(0.3F).downfall(0.6F).specialEffects(ambienceBuilder.build()).mobSpawnSettings(spawnBuilder.build()).generationSettings(builder.build());
     }
-
 
     public static void addVampireFlower(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FLOWER_PLACED);
@@ -115,10 +114,6 @@ public class VampirismBiomes {
         builder.addFeature(GenerationStep.Decoration.FLUID_SPRINGS, MiscOverworldPlacements.SPRING_WATER);
     }
 
-    public static void addModdedWaterLake(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.addFeature(GenerationStep.Decoration.LAKES, VampirismFeatures.WATER_LAKE_PLACED);
-    }
-
     public static void addVampireTrees(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_TREES_PLACED);
     }
@@ -135,7 +130,7 @@ public class VampirismBiomes {
 
     public static void addBushPatch(BiomeGenerationSettings.@NotNull Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.CURSED_ROOT_PLACED);
-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.FOREST_GRASS_PLACED);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FOREST_GRASS_PLACED);
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FOREST_TALL_GRASS_PLACED);
     }
-
 }

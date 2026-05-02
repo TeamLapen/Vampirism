@@ -1,6 +1,9 @@
 {
   "type": "vampirism:shapeless_crafting_weapontable",
-  "category": "equipment",
+  "category": {
+    "category": "equipment"
+  },
+  "commoninfo": {},
   "ingredients": [
     "vampirism:crossbow_arrow_normal",
     {
@@ -15,7 +18,6 @@
   ],
   "lava": 1,
   "result": {
-    "count": 1,
     "id": "vampirism:crossbow_arrow_spitfire"
   }
 }

@@ -19,28 +19,29 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
 public class AlchemyTableRecipeBuilder implements RecipeBuilder {
 
-    public static @NotNull AlchemyTableRecipeBuilder builder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStack stack) {
+    public static @NotNull AlchemyTableRecipeBuilder builder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStackTemplate stack) {
         return new AlchemyTableRecipeBuilder(itemLookup, stack);
     }
 
     public static @NotNull AlchemyTableRecipeBuilder builder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull Holder<IOil> oilStack) {
-        return new AlchemyTableRecipeBuilder(itemLookup, OilContent.createItemStack(ModItems.OIL_BOTTLE.get(), oilStack));
+        return new AlchemyTableRecipeBuilder(itemLookup, OilContent.createTemplate(ModItems.OIL_BOTTLE.get(), oilStack));
     }
 
     protected HolderLookup.RegistryLookup<Item> itemLookup;
-    protected final @NotNull ItemStack result;
+    protected final @NotNull ItemStackTemplate result;
     protected String group;
     protected Ingredient ingredient;
     protected final @NotNull IOil ingredientOil = ModOils.EMPTY.get();
@@ -48,9 +49,14 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
     protected final List<ISkill<?>> skills = new LinkedList<>();
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public AlchemyTableRecipeBuilder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStack result) {
+    public AlchemyTableRecipeBuilder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStackTemplate result) {
         this.itemLookup = itemLookup;
         this.result = result;
+    }
+
+    @Override
+    public @NonNull ResourceKey<Recipe<?>> defaultId() {
+        return RecipeBuilder.getDefaultRecipeId(this.result);
     }
 
     public @NotNull AlchemyTableRecipeBuilder group(@Nullable String group) {
@@ -93,7 +99,8 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(resourceLocation))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement::addCriterion);
-        var recipe = new AlchemyTableRecipe(Objects.requireNonNullElse(this.group, ""), this.ingredient, this.input, this.result, this.skills);
+        Recipe.CommonInfo commonInfo = RecipeBuilder.createCraftingCommonInfo(true);
+        var recipe = new AlchemyTableRecipe(commonInfo, Objects.requireNonNullElse(this.group, ""), this.ingredient, this.input, this.result, this.skills);
         recipeOutput.accept(resourceLocation, recipe, advancement.build(resourceLocation.identifier().withPrefix("recipes/alchemy_table/")));
     }
 
@@ -101,11 +108,6 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
     public @NotNull AlchemyTableRecipeBuilder unlockedBy(@NotNull String name, @NotNull Criterion<?> criterion) {
         this.criteria.put(name, criterion);
         return this;
-    }
-
-    @Override
-    public @NotNull Item getResult() {
-        return this.result.getItem();
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(HolderGetter<Item> holderGetter, ItemLike p_125978_) {

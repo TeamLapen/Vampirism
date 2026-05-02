@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
 import com.google.common.collect.MapMaker;
+import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
@@ -48,7 +50,7 @@ public class WeaponTableBlock extends BaseHorizontalBlock {
 
     private static final VoxelShape SHAPE = Shapes.or(Block.box(3, 0, 0, 13, 2, 8), Block.box(4, 2, 1, 12, 3, 7), Block.box(5, 3, 2, 11, 6, 6), Block.box(3, 6, 0, 13, 9.5, 8), Block.box(0, 1, 9, 7, 2, 16), Block.box(0, 0, 9, 2, 1, 11), Block.box(5, 0, 9, 7, 1, 11), Block.box(0, 0, 14, 2, 1, 16), Block.box(5, 0, 14, 7, 1, 16), Block.box(0, 1, 9, 1, 7, 16), Block.box(0, 1, 9, 7, 7, 10), Block.box(0, 1, 15, 7, 7, 16), Block.box(6, 1, 9, 7, 7, 16), Block.box(10, 0, 11, 15, 3, 14), Block.box(12, 3, 12, 13, 10, 13));
 
-    private static final Component NAME = Component.translatable("gui.vampirism.hunter_weapon_table");
+    private static final Component NAME = Component.translatable("container.vampirism.weapon_table");
 
     public WeaponTableBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LAVA) == 0 ? 0 : state.getValue(LAVA) * 2 + 5), SHAPE);
@@ -82,7 +84,7 @@ public class WeaponTableBlock extends BaseHorizontalBlock {
             if (canUse(player)) {
                 player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new WeaponTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), NAME), pos);
             } else {
-                player.displayClientMessage(Component.translatable("text.vampirism.not_learned"), true);
+                player.sendOverlayMessage(Helper.isHunter(player) ? FactionRestriction.MESSAGE_MISSING_SKILLS : FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
             }
         }
 

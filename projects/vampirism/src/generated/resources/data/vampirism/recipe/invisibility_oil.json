@@ -1,5 +1,6 @@
 {
   "type": "vampirism:alchemical_table",
+  "common_info": {},
   "ingredient": {
     "neoforge:ingredient_type": "neoforge:components",
     "components": {
@@ -38,7 +39,6 @@
         "oil": "vampirism:invisibility"
       }
     },
-    "count": 1,
     "id": "vampirism:oil_bottle"
   }
 }

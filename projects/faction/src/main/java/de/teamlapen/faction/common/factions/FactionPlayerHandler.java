@@ -265,7 +265,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     public void leaveFaction(boolean die) {
         Holder<? extends IFaction<?>> oldFaction = currentFaction;
         setFaction(LevelingChange.neutral());
-        player.displayClientMessage(Component.translatable("command.factionapi.base.level.successful", player.getName(), oldFaction.value().getName(), 0), true);
+        player.sendOverlayMessage(Component.translatable("command.factionapi.base.level.successful", player.getName(), oldFaction.value().getName(), 0));
         if (die) {
             DamageHandler.hurtModded((ServerLevel) this.player.level(), player, ModDamageSources::leaveFaction, 10000);
         }
@@ -316,6 +316,9 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
             newLordLevel = param.getNewLordLevel();
             newLevel = newFaction.value().getHighestReachableLevel();
         }
+
+        newLevel = Math.clamp(newLevel, 0, newFaction.value().getHighestReachableLevel());
+        newLordLevel = Math.clamp(newLordLevel, 0, newFaction.value().getHighestLordLevel());
 
         if (changedFaction) {
             if (!this.currentFaction.value().getPlayerCapability(player).canLeaveFaction()) {

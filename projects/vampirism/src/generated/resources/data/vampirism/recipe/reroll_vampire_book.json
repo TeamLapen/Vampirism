@@ -1,4 +1,18 @@
 {
   "type": "vampirism:reroll_vampire_book",
-  "category": "misc"
+  "vampire_books": {
+    "type": "neoforge:and",
+    "values": [
+      {
+        "type": "neoforge:or",
+        "values": [
+          "#vampirism:is_general"
+        ]
+      },
+      {
+        "type": "neoforge:not",
+        "value": "#vampirism:non_treasure"
+      }
+    ]
+  }
 }

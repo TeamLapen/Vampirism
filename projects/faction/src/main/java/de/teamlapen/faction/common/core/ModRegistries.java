@@ -14,6 +14,7 @@ import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerBooleanSupplier;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
+import de.teamlapen.faction.api.world.items.consume.IFactionFoodBehavior;
 import de.teamlapen.faction.common.factions.minions.MinionEntryCallbacks;
 import de.teamlapen.faction.common.factions.skills.SkillCallbacks;
 import de.teamlapen.faction.common.factions.skills.SkillNode;
@@ -40,6 +41,8 @@ public class ModRegistries {
     public static final Registry<MapCodec<? extends TaskRequirement.Requirement<?>>> TASK_REQUIREMENTS = new RegistryBuilder<>(FactionRegistries.Keys.TASK_REQUIREMENT).create();
     public static final Registry<MapCodec<? extends ITaskRewardInstance>> TASK_REWARD_INSTANCES = new RegistryBuilder<>(FactionRegistries.Keys.TASK_REWARD_INSTANCE).create();
 
+    public static final Registry<IFactionFoodBehavior> FOOD_BEHAVIOURS = new RegistryBuilder<>(FactionRegistries.Keys.FOOD_BEHAVIOUR).create();
+
     public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(FactionRegistries.Keys.FACTION).sync(true).defaultKey(Factions.NEUTRAL.getRawKey()).create();
     public static final Registry<IMinionEntry<?, ?>> MINIONS = new RegistryBuilder<>(FactionRegistries.Keys.MINION).callback(new MinionEntryCallbacks()).sync(true).create();
 
@@ -59,6 +62,7 @@ public class ModRegistries {
         event.register(TASK_UNLOCKER);
         event.register(TASK_REQUIREMENTS);
         event.register(TASK_REWARD_INSTANCES);
+        event.register(FOOD_BEHAVIOURS);
         event.register(FACTIONS);
         event.register(MINIONS);
         event.register(FACTION_PLAYER_CONSUMERS);

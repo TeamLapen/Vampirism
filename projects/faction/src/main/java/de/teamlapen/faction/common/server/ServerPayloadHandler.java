@@ -68,7 +68,7 @@ public class ServerPayloadHandler {
                         if (controller.recallMinion(msg.minionID())) {
                             controller.createMinionEntityAtPlayer(msg.minionID(), context.player());
                         } else {
-                            context.player().displayClientMessage(Component.translatable("text.factionapi.minion.minion_is_still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))), true);
+                            context.player().sendOverlayMessage(Component.translatable("message.factionapi.minion.still_recovering", controller.contactMinionData(msg.minionID(), MinionData::getFormattedName).orElseGet(() -> Component.literal("1"))));
                         }
                     }
                 } else if (RESPAWN.equals(msg.taskID())) {
@@ -139,7 +139,11 @@ public class ServerPayloadHandler {
                     @SuppressWarnings("unchecked")
                     IActionResult r = handler.toggleAction((Holder<IAction<T>>) (Object) action, activationContext);
                     if (!r.successful()) {
-                        player.displayClientMessage(r.message(), r.sendToStatusBar());
+                        if (r.sendToStatusBar()) {
+                            player.sendOverlayMessage(r.message());
+                        } else {
+                            player.sendSystemMessage(r.message());
+                        }
                     } else {
                         handler.sync();
                     }

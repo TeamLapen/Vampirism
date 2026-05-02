@@ -67,7 +67,7 @@ public class VanillaStructureModifications {
      */
     private static void replaceTemples(@NotNull RegistryAccess dynamicRegistries, @NotNull Map<Identifier, Map<String, StructurePoolElement>> patternReplacements) {
         // return if temples should not be modified
-        if (!ModConfig.common().villageReplaceTemples.get()) return;
+        if (!ModConfig.common().replaceVillageTemples.get()) return;
         // get jigsaw registry
         dynamicRegistries.lookup(Registries.TEMPLATE_POOL).ifPresent(jigsawRegistry -> {
             // for every desired pools

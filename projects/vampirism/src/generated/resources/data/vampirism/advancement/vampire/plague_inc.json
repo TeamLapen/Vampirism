@@ -13,7 +13,6 @@
       "translate": "advancement.vampirism.plague_inc.desc"
     },
     "icon": {
-      "count": 1,
       "id": "vampirism:vampire_blood_bottle"
     },
     "title": {

@@ -27,6 +27,7 @@ public class ModRegistryManager {
 
     public void setupRegistries(IEventBus eventBus) {
         ModAttributes.register(eventBus);
+        ModFoodBehaviours.register(eventBus);
         ModBiomes.register(eventBus);
         ModBlocks.register(eventBus);
         ModMenus.register(eventBus);
@@ -97,7 +98,6 @@ public class ModRegistryManager {
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(ModStats::registerFormatter);
         event.enqueueWork(CodecModifications::changeMobEffectCodec);
-        event.enqueueWork(ModVillage::villagerTradeSetup);
         event.enqueueWork(ModItems::registerDispenserBehaviour);
         event.enqueueWork(ModBlocks::registerFlammables);
         event.enqueueWork(ModFluids::registerFluidInteractions);

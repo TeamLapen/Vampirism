@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.common.world.entity.converted;
 
-import com.google.common.collect.Lists;
-import com.mojang.serialization.Dynamic;
 import de.teamlapen.faction.api.world.entities.ICaptureStrengthProvider;
 import de.teamlapen.faction.common.util.TotemHelper;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -9,18 +7,13 @@ import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
-import de.teamlapen.vampirism.common.core.ModAdvancements;
-import de.teamlapen.vampirism.common.core.ModAi;
-import de.teamlapen.vampirism.common.core.ModAttributes;
-import de.teamlapen.vampirism.common.core.ModVillage;
+import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.attachments.NearestVillage;
 import de.teamlapen.vampirism.common.world.entity.VampirismVillagerEntity;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
-import de.teamlapen.vampirism.common.world.entity.villager.VampirismTrades;
-import de.teamlapen.vampirism.misc.mixin.accessor.VillagerAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -53,6 +46,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,18 +55,22 @@ import java.util.Optional;
  */
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements CurableConvertedCreature<Villager, ConvertedVillagerEntity>, ICaptureStrengthProvider {
 
-    public static final @NotNull List<SensorType<? extends Sensor<? super Villager>>> SENSOR_TYPES;
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.STRING);
 
+    protected static final Brain.Provider<Villager> BRAIN_PROVIDER;
+
+
     static {
-        SENSOR_TYPES = Lists.newArrayList(VillagerAccessor.getSensorTypes());
-        SENSOR_TYPES.remove(SensorType.VILLAGER_HOSTILES);
-        SENSOR_TYPES.add(ModAi.VAMPIRE_VILLAGER_HOSTILES.get());
+        var old = Villager.BRAIN_PROVIDER;
+        List<SensorType<? extends Sensor<? super Villager>>> sensorTypes = new ArrayList<>(old.sensorTypes);
+        sensorTypes.remove(SensorType.VILLAGER_HOSTILES);
+        sensorTypes.add(ModAi.VAMPIRE_VILLAGER_HOSTILES.get());
+        BRAIN_PROVIDER = Brain.provider(sensorTypes,old.activities);
     }
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
-        return VampirismVillagerEntity.createAttributes().add(ModAttributes.SUNDAMAGE);
+        return VampirismVillagerEntity.getAttributeBuilder().add(ModAttributes.SUNDAMAGE);
     }
 
     private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
@@ -267,12 +265,12 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     /**
-     * copied from {@link Villager#makeBrain(Dynamic)} but with {@link #SENSOR_TYPES}, where {@link SensorType#VILLAGER_HOSTILES} is replaced by {@link ModAi#VAMPIRE_VILLAGER_HOSTILES}
+     * copied from {@link Villager#makeBrain(net.minecraft.world.entity.ai.Brain.Packed)} but with {@link #SENSOR_TYPES}, where {@link SensorType#VILLAGER_HOSTILES} is replaced by {@link ModAi#VAMPIRE_VILLAGER_HOSTILES}
      */
     @NotNull
     @Override
-    protected Brain<?> makeBrain(@NotNull Dynamic<?> dynamicIn) {
-        Brain<Villager> brain = Brain.provider(VillagerAccessor.getMemoryTypes(), SENSOR_TYPES).makeBrain(dynamicIn);
+    protected Brain<Villager> makeBrain(@NotNull Brain.Packed packedBrain) {
+        Brain<Villager> brain = BRAIN_PROVIDER.makeBrain(this, packedBrain);
         this.registerBrainGoals(brain);
         return brain;
     }
@@ -282,7 +280,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
         super.updateTrades(level);
         Holder<VillagerProfession> profession = this.getVillagerData().profession();
         if (!this.getOffers().isEmpty() && !profession.is(ModVillage.VAMPIRE_EXPERT) && !profession.is(VillagerProfession.BUTCHER) && this.getRandom().nextInt(3) == 0) {
-            this.addOffersFromItemListings(level, this.getOffers(), VampirismTrades.getConvertedTrades(), 1);
+            this.addOffersFromTradeSet(level, this.getOffers(), ModTrades.VAMPIRE_VILLAGER);
         }
     }
 

@@ -7,9 +7,15 @@ package de.teamlapen.vampirism.misc.sit;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.DismountHelper;
+import net.minecraft.world.level.CollisionGetter;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -29,27 +35,26 @@ public class SitUtil {
      * Adds a sit entity to the map that keeps track of them. This does not spawn the entity itself.
      *
      * @param level    The world to add the entity in
-     * @param blockPos The position at which to add the entity
-     * @param entity   The entity to add
+     * @param pos The position at which to add the entity
+     * @param sit   The entity to add
      * @return true if the entity was added, false otherwise. This is always false on the client.
      */
-    public static boolean addSitEntity(@NotNull Level level, BlockPos blockPos, SitEntity entity) {
-        if (!level.isClientSide()) {
-            Identifier id = getDimensionTypeId(level);
+    public static boolean registerSitEntity(Level level, BlockPos pos, SitEntity sit) {
+        if (level.isClientSide()) return false;
 
-            if (!OCCUPIED.containsKey(id)) {
-                OCCUPIED.put(id, new HashMap<>());
-            }
-            var map = OCCUPIED.get(id);
-            if (map.containsKey(blockPos) && map.get(blockPos) != entity) {
-                entity.discard();
-                return false;
-            }
-            map.put(blockPos, entity);
-            return true;
+        Identifier dimension = getDimensionId(level);
+        OCCUPIED.computeIfAbsent(dimension, s -> new HashMap<>());
+
+        Map<BlockPos, SitEntity> map = OCCUPIED.get(dimension);
+        SitEntity existing = map.get(pos);
+
+        if (existing != null && existing != sit) {
+            sit.discard();
+            return false;
         }
 
-        return false;
+        map.put(pos, sit);
+        return true;
     }
 
     /**
@@ -57,19 +62,14 @@ public class SitUtil {
      *
      * @param level The world to remove the entity from
      * @param pos   The position to remove the entity from
-     * @return true if the entity was removed, false otherwise. This is always false on the client.
      */
-    public static boolean removeSitEntity(@NotNull Level level, BlockPos pos) {
-        if (!level.isClientSide()) {
-            Identifier id = getDimensionTypeId(level);
+    public static void unregisterSitEntity(Level level, BlockPos pos) {
+        if (level.isClientSide()) return;
 
-            if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos)) {
-                OCCUPIED.get(id).remove(pos);
-                return true;
-            }
+        Map<BlockPos, SitEntity> map = OCCUPIED.get(getDimensionId(level));
+        if (map != null) {
+            map.remove(pos);
         }
-
-        return false;
     }
 
     /**
@@ -79,29 +79,65 @@ public class SitUtil {
      * @param pos   The position to get the entity from
      * @return The entity at the given position in the given world, null if there is none. This is always null on the client.
      */
-    public static @Nullable SitEntity getSitEntity(@NotNull Level level, BlockPos pos) {
-        if (!level.isClientSide()) {
-            Identifier id = getDimensionTypeId(level);
+    public static @Nullable SitEntity getSitEntity(Level level, BlockPos pos) {
+        if (level.isClientSide()) return null;
 
-            if (OCCUPIED.containsKey(id) && OCCUPIED.get(id).containsKey(pos)) {
-                return OCCUPIED.get(id).get(pos);
-            }
+        Map<BlockPos, SitEntity> map = OCCUPIED.get(getDimensionId(level));
+        return map != null ? map.get(pos) : null;
+    }
+
+    /**
+     * Tries to make a player sit on the block by creating a new sit entity and starting riding it.
+     */
+    public static void startSitting(Player player, Level level, BlockPos pos, double offset) {
+        if (level.isClientSide()) return;
+
+        if (player.isShiftKeyDown() || isSitting(player)) return;
+
+        if (!isPlayerInRange(player, pos) || isOccupied(level, pos) || !player.getMainHandItem().isEmpty()) return;
+
+        SitEntity sit = SitEntity.createEntity(player, level, pos, offset);
+        if (sit != null && registerSitEntity(level, pos, sit)) {
+            level.addFreshEntity(sit);
+            player.startRiding(sit);
+        }
+    }
+
+    /**
+     * Returns whether the player is close enough to the block to be able to sit on it
+     *
+     * @param player The player
+     * @param pos    The position of the block to sit on
+     * @return true if the player is close enough, false otherwise
+     */
+    private static boolean isPlayerInRange(Player player, BlockPos pos) {
+        Vec3 playerPos = player.position().add(0.5, 0.5, 0.5);
+        Vec3 blockCenter = new Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+
+        double reach = Player.DEFAULT_BLOCK_INTERACTION_RANGE;
+        AttributeInstance reachAttribute = player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
+        if (reachAttribute != null) {
+            reach = reachAttribute.getValue();
         }
 
-        return null;
+        AABB range = new AABB(
+                blockCenter.x - reach, blockCenter.y - reach, blockCenter.z - reach,
+                blockCenter.x + reach, blockCenter.y + reach, blockCenter.z + reach
+        );
+
+        return range.contains(playerPos);
     }
 
     /**
      * Checks whether there is a player sitting at the given block position in the given world
      *
-     * @param world The world to check in
+     * @param level The world to check in
      * @param pos   The position to check at
-     * @return true if a player is sitting at the given position in the given world, false otherwhise. This is always false on the client.
+     * @return true if a player is sitting at the given position in the given world, false otherwise. This is always false on the client.
      */
-    public static boolean isOccupied(@NotNull Level world, BlockPos pos) {
-        Identifier id = getDimensionTypeId(world);
-
-        return SitUtil.OCCUPIED.containsKey(id) && SitUtil.OCCUPIED.get(id).containsKey(pos);
+    public static boolean isOccupied(Level level, BlockPos pos) {
+        Map<BlockPos, SitEntity> map = OCCUPIED.get(getDimensionId(level));
+        return map != null && map.containsKey(pos);
     }
 
     /**
@@ -110,19 +146,30 @@ public class SitUtil {
      * @param player The player to check
      * @return true if the given player is sitting anywhere, false otherwise
      */
-    public static boolean isPlayerSitting(@NotNull Player player) {
-        for (Identifier i : OCCUPIED.keySet()) {
-            for (SitEntity pair : OCCUPIED.get(i).values()) {
-                if (pair.hasPassenger(player)) {
-                    return true;
-                }
+    public static boolean isSitting(Player player) {
+        for (Map<BlockPos, SitEntity> map : OCCUPIED.values()) {
+            for (SitEntity sit : map.values()) {
+                if (sit.hasPassenger(player)) return true;
             }
         }
 
         return false;
     }
 
-    private static @NotNull Identifier getDimensionTypeId(@NotNull Level level) {
+    public static @Nullable Vec3 tryMultipleStandUpLocations(Entity entity, CollisionGetter level, BlockPos... positions) {
+        for (BlockPos pos : positions) {
+            Vec3 result = tryStandUpLocation(entity, level, pos);
+            if (result != null) return result;
+        }
+
+        return null;
+    }
+
+    static @Nullable Vec3 tryStandUpLocation(Entity entity, CollisionGetter level, BlockPos pos) {
+        return DismountHelper.findSafeDismountLocation(entity.getType(), level, pos, true);
+    }
+
+    private static Identifier getDimensionId(Level level) {
         return level.dimension().identifier();
     }
 }

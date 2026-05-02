@@ -19,7 +19,7 @@ import de.teamlapen.faction.common.util.IntReference;
 import de.teamlapen.faction.common.util.ItemOrdering;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -45,7 +45,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(factionPlayer -> Minecraft.getInstance().setScreen(new EditSelectActionScreen<>(factionPlayer)));
     }
 
-    private static void drawActionPart(@Nullable Holder<IAction<?>> action, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
+    private static void drawActionPart(@Nullable Holder<IAction<?>> action, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
         if (action == null) return;
         GuiRenderer.blit(graphics, getActionIcon(action), posX, posY, 16, 16, 16, 16);
     }
@@ -124,9 +124,9 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics graphics, int p_296369_, int p_296477_, float p_294317_) {
-        super.renderBackground(graphics, p_296369_, p_296477_, p_294317_);
-        graphics.drawCenteredString(this.font, Component.translatable("gui.factionapi.edit_action.key_shortcuts"), this.width - 70, 5, -1);
+    public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
+        graphics.centeredText(this.font, Component.translatable("gui.factionapi.edit_action.key_shortcuts"), this.width - 70, 5, -1);
     }
 
     public class KeyBindingList extends ContainerObjectSelectionList<KeyBindingList.KeyBindingSetting> {
@@ -144,7 +144,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         }
 
         @Override
-        protected void renderListBackground(@NotNull GuiGraphics guiGraphics) {
+        protected void extractListBackground(GuiGraphicsExtractor graphics) {
         }
 
         @Override
@@ -225,13 +225,13 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             }
 
             @Override
-            public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+            public void extractContent(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
                 stringWidget.setPosition(KeyBindingList.this.getX() + 2, getContentY() + 2);
                 imageWidget.setPosition(KeyBindingList.this.getX() + 90,getContentY() + 2);
                 imageButton.setPosition(KeyBindingList.this.getX() + 115,getContentY() + 2);
-                stringWidget.render(guiGraphics, mouseX, mouseY, partialTick);
-                imageWidget.render(guiGraphics, mouseX, mouseY, partialTick);
-                imageButton.render(guiGraphics, mouseX, mouseY, partialTick);
+                stringWidget.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
+                imageWidget.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
+                imageButton.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
             }
 
             @Override

@@ -1,6 +1,6 @@
 package de.teamlapen.faction.client.gui.overlay;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -8,11 +8,11 @@ import net.minecraft.util.Mth;
 
 public abstract class TextureOverlay extends BaseOverlay {
 
-    protected void renderTextureOverlay(GuiGraphics pGuiGraphics, Identifier pShaderLocation, float pAlpha) {
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, pShaderLocation, 0, 0, 0.0F, 0.0F, pGuiGraphics.guiWidth(), pGuiGraphics.guiHeight(), pGuiGraphics.guiWidth(), pGuiGraphics.guiHeight(), ARGB.color(pAlpha, -90));
+    protected void renderTextureOverlay(GuiGraphicsExtractor pGuiGraphicsExtractor, Identifier pShaderLocation, float pAlpha) {
+        pGuiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, pShaderLocation, 0, 0, 0.0F, 0.0F, pGuiGraphicsExtractor.guiWidth(), pGuiGraphicsExtractor.guiHeight(), pGuiGraphicsExtractor.guiWidth(), pGuiGraphicsExtractor.guiHeight(), ARGB.color(pAlpha, -90));
     }
 
-    protected void scaleBy(float progress, float type, float start, float end, GuiGraphics graphics) {
+    protected void scaleBy(float progress, float type, float start, float end, GuiGraphicsExtractor graphics) {
         int i = graphics.guiWidth();
         int j = graphics.guiHeight();
         float f = lerp(progress, type, start, end);

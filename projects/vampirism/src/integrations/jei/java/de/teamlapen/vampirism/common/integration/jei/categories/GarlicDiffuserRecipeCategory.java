@@ -12,7 +12,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,10 +65,10 @@ public class GarlicDiffuserRecipeCategory implements IRecipeCategory<GarlicDiffu
     }
 
     @Override
-    public void draw(GarlicDiffuserRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        this.background.draw(guiGraphics);
-        guiGraphics.pose().pushMatrix();
-        this.slot.draw(guiGraphics);
+    public void draw(GarlicDiffuserRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphicsExtractor GuiGraphicsExtractor, double mouseX, double mouseY) {
+        this.background.draw(GuiGraphicsExtractor);
+        GuiGraphicsExtractor.pose().pushMatrix();
+        this.slot.draw(GuiGraphicsExtractor);
 
         int burnDuration = recipe.getBurnTime() / 20;
         Component text;
@@ -80,7 +80,7 @@ public class GarlicDiffuserRecipeCategory implements IRecipeCategory<GarlicDiffu
             text = Component.translatable("gui.vampirism.jei.category.diffuser.burn_duration_hours", burnDuration / 3600, (burnDuration % 3600) / 60, (burnDuration % 3600 % 60));
         }
 
-        guiGraphics.drawString(Minecraft.getInstance().font, text, 24, 5, 0xFF808080, false);
-        guiGraphics.pose().popMatrix();
+        GuiGraphicsExtractor.drawString(Minecraft.getInstance().font, text, 24, 5, 0xFF808080, false);
+        GuiGraphicsExtractor.pose().popMatrix();
     }
 }

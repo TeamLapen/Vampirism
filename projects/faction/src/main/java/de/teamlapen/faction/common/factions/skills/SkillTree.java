@@ -14,28 +14,29 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.Optional;
 
-public record SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPredicate unlockPredicate, ItemStack display, Component name, Optional<Identifier> background, TagKey<ISkillTree> skillPointTag) implements ISkillTree {
+public record SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPredicate unlockPredicate, ItemStackTemplate display, Component name, Optional<Identifier> background, TagKey<ISkillTree> skillPointTag) implements ISkillTree {
 
     public static final Codec<ISkillTree> CODEC = Codec.lazyInitialized(() -> RecordCodecBuilder.create(inst ->
             inst.group(
                     ModCodecs.playableFaction().fieldOf("faction").forGetter(ISkillTree::faction),
                     EntityPredicate.CODEC.fieldOf("unlock_predicate").forGetter(ISkillTree::unlockPredicate),
-                    ItemStack.CODEC.fieldOf("display").forGetter(ISkillTree::display),
+                    ItemStackTemplate.CODEC.fieldOf("display").forGetter(ISkillTree::display),
                     ComponentSerialization.CODEC.fieldOf("name").forGetter(ISkillTree::name),
                     Identifier.CODEC.optionalFieldOf("background").forGetter(ISkillTree::background),
                     TagKey.codec(FactionRegistries.Keys.SKILL_TREE).optionalFieldOf("name_suffix", FactionSkillTreeTags.DEFAULT).forGetter(ISkillTree::skillPointTag)
             ).apply(inst, SkillTree::new)
     ));
 
-    public SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPredicate unlockPredicate, ItemStack display, Component name) {
+    public SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPredicate unlockPredicate, ItemStackTemplate display, Component name) {
         this(faction, unlockPredicate, display, name, Optional.empty());
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPredicate unlockPredicate, ItemStack display, Component name, Optional<Identifier> background) {
+    public SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPredicate unlockPredicate, ItemStackTemplate display, Component name, Optional<Identifier> background) {
         this(faction, unlockPredicate, display, name, background, FactionSkillTreeTags.DEFAULT);
     }
 }

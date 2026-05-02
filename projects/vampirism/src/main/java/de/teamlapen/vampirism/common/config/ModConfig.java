@@ -15,7 +15,6 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -26,8 +25,8 @@ public class ModConfig extends Services {
     public static final Logger LOGGER = LogManager.getLogger();
 
     private final Config<ClientConfig> client;
-    private final Config<ServerConfig> server;
     private final Config<CommonConfig> common;
+    private final Config<ServerConfig> server;
     private final BalanceConfig balance;
     private final ConfigHelper helper = new ConfigHelper();
 
@@ -37,8 +36,8 @@ public class ModConfig extends Services {
     public ModConfig(ModContainer container) {
         super(container);
         this.client = Config.create(ClientConfig::new);
-        this.server = Config.create(ServerConfig::new);
         this.common = Config.create(CommonConfig::new);
+        this.server = Config.create(ServerConfig::new);
 
         this.balanceBuilder = new BalanceBuilder();
         this.balance = new BalanceConfig(balanceBuilder);
@@ -52,7 +51,7 @@ public class ModConfig extends Services {
     }
 
     @ThreadSafeAPI
-    public <T extends BalanceBuilder.Conf> void addBalanceModification(@NotNull String key, @NotNull Consumer<T> modifier) {
+    public <T extends BalanceBuilder.Conf> void addBalanceModification(String key, Consumer<T> modifier) {
         if (this.balanceBuilder == null) {
             throw new IllegalStateException("Must add balance modifications during mod construction");
         }
@@ -89,12 +88,12 @@ public class ModConfig extends Services {
         return client.config();
     }
 
-    public ServerConfig serverConfig() {
-        return server.config();
-    }
-
     public CommonConfig commonConfig() {
         return common.config();
+    }
+
+    public ServerConfig serverConfig() {
+        return server.config();
     }
 
     public BalanceConfig balanceConfig() {
@@ -117,21 +116,27 @@ public class ModConfig extends Services {
         container().registerConfig(Type.SERVER, balanceSpec, "vampirism-balance.toml");
     }
 
-    public void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
+    public void onLoad(final ModConfigEvent.Loading configEvent) {
         if (configEvent.getConfig().getType() == Type.SERVER) {
             VampirismMod.services().sunDamageRegistry().reloadConfiguration();
         }
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);
+        }
+        if (configEvent.getConfig().getSpec() == client.spec()) {
+            helper.onClientConfigChanged(configEvent);
         }
     }
 
-    public void onReload(final ModConfigEvent.@NotNull Reloading configEvent) {
+    public void onReload(final ModConfigEvent.Reloading configEvent) {
         if (configEvent.getConfig().getType() == Type.SERVER) {
             VampirismMod.services().sunDamageRegistry().reloadConfiguration();
         }
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);
+        }
+        if (configEvent.getConfig().getSpec() == client.spec()) {
+            helper.onClientConfigChanged(configEvent);
         }
     }
 
@@ -143,10 +148,7 @@ public class ModConfig extends Services {
         Build balance configuration
          */
         final Pair<BalanceConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure((builder) -> {
-            builder.comment("A ton of options which allow you to balance the mod to your desire");
-            builder.push("balance");
             balanceBuilder.build(balance, builder);
-            builder.pop();
             return balance;
         });
         balanceSpec = specPair.getRight();

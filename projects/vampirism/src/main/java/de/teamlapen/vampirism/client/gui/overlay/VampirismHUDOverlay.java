@@ -16,7 +16,7 @@ import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.items.StakeItem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -170,7 +170,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         if (event.getName() != VanillaGuiLayers.PLAYER_HEALTH) {
             return;
         }
-        addTempPoison = mc().player.hasEffect(ModEffects.POISON) && !player().vampirism$activeEffects().containsKey(MobEffects.POISON);
+        addTempPoison = mc().player.hasEffect(ModEffects.TOXICANT) && !player().vampirism$activeEffects().containsKey(MobEffects.POISON);
 
         if (addTempPoison) { //Add temporary dummy potion effect to trick renderer
             if (addedTempPoison == null) {
@@ -181,7 +181,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
 
     }
 
-    private void renderBloodFangs(GuiGraphics graphics, int width, int height, float perc, int color) {
+    private void renderBloodFangs(GuiGraphicsExtractor graphics, int width, int height, float perc, int color) {
         int left = width / 2 - 8;
         int top = height / 2 - 4;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FANG_SPRITE, left, top, 16, 8);
@@ -189,7 +189,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         graphics.vampirism$blitSpriteTiledOffset(FANG_SPRITE, left, top, 16, 8, 0, percHeight, color);
     }
 
-    private void renderStakeInstantKill(GuiGraphics graphics, int width, int height) {
+    private void renderStakeInstantKill(GuiGraphicsExtractor graphics, int width, int height) {
         if (this.mc().options.getCameraType().isFirstPerson() && this.mc().gameMode.getPlayerMode() != GameType.SPECTATOR) {
 //            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             int color = ARGB.colorFromFloat(1f, 158 / 256f, 0, 0);

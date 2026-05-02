@@ -3,6 +3,7 @@ package de.teamlapen.faction.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
@@ -10,7 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -35,7 +36,7 @@ public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity, Tote
         renderState.baseColor = blockEntity.getBaseColor();
         renderState.capturingProgress = blockEntity.getCaptureProgress();
         Holder<? extends IFaction<?>> controllingFaction = blockEntity.getControllingFaction();
-        if (!IFaction.isNeutral(controllingFaction)) {
+        if (!IFaction.isNeutral(controllingFaction) && FactionConfig.client().renderTotemFactionName.getAsBoolean()) {
             renderState.factionName = controllingFaction.value().getNamePlural().withStyle(style -> style.withColor(controllingFaction.value().getChatColor()));
         }
         renderState.distanceToCamera = blockEntity.getBlockPos().distToCenterSqr(cameraPosition);
