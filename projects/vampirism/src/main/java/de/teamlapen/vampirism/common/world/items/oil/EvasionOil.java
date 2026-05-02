@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,7 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     }
 
     @Override
-    public boolean canBeApplied(ItemStack stack) {
+    public boolean canBeApplied(ItemInstance stack) {
         var equippable = stack.get(DataComponents.EQUIPPABLE);
         return equippable != null && equippable.slot().isArmor() && stack.is(ModItemTags.APPLICABLE_OIL_ARMOR) == ModConfig.balance().itApplicableOilArmorReverse.get();
     }

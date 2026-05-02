@@ -166,6 +166,9 @@
   "message.factionapi.minion.minions_recovering": "%s minions are still recovering",
   "message.factionapi.minion_task.could_not_activate": "Command could not be activated",
 
+  "message.factionapi.task_unlocker.lord_level.exact": "Lord level must be exactly %s",
+  "message.factionapi.task_unlocker.lord_level.min": "Lord level must be at least %s",
+
   "dialogue.factionapi.minion.can_respawn": "%s: My Lord, I have recovered",
   "dialogue.factionapi.minion.died": "%s: My Lord, I have died",
   "dialogue.factionapi.minion.died_on_task": "My lord, I am sorry, but I died while fulfilling your task",

@@ -52,4 +52,10 @@ public abstract class GuiGraphicsExtractorMixin implements IGuiGraphicsExtractor
             blitSprite(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height, color);
         }
     }
+
+    @Override
+    public void vampirism$centeredText(Font font, Component text, int x, int y, int color, boolean dropShadow) {
+        FormattedCharSequence toRender = text.getVisualOrderText();
+        this.text(font, toRender, x - font.width(toRender) / 2, y, color, dropShadow);
+    }
 }

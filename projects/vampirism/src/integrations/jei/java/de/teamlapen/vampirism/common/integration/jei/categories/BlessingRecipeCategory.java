@@ -18,7 +18,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -27,21 +26,21 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableRecipe> 
 
     private static final int BACKGROUND_WIDTH = 83;
 
-    private final @NotNull IDrawable background;
-    private final @NotNull IDrawable icon;
+    private final IDrawable background;
+    private final IDrawable icon;
 
-    public BlessingRecipeCategory(@NotNull IGuiHelper guiHelper) {
+    public BlessingRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.drawableBuilder(VIdentifier.mod("textures/gui/blessing_recipe_jei.png"), 0, 0, BACKGROUND_WIDTH, 49).setTextureSize(83, 49).addPadding(10, 20, 20, 20).build();
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALTAR_CLEANSING.get()));
     }
 
     @Override
-    public @NotNull IRecipeType<BlessableRecipe> getRecipeType() {
+    public IRecipeType<BlessableRecipe> getRecipeType() {
         return VampirismJEIPlugin.BLESSING;
     }
 
     @Override
-    public @NotNull Component getTitle() {
+    public Component getTitle() {
         return Component.translatable("gui.vampirism.jei.category.blessing");
     }
 
@@ -57,20 +56,20 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableRecipe> 
     }
 
     @Override
-    public @NotNull IDrawable getIcon() {
+    public IDrawable getIcon() {
         return this.icon;
     }
 
     @Override
-    public void draw(@NotNull BlessableRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+    public void draw(BlessableRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         this.background.draw(graphics, (getWidth() - BACKGROUND_WIDTH)/2, 0);
         if (recipe.enhanced()) {
-            graphics.drawWordWrap(Minecraft.getInstance().font, Component.translatable("gui.vampirism.skill_required", HunterSkills.ENHANCED_BLESSING.get().getName()), 7, 52, 100, Color.gray.getRGB(), false);
+            graphics.textWithWordWrap(Minecraft.getInstance().font, Component.translatable("gui.vampirism.skill_required", HunterSkills.ENHANCED_BLESSING.get().getName()), 7, 52, 100, Color.gray.getRGB(), false);
         }
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull BlessableRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, BlessableRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 22, 17).add(recipe.input().getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 74, 17).add(recipe.output().getDefaultInstance());
     }
