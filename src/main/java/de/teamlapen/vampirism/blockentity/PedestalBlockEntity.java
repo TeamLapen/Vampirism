@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
+public class PedestalBlockEntity extends BlockEntity implements IItemHandler, Clearable {
 
     private final Random rand = new Random();
     private final int chargeRate = 30;
@@ -253,5 +254,10 @@ public class PedestalBlockEntity extends BlockEntity implements IItemHandler {
         ModParticles.spawnParticleClient(level, new FlyingBloodParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, VResourceLocation.mc( "glitter_1")), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
         ModParticles.spawnParticleClient(level, new FlyingBloodParticleOptions( (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, VResourceLocation.mc( "glitter_1")), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
 
+    }
+
+    @Override
+    public void clearContent() {
+        internalStack = ItemStack.EMPTY;
     }
 }
