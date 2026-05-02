@@ -25,6 +25,8 @@ public interface IBloodStats extends ResourceHandler<FluidResource> {
 
     int getPrevBloodLevel();
 
+    int addBlood(int amount, float saturationModifier);
+
     /**
      * @return If the player could use blood
      */

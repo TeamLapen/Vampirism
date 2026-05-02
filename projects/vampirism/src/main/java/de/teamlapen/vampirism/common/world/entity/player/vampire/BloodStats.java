@@ -149,6 +149,7 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
         return 1 + (vampire.getLevel() / (float) vampire.getMaxLevel()) * 0.5f;
     }
 
+    @Override
     public int addBlood(int amount, float saturationModifier) {
         int add = Math.min(amount, maxBlood - bloodLevel);
         bloodLevel += add;

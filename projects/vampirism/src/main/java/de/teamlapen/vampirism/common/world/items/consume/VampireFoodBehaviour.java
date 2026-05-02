@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.common.world.items.consume;
 
 import de.teamlapen.faction.api.world.items.consume.IFactionFoodBehavior;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.BloodStats;
+import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -24,7 +26,7 @@ public class VampireFoodBehaviour implements IFactionFoodBehavior {
         level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), consumable.sound().value(), SoundSource.NEUTRAL, 1.0F, randomsource.triangle(1.0F, 0.4F));
         if (livingEntity instanceof Player player) {
             FactionPlayerHandler.get(player).factionPlayer(ModFactions.VAMPIRE).ifPresent(vampire -> {
-                ((BloodStats) vampire.getBloodStats()).addBlood(foodProperties.nutrition(), foodProperties.saturation());
+                vampire.drinkBlood(foodProperties.nutrition(), foodProperties.saturation(), new DrinkBloodContext(itemStack));
                 level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 0.5F, Mth.randomBetween(randomsource, 0.9F, 1.0F));
             });
         } else if (livingEntity instanceof VampireMinionEntity minion) {
