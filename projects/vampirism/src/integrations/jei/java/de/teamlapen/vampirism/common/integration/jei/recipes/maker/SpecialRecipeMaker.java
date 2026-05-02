@@ -14,14 +14,11 @@ import de.teamlapen.vampirism.common.world.items.BloodBottleItem;
 import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
 import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
-import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
-import de.teamlapen.vampirism.common.world.items.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -40,12 +37,9 @@ public class SpecialRecipeMaker {
     public static List<RecipeHolder<CraftingRecipe>> getAllCraftingRecipes() {
         return Stream.of(
                 makeOilRecipes().stream(),
-                makeBloodBottleFromSyringesRecipes().stream()
+                makeBloodBottleFromSyringesRecipes().stream(),
+                makeSerumFromPotionRecipes().stream()
         ).flatMap(s -> s).toList();
-    }
-
-    public static List<RecipeHolder<IWeaponTableRecipe>> getAllWeaponTableRecipes() {
-        return makeSerumFromPotionRecipes();
     }
 
     public static List<RecipeHolder<CraftingRecipe>> makeOilRecipes() {
@@ -82,7 +76,7 @@ public class SpecialRecipeMaker {
                 .toList();
     }
 
-    public static List<RecipeHolder<IWeaponTableRecipe>> makeSerumFromPotionRecipes() {
+    public static List<RecipeHolder<CraftingRecipe>> makeSerumFromPotionRecipes() {
         return BuiltInRegistries.POTION.listElements()
                 .filter(potion -> !SerumInjectionItem.isBlockedPotion(potion))
                 .map(potion -> {
@@ -97,10 +91,8 @@ public class SpecialRecipeMaker {
                             Ingredient.of(ModItems.SYRINGE_EMPTY.get())
                     );
 
-                    ShapelessWeaponTableRecipe recipe = new ShapelessWeaponTableRecipe("", ingredients, result, 1, 0, List.of());
-
-                    Identifier id = VIdentifier.mod("serum_from_potion_" + potion.unwrapKey().orElseThrow().identifier().getPath());
-                    return new RecipeHolder<IWeaponTableRecipe>(ResourceKey.create(Registries.RECIPE, id), recipe);
+                    ShapelessRecipe recipe = new ShapelessRecipe("", CraftingBookCategory.MISC, result, ingredients);
+                    return new RecipeHolder<CraftingRecipe>(ResourceKey.create(Registries.RECIPE, VIdentifier.mod("serum_from_potion_" + potion.unwrapKey().orElseThrow().identifier().getPath())), recipe);
                 })
                 .toList();
     }

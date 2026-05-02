@@ -23,7 +23,7 @@ public class SerumFromPotionRecipe extends CustomRecipe {
     @Override
     public boolean matches(CraftingInput input, Level level) {
         boolean hasPotion = false;
-        boolean hasSyringe = false;
+        int syringeCount = 0;
 
         for (int i = 0; i < input.size(); i++) {
             ItemStack stack = input.getItem(i);
@@ -36,13 +36,13 @@ public class SerumFromPotionRecipe extends CustomRecipe {
                 }
                 hasPotion = true;
             } else if (stack.is(ModItems.SYRINGE_EMPTY.get())) {
-                hasSyringe = true;
+                syringeCount++;
             } else {
                 return false;
             }
         }
 
-        return hasPotion && hasSyringe;
+        return hasPotion && syringeCount == 2;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SerumFromPotionRecipe extends CustomRecipe {
 
         if (contents == null) return ItemStack.EMPTY;
 
-        ItemStack result = ModItems.SERUM_INJECTION.get().getDefaultInstance();
+        ItemStack result = new ItemStack(ModItems.SERUM_INJECTION.get(), 2);
         result.set(DataComponents.POTION_CONTENTS, contents);
 
         return result;

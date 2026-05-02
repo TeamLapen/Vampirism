@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.items;
 import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModPotionTags;
+import de.teamlapen.vampirism.common.world.potions.BasePotion;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +24,7 @@ public class SerumInjectionItem extends Item {
     }
 
     public static boolean isBlockedPotion(Holder<Potion> potion) {
-        return potion.is(ModPotionTags.SERUM_BLOCKED);
+        return potion.is(ModPotionTags.SERUM_BLOCKED) || BasePotion.isHunterPotion(potion);
     }
 
     @Override
