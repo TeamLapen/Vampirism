@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.registries.RegistryProvider;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
@@ -56,5 +57,9 @@ public class ModRegistries {
 
     static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(VAMPIRE_BOOK, VampireBook.CODEC, VampireBook.CODEC);
+    }
+
+    static {
+        RegistryProvider.register(OILS, ENTITY_CONVERTER, VAMPIRE_VISION);
     }
 }

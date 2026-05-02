@@ -747,7 +747,7 @@ public class BalanceConfig {
                 .comment("Multiplier applied to teleport distance with the teleport range refinement.")
                 .defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
         vrTeleportCooldownMod = builder
-                .defineInRange("teleportCooldownMod", 0.5, 1, Double.MAX_VALUE);
+                .defineInRange("teleportCooldownMod", 0.5, 0, Double.MAX_VALUE);
         vrHalfInvulnerableThresholdMod = builder
                 .comment("Multiplier applied to the partial invulnerability damage threshold with the threshold refinement.")
                 .defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);

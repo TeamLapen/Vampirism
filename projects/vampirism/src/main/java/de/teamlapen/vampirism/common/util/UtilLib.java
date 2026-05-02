@@ -584,6 +584,8 @@ public class UtilLib {
                 if (ServerLifecycleHooks.getCurrentServer() != null) {
                     return ServerLifecycleHooks.getCurrentServer().registryAccess().lookupOrThrow(key).containsKey(id);
                 }
+                // we need to return true here because the config is validated when it is registered, where the server is not available
+                return true;
             }
         }
         return false;
