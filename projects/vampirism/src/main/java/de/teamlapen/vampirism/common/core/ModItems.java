@@ -293,8 +293,7 @@ public class ModItems {
     public static final DeferredItem<SpawnEggItem> HUNTER_TRAINER_SPAWN_EGG = ITEMS.registerItem("hunter_trainer_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.HUNTER_TRAINER.get()));
     public static final DeferredItem<SpawnEggItem> TASK_MASTER_HUNTER_SPAWN_EGG = ITEMS.registerItem("task_master_hunter_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.TASK_MASTER_HUNTER.get()));
     public static final DeferredItem<SpawnEggItem> GHOST_SPAWN_EGG = ITEMS.registerItem("ghost_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.GHOST.get()));
-    public static final DeferredItem<Item> RITUAL_KNIFE = ITEMS.registerItem("ritual_knife", Item::new);
-    public static final DeferredItem<Item> RITUAL_KNIFE_HEART = ITEMS.registerItem("ritual_knife_heart", Item::new);
+    public static final DeferredItem<Item> RITUAL_KNIFE = ITEMS.registerItem("ritual_knife", RitualKnifeItem::new);
 
     public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE, x -> x.useBlockDescriptionPrefix().factions$withShiftDescription());
     public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED, x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));

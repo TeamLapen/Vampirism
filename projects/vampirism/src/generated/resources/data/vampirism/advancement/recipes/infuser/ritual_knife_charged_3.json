@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:ritual_knife_heart_2"
+        "recipe": "vampirism:ritual_knife_charged_3"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -37,7 +37,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:ritual_knife_heart_2"
+      "vampirism:ritual_knife_charged_3"
     ]
   }
 }

@@ -1,6 +1,16 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "vampirism:item/ritual_knife"
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "vampirism:item/ritual_knife"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "vampirism:item/ritual_knife_charged"
+    },
+    "predicate": "vampirism:charged_ritual_knife",
+    "property": "minecraft:component",
+    "value": {}
   }
 }

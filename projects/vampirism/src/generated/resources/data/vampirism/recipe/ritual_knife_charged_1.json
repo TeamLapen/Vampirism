@@ -5,6 +5,9 @@
   "ingredient2": "vampirism:mother_core",
   "item": "vampirism:ritual_knife",
   "result": {
-    "id": "vampirism:ritual_knife_heart"
+    "components": {
+      "vampirism:charged_ritual_knife": true
+    },
+    "id": "vampirism:ritual_knife"
   }
 }

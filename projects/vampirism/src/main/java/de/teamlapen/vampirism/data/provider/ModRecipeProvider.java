@@ -1454,13 +1454,13 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         }
 
         for (int i = 0; i < 4; i++) {
-            infuser(ModItems.RITUAL_KNIFE_HEART)
+            infuser(new ItemStackTemplate(ModItems.RITUAL_KNIFE, DataComponentPatch.builder().set(ModDataComponents.CHARGED_RITUAL_KNIFE.get(), true).build()))
                     .ingredient(i, Ingredient.of(ModItems.MOTHER_CORE))
                     .input(Ingredient.of(ModItems.RITUAL_KNIFE))
                     .burnTime(600)
                     .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
                     .unlockedBy("has_ritual_knife", has(ModItems.RITUAL_KNIFE))
-                    .save(this.output, ResourceKey.create(Registries.RECIPE, getDefaultRecipeId(new ItemStackTemplate(ModItems.RITUAL_KNIFE_HEART)).identifier().withSuffix("_" + i)));
+                    .save(this.output, ResourceKey.create(Registries.RECIPE, getDefaultRecipeId(new ItemStackTemplate(ModItems.RITUAL_KNIFE)).identifier().withSuffix("_charged_" + i)));
         }
     }
 

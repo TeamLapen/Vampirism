@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.blockentity.VelmorraAltarBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -60,7 +61,7 @@ public class VelmorraAltarBlock extends BaseEntityBlock {
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.is(ModItems.RITUAL_KNIFE_HEART)) {
+        if (stack.is(ModItems.RITUAL_KNIFE) && stack.getOrDefault(ModDataComponents.CHARGED_RITUAL_KNIFE, false)) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof VelmorraAltarBlockEntity be && be.offerBlood(player)) {
                 return InteractionResult.SUCCESS_SERVER;

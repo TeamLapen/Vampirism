@@ -47,5 +47,6 @@ public class VampirismDataComponents {
         public static final Identifier QUARREL_POUCH_CONTENTS = VIdentifier.mod("quarrel_pouch_contents");
         public static final Identifier ACTIVE = VIdentifier.mod("active");
         public static final Identifier HELD_ENTITY = VIdentifier.mod("held_entity");
+        public static final Identifier CHARGED_RITUAL_KNIFE = VIdentifier.mod("charged_ritual_knife");
     }
 }
