@@ -203,6 +203,9 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue itApplicableOilPickaxeReverse;
     public final ModConfigSpec.BooleanValue itApplicableOilSwordReverse;
 
+    // Effects
+    public final ModConfigSpec.DoubleValue efExposedPerLevelMultiplier;
+
     // Lord Actions
     public final ModConfigSpec.BooleanValue laLordSpeedEnabled;
     public final ModConfigSpec.IntValue laLordSpeedCooldown;
@@ -739,6 +742,12 @@ public class BalanceConfig {
         itApplicableOilSwordReverse = builder
                 .comment(String.format("When enabled, the '%s' item tag acts as a whitelist instead of a blacklist for sword oil application.", ModItemTags.APPLICABLE_OIL_SWORD.location()))
                 .define("applicableOilSwordReverse", false);
+
+        builder.category("effects", "ef");
+
+        efExposedPerLevelMultiplier = builder
+                .comment("Damage multiplier applied per level of the Exposed effect. For instance, a value of 0.25 means the entity will receive 25% more damage at level I, 50% at level II, 75% at level III, and so on.")
+                .defineInRange("exposedPerLevelMultiplier", 0.25, 0.0, Double.MAX_VALUE);
 
         builder.category("lordActions", "la");
 

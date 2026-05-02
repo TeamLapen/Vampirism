@@ -42,7 +42,7 @@ public class SerumFromPotionRecipe extends CustomRecipe {
             }
         }
 
-        return hasPotion && syringeCount == 2;
+        return hasPotion && syringeCount == 4;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SerumFromPotionRecipe extends CustomRecipe {
 
         if (contents == null) return ItemStack.EMPTY;
 
-        ItemStack result = new ItemStack(ModItems.SERUM_INJECTION.get(), 2);
+        ItemStack result = new ItemStack(ModItems.SERUM_INJECTION.get(), 4);
         result.set(DataComponents.POTION_CONTENTS, contents);
 
         return result;

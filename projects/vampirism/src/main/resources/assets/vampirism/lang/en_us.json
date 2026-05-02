@@ -482,6 +482,7 @@
   "effect.vampirism.no_blood": "No Blood",
   "effect.vampirism.bleeding": "Bleeding",
   "effect.vampirism.crucifix_suppression": "Crucifix Suppression",
+  "effect.vampirism.exposed": "Exposed",
 
   "attribute.vampirism.sundamage": "Sun Damage",
   "attribute.vampirism.blood_exhaustion": "Blood Exhaustion",
@@ -1339,6 +1340,7 @@
   "vampirism.configuration.minions": "Minions",
   "vampirism.configuration.vampireRefinements": "Vampire Refinements",
   "vampirism.configuration.items": "Items",
+  "vampirism.configuration.effects": "Effects",
   "vampirism.configuration.lordActions": "Lord Actions",
 
   "vampirism.configuration.collectData": "Collect Data",
@@ -1736,6 +1738,9 @@
   "vampirism.configuration.applicableOilPickaxeReverse.tooltip": "When enabled, the applicable oil pickaxe item tag acts as a whitelist instead of a blacklist for pickaxe oil application.",
   "vampirism.configuration.applicableOilSwordReverse": "Applicable Oil Sword Reverse",
   "vampirism.configuration.applicableOilSwordReverse.tooltip": "When enabled, the applicable oil sword item tag acts as a whitelist instead of a blacklist for sword oil application.",
+
+  "vampirism.configuration.exposedPerLevelMultiplier": "Exposed Per Level Multiplier",
+  "vampirism.configuration.exposedPerLevelMultiplier.tooltip": "Damage multiplier applied per level of the Exposed effect. For instance, a value of 0.25 means the entity will receive 25% more damage at level I, 50% at level II, 75% at level III, and so on.",
 
   "vampirism.configuration.lordSpeedEnabled": "Lord Speed Enabled",
   "vampirism.configuration.lordSpeedEnabled.tooltip": "When enabled, vampire lords can use the speed action.",

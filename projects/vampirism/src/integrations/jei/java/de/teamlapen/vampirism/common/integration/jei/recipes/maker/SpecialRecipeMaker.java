@@ -27,6 +27,8 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.*;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
@@ -83,14 +85,11 @@ public class SpecialRecipeMaker {
                     ItemStack potionStack = new ItemStack(Items.POTION);
                     potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
 
-                    ItemStack result = new ItemStack(ModItems.SERUM_INJECTION.get(), 2);
+                    ItemStack result = new ItemStack(ModItems.SERUM_INJECTION.get(), 4);
                     result.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
 
-                    List<Ingredient> ingredients = List.of(
-                            Ingredient.of(ModItems.SYRINGE_EMPTY.get()),
-                            Ingredient.of(ModItems.SYRINGE_EMPTY.get()),
-                            DataComponentIngredient.of(false, potionStack)
-                    );
+                    List<Ingredient> ingredients = new ArrayList<>(Collections.nCopies(4, Ingredient.of(ModItems.SYRINGE_EMPTY.get())));
+                    ingredients.add(DataComponentIngredient.of(false, potionStack));
 
                     ShapelessRecipe recipe = new ShapelessRecipe("", CraftingBookCategory.MISC, result, ingredients);
                     return new RecipeHolder<CraftingRecipe>(ResourceKey.create(Registries.RECIPE, VIdentifier.mod("serum_from_potion_" + potion.unwrapKey().orElseThrow().identifier().getPath())), recipe);
