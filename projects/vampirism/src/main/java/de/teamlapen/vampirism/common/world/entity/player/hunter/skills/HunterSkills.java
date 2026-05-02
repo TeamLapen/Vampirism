@@ -63,7 +63,6 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_BREWER = SKILLS.register("master_brewer", () -> new VampirismSkill.SimpleHunterSkill(3, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.register("potion_resistance", () -> new ActionSkill<>(HunterActions.POTION_RESISTANCE_HUNTER, Trees.LEVEL, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CONCENTRATED_DURABLE_BREWING = SKILLS.register("concentrated_durable_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> BIVALENT_INJECTIONS = SKILLS.register("bivalent_injections", () -> new VampirismSkill.SimpleHunterSkill(2, true));
 
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_SPEED, () -> ModConfig.balance().hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_DAMAGE = SKILLS.register("hunter_attack_damage", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
@@ -142,7 +141,7 @@ public class HunterSkills {
             context.register(POTION3, new SkillNode(SWIFT_BREWING, EFFICIENT_BREWING));
             context.register(POTION4, new SkillNode(MASTER_BREWER));
             context.register(POTION5, new SkillNode(POTION_RESISTANCE));
-            context.register(POTION6, new SkillNode(CONCENTRATED_DURABLE_BREWING, BIVALENT_INJECTIONS));
+            context.register(POTION6, new SkillNode(CONCENTRATED_DURABLE_BREWING));
 
             context.register(WEAPON1, new SkillNode(HUNTER_ATTACK_SPEED, HUNTER_ATTACK_DAMAGE));
             context.register(WEAPON2, new SkillNode(ARMOR_SPEED, ARMOR_JUMP));

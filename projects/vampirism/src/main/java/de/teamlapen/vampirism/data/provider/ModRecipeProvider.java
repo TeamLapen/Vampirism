@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.common.world.items.VampireCloakItem;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import de.teamlapen.vampirism.common.world.items.recipes.*;
 import de.teamlapen.vampirism.data.ModBlockFamilies;
-import de.teamlapen.vampirism.data.builder.SpecialWeaponTableRecipeBuilder;
 import de.teamlapen.vampirism.data.provider.base.VampirismRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
@@ -83,8 +82,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, modString("clean_oil"));
         SpecialRecipeBuilder.special(RerollVampireBookRecipe::new).save(output, modString("reroll_vampire_book"));
         SpecialRecipeBuilder.special(FillBottleFromSyringeRecipe::new).save(output, modString("fill_bottle_from_syringe"));
-        SpecialWeaponTableRecipeBuilder.special(SerumFromPotionRecipe.SingleSerumFromPotionRecipe::new).save(output, modString("serum_from_singe_potion"));
-        SpecialWeaponTableRecipeBuilder.special(SerumFromPotionRecipe.DoubleSerumFromPotionRecipe::new).save(output, modString("serum_from_double_potion"));
+        SpecialRecipeBuilder.special(SerumFromPotionRecipe::new).save(output, modString("serum_from_potion"));
     }
 
     private void recipesFunctionalBlocks() {
