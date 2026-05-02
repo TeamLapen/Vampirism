@@ -218,7 +218,7 @@ public class SkillsTabComponent {
         if (remainingPoints == Integer.MAX_VALUE) {
             return Component.translatable("gui.factionapi.skills.skill_points", "∞");
         }
-        return Component.translatable(remainingPoints == 1 ? "gui.factionapi.skill_tree.skill_point" : "gui.factionapi.skill_tree.skill_points", remainingPoints);
+        return Component.translatable(remainingPoints == 1 ? "gui.factionapi.skills.skill_point" : "gui.factionapi.skills.skill_points", remainingPoints);
     }
 
     public Holder<ISkillTree> getSkillTree() {

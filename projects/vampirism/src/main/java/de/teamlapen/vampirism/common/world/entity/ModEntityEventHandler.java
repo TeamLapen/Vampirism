@@ -316,4 +316,13 @@ public class ModEntityEventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public void onExposedDamage(@NotNull LivingIncomingDamageEvent event) {
+        MobEffectInstance exposed = event.getEntity().getEffect(ModEffects.EXPOSED);
+        if (exposed != null) {
+            float multiplier = 1.0f + (float) ModConfig.balance().efExposedPerLevelMultiplier.getAsDouble() * (exposed.getAmplifier() + 1);
+            event.setAmount(event.getAmount() * multiplier);
+        }
+    }
 }

@@ -25,7 +25,12 @@ public class BasePotion extends Potion {
         return Optional.empty();
     }
 
+    public static boolean isHunterPotion(Holder<Potion> potion) {
+        return Optional.ofNullable(potion).map(Holder::value).stream().anyMatch(HunterPotion.class::isInstance);
+    }
+
     public static class HunterPotion extends BasePotion {
+
         public HunterPotion(@Nullable String baseName, MobEffectInstance... effects) {
             super(baseName, effects);
         }

@@ -48,7 +48,7 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
 
     @Override
     public boolean onUpdate(IVampirePlayer player, int duration, int expectedDuration) {
-        if (duration % ModConfig.helper().getTicksPerBlood() == 0) {
+        if (duration % ModConfig.helper().getDarkStalkerTicksPerBlood() == 0) {
             player.useBlood(1, true);
         }
         if (!player.isRemote() && player.asEntity().tickCount % 20 == 0) {

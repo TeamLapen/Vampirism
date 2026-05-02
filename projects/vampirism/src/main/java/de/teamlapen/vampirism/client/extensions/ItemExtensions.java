@@ -200,6 +200,27 @@ public class ItemExtensions {
         }
     };
 
+    public static final IClientItemExtensions SYRINGE = new IClientItemExtensions() {
+
+        @Override
+        public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
+            return entityLiving.isUsingItem() && entityLiving.getUseItem() == itemStack ? HumanoidModel.ArmPose.TOOT_HORN : HumanoidModel.ArmPose.EMPTY;
+        }
+
+        @Override
+        public boolean applyForgeHandTransform(PoseStack poseStack, LocalPlayer player, HumanoidArm arm, ItemStack itemInHand, float partialTick, float equipProcess, float swingProcess) {
+            if (player.isUsingItem() && player.getUseItem() == itemInHand) {
+                poseStack.mulPose(Axis.ZN.rotationDegrees(30F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(45F));
+                poseStack.mulPose(Axis.YP.rotationDegrees(35F));
+                poseStack.translate(0.35F, -0.15F, 0.1F);
+                poseStack.scale(1.5F, 1.5F, 1.5F);
+            }
+
+            return false;
+        }
+    };
+
     public static class VampireArmorItemExtension implements IClientItemExtensions {
 
         private static final Map<ModelLayerLocation, Model<?>> MODELS = new HashMap<>();

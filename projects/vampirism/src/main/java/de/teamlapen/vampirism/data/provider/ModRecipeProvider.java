@@ -82,6 +82,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, modString("clean_oil"));
         SpecialRecipeBuilder.special(RerollVampireBookRecipe::new).save(output, modString("reroll_vampire_book"));
         SpecialRecipeBuilder.special(FillBottleFromSyringeRecipe::new).save(output, modString("fill_bottle_from_syringe"));
+        SpecialRecipeBuilder.special(SerumFromPotionRecipe::new).save(output, modString("serum_from_potion"));
     }
 
     private void recipesFunctionalBlocks() {

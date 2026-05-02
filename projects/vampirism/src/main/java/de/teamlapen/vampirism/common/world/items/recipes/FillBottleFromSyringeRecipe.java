@@ -11,9 +11,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
-// TODO: Add this to JEI when it's available
 public class FillBottleFromSyringeRecipe extends CustomRecipe {
 
     public FillBottleFromSyringeRecipe(CraftingBookCategory category) {
@@ -21,7 +19,7 @@ public class FillBottleFromSyringeRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(@NotNull CraftingInput input, @NotNull Level level) {
+    public boolean matches(CraftingInput input, Level level) {
         ItemStack bottle = ItemStack.EMPTY;
         int syringes = 0;
 
@@ -50,7 +48,7 @@ public class FillBottleFromSyringeRecipe extends CustomRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider registries) {
+    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
         ItemStack bottle = ItemStack.EMPTY;
         int syringes = 0;
 
@@ -71,7 +69,7 @@ public class FillBottleFromSyringeRecipe extends CustomRecipe {
     }
 
     @Override
-    public @NotNull RecipeSerializer<? extends CustomRecipe> getSerializer() {
+    public RecipeSerializer<? extends CustomRecipe> getSerializer() {
         return ModRecipes.FILL_BOTTLE_FROM_SYRINGE.get();
     }
 }

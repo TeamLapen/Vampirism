@@ -1,0 +1,42 @@
+{
+  "parent": "vampirism:hunter/become_hunter",
+  "criteria": {
+    "injection": {
+      "trigger": "vampirism:serum_injected"
+    },
+    "main": {
+      "conditions": {
+        "type": "level",
+        "faction": "vampirism:hunter",
+        "level": 1
+      },
+      "trigger": "factionapi:faction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.mainline.desc"
+    },
+    "icon": {
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:regeneration"
+        }
+      },
+      "count": 1,
+      "id": "vampirism:serum_injection"
+    },
+    "title": {
+      "translate": "advancement.vampirism.mainline"
+    }
+  },
+  "requirements": [
+    [
+      "injection"
+    ],
+    [
+      "main"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

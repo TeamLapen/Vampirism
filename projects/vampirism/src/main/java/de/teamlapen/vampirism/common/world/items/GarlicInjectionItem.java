@@ -5,12 +5,19 @@ import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
+import de.teamlapen.vampirism.common.core.ModSounds;
+import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,5 +43,28 @@ public class GarlicInjectionItem extends InjectionItem {
             }
         }
         return false;
+    }
+
+    @Override
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
+        return ExtendedCreature.getSafe(interactionTarget).map(target -> {
+            if (!player.level().isClientSide()) {
+                target.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION);
+
+                if (!player.isCreative()) {
+                    if (stack.getCount() == 1) {
+                        player.setItemInHand(usedHand, stack.getCraftingRemainder());
+                    } else {
+                        stack.shrink(1);
+                        player.addItem(stack.getCraftingRemainder());
+                    }
+                }
+
+                // TODO: Find some other sound for vaccinating mobs
+                player.level().playSound(null, player.blockPosition(), ModSounds.VAMPIRE_BITE.get(), SoundSource.PLAYERS, 1.0f,  1.0f);
+            }
+            
+            return (InteractionResult) InteractionResult.SUCCESS;
+        }).orElse(InteractionResult.PASS);
     }
 }

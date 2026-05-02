@@ -10,12 +10,10 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
-import de.teamlapen.vampirism.common.advancements.critereon.CuredVampireVillagerCriterionTrigger;
-import de.teamlapen.vampirism.common.advancements.critereon.HunterActionCriterionTrigger;
-import de.teamlapen.vampirism.common.advancements.critereon.MapFoundCriterionTrigger;
-import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
+import de.teamlapen.vampirism.common.advancements.critereon.*;
 import de.teamlapen.vampirism.common.components.predicates.VampireBookPredicate;
 import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.tags.ModEffectTags;
 import de.teamlapen.vampirism.common.tags.ModEntityTags;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
@@ -247,18 +245,24 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .rewards(AdvancementRewards.Builder.experience(100))
                     .save(consumer, REFERENCE.MODID + ":hunter/stake");
-            AdvancementHolder betrayal = Advancement.Builder.advancement()
-                    .display(ModItems.HUMAN_HEART.get(), Component.translatable("advancement.vampirism.betrayal"), Component.translatable("advancement.vampirism.betrayal.desc"), null, AdvancementType.TASK, true, true, true)
-                    .parent(become_hunter)
-                    .addCriterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(entities, ModEntityTags.HUNTER)))
-                    .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
-                    .save(consumer, REFERENCE.MODID + ":hunter/betrayal");
+            AdvancementHolder kill_resurrected_vampire = Advancement.Builder.advancement()
+                    .display(ModItems.SOUL_ORB_VAMPIRE.get(), Component.translatable("advancement.vampirism.kill_resurrected_vampire"), Component.translatable("advancement.vampirism.kill_resurrected_vampire.desc"), null, AdvancementType.TASK, true, true, true)
+                    .parent(stake)
+                    .addCriterion("killed", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModEffects.NEONATAL)).subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))))
+                    .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .save(consumer, REFERENCE.MODID + ":hunter/kill_resurrected_vampire");
             AdvancementHolder max_level = Advancement.Builder.advancement()
                     .display(ModBlocks.GARLIC.get(), Component.translatable("advancement.vampirism.max_level_hunter"), Component.translatable("advancement.vampirism.max_level_hunter.desc"), null, AdvancementType.GOAL, true, true, false)
                     .parent(stake)
                     .addCriterion("level", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 14))
                     .rewards(AdvancementRewards.Builder.experience(100))
                     .save(consumer, REFERENCE.MODID + ":hunter/max_level");
+            AdvancementHolder betrayal = Advancement.Builder.advancement()
+                    .display(ModItems.HUMAN_HEART.get(), Component.translatable("advancement.vampirism.betrayal"), Component.translatable("advancement.vampirism.betrayal.desc"), null, AdvancementType.TASK, true, true, true)
+                    .parent(become_hunter)
+                    .addCriterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(entities, ModEntityTags.HUNTER)))
+                    .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .save(consumer, REFERENCE.MODID + ":hunter/betrayal");
             AdvancementHolder technology = Advancement.Builder.advancement()
                     .display(ModItems.BASIC_TECH_CROSSBOW, Component.translatable("advancement.vampirism.technology"), Component.translatable("advancement.vampirism.technology.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(become_hunter)
@@ -267,6 +271,18 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .requirements(AdvancementRequirements.Strategy.AND)
                     .save(consumer, REFERENCE.MODID + ":hunter/technology");
+            AdvancementHolder mainline = Advancement.Builder.advancement()
+                    .display(ItemDataUtils.createPotion(Potions.REGENERATION, ModItems.SERUM_INJECTION.get()), Component.translatable("advancement.vampirism.mainline"), Component.translatable("advancement.vampirism.mainline.desc"), null, AdvancementType.TASK, true, true, false)
+                    .parent(become_hunter)
+                    .addCriterion("injection", SerumInjectedCriterionTrigger.TriggerInstance.injectedSerumAny())
+                    .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .save(consumer, REFERENCE.MODID + ":hunter/mainline");
+            AdvancementHolder worth_it = Advancement.Builder.advancement()
+                    .display(ModBlocks.TOMBSTONE1, Component.translatable("advancement.vampirism.worth_it"), Component.translatable("advancement.vampirism.worth_it.desc"), null, AdvancementType.CHALLENGE, true, true, true)
+                    .parent(mainline)
+                    .addCriterion("injection", SerumInjectedCriterionTrigger.TriggerInstance.injectedSerum(ModEffectTags.SELF_HARM_SERUMS))
+                    .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .save(consumer, REFERENCE.MODID + ":hunter/worth_it");
             AdvancementHolder max_lord = Advancement.Builder.advancement()
                     .display(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get(), Component.translatable("advancement.vampirism.max_lord_hunter"), Component.translatable("advancement.vampirism.max_lord_hunter.desc"), null, AdvancementType.CHALLENGE, true, true, false)
                     .parent(max_level)
@@ -285,12 +301,6 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("killed", ModAdvancements.TRIGGER_MOTHER_WIN.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/kill_mother");
-            AdvancementHolder kill_resurrected_vampire = Advancement.Builder.advancement()
-                    .display(ModItems.SOUL_ORB_VAMPIRE.get(), Component.translatable("advancement.vampirism.kill_resurrected_vampire"), Component.translatable("advancement.vampirism.kill_resurrected_vampire.desc"), null, AdvancementType.TASK, true, true, true)
-                    .parent(become_hunter)
-                    .addCriterion("killed", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().effects(MobEffectsPredicate.Builder.effects().and(ModEffects.NEONATAL)).subPredicate(FactionSubPredicate.faction(ModFactions.VAMPIRE))))
-                    .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
-                    .save(consumer, REFERENCE.MODID + ":hunter/kill_resurrected_vampire");
         }
     }
 
