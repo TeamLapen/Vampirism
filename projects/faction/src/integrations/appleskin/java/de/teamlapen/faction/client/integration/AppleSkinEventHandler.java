@@ -11,7 +11,9 @@ import squeek.appleskin.api.event.FoodValuesEvent;
 
 import java.util.List;
 
-@EventBusSubscriber
+/**
+ * Registered in {@link AppleSkinCompat}
+ */
 public class AppleSkinEventHandler {
 
     @SubscribeEvent

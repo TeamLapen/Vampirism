@@ -10,6 +10,7 @@ repositories {
 
 dependencies {
     if (include_appleskin.toBoolean()) {
-        implementation "squeek.appleskin:appleskin-neoforge:${appleskin_version}"
+        compileOnly "squeek.appleskin:appleskin-neoforge:${appleskin_version}:api"
+        runtimeOnly "squeek.appleskin:appleskin-neoforge:${appleskin_version}"
     }
 }
