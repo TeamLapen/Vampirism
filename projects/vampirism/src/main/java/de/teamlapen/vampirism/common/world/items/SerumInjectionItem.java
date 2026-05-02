@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModPotionTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,8 +17,6 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 
 public class SerumInjectionItem extends Item {
-
-    public static final Component MASSAGE_RESTRICTION_SYRINGE = Component.translatable("message.vampirism.restriction.syringe");
 
     public SerumInjectionItem(Properties properties) {
         super(properties);

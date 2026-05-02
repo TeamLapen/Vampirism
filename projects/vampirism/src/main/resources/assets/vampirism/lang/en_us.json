@@ -1068,7 +1068,6 @@
   "message.vampirism.restriction.holy": "Something sinful within me recoils in agony... I shouldn't use this",
   "message.vampirism.restriction.heavy": "This is too heavy for me... I cannot wield it",
   "message.vampirism.restriction.oiled": "It's oily... I'm not going to wield it",
-  "message.vampirism.restriction.syringe": "I feel like I'm going to pierce my arm with this...",
 
   "message.vampirism.action.bat.in_sun": "You cannot transform into a bat under the sun",
   "message.vampirism.action.bat.has_umbrella": "You cannot transform into a bat with an umbrella equipped",
