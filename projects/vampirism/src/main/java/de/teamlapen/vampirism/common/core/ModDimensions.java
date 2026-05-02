@@ -72,14 +72,13 @@ public class ModDimensions {
                 DimensionType.Skybox.NONE,
                 CardinalLighting.Type.DEFAULT,
                 EnvironmentAttributeMap.builder()
-                        .set(EnvironmentAttributes.FOG_COLOR, 0x171717) // darker
+                        .set(EnvironmentAttributes.FOG_COLOR, 0x171717)
                         .set(EnvironmentAttributes.SKY_LIGHT_COLOR, ARGB.colorFromFloat(1.0F, 1F, 0.8F, 0.8F))
                         .set(EnvironmentAttributes.WATER_FOG_COLOR, 0x670717)
                         .set(EnvironmentAttributes.SKY_COLOR, 0x131313)
-//                        .set(EnvironmentAttributes.SKY_LIGHT_FACTOR, 0.5F)
                         .set(EnvironmentAttributes.SKY_LIGHT_LEVEL, 3f)
-                        .set(EnvironmentAttributes.FOG_START_DISTANCE, 10.0F) // adjust
-                        .set(EnvironmentAttributes.FOG_END_DISTANCE, 96.0F) // adjust
+                        .set(EnvironmentAttributes.FOG_START_DISTANCE, 10.0F)
+                        .set(EnvironmentAttributes.FOG_END_DISTANCE, 96.0F)
                         .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
                         .set(EnvironmentAttributes.AMBIENT_SOUNDS, new AmbientSounds(Optional.empty(), Optional.of(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)), List.of(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D))))
                         .set(EnvironmentAttributes.BED_RULE, BedRule.EXPLODES)

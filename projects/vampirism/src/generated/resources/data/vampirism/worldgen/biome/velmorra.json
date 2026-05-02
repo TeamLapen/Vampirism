@@ -7,7 +7,7 @@
     "minecraft:cave_extra_underground",
     "minecraft:canyon"
   ],
-  "creature_spawn_probability": 0.25,
+  "creature_spawn_probability": 0.5,
   "downfall": 0.0,
   "effects": {
     "foliage_color": "#101010",
@@ -63,7 +63,20 @@
     "monster": [],
     "underground_water_creature": [],
     "vampirism:hunter": [],
-    "vampirism:vampire": [],
+    "vampirism:vampire": [
+      {
+        "type": "vampirism:vampire",
+        "maxCount": 2,
+        "minCount": 1,
+        "weight": 60
+      },
+      {
+        "type": "vampirism:advanced_vampire",
+        "maxCount": 2,
+        "minCount": 1,
+        "weight": 27
+      }
+    ],
     "water_ambient": [],
     "water_creature": []
   },

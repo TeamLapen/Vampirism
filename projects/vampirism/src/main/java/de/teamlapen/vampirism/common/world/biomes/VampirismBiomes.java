@@ -79,8 +79,10 @@ public class VampirismBiomes {
     public static Biome createVelmorra(HolderGetter<PlacedFeature> placedFeatures, HolderGetter<ConfiguredWorldCarver<?>> configuredCarvers) {
 
         var mobSettings = new MobSpawnSettings.Builder()
-                .creatureGenerationProbability(0.25f)
-                .addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
+                .creatureGenerationProbability(0.5f)
+                .addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4))
+                .addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 60, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 1, 2))
+                .addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 27, new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_VAMPIRE.get(), 1, 2));
 
         var specialEffects = new BiomeSpecialEffects.Builder()
                 .waterColor(0x670717)
