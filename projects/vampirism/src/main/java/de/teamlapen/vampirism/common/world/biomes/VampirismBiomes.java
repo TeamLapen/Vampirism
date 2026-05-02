@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.biomes;
 
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.common.core.ModEntities;
+import de.teamlapen.vampirism.common.core.ModEnvironmentAttributes;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.world.features.VampirismFeatures;
 import net.minecraft.core.HolderGetter;
@@ -40,6 +41,7 @@ public class VampirismBiomes {
                 .setAttribute(EnvironmentAttributes.FOG_COLOR, 0x171717)
                 .setAttribute(EnvironmentAttributes.WATER_FOG_COLOR, 0x670717)
                 .setAttribute(EnvironmentAttributes.SKY_COLOR, 0x131313)
+                .setAttribute(ModEnvironmentAttributes.SUN_DAMAGE.get(), false)
                 .setAttribute(EnvironmentAttributes.AMBIENT_SOUNDS, new AmbientSounds(
                         Optional.empty(),
                         Optional.of(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)),
@@ -104,6 +106,7 @@ public class VampirismBiomes {
                 .hasPrecipitation(false)
                 .temperature(0.6f)
                 .downfall(0)
+                .setAttribute(ModEnvironmentAttributes.SUN_DAMAGE.get(), false)
                 .specialEffects(specialEffects.build())
                 .mobSpawnSettings(mobSettings.build())
                 .generationSettings(generation.build())

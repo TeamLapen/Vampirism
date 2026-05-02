@@ -157,7 +157,7 @@ public class SundamageRegistry implements ISundamageRegistry {
 
     @Override
     public boolean isGettingSundamage(LivingEntity entity, LevelAccessor world) {
-        return Helper.gettingSundamge(entity, world);
+        return Helper.gettingSunDamage(entity, world);
     }
 
     @Override

@@ -10,6 +10,7 @@
     "CrossbowItemMixin",
     "EntityMixin",
     "EntityPredicateMixin",
+    "EnvironmentAttributeSystemMixin$Builder",
     "EquippableMixin",
     "FoodPropertiesMixin",
     "ItemMixin",

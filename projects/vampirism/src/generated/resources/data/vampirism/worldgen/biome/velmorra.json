@@ -1,4 +1,7 @@
 {
+  "attributes": {
+    "vampirism:sun_damage": false
+  },
   "carvers": [
     "minecraft:cave",
     "minecraft:cave_extra_underground",

@@ -84,6 +84,7 @@ public class ModRenderPipelines {
             .withFragmentShader(VIdentifier.mod("core/rendertype_velmorra_portal"))
             .withSampler("Sampler0")
             .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+            .withDepthStencilState(DepthStencilState.DEFAULT)
             .buildSnippet();
     public static final RenderPipeline VELMORRA_PORTAL_PIPELINE = RenderPipeline.builder(VELMORRA_PORTAL_SNIPPET).withLocation(VIdentifier.mod("pipeline/velmorra_portal")).build();
     public static final RenderType VELMORRA_PORTAL_RENDER_TYPE = RenderType.create(

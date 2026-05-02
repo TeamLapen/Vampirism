@@ -44,7 +44,6 @@ public class ModRegistries {
             .add(Registries.VILLAGER_TRADE, ModTrades::bootstrap)
             .add(Registries.TRADE_SET, ModTrades::bootstrapTradeSets)
             .add(Registries.DIMENSION_TYPE, ModDimensions::bootstrapDimensionTypes)
-            .add(Registries.LEVEL_STEM, ModDimensions::bootstrapLevelStem)
             .add(Registries.NOISE_SETTINGS, ModDimensions::bootstrapNoise)
             .add(Registries.DENSITY_FUNCTION, ModDimensions::bootstrapDensityFunctions)
             ;

@@ -12,6 +12,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.attribute.*;
 import net.minecraft.world.level.CardinalLighting;
@@ -58,7 +59,7 @@ public class ModDimensions {
         HolderGetter<Timeline> lookup = context.lookup(Registries.TIMELINE);
         context.register(VELMORRA_DIMENSION_TYPE, new DimensionType(
                         true,
-                        false,
+                        true,
                         false,
                         false,
                         1.0,
@@ -66,32 +67,30 @@ public class ModDimensions {
                         256,
                         256,
                         BlockTags.INFINIBURN_END,
-                        0,
+                        0f,
                 new DimensionType.MonsterSettings(UniformInt.of(0, 7), 0),
                 DimensionType.Skybox.NONE,
                 CardinalLighting.Type.DEFAULT,
                 EnvironmentAttributeMap.builder()
                         .set(EnvironmentAttributes.FOG_COLOR, 0x171717) // darker
-                        .set(EnvironmentAttributes.SKY_LIGHT_COLOR, -1736449)
+                        .set(EnvironmentAttributes.SKY_LIGHT_COLOR, ARGB.colorFromFloat(1.0F, 1F, 0.8F, 0.8F))
                         .set(EnvironmentAttributes.WATER_FOG_COLOR, 0x670717)
                         .set(EnvironmentAttributes.SKY_COLOR, 0x131313)
-                        .set(EnvironmentAttributes.SKY_LIGHT_FACTOR, 0.5F)
-//                        .set(EnvironmentAttributes.FOG_START_DISTANCE, 10.0F) // adjust
-//                        .set(EnvironmentAttributes.FOG_END_DISTANCE, 96.0F) // adjust
+//                        .set(EnvironmentAttributes.SKY_LIGHT_FACTOR, 0.5F)
+                        .set(EnvironmentAttributes.SKY_LIGHT_LEVEL, 3f)
+                        .set(EnvironmentAttributes.FOG_START_DISTANCE, 10.0F) // adjust
+                        .set(EnvironmentAttributes.FOG_END_DISTANCE, 96.0F) // adjust
                         .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
                         .set(EnvironmentAttributes.AMBIENT_SOUNDS, new AmbientSounds(Optional.empty(), Optional.of(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)), List.of(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D))))
                         .set(EnvironmentAttributes.BED_RULE, BedRule.EXPLODES)
                         .set(EnvironmentAttributes.CAN_START_RAID, false)
                         .set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false)
+                        .set(ModEnvironmentAttributes.SUN_DAMAGE.get(), false)
                         .build(),
                 lookup.getOrThrow(ModTimelineTags.IN_VELMORRA),
                 Optional.empty()
                 )
         );
-    }
-
-    static void bootstrapLevelStem(BootstrapContext<LevelStem> context) {
-        // context.register(UNDERWORLD_LEVEL_STEM, new LevelStem(context.lookup(Registries.DIMENSION_TYPE).getOrThrow(UNDERWORLD_DIMENSION_TYPE), new NoiseBasedChunkGenerator(new UnderworldBiomeSource(context.lookup(Registries.BIOME)), context.lookup(Registries.NOISE_SETTINGS).getOrThrow(UNDERWORLD_NOISE_GENERATOR))));
     }
 
     static void bootstrapNoise(BootstrapContext<NoiseGeneratorSettings> context) {

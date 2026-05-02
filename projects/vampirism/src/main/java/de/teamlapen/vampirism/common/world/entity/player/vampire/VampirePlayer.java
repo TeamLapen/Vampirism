@@ -71,7 +71,6 @@ import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -485,7 +484,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sunDamageCache = Helper.gettingSundamge(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
+            sunDamageCache = Helper.gettingSunDamage(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
         }
         return sunDamageCache;
     }
@@ -1209,6 +1208,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         if (getLevel() >= config.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
             float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE).getValue());
+            damage *= player.level().environmentAttributes().getValue(ModEnvironmentAttributes.SUN_INTENSITY.get(), player.position());
             if (damage > 0) {
                 DamageHandler.hurtModded(((ServerLevel) asEntity().level()), player, ModDamageSources::sunDamage, damage);
             }
