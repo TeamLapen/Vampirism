@@ -83,12 +83,13 @@ public class SpecialRecipeMaker {
                     ItemStack potionStack = new ItemStack(Items.POTION);
                     potionStack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
 
-                    ItemStack result = ModItems.SERUM_INJECTION.get().getDefaultInstance();
+                    ItemStack result = new ItemStack(ModItems.SERUM_INJECTION.get(), 2);
                     result.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
 
                     List<Ingredient> ingredients = List.of(
-                            DataComponentIngredient.of(false, potionStack),
-                            Ingredient.of(ModItems.SYRINGE_EMPTY.get())
+                            Ingredient.of(ModItems.SYRINGE_EMPTY.get()),
+                            Ingredient.of(ModItems.SYRINGE_EMPTY.get()),
+                            DataComponentIngredient.of(false, potionStack)
                     );
 
                     ShapelessRecipe recipe = new ShapelessRecipe("", CraftingBookCategory.MISC, result, ingredients);
