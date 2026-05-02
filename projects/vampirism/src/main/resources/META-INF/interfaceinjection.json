@@ -89,5 +89,14 @@
   ],
   "net/minecraft/world/item/crafting/NormalCraftingRecipe": [
     "de/teamlapen/vampirism/misc/injection/INormalCraftingRecipeVampirismMock"
+  ],
+  "net/minecraft/core/LayeredRegistryAccess": [
+    "de/teamlapen/vampirism/misc/injection/ILayeredRegistryAccessVampirismMock"
+  ],
+  "net/minecraft/core/RegistryAccess$ImmutableRegistryAccess": [
+    "de/teamlapen/vampirism/misc/injection/IImmutableRegistryAccessVampirismMock"
+  ],
+  "net/minecraft/server/MinecraftServer": [
+    "de/teamlapen/vampirism/misc/injection/IMinecraftServerVampirismMock"
   ]
 }

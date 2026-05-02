@@ -6,6 +6,7 @@ import de.teamlapen.faction.common.world.blocks.TotemTopBlock;
 import de.teamlapen.faction.common.world.items.OblivionPotionItem;
 import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.faction.common.world.items.consume.OblivionEffect;
+import de.teamlapen.faction.common.world.items.consume.PlayerFactionConsumeEffect;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
@@ -28,6 +29,7 @@ public class FactionItems {
 
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<OblivionEffect>> OBLIVION = CONSUME_EFFECTS.register("oblivious", () -> new ConsumeEffect.Type<>(OblivionEffect.CODEC, OblivionEffect.STREAM_CODEC));
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<FactionBasedConsumeEffect>> FACTION_BASED = CONSUME_EFFECTS.register("faction_based", () -> new ConsumeEffect.Type<>(FactionBasedConsumeEffect.CODEC, FactionBasedConsumeEffect.STREAM_CODEC));
+    public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<PlayerFactionConsumeEffect>> PLAYER_FACTION_BASED = CONSUME_EFFECTS.register("player_faction_based", () -> new ConsumeEffect.Type<>(PlayerFactionConsumeEffect.CODEC, PlayerFactionConsumeEffect.STREAM_CODEC));
 
 
     public static final DeferredItem<OblivionPotionItem> OBLIVION_POTION = ITEMS.registerItem("oblivion_potion", props -> new OblivionPotionItem(props.stacksTo(1).rarity(Rarity.UNCOMMON).component(DataComponents.CONSUMABLE, Consumables.defaultDrink().onConsume(new OblivionEffect()).build())));

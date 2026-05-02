@@ -60,6 +60,7 @@ public class VampirismFeatures {
     public static final ResourceKey<PlacedFeature> CURSED_SPRUCE_TREE_PLACED = createPlacedKey("cursed_spruce_tree_placed");
     public static final ResourceKey<PlacedFeature> VAMPIRE_DUNGEON_PLACED = createPlacedKey("vampire_dungeon");
     public static final ResourceKey<PlacedFeature> VAMPIRE_TREES_PLACED = createPlacedKey("vampire_trees");
+    public static final ResourceKey<PlacedFeature> VAMPIRE_TREES_SPARSE_PLACED = createPlacedKey("vampire_trees_sparse");
     public static final ResourceKey<PlacedFeature> ORE_DARK_STONE_PLACED = createPlacedKey("ore_dark_stone_lower");
     public static final ResourceKey<PlacedFeature> ORE_CURSED_DIRT_PLACED = createPlacedKey("ore_cursed_dirt");
     public static final ResourceKey<PlacedFeature> VAMPIRE_FOREST_GRASS_PLACED = createPlacedKey("vampire_forest_grass");
@@ -103,6 +104,7 @@ public class VampirismFeatures {
         context.register(CURSED_SPRUCE_TREE_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(CURSED_SPRUCE_TREE), List.of(PlacementUtils.filteredByBlockSurvival((ModBlocks.CURSED_SPRUCE_SAPLING.get())))));
         context.register(VAMPIRE_DUNGEON_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VAMPIRE_DUNGEON), List.of(CountPlacement.of(3), InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.top()), BiomeFilter.biome())));
         context.register(VAMPIRE_TREES_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VAMPIRE_TREES), VegetationPlacements.treePlacement(PlacementUtils.countExtra(15, 0.1f, 1))));
+        context.register(VAMPIRE_TREES_SPARSE_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VAMPIRE_TREES), VegetationPlacements.treePlacement(PlacementUtils.countExtra(3, 0.1f, 1))));
         context.register(ORE_DARK_STONE_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(ORE_DARK_STONE), OrePlacementAccessor.invokeCommonOrePlacement(30, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()))));
         context.register(ORE_CURSED_DIRT_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(ORE_CURSED_DIRT), OrePlacementAccessor.invokeCommonOrePlacement(7, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(160)))));
         context.register(VAMPIRE_FOREST_GRASS_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VegetationFeatures.GRASS), VegetationPlacements.worldSurfaceSquaredWithCount(12)));

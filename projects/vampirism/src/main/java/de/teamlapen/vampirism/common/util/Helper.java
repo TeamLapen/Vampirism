@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
+import de.teamlapen.vampirism.common.core.ModEnvironmentAttributes;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
@@ -30,7 +31,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -42,8 +42,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,53 +51,26 @@ import java.util.List;
 public class Helper {
 
 
-    private final static Logger LOGGER = LogManager.getLogger();
-
     /**
      * Checks if the entity can get sundamage at its current position.
      * It is recommended to cache the value for a few ticks.
      */
-    public static boolean gettingSundamge(LivingEntity entity, LevelAccessor world) {
+    public static boolean gettingSunDamage(LivingEntity entity, LevelAccessor world) {
         if (entity instanceof Player && entity.isSpectator()) return false;
-        if (world instanceof Level level && !level.isRaining() && VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition()) && isDay(world, entity.blockPosition())) {
-            BlockPos pos = new BlockPos(entity.getBlockX(), entity.getBlockY() + (int) entity.getEyeHeight(), entity.getBlockZ());
-            return canBlockSeeSun(world, pos) && !LevelFog.get(level).isInsideArtificialVampireFogArea(pos);
-        }
-        return false;
+        return world instanceof Level level && hasLevelSunDamage(level, entity.blockPosition()) && VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition());
+    }
+
+    public static boolean hasLevelSunDamage(Level level, BlockPos pos) {
+        return level.dimensionType().hasSkyLight()
+                && level.environmentAttributes().getValue(ModEnvironmentAttributes.SUN_DAMAGE.get(), pos)
+                && !level.isRainingAt(pos)
+                && isDay( level, pos);
     }
 
     public static boolean isDay(LevelAccessor level, BlockPos pos) {
         float angle = level.environmentAttributes().getValue(EnvironmentAttributes.SUN_ANGLE, pos) / 360;
         return angle > 0.78 || angle < 0.24;
     }
-
-    public static boolean canBlockSeeSun(@NotNull LevelAccessor world, @NotNull BlockPos pos) {
-        if (pos.getY() >= world.getSeaLevel()) {
-            return world.canSeeSky(pos);
-        } else {
-            BlockPos blockpos = new BlockPos(pos.getX(), world.getSeaLevel(), pos.getZ());
-            if (!world.canSeeSky(blockpos)) {
-                return false;
-            } else {
-                int liquidBlocks = 0;
-                for (blockpos = blockpos.below(); blockpos.getY() > pos.getY(); blockpos = blockpos.below()) {
-                    BlockState state = world.getBlockState(blockpos);
-                    if (state.liquid()) { // if fluid than it propagates the light until `vpSundamageWaterBlocks`
-                        liquidBlocks++;
-                        if (liquidBlocks >= ModConfig.balance().vpSundamageWaterblocks.get()) {
-                            return false;
-                        }
-                    } else if (state.canOcclude() && (state.isFaceSturdy(world, pos, Direction.DOWN) || state.isFaceSturdy(world, pos, Direction.UP))) { //solid block blocks the light (fence is solid too?)
-                        return false;
-                    } else if (state.getLightDampening() > 0) { //if not solid, but propagates no light
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-    }
-
 
     @NotNull
     public static EnumStrength getGarlicStrength(@NotNull Entity e, LevelAccessor world) {

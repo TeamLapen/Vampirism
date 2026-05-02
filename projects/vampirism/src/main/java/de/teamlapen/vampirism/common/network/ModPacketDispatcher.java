@@ -30,6 +30,7 @@ public class ModPacketDispatcher {
         registrar.playToClient(ClientboundUpdateFogEmitterPacket.TYPE, ClientboundUpdateFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateFogEmitterPacket(msg, context));
         registrar.playToClient(ClientboundAddFogEmitterPacket.TYPE, ClientboundAddFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleAddFogEmitterPacket(msg, context));
         registrar.playToClient(ClientboundRemoveFogEmitterPacket.TYPE, ClientboundRemoveFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleRemoveFogEmitterPacket(msg, context));
+        registrar.playToClient(ClientboundUpdateDimensionsPacket.TYPE, ClientboundUpdateDimensionsPacket.STREAM_CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateDimensionPacket(msg, context));
 
         registrar.playToServer(ServerboundAppearancePacket.TYPE, ServerboundAppearancePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleAppearancePacket(msg, context));
         registrar.playToServer(ServerboundStartFeedingPacket.TYPE, ServerboundStartFeedingPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleStartFeedingPacket(msg, context));

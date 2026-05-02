@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -32,6 +33,14 @@ public abstract class BaseDisplayItemGenerator implements CreativeModeTab.Displa
 
     protected void add(ItemStack item) {
         output.accept(item);
+    }
+
+    protected void add(ItemLike item, CreativeModeTab.TabVisibility visibility) {
+        output.accept(item, visibility);
+    }
+
+    protected void add(ItemStack item, CreativeModeTab.TabVisibility visibility) {
+        output.accept(item, visibility);
     }
 
     protected void addIfPresent(Identifier id) {

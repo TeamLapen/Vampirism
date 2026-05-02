@@ -51,5 +51,7 @@ public class ModParticleDescriptionProvider extends ParticleDescriptionProvider 
         this.spriteSet(ModParticles.BLOOD_SHRED.get(),
                 VIdentifier.mod("shred"),
                 4,false);
+        this.spriteSet(ModParticles.WHISPERS_OF_THE_VEIL.get(),
+                VIdentifier.mod("whispers_of_the_veil"));
     }
 }

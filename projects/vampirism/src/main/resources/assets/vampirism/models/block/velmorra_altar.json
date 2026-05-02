@@ -1,0 +1,84 @@
+{
+  "format_version": "1.21.6",
+  "credit": "Made with Blockbench",
+  "textures": {
+    "top": "vampirism:block/dark_stone_bricks",
+    "stone": "vampirism:block/dark_stone_bricks",
+    "particle": "vampirism:block/dark_stone_bricks"
+  },
+  "render_type": "minecraft:cutout",
+  "elements": [
+    {
+      "name": "altar_top",
+      "from": [0, 0, 0],
+      "to": [16, 3, 16],
+      "faces": {
+        "north": {"uv": [0, 13, 16, 16], "texture": "#stone"},
+        "east": {"uv": [0, 13, 16, 16], "texture": "#stone"},
+        "south": {"uv": [0, 13, 16, 16], "texture": "#stone"},
+        "west": {"uv": [0, 13, 16, 16], "texture": "#stone"},
+        "up": {"uv": [0, 0, 16, 16], "texture": "#stone"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#stone"}
+      }
+    },
+    {
+      "name": "altar_top",
+      "from": [0, 6, 0],
+      "to": [16, 16, 16],
+      "rotation": {"angle": 0, "axis": "y", "origin": [0, 6, 0]},
+      "faces": {
+        "north": {"uv": [0, 0, 16, 10], "texture": "#stone"},
+        "east": {"uv": [0, 0, 16, 10], "texture": "#stone"},
+        "south": {"uv": [0, 0, 16, 10], "texture": "#stone"},
+        "west": {"uv": [0, 0, 16, 10], "texture": "#stone"},
+        "up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#stone"}
+      }
+    },
+    {
+      "name": "altar_top",
+      "from": [3, 3, 3],
+      "to": [13, 6, 13],
+      "rotation": {"angle": 0, "axis": "y", "origin": [3, 3, 3]},
+      "faces": {
+        "north": {"uv": [3, 10, 13, 13], "texture": "#stone"},
+        "east": {"uv": [3, 10, 13, 13], "texture": "#stone"},
+        "south": {"uv": [3, 10, 13, 13], "texture": "#stone"},
+        "west": {"uv": [3, 10, 13, 13], "texture": "#stone"},
+        "up": {"uv": [3, 3, 13, 13], "texture": "#stone"},
+        "down": {"uv": [3, 3, 13, 13], "texture": "#stone"}
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.375, 0.375, 0.375]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.375, 0.375, 0.375]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 45, 0],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, -135, 0],
+      "scale": [0.4, 0.4, 0.4]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.25, 0.25, 0.25]
+    },
+    "gui": {
+      "rotation": [30, -135, 0],
+      "scale": [0.625, 0.625, 0.625]
+    },
+    "fixed": {
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

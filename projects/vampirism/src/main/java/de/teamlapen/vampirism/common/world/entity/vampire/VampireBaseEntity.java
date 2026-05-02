@@ -96,6 +96,8 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
                     turnToAsh();
                 } else if (tickCount % 40 == 11) {
                     double dmg = getAttribute(ModAttributes.SUNDAMAGE).getValue();
+                    dmg *= level().environmentAttributes().getValue(ModEnvironmentAttributes.SUN_INTENSITY.get(), position());
+
                     if (dmg > 0) {
                         DamageHandler.hurtModded(level, this, ModDamageSources::sunDamage, (float) dmg);
                     }
@@ -234,7 +236,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld));
+        return (sundamageCache = Helper.gettingSunDamage(this, iWorld));
     }
 
     @Override

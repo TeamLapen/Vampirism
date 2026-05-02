@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.registries.RegistryProvider;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
@@ -41,7 +42,11 @@ public class ModRegistries {
             .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)
             .add(Registries.TIMELINE, ModVillage::createTimelines)
             .add(Registries.VILLAGER_TRADE, ModTrades::bootstrap)
-            .add(Registries.TRADE_SET, ModTrades::bootstrapTradeSets);
+            .add(Registries.TRADE_SET, ModTrades::bootstrapTradeSets)
+            .add(Registries.DIMENSION_TYPE, ModDimensions::bootstrapDimensionTypes)
+            .add(Registries.NOISE_SETTINGS, ModDimensions::bootstrapNoise)
+            .add(Registries.DENSITY_FUNCTION, ModDimensions::bootstrapDensityFunctions)
+            ;
 
     static void registerRegistries(NewRegistryEvent event) {
         event.register(OILS);
@@ -51,5 +56,9 @@ public class ModRegistries {
 
     static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(VAMPIRE_BOOK, VampireBook.CODEC, VampireBook.CODEC);
+    }
+
+    static {
+        RegistryProvider.register(OILS, ENTITY_CONVERTER, VAMPIRE_VISION);
     }
 }

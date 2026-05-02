@@ -273,6 +273,9 @@
   "block.vampirism.mother": "Ancient Remains",
   "block.vampirism.remains": "Remains",
   "block.vampirism.vulnerable_remains": "Vulnerable Remains",
+  "block.vampirism.velmorra_portal": "Velmorra Portal",
+  "block.vampirism.velmorra_portal_arch": "Velmorra Portal Arch",
+  "block.vampirism.velmorra_altar": "Velmorra Altar",
 
   "item.vampirism.iron_heart_seeker": "Iron Heartseeker",
   "item.vampirism.diamond_heart_seeker": "Diamond Heartseeker",
@@ -392,6 +395,8 @@
   "item.vampirism.hunter_trainer_spawn_egg": "Hunter Trainer Spawn Egg",
   "item.vampirism.task_master_hunter_spawn_egg": "Hunter Representative Spawn Egg",
   "item.vampirism.ghost_spawn_egg": "Ghost Spawn Egg",
+  "item.vampirism.ritual_knife": "Ritual Knife",
+  "item.vampirism.ritual_knife_heart": "Infused Ritual Knife",
 
   "item.minecraft.potion.effect.blindness": "Potion of Blindness",
   "item.minecraft.potion.effect.nausea": "Potion of Nausea",
@@ -481,6 +486,7 @@
   "effect.vampirism.no_blood": "No Blood",
   "effect.vampirism.bleeding": "Bleeding",
   "effect.vampirism.crucifix_suppression": "Crucifix Suppression",
+  "effect.vampirism.whispers_of_the_veil": "Whispers of the Veil",
 
   "attribute.vampirism.sundamage": "Sun Damage",
   "attribute.vampirism.blood_exhaustion": "Blood Exhaustion",
@@ -1109,6 +1115,7 @@
   "message.vampirism.tent.obstructed": "This tent is obstructed",
   "message.vampirism.tent.occupied": "This tent is occupied",
   "message.vampirism.tent.cant_use": "You can't sleep in a tent",
+  "message.vampirism.velmorra_altar.weak": "The portal seems unaffected. Your blood is not strong enough to interest the portal.",
 
   "message.vampirism.village_raid.attacked.vampire": "%s attacked a nearby vampire village",
   "message.vampirism.village_raid.attacked.hunter": "%s attacked a nearby hunter village",
@@ -1203,6 +1210,7 @@
   "tooltip.vampirism.stake": "A lightweight wooden weapon that can be used to extract vampire blood from vampires. Recommended to be paired with a stronger weapon to weaken vampires, then finish them with the stake.",
   "tooltip.vampirism.garlic_finder": "Pure blood stirs more fiercely in the presence of garlic than the blood of inferior vampires. This device harnesses that peculiarity to estimate the proximity of garlic sources. Garlic diffusers and their cores within 40 blocks will be revealed to you if held in either hands or in the hotbar.",
   "tooltip.vampirism.vapor_still": "A copper distiller capable of separating liquid mixtures into fractions. Primarily used by hunters to augment ordinary potions by infusing them with distilled vampire blood. However, creating most advanced concoctions can be tricky. Therefore, knowledge of certain skills may be required.\n\nThe still needs blaze powder as fuel, one piece is enough for 20 potion batches. Interacts with hoppers similarly to brewing stands, allowing for process automation.",
+  "tooltip.vampirism.ritual_knife.infused": "Infused",
 
   "subtitles.vampirism.entity.vampire_scream": "Vampire hisses",
   "subtitles.vampirism.player.bite": "Vampire bites",

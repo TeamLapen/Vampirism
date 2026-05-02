@@ -132,6 +132,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         if (level() instanceof ServerLevel level) {
             if (isGettingSundamage(level()) && tickCount % 40 == 11) {
                 double dmg = getAttribute(ModAttributes.SUNDAMAGE).getValue();
+                dmg *= this.level().environmentAttributes().getValue(ModEnvironmentAttributes.SUN_INTENSITY.get(), this.position());
+
                 if (dmg > 0) {
                     DamageHandler.hurtModded(level,this, ModDamageSources::sunDamage, (float) dmg);
                 }
@@ -152,7 +154,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld));
+        return (sundamageCache = Helper.gettingSunDamage(this, iWorld));
     }
 
     @Override

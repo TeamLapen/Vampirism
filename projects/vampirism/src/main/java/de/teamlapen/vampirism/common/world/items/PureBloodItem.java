@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.api.FactionsApi;
+import de.teamlapen.faction.common.factions.PlayerFactionPredicate;
+import de.teamlapen.faction.common.util.IntRange;
 import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
+import de.teamlapen.faction.common.world.items.consume.PlayerFactionConsumeEffect;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.*;
@@ -34,7 +37,6 @@ import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.level.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -48,7 +50,16 @@ public class PureBloodItem extends Item {
                 .factions$factionFood(new FactionFoodList(
                         new FoodProperties.Builder().build(),
                         new FactionFoodEntry(VampirismTags.Factions.IS_VAMPIRE, new FoodProperties.Builder().nutrition(50).saturationModifier(0.4f + (0.15f * level)).build(), ModFoodBehaviours.VAMPIRE_FOOD)
-                ), Consumables.defaultDrink().onConsume(FactionBasedConsumeEffect.builder(VampirismTags.Factions.IS_VAMPIRE).add(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ModEffects.SATURATION))).build()).build())
+                ), Consumables.defaultDrink()
+                        .onConsume(FactionBasedConsumeEffect
+                                .builder(VampirismTags.Factions.IS_VAMPIRE)
+                                .add(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ModEffects.SATURATION))).build())
+                        .onConsume(PlayerFactionConsumeEffect
+                                .when(PlayerFactionPredicate.builder()
+                                        .lordLevelRange(IntRange.lowerBound(1)))
+                                .with(new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(ModEffects.WHISPERS_OF_THE_VEIL, 20 + level * 20, level)))
+                                .build())
+                        .build())
                 .component(ModDataComponents.PURE_LEVEL, new PureLevel(level)));
     }
 
@@ -97,7 +108,6 @@ public class PureBloodItem extends Item {
         return 30;
     }
 
-    @NotNull
     @Override
     public ItemUseAnimation getUseAnimation(ItemStack stack) {
         return ItemUseAnimation.DRINK;

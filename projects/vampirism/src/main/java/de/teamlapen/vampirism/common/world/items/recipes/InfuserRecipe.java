@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
+import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -27,10 +28,10 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
 
     private final CommonInfo commonInfo;
     private final String group;
-    private final Ingredient ingredient1;
-    private final Ingredient ingredient2;
-    private final Ingredient ingredient3;
-    private final Ingredient ingredient4;
+    private final @Nullable Ingredient ingredient1;
+    private final @Nullable Ingredient ingredient2;
+    private final @Nullable  Ingredient ingredient3;
+    private final @Nullable Ingredient ingredient4;
     private final Ingredient ingredient;
     @Nullable
     private final ItemStackTemplate result1;
@@ -45,10 +46,11 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     @Nullable
     private PlacementInfo placementInfo;
 
-    public InfuserRecipe(CommonInfo commonInfo, @NotNull String groupIn, Ingredient ingredient1, Ingredient ingredient2, Ingredient ingredient3, Ingredient ingredient4, Ingredient ingredient, Optional<ItemStackTemplate> result1, Optional<ItemStackTemplate> result2, Optional<ItemStackTemplate> result3, Optional<ItemStackTemplate> result, int cookingTime) {
-        this(commonInfo, groupIn, ingredient1, ingredient2, ingredient3, ingredient4, ingredient, result1.orElse(null), result2.orElse(null), result3.orElse(null), result, cookingTime);
+    public InfuserRecipe(CommonInfo commonInfo, @NotNull String groupIn, Optional<Ingredient> ingredient1, Optional<Ingredient> ingredient2, Optional<Ingredient> ingredient3, Optional<Ingredient> ingredient4, Ingredient ingredient, Optional<ItemStackTemplate> result1, Optional<ItemStackTemplate> result2, Optional<ItemStackTemplate> result3, Optional<ItemStackTemplate> result, int cookingTime) {
+        this(commonInfo, groupIn, ingredient1.orElse(null), ingredient2.orElse(null), ingredient3.orElse(null), ingredient4.orElse(null), ingredient, result1.orElse(null), result2.orElse(null), result3.orElse(null), result, cookingTime);
     }
-    public InfuserRecipe(CommonInfo commonInfo, @NotNull String groupIn, Ingredient ingredient1, Ingredient ingredient2, Ingredient ingredient3, Ingredient ingredient4, Ingredient ingredient, @Nullable ItemStackTemplate result1, @Nullable ItemStackTemplate result2,@Nullable  ItemStackTemplate result3, Optional<ItemStackTemplate> result, int cookingTime) {
+    public InfuserRecipe(CommonInfo commonInfo, @NotNull String groupIn,@Nullable Ingredient ingredient1,@Nullable Ingredient ingredient2,@Nullable Ingredient ingredient3,@Nullable Ingredient ingredient4, Ingredient ingredient, @Nullable ItemStackTemplate result1, @Nullable ItemStackTemplate result2,@Nullable  ItemStackTemplate result3, Optional<ItemStackTemplate> result, int cookingTime) {
+        Preconditions.checkArgument(ingredient1 != null || ingredient2 != null || ingredient3 != null || ingredient4 != null, "At least one ingredient must be present");
         this.commonInfo = commonInfo;
         this.group = groupIn;
         this.ingredient1 = ingredient1;
@@ -63,20 +65,20 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
         this.cookingTime = cookingTime;
     }
 
-    public Ingredient ingredient1() {
-        return ingredient1;
+    public Optional<Ingredient> ingredient1() {
+        return Optional.ofNullable(ingredient1);
     }
 
-    public Ingredient ingredient2() {
-        return ingredient2;
+    public Optional<Ingredient> ingredient2() {
+        return Optional.ofNullable(ingredient2);
     }
 
-    public Ingredient ingredient3() {
-        return ingredient3;
+    public Optional<Ingredient> ingredient3() {
+        return Optional.ofNullable(ingredient3);
     }
 
-    public Ingredient ingredient4() {
-        return ingredient4;
+    public Optional<Ingredient> ingredient4() {
+        return Optional.ofNullable(ingredient4);
     }
 
     public Ingredient ingredient() {
@@ -115,7 +117,11 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
 
     @Override
     public boolean matches(InfuserRecipeInput input, @NotNull Level level) {
-        return this.ingredient.test(input.item) && this.ingredient1.test(input.input1) && this.ingredient2.test(input.input2) && this.ingredient3.test(input.input3) && this.ingredient4.test(input.input4);
+        return this.ingredient.test(input.item) &&
+                ((this.ingredient1 == null && input.input1.isEmpty()) || (this.ingredient1 != null && this.ingredient1.test(input.input1))) &&
+                ((this.ingredient2 == null && input.input2.isEmpty()) || (this.ingredient2 != null && this.ingredient2.test(input.input2))) &&
+                ((this.ingredient3 == null && input.input3.isEmpty()) || (this.ingredient3 != null && this.ingredient3.test(input.input3))) &&
+                ((this.ingredient4 == null && input.input4.isEmpty()) || (this.ingredient4 != null && this.ingredient4.test(input.input4)));
     }
 
     @Override
@@ -141,7 +147,7 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     @Override
     public @NotNull PlacementInfo placementInfo() {
         if (this.placementInfo == null) {
-            this.placementInfo = PlacementInfo.create(List.of(this.ingredient1, this.ingredient2, this.ingredient3, this.ingredient4, this.ingredient));
+            this.placementInfo = PlacementInfo.createFromOptionals(List.of(Optional.ofNullable(this.ingredient1), Optional.ofNullable(this.ingredient2), Optional.ofNullable(this.ingredient3), Optional.ofNullable(this.ingredient4), Optional.of(this.ingredient)));
         }
         return this.placementInfo;
     }
@@ -174,10 +180,10 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     public static final MapCodec<InfuserRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             CommonInfo.MAP_CODEC.fieldOf("commoninfo").forGetter(s -> s.commonInfo),
             Codec.STRING.optionalFieldOf("group", "").forGetter(s -> s.group),
-            Ingredient.CODEC.fieldOf("ingredient1").forGetter(x -> x.ingredient1),
-            Ingredient.CODEC.fieldOf("ingredient2").forGetter(x -> x.ingredient2),
-            Ingredient.CODEC.fieldOf("ingredient3").forGetter(x -> x.ingredient3),
-            Ingredient.CODEC.fieldOf("ingredient4").forGetter(x -> x.ingredient4),
+            Ingredient.CODEC.optionalFieldOf("ingredient1").forGetter(x -> Optional.ofNullable(x.ingredient1)),
+            Ingredient.CODEC.optionalFieldOf("ingredient2").forGetter(x -> Optional.ofNullable(x.ingredient2)),
+            Ingredient.CODEC.optionalFieldOf("ingredient3").forGetter(x -> Optional.ofNullable(x.ingredient3)),
+            Ingredient.CODEC.optionalFieldOf("ingredient4").forGetter(x -> Optional.ofNullable(x.ingredient4)),
             Ingredient.CODEC.fieldOf("item").forGetter(x -> x.ingredient),
             ItemStackTemplate.CODEC.optionalFieldOf("result1").forGetter(x -> Optional.ofNullable(x.result1)),
             ItemStackTemplate.CODEC.optionalFieldOf("result2").forGetter(x -> Optional.ofNullable(x.result2)),
@@ -189,10 +195,10 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     public static final StreamCodec<RegistryFriendlyByteBuf, InfuserRecipe> STREAM_CODEC = StreamCodecExtension.composite(
             CommonInfo.STREAM_CODEC, s -> s.commonInfo,
             ByteBufCodecs.STRING_UTF8, s -> s.group,
-            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient1,
-            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient2,
-            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient3,
-            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient4,
+            Ingredient.OPTIONAL_CONTENTS_STREAM_CODEC, s -> Optional.ofNullable(s.ingredient1),
+            Ingredient.OPTIONAL_CONTENTS_STREAM_CODEC, s -> Optional.ofNullable(s.ingredient2),
+            Ingredient.OPTIONAL_CONTENTS_STREAM_CODEC, s -> Optional.ofNullable(s.ingredient3),
+            Ingredient.OPTIONAL_CONTENTS_STREAM_CODEC, s -> Optional.ofNullable(s.ingredient4),
             Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
             ByteBufCodecs.optional(ItemStackTemplate.STREAM_CODEC), s -> Optional.ofNullable(s.result1),
             ByteBufCodecs.optional(ItemStackTemplate.STREAM_CODEC), s -> Optional.ofNullable(s.result2),

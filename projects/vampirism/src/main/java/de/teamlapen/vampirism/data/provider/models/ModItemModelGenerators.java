@@ -6,12 +6,16 @@ import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
+import de.teamlapen.vampirism.common.components.predicates.ChargedRitualKnifePredicate;
 import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.renderer.item.properties.conditional.ComponentMatches;
 import net.minecraft.client.renderer.item.properties.numeric.CrossbowPull;
 import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.component.predicates.DataComponentPredicate;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -45,6 +49,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         generateCrucifix();
         createDefaultModels();
         createAlchemicalFire();
+        createRitualKnife();
     }
 
     protected void createDefaultModels() {
@@ -182,6 +187,13 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     protected void createAlchemicalFire() {
         var model = ItemModelUtils.plainModel(ModelTemplates.TWO_LAYERED_ITEM.create(ModItems.ITEM_ALCHEMICAL_FIRE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/alchemical_fire_layer0"))).put(TextureSlot.LAYER1, new Material(VIdentifier.mod("item/alchemical_fire_layer1"))), this.modelOutput));
         this.itemModelOutput.accept(ModItems.ITEM_ALCHEMICAL_FIRE.get(), model);
+    }
+
+    protected void createRitualKnife() {
+        var model = ItemModelUtils.conditional(new ComponentMatches(new DataComponentPredicate.Single<>(ModDataComponents.CHARGED_RITUAL_KNIFE_PREDICATE.get(), ChargedRitualKnifePredicate.INSTANCE)),
+                ItemModelUtils.plainModel(ModModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(ModItems.RITUAL_KNIFE.asItem(), "_charged"), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/ritual_knife_heart"))), this.modelOutput)),
+                ItemModelUtils.plainModel(ModModelTemplates.FLAT_ITEM.create(ModItems.RITUAL_KNIFE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/ritual_knife"))), this.modelOutput)));
+        this.itemModelOutput.accept(ModItems.RITUAL_KNIFE.get(), model);
     }
 
     protected Stream<Item> getFlatItems() {

@@ -162,6 +162,10 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
         return InfuserRecipeBuilder.infuserRecipe(this.itemLookup, output);
     }
 
+    protected InfuserRecipeBuilder infuser(Holder<Item> output) {
+        return InfuserRecipeBuilder.infuserRecipe(this.itemLookup, new ItemStackTemplate(output));
+    }
+
     protected InfuserRecipeBuilder infuserUpgrade() {
         return InfuserRecipeBuilder.infuserRecipe(this.itemLookup);
     }

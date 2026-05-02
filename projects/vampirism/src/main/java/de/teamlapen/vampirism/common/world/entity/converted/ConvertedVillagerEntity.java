@@ -212,7 +212,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld));
+        return (sundamageCache = Helper.gettingSunDamage(this, iWorld));
     }
 
     @Override

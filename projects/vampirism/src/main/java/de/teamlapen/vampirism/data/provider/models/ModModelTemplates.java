@@ -35,6 +35,7 @@ public class ModModelTemplates extends ModelTemplates {
     public static final ModelTemplate DOUBLE_CROSSBOW_UNLOADED = createItem(mod("double_crossbow_unloaded"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
     public static final ModelTemplate TECH_CROSSBOW = createItem(mod("tech_crossbow"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
     public static final ModelTemplate TECH_CROSSBOW_UNLOADED = createItem(mod("tech_crossbow_unloaded"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
+    public static final ModelTemplate VELMORRA_ALTAR = create(mod("velmorra_altar"), ModTextureSlots.TOP);
 
     public static ModelTemplate createItem(Identifier modelName, TextureSlot... textures) {
         return ModelTemplates.createItem(modelName.toString(), textures);
