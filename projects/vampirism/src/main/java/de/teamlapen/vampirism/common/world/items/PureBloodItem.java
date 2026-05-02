@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.api.FactionsApi;
+import de.teamlapen.faction.common.factions.PlayerFactionPredicate;
+import de.teamlapen.faction.common.util.IntRange;
 import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
+import de.teamlapen.faction.common.world.items.consume.PlayerFactionConsumeEffect;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.*;

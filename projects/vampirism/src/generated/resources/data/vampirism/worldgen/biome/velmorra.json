@@ -37,7 +37,8 @@
     [
       "vampirism:vampire_flower",
       "vampirism:cursed_root",
-      "vampirism:forest_grass",
+      "vampirism:vampire_forest_grass",
+      "vampirism:vampire_forest_tall_grass",
       "minecraft:patch_grass_forest",
       "vampirism:vampire_trees_sparse"
     ]

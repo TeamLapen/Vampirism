@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.attribute.*;
+import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Blocks;
@@ -59,6 +60,7 @@ public class ModDimensions {
                         true,
                         false,
                         false,
+                        false,
                         1.0,
                         0,
                         256,
@@ -67,7 +69,7 @@ public class ModDimensions {
                         0,
                 new DimensionType.MonsterSettings(UniformInt.of(0, 7), 0),
                 DimensionType.Skybox.NONE,
-                DimensionType.CardinalLightType.DEFAULT,
+                CardinalLighting.Type.DEFAULT,
                 EnvironmentAttributeMap.builder()
                         .set(EnvironmentAttributes.FOG_COLOR, 0x171717) // darker
                         .set(EnvironmentAttributes.SKY_LIGHT_COLOR, -1736449)
@@ -82,7 +84,8 @@ public class ModDimensions {
                         .set(EnvironmentAttributes.CAN_START_RAID, false)
                         .set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false)
                         .build(),
-                        lookup.getOrThrow(ModTimelineTags.IN_VELMORRA)
+                lookup.getOrThrow(ModTimelineTags.IN_VELMORRA),
+                Optional.empty()
                 )
         );
     }

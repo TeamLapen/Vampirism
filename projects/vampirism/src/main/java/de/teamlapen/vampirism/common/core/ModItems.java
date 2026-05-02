@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.*;
+import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import de.teamlapen.vampirism.common.world.items.consume.*;
 import de.teamlapen.vampirism.common.world.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.common.world.items.crossbow.DoubleCrossbowItem;
@@ -436,6 +437,7 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CHANDELIER_GREEN = fromChandelier(ModBlocks.CHANDELIER_GREEN);
     public static final DeferredItem<BlockItem> CHANDELIER_RED = fromChandelier(ModBlocks.CHANDELIER_RED);
     public static final DeferredItem<BlockItem> CHANDELIER_BLACK = fromChandelier(ModBlocks.CHANDELIER_BLACK);
+    public static final DeferredItem<BlockItem> VELMORRA_ALTAR = fromBlock(ModBlocks.VELMORRA_ALTAR);
 
 
     @SuppressWarnings("unchecked")

@@ -557,6 +557,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.VELMORRA_ALTAR.get())
                         .with(PropertyDispatch.initial(VelmorraAltarBlock.HAS_BLOOD)
                                 .select(false, plainVariant(VIdentifier.mod("block/velmorra_altar")))
-                                .select(true, plainVariant(ModModelTemplates.VELMORRA_ALTAR.createWithSuffix(ModBlocks.VELMORRA_ALTAR.get(), "bloody" ,new TextureMapping().put(ModTextureSlots.TOP, mod("block/velmorra_altar_bloody")), this.modelOutput)))));
+                                .select(true, plainVariant(ModModelTemplates.VELMORRA_ALTAR.createWithSuffix(ModBlocks.VELMORRA_ALTAR.get(), "bloody" ,new TextureMapping().put(ModTextureSlots.TOP, new Material(mod("block/velmorra_altar_bloody"))), this.modelOutput)))));
     }
 }

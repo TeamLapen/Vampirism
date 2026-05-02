@@ -29,10 +29,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -1457,14 +1454,13 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         }
 
         for (int i = 0; i < 4; i++) {
-            infuser(ModItems.RITUAL_KNIFE_HEART.toStack())
+            infuser(ModItems.RITUAL_KNIFE_HEART)
                     .ingredient(i, Ingredient.of(ModItems.MOTHER_CORE))
                     .input(Ingredient.of(ModItems.RITUAL_KNIFE))
-                    .results(ItemStack.EMPTY)
                     .burnTime(600)
                     .unlockedBy("has_mother_core", has(ModItems.MOTHER_CORE))
                     .unlockedBy("has_ritual_knife", has(ModItems.RITUAL_KNIFE))
-                    .save(this.output, ResourceKey.create(Registries.RECIPE, getDefaultRecipeId(ModItems.RITUAL_KNIFE_HEART.get()).withSuffix("_" + i)));
+                    .save(this.output, ResourceKey.create(Registries.RECIPE, getDefaultRecipeId(new ItemStackTemplate(ModItems.RITUAL_KNIFE_HEART)).identifier().withSuffix("_" + i)));
         }
     }
 

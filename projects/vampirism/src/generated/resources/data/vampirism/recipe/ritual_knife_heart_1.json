@@ -1,10 +1,10 @@
 {
   "type": "vampirism:infuser",
+  "commoninfo": {},
   "cookingtime": 600,
   "ingredient2": "vampirism:mother_core",
   "item": "vampirism:ritual_knife",
   "result": {
-    "count": 1,
     "id": "vampirism:ritual_knife_heart"
   }
 }

@@ -32,7 +32,7 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
         FactionPlayerHandler factionPlayerHandler = FactionPlayerHandler.get(player);
         IPlayableFaction<?> faction = factionPlayerHandler.getFaction().value();
         if (factionPlayerHandler.getLordLevel() != faction.getHighestLordLevel()) {
-            player.displayClientMessage(Component.translatable("text.vampirism.velmorra_altar.weak"), true);
+            player.sendOverlayMessage(Component.translatable("message.vampirism.velmorra_altar.weak"));
             return false;
         }
 
