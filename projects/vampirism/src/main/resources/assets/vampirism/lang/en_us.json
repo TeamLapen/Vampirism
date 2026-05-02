@@ -640,6 +640,8 @@
   "skill.vampirism.minion_tech_crossbows.desc": "Allow your minions to wield semi-auto crossbows",
   "skill.vampirism.hunter_minion_collect": "Equipment collect",
   "skill.vampirism.hunter_minion_collect.desc": "Send your minions out to collect resources",
+  "skill.vampirism.minion_recovery": "Minion Recovery",
+  "skill.vampirism.minion_recovery.desc": "Speeds up the time your minions need to recover",
 
   "advancement.vampirism": "Vampirism",
   "advancement.vampirism.desc": "Getting started with Vampirism",

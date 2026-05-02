@@ -476,11 +476,11 @@ public class ModItems {
     }
 
     private static <T extends BlockItem> DeferredItem<T> fromBlock(Holder<Block> block, BiFunction<Block,Item.Properties, T> itemCreator) {
-        return ITEMS.registerItem(block.getKey().identifier().getPath(), prop -> itemCreator.apply(block.value(), prop));
+        return ITEMS.registerItem(block.unwrapKey().orElseThrow().identifier().getPath(), prop -> itemCreator.apply(block.value(), prop.useBlockDescriptionPrefix()));
     }
 
     private static <T extends BlockItem> DeferredItem<T> fromBlock(Holder<Block> block, Function<Item.Properties, T> itemCreator, UnaryOperator<Item.Properties> properties) {
-        return ITEMS.registerItem(block.getKey().identifier().getPath(), itemCreator, properties);
+        return ITEMS.registerItem(block.unwrapKey().orElseThrow().identifier().getPath(), itemCreator, x -> properties.apply(x).useBlockDescriptionPrefix());
     }
 
     private static DeferredItem<BlockItem> fromChandelier(Holder<Block> block) {
@@ -488,7 +488,7 @@ public class ModItems {
     }
 
     private static DeferredItem<CoffinItem> fromCoffin(DeferredHolder<Block, CoffinBlock> block) {
-        return fromBlock(block, (block1, itemProps) -> new CoffinItem((CoffinBlock) block1, itemProps.factions$withShiftDescription().rarity(Rarity.RARE).stacksTo(1)));
+        return fromBlock(block, (block1, itemProps) -> new CoffinItem((CoffinBlock) block1, itemProps.factions$withShiftDescription().rarity(Rarity.RARE).stacksTo(1).useBlockDescriptionPrefix()));
     }
 
 }

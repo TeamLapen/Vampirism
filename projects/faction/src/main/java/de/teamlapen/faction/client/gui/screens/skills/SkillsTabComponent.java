@@ -1,5 +1,6 @@
 package de.teamlapen.faction.client.gui.screens.skills;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
@@ -94,8 +95,13 @@ public class SkillsTabComponent {
         return index;
     }
 
-    public void drawTab(GuiGraphicsExtractor graphics, int x, int y, boolean selected) {
-        this.position.extractRenderState(graphics, x, y, selected, this.index);
+    public void extractTab(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, boolean selected) {
+        int tabX = x + this.position.getX(this.index);
+        int tabY = y + this.position.getY(this.index);
+        this.position.extractRenderState(graphics, tabX, tabY, selected, this.index);
+        if (!selected && mouseX > tabX && mouseY > tabY && mouseX < tabX + this.position.getWidth() && mouseY < tabY + this.position.getHeight()) {
+            graphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     public void drawIcon(GuiGraphicsExtractor graphics, int x, int y) {
@@ -106,7 +112,7 @@ public class SkillsTabComponent {
         return this.position.isMouseOver(guiLeft, guiTop, this.index, mouseX, mouseY);
     }
 
-    public void drawContents(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY) {
+    public void extractContents(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY) {
         var pose = graphics.pose();
 
         graphics.enableScissor(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT);
@@ -212,11 +218,15 @@ public class SkillsTabComponent {
     }
 
     public Component getRemainingPointsText() {
-        int remainingPoints = this.getRemainingPoints();
-        if (remainingPoints == Integer.MAX_VALUE) {
-            return Component.translatable("gui.factionapi.skills.skill_points", "∞");
+        int points = this.getRemainingPoints();
+        Component remainingPoints;
+        var skillPointId = this.skillTree.value().skillPointTag().location().withPath(x -> "skills.skill_points." + x).toLanguageKey("gui");
+        if (points == Integer.MAX_VALUE) {
+            remainingPoints = Component.translatable(skillPointId, "∞");
+        } else {
+            remainingPoints = Component.translatable( points == 1 ? skillPointId + ".single" : skillPointId, points);
         }
-        return Component.translatable(remainingPoints == 1 ? "gui.factionapi.skill_tree.skill_point" : "gui.factionapi.skill_tree.skill_points", remainingPoints);
+        return remainingPoints;
     }
 
     public Holder<ISkillTree> getSkillTree() {

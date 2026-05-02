@@ -83,8 +83,8 @@
   "gui.factionapi.skills.unlock_unavailable": "Unlocking skills is currently unavailable",
   "gui.factionapi.skills.reset_req": "You need a '%s' to reset your skills",
   "gui.factionapi.skills.reset_consume": "This consumes a '%s'",
-  "gui.factionapi.skills.skill_points": "%d skill points",
-  "gui.factionapi.skills.skill_point": "%d skill point",
+  "gui.factionapi.skills.skill_points.default": "%d skill points",
+  "gui.factionapi.skills.skill_points.default.single": "%d skill point",
 
   "gui.factionapi.taskmaster.not_accepted": "Not accepted",
   "gui.factionapi.taskmaster.task_failed": "Task failed",

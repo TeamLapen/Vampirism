@@ -49,7 +49,6 @@ public class SkillsScreen extends Screen {
     public static final int SCREEN_WIDTH = 252;
     public static final int SCREEN_HEIGHT = 219;
     private static final Identifier WINDOW_LOCATION = FIdentifier.mod("textures/gui/skills/window.png");
-    private static final Identifier TABS_LOCATION = FIdentifier.mc("textures/gui/advancements/tabs.png");
     private static final Component VERY_SAD_LABEL = Component.translatable("advancements.sad_label");
     private static final Component NO_TABS_LABEL = Component.translatable("gui.factionapi.skills.no_tab");
     private static final Component TITLE = Component.translatable("gui.factionapi.faction_menu.skill_screen");
@@ -125,16 +124,16 @@ public class SkillsScreen extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        this.renderInside(graphics, mouseX, mouseY, guiLeft, guiTop);
-        this.renderWindow(graphics, mouseX, mouseY, guiLeft, guiTop);
+        this.extractInside(graphics, mouseX, mouseY, guiLeft, guiTop);
+        this.extractWindow(graphics, mouseX, mouseY, guiLeft, guiTop);
         super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(graphics, mouseX, mouseY, guiLeft, guiTop);
+        this.extractTooltip(graphics, mouseX, mouseY, guiLeft, guiTop);
     }
 
-    public void renderInside(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int x, int y) {
+    public void extractInside(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int x, int y) {
         var pose = graphics.pose();
         if (this.selectedTab != null) {
-            this.selectedTab.drawContents(graphics, x + 9, y + 18, mouseX - 9 - guiLeft, mouseY - 18 - guiTop);
+            this.selectedTab.extractContents(graphics, x + 9, y + 18, mouseX - 9 - guiLeft, mouseY - 18 - guiTop);
         } else {
             pose.pushMatrix();
             pose.translate(x + 9, y + 18);
@@ -146,12 +145,12 @@ public class SkillsScreen extends Screen {
         }
     }
 
-    public void renderWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int x, int y) {
+    public void extractWindow(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int x, int y) {
         GuiRenderer.blit(graphics, WINDOW_LOCATION, x, y, SCREEN_WIDTH, SCREEN_HEIGHT);
         if (this.tabs.size() > 1) {
 
             for (SkillsTabComponent skillTab : this.tabs) {
-                skillTab.drawTab(graphics, x, y, skillTab == this.selectedTab);
+                skillTab.extractTab(graphics, x, y, mouseX, mouseY, skillTab == this.selectedTab);
             }
 
             for (SkillsTabComponent skillTab : this.tabs) {
@@ -165,7 +164,7 @@ public class SkillsScreen extends Screen {
         graphics.text(this.font, TITLE, x + 8, y + 6, 0xff000000, false);
     }
 
-    public void renderTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int guiLeft, int guiTop) {
+    public void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int guiLeft, int guiTop) {
         if (this.minecraft.player.getEffect(FactionEffects.OBLIVION) != null) return;
         if (this.selectedTab != null) {
             var pose = graphics.pose();
