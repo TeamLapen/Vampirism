@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the vampire overlay for converted creatures
@@ -21,7 +20,7 @@ public class ConvertedVampireEntityLayer<Z extends LivingEntityRenderState, U ex
     /**
      * @param checkIfRender If it should check if {@link ConvertedCreatureRenderer#renderOverlay} is true
      */
-    public ConvertedVampireEntityLayer(@NotNull RenderLayerParent<Z, U> entityRendererIn, boolean checkIfRender) {
+    public ConvertedVampireEntityLayer(RenderLayerParent<Z, U> entityRendererIn, boolean checkIfRender) {
         super(entityRendererIn);
         this.checkIfRender = checkIfRender;
     }

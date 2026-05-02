@@ -14,14 +14,13 @@ import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends PlayerModel> extends RenderLayer<T, Q> {
 
-    private final Identifier @NotNull [] eyeOverlays;
-    private final Identifier @NotNull [] fangOverlays;
+    private final Identifier[] eyeOverlays;
+    private final Identifier[] fangOverlays;
 
-    public VampirePlayerHeadLayer(@NotNull RenderLayerParent<T, Q> entityRendererIn) {
+    public VampirePlayerHeadLayer(RenderLayerParent<T, Q> entityRendererIn) {
         super(entityRendererIn);
         eyeOverlays = new Identifier[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < eyeOverlays.length; i++) {

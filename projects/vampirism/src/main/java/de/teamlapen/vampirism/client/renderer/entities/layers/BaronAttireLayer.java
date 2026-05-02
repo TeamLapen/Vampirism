@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
@@ -22,8 +21,8 @@ import java.util.function.Predicate;
  * Render attire for baron. Includes Male and female version
  */
 public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
-    private final @NotNull BaronessAttireModel baroness;
-    private final @NotNull BaronAttireModel baron;
+    private final BaronessAttireModel baroness;
+    private final BaronAttireModel baron;
     private final Identifier textureBaroness = VIdentifier.mod("textures/entity/baroness_attire.png");
     private final Identifier textureBaron = VIdentifier.mod("textures/entity/baron_attire.png");
     private final Predicate<VampireBaronRenderer.VampireBaronRenderState> predicateFemale;
@@ -31,7 +30,7 @@ public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBa
     /**
      * @param predicateFemale used to choose between baron and baroness attire
      */
-    public BaronAttireLayer(@NotNull RenderLayerParent<VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> entityRendererIn, EntityRendererProvider.@NotNull Context context, Predicate<VampireBaronRenderer.VampireBaronRenderState> predicateFemale) {
+    public BaronAttireLayer(RenderLayerParent<VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> entityRendererIn, EntityRendererProvider.Context context, Predicate<VampireBaronRenderer.VampireBaronRenderState> predicateFemale) {
         super(entityRendererIn);
         this.baroness = new BaronessAttireModel(context.bakeLayer(ModEntitiesRender.BARONESS_ATTIRE));
         this.baron = new BaronAttireModel(context.bakeLayer(ModEntitiesRender.BARON_ATTIRE));
@@ -43,7 +42,7 @@ public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBa
         if (!renderState.isInvisible) {
             boolean female = predicateFemale.test(renderState);
             EntityModel<VampireBaronRenderer.VampireBaronRenderState> model = female ? baroness : baron;
-            coloredCutoutModelCopyLayerRender(model, female ? textureBaroness : textureBaron, poseStack, nodeCollector, packedLight, renderState, 0, 0);
+            coloredCutoutModelCopyLayerRender(model, female ? textureBaroness : textureBaron, poseStack, nodeCollector, packedLight, renderState, -1, 1);
         }
     }
 }

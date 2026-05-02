@@ -13,6 +13,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Mob;
 
 import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 public abstract class DualSplitBipedRenderer<TEntity extends Mob,TRenderState extends AvatarLikeRenderState, TModel extends HumanoidModel<TRenderState>> extends DualBipedRenderer<TEntity,TRenderState,TModel> {
 
@@ -39,7 +40,7 @@ public abstract class DualSplitBipedRenderer<TEntity extends Mob,TRenderState ex
     protected abstract boolean splitRenderingEnabled();
 
     private void setHeadVisibility(TModel model, boolean visible) {
-        model.allParts().forEach(part -> part.visible = !visible);
+        Stream.of(model.body, model.rightArm, model.leftArm, model.rightLeg, model.leftLeg).forEach(part -> part.visible = !visible);
         model.head.visible = visible;
         model.hat.visible = visible;
     }
