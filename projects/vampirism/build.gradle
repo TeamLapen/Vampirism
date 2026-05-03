@@ -215,6 +215,9 @@ publishing {
             artifactId = "${project.vampirism_mod_name}"
             artifact(tasks.jar)
             artifact(sourcesJarTask.get())
+            artifact(project(':vampirism-api').tasks.jar) {
+                classifier = "api"
+            }
         }
     }
 }

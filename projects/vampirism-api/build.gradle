@@ -56,13 +56,3 @@ artifacts {
     archives(tasks.jar)
     archives(sourcesJarTask.get())
 }
-
-publishing {
-    publications {
-        register("vampirism-api", MavenPublication) {
-            artifactId = "${project.vampirism_mod_name}-api"
-            artifact(tasks.jar)
-            artifact(sourcesJarTask.get())
-        }
-    }
-}

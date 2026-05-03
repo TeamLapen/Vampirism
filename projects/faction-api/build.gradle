@@ -28,13 +28,3 @@ tasks.withType(JavaCompile).configureEach {
         }
     }
 }
-
-publishing {
-    publications {
-        register("faction-api", MavenPublication) {
-            artifactId = "${project.factions_mod_name}-api"
-            artifact(tasks.jar)
-            artifact(tasks.named("sourcesJar"))
-        }
-    }
-}

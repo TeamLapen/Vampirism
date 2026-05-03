@@ -170,6 +170,9 @@ publishing {
             artifactId = "${project.factions_mod_name}"
             artifact(tasks.jar)
             artifact(sourcesJarTask.get())
+            artifact(project(':faction-api').tasks.jar) {
+                classifier = "api"
+            }
         }
     }
 }
