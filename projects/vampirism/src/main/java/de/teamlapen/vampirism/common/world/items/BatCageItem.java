@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class BatCageItem extends BlockItem implements IEntityInteractable {
+public class BatCageItem extends BlockItem {
 
     public BatCageItem(Block block, Properties properties) {
         super(block, properties);
@@ -81,10 +81,10 @@ public class BatCageItem extends BlockItem implements IEntityInteractable {
     }
 
     @Override
-    public InteractionResult onEntityInteract(ItemStack stack, Entity target, Player player, Level level, InteractionHand hand) {
-        if (!level.isClientSide() && BatCageBlockEntity.canContainEntity(target) && !stack.has(ModDataComponents.HELD_ENTITY)) {
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
+        if (!player.level().isClientSide() && BatCageBlockEntity.canContainEntity(interactionTarget) && !stack.has(ModDataComponents.HELD_ENTITY)) {
             ItemStack capturedStack = stack.copyWithCount(1);
-            if (BatCageItem.captureEntity(target, capturedStack)) {
+            if (BatCageItem.captureEntity(interactionTarget, capturedStack)) {
                 if (!player.getAbilities().instabuild) {
                     stack.shrink(1);
                 }

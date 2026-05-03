@@ -358,6 +358,7 @@
   "item.vampirism.syringe_blood": "Blood Syringe",
   "item.vampirism.injection_garlic": "Garlic Injection",
   "item.vampirism.injection_sanguinare": "Sanguinare Injection",
+  "item.vampirism.serum_injection": "Serum Injection",
   "item.vampirism.item_alchemical_fire": "Alchemical Fire",
   "item.vampirism.purified_garlic": "Purified Garlic",
   "item.vampirism.pure_salt": "Pure Salt",
@@ -486,6 +487,7 @@
   "effect.vampirism.no_blood": "No Blood",
   "effect.vampirism.bleeding": "Bleeding",
   "effect.vampirism.crucifix_suppression": "Crucifix Suppression",
+  "effect.vampirism.exposed": "Exposed",
   "effect.vampirism.whispers_of_the_veil": "Whispers of the Veil",
 
   "attribute.vampirism.sundamage": "Sun Damage",
@@ -596,7 +598,7 @@
   "skill.vampirism.garlic_diffuser": "Vampire Repelling",
   "skill.vampirism.garlic_diffuser.desc": "Learn to craft garlic diffusers to repel nearby vampires",
   "skill.vampirism.purified_garlic": "Purified Garlic",
-  "skill.vampirism.purified_garlic.desc": "Purify garlic to strengthen its effect and boost your diffuser with it",
+  "skill.vampirism.purified_garlic.desc": "Purify garlic to strengthen its effect to boost diffusers",
   "skill.vampirism.garlic_diffuser_improved": "Improved Diffuser",
   "skill.vampirism.garlic_diffuser_improved.desc": "Learn to craft garlic diffusers with a greater range",
   "skill.vampirism.enhanced_blessing": "Greater Blessing",
@@ -705,6 +707,10 @@
   "advancement.vampirism.max_level_hunter.desc": "Reach the highest hunter level",
   "advancement.vampirism.technology": "Modern Technology",
   "advancement.vampirism.technology.desc": "Get yourself an Advanced Crossbow",
+  "advancement.vampirism.mainline": "Mainline",
+  "advancement.vampirism.mainline.desc": "Craft and use a Serum Injection",
+  "advancement.vampirism.worth_it": "Worth It?",
+  "advancement.vampirism.worth_it.desc": "Use a lethal injection on yourself for the sake of the advancement",
   "advancement.vampirism.max_lord_hunter": "The Hunter of the Hunters",
   "advancement.vampirism.max_lord_hunter.desc": "Reach the highest hunter lord level",
   "advancement.vampirism.cure_vampire_villager": "Vampire Doctor",
@@ -1071,7 +1077,7 @@
   "message.vampirism.restriction.hunter_clothing": "The stench of garlic is so pungent that I'm wasting away...",
   "message.vampirism.restriction.holy": "Something sinful within me recoils in agony... I shouldn't use this",
   "message.vampirism.restriction.heavy": "This is too heavy for me... I cannot wield it",
-  "message.vampirism.restriction.oiled": "I cannot handle oiled items",
+  "message.vampirism.restriction.oiled": "It's oily... I'm not going to wield it",
 
   "message.vampirism.action.bat.in_sun": "You cannot transform into a bat under the sun",
   "message.vampirism.action.bat.has_umbrella": "You cannot transform into a bat with an umbrella equipped",
@@ -1345,6 +1351,7 @@
   "vampirism.configuration.minions": "Minions",
   "vampirism.configuration.vampireRefinements": "Vampire Refinements",
   "vampirism.configuration.items": "Items",
+  "vampirism.configuration.effects": "Effects",
   "vampirism.configuration.lordActions": "Lord Actions",
 
   "vampirism.configuration.collectData": "Collect Data",
@@ -1742,6 +1749,9 @@
   "vampirism.configuration.applicableOilPickaxeReverse.tooltip": "When enabled, the applicable oil pickaxe item tag acts as a whitelist instead of a blacklist for pickaxe oil application.",
   "vampirism.configuration.applicableOilSwordReverse": "Applicable Oil Sword Reverse",
   "vampirism.configuration.applicableOilSwordReverse.tooltip": "When enabled, the applicable oil sword item tag acts as a whitelist instead of a blacklist for sword oil application.",
+
+  "vampirism.configuration.exposedPerLevelMultiplier": "Exposed Per Level Multiplier",
+  "vampirism.configuration.exposedPerLevelMultiplier.tooltip": "Damage multiplier applied per level of the Exposed effect. For instance, a value of 0.25 means the entity will receive 25% more damage at level I, 50% at level II, 75% at level III, and so on.",
 
   "vampirism.configuration.lordSpeedEnabled": "Lord Speed Enabled",
   "vampirism.configuration.lordSpeedEnabled.tooltip": "When enabled, vampire lords can use the speed action.",

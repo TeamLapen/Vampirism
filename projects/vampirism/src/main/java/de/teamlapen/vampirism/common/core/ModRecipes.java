@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.common.core;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.world.items.recipes.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -62,6 +62,7 @@ public class ModRecipes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CleanOilRecipe>> CLEAN_OIL = RECIPE_SERIALIZERS.register("clean_oil", () -> new RecipeSerializer<>(CleanOilRecipe.CODEC, CleanOilRecipe.STREAM_CODEC));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<RerollVampireBookRecipe>> REROLL_VAMPIRE_BOOK = RECIPE_SERIALIZERS.register("reroll_vampire_book", () -> new RecipeSerializer<>(RerollVampireBookRecipe.CODEC, RerollVampireBookRecipe.STREAM_CODEC));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<FillBottleFromSyringeRecipe>> FILL_BOTTLE_FROM_SYRINGE = RECIPE_SERIALIZERS.register("fill_bottle_from_syringe", () -> new RecipeSerializer<>(FillBottleFromSyringeRecipe.CODEC, FillBottleFromSyringeRecipe.STREAM_CODEC));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SerumFromPotionRecipe>> SERUM_FROM_POTION = RECIPE_SERIALIZERS.register("serum_from_potion", () -> new RecipeSerializer<>(SerumFromPotionRecipe.CODEC, SerumFromPotionRecipe.STREAM_CODEC));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<InfuserRecipe>> INFUSER = RECIPE_SERIALIZERS.register("infuser", () -> new RecipeSerializer<>(InfuserRecipe.CODEC, InfuserRecipe.STREAM_CODEC));
 
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<ConfigCondition>> CONFIG_CONDITION = CONDITION_CODECS.register("config", () -> ConfigCondition.CODEC);
@@ -72,5 +73,4 @@ public class ModRecipes {
         CONDITION_CODECS.register(bus);
         RECIPE_BOOK_CATEGORIES.register(bus);
     }
-
 }

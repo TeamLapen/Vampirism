@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.core.ModRegistries;
-import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.util.serialization.StreamCodecExtension;
@@ -16,12 +15,12 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
@@ -32,22 +31,19 @@ import java.util.Optional;
 /**
  * @author Cheaterpaul
  */
-public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTableRecipe {
-    protected final static int MAX_WIDTH = 4;
-    protected final static int MAX_HEIGHT = 4;
+public class ShapedWeaponTableRecipe implements IWeaponTableRecipe {
 
     private final CraftingRecipe.CraftingBookInfo category;
     private final CommonInfo commonInfo;
     private final ShapedRecipePattern pattern;
     private final ItemStackTemplate recipeOutput;
     private final int requiredLevel;
-    @NotNull
     private final List<Holder<ISkill<?>>> requiredSkills;
     private final int requiredLava;
     @Nullable
     private PlacementInfo placementInfo;
 
-    public ShapedWeaponTableRecipe(CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo category, ShapedRecipePattern pattern, ItemStackTemplate recipeOutputIn, int requiredLevel, @NotNull List<Holder<ISkill<?>>> requiredSkills, int requiredLava) {
+    public ShapedWeaponTableRecipe(CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo category, ShapedRecipePattern pattern, ItemStackTemplate recipeOutputIn, int requiredLevel, List<Holder<ISkill<?>>> requiredSkills, int requiredLava) {
         this.category = category;
         this.commonInfo = commonInfo;
         this.pattern = pattern;
@@ -57,18 +53,36 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
         this.requiredLava = requiredLava;
     }
 
-    @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingInput inv) {
+    public int getRequiredLavaUnits() {
+        return requiredLava;
+    }
+
+    @Override
+    public int getRequiredLevel() {
+        return requiredLevel;
+    }
+
+    @Override
+    public List<Holder<ISkill<?>>> getRequiredSkills() {
+        return requiredSkills;
+    }
+
+    @Override
+    public boolean matches(CraftingInput input, Level level) {
+        return this.pattern.matches(input);
+    }
+
+    @Override
+    public ItemStack assemble(CraftingInput input) {
         return this.recipeOutput.create();
     }
 
     @Override
-    public @NotNull PlacementInfo placementInfo() {
+    public PlacementInfo placementInfo() {
         if (this.placementInfo == null) {
             this.placementInfo = PlacementInfo.createFromOptionals(this.pattern.ingredients());
         }
-
         return this.placementInfo;
     }
 
@@ -78,17 +92,19 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
     }
 
     @Override
-    public @NonNull String group() {
+    public String group() {
         return this.category.group();
     }
 
     @Override
-    public @NotNull List<RecipeDisplay> display() {
+    public List<RecipeDisplay> display() {
         return List.of(
                 new ShapedCraftingRecipeDisplay(
                         this.pattern.width(),
                         this.pattern.height(),
-                        this.pattern.ingredients().stream().map(x -> x.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE)).toList(),
+                        this.pattern.ingredients().stream()
+                                .map(x -> x.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE))
+                                .toList(),
                         new SlotDisplay.ItemStackSlotDisplay(this.recipeOutput),
                         new SlotDisplay.ItemSlotDisplay(ModBlocks.WEAPON_TABLE.asItem())
                 )
@@ -96,13 +112,8 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
     }
 
     @Override
-    public @NotNull List<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return pattern.ingredients().stream().flatMap(Optional::stream).toList();
-    }
-
-    @Override
-    public @NotNull RecipeBookCategory recipeBookCategory() {
-        return ModRecipes.WEAPON_TABLE_CATEGORY.get();
     }
 
     public int getWidth() {
@@ -113,42 +124,15 @@ public class ShapedWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTa
         return this.pattern.height();
     }
 
-    public int getRequiredLavaUnits() {
-        return requiredLava;
-    }
-
-    public int getRequiredLevel() {
-        return requiredLevel;
-    }
-
-    @NotNull
-    @Override
-    public List<Holder<ISkill<?>>> getRequiredSkills() {
-        return requiredSkills;
-    }
-
-    @NotNull
     @Override
     public RecipeSerializer<? extends ShapedWeaponTableRecipe> getSerializer() {
         return ModRecipes.SHAPED_CRAFTING_WEAPONTABLE.get();
     }
 
-    @NotNull
-    @Override
-    public RecipeType<IWeaponTableRecipe> getType() {
-        return ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get();
-    }
-
-    @Override
-    public boolean matches(@NotNull CraftingInput inv, @NotNull Level worldIn) {
-        return this.pattern.matches(inv);
-    }
-
-
     public static final MapCodec<ShapedWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
-                CommonInfo.MAP_CODEC.fieldOf("commoninfo").forGetter(s -> s.commonInfo),
-                CraftingRecipe.CraftingBookInfo.MAP_CODEC.fieldOf("category").forGetter(p_311732_ -> p_311732_.category),
+                CommonInfo.MAP_CODEC.forGetter(s -> s.commonInfo),
+                CraftingRecipe.CraftingBookInfo.MAP_CODEC.forGetter(p_311732_ -> p_311732_.category),
                 ShapedRecipePattern.MAP_CODEC.forGetter(p_311733_ -> p_311733_.pattern),
                 ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_311730_ -> p_311730_.recipeOutput),
                 Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),

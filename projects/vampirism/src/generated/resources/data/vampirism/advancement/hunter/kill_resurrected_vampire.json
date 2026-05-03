@@ -1,5 +1,5 @@
 {
-  "parent": "vampirism:hunter/become_hunter",
+  "parent": "vampirism:hunter/stake",
   "criteria": {
     "killed": {
       "conditions": {

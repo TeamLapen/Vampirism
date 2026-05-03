@@ -6,11 +6,16 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
+import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
@@ -444,7 +449,19 @@ public class ModCreativeTabs {
             insert(GHOST_SPAWN_EGG, event);
         } else if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
             insertAfter(BLOOD_BUCKET, Items.MILK_BUCKET, event);
+        } else if (event.getTabKey().equals(CreativeModeTabs.FOOD_AND_DRINKS)) {
+            event.getParameters().holders().lookup(Registries.POTION).ifPresent(registry ->
+                    insertPotionTypes(event, registry, SERUM_INJECTION.get(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, event.getParameters().enabledFeatures())
+            );
         }
+    }
+
+    private static void insertPotionTypes(BuildCreativeModeTabContentsEvent event, HolderLookup<Potion> potions, Item item, CreativeModeTab.TabVisibility tabVisibility, FeatureFlagSet requiredFeatures) {
+        potions.listElements()
+                .filter(potion -> potion.value().isEnabled(requiredFeatures))
+                .filter(potion -> !SerumInjectionItem.isBlockedPotion(potion))
+                .map(potion -> PotionContents.createItemStack(item, potion))
+                .forEach(stack -> event.accept(stack, tabVisibility));
     }
 
     private static void insert(ItemLike item, BuildCreativeModeTabContentsEvent event) {

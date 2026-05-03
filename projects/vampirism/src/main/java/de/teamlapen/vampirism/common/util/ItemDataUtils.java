@@ -31,11 +31,21 @@ public class ItemDataUtils {
     }
 
     public static ItemStack createPotion(Holder<Potion> potion) {
-        return PotionContents.createItemStack(Items.POTION, potion);
+        return createPotion(potion, Items.POTION);
+    }
+
+    public static ItemStack createPotion(Holder<Potion> potion, Item baseItem) {
+        return PotionContents.createItemStack(baseItem, potion);
     }
 
     public static ItemStackTemplate template(Holder<Potion> potion) {
         return new ItemStackTemplate(Items.POTION, DataComponentPatch.builder()
+                .set(DataComponents.POTION_CONTENTS, new PotionContents(potion))
+                .build());
+    }
+
+    public static ItemStackTemplate template(Holder<Potion> potion, Holder<Item> item) {
+        return new ItemStackTemplate(item, DataComponentPatch.builder()
                 .set(DataComponents.POTION_CONTENTS, new PotionContents(potion))
                 .build());
     }

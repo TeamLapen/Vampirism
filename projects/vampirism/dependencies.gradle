@@ -28,6 +28,13 @@ repositories {
             includeGroup "com.github.glitchfiend"
         }
     }
+    maven {
+        name = "RyanLiptak"
+        url = "https://maven.ryanliptak.com/"
+        content {
+            includeGroupAndSubgroups "squeek"
+        }
+    }
 }
 
 dependencies {

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.inventory;
 
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModMenus;
 import de.teamlapen.vampirism.common.core.ModRecipes;

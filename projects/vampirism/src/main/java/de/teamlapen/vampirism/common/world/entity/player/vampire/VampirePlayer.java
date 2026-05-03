@@ -529,6 +529,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return 0;
     }
 
+    @Override
+    public boolean canDrain(int amount) {
+        return false;
+    }
+
     public int removeBlood(float percentage) {
         if (getLevel() == 0) {
             int amt = player.getFoodData().getFoodLevel();

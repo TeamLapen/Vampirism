@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.integration.jei.extension;
 
-import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.world.items.recipes.ShapedWeaponTableRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;

@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.core.ModRegistries;
-import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.util.serialization.StreamCodecExtension;
@@ -22,21 +21,20 @@ import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.common.util.RecipeMatcher;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
-public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeaponTableRecipe {
-    protected static final int MAX_WIDTH = 4;
-    protected static final int MAX_HEIGHT = 4;
+public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
 
-    private final @NotNull CraftingRecipe.CraftingBookInfo category;
+    private final CraftingRecipe.CraftingBookInfo category;
     private final CommonInfo commonInfo;
-    private final @NotNull List<Ingredient> recipeItems;
-    private final @NotNull ItemStackTemplate recipeOutput;
+    private final List<Ingredient> ingredients;
+    private final ItemStackTemplate recipeOutput;
     private final int requiredLevel;
     private final List<Holder<ISkill<?>>> requiredSkills;
     private final int requiredLava;
@@ -44,56 +42,23 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
     @Nullable
     private PlacementInfo placementInfo;
 
-    public ShapelessWeaponTableRecipe(CommonInfo commonInfo, @NotNull CraftingRecipe.CraftingBookInfo category, @NotNull List<Ingredient> ingredients, @NotNull ItemStackTemplate result, int level, int lava, @NotNull List<Holder<ISkill<?>>> skills) {
+    public ShapelessWeaponTableRecipe(CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo category, List<Ingredient> ingredients, ItemStackTemplate result, int requiredLevel, int requiredLava, List<Holder<ISkill<?>>> requiredSkills) {
         this.category = category;
         this.commonInfo = commonInfo;
-        this.recipeItems = ingredients;
+        this.ingredients = ingredients;
         this.recipeOutput = result;
-        this.requiredLevel = level;
-        this.requiredLava = lava;
-        this.requiredSkills = skills;
+        this.requiredLevel = requiredLevel;
+        this.requiredLava = requiredLava;
+        this.requiredSkills = requiredSkills;
         this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
     }
 
-    @NotNull
     @Override
-    public ItemStack assemble(@NotNull CraftingInput inv) {
-        return this.recipeOutput.create();
-    }
-
-
-    @Override
-    public @NotNull PlacementInfo placementInfo() {
-        if (placementInfo == null) {
-            placementInfo = PlacementInfo.create(this.recipeItems);
-        }
-        return placementInfo;
-    }
-
-    @Override
-    public @NotNull List<RecipeDisplay> display() {
-        return List.of(new ShapelessCraftingRecipeDisplay(
-                this.getIngredients().stream().map(Ingredient::display).toList(),
-                new SlotDisplay.ItemStackSlotDisplay(this.recipeOutput),
-                new SlotDisplay.ItemSlotDisplay(ModBlocks.WEAPON_TABLE.asItem())
-        ));
-    }
-
-    @Override
-    public @NotNull RecipeBookCategory recipeBookCategory() {
-        return ModRecipes.WEAPON_TABLE_CATEGORY.get();
-    }
-
-    @NotNull
-    @Override
-    public List<Ingredient> getIngredients() {
-        return recipeItems;
-    }
-
     public int getRequiredLavaUnits() {
         return requiredLava;
     }
 
+    @Override
     public int getRequiredLevel() {
         return requiredLevel;
     }
@@ -103,51 +68,71 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
         return this.commonInfo.showNotification();
     }
 
-    @Override
     public String group() {
         return this.category.group();
     }
 
-    @NotNull
     @Override
     public List<Holder<ISkill<?>>> getRequiredSkills() {
         return requiredSkills;
     }
 
-    @NotNull
     @Override
-    public RecipeSerializer<ShapelessWeaponTableRecipe> getSerializer() {
-        return ModRecipes.SHAPELESS_CRAFTING_WEAPONTABLE.get();
-    }
-
-    @NotNull
-    @Override
-    public RecipeType<IWeaponTableRecipe> getType() {
-        return ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get();
+    public List<Ingredient> getIngredients() {
+        return this.ingredients;
     }
 
     @Override
     public boolean matches(CraftingInput input, Level level) {
-        if (input.ingredientCount() != this.recipeItems.size()) {
+        if (input.ingredientCount() != this.ingredients.size()) {
             return false;
         } else if (!isSimple) {
-            var nonEmptyItems = new java.util.ArrayList<ItemStack>(input.ingredientCount());
-            for (var item : input.items())
-                if (!item.isEmpty())
+            ArrayList<ItemStack> nonEmptyItems = new ArrayList<>(input.ingredientCount());
+            for (var item : input.items()) {
+                if (!item.isEmpty()) {
                     nonEmptyItems.add(item);
-            return net.neoforged.neoforge.common.util.RecipeMatcher.findMatches(nonEmptyItems, this.recipeItems) != null;
+                }
+            }
+            return RecipeMatcher.findMatches(nonEmptyItems, this.ingredients) != null;
         } else {
-            return input.size() == 1 && this.recipeItems.size() == 1
-                    ? this.recipeItems.getFirst().test(input.getItem(0))
+            return input.size() == 1 && this.ingredients.size() == 1
+                    ? this.ingredients.getFirst().test(input.getItem(0))
                     : input.stackedContents().canCraft(this, null);
         }
     }
 
+    @Override
+    public ItemStack assemble(CraftingInput input) {
+        return this.recipeOutput.create();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        if (placementInfo == null) {
+            placementInfo = PlacementInfo.create(this.ingredients);
+        }
+        return placementInfo;
+    }
+
+    @Override
+    public List<RecipeDisplay> display() {
+        return List.of(new ShapelessCraftingRecipeDisplay(
+                this.ingredients.stream().map(Ingredient::display).toList(),
+                new SlotDisplay.ItemStackSlotDisplay(this.recipeOutput),
+                new SlotDisplay.ItemSlotDisplay(ModBlocks.WEAPON_TABLE.asItem())
+        ));
+    }
+
+    @Override
+    public RecipeSerializer<? extends ShapelessWeaponTableRecipe> getSerializer() {
+        return ModRecipes.SHAPELESS_CRAFTING_WEAPONTABLE.get();
+    }
+
     public static final MapCodec<ShapelessWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
         return inst.group(
-                CommonInfo.MAP_CODEC.fieldOf("commoninfo").forGetter(s -> s.commonInfo),
-                CraftingRecipe.CraftingBookInfo.MAP_CODEC.fieldOf("category").forGetter(p_301133_ -> p_301133_.category),
-                Codec.lazyInitialized(() -> Ingredient.CODEC.listOf(1, MAX_WIDTH * MAX_HEIGHT)).fieldOf("ingredients").forGetter(x -> x.recipeItems),
+                CommonInfo.MAP_CODEC.forGetter(s -> s.commonInfo),
+                CraftingRecipe.CraftingBookInfo.MAP_CODEC.forGetter(p_301133_ -> p_301133_.category),
+                Codec.lazyInitialized(() -> Ingredient.CODEC.listOf(1, 16)).fieldOf("ingredients").forGetter(x -> x.ingredients),
                 ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
                 Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
                 Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava),
@@ -158,7 +143,7 @@ public class ShapelessWeaponTableRecipe implements Recipe<CraftingInput>, IWeapo
     public static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> STREAM_CODEC = StreamCodecExtension.composite(
             CommonInfo.STREAM_CODEC, s -> s.commonInfo,
             CraftingRecipe.CraftingBookInfo.STREAM_CODEC, s -> s.category,
-            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), s -> s.recipeItems,
+            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), s -> s.ingredients,
             ItemStackTemplate.STREAM_CODEC, s -> s.recipeOutput,
             ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
             ByteBufCodecs.VAR_INT, s -> s.requiredLava,

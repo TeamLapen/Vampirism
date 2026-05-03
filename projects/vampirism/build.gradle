@@ -122,6 +122,11 @@ neoForge {
         "${factions_mod_id}" {
             sourceSet(project(':faction').sourceSets.main)
             sourceSet(project(':faction-api').sourceSets.main)
+            project(':faction').integrations.each {
+                if (it.included) {
+                    sourceSet(project(':faction').sourceSets[it.name])
+                }
+            }
         }
     }
 }

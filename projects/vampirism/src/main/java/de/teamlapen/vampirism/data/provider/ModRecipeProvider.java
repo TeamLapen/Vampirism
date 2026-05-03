@@ -86,6 +86,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         SpecialRecipeBuilder.special(ApplicableOilRecipe::new).save(output, modString("applicable_oil"));
         SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, modString("clean_oil"));
         SpecialRecipeBuilder.special(FillBottleFromSyringeRecipe::new).save(output, modString("fill_bottle_from_syringe"));
+        SpecialRecipeBuilder.special(SerumFromPotionRecipe::new).save(output, modString("serum_from_potion"));
 
         HolderLookup.RegistryLookup<IVampireBook> books = registries.lookupOrThrow(VampirismRegistries.Keys.VAMPIRE_BOOK);
         var bookCondition = new AndHolderSet<>(books.getOrThrow(ModVampireBookTags.IS_GENERAL), new NotHolderSet<>(books, books.getOrThrow(ModVampireBookTags.NON_TREASURE)));

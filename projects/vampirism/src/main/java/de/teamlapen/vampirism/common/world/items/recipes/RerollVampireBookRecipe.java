@@ -24,7 +24,6 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +39,7 @@ public class RerollVampireBookRecipe extends CustomRecipe {
     private final HolderSet<IVampireBook> vampireBooks;
 
     @Override
-    public boolean matches(@NotNull CraftingInput input, @NotNull Level level) {
+    public boolean matches(CraftingInput input, Level level) {
         if (level.registryAccess().lookup(VampirismRegistries.Keys.VAMPIRE_BOOK).isEmpty()) return false;
 
         int bookCount = 0;
@@ -69,14 +68,14 @@ public class RerollVampireBookRecipe extends CustomRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull CraftingInput input) {
+    public ItemStack assemble(CraftingInput input) {
         var book = vampireBooks.getRandomElement(RANDOM).map(Holder::value).orElse(VampireBook.EMPTY);
 
         return VampireBookItem.createBook(book);
     }
 
     @Override
-    public @NotNull RecipeSerializer<? extends CustomRecipe> getSerializer() {
+    public RecipeSerializer<? extends CustomRecipe> getSerializer() {
         return ModRecipes.REROLL_VAMPIRE_BOOK.get();
     }
 

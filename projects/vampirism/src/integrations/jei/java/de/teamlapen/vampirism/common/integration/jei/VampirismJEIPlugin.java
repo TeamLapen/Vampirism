@@ -6,7 +6,9 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.common.integration.jei.subtypes.RitualKnifeInterpreter;
+import de.teamlapen.vampirism.common.integration.jei.subtypes.SerumInjectionSubtypeInterpreter;
+import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
@@ -29,6 +31,7 @@ import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -97,9 +100,11 @@ public class VampirismJEIPlugin implements IModPlugin {
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerFromDataComponentTypes(ModItems.OIL_BOTTLE.get(), ModDataComponents.OIL.get());
         registration.registerFromDataComponentTypes(ModItems.BLOOD_BOTTLE.get(), ModDataComponents.BOTTLE_BLOOD.get());
-        registration.registerFromDataComponentTypes(ModBlocks.CURSED_SPRUCE_WOOD.get().asItem(), ModDataComponents.ACTIVE.get());
-        registration.registerFromDataComponentTypes(ModBlocks.CURSED_SPRUCE_LOG.get().asItem(), ModDataComponents.ACTIVE.get());
-        registration.registerSubtypeInterpreter(ModBlocks.BLOOD_CONTAINER.asItem(), BloodContainerInterpreter.INSTANCE);
+        registration.registerFromDataComponentTypes(ModItems.CURSED_SPRUCE_WOOD.get(), ModDataComponents.ACTIVE.get());
+        registration.registerFromDataComponentTypes(ModItems.CURSED_SPRUCE_LOG.get(), ModDataComponents.ACTIVE.get());
+        registration.registerSubtypeInterpreter(ModItems.BLOOD_CONTAINER.get(), BloodContainerInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(ModItems.SERUM_INJECTION.get(), SerumInjectionSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(ModItems.RITUAL_KNIFE.get(), RitualKnifeInterpreter.INSTANCE);
     }
 
     @Override
@@ -114,7 +119,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(DISTILLING, VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
         registration.addRecipes(RecipeTypes.ANVIL, RepairRecipeMaker.getRecipes(registration.getVanillaRecipeFactory(), registration.getIngredientManager()));
         registration.addRecipes(ALCHEMY_TABLE, recipes.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().toList());
-        registration.addRecipes(RecipeTypes.CRAFTING, OilRecipeMaker.getRecipes(registration.getIngredientManager()));
+        registration.addRecipes(RecipeTypes.CRAFTING, SpecialRecipeMaker.getAllCraftingRecipes());
         registration.addRecipes(BLESSING, BlessableRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(GARLIC_DIFFUSER, GarlicDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(FOG_DIFFUSER, FogDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
