@@ -18,7 +18,7 @@ public abstract class BaseContainerBlock extends BaseEntityBlock {
     }
 
     /**
-     * drop all items from the tileentity's inventory if {@code instanceof} {@link Container}
+     * drop all items from the tile entity's inventory if {@code instanceof} {@link Container}
      */
     protected void dropInventoryTileEntityItems(Level level, BlockPos pos) {
         BlockEntity tileEntity = level.getBlockEntity(pos);

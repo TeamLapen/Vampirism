@@ -22,7 +22,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -56,7 +55,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     private boolean shouldCreateHome;
 
     public HunterTrainerEntity(EntityType<? extends HunterTrainerEntity> type, Level world) {
-        super(type, world, false);
+        super(type, world);
         saveHome = true;
         hasArms = true;
         this.getNavigation().setCanOpenDoors(true);

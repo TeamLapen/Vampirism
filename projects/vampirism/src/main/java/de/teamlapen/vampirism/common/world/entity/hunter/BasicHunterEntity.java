@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.hunter;
 
 import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
@@ -63,6 +64,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -101,7 +103,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     private boolean attack;
 
     public BasicHunterEntity(EntityType<? extends BasicHunterEntity> type, Level world) {
-        super(type, world, true);
+        super(type, world);
         saveHome = true;
         this.getNavigation().setCanOpenDoors(true);
 
@@ -120,7 +122,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void attackVillage(ICaptureAttributes attributes) {
+    public void attackVillage(@NonNull ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = true;
     }
@@ -150,7 +152,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    boolean hasIncreasedStats = lord.asSkillPlayer().map(x -> x.getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+                    boolean hasIncreasedStats = lord.asSkillPlayer().map(ISkillPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
                     HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
                     var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registryAccess());
                     this.serializeAttachments(output);
@@ -174,7 +176,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     }
 
     @Override
-    public void defendVillage(ICaptureAttributes attributes) {
+    public void defendVillage(@NonNull ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = false;
     }

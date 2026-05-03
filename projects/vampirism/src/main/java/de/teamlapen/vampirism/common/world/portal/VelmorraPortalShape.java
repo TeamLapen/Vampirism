@@ -68,8 +68,7 @@ public class VelmorraPortalShape {
     }
 
     public static Optional<VelmorraPortalShape> findPortalShape(LevelAccessor level, BlockPos startPosition, Predicate<VelmorraPortalShape> predicate) {
-        Optional<VelmorraPortalShape> optional = findAnyShape(level, startPosition).filter(predicate);
-        return optional;
+        return findAnyShape(level, startPosition).filter(predicate);
     }
 
     public static Optional<VelmorraPortalShape> findAnyShape(LevelAccessor level, BlockPos bottomLeft) {

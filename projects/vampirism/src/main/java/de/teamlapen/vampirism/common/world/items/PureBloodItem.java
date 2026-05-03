@@ -10,11 +10,6 @@ import de.teamlapen.faction.common.world.items.consume.PlayerFactionConsumeEffec
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.*;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
-import de.teamlapen.vampirism.common.core.ModDataComponents;
-import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import net.minecraft.ChatFormatting;
@@ -84,9 +79,7 @@ public class PureBloodItem extends Item {
             case 2 -> ModItems.PURE_BLOOD_2;
             case 3 -> ModItems.PURE_BLOOD_3;
             case 4 -> ModItems.PURE_BLOOD_4;
-            default -> {
-                throw new IllegalArgumentException("Pure blood of level " + level + " does not exist");
-            }
+            default -> throw new IllegalArgumentException("Pure blood of level " + level + " does not exist");
         };
     }
 

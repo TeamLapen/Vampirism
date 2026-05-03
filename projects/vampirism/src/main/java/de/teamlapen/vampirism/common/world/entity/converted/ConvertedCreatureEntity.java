@@ -96,7 +96,6 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            //noinspection unchecked
             this.entityCreature.ifPresent(creature -> aiStepC(serverLevel));
         }
         super.aiStep();

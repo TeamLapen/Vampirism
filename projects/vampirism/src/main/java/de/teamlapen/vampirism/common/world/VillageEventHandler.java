@@ -15,7 +15,6 @@ import de.teamlapen.vampirism.common.world.effects.ModEffectInstanceHelper;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
-import de.teamlapen.vampirism.common.world.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.common.world.entity.hunter.AggressiveVillagerEntity;
 import de.teamlapen.vampirism.common.world.entity.hunter.DummyHunterTrainerEntity;
 import de.teamlapen.vampirism.common.world.entity.hunter.HunterBaseEntity;

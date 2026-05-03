@@ -41,9 +41,9 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         Player player = Minecraft.getInstance().player;
         ItemStack crossbowStack = player.getMainHandItem();
         if (Helper.isHunter(player) && crossbowStack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack)) {
-            @NotNull Map<Item, @NotNull Integer> list = player.getInventory().getNonEquipmentItems().stream().filter(s -> s.getItem() instanceof QuarrelPouch).map(x -> x.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY)).flatMap(s -> s.items().stream()).collect(Collectors.groupingBy(ItemStack::getItem, Collectors.summingInt(ItemStack::getCount)));
+            @NotNull Map<Item, Integer> list = player.getInventory().getNonEquipmentItems().stream().filter(s -> s.getItem() instanceof QuarrelPouch).map(x -> x.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY)).flatMap(s -> s.items().stream()).collect(Collectors.groupingBy(ItemStack::getItem, Collectors.summingInt(ItemStack::getCount)));
             var ammoTypes = CrossbowArrowHandler.getCrossbowArrows().stream().map(item -> new AmmoType(item, player.getInventory().countItem(item) + list.getOrDefault(item, 0))).collect(Collectors.toList());
-            ammoTypes.add(new AmmoType(null, 0));
+            ammoTypes.add(new AmmoType((ItemStack) null, 0));
             Minecraft.getInstance().setScreen(new SelectAmmoScreen(ammoTypes));
         }
     }
@@ -68,13 +68,9 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
     public void drawSliceName(GuiGraphicsExtractor graphics, String sliceName, ItemStack stack, int posX, int posY) {
     }
 
-    public static class AmmoType {
-        public final ItemStack renderStack;
-        public final int count;
-
-        public AmmoType(@Nullable Item item, int count) {
-            this.count = count;
-            this.renderStack = item == null ? null : item.getDefaultInstance();
+    public record AmmoType(@Nullable ItemStack renderStack, int count) {
+        public AmmoType(@Nullable Item renderStack, int count) {
+            this(renderStack == null ? null : renderStack.getDefaultInstance(), count);
         }
 
         public Component getDisplayName() {

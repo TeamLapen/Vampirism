@@ -68,11 +68,6 @@ public class VelmorraPortalRenderer<T extends VelmorraPortalBlockEntity> impleme
                 this.renderFace(pose, consumer, 0.0F, 1.0F, 0.0F, 0.0F, PERC, PERC, OFFSET, OFFSET, Direction.DOWN);
             }
             case Z -> {
-//                this.renderFace(pose, consumer, OFFSET, PERC, 0.0F, 1.0F, 1, 1, 1, 1, Direction.SOUTH);
-//                this.renderFace(pose, consumer, PERC, OFFSET, 0.0F, 1.0F, 1, 1, 1, 1, Direction.SOUTH);
-//
-//                this.renderFace(pose, consumer, OFFSET, PERC, 1.0F, 0.0F, 0, 0, 0, 0, Direction.NORTH);
-//                this.renderFace(pose, consumer, PERC, OFFSET, 1.0F, 0.0F, 0, 0, 0, 0, Direction.NORTH);
 
                 this.renderFace(pose, consumer, PERC, PERC, 0, 1, 1, 0, 0, 1, Direction.EAST);
                 this.renderFace(pose, consumer, PERC, PERC, 0, 1, 0, 1, 1, 0, Direction.EAST);

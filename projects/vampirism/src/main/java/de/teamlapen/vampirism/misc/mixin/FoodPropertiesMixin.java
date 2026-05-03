@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class FoodPropertiesMixin {
 
     @Inject(method = "onConsume", at = @At("RETURN"))
-    private void affectMinion(Level level, LivingEntity entity, ItemStack stack, Consumable consumable, CallbackInfo ci) {
-        if (entity instanceof MinionEntity<?> minion) {
+    private void affectMinion(Level level, LivingEntity user, ItemStack stack, Consumable consumable, CallbackInfo ci) {
+        if (user instanceof MinionEntity<?> minion) {
             minion.eat(level, stack, (FoodProperties) (Object) this);
         }
     }

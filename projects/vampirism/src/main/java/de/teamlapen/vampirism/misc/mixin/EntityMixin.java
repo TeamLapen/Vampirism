@@ -41,7 +41,7 @@ public class EntityMixin {
     }
 
     @Inject(method = "vibrationAndSoundEffectsFromBlock", at = @At("HEAD"), cancellable = true)
-    private void test(BlockPos pPos, BlockState pState, boolean pPlayStepSound, boolean pBroadcastGameEvent, Vec3 pEntityPos, CallbackInfoReturnable<Boolean> cir) {
+    private void test(BlockPos pos, BlockState blockState, boolean shouldSound, boolean shouldVibrate, Vec3 clippedMovement, CallbackInfoReturnable<Boolean> cir) {
         var entity = (Entity) (Object) this;
         if (entity instanceof Player player && VampirePlayer.get(player).getSkillProperties().darkStalker) {
             cir.setReturnValue(false);

@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.faction.common.core.FactionDataComponents;
-import de.teamlapen.faction.common.util.BlockDescription;
 import de.teamlapen.faction.common.world.blocks.TotemTopBlock;
 import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
@@ -20,18 +18,10 @@ import de.teamlapen.vampirism.common.world.blocks.mother.ActiveVulnerableRemains
 import de.teamlapen.vampirism.common.world.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.common.world.blocks.mother.RemainsBlock;
 import de.teamlapen.vampirism.common.world.features.ModTreeGrower;
-import de.teamlapen.vampirism.common.world.items.BatCageItem;
-import de.teamlapen.vampirism.common.world.items.BloodContainerItem;
-import de.teamlapen.vampirism.common.world.items.CursedSpruceItem;
-import de.teamlapen.vampirism.common.world.items.PureLevelBlockItem;
-import de.teamlapen.vampirism.common.world.items.component.PureLevel;
-import de.teamlapen.vampirism.data.provider.ModLootTableProvider;
-import de.teamlapen.vampirism.data.provider.tags.ModBlockTagsProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.*;
@@ -47,15 +37,11 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

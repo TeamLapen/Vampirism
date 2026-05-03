@@ -182,7 +182,6 @@ public class ModStructures {
         context.register(DRACULA_CAVE_SET, new StructureSet(structureLookup.getOrThrow(DRACULA_CAVE), new SingleOccurrenceStructurePlacement(0, 0)));
     }
 
-    @SuppressWarnings("UnreachableCode")
     static void createStructures(BootstrapContext<Structure> context) {
         HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
         HolderGetter<StructureTemplatePool> lookup1 = context.lookup(Registries.TEMPLATE_POOL);

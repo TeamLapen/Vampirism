@@ -23,8 +23,8 @@ public interface ILastingAction<T extends IFactionPlayer<T> & ISkillPlayer<T>> e
     int getDuration(T player);
 
     /**
-     * Called on the server after the action was activated on server side.
-     * This means it is also called when the server reactivated the action, e.g. on world join
+     * Called on the server after the action was activated on the server side.
+     * This means it is also called when the server reactivated the action, e.g., on world join
      */
     void onActivatedClient(T player);
 
@@ -42,9 +42,9 @@ public interface ILastingAction<T extends IFactionPlayer<T> & ISkillPlayer<T>> e
     void onReActivated(T player);
 
     /**
-     * Called every LivingUpdate for each entity which has this action activated Calls on client side might be wrong due to sync
+     * Called every LivingUpdate for each entity that has this action activated Calls on the client side might be wrong due to sync
      *
-     * @return if true the lasting action is cancelled
+     * @return if true, the lasting action is canceled
      */
     default boolean onUpdate(T player) {
         return false;

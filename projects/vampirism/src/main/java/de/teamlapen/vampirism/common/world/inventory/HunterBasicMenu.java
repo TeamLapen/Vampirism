@@ -50,11 +50,6 @@ public class HunterBasicMenu extends ItemCombinerMenu {
     }
 
     @Override
-    protected boolean mayPickup(Player player, boolean hasStack) {
-        return true;
-    }
-
-    @Override
     protected void onTake(Player player, ItemStack stack) {
         int targetLevel = this.player.getLevel() + 1;
         HunterLeveling.getBasicHunterRequirement(targetLevel).ifPresent(req -> {

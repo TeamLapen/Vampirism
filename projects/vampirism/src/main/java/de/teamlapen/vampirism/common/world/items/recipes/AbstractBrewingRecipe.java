@@ -6,8 +6,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
 
 public abstract class AbstractBrewingRecipe implements Recipe<BrewingRecipeInput> {
 
@@ -28,7 +26,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<BrewingRecipeInput
     }
 
     @Override
-    public boolean matches(@NotNull BrewingRecipeInput inventory, @NotNull Level level) {
+    public boolean matches(BrewingRecipeInput inventory, Level level) {
         return this.ingredient.test(inventory.input());
     }
 
@@ -45,7 +43,7 @@ public abstract class AbstractBrewingRecipe implements Recipe<BrewingRecipeInput
     }
 
     @Override
-    public @NonNull String group() {
+    public String group() {
         return this.group;
     }
 
@@ -54,14 +52,13 @@ public abstract class AbstractBrewingRecipe implements Recipe<BrewingRecipeInput
         return this.commonInfo.showNotification();
     }
 
-    @NotNull
     @Override
-    public ItemStack assemble(@NotNull BrewingRecipeInput inventory) {
+    public ItemStack assemble(BrewingRecipeInput inventory) {
         return this.result.create();
     }
 
     @Override
-    public @NotNull RecipeType<? extends Recipe<BrewingRecipeInput>> getType() {
+    public RecipeType<? extends Recipe<BrewingRecipeInput>> getType() {
         return this.type;
     }
 }

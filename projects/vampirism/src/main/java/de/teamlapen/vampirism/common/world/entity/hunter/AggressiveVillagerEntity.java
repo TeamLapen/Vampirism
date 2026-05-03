@@ -35,6 +35,7 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Villager that is equipped with a fork and hunts vampires
@@ -79,12 +80,12 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
     }
 
     @Override
-    public void attackVillage(ICaptureAttributes villageAttributes) {
+    public void attackVillage(@NonNull ICaptureAttributes villageAttributes) {
         this.villageAttributes = villageAttributes;
     }
 
     @Override
-    public void defendVillage(ICaptureAttributes villageAttributes) {
+    public void defendVillage(@NonNull ICaptureAttributes villageAttributes) {
         this.villageAttributes = villageAttributes;
     }
 

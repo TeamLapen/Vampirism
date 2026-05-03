@@ -36,7 +36,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -45,7 +44,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
 
     private static final EntityDataAccessor<VillagerData> VILLAGER_DATA = SynchedEntityData.defineId(VampireTaskMasterEntity.class, EntityDataSerializers.VILLAGER_DATA);
 
-    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
@@ -61,13 +60,13 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+    public void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.store("VillagerData", VillagerData.CODEC, this.getVillageData());
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull ValueInput input) {
+    public void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         this.entityData.set(VILLAGER_DATA, input.read("VillagerData", VillagerData.CODEC).orElseGet(VampireTaskMasterEntity::createDefaultVillagerData));
     }
@@ -82,22 +81,21 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         SpawnGroupData data = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
         this.setBiomeType(worldIn.registryAccess(), VillagerType.byBiome(worldIn.getBiome(this.blockPosition())));
         return data;
     }
 
     @Override
-    public @NotNull VillagerData getVillageData() {
+    public VillagerData getVillageData() {
         return this.entityData.get(VILLAGER_DATA);
     }
 
-    protected void setBiomeType(@NotNull RegistryAccess registryAccess, @NotNull ResourceKey<VillagerType> type) {
+    protected void setBiomeType(RegistryAccess registryAccess, ResourceKey<VillagerType> type) {
         this.entityData.set(VILLAGER_DATA, new VillagerData(registryAccess.getOrThrow(type), registryAccess.getOrThrow(VillagerProfession.NONE),0));
     }
 
-    @NotNull
     @Override
     public Optional<Player> getForceLookTarget() {
         return Optional.ofNullable(this.interactor);
@@ -109,7 +107,7 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(VILLAGER_DATA, createDefaultVillagerData());
     }
@@ -118,9 +116,8 @@ public class VampireTaskMasterEntity extends VampireBaseEntity implements IDefau
         return new VillagerData(BuiltInRegistries.VILLAGER_TYPE.getOrThrow(VillagerType.PLAINS), BuiltInRegistries.VILLAGER_PROFESSION.getOrThrow(VillagerProfession.NONE), 0);
     }
 
-    @NotNull
     @Override
-    protected InteractionResult mobInteract(@NotNull Player playerEntity, @NotNull InteractionHand hand) {
+    protected InteractionResult mobInteract(Player playerEntity, InteractionHand hand) {
         if (this.level().isClientSide()) {
             return Helper.isVampire(playerEntity) ? InteractionResult.SUCCESS : InteractionResult.PASS;
         }

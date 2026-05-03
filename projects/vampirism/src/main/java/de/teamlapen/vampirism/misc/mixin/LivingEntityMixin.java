@@ -19,14 +19,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
-    public abstract boolean addEffect(MobEffectInstance effectInstance);
+    public abstract boolean addEffect(MobEffectInstance newEffect);
 
     private LivingEntityMixin(@NotNull EntityType<? extends LivingEntity> type, @NotNull Level level) {
         super(type, level);
     }
 
     @Inject(method = "checkTotemDeathProtection", at = @At(value = "RETURN", ordinal = 1))
-    private void handleTotemOfUndying(DamageSource damageSource, @NotNull CallbackInfoReturnable<Boolean> cir) {
+    private void handleTotemOfUndying(DamageSource killingDamage, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && Helper.isVampire(this)) {
             this.addEffect(new MobEffectInstance(ModEffects.FIRE_PROTECTION, 800, 5));
             this.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 800, 4));

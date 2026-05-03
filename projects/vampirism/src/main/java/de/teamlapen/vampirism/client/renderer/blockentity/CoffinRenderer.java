@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.common.world.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

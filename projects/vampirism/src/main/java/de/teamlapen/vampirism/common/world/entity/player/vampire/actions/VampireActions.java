@@ -7,7 +7,6 @@ import de.teamlapen.faction.api.registries.actions.DeferredActionRegister;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.ApiStatus;
 
 /**

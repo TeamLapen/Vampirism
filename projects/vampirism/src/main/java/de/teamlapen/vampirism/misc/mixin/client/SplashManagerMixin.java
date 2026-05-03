@@ -37,7 +37,7 @@ public class SplashManagerMixin {
     private static final RandomSource vampirism$RANDOM = RandomSource.create();
 
     @Inject(method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
-    private void vampirism$prepare(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<List<Component>> cir) {
+    private void vampirism$prepare(ResourceManager manager, ProfilerFiller profiler, CallbackInfoReturnable<List<Component>> cir) {
         List<Component> baseSplashes = cir.getReturnValue();
         List<Component> customSplashes = Collections.emptyList();
 
@@ -59,7 +59,7 @@ public class SplashManagerMixin {
         }
 
         if (!customSplashes.isEmpty()) {
-            double chance = 0.3;
+            double chance = 0.2;
             int originalSize = baseSplashes.size();
             int timesAdded = (int) Math.ceil((chance * originalSize) / ((1 - chance) * customSplashes.size()));
 

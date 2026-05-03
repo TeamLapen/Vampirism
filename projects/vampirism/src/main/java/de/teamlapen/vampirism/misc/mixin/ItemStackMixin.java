@@ -15,7 +15,7 @@ public abstract class ItemStackMixin implements IItemStack {
 
     @Shadow
     @Nullable
-    public abstract <T> T set(DataComponentType<T> component, @org.jetbrains.annotations.Nullable T value);
+    public abstract <T> T set(DataComponentType<T> type, @org.jetbrains.annotations.Nullable T value);
 
     @Override
     public <T> ItemStack vampirism$with(DataComponentType<T> type, T value) {

@@ -10,7 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 
 public class TrainingDummyVampireEntity extends BasicVampireEntity {
@@ -25,7 +24,7 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, @NotNull DamageSource damageSource, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
         level.getNearbyPlayers(PREDICATE, this, this.getBoundingBox().inflate(40)).forEach(p -> p.sendSystemMessage(Component.literal("Damage " + amount + " from " + damageSource.type().msgId())));
         if (this.startTicks != 0) this.damageTaken += amount;
         return super.hurtServer(level, damageSource, amount);
@@ -33,20 +32,19 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
     }
 
     @Override
-    public void convertToMinion(@NotNull Player lord) {
+    public void convertToMinion(Player lord) {
         super.convertToMinion(lord);
     }
 
     @Override
-    protected void actuallyHurt(ServerLevel level, @NotNull DamageSource damageSrc, float damageAmount) {
+    protected void actuallyHurt(ServerLevel level, DamageSource damageSrc, float damageAmount) {
         if (damageSrc.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             super.actuallyHurt(level, damageSrc, damageAmount);
         }
     }
 
-    @NotNull
     @Override
-    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) { //processInteract
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) { //processInteract
         if (!this.level().isClientSide() && hand == InteractionHand.MAIN_HAND) {
             if (startTicks == 0) {
                 player.sendSystemMessage(Component.literal("Start recording"));

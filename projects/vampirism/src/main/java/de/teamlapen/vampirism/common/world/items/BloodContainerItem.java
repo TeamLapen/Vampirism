@@ -2,13 +2,11 @@ package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
-import de.teamlapen.vampirism.common.world.blockentity.BloodContainerBlockEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import org.jetbrains.annotations.NotNull;
 
 public class BloodContainerItem extends BlockItem implements BaseDisplayItemGenerator.CreativeTabItemProvider {
 

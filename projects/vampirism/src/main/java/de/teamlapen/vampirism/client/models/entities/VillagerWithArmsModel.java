@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import org.apache.logging.log4j.LogManager;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Villager Model with usable arms
@@ -20,10 +19,10 @@ public class VillagerWithArmsModel extends VillagerModel implements ArmedModel<V
     private static final String RIGHT_ARM = "right_arm";
     private static final String LEFT_ARM = "left_arm";
 
-    private final @NotNull ModelPart leftArm;
-    private final @NotNull ModelPart rightArm;
+    private final ModelPart leftArm;
+    private final ModelPart rightArm;
 
-    public static @NotNull LayerDefinition createLayer(float scale) {
+    public static LayerDefinition createLayer(float scale) {
         MeshDefinition mesh = VillagerModel.createBodyModel();
         PartDefinition root = mesh.getRoot();
         CubeDeformation def = new CubeDeformation(scale);
@@ -32,7 +31,7 @@ public class VillagerWithArmsModel extends VillagerModel implements ArmedModel<V
         return LayerDefinition.create(mesh, 64, 64);
     }
 
-    public VillagerWithArmsModel(@NotNull ModelPart part) {
+    public VillagerWithArmsModel(ModelPart part) {
         super(part);
         this.leftArm = part.getChild(LEFT_ARM);
         this.rightArm = part.getChild(RIGHT_ARM);
@@ -41,7 +40,7 @@ public class VillagerWithArmsModel extends VillagerModel implements ArmedModel<V
 
 
     @Override
-    public void setupAnim(@NotNull VillagerRenderState entityIn) {
+    public void setupAnim(VillagerRenderState entityIn) {
         super.setupAnim(entityIn);
         this.leftArm.setPos(4, 3, -1);
         this.rightArm.setPos(-4, 3, -1);
@@ -68,11 +67,6 @@ public class VillagerWithArmsModel extends VillagerModel implements ArmedModel<V
     public void translateToHand(VillagerRenderState renderState, HumanoidArm arm, PoseStack poseStack) {
         this.root.translateAndRotate(poseStack);
         this.getArmForSide(arm).translateAndRotate(poseStack);
-//        float f = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
-//        ModelPart part = getArmForSide(arm);
-//        part.x += f;
-//        part.translateAndRotate(poseStack);
-//        part.x -= f;
     }
 
     protected ModelPart getArmForSide(HumanoidArm side) {

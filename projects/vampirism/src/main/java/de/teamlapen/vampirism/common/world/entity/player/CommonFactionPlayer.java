@@ -133,7 +133,6 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
         return factionHandler().getLordLevel();
     }
 
-    @SuppressWarnings("NullableProblems")
     public Optional<ILordTitleProvider> lordTitles() {
         return Optional.ofNullable(getFaction().value().lordTitles());
     }

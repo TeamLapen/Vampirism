@@ -10,10 +10,9 @@ import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -97,12 +96,12 @@ public class ActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends 
     }
 
     @Override
-    protected void getActions(@NotNull Collection<IAction<T>> list) {
+    protected void getActions(Collection<IAction<T>> list) {
         list.add(this.action.value());
     }
 
     @Override
-    protected void collectActions(@NotNull Collection<Holder<? extends IAction<T>>> list) {
+    protected void collectActions(Collection<Holder<? extends IAction<T>>> list) {
         list.add(this.action);
     }
 }

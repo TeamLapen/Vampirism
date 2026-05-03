@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CapeLayerMixin {
 
     @Inject(method = "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V", at = @At("HEAD"), cancellable = true)
-    private void hideCapeWhenWearingCloak(PoseStack p_434174_, SubmitNodeCollector p_434543_, int p_432874_, AvatarRenderState p_445735_, float p_433069_, float p_435707_, CallbackInfo ci) {
-        if (p_445735_.chestEquipment.is(ModItemTags.DISABLES_CAPE)) {
+    private void hideCapeWhenWearingCloak(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, AvatarRenderState state, float yRot, float xRot, CallbackInfo ci) {
+        if (state.chestEquipment.is(ModItemTags.DISABLES_CAPE)) {
             ci.cancel();
         }
     }

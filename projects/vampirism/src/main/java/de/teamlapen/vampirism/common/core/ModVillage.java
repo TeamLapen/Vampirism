@@ -46,7 +46,7 @@ public class ModVillage {
     public static final ResourceKey<Timeline> VAMPIRE_VILLAGER_SCHEDULE = ResourceKey.create(Registries.TIMELINE, VIdentifier.mod("vampire_villager_schedule"));
 
     public static final DeferredHolder<VillagerProfession, VillagerProfession> VAMPIRE_EXPERT = PROFESSIONS.register("vampire_expert", () ->
-            new VillagerProfession(Component.translatable("entity.vampirism.villager.vampire_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CARTOGRAPHER, Int2ObjectMap.ofEntries(
+            new VillagerProfession(Component.translatable("entity.minecraft.villager.vampirism.vampire_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), (holder) -> holder.is(ModPoiTypeTags.IS_VAMPIRE), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_CARTOGRAPHER, Int2ObjectMap.ofEntries(
                     Int2ObjectMap.entry(1, ModTrades.VAMPIRE_EXPERT_LEVEL_1),
                     Int2ObjectMap.entry(2, ModTrades.VAMPIRE_EXPERT_LEVEL_2),
                     Int2ObjectMap.entry(3, ModTrades.VAMPIRE_EXPERT_LEVEL_3),
@@ -54,7 +54,7 @@ public class ModVillage {
                     Int2ObjectMap.entry(5, ModTrades.VAMPIRE_EXPERT_LEVEL_5)
             )));
     public static final DeferredHolder<VillagerProfession, VillagerProfession> HUNTER_EXPERT = PROFESSIONS.register("hunter_expert", () ->
-            new VillagerProfession(Component.translatable("entity.vampirism.villager.hunter_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(ModBlocks.HUNTER_TABLE.get(), ModBlocks.WEAPON_TABLE.get(), ModBlocks.GARLIC.get()), SoundEvents.VILLAGER_WORK_ARMORER, Int2ObjectMap.ofEntries(
+            new VillagerProfession(Component.translatable("entity.minecraft.villager.vampirism.hunter_expert"), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), (holder) -> holder.is(ModPoiTypeTags.IS_HUNTER), ImmutableSet.of(), ImmutableSet.of(ModBlocks.HUNTER_TABLE.get(), ModBlocks.WEAPON_TABLE.get(), ModBlocks.GARLIC.get()), SoundEvents.VILLAGER_WORK_ARMORER, Int2ObjectMap.ofEntries(
                     Int2ObjectMap.entry(1, ModTrades.HUNTER_EXPERT_LEVEL_1),
                     Int2ObjectMap.entry(2, ModTrades.HUNTER_EXPERT_LEVEL_2),
                     Int2ObjectMap.entry(3, ModTrades.HUNTER_EXPERT_LEVEL_3),
@@ -62,7 +62,7 @@ public class ModVillage {
                     Int2ObjectMap.entry(5, ModTrades.HUNTER_EXPERT_LEVEL_5)
             )));
     public static final DeferredHolder<VillagerProfession, VillagerProfession> PRIEST = PROFESSIONS.register("priest", () ->
-            new VillagerProfession(Component.translatable("entity.vampirism.villager.priest"), holder -> holder.is(ALTAR_CLEANSING.getKey()), holder -> holder.is(ALTAR_CLEANSING.getKey()), ImmutableSet.of(), ImmutableSet.of(), ModSounds.BLESSING_MUSIC.get(), Int2ObjectMap.ofEntries(
+            new VillagerProfession(Component.translatable("entity.minecraft.villager.vampirism.priest"), holder -> holder.is(ALTAR_CLEANSING.getKey()), holder -> holder.is(ALTAR_CLEANSING.getKey()), ImmutableSet.of(), ImmutableSet.of(), ModSounds.BLESSING_MUSIC.get(), Int2ObjectMap.ofEntries(
             Int2ObjectMap.entry(1, ModTrades.PRIEST_LEVEL_1),
             Int2ObjectMap.entry(2, ModTrades.PRIEST_LEVEL_2),
             Int2ObjectMap.entry(3, ModTrades.PRIEST_LEVEL_3),

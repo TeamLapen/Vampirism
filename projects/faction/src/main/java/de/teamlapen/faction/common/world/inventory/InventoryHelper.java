@@ -76,7 +76,7 @@ public class InventoryHelper {
             return;
         }
         if (existingStack.isEmpty()) {
-            //If stack in inventory is empty, add a 0 count stack with the item and nbt information. It will be grown afterwards
+            //If the stack in inventory is empty, add a 0-count stack with the item and nbt information. It will be grown afterward
             existingStack = addStack.copy();
             existingStack.setCount(0);
             existingStack.applyComponents(addStack.getComponents());

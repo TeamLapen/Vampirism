@@ -17,17 +17,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PotionBrewingMixin {
 
     @Inject(method = "hasContainerMix", at = @At("HEAD"), cancellable = true)
-    private void handleItemConversionHunterPotion(ItemStack reagent, ItemStack potionItem, CallbackInfoReturnable<Boolean> cir) {
-        if (vampirism$shouldBlockBrewing(potionItem)) {
+    private void handleItemConversionHunterPotion(ItemStack source, ItemStack ingredient, CallbackInfoReturnable<Boolean> cir) {
+        if (vampirism$shouldBlockBrewing(ingredient)) {
             cir.setReturnValue(false);
             cir.cancel();
         }
     }
 
     @Inject(method = "mix", at = @At("HEAD"), cancellable = true)
-    private void handleDoReactionHunterPotion(ItemStack potion, ItemStack potionItem, CallbackInfoReturnable<ItemStack> cir) {
-        if (vampirism$shouldBlockBrewing(potionItem)) {
-            cir.setReturnValue(potionItem);
+    private void handleDoReactionHunterPotion(ItemStack ingredient, ItemStack source, CallbackInfoReturnable<ItemStack> cir) {
+        if (vampirism$shouldBlockBrewing(source)) {
+            cir.setReturnValue(source);
             cir.cancel();
         }
     }

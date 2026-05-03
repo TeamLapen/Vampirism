@@ -24,7 +24,6 @@ import java.util.concurrent.CompletableFuture;
 @EventBusSubscriber(modid = REFERENCE.MODID)
 public class ModDataProvider {
 
-    @SuppressWarnings("UnreachableCode")
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent.Client event) {
         DataGenerator generator = event.getGenerator();

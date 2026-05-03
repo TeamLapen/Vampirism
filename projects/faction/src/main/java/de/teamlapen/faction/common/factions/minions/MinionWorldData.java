@@ -118,7 +118,7 @@ public class MinionWorldData extends SavedData implements ValueIOSerializable {
     }
 
     /**
-     * Only for debugging. Removes controller from saved data not from entities. Reload world afterwards
+     * Only for debugging. Removes controller from saved data not from entities. Reload world afterward
      */
     @VisibleForDebug
     public void purgeController(UUID lordID) {

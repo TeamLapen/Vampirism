@@ -36,8 +36,8 @@ public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends Playe
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, T renderState, float yRot, float xRot) {
         if (!ModConfig.client().renderVampireEyes.get() || renderState.deathTime > 0) return;
         if (renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_LEVEL, 0) > 0 && !renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_DISGUISE, false) && !renderState.isInvisible) {
-            int eyeType = Math.max(0, Math.min(renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_EYE_TYPE, 0), eyeOverlays.length - 1));
-            int fangType = Math.max(0, Math.min(renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_FANG_TYPE, 0), fangOverlays.length - 1));
+            int eyeType = Math.clamp(renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_EYE_TYPE, 0), 0, eyeOverlays.length - 1);
+            int fangType = Math.clamp(renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_FANG_TYPE, 0), 0, fangOverlays.length - 1);
             ModelPart head = this.getParentModel().head;
 
             nodeCollector.submitModelPart(head, poseStack,renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_GLOWING_EYES, false) ? RenderTypes.eyes(eyeOverlays[eyeType]) : RenderTypes.entityCutout(eyeOverlays[eyeType]),packedLight, OverlayTexture.NO_OVERLAY, null);

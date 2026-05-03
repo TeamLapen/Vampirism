@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class CrossbowItemMixin {
 
     @ModifyReturnValue(method = "getChargeDuration", at = @At("RETURN"))
-    private static int modifyCharge(int original, ItemStack crossbowStack, LivingEntity entity) {
+    private static int modifyCharge(int original, ItemStack crossbowStack, LivingEntity user) {
         if (crossbowStack.getItem() instanceof IHunterCrossbow crossbow) {
-            return crossbow.getChargeDurationMod(crossbowStack, entity.level());
+            return crossbow.getChargeDurationMod(crossbowStack, user.level());
         }
         return original;
     }

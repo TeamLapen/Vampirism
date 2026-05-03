@@ -154,7 +154,7 @@ public class RepairRecipeMaker {
                 .mapMulti((itemStack, consumer) -> {
                     String uid = getStringName(itemStack);
                     String ingredientIdPath = sanitizePath(uid);
-                    String itemModId = ingredientHelper.getResourceLocation(itemStack).getNamespace();
+                    String itemModId = itemStack.typeHolder().unwrapKey().orElseThrow().identifier().getNamespace();
 
                     ItemStack damagedThreeQuarters = itemStack.copy();
                     damagedThreeQuarters.setDamageValue(damagedThreeQuarters.getMaxDamage() * 3 / 4);

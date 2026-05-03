@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireS
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -24,11 +23,9 @@ import java.util.function.Supplier;
  */
 public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends DefaultSkill<T> {
     private final Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> skillTree;
-    private Supplier<Component> description = () -> null;
-    private Consumer<T> activate = (T player) -> {
-    };
-    private Consumer<T> deactivate = (T player) -> {
-    };
+    private Supplier<Component> description = Component::empty;
+    private Consumer<T> activate = (T _) -> {};
+    private Consumer<T> deactivate = (T _) -> {};
 
     public VampirismSkill(Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> skillTree) {
         super(2);
@@ -52,7 +49,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
         return description.get();
     }
 
-    public @NotNull VampirismSkill<T> setDescription(Supplier<Component> descriptionIn) {
+    public VampirismSkill<T> setDescription(Supplier<Component> descriptionIn) {
         this.description = descriptionIn;
         return this;
     }
@@ -65,12 +62,12 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
     /**
      * Enable description using "text.vampirism.skill."+getID()+".desc" as unloc key
      */
-    public @NotNull VampirismSkill<T> setHasDefaultDescription() {
+    public VampirismSkill<T> setHasDefaultDescription() {
         description = () -> Component.translatable(getDescriptionId() + ".desc");
         return this;
     }
 
-    public @NotNull VampirismSkill<T> setToggleActions(Consumer<T> activateIn, Consumer<T> deactivateIn) {
+    public VampirismSkill<T> setToggleActions(Consumer<T> activateIn, Consumer<T> deactivateIn) {
         this.activate = activateIn;
         this.deactivate = deactivateIn;
         return this;

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.data.loot.functions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
-import de.teamlapen.vampirism.common.core.ModLoot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;

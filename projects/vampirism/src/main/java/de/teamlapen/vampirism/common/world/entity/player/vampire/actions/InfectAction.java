@@ -16,9 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.npc.villager.AbstractVillager;
-import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -36,7 +34,7 @@ public class InfectAction extends DefaultVampireAction {
     }
 
     @Override
-    protected IActionResult activate(@NotNull IVampirePlayer vampire, @NotNull ActivationContext context) {
+    protected IActionResult activate(IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
         Entity creature = context.targetEntity().orElse(null);
         if (creature instanceof LivingEntity target) {
@@ -57,7 +55,7 @@ public class InfectAction extends DefaultVampireAction {
 
 
     @Override
-    public IActionResult canBeUsedBy(@NotNull IVampirePlayer player) {
+    public IActionResult canBeUsedBy(IVampirePlayer player) {
         if (player.asEntity().level().getDifficulty() == Difficulty.PEACEFUL) {
             return IActionResult.fail(Component.translatable("message.vampirism.action.infect.peaceful"));
         }
@@ -77,14 +75,12 @@ public class InfectAction extends DefaultVampireAction {
         return IActionResult.SUCCESS;
     }
 
-    private @NotNull Optional<? extends IBiteableEntity> deriveBiteableEntry(Entity target) {
-        if (target instanceof IBiteableEntity) {
-            return Optional.of((IBiteableEntity) target);
-        } else if (target instanceof PathfinderMob) {
-            return ExtendedCreature.getSafe(target);
-        } else if (target instanceof Player) {
-            return Optional.of(VampirePlayer.get((Player) target));
-        }
-        return Optional.empty();
+    private Optional<? extends IBiteableEntity> deriveBiteableEntry(Entity target) {
+        return switch (target) {
+            case IBiteableEntity iBiteableEntity -> Optional.of(iBiteableEntity);
+            case PathfinderMob pathfinderMob -> ExtendedCreature.getSafe(target);
+            case Player player -> Optional.of(VampirePlayer.get(player));
+            default -> Optional.empty();
+        };
     }
 }

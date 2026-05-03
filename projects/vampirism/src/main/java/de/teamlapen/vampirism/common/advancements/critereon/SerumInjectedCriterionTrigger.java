@@ -54,7 +54,7 @@ public class SerumInjectedCriterionTrigger extends SimpleCriterionTrigger<SerumI
 
         public boolean matches(PotionContents potionContents) {
             if (this.effect.isEmpty()) return true;
-            TagKey<MobEffect> tag = this.effect.get();;
+            TagKey<MobEffect> tag = this.effect.get();
             return Streams.stream(potionContents.getAllEffects()).anyMatch(instance -> instance.getEffect().is(tag));
         }
     }

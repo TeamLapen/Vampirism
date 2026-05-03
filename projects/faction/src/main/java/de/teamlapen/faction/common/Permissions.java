@@ -16,7 +16,7 @@ import net.neoforged.neoforge.server.permission.nodes.PermissionTypes;
 
 import java.util.Arrays;
 
-// TODO adapt minecrafts new permission system
+// TODO adapt minecraft new permission system
 public class Permissions {
 
     @SuppressWarnings("unchecked")

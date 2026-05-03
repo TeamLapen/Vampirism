@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.particles.FlyingBloodEntityParticleOptions;
-import de.teamlapen.vampirism.common.tags.ModFluidTags;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling.AltarInspirationRequirement;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -73,7 +72,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
         Optional<AltarInspirationRequirement> requirement = VampireLeveling.getInspirationRequirement(targetLevel);
         if (requirement.isEmpty()) {
             if (player.level().isClientSide()) {
-                player.sendOverlayMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"));
+                player.sendOverlayMessage(Component.translatable("message.vampirism.altar_infusion.ritual.level_wrong"));
             }
             return;
         }

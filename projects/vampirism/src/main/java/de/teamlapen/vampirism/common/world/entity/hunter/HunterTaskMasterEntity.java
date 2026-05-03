@@ -53,7 +53,7 @@ public class HunterTaskMasterEntity extends HunterBaseEntity implements IDefault
     private Player interactor;
 
     public HunterTaskMasterEntity(EntityType<? extends HunterBaseEntity> type, Level world) {
-        super(type, world, false);
+        super(type, world);
         this.peaceful = true;
     }
 

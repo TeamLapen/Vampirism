@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.data.provider.models;
 
-import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureSlot;

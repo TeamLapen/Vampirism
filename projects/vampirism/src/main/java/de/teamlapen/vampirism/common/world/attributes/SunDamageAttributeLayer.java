@@ -1,15 +1,12 @@
 package de.teamlapen.vampirism.common.world.attributes;
 
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.attribute.EnvironmentAttributeLayer;
 import net.minecraft.world.attribute.SpatialAttributeInterpolator;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;

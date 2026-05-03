@@ -14,13 +14,12 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemDisplayContext;
-import org.jetbrains.annotations.NotNull;
 
 public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRenderState, VillagerWithArmsModel>{
 
     private static final Identifier texture = VIdentifier.mc("textures/entity/villager/villager.png");
 
-    public HunterVillagerRenderer(EntityRendererProvider.@NotNull Context context) {
+    public HunterVillagerRenderer(EntityRendererProvider.Context context) {
         super(context, new VillagerWithArmsModel(context.bakeLayer(ModEntitiesRender.VILLAGER_WITH_ARMS)), 0.5f);
         this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getPlayerSkinRenderCache()));
         this.addLayer(new VillagerProfessionLayer<>(this, context.getResourceManager(), "villager",
@@ -29,14 +28,13 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRender
         this.addLayer(new ItemInVillagerHandLayer<>(this));
     }
 
-    @NotNull
     @Override
-    public Identifier getTextureLocation(@NotNull VillagerRenderState villagerEntity) {
+    public Identifier getTextureLocation(VillagerRenderState villagerEntity) {
         return texture;
     }
 
     @Override
-    protected void scale(VillagerRenderState p_362272_, @NotNull PoseStack poseStack) {
+    protected void scale(VillagerRenderState p_362272_, PoseStack poseStack) {
         float s = 0.9375F;
         if (p_362272_.isBaby) {
             s = (float) ((double) s * 0.5D);
@@ -49,12 +47,12 @@ public class HunterVillagerRenderer extends MobRenderer<Villager, VillagerRender
     }
 
     @Override
-    public @NotNull VillagerRenderState createRenderState() {
+    public VillagerRenderState createRenderState() {
         return new VillagerRenderState();
     }
 
     @Override
-    public void extractRenderState(@NotNull Villager entity, @NotNull VillagerRenderState state, float p_361157_) {
+    public void extractRenderState(Villager entity, VillagerRenderState state, float p_361157_) {
         super.extractRenderState(entity, state, p_361157_);
         itemModelResolver.updateForLiving(state.heldItem, entity.getMainHandItem(), entity.getMainArm() == HumanoidArm.RIGHT ? ItemDisplayContext.THIRD_PERSON_RIGHT_HAND : ItemDisplayContext.THIRD_PERSON_LEFT_HAND, entity);
         state.isUnhappy = entity.getUnhappyCounter() > 0;

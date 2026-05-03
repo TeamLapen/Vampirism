@@ -27,6 +27,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -62,7 +63,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public Desc<Q> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, Q data) {
+    public Desc<Q> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull Q data) {
         this.triggerAdvancements(lord);
         if (minion != null) {
             minion.recallMinion();
@@ -79,7 +80,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     }
 
     @Override
-    public void deactivateTask(Desc<Q> desc) {
+    public void deactivateTask(@NonNull Desc<Q> desc) {
 
     }
 

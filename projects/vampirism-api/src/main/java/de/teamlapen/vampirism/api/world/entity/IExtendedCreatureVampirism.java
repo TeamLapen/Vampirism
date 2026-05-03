@@ -46,13 +46,6 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
     int getPoisonousBloodDuration();
 
     /**
-     * @deprecated Use {@link IExtendedCreatureVampirism#setPoisonousBlood(int)}
-     */
-    @Deprecated()
-    default void setPoisonousBlood(boolean poisonous) {
-    }
-
-    /**
      * Sets the duration of poisonous blood of the entity
      */
     void setPoisonousBlood(int poisonous);

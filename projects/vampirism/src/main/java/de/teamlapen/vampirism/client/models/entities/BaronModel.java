@@ -9,17 +9,15 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * VampirismBaronLord - RebelT
  * Created using Tabula 7.1.0
  * Updated to 1.17 by maxanier
  */
-public class BaronModel extends BaronBaseModel implements ArmedModel, HeadedModel {
+public class BaronModel extends BaronBaseModel implements ArmedModel<VampireBaronRenderer.VampireBaronRenderState>, HeadedModel {
     private static final String BODY = "body";
     private static final String HEAD_OVERLAY = "head_overlay";
     private static final String LEG_RIGHT_OVERLAY = "leg_right_overlay";
@@ -35,25 +33,25 @@ public class BaronModel extends BaronBaseModel implements ArmedModel, HeadedMode
     private static final String CLAWS_RIGHT = "claws_right";
     private static final String CLAWS_LEFT = "claws_left";
 
-    protected final @NotNull ModelPart body;
-    protected final @NotNull ModelPart headOverlay;
-    protected final @NotNull ModelPart legRightOverlay;
-    protected final @NotNull ModelPart legLeftOverlay;
-    protected final @NotNull ModelPart armRightOverlay;
-    protected final @NotNull ModelPart armLeftOverlay;
-    protected final @NotNull ModelPart bodyOverlay;
-    protected final @NotNull ModelPart head;
-    protected final @NotNull ModelPart armRight;
-    protected final @NotNull ModelPart armLeft;
-    protected final @NotNull ModelPart legRight;
-    protected final @NotNull ModelPart legLeft;
-    protected final @NotNull ModelPart clawsRight;
-    protected final @NotNull ModelPart clawsLeft;
+    protected final ModelPart body;
+    protected final ModelPart headOverlay;
+    protected final ModelPart legRightOverlay;
+    protected final ModelPart legLeftOverlay;
+    protected final ModelPart armRightOverlay;
+    protected final ModelPart armLeftOverlay;
+    protected final ModelPart bodyOverlay;
+    protected final ModelPart head;
+    protected final ModelPart armRight;
+    protected final ModelPart armLeft;
+    protected final ModelPart legRight;
+    protected final ModelPart legLeft;
+    protected final ModelPart clawsRight;
+    protected final ModelPart clawsLeft;
 
     protected final HumanoidModel.ArmPose leftArmPose = HumanoidModel.ArmPose.EMPTY;
     protected final HumanoidModel.ArmPose rightArmPose = HumanoidModel.ArmPose.EMPTY;
 
-    public static @NotNull LayerDefinition createLayer() {
+    public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         CubeDeformation DEFORM_OVERLAY = new CubeDeformation(0.2f);
@@ -76,7 +74,7 @@ public class BaronModel extends BaronBaseModel implements ArmedModel, HeadedMode
 
     }
 
-    public BaronModel(@NotNull ModelPart part) {
+    public BaronModel(ModelPart part) {
         super(part);
         this.body = part.getChild(BODY);
         this.headOverlay = part.getChild(HEAD_OVERLAY);
@@ -100,14 +98,13 @@ public class BaronModel extends BaronBaseModel implements ArmedModel, HeadedMode
         return this.body;
     }
 
-    @NotNull
     @Override
     public ModelPart getHead() {
         return head;
     }
 
     @Override
-    public void setupAnim(@NotNull VampireBaronRenderer.VampireBaronRenderState state) {
+    public void setupAnim(VampireBaronRenderer.VampireBaronRenderState state) {
         this.head.yRot = state.yRot * ((float) Math.PI / 180f);
 
         this.body.yRot = 0.0F;
@@ -163,13 +160,8 @@ public class BaronModel extends BaronBaseModel implements ArmedModel, HeadedMode
             if (handside == HumanoidArm.LEFT) {
                 this.body.yRot *= -1.0F;
             }
-            //Claw rotations are broken
-//            this.armRight.rotationPointZ = MathHelper.sin(this.body.rotateAngleY) * 5.0F;
             this.armRight.x = -Mth.cos(this.body.yRot) * 4.0F;
-//            this.armLeft.rotationPointZ = -MathHelper.sin(this.body.rotateAngleY) * 5.0F;
             this.armLeft.x = Mth.cos(this.body.yRot) * 4.0F;
-//            this.armRight.rotateAngleY += this.body.rotateAngleY;
-//            this.armLeft.rotateAngleY += this.body.rotateAngleY;
             this.armLeft.xRot += this.body.yRot;
             f1 = 1.0F - state.attackTime;
             f1 = f1 * f1;
@@ -178,8 +170,6 @@ public class BaronModel extends BaronBaseModel implements ArmedModel, HeadedMode
             float f2 = Mth.sin(f1 * (float) Math.PI);
             float f3 = Mth.sin(state.attackTime * (float) Math.PI) * -(this.head.xRot - 0.7F) * 0.75F;
             ModelRenderer.xRot = (float) ((double) ModelRenderer.xRot - ((double) f2 * 1.2D + (double) f3));
-//            ModelRenderer.rotateAngleY += this.body.rotateAngleY * 2.0F;
-//            ModelRenderer.rotateAngleZ += MathHelper.sin(this.swingProgress * (float)Math.PI) * -0.4F;
         }
 
         this.body.xRot = 0.0F;
@@ -209,7 +199,7 @@ public class BaronModel extends BaronBaseModel implements ArmedModel, HeadedMode
     }
 
     @Override
-    public void translateToHand(EntityRenderState renderState, HumanoidArm arm, PoseStack poseStack) {
+    public void translateToHand(VampireBaronRenderer.VampireBaronRenderState renderState, HumanoidArm arm, PoseStack poseStack) {
         this.getArmForSide(arm).translateAndRotate(poseStack);
     }
 }

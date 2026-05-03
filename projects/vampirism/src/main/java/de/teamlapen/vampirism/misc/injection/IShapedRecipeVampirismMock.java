@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.misc.injection;
 
 import de.teamlapen.vampirism.misc.extension.IShapedRecipe;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 

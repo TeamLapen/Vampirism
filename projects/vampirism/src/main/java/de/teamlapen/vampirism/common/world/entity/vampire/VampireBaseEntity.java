@@ -45,7 +45,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gamerules.GameRules;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -54,15 +53,15 @@ import java.util.Arrays;
  */
 public abstract class VampireBaseEntity extends VampirismEntity implements IVampireMob, Npc/*mainly for JourneyMap*/ {
 
-    public static boolean spawnPredicateVampire(@NotNull EntityType<? extends VampirismEntity> entityType, @NotNull ServerLevelAccessor world, EntitySpawnReason spawnReason, @NotNull BlockPos blockPos, @NotNull RandomSource random) {
+    public static boolean spawnPredicateVampire(EntityType<? extends VampirismEntity> entityType, ServerLevelAccessor world, EntitySpawnReason spawnReason, BlockPos blockPos, RandomSource random) {
         return world.getDifficulty() != Difficulty.PEACEFUL && (Monster.isDarkEnoughToSpawn(world, blockPos, random) || spawnPredicateVampireFog(world, blockPos)) && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
     }
 
-    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampirismEntity.getAttributeBuilder().add(ModAttributes.SUNDAMAGE, BalanceMobProps.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
     }
 
-    protected @NotNull EnumStrength garlicResist = EnumStrength.NONE;
+    protected EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
     protected boolean vulnerableToFire = true;
     /**
@@ -70,7 +69,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      */
     private SpawnRestriction spawnRestriction = SpawnRestriction.NORMAL;
     private boolean sundamageCache;
-    private @NotNull EnumStrength garlicCache = EnumStrength.NONE;
+    private EnumStrength garlicCache = EnumStrength.NONE;
     /**
      * If the vampire should spawn a vampire soul at the end of its death animation.
      * No need to store this in NBT as it is only set during onDeath() so basically 20 ticks beforehand.
@@ -133,7 +132,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean checkSpawnRules(@NotNull LevelAccessor worldIn, @NotNull EntitySpawnReason spawnReasonIn) {
+    public boolean checkSpawnRules(LevelAccessor worldIn, EntitySpawnReason spawnReasonIn) {
         if (spawnRestriction.level >= SpawnRestriction.SIMPLE.level) {
             if (isGettingSundamage(worldIn, true) || isGettingGarlicDamage(worldIn, true) != EnumStrength.NONE) {
                 return false;
@@ -161,7 +160,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public void die(@NotNull DamageSource cause) {
+    public void die(DamageSource cause) {
         super.die(cause);
         if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
             dropSoul = true;
@@ -176,12 +175,12 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean doesResistGarlic(@NotNull EnumStrength strength) {
+    public boolean doesResistGarlic(EnumStrength strength) {
         return !strength.isStrongerThan(garlicResist);
     }
 
     @Override
-    public boolean doHurtTarget(ServerLevel level, @NotNull Entity entity) {
+    public boolean doHurtTarget(ServerLevel level, Entity entity) {
         if (canSuckBloodFromPlayer && !level().isClientSide() && wantsBlood() && entity instanceof Player player && !Helper.isHunter(player) && !UtilLib.canReallySee(player, this, true)) {
             int amt = VampirePlayer.get(player).onBite(this);
             drinkBlood(amt, IBloodStats.MEDIUM_SATURATION, new DrinkBloodContext(player));
@@ -208,11 +207,10 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
-        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, drinkContext);
+        BloodDrinkEvent.EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, drinkContext);
         this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, event.getAmount() * 20));
     }
 
-    @NotNull
     @Override
     public EnumStrength isGettingGarlicDamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
@@ -222,7 +220,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, @NotNull DamageSource damageSource, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
         if (vulnerableToFire) {
             if (damageSource.is(DamageTypes.IN_FIRE)) {
                 return DamageHandler.hurtModded(level, this, ModDamageSources::vampireInFire, calculateFireDamage(amount));
@@ -289,7 +287,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
      * Checks if light level is low enough
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#CURSED_EARTH}
      */
-    private boolean getCanSpawnHereRestricted(@NotNull LevelAccessor iWorld) {
+    private boolean getCanSpawnHereRestricted(LevelAccessor iWorld) {
         boolean vampireBiome = iWorld.getBiome(this.blockPosition()).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
         boolean lowLightLevel = isLowLightLevel(iWorld);
         if (lowLightLevel) return true;

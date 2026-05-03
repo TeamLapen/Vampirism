@@ -74,7 +74,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
 
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
-        Component name = Component.translatable("container.vampirism.alchemical_cauldron.display", minecraft.player.getDisplayName().copy().withStyle(ChatFormatting.DARK_BLUE), ModBlocks.ALCHEMICAL_CAULDRON.get().getName());
+        Component name = Component.translatable("container.vampirism.alchemical_cauldron.owner", minecraft.player.getDisplayName().copy().withStyle(ChatFormatting.DARK_BLUE), ModBlocks.ALCHEMICAL_CAULDRON.get().getName());
         graphics.text(this.font, name, 5, 6, 0x404040, false);
         graphics.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
     }

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.data.loot.functions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.world.items.oil.IOil;
-import de.teamlapen.vampirism.common.core.ModLoot;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.tags.ModOilTags;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;

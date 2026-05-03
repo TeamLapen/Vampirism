@@ -16,9 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,10 +44,11 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     @Nullable
     private PlacementInfo placementInfo;
 
-    public InfuserRecipe(CommonInfo commonInfo, @NotNull String groupIn, Optional<Ingredient> ingredient1, Optional<Ingredient> ingredient2, Optional<Ingredient> ingredient3, Optional<Ingredient> ingredient4, Ingredient ingredient, Optional<ItemStackTemplate> result1, Optional<ItemStackTemplate> result2, Optional<ItemStackTemplate> result3, Optional<ItemStackTemplate> result, int cookingTime) {
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public InfuserRecipe(CommonInfo commonInfo, String groupIn, Optional<Ingredient> ingredient1, Optional<Ingredient> ingredient2, Optional<Ingredient> ingredient3, Optional<Ingredient> ingredient4, Ingredient ingredient, Optional<ItemStackTemplate> result1, Optional<ItemStackTemplate> result2, Optional<ItemStackTemplate> result3, Optional<ItemStackTemplate> result, int cookingTime) {
         this(commonInfo, groupIn, ingredient1.orElse(null), ingredient2.orElse(null), ingredient3.orElse(null), ingredient4.orElse(null), ingredient, result1.orElse(null), result2.orElse(null), result3.orElse(null), result, cookingTime);
     }
-    public InfuserRecipe(CommonInfo commonInfo, @NotNull String groupIn,@Nullable Ingredient ingredient1,@Nullable Ingredient ingredient2,@Nullable Ingredient ingredient3,@Nullable Ingredient ingredient4, Ingredient ingredient, @Nullable ItemStackTemplate result1, @Nullable ItemStackTemplate result2,@Nullable  ItemStackTemplate result3, Optional<ItemStackTemplate> result, int cookingTime) {
+    public InfuserRecipe(CommonInfo commonInfo, String groupIn,@Nullable Ingredient ingredient1,@Nullable Ingredient ingredient2,@Nullable Ingredient ingredient3,@Nullable Ingredient ingredient4, Ingredient ingredient, @Nullable ItemStackTemplate result1, @Nullable ItemStackTemplate result2,@Nullable  ItemStackTemplate result3, Optional<ItemStackTemplate> result, int cookingTime) {
         Preconditions.checkArgument(ingredient1 != null || ingredient2 != null || ingredient3 != null || ingredient4 != null, "At least one ingredient must be present");
         this.commonInfo = commonInfo;
         this.group = groupIn;
@@ -111,12 +110,12 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     }
 
     @Override
-    public @NonNull String group() {
+    public String group() {
         return this.group;
     }
 
     @Override
-    public boolean matches(InfuserRecipeInput input, @NotNull Level level) {
+    public boolean matches(InfuserRecipeInput input, Level level) {
         return this.ingredient.test(input.item) &&
                 ((this.ingredient1 == null && input.input1.isEmpty()) || (this.ingredient1 != null && this.ingredient1.test(input.input1))) &&
                 ((this.ingredient2 == null && input.input2.isEmpty()) || (this.ingredient2 != null && this.ingredient2.test(input.input2))) &&
@@ -125,7 +124,7 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull InfuserRecipeInput input) {
+    public ItemStack assemble(InfuserRecipeInput input) {
         int level = Stream.of(input.input1, input.input2, input.input3, input.input4).map(s -> s.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.EMPTY)).mapToInt(PureLevel::level).min().orElse(-1);
         var result = this.result.map(ItemStackTemplate::create).orElseGet(input.item::copy);
         if (result.has(ModDataComponents.BLOOD_CHARGED)) {
@@ -135,17 +134,17 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<? extends Recipe<InfuserRecipeInput>> getSerializer() {
+    public RecipeSerializer<? extends Recipe<InfuserRecipeInput>> getSerializer() {
         return ModRecipes.INFUSER.get();
     }
 
     @Override
-    public @NotNull RecipeType<? extends Recipe<InfuserRecipeInput>> getType() {
+    public RecipeType<? extends Recipe<InfuserRecipeInput>> getType() {
         return ModRecipes.INFUSER_TYPE.get();
     }
 
     @Override
-    public @NotNull PlacementInfo placementInfo() {
+    public PlacementInfo placementInfo() {
         if (this.placementInfo == null) {
             this.placementInfo = PlacementInfo.createFromOptionals(List.of(Optional.ofNullable(this.ingredient1), Optional.ofNullable(this.ingredient2), Optional.ofNullable(this.ingredient3), Optional.ofNullable(this.ingredient4), Optional.of(this.ingredient)));
         }
@@ -153,14 +152,14 @@ public class InfuserRecipe implements Recipe<InfuserRecipe.InfuserRecipeInput> {
     }
 
     @Override
-    public @NotNull RecipeBookCategory recipeBookCategory() {
+    public RecipeBookCategory recipeBookCategory() {
         return ModRecipes.INFUSER_CATEGORY.get();
     }
 
     public record InfuserRecipeInput(ItemStack input1, ItemStack input2, ItemStack input3, ItemStack input4, ItemStack item) implements RecipeInput {
 
         @Override
-        public @NotNull ItemStack getItem(int index) {
+        public ItemStack getItem(int index) {
             return switch (index) {
                 case 0 -> this.input1;
                 case 1 -> this.input2;

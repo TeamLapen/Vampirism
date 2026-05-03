@@ -1217,6 +1217,7 @@
   "tooltip.vampirism.garlic_finder": "Pure blood stirs more fiercely in the presence of garlic than the blood of inferior vampires. This device harnesses that peculiarity to estimate the proximity of garlic sources. Garlic diffusers and their cores within 40 blocks will be revealed to you if held in either hands or in the hotbar.",
   "tooltip.vampirism.vapor_still": "A copper distiller capable of separating liquid mixtures into fractions. Primarily used by hunters to augment ordinary potions by infusing them with distilled vampire blood. However, creating most advanced concoctions can be tricky. Therefore, knowledge of certain skills may be required.\n\nThe still needs blaze powder as fuel, one piece is enough for 20 potion batches. Interacts with hoppers similarly to brewing stands, allowing for process automation.",
   "tooltip.vampirism.ritual_knife.infused": "Infused",
+  "tooltip.vampirism.heart_seeker.consume": "Consumes %s blood per hit",
 
   "subtitles.vampirism.entity.vampire_scream": "Vampire hisses",
   "subtitles.vampirism.player.bite": "Vampire bites",

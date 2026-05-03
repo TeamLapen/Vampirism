@@ -6,7 +6,6 @@ import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.world.blockentity.NetworkedContainerBlockEntity;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
-import de.teamlapen.vampirism.common.core.ModDataMaps;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.util.Helper;
@@ -42,9 +41,6 @@ import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

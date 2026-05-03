@@ -2,10 +2,8 @@ package de.teamlapen.vampirism.common.world.items.consume;
 
 import de.teamlapen.faction.api.world.items.consume.IFactionFoodBehavior;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.BloodStats;
 import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

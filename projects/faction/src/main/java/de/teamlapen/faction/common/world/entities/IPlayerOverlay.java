@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * Interface for creatures which have a biped model with parts of their bodies overlayed with the texture of a player
+ * Interface for creatures which have a biped model with parts of their bodies overlapped with the texture of a player
  */
 public interface IPlayerOverlay {
     /**
-     * Used as overlay description while waiting for the texture to be loaded
+     * Used as an overlay description while waiting for the texture to be loaded
      */
     Pair<Identifier, PlayerModelType> PENDING_PROP = Pair.of(DefaultPlayerSkin.getDefaultTexture(), PlayerModelType.WIDE);
 

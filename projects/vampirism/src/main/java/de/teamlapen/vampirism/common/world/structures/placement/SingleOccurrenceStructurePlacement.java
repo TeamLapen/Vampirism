@@ -27,6 +27,7 @@ public class SingleOccurrenceStructurePlacement extends StructurePlacement {
     private final int chunkX;
     private final int chunkZ;
 
+    @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "deprecation"})
     public SingleOccurrenceStructurePlacement(int chunkX, int chunkZ, Vec3i locateOffset, FrequencyReductionMethod frequencyReductionMethod, float frequency, int salt, Optional<ExclusionZone> exclusionZone) {
         super(locateOffset, frequencyReductionMethod, frequency, salt, exclusionZone);
         this.chunkX = chunkX;

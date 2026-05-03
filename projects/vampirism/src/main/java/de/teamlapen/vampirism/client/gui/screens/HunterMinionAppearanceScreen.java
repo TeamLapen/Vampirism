@@ -26,7 +26,6 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private boolean useLordSkin;
     private boolean isMinionSpecificSkin;
     private int normalSkinCount;
-    @SuppressWarnings("FieldCanBeLocal")
     private int minionSkinCount;
     private String minionName;
 

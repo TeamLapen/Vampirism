@@ -6,7 +6,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
 
 public class GhostModel extends EntityModel<GhostRenderer.GhostRenderState> {
 
@@ -31,7 +30,7 @@ public class GhostModel extends EntityModel<GhostRenderer.GhostRenderState> {
     private final ModelPart right_arm;
     private final ModelPart left_arm;
 
-    public GhostModel(@NotNull ModelPart part) {
+    public GhostModel(ModelPart part) {
         super(part);
         this.body = part.getChild(BODY);
         this.head = this.body.getChild(HEAD);
@@ -40,7 +39,7 @@ public class GhostModel extends EntityModel<GhostRenderer.GhostRenderState> {
     }
 
     @Override
-    public void setupAnim(@NotNull GhostRenderer.GhostRenderState renderState) {
+    public void setupAnim(GhostRenderer.GhostRenderState renderState) {
         this.body.getAllParts().forEach(ModelPart::resetPose);
         this.head.yRot = renderState.yRot / (180F / (float) Math.PI);
         this.head.xRot = renderState.xRot / (180F / (float) Math.PI);

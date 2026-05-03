@@ -958,7 +958,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.vision.unlockVision(vision);
     }
 
-    @SuppressWarnings("UnreachableCode")
     public void updateNaturalArmor(int lvl) {
         AttributeInstance armorAtt = player.getAttribute(Attributes.ARMOR);
         AttributeInstance toughnessAtt = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
@@ -1008,27 +1007,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return getLevel() > 0 && bloodStats.needsBlood();
     }
 
-
-
-    //    @Override
-//    public void deserialize(@NotNull ValueInput input) {
-//        super.deserialize(input);
-//        input.getInt(KEY_SPAWN_BITE_PARTICLE).ifPresent(this::spawnBiteParticle);
-//        input.getInt(KEY_FEED_VICTIM_ID).ifPresent(id -> {
-//            feed_victim = id;
-//            if (feed_victim != -1) {
-//                if (feedingSoundReference == null || !feedingSoundReference.isPlaying()) {
-//                    feedingSoundReference = SoundUtil.getSoundHandler().createSoundReference(ModSounds.VAMPIRE_FEEDING.get(), SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 0.8f, 1);
-//                    feedingSoundReference.startPlaying();
-//                }
-//            } else {
-//                if (feedingSoundReference != null) {
-//                    feedingSoundReference.stopPlaying();
-//                    feedingSoundReference = null;
-//                }
-//            }
-//        });
-//    }
 
     private void loadDBNOTimer(int timer) {
         boolean wasDBNOClient = isDBNO();

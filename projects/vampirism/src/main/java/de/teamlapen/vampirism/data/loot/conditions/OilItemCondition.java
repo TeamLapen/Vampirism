@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.util.OilUtils;
 import net.minecraft.world.item.ItemInstance;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;

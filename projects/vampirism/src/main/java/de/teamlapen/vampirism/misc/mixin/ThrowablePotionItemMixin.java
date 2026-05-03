@@ -18,7 +18,7 @@ public abstract class ThrowablePotionItemMixin extends PotionItem implements Pro
     }
 
     @WrapOperation(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/Projectile;spawnProjectileFromRotation(Lnet/minecraft/world/entity/projectile/Projectile$ProjectileFactory;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;FFF)Lnet/minecraft/world/entity/projectile/Projectile;"))
-    private <T extends Projectile> T s(Projectile.ProjectileFactory<T> factory, ServerLevel level, ItemStack spawnedFrom, LivingEntity owner, float z, float velocity, float inaccuracy, Operation<T> original) {
-        return original.call(factory, level, spawnedFrom, owner, z, owner instanceof LivingEntity living && living.hasEffect(ModEffects.FREEZE) ? velocity / 3 : velocity, inaccuracy);
+    private <T extends Projectile> T s(Projectile.ProjectileFactory<T> creator, ServerLevel serverLevel, ItemStack itemStack, LivingEntity source, float yOffset, float pow, float uncertainty, Operation<T> original) {
+        return original.call(creator, serverLevel, itemStack, source, yOffset, source instanceof LivingEntity living && living.hasEffect(ModEffects.FREEZE) ? pow / 3 : pow, uncertainty);
     }
 }

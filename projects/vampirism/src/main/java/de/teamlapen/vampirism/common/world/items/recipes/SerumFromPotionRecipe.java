@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -14,8 +13,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-
-import java.util.*;
 
 public class SerumFromPotionRecipe extends CustomRecipe {
 

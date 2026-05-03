@@ -92,7 +92,7 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
     ISkill<T> asSkill();
 
     /**
-     * Provide some context of the activation instant sent from client
+     * Provide some context of the activation instant sent from the client
      */
     @SuppressWarnings("unused")
     interface ActivationContext {

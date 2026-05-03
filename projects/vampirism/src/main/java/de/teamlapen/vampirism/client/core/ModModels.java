@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.world.item.DyeColor;

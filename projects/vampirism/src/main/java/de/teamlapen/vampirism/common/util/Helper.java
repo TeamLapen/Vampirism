@@ -22,7 +22,6 @@ import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.common.world.items.StakeItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.arrow.VampireKillerBehavior;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.DoubleTag;
@@ -41,7 +40,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

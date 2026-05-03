@@ -58,6 +58,7 @@ import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -90,6 +91,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
      */
     @Nullable
     private Pair<Identifier, PlayerModelType> skinDetails;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Nullable
     private Optional<PlayerSkinRenderCache.RenderInfo> skinProfile;
     /**
@@ -103,7 +105,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     private ICaptureAttributes villageAttributes;
 
     public AdvancedHunterEntity(EntityType<? extends AdvancedHunterEntity> type, Level world) {
-        super(type, world, true);
+        super(type, world);
         saveHome = true;
         this.getNavigation().setCanOpenDoors(true);
 
@@ -127,13 +129,13 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     }
 
     @Override
-    public void attackVillage(ICaptureAttributes attributes) {
+    public void attackVillage(@NonNull ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = true;
     }
 
     @Override
-    public void defendVillage(ICaptureAttributes attributes) {
+    public void defendVillage(@NonNull ICaptureAttributes attributes) {
         this.villageAttributes = attributes;
         this.attack = false;
     }

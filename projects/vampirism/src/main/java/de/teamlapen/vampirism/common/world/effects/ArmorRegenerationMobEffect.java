@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.world.effects;
 
-import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;

@@ -68,7 +68,7 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
                     }
                 }
             }
-            if (e.level.getRandom().nextFloat() < Math.max(0.02f, Math.min(0.1f, e.activePlayers.size() * 0.002f))) {
+            if (e.level.getRandom().nextFloat() < Math.clamp(e.activePlayers.size() * 0.002f, 0.02f, 0.1f)) {
                 var blocks = e.getTreeStructure(false).getCachedBlocks();
                 if (e.level.getEntitiesOfClass(GhostEntity.class, e.getArea().inflate(10)).size() < Math.min(e.activePlayers.size() * 1.6, 10)) {
                     blocks.stream().skip(e.level.getRandom().nextInt(blocks.size())).findFirst().ifPresent(pos -> e.spawnGhost(level, pos));
@@ -293,7 +293,7 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
     private void spawnGhosts() {
         Set<BlockPos> vuls = this.getTreeStructure(false).getCachedBlocks();
         int size = this.level.getEntitiesOfClass(GhostEntity.class, this.getArea()).size();
-        for (int i = size; i < Math.max(3, Math.min(this.activePlayers.size() * 1.6, 10)); i++) {
+        for (int i = size; i < Math.clamp(this.activePlayers.size() * 1.6, 3, 10); i++) {
             vuls.stream().skip(level.getRandom().nextInt(vuls.size())).findFirst().ifPresent(pos -> this.spawnGhost(level, pos));
         }
     }

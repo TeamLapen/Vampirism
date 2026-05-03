@@ -127,11 +127,6 @@ public class PortalGatewayBlock extends BaseHorizontalBlock {
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(TYPE, Type.FIRST));
     }
 
-//    @Override
-//    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-//        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
-//    }
-
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPES.get(state.getValue(TYPE)).get(state.getValue(FACING));

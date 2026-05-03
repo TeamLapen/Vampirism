@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.core;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.world.items.recipes.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;

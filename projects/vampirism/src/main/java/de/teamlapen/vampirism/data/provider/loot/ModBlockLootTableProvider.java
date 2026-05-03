@@ -30,10 +30,6 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
-
 public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
     /**

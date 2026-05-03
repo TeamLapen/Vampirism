@@ -11,7 +11,6 @@ import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +20,7 @@ public abstract class GuiGraphicsExtractorMixin implements IGuiGraphicsExtractor
 
     @Shadow
     @Final
-    private TextureAtlas guiSprites;
+    public TextureAtlas guiSprites;
 
     @Shadow
     private static GuiSpriteScaling getSpriteScaling(TextureAtlasSprite sprite) {
@@ -29,10 +28,10 @@ public abstract class GuiGraphicsExtractorMixin implements IGuiGraphicsExtractor
     }
 
     @Shadow
-    protected abstract void blitTiledSprite(RenderPipeline pipeline, TextureAtlasSprite sprite, int x, int y, int width, int height, int u, int v, int spriteWidth, int spriteHeight, int textureWidth, int textureHeight, int color);
+    protected abstract void blitTiledSprite(RenderPipeline renderPipeline, TextureAtlasSprite sprite, int x, int y, int width, int height, int textureX, int textureY, int tileWidth, int tileHeight, int spriteWidth, int spriteHeight, int color);
 
     @Shadow
-    public abstract void blitSprite(RenderPipeline pipeline, Identifier sprite, int x, int y, int width, int height, int color);
+    public abstract void blitSprite(RenderPipeline renderPipeline, Identifier location, int x, int y, int width, int height, int color);
 
     @Shadow
     public abstract void text(Font font, FormattedCharSequence str, int x, int y, int color, boolean dropShadow);

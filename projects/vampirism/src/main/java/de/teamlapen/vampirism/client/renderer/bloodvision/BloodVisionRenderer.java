@@ -70,7 +70,7 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
     @SubscribeEvent
     public void onExtract(ExtractLevelRenderStateEvent event) {
         this.hasGarlicVision = VampirePlayer.get(player()).getSkillProperties().blood_vision_garlic;
-        this.cachedEntityRenderStates = event.getRenderState().entityRenderStates.stream().filter(x -> x.distanceToCameraSq < ENTITY_NEAR_SQ_DISTANCE * 2).filter(x -> x instanceof LivingEntityRenderState).mapMulti(this::createEntry).toList();
+        this.cachedEntityRenderStates = event.getRenderState().entityRenderStates.stream().filter(x -> x.distanceToCameraSq < ENTITY_NEAR_SQ_DISTANCE * 2).filter(LivingEntityRenderState.class::isInstance).mapMulti(this::createEntry).toList();
     }
 
     private void createEntry(EntityRenderState renderState, Consumer<IEntityEntry> consumer) {
@@ -80,8 +80,6 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
             consumer.accept(new BloodEntityEntry(renderState, (float) blood / renderState.getRenderDataOrDefault(ModEntityRenderStates.MAX_BLOOD, 1)));
         } else if (hasGarlicVision && (poisonBlood || renderState.getRenderDataOrDefault(ModEntityRenderStates.HUNTER, false))) {
             consumer.accept(new PoisonBloodEntry(renderState));
-        } else {
-//            consumer.accept(new OtherEntityEntry(renderState));
         }
     }
 

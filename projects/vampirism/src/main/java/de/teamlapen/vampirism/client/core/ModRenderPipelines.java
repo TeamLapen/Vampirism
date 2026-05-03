@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.renderer.blockentity.VelmorraPortalRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.*;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
 import java.util.function.Supplier;

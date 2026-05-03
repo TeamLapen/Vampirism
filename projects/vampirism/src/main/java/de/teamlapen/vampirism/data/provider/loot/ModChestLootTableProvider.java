@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.data.provider.loot;
 
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.util.MapUtil;
-import de.teamlapen.faction.common.world.items.OblivionPotionItem;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.tags.ModStructureTags;
@@ -23,7 +22,6 @@ import net.minecraft.world.level.storage.loot.functions.SetNameFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.function.BiConsumer;
 

@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class EquippableMixin {
 
     @Inject(method = "swapWithEquipmentSlot" , at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;"), cancellable = true)
-    private void checkFactionUsability(ItemStack newItem, Player player, CallbackInfoReturnable<InteractionResult> cir) {
-        if (FactionRestriction.canUse(player, newItem, true)) {
+    private void checkFactionUsability(ItemStack inHand, Player player, CallbackInfoReturnable<InteractionResult> cir) {
+        if (FactionRestriction.canUse(player, inHand, true)) {
             cir.setReturnValue(InteractionResult.FAIL);
         }
     }

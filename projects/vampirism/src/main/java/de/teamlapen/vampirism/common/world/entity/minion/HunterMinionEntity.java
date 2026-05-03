@@ -176,8 +176,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     private void updateAttackGoal() {
-        if (this.level().isClientSide()) {
-        }
     }
 
     public void updateAttributes() {

@@ -86,14 +86,14 @@ public abstract class FactionVillageEvent extends Event {
         }
 
         /**
-         * @return The type the ne
+         * @return The type the new villager
          */
         public EntityType<? extends Villager> getOriginalNewVillagerType(){
             return originalNewVillagerType;
         }
 
         /**
-         * @return May be null, if entity creation fails
+         * @return May be null if entity creation fails
          */
         @Nullable
         public Villager getOrCreateNewVillager(){
@@ -122,7 +122,7 @@ public abstract class FactionVillageEvent extends Event {
          * @return Villager to be replaced if present
          */
         public Optional<LivingEntity> getEntityToReplace(){
-            return Optional.<LivingEntity>ofNullable(replacedEntity);
+            return Optional.ofNullable(replacedEntity);
         }
 
     }

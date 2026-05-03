@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.misc.extension.client;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.FormattedCharSequence;
 
 public interface IGuiGraphicsExtractor {
 

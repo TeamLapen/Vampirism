@@ -8,7 +8,6 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Attire designed for the female vampire baroness - RebelT
@@ -25,18 +24,18 @@ public class BaronessAttireModel extends EntityModel<VampireBaronRenderer.Vampir
     private static final String DRESS_TORSO = "dress_torso";
     private static final String CLOAK = "cloak";
 
-    public final @NotNull ModelPart dressTorso;
-    public final @NotNull ModelPart dressArmBandRight;
-    public final @NotNull ModelPart dressArmBandLeft;
-    public final @NotNull ModelPart hat;
-    public final @NotNull ModelPart hood;
+    public final ModelPart dressTorso;
+    public final ModelPart dressArmBandRight;
+    public final ModelPart dressArmBandLeft;
+    public final ModelPart hat;
+    public final ModelPart hood;
 
-    public final @NotNull ModelPart dressCurtain;
-    public final @NotNull ModelPart hat2;
-    public final @NotNull ModelPart veil;
-    public final @NotNull ModelPart cloak;
+    public final ModelPart dressCurtain;
+    public final ModelPart hat2;
+    public final ModelPart veil;
+    public final ModelPart cloak;
 
-    public static @NotNull LayerDefinition createLayer() {
+    public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         PartDefinition hat = part.addOrReplaceChild(HAT, CubeListBuilder.create().texOffs(68, 36).addBox(-3, -8, -3, 6, 1, 6), PartPose.ZERO);
@@ -51,7 +50,7 @@ public class BaronessAttireModel extends EntityModel<VampireBaronRenderer.Vampir
         return LayerDefinition.create(mesh, 128, 64);
     }
 
-    public BaronessAttireModel(@NotNull ModelPart part) {
+    public BaronessAttireModel(ModelPart part) {
         super(part);
         dressTorso = part.getChild(DRESS_TORSO);
         dressArmBandLeft = part.getChild(DRESS_ARM_LEFT);
@@ -66,7 +65,7 @@ public class BaronessAttireModel extends EntityModel<VampireBaronRenderer.Vampir
     }
 
     @Override
-    public void setupAnim(@NotNull VampireBaronRenderer.VampireBaronRenderState state) {
+    public void setupAnim(VampireBaronRenderer.VampireBaronRenderState state) {
         float bodyRotateY = 0;
         float headRotateY = 0;
         headRotateY = state.yRot * ((float) Math.PI / 180f);

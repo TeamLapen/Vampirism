@@ -6,7 +6,6 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.world.entity.HumanoidArm;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Keep in sync with {@link net.minecraft.client.model.player.PlayerModel}
@@ -35,7 +34,7 @@ public class ClothedModel<T extends AvatarLikeRenderState> extends HumanoidModel
     }
 
     @Override
-    public void translateToHand(T renderState, @NonNull HumanoidArm arm, @NonNull PoseStack poseStack) {
+    public void translateToHand(T renderState, HumanoidArm arm, PoseStack poseStack) {
         this.root().translateAndRotate(poseStack);
         ModelPart modelpart = this.getArm(arm);
         if (this.slim) {

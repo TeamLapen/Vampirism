@@ -6,7 +6,6 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.core.ModRegistries;
-import de.teamlapen.vampirism.common.core.ModLoot;
 import de.teamlapen.vampirism.common.world.items.RefinementItem;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;

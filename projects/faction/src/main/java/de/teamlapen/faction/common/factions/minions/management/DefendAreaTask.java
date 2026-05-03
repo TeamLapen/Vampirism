@@ -13,6 +13,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import static de.teamlapen.faction.common.factions.minions.management.DefendAreaTask.Desc;
 
@@ -21,7 +22,7 @@ public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
 
 
     @Override
-    public Desc activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, MinionData inventory) {
+    public Desc activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull MinionData inventory) {
         this.triggerAdvancements(lord);
         BlockPos pos = minion != null ? minion.asEntity().blockPosition() : (lord != null ? lord.blockPosition() : null);
         return pos == null ? null : new Desc(pos, 10);
@@ -29,7 +30,7 @@ public class DefendAreaTask extends DefaultMinionTask<Desc, MinionData> {
 
 
     @Override
-    public void deactivateTask(Desc desc) {
+    public void deactivateTask(@NonNull Desc desc) {
 
     }
 

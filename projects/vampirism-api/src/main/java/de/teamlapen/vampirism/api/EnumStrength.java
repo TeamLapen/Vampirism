@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Can be used to determine which strength/tier something is of. e.g. used for holy water and garlic
@@ -27,7 +26,7 @@ public enum EnumStrength implements StringRepresentable {
         return strength;
     }
 
-    public static @NotNull EnumStrength getFromStrength(int strength) {
+    public static EnumStrength getFromStrength(int strength) {
         for (EnumStrength s : values()) {
             if (s.strength == strength) {
                 return s;
@@ -48,13 +47,13 @@ public enum EnumStrength implements StringRepresentable {
     /**
      * If this strength is stronger than the given one.
      */
-    public boolean isStrongerThan(@NotNull EnumStrength compare) {
+    public boolean isStrongerThan(EnumStrength compare) {
         return this.strength > compare.strength;
     }
 
 
     @Override
-    public @NotNull String getSerializedName() {
+    public String getSerializedName() {
         return this.name;
     }
 }

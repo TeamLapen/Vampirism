@@ -65,7 +65,7 @@ public interface ISkill<T extends ISkillPlayer<T>> extends ISkillLike<T> {
     /**
      * Skill can only be added to skill trees defined by the return value.
      *
-     * @return A key of the allowed skilltree or a tag of skilltrees
+     * @return A key of the allowed skill tree or a tag of skill trees
      */
     Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> allowedSkillTrees();
 

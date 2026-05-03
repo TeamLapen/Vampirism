@@ -6,7 +6,6 @@ import de.teamlapen.faction.common.core.DefaultFactions;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Disguise skill
@@ -18,12 +17,12 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     }
 
     @Override
-    public IActionResult activate(@NotNull IVampirePlayer player, ActivationContext context) {
+    public IActionResult activate(IVampirePlayer player, ActivationContext context) {
         activate(player);
         return IActionResult.SUCCESS;
     }
 
-    protected void activate(@NotNull IVampirePlayer player) {
+    protected void activate(IVampirePlayer player) {
         player.getDisguise().disguiseAs(DefaultFactions.NEUTRAL);
     }
 
@@ -43,23 +42,23 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     }
 
     @Override
-    public void onActivatedClient(@NotNull IVampirePlayer player) {
+    public void onActivatedClient(IVampirePlayer player) {
         activate(player);
     }
 
     @Override
-    public void onDeactivated(@NotNull IVampirePlayer player) {
+    public void onDeactivated(IVampirePlayer player) {
         player.getDisguise().unDisguise();
     }
 
     @Override
-    public void onReActivated(@NotNull IVampirePlayer player) {
+    public void onReActivated(IVampirePlayer player) {
         activate(player);
     }
 
     @Override
-    public boolean onUpdate(IVampirePlayer player) {
-        return false;
+    public boolean onUpdate(de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer player) {
+        return ILastingAction.super.onUpdate(player);
     }
 
     @Override

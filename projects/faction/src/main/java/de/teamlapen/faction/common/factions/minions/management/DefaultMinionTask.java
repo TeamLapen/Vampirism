@@ -13,6 +13,7 @@ import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 
 public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> implements IMinionTask<T, Q> {
@@ -31,7 +32,7 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
 
     @Nullable
     @Override
-    public T activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, Q data) {
+    public T activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull Q data) {
         triggerAdvancements(lord);
         return null;
     }

@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player;
 
-import com.google.common.collect.Streams;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionHelper;
-import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.components.FactionSlayer;
@@ -20,7 +18,6 @@ import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
 import de.teamlapen.vampirism.common.world.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
-import de.teamlapen.vampirism.common.world.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.common.world.effects.VampirismPoisonMobEffect;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
@@ -47,7 +44,8 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.skeleton.Stray;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -353,11 +351,6 @@ public class ModPlayerEventHandler {
             event.setCanceled(true);
         } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == state.getBlock()) && Helper.isVampire(event.getEntity())) {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.GARLIC));
-        } else if (state.getBlock() instanceof MotherBlock) {
-            //BlockEntity blockEntity = event.getEntity().level().getBlockEntity(pos);
-            //if (blockEntity instanceof MotherBlockEntity mother && !mother.isCanBeBroken()) {
-            //    event.setUseItem(Event.Result.DENY);
-            //}
         }
     }
 

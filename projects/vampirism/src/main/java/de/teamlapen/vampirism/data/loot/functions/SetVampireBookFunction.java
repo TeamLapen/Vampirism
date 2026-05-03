@@ -7,7 +7,6 @@ import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
-import de.teamlapen.vampirism.common.core.ModLoot;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
 import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.core.RegistryAccess;

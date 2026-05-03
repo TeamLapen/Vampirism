@@ -71,8 +71,8 @@ public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComp
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj instanceof QuarrelPouchContents other) {
-            return ItemStack.listMatches(this.items, other.items);
+        if (obj instanceof QuarrelPouchContents(List<ItemStack> items1)) {
+            return ItemStack.listMatches(this.items, items1);
         }
         return false;
     }

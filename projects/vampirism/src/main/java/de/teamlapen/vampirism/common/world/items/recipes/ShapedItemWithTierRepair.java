@@ -1,19 +1,13 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModRecipes;
-import de.teamlapen.vampirism.misc.mixin.accessor.ShapedRecipeAccessor;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.UnaryOperator;
 
 /**
  * This recipe copies the {@link net.minecraft.nbt.CompoundTag} from the first found {@link IItemWithTier} and inserts it into the manufacturing result with damage = 0

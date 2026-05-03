@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -23,15 +22,15 @@ public class DrinkBloodContext implements IDrinkBloodContext {
     private BlockPos blockPos;
     private boolean returnsSpareBlood = true;
 
-    public DrinkBloodContext(@NotNull LivingEntity entity) {
+    public DrinkBloodContext(LivingEntity entity) {
         this.entity = entity;
     }
 
-    public DrinkBloodContext(@NotNull ItemStack stack) {
+    public DrinkBloodContext(ItemStack stack) {
         this.stack = stack;
     }
 
-    public DrinkBloodContext(@NotNull BlockState blockState, @NotNull BlockPos blockPos) {
+    public DrinkBloodContext(BlockState blockState, BlockPos blockPos) {
         this.blockState = blockState;
         this.blockPos = blockPos;
     }

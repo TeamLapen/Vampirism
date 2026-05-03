@@ -60,10 +60,6 @@ public abstract class FlyingBloodParticleOptions implements ParticleOptions {
         this(maxAgeIn, direct, targetX, targetY, targetZ, 1f);
     }
 
-//    public FlyingBloodParticleOptions(int maxAgeIn, boolean direct, double targetX, double targetY, double targetZ, float scale) {
-//        this(maxAgeIn, direct, targetX, targetY, targetZ, VResourceLocation.mc("critical_hit"), scale);
-//    }
-
     public int getMaxAge() {
         return maxAge;
     }

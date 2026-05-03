@@ -2,12 +2,12 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.faction.common.world.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
-import de.teamlapen.faction.common.world.blocks.base.BaseContainerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -72,11 +71,6 @@ public class AltarInfusionBlock extends BaseContainerBlock implements SimpleWate
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new AltarInfusionBlockEntity(blockPos, blockState);
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
     }
 
     @Override

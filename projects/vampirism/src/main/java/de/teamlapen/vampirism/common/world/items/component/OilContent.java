@@ -10,13 +10,11 @@ import de.teamlapen.vampirism.common.core.ModOils;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
-import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 
 public record OilContent(Holder<IOil> oil) implements IOilContent {

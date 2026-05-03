@@ -86,11 +86,6 @@ public abstract class DiffuserBlock extends BaseContainerBlock {
     public abstract DiffuserBlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
     @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
-    }
-
-    @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }

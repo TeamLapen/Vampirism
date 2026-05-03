@@ -7,8 +7,6 @@ import com.mojang.serialization.codecs.PrimitiveCodec;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.util.Util;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.AABB;
 
 import java.util.Arrays;
@@ -16,7 +14,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
 
 public class ModCodecs {
     public static final Codec<UUID> UUID = Codec.STRING.xmap(java.util.UUID::fromString, java.util.UUID::toString);

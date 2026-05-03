@@ -26,7 +26,7 @@ public class VampirismPoisonMobEffect extends SimpleMobEffect {
 
     @Override
     public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
-        float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.min(entity.getHealth() - 1, Math.max(1, amplifier));
+        float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.clamp(amplifier, 1, entity.getHealth() - 1);
         if (damage > 0) {
             DamageHandler.hurtVanilla(level, entity, DamageSources::magic, damage);
         }

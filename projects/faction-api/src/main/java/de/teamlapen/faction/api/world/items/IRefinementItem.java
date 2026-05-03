@@ -6,7 +6,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -71,7 +70,7 @@ public interface IRefinementItem extends ItemLike {
         }
 
         @Override
-        public @NotNull String getSerializedName() {
+        public String getSerializedName() {
             return this.name;
         }
     }

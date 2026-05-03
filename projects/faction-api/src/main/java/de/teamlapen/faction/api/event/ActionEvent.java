@@ -43,7 +43,7 @@ public abstract class ActionEvent<T extends IFactionPlayer<T> & ISkillPlayer<T>,
 
         private int cooldown;
         private int duration;
-        private Component cancelMessage = Component.translatable("text.factionapi.action.cancelled");
+        private Component cancelMessage = Component.translatable("message.factionapi.action.cancelled");
 
         @ApiStatus.Internal
         public ActionActivatedEvent(T factionPlayer, Holder<IAction<T>> action, int cooldown, int duration) {

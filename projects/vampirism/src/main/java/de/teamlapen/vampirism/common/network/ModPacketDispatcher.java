@@ -5,8 +5,6 @@ import de.teamlapen.vampirism.client.network.ClientPayloadHandler;
 import de.teamlapen.vampirism.common.network.packets.client.*;
 import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 

@@ -7,7 +7,6 @@ import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModRecipes;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

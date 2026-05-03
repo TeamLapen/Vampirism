@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.world.items.oil;
 
 import net.minecraft.world.item.ItemInstance;
-import net.minecraft.world.item.ItemStack;
 
 public interface IToolOil extends IApplicableOil {
 

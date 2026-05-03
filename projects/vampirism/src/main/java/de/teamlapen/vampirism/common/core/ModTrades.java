@@ -26,7 +26,6 @@ import net.minecraft.world.item.trading.VillagerTrade;
 import net.minecraft.world.level.storage.loot.functions.*;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.List;
@@ -309,6 +308,7 @@ public class ModTrades {
         return context.register(resourceKey, villagerTrade);
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private static VillagerTrade trade(TradeCost wants,
                                        ItemStackTemplate gives,
                                        int maxUses,

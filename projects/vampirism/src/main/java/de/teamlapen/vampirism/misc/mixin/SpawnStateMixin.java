@@ -11,7 +11,8 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(NaturalSpawner.SpawnState.class)
 public abstract class SpawnStateMixin implements ISpawnState {
 
-    @Shadow abstract boolean canSpawnForCategoryLocal(MobCategory p_362658_, ChunkPos p_360784_);
+    @Shadow
+    protected abstract boolean canSpawnForCategoryLocal(MobCategory mobCategory, ChunkPos chunkPos);
 
     @Unique
     @Override

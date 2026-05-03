@@ -5,15 +5,14 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import org.jetbrains.annotations.NotNull;
 
 public class RemainsDefenderModel extends EntityModel<RemainsDefenderRenderer.RemainsDefenderRenderState> {
 
     private static final String PART1 = "part1";
     private static final String PART2 = "part2";
 
-    protected final @NotNull ModelPart part1;
-    protected final @NotNull ModelPart part2;
+    protected final ModelPart part1;
+    protected final ModelPart part2;
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();

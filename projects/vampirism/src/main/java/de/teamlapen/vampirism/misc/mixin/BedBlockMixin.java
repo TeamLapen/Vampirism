@@ -20,12 +20,12 @@ import java.util.Optional;
 public class BedBlockMixin {
 
     @Inject(method = "findStandUpPosition(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/CollisionGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;F)Ljava/util/Optional;", at = @At("HEAD"), cancellable = true)
-    private static void vampirism$findStandUpPosition(EntityType<?> entityType, CollisionGetter collisionGetter, BlockPos pos, Direction p_direction, float yRot, CallbackInfoReturnable<Optional<Vec3>> cir) {
-        BlockState state = collisionGetter.getBlockState(pos);
+    private static void vampirism$findStandUpPosition(EntityType<?> type, CollisionGetter level, BlockPos pos, Direction forward, float yaw, CallbackInfoReturnable<Optional<Vec3>> cir) {
+        BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
 
         if (block instanceof CoffinBlock) {
-            cir.setReturnValue(CoffinBlock.findStandUpPosition(entityType, collisionGetter, pos, yRot));
+            cir.setReturnValue(CoffinBlock.findStandUpPosition(type, level, pos, yaw));
             cir.cancel();
         }
     }
