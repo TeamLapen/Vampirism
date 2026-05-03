@@ -1,4 +1,7 @@
 {
+  "remove": [
+    "vampirism:velmorra"
+  ],
   "values": [
     "#c:is_wasteland",
     "#c:is_plateau",

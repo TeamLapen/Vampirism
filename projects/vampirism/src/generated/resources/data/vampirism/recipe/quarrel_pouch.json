@@ -1,5 +1,6 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
   "key": {
     "I": "#c:ingots/iron",
     "L": "#c:leathers",
@@ -12,7 +13,6 @@
     "ILLI"
   ],
   "result": {
-    "count": 1,
     "id": "vampirism:quarrel_pouch"
   }
 }

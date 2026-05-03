@@ -37,7 +37,7 @@ public class ModEnchantments {
     public static final ResourceKey<Enchantment> VAMPIRE_SLAYER = ResourceKey.create(Registries.ENCHANTMENT, VIdentifier.mod("vampire_slayer"));
     public static final ResourceKey<Enchantment> ARROW_FRUGALITY = ResourceKey.create(Registries.ENCHANTMENT, VIdentifier.mod("arrow_frugality"));
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> FRUGALITY_DATA = ENCHANTMENT_DATA_COMPONENTS.register(VampirismDataComponents.Keys.FRUGALITY.getPath(), () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder().persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> FRUGALITY_DATA = ENCHANTMENT_DATA_COMPONENTS.register(VampirismDataComponents.Keys.FRUGALITY.getPath(), () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder().persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC).listOf()).build());
 
     static void register(IEventBus eventBus) {
         ENCHANTMENT_DATA_COMPONENTS.register(eventBus);

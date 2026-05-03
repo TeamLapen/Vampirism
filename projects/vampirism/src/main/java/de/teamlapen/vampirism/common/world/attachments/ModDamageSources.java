@@ -29,6 +29,7 @@ public class ModDamageSources {
     private final DamageSource mother;
     private final DamageSource bleeding;
     private final DamageSource leaveFaction;
+    private final DamageSource ritualKnife;
 
     public ModDamageSources(RegistryAccess access) {
         this.damageTypes = access.lookupOrThrow(Registries.DAMAGE_TYPE);
@@ -40,6 +41,7 @@ public class ModDamageSources {
         this.mother = init(ModDamageTypes.MOTHER);
         this.bleeding = init(ModDamageTypes.BLEEDING);
         this.leaveFaction = init(ModDamageTypes.LEAVE_FACTION);
+        this.ritualKnife = init(ModDamageTypes.RITUAL_KNIFE);
     }
 
     private DamageSource init(ResourceKey<DamageType> key) {
@@ -68,6 +70,10 @@ public class ModDamageSources {
 
     public DamageSource mother() {
         return this.mother;
+    }
+
+    public DamageSource ritualKnife() {
+        return this.ritualKnife;
     }
 
     public DamageSource stake(LivingEntity attacker) {

@@ -30,6 +30,10 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
     /**
@@ -53,7 +57,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                         .add(LootItem.lootTableItem(Items.GOLD_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.PILLAR_TYPE, "gold"))))
                         .add(LootItem.lootTableItem(Items.BONE_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.PILLAR_TYPE, "bone"))))));
         this.dropSelf(ModBlocks.ALTAR_TIP.get());
-        ColorListsUtil.COFFINS.forEach(coffin -> this.add(coffin, block -> createSinglePropConditionTable(block, CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD)));
+        ColorListsUtil.COFFINS.forEach(coffin -> this.add(coffin.get().getBlock(), block -> createSinglePropConditionTable(block, CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD)));
         this.dropSelf(ModBlocks.BLOOD_CONTAINER.get());
         this.dropSelf(ModBlocks.BLOOD_GRINDER.get());
         this.dropSelf(ModBlocks.BLOOD_PEDESTAL.get());
@@ -197,6 +201,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.PURPLE_STONE_TILES_WALL.get());
         this.dropSelf(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
         this.dropSelf(ModBlocks.INFUSER.get());
+        this.dropSelf(ModBlocks.VELMORRA_ALTAR.get());
 
         ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.forEach(pair -> this.dropSelf(pair.getFirst()));
         ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.forEach(pair -> this.dropSelf(pair.getFirst()));

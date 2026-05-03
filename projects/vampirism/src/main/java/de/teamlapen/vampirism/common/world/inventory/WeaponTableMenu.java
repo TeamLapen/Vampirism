@@ -188,7 +188,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
                 if ((craftResultIn.setRecipeUsed(serverPlayer, recipe) || ModList.get().isLoaded("fastbench")) && recipe.value().getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.value().getRequiredSkills())) {
                     this.worldPos.execute((world, pos) -> {
                         if (world.getBlockState(pos).getValue(WeaponTableBlock.LAVA) >= recipe.value().getRequiredLavaUnits()) {
-                            craftResultIn.setItem(0, recipe.value().assemble(craftMatrixIn, world.registryAccess()));
+                            craftResultIn.setItem(0, recipe.value().assemble(craftMatrixIn));
                         } else {
                             this.missingLava.set(true);
                         }

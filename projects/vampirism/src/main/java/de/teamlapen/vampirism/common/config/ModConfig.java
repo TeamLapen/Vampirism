@@ -15,7 +15,6 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -52,7 +51,7 @@ public class ModConfig extends Services {
     }
 
     @ThreadSafeAPI
-    public <T extends BalanceBuilder.Conf> void addBalanceModification(@NotNull String key, @NotNull Consumer<T> modifier) {
+    public <T extends BalanceBuilder.Conf> void addBalanceModification(String key, Consumer<T> modifier) {
         if (this.balanceBuilder == null) {
             throw new IllegalStateException("Must add balance modifications during mod construction");
         }
@@ -117,7 +116,7 @@ public class ModConfig extends Services {
         container().registerConfig(Type.SERVER, balanceSpec, "vampirism-balance.toml");
     }
 
-    public void onLoad(final ModConfigEvent.@NotNull Loading configEvent) {
+    public void onLoad(final ModConfigEvent.Loading configEvent) {
         if (configEvent.getConfig().getType() == Type.SERVER) {
             VampirismMod.services().sunDamageRegistry().reloadConfiguration();
         }
@@ -129,7 +128,7 @@ public class ModConfig extends Services {
         }
     }
 
-    public void onReload(final ModConfigEvent.@NotNull Reloading configEvent) {
+    public void onReload(final ModConfigEvent.Reloading configEvent) {
         if (configEvent.getConfig().getType() == Type.SERVER) {
             VampirismMod.services().sunDamageRegistry().reloadConfiguration();
         }

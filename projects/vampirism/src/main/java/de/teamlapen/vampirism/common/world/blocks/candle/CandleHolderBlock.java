@@ -42,19 +42,23 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty LIT = AbstractCandleBlock.LIT;
 
-    protected static <T extends CandleHolderBlock> Products.P3<RecordCodecBuilder.Mu<T>, Block, Item, Properties> candleStickParts(RecordCodecBuilder.Instance<T> instance) {
+    protected static <T extends CandleHolderBlock> Products.P3<RecordCodecBuilder.Mu<T>, Optional<Block>, Optional<Item>, Properties> candleStickParts(RecordCodecBuilder.Instance<T> instance) {
         return instance.group(
-                BuiltInRegistries.BLOCK.byNameCodec().fieldOf("empty_block").forGetter(i -> Optional.ofNullable(i.emptyBlock).map(Supplier::get).orElse(null)),
-                BuiltInRegistries.ITEM.byNameCodec().fieldOf("candle").forGetter(i -> i.candle.get()),
+                BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("empty_block").forGetter(i -> Optional.ofNullable(i.emptyBlock).map(Supplier::get)),
+                BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("candle").forGetter(i -> Optional.ofNullable(i.candle.get())),
                 propertiesCodec()
         );
     }
 
     private final Map<Identifier, Supplier<Block>> fullHolderByContent = Maps.newHashMap();
     protected final @Nullable Supplier<? extends Block> emptyBlock;
-    protected final Supplier<Item> candle;
+    protected final Supplier<@Nullable Item> candle;
 
-    protected CandleHolderBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<Item> candle, Properties properties) {
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    protected CandleHolderBlock(Optional<Block> emptyBlock, Optional<Item> candle, Properties properties) {
+        this(emptyBlock.map(x -> (Supplier<Block>) () -> x).orElse(null), () -> candle.orElse(null), properties);
+    }
+    protected CandleHolderBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<@Nullable Item> candle, Properties properties) {
         super(properties);
         this.emptyBlock = emptyBlock;
         this.candle = candle;
@@ -73,7 +77,7 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
             Block orDefault = this.fullHolderByContent.getOrDefault(BuiltInRegistries.ITEM.getKey(item), () -> Blocks.AIR).get();
             if (orDefault != Blocks.AIR) {
                 if (stack.getCount() < getNumberOfCandles() && !player.isCreative()) {
-                    player.displayClientMessage(Component.translatable("message.vampirism.candle_holder.not_enough_candles", getNumberOfCandles()), true);
+                    player.sendOverlayMessage(Component.translatable("message.vampirism.candle_holder.not_enough_candles", getNumberOfCandles()));
                 } else {
                     level.setBlock(pos, getFilledState(state, orDefault), Block.UPDATE_ALL);
                     if (!player.getAbilities().instabuild) {
@@ -91,8 +95,9 @@ public abstract class CandleHolderBlock extends AbstractCandleBlock implements S
             } else {
                 if (this.emptyBlock != null) {
                     level.setBlock(pos, this.getEmptyState(state, this.emptyBlock.get()), Block.UPDATE_ALL);
-                    if (!player.getAbilities().instabuild) {
-                        player.addItem(new ItemStack(candle.get(), getNumberOfCandles()));
+                    Item candle = this.candle.get();
+                    if (!player.getAbilities().instabuild && candle != null) {
+                        player.addItem(new ItemStack(candle, getNumberOfCandles()));
                     }
                     level.playSound(player, pos, SoundType.CANDLE.getBreakSound(), SoundSource.BLOCKS, (SoundType.CANDLE.getVolume() + 1.0F) / 2.0F, SoundType.CANDLE.getPitch() * 0.8F);
                 }

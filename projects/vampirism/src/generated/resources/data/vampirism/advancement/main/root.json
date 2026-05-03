@@ -28,7 +28,6 @@
       "translate": "advancement.vampirism.desc"
     },
     "icon": {
-      "count": 1,
       "id": "vampirism:vampire_fang"
     },
     "show_toast": false,

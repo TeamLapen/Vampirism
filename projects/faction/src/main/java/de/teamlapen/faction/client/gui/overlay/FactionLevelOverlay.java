@@ -6,7 +6,7 @@ import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
@@ -19,7 +19,7 @@ public class FactionLevelOverlay extends BaseOverlay {
     }
 
     @Override
-    public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker partialTicks) {
         if (canRenderOverlays() && this.player().jumpableVehicle() == null && !this.mc().options.hideGui) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(this.player());
             Holder<? extends IPlayableFaction<?>> faction = handler.getFaction();
@@ -35,11 +35,11 @@ public class FactionLevelOverlay extends BaseOverlay {
 
                 int x = (this.mc().getWindow().getGuiScaledWidth() - this.mc().font.width(text)) / 2 + FactionConfig.client().factionLevelOverlayXPos.get();
                 int y = this.mc().getWindow().getGuiScaledHeight() - FactionConfig.client().factionLevelOverlayYPos.get();
-                graphics.drawString(font(), text, x + 1, y, backGroundColor, false);
-                graphics.drawString(font(), text, x - 1, y, backGroundColor, false);
-                graphics.drawString(font(), text, x, y + 1, backGroundColor, false);
-                graphics.drawString(font(), text, x, y - 1, backGroundColor, false);
-                graphics.drawString(font(), text, x, y, color, false);
+                graphics.text(font(), text, x + 1, y, backGroundColor, false);
+                graphics.text(font(), text, x - 1, y, backGroundColor, false);
+                graphics.text(font(), text, x, y + 1, backGroundColor, false);
+                graphics.text(font(), text, x, y - 1, backGroundColor, false);
+                graphics.text(font(), text, x, y, color, false);
             }
         }
     }

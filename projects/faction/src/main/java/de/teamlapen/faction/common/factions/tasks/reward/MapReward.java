@@ -11,6 +11,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
@@ -30,7 +31,7 @@ public class MapReward extends ItemReward {
     private final Holder<MapDecorationType> decorationType;
 
     public MapReward(TagKey<Structure> destination, String displayName, Holder<MapDecorationType> decorationType) {
-        super(new ItemStack(Items.FILLED_MAP));
+        super(new ItemStackTemplate(Items.FILLED_MAP));
         this.destination = destination;
         this.displayName = displayName;
         this.decorationType = decorationType;

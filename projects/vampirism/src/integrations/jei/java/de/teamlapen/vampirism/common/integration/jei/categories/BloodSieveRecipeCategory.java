@@ -16,7 +16,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -79,11 +79,11 @@ public class BloodSieveRecipeCategory implements IRecipeCategory<BloodSieveRecip
     }
 
     @Override
-    public void draw(@NotNull BloodSieveRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        this.background.draw(guiGraphics);
-        guiGraphics.pose().pushMatrix();
-        this.slot.draw(guiGraphics);
-        this.arrow.draw(guiGraphics, 26, 1);
-        guiGraphics.pose().popMatrix();
+    public void draw(@NotNull BloodSieveRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphicsExtractor GuiGraphicsExtractor, double mouseX, double mouseY) {
+        this.background.draw(GuiGraphicsExtractor);
+        GuiGraphicsExtractor.pose().pushMatrix();
+        this.slot.draw(GuiGraphicsExtractor);
+        this.arrow.draw(GuiGraphicsExtractor, 26, 1);
+        GuiGraphicsExtractor.pose().popMatrix();
     }
 }

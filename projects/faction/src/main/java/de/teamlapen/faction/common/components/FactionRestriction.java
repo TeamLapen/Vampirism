@@ -141,7 +141,7 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         for (IFactionRestriction restriction : restrictions) {
             Result result = restriction.canUse(factionPlayerHandler);
             if (!result.success()) {
-                result.message().filter(x -> message).ifPresent(s -> player.displayClientMessage(s, true));
+                result.message().filter(x -> message).ifPresent(player::sendOverlayMessage);
                 return false;
             }
         }

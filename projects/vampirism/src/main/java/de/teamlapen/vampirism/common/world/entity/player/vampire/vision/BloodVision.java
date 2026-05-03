@@ -28,7 +28,7 @@ public class BloodVision implements IVampireVision {
             if (!config.optifineBloodVisionWarning.get()) {
                 config.optifineBloodVisionWarning.set(true);
                 config.optifineBloodVisionWarning.save();
-                entity.displayClientMessage(Component.translatable("notification.vampirism.warning_optifine_blood_vision"), false);
+                entity.sendSystemMessage(Component.translatable("notification.vampirism.warning_optifine_blood_vision"));
             }
         }
     }

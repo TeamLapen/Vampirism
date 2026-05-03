@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.common.core.ModLoot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
@@ -42,10 +41,9 @@ public class SetItemBloodChargeFunction extends LootItemConditionalFunction {
         this.charge = charge;
     }
 
-    @NotNull
     @Override
-    public LootItemFunctionType<SetItemBloodChargeFunction> getType() {
-        return ModLoot.SET_ITEM_BLOOD_CHARGE.get();
+    public MapCodec<? extends LootItemConditionalFunction> codec() {
+        return CODEC;
     }
 
     @NotNull

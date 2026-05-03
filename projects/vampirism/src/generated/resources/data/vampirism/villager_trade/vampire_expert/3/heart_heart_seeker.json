@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "vampirism:diamond_heart_seeker"
+  },
+  "max_uses": 3.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 64.0,
+      "min": 42.0
+    },
+    "id": "vampirism:human_heart"
+  },
+  "xp": 10.0
+}

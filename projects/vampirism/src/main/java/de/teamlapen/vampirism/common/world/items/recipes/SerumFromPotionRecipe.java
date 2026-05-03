@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -16,8 +19,11 @@ import java.util.*;
 
 public class SerumFromPotionRecipe extends CustomRecipe {
 
-    public SerumFromPotionRecipe(CraftingBookCategory category) {
-        super(category);
+    public static final SerumFromPotionRecipe INSTANCE = new SerumFromPotionRecipe();
+    public static final MapCodec<SerumFromPotionRecipe> CODEC = MapCodec.unit(INSTANCE);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SerumFromPotionRecipe> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+
+    public SerumFromPotionRecipe() {
     }
 
     @Override
@@ -46,7 +52,7 @@ public class SerumFromPotionRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(CraftingInput input) {
         PotionContents contents = null;
 
         for (int i = 0; i < input.size(); i++) {

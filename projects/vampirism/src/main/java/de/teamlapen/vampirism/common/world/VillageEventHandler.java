@@ -155,13 +155,13 @@ public class VillageEventHandler {
     public void onSpawnCaptureEntity(FactionVillageEvent.SpawnCaptureEntityEvent event) {
         if (IFaction.is(event.getFaction(), ModFactions.HUNTER)) {
             WeightedList.of(new Weighted<>(ModEntities.HUNTER.get(), 10), new Weighted<>(ModEntities.ADVANCED_HUNTER.get(), 2))
-                    .getRandom(event.getLevel().random)
+                    .getRandom(event.getLevel().getRandom())
                     .ifPresent(type -> {
                         event.setEntity(type.create(event.getLevel(), EntitySpawnReason.EVENT));
                     });
         } else if (IFaction.is(event.getFaction(), ModFactions.VAMPIRE)) {
             WeightedList.of(new Weighted<>(ModEntities.VAMPIRE.get(), 10), new Weighted<>(ModEntities.ADVANCED_VAMPIRE.get(), 2))
-                    .getRandom(event.getLevel().random)
+                    .getRandom(event.getLevel().getRandom())
                     .ifPresent(type -> {
                         var entity = event.setEntity(type.create(event.getLevel(), EntitySpawnReason.EVENT));
                         entity.setSpawnRestriction(VampireBaseEntity.SpawnRestriction.SIMPLE);
@@ -199,7 +199,7 @@ public class VillageEventHandler {
             VampirismEntity newEntity = entityType.create(totem.getTileLevel(), EntitySpawnReason.EVENT);
             if (newEntity == null) continue;
             newEntity.restoreFrom(oldEntity);
-            newEntity.setUUID(Mth.createInsecureUUID());
+            newEntity.setUUID(Mth.createInsecureUUID(oldEntity.level().getRandom()));
             newEntity.setInvulnerable(true);
             SpawnUtil.replaceEntity(oldEntity, newEntity);
         }

@@ -12,9 +12,8 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 public class FogDiffuserRecipeCategory implements IRecipeCategory<FogDiffuserRecipe> {
 
@@ -34,12 +33,12 @@ public class FogDiffuserRecipeCategory implements IRecipeCategory<FogDiffuserRec
     }
 
     @Override
-    public @NotNull IRecipeType<FogDiffuserRecipe> getRecipeType() {
+    public IRecipeType<FogDiffuserRecipe> getRecipeType() {
         return VampirismJEIPlugin.FOG_DIFFUSER;
     }
 
     @Override
-    public @NotNull Component getTitle() {
+    public Component getTitle() {
         return this.localizedName;
     }
 
@@ -54,21 +53,21 @@ public class FogDiffuserRecipeCategory implements IRecipeCategory<FogDiffuserRec
     }
 
     @Override
-    public @NotNull IDrawable getIcon() {
+    public IDrawable getIcon() {
         return this.icon;
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, FogDiffuserRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, FogDiffuserRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
                 .addItemStacks(recipe.getInputs());
     }
 
     @Override
-    public void draw(FogDiffuserRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        this.background.draw(guiGraphics);
-        guiGraphics.pose().pushMatrix();
-        this.slot.draw(guiGraphics);
+    public void draw(FogDiffuserRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor GuiGraphicsExtractor, double mouseX, double mouseY) {
+        this.background.draw(GuiGraphicsExtractor);
+        GuiGraphicsExtractor.pose().pushMatrix();
+        this.slot.draw(GuiGraphicsExtractor);
 
         int burnDuration = recipe.getBurnTime() / 20;
         Component text;
@@ -80,7 +79,7 @@ public class FogDiffuserRecipeCategory implements IRecipeCategory<FogDiffuserRec
             text = Component.translatable("gui.vampirism.jei.category.diffuser.burn_duration_hours", burnDuration / 3600, burnDuration % 3600, burnDuration % 3600 % 60);
         }
 
-        guiGraphics.drawString(Minecraft.getInstance().font, text, 24, 5, 0xFF808080, false);
-        guiGraphics.pose().popMatrix();
+        GuiGraphicsExtractor.text(Minecraft.getInstance().font, text, 24, 5, 0xFF808080, false);
+        GuiGraphicsExtractor.pose().popMatrix();
     }
 }

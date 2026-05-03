@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.common.world.items.recipes;
 
+import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.world.items.BloodBottleItem;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -14,9 +17,9 @@ import net.minecraft.world.level.Level;
 
 public class FillBottleFromSyringeRecipe extends CustomRecipe {
 
-    public FillBottleFromSyringeRecipe(CraftingBookCategory category) {
-        super(category);
-    }
+    public static final FillBottleFromSyringeRecipe INSTANCE = new FillBottleFromSyringeRecipe();
+    public static final MapCodec<FillBottleFromSyringeRecipe> CODEC = MapCodec.unit(INSTANCE);
+    public static final StreamCodec<RegistryFriendlyByteBuf, FillBottleFromSyringeRecipe> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     @Override
     public boolean matches(CraftingInput input, Level level) {
@@ -48,7 +51,7 @@ public class FillBottleFromSyringeRecipe extends CustomRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(CraftingInput input) {
         ItemStack bottle = ItemStack.EMPTY;
         int syringes = 0;
 

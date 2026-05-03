@@ -35,16 +35,6 @@ public class ClothedModel<T extends AvatarLikeRenderState> extends HumanoidModel
     }
 
     @Override
-    public void setAllVisible(boolean visible) {
-        super.setAllVisible(visible);
-        this.leftSleeve.visible = visible;
-        this.rightSleeve.visible = visible;
-        this.leftPants.visible = visible;
-        this.rightPants.visible = visible;
-        this.jacket.visible = visible;
-    }
-
-    @Override
     public void translateToHand(T renderState, @NonNull HumanoidArm arm, @NonNull PoseStack poseStack) {
         this.root().translateAndRotate(poseStack);
         ModelPart modelpart = this.getArm(arm);

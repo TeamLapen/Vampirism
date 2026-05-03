@@ -8,8 +8,10 @@ import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Unit;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
@@ -23,7 +25,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 
-import static de.teamlapen.vampirism.common.core.ModBlocks.*;
 import static de.teamlapen.vampirism.common.core.ModItems.*;
 
 @SuppressWarnings("unused")
@@ -83,12 +84,17 @@ public class ModCreativeTabs {
             add(CURSED_SPRUCE_BOAT);
             add(DARK_SPRUCE_CHEST_BOAT);
             add(CURSED_SPRUCE_CHEST_BOAT);
+
+
+            add(RITUAL_KNIFE);
+            add(new ItemStack(RITUAL_KNIFE, 1, DataComponentPatch.builder().set(ModDataComponents.CHARGED_RITUAL_KNIFE.get(), true).build()));
         }
 
         private void addBlocks() {
             addPlants();
             addBuildingBlocks();
             addDecorativeBlocks();
+            add(VELMORRA_ALTAR);
         }
 
         private void addPlants() {
@@ -129,8 +135,8 @@ public class ModCreativeTabs {
 
             add(CURSED_SPRUCE_LOG);
             add(CURSED_SPRUCE_WOOD);
-            add(CURSED_SPRUCE_LOG.get().getActiveBlockItem());
-            add(CURSED_SPRUCE_WOOD.get().getActiveBlockItem());
+            add(CURSED_SPRUCE_LOG.toStack().vampirism$with(ModDataComponents.ACTIVE, Unit.INSTANCE));
+            add(CURSED_SPRUCE_WOOD.toStack().vampirism$with(ModDataComponents.ACTIVE, Unit.INSTANCE));
             add(STRIPPED_CURSED_SPRUCE_LOG);
             add(STRIPPED_CURSED_SPRUCE_WOOD);
             add(CURSED_SPRUCE_PLANKS);
@@ -292,7 +298,7 @@ public class ModCreativeTabs {
             add(ALTAR_TIP);
 
             add(BLOOD_PEDESTAL);
-            addBlockGen(BLOOD_CONTAINER);
+            addItemGen(BLOOD_CONTAINER);
             add(BLOOD_GRINDER);
             add(BLOOD_SIEVE);
             add(INFUSER);
@@ -408,7 +414,7 @@ public class ModCreativeTabs {
         private void addBlocks() {
             addFunctionalBlocks();
 
-            ColorListsUtil.COFFINS.forEach(this::add);
+            ColorListsUtil.COFFINS.forEach(d -> add(d.get()));
         }
 
         private void addFunctionalBlocks() {

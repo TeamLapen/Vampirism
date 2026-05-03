@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "vampirism:dark_spruce_sapling"
+  },
+  "max_uses": 6.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": 8.0,
+    "id": "minecraft:emerald"
+  },
+  "xp": 5.0
+}

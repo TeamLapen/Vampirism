@@ -1,5 +1,6 @@
 {
   "type": "vampirism:infuser",
+  "commoninfo": {},
   "cookingtime": 300,
   "ingredient1": "vampirism:pure_blood_1",
   "ingredient2": "vampirism:pure_blood_1",
@@ -12,19 +13,15 @@
         "level": 1
       }
     },
-    "count": 1,
     "id": "vampirism:blood_infused_raw_iron"
   },
   "result1": {
-    "count": 1,
     "id": "vampirism:pure_blood_0"
   },
   "result2": {
-    "count": 1,
     "id": "vampirism:pure_blood_0"
   },
   "result3": {
-    "count": 1,
     "id": "vampirism:pure_blood_0"
   }
 }

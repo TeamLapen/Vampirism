@@ -10,6 +10,7 @@ import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillPointProvider;
 import de.teamlapen.faction.api.factions.tasks.*;
+import de.teamlapen.faction.api.registries.RegistryProvider;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerBooleanSupplier;
@@ -25,6 +26,8 @@ import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
+
+import java.util.HashMap;
 
 public class ModRegistries {
     public static final Registry<ISkill<?>> SKILLS = new RegistryBuilder<>(FactionRegistries.Keys.SKILL).callback(new SkillCallbacks()).sync(true).create();
@@ -74,5 +77,9 @@ public class ModRegistries {
         event.dataPackRegistry(FactionRegistries.Keys.TASK, Task.CODEC, Task.CODEC);
         event.dataPackRegistry(FactionRegistries.Keys.SKILL_TREE, SkillTree.CODEC, SkillTree.CODEC);
         event.dataPackRegistry(FactionRegistries.Keys.SKILL_NODE, SkillNode.CODEC, SkillNode.CODEC);
+    }
+
+    static {
+        RegistryProvider.register(SKILLS, ACTIONS, MINION_TASKS, REFINEMENTS, REFINEMENT_SETS, TASK_REWARDS, TASK_UNLOCKER, TASK_REQUIREMENTS, TASK_REWARD_INSTANCES, FOOD_BEHAVIOURS, FACTIONS, MINIONS, FACTION_PLAYER_CONSUMERS, SKILL_POINT_PROVIDERS, FACTION_PLAYER_BOOLEAN_SUPPLIERS);
     }
 }

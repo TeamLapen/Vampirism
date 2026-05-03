@@ -12,9 +12,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3fc;
 
 import java.util.function.Consumer;
@@ -29,14 +27,14 @@ public class MotherTrophyRenderer implements NoDataSpecialModelRenderer {
     }
 
     @Override
-    public void submit(ItemDisplayContext displayContext, PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, int packedOverlay, boolean hasFoil, int outlineColor) {
+    public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int overlayCoords, boolean hasFoil, int outlineColor) {
         poseStack.pushPose();
         poseStack.translate(0.5, 0, 0.5);
         poseStack.mulPose(Axis.ZP.rotationDegrees(180));
         poseStack.translate(0.0F, -1.701F, 0.0F);
         float f1 = RotationSegment.convertToDegrees(0);
         poseStack.mulPose(Axis.YP.rotationDegrees(f1));
-        nodeCollector.submitModel(this.model, new GhostRenderer.GhostRenderState(), poseStack, RenderTypes.itemEntityTranslucentCull(GhostRenderer.TEXTURE), packedLight, packedOverlay, 0, null);
+        submitNodeCollector.submitModel(this.model, new GhostRenderer.GhostRenderState(), poseStack, RenderTypes.entityTranslucentCullItemTarget(GhostRenderer.TEXTURE), lightCoords, overlayCoords, 0, null);
         poseStack.popPose();
     }
 
@@ -47,16 +45,16 @@ public class MotherTrophyRenderer implements NoDataSpecialModelRenderer {
         this.model.root().getExtentsForGui(posestack, output);
     }
 
-    public record Unbaked() implements SpecialModelRenderer.Unbaked {
+    public record Unbaked() implements SpecialModelRenderer.Unbaked<Void> {
         public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(new Unbaked());
 
         @Override
-        public @NotNull SpecialModelRenderer<?> bake(BakingContext context) {
+        public MotherTrophyRenderer bake(BakingContext context) {
             return new MotherTrophyRenderer(new GhostModel(context.entityModelSet().bakeLayer(ModEntitiesRender.GHOST)));
         }
 
         @Override
-        public @NotNull MapCodec<? extends SpecialModelRenderer.Unbaked> type() {
+        public MapCodec<? extends SpecialModelRenderer.Unbaked<Void>> type() {
             return MAP_CODEC;
         }
     }

@@ -273,7 +273,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
 
         HunterPlayer hunter = HunterPlayer.get(player);
         if (hunter.getLevel() <= 0) {
-            player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
+            player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
             return false;
         }
 
@@ -288,7 +288,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
             return true;
         }
 
-        player.displayClientMessage(Component.translatable("message.vampirism.vapor_still.other_owner", getOwnerName()), true);
+        player.sendOverlayMessage(Component.translatable("message.vampirism.vapor_still.other_owner", getOwnerName()));
         return false;
     }
 
@@ -347,7 +347,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
     }
 
     private ItemStack dropRemainder(ItemStack stack, BlockPos pos) {
-        ItemStack remainder = stack.getCraftingRemainder();
+        ItemStack remainder = stack.getCraftingRemainder().create();
         if (remainder.isEmpty()) return stack;
         if (stack.isEmpty()) return remainder;
         if (this.level != null && !this.level.isClientSide()) {

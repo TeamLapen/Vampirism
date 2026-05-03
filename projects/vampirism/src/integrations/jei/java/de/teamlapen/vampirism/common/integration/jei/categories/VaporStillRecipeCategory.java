@@ -25,7 +25,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -77,7 +77,7 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
     }
 
     @Override
-    public void draw(JEIPotionMix recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(JEIPotionMix recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         this.background.draw(graphics, 0, 0);
 
         this.flames.draw(graphics, 20, 24);
@@ -89,7 +89,7 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
             Component label = Component.translatable("gui.vampirism.jei.requirements");
             int x = getWidth() - minecraft.font.width(label) - 2;
             int y = getHeight() - minecraft.font.lineHeight - 2;
-            graphics.drawString(minecraft.font, label, x, y, Color.GRAY.getRGB(), false);
+            graphics.text(minecraft.font, label, x, y, Color.GRAY.getRGB(), false);
         }
     }
 
@@ -163,12 +163,12 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
         var mix1 = new SlotDisplay.Composite(
                 recipe.getMix1().display()
                         .resolve(contextMap, SlotDisplay.ItemStackContentsFactory.INSTANCE)
-                        .map(x -> new ItemStackWithSize(x.getItemHolder(), recipe.getMix1Amount()))
+                        .map(x -> new ItemStackWithSize(x.typeHolder(), recipe.getMix1Amount()))
                         .collect(Collectors.toList()));
         var mix2 = new SlotDisplay.Composite(
                 recipe.getMix2().display()
                         .resolve(contextMap, SlotDisplay.ItemStackContentsFactory.INSTANCE)
-                        .map(x -> new ItemStackWithSize(x.getItemHolder(), recipe.getMix2Amount()))
+                        .map(x -> new ItemStackWithSize(x.typeHolder(), recipe.getMix2Amount()))
                         .collect(Collectors.toList()));
 
         builder.addInputSlot(7, 51).add(recipe.getPotionInput());

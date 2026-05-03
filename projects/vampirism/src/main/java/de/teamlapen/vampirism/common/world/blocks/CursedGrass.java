@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.common.core.ModBiomes;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.world.features.VampirismFeatures;
 import de.teamlapen.vampirism.common.world.items.HolyWaterBottleItem;
-import de.teamlapen.vampirism.misc.mixin.accessor.SpreadingSnowyDirtBlockAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -16,6 +15,7 @@ import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.TriState;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -24,12 +24,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.SpreadingSnowyDirtBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -40,39 +37,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CursedGrass extends SpreadingSnowyDirtBlock implements BonemealableBlock, HolyWaterEffectConsumer {
+public class CursedGrass extends SpreadingSnowyBlock implements BonemealableBlock, HolyWaterEffectConsumer {
     public static final MapCodec<CursedGrass> CODEC = simpleCodec(CursedGrass::new);
 
     public CursedGrass(Properties properties) {
-        super(properties);
+        super(properties, ModBlocks.CURSED_EARTH.getKey());
     }
 
     @Override
-    protected MapCodec<? extends SpreadingSnowyDirtBlock> codec() {
+    protected MapCodec<? extends SpreadingSnowyBlock> codec() {
         return CODEC;
-    }
-
-    /**
-     * copied from {@link SpreadingSnowyDirtBlock#randomTick(BlockState, ServerLevel, BlockPos, RandomSource)} changing dirt to cursed earth
-     */
-    @Override
-    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (!SpreadingSnowyDirtBlockAccessor.invokeCanBeGrass(state, level, pos)) {
-            if (!level.isAreaLoaded(pos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
-            level.setBlockAndUpdate(pos, ModBlocks.CURSED_EARTH.get().defaultBlockState());
-        } else {
-            if (!level.isAreaLoaded(pos, 3)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light and spreading
-            if (level.getMaxLocalRawBrightness(pos.above()) >= 9) {
-                BlockState blockstate = this.defaultBlockState();
-
-                for (int i = 0; i < 4; ++i) {
-                    BlockPos blockpos = pos.offset(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
-                    if (level.getBlockState(blockpos).is(ModBlocks.CURSED_EARTH.get()) && SpreadingSnowyDirtBlockAccessor.invokeCanPropagate(blockstate, level, blockpos)) {
-                        level.setBlockAndUpdate(blockpos, blockstate.setValue(SNOWY, level.getBlockState(blockpos.above()).is(Blocks.SNOW)));
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -97,45 +71,44 @@ public class CursedGrass extends SpreadingSnowyDirtBlock implements Bonemealable
      */
     @Override
     public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
-        BlockPos blockpos = pos.above();
-        BlockState blockstate = Blocks.SHORT_GRASS.defaultBlockState();
-        Optional<Holder.Reference<PlacedFeature>> optional = level.registryAccess().lookupOrThrow(Registries.PLACED_FEATURE).get(VegetationPlacements.GRASS_BONEMEAL);
+        BlockPos above = pos.above();
+        BlockState grass = Blocks.SHORT_GRASS.defaultBlockState();
+        Optional<Holder.Reference<PlacedFeature>> grassFeature = level.registryAccess()
+                .lookupOrThrow(Registries.PLACED_FEATURE)
+                .get(VegetationPlacements.GRASS_BONEMEAL);
 
+        label48:
+        for (int j = 0; j < 128; j++) {
+            BlockPos testPos = above;
 
-        label46:
-        for (int i = 0; i < 128; ++i) {
-            BlockPos blockpos1 = blockpos;
-
-            for (int j = 0; j < i / 16; ++j) {
-                blockpos1 = blockpos1.offset(random.nextInt(3) - 1, (random.nextInt(3) - 1) * random.nextInt(3) / 2, random.nextInt(3) - 1);
-                if (!level.getBlockState(blockpos1.below()).is(this) || level.getBlockState(blockpos1).isCollisionShapeFullBlock(level, blockpos1)) {
-                    continue label46;
+            for (int i = 0; i < j / 16; i++) {
+                testPos = testPos.offset(random.nextInt(3) - 1, (random.nextInt(3) - 1) * random.nextInt(3) / 2, random.nextInt(3) - 1);
+                if (!level.getBlockState(testPos.below()).is(this) || level.getBlockState(testPos).isCollisionShapeFullBlock(level, testPos)) {
+                    continue label48;
                 }
             }
 
-            BlockState blockstate1 = level.getBlockState(blockpos1);
-            if (blockstate1.is(blockstate.getBlock()) && random.nextInt(10) == 0) {
-                ((BonemealableBlock) blockstate.getBlock()).performBonemeal(level, random, blockpos1, blockstate1);
+            BlockState testState = level.getBlockState(testPos);
+            if (testState.is(grass.getBlock()) && random.nextInt(10) == 0) {
+                BonemealableBlock bonemealableBlock = (BonemealableBlock)grass.getBlock();
+                if (bonemealableBlock.isValidBonemealTarget(level, testPos, testState)) {
+                    bonemealableBlock.performBonemeal(level, random, testPos, testState);
+                }
             }
 
-            if (blockstate1.isAir()) {
-                Holder<PlacedFeature> holder;
+            if (testState.isAir() && !level.isOutsideBuildHeight(testPos)) {
                 if (random.nextInt(8) == 0) {
-                    BlockPos finalBlockpos = blockpos1;
-                    List<ConfiguredFeature<?, ?>> list = new ArrayList<>(level.registryAccess().lookup(Registries.BIOME).flatMap(x -> x.get(ModBiomes.VAMPIRE_FOREST).map(Holder.Reference::value)).orElseGet(() -> level.getBiome(finalBlockpos).value()).getGenerationSettings().getFlowerFeatures());
+                    final BlockPos finalPos = testPos;
+                    List<ConfiguredFeature<?, ?>> features = new ArrayList<>(level.registryAccess().lookup(Registries.BIOME).flatMap(x -> x.get(ModBiomes.VAMPIRE_FOREST).map(Holder.Reference::value)).orElseGet(() -> level.getBiome(finalPos).value()).getGenerationSettings().getBoneMealFeatures());
                     ConfiguredFeature<?, ?> cursedRoots= level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getValue(VampirismFeatures.CURSED_ROOT);
-                    if (cursedRoots != null) list.add(cursedRoots);
-
-                    holder = ((RandomPatchConfiguration) list.get(level.random.nextInt(list.size())).config()).feature();
-                } else {
-                    if (optional.isEmpty()) {
-                        continue;
+                    if (cursedRoots != null) features.add(cursedRoots);
+                    if (!features.isEmpty()) {
+                        ConfiguredFeature<?, ?> placementFeature = Util.getRandom(features, random);
+                        placementFeature.place(level, level.getChunkSource().getGenerator(), random, testPos);
                     }
-
-                    holder = optional.get();
+                } else if (grassFeature.isPresent()) {
+                    grassFeature.get().value().place(level, level.getChunkSource().getGenerator(), random, testPos);
                 }
-
-                holder.value().place(level, level.getChunkSource().getGenerator(), random, blockpos1);
             }
         }
     }

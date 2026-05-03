@@ -63,7 +63,7 @@ public class SitEntity extends Entity {
     protected void positionRider(Entity passenger, MoveFunction callback) {
         super.positionRider(passenger, callback);
 
-        if (this.shouldLockRotation && !passenger.getType().is(EntityTypeTags.CAN_TURN_IN_BOATS)) {
+        if (this.shouldLockRotation && !passenger.typeHolder().is(EntityTypeTags.CAN_TURN_IN_BOATS)) {
             this.clampEntityRotation(passenger);
         }
     }

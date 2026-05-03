@@ -5,7 +5,6 @@ import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 public class ContainedOilInterpreter implements ISubtypeInterpreter<ItemStack> {
 
@@ -15,7 +14,7 @@ public class ContainedOilInterpreter implements ISubtypeInterpreter<ItemStack> {
     }
 
     @Override
-    public @Nullable Object getSubtypeData(ItemStack ingredient, @NonNull UidContext context) {
+    public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
         var oil = ingredient.get(ModDataComponents.OIL);
         if (oil == null) {
             return null;

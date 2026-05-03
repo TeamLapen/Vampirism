@@ -41,6 +41,7 @@ public class FactionCommands {
         List<String> rootCommands = Lists.newArrayList("factions");
         if (!FMLEnvironment.isProduction()) {
             rootCommands.add("f");
+            FactionCommand.registerDev(dispatcher, event.getBuildContext());
         }
 
         for (String rootCommand : rootCommands) {

@@ -98,23 +98,16 @@ public class CrucifixItem extends Item implements IItemWithTier {
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
+        Helper.handleHeldNonVampireItem(stack, entity, slot);
         if (entity instanceof LivingEntity livingEntity && slot != null && slot.getType() == EquipmentSlot.Type.HAND) {
-            if (entity.tickCount % 16 == 8 && Helper.isVampire(entity)) {
-                livingEntity.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
-                if (entity instanceof Player player) {
-                    player.getInventory().removeItem(stack);
-                    player.drop(stack, true);
-                }
-            }
-
-            if (entity instanceof Player player && player.getCooldowns().isOnCooldown(stack) && ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPEL)) {
+            if (livingEntity instanceof Player player && player.getCooldowns().isOnCooldown(stack) && ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPEL)) {
                 passivePush(level, player, stack, true);
             }
         }
     }
 
     protected boolean affectsEntity(LivingEntity entity, Level level) {
-        return entity.getType().is(EntityTypeTags.UNDEAD) || Helper.isVampire(entity);
+        return entity.typeHolder().is(EntityTypeTags.UNDEAD) || Helper.isVampire(entity);
     }
 
     @Override

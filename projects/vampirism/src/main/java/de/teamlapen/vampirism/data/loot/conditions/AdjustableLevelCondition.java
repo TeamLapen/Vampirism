@@ -4,12 +4,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.common.core.ModLoot;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class AdjustableLevelCondition implements LootItemCondition {
 
@@ -30,10 +29,9 @@ public class AdjustableLevelCondition implements LootItemCondition {
         this.target = targetIn;
     }
 
-    @NotNull
     @Override
-    public LootItemConditionType getType() {
-        return ModLoot.ADJUSTABLE_LEVEL.get();
+    public @NonNull MapCodec<? extends LootItemCondition> codec() {
+        return CODEC;
     }
 
     @Override

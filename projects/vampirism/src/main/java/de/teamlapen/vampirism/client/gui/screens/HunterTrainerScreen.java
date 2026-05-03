@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInp
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.inventory.HunterTrainerMenu;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
@@ -55,14 +55,9 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
         this.buttonLevelUp.active = this.menu.canLevelup();
     }
 
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(graphics, mouseX, mouseY);
-    }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.hoveredSlot != null && this.hoveredSlot.index >= 0 && this.hoveredSlot.index < 3) {
             var requirementOpt = this.menu.getRequirement();
             if (requirementOpt.isPresent()) {
@@ -94,13 +89,13 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
 
                 if (tooltip != null) {
                     ClientTooltipComponent clientTooltip = ClientTooltipComponent.create(tooltip.getVisualOrderText());
-                    graphics.renderTooltip(this.font, List.of(clientTooltip), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, stack.get(DataComponents.TOOLTIP_STYLE));
+                    graphics.tooltip(this.font, List.of(clientTooltip), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, stack.get(DataComponents.TOOLTIP_STYLE));
                     return;
                 }
             }
         }
 
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
@@ -122,14 +117,14 @@ public class HunterTrainerScreen extends ItemCombinerScreen<HunterTrainerMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        super.renderBg(graphics, partialTick, mouseX, mouseY);
-        this.ironIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
-        this.goldIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
-        this.hunterIntelIcon.render(this.menu, graphics, partialTick, this.leftPos, this.topPos);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
+        this.ironIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
+        this.goldIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
+        this.hunterIntelIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderErrorIcon(GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void extractErrorIcon(GuiGraphicsExtractor graphics, int xo, int yo) {
     }
 }

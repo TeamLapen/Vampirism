@@ -304,7 +304,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     private void playLevelUpEffects() {
         if (this.level == null || this.player == null) return;
 
-        this.player.playSound(ModSounds.CHOIR_SHORT.get(), 0.5f, 1.0f + (this.level.random.nextFloat() - 0.5f) / 5.0f);
+        this.player.playSound(ModSounds.CHOIR_SHORT.get(), 0.5f, 1.0f + (this.level.getRandom().nextFloat() - 0.5f) / 5.0f);
     }
 
     private void applyPostRitualEffects() {

@@ -17,7 +17,6 @@
       "translate": "advancement.vampirism.ancient_knowledge.desc"
     },
     "icon": {
-      "count": 1,
       "id": "vampirism:vampire_book"
     },
     "title": {

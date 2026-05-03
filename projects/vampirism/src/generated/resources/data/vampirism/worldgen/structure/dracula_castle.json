@@ -1,0 +1,7 @@
+{
+  "type": "vampirism:dracula_castle",
+  "biomes": "#vampirism:has_structure/dracula_castle",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "beard_box"
+}

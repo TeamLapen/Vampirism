@@ -1,6 +1,6 @@
 package de.teamlapen.faction.client.gui.screens.taskboard;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -19,8 +19,8 @@ public class SeparatorWidget extends AbstractWidget  {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.fill(getX(), getY() + 1, getX() + getWidth(), getY() + 2, this.color);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+        GuiGraphicsExtractor.fill(getX(), getY() + 1, getX() + getWidth(), getY() + 2, this.color);
     }
 
     @Override

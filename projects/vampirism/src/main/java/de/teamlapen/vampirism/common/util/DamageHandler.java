@@ -66,12 +66,8 @@ public class DamageHandler {
         LivingEntity entity = vampire.asEntity();
         entity.addEffect(new MobEffectInstance(ModEffects.GARLIC, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
         if (entity instanceof Player && ((Player) entity).getAbilities().instabuild) return;
-        entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
-        if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
-            entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, (int) (multiplier * 20), 1, ambient, false));
-            if (strength == EnumStrength.STRONG) {
-                entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
-            }
+        if (strength == EnumStrength.STRONG) {
+            entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
         }
         if (vampire instanceof IVampirePlayer) {
             IActionHandler<IVampirePlayer> actionHandler = ((IVampirePlayer) vampire).getActionHandler();
@@ -102,7 +98,7 @@ public class DamageHandler {
      * @param ticks    A tick related value like ticksExisted
      */
     public static void affectVampireGarlicAmbient(@NotNull IVampire vampire, @NotNull EnumStrength strength, int ticks) {
-        if (ticks % 37 == 7) {
+        if (ticks % 17 == 7) {
             affectVampireGarlic(vampire, strength, 5, true);
         }
     }
@@ -137,7 +133,7 @@ public class DamageHandler {
         if (!(entity.level() instanceof ServerLevel level)) return;
         if (!entity.isAlive()) return;
         boolean vampire = Helper.isVampire(entity);
-        if (entity.isAffectedByPotions() && (vampire || entity.getType().is(EntityTypeTags.UNDEAD))) {
+        if (entity.isAffectedByPotions() && (vampire || entity.typeHolder().is(EntityTypeTags.UNDEAD))) {
             if (distSq < 16.0D) {
                 double affect = 1.0D - Math.sqrt(distSq) / 4.0D;
 

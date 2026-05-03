@@ -1,7 +1,6 @@
 {
   "background": "vampirism:block/dark_stone_bricks",
   "display": {
-    "count": 1,
     "id": "vampirism:vampire_book"
   },
   "faction": "vampirism:vampire",

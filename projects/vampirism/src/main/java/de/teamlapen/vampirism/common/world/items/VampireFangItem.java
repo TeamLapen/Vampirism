@@ -23,16 +23,16 @@ public class VampireFangItem extends Item {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide()) {
             if (!ModConfig.server().fangInfection.get()) {
-                player.displayClientMessage(Component.translatable("message.vampirism.infection_disabled_server"), true);
+                player.sendOverlayMessage(Component.translatable("message.vampirism.infection_disabled_server"));
             } else {
                 if (Helper.canBecomeVampire(player)) {
                     SanguinareMobEffect.addRandom(player, true);
                     player.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
                 } else {
                     if (Helper.isVampire(player)) {
-                        player.displayClientMessage(Component.translatable("message.vampirism.already_vampire"), true);
+                        player.sendOverlayMessage(Component.translatable("message.vampirism.already_vampire"));
                     } else {
-                        player.displayClientMessage(Component.translatable("message.vampirism.immune_to_sanguinare"), true);
+                        player.sendOverlayMessage(Component.translatable("message.vampirism.immune_to_sanguinare"));
                     }
                 }
                 stack.shrink(1);

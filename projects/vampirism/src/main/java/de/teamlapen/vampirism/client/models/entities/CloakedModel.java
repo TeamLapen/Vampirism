@@ -28,13 +28,6 @@ public class CloakedModel<T extends AvatarLikeRenderState> extends ClothedModel<
     }
 
     @Override
-    public void setAllVisible(boolean visible) {
-        super.setAllVisible(visible);
-        bipedCloak.visible = visible;
-    }
-
-
-    @Override
     public void setupAnim(@NotNull T state) {
         super.setupAnim(state);
         float f = 1.0F;

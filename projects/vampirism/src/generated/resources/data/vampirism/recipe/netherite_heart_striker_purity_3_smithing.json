@@ -26,5 +26,6 @@
     },
     "id": "vampirism:netherite_heart_striker"
   },
+  "show_notification": false,
   "template": "minecraft:netherite_upgrade_smithing_template"
 }

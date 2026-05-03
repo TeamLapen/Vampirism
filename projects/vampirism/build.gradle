@@ -1,5 +1,5 @@
 plugins {
-    id 'net.neoforged.moddev' version '2.0.116'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 group = project.vampirism_group_id
 version = project.mod_version
@@ -65,11 +65,6 @@ neoForge {
     version = project.neoforge_version
 
     interfaceInjectionData.from project.file("src/main/resources/META-INF/interfaceinjection.json")
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
 
     runs {
         configureEach {

@@ -6,6 +6,7 @@ import de.teamlapen.faction.common.util.Color;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
 
 import java.util.Set;
@@ -17,7 +18,7 @@ public class ServerMultiBossEvent extends MultiBossEvent {
 
 
     public ServerMultiBossEvent(Component nameIn, BossEvent.BossBarOverlay overlayIn, Color... entries) {
-        super(Mth.createInsecureUUID(), nameIn, overlayIn, entries);
+        super(Mth.createInsecureUUID(RandomSource.create()), nameIn, overlayIn, entries);
     }
 
     public void addPlayer(ServerPlayer player) {

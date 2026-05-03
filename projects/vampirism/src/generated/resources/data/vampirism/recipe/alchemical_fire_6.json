@@ -1,6 +1,7 @@
 {
   "type": "vampirism:alchemical_cauldron",
   "fluid": "vampirism:holy_water_bottle_ultimate",
+  "info": {},
   "ingredient": "minecraft:gunpowder",
   "result": {
     "count": 6,

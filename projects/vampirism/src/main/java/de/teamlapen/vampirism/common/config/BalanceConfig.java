@@ -82,6 +82,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue hsSmallAttackSpeedModifier;
     public final ModConfigSpec.DoubleValue hsSmallAttackDamageModifier;
     public final ModConfigSpec.BooleanValue hsInstantKill1FromBehind;
+    public final ModConfigSpec.BooleanValue hsInstantKill1Player;
     public final ModConfigSpec.DoubleValue hsInstantKill1MaxHealth;
     public final ModConfigSpec.IntValue hsInstantKill2MaxHealth;
     public final ModConfigSpec.BooleanValue hsInstantKill2OnlyNPC;
@@ -93,10 +94,12 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vsSundamageReduction1;
     public final ModConfigSpec.DoubleValue vsBloodThirstReduction1;
     public final ModConfigSpec.DoubleValue vsSwordFinisherMaxHealth;
+    public final ModConfigSpec.BooleanValue vsSwordFinisherOnPlayer;
     public final ModConfigSpec.IntValue vsJumpBoost;
     public final ModConfigSpec.DoubleValue vsSpeedBoost;
     public final ModConfigSpec.IntValue vsBloodVisionDistanceSq;
     public final ModConfigSpec.DoubleValue vsSmallAttackDamageModifier;
+    public final ModConfigSpec.DoubleValue vsSmallAttackDamageMultiplier;
     public final ModConfigSpec.DoubleValue vsSmallAttackSpeedModifier;
     public final ModConfigSpec.DoubleValue vsNeonatalReduction;
     public final ModConfigSpec.DoubleValue vsDbnoReduction;
@@ -176,6 +179,9 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vaHalfInvulnerableEnabled;
     public final ModConfigSpec.BooleanValue vaHissingEnabled;
     public final ModConfigSpec.IntValue vaHissingCooldown;
+    public final ModConfigSpec.BooleanValue vaJumpBoostEnabled;
+    public final ModConfigSpec.IntValue vaJumpBoostCooldown;
+    public final ModConfigSpec.IntValue vaJumpBoostDuration;
     public final ModConfigSpec.BooleanValue vaDarkStalkerEnabled;
     public final ModConfigSpec.IntValue vaDarkStalkerCooldown;
     public final ModConfigSpec.IntValue vaDarkStalkerDuration;
@@ -195,6 +201,7 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vrSunscreenDurationMod;
     public final ModConfigSpec.IntValue vrRageFuryDurationBonus;
     public final ModConfigSpec.DoubleValue vrTeleportDistanceMod;
+    public final ModConfigSpec.DoubleValue vrTeleportCooldownMod;
     public final ModConfigSpec.DoubleValue vrHalfInvulnerableThresholdMod;
     public final ModConfigSpec.DoubleValue vrSwordFinisherThresholdMod;
 
@@ -400,6 +407,9 @@ public class BalanceConfig {
         hsInstantKill1FromBehind = builder
                 .comment("When enabled, the first stake skill requires attacking from behind to instantly kill low-level vampires.")
                 .define("instantKill1FromBehind", false);
+        hsInstantKill1Player = builder
+                .comment("Allow killing players")
+                .define("instantKill1Player", true);
         hsInstantKill1MaxHealth = builder
                 .comment("Maximum relative health an entity may have to be instantly killed by the first stake skill.")
                 .defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
@@ -430,6 +440,9 @@ public class BalanceConfig {
         vsSwordFinisherMaxHealth = builder
                 .comment("Maximum relative health a target may have to be finished by the vampire sword finisher skill.")
                 .defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
+        vsSwordFinisherOnPlayer = builder
+                .comment("If the sword finisher works on players")
+                .define("swordFinisherOnPlayer", true);
         vsJumpBoost = builder
                 .comment("Jump boost level granted by the vampire jump skill. Equivalent to the potion effect amplifier, where -1 is no boost.")
                 .defineInRange("jumpBoost", 1, -1, 5);
@@ -442,6 +455,9 @@ public class BalanceConfig {
         vsSmallAttackDamageModifier = builder
                 .comment("Flat damage added to base attack damage by the vampire basic damage skill.")
                 .defineInRange("smallAttackDamageModifier", 1d, 0, 10d);
+        vsSmallAttackDamageMultiplier = builder
+                .comment("Damage to multiply as total (value + 1)")
+                .defineInRange("smallAttackDamageMultiplier", 0.1f,0,1);
         vsSmallAttackSpeedModifier = builder
                 .comment("Attack speed modifier from the vampire basic attack speed skill. Final cooldown = 1 / (base * (1 + modifier)).")
                 .defineInRange("smallAttackSpeedModifier", 0.15, 0, 3);
@@ -462,7 +478,7 @@ public class BalanceConfig {
                 .defineInRange("attackSpeedMaxLevelMod", 0.15, 0, 2);
         vpSpeedMaxLevelMod = builder
                 .comment("Maximum movement speed modifier for vampires at max level. This is a multiplicative modifier applied as (1 + modifier).")
-                .defineInRange("speedMaxLevelMod", 0.3, 0, 5);
+                .defineInRange("speedMaxLevelMod", 0.5, 0, 5);
         vpExhaustionMaxLevelMod = builder
                 .comment("Maximum exhaustion reduction modifier for vampires at max level. This is a multiplicative modifier applied as (1 + modifier).")
                 .defineInRange("exhaustionMaxLevelMod", 1.0, 0, 10);
@@ -673,6 +689,14 @@ public class BalanceConfig {
         vaHissingCooldown = builder
                 .comment("Cooldown for the vampire hissing action, in seconds.")
                 .defineInRange("hissingCooldown", 60, 0, 10000);
+        vaJumpBoostEnabled = builder
+                .define("jumpBoostEnabled", true);
+        vaJumpBoostCooldown = builder
+                .comment("In seconds")
+                .defineInRange("jumpBoostCooldown", 0, 0, 10000);
+        vaJumpBoostDuration = builder
+                .comment("In seconds")
+                .defineInRange("jumpBoostDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
         vaDarkStalkerEnabled = builder
                 .comment("When enabled, vampires can use the dark stalker action.")
                 .define("darkStalkerEnabled", true);
@@ -724,6 +748,8 @@ public class BalanceConfig {
         vrTeleportDistanceMod = builder
                 .comment("Multiplier applied to teleport distance with the teleport range refinement.")
                 .defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
+        vrTeleportCooldownMod = builder
+                .defineInRange("teleportCooldownMod", 0.5, 0, Double.MAX_VALUE);
         vrHalfInvulnerableThresholdMod = builder
                 .comment("Multiplier applied to the partial invulnerability damage threshold with the threshold refinement.")
                 .defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);

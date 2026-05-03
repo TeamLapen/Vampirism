@@ -7,6 +7,7 @@ import de.teamlapen.faction.api.registries.actions.DeferredActionRegister;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -32,6 +33,7 @@ public class VampireActions {
     public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, InvisibilityVampireAction> VAMPIRE_INVISIBILITY = ACTIONS.registerAction("vampire_invisibility", InvisibilityVampireAction::new);
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, HissingAction> HISSING = ACTIONS.registerAction("hissing", HissingAction::new);
     public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DarkStalker> DARK_STALKER = ACTIONS.registerAction("dark_stalker", DarkStalker::new);
+    public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer> ,JumpBoostAction> JUMP_BOOST = ACTIONS.registerAction("jump_boost", JumpBoostAction::new);
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {

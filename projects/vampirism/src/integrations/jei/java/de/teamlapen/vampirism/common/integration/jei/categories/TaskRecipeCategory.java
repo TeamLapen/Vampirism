@@ -21,7 +21,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -40,11 +40,11 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
     }
 
     @Override
-    public void draw(Task task, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(Task task, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         int x = 4;
         int y = 40;
-        graphics.vampirism$drawCenteredString(minecraft.font, task.title(), getWidth()/2, 2, Color.GRAY.getRGB(), false);
+        graphics.vampirism$centeredText(minecraft.font, task.title(), getWidth()/2, 2, Color.GRAY.getRGB(), false);
         Registry<Task> tasks = minecraft.level.registryAccess().lookupOrThrow(FactionRegistries.Keys.TASK);
         Component taskmasterComponent = ModRegistries.FACTIONS.listElements().filter(s -> IFactionSpecificTags.get().get(s, FactionRegistries.Keys.TASK).filter(t -> tasks.wrapAsHolder(task).is(t)).isPresent()).map(a -> a.value().getVillageData().getTaskMasterEntity()).filter(Objects::nonNull).map(EntityType::getDescriptionId).map(Component::translatable).reduce((comp1, comp2) -> comp1.append(", ").append(comp2)).orElse(Component.translatable("gui.vampirism.jei.task.representative"));
         Component text = Component.translatable("gui.vampirism.jei.task.reward_obtain", taskmasterComponent);

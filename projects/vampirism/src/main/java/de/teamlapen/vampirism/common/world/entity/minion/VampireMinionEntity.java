@@ -132,6 +132,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         if (level() instanceof ServerLevel level) {
             if (isGettingSundamage(level()) && tickCount % 40 == 11) {
                 double dmg = getAttribute(ModAttributes.SUNDAMAGE).getValue();
+                dmg *= this.level().environmentAttributes().getValue(ModEnvironmentAttributes.SUN_INTENSITY.get(), this.position());
+
                 if (dmg > 0) {
                     DamageHandler.hurtModded(level,this, ModDamageSources::sunDamage, (float) dmg);
                 }
@@ -152,7 +154,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSundamge(this, iWorld));
+        return (sundamageCache = Helper.gettingSunDamage(this, iWorld));
     }
 
     @Override
@@ -233,10 +235,10 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
-                    player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire_minion.upgrade"), false);
+                    player.sendOverlayMessage(Component.translatable("dialogue.vampirism.vampire_minion.upgrade"));
                     sync();
                 } else {
-                    player.displayClientMessage(Component.translatable("dialogue.vampirism.vampire_minion.wrong_upgrade"), false);
+                    player.sendOverlayMessage(Component.translatable("dialogue.vampirism.vampire_minion.wrong_upgrade"));
 
                 }
                 return InteractionResult.SUCCESS;

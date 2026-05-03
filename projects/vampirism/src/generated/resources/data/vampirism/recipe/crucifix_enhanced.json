@@ -1,5 +1,6 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
   "key": {
     "A": "vampirism:stake",
     "X": "vampirism:holy_water_bottle_normal",
@@ -14,7 +15,6 @@
     "XYYX"
   ],
   "result": {
-    "count": 1,
     "id": "vampirism:crucifix_enhanced"
   },
   "skill": [

@@ -43,7 +43,7 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
                 }
                 return true;
             } else {
-                player.displayClientMessage(Component.translatable("gui.factionapi.skills.skills_reset"), true);
+                player.sendOverlayMessage(Component.translatable("gui.factionapi.skills.skills_reset"));
                 LOGGER.debug(LogUtil.FACTION, "Skills were reset for {}", entity.getName().getString());
                 FactionLogger.info(FactionLogger.SKILLS, "Skills were reset for {}", entity.getName().getString());
                 return false;

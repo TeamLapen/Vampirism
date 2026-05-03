@@ -14,7 +14,7 @@ public class BloodSieveRecipeMaker {
     public static List<BloodSieveRecipe> getRecipes(IIngredientManager ingredientManager) {
         return ingredientManager.getAllIngredients(NeoForgeTypes.FLUID_STACK).stream()
                 .<BloodSieveRecipe>mapMulti((stack, consumer) -> {
-                    IFluidBloodConversion data = stack.getFluidHolder().getData(VampirismDataMaps.FLUID_BLOOD_CONVERSION.get());
+                    IFluidBloodConversion data = stack.typeHolder().getData(VampirismDataMaps.FLUID_BLOOD_CONVERSION.get());
                     if (data != null && data.conversionRate() > 0) {
                         consumer.accept(new BloodSieveRecipe(stack, data));
                     }

@@ -27,83 +27,91 @@ import java.util.Optional;
 
 public class RegUtil {
 
-    public static Identifier id(@NotNull IAction<?> action) {
+    public static Identifier id(Holder<?> key) {
+        return key.getKey().identifier();
+    }
+
+    public static Identifier id(ResourceKey<?> key) {
+        return key.identifier();
+    }
+
+    public static Identifier id(IAction<?> action) {
         return ModRegistries.ACTIONS.getKey(action);
     }
 
-    public static Identifier id(@NotNull EntityType<?> type) {
+    public static Identifier id(EntityType<?> type) {
         return BuiltInRegistries.ENTITY_TYPE.getKey(type);
     }
 
-    public static Identifier id(@NotNull Item item) {
+    public static Identifier id(Item item) {
         return BuiltInRegistries.ITEM.getKey(item);
     }
 
-    public static Identifier id(@NotNull IFaction<?> faction) {
+    public static Identifier id(IFaction<?> faction) {
         return ModRegistries.FACTIONS.getKey(faction);
     }
 
-    public static Identifier id(@NotNull ISkill<?> skill) {
+    public static Identifier id(ISkill<?> skill) {
         return ModRegistries.SKILLS.getKey(skill);
     }
 
-    public static Identifier id(@NotNull IMinionTask<?, ?> minionTask) {
+    public static Identifier id(IMinionTask<?, ?> minionTask) {
         return ModRegistries.MINION_TASKS.getKey(minionTask);
     }
 
-    public static Identifier id(@NotNull IRefinement refinement) {
+    public static Identifier id(IRefinement refinement) {
         return ModRegistries.REFINEMENTS.getKey(refinement);
     }
 
-    public static Identifier id(@NotNull IRefinementSet refinementSet) {
+    public static Identifier id(IRefinementSet refinementSet) {
         return ModRegistries.REFINEMENT_SETS.getKey(refinementSet);
     }
 
-    public static Identifier id(@NotNull Level level, ISkillTree tree) {
+    public static Identifier id(Level level, ISkillTree tree) {
         return level.registryAccess().lookupOrThrow(FactionRegistries.Keys.SKILL_TREE).getKey(tree);
     }
 
-    public static Optional<ResourceKey<IAction<?>>> key(@NotNull IAction<?> action) {
+    public static Optional<ResourceKey<IAction<?>>> key(IAction<?> action) {
         return ModRegistries.ACTIONS.getResourceKey(action);
     }
 
-    public static boolean has(@NotNull IAction<?> action) {
+    public static boolean has(IAction<?> action) {
         return ModRegistries.ACTIONS.containsValue(action);
     }
 
-    public static boolean has(@NotNull ISkill<?> skill) {
+    public static boolean has(ISkill<?> skill) {
         return ModRegistries.SKILLS.containsValue(skill);
     }
 
-    public static boolean has(@NotNull IMinionTask<?, ?> minionTask) {
+    public static boolean has(IMinionTask<?, ?> minionTask) {
         return ModRegistries.MINION_TASKS.containsValue(minionTask);
     }
 
-    public static boolean has(@NotNull IRefinement refinement) {
+    public static boolean has(IRefinement refinement) {
         return ModRegistries.REFINEMENTS.containsValue(refinement);
     }
 
-    public static boolean has(@NotNull IRefinementSet refinementSet) {
+    public static boolean has(IRefinementSet refinementSet) {
         return ModRegistries.REFINEMENT_SETS.containsValue(refinementSet);
     }
 
-    public static IAction<?> getAction(@NotNull Identifier id) {
+    public static IAction<?> getAction(Identifier id) {
         return ModRegistries.ACTIONS.getValue(id);
     }
 
-    public static ISkill<?> getSkill(@NotNull Identifier id) {
+    public static ISkill<?> getSkill(Identifier id) {
         return ModRegistries.SKILLS.getValue(id);
     }
 
-    public static IMinionTask<?, ?> getMinionTask(@NotNull Identifier id) {
+    public static IMinionTask<?, ?> getMinionTask(Identifier id) {
         return ModRegistries.MINION_TASKS.getValue(id);
     }
 
-    public static IRefinement getRefinement(@NotNull Identifier id) {
+    public static IRefinement getRefinement(Identifier id) {
         return ModRegistries.REFINEMENTS.getValue(id);
     }
 
-    public static IRefinementSet getRefinementSet(@NotNull Identifier id) {
+    public static IRefinementSet getRefinementSet(Identifier id) {
         return ModRegistries.REFINEMENT_SETS.getValue(id);
     }
 
@@ -126,7 +134,7 @@ public class RegUtil {
         return (Holder<T>) ModRegistries.FACTIONS.wrapAsHolder(faction);
     }
 
-    public static <T> @NotNull Collection<T> values(@NotNull Registry<T> registry) {
+    public static <T> @NotNull Collection<T> values(Registry<T> registry) {
         return registry.stream().toList();
     }
 }

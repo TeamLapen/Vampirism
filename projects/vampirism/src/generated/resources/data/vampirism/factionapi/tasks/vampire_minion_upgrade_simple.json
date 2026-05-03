@@ -26,7 +26,6 @@
   "reward": {
     "type": "factionapi:item",
     "item": {
-      "count": 1,
       "id": "vampirism:vampire_minion_upgrade_simple"
     }
   },

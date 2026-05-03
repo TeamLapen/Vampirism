@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.inventory.VaporStillMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -32,13 +32,7 @@ public class VaporStillScreen extends AbstractContainerScreen<VaporStillMenu> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(graphics, mouseX, mouseY);
-    }
-
-    @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         Identifier background = menu.isExtended() ? BACKGROUND_EXTENDED : BACKGROUND_NORMAL;
         graphics.blit(RenderPipelines.GUI_TEXTURED, background, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 
@@ -47,7 +41,7 @@ public class VaporStillScreen extends AbstractContainerScreen<VaporStillMenu> {
         renderBrewProgress(graphics);
     }
 
-    private void renderFuel(GuiGraphics graphics) {
+    private void renderFuel(GuiGraphicsExtractor graphics) {
         int fuelTime = menu.getFuelTime();
         int fuelHeight = Mth.clamp((FUEL_SPRITE_HEIGHT * fuelTime + 20 - 1) / 20, 0, FUEL_SPRITE_HEIGHT);
         if (fuelHeight > 0) {
@@ -55,7 +49,7 @@ public class VaporStillScreen extends AbstractContainerScreen<VaporStillMenu> {
         }
     }
 
-    private void renderFlames(GuiGraphics graphics) {
+    private void renderFlames(GuiGraphicsExtractor graphics) {
         int brewTime = menu.getBrewTime();
         if (brewTime <= 0) return;
 
@@ -66,7 +60,7 @@ public class VaporStillScreen extends AbstractContainerScreen<VaporStillMenu> {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITE_FLAMES, FLAMES_SPRITE_WIDTH, FLAMES_SPRITE_HEIGHT, 0, FLAMES_SPRITE_HEIGHT - flameHeight, leftPos + 129, topPos + 40 + FLAMES_SPRITE_HEIGHT - flameHeight, FLAMES_SPRITE_WIDTH, flameHeight);
     }
 
-    private void renderBrewProgress(GuiGraphics graphics) {
+    private void renderBrewProgress(GuiGraphicsExtractor graphics) {
         int brewTime = menu.getBrewTime();
         if (brewTime <= 0) return;
 

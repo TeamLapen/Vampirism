@@ -41,7 +41,7 @@ public class VampireBookItem extends Item implements BaseDisplayItemGenerator.Cr
 
         if (vampireBook.isEmpty()) {
             if (level.isClientSide()) {
-                player.displayClientMessage(Component.translatable("gui.vampirism.vampire_book.failed_to_load"), true);
+                player.sendOverlayMessage(Component.translatable("gui.vampirism.vampire_book.failed_to_load"));
             }
             return InteractionResult.FAIL;
         }

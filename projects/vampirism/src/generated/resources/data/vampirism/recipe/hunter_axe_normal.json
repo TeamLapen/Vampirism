@@ -1,5 +1,6 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
   "key": {
     "X": "#c:ingots/iron",
     "Y": "#c:crops/garlic",
@@ -13,7 +14,11 @@
     "  Z "
   ],
   "result": {
-    "count": 1,
+    "components": {
+      "minecraft:enchantments": {
+        "minecraft:knockback": 1
+      }
+    },
     "id": "vampirism:hunter_axe_normal"
   }
 }

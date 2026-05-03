@@ -18,7 +18,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,19 +27,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
-import org.jetbrains.annotations.NotNull;
 
 
 public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeHolder<AlchemicalCauldronRecipe>> {
-    private final @NotNull Component localizedName;
-    private final @NotNull IDrawable background;
-    private final @NotNull IDrawable icon;
-    private final @NotNull IDrawableAnimated flame;
-    private final @NotNull IDrawableAnimated arrow;
-    private final @NotNull IDrawableAnimated bubbles;
+    private final Component localizedName;
+    private final IDrawable background;
+    private final IDrawable icon;
+    private final IDrawableAnimated flame;
+    private final IDrawableAnimated arrow;
+    private final IDrawableAnimated bubbles;
 
 
-    public AlchemicalCauldronRecipeCategory(@NotNull IGuiHelper guiHelper) {
+    public AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.ALCHEMICAL_CAULDRON.get().getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALCHEMICAL_CAULDRON.get()));
         this.background = guiHelper.drawableBuilder(AlchemicalCauldronScreen.BACKGROUND, 38, 10, 120, 70).addPadding(0, 33, 0, 0).build();
@@ -59,7 +58,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
     }
 
     @Override
-    public void draw(@NotNull RecipeHolder<AlchemicalCauldronRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<AlchemicalCauldronRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         this.background.draw(graphics);
         graphics.pose().pushMatrix();
         AlchemicalCauldronRecipe recipe = holder.value();
@@ -71,7 +70,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
         int y = 65;
         if (recipe.getRequiredLevel() > 1) {
             Component level = Component.translatable("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
-            graphics.drawString(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
+            graphics.text(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight + 2;
         }
         if (!recipe.getRequiredSkills().isEmpty()) {
@@ -80,7 +79,7 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
             for (Holder<ISkill<?>> s : recipe.getRequiredSkills()) {
                 skillText.append(s.value().getName()).append(" ");
             }
-            graphics.drawWordWrap(minecraft.font, skillText, x, y, 132, Color.GRAY.getRGB(), false);
+            graphics.textWithWordWrap(minecraft.font, skillText, x, y, 132, Color.GRAY.getRGB(), false);
         }
         graphics.pose().popMatrix();
     }
@@ -95,27 +94,25 @@ public class AlchemicalCauldronRecipeCategory implements IRecipeCategory<RecipeH
         return 120;
     }
 
-    @NotNull
     @Override
     public IDrawable getIcon() {
         return this.icon;
     }
 
     @Override
-    public @NotNull IRecipeType<RecipeHolder<AlchemicalCauldronRecipe>> getRecipeType() {
+    public IRecipeType<RecipeHolder<AlchemicalCauldronRecipe>> getRecipeType() {
         return VampirismJEIPlugin.ALCHEMICAL_CAULDRON;
     }
 
-    @NotNull
     @Override
     public Component getTitle() {
         return this.localizedName;
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull RecipeHolder<AlchemicalCauldronRecipe> holder, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlchemicalCauldronRecipe> holder, IFocusGroup focuses) {
         AlchemicalCauldronRecipe recipe = holder.value();
-        builder.addSlot(RecipeIngredientRole.INPUT, 6, 7).add(recipe.getFluid().<Ingredient>map(x -> x, x -> Ingredient.of(x.getFluid().getBucket())));
+        builder.addSlot(RecipeIngredientRole.INPUT, 6, 7).add(recipe.getFluid().<Ingredient>map(x -> x, x -> Ingredient.of(x.fluid().value().getBucket())));
         builder.addSlot(RecipeIngredientRole.INPUT, 30, 7).add(recipe.getIngredient());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 78, 25).add(recipe.result());
         builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 18, 43).add(SlotDisplay.AnyFuel.INSTANCE);

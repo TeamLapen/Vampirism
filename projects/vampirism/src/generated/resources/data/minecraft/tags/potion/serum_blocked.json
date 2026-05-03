@@ -1,8 +1,5 @@
 {
   "values": [
-    "vampirism:resistance",
-    "vampirism:strong_resistance",
-    "vampirism:long_resistance",
     "minecraft:healing",
     "vampirism:very_strong_healing",
     "minecraft:strong_healing",

@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "vampirism:armor_of_swiftness_chest_enhanced"
+  },
+  "max_uses": 7.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 40.0,
+      "min": 30.0
+    },
+    "id": "vampirism:soul_orb_vampire"
+  },
+  "xp": 10.0
+}

@@ -34,14 +34,14 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Mth;
@@ -100,8 +100,8 @@ public abstract class GuiRadialMenu<T> extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         Matrix3x2fStack pose = graphics.pose();
 
         if (lastTime == 0) {
@@ -169,7 +169,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
             adjusted = adjusted == -1 ? numberOfSlices - 1 : adjusted;
             Component component = radialMenuSlots.get(adjusted).slotName();
-            graphics.drawCenteredString(font, component, width / 2, (height - font.lineHeight) / 2, Optional.ofNullable(component.getStyle().getColor()).map(TextColor::getValue).orElse(16777215));
+            graphics.centeredText(font, component, width / 2, (height - font.lineHeight) / 2, Optional.ofNullable(component.getStyle().getColor()).map(TextColor::getValue).orElse(16777215));
         }
 
 
@@ -206,7 +206,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    public void drawSecondaryIcons(GuiGraphics graphics, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<T> secondarySlotIcons) {
+    public void drawSecondaryIcons(GuiGraphicsExtractor graphics, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<T> secondarySlotIcons) {
         if (!radialMenu.isShowMoreSecondaryItems()) {
             drawSecondaryIcon(graphics, secondarySlotIcons.getFirst(), positionXOfPrimaryIcon, positionYOfPrimaryIcon, radialMenu.getSecondaryIconStartingPosition());
         } else {
@@ -218,7 +218,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    public void drawSecondaryIcon(GuiGraphics graphics, T item, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, SecondaryIconPosition secondaryIconPosition) {
+    public void drawSecondaryIcon(GuiGraphicsExtractor graphics, T item, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, SecondaryIconPosition secondaryIconPosition) {
         int offset = radialMenu.getOffset();
         switch (secondaryIconPosition) {
             case NORTH -> radialMenu.drawIcon(item, graphics, positionXOfPrimaryIcon + offset, positionYOfPrimaryIcon - 14 + offset, 10);
@@ -228,11 +228,11 @@ public abstract class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    public void drawSliceName(GuiGraphics graphics, String sliceName, ItemStack stack, int posX, int posY) {
+    public void drawSliceName(GuiGraphicsExtractor graphics, String sliceName, ItemStack stack, int posX, int posY) {
         if (!radialMenu.isShowMoreSecondaryItems()) {
-            graphics.renderItemDecorations(font, stack, posX + 5, posY, sliceName);
+            graphics.itemDecorations(font, stack, posX + 5, posY, sliceName);
         } else {
-            graphics.renderItemDecorations(font, stack, posX + 5, posY + 5, sliceName);
+            graphics.itemDecorations(font, stack, posX + 5, posY + 5, sliceName);
         }
     }
 
@@ -261,7 +261,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         return true;
     }
 
-    public void drawSlice(IRadialMenuSlot<T> slot, boolean highlighted, GuiGraphics guiGraphics, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
+    public void drawSlice(IRadialMenuSlot<T> slot, boolean highlighted, GuiGraphicsExtractor GuiGraphicsExtractor, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         // Normalize angles to [0, 360) and ensure sweep is always positive (handles wrap-around at 360)
         float startDeg = Mth.positiveModulo(startAngle, 360.0f);
         float endDeg = Mth.positiveModulo(endAngle, 360.0f);
@@ -274,7 +274,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
         float startRad = (float) Math.toRadians(startDeg);
         float endRad = (float) Math.toRadians(startDeg + sweepDeg);
 
-        guiGraphics.submitGuiElementRenderState(new SliceElement(x, y, 0, radiusIn, radiusOut, startRad, endRad, sections, r, g, b, a, guiGraphics.pose()));
+        GuiGraphicsExtractor.submitGuiElementRenderState(new SliceElement(x, y, 0, radiusIn, radiusOut, startRad, endRad, sections, r, g, b, a, GuiGraphicsExtractor.pose()));
 
     }
 

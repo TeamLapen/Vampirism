@@ -200,7 +200,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (this.playerMinionController != null) {
-            this.getLordOpt().map(ILordPlayer::asEntity).ifPresent(p -> p.displayClientMessage(Component.translatable("dialogue.factionapi.minion.died", this.getDisplayName()), true));
+            this.getLordOpt().map(ILordPlayer::asEntity).ifPresent(p -> p.sendOverlayMessage(Component.translatable("dialogue.factionapi.minion.died", this.getDisplayName())));
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);
             this.playerMinionController = null;
         }

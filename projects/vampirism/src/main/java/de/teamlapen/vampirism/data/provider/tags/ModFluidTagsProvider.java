@@ -23,6 +23,7 @@ public class ModFluidTagsProvider extends FluidTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider holderLookup) {
-        tag(ModFluidTags.BLOOD).add(ModFluids.BLOOD.get());
+        tag(ModFluidTags.BLOOD)
+                .add(ModFluids.BLOOD.get(), ModFluids.FLOWING_BLOOD.get());
     }
 }

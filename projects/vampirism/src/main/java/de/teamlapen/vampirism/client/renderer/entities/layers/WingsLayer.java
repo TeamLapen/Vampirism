@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -22,7 +21,7 @@ import java.util.function.Predicate;
 
 public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q extends EntityModel<S>> extends RenderLayer<S, Q> {
 
-    private final @NotNull WingModel<S> model;
+    private final WingModel<S> model;
     private final Predicate<S> predicateRender;
     private final BiFunction<S, Q, ModelPart> bodyPartFunction;
     private final Identifier texture = VIdentifier.mod("textures/entity/wings.png");
@@ -31,7 +30,7 @@ public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q
      * @param predicateRender  Decides if the layer is rendered
      * @param bodyPartFunction Should return the main body part. The returned ModelRenderer is used to adjust the wing rotation
      */
-    public WingsLayer(@NotNull RenderLayerParent<S, Q> entityRendererIn, @NotNull EntityModelSet modelSet, Predicate<S> predicateRender, BiFunction<S, Q, ModelPart> bodyPartFunction) {
+    public WingsLayer(RenderLayerParent<S, Q> entityRendererIn, EntityModelSet modelSet, Predicate<S> predicateRender, BiFunction<S, Q, ModelPart> bodyPartFunction) {
         super(entityRendererIn);
         this.model = new WingModel<>(modelSet.bakeLayer(ModEntitiesRender.WING));
         this.predicateRender = predicateRender;
@@ -51,7 +50,7 @@ public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q
         poseStack.pushPose();
         poseStack.translate(0f, 0, 0.02f);
         poseStack.scale(s, s, s);
-        coloredCutoutModelCopyLayerRender(model, texture, poseStack, nodeCollector, packedLight, renderState, 0, 0);
+        coloredCutoutModelCopyLayerRender(model, texture, poseStack, nodeCollector, packedLight, renderState, -1, 1);
         poseStack.popPose();
     }
 }

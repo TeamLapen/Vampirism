@@ -118,8 +118,8 @@ public class BiteableEntryManager {
     private boolean isEntityBlacklisted(PathfinderMob creature) {
         if (!(creature instanceof Animal)) return true;
         if (creature instanceof IVampire) return true;
-        EntityType<?> type = creature.getType();
-        if (type.getCategory() == MobCategory.MONSTER || type.getCategory() == MobCategory.WATER_CREATURE) {
+        var type = creature.typeHolder();
+        if (type.value().getCategory() == MobCategory.MONSTER || type.value().getCategory() == MobCategory.WATER_CREATURE) {
             return true;
         }
         if (type.is(ModEntityTags.VAMPIRE)) return true;

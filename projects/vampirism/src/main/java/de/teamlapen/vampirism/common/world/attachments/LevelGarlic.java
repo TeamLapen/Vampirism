@@ -120,7 +120,7 @@ public class LevelGarlic implements IGarlicChunkHandler {
         public static Codec<Emitter> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
                         EnumStrength.CODEC.fieldOf("strength").forGetter(s -> s.strength),
-                        ModCodecs.CHUNK_POS.listOf().fieldOf("pos").forGetter(x -> x.pos)
+                        ChunkPos.CODEC.listOf().fieldOf("pos").forGetter(x -> x.pos)
                 ).apply(inst, Emitter::new)
         );
         public static final StreamCodec<RegistryFriendlyByteBuf, Emitter> STREAM_CODEC = StreamCodec.composite(

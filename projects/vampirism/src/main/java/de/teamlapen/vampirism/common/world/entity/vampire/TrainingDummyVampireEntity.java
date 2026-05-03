@@ -26,7 +26,7 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
 
     @Override
     public boolean hurtServer(ServerLevel level, @NotNull DamageSource damageSource, float amount) {
-        level.getNearbyPlayers(PREDICATE, this, this.getBoundingBox().inflate(40)).forEach(p -> p.displayClientMessage(Component.literal("Damage " + amount + " from " + damageSource.type().msgId()), false));
+        level.getNearbyPlayers(PREDICATE, this, this.getBoundingBox().inflate(40)).forEach(p -> p.sendSystemMessage(Component.literal("Damage " + amount + " from " + damageSource.type().msgId())));
         if (this.startTicks != 0) this.damageTaken += amount;
         return super.hurtServer(level, damageSource, amount);
 
@@ -49,10 +49,10 @@ public class TrainingDummyVampireEntity extends BasicVampireEntity {
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) { //processInteract
         if (!this.level().isClientSide() && hand == InteractionHand.MAIN_HAND) {
             if (startTicks == 0) {
-                player.displayClientMessage(Component.literal("Start recording"), false);
+                player.sendSystemMessage(Component.literal("Start recording"));
                 this.startTicks = this.tickCount;
             } else {
-                player.displayClientMessage(Component.literal("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.tickCount - this.startTicks)) * 20f)), false);
+                player.sendSystemMessage(Component.literal("Damage: " + damageTaken + " - DPS: " + (damageTaken / ((float) (this.tickCount - this.startTicks)) * 20f)));
                 this.discard();
             }
         }

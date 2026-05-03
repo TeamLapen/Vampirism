@@ -21,7 +21,8 @@
     },
     "minecraft:visual/fog_color": "#171717",
     "minecraft:visual/sky_color": "#131313",
-    "minecraft:visual/water_fog_color": "#670717"
+    "minecraft:visual/water_fog_color": "#670717",
+    "vampirism:sun_damage": false
   },
   "carvers": [
     "minecraft:cave",
@@ -40,8 +41,7 @@
     [],
     [
       "minecraft:lake_lava_underground",
-      "minecraft:lake_lava_surface",
-      "vampirism:mod_lake_placed"
+      "minecraft:lake_lava_surface"
     ],
     [],
     [],

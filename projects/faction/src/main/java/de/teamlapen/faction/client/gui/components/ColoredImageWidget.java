@@ -1,6 +1,6 @@
 package de.teamlapen.faction.client.gui.components;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ImageWidget;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
@@ -31,8 +31,8 @@ public abstract class ColoredImageWidget {
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite(), this.getX(), this.getY(), this.getWidth(), this.getHeight(), this.color);
+        public void extractWidgetRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTicks) {
+            GuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, sprite(), this.getX(), this.getY(), this.getWidth(), this.getHeight(), this.color);
         }
     }
 
@@ -50,7 +50,7 @@ public abstract class ColoredImageWidget {
         }
 
         @Override
-        protected void renderWidget(GuiGraphics p_294145_, int p_294755_, int p_294985_, float p_294245_) {
+        protected void extractWidgetRenderState(GuiGraphicsExtractor p_294145_, int p_294755_, int p_294985_, float p_294245_) {
             p_294145_.blit(
                     RenderPipelines.GUI_TEXTURED,
                     this.texture(),

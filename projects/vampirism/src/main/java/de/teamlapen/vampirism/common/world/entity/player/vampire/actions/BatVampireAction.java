@@ -32,7 +32,7 @@ import java.util.Objects;
 public class BatVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public final static float BAT_EYE_HEIGHT = 0.85F * 0.6f;
-    public static final EntityDimensions BAT_SIZE = EntityDimensions.fixed(0.55f, 0.8f).withEyeHeight(BAT_EYE_HEIGHT);
+    public static final EntityDimensions BAT_SIZE = EntityDimensions.fixed(0.6f, 0.8f).withEyeHeight(BAT_EYE_HEIGHT);
 
     private static final float PLAYER_WIDTH = 0.6F;
     private static final float PLAYER_HEIGHT = 1.8F;
@@ -90,6 +90,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     public void onActivatedClient(@NotNull IVampirePlayer vampire) {
         if (!((VampirePlayer) vampire).getSkillProperties().bat) {
             updatePlayer((VampirePlayer) vampire, true);
+            setModifier(vampire.asEntity(), true);
         }
         Identifier key = ModRegistries.ACTIONS.getKey(this);
         AttributeInstance fly = vampire.asEntity().getAttribute(NeoForgeMod.CREATIVE_FLIGHT);

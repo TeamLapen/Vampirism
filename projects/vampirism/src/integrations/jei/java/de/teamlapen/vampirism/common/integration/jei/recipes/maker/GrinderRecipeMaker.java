@@ -13,7 +13,7 @@ public class GrinderRecipeMaker {
     public static List<GrinderRecipe> getRecipes(IIngredientManager ingredientManager) {
         return ingredientManager.getAllItemStacks().stream()
                 .<GrinderRecipe>mapMulti((stack, consumer) -> {
-                    IItemBlood data = stack.getItemHolder().getData(VampirismDataMaps.ITEM_BLOOD.get());
+                    IItemBlood data = stack.typeHolder().getData(VampirismDataMaps.ITEM_BLOOD.get());
                     if (data != null && data.blood() > 0) {
                         consumer.accept(new GrinderRecipe(stack, data));
                     }

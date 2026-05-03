@@ -10,7 +10,7 @@ import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.misc.extensions.client.IStatsScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -71,7 +71,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
     }
 
     @Override
-    protected void renderListBackground(@NotNull GuiGraphics guiGraphics) {
+    protected void extractListBackground(GuiGraphicsExtractor graphics) {
     }
 
     int getColumnX(int index) {
@@ -132,7 +132,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
     }
 
     @Override
-    protected void renderListSeparators(@NotNull GuiGraphics guiGraphics) {
+    protected void extractListSeparators(GuiGraphicsExtractor graphics) {
     }
 
     public abstract static class Entry extends ContainerObjectSelectionList.Entry<Entry> {
@@ -162,21 +162,21 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
         }
 
         @Override
-        public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+        public void extractContent(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
             this.skillsUnlocked.setPosition(this.getContentX() + ActionStatisticsList.this.getColumnX(0) - 18, this.getContentY() + 1);
-            this.skillsUnlocked.render(guiGraphics, mouseX, mouseY, partialTick);
+            this.skillsUnlocked.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
             this.skillsForgotten.setPosition(this.getContentX() + ActionStatisticsList.this.getColumnX(1) - 18, this.getContentY() + 1);
-            this.skillsForgotten.render(guiGraphics, mouseX, mouseY, partialTick);
+            this.skillsForgotten.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
             this.actionUsed.setPosition(this.getContentX() + ActionStatisticsList.this.getColumnX(2) - 18, this.getContentY() + 1);
-            this.actionUsed.render(guiGraphics, mouseX, mouseY, partialTick);
+            this.actionUsed.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
             this.actionTime.setPosition(this.getContentX() + ActionStatisticsList.this.getColumnX(3) - 18, this.getContentY() + 1);
-            this.actionTime.render(guiGraphics, mouseX, mouseY, partialTick);
+            this.actionTime.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
             this.actionCooldownTime.setPosition(this.getContentX() + ActionStatisticsList.this.getColumnX(4) - 18, this.getContentY() + 1);
-            this.actionCooldownTime.render(guiGraphics, mouseX, mouseY, partialTick);
+            this.actionCooldownTime.extractRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
             if (ActionStatisticsList.this.sortColumn != null) {
                 int i = ActionStatisticsList.this.getColumnX(ActionStatisticsList.this.getColumnIndex(ActionStatisticsList.this.sortColumn)) - 36;
                 Identifier resourcelocation = ActionStatisticsList.this.sortOrder == 1 ? StatsScreen.SORT_UP_SPRITE : StatsScreen.SORT_DOWN_SPRITE;
-                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getContentX() + i, this.getContentY() + 1, 18, 18);
+                GuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getContentX() + i, this.getContentY() + 1, 18, 18);
             }
         }
 
@@ -206,7 +206,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
             }
 
             @Override
-            public void renderContents(GuiGraphics graphics, int p_281473_, int p_283021_, float partialTicks) {
+            public void extractContents(GuiGraphicsExtractor graphics, int p_281473_, int p_283021_, float partialTicks) {
                 Identifier identifier = this.sprites.get(this.isActive(), this.isHoveredOrFocused());
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), this.getY(), this.width, this.height);
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.sprite, this.getX(), this.getY(), this.width, this.height);
@@ -229,16 +229,16 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
         }
 
         @Override
-        public void renderContent(@NotNull GuiGraphics pGuiGraphics, int mouseX, int mouseY, boolean isHovering, float partialTick) {
+        public void extractContent(@NotNull GuiGraphicsExtractor pGuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
             this.widget.setPosition(this.getContentX(), this.getContentY());
-            this.widget.render(pGuiGraphics, mouseX, mouseY, partialTick);
+            this.widget.extractRenderState(pGuiGraphicsExtractor, mouseX, mouseY, partialTick);
 
             ActionStatisticsList actionStatisticsList = ActionStatisticsList.this;
             int i = actionStatisticsList.children().indexOf(this);
 
             for (int i1 = 0; i1 < actionStatisticsList.skillColumns.size(); i1++) {
                 actionStatisticsList.skillColumns.get(i1).get(this.skill);
-                this.renderStat(pGuiGraphics,
+                this.renderStat(pGuiGraphicsExtractor,
                         actionStatisticsList.skillColumns.get(i1).get(this.skill),
                         this.getContentX() + actionStatisticsList.getColumnX(i1),
                         this.getContentYMiddle() - 9 / 2,
@@ -252,7 +252,7 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
                 } else {
                     stat = null;
                 }
-                this.renderStat(pGuiGraphics,
+                this.renderStat(pGuiGraphicsExtractor,
                         stat,
                         this.getContentX() + actionStatisticsList.getColumnX(i1 + actionStatisticsList.skillColumns.size()),
                         this.getContentYMiddle() - 9 / 2,
@@ -260,9 +260,9 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
             }
         }
 
-        protected void renderStat(GuiGraphics pGuiGraphics, @Nullable Stat<?> pStat, int x, int y, boolean pEvenRow) {
+        protected void renderStat(GuiGraphicsExtractor pGuiGraphicsExtractor, @Nullable Stat<?> pStat, int x, int y, boolean pEvenRow) {
             Component component = pStat == null ? StatsScreen.NO_VALUE_DISPLAY : Component.literal(pStat.format(screen.getStats().getValue(pStat)));
-            pGuiGraphics.drawString(font, component, x - font.width(component), y, pEvenRow ? -1 : -4539718);
+            pGuiGraphicsExtractor.text(font, component, x - font.width(component), y, pEvenRow ? -1 : -4539718);
         }
 
         @Override
@@ -282,14 +282,14 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
             }
 
             @Override
-            protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, StatsScreen.SLOT_SPRITE, SkillRow.this.getContentX(), SkillRow.this.getContentY(), 18, 18);
-                super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+                GuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, StatsScreen.SLOT_SPRITE, SkillRow.this.getContentX(), SkillRow.this.getContentY(), 18, 18);
+                super.extractWidgetRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
             }
 
             @Override
-            protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-                super.renderTooltip(guiGraphics, SkillRow.this.getContentX() + 18, SkillRow.this.getContentY() + 18);
+            protected void renderTooltip(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY) {
+                super.renderTooltip(GuiGraphicsExtractor, SkillRow.this.getContentX() + 18, SkillRow.this.getContentY() + 18);
             }
         }
     }

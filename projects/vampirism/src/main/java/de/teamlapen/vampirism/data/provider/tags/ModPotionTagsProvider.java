@@ -22,9 +22,6 @@ public class ModPotionTagsProvider extends KeyTagProvider<Potion> {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(ModPotionTags.SERUM_BLOCKED)
-                .add(ModPotions.RESISTANCE.getKey())
-                .add(ModPotions.STRONG_RESISTANCE.getKey())
-                .add(ModPotions.LONG_RESISTANCE.getKey())
                 .add(Potions.HEALING.getKey())
                 .add(ModPotions.VERY_STRONG_HEALING.getKey())
                 .add(Potions.STRONG_HEALING.getKey())

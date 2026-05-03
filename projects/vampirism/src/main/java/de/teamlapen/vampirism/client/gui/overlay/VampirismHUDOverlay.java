@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.items.StakeItem;
 import de.teamlapen.vampirism.common.world.items.SyringeItem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -71,7 +71,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         Window window = mc().getWindow();
         int screenWidth  = window.getGuiScaledWidth();
         int screenHeight = window.getGuiScaledHeight();
-        GuiGraphics graphics = event.getGuiGraphics();
+        GuiGraphicsExtractor graphics = event.getGuiGraphics();
 
         if (hit instanceof EntityHitResult entityHit) {
             Entity target = entityHit.getEntity();
@@ -123,11 +123,11 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         }
     }
 
-    private boolean tryRenderEntityCrosshair(GuiGraphics graphics, LocalPlayer player, Entity target, int width, int height) {
+    private boolean tryRenderEntityCrosshair(GuiGraphicsExtractor graphics, LocalPlayer player, Entity target, int width, int height) {
         return tryRenderSyringeCrosshair(graphics, player, target, width, height) || tryRenderVampireCrosshair(graphics, player, target, width, height) || tryRenderStakeCrosshair(graphics, player, target, width, height);
     }
 
-    private boolean tryRenderVampireCrosshair(GuiGraphics graphics, LocalPlayer player, Entity target, int width, int height) {
+    private boolean tryRenderVampireCrosshair(GuiGraphicsExtractor graphics, LocalPlayer player, Entity target, int width, int height) {
         VampirePlayer vampire = VampirePlayer.get(player);
         if (vampire.getLevel() == 0 || player.isSpectator() || vampire.getSkillProperties().bat) return false;
 
@@ -139,7 +139,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
                 }).orElse(false);
     }
 
-    private boolean tryRenderSyringeCrosshair(GuiGraphics graphics, LocalPlayer player, Entity target, int width, int height) {
+    private boolean tryRenderSyringeCrosshair(GuiGraphicsExtractor graphics, LocalPlayer player, Entity target, int width, int height) {
         if (player.isSpectator()) return false;
         if (Stream.of(player.getMainHandItem(), player.getOffhandItem()).noneMatch(stack -> stack.getItem() instanceof SyringeItem)) return false;
         if (!SyringeItem.isPlayerFacingEntity(player, target)) return false;
@@ -152,7 +152,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
                 }).orElse(false);
     }
 
-    private boolean tryRenderStakeCrosshair(GuiGraphics graphics, LocalPlayer player, Entity target, int width, int height) {
+    private boolean tryRenderStakeCrosshair(GuiGraphicsExtractor graphics, LocalPlayer player, Entity target, int width, int height) {
         HunterPlayer hunter = HunterPlayer.get(player);
         if (hunter.getLevel() == 0 || player.isSpectator()) return false;
         if (player.getMainHandItem().getItem() != ModItems.STAKE.get()) return false;
@@ -163,7 +163,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         return true;
     }
 
-    private boolean tryRenderBlockBloodCrosshair(GuiGraphics graphics, LocalPlayer player, BlockHitResult blockHit, int width, int height) {
+    private boolean tryRenderBlockBloodCrosshair(GuiGraphicsExtractor graphics, LocalPlayer player, BlockHitResult blockHit, int width, int height) {
         ClientLevel level = mc().level;
         if (level == null) return false;
 
@@ -188,7 +188,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         return false;
     }
 
-    private void renderBloodCrosshair(GuiGraphics graphics, int width, int height, float percent, boolean poisonous, Identifier emptySprite, Identifier fullSprite, Identifier poisonSprite) {
+    private void renderBloodCrosshair(GuiGraphicsExtractor graphics, int width, int height, float percent, boolean poisonous, Identifier emptySprite, Identifier fullSprite, Identifier poisonSprite) {
         TextureAtlasSprite sprite = graphics.guiSprites.getSprite(emptySprite);
         int textureWidth = sprite.contents().width();
         int textureHeight = sprite.contents().height();
@@ -204,7 +204,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, poisonous ? poisonSprite : fullSprite, textureWidth, textureHeight, 0, vOffset, x, y + vOffset, textureWidth, fillHeight);
     }
 
-    private void renderProgressBar(GuiGraphics graphics, LocalPlayer player, Window window, Identifier iconSprite, float progress) {
+    private void renderProgressBar(GuiGraphicsExtractor graphics, LocalPlayer player, Window window, Identifier iconSprite, float progress) {
         if (!mc().options.getCameraType().isFirstPerson()) return;
         if (mc().gameMode == null || mc().gameMode.getPlayerMode() == GameType.SPECTATOR) return;
         if (progress <= 0 || progress > 1f) return;
@@ -223,7 +223,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS_FOREGROUND_SPRITE, textureWidth, textureHeight, 0, 0, x, y, barWidth, textureHeight);
     }
 
-    private void renderStakeInstantKill(GuiGraphics graphics, int width, int height) {
+    private void renderStakeInstantKill(GuiGraphicsExtractor graphics, int width, int height) {
         if (!mc().options.getCameraType().isFirstPerson()) return;
         if (mc().gameMode.getPlayerMode() == GameType.SPECTATOR) return;
 

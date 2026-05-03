@@ -11,16 +11,15 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the eyes over the advanced vampire custom face
  */
 public class AdvancedVampireFangLayer extends RenderLayer<AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> {
 
-    private final Identifier @NotNull [] overlays;
+    private final Identifier[] overlays;
 
-    public AdvancedVampireFangLayer(@NotNull RenderLayerParent<AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> renderer) {
+    public AdvancedVampireFangLayer(RenderLayerParent<AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> renderer) {
         super(renderer);
         overlays = new Identifier[REFERENCE.FANG_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
@@ -29,7 +28,7 @@ public class AdvancedVampireFangLayer extends RenderLayer<AdvancedVampireRendere
     }
 
     @Override
-    public void submit(@NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodeCollector, int packedLight, AdvancedVampireRenderer.AdvancedVampireRenderState renderState, float yRot, float xRot) {
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, AdvancedVampireRenderer.AdvancedVampireRenderState renderState, float yRot, float xRot) {
         int type = renderState.fangType;
         if (type < 0 || type >= overlays.length) {
             type = 0;

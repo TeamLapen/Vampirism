@@ -29,7 +29,7 @@ public class HunterHurtByTargetGoal extends HurtByTargetGoal {
 
         for (Mob possibleDefender : list) {
             LivingEntity attacker = mob.getLastHurtByMob();
-            if (possibleDefender != mob && possibleDefender.getType().is(ModEntityTags.ALERTABLE_HUNTERS) && attacker != null && possibleDefender.getTarget() == null && !possibleDefender.isAlliedTo(attacker)) {
+            if (possibleDefender != mob && possibleDefender.typeHolder().is(ModEntityTags.ALERTABLE_HUNTERS) && attacker != null && possibleDefender.getTarget() == null && !possibleDefender.isAlliedTo(attacker)) {
                 this.alertOther(possibleDefender, attacker);
             }
         }

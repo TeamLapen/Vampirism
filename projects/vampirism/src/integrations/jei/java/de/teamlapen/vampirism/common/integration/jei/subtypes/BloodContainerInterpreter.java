@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BloodContainerInterpreter implements ISubtypeInterpreter<ItemStack> {
@@ -15,7 +14,7 @@ public class BloodContainerInterpreter implements ISubtypeInterpreter<ItemStack>
     }
 
     @Override
-    public @Nullable Object getSubtypeData(ItemStack ingredient, @NotNull UidContext context) {
+    public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
         var container = ingredient.get(ModDataComponents.BLOOD_CONTAINER);
         if (container == null) {
             return null;

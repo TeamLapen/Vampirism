@@ -14,7 +14,7 @@ import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemicalCauldronRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -36,11 +36,11 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
     }
 
     @Override
-    public void draw(@NotNull GuiGraphics guiGraphics, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font font, @NotNull IngredientCycler ingredientCycler) {
+    public void draw(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, RegistryAccess registryAccess, Book book, CategoryAbstract categoryAbstract, EntryAbstract entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen baseScreen, @NotNull Font font, @NotNull IngredientCycler ingredientCycler) {
 
-        CRAFTING_GRID.draw(guiGraphics, guiLeft + 60, guiTop + 42);
-        baseScreen.drawCenteredStringWithoutShadow(guiGraphics, font, ModBlocks.ALCHEMICAL_CAULDRON.get().getName(), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
-        baseScreen.drawCenteredStringWithoutShadow(guiGraphics, font, Component.literal("§o").append(Component.translatable("guideapi.text.crafting.shaped")).append("§r"), guiLeft + baseScreen.xSize / 2, guiTop + 14 + font.lineHeight, 0);
+        CRAFTING_GRID.draw(GuiGraphicsExtractor, guiLeft + 60, guiTop + 42);
+        baseScreen.drawCenteredStringWithoutShadow(GuiGraphicsExtractor, font, ModBlocks.ALCHEMICAL_CAULDRON.get().getName(), guiLeft + baseScreen.xSize / 2, guiTop + 12, 0);
+        baseScreen.drawCenteredStringWithoutShadow(GuiGraphicsExtractor, font, Component.literal("§o").append(Component.translatable("guideapi.text.crafting.shaped")).append("§r"), guiLeft + baseScreen.xSize / 2, guiTop + 14 + font.lineHeight, 0);
 
         int outputX = guiLeft + 150;
         int outputY = guiTop + 72;
@@ -52,7 +52,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         ItemStack itemStack = recipe.getResultItem(registryAccess);
 
 
-        GuiHelper.drawItemStack(guiGraphics, itemStack, outputX, outputY);
+        GuiHelper.drawItemStack(GuiGraphicsExtractor, itemStack, outputX, outputY);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, outputX, outputY, 15, 15)) {
             tooltips = GuiHelper.getTooltip(itemStack);
         }
@@ -60,7 +60,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         Ingredient input = recipe.getIngredients().get(0);
         ingredientCycler.getCycledIngredientStack(input, 0).ifPresent(inStack -> {
 
-            GuiHelper.drawItemStack(guiGraphics, inStack, in2X, in2Y);
+            GuiHelper.drawItemStack(GuiGraphicsExtractor, inStack, in2X, in2Y);
             if (GuiHelper.isMouseBetween(mouseX, mouseY, in2X, in2Y, 15, 15)) {
                 tooltips = GuiHelper.getTooltip(inStack);
             }
@@ -70,7 +70,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         Ingredient liquid = recipe.getFluid().map(ingredient -> ingredient, fluidStack -> Ingredient.of(fluidStack.getFluid().getBucket()));
 
         ingredientCycler.getCycledIngredientStack(liquid, 1).ifPresent(fluidStack -> {
-            GuiHelper.drawItemStack(guiGraphics, fluidStack, in1X, in1Y);
+            GuiHelper.drawItemStack(GuiGraphicsExtractor, fluidStack, in1X, in1Y);
             if (GuiHelper.isMouseBetween(mouseX, mouseY, in1X, in1Y, 15, 15)) {
                 tooltips = GuiHelper.getTooltip(fluidStack);
             }
@@ -80,7 +80,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
             Component level = Component.translatable("container.vampirism.hunter_table.level", recipe.getRequiredLevel());
-            guiGraphics.drawString(font, level, guiLeft + 50, y, Color.GRAY.getRGB(), false);
+            GuiGraphicsExtractor.drawString(font, level, guiLeft + 50, y, Color.GRAY.getRGB(), false);
             y += font.lineHeight + 2;
         }
         if (!recipe.getRequiredSkills().isEmpty()) {
@@ -91,7 +91,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
                 skills.add(skill.value().getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
-            guiGraphics.drawWordWrap(font, FormattedText.composite(skills), guiLeft + 50, y, 100, Color.GRAY.getRGB());
+            GuiGraphicsExtractor.drawWordWrap(font, FormattedText.composite(skills), guiLeft + 50, y, 100, Color.GRAY.getRGB());
         }
     }
 

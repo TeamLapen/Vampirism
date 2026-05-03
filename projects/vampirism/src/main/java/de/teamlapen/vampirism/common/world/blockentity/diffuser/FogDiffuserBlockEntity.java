@@ -36,7 +36,7 @@ public class FogDiffuserBlockEntity extends DiffuserBlockEntity {
 
     @Override
     protected int getBurnDuration(ItemStack itemStack) {
-        IFogDiffuserFuel data = itemStack.getItemHolder().getData(ModDataMaps.FOG_DIFFUSER_FUEL_MAP);
+        IFogDiffuserFuel data = itemStack.typeHolder().getData(ModDataMaps.FOG_DIFFUSER_FUEL_MAP);
         return data != null ? data.burnDuration() : 0;
     }
 

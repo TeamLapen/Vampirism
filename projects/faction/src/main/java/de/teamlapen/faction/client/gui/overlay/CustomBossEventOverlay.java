@@ -8,7 +8,7 @@ import de.teamlapen.faction.common.util.Color;
 import de.teamlapen.faction.common.world.MultiBossEvent;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.BossHealthOverlay;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -47,7 +47,7 @@ public class CustomBossEventOverlay extends BaseOverlay {
     }
 
     @Override
-    public void render(GuiGraphics graphics, DeltaTracker partialTicks) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker partialTicks) {
         if (!canRenderOverlays()) {
             return;
         }
@@ -60,7 +60,7 @@ public class CustomBossEventOverlay extends BaseOverlay {
             int l = this.mc().font.width(itextcomponent);
             int i1 = i / 2 - l / 2;
             int j1 = j - 9;
-            graphics.drawString(this.mc().font, itextcomponent, i1, j1, -1, true);
+            graphics.text(this.mc().font, itextcomponent, i1, j1, -1, true);
 
             if (j >= graphics.guiHeight() / 3) {
                 break;
@@ -68,7 +68,7 @@ public class CustomBossEventOverlay extends BaseOverlay {
         }
     }
 
-    private void render(GuiGraphics graphics, int k, int j, MultiBossEvent value) {
+    private void render(GuiGraphicsExtractor graphics, int k, int j, MultiBossEvent value) {
         int textureStart = 0;
         List<Color> s = value.getColors();
         Map<Color, Float> perc = value.getEntries();

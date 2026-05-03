@@ -200,13 +200,13 @@ public class CoffinBlock extends BaseContainerBlock {
                 worldIn.setBlock(otherPos, worldIn.getBlockState(otherPos).setValue(CLOSED, !state.getValue(CLOSED)), 3);
                 return InteractionResult.CONSUME;
             } else if (VampirePlayer.get(player).getLevel() == 0) {
-                player.displayClientMessage(Component.translatable("message.vampirism.coffin.cant_use"), true);
+                player.sendOverlayMessage(Component.translatable("message.vampirism.coffin.cant_use"));
                 return InteractionResult.CONSUME;
             } else if (state.getValue(BedBlock.OCCUPIED)) {
-                player.displayClientMessage(Component.translatable("message.vampirism.coffin.occupied"), true);
+                player.sendOverlayMessage(Component.translatable("message.vampirism.coffin.occupied"));
                 return InteractionResult.CONSUME;
             } else if (state.getValue(CLOSED)) {
-                player.displayClientMessage(Component.translatable("message.vampirism.coffin.closed"), true);
+                player.sendOverlayMessage(Component.translatable("message.vampirism.coffin.closed"));
                 return InteractionResult.CONSUME;
             }
 
@@ -221,7 +221,7 @@ public class CoffinBlock extends BaseContainerBlock {
                 worldIn.explode(null, worldIn.damageSources().badRespawnPointExplosion(vec3), null, vec3, 5.0F, true, Level.ExplosionInteraction.BLOCK);
                 return InteractionResult.CONSUME;
             } else if (state.getValue(BedBlock.OCCUPIED)) {
-                player.displayClientMessage(Component.translatable("message.vampirism.coffin.occupied"), true);
+                player.sendOverlayMessage(Component.translatable("message.vampirism.coffin.occupied"));
                 return InteractionResult.CONSUME;
             } else {
                 final BlockPos finalPos = pos;
@@ -229,7 +229,7 @@ public class CoffinBlock extends BaseContainerBlock {
                 // TODO: Cannot sleep at day
                 player.startSleepInBed(pos).ifLeft(sleepResult1 -> {
                     if (sleepResult1.message() != null) {
-                        player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.message()), true);
+                        player.sendOverlayMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.message()));
                     }
                 }).ifRight(u -> setCoffinSleepPosition(player, finalPos, finalState));
                 return InteractionResult.CONSUME;

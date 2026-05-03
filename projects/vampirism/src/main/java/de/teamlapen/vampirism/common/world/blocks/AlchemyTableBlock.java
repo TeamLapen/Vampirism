@@ -66,7 +66,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
                     player.awardStat(ModStats.INTERACT_WITH_ALCHEMY_TABLE.get());
                 }
             } else {
-                player.displayClientMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()), true);
+                player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
             }
 
             return InteractionResult.CONSUME;

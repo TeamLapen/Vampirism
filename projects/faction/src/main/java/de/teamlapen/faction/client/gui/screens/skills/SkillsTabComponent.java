@@ -1,5 +1,6 @@
 package de.teamlapen.faction.client.gui.screens.skills;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
@@ -11,7 +12,7 @@ import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.factions.skills.SkillTreeConfiguration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.advancements.AdvancementTabType;
 import net.minecraft.client.gui.screens.inventory.tooltip.TooltipRenderUtil;
 import net.minecraft.core.Holder;
@@ -22,12 +23,10 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.system.NonnullDefault;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@NonnullDefault
 public class SkillsTabComponent {
 
     private static final Identifier RED_TOOLTIP = FIdentifier.mod("red");
@@ -63,7 +62,7 @@ public class SkillsTabComponent {
         this.skillHandler = skillHandler;
         ISkillTree tree = skillTree.value();
         this.index = index;
-        this.icon = tree.display();
+        this.icon = tree.display().create();
         this.title = tree.name();
         this.position = AdvancementTabType.LEFT;
         this.treeWidth = skillTreeData.getTreeWidth(skillTree);
@@ -96,19 +95,24 @@ public class SkillsTabComponent {
         return index;
     }
 
-    public void drawTab(GuiGraphics graphics, int x, int y, boolean selected) {
-        this.position.draw(graphics, x, y, selected, this.index);
+    public void extractTab(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, boolean selected) {
+        int tabX = x + this.position.getX(this.index);
+        int tabY = y + this.position.getY(this.index);
+        this.position.extractRenderState(graphics, tabX, tabY, selected, this.index);
+        if (!selected && mouseX > tabX && mouseY > tabY && mouseX < tabX + this.position.getWidth() && mouseY < tabY + this.position.getHeight()) {
+            graphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
-    public void drawIcon(GuiGraphics graphics, int x, int y) {
-        this.position.drawIcon(graphics, x, y, this.index, this.icon);
+    public void drawIcon(GuiGraphicsExtractor graphics, int x, int y) {
+        this.position.extractIcon(graphics, x, y, this.index, this.icon);
     }
 
     public boolean isMouseOverTabItem(int guiLeft, int guiTop, double mouseX, double mouseY) {
         return this.position.isMouseOver(guiLeft, guiTop, this.index, mouseX, mouseY);
     }
 
-    public void drawContents(GuiGraphics graphics, int x, int y, int mouseX, int mouseY) {
+    public void extractContents(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY) {
         var pose = graphics.pose();
 
         graphics.enableScissor(x, y, x + SCREEN_WIDTH, y + SCREEN_HEIGHT);
@@ -139,7 +143,7 @@ public class SkillsTabComponent {
         graphics.disableScissor();
     }
 
-    public void drawTooltips(GuiGraphics graphics, int mouseX, int mouseY) {
+    public void drawTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         var pose = graphics.pose();
         pose.pushMatrix();
         graphics.fill(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
@@ -214,18 +218,22 @@ public class SkillsTabComponent {
     }
 
     public Component getRemainingPointsText() {
-        int remainingPoints = this.getRemainingPoints();
-        if (remainingPoints == Integer.MAX_VALUE) {
-            return Component.translatable("gui.factionapi.skills.skill_points", "∞");
+        int points = this.getRemainingPoints();
+        Component remainingPoints;
+        var skillPointId = this.skillTree.value().skillPointTag().location().withPath(x -> "skills.skill_points." + x).toLanguageKey("gui");
+        if (points == Integer.MAX_VALUE) {
+            remainingPoints = Component.translatable(skillPointId, "∞");
+        } else {
+            remainingPoints = Component.translatable( points == 1 ? skillPointId + ".single" : skillPointId, points);
         }
-        return Component.translatable(remainingPoints == 1 ? "gui.factionapi.skills.skill_point" : "gui.factionapi.skills.skill_points", remainingPoints);
+        return remainingPoints;
     }
 
     public Holder<ISkillTree> getSkillTree() {
         return this.skillTree;
     }
 
-    public void drawDisableText(GuiGraphics graphics, int x, int y) {
+    public void drawDisableText(GuiGraphicsExtractor graphics, int x, int y) {
         Component f = Component.translatable("gui.factionapi.skills.unlock_unavailable").withStyle(ChatFormatting.WHITE);
         FormattedCharSequence s = Language.getInstance().getVisualOrder(f);
 
@@ -234,9 +242,9 @@ public class SkillsTabComponent {
         int tooltipY = 17 + y;
         int tooltipHeight = this.minecraft.font.lineHeight * 2;
 
-        TooltipRenderUtil.renderTooltipBackground(graphics, tooltipX, tooltipY, tooltipTextWidth, tooltipHeight, RED_TOOLTIP);
+        TooltipRenderUtil.extractTooltipBackground(graphics, tooltipX, tooltipY, tooltipTextWidth, tooltipHeight, RED_TOOLTIP);
 
-        graphics.drawCenteredString(this.minecraft.font, f, tooltipX + tooltipTextWidth / 2, tooltipY + tooltipHeight / 2 - this.minecraft.font.lineHeight / 2, 0xff000000);
+        graphics.centeredText(this.minecraft.font, f, tooltipX + tooltipTextWidth / 2, tooltipY + tooltipHeight / 2 - this.minecraft.font.lineHeight / 2, 0xff000000);
     }
 
 }

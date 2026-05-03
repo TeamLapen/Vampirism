@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +22,7 @@ public class BloodBarOverlay extends BaseOverlay {
     private final Minecraft mc = Minecraft.getInstance();
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker partialTicks) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, @NotNull DeltaTracker partialTicks) {
         if (canRenderOverlays() && Helper.isVampire(this.player()) && !VampirismMod.services().imc().isRequestedToDisableBloodbar()) {
             if (this.mc.gameMode.hasExperience()) {
                 IBloodStats stats = VampirePlayer.get(this.player()).getBloodStats();

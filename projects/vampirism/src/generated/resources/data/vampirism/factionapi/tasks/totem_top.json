@@ -8,7 +8,6 @@
         },
         "id": "minecraft:diamond",
         "item": {
-          "count": 1,
           "id": "minecraft:diamond"
         }
       },
@@ -37,7 +36,6 @@
   "reward": {
     "type": "factionapi:item",
     "item": {
-      "count": 1,
       "id": "factionapi:totem_top_crafted"
     }
   },

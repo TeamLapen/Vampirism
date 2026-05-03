@@ -6,11 +6,9 @@ import de.teamlapen.vampirism.common.world.items.InjectionItem;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 public class RevertBackMenu extends AbstractContainerMenu {
 
@@ -27,17 +25,12 @@ public class RevertBackMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int i) {
+    public ItemStack quickMoveStack(Player player, int i) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void clicked(int pSlotId, int pButton, @NotNull ClickType pClickType, @NotNull Player pPlayer) {
-        super.clicked(pSlotId, pButton, pClickType, pPlayer);
-    }
-
-    @Override
-    public boolean stillValid(@NotNull Player player) {
+    public boolean stillValid(Player player) {
         return stillValid(this.pAccess, player, ModBlocks.INJECTION_CHAIR.get());
     }
 

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.world.items.oil;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -13,7 +14,7 @@ public interface IApplicableOil extends IOil {
      *
      * @return true if it is possible
      */
-    boolean canBeApplied(ItemStack stack);
+    boolean canBeApplied(ItemInstance stack);
 
     /**
      * gets the current duration of the oil for the given itemstack

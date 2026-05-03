@@ -40,7 +40,7 @@ public class BloodConversionRegistry implements IBloodConversionRegistry {
 
     @Override
     public @NotNull IItemBlood getItemBlood(@NotNull ItemStack stack) {
-        IItemBlood data = stack.getItemHolder().getData(VampirismDataMaps.ITEM_BLOOD.get());
+        IItemBlood data = stack.typeHolder().getData(VampirismDataMaps.ITEM_BLOOD.get());
         if (data == null) {
             data = CALCULATED.get(stack.getItem());
         }

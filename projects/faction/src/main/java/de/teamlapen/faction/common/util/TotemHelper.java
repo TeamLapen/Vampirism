@@ -8,17 +8,20 @@ import de.teamlapen.faction.common.tags.FactionPoiTypeTags;
 import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.PoiTypeTags;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiRecord;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -29,7 +32,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class TotemHelper {
@@ -345,5 +350,26 @@ public class TotemHelper {
             Optional<TotemBlockEntity> tile = getTotemNearPos(((ServerLevel) world), player.blockPosition(), false);
             tile.ifPresent(s -> s.ringBell(player));
         }
+    }
+
+    public static Stream<PoiRecord> findRecords(ServerLevel level, BlockPos pos) {
+        return getInSquare(level.getPoiManager(), x -> x.is(PoiTypeTags.VILLAGE), pos, 1, PoiManager.Occupancy.ANY);
+    }
+
+    public static Stream<PoiRecord> getInSquare(PoiManager manager, Predicate<Holder<PoiType>> pTypePredicate, BlockPos pPos, int pDistance, PoiManager.Occupancy pStatus) {
+        int i = Math.floorDiv(pDistance, 16) + 1;
+        return ChunkPos.rangeClosed(ChunkPos.containing(pPos), i).flatMap(p_217938_ -> getInChunk(manager, pTypePredicate, p_217938_, pStatus)).filter(p_217971_ -> {
+            BlockPos blockpos = p_217971_.getPos();
+            return Math.abs(blockpos.getX() - pPos.getX()) <= pDistance && Math.abs(blockpos.getZ() - pPos.getZ()) <= pDistance;
+        });
+    }
+
+    public static Stream<PoiRecord> getInChunk(PoiManager poiManager, Predicate<Holder<PoiType>> pTypePredicate, ChunkPos pPosChunk, PoiManager.Occupancy pStatus) {
+        return IntStream.range(poiManager.levelHeightAccessor.getMinSectionY(), poiManager.levelHeightAccessor.getMaxSectionY())
+                .boxed()
+                .map(p_217886_ -> poiManager.get(SectionPos.of(pPosChunk, p_217886_).asLong()))
+                .filter(Objects::nonNull)
+                .filter(Optional::isPresent)
+                .flatMap(p_217942_ -> p_217942_.get().getRecords(pTypePredicate, pStatus));
     }
 }

@@ -1,5 +1,6 @@
 {
   "type": "vampirism:alchemical_table",
+  "common_info": {},
   "ingredient": "minecraft:glass_bottle",
   "input": "minecraft:wheat_seeds",
   "result": {
@@ -8,7 +9,6 @@
         "oil": "vampirism:plant"
       }
     },
-    "count": 1,
     "id": "vampirism:oil_bottle"
   }
 }

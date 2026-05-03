@@ -6,14 +6,13 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.blocks.BloodSphereModel;
 import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -61,9 +60,9 @@ public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionB
     }
 
     @Override
-    public void submit(AltarInfusionRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        submitSphere(renderState, poseStack, nodeCollector);
-        submitBeam(renderState, poseStack, nodeCollector);
+    public void submit(AltarInfusionRenderState altarInfusionRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+        submitSphere(altarInfusionRenderState, poseStack, submitNodeCollector);
+        submitBeam(altarInfusionRenderState, poseStack, submitNodeCollector);
     }
 
     private void submitSphere(AltarInfusionRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector) {
@@ -86,7 +85,7 @@ public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionB
 
         BloodSphereModel.BloodSphereRenderState sphereState = new BloodSphereModel.BloodSphereRenderState();
         nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entitySolid(SPHERE_TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, -1, null,0, renderState.breakProgress);
-        nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entityTranslucentEmissive(SPHERE_TEXTURE), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, -1, null,0, renderState.breakProgress);
+        nodeCollector.submitModel(this.sphereModel, sphereState, poseStack, RenderTypes.entityTranslucentEmissive(SPHERE_TEXTURE), 15728880, OverlayTexture.NO_OVERLAY, -1, null,0, renderState.breakProgress);
 
         poseStack.popPose();
     }
@@ -135,7 +134,7 @@ public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionB
         poseStack.mulPose(Axis.YP.rotation((float) -Math.atan2(dz, dx) - (float) (Math.PI / 2)));
         poseStack.mulPose(Axis.XP.rotation((float) -Math.atan2(distFlat, dy) - (float) (Math.PI / 2)));
 
-        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.entitySmoothCutout(texture), (pose, vertexBuilder) -> {
+        nodeCollector.submitCustomGeometry(poseStack, RenderTypes.endCrystalBeam(texture), (pose, vertexBuilder) -> {
             Matrix4f matrix = pose.pose();
 
             float prevSin = 0.0F;

@@ -1,0 +1,13 @@
+{
+  "type": "vampirism:infuser",
+  "commoninfo": {},
+  "cookingtime": 600,
+  "ingredient1": "vampirism:mother_core",
+  "item": "vampirism:ritual_knife",
+  "result": {
+    "components": {
+      "vampirism:charged_ritual_knife": true
+    },
+    "id": "vampirism:ritual_knife"
+  }
+}

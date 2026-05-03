@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -57,7 +58,7 @@ public class SunscreenBeaconBlock extends BaseContainerBlock implements IBlockWi
     }
 
     @Override
-    public float getExplosionResistance() {
+    public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
         return ModConfig.server().sunscreenBeaconMineable.get() ? 50 : 3600000;
     }
 

@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:stake",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:holy_water_bottle_normal",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:basic_crossbow",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "vampirism:crossbow_arrow_normal",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bread",
+          "weight": 20
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 6.0,
+        "min": 3.0
+      }
+    }
+  ],
+  "random_sequence": "vampirism:chests/dracula_castle/huntercamp"
+}

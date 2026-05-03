@@ -2,7 +2,6 @@
   "type": "minecraft:stonecutting",
   "ingredient": "vampirism:cobbled_dark_stone",
   "result": {
-    "count": 1,
     "id": "vampirism:cobbled_dark_stone_wall"
   }
 }

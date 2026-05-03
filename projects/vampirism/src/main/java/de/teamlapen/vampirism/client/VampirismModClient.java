@@ -50,7 +50,6 @@ public class VampirismModClient {
 
     @SubscribeEvent
     public void setupClient(@NotNull FMLClientSetupEvent event) {
-        event.enqueueWork(ModBlocksRender::register);
         event.enqueueWork(() -> {
             Sheets.addWoodType(ModBlocks.WoodTypes.DARK_SPRUCE);
             Sheets.addWoodType(ModBlocks.WoodTypes.CURSED_SPRUCE);

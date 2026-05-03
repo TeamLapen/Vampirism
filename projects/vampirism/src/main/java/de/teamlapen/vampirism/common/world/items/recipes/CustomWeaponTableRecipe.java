@@ -20,38 +20,38 @@ public abstract class CustomWeaponTableRecipe implements IWeaponTableRecipe {
     @Override
     public abstract RecipeSerializer<? extends CustomWeaponTableRecipe> getSerializer();
 
-    public static class Serializer<T extends CustomWeaponTableRecipe> implements RecipeSerializer<T> {
-
-        private final MapCodec<T> codec;
-        private final StreamCodec<RegistryFriendlyByteBuf, T> streamCodec;
-
-        public Serializer(Factory<T> factory) {
-            this.codec = MapCodec.unit(factory::create);
-            this.streamCodec = new StreamCodec<>() {
-                @Override
-                public T decode(RegistryFriendlyByteBuf buf) {
-                    return factory.create();
-                }
-
-                @Override
-                public void encode(RegistryFriendlyByteBuf buf, T value) {
-                }
-            };
-        }
-
-        @Override
-        public MapCodec<T> codec() {
-            return this.codec;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
-            return this.streamCodec;
-        }
-
-        @FunctionalInterface
-        public interface Factory<T extends CustomWeaponTableRecipe> {
-            T create();
-        }
-    }
+//    public static class Serializer<T extends CustomWeaponTableRecipe> implements RecipeSerializer<T> {
+//
+//        private final MapCodec<T> codec;
+//        private final StreamCodec<RegistryFriendlyByteBuf, T> streamCodec;
+//
+//        public Serializer(Factory<T> factory) {
+//            this.codec = MapCodec.unit(factory::create);
+//            this.streamCodec = new StreamCodec<>() {
+//                @Override
+//                public T decode(RegistryFriendlyByteBuf buf) {
+//                    return factory.create();
+//                }
+//
+//                @Override
+//                public void encode(RegistryFriendlyByteBuf buf, T value) {
+//                }
+//            };
+//        }
+//
+//        @Override
+//        public MapCodec<T> codec() {
+//            return this.codec;
+//        }
+//
+//        @Override
+//        public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
+//            return this.streamCodec;
+//        }
+//
+//        @FunctionalInterface
+//        public interface Factory<T extends CustomWeaponTableRecipe> {
+//            T create();
+//        }
+//    }
 }

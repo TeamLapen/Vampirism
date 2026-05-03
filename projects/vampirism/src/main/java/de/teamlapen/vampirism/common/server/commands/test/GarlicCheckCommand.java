@@ -26,7 +26,7 @@ public class GarlicCheckCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int garlicCheck(@NotNull CommandSourceStack commandSource, @NotNull ServerPlayer asPlayer, boolean print) {
         if (commandSource.getEntity() != null && commandSource.getEntity() instanceof Player) {
-            commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.garliccheck.strength", VampirismApi.garlicHandler(asPlayer.level()).getStrengthAtChunk(new ChunkPos(asPlayer.blockPosition())).getSerializedName()), true);
+            commandSource.sendSuccess(() -> Component.translatable("command.vampirism.test.garliccheck.strength", VampirismApi.garlicHandler(asPlayer.level()).getStrengthAtChunk(ChunkPos.containing(asPlayer.blockPosition())).getSerializedName()), true);
         }
         if (print) {
             LevelGarlic.get(asPlayer.level()).printDebug(commandSource);

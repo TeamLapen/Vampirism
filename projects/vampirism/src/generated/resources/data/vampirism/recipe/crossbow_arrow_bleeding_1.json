@@ -1,5 +1,6 @@
 {
   "type": "vampirism:shapeless_crafting_weapontable",
+  "category": "equipment",
   "ingredients": [
     "vampirism:crossbow_arrow_normal",
     {
@@ -14,7 +15,6 @@
   ],
   "lava": 1,
   "result": {
-    "count": 1,
     "id": "vampirism:crossbow_arrow_bleeding"
   }
 }

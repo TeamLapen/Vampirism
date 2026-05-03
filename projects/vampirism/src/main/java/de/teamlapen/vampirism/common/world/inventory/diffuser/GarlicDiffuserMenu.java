@@ -20,7 +20,7 @@ public class GarlicDiffuserMenu extends DiffuserMenu {
 
     @Override
     public boolean isFuel(ItemStack pStack) {
-        return pStack.getItemHolder().getData(ModDataMaps.GARLIC_DIFFUSER_FUEL_MAP) != null;
+        return pStack.typeHolder().getData(ModDataMaps.GARLIC_DIFFUSER_FUEL_MAP) != null;
     }
 
     public static class Factory extends DiffuserMenu.Factory<GarlicDiffuserMenu> {

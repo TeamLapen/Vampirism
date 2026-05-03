@@ -83,8 +83,8 @@
   "gui.factionapi.skills.unlock_unavailable": "Unlocking skills is currently unavailable",
   "gui.factionapi.skills.reset_req": "You need a '%s' to reset your skills",
   "gui.factionapi.skills.reset_consume": "This consumes a '%s'",
-  "gui.factionapi.skills.skill_points": "%d skill points",
-  "gui.factionapi.skills.skill_point": "%d skill point",
+  "gui.factionapi.skills.skill_points.default": "%d skill points",
+  "gui.factionapi.skills.skill_points.default.single": "%d skill point",
 
   "gui.factionapi.taskmaster.not_accepted": "Not accepted",
   "gui.factionapi.taskmaster.task_failed": "Task failed",
@@ -165,6 +165,9 @@
   "message.factionapi.minion.still_recovering": "%s is still recovering",
   "message.factionapi.minion.minions_recovering": "%s minions are still recovering",
   "message.factionapi.minion_task.could_not_activate": "Command could not be activated",
+
+  "message.factionapi.task_unlocker.lord_level.exact": "Lord level must be exactly %s",
+  "message.factionapi.task_unlocker.lord_level.min": "Lord level must be at least %s",
 
   "dialogue.factionapi.minion.can_respawn": "%s: My Lord, I have recovered",
   "dialogue.factionapi.minion.died": "%s: My Lord, I have died",

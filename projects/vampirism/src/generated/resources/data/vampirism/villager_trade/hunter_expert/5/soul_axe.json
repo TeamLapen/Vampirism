@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "vampirism:hunter_axe_ultimate"
+  },
+  "max_uses": 3.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 96.0,
+      "min": 80.0
+    },
+    "id": "vampirism:soul_orb_vampire"
+  },
+  "xp": 30.0
+}

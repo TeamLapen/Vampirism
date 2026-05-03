@@ -51,12 +51,12 @@ public class GarlicInjectionItem extends InjectionItem {
             if (!player.level().isClientSide()) {
                 target.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION);
 
-                if (!player.isCreative()) {
+                if (!player.isCreative() && stack.getCraftingRemainder() != null) {
                     if (stack.getCount() == 1) {
-                        player.setItemInHand(usedHand, stack.getCraftingRemainder());
+                        player.setItemInHand(usedHand, stack.getCraftingRemainder().create());
                     } else {
                         stack.shrink(1);
-                        player.addItem(stack.getCraftingRemainder());
+                        player.addItem(stack.getCraftingRemainder().create());
                     }
                 }
 

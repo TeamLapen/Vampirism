@@ -13,7 +13,6 @@
       "translate": "advancement.vampirism.defend_area.desc"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:red_banner"
     },
     "title": {

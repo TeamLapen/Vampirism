@@ -202,7 +202,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/sniped");
             AdvancementHolder yuck = Advancement.Builder.advancement()
-                    .display(new DisplayInfo(ItemDataUtils.createPotion(Potions.POISON), Component.translatable("advancement.vampirism.yuck"), Component.translatable("advancement.vampirism.yuck.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
+                    .display(new DisplayInfo(ItemDataUtils.template(Potions.POISON), Component.translatable("advancement.vampirism.yuck"), Component.translatable("advancement.vampirism.yuck.desc"), Optional.empty(), AdvancementType.TASK, true, true, true))
                     .parent(first_blood)
                     .addCriterion("flower", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.POISONOUS_BITE))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
@@ -272,7 +272,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .requirements(AdvancementRequirements.Strategy.AND)
                     .save(consumer, REFERENCE.MODID + ":hunter/technology");
             AdvancementHolder mainline = Advancement.Builder.advancement()
-                    .display(ItemDataUtils.createPotion(Potions.REGENERATION, ModItems.SERUM_INJECTION.get()), Component.translatable("advancement.vampirism.mainline"), Component.translatable("advancement.vampirism.mainline.desc"), null, AdvancementType.TASK, true, true, false)
+                    .display(ItemDataUtils.template(Potions.REGENERATION, ModItems.SERUM_INJECTION), Component.translatable("advancement.vampirism.mainline"), Component.translatable("advancement.vampirism.mainline.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(become_hunter)
                     .addCriterion("injection", SerumInjectedCriterionTrigger.TriggerInstance.injectedSerumAny())
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))

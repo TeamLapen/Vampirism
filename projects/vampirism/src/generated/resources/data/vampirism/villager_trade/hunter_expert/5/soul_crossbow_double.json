@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "vampirism:enhanced_double_crossbow"
+  },
+  "max_uses": 3.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 64.0,
+      "min": 32.0
+    },
+    "id": "vampirism:soul_orb_vampire"
+  },
+  "xp": 30.0
+}

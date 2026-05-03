@@ -8,12 +8,14 @@ import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModRecipes;
+import de.teamlapen.vampirism.common.util.serialization.StreamCodecExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
@@ -26,11 +28,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
 
-    private final String group;
+    private final CraftingRecipe.CraftingBookInfo category;
+    private final CommonInfo commonInfo;
     private final List<Ingredient> ingredients;
-    private final ItemStack recipeOutput;
+    private final ItemStackTemplate recipeOutput;
     private final int requiredLevel;
     private final List<Holder<ISkill<?>>> requiredSkills;
     private final int requiredLava;
@@ -38,8 +42,9 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
     @Nullable
     private PlacementInfo placementInfo;
 
-    public ShapelessWeaponTableRecipe(String group, List<Ingredient> ingredients, ItemStack result, int requiredLevel, int requiredLava, List<Holder<ISkill<?>>> requiredSkills) {
-        this.group = group;
+    public ShapelessWeaponTableRecipe(CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo category, List<Ingredient> ingredients, ItemStackTemplate result, int requiredLevel, int requiredLava, List<Holder<ISkill<?>>> requiredSkills) {
+        this.category = category;
+        this.commonInfo = commonInfo;
         this.ingredients = ingredients;
         this.recipeOutput = result;
         this.requiredLevel = requiredLevel;
@@ -59,18 +64,22 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
     }
 
     @Override
+    public boolean showNotification() {
+        return this.commonInfo.showNotification();
+    }
+
+    public String group() {
+        return this.category.group();
+    }
+
+    @Override
     public List<Holder<ISkill<?>>> getRequiredSkills() {
         return requiredSkills;
     }
 
     @Override
-    public String group() {
-        return this.group;
-    }
-
-    @Override
     public List<Ingredient> getIngredients() {
-        return ingredients;
+        return this.ingredients;
     }
 
     @Override
@@ -93,8 +102,8 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registryAccess) {
-        return this.recipeOutput.copy();
+    public ItemStack assemble(CraftingInput input) {
+        return this.recipeOutput.create();
     }
 
     @Override
@@ -119,35 +128,26 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
         return ModRecipes.SHAPELESS_CRAFTING_WEAPONTABLE.get();
     }
 
-    public static class Serializer implements RecipeSerializer<ShapelessWeaponTableRecipe> {
+    public static final MapCodec<ShapelessWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> {
+        return inst.group(
+                CommonInfo.MAP_CODEC.forGetter(s -> s.commonInfo),
+                CraftingRecipe.CraftingBookInfo.MAP_CODEC.forGetter(p_301133_ -> p_301133_.category),
+                Codec.lazyInitialized(() -> Ingredient.CODEC.listOf(1, 16)).fieldOf("ingredients").forGetter(x -> x.ingredients),
+                ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
+                Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
+                Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava),
+                ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+        ).apply(inst, ShapelessWeaponTableRecipe::new);
+    });
 
-        private static final MapCodec<ShapelessWeaponTableRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.STRING.optionalFieldOf("group", "").forGetter(ShapelessWeaponTableRecipe::group),
-                Codec.lazyInitialized(() -> Ingredient.CODEC.listOf(1, 16)).fieldOf("ingredients").forGetter(recipe -> recipe.ingredients),
-                ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.recipeOutput),
-                Codec.INT.optionalFieldOf("level", 1).forGetter(recipe -> recipe.requiredLevel),
-                Codec.INT.optionalFieldOf("lava", 0).forGetter(recipe -> recipe.requiredLava),
-                ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(recipe -> recipe.requiredSkills)
-        ).apply(instance, ShapelessWeaponTableRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.STRING_UTF8, recipe -> recipe.group,
-                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), recipe -> recipe.ingredients,
-                ItemStack.STREAM_CODEC, recipe -> recipe.recipeOutput,
-                ByteBufCodecs.VAR_INT, recipe -> recipe.requiredLevel,
-                ByteBufCodecs.VAR_INT, recipe -> recipe.requiredLava,
-                ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), recipe -> recipe.requiredSkills,
-                ShapelessWeaponTableRecipe::new
-        );
-
-        @Override
-        public MapCodec<ShapelessWeaponTableRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, ShapelessWeaponTableRecipe> STREAM_CODEC = StreamCodecExtension.composite(
+            CommonInfo.STREAM_CODEC, s -> s.commonInfo,
+            CraftingRecipe.CraftingBookInfo.STREAM_CODEC, s -> s.category,
+            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), s -> s.ingredients,
+            ItemStackTemplate.STREAM_CODEC, s -> s.recipeOutput,
+            ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
+            ByteBufCodecs.VAR_INT, s -> s.requiredLava,
+            ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+            ShapelessWeaponTableRecipe::new
+    );
 }

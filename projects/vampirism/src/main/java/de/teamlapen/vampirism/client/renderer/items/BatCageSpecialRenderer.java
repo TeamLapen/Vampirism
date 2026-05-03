@@ -28,9 +28,9 @@ public class BatCageSpecialRenderer implements SpecialModelRenderer<CompoundTag>
     }
 
     @Override
-    public void submit(@Nullable CompoundTag tag, ItemDisplayContext itemDisplayContext, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int packedLight, int packedOverlay, boolean hasFoil, int outlineColor) {
-        if (tag != null) {
-            renderer.renderBat(poseStack, submitNodeCollector, packedLight, Direction.NORTH);
+    public void submit(@Nullable CompoundTag argument, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, int overlayCoords, boolean hasFoil, int outlineColor) {
+        if (argument != null) {
+            renderer.renderBat(poseStack, submitNodeCollector, lightCoords, Direction.NORTH);
         }
     }
 
@@ -43,17 +43,17 @@ public class BatCageSpecialRenderer implements SpecialModelRenderer<CompoundTag>
         return itemStack.get(ModDataComponents.HELD_ENTITY);
     }
 
-    public record Unbaked() implements SpecialModelRenderer.Unbaked {
+    public record Unbaked() implements SpecialModelRenderer.Unbaked<CompoundTag> {
 
         public static final MapCodec<BatCageSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(BatCageSpecialRenderer.Unbaked::new);
 
         @Override
-        public SpecialModelRenderer<?> bake(BakingContext bakingContext) {
+        public BatCageSpecialRenderer bake(BakingContext bakingContext) {
             return new BatCageSpecialRenderer(new BatCageRenderer(bakingContext.entityModelSet()));
         }
 
         @Override
-        public MapCodec<? extends SpecialModelRenderer.Unbaked> type() {
+        public MapCodec<? extends SpecialModelRenderer.Unbaked<CompoundTag>> type() {
             return MAP_CODEC;
         }
     }

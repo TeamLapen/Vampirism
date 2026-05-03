@@ -211,7 +211,10 @@ public class ExtendedCreature extends AttachmentSync implements IExtendedCreatur
             }
         }
         if (this.entity instanceof Villager villager) {
-            ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.asEntity(), villager);
+            if (!villager.isSleeping()) {
+                //If the villager is not sleeping, they know what you did and like you less
+                ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.asEntity(), villager);
+            }
         }
 
         return amt;

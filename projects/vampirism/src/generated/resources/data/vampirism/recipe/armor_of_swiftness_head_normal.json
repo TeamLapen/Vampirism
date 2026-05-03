@@ -1,5 +1,6 @@
 {
   "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
   "key": {
     "X": "#c:leathers",
     "Y": "#c:crops/garlic",
@@ -21,7 +22,6 @@
     "    "
   ],
   "result": {
-    "count": 1,
     "id": "vampirism:armor_of_swiftness_head_normal"
   }
 }
