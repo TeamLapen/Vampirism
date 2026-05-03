@@ -18,6 +18,7 @@ jobs:
       project: ${{ steps.extract.outputs.project }}
       environment: ${{ steps.extract.outputs.environment }}
       jar_name: ${{ steps.extract.outputs.jar_name }}
+      run_publish: ${{ steps.extract.outputs.run_publish }}
     steps:
       - name: Extract mod version from tag
         id: extract
@@ -42,6 +43,7 @@ jobs:
             jar_name="FactionAPI"
           fi
           echo "jar_name=${jar_name}" >> $GITHUB_OUTPUT
+          echo "run_publish=false" >> $GITHUB_OUTPUT
 
   build:
     needs: [ prepare ]
@@ -96,7 +98,7 @@ jobs:
   publish-curseforge:
     needs: [ prepare, build, publish-maven ]
     environment: ${{ needs.prepare.outputs.environment }}
-    if: ${{ secrets.DEPLOY_MOD == 'true' }}
+    if: ${{ needs.prepare.outputs.run_publish == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Get Artifacts
