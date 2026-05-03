@@ -1,6 +1,6 @@
-Vampirism for Minecraft 1.21 - Dev branch 
+Vampirism for Minecraft 26.1 – Dev branch 
 ============================================
-[![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire) [![](https://img.shields.io/modrinth/dt/jVZ0F1wn?label=Modrinth)](https://modrinth.com/mod/vampirism) [![Gradle Build](https://github.com/TeamLapen/Vampirism/actions/workflows/gradle.yml/badge.svg?branch=1.21)](https://github.com/TeamLapen/Vampirism/actions/workflows/gradle.yml) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P) [![Crowdin](https://badges.crowdin.net/vampirism/localized.svg)](https://crowdin.com/project/vampirism)
+[![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire) [![](https://img.shields.io/modrinth/dt/jVZ0F1wn?label=Modrinth)](https://modrinth.com/mod/vampirism) [![Gradle Build](https://github.com/TeamLapen/Vampirism/actions/workflows/build.yml/badge.svg)](https://github.com/TeamLapen/Vampirism/actions/workflows/build.yml) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Discord Server](https://img.shields.io/discord/430326060635258881)](https://discord.gg/wuamm4P) [![Crowdin](https://badges.crowdin.net/vampirism/localized.svg)](https://crowdin.com/project/vampirism)
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://vampirism.dev)
 
@@ -75,103 +75,55 @@ The following labeling scheme is used:
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more. For more information and an overview checkout the wiki https://wiki.vampirism.dev/docs/api/intro.
 
+## Integrated Mods in gradle
 
-## Setup Gradle build script
+To use Vampirism or FactionAPI as a compile-time dependency in your own mod, add the [Maxanier Maven repository](https://maven.maxanier.de/#/releases/de/teamlapen) and the relevant artifact to your build configuration.
 
-<details>
-<summary>Use Vampirism in your development environment</summary>
-You should be able to include it with the following in your `build.gradle`:
-```gradle
+Addon mods typically only need `faction-api` or `vampirism-api`. Use the full `Vampirism` artifact only if you need access to implementation internals at runtime.
+
+### Gradle
+
+```groovy
 repositories {
-    //Maven repo for Vampirism
     maven {
+        name = "Maxanier"
         url = "https://maven.maxanier.de/releases"
+        content {
+            includeGroupAndSubgroups "de.teamlapen"
+        }
     }
 }
+
 dependencies {
-    //compile against the Vampirism API
-    compileOnly fg.deobf("de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}:api")
-    //at runtime (in your development environment) use the full Vampirism jar
-    runtimeOnly fg.deobf("de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}")
+    // FactionAPI
+    compileOnly "de.teamlapen.faction:FactionAPI-api:2.0.0"
+    runtimeOnly "de.teamlapen.faction:FactionAPI:2.0.0"
+    
+    // Vampirism API
+    compileOnly "de.teamlapen.vampirism:Vampirism-api:2.0.0"
+    runtimeOnly "de.teamlapen.vampirism:Vampirism:2.0.0"
 }
 ```
-
-#### Choose a version
-
-`${mc_version}` gets replaced by the current Minecraft version. (i.e. `1.20.4`)
-`${vampirism_version}` gets replaced by the version of Vampirism you want to use (i.e `1.10.0`)
-
-For a list of available Vampirism version,
-see [CurseForge](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire) or
-the [maven listing](https://maven.maxanier.de/de/teamlapen/vampirism/Vampirism/) .
-
-These properties can be set in a file named `gradle.properties`, placed in the same directory as your `build.gradle`
-file. Example `gradle.properties`:
-
-```
-mc_version=1.16.5
-vampirism_version=1.7.12
-```
-
-#### Rerun Gradle setup commands
-
-Please run the commands that you used to set up your development environment again. E.g. `gradlew`
-or `gradlew build --refresh-dependencies`
-Refresh/Restart your IDE afterwards.
-
-#### Run Vampirism in a deobfuscated environment
-
-Vampirism uses **mixins**. To be able to apply them in a deobfuscated environment using a different set of mappings (
-from the one Vampirism uses) you have to enable remapping the refmap:
-Add
-
-```
-     property 'mixin.env.remapRefMap', 'true'
-     property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-```
-
-to your run configurations in your `build.gradle` and then regenerate your IDE run configurations (`genIntelliJRuns` or
-similar). If that does not work you can also try `property 'mixin.env.disableRefMap', 'true'`
-If you still run into issues with the mixins you can also set `mixin.env.ignoreRequired` to `true`. However, not all of
-Vampirism will work correctly then.
-
-#### Examples
-
-Checkout this example project: https://github.com/TeamLapen/VampirismAPIExample
-
-If you want to create an addon which access all of Vampirism's classes, not just the API, checkout
-this https://github.com/TeamLapen/VampirismAddonExample and consider contacting @Cheaterpaul.
-
-</details>
 
 ## Code Structure
 
-The _minecraft_version_ branch serves as the main development branch. There might be older (stable) branches for the
-same MC version suffixed with the Vampirism main version.  
-It may receive bugfixes until the latest branch is released.  
-The source code is currently divided into three parts, which might be split in the future.
+### Branches
 
-#### Vampirism
-Located in de.teamlapen.vampirism  
-Contains the mod source code. Depends on the other two parts.  
-#### Vampirism API
-Located in de.teamlapen.vampirism.api  
-Designed to be used by mods that only optionally interact with Vampirism as well as addon mods depending on Vampirism.  
-#### VampLib/TeamLapen Lib
-Located in de.teamlapen.lib
-Independent mod (Contains @Mod).  
-Provides Helpers and Registries to automate stuff like EntityUpdates.
-Provides abstract classes/default implementations/interfaces to simplify things (located under de.teamlapen.lib.lib).  
+| Branch                                             | Description                                |
+|----------------------------------------------------|--------------------------------------------|
+| dev                                                | The main development branch.               |
+| version/<mc-version>/[<sub-version>/]<mod-version> | The main branch for a specific MC version. |
+| feature/*                                          | A feature branches.                        |
+| pages/*                                            | The wiki pages deployed to github pages.   |
 
-## Setting up the development environment
+### Projects
 
-<details>
-<summary>old / outdated</summary>
-
-
-If you would like to compile your own versions or even contribute to Vampirism's development, you need to set up the dev environment like any other mod.
-
-</details>  
+| Project         | Description                                                                                                                                                                                                                                               |
+|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `faction-api`   | Pure API module defining the faction system: interfaces for faction registration, player faction handlers, events, registries, and sync abstractions. Depend on this when you only need to read/interact with faction state.                              |
+| `faction`       | Implementation of `faction-api`. Contains the full faction logic.                                                                                                                                                                                         |
+| `vampirism-api` | Pure API module for the Vampirism mod, extending `faction-api`. Exposes interfaces for vampire and hunter players, creature conversion, world events, difficulty, data maps, and all Vampirism registries. This is the primary dependency for addon mods. |
+| `vampirism`     | Full implementation of the Vampirism mod. Implements all vampire/hunter mechanics, world generation, entity conversions, mod integrations (JEI, GuideAPI, TerraBlender, …), and NeoForge service wiring. Depends on `vampirism-api` and `faction`;        |
 
 ## Code Style
 The code style used in this project is the IntelliJ default one.
