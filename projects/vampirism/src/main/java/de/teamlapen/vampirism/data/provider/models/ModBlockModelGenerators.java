@@ -94,7 +94,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         Identifier batCageModel = ModelLocationUtils.getModelLocation(ModBlocks.BAT_CAGE.get());
         this.itemModelOutput.accept(ModBlocks.BAT_CAGE.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(batCageModel), ItemModelUtils.specialModel(batCageModel, new BatCageSpecialRenderer.Unbaked())));
 
-        Identifier bloodContainerModel = mod("block/blood_container/blood_container");
+        Identifier bloodContainerModel = mod("block/blood_container");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BLOOD_CONTAINER.get(), plainVariant(bloodContainerModel)));
         this.itemModelOutput.accept(ModBlocks.BLOOD_CONTAINER.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(bloodContainerModel), ItemModelUtils.specialModel(bloodContainerModel, new BloodContainerRenderer.Unbaked())));
 
