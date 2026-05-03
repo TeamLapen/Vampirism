@@ -2,11 +2,12 @@ name: publish.yml
 on:
   push:
     tags:
-      - '*-alpha.*'
-      - '*-beta.*'
+      - 'vampirism/[0-9]*.[0-9]*(.[0-9]*)?-[0-9]*.[0-9]*.[0-9]*-alpha.[0-9]*'
+      - 'faction/[0-9]*.[0-9]*(.[0-9]*)?-[0-9]*.[0-9]*.[0-9]*-alpha.[0-9]*'
   release:
     types:
       - published
+      - prereleased
 
 jobs:
   prepare:
@@ -14,19 +15,38 @@ jobs:
     outputs:
       mc_version: ${{ steps.extract.outputs.mc_version }}
       mod_version: ${{ steps.extract.outputs.mod_version }}
+      project: ${{ steps.extract.outputs.project }}
+      environment: ${{ steps.extract.outputs.environment }}
+      jar_name: ${{ steps.extract.outputs.jar_name }}
     steps:
       - name: Extract mod version from tag
         id: extract
         run: |
-          echo "mc_version=${GITHUB_REF_NAME%%-*}" >> $GITHUB_OUTPUT
-          echo "mod_version=${GITHUB_REF_NAME#*-}" >> $GITHUB_OUTPUT
+          if [[ ! $GITHUB_REF_NAME =~ ^(vampirism|faction)/[0-9]+\.[0-9]+(\.[0-9]+)?-[0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta)\.[a-zA-Z0-9.]+)?$ ]]; then
+            echo "::error::Invalid tag format: $GITHUB_REF_NAME. Expected <vampirism|faction>/<mc-version>-<mod-version>[-<status>.<identifier>]"
+            exit 1
+          fi
+          project="${GITHUB_REF_NAME%%/*}"
+          version="${GITHUB_REF_NAME#*/}"
+          echo "project=${project}" >> $GITHUB_OUTPUT
+          echo "mc_version=${version%%-*}" >> $GITHUB_OUTPUT
+          echo "mod_version=${version#*-}" >> $GITHUB_OUTPUT
+          if [[ $version =~ -(alpha|beta)\. ]]; then
+            echo "environment=${project}/staging" >> $GITHUB_OUTPUT
+          else
+            echo "environment=${project}/release" >> $GITHUB_OUTPUT
+          fi
+          if [[ $project == 'vampirism' ]]; then
+            jar_name="Vampirism"
+          else
+            jar_name="FactionAPI"
+          fi
+          echo "jar_name=${jar_name}" >> $GITHUB_OUTPUT
 
   build:
     needs: [ prepare ]
-    strategy:
-      matrix:
-        project: [ 'faction', 'vampirism' ]
     runs-on: ubuntu-latest
+    environment: ${{ needs.prepare.outputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -39,24 +59,22 @@ jobs:
       - name: Setup Gradle
         run: ./gradlew -Pmod_version=${{ needs.prepare.outputs.mod_version }}
       - name: Build API
-        run: ./gradlew ${{ matrix.project }}-api:build -Pmod_version=${{ needs.prepare.outputs.mod_version }}
+        run: ./gradlew ${{ needs.prepare.outputs.project }}-api:build -Pmod_version=${{ needs.prepare.outputs.mod_version }}
       - name: Build Mod
-        run: ./gradlew ${{ matrix.project }}:build -Pmod_version=${{ needs.prepare.outputs.mod_version }}
+        run: ./gradlew ${{ needs.prepare.outputs.project }}:build -Pmod_version=${{ needs.prepare.outputs.mod_version }}
       - name: Upload Jars
         uses: actions/upload-artifact@v6
         with:
-          name: ${{ matrix.project }}-jars
+          name: ${{ needs.prepare.outputs.project }}-jars
           path: |
-            projects/${{ matrix.project }}/build/libs/*.jar
-            projects/${{ matrix.project }}-api/build/libs/*.jar
+            projects/${{ needs.prepare.outputs.project }}/build/libs/*.jar
+            projects/${{ needs.prepare.outputs.project }}-api/build/libs/*.jar
           retention-days: 2
 
   publish-maven:
     needs: [ prepare, build ]
-    strategy:
-      matrix:
-        project: [ 'faction', 'vampirism' ]
     runs-on: ubuntu-latest
+    environment: ${{ needs.prepare.outputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -69,7 +87,7 @@ jobs:
       - name: Setup Gradle
         run: ./gradlew -Pmod_version=${{ needs.prepare.outputs.mod_version }}
       - name: Publish to Maven
-        run: ./gradlew ${{ matrix.project }}-api:publish ${{ matrix.project }}:publish -Pmod_version=${{ needs.prepare.outputs.mod_version }}
+        run: ./gradlew ${{ needs.prepare.outputs.project }}-api:publish ${{ needs.prepare.outputs.project }}:publish -Pmod_version=${{ needs.prepare.outputs.mod_version }}
         env:
           MAVEN_URL: ${{ secrets.MAVEN_URL }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
@@ -77,37 +95,28 @@ jobs:
 
   publish-curseforge:
     needs: [ prepare, build, publish-maven ]
-    strategy:
-      matrix:
-        include:
-          - project: vampirism
-            cf_id: '233029'
-            modrinth_id: jVZ0F1wn
-            jar_base: Vampirism
-          - project: faction
-            cf_id: '1416927'
-            modrinth_id: uYW0To9A
-            jar_base: FactionAPI
+    environment: ${{ needs.prepare.outputs.environment }}
+    if: ${{ secrets.DEPLOY_MOD == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Get Artifacts
         uses: actions/download-artifact@v6
         with:
-          name: ${{ matrix.project }}-jars
+          name: ${{ needs.prepare.outputs.project }}-jars
           path: jars/
-      - name: Publish to CurseForge
+      - name: Publish
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          curseforge-id: ${{ matrix.cf_id }}
+          curseforge-id: ${{ vars.cf_id }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          modrinth-id: ${{ matrix.modrinth_id }}
+          modrinth-id: ${{ vars.modrinth_id }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files: jars/projects/${{ matrix.project }}/build/libs/${{ matrix.jar_base }}-${{ needs.prepare.outputs.mod_version }}.jar
-          name: ${{ matrix.jar_base }} ${{ needs.prepare.outputs.mod_version }}
+          files: jars/projects/${{ needs.prepare.outputs.project }}/build/libs/${{ needs.prepare.outputs.jar_name }}-${{ needs.prepare.outputs.mod_version }}.jar
+          name: ${{ needs.prepare.outputs.jar_name }} ${{ needs.prepare.outputs.mod_version }}
           version: ${{ needs.prepare.outputs.mod_version }}
           version-type: ${{ contains(needs.prepare.outputs.mod_version, 'alpha') && 'alpha' || contains(needs.prepare.outputs.mod_version, 'beta') && 'beta' || 'release' }}
           changelog: ${{ github.event.release.body }}
-#          game-versions: |
-#            ${{ needs.prepare.outputs.mc_version }}
-#          loaders: |
-#            neoforge
+          game-versions: |
+            ${{ needs.prepare.outputs.mc_version }}
+          loaders: |
+            neoforge
