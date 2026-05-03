@@ -40,13 +40,13 @@ public class VampirismVoxelShapes {
             Block.box(7, 4, 0, 9, 6, 2)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).orElseGet(Shapes::empty);
 
-    public static final VoxelShape TOMBSTONE_SHORT = Shapes.join(Block.box(2, 0, 8, 14, 2, 14), Block.box(3, 2, 9, 13, 12, 13), BooleanOp.OR);
-    public static final VoxelShape TOMBSTONE_MEDIUM = Shapes.join(Block.box(3, 2, 9, 13, 16, 13), Block.box(2, 0, 8, 14, 2, 14), BooleanOp.OR);
+    public static final VoxelShape TOMBSTONE_SHORT = Shapes.join(Block.box(3, 2, 3, 13, 12, 7), Block.box(2, 0, 2, 14, 2, 8), BooleanOp.OR);
+    public static final VoxelShape TOMBSTONE_MEDIUM = Shapes.join(Block.box(2, 0, 2, 14, 2, 8), Block.box(3, 2, 3, 13, 16, 7), BooleanOp.OR);
     public static final VoxelShape TOMBSTONE_CROSS = Stream.of(
-            Block.box(2, 0, 7, 14, 2, 15),
-            Block.box(5, 2, 8, 11, 17, 14),
-            Block.box(0, 17, 8, 16, 23, 14),
-            Block.box(5, 23, 8, 11, 29, 14)
+            Block.box(5, 23, 2, 11, 29, 8),
+            Block.box(2, 0, 1, 14, 2, 9),
+            Block.box(5, 2, 2, 11, 17, 8),
+            Block.box(0, 17, 2, 16, 23, 8)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     public static final VoxelShape TOMBSTONE_CROSS_BOTTOM = Shapes.join(TOMBSTONE_CROSS, Shapes.block(), BooleanOp.AND);
     public static final VoxelShape TOMBSTONE_CROSS_TOP = Shapes.join(TOMBSTONE_CROSS, Shapes.block().move(0, 1, 0), BooleanOp.AND).move(0, -1, 0);

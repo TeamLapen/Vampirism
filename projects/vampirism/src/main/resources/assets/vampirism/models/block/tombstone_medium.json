@@ -8,9 +8,9 @@
 	},
 	"elements": [
 		{
-			"from": [2, 0, 8],
-			"to": [14, 2, 14],
-			"rotation": {"angle": 0, "axis": "y", "origin": [7, 0, 12]},
+			"from": [2, 0, 2],
+			"to": [14, 2, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [7, 0, 6]},
 			"faces": {
 				"north": {"uv": [1, 9, 7, 10], "texture": "#tombstone"},
 				"east": {"uv": [2.5, 8, 5.5, 9], "texture": "#tombstone"},
@@ -21,9 +21,9 @@
 			}
 		},
 		{
-			"from": [3, 2, 9],
-			"to": [13, 16, 13],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 2, 9]},
+			"from": [3, 2, 3],
+			"to": [13, 16, 7],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 2, 3]},
 			"faces": {
 				"north": {"uv": [0, 1, 5, 8], "texture": "#tombstone"},
 				"east": {"uv": [5, 1, 7, 8], "texture": "#tombstone"},
@@ -37,41 +37,38 @@
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [75, 45, 0],
-			"translation": [-0.25, 1.5, 0],
+			"translation": [0.75, 0, 0],
 			"scale": [0.375, 0.375, 0.375]
 		},
 		"thirdperson_lefthand": {
 			"rotation": [75, 45, 0],
-			"translation": [-0.25, 1.5, 0],
+			"translation": [0.75, 0, 0],
 			"scale": [0.375, 0.375, 0.375]
 		},
 		"firstperson_righthand": {
 			"rotation": [0, 25, 0],
-			"translation": [0, 0.5, 0.25],
+			"translation": [1.75, 0.5, 1.75],
 			"scale": [0.4, 0.4, 0.4]
 		},
 		"firstperson_lefthand": {
 			"rotation": [0, 25, 0],
-			"translation": [0, 0.5, 0.25],
+			"translation": [1.75, 0, 1.75],
 			"scale": [0.4, 0.4, 0.4]
 		},
 		"ground": {
-			"translation": [0, 3, -0.75],
+			"translation": [0, 3, 0.75],
 			"scale": [0.25, 0.25, 0.25]
 		},
 		"gui": {
 			"rotation": [30, -135, 0],
-			"translation": [1.75, -0.6, 0],
+			"translation": [-1.75, 1.15, 0],
 			"scale": [0.82, 0.82, 0.82]
 		},
 		"head": {
 			"scale": [0.5, 0.5, 0.5]
 		},
 		"fixed": {
-			"translation": [0, 0, -2]
-		},
-		"on_shelf": {
-			"translation": [0, 0, -5]
+			"translation": [0, 0, 2]
 		}
 	}
 }
