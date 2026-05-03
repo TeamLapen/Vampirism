@@ -278,7 +278,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/mainline");
             AdvancementHolder worth_it = Advancement.Builder.advancement()
-                    .display(ModBlocks.TOMBSTONE1, Component.translatable("advancement.vampirism.worth_it"), Component.translatable("advancement.vampirism.worth_it.desc"), null, AdvancementType.CHALLENGE, true, true, true)
+                    .display(ModBlocks.TOMBSTONE_MEDIUM, Component.translatable("advancement.vampirism.worth_it"), Component.translatable("advancement.vampirism.worth_it.desc"), null, AdvancementType.CHALLENGE, true, true, true)
                     .parent(mainline)
                     .addCriterion("injection", SerumInjectedCriterionTrigger.TriggerInstance.injectedSerum(ModEffectTags.SELF_HARM_SERUMS))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))

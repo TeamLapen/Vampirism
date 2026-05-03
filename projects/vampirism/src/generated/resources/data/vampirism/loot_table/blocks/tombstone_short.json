@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:tombstone1"
+          "name": "vampirism:tombstone_short"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "vampirism:blocks/tombstone1"
+  "random_sequence": "vampirism:blocks/tombstone_short"
 }

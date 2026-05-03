@@ -402,9 +402,9 @@ public class ModItems {
     public static final DeferredItem<BlockItem> FIRE_PLACE = fromBlock(ModBlocks.FIRE_PLACE);
     public static final DeferredItem<BlockItem> VAMPIRE_SOUL_LANTERN = fromBlock(ModBlocks.VAMPIRE_SOUL_LANTERN);
     public static final DeferredItem<BlockItem> CROSS = fromBlock(ModBlocks.CROSS);
-    public static final DeferredItem<BlockItem> TOMBSTONE1 = fromBlock(ModBlocks.TOMBSTONE1);
-    public static final DeferredItem<BlockItem> TOMBSTONE2 = fromBlock(ModBlocks.TOMBSTONE2);
-    public static final DeferredItem<BlockItem> TOMBSTONE3 = fromBlock(ModBlocks.TOMBSTONE3);
+    public static final DeferredItem<BlockItem> TOMBSTONE_SHORT = fromBlock(ModBlocks.TOMBSTONE_SHORT);
+    public static final DeferredItem<BlockItem> TOMBSTONE_MEDIUM = fromBlock(ModBlocks.TOMBSTONE_MEDIUM);
+    public static final DeferredItem<BlockItem> TOMBSTONE_CROSS = fromBlock(ModBlocks.TOMBSTONE_CROSS);
     public static final DeferredItem<BlockItem> GRAVE_CAGE = fromBlock(ModBlocks.GRAVE_CAGE);
     public static final DeferredItem<BlockItem> VAMPIRE_RACK = fromBlock(ModBlocks.VAMPIRE_RACK);
     public static final DeferredItem<BlockItem> THRONE = fromBlock(ModBlocks.THRONE);

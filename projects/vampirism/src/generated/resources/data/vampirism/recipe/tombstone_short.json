@@ -2,15 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": "#c:cobblestones",
-    "Y": "#c:stones"
+    "S": "minecraft:stone_slab"
   },
   "pattern": [
-    "XX ",
-    "XYX",
-    "XXX"
+    "SS",
+    "SS"
   ],
   "result": {
-    "id": "vampirism:tombstone2"
+    "id": "vampirism:tombstone_short"
   }
 }

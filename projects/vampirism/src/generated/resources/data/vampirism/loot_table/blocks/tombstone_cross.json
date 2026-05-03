@@ -13,18 +13,18 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "block": "vampirism:tombstone3",
+              "block": "vampirism:tombstone_cross",
               "condition": "minecraft:block_state_property",
               "properties": {
                 "part": "main"
               }
             }
           ],
-          "name": "vampirism:tombstone3"
+          "name": "vampirism:tombstone_cross"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "vampirism:blocks/tombstone3"
+  "random_sequence": "vampirism:blocks/tombstone_cross"
 }

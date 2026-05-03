@@ -128,6 +128,9 @@ public class MigrationData {
         mapping.remap("vampirism:totem_top_crafted", "factions:totem_top_crafted");
         mapping.remap("vampirism:med_chair", "vampirism:injection_chair");
         mapping.remap("vampirism:potion_table", "vampirism:vapor_still");
+        mapping.remap("vampirism:tombstone1", "vampirism:tombstone_short");
+        mapping.remap("vampirism:tombstone2", "vampirism:tombstone_medium");
+        mapping.remap("vampirism:tombstone3", "vampirism:tombstone_cross");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {
