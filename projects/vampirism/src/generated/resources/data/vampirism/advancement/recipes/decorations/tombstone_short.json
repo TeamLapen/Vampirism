@@ -1,32 +1,32 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_the_recipe": {
-      "conditions": {
-        "recipe": "vampirism:tombstone3"
-      },
-      "trigger": "minecraft:recipe_unlocked"
-    },
-    "has_tomb": {
+    "has_stone_slab": {
       "conditions": {
         "items": [
           {
-            "items": "vampirism:tombstone2"
+            "items": "minecraft:stone_slab"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:tombstone_short"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "has_tomb"
+      "has_stone_slab"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:tombstone3"
+      "vampirism:tombstone_short"
     ]
   }
 }

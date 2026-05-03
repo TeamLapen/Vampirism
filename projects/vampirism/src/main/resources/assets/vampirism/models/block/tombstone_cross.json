@@ -1,0 +1,106 @@
+{
+	"credit": "Designed by Zozozrob",
+	"parent": "block/block",
+	"texture_size": [32, 32],
+	"textures": {
+		"tombstone": "vampirism:block/tombstone_cross",
+		"particle": "block/stone"
+	},
+	"elements": [
+		{
+			"from": [2, 0, 7],
+			"to": [14, 2, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [3, 0, 7]},
+			"faces": {
+				"north": {"uv": [1, 15, 7, 16], "texture": "#tombstone"},
+				"east": {"uv": [10, 15, 14, 16], "texture": "#tombstone"},
+				"south": {"uv": [1, 15, 7, 16], "texture": "#tombstone"},
+				"west": {"uv": [10, 15, 14, 16], "texture": "#tombstone"},
+				"up": {"uv": [9, 7, 15, 11], "texture": "#tombstone"},
+				"down": {"uv": [9, 11, 15, 15], "texture": "#tombstone"}
+			}
+		},
+		{
+			"from": [5, 2, 8],
+			"to": [11, 17, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [9, 2, 8]},
+			"faces": {
+				"north": {"uv": [2.5, 7.5, 5.5, 15], "texture": "#tombstone"},
+				"east": {"uv": [2.5, 7.5, 5.5, 15], "texture": "#tombstone"},
+				"south": {"uv": [2.5, 7.5, 5.5, 15], "texture": "#tombstone"},
+				"west": {"uv": [2.5, 7.5, 5.5, 15], "texture": "#tombstone"},
+				"up": {"uv": [10.5, 7.5, 13.5, 10.5], "texture": "#tombstone"},
+				"down": {"uv": [10.5, 7.5, 13.5, 10.5], "texture": "#tombstone"}
+			}
+		},
+		{
+			"from": [0, 17, 8],
+			"to": [16, 23, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 17, 8]},
+			"faces": {
+				"north": {"uv": [0, 4.5, 8, 7.5], "texture": "#tombstone"},
+				"east": {"uv": [5.5, 12, 8.5, 15], "texture": "#tombstone"},
+				"south": {"uv": [0, 4.5, 8, 7.5], "texture": "#tombstone"},
+				"west": {"uv": [5.5, 12, 8.5, 15], "texture": "#tombstone"},
+				"up": {"uv": [8, 1, 16, 4], "texture": "#tombstone"},
+				"down": {"uv": [8, 4, 16, 7], "texture": "#tombstone"}
+			}
+		},
+		{
+			"from": [5, 23, 8],
+			"to": [11, 29, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5, 23, 3]},
+			"faces": {
+				"north": {"uv": [2.5, 1.5, 5.5, 4.5], "texture": "#tombstone"},
+				"east": {"uv": [2.5, 1.5, 5.5, 4.5], "texture": "#tombstone"},
+				"south": {"uv": [2.5, 1.5, 5.5, 4.5], "texture": "#tombstone"},
+				"west": {"uv": [2.5, 1.5, 5.5, 4.5], "texture": "#tombstone"},
+				"up": {"uv": [5.5, 9, 8.5, 12], "texture": "#tombstone"},
+				"down": {"uv": [10.5, 1, 13.5, 4], "texture": "#tombstone"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [-0.25, 1.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [-0.25, 1.5, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 25, 0],
+			"translation": [0, -0.25, 0.25],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 25, 0],
+			"translation": [0, -0.25, 0.25],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, -0.75],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, -135, 0],
+			"translation": [1, -3.1, 0],
+			"scale": [0.52, 0.52, 0.52]
+		},
+		"head": {
+			"translation": [0, 9.75, 1.5],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"translation": [0, -4, -2],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"on_shelf": {
+			"translation": [0, 0, -5],
+			"scale": [0.6, 0.6, 0.6]
+		}
+	}
+}

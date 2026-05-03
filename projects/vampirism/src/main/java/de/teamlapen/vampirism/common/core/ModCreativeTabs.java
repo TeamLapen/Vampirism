@@ -202,9 +202,9 @@ public class ModCreativeTabs {
             addCandleHolders(ColorListsUtil.HANGING_CHANDELIERS.stream().map(Block::asItem).toList());
             add(VAMPIRE_SOUL_LANTERN);
             add(CROSS);
-            add(TOMBSTONE1);
-            add(TOMBSTONE2);
-            add(TOMBSTONE3);
+            add(TOMBSTONE_SHORT);
+            add(TOMBSTONE_MEDIUM);
+            add(TOMBSTONE_CROSS);
             add(GRAVE_CAGE);
             add(VAMPIRE_RACK);
             add(THRONE);

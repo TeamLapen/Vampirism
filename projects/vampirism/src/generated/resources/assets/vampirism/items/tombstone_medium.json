@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "vampirism:block/tombstone2"
+    "model": "vampirism:block/tombstone_medium"
   }
 }

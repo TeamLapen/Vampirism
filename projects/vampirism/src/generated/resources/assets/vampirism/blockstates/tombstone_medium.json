@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "vampirism:block/tombstone_medium",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "vampirism:block/tombstone_medium"
+    },
+    "facing=south": {
+      "model": "vampirism:block/tombstone_medium",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "vampirism:block/tombstone_medium",
+      "y": 270
+    }
+  }
+}
