@@ -1,0 +1,10 @@
+{
+  "gui.factionapi.faction_menu.last_known_pos.unknown": "‮غير معلوم",
+  "gui.factionapi.skills.resetall": "إعادة تعيين المهارات",
+  "gui.factionapi.skills.unlocked": "مفتوح",
+  "gui.factionapi.skills.unlocks_action": "فتح مهارة",
+  "gui.factionapi.skills.unlock_parent_first": "إلغاء تأمين الوالدين أولاً",
+  "gui.factionapi.skills.skills_reset": "تم اعادة تعيين مهاراتك",
+  "gui.factionapi.minion.active_task": "المهمة الحالية",
+  "gui.factionapi.minion_stats.level": "مستوى"
+}

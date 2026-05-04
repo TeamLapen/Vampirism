@@ -1,0 +1,10 @@
+{
+  "gui.factionapi.faction_menu.last_known_pos.unknown": "Onbekend",
+  "gui.factionapi.skills.resetall": "Reset vaardigheden",
+  "gui.factionapi.skills.unlocked": "Ontgrendeld",
+  "gui.factionapi.skills.unlocks_action": "Ontgrendelt actie",
+  "gui.factionapi.skills.unlock_parent_first": "Ontgrendel ouder eerst",
+  "gui.factionapi.skills.skills_reset": "Uw vaardigheden zijn hersteld",
+  "gui.factionapi.minion.active_task": "Huidige taak",
+  "gui.factionapi.minion_stats.level": "Niveau"
+}
