@@ -11,7 +11,6 @@ public class ModParticleFactories {
     public static void registerFactories(@NotNull RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ModParticles.SWORD_CHARGE.get(), FlyingBloodParticle.Provider::new);
         event.registerSpriteSet(ModParticles.SWORD_CHARGED.get(), FlyingBloodParticle.Provider::new);
-        event.registerSpriteSet(ModParticles.PEDESTAL.get(), FlyingBloodParticle.Provider::new);
         event.registerSpriteSet(ModParticles.MOTHER.get(), FlyingBloodParticle.Provider::new);
         event.registerSpriteSet(ModParticles.ALTAR_INFUSION.get(), FlyingBloodParticle.Provider::new);
         event.registerSpriteSet(ModParticles.FLYING_BLOOD_ENTITY.get(), FlyingBloodEntityParticle.Provider::new);

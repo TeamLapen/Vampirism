@@ -19,9 +19,6 @@ public class ModParticleDescriptionProvider extends ParticleDescriptionProvider 
         this.spriteSet(ModParticles.SWORD_CHARGED.get(),
                 VIdentifier.mc("critical_hit")
         );
-        this.spriteSet(ModParticles.PEDESTAL.get(),
-                VIdentifier.mc("glitter_1")
-        );
         this.spriteSet(ModParticles.MOTHER.get(),
                 VIdentifier.mc("critical_hit")
         );
