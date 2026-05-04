@@ -5,7 +5,6 @@
   "faction.vampirism.hunter.plural": "Hunters",
   "faction.vampirism.neutral": "Neutral",
   "faction.vampirism.neutral.plural": "Neutral",
-
   "lord_title.vampirism.vampire.male.1": "Baron",
   "lord_title.vampirism.vampire.male.2": "Viscount",
   "lord_title.vampirism.vampire.male.3": "Count",
@@ -36,13 +35,10 @@
   "lord_title.vampirism.hunter.3.short": "Maj",
   "lord_title.vampirism.hunter.4.short": "Col",
   "lord_title.vampirism.hunter.5.short": "Bgr",
-
   "itemGroup.vampirism": "Vampirism",
   "itemGroup.vampirism.vampire": "Vampirism: Vampire",
   "itemGroup.vampirism.hunter": "Vampirism: Hunter",
-
   "biome.vampirism.vampire_forest": "Vampire Forest",
-
   "block.vampirism.altar_inspiration": "Altar of Inspiration",
   "block.vampirism.altar_infusion": "Altar of Infusion",
   "block.vampirism.altar_pillar": "Altar Pillar",
@@ -276,7 +272,6 @@
   "block.vampirism.velmorra_portal": "Velmorra Portal",
   "block.vampirism.velmorra_portal_arch": "Velmorra Portal Arch",
   "block.vampirism.velmorra_altar": "Velmorra Altar",
-
   "item.vampirism.iron_heart_seeker": "Iron Heartseeker",
   "item.vampirism.diamond_heart_seeker": "Diamond Heartseeker",
   "item.vampirism.netherite_heart_seeker": "Netherite Heartseeker",
@@ -398,7 +393,6 @@
   "item.vampirism.ghost_spawn_egg": "Ghost Spawn Egg",
   "item.vampirism.ritual_knife": "Ritual Knife",
   "item.vampirism.ritual_knife_heart": "Infused Ritual Knife",
-
   "item.minecraft.potion.effect.blindness": "Potion of Blindness",
   "item.minecraft.potion.effect.nausea": "Potion of Nausea",
   "item.minecraft.potion.effect.health_boost": "Potion of Health Boost",
@@ -423,7 +417,6 @@
   "item.minecraft.tipped_arrow.effect.resistance": "Arrow of Resistance",
   "item.minecraft.tipped_arrow.effect.vampire_fire_resistance": "Arrow of Vampire Fire Resistance",
   "item.minecraft.tipped_arrow.effect.garlic": "Arrow of Garlic",
-
   "entity.vampirism.vampire": "Vampire",
   "entity.vampirism.vampire_imob": "Vampire",
   "entity.vampirism.advanced_vampire": "Advanced Vampire",
@@ -467,11 +460,9 @@
   "entity.vampirism.dark_blood_projectile": "Dark Blood Projectile",
   "entity.vampirism.particle_cloud": "Particle Cloud",
   "entity.vampirism.throwable_item": "Thrown Item",
-
   "entity.minecraft.villager.vampirism.hunter_expert": "Hunter Expert",
   "entity.minecraft.villager.vampirism.vampire_expert": "Vampire Expert",
   "entity.minecraft.villager.vampirism.priest": "Priest",
-
   "effect.vampirism.sanguinare": "Sanguinare Vampiris",
   "effect.vampirism.saturation": "Saturation",
   "effect.vampirism.sunscreen": "Sunscreen",
@@ -489,24 +480,19 @@
   "effect.vampirism.crucifix_suppression": "Crucifix Suppression",
   "effect.vampirism.exposed": "Exposed",
   "effect.vampirism.whispers_of_the_veil": "Whispers of the Veil",
-
   "attribute.vampirism.sundamage": "Sun Damage",
   "attribute.vampirism.blood_exhaustion": "Blood Exhaustion",
   "attribute.vampirism.neonatal_duration": "Neonatal Duration",
   "attribute.vampirism.dbno_duration": "DBNO Duration",
-
   "fluid.vampirism.blood": "Blood",
   "fluid.vampirism.blood.vampirism": "Vampirism's Blood",
-
   "enchantment.vampirism.arrow_frugality": "Arrow Frugality",
   "enchantment.vampirism.arrow_frugality.desc": "Occasionally preserves a quarrel when shooting.",
   "enchantment.vampirism.vampire_slayer": "Vampire Slayer",
   "enchantment.vampirism.vampire_slayer.desc": "Increases damage dealt to vampiric creatures.",
-
   "filled_map.vampirism.vampire_forest": "Vampire Forest Map",
   "filled_map.vampirism.ancient_remains": "Ancient Remains Map",
   "filled_map.vampirism.crypt": "Crypt Map",
-
   "action.vampirism.regen": "Regeneration",
   "action.vampirism.regen.desc": "Regenerate health faster in exchange for increased blood consumption",
   "action.vampirism.bat": "Bat Form",
@@ -546,7 +532,6 @@
   "action.vampirism.lord_attack_speed": "Lord Attack Speed",
   "action.vampirism.lord_attack_speed.desc": "Boost the attack speed of nearby faction members",
   "action.vampirism.jump_boost": "Jump Boost",
-
   "skill.vampirism.vampire": "Becoming a Vampire",
   "skill.vampirism.night_vision": "Night Vision",
   "skill.vampirism.night_vision.desc": "Unlock night vision, always active while the skill is enabled",
@@ -650,7 +635,6 @@
   "skill.vampirism.hunter_minion_collect.desc": "Send your minions out to collect resources",
   "skill.vampirism.minion_recovery": "Minion Recovery",
   "skill.vampirism.minion_recovery.desc": "Speeds up the time your minions need to recover",
-
   "advancement.vampirism": "Vampirism",
   "advancement.vampirism.desc": "Getting started with Vampirism",
   "advancement.vampirism.vampire_forest": "Blood Feeders' Home",
@@ -729,7 +713,6 @@
   "advancement.vampirism.protect_lord.desc": "Command your Minion to protect you",
   "advancement.vampirism.defend_area": "The Guardian",
   "advancement.vampirism.defend_area.desc": "Command your Minion to guard the area",
-
   "task.vampirism.vampire_lord1": "Are You Worthy?",
   "task.vampirism.vampire_lord1.reward": "Become a Vampire Lord",
   "task.vampirism.vampire_lord2": "The Next Step",
@@ -786,13 +769,11 @@
   "task.vampirism.break_bones2": "Break Some Bones II",
   "task.vampirism.break_bones3": "Break Some Bones III",
   "task.vampirism.break_bones4": "Break Some Bones IV",
-
   "task_tag.vampirism.hunter": "Hunter entities",
   "task_tag.vampirism.advanced_hunter": "Advanced Hunters",
   "task_tag.vampirism.advanced_vampire": "Advanced Vampires",
   "task_tag.vampirism.vampire": "Vampire entities",
   "task_tag.vampirism.zombies": "Zombie creatures",
-
   "stat.vampirism.interact_with_altar_inspiration": "Interactions with Altar of Inspiration",
   "stat.vampirism.interact_with_altar_of_infusion": "Interactions with Altar of Infusion",
   "stat.vampirism.interact_with_blood_pedestal": "Interactions with Blood Pedestal",
@@ -820,12 +801,10 @@
   "stat.vampirism.resurrected": "Times Resurrected",
   "stat.vampirism.killed_with_stake": "Vampires Killed with Stake",
   "stat.vampirism.mother_defeated": "Ancient Remains Defeated",
-
   "key.vampirism.category.main": "Vampirism",
   "key.vampirism.suck_blood": "Suck Blood",
   "key.vampirism.toggle_vision": "Toggle Vampire Vision",
   "key.vampirism.select_ammo": "Select Quarrel Type",
-
   "oil.vampirism.empty": "Uncraftable Oil",
   "oil.vampirism.plant": "Plant Oil",
   "oil.vampirism.vampire_blood": "Activated Oil",
@@ -853,7 +832,6 @@
   "oil.vampirism.spitfire": "Spitfire Oil",
   "oil.vampirism.vampire_killer": "Vampire Killer Oil",
   "oil.vampirism.bleeding": "Bleeding Oil",
-
   "refinement.vampirism.half_invulnerable.desc": "Damage Limiter threshold reduction I",
   "refinement.vampirism.teleport_distance.desc": "Teleport distance increase I",
   "refinement.vampirism.sword_finisher.desc": "Finisher skill threshold increase I",
@@ -871,7 +849,6 @@
   "refinement.vampirism.blood_charge_speed.desc": "Blood charging speedup I",
   "refinement.vampirism.sword_trained_amount.desc": "Train vampire swords faster",
   "refinement.vampirism.crucifix_resistant.desc": "Reduces the effect of a crucifix on you",
-
   "refinement_set.vampirism.armor1": "of Armor",
   "refinement_set.vampirism.health1": "of Health",
   "refinement_set.vampirism.speed1": "of Speed",
@@ -949,12 +926,10 @@
   "refinement_set.vampirism.crucifix_resistant": "of Atheism",
   "refinement_set.vampirism.crucifix_resistant_health": "of Healthy Atheism",
   "refinement_set.vampirism.crucifix_resistant_speed": "of Swift Atheism",
-
   "minion_task.vampirism.collect_blood": "Collect Blood",
   "minion_task.vampirism.collect_blood.start": "I will head out and gather blood for you, Sire",
   "minion_task.vampirism.collect_hunter_items": "Collect Resources",
   "minion_task.vampirism.collect_hunter_items.start": "I will head out and search for resources",
-
   "vampire_book.vampirism.unknown": "Unknown Book",
   "vampire_book.vampirism.unknown.author": "Unknown",
   "vampire_book.vampirism.maids_diary": "A Maid's Diary",
@@ -981,7 +956,6 @@
   "vampire_book.vampirism.ashes_of_past_dawns": "Ashes of Past Dawns",
   "vampire_book.vampirism.ashes_of_past_dawns.author": "Marcus Grid",
   "vampire_book.vampirism.pyromaniacs_diary": "Pyromaniac's Diary",
-
   "container.vampirism.altar_infusion": "Altar of Infusion",
   "container.vampirism.blood_infuser": "Blood Infuser",
   "container.vampirism.fog_diffuser": "Fog Diffuser",
@@ -998,7 +972,6 @@
   "container.vampirism.vampire_beacon.power": "Power",
   "container.vampirism.hunter": "Hunter",
   "container.vampirism.hunter_trainer": "Hunter Trainer",
-
   "gui.vampirism.actions": "Actions",
   "gui.vampirism.skills.level": "Level Skills",
   "gui.vampirism.skills.lord": "Lord Skills",
@@ -1027,7 +1000,6 @@
   "gui.vampirism.dbno.title": "You Are Down!",
   "gui.vampirism.dbno.die": "Give Up",
   "gui.vampirism.dbno.resurrect": "Resurrect",
-
   "gui.vampirism.altar_infusion.ritual_wrong_purity": "Purity %s is required",
   "gui.vampirism.altar_infusion.ritual_missing_pure_blood": "Missing %s Pure Blood of purity %s",
   "gui.vampirism.altar_infusion.ritual_missing_human_heart": "Missing %s Human Heart(s) for this ritual",
@@ -1054,7 +1026,6 @@
   "gui.vampirism.hunter_trainer.ritual_missing_gold": "Missing %s Gold Ingot(s)",
   "gui.vampirism.hunter_trainer.ritual_missing_hunter_intel": "Missing Hunter Intel of level %s",
   "gui.vampirism.level_up": "Level Up",
-
   "gui.vampirism.jei.category.diffuser.burn_duration_seconds": "Burn Duration: %ss",
   "gui.vampirism.jei.category.diffuser.burn_duration_minutes": "Burn Duration: %sm %ss",
   "gui.vampirism.jei.category.diffuser.burn_duration_hours": "Burn Duration: %sh %sm %ss",
@@ -1070,7 +1041,6 @@
   "gui.vampirism.jei.task.representative": "Faction representative",
   "gui.vampirism.jei.task.prerequisites": "Prerequisites",
   "gui.vampirism.jei.task.prerequisites.none": "None",
-
   "message.vampirism.restriction.faction.vampire": "How do those vampires even use this thing...",
   "message.vampirism.restriction.faction.hunter": "How do those hunters even use this thing...",
   "message.vampirism.restriction.vampire_clothing": "Something is resonating inside this... I'm not wearing it",
@@ -1078,7 +1048,6 @@
   "message.vampirism.restriction.holy": "Something sinful within me recoils in agony... I shouldn't use this",
   "message.vampirism.restriction.heavy": "This is too heavy for me... I cannot wield it",
   "message.vampirism.restriction.oiled": "It's oily... I'm not going to wield it",
-
   "message.vampirism.action.bat.in_sun": "You cannot transform into a bat under the sun",
   "message.vampirism.action.bat.has_umbrella": "You cannot transform into a bat with an umbrella equipped",
   "message.vampirism.action.bat.effected_by_garlic": "You cannot transform into a bat under the effect of garlic",
@@ -1096,7 +1065,6 @@
   "message.vampirism.action.bat_swarm.no_bat_mode": "You are not in the bat mode",
   "message.vampirism.action.teleport.no_target": "Invalid teleport position",
   "message.vampirism.action.lord_range.no_target": "No entities in range",
-
   "message.vampirism.vapor_still.other_owner": "This vapor still belongs to %s. I shouldn't touch it",
   "message.vampirism.alchemical_cauldron.other_owner": "This cauldron belongs to %s. I shouldn't touch it",
   "message.vampirism.altar_infusion.ritual.still_running": "I should wait... the ritual is still running",
@@ -1122,12 +1090,10 @@
   "message.vampirism.tent.occupied": "This tent is occupied",
   "message.vampirism.tent.cant_use": "You can't sleep in a tent",
   "message.vampirism.velmorra_altar.weak": "The portal seems unaffected. Your blood is not strong enough to interest the portal.",
-
   "message.vampirism.village_raid.attacked.vampire": "%s attacked a nearby vampire village",
   "message.vampirism.village_raid.attacked.hunter": "%s attacked a nearby hunter village",
   "message.vampirism.village_raid.vampire": "Vampire Raid",
   "message.vampirism.village_raid.hunter": "Hunter Raid",
-
   "dialogue.vampirism.hunter.occupied": "I'm busy right now",
   "dialogue.vampirism.hunter.cured_sanguinare": "You have come to the right person. I have cured you of sanguinare",
   "dialogue.vampirism.hunter.cannot_train_further": "I cannot train you any further. You have to look for someone with more experience",
@@ -1151,9 +1117,7 @@
   "dialogue.vampirism.hunter_minion.unavailable": "You seem to be a reputable Vampire Hunter, but I do no like serving someone other than myself",
   "dialogue.vampirism.hunter_minion.upgrade": "Thank you for the upgraded equipment. Please choose in which area I should train.",
   "dialogue.vampirism.hunter_minion.wrong_upgrade": "I can't use this upgrade",
-
   "misc.vampirism.unknown": "Unknown",
-
   "tooltip.vampirism.tier.normal": "Normal",
   "tooltip.vampirism.tier.enhanced": "Enhanced",
   "tooltip.vampirism.tier.ultimate": "Ultimate",
@@ -1218,7 +1182,6 @@
   "tooltip.vampirism.vapor_still": "A copper distiller capable of separating liquid mixtures into fractions. Primarily used by hunters to augment ordinary potions by infusing them with distilled vampire blood. However, creating most advanced concoctions can be tricky. Therefore, knowledge of certain skills may be required.\n\nThe still needs blaze powder as fuel, one piece is enough for 20 potion batches. Interacts with hoppers similarly to brewing stands, allowing for process automation.",
   "tooltip.vampirism.ritual_knife.infused": "Infused",
   "tooltip.vampirism.heart_seeker.consume": "Consumes %s blood per hit",
-
   "subtitles.vampirism.entity.vampire_scream": "Vampire hisses",
   "subtitles.vampirism.player.bite": "Vampire bites",
   "subtitles.vampirism.player.feeding": "Vampire feeds",
@@ -1242,7 +1205,6 @@
   "subtitles.vampirism.remains_defender.hit": "Ancient Crystal cracks",
   "subtitles.vampirism.remains.death": "Ancient Remains crumbles",
   "subtitles.vampirism.remains.hurt": "Ancient Remains trembles",
-
   "death.attack.vampirism.sun": "%1$s did not like the sun",
   "death.attack.vampirism.sun.player": "%1$s was pushed into the sun by %2$s",
   "death.attack.vampirism.vampire_on_fire": "%1$s burned to ashes",
@@ -1262,7 +1224,6 @@
   "death.attack.vampirism.bleeding": "%1$s bled out",
   "death.attack.vampirism.bleeding.player": "%1$s bled out while fighting %2$s",
   "death.attack.vampirism.leave_faction": "%1$s renounced their nature and perished",
-
   "command.vampirism.failed_to_execute": "Failed to execute command. Internal error.",
   "command.vampirism.failed_to_execute.players": "Failed to execute command for %s. Internal error.",
   "command.vampirism.base.reset_balance.success": "Successfully reset %s balance category. Please restart MC.",
@@ -1319,13 +1280,10 @@
   "command.vampirism.base.config.bat_dim.not_blacklisted": "Dimension %s is no longer blacklisted",
   "command.vampirism.argument.selector.faction": "Faction selector",
   "command.vampirism.argument.selector.level": "Level selector",
-
   "notification.vampirism.guideapi_available": "To get a GuideBook for Vampirism install GuideAPI-VP",
   "notification.vampirism.guideapi_available.download": "Click here to go to the mod page",
   "notification.vampirism.warning_optifine_blood_vision": "You appear to be running Optifine with shaders. Blood vision won't work with that. Therefore a substitute glowing effect is used. Not all shaders actually render the glowing effect though.",
-
   "vampirism.configuration.title": "Vampirism Configuration",
-
   "vampirism.configuration.section.vampirism.client.toml": "Client settings",
   "vampirism.configuration.section.vampirism.client.toml.title": "Client settings",
   "vampirism.configuration.section.vampirism.common.toml": "Common settings",
@@ -1334,7 +1292,6 @@
   "vampirism.configuration.section.vampirism.server.toml.title": "Server settings",
   "vampirism.configuration.section.vampirism.balance.toml": "Balance settings",
   "vampirism.configuration.section.vampirism.balance.toml.title": "Balance settings",
-
   "vampirism.configuration.world": "World",
   "vampirism.configuration.village": "Village",
   "vampirism.configuration.internal": "Internal",
@@ -1354,14 +1311,12 @@
   "vampirism.configuration.items": "Items",
   "vampirism.configuration.effects": "Effects",
   "vampirism.configuration.lordActions": "Lord Actions",
-
   "vampirism.configuration.collectData": "Collect Data",
   "vampirism.configuration.collectData.tooltip": "Send the mod version, the MC version and the mod count to the mod authors. This allows us to identify the high-priority versions players play the most.",
   "vampirism.configuration.autoConvertGlassBottles": "Auto-convert Glass Bottles",
   "vampirism.configuration.autoConvertGlassBottles.tooltip": "When enabled, automatically converts glass bottles to blood bottles when needed.",
   "vampirism.configuration.enableUmbrella": "Craftable Umbrella",
   "vampirism.configuration.enableUmbrella.tooltip": "When enabled, unlocks the crafting recipe of an umbrella that allows to slowly walk under sunlight without taking damage.",
-
   "vampirism.configuration.addVampireForestToOverworld": "Add Vampire Forest To Overworld",
   "vampirism.configuration.addVampireForestToOverworld.tooltip": "When enabled, injects the vampire forest into the default overworld generation, replacing some taiga areas.",
   "vampirism.configuration.vampireForestWeightTerrablender": "Vampire Forest Weight (Terrablender)",
@@ -1376,7 +1331,6 @@
   "vampirism.configuration.villageHunterTrainerWeight.tooltip": "The weight of the hunter trainer building in village generation.",
   "vampirism.configuration.replaceVillageTemples": "Replace Village Temples",
   "vampirism.configuration.replaceVillageTemples.tooltip": "When enabled, replaces village temples with versions that contain church altars from this mod.",
-
   "vampirism.configuration.renderAdvancedMobPlayerFaces": "Render Advanced Mob Player Faces",
   "vampirism.configuration.renderAdvancedMobPlayerFaces.tooltip": "When enabled, renders player faces on advanced hunter and vampire mobs.",
   "vampirism.configuration.renderVampireEyes": "Render Vampire Eyes",
@@ -1391,7 +1345,6 @@
   "vampirism.configuration.renderVampireSwordParticles.tooltip": "When enabled, renders particles when holding a charged vampire sword.",
   "vampirism.configuration.garlicFinderAuraColor": "Garlic Finder Aura Color",
   "vampirism.configuration.garlicFinderAuraColor.tooltip": "The color used by the garlic finder to highlight blocks, in HEX without an alpha channel.",
-
   "vampirism.configuration.showFullScreenOverlay": "Full-Screen Overlay",
   "vampirism.configuration.showFullScreenOverlay.tooltip": "When enabled, renders full-screen colored overlays, e.g. when leveling up as a vampire.",
   "vampirism.configuration.showBatHUDOverlay": "Bat Mode HUD Indicator",
@@ -1402,7 +1355,6 @@
   "vampirism.configuration.showVampireRageHUDOverlay.tooltip": "When enabled, shows the vampire rage indicator in the HUD.",
   "vampirism.configuration.showSunHUDOverlay": "Sun Damage HUD Warning",
   "vampirism.configuration.showSunHUDOverlay.tooltip": "When enabled, shows the sun damage warning in the HUD.",
-
   "vampirism.configuration.enforceRenderForestFog": "Enforce Forest Fog on Clients",
   "vampirism.configuration.enforceRenderForestFog.tooltip": "When enabled, prevents clients from disabling the vampire forest fog.",
   "vampirism.configuration.playerCanInfectPlayers": "Players Can Infect Players",
@@ -1413,7 +1365,6 @@
   "vampirism.configuration.mobBiteInfection.tooltip": "Set to true to prevent vampire mobs from infecting players on attack.",
   "vampirism.configuration.batDimensionBlacklist": "Blacklisted Bat Dimensions",
   "vampirism.configuration.batDimensionBlacklist.tooltip": "A list of dimensions where vampire players cannot transform into a bat. Use dimension IDs e.g. [\"minecraft:the_end\"].",
-
   "vampirism.configuration.autoCalculateEntityBlood": "Auto-calculate Entity Blood",
   "vampirism.configuration.autoCalculateEntityBlood.tooltip": "When enabled, calculates blood levels for creatures without pre-written ones based on their size.",
   "vampirism.configuration.blacklistedBloodEntities": "Blacklisted Blood Entities",
@@ -1422,7 +1373,6 @@
   "vampirism.configuration.sunscreenBeaconRadius.tooltip": "The radius the sunscreen beacon protects against sun damage.",
   "vampirism.configuration.sunscreenBeaconMineable": "Mineable Sunscreen Beacon",
   "vampirism.configuration.sunscreenBeaconMineable.tooltip": "When enabled, the sunscreen beacon can be mined in survival mode.",
-
   "vampirism.configuration.sundamageInUnknownDimensions": "Sundamage In Unknown Dimensions",
   "vampirism.configuration.sundamageInUnknownDimensions.tooltip": "When enabled, vampires receive sun damage in dimensions not explicitly configured.",
   "vampirism.configuration.enforceSundamageDimensions": "Enforce Sundamage in Dimensions",
@@ -1431,7 +1381,6 @@
   "vampirism.configuration.noSundamageDimensions.tooltip": "Dimensions to never apply sun damage in, regardless of other settings. Use dimension IDs from /vampirism currentDimension.",
   "vampirism.configuration.noSundamageBiomes": "No Sundamage Biomes",
   "vampirism.configuration.noSundamageBiomes.tooltip": "Additional biomes where vampires do not receive sun damage. Use biome IDs e.g. [\"minecraft:mesa\", \"minecraft:plains\"].",
-
   "vampirism.configuration.arrowVampireKillerMaxHealth": "Arrow Vampire Killer Max Health",
   "vampirism.configuration.arrowVampireKillerMaxHealth.tooltip": "The vampire killer arrow can only instantly kill NPC vampires whose maximum health does not exceed this value.",
   "vampirism.configuration.holyWaterSplashDamage": "Holy Water Splash Damage",
@@ -1468,7 +1417,6 @@
   "vampirism.configuration.allowInfiniteSpecialArrows.tooltip": "When enabled, special crossbow arrows (e.g. spitfire) can be used with the Infinity enchantment.",
   "vampirism.configuration.garlicDiffuserStartupTime": "Garlic Diffuser Startup Time",
   "vampirism.configuration.garlicDiffuserStartupTime.tooltip": "Delay in ticks before a newly placed garlic diffuser becomes active. Scaled to 0.25x in singleplayer.",
-
   "vampirism.configuration.healthThreshold": "Health Threshold",
   "vampirism.configuration.healthThreshold.tooltip": "Minimum relative health an entity must have to use actions.",
   "vampirism.configuration.invisibilityCooldown": "Invisibility Cooldown",
@@ -1513,7 +1461,6 @@
   "vampirism.configuration.garlicCooldown.tooltip": "Cooldown for the entity garlic resistance action, in seconds.",
   "vampirism.configuration.garlicDuration": "Garlic Duration",
   "vampirism.configuration.garlicDuration.tooltip": "Duration of the entity garlic resistance action, in seconds.",
-
   "vampirism.configuration.disguiseEnabled": "Disguise Enabled",
   "vampirism.configuration.disguiseEnabled.tooltip": "When enabled, hunters can use the disguise action.",
   "vampirism.configuration.disguiseVisibilityMod": "Disguise Visibility Modifier",
@@ -1534,12 +1481,10 @@
   "vampirism.configuration.potionResistanceDuration.tooltip": "Duration of the potion resistance action, in ticks.",
   "vampirism.configuration.potionResistanceCooldown": "Potion Resistance Cooldown",
   "vampirism.configuration.potionResistanceCooldown.tooltip": "Cooldown for the potion resistance action, in ticks.",
-
   "vampirism.configuration.strengthMaxMod": "Strength Maximum Modifier",
   "vampirism.configuration.strengthMaxMod.tooltip": "Maximum strength modifier for hunters at max level. Final strength = base * (modifier + 1).",
   "vampirism.configuration.strengthType": "Strength Scaling Type",
   "vampirism.configuration.strengthType.tooltip": "Scaling type for the hunter strength modifier. Use 0.5 for square root scaling or 1.0 for linear scaling.",
-
   "vampirism.configuration.smallAttackSpeedModifier": "Attack Speed Modifier",
   "vampirism.configuration.smallAttackSpeedModifier.tooltip": "Attack speed modifier from the basic attack speed skill. Final cooldown = 1 / (base * (1 + modifier)).",
   "vampirism.configuration.smallAttackDamageModifier": "Attack Damage Modifier",
@@ -1558,7 +1503,6 @@
   "vampirism.configuration.garlicDiffuserEnhancedDist.tooltip": "Chunk radius affected by an enhanced garlic diffuser. A value of 0 results in a single-chunk area. Only affects newly placed blocks.",
   "vampirism.configuration.garlicDiffuserWeakDist": "Garlic Diffuser Weak Distance",
   "vampirism.configuration.garlicDiffuserWeakDist.tooltip": "Chunk radius affected by a weak garlic diffuser. A value of 0 results in a single-chunk area. Only affects newly placed blocks.",
-
   "vampirism.configuration.sundamageReduction1": "Sun Damage Reduction",
   "vampirism.configuration.sundamageReduction1.tooltip": "Sun damage multiplier reduction from the first sun damage skill. Final sun damage = base * (1 + value).",
   "vampirism.configuration.bloodThirstReduction1": "Blood Thirst Reduction",
@@ -1575,7 +1519,6 @@
   "vampirism.configuration.neonatalReduction.tooltip": "Percentage reduction of the neonatal debuff duration from the neonatal reduction skill.",
   "vampirism.configuration.dbnoReduction": "DBNO Reduction",
   "vampirism.configuration.dbnoReduction.tooltip": "Percentage reduction of the downed timer required to resurrect, from the downed reduction skill.",
-
   "vampirism.configuration.healthMaxLevelMod": "Health Max Level Modifier",
   "vampirism.configuration.healthMaxLevelMod.tooltip": "Flat bonus health added to vampire players at max level. This is an additive modifier.",
   "vampirism.configuration.attackSpeedMaxLevelMod": "Attack Speed Max Level Modifier",
@@ -1634,7 +1577,6 @@
   "vampirism.configuration.nightVisionDisabled.tooltip": "When enabled, disables the passive night vision effect for vampire players.",
   "vampirism.configuration.bloodVisionDisabled": "Blood Vision Disabled",
   "vampirism.configuration.bloodVisionDisabled.tooltip": "When enabled, disables the blood vision ability for vampire players.",
-
   "vampirism.configuration.freezeEnabled": "Freeze Enabled",
   "vampirism.configuration.freezeEnabled.tooltip": "When enabled, vampires can use the freeze action.",
   "vampirism.configuration.freezeCooldown": "Freeze Cooldown",
@@ -1715,10 +1657,8 @@
   "vampirism.configuration.darkStalkerDuration.tooltip": "Duration of the vampire dark stalker action, in ticks.",
   "vampirism.configuration.darkStalkerBloodConsumption": "Dark Stalker Blood Consumption",
   "vampirism.configuration.darkStalkerBloodConsumption.tooltip": "Blood consumed per tick while the dark stalker action is active, in mB.",
-
   "vampirism.configuration.resourceCooldown": "Resource Cooldown",
   "vampirism.configuration.resourceCooldown.tooltip": "Cooldown in ticks before new resources are generated by a minion's collect resource task.",
-
   "vampirism.configuration.swordTrainingSpeedMod": "Sword Training Speed Modifier",
   "vampirism.configuration.swordTrainingSpeedMod.tooltip": "Multiplier applied to sword training speed with the sword training refinement.",
   "vampirism.configuration.bloodChargeSpeedMod": "Blood Charge Speed Modifier",
@@ -1743,17 +1683,14 @@
   "vampirism.configuration.halfInvulnerableThresholdMod.tooltip": "Multiplier applied to the partial invulnerability damage threshold with the threshold refinement.",
   "vampirism.configuration.swordFinisherThresholdMod": "Sword Finisher Threshold Modifier",
   "vampirism.configuration.swordFinisherThresholdMod.tooltip": "Multiplier applied to the sword finisher health threshold with the finisher refinement.",
-
   "vampirism.configuration.applicableOilArmorReverse": "Applicable Oil Armor Reverse",
   "vampirism.configuration.applicableOilArmorReverse.tooltip": "When enabled, the applicable oil armor item tag acts as a whitelist instead of a blacklist for armor oil application.",
   "vampirism.configuration.applicableOilPickaxeReverse": "Applicable Oil Pickaxe Reverse",
   "vampirism.configuration.applicableOilPickaxeReverse.tooltip": "When enabled, the applicable oil pickaxe item tag acts as a whitelist instead of a blacklist for pickaxe oil application.",
   "vampirism.configuration.applicableOilSwordReverse": "Applicable Oil Sword Reverse",
   "vampirism.configuration.applicableOilSwordReverse.tooltip": "When enabled, the applicable oil sword item tag acts as a whitelist instead of a blacklist for sword oil application.",
-
   "vampirism.configuration.exposedPerLevelMultiplier": "Exposed Per Level Multiplier",
   "vampirism.configuration.exposedPerLevelMultiplier.tooltip": "Damage multiplier applied per level of the Exposed effect. For instance, a value of 0.25 means the entity will receive 25% more damage at level I, 50% at level II, 75% at level III, and so on.",
-
   "vampirism.configuration.lordSpeedEnabled": "Lord Speed Enabled",
   "vampirism.configuration.lordSpeedEnabled.tooltip": "When enabled, vampire lords can use the speed action.",
   "vampirism.configuration.lordSpeedDuration": "Lord Speed Duration",
