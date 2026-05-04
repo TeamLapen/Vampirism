@@ -54,7 +54,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 .add(ModBlocks.FIRE_PLACE.get())
                 .add(ModBlocks.GRAVE_CAGE.get())
                 .add(ModBlocks.ALCHEMICAL_CAULDRON.get())
-                .add(ModBlocks.MED_CHAIR.get())
+                .add(ModBlocks.VAPOR_STILL.get())
                 .add(ModBlocks.GARLIC_DIFFUSER_WEAK.get())
                 .add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())
                 .add(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get())
@@ -83,7 +83,6 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 .add(ModBlocks.DARK_SPRUCE_WALL_SIGN.get())
                 .add(ModBlocks.CURSED_SPRUCE_SIGN.get())
                 .add(ModBlocks.CURSED_SPRUCE_WALL_SIGN.get())
-                .add(ModBlocks.POTION_TABLE.get())
                 .add(ModBlocks.CROSS.get())
                 .add(ModBlocks.DARK_SPRUCE_DOOR.get())
                 .add(ModBlocks.CURSED_SPRUCE_DOOR.get())
@@ -93,6 +92,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 .add(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get())
                 .add(ModBlocks.VAMPIRE_RACK.get())
                 .add(ModBlocks.THRONE.get())
+                .add(ModBlocks.INJECTION_CHAIR.get())
                 .addTag(ModBlockTags.COFFIN)
         ;
 
@@ -100,8 +100,6 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(ModBlocks.ALTAR_TIP.get())
                 .add(ModBlocks.GRAVE_CAGE.get())
-                .add(ModBlocks.MED_CHAIR.get())
-                .add(ModBlocks.MED_CHAIR.get())
         ;
         tag(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.BLOOD_PEDESTAL.get())
@@ -160,6 +158,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(ModBlockTags.VAMPIRE_BEACON_BASE_BLOCKS).add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
         tag(ModBlockTags.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS).add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
         tag(ModBlockTags.CREEPER_REPELLENT).add(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
+        tag(ModBlockTags.GARLIC_FINDER_HIGHLIGHTED).add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), ModBlocks.GARLIC_DIFFUSER_WEAK.get(), ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), ModBlocks.GARLIC_DIFFUSER_CORE.get(), ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.get());
         tag(ModBlockTags.GARLIC).add(ModBlocks.GARLIC.get());
 
         ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.forEach(pair -> {
@@ -174,6 +173,11 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(ModBlockTags.CANDELABRA).addTags(ModBlockTags.STANDING_CANDELABRA, ModBlockTags.WALL_CANDELABRA);
         ColorListsUtil.HANGING_CHANDELIERS.forEach(block -> tag(ModBlockTags.CHANDELIER).add(block));
         tag(BlockTags.CANDLES).addTag(ModBlockTags.CANDLE_STICK).addTag(ModBlockTags.CANDELABRA).addTag(ModBlockTags.CHANDELIER);
+        tag(BlockTags.DRAGON_IMMUNE).add(ModBlocks.VELMORRA_PORTAL.get());
+        tag(BlockTags.WITHER_IMMUNE).add(ModBlocks.VELMORRA_PORTAL.get());
+        tag(BlockTags.PORTALS).add(ModBlocks.VELMORRA_PORTAL.get());
+        tag(BlockTags.INVALID_SPAWN_INSIDE).add(ModBlocks.VELMORRA_PORTAL.get());
+
 
         addCompatibilityTags();
     }

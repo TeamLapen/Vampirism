@@ -106,7 +106,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistEntity(@NotNull ServerPlayer player, @NotNull Identifier entity) {
-        return modifyList(player, entity, ModConfig.server().blacklistedBloodEntity, "command.vampirism.base.config.entity.blacklisted", "command.vampirism.base.config.entity.not_blacklisted");
+        return modifyList(player, entity, ModConfig.server().blacklistedBloodEntities, "command.vampirism.base.config.entity.blacklisted", "command.vampirism.base.config.entity.not_blacklisted");
     }
 
     private static int blacklistBiome(@NotNull ServerPlayer player) {
@@ -114,7 +114,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistBiome(@NotNull ServerPlayer player, @NotNull Identifier biome) {
-        return modifyList(player, biome, ModConfig.server().sundamageDisabledBiomes, "command.vampirism.base.config.biome.blacklisted", "command.vampirism.base.config.biome.not_blacklisted");
+        return modifyList(player, biome, ModConfig.server().noSundamageBiomes, "command.vampirism.base.config.biome.blacklisted", "command.vampirism.base.config.biome.not_blacklisted");
     }
 
     private static int blacklistDimension(@NotNull ServerPlayer player) {
@@ -122,7 +122,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int blacklistDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dimension) {
-        return modifyList(player, dimension.dimension().identifier(), ModConfig.server().sundamageDimensionsOverrideNegative, "command.vampirism.base.config.dimension.blacklisted", "command.vampirism.base.config.dimension.not_blacklisted");
+        return modifyList(player, dimension.dimension().identifier(), ModConfig.server().noSundamageDimensions, "command.vampirism.base.config.dimension.blacklisted", "command.vampirism.base.config.dimension.not_blacklisted");
     }
 
     private static int enforceDimension(@NotNull ServerPlayer player) {
@@ -130,7 +130,7 @@ public class ConfigCommand extends BasicCommand {
     }
 
     private static int enforceDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dimension) {
-        return modifyList(player, dimension.dimension().identifier(), ModConfig.server().sundamageDimensionsOverridePositive, "command.vampirism.base.config.dimension.enforced", "command.vampirism.base.config.dimension.not_enforced");
+        return modifyList(player, dimension.dimension().identifier(), ModConfig.server().enforceSundamageDimensions, "command.vampirism.base.config.dimension.enforced", "command.vampirism.base.config.dimension.not_enforced");
     }
 
     private static int batBlacklistDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dim) {
@@ -143,10 +143,10 @@ public class ConfigCommand extends BasicCommand {
         if (!list.contains(id.toString())) {
             //noinspection unchecked
             ((List<String>) list).add(id.toString());
-            player.displayClientMessage(Component.translatable(blacklist, id.toString()), false);
+            player.sendSystemMessage(Component.translatable(blacklist, id.toString()));
         } else {
             list.remove(id.toString());
-            player.displayClientMessage(Component.translatable(not_blacklist, id.toString()), false);
+            player.sendSystemMessage(Component.translatable(not_blacklist, id.toString()));
         }
         configList.set(list);
         return 0;

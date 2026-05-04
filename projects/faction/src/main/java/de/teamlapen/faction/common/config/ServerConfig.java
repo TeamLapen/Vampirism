@@ -3,69 +3,144 @@ package de.teamlapen.faction.common.config;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
-public class ServerConfig {
+public class ServerConfig implements FactionConfig.IConfigs {
 
-    public final ModConfigSpec.BooleanValue unlockAllSkills;
-    public final ModConfigSpec.BooleanValue pvpOnlyBetweenFactions;
-    public final ModConfigSpec.BooleanValue pvpOnlyBetweenFactionsIncludeHumans;
+    // Village
+    public final ModConfigSpec.IntValue villageMaxSpawnableVillagers;
+    public final ModConfigSpec.BooleanValue villageAllowPoiDestruction;
+    public final ModConfigSpec.IntValue villageMaximumTotemRadius;
+
+    // Raid
+    public final ModConfigSpec.DoubleValue raidRandomChance;
+    public final ModConfigSpec.IntValue raidPhaseOneDuration;
+    public final ModConfigSpec.IntValue raidPhaseTwoMembersForceTargetTime;
+    public final ModConfigSpec.IntValue raidNotifyDistance;
+    public final ModConfigSpec.BooleanValue raidDisableVillageGuards;
+
+    // Faction
     public final ModConfigSpec.BooleanValue factionColorInChat;
-    public final ModConfigSpec.BooleanValue lordPrefixInChat;
-    public final ModConfigSpec.EnumValue<IMobOptions> entityIMob;
-    public final ModConfigSpec.BooleanValue allowVillageDestroyBlocks;
-    public final ModConfigSpec.BooleanValue usePermissions;
-    public final ModConfigSpec.BooleanValue preventRenderingDebugBoundingBoxes;
+    public final ModConfigSpec.BooleanValue factionLordPrefixInChat;
+    public final ModConfigSpec.BooleanValue factionPvpOnlyBetweenFactions;
+    public final ModConfigSpec.BooleanValue factionUnlockAllSkills;
+    public final ModConfigSpec.DoubleValue factionSkillPointsPerLevel;
+    public final ModConfigSpec.DoubleValue factionSkillPointsPerLordLevel;
 
-    public final ModConfigSpec.BooleanValue disableVillageGuards;
+    // Minions
+    public final ModConfigSpec.IntValue minionDeathRecoveryTime;
+    public final ModConfigSpec.IntValue minionPerLordLevel;
+    public final ModConfigSpec.DoubleValue minionOfflineResourceCooldownMultiplier;
+    public final ModConfigSpec.IntValue minionEquipmentRepairAmount;
 
-    public final ModConfigSpec.IntValue viMaxVillagerRespawn;
-    public final ModConfigSpec.DoubleValue viRandomRaidChance;
-    public final ModConfigSpec.IntValue viPhase1Duration;
-    public final ModConfigSpec.IntValue viNotifyDistanceSQ;
-    public final ModConfigSpec.IntValue viForceTargetTime;
-    public final ModConfigSpec.IntValue viMaxTotemRadius;
-
-
-    public final ModConfigSpec.IntValue miDeathRecoveryTime;
-    public final ModConfigSpec.IntValue miMinionPerLordLevel;
+    // Tasks
     public final ModConfigSpec.IntValue taskDurationSinglePlayer;
     public final ModConfigSpec.IntValue taskDurationDedicatedServer;
+    public final ModConfigSpec.IntValue taskMasterMaxTasks;
 
-    public final ModConfigSpec.IntValue taskMasterMaxTaskAmount;
-    public final ModConfigSpec.DoubleValue miResourceCooldownOfflineMult;
-
-    public final ModConfigSpec.DoubleValue skillPointsPerLevel;
-    public final ModConfigSpec.DoubleValue skillPointsPerLordLevel;
-
-    public final ModConfigSpec.IntValue miEquipmentRepairAmount;
+    // Admin
+    public final ModConfigSpec.EnumValue<IMobOptions> entitiesIMob;
+    public final ModConfigSpec.BooleanValue preventDebugBoundingBoxes;
+    public final ModConfigSpec.BooleanValue usePermissions;
+    public final ModConfigSpec.BooleanValue enableFactionLogging;
 
     public ServerConfig(ModConfigSpec.@NotNull Builder builder) {
-        pvpOnlyBetweenFactions = builder.comment("If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates").define("pvpOnlyBetweenFactions", false);
-        pvpOnlyBetweenFactionsIncludeHumans = builder.comment("If pvpOnlyBetweenFactions is enabled, this decides whether human players can be attacked and attack others").define("pvpOnlyBetweenFactionsIncludeHumans", false);
-        factionColorInChat = builder.comment("Whether to color player names in chat based on their current faction").define("factionColorInChat", true);
-        lordPrefixInChat = builder.comment("Whether to add a prefix title based on the current lord level to the player names").define("lordPrefixInChat", true);
-        entityIMob = builder.comment("Changes if entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers ").defineEnum("entitiesIMob", IMobOptions.SMART);
-        preventRenderingDebugBoundingBoxes = builder.comment("Prevent players from enabling the rendering of debug bounding boxes. This can allow them to see certain entities they are not supposed to see (e.g. disguised hunter").define("preventDebugBoundingBoxes", false);
-        allowVillageDestroyBlocks = builder.comment("Allow players to destroy point of interest blocks in faction villages if they no not have the faction village").define("allowVillageDestroyBlocks", false);
-        usePermissions = builder.comment("Use the forge permission system for certain actions. Take a look at the wiki for more information").define("usePermissions", false);
-        unlockAllSkills = builder.comment("If enabled, you will be able to unlock all skills at max level").define("allSkillsAtMaxLevel", false);
-        disableVillageGuards = builder.comment("Prevent villagers in hunter controlled villages to turn into guard villager when the village is attacked").define("disableVillageGuards", false);
-        viMaxVillagerRespawn = builder.comment("Maximum of Villager the Totem can respawn").defineInRange("maxVillagerRespawn", 30, 0, Integer.MAX_VALUE);
-        viRandomRaidChance = builder.comment("Chance (per tick) of a faction raid to occur").defineInRange("randomRaidChance", 0.000138888888889, 0, 1);
+        builder.push("world");
 
-        viPhase1Duration = builder.comment("Duration of phase 1 of the capturing process in 2*seconds").defineInRange("phase1Duration", 80, 1, 1000);
-        viNotifyDistanceSQ = builder.comment("Squared distance of village capture notification").defineInRange("notifyDistanceSQ", 40000, 0, 100000);
-        viForceTargetTime = builder.comment("Time in 2*seconds in capture phase 2 after which the capture entities should find a target regardless of distance").defineInRange("forceTargetTime", 80, 1, 1000);
-        viMaxTotemRadius = builder.comment("Maximum range of a Totem to grow the village").defineInRange("maxTotemRadius", 100, 0, Integer.MAX_VALUE);
-        miDeathRecoveryTime = builder.comment("Time in seconds a minion needs to recover from death.").defineInRange("deathRecoveryTime", 220, 1, Integer.MAX_VALUE / 100);
-        miMinionPerLordLevel = builder.comment("How many minions a player can have per lord level. Probably don't want to go very high").defineInRange("minionPerLordLevel", 1, 0, 100);
-        taskDurationSinglePlayer = builder.comment("Duration a task can be completed in a singleplayer world. In Minutes").defineInRange("taskDurationSinglePlayer", 120, 1, Integer.MAX_VALUE);
-        taskDurationDedicatedServer = builder.comment("Duration a task can be completed on a dedicated server. In Minutes").defineInRange("taskDurationDedicatedServer", 1440, 1, Integer.MAX_VALUE);
-        taskMasterMaxTaskAmount = builder.comment("Maximum amount of task shown at a taskmaster, except unique tasks").defineInRange("taskMasterMaxTaskAmount", 3, 1, Integer.MAX_VALUE);
-        miResourceCooldownOfflineMult = builder.comment("Cooldown multiplier for collect resource task types while player is offline").defineInRange("resourceCooldownOfflineMult", 20D, 1D, 100000D);
-        miEquipmentRepairAmount = builder.comment("How much the equipments should be repaired on minion resource tasks").defineInRange("equipmentRepairAmount", 10, 1, Integer.MAX_VALUE);
+        builder.push("village");
+        this.villageMaxSpawnableVillagers = builder
+                .comment("Maximum number of villagers the totem can respawn.")
+                .defineInRange("villageMaxSpawnableVillagers", 30, 0, Integer.MAX_VALUE);
+        this.villageAllowPoiDestruction = builder
+                .comment("When enabled, allows players to destroy point of interest blocks in faction villages they do not own.")
+                .define("villageAllowPoiDestruction", false);
+        this.villageMaximumTotemRadius = builder
+                .comment("Maximum range of a totem used to grow the village.")
+                .defineInRange("villageMaximumTotemRadius", 100, 0, Integer.MAX_VALUE);
+        builder.pop();
 
-        skillPointsPerLevel = builder.comment("Players receive n skill points for each level-up. Anything except 2 is unbalanced, but to unlock all skills on maxlevel this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLevel", 2D, 1D, 20D);
-        skillPointsPerLordLevel = builder.comment("Players receive n skill points for each lord level-up. Anything except 2 is unbalanced, but to unlock all skills on max lord level this value should be set to skill-amount/(max-level - 1)").defineInRange("skillPointsPerLordLevel", 2D, 1D, 20D);
+        builder.push("raid");
+        this.raidRandomChance = builder
+                .comment("Chance per second of a faction raid occurring.")
+                .defineInRange("raidRandomChance", 2.77777777778E-4, 0, 1);
+        this.raidPhaseOneDuration = builder
+                .comment("Duration of phase one of the capturing process, in seconds.")
+                .defineInRange("raidPhaseOneDuration", 80, 1, 1000);
+        this.raidPhaseTwoMembersForceTargetTime = builder
+                .comment("Time in seconds during capture phase two after which capture entities seek a target regardless of distance.")
+                .defineInRange("raidPhaseTwoMembersForceTargetTime", 80, 1, 1000);
+        this.raidNotifyDistance = builder
+                .comment("Squared distance within which players are notified of a village capture.")
+                .defineInRange("raidNotifyDistance", 40000, 0, 100000);
+        this.raidDisableVillageGuards = builder
+                .comment("When enabled, prevents villagers in controlled villages from turning into guard villagers when attacked.")
+                .define("raidDisableVillageGuards", false);
+        builder.pop();
+
+        builder.pop();
+
+        builder.push("faction");
+        this.factionColorInChat = builder
+                .comment("When enabled, colors player names in chat based on their current faction.")
+                .define("factionColorInChat", true);
+        this.factionLordPrefixInChat = builder
+                .comment("When enabled, adds a title prefix based on the current lord level to player names in chat.")
+                .define("factionLordPrefixInChat", true);
+        this.factionPvpOnlyBetweenFactions = builder
+                .comment("When enabled, PVP is only allowed between members of different factions. Requires PVP to be enabled in server properties. Not guaranteed to always protect teammates.")
+                .define("factionPvpOnlyBetweenFactions", false);
+        this.factionUnlockAllSkills = builder
+                .comment("When enabled, allows unlocking all skills upon reaching max level.")
+                .define("factionUnlockAllSkills", false);
+        this.factionSkillPointsPerLevel = builder
+                .comment("Number of skill points awarded per level-up. Values other than 2 are unbalanced. To unlock all skills at max level, set to skill-amount / (max-level - 1).")
+                .defineInRange("factionSkillPointsPerLevel", 2D, 1D, 20D);
+        this.factionSkillPointsPerLordLevel = builder
+                .comment("Number of skill points awarded per lord level-up. Values other than 2 are unbalanced. To unlock all skills at max lord level, set to skill-amount / (max-level - 1).")
+                .defineInRange("factionSkillPointsPerLordLevel", 2D, 1D, 20D);
+
+        builder.push("minions");
+        this.minionDeathRecoveryTime = builder
+                .comment("Time in seconds a minion needs to recover after death.")
+                .defineInRange("minionDeathRecoveryTime", 220, 1, Integer.MAX_VALUE / 100);
+        this.minionPerLordLevel = builder
+                .comment("Number of minions a player may have per lord level.")
+                .defineInRange("minionPerLordLevel", 1, 0, 100);
+        this.minionOfflineResourceCooldownMultiplier = builder
+                .comment("Cooldown multiplier for collect resource task types while the owning player is offline.")
+                .defineInRange("minionOfflineResourceCooldownMultiplier", 20D, 1D, 100000D);
+        this.minionEquipmentRepairAmount = builder
+                .comment("Amount by which minion equipment is repaired when completing resource tasks.")
+                .defineInRange("minionEquipmentRepairAmount", 10, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("tasks");
+        this.taskDurationSinglePlayer = builder
+                .comment("Duration in minutes within which a task must be completed in a singleplayer world.")
+                .defineInRange("taskDurationSinglePlayer", 120, 1, Integer.MAX_VALUE);
+        this.taskDurationDedicatedServer = builder
+                .comment("Duration in minutes within which a task must be completed on a dedicated server.")
+                .defineInRange("taskDurationDedicatedServer", 1440, 1, Integer.MAX_VALUE);
+        this.taskMasterMaxTasks = builder
+                .comment("Maximum number of tasks shown at a taskmaster, excluding unique tasks.")
+                .defineInRange("taskMasterMaxTasks", 3, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.pop();
+
+        builder.push("admin");
+        this.entitiesIMob = builder
+                .comment("Controls whether faction entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers.")
+                .defineEnum("entitiesIMob", IMobOptions.SMART);
+        this.preventDebugBoundingBoxes = builder
+                .comment("When enabled, prevents players from enabling debug bounding box rendering, which can reveal disguised entities.")
+                .define("preventDebugBoundingBoxes", false);
+        this.usePermissions = builder
+                .comment("When enabled, uses the Forge permission system for certain actions. See the wiki for more information.")
+                .define("usePermissions", false);
+        this.enableFactionLogging = builder
+                .comment("When enabled, writes a custom log file for specific faction actions. Only applies to dedicated servers. Requires a server restart.")
+                .worldRestart()
+                .define("enableFactionLogging", false);
+        builder.pop();
     }
 
     public enum IMobOptions {

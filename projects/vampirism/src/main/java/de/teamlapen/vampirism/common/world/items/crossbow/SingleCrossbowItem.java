@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.common.world.items.crossbow;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 public class SingleCrossbowItem extends HunterCrossbowItem {
 
     public SingleCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, ToolMaterial itemTier, Holder<ISkill<?>> requiredSkill) {
-        super(properties.component(FactionDataComponents.FACTION_RESTRICTION, FactionRestriction.builder(ModFactionTags.IS_HUNTER).skill(requiredSkill).build()), arrowVelocity, chargeTime, itemTier);
+        super(properties.component(FactionDataComponents.FACTION_RESTRICTION, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(requiredSkill).build()), arrowVelocity, chargeTime, itemTier);
     }
 
     @Override

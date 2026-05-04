@@ -32,7 +32,6 @@ public class HunterLeveling {
     public static Optional<HunterLevelRequirement> getLevelRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
         //noinspection ConstantValue
         if (targetLevel < 0 || targetLevel > REFERENCE.HIGHEST_HUNTER_LEVEL) return Optional.empty();
-        //noinspection NullableProblems
         return Optional.ofNullable(LEVEL_REQUIREMENTS[targetLevel]);
     }
 

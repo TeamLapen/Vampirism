@@ -15,7 +15,7 @@ import java.util.OptionalInt;
 
 public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner, ITaskMasterEntity {
 
-    Component NO_TASK = Component.translatable("text.factionapi.taskmaster.no_tasks");
+    Component NO_TASK = Component.translatable("message.factionapi.taskmaster.no_tasks");
 
     /**
      * @return The biome type based on where this entity was spawned
@@ -32,7 +32,7 @@ public interface IDefaultTaskMasterEntity extends ForceLookEntityGoal.TaskOwner,
                 return true;
             }
         } else {
-            playerEntity.displayClientMessage(NO_TASK, true);
+            playerEntity.sendOverlayMessage(NO_TASK);
         }
         return false;
     }

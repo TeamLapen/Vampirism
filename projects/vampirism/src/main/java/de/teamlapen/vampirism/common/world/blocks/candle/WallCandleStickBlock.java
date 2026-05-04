@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.common.world.blocks.candle;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.faction.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.core.ModBlocks;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,6 +27,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -38,8 +39,8 @@ public class WallCandleStickBlock extends CandleHolderBlock {
     private static final VoxelShape SHAPE = Stream.of(Block.box(6, 1, 15, 10, 5, 16), Block.box(7, 2, 13, 9, 4, 15), Block.box(7, 2, 11, 9, 5, 13), Block.box(6, 5, 10, 10, 7, 14)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     private static final VoxelShape SHAPE_WITH_CANDLE = Shapes.or(SHAPE, Block.box(7, 7, 11, 9, 13, 13));
 
-    private static final Map<Direction, VoxelShape> SHAPES = UtilLib.getShapesRotatedFromNorth(SHAPE);
-    private static final Map<Direction, VoxelShape> SHAPES_WITH_CANDLE = UtilLib.getShapesRotatedFromNorth(SHAPE_WITH_CANDLE);
+    private static final Map<Direction, VoxelShape> SHAPES = ShapeUtil.getShapesRotatedFromNorth(SHAPE);
+    private static final Map<Direction, VoxelShape> SHAPES_WITH_CANDLE = ShapeUtil.getShapesRotatedFromNorth(SHAPE_WITH_CANDLE);
 
     private static final Map<Direction, Iterable<Vec3>> PARTICLE_OFFSET = new EnumMap<>(Direction.class) {{
         put(Direction.NORTH, ImmutableList.of(new Vec3(8 / 16d, 14.75 / 16d, 12 / 16d)));
@@ -48,8 +49,9 @@ public class WallCandleStickBlock extends CandleHolderBlock {
         put(Direction.EAST, ImmutableList.of(new Vec3(4 / 16d, 14.75 / 16d, 8 / 16d)));
     }};
 
-    private WallCandleStickBlock(Block emptyBlock, Item candle, Properties properties) {
-        this(() -> emptyBlock, () -> candle, properties);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    protected WallCandleStickBlock(Optional<Block> emptyBlock, Optional<Item> candle, Properties properties) {
+        super(emptyBlock, candle, properties);
     }
 
     public WallCandleStickBlock(@Nullable Supplier<? extends Block> emptyBlock, Supplier<Item> candle, Properties properties) {

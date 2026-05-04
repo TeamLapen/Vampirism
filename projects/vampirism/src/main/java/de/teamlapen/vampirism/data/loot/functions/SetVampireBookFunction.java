@@ -3,11 +3,10 @@ package de.teamlapen.vampirism.data.loot.functions;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.factions.IFactionHelper;
-import de.teamlapen.faction.api.factions.IFactionTags;
+import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
-import de.teamlapen.vampirism.common.core.ModLoot;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
 import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.core.RegistryAccess;
@@ -17,7 +16,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.apache.logging.log4j.LogManager;
@@ -56,8 +54,8 @@ public class SetVampireBookFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public @NotNull LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
-        return ModLoot.SET_VAMPIRE_BOOK.get();
+    public MapCodec<? extends LootItemConditionalFunction> codec() {
+        return CODEC;
     }
 
     @Override
@@ -77,7 +75,7 @@ public class SetVampireBookFunction extends LootItemConditionalFunction {
                     LOGGER.warn("Vampire Book \"{}\" does not exist, cannot add it to a loot table", id.getPath());
                 }
             } else {
-                var tag = IFactionTags.get().get(IFactionHelper.get().getFaction(entity), VampirismRegistries.Keys.VAMPIRE_BOOK).orElse(ModVampireBookTags.IS_GENERAL);
+                var tag = IFactionSpecificTags.get().get(IFactionHelper.get().getFaction(entity), VampirismRegistries.Keys.VAMPIRE_BOOK).orElse(ModVampireBookTags.IS_GENERAL);
                 vampireBook = VampireBook.getRandomBook(tag, lootContext);
             }
         }

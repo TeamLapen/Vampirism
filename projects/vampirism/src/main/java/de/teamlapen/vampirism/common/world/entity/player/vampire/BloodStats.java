@@ -8,13 +8,13 @@ import de.teamlapen.vampirism.common.core.ModAttributes;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.util.BloodResourceHandler;
-import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
 import de.teamlapen.vampirism.misc.mixin.accessor.FoodDataAccessor;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import org.jetbrains.annotations.Nullable;
@@ -111,16 +111,18 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
                 ++this.bloodTimer;
                 if (this.bloodTimer >= 10) {
                     float f = Math.min(this.bloodSaturationLevel, 6F);
-                    player.heal(f / 6F);
+                    player.heal((f / 6F) * getHealModifier());
                     this.addExhaustion(f);
                     this.bloodTimer = 0;
                 }
-            } else if (regen && this.bloodLevel >= (18) && player.isHurt()) {
+            } else if (regen && this.bloodLevel > 0 && player.isHurt()) {
                 ++this.bloodTimer;
 
-                if (this.bloodTimer >= 80) {
-                    player.heal(1.0F);
-                    this.addExhaustion(6F);
+                boolean betterHeal = this.bloodLevel >= (18) && this.bloodTimer >= 80;
+                boolean heal = this.bloodTimer >= 300;
+                if (betterHeal || heal) {
+                    player.heal(betterHeal ? getHealModifier() : 0.5F * getHealModifier());
+                    this.addExhaustion(betterHeal ? 6F : 3F);
                     this.bloodTimer = 0;
                 }
             } else if (this.bloodLevel <= 0) {
@@ -142,7 +144,13 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
         }
     }
 
-    int addBlood(int amount, float saturationModifier) {
+    private float getHealModifier() {
+        VampirePlayer vampire = VampirePlayer.get(this.player);
+        return 1 + (vampire.getLevel() / (float) vampire.getMaxLevel()) * 0.5f;
+    }
+
+    @Override
+    public int addBlood(int amount, float saturationModifier) {
         int add = Math.min(amount, maxBlood - bloodLevel);
         bloodLevel += add;
         bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);
@@ -169,8 +177,8 @@ public class BloodStats extends PropertySync implements IBloodStats, BloodResour
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, 40F);
     }
 
-    public void eat(BloodFoodProperties bloodFoodProperties) {
-        this.addBlood(bloodFoodProperties.blood(), bloodFoodProperties.saturation());
+    public void eat(FoodProperties foodProperties) {
+        this.addBlood(foodProperties.nutrition(), foodProperties.saturation());
     }
 
     @Override

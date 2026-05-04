@@ -9,7 +9,7 @@ import net.minecraft.core.HolderSet;
 public interface IFactionSlayer {
 
     /**
-     * Factions that can be slayed by this slayer.
+     * Factions that can be slain by this slayer.
      */
     HolderSet<IFaction<?>> slayedFactions();
 

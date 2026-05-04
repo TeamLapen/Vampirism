@@ -13,7 +13,7 @@ public class RecipeHelper {
     public static RecipePropertySet createLocalInfuserRecipePropertySet(Level level) {
         return RecipePropertySet.create(VampirismMod.services().recipes().getRecipes().byType(ModRecipes.INFUSER_TYPE.get()).stream().flatMap(x ->  {
             InfuserRecipe recipe = x.value();
-            return Stream.of(recipe.ingredient1(), recipe.ingredient2(), recipe.ingredient3(), recipe.ingredient4());
+            return Stream.of(recipe.ingredient1().stream(), recipe.ingredient2().stream(), recipe.ingredient3().stream(), recipe.ingredient4().stream()).flatMap(s -> s);
         }).toList());
     }
 

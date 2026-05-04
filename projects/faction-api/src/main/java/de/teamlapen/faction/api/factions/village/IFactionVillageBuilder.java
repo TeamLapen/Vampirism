@@ -30,7 +30,7 @@ public interface IFactionVillageBuilder {
     IFactionVillageBuilder badOmenEffect(Holder<MobEffect> badOmenEffect);
 
     /**
-     * Supply a banner item that is equipped by entities to add a faction bad omen effect to the killer
+     * Supply a banner item equipped by entities to add a faction bad omen effect to the killer
      *
      * @param bannerItem the banner itemstack
      * @return this builder

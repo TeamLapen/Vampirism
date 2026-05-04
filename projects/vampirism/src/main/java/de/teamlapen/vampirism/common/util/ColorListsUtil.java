@@ -4,14 +4,15 @@ import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.blocks.candle.CandleHolderBlock;
+import de.teamlapen.vampirism.common.world.items.CoffinItem;
 import de.teamlapen.vampirism.common.world.items.VampireCloakItem;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -25,23 +26,23 @@ public class ColorListsUtil {
     public static final List<Pair<CandleHolderBlock, CandleHolderBlock>> STANDING_AND_WALL_CANDELABRAS = List.of(Pair.of(ModBlocks.CANDELABRA.get(), ModBlocks.WALL_CANDELABRA.get()), Pair.of(ModBlocks.CANDELABRA_NORMAL.get(), ModBlocks.WALL_CANDELABRA_NORMAL.get()), Pair.of(ModBlocks.CANDELABRA_WHITE.get(), ModBlocks.WALL_CANDELABRA_WHITE.get()), Pair.of(ModBlocks.CANDELABRA_LIGHT_GRAY.get(), ModBlocks.WALL_CANDELABRA_LIGHT_GRAY.get()), Pair.of(ModBlocks.CANDELABRA_GRAY.get(), ModBlocks.WALL_CANDELABRA_GRAY.get()), Pair.of(ModBlocks.CANDELABRA_BLACK.get(), ModBlocks.WALL_CANDELABRA_BLACK.get()), Pair.of(ModBlocks.CANDELABRA_BROWN.get(), ModBlocks.WALL_CANDELABRA_BROWN.get()), Pair.of(ModBlocks.CANDELABRA_RED.get(), ModBlocks.WALL_CANDELABRA_RED.get()), Pair.of(ModBlocks.CANDELABRA_ORANGE.get(), ModBlocks.WALL_CANDELABRA_ORANGE.get()), Pair.of(ModBlocks.CANDELABRA_YELLOW.get(), ModBlocks.WALL_CANDELABRA_YELLOW.get()), Pair.of(ModBlocks.CANDELABRA_LIME.get(), ModBlocks.WALL_CANDELABRA_LIME.get()), Pair.of(ModBlocks.CANDELABRA_GREEN.get(), ModBlocks.WALL_CANDELABRA_GREEN.get()), Pair.of(ModBlocks.CANDELABRA_CYAN.get(), ModBlocks.WALL_CANDELABRA_CYAN.get()), Pair.of(ModBlocks.CANDELABRA_LIGHT_BLUE.get(), ModBlocks.WALL_CANDELABRA_LIGHT_BLUE.get()), Pair.of(ModBlocks.CANDELABRA_BLUE.get(), ModBlocks.WALL_CANDELABRA_BLUE.get()), Pair.of(ModBlocks.CANDELABRA_MAGENTA.get(), ModBlocks.WALL_CANDELABRA_MAGENTA.get()), Pair.of(ModBlocks.CANDELABRA_PURPLE.get(), ModBlocks.WALL_CANDELABRA_PURPLE.get()), Pair.of(ModBlocks.CANDELABRA_PINK.get(), ModBlocks.WALL_CANDELABRA_PINK.get()));
     public static final List<CandleHolderBlock> HANGING_CHANDELIERS = List.of(ModBlocks.CHANDELIER.get(), ModBlocks.CHANDELIER_NORMAL.get(), ModBlocks.CHANDELIER_WHITE.get(), ModBlocks.CHANDELIER_LIGHT_GRAY.get(), ModBlocks.CHANDELIER_GRAY.get(), ModBlocks.CHANDELIER_BLACK.get(), ModBlocks.CHANDELIER_BROWN.get(), ModBlocks.CHANDELIER_RED.get(), ModBlocks.CHANDELIER_ORANGE.get(), ModBlocks.CHANDELIER_YELLOW.get(), ModBlocks.CHANDELIER_LIME.get(), ModBlocks.CHANDELIER_GREEN.get(), ModBlocks.CHANDELIER_CYAN.get(), ModBlocks.CHANDELIER_LIGHT_BLUE.get(), ModBlocks.CHANDELIER_BLUE.get(), ModBlocks.CHANDELIER_MAGENTA.get(), ModBlocks.CHANDELIER_PURPLE.get(), ModBlocks.CHANDELIER_PINK.get());
 
-    public static final List<CoffinBlock> COFFINS = List.of(
-            ModBlocks.COFFIN_WHITE.get(),
-            ModBlocks.COFFIN_LIGHT_GRAY.get(),
-            ModBlocks.COFFIN_GRAY.get(),
-            ModBlocks.COFFIN_BLACK.get(),
-            ModBlocks.COFFIN_BROWN.get(),
-            ModBlocks.COFFIN_RED.get(),
-            ModBlocks.COFFIN_ORANGE.get(),
-            ModBlocks.COFFIN_YELLOW.get(),
-            ModBlocks.COFFIN_LIME.get(),
-            ModBlocks.COFFIN_GREEN.get(),
-            ModBlocks.COFFIN_CYAN.get(),
-            ModBlocks.COFFIN_LIGHT_BLUE.get(),
-            ModBlocks.COFFIN_BLUE.get(),
-            ModBlocks.COFFIN_PURPLE.get(),
-            ModBlocks.COFFIN_MAGENTA.get(),
-            ModBlocks.COFFIN_PINK.get()
+    public static final List<DeferredHolder<Item, CoffinItem>> COFFINS = List.of(
+            ModItems.COFFIN_WHITE,
+            ModItems.COFFIN_LIGHT_GRAY,
+            ModItems.COFFIN_GRAY,
+            ModItems.COFFIN_BLACK,
+            ModItems.COFFIN_BROWN,
+            ModItems.COFFIN_RED,
+            ModItems.COFFIN_ORANGE,
+            ModItems.COFFIN_YELLOW,
+            ModItems.COFFIN_LIME,
+            ModItems.COFFIN_GREEN,
+            ModItems.COFFIN_CYAN,
+            ModItems.COFFIN_LIGHT_BLUE,
+            ModItems.COFFIN_BLUE,
+            ModItems.COFFIN_PURPLE,
+            ModItems.COFFIN_MAGENTA,
+            ModItems.COFFIN_PINK
     );
 
     public static final Map<DyeColor, VampireCloakItem> VAMPIRE_CLOAKS = makeDyedMap(map -> {

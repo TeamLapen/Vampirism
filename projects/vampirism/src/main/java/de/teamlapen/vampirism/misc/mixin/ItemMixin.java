@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ItemMixin {
 
     @Inject(method = "isFoil", at = @At("RETURN"), cancellable = true)
-    private void hasOil(@NotNull ItemStack stack, @NotNull CallbackInfoReturnable<Boolean> cir) {
-        if (AppliedOilContent.getAppliedOil(stack).isPresent()) {
+    private void hasOil(@NotNull ItemStack itemStack, @NotNull CallbackInfoReturnable<Boolean> cir) {
+        if (AppliedOilContent.getAppliedOil(itemStack).isPresent()) {
             cir.setReturnValue(true);
         }
     }

@@ -19,7 +19,7 @@ public interface StreamCodecExtension<B, V> extends StreamCodec<B, V> {
 
             final Function7<T1, T2, T3, T4, T5, T6, T7, C> result
     ) {
-        return new StreamCodec<B, C>() {
+        return new StreamCodec<>() {
             @Override
             public @NotNull C decode(@NotNull B buffer) {
                 T1 t1 = codec1.decode(buffer);
@@ -57,7 +57,7 @@ public interface StreamCodecExtension<B, V> extends StreamCodec<B, V> {
 
             final Function8<T1, T2, T3, T4, T5, T6, T7, T8, C> result
     ) {
-        return new StreamCodec<B, C>() {
+        return new StreamCodec<>() {
             @Override
             public @NotNull C decode(@NotNull B buffer) {
                 T1 t1 = codec1.decode(buffer);
@@ -98,7 +98,7 @@ public interface StreamCodecExtension<B, V> extends StreamCodec<B, V> {
 
             final Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, C> result
     ) {
-        return new StreamCodec<B, C>() {
+        return new StreamCodec<>() {
             @Override
             public @NotNull C decode(@NotNull B buffer) {
                 T1 t1 = codec1.decode(buffer);
@@ -142,7 +142,7 @@ public interface StreamCodecExtension<B, V> extends StreamCodec<B, V> {
 
             final Function10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, C> result
     ) {
-        return new StreamCodec<B, C>() {
+        return new StreamCodec<>() {
             @Override
             public @NotNull C decode(@NotNull B buffer) {
                 T1 t1 = codec1.decode(buffer);
@@ -189,7 +189,7 @@ public interface StreamCodecExtension<B, V> extends StreamCodec<B, V> {
 
             final Function11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, C> result
     ) {
-        return new StreamCodec<B, C>() {
+        return new StreamCodec<>() {
             @Override
             public @NotNull C decode(@NotNull B buffer) {
                 T1 t1 = codec1.decode(buffer);
@@ -239,7 +239,7 @@ public interface StreamCodecExtension<B, V> extends StreamCodec<B, V> {
 
             final Function12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, C> result
     ) {
-        return new StreamCodec<B, C>() {
+        return new StreamCodec<>() {
             @Override
             public @NotNull C decode(@NotNull B buffer) {
                 T1 t1 = codec1.decode(buffer);

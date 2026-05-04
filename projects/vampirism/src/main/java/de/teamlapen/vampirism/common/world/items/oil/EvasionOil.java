@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,7 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     }
 
     @Override
-    public boolean canBeApplied(ItemStack stack) {
+    public boolean canBeApplied(ItemInstance stack) {
         var equippable = stack.get(DataComponents.EQUIPPABLE);
         return equippable != null && equippable.slot().isArmor() && stack.is(ModItemTags.APPLICABLE_OIL_ARMOR) == ModConfig.balance().itApplicableOilArmorReverse.get();
     }
@@ -38,8 +39,8 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     @Override
     public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
         tooltips.accept(Component.empty());
-        tooltips.accept(Component.translatable("text.vampirism.oil.evasion_armor_desc").withStyle(ChatFormatting.DARK_PURPLE));
-        tooltips.accept(Component.literal("- ").append(Component.translatable("text.vampirism.oil.evasion_chance_desc")).withStyle(ChatFormatting.GRAY));
+        tooltips.accept(Component.translatable("tooltip.vampirism.oil.on_armor").withStyle(ChatFormatting.DARK_PURPLE));
+        tooltips.accept(Component.literal("- ").append(Component.translatable("tooltip.vampirism.oil.evasion_chance")).withStyle(ChatFormatting.GRAY));
     }
 
     /**

@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 
@@ -37,9 +37,9 @@ public class HunterTaskMasterRenderer extends MobRenderer<HunterTaskMasterEntity
     }
 
     @Override
-    protected void submitNameTag(HunterTaskMasterRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        if (renderState.distanceToCameraSq <= 128) {
-            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
+    protected void submitNameDisplay(HunterTaskMasterRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        if (state.distanceToCameraSq <= 256) {
+            super.submitNameDisplay(state, poseStack, submitNodeCollector, camera);
         }
     }
 

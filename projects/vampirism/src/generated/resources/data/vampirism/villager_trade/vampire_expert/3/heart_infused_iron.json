@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "vampirism:blood_infused_iron_ingot"
+  },
+  "max_uses": 12.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 30.0,
+      "min": 15.0
+    },
+    "id": "vampirism:human_heart"
+  },
+  "xp": 10.0
+}

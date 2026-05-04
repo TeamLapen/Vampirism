@@ -12,6 +12,8 @@ import de.teamlapen.vampirism.api.world.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModEffects;
+import de.teamlapen.vampirism.common.core.ModEnvironmentAttributes;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
@@ -20,7 +22,6 @@ import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.common.world.items.StakeItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.arrow.VampireKillerBehavior;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.DoubleTag;
@@ -29,17 +30,16 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.state.BlockState;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,60 +49,26 @@ import java.util.List;
 public class Helper {
 
 
-    private final static Logger LOGGER = LogManager.getLogger();
-
     /**
      * Checks if the entity can get sundamage at its current position.
      * It is recommended to cache the value for a few ticks.
      */
-    public static boolean gettingSundamge(LivingEntity entity, LevelAccessor world) {
+    public static boolean gettingSunDamage(LivingEntity entity, LevelAccessor world) {
         if (entity instanceof Player && entity.isSpectator()) return false;
-        if (VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition())) {
-            if (!(world instanceof Level) || !((Level) world).isRaining()) {
-                //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
-                if (isDay(world, entity.blockPosition())) {
-                    BlockPos pos = new BlockPos((int) entity.getX(), (int) (entity.getY() + Mth.clamp(entity.getBbHeight() / 2.0F, 0F, 2F)), (int) entity.getZ());
-                    if (canBlockSeeSun(world, pos)) {
-                        return world instanceof Level && !LevelFog.get(((Level) world)).isInsideArtificialVampireFogArea(new BlockPos((int) entity.getX(), (int) (entity.getY() + 1), (int) entity.getZ()));
-                    }
-                }
-            }
-        }
-        return false;
+        return world instanceof Level level && hasLevelSunDamage(level, entity.blockPosition()) && VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition());
+    }
+
+    public static boolean hasLevelSunDamage(Level level, BlockPos pos) {
+        return level.dimensionType().hasSkyLight()
+                && level.environmentAttributes().getValue(ModEnvironmentAttributes.SUN_DAMAGE.get(), pos)
+                && !level.isRainingAt(pos)
+                && isDay( level, pos);
     }
 
     public static boolean isDay(LevelAccessor level, BlockPos pos) {
         float angle = level.environmentAttributes().getValue(EnvironmentAttributes.SUN_ANGLE, pos) / 360;
         return angle > 0.78 || angle < 0.24;
     }
-
-    public static boolean canBlockSeeSun(@NotNull LevelAccessor world, @NotNull BlockPos pos) {
-        if (pos.getY() >= world.getSeaLevel()) {
-            return world.canSeeSky(pos);
-        } else {
-            BlockPos blockpos = new BlockPos(pos.getX(), world.getSeaLevel(), pos.getZ());
-            if (!world.canSeeSky(blockpos)) {
-                return false;
-            } else {
-                int liquidBlocks = 0;
-                for (blockpos = blockpos.below(); blockpos.getY() > pos.getY(); blockpos = blockpos.below()) {
-                    BlockState state = world.getBlockState(blockpos);
-                    if (state.liquid()) { // if fluid than it propagates the light until `vpSundamageWaterBlocks`
-                        liquidBlocks++;
-                        if (liquidBlocks >= ModConfig.balance().vpSundamageWaterblocks.get()) {
-                            return false;
-                        }
-                    } else if (state.canOcclude() && (state.isFaceSturdy(world, pos, Direction.DOWN) || state.isFaceSturdy(world, pos, Direction.UP))) { //solid block blocks the light (fence is solid too?)
-                        return false;
-                    } else if (state.getLightBlock() > 0) { //if not solid, but propagates no light
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-    }
-
 
     @NotNull
     public static EnumStrength getGarlicStrength(@NotNull Entity e, LevelAccessor world) {
@@ -111,7 +77,7 @@ public class Helper {
 
     @NotNull
     public static EnumStrength getGarlicStrengthAt(LevelAccessor world, @NotNull BlockPos pos) {
-        return world instanceof Level ? VampirismApi.garlicHandler((Level) world).getStrengthAtChunk(new ChunkPos(pos)) : EnumStrength.NONE;
+        return world instanceof Level ? VampirismApi.garlicHandler((Level) world).getStrengthAtChunk(ChunkPos.containing(pos)) : EnumStrength.NONE;
     }
 
     @NotNull
@@ -126,10 +92,10 @@ public class Helper {
     public static boolean canTurnPlayer(IVampire biter, @Nullable Player target) {
         if (target != null && (target.isCreative() || target.isSpectator())) return false;
         if (biter instanceof IVampirePlayer player) {
-            if (!ModConfig.server().playerCanTurnPlayer.get()) return false;
+            if (!ModConfig.server().playerCanInfectPlayers.get()) return false;
             return !(player instanceof ServerPlayer) || Permissions.INFECT_PLAYER.isAllowed((ServerPlayer) player);
         } else {
-            return !ModConfig.server().disableMobBiteInfection.get();
+            return ModConfig.server().mobBiteInfection.get();
         }
     }
 
@@ -250,5 +216,27 @@ public class Helper {
             }
         }
         return true;
+    }
+
+    /**
+     * Call this in Item inventoryTick to make Vampires drop this item and get a short poison effect when held
+     *
+     * @param stack  item
+     * @param entity Entity holding the item
+     * @param slot   Equipment slot holding the item
+     * @return If entity is vampire
+     */
+    public static boolean handleHeldNonVampireItem(ItemStack stack, Entity entity, @Nullable EquipmentSlot slot) {
+        if (entity instanceof LivingEntity living && (slot != null && slot.getType() == EquipmentSlot.Type.HAND) && entity.tickCount % 16 == 8 ) {
+            if (Helper.isVampire(living)) {
+                living.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 20, 1));
+                if (living instanceof Player player) {
+                    player.getInventory().removeItem(stack);
+                    player.drop(stack, true);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }

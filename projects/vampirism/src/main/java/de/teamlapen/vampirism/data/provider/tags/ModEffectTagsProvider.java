@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
+@SuppressWarnings("ConstantConditions")
 public class ModEffectTagsProvider extends KeyTagProvider<MobEffect> {
 
     public ModEffectTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
@@ -28,5 +29,7 @@ public class ModEffectTagsProvider extends KeyTagProvider<MobEffect> {
         this.tag(ModEffectTags.DISABLES_ACTIONS_VAMPIRE)
                 .addTag(FactionEffectTags.DISABLES_ACTIONS)
                 .add(ModEffects.CRUCIFIX_SUPPRESSION.getKey());
+        this.tag(ModEffectTags.SELF_HARM_SERUMS)
+                .add(MobEffects.INSTANT_DAMAGE.getKey());
     }
 }

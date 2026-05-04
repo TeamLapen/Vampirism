@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * This item is not an arrow itself, but holds arrows
  */
-public interface IArrowContainer {
+public interface IArrowContainer { // TODO adapt to use ItemStackTemplate
 
     /**
      * @return contained arrows
@@ -25,7 +25,7 @@ public interface IArrowContainer {
     /**
      * Adds multiple arrows to the container.
      *
-     * @param arrowStacks The arrows to add. Added arrows are removed from the list.
+     * @param arrowStacks The arrows to add. Added arrows are removed from the list, if the list supports it (e.g. ArrayList)
      */
     void addArrows(ItemStack container, List<ItemStack> arrowStacks);
 

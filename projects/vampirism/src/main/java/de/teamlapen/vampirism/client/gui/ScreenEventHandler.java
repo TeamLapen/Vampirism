@@ -23,7 +23,7 @@ public class ScreenEventHandler {
             if (p != null && p.isSleeping()) {
                 GuiEventListener l = event.getScreen().children().get(1);
                 if (l instanceof AbstractWidget leaveButton) {
-                    p.getSleepingPos().map(pos -> p.level().getBlockState(pos).getBlock()).map(block -> block instanceof TentBlock ? "text.vampirism.tent.stop_sleeping" : (block instanceof CoffinBlock ? "text.vampirism.coffin.stop_sleeping" : null)).ifPresent(newText -> {
+                    p.getSleepingPos().map(pos -> p.level().getBlockState(pos).getBlock()).map(block -> block instanceof TentBlock ? "gui.vampirism.tent.stop_sleeping" : (block instanceof CoffinBlock ? "gui.vampirism.coffin.stop_sleeping" : null)).ifPresent(newText -> {
                         leaveButton.setMessage(Component.translatable(newText));
                     });
                 }

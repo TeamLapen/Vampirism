@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.integration.jei.categories;
 
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.util.Color;
-import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
+import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.integration.jei.VampirismJEIPlugin;
 import de.teamlapen.vampirism.common.integration.jei.extension.WeaponTableCategoryExtension;
@@ -19,14 +19,13 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -35,16 +34,15 @@ import java.util.List;
  */
 public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<IWeaponTableRecipe>> {
 
-    private static final ItemStack lavaStack = new ItemStack(Items.LAVA_BUCKET);
-    private final @NotNull Component localizedName;
-    private final @NotNull IDrawable icon;
-    private final @NotNull IDrawable bucket;
+    private final Component localizedName;
+    private final IDrawable icon;
+    private final IDrawable bucket;
     private final ICraftingGridHelper craftingGridHelper;
     private final IGuiHelper guiHelper;
     private final WeaponTableCategoryExtension weaponTableCategoryExtension = new WeaponTableCategoryExtension();
 
 
-    public WeaponTableRecipeCategory(@NotNull IGuiHelper guiHelper) {
+    public WeaponTableRecipeCategory(IGuiHelper guiHelper) {
         this.localizedName = Component.translatable(ModBlocks.WEAPON_TABLE.get().getDescriptionId());
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.WEAPON_TABLE.get()));
         this.bucket = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Items.LAVA_BUCKET));
@@ -53,7 +51,7 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
     }
 
     @Override
-    public void draw(@NotNull RecipeHolder<IWeaponTableRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<IWeaponTableRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
 //        this.background.draw(graphics);
 
         IDrawableStatic recipeArrow = this.guiHelper.getRecipeArrow();
@@ -68,9 +66,9 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
             this.bucket.draw(graphics, 83, 11);
         }
         if (recipe.getRequiredLevel() > 1) {
-            Component level = Component.translatable("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
+            Component level = Component.translatable("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
 
-            graphics.drawString(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
+            graphics.text(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight + 2;
         }
         List<Holder<ISkill<?>>> requiredSkills = recipe.getRequiredSkills();
@@ -96,18 +94,16 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
         return 134;
     }
 
-    @NotNull
     @Override
     public IDrawable getIcon() {
         return icon;
     }
 
     @Override
-    public @NotNull IRecipeType<RecipeHolder<IWeaponTableRecipe>> getRecipeType() {
+    public IRecipeType<RecipeHolder<IWeaponTableRecipe>> getRecipeType() {
         return VampirismJEIPlugin.WEAPON_TABLE;
     }
 
-    @NotNull
     @Override
     public Component getTitle() {
         return localizedName;
@@ -115,12 +111,12 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
 
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull RecipeHolder<IWeaponTableRecipe> holder, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<IWeaponTableRecipe> holder, IFocusGroup focuses) {
         this.weaponTableCategoryExtension.setRecipe(holder, builder, this.craftingGridHelper, focuses);
     }
 
     @Override
-    public boolean isHandled(@NotNull RecipeHolder<IWeaponTableRecipe> recipe) {
+    public boolean isHandled(RecipeHolder<IWeaponTableRecipe> recipe) {
         return this.weaponTableCategoryExtension.isHandled(recipe);
     }
 }

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.world.blocks;
 
 import de.teamlapen.vampirism.api.world.blocks.HolyWaterEffectConsumer;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.BlockPos;
@@ -26,7 +25,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public abstract class CursedBarkBlock extends Block implements HolyWaterEffectConsumer {
 
     public CursedBarkBlock(Properties properties) {
-        super(properties.noCollision().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking(UtilLib::never));
+        super(properties.noCollision().replaceable().strength(0.0F).pushReaction(PushReaction.DESTROY).ignitedByLava().isViewBlocking((_,_,_) -> false));
         ((FireBlock) Blocks.FIRE).setFlammable(this, 5, 5);
     }
 

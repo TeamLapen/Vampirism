@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.world.blockentity.*;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.FogDiffuserBlockEntity;
 import de.teamlapen.vampirism.common.world.blockentity.diffuser.GarlicDiffuserBlockEntity;
+import de.teamlapen.vampirism.common.world.blockentity.diffuser.GarlicDiffuserCoreBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,10 +29,11 @@ public class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SunscreenBeaconBlockEntity>> SUNSCREEN_BEACON = BLOCK_ENTITY_TYPES.register("sunscreen_beacon", () -> create(SunscreenBeaconBlockEntity::new, ModBlocks.SUNSCREEN_BEACON.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AlchemicalCauldronBlockEntity>> ALCHEMICAL_CAULDRON = BLOCK_ENTITY_TYPES.register("alchemical_cauldron", () -> create(AlchemicalCauldronBlockEntity::new, ModBlocks.ALCHEMICAL_CAULDRON.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GarlicDiffuserBlockEntity>> GARLIC_DIFFUSER = BLOCK_ENTITY_TYPES.register("garlic_diffuser", () -> create(GarlicDiffuserBlockEntity::new, ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), ModBlocks.GARLIC_DIFFUSER_WEAK.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GarlicDiffuserCoreBlockEntity>> GARLIC_DIFFUSER_CORE = BLOCK_ENTITY_TYPES.register("garlic_diffuser_core", () -> create(GarlicDiffuserCoreBlockEntity::new, ModBlocks.GARLIC_DIFFUSER_CORE.get(), ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PedestalBlockEntity>> BLOOD_PEDESTAL = BLOCK_ENTITY_TYPES.register("blood_pedestal", () -> create(PedestalBlockEntity::new, ModBlocks.BLOOD_PEDESTAL.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BloodGrinderBlockEntity>> BLOOD_GRINDER = BLOCK_ENTITY_TYPES.register("blood_grinder", () -> create(BloodGrinderBlockEntity::new, ModBlocks.BLOOD_GRINDER.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BloodSieveBlockEntity>> BLOOD_SIEVE = BLOCK_ENTITY_TYPES.register("blood_sieve", () -> create(BloodSieveBlockEntity::new, ModBlocks.BLOOD_SIEVE.get()));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PotionTableBlockEntity>> POTION_TABLE = BLOCK_ENTITY_TYPES.register("potion_table", () -> create(PotionTableBlockEntity::new, ModBlocks.POTION_TABLE.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VaporStillBlockEntity>> VAPOR_STILL = BLOCK_ENTITY_TYPES.register("vapor_still", () -> create(VaporStillBlockEntity::new, ModBlocks.VAPOR_STILL.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AlchemyTableBlockEntity>> ALCHEMICAL_TABLE = BLOCK_ENTITY_TYPES.register("alchemical_table", () -> create(AlchemyTableBlockEntity::new, ModBlocks.ALCHEMY_TABLE.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BatCageBlockEntity>> BAT_CAGE = BLOCK_ENTITY_TYPES.register("bat_cage", () -> create(BatCageBlockEntity::new, ModBlocks.BAT_CAGE.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MotherBlockEntity>> MOTHER = BLOCK_ENTITY_TYPES.register("mother", () -> create(MotherBlockEntity::new, ModBlocks.MOTHER.get()));
@@ -40,6 +42,9 @@ public class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FogDiffuserBlockEntity>> FOG_DIFFUSER = BLOCK_ENTITY_TYPES.register("fog_diffuser", () -> create(FogDiffuserBlockEntity::new, ModBlocks.FOG_DIFFUSER.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VampireBeaconBlockEntity>> VAMPIRE_BEACON = BLOCK_ENTITY_TYPES.register("vampire_beacon", () -> create(VampireBeaconBlockEntity::new, ModBlocks.VAMPIRE_BEACON.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InfuserBlockEntity>> INFUSER = BLOCK_ENTITY_TYPES.register("infuser", () -> create(InfuserBlockEntity::new, ModBlocks.INFUSER.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VelmorraPortalBlockEntity>> VELMORRA_PORTAL = BLOCK_ENTITY_TYPES.register("velmorra_portal", () -> create(VelmorraPortalBlockEntity::new, ModBlocks.VELMORRA_PORTAL.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VelmorraAltarBlockEntity>> VELMORRA_ALTAR = BLOCK_ENTITY_TYPES.register("velmorra_altar", () -> create(VelmorraAltarBlockEntity::new, ModBlocks.VELMORRA_ALTAR.get()));
+
 
     private static <T extends BlockEntity> @NotNull BlockEntityType<T> create(BlockEntityType.@NotNull BlockEntitySupplier<T> factoryIn, Block... blocks) {
         return new BlockEntityType<>(factoryIn, blocks);

@@ -45,7 +45,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -62,7 +61,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
 
-    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE)
@@ -99,7 +98,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+    public void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putInt("level", getEntityLevel());
         output.putInt("type", getEyeType());
@@ -129,7 +128,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public @NotNull Optional<String> getBookLootId() {
+    public Optional<String> getBookLootId() {
         return Optional.ofNullable(lootBookId);
     }
 
@@ -175,7 +174,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return MAX_LEVEL;
     }
 
-    @NotNull
     @Override
     public Component getName() {
         String senderName = this.getEntityData().get(NAME);
@@ -184,7 +182,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @SuppressWarnings("OptionalAssignedToNull")
     @Override
-    public @NotNull Optional<PlayerSkinRenderCache.RenderInfo> getPlayerOverlay() {
+    public Optional<PlayerSkinRenderCache.RenderInfo> getPlayerOverlay() {
         if (this.skinProfile == null) {
             PlayerSkinHelper.getPlayerRenderInfo(getTextureName(), x -> this.skinProfile = x);
         }
@@ -223,7 +221,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, @NotNull DamageSource damageSource, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
         boolean flag = super.hurtServer(level, damageSource, amount);
         if (flag && damageSource.getEntity() instanceof Player && this.random.nextInt(4) == 0) {
             this.addEffect(new MobEffectInstance(ModEffects.SUNSCREEN, 150, 2));
@@ -232,9 +230,9 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull ValueInput input) {
+    public void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
-        setEntityLevel(input.getIntOr("level", 0));
+        input.getInt("level").ifPresent(this::setEntityLevel);
         getEntityData().set(TYPE, input.getIntOr("type", 0));
         getEntityData().set(NAME, input.getStringOr("name", "none"));
         getEntityData().set(TEXTURE, input.getStringOr("texture", "none"));
@@ -254,7 +252,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    public int suggestEntityLevel(@NotNull Difficulty d) {
+    public int suggestEntityLevel(Difficulty d) {
         if (random.nextBoolean()) {
             return (int) (d.avgPercLevel() * MAX_LEVEL / 100F);
         }
@@ -303,7 +301,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
-    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
         return iMob ? ModEntities.ADVANCED_VAMPIRE_IMOB.get() : ModEntities.ADVANCED_VAMPIRE.get();
     }
 

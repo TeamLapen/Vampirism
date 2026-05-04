@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "has_blood=false": {
+      "model": "vampirism:block/velmorra_altar"
+    },
+    "has_blood=true": {
+      "model": "vampirism:block/velmorra_altarbloody"
+    }
+  }
+}

@@ -21,7 +21,8 @@
     },
     "minecraft:visual/fog_color": "#171717",
     "minecraft:visual/sky_color": "#131313",
-    "minecraft:visual/water_fog_color": "#670717"
+    "minecraft:visual/water_fog_color": "#670717",
+    "vampirism:sun_damage": false
   },
   "carvers": [
     "minecraft:cave",
@@ -29,18 +30,18 @@
     "minecraft:canyon"
   ],
   "creature_spawn_probability": 0.25,
-  "downfall": 0.0,
+  "downfall": 0.6,
   "effects": {
-    "foliage_color": "#101010",
-    "grass_color": "#101010",
+    "dry_foliage_color": "#383838",
+    "foliage_color": "#1f1f1f",
+    "grass_color": "#242424",
     "water_color": "#670717"
   },
   "features": [
     [],
     [
       "minecraft:lake_lava_underground",
-      "minecraft:lake_lava_surface",
-      "vampirism:mod_lake_placed"
+      "minecraft:lake_lava_surface"
     ],
     [],
     [],
@@ -79,7 +80,9 @@
     [
       "vampirism:vampire_flower",
       "vampirism:cursed_root",
-      "vampirism:forest_grass",
+      "vampirism:vampire_forest_grass",
+      "vampirism:vampire_forest_tall_grass",
+      "minecraft:patch_bush",
       "minecraft:patch_grass_forest",
       "vampirism:vampire_trees"
     ]

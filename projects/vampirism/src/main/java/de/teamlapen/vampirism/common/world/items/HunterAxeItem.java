@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.common.world.items;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.components.FactionSlayer;
 import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -26,6 +26,8 @@ import java.util.function.Consumer;
 
 public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
 
+    public static final Component MASSAGE_RESTRICTION_HEAVY = Component.translatable("message.vampirism.restriction.heavy");
+
     public static final ToolMaterial NORMAL = new ToolMaterial(BlockTags.INCORRECT_FOR_IRON_TOOL, 250, 3.5f, 6.0F, 14, Tags.Items.INGOTS_IRON);
     public static final ToolMaterial ENHANCED = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.4f, 7.0F, 14, Tags.Items.GEMS_DIAMOND);
     public static final ToolMaterial ULTIMATE = new ToolMaterial(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2031, 3.3f, 8.0F, 14, Tags.Items.INGOTS_NETHERITE);
@@ -33,14 +35,14 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     private final Tier tier;
 
     public HunterAxeItem(ToolMaterial material, Tier tier, Properties properties) {
-        super(material, 3, -2.9f, FactionRestriction.builder(ModFactionTags.IS_HUNTER).minLevel(getMinLevel(tier)).apply(properties).component(FactionDataComponents.FACTION_SLAYER, FactionSlayer.create(ModFactionTags.IS_VAMPIRE, getVampireMult(tier))).component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE), 5);
+        super(material, 3, -2.9f, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).minLevel(getMinLevel(tier)).message(MASSAGE_RESTRICTION_HEAVY).apply(properties).component(FactionDataComponents.FACTION_SLAYER, FactionSlayer.create(VampirismTags.Factions.IS_VAMPIRE, getVampireMult(tier))).component(ModDataComponents.DROP_VAMPIRE_SOUL, Unit.INSTANCE), 5);
         this.tier = tier;
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flagIn) {
         addTierInformation(tooltip);
-        tooltip.accept(Component.translatable("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100), ModFactions.VAMPIRE.value().getNamePlural()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.translatable("tooltip.vampirism.more_damage_against", Math.round((getVampireMult(tier) - 1) * 100), ModFactions.VAMPIRE.value().getNamePlural()).withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
     }
 

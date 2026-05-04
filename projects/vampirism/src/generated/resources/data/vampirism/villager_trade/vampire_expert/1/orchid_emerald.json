@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "minecraft:emerald"
+  },
+  "max_uses": 8.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": 9.0,
+    "id": "vampirism:vampire_orchid"
+  },
+  "xp": 2.0
+}

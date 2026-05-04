@@ -14,14 +14,13 @@ import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends PlayerModel> extends RenderLayer<T, Q> {
 
-    private final Identifier @NotNull [] eyeOverlays;
-    private final Identifier @NotNull [] fangOverlays;
+    private final Identifier[] eyeOverlays;
+    private final Identifier[] fangOverlays;
 
-    public VampirePlayerHeadLayer(@NotNull RenderLayerParent<T, Q> entityRendererIn) {
+    public VampirePlayerHeadLayer(RenderLayerParent<T, Q> entityRendererIn) {
         super(entityRendererIn);
         eyeOverlays = new Identifier[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < eyeOverlays.length; i++) {
@@ -37,12 +36,12 @@ public class VampirePlayerHeadLayer<T extends AvatarRenderState, Q extends Playe
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, T renderState, float yRot, float xRot) {
         if (!ModConfig.client().renderVampireEyes.get() || renderState.deathTime > 0) return;
         if (renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_LEVEL, 0) > 0 && !renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_DISGUISE, false) && !renderState.isInvisible) {
-            int eyeType = Math.max(0, Math.min(renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_EYE_TYPE, 0), eyeOverlays.length - 1));
-            int fangType = Math.max(0, Math.min(renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_FANG_TYPE, 0), fangOverlays.length - 1));
+            int eyeType = Math.clamp(renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_EYE_TYPE, 0), 0, eyeOverlays.length - 1);
+            int fangType = Math.clamp(renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_FANG_TYPE, 0), 0, fangOverlays.length - 1);
             ModelPart head = this.getParentModel().head;
 
-            nodeCollector.submitModelPart(head, poseStack,renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_GLOWING_EYES, false) ? RenderTypes.eyes(eyeOverlays[eyeType]) : RenderTypes.entityCutoutNoCull(eyeOverlays[eyeType]),packedLight, OverlayTexture.NO_OVERLAY, null);
-            nodeCollector.submitModelPart(head, poseStack,RenderTypes.entityCutoutNoCull(fangOverlays[fangType]),packedLight, OverlayTexture.NO_OVERLAY, null);
+            nodeCollector.submitModelPart(head, poseStack,renderState.getRenderDataOrDefault(ModEntityRenderStates.VAMPIRE_GLOWING_EYES, false) ? RenderTypes.eyes(eyeOverlays[eyeType]) : RenderTypes.entityCutout(eyeOverlays[eyeType]),packedLight, OverlayTexture.NO_OVERLAY, null);
+            nodeCollector.submitModelPart(head, poseStack,RenderTypes.entityCutout(fangOverlays[fangType]),packedLight, OverlayTexture.NO_OVERLAY, null);
         }
     }
 }

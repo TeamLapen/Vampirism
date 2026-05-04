@@ -21,6 +21,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +59,7 @@ public class RefinementHandler<T extends IRefinementPlayer<T>> extends PropertyS
             ItemStack stack = refinementItems.get(slot.getSlot());
             if (stack.isEmpty()) continue;
 
+            @Nullable
             IRefinementSet set = ((IRefinementItem) stack.getItem()).getRefinementSet(stack);
             int damage;
             if (set == null) {

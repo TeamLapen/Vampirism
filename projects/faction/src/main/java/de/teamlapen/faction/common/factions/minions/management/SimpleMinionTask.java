@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Supplier;
 
@@ -21,13 +22,13 @@ public class SimpleMinionTask extends DefaultMinionTask<IMinionTask.NoDesc<Minio
 
     @Nullable
     @Override
-    public NoDesc<MinionData> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, MinionData data) {
+    public NoDesc<MinionData> activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull MinionData data) {
         this.triggerAdvancements(lord);
         return new NoDesc<>(this);
     }
 
     @Override
-    public void deactivateTask(NoDesc<MinionData> desc) {
+    public void deactivateTask(@NonNull NoDesc<MinionData> desc) {
 
     }
 

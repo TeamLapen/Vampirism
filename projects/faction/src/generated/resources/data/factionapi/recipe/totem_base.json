@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": "#c:ingots/iron",
+    "O": "#c:obsidians",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    "POP",
+    "POP",
+    "III"
+  ],
+  "result": {
+    "id": "factionapi:totem_base"
+  }
+}

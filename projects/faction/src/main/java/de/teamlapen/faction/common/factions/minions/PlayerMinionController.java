@@ -52,14 +52,14 @@ import java.util.stream.Collectors;
  * While the minion is checked out, the minion controller knows about the entity id and dimension and can access it when necessary. Furthermore, no other minion can access the data (no one else should have the token anyway).
  * When the minion is unloaded it must check in the data and save the token, so it can check out the data on load again.
  * <p>
- * If the player calls the minions to them, the checkout (loaded) minions  are forced to check in their data and are removed from the world. Then the tokens are invalidated and a fresh set of tokens is created for the new minion entities that access the same minion slots.
- * If a minion entity is stored in an unloaded chunk, it will try to check out the minion data/slot again once loaded. However, if the player has recalled it in the meantime (which means a new shell entity has been created) the minion entity will fail to check out the data and remove itself from the world.
+ * If the player calls the minions to them, the checkout (loaded) minions are forced to check in their data and are removed from the world. Then the tokens are invalidated and a fresh set of tokens is created for the new minion entities that access the same minion slots.
+ * If a minion entity is stored in an unloaded chunk, it will try to check out the minion data/slot again once loaded. However, if the player has recalled it in the meantime (which means a new shell entity has been created), the minion entity will fail to check out the data and remove itself from the world.
  * <p>
  * <p>
  * - Recruit a new minion{@link PlayerMinionController#createNewMinionSlot(MinionData, EntityType)}
- * - Associate a entity representation (real entity, nbt saved entity, ...) with the minion slot {@link PlayerMinionController#claimMinionSlot(int)}
- * - Checkout minion slot if entity is added to world. Can "fail" if minion has been reclaimed in the meantime. {@link PlayerMinionController#checkoutMinion(int, int, MinionEntity)}
- * - Checkin minion slot if entity is removed from world {@link PlayerMinionController#checkInMinion(int, int)}
+ * - Associate an entity representation (real entity, nbt saved entity, ...) with the minion slot {@link PlayerMinionController#claimMinionSlot(int)}
+ * - Check out minion slot if entity is added to world. Can "fail" if minion has been reclaimed in the meantime. {@link PlayerMinionController#checkoutMinion(int, int, MinionEntity)}
+ * - Check in minion slot if entity is removed from world {@link PlayerMinionController#checkInMinion(int, int)}
  * - Release minion slot if minion dies {@link PlayerMinionController#markDeadAndReleaseMinionSlot(int, int)}
  */
 public class PlayerMinionController implements ValueIOSerializable {
@@ -105,7 +105,7 @@ public class PlayerMinionController implements ValueIOSerializable {
 
     /**
      * Mark a minion as inactive
-     * Don't use associated MinionData afterwards
+     * Don't use associated MinionData afterward
      *
      * @param id    minion slot
      * @param token Previously received token
@@ -120,7 +120,7 @@ public class PlayerMinionController implements ValueIOSerializable {
     /**
      * Request minion data for a previously claimed slot. Marks the respective minion slot as active
      * Returns null if
-     * a) Minion already active
+     * a) Minion is already active
      * b) Minion dead
      * c) Token invalid
      *
@@ -180,7 +180,7 @@ public class PlayerMinionController implements ValueIOSerializable {
     }
 
     /**
-     * Contact all currently loaded (checked out) minions
+     * Contact all currently loaded (checked-out) minions
      */
     public void contactMinions(Consumer<MinionEntity<?>> entityConsumer) {
         for (MinionInfo m : minions) {
@@ -203,6 +203,7 @@ public class PlayerMinionController implements ValueIOSerializable {
                 } else {
                     m.claimMinionSlot(id, this);
                     m.copyPosition(p);
+                    checkDeathStatus(id, m);
                     p.level().addFreshEntity(m);
                     activateTask(id, FactionMinionTasks.STAY.get());
                     return m;
@@ -212,6 +213,17 @@ public class PlayerMinionController implements ValueIOSerializable {
 
         }
         return null;
+    }
+
+    /**
+     * tmp fix to heal minions that are not dead but have negative health
+     */
+    @Deprecated
+    private void checkDeathStatus(int id, MinionEntity<?> minion) {
+        MinionData data = minions[id].data;
+        if (data.getHealth() <= 0) {
+            data.setHealth(data.getMaxHealth());
+        }
     }
 
     /**
@@ -285,8 +297,8 @@ public class PlayerMinionController implements ValueIOSerializable {
 
     /**
      * Mark a minion as dead and as inactive.
-     * The minion slot is released and the token is invalidated
-     * Don't use associated MinionData afterwards
+     * The minion slot is released, and the token is invalidated
+     * Don't use associated MinionData afterward
      *
      * @param id    Minion slot
      * @param token Previously received token
@@ -295,7 +307,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         MinionInfo i = getMinionInfo(id, token);
         if (i != null) {
             i.checkin();
-            i.deathCooldown = 20 * FactionConfig.server().miDeathRecoveryTime.get();
+            i.deathCooldown = 20 * FactionConfig.server().minionDeathRecoveryTime.get();
             getLord().filter(x -> x instanceof ISkillPlayer<?>).map(ISkillPlayer.class::cast).map(ISkillPlayer::getSkillHandler).ifPresent(s -> {
                 if (s.isSkillEnabled(FactionSkills.MINION_RECOVERY)) {
                     i.deathCooldown = (int) (i.deathCooldown * 0.8);
@@ -308,7 +320,7 @@ public class PlayerMinionController implements ValueIOSerializable {
     }
 
     /**
-     * Recall the given minion. Corresponding entity is removed if present, token is invalidated and slot is released.
+     * Recall the given minion. Corresponding entity is removed if present, token is invalidated, and slot is released.
      *
      * @return If minion can be reclaimed (isAlive)
      */
@@ -321,7 +333,7 @@ public class PlayerMinionController implements ValueIOSerializable {
 
     /**
      * Recalls all minions.
-     * Corresponding entities are removed if present, tokens are invalidated  and slots are released
+     * Corresponding entities are removed if present, tokens are invalidated, and slots are released
      *
      * @param force Include minions with locked task
      * @return A list of minions ids that can be reclaimed
@@ -437,7 +449,7 @@ public class PlayerMinionController implements ValueIOSerializable {
                 i.deathCooldown--;
                 if (i.deathCooldown == 0) {
                     i.data.setHealth(i.data.getMaxHealth());
-                    getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.factionapi.minion.can_respawn", i.data.getFormattedName()), true));
+                    getLordPlayer().ifPresent(player -> player.sendOverlayMessage(Component.translatable("dialogue.factionapi.minion.can_respawn", i.data.getFormattedName())));
                 }
             } else {
                 IMinionTask.IMinionTaskDesc<MinionData> taskDesc = i.data.getCurrentTaskDesc();
@@ -450,7 +462,7 @@ public class PlayerMinionController implements ValueIOSerializable {
         @Nullable
         IMinionTask.IMinionTaskDesc<MinionData> desc = task.activateTask(getLordPlayer().orElse(null), getMinionEntity(info).orElse(null), info.data);
         if (desc == null) {
-            getLordPlayer().ifPresent(player -> player.displayClientMessage(Component.translatable("text.factionapi.minion.command_could_not_activate"), false));
+            getLordPlayer().ifPresent(player -> player.sendOverlayMessage(Component.translatable("message.factionapi.minion_task.could_not_activate")));
         } else {
             MinionData d = info.data;
             d.switchTask(d.getCurrentTaskDesc().getTask(), d.getCurrentTaskDesc(), desc);
@@ -494,7 +506,7 @@ public class PlayerMinionController implements ValueIOSerializable {
     }
 
     /**
-     * Recall the given minion. Corresponding entity is removed if present, token is invalidated and slot is released.
+     * Recall the given minion. Corresponding entity is removed if present, token is invalidated, and slot is released.
      *
      * @return If minion can be reclaimed (isAlive)
      */
@@ -520,9 +532,9 @@ public class PlayerMinionController implements ValueIOSerializable {
     }
 
     /**
-     * creates a collection of id for all minions that are unique identifier to be used safely in commands
+     * creates a collection of ids for all minions that are unique identifier to be used safely in commands
      * <br>
-     * since the player is not necessarily available because the player might not be connected the players name is needed as parameter
+     * since the player is not necessarily available because the player might not be connected, the players name is needed as parameter
      *
      * @param playerName the players name
      * @return collection of minion ids

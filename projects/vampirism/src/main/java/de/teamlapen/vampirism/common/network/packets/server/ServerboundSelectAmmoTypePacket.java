@@ -37,10 +37,10 @@ public record ServerboundSelectAmmoTypePacket(boolean hasRestriction, @Nullable 
     }
 
     public static ServerboundSelectAmmoTypePacket of(SelectAmmoScreen.AmmoType ammoType) {
-        if (ammoType.renderStack == null) {
+        if (ammoType.renderStack() == null) {
             return new ServerboundSelectAmmoTypePacket(false, (Item) null);
         } else {
-            return new ServerboundSelectAmmoTypePacket(true, ammoType.renderStack.getItem());
+            return new ServerboundSelectAmmoTypePacket(true, ammoType.renderStack().getItem());
         }
     }
 

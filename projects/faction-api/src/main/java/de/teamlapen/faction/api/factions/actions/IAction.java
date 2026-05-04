@@ -83,14 +83,6 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
     }
 
     /**
-     * @return if the action should be shown in the action select screen
-     */
-    @SuppressWarnings("SameReturnValue")
-    default boolean showInSelectAction(Player player) {
-        return true;
-    }
-
-    /**
      * @return if the action's cooldown should be rendered in the HUD
      */
     default boolean showHudCooldown(Player player) {
@@ -100,7 +92,7 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
     ISkill<T> asSkill();
 
     /**
-     * Provide some context of the activation instant sent from client
+     * Provide some context of the activation instant sent from the client
      */
     @SuppressWarnings("unused")
     interface ActivationContext {

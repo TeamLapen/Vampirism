@@ -5,10 +5,7 @@ import de.teamlapen.faction.client.core.FactionAppearanceScreens;
 import de.teamlapen.vampirism.api.client.VampirismOverlays;
 import de.teamlapen.vampirism.client.DisguiseOverlay;
 import de.teamlapen.vampirism.client.VampirismModClient;
-import de.teamlapen.vampirism.client.gui.overlay.BatOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.BloodBarOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.RageOverlay;
-import de.teamlapen.vampirism.client.gui.overlay.SunOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.FogDiffuserScreen;
 import de.teamlapen.vampirism.client.gui.screens.diffuser.GarlicDiffuserScreen;
@@ -32,7 +29,7 @@ public class ModScreens {
         event.register(ModMenus.HUNTER_BASIC.get(), HunterBasicScreen::new);
         event.register(ModMenus.ALTAR_INFUSION.get(), AltarInfusionScreen::new);
         event.register(ModMenus.BLOOD_GRINDER.get(), BloodGrinderScreen::new);
-        event.register(ModMenus.EXTENDED_POTION_TABLE.get(), PotionTableScreen::new);
+        event.register(ModMenus.EXTENDED_VAPOR_STILL.get(), VaporStillScreen::new);
         event.register(ModMenus.ALCHEMICAL_TABLE.get(), AlchemyTableScreen::new);
         event.register(ModMenus.VAMPIRE_BEACON.get(), VampireBeaconScreen::new);
         event.register(ModMenus.REVERT_BACK.get(), InjectionChairRevertBackScreen::new);
@@ -47,6 +44,7 @@ public class ModScreens {
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.BAT, new BatOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.DISGUISE, new DisguiseOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.SUN, new SunOverlay());
+        event.registerAbove(VanillaGuiLayers.HOTBAR, VampirismOverlays.ITEM_CHARGE, new ItemChargeOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.FULL_SCREEN, VampirismModClient.services().fullScreenOverlay());
         event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, VampirismOverlays.DRACULA_EVENT, VampirismModClient.services().draculaEventOverlay());
     }

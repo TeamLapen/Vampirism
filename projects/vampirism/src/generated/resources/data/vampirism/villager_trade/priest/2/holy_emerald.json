@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "count": 2,
+    "id": "minecraft:emerald"
+  },
+  "max_uses": 5.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "id": "vampirism:holy_water_bottle_normal"
+  },
+  "xp": 5.0
+}

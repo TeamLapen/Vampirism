@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.world.blockentity.PedestalBlockEntity;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseContainerBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseContainerBlock;
 import de.teamlapen.vampirism.common.world.items.VampireSwordItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -109,6 +109,7 @@ public class PedestalBlock extends BaseContainerBlock {
                 playerInventoryWrapper.drop(itemResource, 1, true, false, transaction);
             }
             transaction.commit();
+            player.awardStat(ModStats.INTERACT_WITH_BLOOD_PEDESTAL.get());
             return InteractionResult.SUCCESS;
         }
     }
@@ -125,6 +126,7 @@ public class PedestalBlock extends BaseContainerBlock {
 
             if (count > 0) {
                 transaction.commit();
+                player.awardStat(ModStats.INTERACT_WITH_BLOOD_PEDESTAL.get());
                 return InteractionResult.SUCCESS;
             } else {
                 return InteractionResult.FAIL;

@@ -96,8 +96,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            //noinspection unchecked
-            this.entityCreature.ifPresent(creature -> aiStepC(serverLevel, (EntityType<T>) creature.getType()));
+            this.entityCreature.ifPresent(creature -> aiStepC(serverLevel));
         }
         super.aiStep();
     }
@@ -110,7 +109,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     @Override
     public @NotNull Component getTypeName() {
-        return this.entityCreature.map(creature -> this.getNameC(creature.getType()::getDescription)).orElseGet(super::getName);
+        return this.entityCreature.map(creature -> this.getNameC(creature.getType()::getDescription)).orElseGet(super::getTypeName);
     }
 
     @Override
@@ -152,11 +151,19 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     }
 
     @Override
-    public T cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity, @NotNull EntityType<T> newType) {
+    public T cureEntity(@NotNull ServerLevel world, @NotNull PathfinderMob entity) {
         return this.entityCreature.map(creature -> {
             creature.revive();
             return creature;
-        }).orElseGet(() -> CurableConvertedCreature.super.cureEntity(world, entity, newType));
+        }).orElseGet(() -> CurableConvertedCreature.super.cureEntity(world, entity));
+    }
+
+    @Override
+    public @NotNull EntityType<T> getCuredEntityType() {
+        return this.entityCreature.map(creature -> (EntityType<T>) creature.getType()).orElseGet( ()->{
+            LOGGER.warn("Trying to cure a ConvertedCreatureEntity with an empty wrapped entityCreature. Returning dummy entity. Might cause problems.");
+            return (EntityType<T>) (this.getType());
+        });
     }
 
     @Override

@@ -41,7 +41,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -55,11 +54,11 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     private static final EntityDataAccessor<Boolean> LADY = SynchedEntityData.defineId(VampireBaronEntity.class, EntityDataSerializers.BOOLEAN);
     private final static int ENRAGED_TRANSITION_TIME = 15;
 
-    public static boolean spawnPredicateBaron(@NotNull EntityType<? extends VampireBaronEntity> entityType, @NotNull LevelAccessor world, EntitySpawnReason spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
+    public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, LevelAccessor world, EntitySpawnReason spawnReason, BlockPos blockPos, RandomSource random) {
         return world.getBiome(blockPos).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
     }
 
-    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, BalanceMobProps.mobProps.VAMPIRE_BARON_MAX_HEALTH)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE)
@@ -90,7 +89,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+    public void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putInt("level", getEntityLevel());
         output.putBoolean("lady", isLady());
@@ -139,7 +138,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean checkSpawnRules(@NotNull LevelAccessor worldIn, @NotNull EntitySpawnReason spawnReasonIn) {
+    public boolean checkSpawnRules(LevelAccessor worldIn, EntitySpawnReason spawnReasonIn) {
         int i = Mth.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
@@ -153,7 +152,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean doHurtTarget(ServerLevel level, @NotNull Entity entity) {
+    public boolean doHurtTarget(ServerLevel level, Entity entity) {
         boolean flag = super.doHurtTarget(level, entity);
         if (flag && entity instanceof LivingEntity) {
             float tm = 1f;
@@ -178,10 +177,10 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         this.getEntityData().set(LADY, this.getRandom().nextBoolean());
         if (reason == EntitySpawnReason.COMMAND || reason == EntitySpawnReason.SPAWN_ITEM_USE) {
-            this.setEntityLevel(getRandom().nextInt(getMaxEntityLevel() + 1));
+//            this.setEntityLevel(getRandom().nextInt(getMaxEntityLevel() + 1));
         }
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
     }
@@ -210,7 +209,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            this.setCustomName(getTypeName().plainCopy().append(Component.translatable("entity.vampirism.vampire_baron.level", level + 1)));
+            this.setCustomName(Component.translatable("entity.vampirism.vampire_baron.leveled", level + 1));
         } else {
             this.setCustomName(null);
         }
@@ -251,7 +250,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, @NotNull DamageSource damageSource, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
         attackDecisionCounter++;
         return super.hurtServer(level, damageSource, amount);
     }
@@ -269,7 +268,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public boolean killedEntity(@NotNull ServerLevel world, @NotNull LivingEntity entity, @NotNull DamageSource damageSource) {
+    public boolean killedEntity(ServerLevel world, LivingEntity entity, DamageSource damageSource) {
         boolean result = super.killedEntity(world, entity, damageSource);
         if (entity instanceof VampireBaronEntity) {
             this.setHealth(this.getMaxHealth());
@@ -278,9 +277,9 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull ValueInput input) {
+    public void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
-        setEntityLevel(input.getInt("level").map(x -> Mth.clamp(x, 0, MAX_LEVEL)).orElse(-1));
+        input.getInt("level").map(x -> Mth.clamp(x, 0, MAX_LEVEL)).ifPresent(this::setEntityLevel);
         this.getEntityData().set(LADY, input.getBooleanOr("lady", false));
     }
 
@@ -296,18 +295,21 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public int suggestEntityLevel(@NotNull Difficulty d) {
-        int avg = Math.round(((d.avgPercLevel()) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int max = Math.round(((d.maxPercLevel()) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int min = Math.round(((d.minPercLevel()) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
+    public int suggestEntityLevel(Difficulty d) {
+        //Currently, this is not called when the entity is spawned by a command or spawn egg  to guarantee a spawn-> See finalizeSpawn
 
+        //We want to distribute the baron levels between player levels 5 (from here on you need pure blood for leveling and 14 {@link de.teamlapen.vampirism.REFERENCE.HIGHEST_VAMPIRE_LEVEL}
+        int avg = Math.round(((d.avgPercLevel() / 100f - 5 / 14f) / (1F - 5 / 14F)) * MAX_LEVEL);
+        int max = Math.round(((d.maxPercLevel() / 100f - 5 / 14f) / (1F - 5 / 14F)) * MAX_LEVEL);
+        int min = Math.round(((d.minPercLevel() / 100f - 5 / 14f) / (1F - 5 / 14F)) * MAX_LEVEL);
+        //Values may be <0 leading to entity spawn being canceled
         return switch (random.nextInt(7)) {
             case 0 -> min;
             case 1 -> max + 1;
             case 2 -> avg;
             case 3 -> avg + 1;
             case 4, 5 -> random.nextInt(MAX_LEVEL + 1);
-            default -> random.nextInt(max + 2 - min) + min;
+            default -> random.nextInt(max - min + 2) + min; //Even if values are negative max> min -> argument is >=2)
         };
     }
 
@@ -369,13 +371,13 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    protected boolean canRide(@NotNull Entity pVehicle) {
+    protected boolean canRide(Entity pVehicle) {
         return false;
     }
 
     private class BaronAIAttackMelee extends MeleeAttackGoal {
 
-        BaronAIAttackMelee(@NotNull PathfinderMob creature, double speedIn) {
+        BaronAIAttackMelee(PathfinderMob creature, double speedIn) {
             super(creature, speedIn, false);
         }
 

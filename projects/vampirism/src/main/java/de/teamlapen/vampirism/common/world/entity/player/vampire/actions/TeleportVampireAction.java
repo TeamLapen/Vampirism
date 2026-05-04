@@ -40,7 +40,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         double oz = player.getZ();
         if (target.getType() == HitResult.Type.MISS) {
             player.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), 1, 1);
-            return IActionResult.fail(Component.translatable("text.vampirism.action.teleport.no_target"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.teleport.no_target"));
         }
         BlockPos pos = null;
         if (target.getType() == HitResult.Type.BLOCK) {
@@ -64,10 +64,10 @@ public class TeleportVampireAction extends DefaultVampireAction {
         if (pos == null) {
             player.setPos(ox, oy, oz);
             player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 1, 1);
-            return IActionResult.fail(Component.translatable("text.vampirism.action.teleport.no_target"));
+            return IActionResult.fail(Component.translatable("message.vampirism.action.teleport.no_target"));
         }
         if (player instanceof ServerPlayer playerMp) {
-            playerMp.disconnect();
+            playerMp.removeVehicle();
             playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
         AreaParticleCloud particleCloud = new AreaParticleCloud(ModEntities.PARTICLE_CLOUD.get(), player.level());
@@ -89,7 +89,11 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown(@NotNull IVampirePlayer player) {
-        return (int) ((player.getRefinementHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE) ? 0.5 : 1) * ModConfig.balance().vaTeleportCooldown.get() * 20);
+        int cooldown = ModConfig.balance().vaTeleportCooldown.get() * 20;
+        if (player.getRefinementHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE)) {
+            cooldown = (int)(cooldown * ModConfig.balance().vrTeleportCooldownMod.get());
+        }
+        return cooldown;
     }
 
     @Override

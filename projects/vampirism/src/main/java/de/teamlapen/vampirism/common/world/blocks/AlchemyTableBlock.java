@@ -1,19 +1,20 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blockentity.AlchemyTableBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -30,14 +31,9 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
 
     private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 12, 16);
 
-    public AlchemyTableBlock(Properties properties) {
+    public AlchemyTableBlock(BlockBehaviour.Properties properties) {
         super(properties, SHAPE);
         this.registerDefaultState(this.defaultBlockState().setValue(HAS_BOTTLE_INPUT_0, false).setValue(HAS_BOTTLE_INPUT_1, false).setValue(HAS_BOTTLE_OUTPUT_0, false).setValue(HAS_BOTTLE_OUTPUT_1, false));
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
     }
 
     @Nullable
@@ -64,7 +60,7 @@ public class AlchemyTableBlock extends HorizontalContainerBlock {
                     player.awardStat(ModStats.INTERACT_WITH_ALCHEMY_TABLE.get());
                 }
             } else {
-                player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+                player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
             }
 
             return InteractionResult.CONSUME;

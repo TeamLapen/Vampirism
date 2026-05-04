@@ -1,8 +1,8 @@
 plugins {
-    id 'net.neoforged.moddev' version '2.0.116'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 group = project.vampirism_group_id
-version = project.mod_version
+version = project.vampirism_version
 
 base {
     archivesName = project.vampirism_mod_name
@@ -35,17 +35,8 @@ for (var integration : integrations) {
     }
 }
 
-tasks.named("classes").configure {
-    integrations.each {
-        if (it.included) {
-            dependsOn(sourceSets[it.name].classesTaskName)
-        }
-    }
-}
-
 integrations.each {
     if (it.included) {
-        sourceSets.main.compileClasspath += sourceSets[it.name].output
         sourceSets.main.runtimeClasspath += sourceSets[it.name].output
     }
 }
@@ -74,11 +65,6 @@ neoForge {
     version = project.neoforge_version
 
     interfaceInjectionData.from project.file("src/main/resources/META-INF/interfaceinjection.json")
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
 
     runs {
         configureEach {
@@ -136,6 +122,11 @@ neoForge {
         "${factions_mod_id}" {
             sourceSet(project(':faction').sourceSets.main)
             sourceSet(project(':faction-api').sourceSets.main)
+            project(':faction').integrations.each {
+                if (it.included) {
+                    sourceSet(project(':faction').sourceSets[it.name])
+                }
+            }
         }
     }
 }
@@ -155,13 +146,17 @@ def generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_id                 : vampirism_mod_id,
             mod_name               : vampirism_mod_name,
             mod_license            : vampirism_mod_license,
-            mod_version            : mod_version,
+            mod_version            : vampirism_version,
             mod_authors            : vampirism_authors,
             mod_description        : vampirism_description,
             mod_issue_tracker      : vampirism_issue_tracker,
             mod_url                : vampirism_url,
             mod_update_url         : vampirism_update_url,
-            jei_version            : jei_version
+            factions_mod_id        : factions_mod_id,
+            jei_version            : jei_version,
+            guideapi_version       : guideapi_version,
+            terrablender_version   : terrablender_version,
+            factions_version       : factions_version,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
@@ -223,6 +218,9 @@ publishing {
             artifactId = "${project.vampirism_mod_name}"
             artifact(tasks.jar)
             artifact(sourcesJarTask.get())
+            artifact(project(':vampirism-api').tasks.jar) {
+                classifier = "api"
+            }
         }
     }
 }

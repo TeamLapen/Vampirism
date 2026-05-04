@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.api.world.items.oil;
 
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemInstance;
 
 public interface IToolOil extends IApplicableOil {
 
-    boolean isCorrectTool(ItemStack stack);
+    boolean isCorrectTool(ItemInstance stack);
 
-    boolean isOilAllowedOnTool(ItemStack stack);
+    boolean isOilAllowedOnTool(ItemInstance stack);
 
     @Override
-    default boolean canBeApplied(ItemStack stack) {
+    default boolean canBeApplied(ItemInstance stack) {
         return isCorrectTool(stack) && isOilAllowedOnTool(stack);
     }
 }

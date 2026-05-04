@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.misc.mixin.accessor;
 
 import de.teamlapen.vampirism.misc.extension.IShapedRecipe;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +12,7 @@ public interface ShapedRecipeAccessor extends IShapedRecipe {
 
     @Override
     @Accessor("result")
-    ItemStack getResult();
+    ItemStackTemplate getResult();
 
     @Override
     @Accessor("pattern")

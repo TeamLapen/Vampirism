@@ -12,7 +12,6 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -23,7 +22,7 @@ public class CursedSpruceItem extends BlockItem {
     }
 
     @Override
-    protected BlockState getPlacementState(@NotNull BlockPlaceContext context) {
+    protected BlockState getPlacementState(BlockPlaceContext context) {
         BlockState state = super.getPlacementState(context);
         if (state != null && state.getBlock() instanceof CursedSpruceBlock && context.getItemInHand().has(ModDataComponents.ACTIVE)) {
             state = state.setValue(CursedSpruceBlock.ACTIVE, true);
@@ -36,7 +35,7 @@ public class CursedSpruceItem extends BlockItem {
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltipComponents, tooltipFlag);
         if (stack.has(ModDataComponents.ACTIVE)) {
-            tooltipComponents.accept(Component.translatable("text.vampirism.active").withStyle(ChatFormatting.DARK_RED));
+            tooltipComponents.accept(Component.translatable("tooltip.vampirism.active").withStyle(ChatFormatting.DARK_RED));
         }
     }
 }

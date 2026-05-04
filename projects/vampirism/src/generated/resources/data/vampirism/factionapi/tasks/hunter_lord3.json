@@ -16,7 +16,7 @@
         "type": "factionapi:entity_type",
         "amount": 50,
         "description": {
-          "translate": "entity_tag.vampirism.vampire"
+          "translate": "task_tag.vampirism.vampire"
         },
         "entityType": "vampirism:vampire",
         "id": "vampirism:vampire"
@@ -26,7 +26,7 @@
   "reward": {
     "type": "factionapi:lord_level",
     "description": {
-      "translate": "task_reward.factionapi.lord_level_reward",
+      "translate": "task_reward.factionapi.lord_level",
       "with": [
         3
       ]

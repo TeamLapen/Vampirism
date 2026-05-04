@@ -3,12 +3,11 @@ package de.teamlapen.vampirism.common.world.items;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.common.components.FactionRestriction;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
-import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRefinements;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
@@ -23,7 +22,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,7 +46,7 @@ public class CrucifixItem extends Item implements IItemWithTier {
     private static final Identifier COOLDOWN_GROUP = VIdentifier.mod("crucifix");
 
     public CrucifixItem(Tier tier, Properties properties) {
-        super(FactionRestriction.builder(ModFactionTags.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).apply(properties).stacksTo(1).component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {
+        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).message(HolyWaterBottleItem.MASSAGE_RESTRICTION_HOLY).apply(properties).stacksTo(1).component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {
             case NORMAL -> 7;
             case ENHANCED -> 5;
             case ULTIMATE -> 3;
@@ -98,23 +96,16 @@ public class CrucifixItem extends Item implements IItemWithTier {
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
+        Helper.handleHeldNonVampireItem(stack, entity, slot);
         if (entity instanceof LivingEntity livingEntity && slot != null && slot.getType() == EquipmentSlot.Type.HAND) {
-            if (entity.tickCount % 16 == 8 && Helper.isVampire(entity)) {
-                livingEntity.addEffect(new MobEffectInstance(ModEffects.POISON, 20, 1));
-                if (entity instanceof Player player) {
-                    player.getInventory().removeItem(stack);
-                    player.drop(stack, true);
-                }
-            }
-
-            if (entity instanceof Player player && player.getCooldowns().isOnCooldown(stack) && ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPEL)) {
+            if (livingEntity instanceof Player player && player.getCooldowns().isOnCooldown(stack) && ISkillHandler.isSkillEnabled(player, HunterSkills.CRUCIFIX_REPEL)) {
                 passivePush(level, player, stack, true);
             }
         }
     }
 
     protected boolean affectsEntity(LivingEntity entity, Level level) {
-        return entity.getType().is(EntityTypeTags.UNDEAD) || Helper.isVampire(entity);
+        return entity.typeHolder().is(EntityTypeTags.UNDEAD) || Helper.isVampire(entity);
     }
 
     @Override

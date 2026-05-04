@@ -355,7 +355,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
                 } else {
                     expectedCooldownTimes.put(action, cooldown);
                 }
-                //Entries should to be at least 1
+                //Entries should be at least 1
                 cooldownTimers.put(action, Math.max(cooldown, 1));
                 activeTimers.put(action, 1);
             }
@@ -441,13 +441,11 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
             this.blockPos = null;
         }
 
-        @SuppressWarnings("NullableProblems")
         @Override
         public Optional<BlockPos> targetBlock() {
             return Optional.ofNullable(blockPos);
         }
 
-        @SuppressWarnings("NullableProblems")
         @Override
         public Optional<Entity> targetEntity() {
             return Optional.ofNullable(entity);

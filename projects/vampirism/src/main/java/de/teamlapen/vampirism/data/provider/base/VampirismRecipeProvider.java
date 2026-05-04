@@ -22,12 +22,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
@@ -44,16 +42,19 @@ import static de.teamlapen.vampirism.api.util.VIdentifier.modString;
 
 public abstract class VampirismRecipeProvider extends RecipeProvider {
 
+    protected static final TagKey<Item> COPPER_INGOT = Tags.Items.INGOTS_COPPER;
     protected static final TagKey<Item> IRON_INGOT = Tags.Items.INGOTS_IRON;
     protected static final TagKey<Item> GOLD_INGOT = Tags.Items.INGOTS_GOLD;
     protected static final TagKey<Item> COAL = ItemTags.COALS;
     protected static final TagKey<Item> DIAMOND = Tags.Items.GEMS_DIAMOND;
     protected static final TagKey<Item> NETHERITE_INGOT = Tags.Items.INGOTS_NETHERITE;
     protected static final TagKey<Item> REDSTONE_DUST = Tags.Items.DUSTS_REDSTONE;
+    protected static final TagKey<Item> COPPER_BLOCK = Tags.Items.STORAGE_BLOCKS_COPPER;
     protected static final TagKey<Item> IRON_BLOCK = Tags.Items.STORAGE_BLOCKS_IRON;
     protected static final TagKey<Item> GOLD_BLOCK = Tags.Items.STORAGE_BLOCKS_GOLD;
     protected static final TagKey<Item> COAL_BLOCK = Tags.Items.STORAGE_BLOCKS_COAL;
     protected static final TagKey<Item> DIAMOND_BLOCK = Tags.Items.STORAGE_BLOCKS_DIAMOND;
+    protected static final TagKey<Item> COPPER_NUGGET = Tags.Items.NUGGETS_COPPER;
     protected static final TagKey<Item> IRON_NUGGET = Tags.Items.NUGGETS_IRON;
     protected static final TagKey<Item> GOLD_NUGGET = Tags.Items.NUGGETS_GOLD;
     protected static final TagKey<Item> GARLIC = ModItemTags.GARLIC;
@@ -102,23 +103,23 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
     }
 
     protected void smeltingAndBlasting(RecipeCategory category, String name, ItemLike toSmelt, ItemLike result, float experience) {
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category, result, experience, 200)
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category, CookingBookCategory.MISC, result, experience, 200)
                 .unlockedBy("has_" + RegUtil.id(toSmelt.asItem()).getPath(), has(toSmelt))
                 .save(output, modString(name + "_from_smelting"));
 
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category, result, experience, 100)
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category, CookingBookCategory.MISC,result, experience, 100)
                 .unlockedBy("has_" + RegUtil.id(toSmelt.asItem()).getPath(), has(toSmelt))
                 .save(output, modString(name + "_from_blasting"));
     }
 
     protected void smeltingAndBlasting(RecipeCategory category, String name, ItemLike[] toSmelt, ItemLike result, float experience) {
-        SimpleCookingRecipeBuilder smelting = SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category, result, experience, 200);
+        SimpleCookingRecipeBuilder smelting = SimpleCookingRecipeBuilder.smelting(Ingredient.of(toSmelt), category,CookingBookCategory.MISC, result, experience, 200);
         for (ItemLike item : toSmelt) {
             smelting.unlockedBy("has_" + RegUtil.id(item.asItem()).getPath(), has(item));
         }
         smelting.save(output, modString(name + "_from_smelting"));
 
-        SimpleCookingRecipeBuilder blasting = SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category, result, experience, 100);
+        SimpleCookingRecipeBuilder blasting = SimpleCookingRecipeBuilder.blasting(Ingredient.of(toSmelt), category,CookingBookCategory.MISC, result, experience, 100);
         for (ItemLike item : toSmelt) {
             blasting.unlockedBy("has_" + RegUtil.id(item.asItem()).getPath(), has(item));
         }
@@ -129,19 +130,19 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
         return AlchemyTableRecipeBuilder.builder(this.itemLookup, oilStack);
     }
 
-    protected AlchemicalCauldronRecipeBuilder cauldronRecipe(ItemLike item) {
-        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(this.itemLookup, item.asItem());
+    protected AlchemicalCauldronRecipeBuilder cauldronRecipe(Holder<Item> item) {
+        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(this.itemLookup, new ItemStackTemplate(item, 1));
     }
 
-    protected AlchemicalCauldronRecipeBuilder cauldronRecipe(ItemLike item, int count) {
-        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(this.itemLookup, item.asItem(), count);
+    protected AlchemicalCauldronRecipeBuilder cauldronRecipe(Holder<Item> item, int count) {
+        return AlchemicalCauldronRecipeBuilder.cauldronRecipe(this.itemLookup, new ItemStackTemplate(item, count));
     }
 
     protected ShapedWeaponTableRecipeBuilder shapedWeaponTable(RecipeCategory category, ItemLike item) {
         return ShapedWeaponTableRecipeBuilder.shapedWeaponTable(this.itemLookup, category, item);
     }
 
-    protected ShapedWeaponTableRecipeBuilder shapedWeaponTable(RecipeCategory category, ItemStack stack) {
+    protected ShapedWeaponTableRecipeBuilder shapedWeaponTable(RecipeCategory category, ItemStackTemplate stack) {
         return ShapedWeaponTableRecipeBuilder.shapedWeaponTable(this.itemLookup, category, stack);
     }
 
@@ -157,47 +158,51 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
         return ShapelessWeaponTableRecipeBuilder.shapelessWeaponTable(this.itemLookup, category, item, count);
     }
 
-    protected InfuserRecipeBuilder infuser(ItemStack output) {
+    protected InfuserRecipeBuilder infuser(ItemStackTemplate output) {
         return InfuserRecipeBuilder.infuserRecipe(this.itemLookup, output);
+    }
+
+    protected InfuserRecipeBuilder infuser(Holder<Item> output) {
+        return InfuserRecipeBuilder.infuserRecipe(this.itemLookup, new ItemStackTemplate(output));
     }
 
     protected InfuserRecipeBuilder infuserUpgrade() {
         return InfuserRecipeBuilder.infuserRecipe(this.itemLookup);
     }
 
-    protected void fiveTieredMetalInfusionRecipe(ItemLike ingredientItem, ItemLike result) {
+    protected void fiveTieredMetalInfusionRecipe(ItemLike ingredientItem, Holder<Item> result) {
         for (int i = 0; i < 5; i++) {
             metalInfusionRecipe(ingredientItem, result, i);
         }
     }
 
-    protected void fiveTieredMetalInfusionRecipe(TagKey<Item> ingredientTag, ItemLike result) {
+    protected void fiveTieredMetalInfusionRecipe(TagKey<Item> ingredientTag, Holder<Item> result) {
         for (int i = 0; i < 5; i++) {
             metalInfusionRecipe(ingredientTag, result, i);
         }
     }
 
-    protected void metalInfusionRecipe(Ingredient inputIngredient, String ingredientName, ItemLike result, int level, Criterion<InventoryChangeTrigger.TriggerInstance> hasIngredientTrigger) {
+    protected void metalInfusionRecipe(Ingredient inputIngredient, String ingredientName, Holder<Item> result, int level, Criterion<InventoryChangeTrigger.TriggerInstance> hasIngredientTrigger) {
         ItemLike pureBloodRequired = PureBloodItem.getBloodItemForLevel(level);
-        ItemLike leftoverBloodItem = level == 0 ? ModItems.VAMPIRE_BLOOD_BOTTLE : PureBloodItem.getBloodItemForLevel(level - 1);
+        Holder<Item> leftoverBloodItem = level == 0 ? ModItems.VAMPIRE_BLOOD_BOTTLE : PureBloodItem.getPureBloodHolder(level - 1);
         int burnTime = 200 + 100 * level;
 
-        infuser(PureLevel.pureBlood(result.asItem().getDefaultInstance(), level))
+        infuser(PureLevel.template(result, level))
                 .ingredients(Ingredient.of(pureBloodRequired))
                 .input(inputIngredient)
-                .results(leftoverBloodItem.asItem().getDefaultInstance())
+                .results(new ItemStackTemplate(leftoverBloodItem))
                 .burnTime(burnTime)
                 .unlockedBy(ingredientName, hasIngredientTrigger)
                 .unlockedBy("has_pure_blood", has(pureBloodRequired))
                 .save(this.output, modString(ingredientName + "_pure_" + level));
     }
 
-    protected void metalInfusionRecipe(ItemLike ingredientItem, ItemLike result, int level) {
+    protected void metalInfusionRecipe(ItemLike ingredientItem, Holder<Item> result, int level) {
         String ingredientName = RegUtil.id(ingredientItem.asItem()).getPath();
         metalInfusionRecipe(Ingredient.of(ingredientItem), ingredientName, result, level, has(ingredientItem));
     }
 
-    protected void metalInfusionRecipe(TagKey<Item> ingredientTag, ItemLike result, int level) {
+    protected void metalInfusionRecipe(TagKey<Item> ingredientTag, Holder<Item> result, int level) {
         metalInfusionRecipe(tag(ingredientTag), getTagName(ingredientTag), result, level, has(ingredientTag));
     }
 
@@ -207,21 +212,21 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
         return lastSeparator == -1 ? path : path.substring(lastSeparator + 1);
     }
 
-    protected void fiveTieredInfusedMetalSmeltingRecipe(ItemLike rawIngredient, ItemLike result) {
+    protected void fiveTieredInfusedMetalSmeltingRecipe(ItemLike rawIngredient, Holder<Item> result) {
         for (int i = 0; i < 5; i++) {
             infusedMetalSmeltingRecipe(rawIngredient, result, i);
         }
     }
 
-    protected void infusedMetalSmeltingRecipe(ItemLike rawIngredient, ItemLike result, int level) {
+    protected void infusedMetalSmeltingRecipe(ItemLike rawIngredient, Holder<Item> result, int level) {
         String ingredientName = RegUtil.id(rawIngredient.asItem()).getPath();
-        String resultName = RegUtil.id(result.asItem()).getPath();
+        String resultName = result.getKey().identifier().getPath();
         SimpleCookingRecipeBuilder
-                .smelting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), rawIngredient), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(result, level), (float) Math.pow(2F, level), 200 + level * 100)
+                .smelting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), rawIngredient), RecipeCategory.BUILDING_BLOCKS,CookingBookCategory.MISC, PureLevel.template(result, level), (float) Math.pow(2F, level), 200 + level * 100)
                 .unlockedBy("has_" + resultName, has(rawIngredient))
                 .save(this.output, modString(ingredientName + "_pure_" + level + "_smelting"));
         SimpleCookingRecipeBuilder
-                .blasting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), rawIngredient), RecipeCategory.BUILDING_BLOCKS, PureLevel.pureBlood(result, level), (float) Math.pow(2F, level), 100 + level * 50)
+                .blasting(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(level), rawIngredient), RecipeCategory.BUILDING_BLOCKS, CookingBookCategory.MISC, PureLevel.template(result, level), (float) Math.pow(2F, level), 100 + level * 50)
                 .unlockedBy("has_" + resultName, has(rawIngredient))
                 .save(this.output, modString(ingredientName + "_pure_" + level + "_blasting"));
     }
@@ -232,7 +237,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
      * X - The metal or gem used in crafting.
      * Y - Stick.
      */
-    protected void fiveTieredInfusedSwordCrafting(ItemLike result, ItemLike metalIngredient, String pattern) {
+    protected void fiveTieredInfusedSwordCrafting(Holder<Item> result, ItemLike metalIngredient, String pattern) {
         for (int i = 0; i < 5; i++) {
             infusedSwordCrafting(result, metalIngredient, pattern, i);
         }
@@ -243,8 +248,8 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
      * X - The metal or gem used in crafting.
      * Y - Stick.
      */
-    protected void infusedSwordCrafting(ItemLike result, ItemLike metalIngredient, String pattern, int level) {
-        ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.pureBlood(result, level));
+    protected void infusedSwordCrafting(Holder<Item> result, ItemLike metalIngredient, String pattern, int level) {
+        ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(this.itemLookup, RecipeCategory.COMBAT, PureLevel.template(result, level));
         for (String row : pattern.split("\n")) {
             builder.pattern(row);
         }
@@ -276,14 +281,14 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
                 .save(output, RegUtil.id(arrow) + "_" + quantity);
     }
 
-    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStack unpacked, RecipeCategory packedCategory, ItemStack packed, String pathSuffix) {
-        this.nineBlockStorageRecipes(unpackedCategory, unpacked, packedCategory, packed, RegUtil.id(packed.getItem()).withSuffix(pathSuffix), null, RegUtil.id(unpacked.getItem()).withSuffix(pathSuffix), null);
+    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStackTemplate unpacked, RecipeCategory packedCategory, ItemStackTemplate packed, String pathSuffix) {
+        this.nineBlockStorageRecipes(unpackedCategory, unpacked, packedCategory, packed, packed.item().getKey().identifier().withSuffix(pathSuffix), null, unpacked.item().getKey().identifier().withSuffix(pathSuffix), null);
     }
 
-    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStack unpacked, RecipeCategory packedCategory, ItemStack packed, Identifier packedName, @Nullable String packedGroup, Identifier unpackedName, @Nullable String unpackedGroup) {
+    protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStackTemplate unpacked, RecipeCategory packedCategory, ItemStackTemplate packed, Identifier packedName, @Nullable String packedGroup, Identifier unpackedName, @Nullable String unpackedGroup) {
         this.shapeless(unpackedCategory, unpacked)
                 .requires(DataComponentIngredient.of(false, packed))
-                .group(unpackedGroup).unlockedBy(getHasName(packed.getItem()), this.has(packed.getItem()))
+                .group(unpackedGroup).unlockedBy(getHasName(packed.item().value()), this.has(packed.item().value()))
                 .save(this.output, ResourceKey.create(Registries.RECIPE, unpackedName));
         ShapedRecipeBuilder
                 .shaped(this.itemLookup, packedCategory, packed)
@@ -292,7 +297,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
                 .pattern("###")
                 .pattern("###")
                 .group(packedGroup)
-                .unlockedBy(getHasName(unpacked.getItem()), this.has(unpacked.getItem()))
+                .unlockedBy(getHasName(unpacked.item().value()), this.has(unpacked.item().value()))
                 .save(this.output, ResourceKey.create(Registries.RECIPE, packedName));
     }
 

@@ -1,6 +1,5 @@
 {
   "parent": "minecraft:block/beacon",
-  "render_type": "minecraft:cutout",
   "textures": {
     "beacon": "vampirism:block/cursed_earth"
   }

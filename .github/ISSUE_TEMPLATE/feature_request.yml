@@ -2,6 +2,8 @@ name: Feature request
 description: Suggest an idea for this mod
 title: "[Feature]: "
 labels: [ "discussion", "enhancement", "feature" ]
+type: "feature"
+projects: ["TeamLapen/2"]
 body:
   - type: markdown
     attributes:

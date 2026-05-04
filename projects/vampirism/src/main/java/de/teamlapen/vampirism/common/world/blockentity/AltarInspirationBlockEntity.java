@@ -72,7 +72,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
         Optional<AltarInspirationRequirement> requirement = VampireLeveling.getInspirationRequirement(targetLevel);
         if (requirement.isEmpty()) {
             if (player.level().isClientSide()) {
-                player.displayClientMessage(Component.translatable("text.vampirism.altar_infusion.ritual_level_wrong"), true);
+                player.sendOverlayMessage(Component.translatable("message.vampirism.altar_infusion.ritual.level_wrong"));
             }
             return;
         }
@@ -84,7 +84,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
                 var blood = ResourceHandlerUtil.extractFirst(fluidInventory, x -> x.is(ModFluids.BLOOD), neededBlood, transaction);
 
                 if (blood == null || blood.amount() < neededBlood) {
-                    player.displayClientMessage(Component.translatable("text.vampirism.not_enough_blood"), true);
+                    player.sendOverlayMessage(Component.translatable("message.vampirism.altar_inspiration.not_enough_blood"));
                     return;
                 }
             }

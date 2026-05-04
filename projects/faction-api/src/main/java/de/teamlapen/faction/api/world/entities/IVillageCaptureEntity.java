@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Required for entities that are supposed to attack/defend villages during a capture progress
+ * Required for entities that are supposed to attack/defend villages during capture progress
  */
 public interface IVillageCaptureEntity extends IFactionEntity {
 
@@ -22,7 +22,7 @@ public interface IVillageCaptureEntity extends IFactionEntity {
     ICaptureAttributes getCaptureInfo();
 
     /**
-     * @return The village area that is target of the capture
+     * @return The village area that is the target of the capture
      */
     @Nullable
     AABB getTargetVillageArea();
@@ -35,7 +35,7 @@ public interface IVillageCaptureEntity extends IFactionEntity {
     boolean isDefendingVillage();
 
     /**
-     * Called when the entity is within a village where a capture progress has been stopped.
+     * Called when the entity is within a village where capture progress has been stopped.
      * {@link #attackVillage(ICaptureAttributes)} or {@link #defendVillage(ICaptureAttributes)} may not have been called before
      */
     void stopVillageAttackDefense();

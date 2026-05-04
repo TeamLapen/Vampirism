@@ -28,13 +28,13 @@ public abstract class AreaEffectCloudMixin extends Entity {
         super(pEntityType, pLevel);
     }
 
-    @ModifyVariable(method = "serverTick", at = @At(value = "STORE", ordinal = 0))
-    private MobEffectInstance replaceEffectForVampires(MobEffectInstance effectInstance, @Local(ordinal = 0) LivingEntity entity) {
+    @ModifyVariable(method = "serverTick", at = @At(value = "STORE", ordinal = 0), name = "effect")
+    private MobEffectInstance replaceEffectForVampires(MobEffectInstance effect, @Local(name = "entity") LivingEntity entity) {
         return this.potionContents.potion()
                 .map(Holder::value)
                 .filter(BasePotion.HunterPotion.class::isInstance)
-                .filter(potion -> Helper.isVampire(entity))
+                .filter(_ -> Helper.isVampire(entity))
                 .map(s -> VampirismPoisonMobEffect.createEffectCloudEffect())
-                .orElse(effectInstance);
+                .orElse(effect);
     }
 }

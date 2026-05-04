@@ -39,11 +39,9 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     }
 
     protected final int MOVE_TO_RESTRICT_PRIO = 3;
-    private final boolean countAsMonster;
 
-    public HunterBaseEntity(EntityType<? extends HunterBaseEntity> type, Level world, boolean countAsMonster) {
+    public HunterBaseEntity(EntityType<? extends HunterBaseEntity> type, Level world) {
         super(type, world);
-        this.countAsMonster = countAsMonster;
     }
 
     @Override
@@ -73,7 +71,7 @@ public abstract class HunterBaseEntity extends VampirismEntity implements IHunte
     protected boolean tryCureSanguinare(@NotNull Player entity) {
         if (!this.level().isClientSide() && entity.hasEffect(ModEffects.SANGUINARE)) {
             entity.removeEffect(ModEffects.SANGUINARE);
-            entity.displayClientMessage(Component.translatable("text.vampirism.hunter.cured_sanguinare"), true);
+            entity.sendOverlayMessage(Component.translatable("dialogue.vampirism.hunter.cured_sanguinare"));
             return true;
         }
         return false;

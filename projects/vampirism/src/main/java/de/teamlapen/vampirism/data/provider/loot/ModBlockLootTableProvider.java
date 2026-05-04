@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.world.blocks.*;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseSplitBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
 import de.teamlapen.vampirism.data.loot.conditions.TentSpawnerCondition;
 import de.teamlapen.vampirism.misc.mixin.accessor.VanillaBlockLootAccessor;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
@@ -53,11 +53,11 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                         .add(LootItem.lootTableItem(Items.GOLD_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.PILLAR_TYPE, "gold"))))
                         .add(LootItem.lootTableItem(Items.BONE_BLOCK).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.ALTAR_PILLAR.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AltarPillarBlock.PILLAR_TYPE, "bone"))))));
         this.dropSelf(ModBlocks.ALTAR_TIP.get());
-        ColorListsUtil.COFFINS.forEach(coffin -> this.add(coffin, block -> createSinglePropConditionTable(block, CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD)));
+        ColorListsUtil.COFFINS.forEach(coffin -> this.add(coffin.get().getBlock(), block -> createSinglePropConditionTable(block, CoffinBlock.PART, CoffinBlock.CoffinPart.HEAD)));
         this.dropSelf(ModBlocks.BLOOD_CONTAINER.get());
         this.dropSelf(ModBlocks.BLOOD_GRINDER.get());
         this.dropSelf(ModBlocks.BLOOD_PEDESTAL.get());
-        this.dropSelf(ModBlocks.POTION_TABLE.get());
+        this.dropSelf(ModBlocks.VAPOR_STILL.get());
         this.dropSelf(ModBlocks.BLOOD_SIEVE.get());
         this.dropSelf(ModBlocks.DARK_STONE_BRICKS.get());
         this.dropSelf(ModBlocks.BLOODY_DARK_STONE_BRICKS.get());
@@ -83,11 +83,12 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                 .withPool(LootPool.lootPool()
                         .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.GARLIC.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicBlock.AGE, 7)))
                         .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).apply(ApplyBonusCount.addBonusBinomialDistributionCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE), 0.5714286F, 3))))));
+        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_CORE.get());
+        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.get());
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
         this.dropSelf(ModBlocks.HUNTER_TABLE.get());
-        this.add(ModBlocks.MED_CHAIR.get(), block -> createSinglePropConditionTable(block, MedChairBlock.PART, MedChairBlock.EnumPart.BOTTOM));
         this.dropSelf(ModBlocks.SUNSCREEN_BEACON.get());
         this.add(ModBlocks.TENT_MAIN.get(), createSingleItemTable(ModItems.ITEM_TENT.get())
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(TentSpawnerCondition.builder())
@@ -137,10 +138,11 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE_GATE.get());
         this.dropSelf(ModBlocks.DARK_SPRUCE_FENCE.get());
         this.dropSelf(ModBlocks.CURSED_SPRUCE_FENCE.get());
-        this.add(ModBlocks.CURSED_ROOTS.get(), (block) -> createShearsDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));
+        this.add(ModBlocks.CURSED_ROOTS.get(), block -> createShearsDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(Items.STICK).apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))))));
         this.dropSelf(ModBlocks.VAMPIRE_RACK.get());
-        this.add(ModBlocks.THRONE.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
+        this.add(ModBlocks.THRONE.get(), block -> createSinglePropConditionTable(block, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.dropSelf(ModBlocks.ALCHEMY_TABLE.get());
+        this.add(ModBlocks.INJECTION_CHAIR.get(), block -> createSinglePropConditionTable(block, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.add(ModBlocks.DIAGONAL_CURSED_BARK.get(), noDrop());
         this.dropSelf(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get());
         this.dropSelf(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get());
@@ -195,6 +197,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.PURPLE_STONE_TILES_WALL.get());
         this.dropSelf(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
         this.dropSelf(ModBlocks.INFUSER.get());
+        this.dropSelf(ModBlocks.VELMORRA_ALTAR.get());
 
         ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.forEach(pair -> this.dropSelf(pair.getFirst()));
         ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.forEach(pair -> this.dropSelf(pair.getFirst()));

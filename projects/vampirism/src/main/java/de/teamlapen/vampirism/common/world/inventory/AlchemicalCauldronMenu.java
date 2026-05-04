@@ -21,7 +21,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,11 +45,11 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu {
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
-    public AlchemicalCauldronMenu(int id, @NotNull Inventory playerInventory) {
+    public AlchemicalCauldronMenu(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(4), new SimpleContainerData(4));
     }
 
-    public AlchemicalCauldronMenu(int id, @NotNull Inventory playerInventory, @NotNull Container inv, @NotNull ContainerData pData) {
+    public AlchemicalCauldronMenu(int id, Inventory playerInventory, Container inv, ContainerData pData) {
         super(ModMenus.ALCHEMICAL_CAULDRON.get(), id);
         this.recipeType = ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get();
         this.recipeBookType = RecipeBookType.FURNACE;
@@ -78,11 +77,11 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu {
     }
 
     @Override
-    public PostPlaceAction handlePlacement(boolean p_40119_, boolean p_362739_, @NotNull RecipeHolder<?> recipeHolder, ServerLevel level, Inventory inventory) {
+    public PostPlaceAction handlePlacement(boolean p_40119_, boolean p_362739_, RecipeHolder<?> recipeHolder, ServerLevel level, Inventory inventory) {
         List<Slot> slots = List.of(this.getSlot(FLUID_SLOT), this.getSlot(INGREDIENT_SLOT), this.getSlot(RESULT_SLOT));
         return ServerPlaceRecipe.placeRecipe(new ServerPlaceRecipe.CraftingMenuAccess<>() {
             @Override
-            public void fillCraftSlotsStackedContents(@NotNull StackedItemContents itemContents) {
+            public void fillCraftSlotsStackedContents(StackedItemContents itemContents) {
                 AlchemicalCauldronMenu.this.fillCraftSlotsStackedContents(itemContents);
             }
 
@@ -92,7 +91,7 @@ public class AlchemicalCauldronMenu extends RecipeBookMenu {
             }
 
             @Override
-            public boolean recipeMatches(@NotNull RecipeHolder<AlchemicalCauldronRecipe> recipeHolder) {
+            public boolean recipeMatches(RecipeHolder<AlchemicalCauldronRecipe> recipeHolder) {
                 return recipeHolder.value().matches(new AlchemicalCauldronRecipeInput(AlchemicalCauldronMenu.this.container.getItem(INGREDIENT_SLOT), AlchemicalCauldronMenu.this.container.getItem(FLUID_SLOT)), level);
             }
         }, 1, 1, List.of(this.getSlot(FLUID_SLOT), this.getSlot(INGREDIENT_SLOT)), slots, inventory, (RecipeHolder<AlchemicalCauldronRecipe>) recipeHolder, p_40119_, p_362739_);

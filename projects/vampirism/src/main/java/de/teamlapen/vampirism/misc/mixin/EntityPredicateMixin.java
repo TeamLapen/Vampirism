@@ -23,9 +23,9 @@ public class EntityPredicateMixin {
     private boolean isCombat;
 
     @Inject(method = "test", at = @At("RETURN"), cancellable = true)
-    private void ignoreIfDown(ServerLevel level, LivingEntity attacker, LivingEntity target, @NotNull CallbackInfoReturnable<Boolean> cir) {
+    private void ignoreIfDown(ServerLevel level, LivingEntity targeter, LivingEntity target, @NotNull CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && isCombat) {
-            if (target instanceof Player player && !(attacker instanceof IHunterMob)) {
+            if (target instanceof Player player && !(targeter instanceof IHunterMob)) {
                 if (VampirePlayer.get(player).getSkillProperties().isDBNO) {
                     cir.setReturnValue(false);
                     cir.cancel();

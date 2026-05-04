@@ -5,6 +5,11 @@
         "texture": "vampirism:armor_of_swiftness_normal"
       }
     ],
+    "humanoid_baby": [
+      {
+        "texture": "vampirism:armor_of_swiftness_normal"
+      }
+    ],
     "humanoid_leggings": [
       {
         "texture": "vampirism:armor_of_swiftness_normal"

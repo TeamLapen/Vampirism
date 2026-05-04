@@ -59,7 +59,6 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static net.neoforged.neoforge.event.EventHooks.onEffectRemoved;
@@ -77,7 +76,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
+    public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
                 .add(Attributes.MAX_HEALTH, 1)
                 .add(Attributes.ATTACK_DAMAGE, BalanceMobProps.mobProps.VAMPIRE_ATTACK_DAMAGE)
@@ -104,7 +103,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull ValueOutput output) {
+    public void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putInt("level", getEntityLevel());
         output.putInt("type", getEntityTextureType());
@@ -148,7 +147,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     /**
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
-    public void convertToMinion(@NotNull Player player) {
+    public void convertToMinion(Player player) {
         FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
@@ -172,9 +171,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                     LOGGER.warn("No free slot");
                 }
             });
-        }, () -> {
-            LOGGER.error("Can't have minions");
-        });
+        }, () -> LOGGER.error("Can't have minions"));
     }
 
     /**
@@ -217,7 +214,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void die(@NotNull DamageSource cause) {
+    public void die(DamageSource cause) {
         if (this.villageAttributes == null) {
             FactionBadOmenMobEffect.handlePotentialBannerKill(cause.getEntity(), this);
         }
@@ -226,7 +223,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
-        BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, drinkContext);
+        BloodDrinkEvent.EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, drinkContext);
         this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, event.getAmount() * 20));
         boolean dedicated = ServerLifecycleHooks.getCurrentServer().isDedicatedServer();
         bloodtimer += event.getAmount() * 40 + this.getRandom().nextInt(1000) * (dedicated ? 2 : 1);
@@ -234,7 +231,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         if ((reason == EntitySpawnReason.NATURAL || reason == EntitySpawnReason.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
             this.setItemSlot(EquipmentSlot.HEAD, VampireVillage.createBanner(worldIn.registryAccess()));
         }
@@ -307,14 +304,14 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, @NotNull DamageSource damageSource, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
         boolean flag = super.hurtServer(level, damageSource, amount);
         if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
         return flag;
     }
 
     @Override
-    public void remove(@NotNull RemovalReason p_146834_) {
+    public void remove(RemovalReason p_146834_) {
         super.remove(p_146834_);
         if (advancedLeader != null) {
             advancedLeader.decreaseFollowerCount();
@@ -328,12 +325,11 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull ValueInput input) {
+    public void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
-        setEntityLevel(input.getIntOr("level", 0));
+        input.getInt("level").ifPresent(this::setEntityLevel);
         this.attack = input.getBooleanOr("attack", false);
-        int type = input.getIntOr("type", 0);
-        getEntityData().set(TYPE, type < TYPES && type >= 0 ? type : -1);
+        input.getInt("type").ifPresent(t -> getEntityData().set(TYPE, t < TYPES && t >= 0 ? t : -1));
     }
 
     @Override
@@ -350,7 +346,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    public int suggestEntityLevel(@NotNull Difficulty d) {
+    public int suggestEntityLevel(Difficulty d) {
         return switch (this.random.nextInt(5)) {
             case 0 -> (int) (d.minPercLevel() / 100F * MAX_LEVEL);
             case 1 -> (int) (d.avgPercLevel() / 100F * MAX_LEVEL);
@@ -388,35 +384,34 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     }
 
     @Override
-    protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
+    protected EntityType<?> getIMobTypeOpt(boolean iMob) {
         return iMob ? ModEntities.VAMPIRE_IMOB.get() : ModEntities.VAMPIRE.get();
     }
 
-    @NotNull
     @Override
-    protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (this.isAlive() && !player.isShiftKeyDown()) {
             if (!level().isClientSide()) {
                 return FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(ModFactions.VAMPIRE)).<InteractionResult>map(lord -> {
                     ItemStack heldItem = player.getItemInHand(hand);
                     //noinspection Convert2MethodRef
                     boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(c -> c.hasFreeMinionSlot()).orElse(false);
-                    player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.available"), true);
+                    player.sendOverlayMessage(Component.translatable("dialogue.vampirism.vampire_minion.available"));
                     if (heldItem.getItem() == ModItems.VAMPIRE_MINION_BINDING.get()) {
                         if (!freeSlot) {
-                            player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.no_free_slot"), true);
+                            player.sendOverlayMessage(Component.translatable("dialogue.vampirism.vampire_minion.no_free_slot"));
                         } else {
                             String key = switch (this.getRandom().nextInt(3)) {
-                                case 0 -> "text.vampirism.basic_vampire.minion.start_serving1";
-                                case 1 -> "text.vampirism.basic_vampire.minion.start_serving2";
-                                default -> "text.vampirism.basic_vampire.minion.start_serving3";
+                                case 0 -> "dialogue.vampirism.vampire.minion.start_serving1";
+                                case 1 -> "dialogue.vampirism.vampire.minion.start_serving2";
+                                default -> "dialogue.vampirism.vampire.minion.start_serving3";
                             };
-                            player.displayClientMessage(Component.translatable(key), false);
+                            player.sendSystemMessage(Component.translatable(key));
                             convertToMinion(player);
                             if (!player.getAbilities().instabuild) heldItem.shrink(1);
                         }
                     } else if (freeSlot) {
-                        player.displayClientMessage(Component.translatable("text.vampirism.basic_vampire.minion.require_binding", Component.translatable(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())), true);
+                        player.sendOverlayMessage(Component.translatable("dialogue.vampirism.vampire_minion.require_binding", Component.translatable(ModItems.VAMPIRE_MINION_BINDING.get().getDescriptionId())));
                     }
                     return InteractionResult.SUCCESS;
                 }).orElse(InteractionResult.PASS);

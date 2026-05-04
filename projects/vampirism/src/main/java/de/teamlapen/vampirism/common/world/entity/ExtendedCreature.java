@@ -44,10 +44,6 @@ public class ExtendedCreature extends AttachmentSync implements IExtendedCreatur
 
     public static final int POISONOUS_BLOOD_DOSE_DURATION = 72000; // 3 in-game days
 
-    private final static String KEY_BLOOD = "bloodLevel";
-    private final static String KEY_MAX_BLOOD = "max_blood";
-    private final static String KEY_POISONOUS_BLOOD = "poisonousBlood";
-
     public static @NotNull Optional<ExtendedCreature> getSafe(@NotNull Entity mob) {
         if (mob instanceof PathfinderMob pathfinderMob) {
             return Optional.of(pathfinderMob.getData(ModAttachments.EXTENDED_CREATURE));
@@ -215,7 +211,10 @@ public class ExtendedCreature extends AttachmentSync implements IExtendedCreatur
             }
         }
         if (this.entity instanceof Villager villager) {
-            ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.asEntity(), villager);
+            if (!villager.isSleeping()) {
+                //If the villager is not sleeping, they know what you did and like you less
+                ((ServerLevel) villager.level()).onReputationEvent(ReputationEventType.VILLAGER_HURT, biter.asEntity(), villager);
+            }
         }
 
         return amt;
@@ -237,6 +236,16 @@ public class ExtendedCreature extends AttachmentSync implements IExtendedCreatur
         this.sync();
 
         return amount;
+    }
+
+    @Override
+    public boolean canDrain(int amount) {
+        int available = getBlood();
+        if (entity instanceof AgeableMob ageableMob && ageableMob.getAge() < 0) {
+            available /= 3;
+        }
+
+        return available > amount;
     }
 
     @Override

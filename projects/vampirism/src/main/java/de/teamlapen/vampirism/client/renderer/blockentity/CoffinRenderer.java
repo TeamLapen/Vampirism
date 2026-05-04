@@ -7,13 +7,13 @@ import de.teamlapen.vampirism.common.world.blockentity.CoffinBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
@@ -29,8 +29,10 @@ import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
+import static net.minecraft.client.renderer.block.BlockModelRenderState.EMPTY_TINTS;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 /**
@@ -41,21 +43,17 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
     private static final Marker COFFIN = new MarkerManager.Log4jMarker("COFFIN");
     private final Logger LOGGER = LogManager.getLogger();
 
-    private final BlockStateModel[] bottom;
-    private final BlockStateModel[] top;
+    private final BlockStateModelPart[] bottom;
+    private final BlockStateModelPart top;
 
     public CoffinRenderer(BlockEntityRendererProvider.Context context) {
         ModelManager modelManager = Minecraft.getInstance().getModelManager();
-        bottom = ModModels.COFFIN_KEYS.row(ModModels.CoffinType.BOTTOM).entrySet().stream()
+        bottom = ModModels.COFFIN_BOTTOM_KEYS.entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> entry.getKey().getId()))
                 .map(Map.Entry::getValue)
                 .map(modelManager::getStandaloneModel)
-                .toArray(BlockStateModel[]::new);
-        top = ModModels.COFFIN_KEYS.row(ModModels.CoffinType.TOP).entrySet().stream()
-                .sorted(Comparator.comparingInt(entry -> entry.getKey().getId()))
-                .map(Map.Entry::getValue)
-                .map(modelManager::getStandaloneModel)
-                .toArray(BlockStateModel[]::new);
+                .toArray(BlockStateModelPart[]::new);
+        top = modelManager.getStandaloneModel(ModModels.COFFIN_TOP_KEY);
     }
 
     @Override
@@ -110,7 +108,7 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
             }
         }
 
-        nodeCollector.submitBlockModel(poseStack, RenderTypes.solidMovingBlock(), this.bottom[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        nodeCollector.submitBlockModel(poseStack, RenderTypes.cutoutMovingBlock(), List.of(this.bottom[renderState.color.getId()]), EMPTY_TINTS, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 
         poseStack.pushPose();
         if (renderState.isVertical) {
@@ -121,7 +119,7 @@ public class CoffinRenderer implements BlockEntityRenderer<CoffinBlockEntity, Co
             poseStack.translate(0, 0, -0.5 * renderState.lidPos);
         }
 
-        nodeCollector.submitBlockModel(poseStack, RenderTypes.solidMovingBlock(), this.top[renderState.color.getId()], 1f, 1f, 1f, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        nodeCollector.submitBlockModel(poseStack, RenderTypes.solidMovingBlock(), List.of(this.top), EMPTY_TINTS, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
 
         poseStack.popPose();

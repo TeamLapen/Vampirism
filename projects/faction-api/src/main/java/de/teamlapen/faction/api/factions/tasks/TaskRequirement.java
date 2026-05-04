@@ -9,7 +9,6 @@ import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Function;
@@ -134,7 +133,6 @@ public class TaskRequirement {
          * @return the stat the needs to be achieved with {@link #getAmount(IFactionPlayer)} to complete the requirement
          * @throws ClassCastException if Object is not applicant for the {@link #getType()}
          */
-        @NotNull
         T getStat(IFactionPlayer<?> player);
 
         default Type getType() {

@@ -3,6 +3,8 @@ package de.teamlapen.faction.api.event;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.world.ITotem;
 import net.minecraft.core.Holder;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.level.Level;
@@ -11,10 +13,7 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public abstract class FactionVillageEvent extends Event {
@@ -48,6 +47,7 @@ public abstract class FactionVillageEvent extends Event {
         return totem.getVillageAreaReduced();
     }
 
+    @Nullable
     public Level getLevel() {
         return this.totem.getTileLevel();
     }
@@ -62,19 +62,20 @@ public abstract class FactionVillageEvent extends Event {
     public static class SpawnNewVillager extends FactionVillageEvent {
 
         /**
-         * Random existing villager in totemTile
-         * Used as a "seed" villager to get a valid spawn point.
+         * If an existing entity is to be replaced, it is available here
          */
         @Nullable
-        private final LivingEntity oldEntity;
-        private final boolean replace;
-        private Villager newVillager;
+        private final LivingEntity replacedEntity;
 
-        public SpawnNewVillager(ITotem totem, @Nullable LivingEntity oldEntity, Villager newVillager, boolean replace) {
+        @Nullable
+        private Villager newVillager;
+        private final EntityType<? extends Villager> originalNewVillagerType;
+
+        public SpawnNewVillager(ITotem totem, EntityType<? extends Villager> newVillagerType, @Nullable LivingEntity replacedEntity) {
             super(totem);
-            this.oldEntity = oldEntity;
-            this.newVillager = newVillager;
-            this.replace = replace;
+            this.replacedEntity = replacedEntity;
+            this.originalNewVillagerType = newVillagerType;
+
         }
 
         /**
@@ -84,7 +85,21 @@ public abstract class FactionVillageEvent extends Event {
             return this.totem.getControllingFaction();
         }
 
-        public Villager getNewVillager() {
+        /**
+         * @return The type the new villager
+         */
+        public EntityType<? extends Villager> getOriginalNewVillagerType(){
+            return originalNewVillagerType;
+        }
+
+        /**
+         * @return May be null if entity creation fails
+         */
+        @Nullable
+        public Villager getOrCreateNewVillager(){
+            if(newVillager==null && getLevel() != null){
+                newVillager= getOriginalNewVillagerType().create(getLevel(), isReplace() ? EntitySpawnReason.CONVERSION : EntitySpawnReason.EVENT );
+            }
             return newVillager;
         }
 
@@ -97,18 +112,17 @@ public abstract class FactionVillageEvent extends Event {
         }
 
         /**
-         * A random existing villager which can be used as a seed (e.g. for the position)
+         * @return if the {@link #replacedEntity} will be replaced by {@link #newVillager}
          */
-        @Nullable
-        public LivingEntity getOldEntity() {
-            return oldEntity;
+        public boolean isReplace() {
+            return replacedEntity !=null;
         }
 
         /**
-         * @return if the {@link #oldEntity} will be replaced by {@link #newVillager}
+         * @return Villager to be replaced if present
          */
-        public boolean isReplace() {
-            return replace;
+        public Optional<LivingEntity> getEntityToReplace(){
+            return Optional.ofNullable(replacedEntity);
         }
 
     }
@@ -349,7 +363,11 @@ public abstract class FactionVillageEvent extends Event {
             return Collections.unmodifiableMap(this.entitiesScheduledForReplacement);
         }
 
+
         public enum Action {
+            /**
+             * Replace with a fresh villager
+             */
             REPLACE,
             KILL
         }

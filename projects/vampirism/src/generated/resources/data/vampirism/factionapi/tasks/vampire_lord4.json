@@ -5,7 +5,7 @@
         "type": "factionapi:entity_type",
         "amount": 5,
         "description": {
-          "translate": "entity_tag.vampirism.advanced_hunter"
+          "translate": "task_tag.vampirism.advanced_hunter"
         },
         "entityType": "vampirism:advanced_hunter",
         "id": "vampirism:advanced_hunter"
@@ -37,7 +37,7 @@
   "reward": {
     "type": "factionapi:lord_level",
     "description": {
-      "translate": "task_reward.factionapi.lord_level_reward",
+      "translate": "task_reward.factionapi.lord_level",
       "with": [
         4
       ]

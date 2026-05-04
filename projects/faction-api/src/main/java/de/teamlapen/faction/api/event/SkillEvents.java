@@ -8,7 +8,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.Event;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -16,12 +15,11 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class SkillEvents<T extends ISkillPlayer<T>, Z extends ISkill<T>> extends Event {
 
-    @NotNull
     private final T skillPlayer;
     private final Holder<Z> skill;
 
     @ApiStatus.Internal
-    public SkillEvents(@NotNull T skillPlayer, Holder<Z> skill) {
+    public SkillEvents(T skillPlayer, Holder<Z> skill) {
         this.skillPlayer = skillPlayer;
         this.skill = skill;
     }
@@ -58,7 +56,7 @@ public abstract class SkillEvents<T extends ISkillPlayer<T>, Z extends ISkill<T>
 
         @ApiStatus.Internal
         @SuppressWarnings("unchecked")
-        public SkillUnlockCheckEvent(@NotNull T skillPlayer, Holder<? extends ISkill<?>> skill) {
+        public SkillUnlockCheckEvent(T skillPlayer, Holder<? extends ISkill<?>> skill) {
             super(skillPlayer, (Holder<ISkill<T>>) skill);
         }
 
@@ -86,7 +84,7 @@ public abstract class SkillEvents<T extends ISkillPlayer<T>, Z extends ISkill<T>
 
         @ApiStatus.Internal
         @SuppressWarnings("unchecked")
-        public SkillDisableEvent(@NotNull T skillPlayer, Holder<? extends ISkill<?>> skill) {
+        public SkillDisableEvent(T skillPlayer, Holder<? extends ISkill<?>> skill) {
             super(skillPlayer, (Holder<ISkill<T>>) skill);
         }
 
@@ -102,7 +100,7 @@ public abstract class SkillEvents<T extends ISkillPlayer<T>, Z extends ISkill<T>
 
         @ApiStatus.Internal
         @SuppressWarnings("unchecked")
-        public SkillEnableEvent(@NotNull T factionPlayer, Holder<? extends ISkill<?>> skill, Holder<ISkillTree> skillTree, boolean fromLoading) {
+        public SkillEnableEvent(T factionPlayer, Holder<? extends ISkill<?>> skill, Holder<ISkillTree> skillTree, boolean fromLoading) {
             super(factionPlayer, (Holder<ISkill<T>>) skill);
             this.skillTree = skillTree;
             this.fromLoading = fromLoading;

@@ -14,7 +14,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 public class AlchemyTableMenu extends AbstractContainerMenu {
     public static final int OIL_SLOT_1 = 0;
@@ -27,15 +26,15 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
     private static final int INV_SLOT_END = 33;
     private static final int USE_ROW_SLOT_START = 33;
     private static final int USE_ROW_SLOT_END = 42;
-    private final @NotNull Container alchemyTable;
-    private final @NotNull ContainerData alchemyTableData;
-    private final @NotNull Slot ingredientSlot;
+    private final Container alchemyTable;
+    private final ContainerData alchemyTableData;
+    private final Slot ingredientSlot;
 
-    public AlchemyTableMenu(int containerId, @NotNull Inventory playerInventory) {
+    public AlchemyTableMenu(int containerId, Inventory playerInventory) {
         this(containerId, playerInventory.player.level(), playerInventory, new SimpleContainer(6), new SimpleContainerData(3));
     }
 
-    public AlchemyTableMenu(int containerId, Level level, @NotNull Inventory playerInventory, @NotNull Container inventory, @NotNull ContainerData data) {
+    public AlchemyTableMenu(int containerId, Level level, Inventory playerInventory, Container inventory, ContainerData data) {
         super(ModMenus.ALCHEMICAL_TABLE.get(), containerId);
         checkContainerSize(inventory, 5);
         checkContainerDataCount(data, 3);
@@ -45,7 +44,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
         this.addSlot(new OilSlot(level, inventory, 1, 79, 16));
         this.addSlot(new ResultSlot(inventory, 2, 112, 72));
         this.addSlot(new ResultSlot(inventory, 3, 140, 44));
-        this.ingredientSlot = this.addSlot(new IngredientSlot(level, inventory, 4, 15, 25));
+        this.ingredientSlot = this.addSlot(new IngredientSlot(inventory, 4, 15, 25));
         this.addSlot(new FuelSlot(inventory, 5, 34, 69));
         this.addDataSlots(data);
 
@@ -62,7 +61,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(@NotNull Player player) {
+    public boolean stillValid(Player player) {
         return this.alchemyTable.stillValid(player);
     }
 
@@ -79,8 +78,7 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
     }
 
 
-    @NotNull
-    public ItemStack quickMoveStack(@NotNull Player player, int slotId) {
+    public ItemStack quickMoveStack(Player player, int slotId) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotId);
         if (slot != null && slot.hasItem()) {
@@ -139,16 +137,16 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
 
         private final Level world;
 
-        public OilSlot(Level worldPos, @NotNull Container inventory, int slotId, int xPos, int yPos) {
+        public OilSlot(Level worldPos, Container inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
             this.world = worldPos;
         }
 
-        public static boolean mayPlaceItem(@NotNull Level world, @NotNull ItemStack itemstack) {
+        public static boolean mayPlaceItem(Level world, ItemStack itemstack) {
             return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isIngredient(itemstack));
         }
 
-        public boolean mayPlace(@NotNull ItemStack stack) {
+        public boolean mayPlace(ItemStack stack) {
             return mayPlaceItem(world, stack);
         }
 
@@ -158,16 +156,9 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
     }
 
     static class IngredientSlot extends Slot {
-        private final Level world;
 
-        public IngredientSlot(Level worldPos, @NotNull Container inventory, int slotId, int xPos, int yPos) {
+        public IngredientSlot(Container inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
-            this.world = worldPos;
-
-        }
-
-        public boolean mayPlace(@NotNull ItemStack stack) {
-            return true;
         }
 
         public int getMaxStackSize() {
@@ -176,15 +167,15 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
     }
 
     static class FuelSlot extends Slot {
-        public FuelSlot(@NotNull Container inventory, int slotId, int xPos, int yPos) {
+        public FuelSlot(Container inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
         }
 
-        public boolean mayPlace(@NotNull ItemStack stack) {
+        public boolean mayPlace(ItemStack stack) {
             return mayPlaceItem(stack);
         }
 
-        public static boolean mayPlaceItem(@NotNull ItemStack stack) {
+        public static boolean mayPlaceItem(ItemStack stack) {
             return stack.getItem() == Items.BLAZE_POWDER;
         }
 
@@ -195,12 +186,12 @@ public class AlchemyTableMenu extends AbstractContainerMenu {
 
     static class ResultSlot extends Slot {
 
-        public ResultSlot(@NotNull Container inventory, int slotId, int xPos, int yPos) {
+        public ResultSlot(Container inventory, int slotId, int xPos, int yPos) {
             super(inventory, slotId, xPos, yPos);
         }
 
         @Override
-        public boolean mayPlace(@NotNull ItemStack stack) {
+        public boolean mayPlace(ItemStack stack) {
             return false;
         }
     }

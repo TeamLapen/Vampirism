@@ -6,7 +6,9 @@ import de.teamlapen.faction.client.config.ClientConfig;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.IConfigSpec;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.config.ModConfig.Type;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.apache.logging.log4j.LogManager;
@@ -20,20 +22,13 @@ public class FactionConfig extends Services {
 
     private final Config<ClientConfig> client;
     private final Config<ServerConfig> server;
-    private final Config<CommonConfig> common;
     private final ConfigHelper helper;
 
     public FactionConfig(ModContainer container) {
         super(container);
         this.client = Config.create(ClientConfig::new);
         this.server = Config.create(ServerConfig::new);
-        this.common = Config.create(CommonConfig::new);
         this.helper = new ConfigHelper(this);
-    }
-
-    @Override
-    protected void registerModBus(IEventBus bus) {
-        bus.addListener(this::setup);
     }
 
     //<editor-fold desc="Static Accessors">
@@ -44,10 +39,6 @@ public class FactionConfig extends Services {
 
     public static ServerConfig server() {
         return FactionsMod.config().server.config();
-    }
-
-    public static CommonConfig common() {
-        return FactionsMod.config().common.config();
     }
 
     public static ConfigHelper helper() {
@@ -66,10 +57,6 @@ public class FactionConfig extends Services {
         return this.server;
     }
 
-    public Config<CommonConfig> commonConfig() {
-        return this.common;
-    }
-
     public boolean isClientConfigSpec(IConfigSpec specs) {
         return this.client.isSpec(specs);
     }
@@ -78,17 +65,29 @@ public class FactionConfig extends Services {
 
     //<editor-fold desc="Event Handler">
 
-    public void setup(NewRegistryEvent event) {
+    @Override
+    protected void registerModBus(IEventBus bus) {
+        bus.addListener(this::setup);
+        bus.addListener(this::configLoaded);
+    }
+
+    private void setup(NewRegistryEvent event) {
         container().registerConfig(Type.CLIENT, client.spec());
         container().registerConfig(Type.SERVER, server.spec());
-        container().registerConfig(Type.COMMON, common.spec());
+    }
+
+    private void configLoaded(ModConfigEvent event) {
+        this.client.update(event.getConfig());
+        this.server.update(event.getConfig());
     }
 
     //</editor-fold>
 
-    public record Config<T>(T config, ModConfigSpec spec) {
+    //<editor-fold desc="Helper">
 
-        public static <T> Config<T> create(Function<ModConfigSpec.Builder, T> consumer) {
+    public record Config<T extends IConfigs>(T config, ModConfigSpec spec) {
+
+        public static <T extends IConfigs> Config<T> create(Function<ModConfigSpec.Builder, T> consumer) {
             var builder = new ModConfigSpec.Builder().configure(consumer);
             return new Config<>(builder.getLeft(), builder.getRight());
         }
@@ -100,5 +99,20 @@ public class FactionConfig extends Services {
         public boolean isLoaded() {
             return this.spec.isLoaded();
         }
+
+        public void update(ModConfig config) {
+            if (isSpec(config.getSpec())) {
+                this.config.refresh();
+            }
+        }
     }
+
+    public interface IConfigs {
+
+        default void refresh() {
+
+        }
+    }
+
+    //</editor-fold>
 }

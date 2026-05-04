@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -120,7 +119,7 @@ public class SoulOrbEntity extends Entity implements ItemSupplier {
         this.yo = this.getY();
         this.zo = this.getZ();
 
-        if (this.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value())) {
+        if (this.isEyeInFluid(FluidTags.WATER)) {
             Vec3 vec3d = this.getDeltaMovement();
             this.setDeltaMovement(vec3d.x * (double) 0.99F, Math.min(vec3d.y + (double) 5.0E-4F, 0.06F), vec3d.z * (double) 0.99F);
         } else if (!this.isNoGravity()) {

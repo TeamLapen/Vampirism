@@ -1,14 +1,13 @@
 package de.teamlapen.faction.data.provider.base;
 
-import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
+import de.teamlapen.faction.api.factions.skills.ISkillNode;
 import de.teamlapen.faction.common.factions.skills.SkillTreeConfiguration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,7 +32,6 @@ public abstract class SkillTreeProvider implements DataProvider {
         return this.lookupProvider.thenCompose(provider -> {
             Set<Identifier> set = new HashSet<>();
             List<CompletableFuture<?>> list = new ArrayList<>();
-            RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, provider);
             this.buildSkillTrees(provider, (id, skillTree) -> {
                 if (!set.add(id)) {
                     throw new IllegalStateException("Duplicate skill tree " + id);
@@ -47,6 +45,19 @@ public abstract class SkillTreeProvider implements DataProvider {
     }
 
     protected abstract void buildSkillTrees(HolderLookup.Provider provider, SkillTreeOutput output);
+
+    protected SkillTreeConfiguration.SkillTreeNodeConfiguration node(HolderLookup.RegistryLookup<ISkillNode> nodes, ResourceKey<ISkillNode> key, SkillTreeConfiguration.SkillTreeNodeConfiguration... children) {
+        return new SkillTreeConfiguration.SkillTreeNodeConfiguration(nodes.getOrThrow(key), children);
+    }
+
+    @SafeVarargs
+    protected final SkillTreeConfiguration.SkillTreeNodeConfiguration chain(HolderLookup.RegistryLookup<ISkillNode> nodes, ResourceKey<ISkillNode>... keys) {
+        SkillTreeConfiguration.SkillTreeNodeConfiguration current = node(nodes, keys[keys.length - 1]);
+        for (int i = keys.length - 2; i >= 0; i--) {
+            current = node(nodes, keys[i], current);
+        }
+        return current;
+    }
 
     @Override
     public String getName() {

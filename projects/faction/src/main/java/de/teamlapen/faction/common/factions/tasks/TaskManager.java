@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.IFactionTags;
+import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.tasks.*;
 import de.teamlapen.faction.api.util.FIdentifier;
@@ -378,7 +378,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
         if (!wrapper.tasks.isEmpty()) {
             this.removeLockedTasks(wrapper.getTaskInstances());
         }
-        wrapper.taskAmount = wrapper.taskAmount < 0 ? player.getRandom().nextInt(FactionConfig.server().taskMasterMaxTaskAmount.get()) + 1 - wrapper.lessTasks : wrapper.taskAmount;
+        wrapper.taskAmount = wrapper.taskAmount < 0 ? player.getRandom().nextInt(FactionConfig.server().taskMasterMaxTasks.get()) + 1 - wrapper.lessTasks : wrapper.taskAmount;
         if (wrapper.tasks.size() < wrapper.taskAmount) {
             List<Holder.Reference<Task>> tasks = this.registry.listElements().collect(Collectors.toList());
             Collections.shuffle(tasks);
@@ -424,7 +424,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     }
 
     private boolean matchesFaction(Holder<Task> task) {
-        return !task.is(FactionTaskTags.HAS_FACTION) || IFactionTags.get().get(this.faction,FactionRegistries.Keys.TASK).map(task::is).orElse(false);
+        return !task.is(FactionTaskTags.HAS_FACTION) || IFactionSpecificTags.get().get(this.faction,FactionRegistries.Keys.TASK).map(task::is).orElse(false);
     }
 
     /**

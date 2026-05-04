@@ -1,24 +1,26 @@
 {
   "type": "vampirism:infuser",
+  "commoninfo": {},
   "ingredient1": "vampirism:pure_blood_0",
   "ingredient2": "vampirism:pure_blood_0",
   "ingredient3": "vampirism:pure_blood_0",
   "ingredient4": "vampirism:pure_blood_0",
   "item": "#c:gems/diamond",
   "result": {
-    "count": 1,
+    "components": {
+      "vampirism:pure_level": {
+        "level": 0
+      }
+    },
     "id": "vampirism:blood_infused_diamond"
   },
   "result1": {
-    "count": 1,
     "id": "vampirism:vampire_blood_bottle"
   },
   "result2": {
-    "count": 1,
     "id": "vampirism:vampire_blood_bottle"
   },
   "result3": {
-    "count": 1,
     "id": "vampirism:vampire_blood_bottle"
   }
 }

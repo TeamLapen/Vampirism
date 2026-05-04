@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionHelper;
+import de.teamlapen.faction.api.registries.factions.DeferredFaction;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.ModRegistries;
 import net.minecraft.core.Holder;
@@ -17,10 +18,13 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +45,15 @@ public record FactionBasedConsumeEffect(HolderSet<IFaction<?>> faction, List<Con
 
     public FactionBasedConsumeEffect(HolderSet<IFaction<?>> faction, ConsumeEffect effects) {
         this(faction, List.of(effects));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static FactionBasedConsumeEffect allExcept(DeferredFaction<?, ?> faction, List<MobEffectInstance> effects) {
+        return new FactionBasedConsumeEffect(new NotHolderSet<>(ModRegistries.FACTIONS, HolderSet.direct((Holder<IFaction<?>>) faction)), new ApplyStatusEffectsConsumeEffect(effects));
+    }
+
+    public static FactionBasedConsumeEffect allExcept(DeferredFaction<?, ?>  faction, MobEffectInstance effect) {
+        return allExcept(faction, List.of(effect));
     }
 
     @Override

@@ -1,0 +1,15 @@
+{
+  "gives": {
+    "id": "vampirism:crucifix_normal"
+  },
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 16.0,
+      "min": 6.0
+    },
+    "id": "minecraft:emerald"
+  },
+  "xp": 20.0
+}

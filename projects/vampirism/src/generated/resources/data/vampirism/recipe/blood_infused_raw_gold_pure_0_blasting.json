@@ -13,7 +13,11 @@
     "items": "vampirism:blood_infused_raw_gold"
   },
   "result": {
-    "count": 1,
+    "components": {
+      "vampirism:pure_level": {
+        "level": 0
+      }
+    },
     "id": "vampirism:blood_infused_gold_ingot"
   }
 }

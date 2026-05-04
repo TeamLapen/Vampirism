@@ -127,6 +127,7 @@ public class ModEntityEventHandler {
     public void onEntityJoinWorld(@NotNull EntityJoinLevelEvent event) {
         if (!event.getLevel().isClientSide()) {
             if (event.getEntity() instanceof IAdjustableLevel entity) {
+                int l2 = entity.getEntityLevel();
                 if (entity.getEntityLevel() == -1) {
                     Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getLevel(), event.getEntity().blockPosition(), 30);
                     int l = entity.suggestEntityLevel(d);
@@ -264,7 +265,7 @@ public class ModEntityEventHandler {
     public void onStartAttackHit(AttackEntityEvent event) {
         if (!Helper.isHunter(event.getEntity()) && OilUtils.getAppliedOil(event.getEntity().getMainHandItem()).isPresent()) {
             event.setCanceled(true);
-            event.getEntity().displayClientMessage(Component.translatable("text.vampirism.oils.cannot_use"), true);
+            event.getEntity().sendOverlayMessage(Component.translatable("message.vampirism.restriction.oiled"));
         }
     }
 
@@ -303,7 +304,7 @@ public class ModEntityEventHandler {
         if (event.getSource().is(ModDamageTypeTags.ENTITY_PHYSICAL) && !event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)) {
             for (ItemStack armorStack : Arrays.stream(EquipmentSlot.values()).filter(x -> x.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(x -> event.getEntity().getItemBySlot(x)).toList()) {
                 if (OilUtils.getAppliedOil(armorStack).map(oil -> {
-                    if (oil instanceof EvasionOil evasionOil && evasionOil.evasionChance() > Optional.ofNullable(event.getSource().getEntity()).map(entity -> entity.level().random.nextFloat()).orElse(1f)) {
+                    if (oil instanceof EvasionOil evasionOil && evasionOil.evasionChance() > Optional.ofNullable(event.getSource().getEntity()).map(entity -> entity.level().getRandom().nextFloat()).orElse(1f)) {
                         event.setAmount(0);
                         oil.reduceDuration(armorStack, oil, oil.getDurationReduction());
                         return true;
@@ -313,6 +314,15 @@ public class ModEntityEventHandler {
                     break;
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onExposedDamage(@NotNull LivingIncomingDamageEvent event) {
+        MobEffectInstance exposed = event.getEntity().getEffect(ModEffects.EXPOSED);
+        if (exposed != null) {
+            float multiplier = 1.0f + (float) ModConfig.balance().efExposedPerLevelMultiplier.getAsDouble() * (exposed.getAmplifier() + 1);
+            event.setAmount(event.getAmount() * multiplier);
         }
     }
 }

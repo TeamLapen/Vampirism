@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.world.entity.player;
 
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionHelper;
-import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.components.FactionSlayer;
@@ -13,12 +12,12 @@ import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.config.BalanceConfig;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
 import de.teamlapen.vampirism.common.world.blocks.BloodContainerBlock;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
-import de.teamlapen.vampirism.common.world.blocks.mother.MotherBlock;
 import de.teamlapen.vampirism.common.world.effects.VampirismPoisonMobEffect;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
@@ -40,10 +39,13 @@ import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.clock.ClockTimeMarkers;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.skeleton.Stray;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -62,6 +64,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
+import net.neoforged.neoforge.common.util.ClockAdjustment;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -70,11 +73,12 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.SleepFinishedTimeEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -120,12 +124,12 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void onBlockBreak(BlockEvent.@NotNull BreakEvent event) {
+    public void onBlockBreak(BreakBlockEvent event) {
         HunterPlayer.get(event.getPlayer()).breakDisguise();
     }
 
     @SubscribeEvent
-    public void onBlockPlaced(BlockEvent.@NotNull EntityPlaceEvent event) {
+    public void onBlockPlaced(BlockEvent.EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof Player player) || !event.getEntity().isAlive()) return;
         if (event.getPlacedBlock().isAir()) return; //If for some reason, cough Create cough, a block is removed (so air is placed) we don't want to prevent that.
         try {
@@ -209,14 +213,14 @@ public class ModPlayerEventHandler {
             if (stack.getItem() == Items.POTION) {
                 PotionContents contents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
                 if (contents.potion().map(s -> s.value() instanceof BasePotion.HunterPotion).orElse(false) && StreamSupport.stream(contents.getAllEffects().spliterator(), false).map(MobEffectInstance::getEffect).map(Holder::value).anyMatch(MobEffect::isBeneficial)) {
-                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.POISON, Integer.MAX_VALUE, VampirismPoisonMobEffect.DEADLY_AMPLIFIER));
+                    event.getEntity().addEffect(new MobEffectInstance(ModEffects.TOXICANT, Integer.MAX_VALUE, VampirismPoisonMobEffect.DEADLY_AMPLIFIER));
                 }
             }
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onLivingAttack(@NotNull LivingIncomingDamageEvent event) {
+    public void onLivingAttack(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             if (event.getEntity().isAlive() && !FactionPlayerHandler.get((Player) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
                 event.setCanceled(true);
@@ -252,11 +256,29 @@ public class ModPlayerEventHandler {
             }
         }
 
-        // reduce damage dor vampires
+        // reduce damage for vampires
         if (event.getEntity() instanceof Player player && Helper.isVampire(player)) {
             VampirePlayer vampire = VampirePlayer.get(player);
             float mod = (float) (0.2 * (float)vampire.getLevel()/ (float)vampire.getMaxLevel());
             d.setNewDamage(d.getNewDamage() * (1 - mod));
+        }
+
+        if (event.getEntity() instanceof Player player && Helper.isHunter(player)) {
+            float swiftnessDodgeChance = (float) Arrays.stream(EquipmentSlot.values()).filter(EquipmentSlot::isArmor).map(player::getItemBySlot).filter(s -> s.is(ModItemTags.ARMOR_OF_SWIFTNESS)).mapToDouble(x -> 0.025d).sum();
+            if (swiftnessDodgeChance == 0.1f) {
+                swiftnessDodgeChance = 0.2f;
+            }
+            if (player.getRandom().nextFloat() < swiftnessDodgeChance) {
+                event.setNewDamage(0);
+                return;
+            }
+            if (event.getSource().getEntity() != null && !Helper.isHunter(event.getSource().getEntity())) {
+                float coatReduction = (float) Arrays.stream(EquipmentSlot.values()).filter(EquipmentSlot::isArmor).map(player::getItemBySlot).filter(s -> s.is(ModItemTags.HUNTER_COAT)).mapToDouble(x -> 0.025d).sum();
+                if (coatReduction == 0.1f) {
+                    coatReduction = 0.2f;
+                }
+                event.setNewDamage(event.getNewDamage() * (1f - coatReduction));
+            }
         }
     }
 
@@ -329,11 +351,6 @@ public class ModPlayerEventHandler {
             event.setCanceled(true);
         } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == state.getBlock()) && Helper.isVampire(event.getEntity())) {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.GARLIC));
-        } else if (state.getBlock() instanceof MotherBlock) {
-            //BlockEntity blockEntity = event.getEntity().level().getBlockEntity(pos);
-            //if (blockEntity instanceof MotherBlockEntity mother && !mother.isCanBeBroken()) {
-            //    event.setUseItem(Event.Result.DENY);
-            //}
         }
     }
 
@@ -400,27 +417,21 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    public void sleepTimeFinish(@NotNull SleepFinishedTimeEvent event) {
+    public void sleepTimeFinish(SleepFinishedTimeEvent event) {
         if (event.getLevel() instanceof ServerLevel && Helper.isDay(event.getLevel(), BlockPos.ZERO)) {
             boolean sleepingInCoffin = event.getLevel().players().stream().anyMatch(player -> {
                 Optional<BlockPos> pos = player.getSleepingPos();
                 return pos.isPresent() && event.getLevel().getBlockState(pos.get()).getBlock() instanceof CoffinBlock;
             });
             if (sleepingInCoffin) {
-                long dist = ((ServerLevel) event.getLevel()).getDayTime() % 24000L > 12000L ? 13000 : -11000; //Make sure we don't go backwards in time (in special case sleeping at 23500)
-                event.setTimeAddition(event.getNewTime() + dist);
-
+                event.setAdjustment(new ClockAdjustment.Marker(ClockTimeMarkers.NIGHT));
             }
         }
     }
 
-    private boolean checkExceptions(@NotNull Player player, Holder<? extends IPlayableFaction<?>> currentFaction, @NotNull ItemStack stack) { // stupid implementation. Otherwise we would need a better IFactionExclusiveItem#getExclusiveFaction method.
-        return !stack.is(ModItems.GARLIC_BREAD) || currentFaction != null;
-    }
-
 
     @SubscribeEvent
-    public void onPlayerAttackCritical(@NotNull CriticalHitEvent event) {
+    public void onPlayerAttackCritical(CriticalHitEvent event) {
         ItemStack stack = event.getEntity().getMainHandItem();
         if (!stack.isEmpty()) {
             FactionSlayer factionSlayer = stack.get(FactionDataComponents.FACTION_SLAYER);

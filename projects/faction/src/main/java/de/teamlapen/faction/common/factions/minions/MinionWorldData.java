@@ -29,7 +29,7 @@ import java.util.UUID;
 
 
 public class MinionWorldData extends SavedData implements ValueIOSerializable {
-    public static final SavedDataType<MinionWorldData> TYPE = new SavedDataType<>(FIdentifier.modString("minion_data").replace(':', '_'), MinionWorldData::new, MinionWorldData::makeCodec);
+    public static final SavedDataType<MinionWorldData> TYPE = new SavedDataType<>(FIdentifier.mod("minion_data"), MinionWorldData::new, MinionWorldData::makeCodec);
 
     @NotNull
     public static MinionWorldData getData(@NotNull ServerLevel world) {
@@ -118,7 +118,7 @@ public class MinionWorldData extends SavedData implements ValueIOSerializable {
     }
 
     /**
-     * Only for debugging. Removes controller from saved data not from entities. Reload world afterwards
+     * Only for debugging. Removes controller from saved data not from entities. Reload world afterward
      */
     @VisibleForDebug
     public void purgeController(UUID lordID) {

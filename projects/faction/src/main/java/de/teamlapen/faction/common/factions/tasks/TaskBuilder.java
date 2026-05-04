@@ -21,6 +21,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -61,7 +62,7 @@ public class TaskBuilder {
     }
 
     public TaskBuilder addRequirement(TagKey<EntityType<?>> entityType, int amount) {
-        return this.addRequirement(new EntityTypeRequirement(entityType, amount, Component.translatable(Util.makeDescriptionId("entity_tag", entityType.location()))));
+        return this.addRequirement(new EntityTypeRequirement(entityType, amount, Component.translatable(Util.makeDescriptionId("task_tag", entityType.location()))));
     }
 
     public TaskBuilder addRequirement(Identifier stat, int amount, Component description) {
@@ -72,12 +73,12 @@ public class TaskBuilder {
         return this.addRequirement(new StatRequirement(stat, amount, Component.translatable(Util.makeDescriptionId("stat", stat))));
     }
 
-    public TaskBuilder addRequirement(ItemStack itemStack, Component description) {
+    public TaskBuilder addRequirement(ItemStackTemplate itemStack, Component description) {
         return this.addRequirement(new ItemRequirement(itemStack, description));
     }
 
-    public TaskBuilder addRequirement(ItemStack itemStack) {
-        return this.addRequirement(new ItemRequirement(itemStack, Component.translatable(Util.makeDescriptionId("item", RegUtil.id(itemStack.getItem())))));
+    public TaskBuilder addRequirement(ItemStackTemplate itemStack) {
+        return this.addRequirement(new ItemRequirement(itemStack, Component.translatable(Util.makeDescriptionId("item", RegUtil.id(itemStack.item())))));
     }
 
     public TaskBuilder addRequirement(Holder<FactionPlayerBooleanSupplier> function, Component description) {
@@ -132,7 +133,7 @@ public class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder setReward(ItemStack reward) {
+    public TaskBuilder setReward(ItemStackTemplate reward) {
         this.reward = new ItemReward(reward);
         return this;
     }

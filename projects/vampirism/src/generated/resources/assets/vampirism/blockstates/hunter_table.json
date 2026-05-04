@@ -171,7 +171,7 @@
             "facing": "north"
           },
           {
-            "potion_table": "true"
+            "vapor_still": "true"
           }
         ]
       }
@@ -187,7 +187,7 @@
             "facing": "east"
           },
           {
-            "potion_table": "true"
+            "vapor_still": "true"
           }
         ]
       }
@@ -203,7 +203,7 @@
             "facing": "south"
           },
           {
-            "potion_table": "true"
+            "vapor_still": "true"
           }
         ]
       }
@@ -219,7 +219,7 @@
             "facing": "west"
           },
           {
-            "potion_table": "true"
+            "vapor_still": "true"
           }
         ]
       }

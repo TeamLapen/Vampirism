@@ -17,16 +17,16 @@ public class VampirismPoisonMobEffect extends SimpleMobEffect {
     }
 
     public static MobEffectInstance createThrowableEffect() {
-        return new MobEffectInstance(ModEffects.POISON, 40, 1);
+        return new MobEffectInstance(ModEffects.TOXICANT, 40, 1);
     }
 
     public static MobEffectInstance createEffectCloudEffect() {
-        return new MobEffectInstance(ModEffects.POISON, 60, 1);
+        return new MobEffectInstance(ModEffects.TOXICANT, 60, 1);
     }
 
     @Override
     public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
-        float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.min(entity.getHealth() - 1, Math.max(1, amplifier));
+        float damage = amplifier >= DEADLY_AMPLIFIER ? amplifier : Math.clamp(amplifier, 1, entity.getHealth() - 1);
         if (damage > 0) {
             DamageHandler.hurtVanilla(level, entity, DamageSources::magic, damage);
         }

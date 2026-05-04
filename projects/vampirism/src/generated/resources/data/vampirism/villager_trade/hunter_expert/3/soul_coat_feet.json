@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "vampirism:hunter_coat_feet_normal"
+  },
+  "max_uses": 7.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 15.0,
+      "min": 10.0
+    },
+    "id": "vampirism:soul_orb_vampire"
+  },
+  "xp": 10.0
+}

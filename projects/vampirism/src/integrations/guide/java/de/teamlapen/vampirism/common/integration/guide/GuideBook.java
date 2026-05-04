@@ -309,7 +309,7 @@ public class GuideBook implements IGuideBook {
         entries.put(VResourceLocation.mod(base + "leveling"), new EntryText(levelingPages, translateComponent(base + "leveling")));
 
         List<IPage> skillPages = new ArrayList<>();
-        skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.intro")), VResourceLocation.mod(base + "vampirism_menu")));
+        skillPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "skills.intro", ModKeys.SKILL_SCREEN.getTranslatedKeyMessage())), VResourceLocation.mod(base + "vampirism_menu")));
         String disguise = String.format("§l%s§r\n", HunterActions.DISGUISE_HUNTER.get().getName().getString());
         disguise += translate(base + "skills.disguise.text", ModKeys.ACTION.getTranslatedKeyMessage());
         skillPages.addAll(PageHelper.pagesForLongText(Component.literal(disguise)));
@@ -448,7 +448,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModItems.VAMPIRE_FANG.get()).build(entries);
         helper.info(ModItems.HUMAN_HEART.get()).build(entries);
         helper.info(ModItems.PURE_BLOOD_0.get(), ModItems.PURE_BLOOD_1.get(), ModItems.PURE_BLOOD_2.get(), ModItems.PURE_BLOOD_3.get(), ModItems.PURE_BLOOD_4.get()).setFormats(translateComponent(ModEntities.VAMPIRE_BARON.get().getDescriptionId())).build(entries);
-        helper.info(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setFormats(translateComponent(ModEntities.VAMPIRE.get().getDescriptionId()), translateComponent(ModEntities.ADVANCED_VAMPIRE.get().getDescriptionId(), loc(ModItems.STAKE.get()))).build(entries);
+        helper.info(ModItems.VAMPIRE_BLOOD_BOTTLE.get()).setFormats(translateComponent(ModEntities.VAMPIRE.get().getDescriptionId()), translateComponent(ModEntities.ADVANCED_VAMPIRE.get().getDescriptionId()), loc(ModItems.STAKE.get())).build(entries);
         helper.info(ModItems.VAMPIRE_BOOK.get()).build(entries);
         helper.info(ModItems.OBLIVION_POTION.get()).customPages(new PageTaskItemStack(ModTasks.OBLIVION_POTION)).build(entries);
 

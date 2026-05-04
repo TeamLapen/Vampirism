@@ -19,6 +19,8 @@ import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -66,7 +68,7 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
                     }
                 }
             }
-            if (e.level.getRandom().nextFloat() < Math.max(0.02f, Math.min(0.1f, e.activePlayers.size() * 0.002f))) {
+            if (e.level.getRandom().nextFloat() < Math.clamp(e.activePlayers.size() * 0.002f, 0.02f, 0.1f)) {
                 var blocks = e.getTreeStructure(false).getCachedBlocks();
                 if (e.level.getEntitiesOfClass(GhostEntity.class, e.getArea().inflate(10)).size() < Math.min(e.activePlayers.size() * 1.6, 10)) {
                     blocks.stream().skip(e.level.getRandom().nextInt(blocks.size())).findFirst().ifPresent(pos -> e.spawnGhost(level, pos));
@@ -115,8 +117,8 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
         }
     }
 
-
-    private final ServerBossEvent bossEvent = new ServerBossEvent(Component.translatable("block.vampirism.mother"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
+    private static final RandomSource RANDOM = RandomSource.create();
+    private final ServerBossEvent bossEvent = new ServerBossEvent(Mth.createInsecureUUID(RANDOM),Component.translatable("block.vampirism.mother"), BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.NOTCHED_10);
     private final Set<ServerPlayer> activePlayers = new HashSet<>();
     private final Set<UUID> involvedPlayers = new HashSet<>();
     /**
@@ -215,9 +217,11 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
         List<Triple<BlockPos, BlockState, IRemainsBlock>> remaining = vuls.stream().filter(vul -> vul.getRight().isVulnerable(vul.getMiddle())).toList();
         if (!remaining.isEmpty()) {
             var remainingHealth = remaining.stream().mapToInt(s -> {
-                var entity = level.getBlockEntity(s.getLeft());
-                if (entity instanceof VulnerableRemainsBlockEntity vulnerable) {
-                    return vulnerable.getHealth();
+                if (level.isLoaded(s.getLeft())) { //Check whether still loaded
+                    var entity = level.getBlockEntity(s.getLeft());
+                    if (entity instanceof VulnerableRemainsBlockEntity vulnerable) {
+                        return vulnerable.getHealth();
+                    }
                 }
                 return VulnerableRemainsBlockEntity.MAX_HEALTH;
             }).sum();
@@ -289,7 +293,7 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
     private void spawnGhosts() {
         Set<BlockPos> vuls = this.getTreeStructure(false).getCachedBlocks();
         int size = this.level.getEntitiesOfClass(GhostEntity.class, this.getArea()).size();
-        for (int i = size; i < Math.max(3, Math.min(this.activePlayers.size() * 1.6, 10)); i++) {
+        for (int i = size; i < Math.clamp(this.activePlayers.size() * 1.6, 3, 10); i++) {
             vuls.stream().skip(level.getRandom().nextInt(vuls.size())).findFirst().ifPresent(pos -> this.spawnGhost(level, pos));
         }
     }

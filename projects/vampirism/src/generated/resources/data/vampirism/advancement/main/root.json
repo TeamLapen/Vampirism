@@ -23,12 +23,11 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "vampirism:block/dark_stone_bricks.png",
+    "background": "vampirism:block/dark_stone_bricks",
     "description": {
       "translate": "advancement.vampirism.desc"
     },
     "icon": {
-      "count": 1,
       "id": "vampirism:vampire_fang"
     },
     "show_toast": false,

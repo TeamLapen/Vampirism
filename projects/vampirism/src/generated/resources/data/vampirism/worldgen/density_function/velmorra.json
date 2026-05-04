@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:add",
+  "argument1": {
+    "type": "vampirism:velmorra"
+  },
+  "argument2": "vampirism:base_3d_noise"
+}

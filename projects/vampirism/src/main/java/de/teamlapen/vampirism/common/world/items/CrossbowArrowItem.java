@@ -1,14 +1,16 @@
 package de.teamlapen.vampirism.common.world.items;
 
 
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.world.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,21 +23,26 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowArrow<CrossbowArrowEntity> {
 
     private final ICrossbowArrowBehavior behavior;
 
-
     public CrossbowArrowItem(ICrossbowArrowBehavior behavior, Properties properties) {
-        super(properties.factions$restrictFaction(ModFactionTags.IS_HUNTER));
+        super(properties.factions$restrictFaction(VampirismTags.Factions.IS_HUNTER));
         this.behavior = behavior;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> components, TooltipFlag tooltipFlag) {
-        this.behavior.appendHoverText(stack, context, tooltipDisplay, components, tooltipFlag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        Component effectDescription = this.behavior.getEffectDescription();
+        if (!Objects.equals(effectDescription, Component.empty())) {
+            tooltipAdder.accept(CommonComponents.EMPTY);
+            tooltipAdder.accept(Component.translatable("tooltip.vampirism.quarrel_effect").withStyle(ChatFormatting.GRAY));
+            tooltipAdder.accept(Component.literal(" ").append(effectDescription).withStyle(ChatFormatting.DARK_GREEN));
+        }
     }
 
     @Override

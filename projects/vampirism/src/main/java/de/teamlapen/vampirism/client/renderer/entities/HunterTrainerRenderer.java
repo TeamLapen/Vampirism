@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.resources.Identifier;
 
 public class HunterTrainerRenderer extends HumanoidMobRenderer<VampirismEntity, HunterTrainerRenderer.HunterTrainerRenderState, ClothedModel<HunterTrainerRenderer.HunterTrainerRenderState>> {
@@ -32,9 +32,9 @@ public class HunterTrainerRenderer extends HumanoidMobRenderer<VampirismEntity, 
     }
 
     @Override
-    protected void submitNameTag(HunterTrainerRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        if (renderState.distanceToCameraSq <= 128) {
-            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
+    protected void submitNameDisplay(HunterTrainerRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        if (state.distanceToCameraSq <= 256) {
+            super.submitNameDisplay(state, poseStack, submitNodeCollector, camera);
         }
     }
 

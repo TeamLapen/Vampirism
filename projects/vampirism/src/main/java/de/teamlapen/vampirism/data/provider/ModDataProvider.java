@@ -24,7 +24,6 @@ import java.util.concurrent.CompletableFuture;
 @EventBusSubscriber(modid = REFERENCE.MODID)
 public class ModDataProvider {
 
-    @SuppressWarnings("UnreachableCode")
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent.Client event) {
         DataGenerator generator = event.getGenerator();
@@ -48,6 +47,7 @@ public class ModDataProvider {
         generator.addProvider(true, new ModLootModifierProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new ModSoundDefinitionsProvider(packOutput));
         generator.addProvider(true, new ModEquipmentAssetProvider(packOutput));
+        generator.addProvider(true, new ModParticleDescriptionProvider(packOutput));
         generator.addProvider(true, new ModBookBackgroundsProvider(packOutput));
         generator.addProvider(true, new PackMetadataGenerator(packOutput).add(PackMetadataSection.CLIENT_TYPE, new PackMetadataSection(Component.literal("Vampirism resources"), new InclusiveRange<>(DetectedVersion.BUILT_IN.packVersion(PackType.SERVER_DATA)))));
         generator.addProvider(true, new ModAtlasProvider(packOutput));

@@ -6,9 +6,16 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
+import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Unit;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
@@ -18,7 +25,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 
-import static de.teamlapen.vampirism.common.core.ModBlocks.*;
 import static de.teamlapen.vampirism.common.core.ModItems.*;
 
 @SuppressWarnings("unused")
@@ -51,10 +57,8 @@ public class ModCreativeTabs {
         @Override
         protected void addAll() {
             addItems();
-
             addBlocks();
         }
-
 
         private void addItems() {
             add(GARLIC_BREAD);
@@ -73,19 +77,24 @@ public class ModCreativeTabs {
             addIfPresent(VIdentifier.loc(REFERENCE.GUIDEAPI_MODID, REFERENCE.GUIDEBOOK_ID));
             add(VAMPIRE_FANG);
 
-            add(FactionItems.OBLIVION_POTION);
             add(GARLIC_FINDER);
+            add(FactionItems.OBLIVION_POTION);
 
             add(DARK_SPRUCE_BOAT);
             add(CURSED_SPRUCE_BOAT);
             add(DARK_SPRUCE_CHEST_BOAT);
             add(CURSED_SPRUCE_CHEST_BOAT);
+
+
+            add(RITUAL_KNIFE);
+            add(new ItemStack(RITUAL_KNIFE, 1, DataComponentPatch.builder().set(ModDataComponents.CHARGED_RITUAL_KNIFE.get(), true).build()));
         }
 
         private void addBlocks() {
             addPlants();
             addBuildingBlocks();
             addDecorativeBlocks();
+            add(VELMORRA_ALTAR);
         }
 
         private void addPlants() {
@@ -126,8 +135,8 @@ public class ModCreativeTabs {
 
             add(CURSED_SPRUCE_LOG);
             add(CURSED_SPRUCE_WOOD);
-            add(CURSED_SPRUCE_LOG.get().getActiveBlockItem());
-            add(CURSED_SPRUCE_WOOD.get().getActiveBlockItem());
+            add(CURSED_SPRUCE_LOG.toStack().vampirism$with(ModDataComponents.ACTIVE, Unit.INSTANCE));
+            add(CURSED_SPRUCE_WOOD.toStack().vampirism$with(ModDataComponents.ACTIVE, Unit.INSTANCE));
             add(STRIPPED_CURSED_SPRUCE_LOG);
             add(STRIPPED_CURSED_SPRUCE_WOOD);
             add(CURSED_SPRUCE_PLANKS);
@@ -289,7 +298,7 @@ public class ModCreativeTabs {
             add(ALTAR_TIP);
 
             add(BLOOD_PEDESTAL);
-            addBlockGen(BLOOD_CONTAINER);
+            addItemGen(BLOOD_CONTAINER);
             add(BLOOD_GRINDER);
             add(BLOOD_SIEVE);
             add(INFUSER);
@@ -405,16 +414,16 @@ public class ModCreativeTabs {
         private void addBlocks() {
             addFunctionalBlocks();
 
-            ColorListsUtil.COFFINS.forEach(this::add);
+            ColorListsUtil.COFFINS.forEach(d -> add(d.get()));
         }
 
         private void addFunctionalBlocks() {
             add(HUNTER_TABLE);
             add(WEAPON_TABLE);
             add(ALCHEMICAL_CAULDRON);
-            add(POTION_TABLE);
+            add(VAPOR_STILL);
             add(ALCHEMY_TABLE);
-            add(MED_CHAIR);
+            add(INJECTION_CHAIR);
             add(ALTAR_CLEANSING);
 
             add(GARLIC_DIFFUSER_NORMAL);
@@ -440,7 +449,19 @@ public class ModCreativeTabs {
             insert(GHOST_SPAWN_EGG, event);
         } else if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
             insertAfter(BLOOD_BUCKET, Items.MILK_BUCKET, event);
+        } else if (event.getTabKey().equals(CreativeModeTabs.FOOD_AND_DRINKS)) {
+            event.getParameters().holders().lookup(Registries.POTION).ifPresent(registry ->
+                    insertPotionTypes(event, registry, SERUM_INJECTION.get(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, event.getParameters().enabledFeatures())
+            );
         }
+    }
+
+    private static void insertPotionTypes(BuildCreativeModeTabContentsEvent event, HolderLookup<Potion> potions, Item item, CreativeModeTab.TabVisibility tabVisibility, FeatureFlagSet requiredFeatures) {
+        potions.listElements()
+                .filter(potion -> potion.value().isEnabled(requiredFeatures))
+                .filter(potion -> !SerumInjectionItem.isBlockedPotion(potion))
+                .map(potion -> PotionContents.createItemStack(item, potion))
+                .forEach(stack -> event.accept(stack, tabVisibility));
     }
 
     private static void insert(ItemLike item, BuildCreativeModeTabContentsEvent event) {

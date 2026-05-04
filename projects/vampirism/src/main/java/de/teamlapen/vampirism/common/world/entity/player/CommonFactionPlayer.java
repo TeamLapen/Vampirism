@@ -125,7 +125,7 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     }
 
     public int getMaxMinions() {
-        return getLordLevel() * FactionConfig.server().miMinionPerLordLevel.get();
+        return getLordLevel() * FactionConfig.server().minionPerLordLevel.get();
     }
 
     @Override
@@ -133,7 +133,6 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
         return factionHandler().getLordLevel();
     }
 
-    @SuppressWarnings("NullableProblems")
     public Optional<ILordTitleProvider> lordTitles() {
         return Optional.ofNullable(getFaction().value().lordTitles());
     }

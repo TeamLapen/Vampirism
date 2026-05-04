@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.common.server.commands.AppearanceCommand;
 import de.teamlapen.vampirism.common.server.commands.BloodBarCommand;
 import de.teamlapen.vampirism.common.server.commands.ConfigCommand;
 import de.teamlapen.vampirism.common.server.commands.VampireSwordCommand;
+import de.teamlapen.vampirism.common.server.commands.dev.DevFactionCommand;
 import de.teamlapen.vampirism.common.server.commands.test.*;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -22,7 +23,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -40,13 +40,14 @@ public class ModCommands {
     }
 
 
-    static void registerCommands(@NotNull RegisterCommandsEvent event) {
+    static void registerCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         CommandBuildContext buildContext = event.getBuildContext();
 
         List<String> vampirism = Lists.newArrayList("vampirism");
         if (VampirismMod.inDev) {
             vampirism.add("v");
+            dispatcher.register(DevFactionCommand.register());
         }
 
         //Vampirism commands
@@ -69,6 +70,7 @@ public class ModCommands {
                                     .then(TaskCommand.register())
                                     .then(SummonDummy.register())
                                     .then(GiveBannerCommand.register(buildContext))
+                                    .then(VelmorraCommand.register())
                             )
             );
         }

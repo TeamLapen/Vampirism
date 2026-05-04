@@ -33,7 +33,7 @@ public class HeartSeekerItem extends VampireSwordItem implements IItemWithTier, 
         super.appendHoverText(stack, context, tooltipDisplay, tooltip, flagIn);
 
         if (flagIn.hasAltDown()) {
-            tooltip.accept(Component.translatable("Consumes %s blood per hit", getChargeUsage(stack)));
+            tooltip.accept(Component.translatable("tooltip.vampirism.heart_seeker.consume", getChargeUsage(stack)));
         }
     }
 

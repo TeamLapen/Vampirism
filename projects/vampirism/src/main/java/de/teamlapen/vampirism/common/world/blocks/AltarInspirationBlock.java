@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.BloodHelper;
 import de.teamlapen.vampirism.common.world.blockentity.AltarInspirationBlockEntity;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseContainerBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseContainerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -82,7 +82,7 @@ public class AltarInspirationBlock extends BaseContainerBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof AltarInspirationBlockEntity altarBlockEntity) {
-            player.awardStat(ModStats.ALTAR_OF_INSPIRATION_RITUALS_PERFORMED.get());
+            player.awardStat(ModStats.ALTAR_INSPIRATION_RITUALS_PERFORMED.get());
             altarBlockEntity.startRitual(player);
 
             return InteractionResult.SUCCESS;

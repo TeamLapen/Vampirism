@@ -12,7 +12,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Attire designed for the male vampire baron - RebelT
@@ -23,12 +22,12 @@ public class BaronAttireModel extends EntityModel<VampireBaronRenderer.VampireBa
     private static final String HOOD = "hood";
     private static final String CLOAK = "cloak";
 
-    public final @NotNull ModelPart hood;
-    public final @NotNull ModelPart cloak;
+    public final ModelPart hood;
+    public final ModelPart cloak;
     private float enragedProgress = 0;
     private final KeyframeAnimation cloakAnimation;
 
-    public static @NotNull LayerDefinition createLayer() {
+    public static LayerDefinition createLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition part = mesh.getRoot();
         PartDefinition hood = part.addOrReplaceChild(HOOD, CubeListBuilder.create().texOffs(44, 0).addBox(-4.5f, -8.5f, -4, 9, 9, 9), PartPose.ZERO);
@@ -36,7 +35,7 @@ public class BaronAttireModel extends EntityModel<VampireBaronRenderer.VampireBa
         return LayerDefinition.create(mesh, 128, 64);
     }
 
-    public BaronAttireModel(@NotNull ModelPart part) {
+    public BaronAttireModel(ModelPart part) {
         super(part);
         hood = part.getChild(HOOD);
         cloak = hood.getChild(CLOAK);
@@ -44,7 +43,7 @@ public class BaronAttireModel extends EntityModel<VampireBaronRenderer.VampireBa
     }
 
     @Override
-    public void setupAnim(@NotNull VampireBaronRenderer.VampireBaronRenderState entityIn) {
+    public void setupAnim(VampireBaronRenderer.VampireBaronRenderState entityIn) {
         float bodyRotateAngleY = 0;
         if (entityIn.attackTime > 0.0F) {
             HumanoidArm handside = entityIn.attackArm;

@@ -8,7 +8,6 @@
         },
         "id": "minecraft:diamond",
         "item": {
-          "count": 1,
           "id": "minecraft:diamond"
         }
       },
@@ -27,7 +26,7 @@
         "type": "factionapi:entity_type",
         "amount": 32,
         "description": {
-          "translate": "entity_tag.vampirism.zombies"
+          "translate": "task_tag.vampirism.zombies"
         },
         "entityType": "vampirism:zombies",
         "id": "vampirism:zombies"
@@ -37,7 +36,6 @@
   "reward": {
     "type": "factionapi:item",
     "item": {
-      "count": 1,
       "id": "factionapi:totem_top_crafted"
     }
   },

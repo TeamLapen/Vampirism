@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.config;
 
-
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.UtilLib;
@@ -9,42 +8,37 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 /**
- * Values are null until after RegistryEvent<Block>
+ * Values are null until after RegistryEvent<Block>.
  */
 public class BalanceConfig {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    //GENERAL
-
-
+    // General
     public final ModConfigSpec.IntValue arrowVampireKillerMaxHealth;
     public final ModConfigSpec.IntValue holyWaterSplashDamage;
+    public final ModConfigSpec.DoubleValue holyWaterTierDamageInc;
     public final ModConfigSpec.IntValue holyWaterNauseaDuration;
     public final ModConfigSpec.IntValue holyWaterBlindnessDuration;
-    public final ModConfigSpec.IntValue dropOrchidFromLeavesChance;
-    public final ModConfigSpec.DoubleValue holyWaterTierDamageInc;
     public final ModConfigSpec.DoubleValue vampireSwordChargingFactor;
     public final ModConfigSpec.DoubleValue vampireSwordBloodUsageFactor;
+    public final ModConfigSpec.IntValue dropOrchidFromLeavesChance;
     public final ModConfigSpec.BooleanValue golemAttackNonVillageFaction;
     public final ModConfigSpec.BooleanValue zombieIgnoreVampire;
     public final ModConfigSpec.BooleanValue skeletonIgnoreVampire;
     public final ModConfigSpec.BooleanValue creeperIgnoreVampire;
     public final ModConfigSpec.DoubleValue bleedingEffectDamage;
     public final ModConfigSpec.IntValue diffuserBootTime;
-
     public final ModConfigSpec.IntValue hunterTentMaxSpawn;
     public final ModConfigSpec.DoubleValue crossbowDamageMult;
-
-
     public final ModConfigSpec.BooleanValue allowInfiniteSpecialArrows;
     public final ModConfigSpec.IntValue garlicDiffuserStartupTime;
 
+    // Entity Actions
     public final ModConfigSpec.DoubleValue eaHealthThreshold;
     public final ModConfigSpec.IntValue eaInvisibilityCooldown;
     public final ModConfigSpec.IntValue eaInvisibilityDuration;
@@ -68,23 +62,27 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue eaGarlicDuration;
     public final ModConfigSpec.IntValue eaGarlicCooldown;
 
-    public final ModConfigSpec.DoubleValue haDisguiseVisibilityMod;
+    // Hunter Actions
     public final ModConfigSpec.BooleanValue haDisguiseEnabled;
+    public final ModConfigSpec.DoubleValue haDisguiseVisibilityMod;
     public final ModConfigSpec.IntValue haDisguiseInvisibleSQ;
+    public final ModConfigSpec.BooleanValue haAwarenessEnabled;
     public final ModConfigSpec.IntValue haAwarenessDuration;
     public final ModConfigSpec.IntValue haAwarenessCooldown;
-    public final ModConfigSpec.BooleanValue haAwarenessEnabled;
     public final ModConfigSpec.IntValue haAwarenessRadius;
+    public final ModConfigSpec.BooleanValue haPotionResistanceEnabled;
     public final ModConfigSpec.IntValue haPotionResistanceDuration;
     public final ModConfigSpec.IntValue haPotionResistanceCooldown;
-    public final ModConfigSpec.BooleanValue haPotionResistanceEnabled;
 
+    // Hunter Player
     public final ModConfigSpec.DoubleValue hpStrengthMaxMod;
     public final ModConfigSpec.DoubleValue hpStrengthType;
 
+    // Hunter Skills
     public final ModConfigSpec.DoubleValue hsSmallAttackSpeedModifier;
     public final ModConfigSpec.DoubleValue hsSmallAttackDamageModifier;
     public final ModConfigSpec.BooleanValue hsInstantKill1FromBehind;
+    public final ModConfigSpec.BooleanValue hsInstantKill1Player;
     public final ModConfigSpec.DoubleValue hsInstantKill1MaxHealth;
     public final ModConfigSpec.IntValue hsInstantKill2MaxHealth;
     public final ModConfigSpec.BooleanValue hsInstantKill2OnlyNPC;
@@ -92,23 +90,25 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue hsGarlicDiffuserEnhancedDist;
     public final ModConfigSpec.IntValue hsGarlicDiffuserWeakDist;
 
-
-
+    // Vampire Skills
     public final ModConfigSpec.DoubleValue vsSundamageReduction1;
     public final ModConfigSpec.DoubleValue vsBloodThirstReduction1;
     public final ModConfigSpec.DoubleValue vsSwordFinisherMaxHealth;
+    public final ModConfigSpec.BooleanValue vsSwordFinisherOnPlayer;
     public final ModConfigSpec.IntValue vsJumpBoost;
     public final ModConfigSpec.DoubleValue vsSpeedBoost;
     public final ModConfigSpec.IntValue vsBloodVisionDistanceSq;
     public final ModConfigSpec.DoubleValue vsSmallAttackDamageModifier;
+    public final ModConfigSpec.DoubleValue vsSmallAttackDamageMultiplier;
     public final ModConfigSpec.DoubleValue vsSmallAttackSpeedModifier;
     public final ModConfigSpec.DoubleValue vsNeonatalReduction;
     public final ModConfigSpec.DoubleValue vsDbnoReduction;
 
-    public final ModConfigSpec.DoubleValue vpHealthMaxMod;
-    public final ModConfigSpec.DoubleValue vpAttackSpeedMaxMod;
-    public final ModConfigSpec.DoubleValue vpSpeedMaxMod;
-    public final ModConfigSpec.DoubleValue vpExhaustionMaxMod;
+    // Vampire Player
+    public final ModConfigSpec.DoubleValue vpHealthMaxLevelMod;
+    public final ModConfigSpec.DoubleValue vpAttackSpeedMaxLevelMod;
+    public final ModConfigSpec.DoubleValue vpSpeedMaxLevelMod;
+    public final ModConfigSpec.DoubleValue vpExhaustionMaxLevelMod;
     public final ModConfigSpec.DoubleValue vpBloodExhaustionFactor;
     public final ModConfigSpec.BooleanValue vpBloodUsagePeaceful;
     public final ModConfigSpec.DoubleValue vpPlayerBloodSaturation;
@@ -117,7 +117,7 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vpSundamageNausea;
     public final ModConfigSpec.IntValue vpSundamageNauseaMinLevel;
     public final ModConfigSpec.IntValue vpSundamageWeaknessMinLevel;
-    public final ModConfigSpec.DoubleValue vpSundamage;
+    public final ModConfigSpec.DoubleValue vpSundamagePerTick;
     public final ModConfigSpec.IntValue vpSundamageWaterblocks;
     public final ModConfigSpec.BooleanValue vpSundamageInstantDeath;
     public final ModConfigSpec.BooleanValue vpSunscreenBuff;
@@ -135,7 +135,7 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vpNightVisionDisabled;
     public final ModConfigSpec.BooleanValue vpBloodVisionDisabled;
 
-
+    // Vampire Actions
     public final ModConfigSpec.IntValue vaFreezeCooldown;
     public final ModConfigSpec.BooleanValue vaFreezeEnabled;
     public final ModConfigSpec.IntValue vaFreezeDuration;
@@ -179,14 +179,18 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vaHalfInvulnerableEnabled;
     public final ModConfigSpec.BooleanValue vaHissingEnabled;
     public final ModConfigSpec.IntValue vaHissingCooldown;
+    public final ModConfigSpec.BooleanValue vaJumpBoostEnabled;
+    public final ModConfigSpec.IntValue vaJumpBoostCooldown;
+    public final ModConfigSpec.IntValue vaJumpBoostDuration;
     public final ModConfigSpec.BooleanValue vaDarkStalkerEnabled;
     public final ModConfigSpec.IntValue vaDarkStalkerCooldown;
     public final ModConfigSpec.IntValue vaDarkStalkerDuration;
     public final ModConfigSpec.DoubleValue vaDarkStalkerBloodConsumption;
 
+    // Minions
     public final ModConfigSpec.IntValue miResourceCooldown;
 
-
+    // Vampire Refinements
     public final ModConfigSpec.DoubleValue vrSwordTrainingSpeedMod;
     public final ModConfigSpec.IntValue vrBloodChargeSpeedMod;
     public final ModConfigSpec.DoubleValue vrFreezeDurationMod;
@@ -197,237 +201,599 @@ public class BalanceConfig {
     public final ModConfigSpec.DoubleValue vrSunscreenDurationMod;
     public final ModConfigSpec.IntValue vrRageFuryDurationBonus;
     public final ModConfigSpec.DoubleValue vrTeleportDistanceMod;
+    public final ModConfigSpec.DoubleValue vrTeleportCooldownMod;
     public final ModConfigSpec.DoubleValue vrHalfInvulnerableThresholdMod;
     public final ModConfigSpec.DoubleValue vrSwordFinisherThresholdMod;
 
+    // Items
     public final ModConfigSpec.BooleanValue itApplicableOilArmorReverse;
     public final ModConfigSpec.BooleanValue itApplicableOilPickaxeReverse;
     public final ModConfigSpec.BooleanValue itApplicableOilSwordReverse;
 
+    // Effects
+    public final ModConfigSpec.DoubleValue efExposedPerLevelMultiplier;
+
+    // Lord Actions
     public final ModConfigSpec.BooleanValue laLordSpeedEnabled;
     public final ModConfigSpec.IntValue laLordSpeedCooldown;
     public final ModConfigSpec.IntValue laLordSpeedDuration;
-
     public final ModConfigSpec.BooleanValue laLordAttackSpeedEnabled;
     public final ModConfigSpec.IntValue laLordAttackSpeedCooldown;
     public final ModConfigSpec.IntValue laLordAttackSpeedDuration;
 
-    public BalanceConfig(@NotNull BalanceBuilder builder) {
+    public BalanceConfig(BalanceBuilder builder) {
         boolean iceAndFire = ModList.get().isLoaded("iceandfire");
         if (iceAndFire) {
             LOGGER.info("IceAndFire is loaded -> Adjusting default fire related configuration.");
         }
 
-        //This is build using the intermediate builder to allow modification by addon mods.
-        //It is finalized and assigned during RegistryEvent<Block>
-
-        //GENERAL
-        builder.comment("General options");
+        builder.comment("General options.");
         builder.category("general", "");
 
+        arrowVampireKillerMaxHealth = builder
+                .comment("The vampire killer arrow can only instantly kill NPC vampires whose maximum health does not exceed this value.")
+                .defineInRange("arrowVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);
+        holyWaterSplashDamage = builder
+                .comment("Damage dealt by a normal holy water splash bottle when it directly hits a vampire.")
+                .defineInRange("holyWaterSplashDamage", 5, 0, Integer.MAX_VALUE);
+        holyWaterTierDamageInc = builder
+                .comment("Holy water damage is multiplied by this value for each tier above normal.")
+                .defineInRange("holyWaterTierDamageInc", 2d, 1d, 10d);
+        holyWaterNauseaDuration = builder
+                .comment("Duration of the nausea effect caused by enhanced or special holy water, in ticks.")
+                .defineInRange("holyWaterNauseaDuration", 200, 0, 1000);
+        holyWaterBlindnessDuration = builder
+                .comment("Duration of the blindness effect caused by special holy water, in ticks.")
+                .defineInRange("holyWaterBlindnessDuration", 160, 0, 1000);
+        vampireSwordChargingFactor = builder
+                .comment("Amount of blood in mB required to charge one percent of the vampire sword.")
+                .defineInRange("vampireSwordChargingFactor", 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, 0d, 1d);
+        vampireSwordBloodUsageFactor = builder
+                .comment("Percentage of stored blood consumed per hit with a vampire sword.")
+                .defineInRange("vampireSwordBloodUsageFactor", 0.5, 0, 100d);
+        dropOrchidFromLeavesChance = builder
+                .comment("Chance of dropping an orchid when breaking leaves in the vampire forest, expressed as 1-in-N.")
+                .defineInRange("dropOrchidFromLeavesChance", 25, 1, Integer.MAX_VALUE);
+        golemAttackNonVillageFaction = builder
+                .comment("When enabled, iron golems will attack faction NPCs that belong to a different faction than the village they are in.")
+                .define("golemAttackNonVillageFaction", true);
+        zombieIgnoreVampire = builder
+                .comment("When enabled, zombies will not target vampire players.")
+                .define("zombieIgnoreVampire", true);
+        skeletonIgnoreVampire = builder
+                .comment("When enabled, skeletons will not target vampire players.")
+                .define("skeletonIgnoreVampire", true);
+        creeperIgnoreVampire = builder
+                .comment("When enabled, creepers will not target vampire players.")
+                .define("creeperIgnoreVampire", true);
+        hunterTentMaxSpawn = builder
+                .comment("Maximum number of hunters that can spawn at a single tent per day.")
+                .defineInRange("hunterTentMaxSpawn", 4, 0, 20);
+        crossbowDamageMult = builder
+                .comment("Multiplier applied to base damage dealt by crossbow arrows.")
+                .defineInRange("crossbowDamageMult", 1, 0.2, 5);
+        allowInfiniteSpecialArrows = builder
+                .comment("When enabled, special crossbow arrows (e.g. spitfire) can be used with the Infinity enchantment.")
+                .define("allowInfiniteSpecialArrows", false);
+        garlicDiffuserStartupTime = builder
+                .comment("Delay in ticks before a newly placed garlic diffuser becomes active. Scaled to 0.25x in singleplayer.")
+                .defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);
+        bleedingEffectDamage = builder
+                .comment("Damage dealt by the bleeding effect per damaging tick.")
+                .defineInRange("bleedingEffectDamage", 0.1, 0, Double.MAX_VALUE);
+        diffuserBootTime = builder
+                .comment("Time in seconds before a diffuser's effect becomes active after placement.")
+                .defineInRange("diffuserBootTime", 15, 1, Integer.MAX_VALUE / 20);
 
-        arrowVampireKillerMaxHealth = builder.comment("The vampire killer arrow can only instant kill NPC vampires that have a max (not actual) health of this").defineInRange("arrowVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);
-        holyWaterSplashDamage = builder.comment("Damage a normal holy water splash bottle does when directly hitting a vampire").defineInRange("holyWaterSplashDamage", 5, 0, Integer.MAX_VALUE);
-        holyWaterTierDamageInc = builder.comment("Holy water damage is multiplied with this value for each tier above normal").defineInRange("holyWaterTierDamageInc", 2d, 1d, 10d);
-        holyWaterNauseaDuration = builder.comment("Duration of the nausea effect caused by enhanced or special holy water (ticks)").defineInRange("holyWaterNauseaDuration", 200, 0, 1000);
-        holyWaterBlindnessDuration = builder.comment("Duration of the blindness effect caused by special holy water (ticks)").defineInRange("holyWaterBlindnessDuration", 160, 0, 1000);
-        vampireSwordChargingFactor = builder.comment("The blood mB to charge percentage of the normal vampire sword").defineInRange("vampireSwordChargingFactor", 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, 0d, 1d);
-        vampireSwordBloodUsageFactor = builder.comment("The percentage of stored blood used for every hit with a normal vampire sword").defineInRange("vampireSwordBloodUsageFactor", 0.5, 0, 100d);
-        dropOrchidFromLeavesChance = builder.comment("Drop orchid every n times breaking a leave in the vampire forest").defineInRange("dropOrchidFromLeavesChance", 25, 1, Integer.MAX_VALUE);
-        golemAttackNonVillageFaction = builder.comment("If iron golems should attack faction NPCs if in a village with a different faction").define("golemAttackNonVillageFaction", true);
-        zombieIgnoreVampire = builder.comment("Whether zombies should ignore vampires").define("zombieIgnoreVampire", true);
-        skeletonIgnoreVampire = builder.comment("Whether skeletons should ignore vampires").define("skeletonIgnoreVampire", true);
-        creeperIgnoreVampire = builder.comment("Whether creepers should ignore vampires").define("creeperIgnoreVampire", true);
-        hunterTentMaxSpawn = builder.comment("Maximum number of hunters that can spawn at one tent per day").defineInRange("hunterTentMaxSpawn", 4, 0, 20);
-        crossbowDamageMult = builder.comment("The base damage dealt by crossbow arrows is multiplied by this").defineInRange("crossbowDamageMult", 1, 0.2, 5);
-        allowInfiniteSpecialArrows = builder.comment("Whether special crossbow arrows (e.g. spitfire) can be used with infinity enchantment").define("allowInfiniteSpecialArrows", false);
-        garlicDiffuserStartupTime = builder.comment("Delay in seconds before a newly placed garlic diffuser becomes active. *0.25 in Singleplayer").defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);
-        bleedingEffectDamage = builder.comment("How much damage the bleeding effect should do per damaging tick").defineInRange("bleedingEffectDamage", 0.1, 0, Double.MAX_VALUE);
-        diffuserBootTime = builder.comment("Time in seconds a diffuser needs to boot up, before its effect takes action").defineInRange("diffuserBootTime", 15, 1, Integer.MAX_VALUE / 20);
-
-        //Entity actions
         builder.category("entityActions", "ea");
-        eaHealthThreshold = builder.comment("Relative health a entity must have to use actions").defineInRange("healthThreshold", 0.3, 0, 1);
-        eaInvisibilityCooldown = builder.comment("In seconds").defineInRange("invisibilityCooldown", 7, 1, Integer.MAX_VALUE);
-        eaInvisibilityDuration = builder.comment("In seconds").defineInRange("invisibilityDuration", 4, 1, Integer.MAX_VALUE);
-        eaHealAmount = builder.comment("In percent").defineInRange("healAmount", 30, 0, 100);
-        eaHealCooldown = builder.comment("In seconds").defineInRange("healCooldown", 7, 1, Integer.MAX_VALUE);
-        eaRegenerationDuration = builder.comment("In seconds").defineInRange("regenerationDuration", 5, 0, Integer.MAX_VALUE);
-        eaRegenerationAmount = builder.comment("In percent").defineInRange("regenerationAmount", 40, 0, 100);
-        eaRegenerationCooldown = builder.comment("In seconds").defineInRange("regenerationCooldown", 8, 0, Integer.MAX_VALUE);
-        eaSpeedDuration = builder.comment("In seconds").defineInRange("speedDuration", 4, 0, Integer.MAX_VALUE);
-        eaSpeedCooldown = builder.comment("In seconds").defineInRange("speedCooldown", 6, 1, Integer.MAX_VALUE);
-        eaSpeedAmount = builder.comment("Speed = basevalue * (1+ speedAmount)").defineInRange("speedAmount", 0.14, 0, 2);
-        eaBatspawnAmount = builder.defineInRange("batspawnAmount", 4, 1, 10);
-        eaBatspawnCooldown = builder.comment("In seconds").defineInRange("batspawnCooldown", 15, 1, Integer.MAX_VALUE);
-        eaDarkProjectileCooldown = builder.comment("In seconds").defineInRange("darkProjectileCooldown", 10, 1, Integer.MAX_VALUE);
-        eaDarkProjectileDamage = builder.defineInRange("darkProjectileDamage", 5d, 0, 100);
-        eaDarkProjectileIndirectDamage = builder.defineInRange("darkProjectileIndirectDamage", 2d, 0, 100);
-        eaSunscreenDuration = builder.comment("In seconds").defineInRange("sunscreenDuration", 9, 0, Integer.MAX_VALUE);
-        eaSunscreenCooldown = builder.comment("In seconds").defineInRange("sunscreenCooldown", 10, 1, Integer.MAX_VALUE);
-        eaIgnoreSundamageCooldown = builder.comment("In seconds").defineInRange("ignoreSundamageCooldown", 6, 1, Integer.MAX_VALUE);
-        eaIgnoreSundamageDuration = builder.comment("In seconds").defineInRange("ignoreSundamageDuration", 5, 0, Integer.MAX_VALUE);
-        eaGarlicCooldown = builder.comment("In seconds").defineInRange("garlicCooldown", 5, 1, Integer.MAX_VALUE);
-        eaGarlicDuration = builder.comment("In seconds").defineInRange("garlicDuration", 5, 0, Integer.MAX_VALUE);
 
-        //Hunter actions
+        eaHealthThreshold = builder
+                .comment("Minimum relative health an entity must have to use actions.")
+                .defineInRange("healthThreshold", 0.3, 0, 1);
+        eaInvisibilityCooldown = builder
+                .comment("Cooldown for the entity invisibility action, in seconds.")
+                .defineInRange("invisibilityCooldown", 7, 1, Integer.MAX_VALUE);
+        eaInvisibilityDuration = builder
+                .comment("Duration of the entity invisibility action, in seconds.")
+                .defineInRange("invisibilityDuration", 4, 1, Integer.MAX_VALUE);
+        eaHealAmount = builder
+                .comment("Amount healed by the entity heal action, as a percentage of max health.")
+                .defineInRange("healAmount", 30, 0, 100);
+        eaHealCooldown = builder
+                .comment("Cooldown for the entity heal action, in seconds.")
+                .defineInRange("healCooldown", 7, 1, Integer.MAX_VALUE);
+        eaRegenerationDuration = builder
+                .comment("Duration of the entity regeneration action, in seconds.")
+                .defineInRange("regenerationDuration", 5, 0, Integer.MAX_VALUE);
+        eaRegenerationAmount = builder
+                .comment("Strength of the entity regeneration action, as a percentage of max health.")
+                .defineInRange("regenerationAmount", 40, 0, 100);
+        eaRegenerationCooldown = builder
+                .comment("Cooldown for the entity regeneration action, in seconds.")
+                .defineInRange("regenerationCooldown", 8, 0, Integer.MAX_VALUE);
+        eaSpeedDuration = builder
+                .comment("Duration of the entity speed action, in seconds.")
+                .defineInRange("speedDuration", 4, 0, Integer.MAX_VALUE);
+        eaSpeedCooldown = builder
+                .comment("Cooldown for the entity speed action, in seconds.")
+                .defineInRange("speedCooldown", 6, 1, Integer.MAX_VALUE);
+        eaSpeedAmount = builder
+                .comment("Speed modifier applied during the entity speed action. Final speed = baseSpeed * (1 + speedAmount).")
+                .defineInRange("speedAmount", 0.14, 0, 2);
+        eaBatspawnAmount = builder
+                .comment("Number of bats spawned per entity bat spawn action.")
+                .defineInRange("batspawnAmount", 4, 1, 10);
+        eaBatspawnCooldown = builder
+                .comment("Cooldown for the entity bat spawn action, in seconds.")
+                .defineInRange("batspawnCooldown", 15, 1, Integer.MAX_VALUE);
+        eaDarkProjectileCooldown = builder
+                .comment("Cooldown for the entity dark projectile action, in seconds.")
+                .defineInRange("darkProjectileCooldown", 10, 1, Integer.MAX_VALUE);
+        eaDarkProjectileDamage = builder
+                .comment("Direct damage dealt by the entity dark projectile.")
+                .defineInRange("darkProjectileDamage", 5d, 0, 100);
+        eaDarkProjectileIndirectDamage = builder
+                .comment("Indirect (splash) damage dealt by the entity dark projectile.")
+                .defineInRange("darkProjectileIndirectDamage", 2d, 0, 100);
+        eaSunscreenDuration = builder
+                .comment("Duration of the entity sunscreen action, in seconds.")
+                .defineInRange("sunscreenDuration", 9, 0, Integer.MAX_VALUE);
+        eaSunscreenCooldown = builder
+                .comment("Cooldown for the entity sunscreen action, in seconds.")
+                .defineInRange("sunscreenCooldown", 10, 1, Integer.MAX_VALUE);
+        eaIgnoreSundamageCooldown = builder
+                .comment("Cooldown for the entity ignore sun damage action, in seconds.")
+                .defineInRange("ignoreSundamageCooldown", 6, 1, Integer.MAX_VALUE);
+        eaIgnoreSundamageDuration = builder
+                .comment("Duration of the entity ignore sun damage action, in seconds.")
+                .defineInRange("ignoreSundamageDuration", 5, 0, Integer.MAX_VALUE);
+        eaGarlicCooldown = builder
+                .comment("Cooldown for the entity garlic resistance action, in seconds.")
+                .defineInRange("garlicCooldown", 5, 1, Integer.MAX_VALUE);
+        eaGarlicDuration = builder
+                .comment("Duration of the entity garlic resistance action, in seconds.")
+                .defineInRange("garlicDuration", 5, 0, Integer.MAX_VALUE);
+
         builder.category("hunterActions", "ha");
-        haDisguiseEnabled = builder.define("disguiseEnabled", true);
-        haDisguiseVisibilityMod = builder.comment("If disguised the detection radius of mobs will be multiplied by this").defineInRange("disguiseVisibilityMod", 0.2D, 0, 1);
-        haDisguiseInvisibleSQ = builder.comment("Squared distance as of which a disguised hunter is invisible").defineInRange("disguiseInvisibleSQ", 256, 1, Integer.MAX_VALUE);
-        haAwarenessEnabled = builder.define("awarenessEnabled", true);
-        haAwarenessDuration = builder.comment("In ticks").defineInRange("awarenessDuration", 300, 1, Integer.MAX_VALUE);
-        haAwarenessCooldown = builder.comment("In ticks").defineInRange("awarenessCooldown", 900, 1, Integer.MAX_VALUE);
-        haAwarenessRadius = builder.comment("Radius in which vampires should be detected").defineInRange("awarenessRadius", 25, 0, 50);
-        haPotionResistanceEnabled = builder.define("potionResistanceEnabled", true);
-        haPotionResistanceDuration = builder.comment("In ticks").defineInRange("potionResistanceDuration", 400, 1, Integer.MAX_VALUE);
-        haPotionResistanceCooldown = builder.comment("In ticks").defineInRange("potionResistanceCooldown", 1200, 1, Integer.MAX_VALUE);
 
-        //Hunter player
+        haDisguiseEnabled = builder
+                .comment("When enabled, hunters can use the disguise action.")
+                .define("disguiseEnabled", true);
+        haDisguiseVisibilityMod = builder
+                .comment("Multiplier applied to mob detection radius while a hunter is disguised.")
+                .defineInRange("disguiseVisibilityMod", 0.2D, 0, 1);
+        haDisguiseInvisibleSQ = builder
+                .comment("Squared distance within which a disguised hunter is completely invisible to mobs.")
+                .defineInRange("disguiseInvisibleSQ", 256, 1, Integer.MAX_VALUE);
+        haAwarenessEnabled = builder
+                .comment("When enabled, hunters can use the vampire awareness action.")
+                .define("awarenessEnabled", true);
+        haAwarenessDuration = builder
+                .comment("Duration of the vampire awareness action, in ticks.")
+                .defineInRange("awarenessDuration", 300, 1, Integer.MAX_VALUE);
+        haAwarenessCooldown = builder
+                .comment("Cooldown for the vampire awareness action, in ticks.")
+                .defineInRange("awarenessCooldown", 900, 1, Integer.MAX_VALUE);
+        haAwarenessRadius = builder
+                .comment("Radius in blocks within which vampires are detected by the awareness action.")
+                .defineInRange("awarenessRadius", 25, 0, 50);
+        haPotionResistanceEnabled = builder
+                .comment("When enabled, hunters can use the potion resistance action.")
+                .define("potionResistanceEnabled", true);
+        haPotionResistanceDuration = builder
+                .comment("Duration of the potion resistance action, in ticks.")
+                .defineInRange("potionResistanceDuration", 400, 1, Integer.MAX_VALUE);
+        haPotionResistanceCooldown = builder
+                .comment("Cooldown for the potion resistance action, in ticks.")
+                .defineInRange("potionResistanceCooldown", 1200, 1, Integer.MAX_VALUE);
+
         builder.category("hunterPlayer", "hp");
-        hpStrengthMaxMod = builder.comment("Strength = Old * (modifier+1").defineInRange("strengthMaxMod", 0.3d, 0d, 4d);
-        hpStrengthType = builder.comment("0.5 for square root, 1 for linear").defineInRange("strengthType", 0.5d, 0.5d, 1);
 
-        //Hunter skills
+        hpStrengthMaxMod = builder
+                .comment("Maximum strength modifier for hunters at max level. Final strength = base * (modifier + 1).")
+                .defineInRange("strengthMaxMod", 0.3d, 0d, 4d);
+        hpStrengthType = builder
+                .comment("Scaling type for the hunter strength modifier. Use 0.5 for square root scaling or 1.0 for linear scaling.")
+                .defineInRange("strengthType", 0.5d, 0.5d, 1);
+
         builder.category("hunterSkills", "hs");
-        hsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.3, 0, 3);
-        hsSmallAttackDamageModifier = builder.comment("Increase damage - Added to base damage").defineInRange("smallAttackDamageModifier", 0.1d, 0, 10);
-        hsInstantKill1FromBehind = builder.comment("First stake skill - If it is required to attack from behind to instant kill low level vampires").define("instantKill1FromBehind", false);
-        hsInstantKill1MaxHealth = builder.comment("First stake skill -The maximal relative health a entity may have to be instantly killed").defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
-        hsInstantKill2MaxHealth = builder.comment("Second stake skill - The max (not the actual) health of an entity that can be one hit killed from behind").defineInRange("instantKill2MaxHealth", 200, 0, Integer.MAX_VALUE);
-        hsInstantKill2OnlyNPC = builder.comment("Second stake skill - Whether only NPCs can be one hit killed with this skill").define("instantKill2OnlyNPC", true);
-        hsGarlicDiffuserNormalDist = builder.comment("The chunk radius a normal diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffuserNormalDist", 0, 0, 5);
-        hsGarlicDiffuserEnhancedDist = builder.comment("The chunk radius a enhanced diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffuserEnhancedDist", 1, 0, 5);
-        hsGarlicDiffuserWeakDist = builder.comment("The chunk radius a normal diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks").defineInRange("garlicDiffuserWeakDist", 2, 0, 5);
 
+        hsSmallAttackSpeedModifier = builder
+                .comment("Attack speed modifier from the basic attack speed skill. Final cooldown = 1 / (base * (1 + modifier)).")
+                .defineInRange("smallAttackSpeedModifier", 0.3, 0, 3);
+        hsSmallAttackDamageModifier = builder
+                .comment("Flat damage added to base attack damage by the basic damage skill.")
+                .defineInRange("smallAttackDamageModifier", 0.1d, 0, 10);
+        hsInstantKill1FromBehind = builder
+                .comment("When enabled, the first stake skill requires attacking from behind to instantly kill low-level vampires.")
+                .define("instantKill1FromBehind", false);
+        hsInstantKill1Player = builder
+                .comment("Allow killing players")
+                .define("instantKill1Player", true);
+        hsInstantKill1MaxHealth = builder
+                .comment("Maximum relative health an entity may have to be instantly killed by the first stake skill.")
+                .defineInRange("instantKill1MaxHealth", 0.35, 0, 1);
+        hsInstantKill2MaxHealth = builder
+                .comment("Maximum absolute health an entity may have to be instantly killed from behind by the second stake skill.")
+                .defineInRange("instantKill2MaxHealth", 200, 0, Integer.MAX_VALUE);
+        hsInstantKill2OnlyNPC = builder
+                .comment("When enabled, the second stake skill can only instantly kill NPCs, not other players.")
+                .define("instantKill2OnlyNPC", true);
+        hsGarlicDiffuserNormalDist = builder
+                .comment("Chunk radius affected by a normal garlic diffuser. A value of 0 results in a single-chunk area. Only affects newly placed blocks.")
+                .defineInRange("garlicDiffuserNormalDist", 0, 0, 5);
+        hsGarlicDiffuserEnhancedDist = builder
+                .comment("Chunk radius affected by an enhanced garlic diffuser. A value of 0 results in a single-chunk area. Only affects newly placed blocks.")
+                .defineInRange("garlicDiffuserEnhancedDist", 1, 0, 5);
+        hsGarlicDiffuserWeakDist = builder
+                .comment("Chunk radius affected by a weak garlic diffuser. A value of 0 results in a single-chunk area. Only affects newly placed blocks.")
+                .defineInRange("garlicDiffuserWeakDist", 2, 0, 5);
 
-        //Vampire skills
         builder.category("vampireSkills", "vs");
-        vsSundamageReduction1 = builder.comment("Sundamage is multiplied with (value+1)").defineInRange("sundamageReduction1", -0.5, -1, 0);
-        vsBloodThirstReduction1 = builder.comment("Blood exhaustion is multiplied with (value+1)").defineInRange("bloodThirstReduction1", -0.4, -1, 0);
-        vsSwordFinisherMaxHealth = builder.comment("The max relative health for sword finisher kill").defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
-        vsJumpBoost = builder.comment("Similar to potion effect amplifier (and -1 is normal)").defineInRange("jumpBoost", 1, -1, 5);
-        vsSpeedBoost = builder.comment("Max speed is multiplied with (value+1)").defineInRange("speedBoost", 0.15, 0, 3);
-        vsBloodVisionDistanceSq = builder.comment("Squared blood vision distance").defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
-        vsSmallAttackDamageModifier = builder.comment("Damage added to base damage").defineInRange("smallAttackDamageModifier", 1d, 0, 10d);
-        vsSmallAttackSpeedModifier = builder.comment("Basic skill - Weapon cooldown = 1/(oldvalue*(1+modifier))").defineInRange("smallAttackSpeedModifier", 0.15, 0, 3);
-        vsNeonatalReduction = builder.comment("Reduced percentage of the neonatal effect").defineInRange("neonatalReduction", 0.5, 0, 1024);
-        vsDbnoReduction = builder.comment("Reduced percentage of the downed timer required to resurrect").defineInRange("dbnoReduction", 0.5, 0, 1024);
 
+        vsSundamageReduction1 = builder
+                .comment("Sun damage multiplier reduction from the first sun damage skill. Final sun damage = base * (1 + value).")
+                .defineInRange("sundamageReduction1", -0.5, -1, 0);
+        vsBloodThirstReduction1 = builder
+                .comment("Blood exhaustion multiplier reduction from the first blood thirst skill. Final exhaustion = base * (1 + value).")
+                .defineInRange("bloodThirstReduction1", -0.4, -1, 0);
+        vsSwordFinisherMaxHealth = builder
+                .comment("Maximum relative health a target may have to be finished by the vampire sword finisher skill.")
+                .defineInRange("swordFinisherMaxHealth", 0.25, 0, 1);
+        vsSwordFinisherOnPlayer = builder
+                .comment("If the sword finisher works on players")
+                .define("swordFinisherOnPlayer", true);
+        vsJumpBoost = builder
+                .comment("Jump boost level granted by the vampire jump skill. Equivalent to the potion effect amplifier, where -1 is no boost.")
+                .defineInRange("jumpBoost", 1, -1, 5);
+        vsSpeedBoost = builder
+                .comment("Maximum speed boost granted by the vampire speed skill. Final max speed = base * (1 + value).")
+                .defineInRange("speedBoost", 0.15, 0, 3);
+        vsBloodVisionDistanceSq = builder
+                .comment("Squared distance within which entities are highlighted by the blood vision skill.")
+                .defineInRange("bloodVisionDistanceSq", 1600, 5, Integer.MAX_VALUE);
+        vsSmallAttackDamageModifier = builder
+                .comment("Flat damage added to base attack damage by the vampire basic damage skill.")
+                .defineInRange("smallAttackDamageModifier", 1d, 0, 10d);
+        vsSmallAttackDamageMultiplier = builder
+                .comment("Damage to multiply as total (value + 1)")
+                .defineInRange("smallAttackDamageMultiplier", 0.1f,0,1);
+        vsSmallAttackSpeedModifier = builder
+                .comment("Attack speed modifier from the vampire basic attack speed skill. Final cooldown = 1 / (base * (1 + modifier)).")
+                .defineInRange("smallAttackSpeedModifier", 0.15, 0, 3);
+        vsNeonatalReduction = builder
+                .comment("Percentage reduction of the neonatal debuff duration from the neonatal reduction skill.")
+                .defineInRange("neonatalReduction", 0.5, 0, 1024);
+        vsDbnoReduction = builder
+                .comment("Percentage reduction of the downed timer required to resurrect, from the downed reduction skill.")
+                .defineInRange("dbnoReduction", 0.5, 0, 1024);
 
-        //Vampire Player TODO 1.19 rename *MaxMod to *MaxLevelMod and clarify whether it is a multiplicative or additive modifier
         builder.category("vampirePlayer", "vp");
-        vpHealthMaxMod = builder.defineInRange("healthMaxMod", 16, 0.5, 40);
-        vpAttackSpeedMaxMod = builder.defineInRange("attackSpeedMaxMod", 0.15, 0, 2);
-        vpSpeedMaxMod = builder.defineInRange("speedMaxMod", 0.3, 0, 5);
-        vpExhaustionMaxMod = builder.defineInRange("exhaustionMaxMod", 1.0, 0, 10);
-        vpBloodExhaustionFactor = builder.comment("Blood exhaustion is multiplied with this value").defineInRange("bloodExhaustionFactor", 0.7, 0, 5);
-        vpBloodUsagePeaceful = builder.comment("Whether blood is consumed in peaceful gamemode").define("bloodUsagePeaceful", false);
-        vpPlayerBloodSaturation = builder.defineInRange("playerBloodSaturation", 1.5, 0.3, 10);
-        vpSanguinareAverageDuration = builder.comment("Average duration of the Sanguinare Vampiris Effect. The final duration is random between 0.5 x avgDuration - 1.5 x avgDuration. In Seconds.").defineInRange("sanguinareAverageDuration", 900, 1, 10000);
-        vpSundamage = builder.defineInRange("sundamage", 7d, 1, Double.MAX_VALUE);
-        vpSundamageMinLevel = builder.defineInRange("sundamageMinLevel", 4, 1, Integer.MAX_VALUE);
-        vpSundamageNausea = builder.comment("Weather a vampire player that receives sundamage should also receive a nausea effect").define("sundamageNausea", true);
-        vpSundamageNauseaMinLevel = builder.defineInRange("sundamageNauseaMinLevel", 3, 1, Integer.MAX_VALUE);
-        vpSundamageWeaknessMinLevel = builder.defineInRange("sundamageWeaknessMinLevel", 2, 1, Integer.MAX_VALUE);
-        vpSundamageWaterblocks = builder.defineInRange("sundamageWaterblocks", 4, 1, 10);
-        vpSundamageInstantDeath = builder.comment("Whether vampires are instantly turned into ash when being in the sun").define("sundamageInstantDeath", false);
-        vpSunscreenBuff = builder.comment("Buff sunscreen potion to prevent negative effects at any level").define("sunscreenBuff", false);
-        vpFireVulnerabilityMod = builder.comment("Multiply fire damage with this for vampires" + (iceAndFire ? " - Changed due to IceAndFire" : "")).defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
-        vpFireResistanceReplace = builder.comment("Whether to replace the vanilla fire resistance potion for vampires with a custom one that only reduces damage but does not remove it" + (iceAndFire ? " - Changed due to IceAndFire" : "")).define("fireResistanceReplace", !iceAndFire);
-        vpMaxYellowBorderPercentage = builder.comment("Defines the maximum extend the yellow border covers when the player is in the sun. 100 is default. 0 to disable completely").defineInRange("maxYellowBorderPercentage", 100, 0, 100);
-        vpImmortalFromDamageSources = builder.comment("List of damage source types that the player does not die from (immediately)").defineList("immortalFromDamageSources", List.of(), () -> "", c -> UtilLib.checkRegistryObjectExistence(Registries.DAMAGE_TYPE, c));
-        vpDbnoDuration = builder.comment("Base cooldown before a downed vampire can resurrect. In sec.").defineInRange("dbnoDuration", 60, 1, 1000);
-        vpNeonatalDuration = builder.comment("Base duration of neonatal effect after resurrection. In sec.").defineInRange("neonatalDuration", 120, 1, Integer.MAX_VALUE);
-        vpNaturalArmorRegenDuration = builder.comment("The duration it takes for the vampire natural armor to fully regenerate after respawn. In seconds").defineInRange("naturalArmorRegenDuration", 240, 1, 2400);
-        vpNaturalArmorBaseValue = builder.comment("The base value of natural armor every vampire has at level 1").defineInRange("naturalArmorBaseValue", 10, 0, 100);
-        vpNaturalArmorIncrease = builder.comment("The amount of natural armor a max level vampire has in addition to the base value").defineInRange("naturalArmorIncrease", 10, 0, 100);
-        vpNaturalArmorToughnessIncrease = builder.comment("The amount of natural armor toughness a max level vampire has").defineInRange("naturalArmorToughnessIncrease", 8, 0, 100);
-        vpArmorPenalty = builder.comment("Whether vampire have a reduced speed and attack boost when wearing heavy armor").define("armorPenalty", true);
-        vpNightVisionDisabled = builder.comment("Disable vampire night vision").define("nightVisionDisabled", false);
-        vpBloodVisionDisabled = builder.comment("Disable vampire blood vision").define("bloodVisionDisabled", false);
 
+        vpHealthMaxLevelMod = builder
+                .comment("Flat bonus health added to vampire players at max level. This is an additive modifier.")
+                .defineInRange("healthMaxLevelMod", 16, 0.5, 40);
+        vpAttackSpeedMaxLevelMod = builder
+                .comment("Maximum attack speed modifier for vampires at max level. This is a multiplicative modifier applied as (1 + modifier).")
+                .defineInRange("attackSpeedMaxLevelMod", 0.15, 0, 2);
+        vpSpeedMaxLevelMod = builder
+                .comment("Maximum movement speed modifier for vampires at max level. This is a multiplicative modifier applied as (1 + modifier).")
+                .defineInRange("speedMaxLevelMod", 0.5, 0, 5);
+        vpExhaustionMaxLevelMod = builder
+                .comment("Maximum exhaustion reduction modifier for vampires at max level. This is a multiplicative modifier applied as (1 + modifier).")
+                .defineInRange("exhaustionMaxLevelMod", 1.0, 0, 10);
+        vpBloodExhaustionFactor = builder
+                .comment("Multiplier applied to blood exhaustion for vampire players.")
+                .defineInRange("bloodExhaustionFactor", 0.7, 0, 5);
+        vpBloodUsagePeaceful = builder
+                .comment("When enabled, blood is consumed from vampire players even in peaceful game mode.")
+                .define("bloodUsagePeaceful", false);
+        vpPlayerBloodSaturation = builder
+                .comment("Blood saturation value granted when a vampire player feeds.")
+                .defineInRange("playerBloodSaturation", 1.5, 0.3, 10);
+        vpSanguinareAverageDuration = builder
+                .comment("Average duration of the Sanguinare Vampiris effect, in seconds. The actual duration is randomized between 0.5x and 1.5x this value.")
+                .defineInRange("sanguinareAverageDuration", 900, 1, 10000);
+        vpSundamagePerTick = builder
+                .comment("Base sun damage dealt to vampire players per tick in direct sunlight.")
+                .defineInRange("sundamagePerTick", 7d, 1, Double.MAX_VALUE);
+        vpSundamageMinLevel = builder
+                .comment("Minimum vampire level required to receive sun damage.")
+                .defineInRange("sundamageMinLevel", 4, 1, Integer.MAX_VALUE);
+        vpSundamageNausea = builder
+                .comment("When enabled, vampire players receiving sun damage will also receive a nausea effect.")
+                .define("sundamageNausea", true);
+        vpSundamageNauseaMinLevel = builder
+                .comment("Minimum vampire level required to receive the sun damage nausea effect.")
+                .defineInRange("sundamageNauseaMinLevel", 3, 1, Integer.MAX_VALUE);
+        vpSundamageWeaknessMinLevel = builder
+                .comment("Minimum vampire level required to receive the sun damage weakness effect.")
+                .defineInRange("sundamageWeaknessMinLevel", 2, 1, Integer.MAX_VALUE);
+        vpSundamageWaterblocks = builder
+                .comment("Number of water source blocks above a vampire required to block sun damage.")
+                .defineInRange("sundamageWaterblocks", 4, 1, 10);
+        vpSundamageInstantDeath = builder
+                .comment("When enabled, vampires are instantly turned to ash upon exposure to direct sunlight.")
+                .define("sundamageInstantDeath", false);
+        vpSunscreenBuff = builder
+                .comment("When enabled, the sunscreen potion prevents all sun-related negative effects regardless of vampire level.")
+                .define("sunscreenBuff", false);
+        vpFireVulnerabilityMod = builder
+                .comment("Multiplier applied to fire damage received by vampire players." + (iceAndFire ? " Changed due to IceAndFire." : ""))
+                .defineInRange("fireVulnerabilityMod", iceAndFire ? 1.5d : 3d, 0.1, Double.MAX_VALUE);
+        vpFireResistanceReplace = builder
+                .comment("When enabled, replaces the vanilla fire resistance effect for vampires with a weaker version that reduces but does not eliminate fire damage." + (iceAndFire ? " Changed due to IceAndFire." : ""))
+                .define("fireResistanceReplace", !iceAndFire);
+        vpMaxYellowBorderPercentage = builder
+                .comment("Maximum extent of the yellow vignette shown when a vampire player is in sunlight. Set to 0 to disable the vignette entirely.")
+                .defineInRange("maxYellowBorderPercentage", 100, 0, 100);
+        vpImmortalFromDamageSources = builder
+                .comment("List of damage source types that will not immediately kill a vampire player. Use damage type IDs e.g. [\"minecraft:fell_out_of_world\"].")
+                .defineList("immortalFromDamageSources", List.of(), () -> "", c -> UtilLib.checkRegistryObjectExistence(Registries.DAMAGE_TYPE, c));
+        vpDbnoDuration = builder
+                .comment("Base duration a downed vampire must wait before being able to resurrect, in seconds.")
+                .defineInRange("dbnoDuration", 60, 1, 1000);
+        vpNeonatalDuration = builder
+                .comment("Base duration of the neonatal debuff applied after a vampire resurrects, in seconds.")
+                .defineInRange("neonatalDuration", 120, 1, Integer.MAX_VALUE);
+        vpNaturalArmorRegenDuration = builder
+                .comment("Time for a vampire's natural armor to fully regenerate after respawning, in seconds.")
+                .defineInRange("naturalArmorRegenDuration", 240, 1, 2400);
+        vpNaturalArmorBaseValue = builder
+                .comment("Base natural armor value granted to all vampires at level 1.")
+                .defineInRange("naturalArmorBaseValue", 10, 0, 100);
+        vpNaturalArmorIncrease = builder
+                .comment("Additional natural armor granted to vampires at max level, on top of the base value.")
+                .defineInRange("naturalArmorIncrease", 10, 0, 100);
+        vpNaturalArmorToughnessIncrease = builder
+                .comment("Natural armor toughness granted to vampires at max level.")
+                .defineInRange("naturalArmorToughnessIncrease", 8, 0, 100);
+        vpArmorPenalty = builder
+                .comment("When enabled, vampires wearing heavy armor receive reduced speed and attack speed bonuses.")
+                .define("armorPenalty", true);
+        vpNightVisionDisabled = builder
+                .comment("When enabled, disables the passive night vision effect for vampire players.")
+                .define("nightVisionDisabled", false);
+        vpBloodVisionDisabled = builder
+                .comment("When enabled, disables the blood vision ability for vampire players.")
+                .define("bloodVisionDisabled", false);
 
-        //Vampire actions
         builder.category("vampireActions", "va");
-        vaFreezeCooldown = builder.comment("In seconds").defineInRange("freezeCooldown", 60, 1, Integer.MAX_VALUE);
-        vaFreezeDuration = builder.comment("In seconds").defineInRange("freezeDuration", 5, 1, 30);
-        vaFreezeAttackSpeedModifier = builder.comment("How much should the attack speed be reduced when effected by freeze").defineInRange("freezeAttackSpeedModifier", 0.3, 0, 1);
-        vaFreezeEnabled = builder.define("freezeEnabled", true);
-        vaInvisibilityCooldown = builder.comment("In seconds").defineInRange("invisibilityCooldown", 25, 1, Integer.MAX_VALUE);
-        vaInvisibilityDuration = builder.comment("In seconds").defineInRange("invisibilityDuration", 25, 1, Integer.MAX_VALUE);
-        vaInvisibilityEnabled = builder.define("invisibilityEnabled", true);
-        vaRegenerationCooldown = builder.comment("In seconds").defineInRange("regenerationCooldown", 60, 0, Integer.MAX_VALUE);
-        vaRegenerationDuration = builder.comment("In seconds").defineInRange("regenerationDuration", 20, 0, Integer.MAX_VALUE);
-        vaRegenerationEnabled = builder.define("regenerationEnabled", true);
-        vaTeleportCooldown = builder.comment("In seconds").defineInRange("teleportCooldown", 10, 1, Integer.MAX_VALUE);
-        vaTeleportMaxDistance = builder.defineInRange("teleportMaxDistance", 50, 1, 1000);
-        vaTeleportEnabled = builder.define("teleportEnabled", true);
-        vaRageCooldown = builder.comment("In seconds").defineInRange("rageCooldown", 20, 0, Integer.MAX_VALUE);
-        vaRageMinDuration = builder.comment("In seconds").defineInRange("rageMinDuration", 13, 1, 10000);
-        vaRageDurationIncrease = builder.comment("In seconds. Increase per vampire level").defineInRange("rageDurationIncrease", 5, 0, 1000);
-        vaRageEnabled = builder.define("rageEnabled", true);
-        vaSunscreenCooldown = builder.comment("In seconds").defineInRange("sunscreenCooldown", 500, 0, 1000);
-        vaSunscreenDuration = builder.comment("In seconds").defineInRange("sunscreenDuration", 40, 1, Integer.MAX_VALUE);
-        vaSunscreenEnabled = builder.define("sunscreenEnabled", true);
-        vaBatEnabled = builder.define("batEnabled", true);
-        vaBatCooldown = builder.comment("In seconds").defineInRange("batCooldown", 0, 0, 10000);
-        vaBatDuration = builder.comment("In seconds").defineInRange("batDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
-        vaBatHealthReduction = builder.comment("The player health will be reduced by this factor").defineInRange("batHealthReduction", 0.9, 0, 0.95);
-        vaBatExhaustion = builder.comment("Additional exhaustion added while in bat mode. E.g. Thirst I would be 0.01").defineInRange("batExhaustion", 0.005f, 0, 0.05);
-        vaBatFlightSpeed = builder.defineInRange("batFlightSpeed", 0.025f, 0.001, 0.2);
-        vaBatAllowInteraction = builder.comment("Whether to allow players in bat mode to interact with items/blocks and place/break blocks").define("batAllowInteraction", false);
-        vaSummonBatsCooldown = builder.comment("In seconds").defineInRange("summonBatsCooldown", 300, 1, 10000);
-        vaSummonBatsCount = builder.defineInRange("summonBatsCount", 16, 1, 100);
-        vaSummonBatsEnabled = builder.define("summonBatsEnabled", true);
-        vaDisguiseCooldown = builder.comment("In seconds").defineInRange("disguiseCooldown", 60, 1, 10000);
-        vaDisguiseDuration = builder.comment("In seconds").defineInRange("disguiseDuration", 60, 1, 10000);
-        vaDisguiseEnabled = builder.define("disguiseEnabled", true);
-        vaDarkBloodProjectileCooldown = builder.comment("In seconds").defineInRange("darkBloodProjectileCooldown", 4, 1, 1000);
-        vaDarkBloodProjectileDamage = builder.defineInRange("darkBloodProjectileDamage", 6d, 0, 10000);
-        vaDarkBloodProjectileEnabled = builder.define("darkBloodProjectileEnabled", true);
-        vaHalfInvulnerableCooldown = builder.defineInRange("halfInvulnerableCooldown", 60, 1, 10000);
-        vaHalfInvulnerableDuration = builder.defineInRange("halfInvulnerableDuration", 30, 1, 10000);
-        vaHalfInvulnerableThreshold = builder.comment("Damage threshold relative to players max health. Damage above this value will be ignored").defineInRange("halfInvulnerableThreshold", 0.4d, 0.0d, 1d);
-        vaHalfInvulnerableBloodCost = builder.defineInRange("halfInvulnerableBloodCost", 4, 0, 1000);
-        vaHalfInvulnerableEnabled = builder.define("halfInvulnerableEnabled", true);
-        vaHissingCooldown = builder.comment("In seconds").defineInRange("hissingCooldown", 60, 0, 10000);
-        vaHissingEnabled = builder.define("hissingEnabled", true);
-        vaDarkStalkerCooldown = builder.comment("Defined in ticks").defineInRange("darkStalkerCooldown", 1200, 1, Integer.MAX_VALUE);
-        vaDarkStalkerDuration = builder.comment("Defined in ticks").defineInRange("darkStalkerDuration", 600, 1, Integer.MAX_VALUE);
-        vaDarkStalkerEnabled = builder.define("darkStalkerEnabled", true);
-        vaDarkStalkerBloodConsumption = builder.comment("mb blood consumed each tick").defineInRange("darkStalkerBloodConsumption", 1, 0.0, 1000);
+
+        vaFreezeEnabled = builder
+                .comment("When enabled, vampires can use the freeze action.")
+                .define("freezeEnabled", true);
+        vaFreezeCooldown = builder
+                .comment("Cooldown for the vampire freeze action, in seconds.")
+                .defineInRange("freezeCooldown", 60, 1, Integer.MAX_VALUE);
+        vaFreezeDuration = builder
+                .comment("Duration of the vampire freeze action, in seconds.")
+                .defineInRange("freezeDuration", 5, 1, 30);
+        vaFreezeAttackSpeedModifier = builder
+                .comment("Attack speed reduction applied to entities affected by the vampire freeze action.")
+                .defineInRange("freezeAttackSpeedModifier", 0.3, 0, 1);
+        vaInvisibilityEnabled = builder
+                .comment("When enabled, vampires can use the invisibility action.")
+                .define("invisibilityEnabled", true);
+        vaInvisibilityCooldown = builder
+                .comment("Cooldown for the vampire invisibility action, in seconds.")
+                .defineInRange("invisibilityCooldown", 25, 1, Integer.MAX_VALUE);
+        vaInvisibilityDuration = builder
+                .comment("Duration of the vampire invisibility action, in seconds.")
+                .defineInRange("invisibilityDuration", 25, 1, Integer.MAX_VALUE);
+        vaRegenerationEnabled = builder
+                .comment("When enabled, vampires can use the regeneration action.")
+                .define("regenerationEnabled", true);
+        vaRegenerationCooldown = builder
+                .comment("Cooldown for the vampire regeneration action, in seconds.")
+                .defineInRange("regenerationCooldown", 60, 0, Integer.MAX_VALUE);
+        vaRegenerationDuration = builder
+                .comment("Duration of the vampire regeneration action, in seconds.")
+                .defineInRange("regenerationDuration", 20, 0, Integer.MAX_VALUE);
+        vaTeleportEnabled = builder
+                .comment("When enabled, vampires can use the teleport action.")
+                .define("teleportEnabled", true);
+        vaTeleportCooldown = builder
+                .comment("Cooldown for the vampire teleport action, in seconds.")
+                .defineInRange("teleportCooldown", 10, 1, Integer.MAX_VALUE);
+        vaTeleportMaxDistance = builder
+                .comment("Maximum distance in blocks a vampire can teleport in a single use.")
+                .defineInRange("teleportMaxDistance", 50, 1, 1000);
+        vaRageEnabled = builder
+                .comment("When enabled, vampires can use the rage action.")
+                .define("rageEnabled", true);
+        vaRageCooldown = builder
+                .comment("Cooldown for the vampire rage action, in seconds.")
+                .defineInRange("rageCooldown", 20, 0, Integer.MAX_VALUE);
+        vaRageMinDuration = builder
+                .comment("Minimum duration of the vampire rage action, in seconds.")
+                .defineInRange("rageMinDuration", 13, 1, 10000);
+        vaRageDurationIncrease = builder
+                .comment("Duration added to the vampire rage action per vampire level, in seconds.")
+                .defineInRange("rageDurationIncrease", 5, 0, 1000);
+        vaSunscreenEnabled = builder
+                .comment("When enabled, vampires can use the sunscreen action.")
+                .define("sunscreenEnabled", true);
+        vaSunscreenCooldown = builder
+                .comment("Cooldown for the vampire sunscreen action, in seconds.")
+                .defineInRange("sunscreenCooldown", 500, 0, 1000);
+        vaSunscreenDuration = builder
+                .comment("Duration of the vampire sunscreen action, in seconds.")
+                .defineInRange("sunscreenDuration", 40, 1, Integer.MAX_VALUE);
+        vaBatEnabled = builder
+                .comment("When enabled, vampires can transform into a bat.")
+                .define("batEnabled", true);
+        vaBatCooldown = builder
+                .comment("Cooldown before a vampire can transform into a bat again, in seconds.")
+                .defineInRange("batCooldown", 0, 0, 10000);
+        vaBatDuration = builder
+                .comment("Maximum duration of bat form, in seconds.")
+                .defineInRange("batDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
+        vaBatHealthReduction = builder
+                .comment("Factor by which the player's health is reduced upon entering bat form.")
+                .defineInRange("batHealthReduction", 0.9, 0, 0.95);
+        vaBatExhaustion = builder
+                .comment("Additional blood exhaustion added per tick while in bat form. For reference, Haste I adds 0.01 per tick.")
+                .defineInRange("batExhaustion", 0.005f, 0, 0.05);
+        vaBatFlightSpeed = builder
+                .comment("Movement speed of the player while in bat form.")
+                .defineInRange("batFlightSpeed", 0.025f, 0.001, 0.2);
+        vaBatAllowInteraction = builder
+                .comment("When enabled, players in bat form can interact with blocks and items, and place or break blocks.")
+                .define("batAllowInteraction", false);
+        vaSummonBatsEnabled = builder
+                .comment("When enabled, vampires can use the summon bats action.")
+                .define("summonBatsEnabled", true);
+        vaSummonBatsCooldown = builder
+                .comment("Cooldown for the vampire summon bats action, in seconds.")
+                .defineInRange("summonBatsCooldown", 300, 1, 10000);
+        vaSummonBatsCount = builder
+                .comment("Number of bats summoned by the vampire summon bats action.")
+                .defineInRange("summonBatsCount", 16, 1, 100);
+        vaDisguiseEnabled = builder
+                .comment("When enabled, vampires can use the disguise action.")
+                .define("disguiseEnabled", true);
+        vaDisguiseCooldown = builder
+                .comment("Cooldown for the vampire disguise action, in seconds.")
+                .defineInRange("disguiseCooldown", 60, 1, 10000);
+        vaDisguiseDuration = builder
+                .comment("Duration of the vampire disguise action, in seconds.")
+                .defineInRange("disguiseDuration", 60, 1, 10000);
+        vaDarkBloodProjectileEnabled = builder
+                .comment("When enabled, vampires can use the dark blood projectile action.")
+                .define("darkBloodProjectileEnabled", true);
+        vaDarkBloodProjectileCooldown = builder
+                .comment("Cooldown for the vampire dark blood projectile action, in seconds.")
+                .defineInRange("darkBloodProjectileCooldown", 4, 1, 1000);
+        vaDarkBloodProjectileDamage = builder
+                .comment("Damage dealt by the vampire dark blood projectile.")
+                .defineInRange("darkBloodProjectileDamage", 6d, 0, 10000);
+        vaHalfInvulnerableEnabled = builder
+                .comment("When enabled, vampires can use the partial invulnerability action.")
+                .define("halfInvulnerableEnabled", true);
+        vaHalfInvulnerableCooldown = builder
+                .comment("Cooldown for the vampire partial invulnerability action, in seconds.")
+                .defineInRange("halfInvulnerableCooldown", 60, 1, 10000);
+        vaHalfInvulnerableDuration = builder
+                .comment("Duration of the vampire partial invulnerability action, in seconds.")
+                .defineInRange("halfInvulnerableDuration", 30, 1, 10000);
+        vaHalfInvulnerableThreshold = builder
+                .comment("Damage threshold relative to the player's max health. Hits above this threshold are negated while the action is active.")
+                .defineInRange("halfInvulnerableThreshold", 0.4d, 0.0d, 1d);
+        vaHalfInvulnerableBloodCost = builder
+                .comment("Blood cost per blocked hit during the partial invulnerability action.")
+                .defineInRange("halfInvulnerableBloodCost", 4, 0, 1000);
+        vaHissingEnabled = builder
+                .comment("When enabled, vampires can use the hissing action.")
+                .define("hissingEnabled", true);
+        vaHissingCooldown = builder
+                .comment("Cooldown for the vampire hissing action, in seconds.")
+                .defineInRange("hissingCooldown", 60, 0, 10000);
+        vaJumpBoostEnabled = builder
+                .define("jumpBoostEnabled", true);
+        vaJumpBoostCooldown = builder
+                .comment("In seconds")
+                .defineInRange("jumpBoostCooldown", 0, 0, 10000);
+        vaJumpBoostDuration = builder
+                .comment("In seconds")
+                .defineInRange("jumpBoostDuration", Integer.MAX_VALUE, 10, Integer.MAX_VALUE);
+        vaDarkStalkerEnabled = builder
+                .comment("When enabled, vampires can use the dark stalker action.")
+                .define("darkStalkerEnabled", true);
+        vaDarkStalkerCooldown = builder
+                .comment("Cooldown for the vampire dark stalker action, in ticks.")
+                .defineInRange("darkStalkerCooldown", 1200, 1, Integer.MAX_VALUE);
+        vaDarkStalkerDuration = builder
+                .comment("Duration of the vampire dark stalker action, in ticks.")
+                .defineInRange("darkStalkerDuration", 600, 1, Integer.MAX_VALUE);
+        vaDarkStalkerBloodConsumption = builder
+                .comment("Blood consumed per tick while the dark stalker action is active, in mB.")
+                .defineInRange("darkStalkerBloodConsumption", 1, 0.0, 1000);
 
         builder.category("minions", "mi");
-        miResourceCooldown = builder.comment("Cooldown in ticks,before new resources are added in collect resource task types").defineInRange("resourceCooldown", 1500, 20, Integer.MAX_VALUE);
 
+        miResourceCooldown = builder
+                .comment("Cooldown in ticks before new resources are generated by a minion's collect resource task.")
+                .defineInRange("resourceCooldown", 1500, 20, Integer.MAX_VALUE);
 
-        builder.category("vampire_refinements", "vr");
-        vrSwordTrainingSpeedMod = builder.defineInRange("swordTrainingSpeedMod", 1.2D, 1D, Integer.MAX_VALUE);
-        vrBloodChargeSpeedMod = builder.defineInRange("bloodChargeSpeedMod", 3, 2, Integer.MAX_VALUE);
-        vrFreezeDurationMod = builder.defineInRange("freezeDurationMod", 1.4D, 1D, Integer.MAX_VALUE);
-        vrVistaMod = builder.defineInRange("vistaMod", 1D, 0D, 10D);
-        vrDarkBloodProjectileDamageMod = builder.defineInRange("darkBloodProjectileDamageMod", 1.5D, 1D, Integer.MAX_VALUE);
-        vrDarkBloodProjectileAOECooldownMod = builder.defineInRange("darkBloodProjectileAOECooldownMod", 2D, 1D, Integer.MAX_VALUE);
-        vrDarkBloodProjectileAOERange = builder.comment("squared value").defineInRange("darkBloodProjectileAOERange", 16, 0, Integer.MAX_VALUE);
-        vrSunscreenDurationMod = builder.defineInRange("sunscreenDurationMod", 1.5D, 1, Double.MAX_VALUE);
-        vrRageFuryDurationBonus = builder.comment("For every kill the rage duration is extended by this amount. In seconds.").defineInRange("rageFuryDurationBonus", 5, 0, Integer.MAX_VALUE);
-        vrTeleportDistanceMod = builder.defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
-        vrHalfInvulnerableThresholdMod = builder.comment("Threshold for attacks that are considered high damage is multiplied by this value").defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);
-        vrSwordFinisherThresholdMod = builder.comment("Threshold for instant kill is modified by this amount").defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
+        builder.category("vampireRefinements", "vr");
+
+        vrSwordTrainingSpeedMod = builder
+                .comment("Multiplier applied to sword training speed with the sword training refinement.")
+                .defineInRange("swordTrainingSpeedMod", 1.2D, 1D, Integer.MAX_VALUE);
+        vrBloodChargeSpeedMod = builder
+                .comment("Multiplier applied to blood charge speed with the blood charge refinement.")
+                .defineInRange("bloodChargeSpeedMod", 3, 2, Integer.MAX_VALUE);
+        vrFreezeDurationMod = builder
+                .comment("Multiplier applied to freeze duration with the freeze refinement.")
+                .defineInRange("freezeDurationMod", 1.4D, 1D, Integer.MAX_VALUE);
+        vrVistaMod = builder
+                .comment("Multiplier applied to the vampire's field of view with the vista refinement.")
+                .defineInRange("vistaMod", 1D, 0D, 10D);
+        vrDarkBloodProjectileDamageMod = builder
+                .comment("Multiplier applied to dark blood projectile damage with the projectile damage refinement.")
+                .defineInRange("darkBloodProjectileDamageMod", 1.5D, 1D, Integer.MAX_VALUE);
+        vrDarkBloodProjectileAOECooldownMod = builder
+                .comment("Multiplier applied to the dark blood projectile AOE cooldown with the AOE refinement.")
+                .defineInRange("darkBloodProjectileAOECooldownMod", 2D, 1D, Integer.MAX_VALUE);
+        vrDarkBloodProjectileAOERange = builder
+                .comment("Squared radius of the dark blood projectile AOE effect with the AOE refinement.")
+                .defineInRange("darkBloodProjectileAOERange", 16, 0, Integer.MAX_VALUE);
+        vrSunscreenDurationMod = builder
+                .comment("Multiplier applied to sunscreen action duration with the sunscreen refinement.")
+                .defineInRange("sunscreenDurationMod", 1.5D, 1, Double.MAX_VALUE);
+        vrRageFuryDurationBonus = builder
+                .comment("Duration added to the rage action per kill while the fury refinement is active, in seconds.")
+                .defineInRange("rageFuryDurationBonus", 5, 0, Integer.MAX_VALUE);
+        vrTeleportDistanceMod = builder
+                .comment("Multiplier applied to teleport distance with the teleport range refinement.")
+                .defineInRange("teleportDistanceMod", 1.5, 1, Double.MAX_VALUE);
+        vrTeleportCooldownMod = builder
+                .defineInRange("teleportCooldownMod", 0.5, 0, Double.MAX_VALUE);
+        vrHalfInvulnerableThresholdMod = builder
+                .comment("Multiplier applied to the partial invulnerability damage threshold with the threshold refinement.")
+                .defineInRange("halfInvulnerableThresholdMod", 0.7, 0, 2);
+        vrSwordFinisherThresholdMod = builder
+                .comment("Multiplier applied to the sword finisher health threshold with the finisher refinement.")
+                .defineInRange("swordFinisherThresholdMod", 1.25, 1, Double.MAX_VALUE);
 
         builder.category("items", "it");
-        itApplicableOilArmorReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModItemTags.APPLICABLE_OIL_ARMOR.location())).define("applicableOilArmorReverse", false);
-        itApplicableOilPickaxeReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModItemTags.APPLICABLE_OIL_PICKAXE.location())).define("applicableOilPickaxeReverse", false);
-        itApplicableOilSwordReverse = builder.comment(String.format("Determines if the '%s' item tag should work as blacklist (false) or whitelist (true)", ModItemTags.APPLICABLE_OIL_SWORD.location())).define("applicableOilSwordReverse", false);
 
-        builder.category("lord actions", "la");
-        laLordSpeedEnabled = builder.define("lordSpeedEnabled", true);
-        laLordSpeedDuration = builder.comment("In seconds").defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
-        laLordSpeedCooldown = builder.comment("In seconds").defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);
-        laLordAttackSpeedEnabled = builder.define("lordAttackSpeedEnabled", true);
-        laLordAttackSpeedDuration = builder.comment("In seconds").defineInRange("lordAttackSpeedDuration", 30, 0, Integer.MAX_VALUE);
-        laLordAttackSpeedCooldown = builder.comment("In seconds").defineInRange("lordAttackSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+        itApplicableOilArmorReverse = builder
+                .comment(String.format("When enabled, the '%s' item tag acts as a whitelist instead of a blacklist for armor oil application.", ModItemTags.APPLICABLE_OIL_ARMOR.location()))
+                .define("applicableOilArmorReverse", false);
+        itApplicableOilPickaxeReverse = builder
+                .comment(String.format("When enabled, the '%s' item tag acts as a whitelist instead of a blacklist for pickaxe oil application.", ModItemTags.APPLICABLE_OIL_PICKAXE.location()))
+                .define("applicableOilPickaxeReverse", false);
+        itApplicableOilSwordReverse = builder
+                .comment(String.format("When enabled, the '%s' item tag acts as a whitelist instead of a blacklist for sword oil application.", ModItemTags.APPLICABLE_OIL_SWORD.location()))
+                .define("applicableOilSwordReverse", false);
 
+        builder.category("effects", "ef");
+
+        efExposedPerLevelMultiplier = builder
+                .comment("Damage multiplier applied per level of the Exposed effect. For instance, a value of 0.25 means the entity will receive 25% more damage at level I, 50% at level II, 75% at level III, and so on.")
+                .defineInRange("exposedPerLevelMultiplier", 0.25, 0.0, Double.MAX_VALUE);
+
+        builder.category("lordActions", "la");
+
+        laLordSpeedEnabled = builder
+                .comment("When enabled, vampire lords can use the speed action.")
+                .define("lordSpeedEnabled", true);
+        laLordSpeedDuration = builder
+                .comment("Duration of the vampire lord speed action, in seconds.")
+                .defineInRange("lordSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        laLordSpeedCooldown = builder
+                .comment("Cooldown for the vampire lord speed action, in seconds.")
+                .defineInRange("lordSpeedCooldown", 120, 0, Integer.MAX_VALUE);
+        laLordAttackSpeedEnabled = builder
+                .comment("When enabled, vampire lords can use the attack speed action.")
+                .define("lordAttackSpeedEnabled", true);
+        laLordAttackSpeedDuration = builder
+                .comment("Duration of the vampire lord attack speed action, in seconds.")
+                .defineInRange("lordAttackSpeedDuration", 30, 0, Integer.MAX_VALUE);
+        laLordAttackSpeedCooldown = builder
+                .comment("Cooldown for the vampire lord attack speed action, in seconds.")
+                .defineInRange("lordAttackSpeedCooldown", 120, 0, Integer.MAX_VALUE);
     }
 }

@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 
 public class WeaponOil extends ApplicableOil implements IWeaponOil {
@@ -13,7 +14,7 @@ public class WeaponOil extends ApplicableOil implements IWeaponOil {
         super(color, maxDuration);
     }
 
-    public boolean canBeApplied(ItemStack stack) {
+    public boolean canBeApplied(ItemInstance stack) {
         return stack.has(DataComponents.WEAPON) && stack.is(ModItemTags.APPLICABLE_OIL_SWORD) == ModConfig.balance().itApplicableOilSwordReverse.get();
     }
 

@@ -26,5 +26,6 @@ public class VampirismOverlays {
     public static final Identifier DISGUISE = VIdentifier.mod("disguise");
     public static final Identifier SUN = VIdentifier.mod("sun");
     public static final Identifier FULL_SCREEN = VIdentifier.mod("fullscreen");
+    public static final Identifier ITEM_CHARGE = VIdentifier.mod("item_charge");
     public static final Identifier DRACULA_EVENT = VIdentifier.mod("dracula_event");
 }

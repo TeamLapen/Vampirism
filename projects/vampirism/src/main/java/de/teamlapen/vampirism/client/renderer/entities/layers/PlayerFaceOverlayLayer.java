@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Mob;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Renders an overlay over the entities face
@@ -23,14 +22,14 @@ public class PlayerFaceOverlayLayer<T extends Mob & IPlayerOverlay, S extends Hu
 
     private final M model;
 
-    public PlayerFaceOverlayLayer(@NotNull HumanoidMobRenderer<T, S, M> renderBiped, M model) {
+    public PlayerFaceOverlayLayer(HumanoidMobRenderer<T, S, M> renderBiped, M model) {
         super(renderBiped);
         this.model = model;
     }
 
 
     @Override
-    public void submit(@NotNull PoseStack poseStack, @NotNull SubmitNodeCollector nodeCollector, int packedLight, S renderState, float yRot, float xRot) {
+    public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, S renderState, float yRot, float xRot) {
         Identifier overlay = renderState.overlay();
         if (overlay != null) {
             copyModelPartProperties(getParentModel().head, model.head);

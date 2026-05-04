@@ -10,7 +10,7 @@ import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
 import de.maxanier.guideapi.gui.BaseScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -46,22 +46,22 @@ public class PageTable extends Page {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void draw(@NotNull GuiGraphics guiGraphics, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, @NotNull Font font) {
+    public void draw(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, @NotNull Font font) {
         float charWidth = font.width("W");
         int y = guiTop + 12;
         int x = guiLeft + 39;
         if (headline != null) {
-            guiGraphics.drawString(font, headline.withStyle(ChatFormatting.BOLD), x, y, 0, false);
+            GuiGraphicsExtractor.drawString(font, headline.withStyle(ChatFormatting.BOLD), x, y, 0, false);
             y += font.lineHeight;
         }
-        drawLine(guiGraphics, x, y + font.lineHeight, x + (guiBase.xSize * 3F / 5F), y + font.lineHeight, 0);
+        drawLine(GuiGraphicsExtractor, x, y + font.lineHeight, x + (guiBase.xSize * 3F / 5F), y + font.lineHeight, 0);
         for (Component[] l : lines) {
             x = guiLeft + 39;
             for (int i = 0; i < l.length; i++) {
                 int mw = (int) (width[i] * charWidth);
                 int aw = font.width(l[i]);
                 int dw = (mw - aw) / 2;
-                guiGraphics.drawString(font, l[i], x + dw, y, 0, false);
+                GuiGraphicsExtractor.drawString(font, l[i], x + dw, y, 0, false);
                 x += mw;
             }
             y += font.lineHeight;
@@ -71,8 +71,8 @@ public class PageTable extends Page {
     }
 
 
-    protected void drawLine(@NotNull GuiGraphics guiGraphics, double x1, double y1, double x2, double y2, float publicZLevel) {
-        PoseStack pose = guiGraphics.pose();
+    protected void drawLine(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, double x1, double y1, double x2, double y2, float publicZLevel) {
+        PoseStack pose = GuiGraphicsExtractor.pose();
         pose.pushPose();
         Matrix4f matrix = pose.last().pose();
         GL11.glDisable(GL11.GL_TEXTURE_2D);

@@ -45,6 +45,11 @@ public class ConvertedCatEntity extends Cat implements CurableConvertedCreature<
     }
 
     @Override
+    public @NotNull EntityType<Cat> getCuredEntityType() {
+        return EntityType.CAT;
+    }
+
+    @Override
     public @NotNull EntityDataAccessor<Boolean> getConvertingDataParam() {
         return CONVERTING;
     }
@@ -83,7 +88,7 @@ public class ConvertedCatEntity extends Cat implements CurableConvertedCreature<
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.CAT);
+            aiStepC(serverLevel);
         }
         super.aiStep();
     }

@@ -113,6 +113,7 @@ public class ModDataMapProvider extends DataMapProvider {
         entityValues.add(holder.apply(EntityType.LLAMA), new EntityBloodEntry(10), false);
         entityValues.add(holder.apply(EntityType.BEE), EntityBloodEntry.EMPTY, false);
         entityValues.add(holder.apply(EntityType.VILLAGER), new EntityBloodEntry(15), false);
+        entityValues.add(ModEntities.VILLAGER_ANGRY, new EntityBloodEntry(15), false);
         entityValues.add(holder.apply(EntityType.POLAR_BEAR), new EntityBloodEntry(10), false);
         entityValues.add(holder.apply(EntityType.TRADER_LLAMA), new EntityBloodEntry(10), false);
         entityValues.add(holder.apply(EntityType.PANDA), new EntityBloodEntry(13), false);
@@ -149,12 +150,10 @@ public class ModDataMapProvider extends DataMapProvider {
         entityValues.add(holder.apply(EntityType.PANDA), new ConverterEntry(overlay.apply("panda")), false);
     }
 
-    @SuppressWarnings("deprecation")
     protected void gatherStrippables(Builder<Strippable, Block> strippables) {
-        strippables.add(ModBlocks.DARK_SPRUCE_LOG.get().builtInRegistryHolder(), new Strippable(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()), false);
-        strippables.add(ModBlocks.DARK_SPRUCE_WOOD.get().builtInRegistryHolder(), new Strippable(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get()), false);
-        strippables.add(ModBlocks.CURSED_SPRUCE_LOG.get().builtInRegistryHolder(), new Strippable(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get()), false);
-        strippables.add(ModBlocks.CURSED_SPRUCE_WOOD.get().builtInRegistryHolder(), new Strippable(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get()), false);
+        strippables.add(ModBlocks.DARK_SPRUCE_LOG, new Strippable(ModBlocks.STRIPPED_DARK_SPRUCE_LOG.get()), false);
+        strippables.add(ModBlocks.DARK_SPRUCE_WOOD, new Strippable(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD.get()), false);
+        strippables.add(ModBlocks.CURSED_SPRUCE_LOG, new Strippable(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG.get()), false);
+        strippables.add(ModBlocks.CURSED_SPRUCE_WOOD, new Strippable(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD.get()), false);
     }
-
 }

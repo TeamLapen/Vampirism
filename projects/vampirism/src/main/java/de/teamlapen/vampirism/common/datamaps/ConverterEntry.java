@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.util.valueproviders.FloatProviders;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +58,7 @@ public record ConverterEntry(Converter converter, Optional<Identifier> overlay) 
         private static final Codec<com.mojang.datafixers.util.Pair<Holder<Attribute>, com.mojang.datafixers.util.Pair<FloatProvider, Double>>> CODEC_PAIR = RecordCodecBuilder.create(inst ->
                 inst.group(
                         BuiltInRegistries.ATTRIBUTE.holderByNameCodec().fieldOf("attribute").forGetter(Pair::getFirst),
-                        FloatProvider.CODEC.fieldOf("modifier").forGetter(s -> s.getSecond().getFirst()),
+                        FloatProviders.CODEC.fieldOf("modifier").forGetter(s -> s.getSecond().getFirst()),
                         Codec.DOUBLE.optionalFieldOf("fallback_base", 1d).forGetter(s -> s.getSecond().getSecond())
                 ).apply(inst, ((attribute, floatProvider, aDouble) -> Pair.of(attribute, Pair.of(floatProvider, aDouble)))));
         public static final Codec<ConvertingAttributeModifier> CODEC = CODEC_PAIR.listOf().xmap(

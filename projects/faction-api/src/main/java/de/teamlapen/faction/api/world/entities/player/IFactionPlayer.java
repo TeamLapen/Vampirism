@@ -9,7 +9,7 @@ import net.minecraft.core.Holder;
  * Basic interface for all of Vampirism's player types (VampirePlayer, HunterPlayer, ...)
  * The child classes are used as capabilities and attached to the player.
  * A player can have levels.
- * A player can only be part of one faction at once, this means only one IFactionPlayer capability belonging to a single player can have a level >0.
+ * A player can only be part of one faction at once; this means only one IFactionPlayer capability belonging to a single player can have a level >0.
  * <p>
  * If you are writing an addon and not a standalone mod, consider extending FactionPlayerBase instead of implementing this
  */

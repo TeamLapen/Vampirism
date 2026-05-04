@@ -15,7 +15,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 
 public class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(Registries.PARTICLE_TYPE, REFERENCE.MODID);
@@ -26,43 +25,47 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, ParticleType<MotherParticleOptions>> MOTHER = PARTICLE_TYPES.register("mother", () -> create(MotherParticleOptions.CODEC, MotherParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<AltarInfusionParticleOptions>> ALTAR_INFUSION = PARTICLE_TYPES.register("altar_infusion", () -> create(AltarInfusionParticleOptions.CODEC, AltarInfusionParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> create(FlyingBloodEntityParticleOptions.CODEC,FlyingBloodEntityParticleOptions.STREAM_CODEC));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<BloodShredParticleOptions>> BLOOD_SHRED = PARTICLE_TYPES.register("blood_shred", () -> create(BloodShredParticleOptions.CODEC, BloodShredParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<GenericParticleOptions>> GENERIC = PARTICLE_TYPES.register("generic", () -> create(GenericParticleOptions.CODEC, GenericParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SANGUINARE = PARTICLE_TYPES.register("sanguinare", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> DARK_SPRUCE_OAK_LEAVES = PARTICLE_TYPES.register("dark_spruce_leaves", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, ParticleType<WhispersOfTheVeilParticleOptions>> WHISPERS_OF_THE_VEIL = PARTICLE_TYPES.register("whispers_of_the_veil", () -> create(WhispersOfTheVeilParticleOptions.CODEC, WhispersOfTheVeilParticleOptions.STREAM_CODEC));
+
 
     static void register(IEventBus bus) {
         PARTICLE_TYPES.register(bus);
     }
 
     private static <T extends ParticleOptions> ParticleType<T> create(MapCodec<T> codec, StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec) {
-        return new ParticleType<T>(false) {
+        return new ParticleType<>(false) {
             @Override
-            public @NotNull MapCodec<T> codec() {
+            public MapCodec<T> codec() {
                 return codec;
             }
 
             @Override
-            public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
+            public StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
                 return streamCodec;
             }
         };
     }
 
-    public static void spawnParticlesClient(Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, @NotNull RandomSource rand) {
+    public static void spawnParticlesClient(Level worldIn, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int count, double maxDist, RandomSource rand) {
         assert !(worldIn instanceof ServerLevel) : "Calling spawnParticlesClient on ServerWorld is pointless";
         for (int i = 0; i < count; i++) {
             worldIn.addParticle(particle, x + maxDist * (2 * rand.nextDouble() - 1), y + (2 * rand.nextDouble() - 1) * maxDist, z + (2 * rand.nextDouble() - 1) * maxDist, xSpeed, ySpeed, zSpeed);
         }
     }
 
-    public static void spawnParticlesClient(Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, int count, double maxDist, @NotNull RandomSource rand) {
+    public static void spawnParticlesClient(Level worldIn, ParticleOptions particle, double x, double y, double z, int count, double maxDist, RandomSource rand) {
         spawnParticlesClient(worldIn, particle, x, y, z, 0, 0, 0, count, maxDist, rand);
     }
 
-    public static void spawnParticleClient(@NotNull Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z) {
+    public static void spawnParticleClient(Level worldIn, ParticleOptions particle, double x, double y, double z) {
         spawnParticleClient(worldIn, particle, x, y, z, 0, 0, 0);
     }
 
-    public static void spawnParticleClient(@NotNull Level worldIn, @NotNull ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+    public static void spawnParticleClient(Level worldIn, ParticleOptions particle, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         assert !(worldIn instanceof ServerLevel) : "Calling spawnParticleClient on ServerWorld is pointless";
         worldIn.addParticle(particle, x, y, z, xSpeed, ySpeed, zSpeed);
     }
@@ -78,7 +81,7 @@ public class ModParticles {
      * @param speed         Direction is randomized but multiplied by x/y/zOffset
      * @return Number of players this has been sent to.
      */
-    public static int spawnParticlesServer(Level worldIn, @NotNull ParticleOptions particle, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
+    public static int spawnParticlesServer(Level worldIn, ParticleOptions particle, double posX, double posY, double posZ, int particleCount, double xOffset, double yOffset, double zOffset, double speed) {
         assert worldIn instanceof ServerLevel : "Calling spawnParticlesServer on client side is pointless";
         if (worldIn instanceof ServerLevel) {
             return ((ServerLevel) worldIn).sendParticles(particle, posX, posY, posZ, particleCount, xOffset, yOffset, zOffset, speed);

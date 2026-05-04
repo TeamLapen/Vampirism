@@ -12,7 +12,7 @@ import net.minecraft.client.model.npc.VillagerModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.resources.Identifier;
 
 /**
@@ -40,9 +40,9 @@ public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEnti
     }
 
     @Override
-    protected void submitNameTag(VampireTaskMasterRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        if (renderState.distanceToCameraSq <= 128) {
-            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
+    protected void submitNameDisplay(VampireTaskMasterRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        if (state.distanceToCameraSq <= 256) {
+            super.submitNameDisplay(state, poseStack, submitNodeCollector, camera);
         }
     }
 

@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "vampirism:netherite_heart_striker"
+  },
+  "max_uses": 3.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 96.0,
+      "min": 80.0
+    },
+    "id": "vampirism:human_heart"
+  },
+  "xp": 30.0
+}

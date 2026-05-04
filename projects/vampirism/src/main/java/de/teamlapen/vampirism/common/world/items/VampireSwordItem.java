@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
+import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -47,6 +48,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class VampireSwordItem extends VampirismSwordItem implements IBloodChargeable {
@@ -63,11 +67,11 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.accept(Component.translatable("text.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level() + 1).withStyle(ChatFormatting.DARK_RED));
+        tooltipComponents.accept(Component.translatable("tooltip.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level() + 1).withStyle(ChatFormatting.DARK_RED));
         float charged = getChargePercentage(stack);
         float trained = getTrained(stack, FactionsMod.proxy.getClientPlayer());
-        tooltipComponents.accept(Component.translatable("text.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
-        tooltipComponents.accept(Component.translatable("text.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
+        tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
+        tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
     }
 
     @Override
@@ -115,10 +119,22 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     @Override
     public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         //Vampire Finisher skill
-        if (attacker instanceof Player player && !Helper.isVampire(target) && !target.getType().is(ModEntityTags.IGNORE_VAMPIRE_SWORD_FINISHER)) {
+        if (attacker instanceof Player player && !Helper.isVampire(target) && !target.typeHolder().is(ModEntityTags.IGNORE_VAMPIRE_SWORD_FINISHER)) {
+            double relTh = 0;
             ISkillHandler<IVampirePlayer> skillHandler = VampirePlayer.get(player).getSkillHandler();
             IRefinementHandler<IVampirePlayer> refinementHandler = VampirePlayer.get(player).getRefinementHandler();
-            double relTh = ModConfig.balance().vsSwordFinisherMaxHealth.get() * (skillHandler.isSkillEnabled(VampireSkills.SWORD_FINISHER) ? (refinementHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER) ? ModConfig.balance().vrSwordFinisherThresholdMod.get() : 1d) : 0d);
+            if (skillHandler.isSkillEnabled(VampireSkills.SWORD_FINISHER) && !(target instanceof Player) || ModConfig.balance().vsSwordFinisherOnPlayer.get()) {
+                relTh = ModConfig.balance().vsSwordFinisherMaxHealth.get() * (refinementHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER) ? ModConfig.balance().vrSwordFinisherThresholdMod.get() : 1d);
+            }
+            List<IItemWithTier.Tier> hunterCoatArmor = Arrays.stream(EquipmentSlot.values()).filter(EquipmentSlot::isArmor).map(target::getItemBySlot).filter(s -> s.getItem() instanceof HunterCoatItem).map(s -> ((HunterCoatItem) s.getItem()).getVampirismTier()).toList();
+            if (hunterCoatArmor.size() == 4) {
+                var level = hunterCoatArmor.stream().min(Comparator.comparingInt(IItemWithTier.Tier::ordinal)).orElse(IItemWithTier.Tier.NORMAL);
+                relTh *= (1- switch (level) {
+                    case NORMAL -> 0.25f;
+                    case ENHANCED -> 0.3f;
+                    case ULTIMATE -> 0.35f;
+                });
+            }
             if (relTh > 0 && target.getHealth() <= target.getMaxHealth() * relTh) {
                 if (player.level() instanceof ServerLevel level) {
                     DamageHandler.hurtModded(level, target, s -> s.getPlayerAttackWithBypassArmor(player), 10000f);
@@ -270,16 +286,6 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     /**
-     * Gets the charged value from the tag compound
-     *
-     * @return Value between 0 and 1
-     */
-    @Override
-    public float getChargePercentage(ItemStack stack) {
-        return stack.getOrDefault(ModDataComponents.BLOOD_CHARGED, BloodCharged.EMPTY).charged();
-    }
-
-    /**
      * @return Charging factor multiplied with amount to get charge percentage
      */
     protected abstract float getChargingFactor(ItemStack stack);
@@ -289,7 +295,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
      *
      * @return Value between 0 and 1. Defaults to 0
      */
-    protected float getTrained(ItemStack stack) {
+    public float getTrained(ItemStack stack) {
         return stack.getOrDefault(ModDataComponents.TRAINING_CACHE, 0f);
     }
 

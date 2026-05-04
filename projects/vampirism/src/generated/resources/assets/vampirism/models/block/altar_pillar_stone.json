@@ -1,6 +1,6 @@
 {
   "parent": "vampirism:block/altar_pillar_filled",
   "textures": {
-    "filler": "minecraft:block/stone_bricks"
+    "side": "vampirism:block/altar_pillar_stone"
   }
 }

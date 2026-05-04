@@ -3,10 +3,14 @@ package de.teamlapen.vampirism.common.world.items.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.ItemLike;
 
 public record PureLevel(int level) {
@@ -27,6 +31,11 @@ public record PureLevel(int level) {
         stack.set(ModDataComponents.PURE_LEVEL, new PureLevel(level));
         return stack;
     }
+
+    public static ItemStackTemplate template(Holder<Item> stack, int level) {
+        return new ItemStackTemplate(stack, 1, DataComponentPatch.builder().set(ModDataComponents.PURE_LEVEL.get(), new PureLevel(level)).build());
+    }
+
     public static ItemStack pureBlood(ItemLike item, int level) {
         return pureBlood(item.asItem().getDefaultInstance(), level);
     }

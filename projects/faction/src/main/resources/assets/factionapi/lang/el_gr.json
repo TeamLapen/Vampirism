@@ -1,0 +1,13 @@
+{
+  "gui.factionapi.faction_menu.last_known_pos.unknown": "Άγνωστο",
+  "gui.factionapi.skills.resetall": "Επαναφέρετε τις δεξιότητες",
+  "gui.factionapi.skills.unlocked": "Ξεκλείδωτο",
+  "gui.factionapi.skills.unlocks_action": "Ξεκλειδώνει δράση",
+  "gui.factionapi.skills.unlock_parent_first": "Ξεκλειδώστε το προηγούμενο πρώτα",
+  "gui.factionapi.skills.skills_reset": "Οι ικανότητές σας έχουν επαναφερθεί",
+  "gui.factionapi.taskmaster.accept_task": "Αποδοχή",
+  "gui.factionapi.taskmaster.abort_task": "Ματαίωση",
+  "gui.factionapi.minion.active_task": "Τρέχουσα εργασία",
+  "gui.factionapi.minion_stats.level": "Επίπεδο",
+  "command.factionapi.failed_to_execute": "Απέτυχε η εκτέλεση της εντολής. Εσωτερικό σφάλμα."
+}

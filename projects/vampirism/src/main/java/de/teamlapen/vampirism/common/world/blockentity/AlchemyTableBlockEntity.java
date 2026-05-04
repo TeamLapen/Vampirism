@@ -30,7 +30,7 @@ import java.util.Arrays;
 
 public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
 
-    private @NotNull NonNullList<ItemStack> items = NonNullList.withSize(6, ItemStack.EMPTY);
+    private NonNullList<ItemStack> items = NonNullList.withSize(6, ItemStack.EMPTY);
     private int brewTime;
     private boolean @Nullable [] lastOilCount;
     private Item ingredient;
@@ -234,7 +234,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             }
         }
         BlockPos blockpos = this.getBlockPos();
-        ItemStack craftingRemainder = itemstack.getCraftingRemainder();
+        ItemStack craftingRemainder = itemstack.getCraftingRemainder().create();
         if (!craftingRemainder.isEmpty()) {
             itemstack.shrink(1);
             if (itemstack.isEmpty()) {

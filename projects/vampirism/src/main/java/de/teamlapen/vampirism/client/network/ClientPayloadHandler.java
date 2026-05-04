@@ -8,8 +8,14 @@ import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import java.util.Set;
+import java.util.function.Consumer;
 
 public class ClientPayloadHandler {
 
@@ -64,6 +70,24 @@ public class ClientPayloadHandler {
 
     public static void handleRemoveFogEmitterPacket(ClientboundRemoveFogEmitterPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> LevelFog.get(context.player().level()).remove(msg.position(), msg.tmp()));
+    }
+
+    public static void handleUpdateDimensionPacket(ClientboundUpdateDimensionsPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            final LocalPlayer player = Minecraft.getInstance().player;
+            if (player == null)
+                return;
+
+            final Set<ResourceKey<Level>> dimensionList = player.connection.levels();
+            if (dimensionList == null)
+                return;
+
+            Consumer<ResourceKey<Level>> keyConsumer = msg.add()
+                    ? dimensionList::add
+                    : dimensionList::remove;
+
+            msg.keys().forEach(keyConsumer);
+        });
     }
 
     public static void handleDraculaEventPacket(ClientboundDraculaEventPacket msg, IPayloadContext context) {

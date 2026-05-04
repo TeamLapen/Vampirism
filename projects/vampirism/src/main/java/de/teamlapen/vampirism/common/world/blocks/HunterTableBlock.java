@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.world.blocks.base.BaseHorizontalBlock;
+import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.vampirism.common.world.inventory.HunterTableMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +36,7 @@ public class HunterTableBlock extends BaseHorizontalBlock {
 
     public static final BooleanProperty WEAPON_TABLE = BooleanProperty.create("weapon_table");
     public static final BooleanProperty ALCHEMICAL_CAULDRON = BooleanProperty.create("alchemical_cauldron");
-    public static final BooleanProperty POTION_TABLE = BooleanProperty.create("potion_table");
+    public static final BooleanProperty VAPOR_STILL = BooleanProperty.create("vapor_still");
 
     private static final VoxelShape SHAPE = Stream.of(
             Block.box(0, 8, 0, 16, 10, 16),
@@ -45,9 +47,11 @@ public class HunterTableBlock extends BaseHorizontalBlock {
             Block.box(2, 10, 6, 8, 13, 14)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
+    private static final Component NAME = Component.translatable("container.vampirism.hunter_table");
+
     public HunterTableBlock(Properties properties) {
         super(properties, SHAPE);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(WEAPON_TABLE, false).setValue(ALCHEMICAL_CAULDRON, false).setValue(POTION_TABLE, false));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(WEAPON_TABLE, false).setValue(ALCHEMICAL_CAULDRON, false).setValue(VAPOR_STILL, false));
     }
 
     @Nullable
@@ -70,9 +74,9 @@ public class HunterTableBlock extends BaseHorizontalBlock {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.awardStat(ModStats.INTERACT_WITH_RESEARCH_TABLE.get());
                 if (Helper.isHunter(serverPlayer)) {
-                    player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), Component.translatable("container.crafting")), pos);
+                    player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> new HunterTableMenu(id, playerInventory, ContainerLevelAccess.create(playerIn.level(), pos)), NAME), pos);
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.unfamiliar"), true);
+                    player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
                 }
             }
         }
@@ -83,7 +87,7 @@ public class HunterTableBlock extends BaseHorizontalBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(WEAPON_TABLE, ALCHEMICAL_CAULDRON, POTION_TABLE);
+        builder.add(WEAPON_TABLE, ALCHEMICAL_CAULDRON, VAPOR_STILL);
     }
 
     private static BlockState updateVariantValues(LevelReader level, BlockPos pos, BlockState state) {
@@ -91,14 +95,14 @@ public class HunterTableBlock extends BaseHorizontalBlock {
 
         return state.setValue(WEAPON_TABLE, relativeBlocks.contains(ModBlocks.WEAPON_TABLE.get()))
                 .setValue(ALCHEMICAL_CAULDRON, relativeBlocks.contains(ModBlocks.ALCHEMICAL_CAULDRON.get()))
-                .setValue(POTION_TABLE, relativeBlocks.contains(ModBlocks.POTION_TABLE.get()));
+                .setValue(VAPOR_STILL, relativeBlocks.contains(ModBlocks.VAPOR_STILL.get()));
     }
 
     public static int getVariantValue(BlockState state) {
         int value = 0;
         if (state.hasProperty(WEAPON_TABLE) && state.getValue(WEAPON_TABLE)) value++;
         if (state.hasProperty(ALCHEMICAL_CAULDRON) && state.getValue(ALCHEMICAL_CAULDRON)) value++;
-        if (state.hasProperty(POTION_TABLE) && state.getValue(POTION_TABLE)) value++;
+        if (state.hasProperty(VAPOR_STILL) && state.getValue(VAPOR_STILL)) value++;
         return value;
     }
 }

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui.overlay;
 import de.teamlapen.faction.client.gui.overlay.BaseOverlay;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.level.Level;
 
@@ -31,15 +31,15 @@ public class FullScreenOverlay extends BaseOverlay {
 
     @Override
     public boolean canRenderOverlays() {
-        return super.canRenderOverlays() && ModConfig.client().renderScreenOverlay.get();
+        return super.canRenderOverlays() && ModConfig.client().showFullScreenOverlay.get();
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public void render(GuiGraphicsExtractor GuiGraphicsExtractor, DeltaTracker deltaTracker) {
         if (this.percentage <= 0) return;
         if (!canRenderOverlays()) return;
 
-        guiGraphics.fill(0,0,guiGraphics.guiWidth(),guiGraphics.guiHeight(), ARGB.color(this.percentage, color));
+        GuiGraphicsExtractor.fill(0,0,GuiGraphicsExtractor.guiWidth(),GuiGraphicsExtractor.guiHeight(), ARGB.color(this.percentage, color));
     }
 
     public void update() {
@@ -57,7 +57,7 @@ public class FullScreenOverlay extends BaseOverlay {
         } else if (gameTime < this.startTicks + this.onTicks + this.mainTicks) {
             this.percentage = 1;
         } else if (gameTime < this.startTicks + this.onTicks + this.mainTicks + this.offTicks) {
-            this.percentage = (gameTime - this.startTicks - this.onTicks - this.mainTicks) / (float) this.offTicks;
+            this.percentage = 1f - (gameTime - this.startTicks - this.onTicks - this.mainTicks) / (float) this.offTicks;
         } else {
             this.startTicks = -1;
             this.percentage = 0;

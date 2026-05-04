@@ -3,7 +3,6 @@ package de.teamlapen.faction.api.world.entities.minion;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public interface IMinionInventory extends Container {
      *
      * @param stack Is modified
      */
-    void addItemStack(@NotNull ItemStack stack);
+    void addItemStack(ItemStack stack);
 
     /**
      * @return The number of available main inventory slots. Must be 9, 12 or 15

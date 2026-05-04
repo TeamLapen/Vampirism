@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.common.world.attachments;
 
-import de.teamlapen.faction.common.factions.minions.MinionDamageSource;
-import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.vampirism.common.core.ModDamageTypes;
 import de.teamlapen.vampirism.common.util.DBNODamageSource;
 import de.teamlapen.vampirism.common.util.PlayerAttackDamageSourceBypassArmor;
@@ -29,6 +27,7 @@ public class ModDamageSources {
     private final DamageSource mother;
     private final DamageSource bleeding;
     private final DamageSource leaveFaction;
+    private final DamageSource ritualKnife;
 
     public ModDamageSources(RegistryAccess access) {
         this.damageTypes = access.lookupOrThrow(Registries.DAMAGE_TYPE);
@@ -40,6 +39,7 @@ public class ModDamageSources {
         this.mother = init(ModDamageTypes.MOTHER);
         this.bleeding = init(ModDamageTypes.BLEEDING);
         this.leaveFaction = init(ModDamageTypes.LEAVE_FACTION);
+        this.ritualKnife = init(ModDamageTypes.RITUAL_KNIFE);
     }
 
     private DamageSource init(ResourceKey<DamageType> key) {
@@ -70,12 +70,12 @@ public class ModDamageSources {
         return this.mother;
     }
 
-    public DamageSource stake(LivingEntity attacker) {
-        return new DamageSource(this.damageTypes.getOrThrow(ModDamageTypes.STAKE), attacker);
+    public DamageSource ritualKnife() {
+        return this.ritualKnife;
     }
 
-    public MinionDamageSource minion(@NotNull MinionEntity<?> entity) {
-        return new MinionDamageSource(this.damageTypes.getOrThrow(ModDamageTypes.MINION), entity);
+    public DamageSource stake(LivingEntity attacker) {
+        return new DamageSource(this.damageTypes.getOrThrow(ModDamageTypes.STAKE), attacker);
     }
 
     public DBNODamageSource dbno(@Nullable Component originalSource) {

@@ -25,7 +25,6 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +35,7 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Villager that is equipped with a fork and hunts vampires
@@ -76,16 +76,16 @@ public class AggressiveVillagerEntity extends VampirismVillagerEntity implements
 
     public AggressiveVillagerEntity(EntityType<? extends AggressiveVillagerEntity> type, Level worldIn) {
         super(type, worldIn);
-        ((GroundPathNavigation) getNavigation()).setCanOpenDoors(true);
+        getNavigation().setCanOpenDoors(true);
     }
 
     @Override
-    public void attackVillage(ICaptureAttributes villageAttributes) {
+    public void attackVillage(@NonNull ICaptureAttributes villageAttributes) {
         this.villageAttributes = villageAttributes;
     }
 
     @Override
-    public void defendVillage(ICaptureAttributes villageAttributes) {
+    public void defendVillage(@NonNull ICaptureAttributes villageAttributes) {
         this.villageAttributes = villageAttributes;
     }
 

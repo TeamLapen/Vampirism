@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.world.structures.huntercamp;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.faction.common.util.StructureUtil;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModStructures;
@@ -11,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.StructureTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
@@ -57,8 +55,7 @@ public abstract class HunterCampPieces extends StructurePiece {
     }
 
     protected boolean testPreconditions(@NotNull WorldGenLevel worldIn, @NotNull StructureManager manager, @NotNull ChunkPos chunkPos) {
-        if (!ModConfig.common().enableHunterTentGeneration.get()) return false;
-        return StructureUtil.getStructureStartAt(worldIn.getLevel(), this.pos, StructureTags.VILLAGE).isEmpty();
+        return ModConfig.common().generateHunterCamps.get();
     }
 
     public static class Fireplace extends HunterCampPieces {

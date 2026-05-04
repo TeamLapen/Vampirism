@@ -12,6 +12,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 
 public class StayTask extends DefaultMinionTask<StayTask.Desc, MinionData> {
@@ -19,14 +20,14 @@ public class StayTask extends DefaultMinionTask<StayTask.Desc, MinionData> {
 
     @Nullable
     @Override
-    public Desc activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, MinionData inventory) {
+    public Desc activateTask(@Nullable Player lord, @Nullable IMinionEntity minion, @NonNull MinionData inventory) {
         this.triggerAdvancements(lord);
         BlockPos pos = minion != null ? minion.asEntity().blockPosition() : (lord != null ? lord.blockPosition() : null);
         return pos == null ? null : new Desc(pos);
     }
 
     @Override
-    public void deactivateTask(Desc desc) {
+    public void deactivateTask(@NonNull Desc desc) {
 
     }
 

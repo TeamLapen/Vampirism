@@ -22,7 +22,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -41,7 +40,7 @@ import java.util.Optional;
  * Hunter Trainer which allows Hunter players to level up
  */
 public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEntityGoal.TaskOwner, ICaptureIgnore {
-    private static final Component name = Component.translatable("container.huntertrainer");
+    private static final Component name = Component.translatable("container.vampirism.hunter_trainer");
     private static final int MOVE_TO_RESTRICT_PRIO = 3;
 
     public static AttributeSupplier.@NotNull Builder getAttributeBuilder() {
@@ -56,10 +55,10 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
     private boolean shouldCreateHome;
 
     public HunterTrainerEntity(EntityType<? extends HunterTrainerEntity> type, Level world) {
-        super(type, world, false);
+        super(type, world);
         saveHome = true;
         hasArms = true;
-        ((GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
+        this.getNavigation().setCanOpenDoors(true);
         this.peaceful = true;
         this.setDontDropEquipment();
     }
@@ -137,11 +136,10 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                         this.trainee = player;
                         this.getNavigation().stop();
                     } else {
-                        player.displayClientMessage(Component.translatable("text.vampirism.i_am_busy_right_now"), false);
+                        player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter.occupied"));
                     }
-
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.hunter_trainer.trainer_level_wrong"), false);
+                    player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_trainer.wrong_level"));
                 }
 
             }

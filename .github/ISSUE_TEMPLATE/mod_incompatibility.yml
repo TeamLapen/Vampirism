@@ -2,6 +2,8 @@ name: Mod incompatibility
 description: Use this if there is a bug/problem with another mod
 title: "[Modcompat]: "
 labels: [ "bug", "modcompat", "unconfirmed" ]
+type: "bug"
+projects: ["TeamLapen/2"]
 body:
   - type: markdown
     attributes:
@@ -23,6 +25,7 @@ body:
         - 1.19.3+
         - 1.20.x
         - 1.21.x
+        - 26.1.x
     validations:
       required: true
   - type: input

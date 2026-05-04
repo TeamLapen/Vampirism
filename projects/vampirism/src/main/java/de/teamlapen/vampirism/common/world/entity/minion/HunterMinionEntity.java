@@ -89,11 +89,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         return Lists.newArrayList(FactionMinionTasks.FOLLOW_LORD.get(), FactionMinionTasks.DEFEND_AREA.get(), FactionMinionTasks.STAY.get(), MinionTasks.COLLECT_HUNTER_ITEMS.get(), FactionMinionTasks.PROTECT_LORD.get());
     }
 
-    public void setHatType(int type) {
-        assert type >= -1;
-        this.getMinionData().ifPresent(d -> d.hat = type);
-    }
-
     public int getHunterType() {
         return this.getMinionData().map(d -> d.type).map(t -> Math.max(0, t)).orElse(0);
     }
@@ -103,10 +98,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
      */
     public boolean hasMinionSpecificSkin() {
         return this.getMinionData().map(d -> d.minionSkin).orElse(false);
-    }
-
-    public int getHatType() {
-        return this.getItemBySlot(EquipmentSlot.HEAD).isEmpty() ? this.getMinionData().map(d -> d.hat).orElse(0) : -1;
     }
 
     @Override
@@ -166,9 +157,9 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                 if (this.minionData.level + 1 >= ((MinionUpgradeItem) heldItem.getItem()).getMinLevel() && this.minionData.level + 1 <= ((MinionUpgradeItem) heldItem.getItem()).getMaxLevel()) {
                     this.minionData.level++;
                     if (!player.getAbilities().instabuild) heldItem.shrink(1);
-                    player.displayClientMessage(Component.translatable("text.vampirism.hunter_minion.equipment_upgrade"), false);
+                    player.sendOverlayMessage(Component.translatable("dialogue.vampirism.hunter_minion.upgrade"));
                 } else {
-                    player.displayClientMessage(Component.translatable("text.vampirism.hunter_minion.equipment_wrong"), false);
+                    player.sendOverlayMessage(Component.translatable("dialogue.vampirism.hunter_minion.wrong_upgrade"));
                     sync();
                 }
                 return InteractionResult.SUCCESS;
@@ -185,8 +176,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     }
 
     private void updateAttackGoal() {
-        if (this.level().isClientSide()) {
-        }
     }
 
     public void updateAttributes() {
@@ -232,7 +221,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         if (stack.getItem() instanceof IHunterCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
                 var clip = ModItems.ARROW_CLIP.get().getDefaultInstance();
-                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance()));
+                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance())); //Careful, all entries of the list are the same object, not copies
                 return clip;
             } else {
                 return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
@@ -260,7 +249,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         public static final int MAX_LEVEL_RESOURCES = 2;
 
         private int type;
-        private int hat;
         private boolean useLordSkin;
         private boolean minionSkin;
 
@@ -275,10 +263,9 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
         private boolean hasIncreasedStats;
 
-        public HunterMinionData(String name, int type, int hat, boolean useLordSkin, boolean hasIncreasedStats) {
+        public HunterMinionData(String name, int type, boolean useLordSkin, boolean hasIncreasedStats) {
             super(name, 9);
             this.type = type;
-            this.hat = hat;
             this.useLordSkin = useLordSkin;
             this.level = 0;
             this.minionSkin = false;
@@ -293,7 +280,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         public void deserialize(@NotNull ValueInput input) {
             super.deserialize(input);
             type = input.getIntOr("hunter_type", 0);
-            hat = input.getIntOr("hunter_hat", 0);
             level = input.getIntOr("level", 0);
             useLordSkin = input.getBooleanOr("use_lord_skin", false);
             inventoryLevel = input.getIntOr("l_inv", 0);
@@ -308,7 +294,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         protected void registerProperties() {
             super.registerProperties();
             this.registerProperty(VIdentifier.mod("type")).simple(0, () -> type, x -> type = x);
-            this.registerProperty(VIdentifier.mod("hat")).simple(0, () -> hat, x -> hat = x);
             this.registerProperty(VIdentifier.mod("level")).simple(0, () -> level, x -> level = x);
             this.registerProperty(VIdentifier.mod("use_lord_skin")).simple(false, () -> useLordSkin, x -> useLordSkin = x);
             this.registerProperty(VIdentifier.mod("inventory_level")).simple(0, () -> inventoryLevel, x -> inventoryLevel = x);
@@ -360,8 +345,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             for (int i = 0; i < data.size(); i++) {
                 switch (i) {
                     case 0 -> this.type = data.get(i);
-                    case 1 -> this.hat = data.get(i);
-                    case 2 -> {
+                    case 1 -> {
                         this.useLordSkin = (data.get(i) & 0b1) == 1;
                         this.minionSkin = (data.get(i) & 0b10) == 0b10;
                     }
@@ -390,7 +374,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         public void serialize(@NotNull ValueOutput output) {
             super.serialize(output);
             output.putInt("hunter_type", type);
-            output.putInt("hunter_hat", hat);
             output.putInt("level", level);
             output.putInt("l_inv", inventoryLevel);
             output.putInt("l_he", healthLevel);
@@ -486,8 +469,5 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             return this.useLordSkin;
         }
 
-        public void setHat(int hat) {
-            this.hat = hat;
-        }
     }
 }

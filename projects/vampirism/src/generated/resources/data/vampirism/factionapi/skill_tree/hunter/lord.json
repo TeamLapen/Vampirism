@@ -1,12 +1,11 @@
 {
   "background": "minecraft:block/spruce_planks",
   "display": {
-    "count": 1,
     "id": "vampirism:hunter_minion_equipment"
   },
   "faction": "vampirism:hunter",
   "name": {
-    "translate": "text.vampirism.skills.lord"
+    "translate": "gui.vampirism.skills.lord"
   },
   "unlock_predicate": {
     "type_specific": {

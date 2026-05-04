@@ -4,6 +4,11 @@
       {
         "texture": "vampirism:cloak/yellow"
       }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "vampirism:cloak/yellow"
+      }
     ]
   }
 }

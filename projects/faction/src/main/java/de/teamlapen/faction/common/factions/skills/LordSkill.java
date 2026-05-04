@@ -6,7 +6,6 @@ import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.tags.FactionSkillTreeTags;
-import de.teamlapen.faction.common.tags.FactionTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -34,7 +33,7 @@ public class LordSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends De
 
     @Override
     public TagKey<? extends IFaction<?>> factions() {
-        return FactionTags.HAS_LORD_SKILLS;
+        return de.teamlapen.faction.api.tags.FactionTags.HAS_LORD_SKILLS;
     }
 
     @Override

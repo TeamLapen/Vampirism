@@ -4,12 +4,10 @@ import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
-import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.util.BloodHelper;
-import de.teamlapen.vampirism.common.util.IBlockWithDescription;
+import de.teamlapen.faction.api.world.blocks.IBlockWithDescription;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.blockentity.BloodContainerBlockEntity;
-import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +16,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -43,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayItemGenerator.CreativeTabItemProvider, IBlockWithDescription {
+public class BloodContainerBlock extends BaseEntityBlock implements IBlockWithDescription {
 
     public static final MapCodec<BloodContainerBlock> CODEC = simpleCodec(BloodContainerBlock::new);
 
@@ -106,17 +103,7 @@ public class BloodContainerBlock extends BaseEntityBlock implements BaseDisplayI
 
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
-        return ItemDataUtils.createBloodContainer(level.getBlockEntity(pos) instanceof BloodContainerBlockEntity blockEntity ? blockEntity.getFluid().getAmount() : 0);
-    }
-
-    @Override
-    public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        ItemStack stack = new ItemStack(this, 1);
-        output.accept(stack);
-        stack = stack.copy();
-        FluidStack fluid = new FluidStack(ModFluids.BLOOD.get(), BloodContainerBlockEntity.CAPACITY);
-        stack.set(ModDataComponents.BLOOD_CONTAINER, SimpleFluidContent.copyOf(fluid));
-        output.accept(stack);
+        return ItemDataUtils.createBloodContainer(level.getBlockEntity(pos) instanceof BloodContainerBlockEntity blockEntity ? blockEntity.getFluid().getAmount() : 0).create();
     }
 
     @Override

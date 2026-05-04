@@ -1,0 +1,6 @@
+{
+  "gui.factionapi.skills.resetall": "Resetare abilități",
+  "gui.factionapi.skills.unlocked": "Deblocat",
+  "gui.factionapi.skills.unlocks_action": "Deblochează acțiunea",
+  "message.factionapi.action.not_bound": "Nicio acţiune este legată la această cheie. A se vedea %s."
+}

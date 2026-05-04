@@ -18,6 +18,7 @@ import de.teamlapen.faction.common.util.Color;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismFactions;
 import de.teamlapen.vampirism.api.VampirismRegistries;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
@@ -79,7 +80,6 @@ public class ModFactions {
                     .commandBuilder(ModEntities.HUNTER_MINION, builder -> builder
                             .with("name", "Hunter", StringArgumentType.string(), MinionData::setName, StringArgumentType::getString)
                             .with("texture", -1, IntegerArgumentType.integer(-1, IBasicHunter.TYPES), HunterMinionEntity.HunterMinionData::setType, IntegerArgumentType::getInteger)
-                            .with("hat", 0, IntegerArgumentType.integer(-1, 3), HunterMinionEntity.HunterMinionData::setHat, IntegerArgumentType::getInteger)
                             .with("use_lord_skin", false, BoolArgumentType.bool(), HunterMinionEntity.HunterMinionData::setUseLordSkin, BoolArgumentType::getBool)).build());
 
     static void register(IEventBus bus) {
@@ -95,7 +95,7 @@ public class ModFactions {
                 .add(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_HUNTER)
                 .add(Registries.ENTITY_TYPE, ModEntityTags.HUNTER)
                 .add(FactionRegistries.Keys.TASK, ModTaskTags.IS_HUNTER)
-                .add(FactionRegistries.Keys.FACTION, ModFactionTags.IS_HUNTER)
+                .add(FactionRegistries.Keys.FACTION, VampirismTags.Factions.IS_HUNTER)
                 .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.HUNTER_FOOD)
                 .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_HUNTER)
                 .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_HUNTER)
@@ -107,7 +107,7 @@ public class ModFactions {
                 .add(Registries.VILLAGER_PROFESSION, ModProfessionTags.IS_VAMPIRE)
                 .add(Registries.ENTITY_TYPE, ModEntityTags.VAMPIRE)
                 .add(FactionRegistries.Keys.TASK, ModTaskTags.IS_VAMPIRE)
-                .add(FactionRegistries.Keys.FACTION, ModFactionTags.IS_VAMPIRE)
+                .add(FactionRegistries.Keys.FACTION, VampirismTags.Factions.IS_VAMPIRE)
                 .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.VAMPIRE_FOOD)
                 .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_VAMPIRE)
                 .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_VAMPIRE)

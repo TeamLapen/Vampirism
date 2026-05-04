@@ -3,9 +3,9 @@
   "cookTime": 180,
   "experience": 0.15,
   "fluid": "vampirism:pure_blood_1",
+  "info": {},
   "ingredient": "minecraft:iron_block",
   "result": {
-    "count": 1,
     "id": "vampirism:blood_infused_iron_block"
   }
 }

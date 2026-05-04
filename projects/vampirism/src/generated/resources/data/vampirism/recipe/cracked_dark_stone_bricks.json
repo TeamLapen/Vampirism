@@ -5,7 +5,6 @@
   "experience": 0.1,
   "ingredient": "vampirism:dark_stone_bricks",
   "result": {
-    "count": 1,
     "id": "vampirism:cracked_dark_stone_bricks"
   }
 }

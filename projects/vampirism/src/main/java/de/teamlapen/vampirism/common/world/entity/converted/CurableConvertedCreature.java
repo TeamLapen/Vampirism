@@ -7,10 +7,7 @@ import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
-import de.teamlapen.vampirism.common.core.ModAttributes;
-import de.teamlapen.vampirism.common.core.ModDataComponents;
-import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.core.ModFactions;
+import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
@@ -27,7 +24,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.*;
@@ -133,7 +129,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         if (!forceRefresh) {
             return data().sundamageCache;
         }
-        return (data().sundamageCache = Helper.gettingSundamge(((PathfinderMob) this), iWorld));
+        return (data().sundamageCache = Helper.gettingSunDamage(((PathfinderMob) this), iWorld));
     }
 
     @Override
@@ -144,12 +140,12 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     /**
      * call in {@link PathfinderMob#aiStep()}
      */
-    default void aiStepC(ServerLevel level, @NotNull EntityType<T> originalType) {
+    default void aiStepC(ServerLevel level) {
         PathfinderMob entity = ((PathfinderMob) this);
         if (entity.isAlive() && this.isConverting(entity)) {
             --data().conversionTime;
-            if (data().conversionTime <= 0 && net.neoforged.neoforge.event.EventHooks.canLivingConvert(entity, originalType, (timer) -> data().conversionTime = timer)) {
-                this.cureEntity((ServerLevel) entity.level(), entity, originalType);
+            if (data().conversionTime <= 0 && net.neoforged.neoforge.event.EventHooks.canLivingConvert(entity, getCuredEntityType(), (timer) -> data().conversionTime = timer)) {
+                this.cureEntity((ServerLevel) entity.level(), entity);
             }
         }
         if (entity.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
@@ -160,6 +156,8 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         }
             if (isGettingSundamage(entity.level()) && entity.tickCount % 40 == 11) {
                 double dmg = entity.getAttribute(ModAttributes.SUNDAMAGE).getValue();
+                dmg *= entity.level().environmentAttributes().getValue(ModEnvironmentAttributes.SUN_INTENSITY.get(), entity.position());
+
                 if (dmg > 0) {
                     DamageHandler.hurtModded(level, entity, ModDamageSources::sunDamage, (float) dmg);
                 }

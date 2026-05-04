@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.common.world.inventory.HunterBasicMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
@@ -30,17 +30,17 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
     }
 
     @Override
-    protected void renderErrorIcon(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void extractErrorIcon(GuiGraphicsExtractor graphics, int xo, int yo) {
 
         Component component = switch (this.menu.canLevelUp()) {
-            case WRONG_LEVEL -> Component.translatable("text.vampirism.basic_hunter.cannot_train_you_any_further");
-            case NEED_BLOOD ->  Component.translatable("text.vampirism.basic_hunter.pay_n_vampire_blood_more", this.menu.requiredBloodBottles());
-            case CAN_LEVEL_UP -> Component.translatable("text.vampirism.basic_hunter.i_will_train_you");
+            case WRONG_LEVEL -> Component.translatable("dialogue.vampirism.hunter.cannot_train_further");
+            case NEED_BLOOD ->  Component.translatable("dialogue.vampirism.hunter.pay_vampire_blood", this.menu.requiredBloodBottles());
+            case CAN_LEVEL_UP -> Component.translatable("dialogue.vampirism.hunter.will_train_you");
         };
 
-        guiGraphics.setTooltipForNextFrame(this.font, this.font.split(component, 120), x + 45, y + 23);
+        graphics.setTooltipForNextFrame(this.font, this.font.split(component, 120), xo + 45, yo + 23);
 
-//        guiGraphics.drawWordWrap(this.font, component, x + 50, y + 12, 120, -1);
+//        GuiGraphicsExtractor.drawWordWrap(this.font, component, x + 50, y + 12, 120, -1);
     }
 
 
@@ -49,7 +49,7 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
     public void init() {
         super.init();
 
-        Component name = Component.translatable("text.vampirism.level_up");
+        Component name = Component.translatable("gui.vampirism.level_up");
         int wid = this.font.width(name) + 10;
         int i = (this.imageWidth - wid) / 2;
         int j = (this.height - this.imageHeight) / 2;
@@ -70,8 +70,8 @@ public class HunterBasicScreen extends ItemCombinerScreen<HunterBasicMenu> {
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTicks, int x, int y) {
-        super.renderBg(guiGraphics, partialTicks, x, y);
-        this.bloodIcon.render(this.menu, guiGraphics, partialTicks, this.leftPos, this.topPos);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
+        this.bloodIcon.extractRenderState(this.menu, graphics, a, this.leftPos, this.topPos);
     }
 }

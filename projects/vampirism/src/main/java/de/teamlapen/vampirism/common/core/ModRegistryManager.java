@@ -16,7 +16,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles registrations of all registrable things as well as a few additional
@@ -27,6 +26,7 @@ public class ModRegistryManager {
 
     public void setupRegistries(IEventBus eventBus) {
         ModAttributes.register(eventBus);
+        ModFoodBehaviours.register(eventBus);
         ModBiomes.register(eventBus);
         ModBlocks.register(eventBus);
         ModMenus.register(eventBus);
@@ -65,13 +65,15 @@ public class ModRegistryManager {
         ModDataComponents.register(eventBus);
         ModFactions.register(eventBus);
         VampirismVampireVisions.register(eventBus);
+        ModDimensions.register(eventBus);
+        ModEnvironmentAttributes.register(eventBus);
         ModActivities.register(eventBus);
         ModMemoryTypes.register(eventBus);
         ModSensors.register(eventBus);
     }
 
     @SubscribeEvent
-    public void onNewDatapackRegistries(@NotNull DataPackRegistryEvent.NewRegistry event) {
+    public void onNewDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         ModRegistries.registerDatapackRegistries(event);
     }
 
@@ -99,7 +101,6 @@ public class ModRegistryManager {
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(ModStats::registerFormatter);
         event.enqueueWork(CodecModifications::changeMobEffectCodec);
-        event.enqueueWork(ModVillage::villagerTradeSetup);
         event.enqueueWork(ModItems::registerDispenserBehaviour);
         event.enqueueWork(ModBlocks::registerFlammables);
         event.enqueueWork(ModFluids::registerFluidInteractions);

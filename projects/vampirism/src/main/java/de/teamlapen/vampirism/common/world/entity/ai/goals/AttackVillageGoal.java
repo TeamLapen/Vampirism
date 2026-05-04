@@ -31,7 +31,7 @@ public class AttackVillageGoal<T extends VampirismEntity & IVillageCaptureEntity
                 }
                 return super.test(level, attackEntity, targetEntity);
             }
-        }.selector(IFactionPredicate.builder(this.attacker.getFaction()).build()).ignoreInvisibilityTesting();
+        }.selector(IFactionPredicate.builder(this.attacker.getFaction()).notNeutral().build()).ignoreInvisibilityTesting();
     }
 
     @Override

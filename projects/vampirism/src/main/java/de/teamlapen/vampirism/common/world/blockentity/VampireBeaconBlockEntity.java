@@ -60,7 +60,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
     public static final int DATA_UPGRADED = 3;
     public static final int NUM_DATA_VALUES = 4;
     private static final int BLOCKS_CHECK_PER_TICK = 10;
-    private static final Component DEFAULT_NAME = Component.translatable("container.beacon");
+    private static final Component DEFAULT_NAME = Component.translatable("container.vampirism.vampire_beacon");
     private List<BeaconBeamOwner.Section> beamSections = Lists.newArrayList();
     private List<BeaconBeamOwner.Section> checkingBeamSections = Lists.newArrayList();
     private int levels;
@@ -149,7 +149,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
                     }
                 }
             } else {
-                if (beaconblockentity$beaconbeamsection == null || blockstate.getLightBlock() >= 15 && !blockstate.is(Blocks.BEDROCK)) {
+                if (beaconblockentity$beaconbeamsection == null || blockstate.getLightDampening() >= 15 && !blockstate.is(Blocks.BEDROCK)) {
                     pBlockEntity.checkingBeamSections.clear();
                     pBlockEntity.lastCheckY = l;
                     break;

@@ -6,7 +6,7 @@ import de.teamlapen.faction.client.gui.screens.ExtendedScreen;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.inventory.ITaskMenu;
 import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ImageWidget;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.layouts.FrameLayout;
@@ -32,9 +32,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
     private TaskListWidget taskList;
 
     public TaskBoardScreen(@NotNull TaskBoardMenu container, @NotNull Inventory playerInventory, @NotNull Component containerName) {
-        super(container, playerInventory, containerName);
-        this.imageWidth = SCREEN_WIDTH;
-        this.imageHeight = SCREEN_HEIGHT;
+        super(container, playerInventory, containerName, SCREEN_WIDTH, SCREEN_HEIGHT);
         this.factionPlayer = FactionPlayerHandler.getCurrentFactionPlayer(playerInventory.player).orElseThrow(() -> new IllegalStateException("Can't open container without faction"));
         this.menu.setReloadListener(this::refreshTaskList);
     }
@@ -55,7 +53,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
         LinearLayout contentLayout = this.mainLayout.addChild(LinearLayout.vertical(), 0, 0, this.mainLayout.newCellSettings().padding(6));
 
         // Title
-        contentLayout.addChild(new StringWidget(Component.translatable("text.factionapi.tasks"), this.font), contentLayout.newCellSettings().alignHorizontallyCenter());
+        contentLayout.addChild(new StringWidget(Component.translatable("gui.factionapi.task_board.tasks"), this.font), contentLayout.newCellSettings().alignHorizontallyCenter());
         contentLayout.addChild(new SeparatorWidget(TASK_LIST_WIDTH), contentLayout.newCellSettings().alignHorizontallyCenter().paddingVertical(2));
 
         // Task list
@@ -82,13 +80,7 @@ public class TaskBoardScreen extends AbstractContainerScreen<TaskBoardMenu> impl
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        // Background is rendered by the ImageWidget in the layout
-    }
-
-    @Override
-    protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        // Labels are handled by StringWidgets in the layout
+    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
     }
 
     @Override

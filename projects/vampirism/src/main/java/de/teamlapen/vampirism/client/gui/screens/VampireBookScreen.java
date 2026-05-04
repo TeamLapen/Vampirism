@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -21,14 +21,12 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 public class VampireBookScreen extends Screen {
 
@@ -40,13 +38,13 @@ public class VampireBookScreen extends Screen {
     private VampireBookPageButton buttonForward;
     private VampireBookPageButton buttonBack;
 
-    private final @NotNull IVampireBook vampireBook;
+    private final IVampireBook vampireBook;
     private final IBookBackground background;
     private final List<IBookContents.IImageEntry> images;
     private List<FormattedText> content;
     private int pageNumber;
 
-    public VampireBookScreen(@NotNull IVampireBook vampireBook) {
+    public VampireBookScreen(IVampireBook vampireBook) {
         super(vampireBook.title());
         this.vampireBook = vampireBook;
         this.background = vampireBook.background();
@@ -81,8 +79,8 @@ public class VampireBookScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(graphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
 
         pageNumber = Mth.clamp(pageNumber, 0, content.size() - 1);
 
@@ -110,7 +108,7 @@ public class VampireBookScreen extends Screen {
             }
         }
 
-        graphics.drawCenteredString(font, title, guiLeft + xSize / 2, guiTop - 10, Color.WHITE.getRGB());
+        graphics.centeredText(font, title, guiLeft + xSize / 2, guiTop - 10, Color.WHITE.getRGB());
 
         updatePageButtonVisibility();
     }
@@ -127,22 +125,22 @@ public class VampireBookScreen extends Screen {
         }
     }
 
-    private void drawPage(GuiGraphics graphics, int x, int y, FormattedText text) {
+    private void drawPage(GuiGraphicsExtractor graphics, int x, int y, FormattedText text) {
         List<FormattedCharSequence> lines = this.font.split(text, background.textWidth());
         int currentY = y;
         for (FormattedCharSequence line : lines) {
-            graphics.drawString(this.font, line, x, currentY, background.textColor(), false);
+            graphics.text(this.font, line, x, currentY, background.textColor(), false);
             currentY += 10;
         }
     }
 
-    private void drawPageNumber(GuiGraphics graphics, int x, String number) {
-        graphics.drawString(this.font, number, x - this.font.width(number) / 2, this.guiTop + this.ySize - background.pageNumberYOffset(), background.textColor(), false);
+    private void drawPageNumber(GuiGraphicsExtractor graphics, int x, String number) {
+        graphics.text(this.font, number, x - this.font.width(number) / 2, this.guiTop + this.ySize - background.pageNumberYOffset(), background.textColor(), false);
     }
 
     @Override
-    public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
 
         Identifier backgroundTexture = null;
         if (pageNumber == 0 && background.textureFirstPage().isPresent()) {
@@ -154,11 +152,11 @@ public class VampireBookScreen extends Screen {
             backgroundTexture = background.texture();
         }
 
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, guiLeft, guiTop, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
 
         for (IBookContents.IImageEntry entry : images) {
             if (entry.page() == pageNumber || (background.twoPages() && (entry.page() == pageNumber + 1))) {
-                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, entry.texture(), guiLeft + entry.xOffset(), guiTop + entry.yOffset(), 0, 0, entry.width(), entry.height(), entry.width(), entry.height());
+                graphics.blit(RenderPipelines.GUI_TEXTURED, entry.texture(), guiLeft + entry.xOffset(), guiTop + entry.yOffset(), 0, 0, entry.width(), entry.height(), entry.width(), entry.height());
             }
         }
     }
@@ -224,7 +222,7 @@ public class VampireBookScreen extends Screen {
      * @return Each list element should be drawn on an individual page. Lines are wrapped using '\n'
      */
     @SuppressWarnings({"JavadocReference"})
-    private static @NotNull List<FormattedText> prepareForLongText(@NotNull Component text, int lineWidth, int firstHeight, int subsequentHeight) {
+    private static List<FormattedText> prepareForLongText(Component text, int lineWidth, int firstHeight, int subsequentHeight) {
         Font fontRenderer = Minecraft.getInstance().font;
         int firstCount = firstHeight / fontRenderer.lineHeight;
         int count = subsequentHeight / fontRenderer.lineHeight;
@@ -249,7 +247,7 @@ public class VampireBookScreen extends Screen {
      * @return a new ITextProperties that combines the given elements with a newline in between
      */
     @SuppressWarnings("JavadocReference")
-    private static @NotNull FormattedText combineWithNewLine(@NotNull List<FormattedText> elements) {
+    private static FormattedText combineWithNewLine(List<FormattedText> elements) {
         FormattedText newLine = Component.literal("\n");
         List<FormattedText> copy = new ArrayList<>(elements.size() * 2);
         for (int i = 0; i < elements.size() - 1; i++) {
@@ -278,15 +276,15 @@ public class VampireBookScreen extends Screen {
         }
 
         @Override
-        public void renderContents(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            Identifier resourcelocation;
+        protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+            Identifier texture;
             if (this.isForward) {
-                resourcelocation = this.isHovered() ? PAGE_FORWARD_HIGHLIGHTED_SPRITE : PAGE_FORWARD_SPRITE;
+                texture = this.isHovered() ? PAGE_FORWARD_HIGHLIGHTED_SPRITE : PAGE_FORWARD_SPRITE;
             } else {
-                resourcelocation = this.isHovered() ? PAGE_BACKWARD_HIGHLIGHTED_SPRITE : PAGE_BACKWARD_SPRITE;
+                texture = this.isHovered() ? PAGE_BACKWARD_HIGHLIGHTED_SPRITE : PAGE_BACKWARD_SPRITE;
             }
 
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, resourcelocation, this.getX(), this.getY(), WIDTH, HEIGHT);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, this.getX(), this.getY(), WIDTH, HEIGHT);
         }
 
         @Override

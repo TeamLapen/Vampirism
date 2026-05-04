@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.world.entity;
 
-import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.datamaps.IConverterEntry;
 import de.teamlapen.vampirism.api.datamaps.IEntityBlood;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
@@ -22,7 +21,7 @@ import java.util.Map;
  * <br>
  * <br>
  * Values are loaded using the following <a href="https://docs.neoforged.net/docs/datamaps/">neoforge datamaps</a>:<br>
- * - {@link VampirismRegistries#ENTITY_BLOOD_MAP}<br>
+ * - {@link de.teamlapen.vampirism.api.VampirismDataMaps#ENTITY_BLOOD}<br>
  */
 public interface IVampirismEntityRegistry {
 

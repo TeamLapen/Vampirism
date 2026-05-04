@@ -4,24 +4,25 @@ import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
-import de.teamlapen.faction.client.config.ClientConfigHelper;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.radialmenu.IRadialMenuSlot;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenuSlot;
 import de.teamlapen.faction.client.gui.screens.radial.DualSwitchingRadialMenu;
+import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionKeys;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
-import de.teamlapen.faction.common.util.RegUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,9 +33,10 @@ import java.util.stream.Stream;
 
 public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<SelectMinionTaskRadialScreen.Entry> {
 
-    public static final Map<Identifier, Entry> CUSTOM_ENTRIES = Stream.of(new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_single"), Component.translatable("text.factionapi.minion.call_single"), FIdentifier.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
-            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_all"), Component.translatable("text.factionapi.minion.call_all"), FIdentifier.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
-            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("respawn"), Component.translatable("text.factionapi.minion.respawn"), FIdentifier.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
+    public static final Map<Identifier, Entry> CUSTOM_ENTRIES = Stream.of(
+            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_single"), Component.translatable("minion_task.factionapi.call_single"), FIdentifier.mod("textures/minion_tasks/recall_single.png"), (SelectMinionTaskRadialScreen::callSingle)),
+            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("call_all"), Component.translatable("minion_task.factionapi.call_all"), FIdentifier.mod("textures/minion_tasks/recall.png"), (SelectMinionTaskRadialScreen::callAll)),
+            new SelectMinionTaskRadialScreen.Entry(FIdentifier.mod("respawn"), Component.translatable("minion_task.factionapi.respawn"), FIdentifier.mod("textures/minion_tasks/respawn.png"), (SelectMinionTaskRadialScreen::callRespawn))).collect(Collectors.toMap(e -> e.id, e -> e));
 
     private SelectMinionTaskRadialScreen(Collection<Entry> entries, KeyMapping keyMapping) {
         super(getRadialMenu(entries), keyMapping, SelectActionRadialScreen::show);
@@ -48,7 +50,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         FactionPlayerHandler.get(Minecraft.getInstance().player).getLordPlayer().filter(x -> x.getLordLevel() > 0).ifPresent(lord -> {
             Collection<Entry> tasks = getTasks(lord);
             if (tasks.isEmpty()) {
-                Minecraft.getInstance().player.displayClientMessage(Component.translatable("text.factionapi.no_minion_tasks"), true);
+                Minecraft.getInstance().player.sendOverlayMessage(Component.translatable("gui.factionapi.minion_radial.no_minion_tasks"));
                 Minecraft.getInstance().setScreen(null);
             } else {
                 Minecraft.getInstance().setScreen(new SelectMinionTaskRadialScreen(tasks, mapping));
@@ -57,14 +59,14 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(@NonNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
     }
 
     private static List<Entry> getTasks(ILordPlayer<?> lord) {
         if (lord.getLordLevel() == 0) return List.of();
-        return ClientConfigHelper.getMinionTaskOrder(lord.getFaction()).stream().filter(entry -> {
-            return Optional.ofNullable(entry.getTask()).map(s -> s.isAvailable(lord)).orElse(true);
-        }).collect(Collectors.toList());
+        return FactionConfig.client().minionTaskOrder.get(lord.getFaction()).stream()
+                .filter(x -> Optional.ofNullable(x.getTask()).map(s -> s.value().isAvailable(lord)).orElse(true))
+                .collect(Collectors.toList());
     }
 
     private static RadialMenu<Entry> getRadialMenu(Collection<Entry> playerHandler) {
@@ -72,7 +74,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         return new RadialMenu<>(i -> parts.get(i).primarySlotIcon().onSelected.run(), parts, SelectMinionTaskRadialScreen::drawActionPart, 0);
     }
 
-    private static void drawActionPart(Entry t, GuiGraphics graphics, int posX, int posY, int size, boolean transparent) {
+    private static void drawActionPart(Entry t, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
         GuiRenderer.blit(graphics, t.getIconLoc(), posX, posY, 16, 16, 16, 16);
     }
 
@@ -90,8 +92,8 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.SHOW_MINION_CALL_SELECTION));
     }
 
-    private static void sendTask(IMinionTask<?, ?> task) {
-        FactionsMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(-1, RegUtil.id(task)));
+    private static void sendTask(Holder<IMinionTask<?, ?>> task) {
+        FactionsMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(-1, task.getKey().identifier()));
     }
 
     public static class Entry {
@@ -100,13 +102,13 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         private final Component text;
         private final Identifier loc;
         private final Runnable onSelected;
-        private final IMinionTask<?, ?> task;
+        private final Holder<IMinionTask<?, ?>> task;
 
-        public Entry(@NotNull IMinionTask<?, ?> task) {
-            this(RegUtil.id(task), task.getName(), FIdentifier.loc(RegUtil.id(task).getNamespace(), "textures/minion_tasks/" + RegUtil.id(task).getPath() + ".png"), (() -> sendTask(task)), task);
+        public Entry(@NotNull Holder<IMinionTask<?, ?>> task) {
+            this(task.getKey().identifier(), task.value().getName(), task.getKey().identifier().withPath(path -> "textures/minion_tasks/" + path + ".png"), (() -> sendTask(task)), task);
         }
 
-        public Entry(@NotNull Identifier id, @NotNull Component text, @NotNull Identifier icon, @NotNull Runnable onSelected, @Nullable IMinionTask<?, ?> task) {
+        public Entry(@NotNull Identifier id, @NotNull Component text, @NotNull Identifier icon, @NotNull Runnable onSelected, @Nullable Holder<IMinionTask<?, ?>> task) {
             this.id = id;
             this.text = text;
             this.loc = icon;
@@ -134,7 +136,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
         }
 
         @Nullable
-        public IMinionTask<?, ?> getTask() {
+        public Holder<IMinionTask<?, ?>> getTask() {
             return this.task;
         }
 

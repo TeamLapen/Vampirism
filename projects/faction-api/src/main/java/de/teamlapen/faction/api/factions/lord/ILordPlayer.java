@@ -23,7 +23,6 @@ public interface ILordPlayer<T extends ILordPlayer<T>> extends IFactionPlayer<T>
     Component getLordTitleShort();
 
 
-    @SuppressWarnings("NullableProblems")
     default Optional<ISkillPlayer<?>> asSkillPlayer() {
         return Optional.ofNullable(this instanceof ISkillPlayer<?> skillPlayer ? skillPlayer : null);
     }

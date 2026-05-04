@@ -4,9 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
+import de.teamlapen.faction.common.util.ShapeUtil;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.util.UtilLib;
+import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,9 +60,9 @@ public class TentBlock extends Block {
 
     static {
         VoxelShape NORTH = makeShape();
-        VoxelShape EAST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.NINETY);
-        VoxelShape SOUTH = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.HUNDRED_EIGHTY);
-        VoxelShape WEST = UtilLib.rotateShape(NORTH, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY);
+        VoxelShape EAST = ShapeUtil.rotateY(NORTH, ShapeUtil.RotationAmount.NINETY);
+        VoxelShape SOUTH = ShapeUtil.rotateY(NORTH, ShapeUtil.RotationAmount.HUNDRED_EIGHTY);
+        VoxelShape WEST = ShapeUtil.rotateY(NORTH, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY);
         VoxelShape BACK = makeShapeBack1();
         VoxelShape BACKMIRROR = makeShapeBack2();
         VoxelShape SOUTHR = Shapes.or(SOUTH, BACK);
@@ -72,19 +72,19 @@ public class TentBlock extends Block {
         shapeBuilder.put(Direction.NORTH, 0, NORTH);
         shapeBuilder.put(Direction.NORTH, 1, NORTH);
         shapeBuilder.put(Direction.NORTH, 2, NORTHL);
-        shapeBuilder.put(Direction.NORTH, 3, UtilLib.rotateShape(SOUTHR, UtilLib.RotationAmount.HUNDRED_EIGHTY));
+        shapeBuilder.put(Direction.NORTH, 3, ShapeUtil.rotateY(SOUTHR, ShapeUtil.RotationAmount.HUNDRED_EIGHTY));
         shapeBuilder.put(Direction.EAST, 0, EAST);
         shapeBuilder.put(Direction.EAST, 1, EAST);
-        shapeBuilder.put(Direction.EAST, 2, UtilLib.rotateShape(NORTHL, UtilLib.RotationAmount.NINETY));
-        shapeBuilder.put(Direction.EAST, 3, UtilLib.rotateShape(SOUTHR, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY));
+        shapeBuilder.put(Direction.EAST, 2, ShapeUtil.rotateY(NORTHL, ShapeUtil.RotationAmount.NINETY));
+        shapeBuilder.put(Direction.EAST, 3, ShapeUtil.rotateY(SOUTHR, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY));
         shapeBuilder.put(Direction.SOUTH, 0, SOUTH);
         shapeBuilder.put(Direction.SOUTH, 1, SOUTH);
-        shapeBuilder.put(Direction.SOUTH, 2, UtilLib.rotateShape(NORTHL, UtilLib.RotationAmount.HUNDRED_EIGHTY));
+        shapeBuilder.put(Direction.SOUTH, 2, ShapeUtil.rotateY(NORTHL, ShapeUtil.RotationAmount.HUNDRED_EIGHTY));
         shapeBuilder.put(Direction.SOUTH, 3, SOUTHR);
         shapeBuilder.put(Direction.WEST, 0, WEST);
         shapeBuilder.put(Direction.WEST, 1, WEST);
-        shapeBuilder.put(Direction.WEST, 2, UtilLib.rotateShape(NORTHL, UtilLib.RotationAmount.TWO_HUNDRED_SEVENTY));
-        shapeBuilder.put(Direction.WEST, 3, UtilLib.rotateShape(SOUTHR, UtilLib.RotationAmount.NINETY));
+        shapeBuilder.put(Direction.WEST, 2, ShapeUtil.rotateY(NORTHL, ShapeUtil.RotationAmount.TWO_HUNDRED_SEVENTY));
+        shapeBuilder.put(Direction.WEST, 3, ShapeUtil.rotateY(SOUTHR, ShapeUtil.RotationAmount.NINETY));
         shapes = shapeBuilder.build();
 
         ImmutableTable.Builder<Integer, Direction, Pair<Double, Double>> offsetsBuilder = ImmutableTable.builder();
@@ -107,9 +107,9 @@ public class TentBlock extends Block {
         offsets = offsetsBuilder.build();
 
         ImmutableMap.Builder<Player.BedSleepingProblem, Component> sleepBuilder = ImmutableMap.builder();
-        sleepBuilder.put(new Player.BedSleepingProblem(BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(Component.empty())), Component.translatable("text.vampirism.tent.no_sleep"));
-        sleepBuilder.put(Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("text.vampirism.tent.too_far_away"));
-        sleepBuilder.put(Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("text.vampirism.tent.obstructed"));
+        sleepBuilder.put(new Player.BedSleepingProblem(BedRule.CAN_SLEEP_WHEN_DARK.errorMessage().orElse(Component.empty())), Component.translatable("message.vampirism.tent.night_only"));
+        sleepBuilder.put(Player.BedSleepingProblem.TOO_FAR_AWAY, Component.translatable("message.vampirism.tent.too_far_away"));
+        sleepBuilder.put(Player.BedSleepingProblem.OBSTRUCTED, Component.translatable("message.vampirism.tent.obstructed"));
         sleepResults = sleepBuilder.build();
     }
 
@@ -304,12 +304,13 @@ public class TentBlock extends Block {
     public InteractionResult useWithoutItem(BlockState blockState, Level world, final BlockPos pos, Player player, BlockHitResult rayTraceResult) {
         if (world.isClientSide()) return InteractionResult.SUCCESS;
         if (HunterPlayer.get(player).getLevel() == 0) {
-            player.displayClientMessage(Component.translatable("text.vampirism.tent.cant_use"), true);
+            player.sendOverlayMessage(Component.translatable("message.vampirism.tent.cant_use"));
             return InteractionResult.SUCCESS;
         }
 
+        player.awardStat(ModStats.INTERACT_WITH_TENT.get());
         BedRule bedrule = world.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
-        if (!bedrule.explodes()) {
+        if (bedrule.explodes()) {
             world.removeBlock(pos, false);
             BlockPos blockpos = pos.relative(blockState.getValue(HORIZONTAL_FACING).getOpposite());
             if (world.getBlockState(blockpos).is(this)) {
@@ -320,7 +321,7 @@ public class TentBlock extends Block {
             world.explode(null, world.damageSources().badRespawnPointExplosion(vec3), null, vec3, 5.0F, true, Level.ExplosionInteraction.BLOCK);
             return InteractionResult.SUCCESS;
         } else if (blockState.getValue(OCCUPIED)) {
-            player.displayClientMessage(Component.translatable("text.vampirism.tent.occupied"), true);
+            player.sendOverlayMessage(Component.translatable("message.vampirism.tent.occupied"));
             return InteractionResult.SUCCESS;
         } else {
             BlockState targetState = blockState;
@@ -343,7 +344,7 @@ public class TentBlock extends Block {
             BlockPos finalTargetPos = targetPos;
             player.startSleepInBed(finalTargetPos).ifLeft(sleepResult1 -> {
                 if (sleepResult1.message() != null) {
-                    player.displayClientMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.message()), true);
+                    player.sendOverlayMessage(sleepResults.getOrDefault(sleepResult1, sleepResult1.message()));
                 }
             }).ifRight(u -> {
                 this.setBedOccupied(finalTargetState, world, finalTargetPos, null, true);

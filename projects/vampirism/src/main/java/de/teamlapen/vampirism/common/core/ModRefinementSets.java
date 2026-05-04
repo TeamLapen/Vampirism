@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.common.VampireRefinementSet;
 import net.minecraft.core.Holder;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 
 public class ModRefinementSets {
     public static final DeferredRegister<IRefinementSet> REFINEMENT_SETS = DeferredRegister.create(FactionRegistries.Keys.REFINEMENT_SET, REFERENCE.MODID);
@@ -151,28 +150,28 @@ public class ModRefinementSets {
     }
 
     @SafeVarargs
-    private static @NotNull IRefinementSet commonV(Holder<IRefinement>... refinements) {
+    private static IRefinementSet commonV(Holder<IRefinement>... refinements) {
         return vampire(Rarity.COMMON, refinements);
     }
 
     @SafeVarargs
-    private static @NotNull IRefinementSet uncommonV(Holder<IRefinement>... refinements) {
+    private static IRefinementSet uncommonV(Holder<IRefinement>... refinements) {
         return vampire(Rarity.UNCOMMON, refinements);
     }
 
     @SafeVarargs
-    private static @NotNull IRefinementSet rareV(Holder<IRefinement>... refinements) {
+    private static IRefinementSet rareV(Holder<IRefinement>... refinements) {
         return vampire(Rarity.RARE, refinements);
     }
 
     @SafeVarargs
-    private static @NotNull IRefinementSet epicV(Holder<IRefinement>... refinements) {
+    private static IRefinementSet epicV(Holder<IRefinement>... refinements) {
         return vampire(Rarity.EPIC, refinements);
     }
 
     @SuppressWarnings("ConstantConditions")
     @SafeVarargs
-    private static @NotNull RefinementSet vampire(@NotNull Rarity rarity, Holder<IRefinement>... refinements) {
+    private static RefinementSet vampire(Rarity rarity, Holder<IRefinement>... refinements) {
         return new VampireRefinementSet(rarity, rarity.color.getColor(), refinements);
     }
 }

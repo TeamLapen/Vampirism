@@ -2,9 +2,9 @@
   "type": "vampirism:alchemical_cauldron",
   "experience": 0.1,
   "fluid": "vampirism:pure_blood_0",
+  "info": {},
   "ingredient": "minecraft:iron_block",
   "result": {
-    "count": 1,
     "id": "vampirism:blood_infused_iron_block"
   }
 }

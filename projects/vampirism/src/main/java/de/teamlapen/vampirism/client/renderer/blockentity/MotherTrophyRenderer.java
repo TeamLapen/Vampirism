@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +43,7 @@ public class MotherTrophyRenderer implements BlockEntityRenderer<MotherTrophyBlo
         this.model.setupAnim2(renderState.gameTime);
         poseStack.translate(0,0.75,0);
         poseStack.scale(0.5F, 0.5F, 0.5F);
-        nodeCollector.submitModel(model, renderState.ghostRenderState, poseStack, RenderTypes.itemEntityTranslucentCull(GhostRenderer.TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0, null);
+        nodeCollector.submitModel(model, renderState.ghostRenderState, poseStack, RenderTypes.entityTranslucentCullItemTarget(GhostRenderer.TEXTURE), renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0, null);
         poseStack.popPose();
     }
 

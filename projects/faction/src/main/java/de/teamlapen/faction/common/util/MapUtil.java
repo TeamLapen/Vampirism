@@ -3,14 +3,13 @@ package de.teamlapen.faction.common.util;
 import de.teamlapen.faction.api.util.REFERENCE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.MapItemColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -44,11 +43,11 @@ public class MapUtil {
         return null;
     }
 
-    public static ItemStack getPreviewMap(String displayName, Holder<MapDecorationType> decorationType) {
-        ItemStack itemStack = new ItemStack(Items.FILLED_MAP);
-        itemStack.set(DataComponents.MAP_COLOR, new MapItemColor(decorationType.value().mapColor()));
-        itemStack.set(DataComponents.ITEM_NAME, Component.translatable(displayName));
-        return itemStack;
+    public static ItemStackTemplate getPreviewMap(String displayName, Holder<MapDecorationType> decorationType) {
+        return new ItemStackTemplate(Items.FILLED_MAP, DataComponentPatch.builder()
+                .set(DataComponents.MAP_COLOR, new MapItemColor(decorationType.value().mapColor()))
+                .set(DataComponents.ITEM_NAME, Component.translatable(displayName))
+                .build());
     }
 
     public static boolean hasDecoration(Holder<MapDecorationType> mapDecoration, ItemStack itemStack, Level level) {

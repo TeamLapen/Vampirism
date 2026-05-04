@@ -50,6 +50,11 @@ public class ConvertedHorseEntity extends Horse implements CurableConvertedCreat
     }
 
     @Override
+    public @NotNull EntityType<Horse> getCuredEntityType() {
+        return EntityType.HORSE;
+    }
+
+    @Override
     public Data<Horse> data() {
         return this.data;
     }
@@ -78,7 +83,7 @@ public class ConvertedHorseEntity extends Horse implements CurableConvertedCreat
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.HORSE);
+            aiStepC(serverLevel);
         }
         super.aiStep();
     }

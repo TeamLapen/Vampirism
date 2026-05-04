@@ -44,7 +44,8 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.02f, 0.01f))
                         .add(LootItem.lootTableItem(ModItems.AMULET.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE)))
                         .add(LootItem.lootTableItem(ModItems.RING.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE)))
-                        .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE))));
+                        .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE))))
+                        ;
         this.add(VAMPIRE.get(), vampire);
         this.add(VAMPIRE_IMOB.get(), vampire);
 
@@ -57,7 +58,8 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.05f, 0.01f))
                         .add(LootItem.lootTableItem(ModItems.AMULET.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE)))
                         .add(LootItem.lootTableItem(ModItems.RING.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE)))
-                        .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE))));
+                        .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE))))
+                ;
         this.add(ADVANCED_VAMPIRE.get(), advancedVampire);
         this.add(ADVANCED_VAMPIRE_IMOB.get(), advancedVampire);
 
@@ -71,7 +73,8 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(LootItemKilledByPlayerCondition.killedByPlayer()).when(AdjustableLevelCondition.builder(3, LootContext.EntityTarget.THIS))
                         .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_3.get()).setWeight(1)))
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(LootItemKilledByPlayerCondition.killedByPlayer()).when(AdjustableLevelCondition.builder(4, LootContext.EntityTarget.THIS))
-                        .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()).setWeight(1))));
+                        .add(LootItem.lootTableItem(ModItems.PURE_BLOOD_4.get()).setWeight(1)))
+        );
 
         LootTable.Builder hunter = LootTable.lootTable()
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(LootItemKilledByPlayerCondition.killedByPlayer()).when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.33f, 0.005f))
@@ -79,7 +82,8 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.05f, 0.02f))
                         .add(LootItem.lootTableItem(ModItems.AMULET.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE)))
                         .add(LootItem.lootTableItem(ModItems.RING.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE)))
-                        .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE))));
+                        .add(LootItem.lootTableItem(ModItems.OBI_BELT.get()).setWeight(1).apply(RefinementSetFunction.builder(ModFactions.VAMPIRE))))
+                ;
         this.add(HUNTER.get(), hunter);
         this.add(HUNTER_IMOB.get(), hunter);
 
@@ -92,7 +96,8 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                         .add(LootItem.lootTableItem(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get()).setWeight(1))
                         .add(LootItem.lootTableItem(ModItems.PURE_SALT_WATER.get()).setWeight(4).apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0, 1))).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 2)))))
                 .withPool(LootPool.lootPool().when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.1f, 0.015f)).setRolls(ConstantValue.exactly(1))
-                        .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(1).apply(SetVampireBookFunction.special())));
+                        .add(LootItem.lootTableItem(ModItems.VAMPIRE_BOOK.get()).setWeight(1).apply(SetVampireBookFunction.special())))
+                ;
         this.add(ADVANCED_HUNTER.get(), advancedHunter);
         this.add(ADVANCED_HUNTER_IMOB.get(), advancedHunter);
 
@@ -120,7 +125,7 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 HUNTER_MINION,
                 GHOST,
                 THROWABLE_ITEM,
-                SIT_DUMMY,
+                SIT,
                 CROSSBOW_ARROW,
                 DARK_BLOOD_PROJECTILE,
                 SOUL_ORB,

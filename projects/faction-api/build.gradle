@@ -1,9 +1,9 @@
 plugins {
-    id 'net.neoforged.moddev' version '2.0.116'
+    id 'net.neoforged.moddev' version '2.0.141'
 }
 
 group = project.factions_group_id
-version = project.mod_version
+version = project.factions_version
 
 base {
     archivesName = "${project.factions_mod_name}-api"
@@ -18,12 +18,6 @@ java {
 
 neoForge {
     version = project.neoforge_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
-
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -31,16 +25,6 @@ tasks.withType(JavaCompile).configureEach {
     javaToolchains {
         compilerFor {
             languageVersion = JavaLanguageVersion.of(project.java_version)
-        }
-    }
-}
-
-publishing {
-    publications {
-        register("faction-api", MavenPublication) {
-            artifactId = "${project.factions_mod_name}-api"
-            artifact(tasks.jar)
-            artifact(tasks.named("sourcesJar"))
         }
     }
 }

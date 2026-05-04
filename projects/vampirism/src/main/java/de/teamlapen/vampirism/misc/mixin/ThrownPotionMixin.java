@@ -27,12 +27,12 @@ public abstract class ThrownPotionMixin extends ThrowableItemProjectile {
         super(pEntityType, pLevel);
     }
 
-    @ModifyVariable(method = "onHitAsPotion", at = @At(value = "STORE", ordinal = 0))
+    @ModifyVariable(method = "onHitAsPotion", at = @At(value = "STORE", ordinal = 0), name = "entity")
     private LivingEntity setCurrentEntity(LivingEntity entity) {
         return vampirism$currentAffectedEntity = entity;
     }
 
-    @ModifyVariable(method = "onHitAsPotion", at = @At(value = "STORE", ordinal = 0))
+    @ModifyVariable(method = "onHitAsPotion", at = @At(value = "STORE", ordinal = 0), name = "effectInstance")
     private MobEffectInstance checkHunterPotions(MobEffectInstance effectInstance) {
         if (this.getItem().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion().map(s -> s.value() instanceof BasePotion.HunterPotion).orElse(false) && Helper.isVampire(vampirism$currentAffectedEntity)) {
             return VampirismPoisonMobEffect.createThrowableEffect();

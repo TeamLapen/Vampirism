@@ -18,7 +18,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -89,17 +89,14 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
     }
 
     @Override
-    public void draw(@NotNull RecipeHolder<AlchemyTableRecipe> holder, IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(@NotNull RecipeHolder<AlchemyTableRecipe> holder, IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         this.background.draw(graphics);
         graphics.pose().pushMatrix();
         AlchemyTableRecipe recipe = holder.value();
         this.blazeHeat.draw(graphics, 33 - 9 - 2, 60 - 10 - 2);
         this.arrow.draw(graphics, 73 - 9 - 2, 57 - 10 - 2);
 
-//        int color = OilContent.getOil(RecipeUtil.getResultItem(recipe)).value().getColor();
-//        graphics.setColor(((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, ((color) & 0xFF) / 255f, 1F);
         this.pool.draw(graphics, 104 - 9 - 2, 36 - 10 - 2);
-//        graphics.setColor(1, 1, 1, 1);
 
         int x = 2;
         int y = 80;

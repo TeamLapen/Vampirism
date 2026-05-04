@@ -5,6 +5,8 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.world.ITotem;
 import de.teamlapen.faction.api.world.entities.ICaptureIgnore;
 import de.teamlapen.faction.common.util.SpawnUtil;
+import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
+import de.teamlapen.vampirism.api.world.entity.convertible.ICurableConvertedCreature;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -13,7 +15,6 @@ import de.teamlapen.vampirism.common.world.effects.ModEffectInstanceHelper;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
-import de.teamlapen.vampirism.common.world.entity.converted.ConvertedVillagerEntity;
 import de.teamlapen.vampirism.common.world.entity.hunter.AggressiveVillagerEntity;
 import de.teamlapen.vampirism.common.world.entity.hunter.DummyHunterTrainerEntity;
 import de.teamlapen.vampirism.common.world.entity.hunter.HunterBaseEntity;
@@ -25,6 +26,7 @@ import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -69,19 +71,28 @@ public class VillageEventHandler {
 
     @SubscribeEvent
     public void onSpawnVillager(FactionVillageEvent.SpawnNewVillager event) {
-        if (IFaction.is(event.getFaction(), ModFactions.VAMPIRE)) {
-            if (event.getNewVillager().getRandom().nextBoolean()) {
-                var newVillager = event.setNewVillager(ModEntities.VILLAGER_CONVERTED.get().create(event.getLevel(), EntitySpawnReason.EVENT));
-                if (event.getOldEntity() instanceof Villager oldVillager) {
-                    newVillager.setHomeTo(oldVillager.getHomePosition(), oldVillager.getHomeRadius());
+        if(event.getLevel() != null){
+            if (IFaction.is(event.getFaction(), ModFactions.VAMPIRE)) {
+                if(event.getLevel().getRandom().nextBoolean()){
+                    var newVillager = ModEntities.VILLAGER_CONVERTED.get().create(event.getLevel(), EntitySpawnReason.EVENT);
+                    if(newVillager != null) {
+                        event.setNewVillager(newVillager);
+                    }
+                }
+            } else if (IFaction.is(event.getFaction(), ModFactions.HUNTER)) {
+                //If the previous creature is curable -> cure it instead of replacing it with a new villager
+                PathfinderMob newVillager = event.getEntityToReplace().map(old -> {
+                        if(old instanceof Villager villager && old instanceof ICurableConvertedCreature<?> curable){
+                            return curable.createCuredEntity(villager);
+                        }
+                        return event.getOrCreateNewVillager();
+                }).orElseGet(event::getOrCreateNewVillager);
+                if(newVillager != null) {
+                    ExtendedCreature.getSafe(newVillager).ifPresent(x -> x.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
                 }
             }
-        } else if (IFaction.is(event.getFaction(), ModFactions.HUNTER)) {
-            ExtendedCreature.getSafe(event.getNewVillager()).ifPresent(x -> x.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION));
-            if (event.getOldEntity() instanceof Villager oldVillager) {
-                event.getNewVillager().setHomeTo(oldVillager.getHomePosition(), oldVillager.getHomeRadius());
-            }
         }
+
     }
 
     @SubscribeEvent
@@ -128,7 +139,7 @@ public class VillageEventHandler {
                 if (villagerEntity.hasEffect(ModEffects.SANGUINARE)) {
                     villagerEntity.removeEffect(ModEffects.SANGUINARE);
                 }
-                if (event.isForced() && villagerEntity instanceof ConvertedVillagerEntity) {
+                if (event.isForced() && villagerEntity instanceof IConvertedCreature<?>) {
                     event.requestReplacement(villagerEntity);
                 }
             }
@@ -143,13 +154,13 @@ public class VillageEventHandler {
     public void onSpawnCaptureEntity(FactionVillageEvent.SpawnCaptureEntityEvent event) {
         if (IFaction.is(event.getFaction(), ModFactions.HUNTER)) {
             WeightedList.of(new Weighted<>(ModEntities.HUNTER.get(), 10), new Weighted<>(ModEntities.ADVANCED_HUNTER.get(), 2))
-                    .getRandom(event.getLevel().random)
+                    .getRandom(event.getLevel().getRandom())
                     .ifPresent(type -> {
                         event.setEntity(type.create(event.getLevel(), EntitySpawnReason.EVENT));
                     });
         } else if (IFaction.is(event.getFaction(), ModFactions.VAMPIRE)) {
             WeightedList.of(new Weighted<>(ModEntities.VAMPIRE.get(), 10), new Weighted<>(ModEntities.ADVANCED_VAMPIRE.get(), 2))
-                    .getRandom(event.getLevel().random)
+                    .getRandom(event.getLevel().getRandom())
                     .ifPresent(type -> {
                         var entity = event.setEntity(type.create(event.getLevel(), EntitySpawnReason.EVENT));
                         entity.setSpawnRestriction(VampireBaseEntity.SpawnRestriction.SIMPLE);
@@ -187,7 +198,7 @@ public class VillageEventHandler {
             VampirismEntity newEntity = entityType.create(totem.getTileLevel(), EntitySpawnReason.EVENT);
             if (newEntity == null) continue;
             newEntity.restoreFrom(oldEntity);
-            newEntity.setUUID(Mth.createInsecureUUID());
+            newEntity.setUUID(Mth.createInsecureUUID(oldEntity.level().getRandom()));
             newEntity.setInvulnerable(true);
             SpawnUtil.replaceEntity(oldEntity, newEntity);
         }

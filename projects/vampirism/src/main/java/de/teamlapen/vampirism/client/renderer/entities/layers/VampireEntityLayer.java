@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Render the vampire overlay
@@ -16,13 +15,13 @@ public class VampireEntityLayer<T extends LivingEntityRenderState, U extends Ent
 
     private final Identifier texture;
 
-    public VampireEntityLayer(@NotNull RenderLayerParent<T, U> entityRendererIn, Identifier texture) {
+    public VampireEntityLayer(RenderLayerParent<T, U> entityRendererIn, Identifier texture) {
         super(entityRendererIn);
         this.texture = texture;
     }
 
     @Deprecated
-    public VampireEntityLayer(@NotNull RenderLayerParent<T, U> entityRendererIn, Identifier texture, boolean checkIfRender) {
+    public VampireEntityLayer(RenderLayerParent<T, U> entityRendererIn, Identifier texture, boolean checkIfRender) {
         this(entityRendererIn, texture);
     }
 

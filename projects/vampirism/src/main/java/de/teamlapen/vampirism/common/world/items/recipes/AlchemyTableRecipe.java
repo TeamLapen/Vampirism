@@ -7,11 +7,11 @@ import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModRecipes;
-import de.teamlapen.vampirism.common.util.UtilLib;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
@@ -29,13 +29,13 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
     @Nullable
     private PlacementInfo placementInfo;
 
-    public AlchemyTableRecipe(String group, Ingredient ingredient, Ingredient input, ItemStack result, List<ISkill<?>> skills) {
-        super(ModRecipes.ALCHEMICAL_TABLE_TYPE.get(), group, ingredient, input, result);
+    public AlchemyTableRecipe(CommonInfo commonInfo, String group, Ingredient ingredient, Ingredient input, ItemStackTemplate result, List<ISkill<?>> skills) {
+        super(ModRecipes.ALCHEMICAL_TABLE_TYPE.get(), commonInfo, group, ingredient, input, result);
         this.requiredSkills = skills;
     }
 
     public boolean isInput(@NotNull ItemStack input) {
-        return UtilLib.matchesItem(this.input, input);
+        return this.input.test(input);
     }
 
     public boolean isIngredient(@NotNull ItemStack ingredient) {
@@ -44,7 +44,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
     @NotNull
     public ItemStack getResult(@NotNull ItemStack input, @NotNull ItemStack ingredient) {
-        return isInput(input) && isIngredient(ingredient) ? this.result.copy() : ItemStack.EMPTY;
+        return isInput(input) && isIngredient(ingredient) ? this.result.create() : ItemStack.EMPTY;
     }
 
     @Override
@@ -70,33 +70,22 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
         return ModRecipes.ALCHEMICAL_TABLE.get();
     }
 
-    public static class Serializer implements RecipeSerializer<AlchemyTableRecipe> {
-        public static final MapCodec<AlchemyTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-                Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
-                Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300831_ -> p_300831_.ingredient),
-                Ingredient.CODEC.fieldOf("input").forGetter(p_300830_ -> p_300830_.input),
-                ItemStack.CODEC.fieldOf("result").forGetter(p_300829_ -> p_300829_.result),
-                ModRegistries.SKILLS.byNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
-        ).apply(inst, AlchemyTableRecipe::new));
+    public static final MapCodec<AlchemyTableRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+            CommonInfo.MAP_CODEC.fieldOf("common_info").forGetter(p -> p.commonInfo),
+            Codec.STRING.optionalFieldOf("group", "").forGetter(p_300832_ -> p_300832_.group),
+            Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300831_ -> p_300831_.ingredient),
+            Ingredient.CODEC.fieldOf("input").forGetter(p_300830_ -> p_300830_.input),
+            ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_300829_ -> p_300829_.result),
+            ModRegistries.SKILLS.byNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+    ).apply(inst, AlchemyTableRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).map(s -> s.orElse(""), Optional::of), s -> s.group,
-                Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
-                Ingredient.CONTENTS_STREAM_CODEC, s -> s.input,
-                ItemStack.STREAM_CODEC, s -> s.result,
-                ByteBufCodecs.registry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
-                AlchemyTableRecipe::new
-        );
-
-        @Override
-        public @NotNull MapCodec<AlchemyTableRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> STREAM_CODEC = StreamCodec.composite(
+            CommonInfo.STREAM_CODEC, s -> s.commonInfo,
+            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).map(s -> s.orElse(""), Optional::of), s -> s.group,
+            Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
+            Ingredient.CONTENTS_STREAM_CODEC, s -> s.input,
+            ItemStackTemplate.STREAM_CODEC, s -> s.result,
+            ByteBufCodecs.registry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+            AlchemyTableRecipe::new
+    );
 }

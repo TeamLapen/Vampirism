@@ -1,6 +1,7 @@
 {
   "type": "vampirism:alchemical_cauldron",
   "fluid": "#vampirism:holy_water",
+  "info": {},
   "ingredient": "#c:crops/garlic",
   "result": {
     "count": 2,

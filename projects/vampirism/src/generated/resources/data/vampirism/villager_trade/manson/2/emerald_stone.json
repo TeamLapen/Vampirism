@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "count": 16,
+    "id": "vampirism:dark_stone"
+  },
+  "max_uses": 16.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "id": "minecraft:emerald"
+  },
+  "xp": 10.0
+}

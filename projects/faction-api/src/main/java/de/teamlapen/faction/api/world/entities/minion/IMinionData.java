@@ -1,7 +1,6 @@
 package de.teamlapen.faction.api.world.entities.minion;
 
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 
 public interface IMinionData {
@@ -9,7 +8,6 @@ public interface IMinionData {
     /**
      * @return The current executed task of the minion
      */
-    @NotNull
     IMinionTask.IMinionTaskDesc<?> getCurrentTaskDesc();
 
     /**

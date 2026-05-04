@@ -6,36 +6,28 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * ModelBiped with a cloak
  */
 public class CloakedModel<T extends AvatarLikeRenderState> extends ClothedModel<T> {
     private static final String CLOAK = "cloak";
-    public final @NotNull ModelPart bipedCloak;
+    public final ModelPart bipedCloak;
 
-    public static @NotNull LayerDefinition createLayer() {
+    public static LayerDefinition createLayer() {
         MeshDefinition var2 = PlayerModel.createMesh(CubeDeformation.NONE, false);
         PartDefinition var3 = var2.getRoot();
         var3.addOrReplaceChild(CLOAK, CubeListBuilder.create().texOffs(0, 0).addBox(-7, 0, 2f, 14, 20, 1), PartPose.offset(0, 0, 2));
         return LayerDefinition.create(var2, 64,32);
     }
 
-    public CloakedModel(@NotNull ModelPart part, boolean smallArms) {
+    public CloakedModel(ModelPart part, boolean smallArms) {
         super(part, smallArms);
         bipedCloak = part.getChild(CLOAK);
     }
 
     @Override
-    public void setAllVisible(boolean visible) {
-        super.setAllVisible(visible);
-        bipedCloak.visible = visible;
-    }
-
-
-    @Override
-    public void setupAnim(@NotNull T state) {
+    public void setupAnim(T state) {
         super.setupAnim(state);
         float f = 1.0F;
         if (state.fallFlyingTimeInTicks > 4) {

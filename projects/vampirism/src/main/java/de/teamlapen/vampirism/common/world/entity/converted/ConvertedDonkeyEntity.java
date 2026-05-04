@@ -49,6 +49,11 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     }
 
     @Override
+    public @NotNull EntityType<Donkey> getCuredEntityType() {
+        return EntityType.DONKEY;
+    }
+
+    @Override
     public Data<Donkey> data() {
         return this.data;
     }
@@ -77,7 +82,7 @@ public class ConvertedDonkeyEntity extends Donkey implements CurableConvertedCre
     @Override
     public void aiStep() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            aiStepC(serverLevel, EntityType.DONKEY);
+            aiStepC(serverLevel);
         }
         super.aiStep();
     }

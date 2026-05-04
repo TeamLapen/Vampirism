@@ -42,12 +42,11 @@ public class VampirismDataComponents {
         public static final Identifier BLOOD_CHARGED = VIdentifier.mod( "blood_charged");
         public static final Identifier BOTTLE_BLOOD = VIdentifier.mod( "bottle_blood");
         public static final Identifier FRUGALITY = VIdentifier.mod( "frugality");
-        public static final Identifier VAMPIRE_FOOD = VIdentifier.mod("vampire_food");
         public static final Identifier DROP_VAMPIRE_SOUL = VIdentifier.mod("drop_vampire_soul");
         public static final Identifier PURE_LEVEL = VIdentifier.mod("pure_level");
         public static final Identifier QUARREL_POUCH_CONTENTS = VIdentifier.mod("quarrel_pouch_contents");
         public static final Identifier ACTIVE = VIdentifier.mod("active");
-        public static final Identifier SHIFT_DESCRIPTION = VIdentifier.mod("shift_description");
-        public static final Identifier BLOCK_DESCRIPTION = VIdentifier.mod("block_description");
+        public static final Identifier HELD_ENTITY = VIdentifier.mod("held_entity");
+        public static final Identifier CHARGED_RITUAL_KNIFE = VIdentifier.mod("charged_ritual_knife");
     }
 }

@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModRegistries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -60,7 +61,7 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
         return stack;
     }
 
-    public static Optional<AppliedOilContent> getAppliedOil(ItemStack stack) {
+    public static Optional<AppliedOilContent> getAppliedOil(DataComponentGetter stack) {
         return Optional.ofNullable(stack.get(ModDataComponents.APPLIED_OIL));
     }
 
@@ -93,7 +94,7 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
             if (flag.isAdvanced()) {
                 component.append(" ").append(Component.literal("%s/%s".formatted(duration, maxDuration)).withStyle(status));
             } else {
-                component.append(" ").append(Component.translatable("text.vampirism.oil.wetting_status").withStyle(status));
+                component.append(" ").append(Component.translatable("tooltip.vampirism.oil.wetting").withStyle(status));
             }
         }
         tooltip.add(component);

@@ -2,17 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": "#c:rods/wooden",
-    "Y": "minecraft:red_carpet",
-    "Z": "#minecraft:planks"
+    "P": "#minecraft:planks",
+    "S": "#c:rods/wooden",
+    "W": "#minecraft:wool"
   },
   "pattern": [
-    " YZ",
-    "YYZ",
-    "XZX"
+    " WP",
+    "PWP",
+    "S S"
   ],
   "result": {
-    "count": 1,
     "id": "vampirism:throne"
   }
 }

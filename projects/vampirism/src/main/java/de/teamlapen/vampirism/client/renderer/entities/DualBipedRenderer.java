@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,34 +27,40 @@ import java.util.Comparator;
 import java.util.stream.Stream;
 
 
-public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRenderState, M extends HumanoidModel<S>> extends HumanoidMobRenderer<T, S, M> {
-    private final M modelA;
-    private final M modelB;
+public abstract class DualBipedRenderer<TEntity extends Mob, TRenderState extends AvatarLikeRenderState, TModel extends HumanoidModel<TRenderState>> extends HumanoidMobRenderer<TEntity, TRenderState, TModel> {
+    protected final TModel wideModel;
+    protected final TModel tallModel;
 
-    public DualBipedRenderer(EntityRendererProvider.Context context, M modelBipedInA, M modelBipedInB, float shadowSize) {
-        super(context, modelBipedInA, shadowSize);
-        this.modelA = modelBipedInA;
-        this.modelB = modelBipedInB;
+    public DualBipedRenderer(EntityRendererProvider.Context context, TModel modelWide, TModel modelSlim, float shadowSize) {
+        super(context, modelWide, shadowSize);
+        this.wideModel = modelWide;
+        this.tallModel = modelSlim;
     }
 
     @Override
-    public Identifier getTextureLocation(S renderState) {
-        return renderState.skin.body().texturePath();
+    public Identifier getTextureLocation(TRenderState renderState) {
+        return determineSkin(renderState).body().texturePath();
     }
 
     @Override
-    public void submit(S renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        this.model = switch (renderState.skin.model()) {
-            case SLIM -> modelB;
-            case WIDE -> modelA;
-        };
+    public void submit(TRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        this.model = this.adultModel = provideModel(renderState);
         super.submit(renderState, poseStack, nodeCollector, cameraRenderState);
+    }
+
+    protected TModel provideModel(TRenderState renderState) {
+        return switch (renderState.skin.model()) {
+            case SLIM -> tallModel;
+            case WIDE -> wideModel;
+        };
     }
 
     /**
      * @return Sets of texture resource location and model selecting boolean (true->b, false ->a)
      */
-    protected abstract PlayerSkin determineTextureAndModel(S entity);
+    protected PlayerSkin determineSkin(TRenderState entity) {
+        return entity.skin;
+    }
 
     /**
      * @return Array of texture and slim status
@@ -86,20 +92,20 @@ public abstract class DualBipedRenderer<T extends Mob, S extends AvatarLikeRende
         return (o1, o2) -> TextureComparator.alphaNumericComparator().compare(o1.body().texturePath(), o2.body().texturePath());
     }
 
-    protected class ArmorLayer<A extends HumanoidModel<S>> extends HumanoidArmorLayer<S, M, A> {
+    protected class ArmorLayer<TArmorModel extends HumanoidModel<TRenderState>> extends HumanoidArmorLayer<TRenderState, TModel, TArmorModel> {
 
-        private final ArmorModelSet<A> slimModelSet;
-        private final ArmorModelSet<A> wideModelSet;
+        private final ArmorModelSet<TArmorModel> slimModelSet;
+        private final ArmorModelSet<TArmorModel> wideModelSet;
 
-        public ArmorLayer(RenderLayerParent<S, M> renderer, ArmorModelSet<A> slimModelSet, ArmorModelSet<A> wideModelSet, EquipmentLayerRenderer equipmentRenderer) {
+        public ArmorLayer(RenderLayerParent<TRenderState, TModel> renderer, ArmorModelSet<TArmorModel> slimModelSet, ArmorModelSet<TArmorModel> wideModelSet, EquipmentLayerRenderer equipmentRenderer) {
             super(renderer, slimModelSet, equipmentRenderer);
             this.slimModelSet = slimModelSet;
             this.wideModelSet = wideModelSet;
         }
 
         @Override
-        public A getArmorModel(S renderState, EquipmentSlot slot) {
-            PlayerSkin b = determineTextureAndModel(renderState);
+        public TArmorModel getArmorModel(TRenderState renderState, EquipmentSlot slot) {
+            PlayerSkin b = determineSkin(renderState);
             return (switch (b.model()) {
                 case SLIM -> slimModelSet;
                 case WIDE -> wideModelSet;

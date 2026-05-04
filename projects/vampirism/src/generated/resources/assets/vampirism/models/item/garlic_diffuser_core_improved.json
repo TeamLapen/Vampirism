@@ -1,6 +1,6 @@
 {
-  "parent": "vampirism:item/garlic_diffuser_core",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "texture": "vampirism:block/garlic_diffuser_inside_improved"
+    "layer0": "vampirism:item/garlic_diffuser_core_improved"
   }
 }

@@ -5,8 +5,7 @@ import de.teamlapen.vampirism.client.gui.components.ProgressBar;
 import de.teamlapen.vampirism.common.network.packets.common.PlayerOwnedBlockEntityLockPacket;
 import de.teamlapen.vampirism.common.world.blockentity.PlayerOwnedBlockEntity;
 import de.teamlapen.vampirism.common.world.inventory.diffuser.DiffuserMenu;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.LockIconButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -15,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractContainerScreen<T> {
     private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/diffuser.png");
@@ -34,16 +32,13 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     @Override
     protected void init() {
         super.init();
-        this.startupBar = this.addRenderableOnly(new ProgressBar(this.getGuiLeft() + (xSize - 150) / 2, this.getGuiTop() + 23, 150, getBootMessage(0)));
+        this.startupBar = this.addRenderableOnly(new ProgressBar(this.getLeftPos() + (xSize - 150) / 2, this.getTopPos() + 23, 150, getBootMessage(0)));
         this.startupBar.setColor(getProgressBarColor());
         this.startupBar.setFGColor(getProgressBarFGColor());
         if (this.menu.hasOwner()) {
-            lock = this.addRenderableWidget(new LockIconButton(this.getGuiLeft() + xSize - 30, this.getGuiTop() + 50, new Button.OnPress() {
-                @Override
-                public void onPress(@NotNull Button pButton) {
-                    setLock(!((LockIconButton) pButton).isLocked());
-                    lock.setTooltip(Tooltip.create(getLockText()));
-                }
+            lock = this.addRenderableWidget(new LockIconButton(this.getLeftPos() + xSize - 30, this.getTopPos() + 50, pButton -> {
+                setLock(!((LockIconButton) pButton).isLocked());
+                lock.setTooltip(Tooltip.create(getLockText()));
             }));
             lock.setLocked(this.menu.getLockStatus() == PlayerOwnedBlockEntity.Lock.PRIVATE);
             lock.active = this.menu.isOwner(minecraft.player);
@@ -54,11 +49,11 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     private Component getLockText() {
         if (this.menu.isOwner(minecraft.player)) {
             return switch (this.menu.getLockStatus()) {
-                case PUBLIC -> Component.translatable("text.vampirism.screen.unlocked_for_other_player");
-                case PRIVATE -> Component.translatable("text.vampirism.screen.locked_for_other_player");
+                case PUBLIC -> Component.translatable("gui.vampirism.diffuser.unlocked_for_others");
+                case PRIVATE -> Component.translatable("gui.vampirism.diffuser.locked_for_others");
             };
         } else {
-            return Component.translatable("text.vampirism.screen.lock_not_owner");
+            return Component.translatable("gui.vampirism.diffuser.not_the_owner");
         }
     }
 
@@ -76,12 +71,6 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
-    }
-
-    @Override
     protected void containerTick() {
         this.updateProgress();
     }
@@ -94,20 +83,21 @@ public abstract class DiffuserScreen<T extends DiffuserMenu> extends AbstractCon
 
     protected Component getBootMessage(float progress) {
         if (progress == 1f) {
-            return Component.translatable("text.vampirism.fog_diffuser.active");
+            return Component.translatable("gui.vampirism.diffuser.active");
         } else if (progress == 0) {
-            return Component.translatable("text.vampirism.fog_diffuser.idle");
+            return Component.translatable("gui.vampirism.diffuser.idle");
         } else {
-            return Component.translatable("text.vampirism.fog_diffuser.booting");
+            return Component.translatable("gui.vampirism.diffuser.booting");
         }
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.getGuiLeft(), this.getGuiTop(), 0, 0, this.xSize, this.ySize, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, this.getLeftPos(), this.getTopPos(), 0, 0, this.xSize, this.ySize, 256, 256);
         if (this.menu.isLit()) {
             int l = Mth.ceil(this.menu.getLitProgress() * 13.0F) + 1;
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - l, getGuiLeft() + 26 + 19, getGuiTop() + 53 + 2 + (14 - l), 14, l);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, LIT_PROGRESS_SPRITE, 14, 14, 0, 14 - l, getLeftPos() + 26 + 19, getTopPos() + 53 + 2 + (14 - l), 14, l);
         }
     }
 }

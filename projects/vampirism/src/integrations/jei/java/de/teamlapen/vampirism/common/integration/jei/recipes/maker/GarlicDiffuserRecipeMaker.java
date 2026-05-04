@@ -13,7 +13,7 @@ public class GarlicDiffuserRecipeMaker {
     public static List<GarlicDiffuserRecipe> getRecipes(IIngredientManager ingredientManager) {
         return ingredientManager.getAllItemStacks().stream()
                 .<GarlicDiffuserRecipe>mapMulti((stack, consumer) -> {
-                    IGarlicDiffuserFuel data = stack.getItemHolder().getData(VampirismDataMaps.GARLIC_DIFFUSER_FUEL.get());
+                    IGarlicDiffuserFuel data = stack.typeHolder().getData(VampirismDataMaps.GARLIC_DIFFUSER_FUEL.get());
                     if (data != null) {
                         consumer.accept(new GarlicDiffuserRecipe(stack, data));
                     }

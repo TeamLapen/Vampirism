@@ -8,7 +8,6 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
@@ -18,11 +17,11 @@ public class BloodGrinderMenu extends InventoryContainerMenu {
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated
-    public BloodGrinderMenu(int id, @NotNull Inventory playerInventory) {
+    public BloodGrinderMenu(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(1), ContainerLevelAccess.NULL);
     }
 
-    public BloodGrinderMenu(int id, @NotNull Inventory playerInventory, @NotNull Container inventory, ContainerLevelAccess worldPosIn) {
+    public BloodGrinderMenu(int id, Inventory playerInventory, Container inventory, ContainerLevelAccess worldPosIn) {
         super(ModMenus.BLOOD_GRINDER.get(), id, playerInventory, worldPosIn, inventory, SELECTOR_INFOS);
         this.addPlayerSlots(playerInventory);
     }

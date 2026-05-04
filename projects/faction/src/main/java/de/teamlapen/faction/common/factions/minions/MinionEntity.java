@@ -79,7 +79,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     private final static NonNullList<ItemStack> EMPTY_LIST = NonNullList.create();
     private final static int CONVERT_DURATION = 20;
     /**
-     * Predicate that checks that target is not affiliated with the lord
+     * Predicate that checks that the target is not affiliated with the lord
      */
     private final @NotNull Predicate<LivingEntity> hardAttackPredicate;
     /**
@@ -112,7 +112,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
      */
     private int token;
     /**
-     * If >0 the conversion animation is running. Set on server side and synced with the spawn packet, afterwards its decreased on both server and client side. Not stored to NBT
+     * If >0 the conversion animation is running. Set on the server side and synced with the spawn packet, afterward it decreased on both server and client side. Not stored to NBT
      */
     private int convertCounter;
     /**
@@ -200,7 +200,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     public void die(@NotNull DamageSource cause) {
         super.die(cause);
         if (this.playerMinionController != null) {
-            this.getLordOpt().map(ILordPlayer::asEntity).ifPresent(p -> p.displayClientMessage(Component.translatable("text.factionapi.minion.died", this.getDisplayName()), true));
+            this.getLordOpt().map(ILordPlayer::asEntity).ifPresent(p -> p.sendOverlayMessage(Component.translatable("dialogue.factionapi.minion.died", this.getDisplayName())));
             this.playerMinionController.markDeadAndReleaseMinionSlot(minionId, token);
             this.playerMinionController = null;
         }
@@ -208,7 +208,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
 
     /**
      * Copy of {@link net.minecraft.world.entity.Mob} but with modified DamageSource
-     * Check if code still up-to-date
+     * Check if code still up to date
      * TODO 1.22
      */
     @Override
@@ -261,7 +261,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     /**
      * Return
      *
-     * @param onlyShould If true only hostile (faction-wise) entities are targeted otherwise anything that is not affiliated with the lord is targeted
+     * @param onlyShould If true, only hostile (faction-wise) entities are targeted, otherwise anything not affiliated with the lord is targeted
      * @return a predicate that checks if the target should be attacked
      */
     public Predicate<LivingEntity> getAttackPredicate(boolean onlyShould) {
@@ -330,8 +330,8 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     /**
-     * Call server side before adding entity to the world.
-     * Once spawned the entity will perform the conversion animation on client side.
+     * Call server side before adding an entity to the world.
+     * Once spawned, the entity will perform the conversion animation on the client side.
      */
     public void markAsConverted() {
         convertCounter = CONVERT_DURATION;
@@ -534,7 +534,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
-                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("text.factionapi.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
             return InteractionResult.SUCCESS;
         }
@@ -566,8 +566,8 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     /**
-     * Checkout the minion data from the playerMinionController (if available).
-     * Call as early as possible but only if being added to world
+     * Check out the minion data from the playerMinionController (if available).
+     * Call as early as possible but only if being added to the world
      * Can be called from different locations. Only executes if not checkout already.
      * Happens either in {@link net.minecraft.world.entity.Entity#onAddedToLevel()} or if tracking starts before during {@link ISyncable#serializeUpdate(ValueOutput)}
      */
@@ -611,7 +611,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
 
     @Override
     public void serialize(@NotNull ValueOutput output) {
-        if (this.minionData == null && this.level().getEntity(this.getId()) != null) { //If tracking is started already while adding to world (and thereby before {@link Entity#onAddedToWorld}) trigger the checkout here (but only if actually added to world).
+        if (this.minionData == null && this.level().getEntity(this.getId()) != null) { //If tracking is started already while adding to world (and thereby before {@link Entity#onAddedToWorld}), trigger the checkout here (but only if actually added to world).
             this.checkoutMinionData(registryAccess());
         }
         if (this.minionData != null) {

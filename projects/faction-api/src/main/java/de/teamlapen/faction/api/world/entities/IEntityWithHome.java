@@ -2,7 +2,6 @@ package de.teamlapen.faction.api.world.entities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -34,7 +33,7 @@ public interface IEntityWithHome {
     /**
      * Checks if the given position i within the entity's home area
      */
-    default boolean isWithinHomeDistance(@NotNull BlockPos pos) {
+    default boolean isWithinHomeDistance(BlockPos pos) {
         return this.isWithinHomeDistance(pos.getX(), pos.getY(), pos.getZ());
     }
 

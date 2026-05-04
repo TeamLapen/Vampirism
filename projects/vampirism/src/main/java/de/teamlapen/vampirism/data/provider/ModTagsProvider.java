@@ -23,11 +23,14 @@ public class ModTagsProvider {
         generator.addProvider(true, new ModStructureTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModSkillTreeTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModEffectTagsProvider(output, lookupProviderFuture));
+        generator.addProvider(true, new ModPotionTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModEnchantmentTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModFactionTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModActionTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModVampireBookTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModGameEventTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModDataComponentTagsProvider(output, lookupProviderFuture));
+        generator.addProvider(true, new ModVillageTradesTagProvider(output, lookupProviderFuture));
+        generator.addProvider(true, new ModTimelineTagProvider(output, lookupProviderFuture));
     }
 }

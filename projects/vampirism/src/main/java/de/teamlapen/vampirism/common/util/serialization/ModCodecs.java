@@ -17,11 +17,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
 
 public class ModCodecs {
     public static final Codec<UUID> UUID = Codec.STRING.xmap(java.util.UUID::fromString, java.util.UUID::toString);
-    public static final Codec<ChunkPos> CHUNK_POS = Codec.INT_STREAM.comapFlatMap(p -> Util.fixedSize(p, 2).map(l -> new ChunkPos(l[0], l[1])), p -> IntStream.of(p.x, p.z));
     public static final PrimitiveCodec<DoubleStream> DOUBLE_STREAM = new PrimitiveCodec<>() {
         @Override
         public <T> DataResult<DoubleStream> read(final DynamicOps<T> ops, final T input) {

@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.layers.AdvancedVampireEyeLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.AdvancedVampireFangLayer;
-import de.teamlapen.vampirism.client.renderer.entities.layers.PlayerFaceOverlayLayer;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.client.renderer.entities.state.IOverlayRenderState;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -14,7 +13,7 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.PlayerModelType;
@@ -24,15 +23,14 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Render the advanced vampire with overlays
  */
-public class AdvancedVampireRenderer extends DualBipedRenderer<AdvancedVampireEntity, AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> {
+public class AdvancedVampireRenderer extends DualSplitBipedRenderer<AdvancedVampireEntity, AdvancedVampireRenderer.AdvancedVampireRenderState, ClothedModel<AdvancedVampireRenderer.AdvancedVampireRenderState>> {
     private static final PlayerSkin FALLBACK = new PlayerSkin(new ClientAsset.ResourceTexture(VIdentifier.mod("fallback"), VIdentifier.mod("textures/entity/advanced_vampire.png")), null, null, PlayerModelType.WIDE, false);
     private final PlayerSkin[] textures;
 
 
     public AdvancedVampireRenderer(EntityRendererProvider.Context context) {
-        super(context, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false), new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
+        super(context, ModelLayers.PLAYER, ModelLayers.PLAYER_SLIM, ClothedModel::new, 0.5F);
         if (ModConfig.client().renderAdvancedMobPlayerFaces.get()) {
-            this.addLayer(new PlayerFaceOverlayLayer<>(this, new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false)));
             this.addLayer(new AdvancedVampireEyeLayer(this));
             this.addLayer(new AdvancedVampireFangLayer(this));
         }
@@ -40,8 +38,20 @@ public class AdvancedVampireRenderer extends DualBipedRenderer<AdvancedVampireEn
     }
 
     @Override
-    protected PlayerSkin determineTextureAndModel(AdvancedVampireRenderer.AdvancedVampireRenderState entity) {
-        return entity.skin;
+    protected boolean splitRenderingEnabled() {
+        return ModConfig.client().renderAdvancedMobPlayerFaces.get();
+    }
+
+    @Override
+    protected Identifier getTexture(AdvancedVampireRenderer.AdvancedVampireRenderState renderState, RenderPart part) {
+        Identifier texture = null;
+        if (part == RenderPart.HEAD) {
+            texture = renderState.overlay;
+        }
+        if (texture != null) {
+            return texture;
+        }
+        return renderState.skin.body().texturePath();
     }
 
     @Override
@@ -59,9 +69,9 @@ public class AdvancedVampireRenderer extends DualBipedRenderer<AdvancedVampireEn
     }
 
     @Override
-    protected void submitNameTag(AdvancedVampireRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        if (renderState.distanceToCameraSq <= 256) {
-            super.submitNameTag(renderState, poseStack, nodeCollector, cameraRenderState);
+    protected void submitNameDisplay(AdvancedVampireRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        if (state.distanceToCameraSq <= 256) {
+            super.submitNameDisplay(state, poseStack, submitNodeCollector, camera);
         }
     }
 

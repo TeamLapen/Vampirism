@@ -28,7 +28,7 @@ public class ModLootModifierProvider extends GlobalLootModifierProvider {
 
     @Override
     protected void start() {
-        add("smelting", new SmeltItemLootModifier(new OilItemCondition(ModOils.SMELT.get()), new FactionCondition(ModFactions.HUNTER)));
+        add("smelting", new SmeltItemLootModifier(new LootItemCondition[]{new OilItemCondition(ModOils.SMELT.get()), new FactionCondition(ModFactions.HUNTER)}, 1000));
 
         addChestLoot("abandoned_mineshaft", ModLootTables.INJECT_ABANDONED_MINESHAFT, BuiltInLootTables.ABANDONED_MINESHAFT.identifier());
         addChestLoot("jungle_temple", ModLootTables.INJECT_JUNGLE_TEMPLE, BuiltInLootTables.JUNGLE_TEMPLE.identifier());
@@ -38,6 +38,6 @@ public class ModLootModifierProvider extends GlobalLootModifierProvider {
     }
 
     private void addChestLoot(String name, ResourceKey<LootTable> insertedPool, Identifier targetPool) {
-        add("add_loot_" + name, new AddTableLootModifier(new LootItemCondition[] { LootTableIdCondition.builder(targetPool).build() }, insertedPool));
+        add("add_loot_" + name, new AddTableLootModifier(new LootItemCondition[] { LootTableIdCondition.builder(targetPool).build() },1000, insertedPool));
     }
 }

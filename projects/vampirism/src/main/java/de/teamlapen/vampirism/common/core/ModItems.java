@@ -1,20 +1,21 @@
 package de.teamlapen.vampirism.common.core;
 
-import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.components.FactionRestriction;
-import de.teamlapen.faction.common.core.ModRegistries;
-import de.teamlapen.faction.common.world.items.consume.FactionBasedConsumeEffect;
+import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.faction.common.util.BlockDescription;
+import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
+import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
-import de.teamlapen.vampirism.common.tags.ModFactionTags;
+import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
+import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.*;
-import de.teamlapen.vampirism.common.world.items.consume.AffectGarlic;
-import de.teamlapen.vampirism.common.world.items.consume.BloodConsume;
-import de.teamlapen.vampirism.common.world.items.consume.BloodFoodProperties;
-import de.teamlapen.vampirism.common.world.items.consume.ModConsumables;
+import de.teamlapen.vampirism.common.world.items.component.PureLevel;
+import de.teamlapen.vampirism.common.world.items.consume.*;
 import de.teamlapen.vampirism.common.world.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.common.world.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.SingleCrossbowItem;
@@ -24,42 +25,40 @@ import de.teamlapen.vampirism.common.world.items.dispenser.SyringeDispenseBehavi
 import de.teamlapen.vampirism.common.world.items.display.ItemStackWithSize;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.Consumables;
-import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 /**
  * Handles all item registrations and reference.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused"})
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(REFERENCE.MODID);
     public static final DeferredRegister<ConsumeEffect.Type<?>> CONSUME_EFFECTS = DeferredRegister.create(Registries.CONSUME_EFFECT_TYPE, REFERENCE.MODID);
     public static final DeferredRegister<SlotDisplay.Type<?>> SLOT_DISPLAYS = DeferredRegister.create(Registries.SLOT_DISPLAY, REFERENCE.MODID);
 
     // Consume Effects
-    public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<BloodConsume>> CONSUME_BLOOD_EFFECT = CONSUME_EFFECTS.register("blood_consume", () -> new ConsumeEffect.Type<>(BloodConsume.CODEC, BloodConsume.STREAM_CODEC));
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<AffectGarlic>> AFFECT_GARLIC = CONSUME_EFFECTS.register("affect_garlic", () -> new ConsumeEffect.Type<>(AffectGarlic.CODEC, AffectGarlic.STREAM_CODEC));
 
     // slot display
@@ -96,46 +95,46 @@ public class ModItems {
     public static final DeferredItem<Item> QUARREL_POUCH = ITEMS.registerItem("quarrel_pouch",  props -> new QuarrelPouch(props.stacksTo(1)));
 
     public static final DeferredItem<Item> PITCHFORK = ITEMS.registerSimpleItem("pitchfork", props -> props.sword(ToolMaterial.IRON, 6, -3));
-    public static final DeferredItem<StakeItem> STAKE = ITEMS.registerItem("stake", StakeItem::new);
+    public static final DeferredItem<StakeItem> STAKE = ITEMS.registerItem("stake", props -> new StakeItem(props.factions$withShiftDescription()));
 
     public static final DeferredItem<CrucifixItem> CRUCIFIX_NORMAL = ITEMS.registerItem("crucifix_normal",  props -> new CrucifixItem(IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<CrucifixItem> CRUCIFIX_ENHANCED = ITEMS.registerItem("crucifix_enhanced",  props -> new CrucifixItem(IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<CrucifixItem> CRUCIFIX_ULTIMATE = ITEMS.registerItem("crucifix_ultimate",  props -> new CrucifixItem(IItemWithTier.Tier.ULTIMATE, props));
 
     // Armor
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = ITEMS.registerItem("armor_of_swiftness_chest_normal", props ->new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.NORMAL, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = ITEMS.registerItem("armor_of_swiftness_chest_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.ENHANCED, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_chest_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.ULTIMATE, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = ITEMS.registerItem("armor_of_swiftness_feet_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.NORMAL, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = ITEMS.registerItem("armor_of_swiftness_feet_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.ENHANCED, props));
-    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_feet_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.ULTIMATE, props));
     public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_NORMAL = ITEMS.registerItem("armor_of_swiftness_head_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.HELMET, IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ENHANCED = ITEMS.registerItem("armor_of_swiftness_head_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.HELMET, IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_head_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.HELMET, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_NORMAL = ITEMS.registerItem("armor_of_swiftness_chest_normal", props ->new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ENHANCED = ITEMS.registerItem("armor_of_swiftness_chest_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_chest_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.CHESTPLATE, IItemWithTier.Tier.ULTIMATE, props));
     public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_NORMAL = ITEMS.registerItem("armor_of_swiftness_legs_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.LEGGINGS, IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ENHANCED = ITEMS.registerItem("armor_of_swiftness_legs_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.LEGGINGS, IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_legs_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.LEGGINGS, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_NORMAL = ITEMS.registerItem("armor_of_swiftness_feet_normal",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.NORMAL_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ENHANCED = ITEMS.registerItem("armor_of_swiftness_feet_enhanced",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ENHANCED_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<ArmorOfSwiftnessItem> ARMOR_OF_SWIFTNESS_FEET_ULTIMATE = ITEMS.registerItem("armor_of_swiftness_feet_ultimate",  props -> new ArmorOfSwiftnessItem(ModArmorMaterials.ULTIMATE_SWIFTNESS, ArmorType.BOOTS, IItemWithTier.Tier.ULTIMATE, props));
 
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = ITEMS.registerItem("hunter_coat_chest_normal", props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.Tier.NORMAL, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = ITEMS.registerItem("hunter_coat_chest_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.Tier.ENHANCED, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = ITEMS.registerItem("hunter_coat_chest_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.Tier.ULTIMATE, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = ITEMS.registerItem("hunter_coat_feet_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.Tier.NORMAL, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = ITEMS.registerItem("hunter_coat_feet_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.Tier.ENHANCED, props));
-    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = ITEMS.registerItem("hunter_coat_feet_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.Tier.ULTIMATE, props));
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_NORMAL = ITEMS.registerItem("hunter_coat_head_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.HELMET, IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ENHANCED = ITEMS.registerItem("hunter_coat_head_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.HELMET, IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_HEAD_ULTIMATE = ITEMS.registerItem("hunter_coat_head_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.HELMET, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_NORMAL = ITEMS.registerItem("hunter_coat_chest_normal", props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ENHANCED = ITEMS.registerItem("hunter_coat_chest_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_CHEST_ULTIMATE = ITEMS.registerItem("hunter_coat_chest_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.CHESTPLATE, IItemWithTier.Tier.ULTIMATE, props));
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_NORMAL = ITEMS.registerItem("hunter_coat_legs_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ENHANCED = ITEMS.registerItem("hunter_coat_legs_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<HunterCoatItem> HUNTER_COAT_LEGS_ULTIMATE = ITEMS.registerItem("hunter_coat_legs_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.LEGGINGS, IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_NORMAL = ITEMS.registerItem("hunter_coat_feet_normal",  props -> new HunterCoatItem(ModArmorMaterials.NORMAL_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.Tier.NORMAL, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ENHANCED = ITEMS.registerItem("hunter_coat_feet_enhanced",  props -> new HunterCoatItem(ModArmorMaterials.ENHANCED_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.Tier.ENHANCED, props));
+    public static final DeferredItem<HunterCoatItem> HUNTER_COAT_FEET_ULTIMATE = ITEMS.registerItem("hunter_coat_feet_ultimate",  props -> new HunterCoatItem(ModArmorMaterials.ULTIMATE_HUNTER_COAT, ArmorType.BOOTS, IItemWithTier.Tier.ULTIMATE, props));
 
     public static final DeferredItem<HunterArmorItem> HUNTER_HAT_TALL = ITEMS.registerItem("hunter_hat_tall",  props -> new HunterArmorItem(ModArmorMaterials.HUNTER_HAT_TALL, ArmorType.HELMET, props));
     public static final DeferredItem<HunterArmorItem> HUNTER_HAT_BROAD = ITEMS.registerItem("hunter_hat_broad",  props -> new HunterArmorItem(ModArmorMaterials.HUNTER_HAT_BROAD, ArmorType.HELMET, props));
 
+    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_HAT = ITEMS.registerItem("vampire_clothing_hat",  props -> new VampireClothingItem(ArmorType.HELMET, ModArmorMaterials.VAMPIRE_CLOTH_HAT, props));
     public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_CROWN = ITEMS.registerItem("vampire_clothing_crown",  props -> new VampireClothingItem(ArmorType.HELMET, ModArmorMaterials.VAMPIRE_CLOTH_CROWN, props));
     public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_LEGS = ITEMS.registerItem("vampire_clothing_legs",  props -> new VampireClothingItem(ArmorType.LEGGINGS, ModArmorMaterials.VAMPIRE_CLOTH_LEGS, props));
     public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_BOOTS = ITEMS.registerItem("vampire_clothing_boots",  props -> new VampireClothingItem(ArmorType.BOOTS, ModArmorMaterials.VAMPIRE_CLOTH_BOOTS, props));
-    public static final DeferredItem<VampireClothingItem> VAMPIRE_CLOTHING_HAT = ITEMS.registerItem("vampire_clothing_hat",  props -> new VampireClothingItem(ArmorType.HELMET, ModArmorMaterials.VAMPIRE_CLOTH_HAT, props));
 
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_WHITE = ITEMS.registerItem("vampire_cloak_white", props -> new VampireCloakItem(DyeColor.WHITE, props));
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_ORANGE = ITEMS.registerItem("vampire_cloak_orange",  props -> new VampireCloakItem(DyeColor.ORANGE, props));
@@ -154,13 +153,13 @@ public class ModItems {
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_RED = ITEMS.registerItem("vampire_cloak_red",  props -> new VampireCloakItem(DyeColor.RED, props));
     public static final DeferredItem<VampireCloakItem> VAMPIRE_CLOAK_BLACK = ITEMS.registerItem("vampire_cloak_black",  props -> new VampireCloakItem(DyeColor.BLACK, props));
 
-    public static final DeferredItem<RefinementItem> AMULET = ITEMS.registerItem("amulet",  props -> new RefinementItem(FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.AMULET));
-    public static final DeferredItem<RefinementItem> RING = ITEMS.registerItem("ring",  props -> new RefinementItem(FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.RING));
-    public static final DeferredItem<RefinementItem> OBI_BELT = ITEMS.registerItem("obi_belt",  props -> new RefinementItem(FactionRestriction.builder(ModFactionTags.IS_VAMPIRE).apply(props), IRefinementItem.AccessorySlotType.OBI_BELT));
+    public static final DeferredItem<RefinementItem> AMULET = ITEMS.registerItem("amulet",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.AMULET));
+    public static final DeferredItem<RefinementItem> RING = ITEMS.registerItem("ring",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.RING));
+    public static final DeferredItem<RefinementItem> OBI_BELT = ITEMS.registerItem("obi_belt",  props -> new RefinementItem(FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).message(VampireClothingItem.MASSAGE_RESTRICTION_VAMPIRE_CLOTHING).apply(props), IRefinementItem.AccessorySlotType.OBI_BELT));
 
     // General
-    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build()).vampirism$withShiftDescription()));
-    public static final DeferredItem<BucketItem> BLOOD_BUCKET = ITEMS.registerItem("blood_bucket",  props -> new BucketItem(ModFluids.BLOOD.get(), props.craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<BloodBottleItem> BLOOD_BOTTLE = ITEMS.registerItem("blood_bottle", props -> new BloodBottleItem(props.component(DataComponents.CONSUMABLE, Consumables.defaultDrink().build())));
+    public static final DeferredItem<BucketItem> BLOOD_BUCKET = ITEMS.registerItem("blood_bucket",  props -> new BucketItem(ModFluids.BLOOD.get(), props.craftRemainder(Items.BUCKET).stacksTo(1).factions$withShiftDescription()));
 
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_IRON = ITEMS.registerItem("blood_infused_raw_iron", PureLevelItem::new);
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_RAW_GOLD = ITEMS.registerItem("blood_infused_raw_gold", PureLevelItem::new);
@@ -168,9 +167,6 @@ public class ModItems {
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_GOLD_INGOT = ITEMS.registerItem("blood_infused_gold_ingot", PureLevelItem::new);
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_DIAMOND = ITEMS.registerItem("blood_infused_diamond", PureLevelItem::new);
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_NETHERITE_INGOT = ITEMS.registerItem("blood_infused_netherite_ingot", PureLevelItem::new);
-
-    public static final DeferredItem<Item> GARLIC_DIFFUSER_CORE = ITEMS.registerItem("garlic_diffuser_core", Item::new);
-    public static final DeferredItem<Item> GARLIC_DIFFUSER_CORE_IMPROVED = ITEMS.registerItem("garlic_diffuser_core_improved", Item::new);
 
     public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = ITEMS.registerItem("holy_water_bottle_normal",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_bottle_enhanced",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ENHANCED, props));
@@ -196,14 +192,15 @@ public class ModItems {
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_3 = ITEMS.registerItem("pure_blood_3",  props -> new PureBloodItem(3, props));
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_4 = ITEMS.registerItem("pure_blood_4",  props -> new PureBloodItem(4, props));
 
-    public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.food(new FoodProperties.Builder().nutrition(6).saturationModifier(0.7F).build()).component(DataComponents.CONSUMABLE, ModConsumables.GARLIC)));
-    public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.component(DataComponents.FOOD, new FoodProperties.Builder().nutrition(5).saturationModifier(1f).build()).component(ModDataComponents.VAMPIRE_FOOD, new BloodFoodProperties.Builder().blood(20).saturationModifier(1.5F).build()).component(DataComponents.CONSUMABLE, Consumables.defaultFood().onConsume(new FactionBasedConsumeEffect(new NotHolderSet<>(ModRegistries.FACTIONS, HolderSet.direct((Holder<IFaction<?>>) (Object) ModFactions.VAMPIRE)), new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.NAUSEA, 20 * 20))))).build())));
-    public static final DeferredItem<VampirismItemBloodFoodItem> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new VampirismItemBloodFoodItem(props.food(new FoodProperties.Builder().nutrition(3).saturationModifier(1f).build()), new BloodFoodProperties.Builder().blood(10).saturationModifier(0.9F).build()));
+    public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.factions$factionFood(ModFoods.GARLIC_BREAD, ModConsumables.GARLIC)));
+    public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.factions$factionFood(ModFoods.HUMAN_HEART, ModConsumables.NASTY_NON_VAMPIRES)));
+    public static final DeferredItem<Item> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new Item(props.factions$factionFood(ModFoods.WEAK_HUMAN_HEART, ModConsumables.NASTY_NON_VAMPIRES)));
 
-    public static final DeferredItem<Item> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", x -> new Item(x.vampirism$withShiftDescription()));
-    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.vampirism$withShiftDescription()),props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
-    public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", x -> new GarlicInjectionItem(x.vampirism$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
-    public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", x -> new SanguinareInjectionItem(x.vampirism$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
+    public static final DeferredItem<SyringeItem> SYRINGE_EMPTY = ITEMS.registerItem("syringe_empty", x -> new SyringeItem(x.factions$withShiftDescription()));
+    public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()).factions$factionFood(new FactionFoodList(new FoodProperties.Builder().build(), new FactionFoodEntry(VampirismTags.Factions.IS_VAMPIRE, new FoodProperties.Builder().nutrition(BloodSyringeFluidHandler.CAPACITY / IBottleBlood.MULTIPLIER).saturationModifier(0.8F).build(), ModFoodBehaviours.VAMPIRE_FOOD)), Consumables.defaultDrink().build()));
+    public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", x -> new GarlicInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
+    public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", x -> new SanguinareInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
+    public static final DeferredItem<SerumInjectionItem> SERUM_INJECTION = ITEMS.registerItem("serum_injection", SerumInjectionItem::new, props -> props.component(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).component(DataComponents.POTION_DURATION_SCALE, 0.25F).stacksTo(4).useCooldown(8));
 
     public static final DeferredItem<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = ITEMS.registerItem("item_alchemical_fire", AlchemicalFireItem::new);
 
@@ -211,33 +208,33 @@ public class ModItems {
     public static final DeferredItem<Item> PURE_SALT = ITEMS.registerItem("pure_salt", Item::new);
     public static final DeferredItem<BlessableItem> PURE_SALT_WATER = ITEMS.registerItem("pure_salt_water",  props -> new BlessableItem(props.stacksTo(1), HOLY_WATER_BOTTLE_NORMAL, HOLY_WATER_BOTTLE_ENHANCED) {
         @Override
-        public boolean isFoil(@NotNull ItemStack stack) {
+        public boolean isFoil(ItemStack stack) {
             return true;
         }
     });
 
     public static final DeferredItem<Item> SOUL_ORB_VAMPIRE = ITEMS.registerItem("soul_orb_vampire", Item::new);
     public static final DeferredItem<Item> MOTHER_CORE = ITEMS.registerItem("mother_core",  Item::new, props -> props.rarity(Rarity.UNCOMMON));
-    public static final DeferredItem<Item> VAMPIRE_BLOOD_BOTTLE = ITEMS.registerItem("vampire_blood_bottle", Item::new);
+    public static final DeferredItem<Item> VAMPIRE_BLOOD_BOTTLE = ITEMS.registerItem("vampire_blood_bottle", props -> new Item(props.factions$withShiftDescription()));
     public static final DeferredItem<VampireBookItem> VAMPIRE_BOOK = ITEMS.registerItem("vampire_book", VampireBookItem::new, props -> props.rarity(Rarity.UNCOMMON).stacksTo(1));
     public static final DeferredItem<VampireFangItem> VAMPIRE_FANG = ITEMS.registerItem("vampire_fang", VampireFangItem::new);
 
     public static final DeferredItem<UmbrellaItem> UMBRELLA = ITEMS.registerItem("umbrella", UmbrellaItem::new, props -> props.stacksTo(1));
-
-    public static final DeferredItem<Item> HUNTER_MINION_EQUIPMENT = ITEMS.registerItem("hunter_minion_equipment", Item::new);
-    public static final DeferredItem<MinionUpgradeItem> HUNTER_MINION_UPGRADE_SIMPLE = ITEMS.registerItem("hunter_minion_upgrade_simple",  props -> new MinionUpgradeItem(1, 2, ModFactions.HUNTER, props));
-    public static final DeferredItem<MinionUpgradeItem> HUNTER_MINION_UPGRADE_ENHANCED = ITEMS.registerItem("hunter_minion_upgrade_enhanced",  props -> new MinionUpgradeItem(3, 4, ModFactions.HUNTER, props));
-    public static final DeferredItem<MinionUpgradeItem> HUNTER_MINION_UPGRADE_SPECIAL = ITEMS.registerItem("hunter_minion_upgrade_special",  props -> new MinionUpgradeItem(5, 6, ModFactions.HUNTER, props));
 
     public static final DeferredItem<Item> VAMPIRE_MINION_BINDING = ITEMS.registerItem("vampire_minion_binding", Item::new);
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SIMPLE = ITEMS.registerItem("vampire_minion_upgrade_simple",  props -> new MinionUpgradeItem(1, 2, ModFactions.VAMPIRE, props));
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_ENHANCED = ITEMS.registerItem("vampire_minion_upgrade_enhanced",  props -> new MinionUpgradeItem(3, 4, ModFactions.VAMPIRE, props));
     public static final DeferredItem<MinionUpgradeItem> VAMPIRE_MINION_UPGRADE_SPECIAL = ITEMS.registerItem("vampire_minion_upgrade_special",  props -> new MinionUpgradeItem(5, 6, ModFactions.VAMPIRE, props));
 
-    public static final DeferredItem<Item> FABRIC_FILTER = ITEMS.registerItem("fabric_filter", x ->  new Item(x.vampirism$withShiftDescription()) ,props -> props.stacksTo(1).durability(4800));
+    public static final DeferredItem<Item> HUNTER_MINION_EQUIPMENT = ITEMS.registerItem("hunter_minion_equipment", Item::new);
+    public static final DeferredItem<MinionUpgradeItem> HUNTER_MINION_UPGRADE_SIMPLE = ITEMS.registerItem("hunter_minion_upgrade_simple",  props -> new MinionUpgradeItem(1, 2, ModFactions.HUNTER, props));
+    public static final DeferredItem<MinionUpgradeItem> HUNTER_MINION_UPGRADE_ENHANCED = ITEMS.registerItem("hunter_minion_upgrade_enhanced",  props -> new MinionUpgradeItem(3, 4, ModFactions.HUNTER, props));
+    public static final DeferredItem<MinionUpgradeItem> HUNTER_MINION_UPGRADE_SPECIAL = ITEMS.registerItem("hunter_minion_upgrade_special",  props -> new MinionUpgradeItem(5, 6, ModFactions.HUNTER, props));
+
+    public static final DeferredItem<Item> FABRIC_FILTER = ITEMS.registerItem("fabric_filter", x ->  new Item(x.factions$withShiftDescription()) ,props -> props.stacksTo(1).durability(4800));
 
     public static final DeferredItem<FeedingAdapterItem> FEEDING_ADAPTER = ITEMS.registerItem("feeding_adapter", FeedingAdapterItem::new, props -> props.stacksTo(1));
-    public static final DeferredItem<Item> GARLIC_FINDER = ITEMS.registerItem("garlic_finder",  Item::new, props -> props.rarity(Rarity.RARE));
+    public static final DeferredItem<Item> GARLIC_FINDER = ITEMS.registerItem("garlic_finder", x ->  new Item(x.factions$withShiftDescription()));
 
     public static final DeferredItem<OilBottleItem> OIL_BOTTLE = ITEMS.registerItem("oil_bottle",  OilBottleItem::new, props -> props.stacksTo(1));
 
@@ -251,8 +248,8 @@ public class ModItems {
     public static final DeferredItem<HangingSignItem> DARK_SPRUCE_HANGING_SIGN = ITEMS.registerItem("dark_spruce_hanging_sign",  props -> new HangingSignItem(ModBlocks.DARK_SPRUCE_HANGING_SIGN.get(), ModBlocks.DARK_SPRUCE_WALL_HANGING_SIGN.get(), props.useBlockDescriptionPrefix().stacksTo(16)));
     public static final DeferredItem<HangingSignItem> CURSED_SPRUCE_HANGING_SIGN = ITEMS.registerItem("cursed_spruce_hanging_sign",  props -> new HangingSignItem(ModBlocks.CURSED_SPRUCE_HANGING_SIGN.get(), ModBlocks.CURSED_SPRUCE_WALL_HANGING_SIGN.get(), props.useBlockDescriptionPrefix().stacksTo(16)));
 
-    public static final DeferredItem<TentItem> ITEM_TENT = ITEMS.registerItem("item_tent",  props -> new TentItem(false, props));
-    public static final DeferredItem<TentItem> ITEM_TENT_SPAWNER = ITEMS.registerItem("item_tent_spawner",  props -> new TentItem(true, props));
+    public static final DeferredItem<TentItem> ITEM_TENT = ITEMS.registerItem("item_tent", props -> new TentItem(false, props));
+    public static final DeferredItem<TentItem> ITEM_TENT_SPAWNER = ITEMS.registerItem("item_tent_spawner", props -> new TentItem(true, props));
 
     public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK = ITEMS.registerItem("candle_stick",  props -> new StandingAndWallBlockItem(ModBlocks.CANDLE_STICK.get(), ModBlocks.WALL_CANDLE_STICK.get(), Direction.DOWN, props.useBlockDescriptionPrefix()));
     public static final DeferredItem<StandingAndWallBlockItem> CANDLE_STICK_NORMAL = ITEMS.registerItem("candle_stick_normal",  props -> new  StandingAndWallBlockItem(ModBlocks.CANDLE_STICK_NORMAL.get(), ModBlocks.WALL_CANDLE_STICK_NORMAL.get(), Direction.DOWN, props.useBlockDescriptionPrefix()));
@@ -302,6 +299,150 @@ public class ModItems {
     public static final DeferredItem<SpawnEggItem> HUNTER_TRAINER_SPAWN_EGG = ITEMS.registerItem("hunter_trainer_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.HUNTER_TRAINER.get()));
     public static final DeferredItem<SpawnEggItem> TASK_MASTER_HUNTER_SPAWN_EGG = ITEMS.registerItem("task_master_hunter_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.TASK_MASTER_HUNTER.get()));
     public static final DeferredItem<SpawnEggItem> GHOST_SPAWN_EGG = ITEMS.registerItem("ghost_spawn_egg", SpawnEggItem::new, props -> props.spawnEgg(ModEntities.GHOST.get()));
+    public static final DeferredItem<Item> RITUAL_KNIFE = ITEMS.registerItem("ritual_knife", RitualKnifeItem::new);
+
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE, x -> x.useBlockDescriptionPrefix().factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED, x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
+    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, PureLevel.LOW)));
+    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK,  (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, new PureLevel(4))));
+    public static final DeferredItem<BlockItem> ALTAR_INSPIRATION = fromBlock(ModBlocks.ALTAR_INSPIRATION);
+    public static final DeferredItem<BlockItem> ALTAR_INFUSION = fromBlock(ModBlocks.ALTAR_INFUSION);
+    public static final DeferredItem<BlockItem> ALTAR_PILLAR = fromBlock(ModBlocks.ALTAR_PILLAR);
+    public static final DeferredItem<BlockItem> ALTAR_TIP = fromBlock(ModBlocks.ALTAR_TIP);
+    public static final DeferredItem<BlockItem> BLOOD_PEDESTAL = fromBlock(ModBlocks.BLOOD_PEDESTAL);
+    public static final DeferredItem<BloodContainerItem> BLOOD_CONTAINER = fromBlock(ModBlocks.BLOOD_CONTAINER, BloodContainerItem::new);
+    public static final DeferredItem<BlockItem> BLOOD_GRINDER = fromBlock(ModBlocks.BLOOD_GRINDER, x -> x.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> BLOOD_SIEVE = fromBlock(ModBlocks.BLOOD_SIEVE, x -> x.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> INFUSER = fromBlock(ModBlocks.INFUSER);
+    public static final DeferredItem<BlockItem> FOG_DIFFUSER = fromBlock(ModBlocks.FOG_DIFFUSER);
+    public static final DeferredItem<BlockItem> SUNSCREEN_BEACON = fromBlock(ModBlocks.SUNSCREEN_BEACON, itemProps -> itemProps.rarity(Rarity.RARE).component(FactionDataComponents.BLOCK_DESCRIPTION, BlockDescription.INSTANCE));
+    public static final DeferredItem<BlockItem> HUNTER_TABLE = fromBlock(ModBlocks.HUNTER_TABLE, x -> x.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> WEAPON_TABLE = fromBlock(ModBlocks.WEAPON_TABLE);
+    public static final DeferredItem<BlockItem> ALCHEMICAL_CAULDRON = fromBlock(ModBlocks.ALCHEMICAL_CAULDRON);
+    public static final DeferredItem<BlockItem> VAPOR_STILL = fromBlock(ModBlocks.VAPOR_STILL, x -> x.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> ALCHEMY_TABLE = fromBlock(ModBlocks.ALCHEMY_TABLE);
+    public static final DeferredItem<BlockItem> INJECTION_CHAIR = fromBlock(ModBlocks.INJECTION_CHAIR, props -> props.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> ALTAR_CLEANSING = fromBlock(ModBlocks.ALTAR_CLEANSING);
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_NORMAL = fromBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL, (item) -> item.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_WEAK = fromBlock(ModBlocks.GARLIC_DIFFUSER_WEAK, (item) -> item.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED, (item) -> item.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> VAMPIRE_BEACON = fromBlock(ModBlocks.VAMPIRE_BEACON, itemProps -> itemProps.rarity(Rarity.RARE));
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_LEAVES = fromBlock(ModBlocks.DARK_SPRUCE_LEAVES);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_SAPLING = fromBlock(ModBlocks.DARK_SPRUCE_SAPLING);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_SAPLING = fromBlock(ModBlocks.CURSED_SPRUCE_SAPLING);
+    public static final DeferredItem<BlockItem> VAMPIRE_ORCHID = fromBlock(ModBlocks.VAMPIRE_ORCHID);
+    public static final DeferredItem<BlockItem> CURSED_ROOTS = fromBlock(ModBlocks.CURSED_ROOTS);
+    public static final DeferredItem<BlockItem> CURSED_HANGING_ROOTS = fromBlock(ModBlocks.CURSED_HANGING_ROOTS);
+    public static final DeferredItem<BlockItem> DIRECT_CURSED_BARK = fromBlock(ModBlocks.DIRECT_CURSED_BARK);
+    public static final DeferredItem<BlockItem> GARLIC = fromBlock(ModBlocks.GARLIC, GarlicItem::new);
+    public static final DeferredItem<BlockItem> CURSED_GRASS = fromBlock(ModBlocks.CURSED_GRASS);
+    public static final DeferredItem<BlockItem> CURSED_EARTH = fromBlock(ModBlocks.CURSED_EARTH);
+    public static final DeferredItem<BlockItem> CURSED_EARTH_PATH = fromBlock(ModBlocks.CURSED_EARTH_PATH);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_LOG = fromBlock(ModBlocks.DARK_SPRUCE_LOG);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_WOOD = fromBlock(ModBlocks.DARK_SPRUCE_WOOD);
+    public static final DeferredItem<BlockItem> STRIPPED_DARK_SPRUCE_LOG = fromBlock(ModBlocks.STRIPPED_DARK_SPRUCE_LOG);
+    public static final DeferredItem<BlockItem> STRIPPED_DARK_SPRUCE_WOOD = fromBlock(ModBlocks.STRIPPED_DARK_SPRUCE_WOOD);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_PLANKS = fromBlock(ModBlocks.DARK_SPRUCE_PLANKS);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_STAIRS = fromBlock(ModBlocks.DARK_SPRUCE_STAIRS);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_SLAB = fromBlock(ModBlocks.DARK_SPRUCE_SLAB);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_FENCE = fromBlock(ModBlocks.DARK_SPRUCE_FENCE);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_FENCE_GATE = fromBlock(ModBlocks.DARK_SPRUCE_FENCE_GATE);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_DOOR = fromBlock(ModBlocks.DARK_SPRUCE_DOOR);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_TRAPDOOR = fromBlock(ModBlocks.DARK_SPRUCE_TRAPDOOR);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_PRESSURE_PLACE = fromBlock(ModBlocks.DARK_SPRUCE_PRESSURE_PLACE);
+    public static final DeferredItem<BlockItem> DARK_SPRUCE_BUTTON = fromBlock(ModBlocks.DARK_SPRUCE_BUTTON);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_LOG = fromBlock(ModBlocks.CURSED_SPRUCE_LOG, CursedSpruceItem::new);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_WOOD = fromBlock(ModBlocks.CURSED_SPRUCE_WOOD, CursedSpruceItem::new);
+    public static final DeferredItem<BlockItem> STRIPPED_CURSED_SPRUCE_LOG = fromBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_LOG);
+    public static final DeferredItem<BlockItem> STRIPPED_CURSED_SPRUCE_WOOD = fromBlock(ModBlocks.STRIPPED_CURSED_SPRUCE_WOOD);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_PLANKS = fromBlock(ModBlocks.CURSED_SPRUCE_PLANKS);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_STAIRS = fromBlock(ModBlocks.CURSED_SPRUCE_STAIRS);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_SLAB = fromBlock(ModBlocks.CURSED_SPRUCE_SLAB);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_FENCE = fromBlock(ModBlocks.CURSED_SPRUCE_FENCE);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_FENCE_GATE = fromBlock(ModBlocks.CURSED_SPRUCE_FENCE_GATE);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_DOOR = fromBlock(ModBlocks.CURSED_SPRUCE_DOOR);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_TRAPDOOR = fromBlock(ModBlocks.CURSED_SPRUCE_TRAPDOOR);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_PRESSURE_PLACE = fromBlock(ModBlocks.CURSED_SPRUCE_PRESSURE_PLACE);
+    public static final DeferredItem<BlockItem> CURSED_SPRUCE_BUTTON = fromBlock(ModBlocks.CURSED_SPRUCE_BUTTON);
+    public static final DeferredItem<BlockItem> DARK_STONE = fromBlock(ModBlocks.DARK_STONE);
+    public static final DeferredItem<BlockItem> DARK_STONE_STAIRS = fromBlock(ModBlocks.DARK_STONE_STAIRS);
+    public static final DeferredItem<BlockItem> DARK_STONE_SLAB = fromBlock(ModBlocks.DARK_STONE_SLAB);
+    public static final DeferredItem<BlockItem> DARK_STONE_WALL = fromBlock(ModBlocks.DARK_STONE_WALL);
+    public static final DeferredItem<BlockItem> INFESTED_DARK_STONE = fromBlock(ModBlocks.INFESTED_DARK_STONE);
+    public static final DeferredItem<BlockItem> DARK_STONE_BRICKS = fromBlock(ModBlocks.DARK_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> DARK_STONE_BRICK_STAIRS = fromBlock(ModBlocks.DARK_STONE_BRICK_STAIRS);
+    public static final DeferredItem<BlockItem> DARK_STONE_BRICK_SLAB = fromBlock(ModBlocks.DARK_STONE_BRICK_SLAB);
+    public static final DeferredItem<BlockItem> DARK_STONE_BRICK_WALL = fromBlock(ModBlocks.DARK_STONE_BRICK_WALL);
+    public static final DeferredItem<BlockItem> CRACKED_DARK_STONE_BRICKS = fromBlock(ModBlocks.CRACKED_DARK_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> CHISELED_DARK_STONE_BRICKS = fromBlock(ModBlocks.CHISELED_DARK_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> BLOODY_DARK_STONE_BRICKS = fromBlock(ModBlocks.BLOODY_DARK_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> COBBLED_DARK_STONE = fromBlock(ModBlocks.COBBLED_DARK_STONE);
+    public static final DeferredItem<BlockItem> COBBLED_DARK_STONE_STAIRS = fromBlock(ModBlocks.COBBLED_DARK_STONE_STAIRS);
+    public static final DeferredItem<BlockItem> COBBLED_DARK_STONE_SLAB = fromBlock(ModBlocks.COBBLED_DARK_STONE_SLAB);
+    public static final DeferredItem<BlockItem> COBBLED_DARK_STONE_WALL = fromBlock(ModBlocks.COBBLED_DARK_STONE_WALL);
+    public static final DeferredItem<BlockItem> POLISHED_DARK_STONE = fromBlock(ModBlocks.POLISHED_DARK_STONE);
+    public static final DeferredItem<BlockItem> POLISHED_DARK_STONE_STAIRS = fromBlock(ModBlocks.POLISHED_DARK_STONE_STAIRS);
+    public static final DeferredItem<BlockItem> POLISHED_DARK_STONE_SLAB = fromBlock(ModBlocks.POLISHED_DARK_STONE_SLAB);
+    public static final DeferredItem<BlockItem> POLISHED_DARK_STONE_WALL = fromBlock(ModBlocks.POLISHED_DARK_STONE_WALL);
+    public static final DeferredItem<BlockItem> DARK_STONE_TILES = fromBlock(ModBlocks.DARK_STONE_TILES);
+    public static final DeferredItem<BlockItem> DARK_STONE_TILES_STAIRS = fromBlock(ModBlocks.DARK_STONE_TILES_STAIRS);
+    public static final DeferredItem<BlockItem> DARK_STONE_TILES_SLAB = fromBlock(ModBlocks.DARK_STONE_TILES_SLAB);
+    public static final DeferredItem<BlockItem> DARK_STONE_TILES_WALL = fromBlock(ModBlocks.DARK_STONE_TILES_WALL);
+    public static final DeferredItem<BlockItem> CRACKED_DARK_STONE_TILES = fromBlock(ModBlocks.CRACKED_DARK_STONE_TILES);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_BRICKS = fromBlock(ModBlocks.PURPLE_STONE_BRICKS);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_BRICK_STAIRS = fromBlock(ModBlocks.PURPLE_STONE_BRICK_STAIRS);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_BRICK_SLAB = fromBlock(ModBlocks.PURPLE_STONE_BRICK_SLAB);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_BRICK_WALL = fromBlock(ModBlocks.PURPLE_STONE_BRICK_WALL);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_TILES = fromBlock(ModBlocks.PURPLE_STONE_TILES);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_STAIRS = fromBlock(ModBlocks.PURPLE_STONE_TILES_STAIRS);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_SLAB = fromBlock(ModBlocks.PURPLE_STONE_TILES_SLAB);
+    public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_WALL = fromBlock(ModBlocks.PURPLE_STONE_TILES_WALL);
+    public static final DeferredItem<BlockItem> FIRE_PLACE = fromBlock(ModBlocks.FIRE_PLACE);
+    public static final DeferredItem<BlockItem> VAMPIRE_SOUL_LANTERN = fromBlock(ModBlocks.VAMPIRE_SOUL_LANTERN);
+    public static final DeferredItem<BlockItem> CROSS = fromBlock(ModBlocks.CROSS);
+    public static final DeferredItem<BlockItem> TOMBSTONE1 = fromBlock(ModBlocks.TOMBSTONE1);
+    public static final DeferredItem<BlockItem> TOMBSTONE2 = fromBlock(ModBlocks.TOMBSTONE2);
+    public static final DeferredItem<BlockItem> TOMBSTONE3 = fromBlock(ModBlocks.TOMBSTONE3);
+    public static final DeferredItem<BlockItem> GRAVE_CAGE = fromBlock(ModBlocks.GRAVE_CAGE);
+    public static final DeferredItem<BlockItem> VAMPIRE_RACK = fromBlock(ModBlocks.VAMPIRE_RACK);
+    public static final DeferredItem<BlockItem> THRONE = fromBlock(ModBlocks.THRONE);
+    public static final DeferredItem<BlockItem> BAT_CAGE = fromBlock(ModBlocks.BAT_CAGE, BatCageItem::new);
+    public static final DeferredItem<BlockItem> MOTHER_TROPHY = fromBlock(ModBlocks.MOTHER_TROPHY, itemProps -> itemProps.factions$withShiftDescription().rarity(Rarity.EPIC).stacksTo(1));
+    public static final DeferredItem<CoffinItem> COFFIN_WHITE = fromCoffin(ModBlocks.COFFIN_WHITE);
+    public static final DeferredItem<CoffinItem> COFFIN_ORANGE = fromCoffin(ModBlocks.COFFIN_ORANGE);
+    public static final DeferredItem<CoffinItem> COFFIN_MAGENTA = fromCoffin(ModBlocks.COFFIN_MAGENTA);
+    public static final DeferredItem<CoffinItem> COFFIN_YELLOW = fromCoffin(ModBlocks.COFFIN_YELLOW);
+    public static final DeferredItem<CoffinItem> COFFIN_LIME = fromCoffin(ModBlocks.COFFIN_LIME);
+    public static final DeferredItem<CoffinItem> COFFIN_PINK = fromCoffin(ModBlocks.COFFIN_PINK);
+    public static final DeferredItem<CoffinItem> COFFIN_GRAY = fromCoffin(ModBlocks.COFFIN_GRAY);
+    public static final DeferredItem<CoffinItem> COFFIN_LIGHT_GRAY = fromCoffin(ModBlocks.COFFIN_LIGHT_GRAY);
+    public static final DeferredItem<CoffinItem> COFFIN_CYAN = fromCoffin(ModBlocks.COFFIN_CYAN);
+    public static final DeferredItem<CoffinItem> COFFIN_LIGHT_BLUE = fromCoffin(ModBlocks.COFFIN_LIGHT_BLUE);
+    public static final DeferredItem<CoffinItem> COFFIN_PURPLE = fromCoffin(ModBlocks.COFFIN_PURPLE);
+    public static final DeferredItem<CoffinItem> COFFIN_BLUE = fromCoffin(ModBlocks.COFFIN_BLUE);
+    public static final DeferredItem<CoffinItem> COFFIN_BROWN = fromCoffin(ModBlocks.COFFIN_BROWN);
+    public static final DeferredItem<CoffinItem> COFFIN_GREEN = fromCoffin(ModBlocks.COFFIN_GREEN);
+    public static final DeferredItem<CoffinItem> COFFIN_RED = fromCoffin(ModBlocks.COFFIN_RED);
+    public static final DeferredItem<CoffinItem> COFFIN_BLACK = fromCoffin(ModBlocks.COFFIN_BLACK);
+    public static final DeferredItem<BlockItem> CHANDELIER = fromChandelier(ModBlocks.CHANDELIER);
+    public static final DeferredItem<BlockItem> CHANDELIER_NORMAL = fromChandelier(ModBlocks.CHANDELIER_NORMAL);
+    public static final DeferredItem<BlockItem> CHANDELIER_WHITE = fromChandelier(ModBlocks.CHANDELIER_WHITE);
+    public static final DeferredItem<BlockItem> CHANDELIER_ORANGE = fromChandelier(ModBlocks.CHANDELIER_ORANGE);
+    public static final DeferredItem<BlockItem> CHANDELIER_MAGENTA = fromChandelier(ModBlocks.CHANDELIER_MAGENTA);
+    public static final DeferredItem<BlockItem> CHANDELIER_LIGHT_BLUE = fromChandelier(ModBlocks.CHANDELIER_LIGHT_BLUE);
+    public static final DeferredItem<BlockItem> CHANDELIER_YELLOW = fromChandelier(ModBlocks.CHANDELIER_YELLOW);
+    public static final DeferredItem<BlockItem> CHANDELIER_LIME = fromChandelier(ModBlocks.CHANDELIER_LIME);
+    public static final DeferredItem<BlockItem> CHANDELIER_PINK = fromChandelier(ModBlocks.CHANDELIER_PINK);
+    public static final DeferredItem<BlockItem> CHANDELIER_GRAY = fromChandelier(ModBlocks.CHANDELIER_GRAY);
+    public static final DeferredItem<BlockItem> CHANDELIER_LIGHT_GRAY = fromChandelier(ModBlocks.CHANDELIER_LIGHT_GRAY);
+    public static final DeferredItem<BlockItem> CHANDELIER_CYAN = fromChandelier(ModBlocks.CHANDELIER_CYAN);
+    public static final DeferredItem<BlockItem> CHANDELIER_PURPLE = fromChandelier(ModBlocks.CHANDELIER_PURPLE);
+    public static final DeferredItem<BlockItem> CHANDELIER_BLUE = fromChandelier(ModBlocks.CHANDELIER_BLUE);
+    public static final DeferredItem<BlockItem> CHANDELIER_BROWN = fromChandelier(ModBlocks.CHANDELIER_BROWN);
+    public static final DeferredItem<BlockItem> CHANDELIER_GREEN = fromChandelier(ModBlocks.CHANDELIER_GREEN);
+    public static final DeferredItem<BlockItem> CHANDELIER_RED = fromChandelier(ModBlocks.CHANDELIER_RED);
+    public static final DeferredItem<BlockItem> CHANDELIER_BLACK = fromChandelier(ModBlocks.CHANDELIER_BLACK);
+    public static final DeferredItem<BlockItem> VELMORRA_ALTAR = fromBlock(ModBlocks.VELMORRA_ALTAR);
 
 
     @SuppressWarnings("unchecked")
@@ -332,6 +473,30 @@ public class ModItems {
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get());
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get());
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get());
+    }
+
+    private static DeferredItem<BlockItem> fromBlock(Holder<Block> block) {
+        return ITEMS.registerSimpleBlockItem(block);
+    }
+
+    private static DeferredItem<BlockItem> fromBlock(Holder<Block> block, UnaryOperator<Item.Properties> properties) {
+        return ITEMS.registerSimpleBlockItem(block, properties);
+    }
+
+    private static <T extends BlockItem> DeferredItem<T> fromBlock(Holder<Block> block, BiFunction<Block,Item.Properties, T> itemCreator) {
+        return ITEMS.registerItem(block.unwrapKey().orElseThrow().identifier().getPath(), prop -> itemCreator.apply(block.value(), prop.useBlockDescriptionPrefix()));
+    }
+
+    private static <T extends BlockItem> DeferredItem<T> fromBlock(Holder<Block> block, Function<Item.Properties, T> itemCreator, UnaryOperator<Item.Properties> properties) {
+        return ITEMS.registerItem(block.unwrapKey().orElseThrow().identifier().getPath(), itemCreator, x -> properties.apply(x).useBlockDescriptionPrefix());
+    }
+
+    private static DeferredItem<BlockItem> fromChandelier(Holder<Block> block) {
+        return fromBlock(block, (b, itemProps) -> new BlockItem(b, itemProps.useBlockDescriptionPrefix().factions$withShiftDescription(Component.translatable("tooltip.vampirism.chandelier.filled"))));
+    }
+
+    private static DeferredItem<CoffinItem> fromCoffin(DeferredHolder<Block, CoffinBlock> block) {
+        return fromBlock(block, (block1, itemProps) -> new CoffinItem((CoffinBlock) block1, itemProps.factions$withShiftDescription().rarity(Rarity.RARE).stacksTo(1).useBlockDescriptionPrefix()));
     }
 
 }

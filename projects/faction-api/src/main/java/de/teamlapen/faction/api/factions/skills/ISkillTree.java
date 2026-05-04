@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.Optional;
 
@@ -38,7 +38,7 @@ public interface ISkillTree {
     /**
      * The icon of the skill tree shown in the skill screen
      */
-    ItemStack display();
+    ItemStackTemplate display();
 
     Optional<Identifier> background();
 

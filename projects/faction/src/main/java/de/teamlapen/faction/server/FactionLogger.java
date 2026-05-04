@@ -11,7 +11,7 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 
 /**
- * logger for faction stuff that is only initialized for dedicated server and only woorking if {@link de.teamlapen.faction.common.config.CommonConfig#enableFactionLogging} is true<br>
+ * logger for faction stuff that is only initialized for dedicated server and only working if {@link de.teamlapen.faction.common.config.ServerConfig#enableFactionLogging} is true<br>
  * otherwise the logger does nothing
  */
 public class FactionLogger {
@@ -32,7 +32,7 @@ public class FactionLogger {
      * requires common config to be loaded
      */
     public static void init() {
-        if (!FactionConfig.common().enableFactionLogging.get() || logger != null) return;
+        if (!FactionConfig.server().enableFactionLogging.get() || logger != null) return;
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration configuration = ctx.getConfiguration();
 

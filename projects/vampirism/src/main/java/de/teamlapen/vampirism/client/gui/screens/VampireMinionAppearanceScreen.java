@@ -36,7 +36,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     public void removed() {
         String name = minionName;
         if (name.isEmpty()) {
-            name = Component.translatable("text.vampirism.minion").getString() + entity.getMinionId().orElse(0);
+            name = Component.translatable("gui.vampirism.minion_appearance.minion").getString() + entity.getMinionId().orElse(0);
         }
         VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), name, this.skinType, (isMinionSpecificSkin ? 0b10 : 0b0) | (useLordSkin ? 0b1 : 0b0)));
         super.removed();

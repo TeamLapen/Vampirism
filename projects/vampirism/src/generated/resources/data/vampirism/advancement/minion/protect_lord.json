@@ -13,7 +13,6 @@
       "translate": "advancement.vampirism.protect_lord.desc"
     },
     "icon": {
-      "count": 1,
       "id": "minecraft:shield"
     },
     "title": {

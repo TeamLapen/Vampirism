@@ -76,7 +76,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("block.vampirism.blood_infuser");
+        return Component.translatable("container.vampirism.blood_infuser");
     }
 
     @Override
@@ -161,7 +161,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
         if (recipeHolder == null) {
             return false;
         }
-        ItemStack result = recipeHolder.value().assemble(recipeInput, registryAccess);
+        ItemStack result = recipeHolder.value().assemble(recipeInput);
         if (result.isEmpty()) {
             return false;
         }
@@ -180,7 +180,7 @@ public class InfuserBlockEntity extends BaseContainerBlockEntity implements Worl
 
     private static boolean burn(RegistryAccess registryAccess, @Nullable RecipeHolder<InfuserRecipe> recipeHolder, InfuserRecipe.InfuserRecipeInput recipeInput, NonNullList<ItemStack> items) {
         if (recipeHolder != null && canBurn(registryAccess, recipeHolder, recipeInput, items)) {
-            ItemStack result = recipeHolder.value().assemble(recipeInput, registryAccess);
+            ItemStack result = recipeHolder.value().assemble(recipeInput);
 
             ItemStack resultSlotItem = items.get(SLOT_RESULT);
             if (resultSlotItem.isEmpty()) {

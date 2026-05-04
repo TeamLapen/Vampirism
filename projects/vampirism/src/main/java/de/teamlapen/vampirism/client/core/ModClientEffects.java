@@ -9,7 +9,7 @@ public class ModClientEffects {
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerMobEffect(EffectExtensions.NIGHT_VISION, MobEffects.NIGHT_VISION.value());
-        event.registerMobEffect(EffectExtensions.POISON, ModEffects.POISON.value());
+        event.registerMobEffect(EffectExtensions.POISON, ModEffects.TOXICANT.value());
         event.registerMobEffect(EffectExtensions.SANGUINARE, ModEffects.SANGUINARE.value());
     }
 }

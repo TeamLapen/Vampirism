@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.common.core.ModAttachments;
-import de.teamlapen.vampirism.common.util.serialization.ModCodecs;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -120,7 +119,7 @@ public class LevelGarlic implements IGarlicChunkHandler {
         public static Codec<Emitter> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
                         EnumStrength.CODEC.fieldOf("strength").forGetter(s -> s.strength),
-                        ModCodecs.CHUNK_POS.listOf().fieldOf("pos").forGetter(x -> x.pos)
+                        ChunkPos.CODEC.listOf().fieldOf("pos").forGetter(x -> x.pos)
                 ).apply(inst, Emitter::new)
         );
         public static final StreamCodec<RegistryFriendlyByteBuf, Emitter> STREAM_CODEC = StreamCodec.composite(

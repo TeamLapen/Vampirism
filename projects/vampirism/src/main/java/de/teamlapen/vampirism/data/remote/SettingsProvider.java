@@ -39,7 +39,7 @@ public class SettingsProvider implements ISettingsProvider {
 
     public SettingsProvider(String baseUrl) {
         this.baseUrl = baseUrl;
-        this.client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).executor(Util.nonCriticalIoPool()).build();
+        this.client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).executor(Util.ioPool()).build();
     }
 
     @Override

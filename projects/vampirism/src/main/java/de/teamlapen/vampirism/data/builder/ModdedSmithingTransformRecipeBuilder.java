@@ -12,10 +12,10 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.SmithingTransformRecipe;
-import net.minecraft.world.item.crafting.TransmuteResult;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -61,8 +61,8 @@ public class ModdedSmithingTransformRecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(resourceKey))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement$builder::addCriterion);
-        SmithingTransformRecipe smithingtransformrecipe = new SmithingTransformRecipe(
-                Optional.of(this.template), this.base, Optional.of(this.addition), new TransmuteResult(this.result.builtInRegistryHolder(), 1, patch)
+        SmithingTransformRecipe smithingtransformrecipe = new SmithingTransformRecipe(new Recipe.CommonInfo(false),
+                Optional.of(this.template), this.base, Optional.of(this.addition), new ItemStackTemplate(this.result.builtInRegistryHolder(), 1, patch)
         );
         output.accept(
                 resourceKey, smithingtransformrecipe, advancement$builder.build(resourceKey.identifier().withPrefix("recipes/" + this.category.getFolderName() + "/"))

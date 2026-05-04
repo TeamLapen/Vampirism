@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.gui.components;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -26,9 +26,8 @@ public class ProgressBar extends AbstractWidget {
         super(x, y, width, 20, title);
     }
 
-
     @Override
-    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, progress > 0), this.getX(), this.getY(), this.width, 20, ARGB.color(alpha, color));
@@ -37,7 +36,7 @@ public class ProgressBar extends AbstractWidget {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, PROGRESS, this.getX() + 3, this.getY() + 3, (int) ((progress) * (this.width - 6)), 14, ARGB.color(alpha, color));
         }
         int j = getFGColor();
-        graphics.drawCenteredString(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
+        graphics.centeredText(font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, j | Mth.ceil(this.alpha * 255.0F) << 24);
         setTooltip(Tooltip.create(Component.literal(((int) (progress * 100f)) + "%")));
     }
 

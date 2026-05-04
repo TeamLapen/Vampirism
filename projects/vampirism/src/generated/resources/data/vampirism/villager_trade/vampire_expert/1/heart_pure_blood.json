@@ -1,0 +1,16 @@
+{
+  "gives": {
+    "id": "vampirism:pure_blood_0"
+  },
+  "max_uses": 2.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max": 15.0,
+      "min": 10.0
+    },
+    "id": "vampirism:human_heart"
+  },
+  "xp": 2.0
+}

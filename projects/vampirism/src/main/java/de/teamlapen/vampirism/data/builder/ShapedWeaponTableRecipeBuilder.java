@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.data.builder;
 
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.vampirism.common.world.items.recipes.ShapedWeaponTableRecipe;
-import de.teamlapen.vampirism.misc.mixin.accessor.ShapedRecipeBuilderAccessor;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
@@ -17,7 +16,7 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
 
@@ -40,7 +38,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return new ShapedWeaponTableRecipeBuilder(holderGetter, category, item, count);
     }
 
-    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStack stack) {
+    public static @NotNull ShapedWeaponTableRecipeBuilder shapedWeaponTable(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStackTemplate stack) {
         return new ShapedWeaponTableRecipeBuilder(holderGetter, category, stack);
     }
 
@@ -52,43 +50,50 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         super(holderGetter, category, item, count);
     }
 
-    public ShapedWeaponTableRecipeBuilder(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStack itemStack) {
-        super(holderGetter, category, itemStack.getItem(), itemStack.getCount());
+    public ShapedWeaponTableRecipeBuilder(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStackTemplate stack) {
+        super(holderGetter, category, stack);
     }
 
     @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol, @NotNull ItemLike itemIn) {
-        return (ShapedWeaponTableRecipeBuilder) super.define(symbol, itemIn);
+    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol, @NotNull ItemLike item) {
+        return (ShapedWeaponTableRecipeBuilder) super.define(symbol, item);
     }
 
     @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol, @NotNull Ingredient ingredientIn) {
-        return (ShapedWeaponTableRecipeBuilder) super.define(symbol, ingredientIn);
+    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol, @NotNull Ingredient ingredient) {
+        return (ShapedWeaponTableRecipeBuilder) super.define(symbol, ingredient);
     }
 
     @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol, @NotNull TagKey<Item> tagIn) {
-        return (ShapedWeaponTableRecipeBuilder) super.define(symbol, tagIn);
+    public ShapedWeaponTableRecipeBuilder define(@NotNull Character symbol, @NotNull TagKey<Item> tag) {
+        return (ShapedWeaponTableRecipeBuilder) super.define(symbol, tag);
     }
 
     @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder group(@Nullable String groupIn) {
-        return (ShapedWeaponTableRecipeBuilder) super.group(groupIn);
+    public ShapedWeaponTableRecipeBuilder group(@Nullable String group) {
+        return (ShapedWeaponTableRecipeBuilder) super.group(group);
     }
 
     @NotNull
     @Override
-    public ShapedWeaponTableRecipeBuilder pattern(@NotNull String patternIn) {
-        return (ShapedWeaponTableRecipeBuilder) super.pattern(patternIn);
+    public ShapedWeaponTableRecipeBuilder pattern(@NotNull String pattern) {
+        return (ShapedWeaponTableRecipeBuilder) super.pattern(pattern);
     }
 
+    @NotNull
     @Override
-    public @NotNull ShapedWeaponTableRecipeBuilder showNotification(boolean p_273326_) {
-        return (ShapedWeaponTableRecipeBuilder) super.showNotification(p_273326_);
+    public ShapedWeaponTableRecipeBuilder showNotification(boolean show) {
+        return (ShapedWeaponTableRecipeBuilder) super.showNotification(show);
+    }
+
+    @NotNull
+    @Override
+    public ShapedWeaponTableRecipeBuilder unlockedBy(@NotNull String name, @NotNull Criterion<?> criterion) {
+        return (ShapedWeaponTableRecipeBuilder) super.unlockedBy(name, criterion);
     }
 
     public @NotNull ShapedWeaponTableRecipeBuilder lava(int amount) {
@@ -101,27 +106,32 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
         return this;
     }
 
-    @Override
-    public void save(RecipeOutput output, @NotNull ResourceKey<Recipe<?>> recipeId) {
-        ShapedRecipePattern shapedRecipePattern = this.ensureValid(recipeId);
-        Advancement.Builder advancement = output.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId))
-                .rewards(AdvancementRewards.Builder.recipe(recipeId))
-                .requirements(AdvancementRequirements.Strategy.OR);
-        this.criteria.forEach(advancement::addCriterion);
-        ShapedWeaponTableRecipe recipe = new ShapedWeaponTableRecipe(Objects.requireNonNullElse(this.group, ""), RecipeBuilder.determineBookCategory(((ShapedRecipeBuilderAccessor) this).getCategory()), shapedRecipePattern, new ItemStack(result, count), level, skills, lava);
-        output.accept(recipeId, recipe, advancement.build(recipeId.identifier().withPrefix("recipes/weapontable/")));
-    }
-
-    @Override
-    public @NotNull ShapedWeaponTableRecipeBuilder unlockedBy(@NotNull String name, @NotNull Criterion<?> criterion) {
-        return (ShapedWeaponTableRecipeBuilder) super.unlockedBy(name, criterion);
-    }
-
     @SafeVarargs
     public final @NotNull ShapedWeaponTableRecipeBuilder skills(@NotNull Holder<ISkill<?>>... skills) {
         this.skills.addAll(Arrays.asList(skills));
         return this;
     }
 
+    @Override
+    public void save(RecipeOutput output, @NotNull ResourceKey<Recipe<?>> id) {
+        ShapedRecipePattern pattern = ShapedRecipePattern.of(key(), rows());
+        Advancement.Builder advancement = output.advancement()
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
+                .rewards(AdvancementRewards.Builder.recipe(id))
+                .requirements(AdvancementRequirements.Strategy.OR);
+        this.advancementBuilder.criteria.forEach(advancement::addCriterion);
+
+        output.accept(id,
+                new ShapedWeaponTableRecipe(
+                        RecipeBuilder.createCraftingCommonInfo(true),
+                        RecipeBuilder.createCraftingBookInfo(this.category, this.group),
+                        pattern,
+                        result,
+                        this.level,
+                        this.skills,
+                        this.lava
+                ),
+                advancement.build(id.identifier().withPrefix("recipes/weapontable/"))
+        );
+    }
 }
