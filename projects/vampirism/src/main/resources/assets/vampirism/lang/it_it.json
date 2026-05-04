@@ -182,7 +182,9 @@
   "minion_task.vampirism.collect_blood": "colleziona il sangue",
   "minion_task.vampirism.collect_hunter_items": "Raccogli le risorse",
   "minion_task.vampirism.collect_hunter_items.start": "Andrò fuori e cercherò le risorse",
+  "vampire_book.vampirism.unknown.author": "Sconosciuto",
   "container.vampirism.altar_infusion": "Altare d'Infusione",
+  "container.vampirism.hunter_table": "Tabella di ricerca da Cacciatore",
   "container.vampirism.weapon_table": "Scheda dell'arma del cacciatore",
   "container.vampirism.weapon_table.level": "Livello da cacciatore richiesto: %s",
   "container.vampirism.alchemical_cauldron": "Calderone Alchemico",
@@ -288,5 +290,6 @@
   "command.vampirism.base.config.sun_damage.blacklist.no_type": "Seleziona un tipo di blacklist",
   "notification.vampirism.guideapi_available": "Per ottenere una guida per Vampirism installare GuideAPI-VP",
   "notification.vampirism.guideapi_available.download": "Clicca qui per andare alla pagina mod",
+  "vampirism.configuration.section.vampirism.balance.toml": "Impostazioni bilanciate",
   "vampirism.configuration.section.vampirism.balance.toml.title": "Impostazioni bilanciate"
 }
