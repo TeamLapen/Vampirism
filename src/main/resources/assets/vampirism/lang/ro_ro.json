@@ -1,0 +1,17 @@
+{
+  "text.vampirism.command.subcommand_help": "Utilizarea '/%s help <subcommand>' pentru a obține mai multe informații",
+  "text.vampirism.command.usage": "/%s<subcommand><params> | Folosește /%s help pentru a primii toate subcomenzile disponibile",
+  "text.vampirism.action.not_unlocked": "Această acţiune nu este deblocată",
+  "text.vampirism.action.not_bound": "Nicio acţiune este legată la această cheie. A se vedea %s.",
+  "gui.vampirism.reset_skills.title": "Resetare abilități",
+  "skill.vampirism.more_bite_damage": "Dinți întăriți",
+  "skill.vampirism.blood_charge": "Încarcător de Sânge",
+  "skill.vampirism.sword_finisher": "Executător",
+  "skill.vampirism.double_crossbow": "Dublează",
+  "skill.vampirism.more_bite_damage.desc": "Cauzează mai multe daune când muști",
+  "text.vampirism.skills.gui_title": "Abilitățile tale",
+  "text.vampirism.skills.points_left": "%d punct(e) de abilitate rămas(e)",
+  "text.vampirism.skill.resetall": "Resetare abilități",
+  "text.vampirism.skill.unlocked": "Deblocat",
+  "text.vampirism.skill.unlocks_action": "Deblochează acțiunea"
+}

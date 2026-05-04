@@ -60,7 +60,6 @@ apply from: 'gradle/forge.gradle'
 apply from: 'gradle/versioning.gradle'
 apply from: 'gradle/artifacts.gradle'
 apply from: 'gradle/deploy.gradle'
-apply from: 'gradle/crowdin.gradle'
 
 idea {
     module {
@@ -99,12 +98,6 @@ tasks.named('jar', Jar).configure {
     from sourceSets.main.output.resourcesDir
     from sourceSets.api.output.resourcesDir
     from sourceSets.lib.output.resourcesDir
-
-    from{
-        fileTree('build/translations').matching{
-            exclude "**/en_us.json" //Don't override local source file
-        }
-    }
 
     manifest {
         attributes([

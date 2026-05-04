@@ -1,0 +1,10 @@
+{
+  "gui.vampirism.reset_skills.title": "לאפס יכולות",
+  "text.vampirism.skills.gui_title": "היכולות שלך",
+  "text.vampirism.skills.points_left": "%d נקודות יכולת נשארו",
+  "text.vampirism.skill.resetall": "לאפס יכולות",
+  "text.vampirism.skill.unlocked": "פתוח",
+  "text.vampirism.skill.unlocks_action": "לפתוח פעולה",
+  "text.vampirism.skill.unlock_parent_first": "פתח את ההורה קודם",
+  "text.vampirism.skill.skills_reset": "היכולות שלך אופסו"
+}
