@@ -1,22 +1,28 @@
 {
   "faction.factionapi.neutral": "Neutral",
+
   "block.factionapi.totem_base": "Village Totem Base",
   "block.factionapi.totem_top": "Fragile Village Totem Top",
   "block.factionapi.totem_top_crafted": "Village Totem Top",
+
   "item.factionapi.oblivion_potion": "Oblivion Potion",
+
   "effect.factionapi.oblivion": "Oblivion",
   "effect.factionapi.resurrection_fatigue": "Resurrection Fatigue",
+
   "stat_type.factionapi.action_used": "Action Activated",
   "stat_type.factionapi.action_time": "Action Active",
   "stat_type.factionapi.action_cooldown_time": "Action On Cooldown",
   "stat_type.factionapi.skill_unlocked": "Skill Unlocked",
   "stat_type.factionapi.skill_forgotten": "Skill Forgotten",
+
   "stat.factionapi.tasks_accepted": "Tasks Accepted",
   "stat.factionapi.tasks_completed": "Tasks Completed",
   "stat.factionapi.interact_with_totem": "Interactions with Village Totem",
   "stat.factionapi.capture_village": "Villages Captured",
   "stat.factionapi.defend_village": "Villages Defended",
   "stat.factionapi.win_village_capture": "Won Village Captures",
+
   "key.category.factionapi.main": "Factions",
   "key.factionapi.action": "Open Action Radial Menu",
   "key.factionapi.action1": "Action 1",
@@ -31,6 +37,7 @@
   "key.factionapi.minion_task": "Open Minion Radial Menu",
   "key.factionapi.faction_screen": "Open Faction Screen",
   "key.factionapi.skill_screen": "Open Skill Screen",
+
   "minion_task.factionapi.stay": "Stay here",
   "minion_task.factionapi.defend_area": "Defend area",
   "minion_task.factionapi.follow_lord": "Follow",
@@ -39,12 +46,15 @@
   "minion_task.factionapi.call_single": "Call single",
   "minion_task.factionapi.call_all": "Call all",
   "minion_task.factionapi.respawn": "Respawn dead",
+
   "task_reward.factionapi.lord_level": "Lord Level %s",
+
   "task_requirement.factionapi.lord_level.min": "Lord Level %s or Higher",
   "task_requirement.factionapi.lord_level.exact": "Lord Level %s",
   "task_requirement.factionapi.level.min": "Level %s or Higher",
   "task_requirement.factionapi.level.range": "Level %1$s to %2$s",
   "task_requirement.factionapi.parent": "Complete %s first",
+
   "gui.factionapi.faction_menu.appearance_menu": "Appearance Menu",
   "gui.factionapi.faction_menu.locate_taskmaster": "Last Known Position",
   "gui.factionapi.faction_menu.distance": " (%s blocks away)",
@@ -56,8 +66,10 @@
   "gui.factionapi.faction_menu.no_tasks": "No accepted tasks",
   "gui.factionapi.faction_menu.destroy_item": "Destroys equipped item",
   "gui.factionapi.faction_menu.level": "Level %1$s",
+
   "gui.factionapi.edit_action.open_keybinding_settings": "Open Keybinding",
   "gui.factionapi.edit_action.key_shortcuts": "Key Shortcuts",
+
   "gui.factionapi.skills.no_tab": "You cannot learn skills",
   "gui.factionapi.skills.resetall": "Reset skills",
   "gui.factionapi.skills.unlocked": "Unlocked",
@@ -73,6 +85,7 @@
   "gui.factionapi.skills.reset_consume": "This consumes a '%s'",
   "gui.factionapi.skills.skill_points.default": "%d skill points",
   "gui.factionapi.skills.skill_points.default.single": "%d skill point",
+
   "gui.factionapi.taskmaster.not_accepted": "Not accepted",
   "gui.factionapi.taskmaster.task_failed": "Task failed",
   "gui.factionapi.taskmaster.item_req": "Items to acquire",
@@ -86,7 +99,9 @@
   "gui.factionapi.taskmaster.remove_task": "Remove",
   "gui.factionapi.taskmaster.requirement": "Requirement: ",
   "gui.factionapi.taskmaster.reward": "Reward:",
+
   "gui.factionapi.task_board.tasks": "Tasks",
+
   "gui.factionapi.minion.appearance": "Change minion appearance",
   "gui.factionapi.minion.lock_action": "Ignore global commands",
   "gui.factionapi.minion.active_task": "Current task",
@@ -96,18 +111,23 @@
   "gui.factionapi.minion_stats": "Minion Stats",
   "gui.factionapi.minion_stats.level": "Level",
   "gui.factionapi.minion_stats.stat_level": "Lvl %1$s/%2$s",
+
   "gui.factionapi.radial_menu.excluded_actions": "Excluded Actions",
   "gui.factionapi.radial_menu.place_exclude": "Place here to exclude",
   "gui.factionapi.action_radial.no_actions": "No assigned actions",
   "gui.factionapi.minion_radial.no_minion_tasks": "No assigned minion tasks",
+
   "gui.factionapi.reordering.excluded": "Excluded",
   "gui.factionapi.reset": "Reset",
   "gui.factionapi.reset_question": "Are you sure?",
+
   "narration.factionapi.skill": "Skill",
+
   "message.factionapi.restriction.faction.neutral": "How do those humans even use this thing...",
   "message.factionapi.restriction.faction": "How do they even use this thing...",
   "message.factionapi.restriction.level": "I am not yet experienced enough to use this",
   "message.factionapi.restriction.skill": "I have not yet acquired the skill to use this",
+
   "message.factionapi.action.not_unlocked": "This action has not been unlocked yet",
   "message.factionapi.action.disabled_by_admin": "This action has been disabled by the server administrator",
   "message.factionapi.action.not_bound": "No action is bound to this key. See %s.",
@@ -118,6 +138,7 @@
   "message.factionapi.action.conflicts_with": "You cannot use this action while %s is active",
   "message.factionapi.action.on_cooldown": "This action is still on cooldown",
   "message.factionapi.action.cancelled": "This action could not be activated",
+
   "message.factionapi.village_raid.defended": "Village successfully defended",
   "message.factionapi.village_raid.attacked.neutral": "%s attacked a nearby neutral village",
   "message.factionapi.village_raid.captured_by": "%s captured a nearby village",
@@ -125,6 +146,7 @@
   "message.factionapi.village_raid.abandoned": "A nearby village has been abandoned",
   "message.factionapi.village_raid.neutral": "Neutral Raid",
   "message.factionapi.village_raid.participants_remaining": "Participants Remaining",
+
   "message.factionapi.village_totem.fail_other_capturing": "Cannot destroy totem while another faction is capturing it",
   "message.factionapi.village_totem.fail_other_faction": "Cannot destroy a totem of another faction",
   "message.factionapi.village_totem.fail_other_component": "Cannot destroy village component of another faction's village",
@@ -137,20 +159,27 @@
   "message.factionapi.village_totem.no_village.villagers": "— Not enough villagers: %1$s/%2$s",
   "message.factionapi.village_totem.disabled": "This totem doesn't work. Search for another one",
   "message.factionapi.village_totem.non_village_faction": "Your faction is not able to capture villages",
+
   "message.factionapi.taskmaster.no_tasks": "No tasks available at the moment",
+
   "message.factionapi.minion.still_recovering": "%s is still recovering",
   "message.factionapi.minion.minions_recovering": "%s minions are still recovering",
   "message.factionapi.minion_task.could_not_activate": "Command could not be activated",
+
   "message.factionapi.task_unlocker.lord_level.exact": "Lord level must be exactly %s",
   "message.factionapi.task_unlocker.lord_level.min": "Lord level must be at least %s",
+
   "dialogue.factionapi.minion.can_respawn": "%s: My Lord, I have recovered",
   "dialogue.factionapi.minion.died": "%s: My Lord, I have died",
   "dialogue.factionapi.minion.died_on_task": "My lord, I am sorry, but I died while fulfilling your task",
+
   "subtitles.factionapi.task_complete": "Task completed",
+
   "tooltip.factionapi.faction_specifics": "Faction Specifics:",
   "tooltip.factionapi.required_skill": "Required skill: %s",
   "tooltip.factionapi.required_level": "Required level: %s",
   "tooltip.factionapi.oblivion_potion.desc": "Resets skills on consume",
+
   "command.factionapi.base.level.successful": "%s is now a %s level %s",
   "command.factionapi.base.get_level.successful": "%s is a %s level %s and lord level %s",
   "command.factionapi.base.bind_action.success": "Successfully bound action %s to action key %s",
@@ -193,11 +222,14 @@
   "command.factionapi.test.skill.not_enabled": "Skill %s was not enabled",
   "command.factionapi.failed_to_execute": "Failed to execute command. Internal error.",
   "command.factionapi.failed_to_execute.players": "Failed to execute command for %s. Internal error.",
+
   "factionapi.configuration.title": "FactionAPI Configuration",
+
   "factionapi.configuration.section.factionapi.client.toml": "Client settings",
   "factionapi.configuration.section.factionapi.client.toml.title": "Client settings",
   "factionapi.configuration.section.factionapi.common.toml": "Common settings",
   "factionapi.configuration.section.factionapi.common.toml.title": "Common settings",
+
   "factionapi.configuration.gui": "GUI",
   "factionapi.configuration.overlays": "Overlays",
   "factionapi.configuration.internal": "Internal",
@@ -208,14 +240,17 @@
   "factionapi.configuration.minions": "Minions",
   "factionapi.configuration.tasks": "Tasks",
   "factionapi.configuration.admin": "Admin",
+
   "factionapi.configuration.renderTotemFactionName": "Render Totem Faction Name",
   "factionapi.configuration.renderTotemFactionName.tooltip": "When enabled, renders the owning faction's name above totem blocks.",
+
   "factionapi.configuration.addFactionMenuButtonToInventory": "Faction Menu Inventory Button",
   "factionapi.configuration.addFactionMenuButtonToInventory.tooltip": "When enabled, adds a shortcut button to the faction menu in the player inventory screen.",
   "factionapi.configuration.factionMenuButtonXPos": "Faction Menu Button X Position",
   "factionapi.configuration.factionMenuButtonXPos.tooltip": "Horizontal offset of the faction menu button from the center of the screen, in pixels.",
   "factionapi.configuration.factionMenuButtonYPos": "Faction Menu Button Y Position",
   "factionapi.configuration.factionMenuButtonYPos.tooltip": "Vertical offset of the faction menu button from the center of the screen, in pixels.",
+
   "factionapi.configuration.showFactionLevelOverlay": "Faction Level",
   "factionapi.configuration.showFactionLevelOverlay.tooltip": "When enabled, renders the faction level indicator in the HUD.",
   "factionapi.configuration.factionLevelOverlayXPos": "Faction Level X Position",
@@ -228,12 +263,14 @@
   "factionapi.configuration.showActionCooldownOverlay.tooltip": "When enabled, renders the action cooldown indicator in the HUD.",
   "factionapi.configuration.showActionDurationOverlay": "Action Duration",
   "factionapi.configuration.showActionDurationOverlay.tooltip": "When enabled, renders the action duration indicator in the HUD.",
+
   "factionapi.configuration.villageMaxSpawnableVillagers": "Max Spawnable Villagers",
   "factionapi.configuration.villageMaxSpawnableVillagers.tooltip": "Maximum number of villagers the totem can respawn.",
   "factionapi.configuration.villageAllowPoiDestruction": "Allow Workstation Destruction",
   "factionapi.configuration.villageAllowPoiDestruction.tooltip": "When enabled, allows players to destroy point of interest blocks in faction villages they do not own.",
   "factionapi.configuration.villageMaximumTotemRadius": "Village Maximum Totem Radius",
   "factionapi.configuration.villageMaximumTotemRadius.tooltip": "Maximum range of a totem used to grow the village.",
+
   "factionapi.configuration.raidRandomChance": "Random Raid Chance",
   "factionapi.configuration.raidRandomChance.tooltip": "Chance per second of a faction raid occurring.",
   "factionapi.configuration.raidPhaseOneDuration": "Raid Phase One Duration",
@@ -244,6 +281,7 @@
   "factionapi.configuration.raidNotifyDistance.tooltip": "Squared distance within which players are notified of a village capture.",
   "factionapi.configuration.raidDisableVillageGuards": "Disable Village Guards",
   "factionapi.configuration.raidDisableVillageGuards.tooltip": "When enabled, prevents villagers in controlled villages from turning into guard villagers when attacked.",
+
   "factionapi.configuration.factionColorInChat": "Faction Color in Chat",
   "factionapi.configuration.factionColorInChat.tooltip": "When enabled, colors player names in chat based on their current faction.",
   "factionapi.configuration.factionLordPrefixInChat": "Lord Prefix in Chat",
@@ -256,6 +294,7 @@
   "factionapi.configuration.factionSkillPointsPerLevel.tooltip": "Number of skill points awarded per level-up. Values other than 2 are unbalanced. To unlock all skills at max level, set to skill-amount ",
   "factionapi.configuration.factionSkillPointsPerLordLevel": "Skill Points Per Lord Level",
   "factionapi.configuration.factionSkillPointsPerLordLevel.tooltip": "Number of skill points awarded per lord level-up. Values other than 2 are unbalanced. To unlock all skills at max lord level, set to skill-amount ",
+
   "factionapi.configuration.minionDeathRecoveryTime": "Death Recovery Time",
   "factionapi.configuration.minionDeathRecoveryTime.tooltip": "Time in seconds a minion needs to recover after death.",
   "factionapi.configuration.minionPerLordLevel": "Minions Per Lord Level",
@@ -264,12 +303,14 @@
   "factionapi.configuration.minionOfflineResourceCooldownMultiplier.tooltip": "Cooldown multiplier for collect resource task types while the owning player is offline.",
   "factionapi.configuration.minionEquipmentRepairAmount": "Equipment Repair Amount",
   "factionapi.configuration.minionEquipmentRepairAmount.tooltip": "Amount by which minion equipment is repaired when completing resource tasks.",
+
   "factionapi.configuration.taskDurationSinglePlayer": "Task Duration in Singleplayer",
   "factionapi.configuration.taskDurationSinglePlayer.tooltip": "Duration in minutes within which a task must be completed in a singleplayer world.",
   "factionapi.configuration.taskDurationDedicatedServer": "Task Duration on Server",
   "factionapi.configuration.taskDurationDedicatedServer.tooltip": "Duration in minutes within which a task must be completed on a dedicated server.",
   "factionapi.configuration.taskMasterMaxTasks": "Task Master Max Tasks",
   "factionapi.configuration.taskMasterMaxTasks.tooltip": "Maximum number of tasks shown at a taskmaster, excluding unique tasks.",
+
   "factionapi.configuration.entitiesIMob": "IMob Entities",
   "factionapi.configuration.entitiesIMob.tooltip": "Controls whether faction entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers.",
   "factionapi.configuration.preventDebugBoundingBoxes": "Prevent Rendering Debug Bounding Boxes",
