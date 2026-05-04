@@ -24,6 +24,7 @@
   "gui.factionapi.minion.appearance": "Cambia l'aspetto del minion",
   "gui.factionapi.minion.lock_action": "Ignora i comandi globali",
   "gui.factionapi.minion.active_task": "Attività corrente",
+  "gui.factionapi.minion.stats": "Statistiche minion",
   "gui.factionapi.minion.name": "Nome: ",
   "gui.factionapi.minion_stats": "Statistiche minion",
   "gui.factionapi.minion_stats.level": "Livello",
@@ -55,5 +56,7 @@
   "command.factionapi.test.skill.otherfaction": "La tua fazione non permette questa abilità",
   "command.factionapi.test.skill.noinfaction": "Devi essere in una fazione",
   "command.factionapi.test.skill.disabled": "Disabilità Abilità",
-  "command.factionapi.test.skill.locked": "Bloccato da un altro nodo abilità"
+  "command.factionapi.test.skill.locked": "Bloccato da un altro nodo abilità",
+  "command.factionapi.failed_to_execute": "Fallimento nell'esecuzione del comando. Errore Interno.",
+  "command.factionapi.failed_to_execute.players": "Esecuzione del comando per %snon riuscita. Errore interno, azz."
 }
