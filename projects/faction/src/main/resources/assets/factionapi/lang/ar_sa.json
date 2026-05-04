@@ -6,5 +6,6 @@
   "gui.factionapi.skills.unlock_parent_first": "إلغاء تأمين الوالدين أولاً",
   "gui.factionapi.skills.skills_reset": "تم اعادة تعيين مهاراتك",
   "gui.factionapi.minion.active_task": "المهمة الحالية",
-  "gui.factionapi.minion_stats.level": "مستوى"
+  "gui.factionapi.minion_stats.level": "مستوى",
+  "command.factionapi.failed_to_execute": "فشل تنفيذ الأمر. حدث خطأ داخلي."
 }
