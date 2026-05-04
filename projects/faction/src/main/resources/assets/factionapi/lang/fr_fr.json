@@ -29,6 +29,7 @@
   "gui.factionapi.minion.appearance": "Changer l'apparence du servant",
   "gui.factionapi.minion.lock_action": "Ignorer les commandes globales",
   "gui.factionapi.minion.active_task": "Tâche en cours",
+  "gui.factionapi.minion.stats": "Statistiques du servant",
   "gui.factionapi.minion_stats": "Statistiques du servant",
   "gui.factionapi.minion_stats.level": "Niveau",
   "gui.factionapi.radial_menu.place_exclude": "Placez ici pour exclure",
@@ -54,5 +55,7 @@
   "command.factionapi.base.bind_action.not_existing": "L'action mentionné %s n'existe pas",
   "command.factionapi.argument.action.notfound": "L'action mentionné %s n'existe pas",
   "command.factionapi.test.village.no_village": "Aucun village à proximité",
-  "command.factionapi.test.skill.noinfaction": "Vous devez être dans une faction"
+  "command.factionapi.test.skill.noinfaction": "Vous devez être dans une faction",
+  "command.factionapi.failed_to_execute": "Exécution impossible. Erreur interne.",
+  "factionapi.configuration.world": "Monde"
 }
