@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BatCageRenderer implements BlockEntityRenderer<BatCageBlockEntity, BatCageRenderer.BatCageRenderState> {
 
-    public static final Identifier BAT_LOCATION = VIdentifier.mc("textures/entity/bat.png");
+    public static final Identifier BAT_LOCATION = VIdentifier.mc("textures/entity/bat/bat.png");
 
     private final BatModel model;
 
