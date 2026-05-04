@@ -21,3 +21,7 @@ There are 3 source files for translations:
 4. Translate the key in Crowdin
 5. Crowdin will automatically push to the translation branch
 6. Merge the translation branch into the main branch
+
+## Change English translations
+
+Changing English source translations is not recommended as it will remove all translations for the key. Either create a new key or inform us (Discord/GitHub Issue) so that we can change the source translation on crowdin.
