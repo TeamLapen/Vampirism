@@ -34,5 +34,6 @@
   "command.vampirism.base.vampire_biome.searching": "À procura de uma floresta vampírica",
   "command.vampirism.base.vampire_biome.not_found": "Nenhuma encontrada.",
   "command.vampirism.test.tent.success": "Sucesso",
+  "vampirism.configuration.section.vampirism.balance.toml": "Configurações de equilíbrio",
   "vampirism.configuration.section.vampirism.balance.toml.title": "Configurações de equilíbrio"
 }
