@@ -3,17 +3,19 @@ package de.teamlapen.vampirism.common.world.entity.dracula;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundDraculaEventPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class ServerDraculaEvent extends DraculaEvent {
 
+    private static final RandomSource RANDOM = RandomSource.create();
     private final Set<ServerPlayer> players = new HashSet<>();
     protected boolean isVisible;
 
     public ServerDraculaEvent(float percentage, FightStage stage, boolean inVulnerable) {
-        super(Mth.createInsecureUUID(), percentage, stage, inVulnerable);
+        super(Mth.createInsecureUUID(RANDOM), percentage, stage, inVulnerable);
     }
 
     public Set<ServerPlayer> getPlayers() {

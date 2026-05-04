@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.schedule.Activity;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,9 +44,9 @@ public record Action<E extends LivingEntity>(
         BiPredicate<ServerLevel, E> precondition,
         ImmutableList<? extends Pair<Integer, ? extends BehaviorControl<? super E>>> behaviors
 ) {
-    public void register(Brain<E> brain, Set<Pair<MemoryModuleType<?>, MemoryStatus>> requirements) {
+    public void register(E entity, Set<Pair<MemoryModuleType<?>, MemoryStatus>> requirements, Consumer<ActivityData<E>> consumer) {
         Stream<Stream<Pair<MemoryModuleType<?>, MemoryStatus>>> stream = Stream.of(requirements.stream(), this.requirements.stream(), Stream.of(Pair.of(activeMemory, MemoryStatus.VALUE_PRESENT), Pair.of(cooldownMemory.memory, MemoryStatus.VALUE_ABSENT)));
-        brain.addActivityWithConditions(this.activity, this.behaviors, stream.flatMap(x -> x).collect(Collectors.toUnmodifiableSet()));
+        consumer.accept(new ActivityData<>(this.activity, this.behaviors, stream.flatMap(x -> x).collect(Collectors.toUnmodifiableSet()), Set.of()));
     }
 
     public record Cooldown(MemoryModuleType<Unit> memory, Supplier<Integer> cooldownSupplier) {

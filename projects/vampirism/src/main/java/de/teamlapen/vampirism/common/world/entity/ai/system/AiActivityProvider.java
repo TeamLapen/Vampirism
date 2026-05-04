@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.common.world.entity.ai.activities.ActivityBuilder;
 import de.teamlapen.vampirism.common.world.entity.ai.activities.ActivityEntry;
 import de.teamlapen.vampirism.common.world.entity.ai.activities.actions.Action;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
@@ -11,8 +12,10 @@ import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Gatherer;
 import java.util.stream.Stream;
 
 /**
@@ -46,10 +49,6 @@ public abstract class AiActivityProvider<E extends LivingEntity> {
         return this.activityEntry.memories();
     }
 
-    public void initActivity(Brain<E> brain) {
-        this.activityEntry.register(brain);
-    }
-
     public Activity getActivity() {
         return this.activity;
     }
@@ -63,5 +62,12 @@ public abstract class AiActivityProvider<E extends LivingEntity> {
     }
 
     protected abstract void createActivity(ActivityBuilder<E> builder);
+
+    public Stream<ActivityData<E>> getData(E entity) {
+        return Stream.of(activityEntry).gather(() -> (_, element, downstream) -> {
+            element.register(entity, downstream::push);
+            return false;
+        });
+    }
 
 }

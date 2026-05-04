@@ -14,7 +14,7 @@ public class LivingTargetableLivingEntitySensor<T extends LivingEntity> extends 
 
     @Override
     public Set<MemoryModuleType<?>> requires() {
-        return Set.of(ModMemoryTypes.NEAREST_ATTACKABLE.get(), ModMemoryTypes.NEAREST_VISIBLE_ATTACKABLE.get(), MemoryModuleType.NEAREST_LIVING_ENTITIES);
+        return Set.of(ModMemoryTypes.NEAREST_ATTACKABLE.get(), ModMemoryTypes.NEAREST_VISIBLE_ATTACKABLE.get(), MemoryModuleType.NEAREST_LIVING_ENTITIES, ModMemoryTypes.ALLIES.get());
     }
 
     @Override

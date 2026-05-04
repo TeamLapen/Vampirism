@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.network.packets.client.ClientboundDraculaEv
 import de.teamlapen.vampirism.common.world.entity.dracula.DraculaEvent;
 import de.teamlapen.vampirism.common.world.entity.dracula.FightStage;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -22,7 +22,7 @@ public class DraculaEventOverlay extends BaseOverlay {
     private DraculaEvent event;
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
         if (this.event != null && this.event.getStage() != FightStage.NONE) {
             guiGraphics.nextStratum();
             Matrix3x2fStack pose = guiGraphics.pose();

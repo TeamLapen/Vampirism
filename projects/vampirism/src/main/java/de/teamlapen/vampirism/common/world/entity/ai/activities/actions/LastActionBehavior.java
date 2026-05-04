@@ -9,6 +9,7 @@ import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -28,6 +29,11 @@ public record LastActionBehavior<E extends LivingEntity>(BehaviorControl<E> orig
     @Override
     public Behavior.Status getStatus() {
         return this.original.getStatus();
+    }
+
+    @Override
+    public Set<MemoryModuleType<?>> getRequiredMemories() {
+        return Set.of(activeMemory, cooldownMemory.memory());
     }
 
     @Override

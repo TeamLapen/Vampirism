@@ -3,7 +3,9 @@ package de.teamlapen.vampirism.common.world.entity.ai.activities;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import de.teamlapen.vampirism.common.world.entity.ai.activities.actions.Action;
+import de.teamlapen.vampirism.data.provider.ModSundamageProvider;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.schedule.Activity;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -37,10 +40,10 @@ public record ActivityEntry<E extends LivingEntity>(
     /**
      * register the activity and sub actions to the brain
      */
-    public void register(Brain<E> brain) {
-        brain.addActivityWithConditions(this.activity, this.behaviors, this.requirements);
+    public void register(E entity, Consumer<ActivityData<E>> consumer) {
+        consumer.accept(new ActivityData<>(this.activity, this.behaviors, this.requirements, Set.of()));
         for (Action<E> actionBuilder : this.actions) {
-            actionBuilder.register(brain, this.requirements);
+            actionBuilder.register(entity, this.requirements, consumer);
         }
     }
 

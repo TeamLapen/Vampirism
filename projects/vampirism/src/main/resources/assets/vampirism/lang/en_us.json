@@ -467,6 +467,7 @@
   "entity.vampirism.dark_blood_projectile": "Dark Blood Projectile",
   "entity.vampirism.particle_cloud": "Particle Cloud",
   "entity.vampirism.throwable_item": "Thrown Item",
+  "entity.vampirism.dracula": "Dracula",
 
   "entity.minecraft.villager.vampirism.hunter_expert": "Hunter Expert",
   "entity.minecraft.villager.vampirism.vampire_expert": "Vampire Expert",

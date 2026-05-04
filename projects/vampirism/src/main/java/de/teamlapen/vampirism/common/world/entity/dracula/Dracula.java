@@ -303,13 +303,8 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic) {
-        return DraculaAiSystem.AI.initializeBrain(this.brainProvider().makeBrain(dynamic));
-    }
-
-    @Override
-    protected Brain.Provider<Dracula> brainProvider() {
-        return DraculaAiSystem.AI.brainProvider();
+    protected Brain<? extends LivingEntity> makeBrain(Brain.Packed packedBrain) {
+        return DraculaAiSystem.AI.brainProvider().makeBrain(this, packedBrain);
     }
 
     @Override

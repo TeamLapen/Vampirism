@@ -24,10 +24,11 @@ import java.util.stream.Collectors;
 public abstract class AiSystem<E extends LivingEntity> {
     protected final List<AiActivityProvider<E>> activityProviders;
 
-    private Brain.@Nullable Provider<E> brainProvider;
+    private final Brain.Provider<E> brainProvider;
 
     public AiSystem() {
         this.activityProviders = this.createActivityProviders();
+        this.brainProvider = Brain.provider(getSensors(), (entity) -> this.activityProviders.stream().flatMap(x -> x.getData(entity)).toList());
     }
 
     /**
@@ -47,31 +48,12 @@ public abstract class AiSystem<E extends LivingEntity> {
                     .collect(ImmutableSet.toImmutableSet());
     }
 
-    public Brain<E> initializeBrain(Brain<E> brain) {
-        this.activityProviders.forEach(p -> p.initActivity(brain));
-        this.setupBrainPriorities(brain);
-
-        return brain;
-    }
-
     public Map<Activity,Collection<Action<E>>> getActions() {
         return this.activityProviders.stream().collect(Collectors.toMap(AiActivityProvider::getActivity, AiActivityProvider::getActions));
     }
 
     public Brain.Provider<E> brainProvider() {
-        if (this.brainProvider == null) {
-            this.brainProvider = Brain.provider(getMemoryModules(), getSensors());
-        }
         return this.brainProvider;
-    }
-
-    /**
-     * Define core, idle, and default activities.
-     */
-    protected void setupBrainPriorities(Brain<E> brain) {
-        brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
-        brain.setDefaultActivity(Activity.IDLE);
-        brain.useDefaultActivity();
     }
 
     @SuppressWarnings("unchecked")
