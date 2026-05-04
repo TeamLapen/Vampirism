@@ -1,19 +1,16 @@
 project_id: "113663"
-api_token_env: CROWDIN_KEY
-base_path: "."
-base_url: "https://api.crowdin.com"
+base_path: .
 
 preserve_hierarchy: true
-
-files: [
-  {
-    source: "src/main/resources/assets/vampirism/lang/en_us.json",
-    translation: "src/main/resources/assets/vampirism/lang/%locale_with_underscore%.json",
-    dest: "main_translations.json",
-  },
-  {
-    source: "src/main/resources/assets/vampirismguide/lang/en_us.json",
-    translation: "src/main/resources/assets/vampirismguide/lang/%locale_with_underscore%.json",
-    dest: "guide.json",
-  }
-]
+pull_request_labels:
+  - Translations
+files:
+  - source: /projects/faction/src/main/resources/assets/factionapi/lang/en_us.json
+    translation: /projects/faction/src/main/resources/assets/factionapi/lang/%locale_with_underscore%.%file_extension%
+    dest: /factionapi.%file_extension%
+  - source: /projects/vampirism/src/main/resources/assets/vampirism/lang/en_us.json
+    translation: /projects/vampirism/src/main/resources/assets/vampirism/lang/%locale_with_underscore%.%file_extension%
+    dest: /vampirism.%file_extension%
+  - source: /projects/vampirism/src/main/resources/assets/vampirismguide/lang/en_us.json
+    translation: /projects/vampirism/src/main/resources/assets/vampirismguide/lang/%locale_with_underscore%.%file_extension%
+    dest: /vampirismguide.%file_extension%
