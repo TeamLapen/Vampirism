@@ -94,7 +94,9 @@
   "advancement.vampirism.become_hunter.desc": "تصبح صياد مصاص دماء",
   "key.vampirism.category.main": "مصاص الدماء",
   "minion_task.vampirism.collect_blood": "جمع الدم",
+  "vampire_book.vampirism.unknown.author": "‮غير معلوم",
   "container.vampirism.altar_infusion": "مذبح لضخ",
+  "container.vampirism.hunter_table": "طاولة البحث للصياد",
   "container.vampirism.weapon_table": "طاولة الصياد",
   "container.vampirism.weapon_table.level": "يتطلب مستوى صياد: %s",
   "container.vampirism.alchemical_cauldron": "المرجل الكميائي",
@@ -121,5 +123,6 @@
   "command.vampirism.failed_to_execute": "فشل تنفيذ الأمر. حدث خطأ داخلي.",
   "command.vampirism.base.vampire_biome.searching": "يتم البحث على غابت مصاص الدماء. الرجاء الانتظار",
   "command.vampirism.base.vampire_biome.not_found": "لم يتم العثور على غابت مصاص الدماء.",
+  "vampirism.configuration.section.vampirism.balance.toml": "إعدادات الرصيد",
   "vampirism.configuration.section.vampirism.balance.toml.title": "إعدادات الرصيد"
 }
