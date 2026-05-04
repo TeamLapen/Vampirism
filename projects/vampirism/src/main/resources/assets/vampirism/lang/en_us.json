@@ -821,7 +821,7 @@
   "stat.vampirism.killed_with_stake": "Vampires Killed with Stake",
   "stat.vampirism.mother_defeated": "Ancient Remains Defeated",
 
-  "key.vampirism.category.main": "Vampirism",
+  "key.category.vampirism.main": "Vampirism",
   "key.vampirism.suck_blood": "Suck Blood",
   "key.vampirism.toggle_vision": "Toggle Vampire Vision",
   "key.vampirism.select_ammo": "Select Quarrel Type",
@@ -1190,7 +1190,6 @@
   "tooltip.vampirism.sword_trained": "Trained:",
   "tooltip.vampirism.active": "Active",
   "tooltip.vampirism.bat_cage.contains_bat": "Contains: %s",
-  "tooltip.vampirism.hold_shift_for_info": "Hold [§7Shift§r] for Info",
   "tooltip.vampirism.garlic_diffuser_normal": "A hunter gear that diffuses garlic in a %s by %s chunk area when placed, thereby weakening vampires unlucky enough to be nearby. The radius is quite small. So is the strength of the effect.",
   "tooltip.vampirism.garlic_diffuser_weak": "A hunter gear that diffuses garlic in a %s by %s chunk area when placed, thereby weakening vampires unlucky enough to be nearby. The effect is not too strong, but the substantial radius is worth it.",
   "tooltip.vampirism.garlic_diffuser_improved": "A hunter gear that diffuses garlic in a %s by %s chunk area when placed, thereby weakening vampires unlucky enough to be nearby. The radius is fairly average, but it's compensated by the stronger effect.",
