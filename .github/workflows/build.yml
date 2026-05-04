@@ -11,6 +11,7 @@ on:
       - 'dev'
       - 'feature/*'
       - 'version/*'
+      - 'translate/*'
 
 jobs:
   build:
