@@ -15,6 +15,7 @@
   "minion_task.factionapi.call_all": "Rufe alle",
   "minion_task.factionapi.respawn": "Respawn Tote",
   "task_reward.factionapi.lord_level": "Lord Level %s",
+  "task_requirement.factionapi.lord_level.exact": "Lord Level %s",
   "gui.factionapi.faction_menu.appearance_menu": "Erscheinungsmenü",
   "gui.factionapi.faction_menu.distance": " (%s Blöcke entfernt)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Unbekannt",
@@ -53,6 +54,7 @@
   "gui.factionapi.minion.appearance": "Lakai Aussehen ändern",
   "gui.factionapi.minion.lock_action": "Globale Befehle ignorieren",
   "gui.factionapi.minion.active_task": "Aktuelle Aufgabe",
+  "gui.factionapi.minion.stats": "Lakai-Statistik",
   "gui.factionapi.minion.name": "Name: ",
   "gui.factionapi.minion_screen.reset_stats": "Attribute zurücksetzen. Dies verbraucht %s",
   "gui.factionapi.minion_stats": "Lakai-Statistik",
@@ -117,5 +119,8 @@
   "command.factionapi.test.skill.locked": "Durch andere Fertigkeit gesperrt",
   "command.factionapi.test.skill.locked_player_state": "Gesperrt durch Spielerstatus",
   "command.factionapi.test.skill.all_unlocked": "Alle Fähigkeiten sind jetzt freigeschaltet",
-  "command.factionapi.test.skill.all_locked": "Alle Fähigkeiten sind jetzt gesperrt"
+  "command.factionapi.test.skill.all_locked": "Alle Fähigkeiten sind jetzt gesperrt",
+  "command.factionapi.failed_to_execute": "Interner Fehler beim Ausführen des Befehls.",
+  "command.factionapi.failed_to_execute.players": "Interner Fehler beim Ausführen des Befehls %s.",
+  "factionapi.configuration.world": "Welt"
 }
