@@ -43,6 +43,7 @@
   "gui.factionapi.minion.appearance": "부하 외형 변경",
   "gui.factionapi.minion.lock_action": "전체에게 내리는 명령 무시",
   "gui.factionapi.minion.active_task": "현재 작업",
+  "gui.factionapi.minion.stats": "미니언 능력치",
   "gui.factionapi.minion.name": "이름: ",
   "gui.factionapi.minion_screen.reset_stats": "%s을 소모해 스탯을 초기화 합니다",
   "gui.factionapi.minion_stats": "미니언 능력치",
@@ -97,5 +98,8 @@
   "command.factionapi.test.skill.locked": "다른 스킬에 의해 잠겨져 있습니다",
   "command.factionapi.test.skill.locked_player_state": "플레이어 상태에 의해 잠겨있습니다",
   "command.factionapi.test.skill.all_unlocked": "모든 스킬이 해금되었습니다",
-  "command.factionapi.test.skill.all_locked": "모든 스킬이 잠금되었습니다"
+  "command.factionapi.test.skill.all_locked": "모든 스킬이 잠금되었습니다",
+  "command.factionapi.failed_to_execute": "명령을 실행 하지 못했습니다. 내부 오류가 발생 했습니다.",
+  "command.factionapi.failed_to_execute.players": "명령 %s을(를) 실행하지 못했습니다. 내부 오류가 발생했습니다.",
+  "factionapi.configuration.world": "월드"
 }
