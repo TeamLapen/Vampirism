@@ -42,6 +42,7 @@
   "gui.factionapi.minion.appearance": "Thay đổi ngoại hình thuộc hạ",
   "gui.factionapi.minion.lock_action": "Bỏ qua mệnh lệnh chung",
   "gui.factionapi.minion.active_task": "Nhiệm vụ hiện tại",
+  "gui.factionapi.minion.stats": "Chỉ số thuộc hạ",
   "gui.factionapi.minion.name": "Tên: ",
   "gui.factionapi.minion_screen.reset_stats": "Làm mới chỉ số. Việc này tiêu thụ %s",
   "gui.factionapi.minion_stats": "Chỉ số thuộc hạ",
@@ -92,5 +93,8 @@
   "command.factionapi.test.skill.noinfaction": "Bạn phải thuộc một phe nào đó",
   "command.factionapi.test.skill.disabled": "Kĩ năng bị loại bỏ",
   "command.factionapi.test.skill.locked": "Bị khóa bởi các kỹ năng khác",
-  "command.factionapi.test.skill.locked_player_state": "Bị khóa bởi tình trạng của người chơi"
+  "command.factionapi.test.skill.locked_player_state": "Bị khóa bởi tình trạng của người chơi",
+  "command.factionapi.failed_to_execute": "Thất bại trong việc thực hiện lệnh. Lỗi nội bộ.",
+  "command.factionapi.failed_to_execute.players": "Thất bại trong việc thực hiện lệnh %s. Lỗi nội bộ.",
+  "factionapi.configuration.world": "Thế giới"
 }

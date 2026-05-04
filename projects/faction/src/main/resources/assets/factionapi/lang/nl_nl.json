@@ -6,5 +6,6 @@
   "gui.factionapi.skills.unlock_parent_first": "Ontgrendel ouder eerst",
   "gui.factionapi.skills.skills_reset": "Uw vaardigheden zijn hersteld",
   "gui.factionapi.minion.active_task": "Huidige taak",
-  "gui.factionapi.minion_stats.level": "Niveau"
+  "gui.factionapi.minion_stats.level": "Niveau",
+  "command.factionapi.failed_to_execute": "Kan de opdracht niet uitvoeren. Interne fout."
 }

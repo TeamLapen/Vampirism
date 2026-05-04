@@ -111,7 +111,9 @@
   "advancement.vampirism.betrayal": "裏切り者",
   "key.vampirism.category.main": "Vampirism",
   "minion_task.vampirism.collect_blood": "『血を捧げよ』",
+  "vampire_book.vampirism.unknown.author": "Unknown",
   "container.vampirism.altar_infusion": "注入の祭壇",
+  "container.vampirism.hunter_table": "ハンター調査テーブル",
   "container.vampirism.weapon_table": "ハンター武器制作台",
   "container.vampirism.weapon_table.level": "必要ハンターLv: %s",
   "container.vampirism.alchemical_cauldron": "錬金釜",
@@ -160,6 +162,7 @@
   "command.vampirism.test.gen_debug.true": "ワールド生成デバッグをONにしました。",
   "command.vampirism.test.gen_debug.false": "ワールド生成デバッグをOFFにしました。",
   "command.vampirism.base.vampire_biome.parse_dist": "最長距離でのパースに失敗しました。%s を使用して下さい。",
+  "vampirism.configuration.section.vampirism.balance.toml": "バランスの設定",
   "vampirism.configuration.section.vampirism.balance.toml.title": "バランスの設定",
   "vampirism.configuration.general": "全般",
   "vampirism.configuration.items": "アイテム"

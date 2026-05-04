@@ -7,6 +7,7 @@
   "minion_task.factionapi.call_all": "Chamar todos",
   "minion_task.factionapi.respawn": "Renascer os mortos",
   "task_reward.factionapi.lord_level": "Nível Lorde %s",
+  "task_requirement.factionapi.lord_level.exact": "Nível Lorde %s",
   "gui.factionapi.faction_menu.appearance_menu": "Menu de Aparência",
   "gui.factionapi.faction_menu.distance": " (%s blocos de distância)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Desconhecido",
@@ -44,6 +45,7 @@
   "gui.factionapi.minion.appearance": "Alterar a aparência do servo",
   "gui.factionapi.minion.lock_action": "Ignorar comandos globais",
   "gui.factionapi.minion.active_task": "Tarefa atual",
+  "gui.factionapi.minion.stats": "Estatísticas do servo",
   "gui.factionapi.minion.name": "Nome: ",
   "gui.factionapi.minion_screen.reset_stats": "Redefinir os atributos. Isto consome %s",
   "gui.factionapi.minion_stats": "Estatísticas do servo",
@@ -97,5 +99,8 @@
   "command.factionapi.test.skill.noinfaction": "Você tem que estar em uma facção",
   "command.factionapi.test.skill.disabled": "Habilidade desativada",
   "command.factionapi.test.skill.locked": "Bloqueado por outra habilidade",
-  "command.factionapi.test.skill.locked_player_state": "Bloqueado pelo atributo do jogador"
+  "command.factionapi.test.skill.locked_player_state": "Bloqueado pelo atributo do jogador",
+  "command.factionapi.failed_to_execute": "Falha ao executar o comando. Erro interno.",
+  "command.factionapi.failed_to_execute.players": "Falha ao executar o comando para %s. Erro interno.",
+  "factionapi.configuration.world": "Mundo"
 }

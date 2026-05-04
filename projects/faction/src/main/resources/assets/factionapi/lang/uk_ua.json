@@ -15,6 +15,7 @@
   "minion_task.factionapi.call_all": "Покликати всіх",
   "minion_task.factionapi.respawn": "Відродження",
   "task_reward.factionapi.lord_level": "%s рівень володаря",
+  "task_requirement.factionapi.lord_level.exact": "%s рівень володаря",
   "gui.factionapi.faction_menu.appearance_menu": "Зовнішній вигляд",
   "gui.factionapi.faction_menu.distance": " (%s блоків звідси)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Невідомо",
@@ -52,6 +53,7 @@
   "gui.factionapi.minion.appearance": "Зміна зовнішнього вигляду посіпак",
   "gui.factionapi.minion.lock_action": "Ігнорувати глобальні команди",
   "gui.factionapi.minion.active_task": "Поточне завдання",
+  "gui.factionapi.minion.stats": "Характеристики посіпак",
   "gui.factionapi.minion.name": "Ім’я: ",
   "gui.factionapi.minion_screen.reset_stats": "Скинути характеристики. Це витратить %s",
   "gui.factionapi.minion_stats": "Характеристики посіпак",
@@ -116,5 +118,8 @@
   "command.factionapi.test.skill.locked": "Заблоковано іншим вузлом навичок",
   "command.factionapi.test.skill.locked_player_state": "Заблоковано через статус гравця",
   "command.factionapi.test.skill.all_unlocked": "Усі навички тепер розблоковано",
-  "command.factionapi.test.skill.all_locked": "Усі навички тепер заблоковано"
+  "command.factionapi.test.skill.all_locked": "Усі навички тепер заблоковано",
+  "command.factionapi.failed_to_execute": "Не вдалося виконати команду. Внутрішня помилка.",
+  "command.factionapi.failed_to_execute.players": "Не вдалося виконати команду для %s. Внутрішня помилка.",
+  "factionapi.configuration.world": "Світ"
 }

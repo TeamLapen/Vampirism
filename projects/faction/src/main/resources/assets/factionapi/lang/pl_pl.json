@@ -39,6 +39,7 @@
   "gui.factionapi.minion.appearance": "Zmień wygląd sługi",
   "gui.factionapi.minion.lock_action": "Ignoruj komendy globalne",
   "gui.factionapi.minion.active_task": "Obecne zadanie",
+  "gui.factionapi.minion.stats": "Statystyki sług",
   "gui.factionapi.minion.name": "Nazwa: ",
   "gui.factionapi.minion_screen.reset_stats": "Zresetuj statystyki. Zużywa to %s",
   "gui.factionapi.minion_stats": "Statystyki sług",
@@ -84,5 +85,8 @@
   "command.factionapi.test.skill.noinfaction": "Musisz należeć do frakcji",
   "command.factionapi.test.skill.disabled": "Wyłączona umiejętność",
   "command.factionapi.test.skill.locked": "Zablokowane przez inny węzeł umiejętności",
-  "command.factionapi.test.skill.locked_player_state": "Zablokowane przez status gracza"
+  "command.factionapi.test.skill.locked_player_state": "Zablokowane przez status gracza",
+  "command.factionapi.failed_to_execute": "Nie można wykonać polecenia. Błąd wewnętrzny.",
+  "command.factionapi.failed_to_execute.players": "Nie udało się wykonać polecenia dla %s. Błąd wewnętrzny.",
+  "factionapi.configuration.world": "Świat"
 }

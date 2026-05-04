@@ -94,7 +94,9 @@
   "advancement.vampirism.become_hunter.desc": "Wordt een vampieren jager",
   "key.vampirism.category.main": "Vampirisme",
   "minion_task.vampirism.collect_blood": "Verzamel bloed",
+  "vampire_book.vampirism.unknown.author": "Onbekend",
   "container.vampirism.altar_infusion": "Altaar van de infusie",
+  "container.vampirism.hunter_table": "Jager onderzoekstafel",
   "container.vampirism.weapon_table": "Jagers wapen tafel",
   "container.vampirism.weapon_table.level": "Jagers niveau vereist: %s",
   "container.vampirism.alchemical_cauldron": "Alchemische ketel",
@@ -126,5 +128,6 @@
   "command.vampirism.failed_to_execute": "Kan de opdracht niet uitvoeren. Interne fout.",
   "command.vampirism.base.vampire_biome.searching": "Op zoek naar een vampieren bos biotoop. Een ogenblik geduld",
   "command.vampirism.base.vampire_biome.not_found": "Geen Vampieren bos biotoop werd gevonden.",
+  "vampirism.configuration.section.vampirism.balance.toml": "Balans instellingen",
   "vampirism.configuration.section.vampirism.balance.toml.title": "Balans instellingen"
 }

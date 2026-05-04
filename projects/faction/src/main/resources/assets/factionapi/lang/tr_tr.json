@@ -32,6 +32,7 @@
   "gui.factionapi.minion.appearance": "Dalkavuk görüntüsünü değiştir",
   "gui.factionapi.minion.lock_action": "Evrensel komutları görmezden gel",
   "gui.factionapi.minion.active_task": "Geçerli görev",
+  "gui.factionapi.minion.stats": "Dalkavuk İstatistikleri",
   "gui.factionapi.minion.name": "İsim: ",
   "gui.factionapi.minion_stats": "Dalkavuk İstatistikleri",
   "gui.factionapi.minion_stats.level": "Seviye",
@@ -75,5 +76,8 @@
   "command.factionapi.test.skill.nopoints": "Yetenek puanı kalmadı",
   "command.factionapi.test.skill.othernode": "Diğer yetenek etkin",
   "command.factionapi.test.skill.noinfaction": "Bir grupta olmalısın",
-  "command.factionapi.test.skill.disabled": "Yetenek devre dışı bırakıldı"
+  "command.factionapi.test.skill.disabled": "Yetenek devre dışı bırakıldı",
+  "command.factionapi.failed_to_execute": "Komut çalıştırılamadı. İç hata.",
+  "command.factionapi.failed_to_execute.players": "%s için komut yürütme başarısız oldu. İç Hata.",
+  "factionapi.configuration.world": "Dünya"
 }

@@ -16,6 +16,7 @@
   "minion_task.factionapi.call_all": "Позвать всех",
   "minion_task.factionapi.respawn": "Возродить",
   "task_reward.factionapi.lord_level": "Уровень лорда %s",
+  "task_requirement.factionapi.lord_level.exact": "Уровень лорда %s",
   "gui.factionapi.faction_menu.appearance_menu": "Меню появления",
   "gui.factionapi.faction_menu.distance": " (%s блоков отсюда)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Неизвестно",
@@ -53,6 +54,7 @@
   "gui.factionapi.minion.appearance": "Изменение внешнего вида миньона",
   "gui.factionapi.minion.lock_action": "Игнорировать глобальные команды",
   "gui.factionapi.minion.active_task": "Текущее задание",
+  "gui.factionapi.minion.stats": "Характеристики миньона",
   "gui.factionapi.minion.name": "Имя: ",
   "gui.factionapi.minion_screen.reset_stats": "Сброс статистики. Это расходует %s",
   "gui.factionapi.minion_stats": "Характеристики миньона",
@@ -119,6 +121,12 @@
   "command.factionapi.test.skill.locked_player_state": "Заблокировано статусом игрока",
   "command.factionapi.test.skill.all_unlocked": "Все навыки прокачаны",
   "command.factionapi.test.skill.all_locked": "Все навыки выключены",
+  "command.factionapi.failed_to_execute": "Не удалось выполнить команду. Внутренняя ошибка.",
+  "command.factionapi.failed_to_execute.players": "Не удалось выполнить команду %s. Внутренняя ошибка.",
   "factionapi.configuration.gui": "Графический интерфейс",
+  "factionapi.configuration.internal": "Внутренний",
+  "factionapi.configuration.world": "Мир",
+  "factionapi.configuration.village": "Деревня",
+  "factionapi.configuration.minions": "Миньоны",
   "factionapi.configuration.enableFactionLogging": "Включить ведение логов фракций"
 }
