@@ -397,7 +397,6 @@ public class ModItems {
     public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_STAIRS = fromBlock(ModBlocks.PURPLE_STONE_TILES_STAIRS);
     public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_SLAB = fromBlock(ModBlocks.PURPLE_STONE_TILES_SLAB);
     public static final DeferredItem<BlockItem> PURPLE_STONE_TILES_WALL = fromBlock(ModBlocks.PURPLE_STONE_TILES_WALL);
-    public static final DeferredItem<BlockItem> FIRE_PLACE = fromBlock(ModBlocks.FIRE_PLACE);
     public static final DeferredItem<BlockItem> VAMPIRE_SOUL_LANTERN = fromBlock(ModBlocks.VAMPIRE_SOUL_LANTERN);
     public static final DeferredItem<BlockItem> CROSS = fromBlock(ModBlocks.CROSS);
     public static final DeferredItem<BlockItem> TOMBSTONE_SHORT = fromBlock(ModBlocks.TOMBSTONE_SHORT);

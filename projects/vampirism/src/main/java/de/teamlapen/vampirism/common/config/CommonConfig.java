@@ -11,7 +11,6 @@ public class CommonConfig {
     public final ModConfigSpec.BooleanValue addVampireForestToOverworld;
     public final ModConfigSpec.IntValue vampireForestWeightTerrablender;
     public final ModConfigSpec.BooleanValue generateHunterCamps;
-    public final ModConfigSpec.BooleanValue useVanillaCampfire;
 
     public final ModConfigSpec.BooleanValue replaceVillageTemples;
     public final ModConfigSpec.IntValue villageTotemWeight;
@@ -45,9 +44,6 @@ public class CommonConfig {
         this.generateHunterCamps = builder
                 .comment("When enabled, generates hunter camps in the world.")
                 .define("generateHunterCamps", true);
-        this.useVanillaCampfire = builder
-                .comment("Set to true to use the vanilla campfire block in hunter camps instead of Vampirism's custom one.")
-                .define("useVanillaCampfire", false);
         builder.push("village");
         this.villageTotemWeight = builder
                 .comment("The weight of the totem building in village generation.")

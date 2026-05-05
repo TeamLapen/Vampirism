@@ -131,6 +131,7 @@ public class MigrationData {
         mapping.remap("vampirism:tombstone1", "vampirism:tombstone_short");
         mapping.remap("vampirism:tombstone2", "vampirism:tombstone_medium");
         mapping.remap("vampirism:tombstone3", "vampirism:tombstone_cross");
+        mapping.remap("vampirism:fire_place", "minecraft:campfire");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {

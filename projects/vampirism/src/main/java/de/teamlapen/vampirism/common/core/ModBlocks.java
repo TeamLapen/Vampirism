@@ -207,7 +207,6 @@ public class ModBlocks {
     public static final DeferredBlock<Block> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = BLOCKS.registerBlock("blood_infused_enhanced_iron_block", PureBloodBlock::new, () -> copyProperties(Blocks.IRON_BLOCK).mapColor(MapColor.CRIMSON_HYPHAE).strength(6.5F, 8.0F));
 
     // Decorative Blocks
-    public static final DeferredBlock<FirePlaceBlock> FIRE_PLACE = BLOCKS.registerBlock("fire_place", FirePlaceBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).lightLevel(state -> 15).strength(1).ignitedByLava().noOcclusion());
     public static final DeferredBlock<AlchemicalFireBlock> ALCHEMICAL_FIRE = registerBlock("alchemical_fire", AlchemicalFireBlock::new, () -> copyProperties(Blocks.FIRE).mapColor(MapColor.COLOR_PURPLE).noLootTable());
 
     public static final DeferredBlock<StandingCandleStickBlock> CANDLE_STICK = registerBlock("candle_stick", props -> new StandingCandleStickBlock(null, () -> null, props), () -> basicProperties().mapColor(MapColor.METAL).noOcclusion().strength(0.5f).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));

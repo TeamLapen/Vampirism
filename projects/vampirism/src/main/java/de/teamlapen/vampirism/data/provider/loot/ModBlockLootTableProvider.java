@@ -76,7 +76,6 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.add(ModBlocks.CURSED_SPRUCE_DOOR.get(), this::createDoorTable);
         this.dropSelf(ModBlocks.ALTAR_CLEANSING.get());
         this.dropSelf(ModBlocks.CURSED_EARTH.get());
-        this.dropSelf(ModBlocks.FIRE_PLACE.get());
         this.add(ModBlocks.GARLIC.get(), applyExplosionDecay(ModBlocks.GARLIC.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool()
                         .add(LootItem.lootTableItem(ModBlocks.GARLIC.get())))
