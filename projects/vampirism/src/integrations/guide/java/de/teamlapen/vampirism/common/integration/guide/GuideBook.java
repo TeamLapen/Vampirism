@@ -132,7 +132,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> configPages = new ArrayList<>();
         configPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "config.text")));
-        configPages.addAll(PageHelper.pagesForLongText(FormattedText.composite(translateComponent(base + "config.general.text"), translateComponent(base + "config.general.examples"))));
+        configPages.addAll(PageHelper.pagesForLongText(FormattedText.composite(translateComponent(base + "config.general.text"), FormattedText.of("\n"), translateComponent(base + "config.general.examples"))));
         configPages.addAll(PageHelper.pagesForLongText(translateComponent(base + "config.balance.text")));
         entries.put(VIdentifier.mod(base + "config"), new EntryText(configPages, translateComponent(base + "config")));
 
@@ -256,7 +256,7 @@ public class GuideBook implements IGuideBook {
         assert titles != null;
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_VAMPIRE.get().getDescription(), titles.getLordTitle(1, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE), titles.getLordTitle(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.MALE), titles.getLordTitle(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.FEMALE))), VIdentifier.mod(("guide.vampirism.entity.taskmaster"))));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(3).setHeadline(translateComponent(base + "lord.titles"));
-        lordTitleBuilder.addLine(Component.translatable("text.vampirism.level"), Component.translatable("text.vampirism.title"), Component.translatable("text.vampirism.title"));
+        lordTitleBuilder.addLine(Component.translatable("gui.factionapi.level"), Component.translatable("gui.factionapi.title"), Component.translatable("gui.factionapi.title"));
         lordTitleBuilder.addLine(1, titles.getLordTitle(1, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE));
         lordTitleBuilder.addLine(2, titles.getLordTitle(2, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(2, IPlayableFaction.TitleGender.FEMALE));
         lordTitleBuilder.addLine(3, titles.getLordTitle(3, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(3, IPlayableFaction.TitleGender.FEMALE));

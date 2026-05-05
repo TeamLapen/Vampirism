@@ -10,16 +10,12 @@ import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.teamlapen.vampirism.common.world.items.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -33,7 +29,6 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
         super(recipe, ShapelessCraftingRecipeDisplay.class);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
         super.draw(guiGraphics, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
