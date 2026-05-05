@@ -7,8 +7,10 @@ import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.blocks.VelmorraAltarBlock;
 import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraDimension;
+import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import de.teamlapen.vampirism.common.world.portal.VelmorraPortalShape;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -45,7 +47,7 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
     }
 
     private void activatePortal(ServerLevel level) {
-        VelmorraDimension.createDimension(level.getServer());
-        VelmorraPortalShape.findEmptyPortalShape(level, worldPosition).ifPresent(x -> x.activate(level));
+        VelmorraPortalShape.findEmptyPortalShape(level, worldPosition)
+                .ifPresent(x -> x.activate(level));
     }
 }

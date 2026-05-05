@@ -99,14 +99,14 @@ public class VelmorraCommand extends BasicCommand {
     }
 
     private static int activatePortal(ServerLevel level, BlockPos blockPos) {
-        Optional<VelmorraPortalShape> emptyPortalShape = VelmorraPortalShape.findEmptyPortalShape(level, blockPos);
-        emptyPortalShape.ifPresent(x -> x.activate(level));
+        VelmorraPortalShape.findEmptyPortalShape(level, blockPos)
+                .ifPresent(x -> x.activate(level));
         return 0;
     }
 
     private static int deactivatePortal(ServerLevel level, BlockPos blockPos) {
-        Optional<VelmorraPortalShape> emptyPortalShape = VelmorraPortalShape.findActivePortalShape(level, blockPos);
-        emptyPortalShape.ifPresent(x -> x.deactivate(level));
+        VelmorraPortalShape.findActivePortalShape(level, blockPos)
+                .ifPresent(x -> x.deactivate(level));
         return 0;
     }
 

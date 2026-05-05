@@ -282,6 +282,14 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_obsidian", has(OBSIDIAN))
                 .unlockedBy("has_glass", has(GLASS))
                 .save(output);
+
+        shaped(RecipeCategory.MISC, ModItems.CHALICE)
+                .pattern("G G")
+                .pattern("GGG")
+                .pattern(" G ")
+                .define('G', GOLD_INGOT)
+                .unlockedBy("has_gold_ingot", has(GOLD_INGOT))
+                .save(output);
     }
 
     private void recipesDecorationalBlocks() {

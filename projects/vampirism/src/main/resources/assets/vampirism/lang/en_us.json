@@ -1130,8 +1130,10 @@
   "message.vampirism.village_raid.vampire": "Vampire Raid",
   "message.vampirism.village_raid.hunter": "Hunter Raid",
 
-  "message.vampirism.velmorra.crumblin": "Velmorra is slowly crumbling",
-  "message.vampirism.velmorra.crumblin2": "Velmorra is crumbling faster",
+  "message.vampirism.velmorra.crumblin": "Without its master, the realm of Velmorra rejects its own existence",
+  "message.vampirism.velmorra.crumblin2": "Velmorra consumes itself. Leave now, or be lost to the void",
+  "message.vampirism.dracula.defeated": "A hollow silence falls over the mansion... Dracula is no more",
+  "message.vampirism.dracula.summoned": "The scent of blood awakens the master of the mansion",
 
   "dialogue.vampirism.hunter.occupied": "I'm busy right now",
   "dialogue.vampirism.hunter.cured_sanguinare": "You have come to the right person. I have cured you of sanguinare",

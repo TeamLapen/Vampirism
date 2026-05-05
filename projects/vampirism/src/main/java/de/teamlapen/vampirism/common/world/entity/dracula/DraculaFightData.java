@@ -7,12 +7,15 @@ import de.teamlapen.vampirism.common.core.ModDimensions;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.world.blocks.ChaliceBlock;
 import de.teamlapen.vampirism.common.world.dimensions.DimensionManager;
+import de.teamlapen.vampirism.common.world.portal.VelmorraPortalShape;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Marker;
@@ -20,8 +23,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
@@ -32,6 +37,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Gatherer;
+import java.util.stream.Gatherers;
 
 public class DraculaFightData implements ValueIOSerializable {
 
@@ -40,6 +48,7 @@ public class DraculaFightData implements ValueIOSerializable {
     private final ServerDraculaEvent event = new ServerDraculaEvent(1, FightStage.NONE, false);
     private final ServerLevel level;
     private final Map<BlockPos, ChaliceReference> chaliceReferences = new HashMap<>();
+    private final Set<GlobalPos> portalLocations = new HashSet<>();
     private State dimensionState = State.NONE;
     @Nullable
     private UUID draculaId;
@@ -72,6 +81,10 @@ public class DraculaFightData implements ValueIOSerializable {
         }
     }
 
+    public void registerPortal(GlobalPos pos) {
+        this.portalLocations.add(pos);
+    }
+
     public void tick() {
         switch (dimensionState) {
             case INVALID -> {
@@ -80,14 +93,14 @@ public class DraculaFightData implements ValueIOSerializable {
             }
             case DEAD -> {
                 deathTicks++;
-                if (deathTicks >= 12000) {
+                if (deathTicks >= 12000/10) {
                     // TODO check if players need to send back
                     destroyDimension();
-                } else if (deathTicks >= 10000 && warningsSend == 1) {
-                    level.players().forEach(x -> x.sendOverlayMessage(Component.translatable("message.vampirism.velmorra.crumblin2")));
+                } else if (deathTicks >= 10000/10 && warningsSend == 1) {
+                    sendMessage(Component.translatable("message.vampirism.velmorra.crumblin2"));
                     warningsSend++;
-                } else if (deathTicks >= 5000 && warningsSend == 0) {
-                    level.players().forEach(x -> x.sendOverlayMessage(Component.translatable("message.vampirism.velmorra.crumblin")));
+                } else if (deathTicks >= 5000/10 && warningsSend == 0) {
+                    sendMessage(Component.translatable("message.vampirism.velmorra.crumblin"));
                     warningsSend++;
                 }
             }
@@ -99,13 +112,45 @@ public class DraculaFightData implements ValueIOSerializable {
             }
             case FIGHTING -> {
                 if (level.getGameTime() % 100 == 0){
-                    level.getPlayers(x -> true).forEach(event::addPlayer);
+                    level.players().forEach(event::addPlayer);
+                    if (this.draculaId == null) {
+                        LOGGER.error("Dracula id is null");
+                        this.dimensionState = State.INVALID;
+                    } else if (this.dracula == null || this.dracula.get() == null) {
+                        Entity entity = this.level.getEntity(this.draculaId);
+                        if (entity instanceof Dracula dra) {
+                            this.dracula = new WeakReference<>(dra);
+                        } else {
+                            LOGGER.error("Dracula is null");
+                            this.dimensionState = State.INVALID;
+                        }
+                    }
                 }
             }
         }
     }
 
     private void destroyDimension() {
+
+        this.level.players().forEach(player -> {
+            GlobalPos data = player.getData(ModAttachments.VELMORRA_PORTAL.get());
+            ServerLevel targetLevel = this.level.getServer().getLevel(data.dimension());
+            if (targetLevel != null) {
+                player.teleport(new TeleportTransition(targetLevel, data.pos().getBottomCenter(), Vec3.ZERO, 0, 0, Set.of(), TeleportTransition.PLAY_PORTAL_SOUND.then(TeleportTransition.PLACE_PORTAL_TICKET)));
+            }
+        });
+
+        var positions= portalLocations.stream().collect(Collectors.groupingBy(GlobalPos::dimension));
+
+        for (var pos : positions.entrySet()) {
+            ServerLevel portalLevel = level.getServer().getLevel(pos.getKey());
+            for (GlobalPos globalPos : pos.getValue()) {
+                VelmorraPortalShape.findActivePortalShape(portalLevel, globalPos.pos()).ifPresent(x -> x.deactivate(portalLevel));
+            }
+        }
+
+        this.event.clear();
+
         DimensionManager manager = DimensionManager.INSTANCE;
         manager.markDimensionForUnregistration(level.getServer(), ModDimensions.VELMORRA_LEVEL, true);
     }
@@ -125,6 +170,7 @@ public class DraculaFightData implements ValueIOSerializable {
             return;
         }
         dracula.setPos(spawnPoint.position());
+        dracula.setPersistenceRequired();
         this.event.setVisible(true);
         this.level.addFreshEntity(dracula);
         this.draculaId = dracula.getUUID();
@@ -132,6 +178,11 @@ public class DraculaFightData implements ValueIOSerializable {
         this.chaliceReferences.forEach((pos, chalice) -> {
             this.level.setBlock(pos, this.level.getBlockState(pos).setValue(ChaliceBlock.FILLED, false), Block.UPDATE_ALL);
         });
+        this.sendMessage(Component.translatable("message.vampirism.dracula.summoned"));
+    }
+
+    private void sendMessage(Component component) {
+        level.players().forEach(x -> x.sendOverlayMessage(component));
     }
 
     public void draculaDied(Dracula dracula) {
@@ -139,9 +190,10 @@ public class DraculaFightData implements ValueIOSerializable {
             return;
         }
         this.dimensionState = State.DEAD;
-        applyAward();
+        this.applyAward();
         this.event.clear();
-        activatePortal();
+        this.activatePortal();
+        this.sendMessage(Component.translatable("message.vampirism.dracula.defeated"));
     }
 
     public void applyAward() {

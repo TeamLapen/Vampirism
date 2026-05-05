@@ -3,8 +3,11 @@ package de.teamlapen.vampirism.common.world.portal;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.world.blocks.PortalGatewayBlock;
 import de.teamlapen.vampirism.common.world.blocks.VelmorraPortalBlock;
+import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraDimension;
+import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
@@ -28,11 +31,17 @@ public class VelmorraPortalShape {
         this.bottom = bottom;
     }
 
+    public BlockPos getBottom() {
+        return this.bottom;
+    }
+
     public void activate(ServerLevel level) {
         if (!this.isActive) {
             BlockState blockState = ModBlocks.VELMORRA_PORTAL.get().defaultBlockState().setValue(VelmorraPortalBlock.AXIS, this.direction.getAxis());
             executeInner(level, blockState);
             this.isActive = true;
+            DraculaFightData.getOpt(VelmorraDimension.createDimension(level.getServer()))
+                    .ifPresent(data -> data.registerPortal(new GlobalPos(level.dimension(), this.bottom)));
         }
     }
 
@@ -64,7 +73,7 @@ public class VelmorraPortalShape {
     }
 
     public static Optional<VelmorraPortalShape> findActivePortalShape(LevelAccessor level, BlockPos startPosition) {
-        return findPortalShape(level, startPosition, shape -> !shape.isActive);
+        return findPortalShape(level, startPosition, shape -> shape.isActive);
     }
 
     public static Optional<VelmorraPortalShape> findPortalShape(LevelAccessor level, BlockPos startPosition, Predicate<VelmorraPortalShape> predicate) {

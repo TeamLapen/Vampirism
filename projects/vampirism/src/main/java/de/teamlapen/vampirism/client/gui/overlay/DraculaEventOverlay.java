@@ -23,7 +23,7 @@ public class DraculaEventOverlay extends BaseOverlay {
 
     @Override
     public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
-        if (this.event != null && this.event.getStage() != FightStage.NONE) {
+        if (this.event != null) {
             guiGraphics.nextStratum();
             Matrix3x2fStack pose = guiGraphics.pose();
             pose.pushMatrix();

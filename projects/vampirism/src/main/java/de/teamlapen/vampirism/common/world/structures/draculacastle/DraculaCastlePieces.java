@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.common.world.structures.draculacastle;
 
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModLootTables;
 import de.teamlapen.vampirism.common.core.ModStructures;
+import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Marker;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -28,11 +31,14 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSetting
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.neoforged.neoforge.common.Tags;
+import org.slf4j.Logger;
 
 import java.util.Locale;
 
 public class DraculaCastlePieces {
 
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(DraculaCastlePieces.class);
     private static final int structureWidth = 271;
     private static final int structureDepth = 271;
 
@@ -148,6 +154,15 @@ public class DraculaCastlePieces {
                     villager.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), EntitySpawnReason.STRUCTURE, null);
                     level.addFreshEntity(villager);
                     level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                }
+            } else if (name.equals("vampirism:dracula_marker")) {
+                Marker marker = EntityType.MARKER.create(level.getLevel(), EntitySpawnReason.STRUCTURE);
+                if (marker == null) {
+                    LOGGER.error("Failed to spawn dracula marker");
+                } else {
+                    marker.setData(ModAttachments.MARKER, DraculaFightData.DRACULA_SPAWN_MARKER);
+                    marker.setPos(pos.getCenter());
+                    level.addFreshEntity(marker);
                 }
             }
         }
