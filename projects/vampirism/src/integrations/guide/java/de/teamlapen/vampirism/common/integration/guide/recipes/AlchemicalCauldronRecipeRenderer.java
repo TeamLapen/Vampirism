@@ -16,14 +16,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,17 +35,18 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
     }
 
     @Override
-    public void draw(GuiGraphics guiGraphics, Book book, CategoryBase category, EntryBase entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuideBookScreen screen, Font font, IngredientCycler ingredientCycler){
-        CRAFTING_GRID.draw(guiGraphics, guiLeft + 60, guiTop + 42);
-        GuiHelper.drawCenteredStringWithoutShadow(guiGraphics, font, ModBlocks.ALCHEMICAL_CAULDRON.get().getName(), guiLeft + screen.xSize() / 2, guiTop + 12, book.getTextColor());
-        GuiHelper.drawCenteredStringWithoutShadow(guiGraphics, font, Component.literal("§o").append(Component.translatable("guideapi.text.crafting.shaped")).append("§r"), guiLeft + screen.xSize() / 2, guiTop + 14 + font.lineHeight, book.getTextColor());
+    public void draw(GuiGraphics guiGraphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font font, IngredientCycler ingredientCycler) {
 
-        int outputX = guiLeft + 150;
-        int outputY = guiTop + 71;
-        int in1X = guiLeft + 78;
-        int in1Y = guiTop + 59;
-        int in2X = guiLeft + 108;
-        int in2Y = guiTop + 59;
+        CRAFTING_GRID.draw(guiGraphics, pageLeft - 39 + 60, pageTop - 13 + 42);
+        GuiHelper.drawCenteredStringWithoutShadow(guiGraphics, font, ModBlocks.ALCHEMICAL_CAULDRON.get().getName(), screen.pageXCenter(), pageTop - 13 + 12, book.getTextColor());
+        GuiHelper.drawCenteredStringWithoutShadow(guiGraphics, font, Component.literal("§o").append(Component.translatable("guideapi.text.crafting.shaped")).append("§r"), screen.pageXCenter(), pageTop - 13 + 14 + font.lineHeight, book.getTextColor());
+
+        int outputX = pageLeft - 39 + 150;
+        int outputY = pageTop - 13 + 71;
+        int in1X = pageLeft - 39 + 78;
+        int in1Y = pageTop - 13 + 59;
+        int in2X = pageLeft - 39 + 108;
+        int in2Y = pageTop - 13 + 59;
 
         ItemStack itemStack = recipe.value().result();
 
@@ -77,10 +76,10 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
         });
 
 
-        int y = guiTop + 120;
+        int y = pageTop - 13 + 120;
         if (recipe.value().getRequiredLevel() > 1) {
             Component level = Component.translatable("container.vampirism.hunter_table.level", recipe.value().getRequiredLevel());
-            guiGraphics.drawString(font, level, guiLeft + 50, y, Color.GRAY.getRGB(), false);
+            guiGraphics.drawString(font, level, pageLeft - 39 + 50, y, Color.GRAY.getRGB(), false);
             y += font.lineHeight + 2;
         }
         if (!recipe.value().getRequiredSkills().isEmpty()) {
@@ -91,7 +90,7 @@ public class AlchemicalCauldronRecipeRenderer extends IRecipeRenderer.RecipeRend
                 skills.add(skill.value().getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
-            guiGraphics.drawWordWrap(font, FormattedText.composite(skills), guiLeft + 50, y, 100, Color.GRAY.getRGB(),false);
+            guiGraphics.drawWordWrap(font, FormattedText.composite(skills), pageLeft - 39 + 50, y, 100, Color.GRAY.getRGB(), false);
         }
     }
 

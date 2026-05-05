@@ -30,14 +30,15 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
     }
 
     @Override
-    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
-        super.draw(guiGraphics, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
+    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int pageLeft, int pageTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
+        super.draw(guiGraphics, book, categoryAbstract, entryAbstract, pageLeft, pageTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
+
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 int i = 3 * y + x;
                 if (i < inputs.size()) {
-                    int stackX = (x + 1) * 17 + (guiLeft + 49);
-                    int stackY = (y + 1) * 17 + (guiTop + 30);
+                    int stackX = (x + 1) * 17 + (pageLeft - 39 + 49);
+                    int stackY = (y + 1) * 17 + (pageTop - 13 + 30);
                     ItemStack itemStack = ingredientCycler.getCycledIngredientStack(inputs.get(i), i);
                     GuiHelper.drawItemStack(guiGraphics, itemStack, stackX, stackY);
                     if (GuiHelper.isMouseBetween(mouseX, mouseY, stackX, stackY, 15, 15)) {

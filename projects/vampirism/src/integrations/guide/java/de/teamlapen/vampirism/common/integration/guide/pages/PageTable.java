@@ -6,7 +6,7 @@ import de.maxanier.guideapi.api.book.Book;
 import de.maxanier.guideapi.api.category.CategoryBase;
 import de.maxanier.guideapi.api.entry.EntryBase;
 import de.maxanier.guideapi.api.pages.Page;
-import de.teamlapen.faction.common.util.Color;
+import de.maxanier.guideapi.api.util.GuiHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -39,18 +39,19 @@ public class PageTable extends Page {
 
 
     @Override
-    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase category, EntryBase entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuideBookScreen guiBase, Font font) {
+    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font font) {
+
         float charWidth = font.width("W");
-        int x = guiLeft + 39;
-        int y = guiTop + 12;
+        int x = pageLeft - 39 + 39;
+        int y = pageTop - 13 + 12;
         if (headline != null) {
             guiGraphics.drawString(font, headline.withStyle(ChatFormatting.BOLD), x, y, book.getTextColor(), false);
             y += font.lineHeight;
         }
-        drawLine(guiGraphics, x, y + font.lineHeight, (int) (x + (guiBase.xSize() - 2 * 39)), y + font.lineHeight);
+        GuiHelper.drawLine(guiGraphics, x, y + font.lineHeight, x + screen.pageWidth(), y + font.lineHeight, 1, book.getTextColor());
         y += 2;
         for (Component[] l : lines) {
-            x = guiLeft + 39;
+            x = pageLeft - 39 + 39;
             for (int i = 0; i < l.length; i++) {
                 int mw = (int) (width[i] * charWidth);
                 int aw = font.width(l[i]);
@@ -62,11 +63,6 @@ public class PageTable extends Page {
 
         }
 
-    }
-
-
-    protected void drawLine(@NotNull GuiGraphics guiGraphics, int x1, int y1, int x2, int y2) {
-        guiGraphics.fill(x1, y1, x2 + 1, y2 + 1, Color.GRAY.getRGB()); //TODO test and potentially inline
     }
 
 

@@ -14,7 +14,6 @@ import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.factions.tasks.TaskUnlocker;
 import de.teamlapen.faction.common.factions.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.common.tags.ModTaskTags;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
@@ -77,11 +76,11 @@ public class PageTask extends PageText {
     }
 
     @Override
-    public void drawExtras(GuiGraphics graphics, Book book, CategoryBase category, EntryBase entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
+    public void drawExtras(GuiGraphics graphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
         if (this.setup) {
             ingredientCycler.tick(screen.getMinecraft().level.getGameTime());
             ItemStack s = ingredientCycler.getCycledIngredientStack(stacks, 0);
-            GuiHelper.drawScaledItemStack(graphics, s, guiLeft + 101, guiTop + 20, 3);
+            GuiHelper.drawScaledItemStack(graphics, s, pageLeft - 39 + 101, pageTop - 13 + 20, 3);
         }
     }
 

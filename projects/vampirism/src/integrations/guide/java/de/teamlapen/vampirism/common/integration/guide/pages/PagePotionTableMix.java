@@ -59,7 +59,8 @@ public class PagePotionTableMix extends Page {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, Book book, CategoryBase category, EntryBase entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
+    public void draw(GuiGraphics graphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
+
         //Update cycle
         long time = screen.getMinecraft().level != null ? screen.getMinecraft().level.getGameTime() : 0L;
         if (this.lastCycle < 0L || this.lastCycle < time - 60L) {
@@ -71,8 +72,8 @@ public class PagePotionTableMix extends Page {
         }
 
 
-        int xStart = guiLeft + screen.xSize() / 2 - 44;
-        int yStart = guiTop + 20;
+        int xStart = screen.pageXCenter() - 44;
+        int yStart = pageTop - 13 + 20;
         POTION_GRID.draw(graphics, xStart, yStart);
 
         List<Component> tooltip = null;
@@ -98,7 +99,7 @@ public class PagePotionTableMix extends Page {
         y = yStart + 29;
         GuiHelper.drawItemStack(graphics, output, x, y);
         if (GuiHelper.isMouseBetween(mouseX, mouseY, x, y, 15, 15)) tooltip = GuiHelper.getTooltip(output);
-        PageHelper.drawFormattedText(graphics, guiLeft + 43, yStart + 80, description, book.getTextColor());
+        PageHelper.drawFormattedText(graphics, pageLeft - 39 + 43, yStart + 80, description, book.getTextColor());
 
         if (tooltip != null) {
             tooltips.addAll(tooltip);
@@ -110,8 +111,8 @@ public class PagePotionTableMix extends Page {
     private final List<Component> tooltips = Lists.newArrayList();
 
     @Override
-    public void drawExtras(GuiGraphics graphics, Book book, CategoryBase category, EntryBase entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
-        super.drawExtras(graphics, book, category, entry, guiLeft, guiTop, mouseX, mouseY, screen, fontRendererObj);
+    public void drawExtras(GuiGraphics graphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
+        super.drawExtras(graphics, book, category, entry, pageLeft, pageTop, mouseX, mouseY, screen, fontRendererObj);
 
         graphics.setTooltipForNextFrame(Minecraft.getInstance().font,
                 tooltips,

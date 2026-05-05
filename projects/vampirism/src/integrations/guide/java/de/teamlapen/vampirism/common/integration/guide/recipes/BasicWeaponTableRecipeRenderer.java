@@ -39,15 +39,14 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe, Q exte
     }
 
     @Override
-    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, IngredientCycler ingredientCycler) {
+    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int pageLeft, int pageTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, IngredientCycler ingredientCycler) {
 
+        CRAFTING_GRID.draw(guiGraphics, pageLeft - 39 + 62, pageTop - 13 + 43);
+        GuiHelper.drawCenteredStringWithoutShadow(guiGraphics, fontRenderer, ModBlocks.WEAPON_TABLE.get().getName(), baseScreen.pageXCenter(), pageTop - 13 + 12, book.getTextColor());
+        GuiHelper.drawCenteredStringWithoutShadow(guiGraphics, fontRenderer, getRecipeName().withStyle(style -> style.withItalic(true)), baseScreen.pageXCenter(), pageTop - 13 + 14 + fontRenderer.lineHeight, book.getTextColor());
 
-        CRAFTING_GRID.draw(guiGraphics, guiLeft + 62, guiTop + 43);
-        GuiHelper.drawCenteredStringWithoutShadow(guiGraphics, fontRenderer, ModBlocks.WEAPON_TABLE.get().getName(), guiLeft + baseScreen.xSize() / 2, guiTop + 12, book.getTextColor());
-        GuiHelper.drawCenteredStringWithoutShadow(guiGraphics, fontRenderer, getRecipeName().withStyle(style -> style.withItalic(true)), guiLeft + baseScreen.xSize() / 2, guiTop + 14 + fontRenderer.lineHeight, book.getTextColor());
-
-        int outputX = guiLeft + 152;
-        int outputY = guiTop + 72;
+        int outputX = pageLeft - 39 + 152;
+        int outputY = pageTop - 13 + 72;
 
 
         ItemStack outputStack = ingredientCycler.getCycledIngredientStack(this.outputs, -1);
@@ -61,10 +60,10 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe, Q exte
             GuiHelper.drawItemStack(guiGraphics, new ItemStack(Items.LAVA_BUCKET), outputX - 16, outputY + 21);
         }
 
-        int y = guiTop + 120;
+        int y = pageTop - 13 + 120;
         if (recipe.value().getRequiredLevel() > 1) {
             Component level = Component.translatable("container.vampirism.hunter_table.level", recipe.value().getRequiredLevel());
-            guiGraphics.drawString(fontRenderer, level, guiLeft + 40, y, Color.GRAY.getRGB(), false);
+            guiGraphics.drawString(fontRenderer, level, pageLeft - 39 + 40, y, Color.GRAY.getRGB(), false);
             y += fontRenderer.lineHeight + 2;
         }
         if (!recipe.value().getRequiredSkills().isEmpty()) {
@@ -75,7 +74,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe, Q exte
                 skills.add(skill.value().getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
-            guiGraphics.drawWordWrap(fontRenderer, FormattedText.composite(skills), guiLeft + 40, y, 110, Color.GRAY.getRGB());
+            guiGraphics.drawWordWrap(fontRenderer, FormattedText.composite(skills), pageLeft - 39 + 40, y, 110, Color.GRAY.getRGB());
         }
     }
 

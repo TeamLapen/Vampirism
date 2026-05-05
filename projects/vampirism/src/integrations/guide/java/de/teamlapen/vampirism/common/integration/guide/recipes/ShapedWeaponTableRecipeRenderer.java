@@ -9,7 +9,6 @@ import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.teamlapen.vampirism.common.world.items.recipes.ShapedWeaponTableRecipe;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -27,13 +26,14 @@ public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRende
     }
 
     @Override
-    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
-        super.draw(guiGraphics, book, categoryAbstract, entryAbstract, guiLeft, guiTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
+    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int pageLeft, int pageTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
+        super.draw(guiGraphics, book, categoryAbstract, entryAbstract, pageLeft, pageTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
+
         display().ifPresent(d-> {
             for (int y = 0; y < d.height(); y++) {
                 for (int x = 0; x < d.width(); x++) {
-                    int stackX = (x + 1) * 17 + (guiLeft + 49);
-                    int stackY = (y + 1) * 17 + (guiTop + 30);
+                    int stackX = (x + 1) * 17 + (pageLeft - 39 + 49);
+                    int stackY = (y + 1) * 17 + (pageTop - 13 + 30);
                     int i = y * d.width() + x;
                     if (i < inputs.size()) {
                         ItemStack itemStack = ingredientCycler.getCycledIngredientStack(inputs.get(i), i);
