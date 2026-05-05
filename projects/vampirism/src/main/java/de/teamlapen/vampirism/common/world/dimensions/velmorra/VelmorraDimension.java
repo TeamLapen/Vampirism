@@ -11,6 +11,7 @@ import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 
+import java.util.OptionalLong;
 import java.util.function.Function;
 
 public class VelmorraDimension {
@@ -18,7 +19,10 @@ public class VelmorraDimension {
     public static void createDimension(MinecraftServer server) {
         DimensionManager.INSTANCE.getOrCreateLevel(server, ModDimensions.VELMORRA_LEVEL, () -> {
             RegistryAccess.Frozen context = server.registryAccess();
-            return new LevelStem(context.lookupOrThrow(Registries.DIMENSION_TYPE).getOrThrow(ModDimensions.VELMORRA_DIMENSION_TYPE), new NoiseBasedChunkGenerator(new VelmorraBiomeSource(context.lookupOrThrow(Registries.BIOME)), context.lookupOrThrow(Registries.NOISE_SETTINGS).getOrThrow(ModDimensions.VELMORRA_NOISE_GENERATOR)));
+            return new LevelStem(
+                    context.lookupOrThrow(Registries.DIMENSION_TYPE).getOrThrow(ModDimensions.VELMORRA_DIMENSION_TYPE),
+                    new NoiseBasedChunkGenerator(new VelmorraBiomeSource(context.lookupOrThrow(Registries.BIOME)), context.lookupOrThrow(Registries.NOISE_SETTINGS).getOrThrow(ModDimensions.VELMORRA_NOISE_GENERATOR)),
+                    OptionalLong.of(server.getRandomSequence(ModDimensions.VELMORRA).nextLong()));
         });
     }
 

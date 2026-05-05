@@ -276,6 +276,7 @@
   "block.vampirism.velmorra_portal": "Velmorra Portal",
   "block.vampirism.velmorra_portal_arch": "Velmorra Portal Arch",
   "block.vampirism.velmorra_altar": "Velmorra Altar",
+  "block.vampirism.chalice": "Chalice",
 
   "item.vampirism.iron_heart_seeker": "Iron Heartseeker",
   "item.vampirism.diamond_heart_seeker": "Diamond Heartseeker",
@@ -1128,6 +1129,9 @@
   "message.vampirism.village_raid.attacked.hunter": "%s attacked a nearby hunter village",
   "message.vampirism.village_raid.vampire": "Vampire Raid",
   "message.vampirism.village_raid.hunter": "Hunter Raid",
+
+  "message.vampirism.velmorra.crumblin": "Velmorra is slowly crumbling",
+  "message.vampirism.velmorra.crumblin2": "Velmorra is crumbling faster",
 
   "dialogue.vampirism.hunter.occupied": "I'm busy right now",
   "dialogue.vampirism.hunter.cured_sanguinare": "You have come to the right person. I have cured you of sanguinare",

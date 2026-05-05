@@ -26,6 +26,7 @@
     "ThrowablePotionItemMixin",
     "ThrownPotionMixin",
     "VibrationSystemUserMixin",
+    "WorldGenSettingsMixin",
     "accessor.AnimationStateAccessor",
     "accessor.AttributeInstanceAccessor",
     "accessor.EntityAccessor",

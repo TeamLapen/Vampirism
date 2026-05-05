@@ -4,11 +4,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
-public class VelmorraDimensionEvent extends Event implements ICancellableEvent
+public class DimensionRemoveEvent extends Event implements ICancellableEvent
 {
     private final ServerLevel level;
 
-    public VelmorraDimensionEvent(ServerLevel level)
+    public DimensionRemoveEvent(ServerLevel level)
     {
         this.level = level;
     }

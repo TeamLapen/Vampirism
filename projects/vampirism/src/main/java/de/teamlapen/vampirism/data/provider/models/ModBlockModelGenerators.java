@@ -108,6 +108,11 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
 
         createNonTemplateModelBlock(ModBlocks.BLOOD.get());
         createParticleOnlyBlock(ModBlocks.VELMORRA_PORTAL.get(), Blocks.OBSIDIAN);
+
+        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ModBlocks.CHALICE.get())
+                .with(PropertyDispatch.initial(ChaliceBlock.FILLED)
+                        .select(true, plainVariant(getModelLocation(ModBlocks.CHALICE.get(), "_filled")))
+                        .select(false, plainVariant(getModelLocation(ModBlocks.CHALICE.get())))));
     }
 
     protected void createCursedEarthPath() {

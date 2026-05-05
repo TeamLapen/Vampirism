@@ -133,7 +133,10 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 PARTICLE_CLOUD,
                 REMAINS_DEFENDER,
                 VULNERABLE_REMAINS_DUMMY,
-                DRACULA
+                DRACULA,
+                BLOOD_PROJECTILE,
+                FLYING_NEEDLE,
+                FLYING_SWORD
         ).forEach(entity -> this.add(entity.get(), LootTable.lootTable()));
     }
 

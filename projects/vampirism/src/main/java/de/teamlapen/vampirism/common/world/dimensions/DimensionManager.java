@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.serialization.Lifecycle;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundUpdateDimensionsPacket;
-import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraDimensionEvent;
+import de.teamlapen.vampirism.common.world.dimensions.velmorra.DimensionRemoveEvent;
 import net.minecraft.core.*;
 import net.minecraft.core.RegistryAccess.ImmutableRegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -14,7 +14,9 @@ import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.WorldGenSettings;
 import net.minecraft.world.level.storage.DerivedLevelData;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.storage.LevelStorageSource.LevelStorageAccess;
@@ -98,9 +100,6 @@ public class DimensionManager {
     @SuppressWarnings("deprecation") // markWorldsDirty is deprecated, see below
     private static ServerLevel createAndRegisterLevel(final MinecraftServer server, final Map<ResourceKey<Level>, ServerLevel> map, final ResourceKey<Level> levelKey, Supplier<LevelStem> dimensionFactory)
     {
-        // get everything we need to create the dimension and the level
-        final ServerLevel overworld = server.getLevel(Level.OVERWORLD);
-
         // dimension keys have a 1:1 relationship with level keys, they have the same IDs as well
         final ResourceKey<LevelStem> dimensionKey = ResourceKey.create(Registries.LEVEL_STEM, levelKey.identifier());
         final LevelStem dimension = dimensionFactory.get();
@@ -110,6 +109,9 @@ public class DimensionManager {
         final LevelStorageAccess anvilConverter = server.vampirism$storageSource();
         final WorldData worldData = server.getWorldData();
         final DerivedLevelData derivedLevelData = new DerivedLevelData(worldData, worldData.overworldData());
+        final WorldGenSettings worldGenSettings = server.getWorldGenSettings();
+        long serverSeed = worldGenSettings.options().seed();
+
 
         // now we have everything we need to create the dimension and the level
         // this is the same order server init creates levels:
@@ -128,6 +130,9 @@ public class DimensionManager {
             throw new IllegalStateException(String.format("Unable to register dimension %s -- dimension registry not writable", dimensionKey.identifier()));
         }
 
+        worldGenSettings.vampirism$addDimension(dimensionKey,  dimension);
+
+
         // create the level instance
         final ServerLevel newLevel = new ServerLevel(
                 server,
@@ -137,7 +142,7 @@ public class DimensionManager {
                 levelKey,
                 dimension,
                 worldData.isDebugWorld(),
-                overworld.getSeed(), // don't need to call BiomeManager#obfuscateSeed, overworld seed is already obfuscated
+                BiomeManager.obfuscateSeed(dimension.seedOverride().orElse(serverSeed)),
                 List.of(), // "special spawn list"
                 // phantoms, travelling traders, patrolling/sieging raiders, and cats are overworld special spawns
                 // this is always empty for non-overworld dimensions (including json dimensions)
@@ -167,14 +172,13 @@ public class DimensionManager {
         return newLevel;
     }
 
-    @SuppressWarnings("deprecation")
     private void unregisterScheduledDimensions(final MinecraftServer server)
     {
         if (this.levelsPendingUnregistration.isEmpty())
             return;
 
         // flush the buffer
-        final Set<UnregistrationTicket> keysToRemove = this.levelsPendingUnregistration;
+        final Map<ResourceKey<Level>, UnregistrationTicket> keysToRemove = this.levelsPendingUnregistration.stream().collect(Collectors.toMap(UnregistrationTicket::levelKey, x -> x));
         this.levelsPendingUnregistration = new HashSet<>();
 
         // we need to remove the dimension/level from three places:
@@ -183,6 +187,10 @@ public class DimensionManager {
         // the level registry is just a simple map and the border listener has a remove() method
         // the dimension registry has five sub-collections that need to be cleaned up
         // we should also eject players from removed worlds so they don't get stuck there
+
+        WorldGenSettings worldGenSettings = server.getWorldGenSettings();
+        //noinspection unchecked
+        worldGenSettings.vampirism$removeDimension(keysToRemove.keySet().toArray(ResourceKey[]::new));
 
         final Registry<LevelStem> oldRegistry = server.registryAccess().lookupOrThrow(Registries.LEVEL_STEM);
         if (!(oldRegistry instanceof MappedRegistry<LevelStem> oldMappedRegistry))
@@ -198,22 +206,23 @@ public class DimensionManager {
             return;
         }
 
-        final Set<UnregistrationTicket> removedLevelKeys = new HashSet<>();
+        final Set<ResourceKey<Level>> removedLevelKeys = new HashSet<>();
         final ServerLevel overworld = server.getLevel(Level.OVERWORLD);
 
-        for (final UnregistrationTicket levelKeyToRemove : keysToRemove)
+        for (final ResourceKey<Level> levelKeyToRemove : keysToRemove.keySet())
         {
-            final @Nullable ServerLevel levelToRemove = server.getLevel(levelKeyToRemove.levelKey());
+            final @Nullable ServerLevel levelToRemove = server.getLevel(levelKeyToRemove);
             if (levelToRemove == null)
                 continue;
 
-            VelmorraDimensionEvent unregisterDimensionEvent = new VelmorraDimensionEvent(levelToRemove);
+            DimensionRemoveEvent unregisterDimensionEvent = new DimensionRemoveEvent(levelToRemove);
             NeoForge.EVENT_BUS.post(unregisterDimensionEvent);
             if (unregisterDimensionEvent.isCanceled())
                 continue;
 
             // null if specified level not present
-            final @Nullable ServerLevel removedLevel = server.forgeGetWorldMap().remove(levelKeyToRemove.levelKey());
+            @SuppressWarnings("deprecation")
+            final @Nullable ServerLevel removedLevel = server.forgeGetWorldMap().remove(levelKeyToRemove);
 
             if (removedLevel != null) // if we removed the key from the map
             {
@@ -227,7 +236,7 @@ public class DimensionManager {
                     ResourceKey<Level> respawnKey = respawnData.dimension();
                     BlockPos destinationPos = respawnData.pos();
                     // if we're removing their respawn world then just send them to the overworld
-                    if (keysToRemove.contains(respawnKey))
+                    if (keysToRemove.containsKey(respawnKey))
                     {
                         respawnKey = Level.OVERWORLD;
                         // make sure to wipe the player's respawn point if it was set here
@@ -278,7 +287,7 @@ public class DimensionManager {
                 final ResourceKey<LevelStem> oldKey = entry.getKey();
                 final ResourceKey<Level> oldLevelKey = ResourceKey.create(Registries.DIMENSION, oldKey.identifier());
                 final LevelStem dimension = entry.getValue();
-                if (oldKey != null && dimension != null && removedLevelKeys.stream().noneMatch(x -> x.levelKey() == oldLevelKey))
+                if (dimension != null && removedLevelKeys.stream().noneMatch(x -> x == oldLevelKey))
                 {
                     newRegistry.register(oldKey, dimension, oldRegistry.registrationInfo(oldKey).orElse(DIMENSION_REGISTRATION_INFO));
                 }
@@ -320,10 +329,11 @@ public class DimensionManager {
             server.markWorldsDirty();
 
             // notify client of the removed levels
-            server.getPlayerList().broadcastAll(new ClientboundUpdateDimensionsPacket(removedLevelKeys.stream().map(UnregistrationTicket::levelKey).collect(Collectors.toUnmodifiableSet()), false));
+            server.getPlayerList().broadcastAll(new ClientboundUpdateDimensionsPacket(removedLevelKeys.stream().collect(Collectors.toUnmodifiableSet()), false));
         }
 
-        for (UnregistrationTicket ticket : removedLevelKeys) {
+        for (ResourceKey<Level> key : removedLevelKeys) {
+            var ticket = keysToRemove.get(key);
             if (ticket.deleteDataFromDisk()) {
                 deletePersistentData(server, ticket.levelKey());
             }

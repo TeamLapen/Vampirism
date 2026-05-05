@@ -102,17 +102,11 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
     }
 
     protected void updateEvent() {
-        if (this.level() instanceof ServerLevel serverLevel) {
-            DraculaFightData data = serverLevel.getData(ModAttachments.DRACULA_FIGHT_DATA.get());
-            data.getEvent().update(this);
-        }
+        DraculaFightData.getOpt(this.level()).ifPresent(x -> x.getEvent().update(this));
     }
 
     protected void addPlayerToEvent(ServerPlayer player) {
-        if (this.level() instanceof ServerLevel serverLevel) {
-            DraculaFightData data = serverLevel.getData(ModAttachments.DRACULA_FIGHT_DATA.get());
-            data.getEvent().addPlayer(player);
-        }
+        DraculaFightData.getOpt(this.level()).ifPresent(x -> x.getEvent().addPlayer(player));
     }
 
     //<editor-fold desc="Data">
@@ -458,9 +452,7 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
     @Override
     public void die(DamageSource damageSource) {
         super.die(damageSource);
-        if (this.level() instanceof ServerLevel serverLevel) {
-            serverLevel.getData(ModAttachments.DRACULA_FIGHT_DATA.get()).getEvent().clear();
-        }
+        DraculaFightData.getOpt(level()).ifPresent  (x -> x.draculaDied(this));
     }
 
     //</editor-fold>

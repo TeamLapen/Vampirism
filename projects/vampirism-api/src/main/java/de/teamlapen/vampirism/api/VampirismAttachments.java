@@ -34,5 +34,6 @@ public class VampirismAttachments {
         public static final Identifier HUNTER_MINION_DATA = VIdentifier.mod("hunter_minion_data");
         public static final Identifier VELMORRA_PORTAL = VIdentifier.mod("velmorra_portal");
         public static final Identifier DRACULA_FIGHT_DATA = VIdentifier.mod("dracula_fight_data");
+        public static final Identifier MARKER = VIdentifier.mod("marker");
     }
 }

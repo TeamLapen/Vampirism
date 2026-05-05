@@ -198,6 +198,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
         this.dropSelf(ModBlocks.INFUSER.get());
         this.dropSelf(ModBlocks.VELMORRA_ALTAR.get());
+        this.dropSelf(ModBlocks.CHALICE.get());
 
         ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.forEach(pair -> this.dropSelf(pair.getFirst()));
         ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.forEach(pair -> this.dropSelf(pair.getFirst()));

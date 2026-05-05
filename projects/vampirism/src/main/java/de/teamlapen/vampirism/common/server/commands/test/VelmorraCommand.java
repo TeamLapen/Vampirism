@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.common.server.commands.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
+import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDimensions;
 import de.teamlapen.vampirism.common.world.blocks.PortalGatewayBlock;
 import de.teamlapen.vampirism.common.world.dimensions.DimensionManager;
 import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraBiomeSource;
+import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import de.teamlapen.vampirism.common.world.portal.VelmorraPortalShape;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -16,9 +18,13 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Marker;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
@@ -30,6 +36,9 @@ public class VelmorraCommand extends BasicCommand {
                         .executes(context -> createVelmorra(context.getSource().getServer())))
                 .then(Commands.literal("remove")
                         .executes(context -> removeVelmorra(context.getSource().getServer())))
+                .then(Commands.literal("marker")
+                        .then(Commands.literal("dracula")
+                                .executes(c -> markerDracula(c.getSource().getLevel(), c.getSource().getPlayerOrException().position()))))
                 .then(Commands.literal("portal")
                         .then(Commands.literal("create")
                                 .executes(context -> createPortal(context.getSource().getLevel(), context.getSource().getPlayerOrException().blockPosition(), context.getSource().getPlayerOrException().getNearestViewDirection())))
@@ -39,8 +48,22 @@ public class VelmorraCommand extends BasicCommand {
                                 .executes(context -> deactivatePortal(context.getSource().getLevel(), context.getSource().getPlayerOrException().blockPosition()))));
     }
 
+    private static int markerDracula(ServerLevel server, Vec3 blockPos) {
+        Marker marker = EntityType.MARKER.create(server, EntitySpawnReason.COMMAND);
+        if (marker == null) {
+            throw new IllegalStateException("Could not create marker");
+        }
+        marker.setData(ModAttachments.MARKER, DraculaFightData.DRACULA_SPAWN_MARKER);
+        marker.setPos(blockPos);
+        server.addFreshEntity(marker);
+        return 0;
+    }
+
     private static int createPortal(ServerLevel level, BlockPos blockPos, Direction nearestViewDirection) {
 
+        if (nearestViewDirection.getAxis() == Direction.Axis.Y) {
+            throw new IllegalArgumentException("Can not create portal. Look into a direction");
+        }
         BlockPos start = blockPos.relative(nearestViewDirection, 3).relative(nearestViewDirection.getCounterClockWise(), 2).below();
 
         level.setBlockAndUpdate(start, ModBlocks.DARK_STONE_BRICKS.get().defaultBlockState());

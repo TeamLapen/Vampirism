@@ -48,5 +48,6 @@ public class VampirismDataComponents {
         public static final Identifier ACTIVE = VIdentifier.mod("active");
         public static final Identifier HELD_ENTITY = VIdentifier.mod("held_entity");
         public static final Identifier CHARGED_RITUAL_KNIFE = VIdentifier.mod("charged_ritual_knife");
+        public static final Identifier MARKER = VIdentifier.mod("marker");
     }
 }

@@ -101,5 +101,8 @@
   ],
   "net/minecraft/world/entity/AnimationState": [
     "de/teamlapen/vampirism/misc/injection/IAnimationStateVampirismMock"
+  ],
+  "net/minecraft/world/level/levelgen/WorldGenSettings": [
+    "de/teamlapen/vampirism/misc/injection/IWorldGenSettingsVampirismMock"
   ]
 }

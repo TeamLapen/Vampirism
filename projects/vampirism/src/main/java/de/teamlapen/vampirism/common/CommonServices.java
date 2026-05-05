@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.common.integration.InterModHandler;
 import de.teamlapen.vampirism.common.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.common.server.ServerEventHandler;
 import de.teamlapen.vampirism.common.util.*;
+import de.teamlapen.vampirism.common.world.LevelEventHandler;
 import de.teamlapen.vampirism.common.world.VillageEventHandler;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
 import de.teamlapen.vampirism.common.world.entity.ModEntityEventHandler;
@@ -47,6 +48,7 @@ public class CommonServices extends Services implements IVampirismServices {
     private final InterModHandler interModCommunicationHandler = new InterModHandler();
     private final IVampirismEntityRegistry entityRegistry = new VampirismEntityRegistry();
     private final VillageEventHandler villageEventHandler = new VillageEventHandler();
+    private final LevelEventHandler levelEventHandler = new LevelEventHandler();
     private final ItemEventHandler itemEventHandler = new ItemEventHandler();
 
 
@@ -126,5 +128,6 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.register(this.villageEventHandler);
         bus.addListener(Permissions::registerNodes);
         bus.register(this.itemEventHandler);
+        bus.register(this.levelEventHandler);
     }
 }

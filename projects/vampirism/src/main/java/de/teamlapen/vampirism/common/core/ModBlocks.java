@@ -345,10 +345,16 @@ public class ModBlocks {
     public static final DeferredBlock<VelmorraPortalBlock> VELMORRA_PORTAL = registerBlock("velmorra_portal", VelmorraPortalBlock::new, () -> basicProperties().noCollision().strength(-1, 3600000.0F).sound(SoundType.GLASS).pushReaction(PushReaction.IGNORE).lightLevel(p -> 11).noLootTable());
     public static final DeferredBlock<PortalGatewayBlock> VELMORRA_PORTAL_ARCH = registerBlock("velmorra_portal_arch", props -> new PortalGatewayBlock(props.strength(-1, 3600000.0F).mapColor(MapColor.DEEPSLATE).pushReaction(PushReaction.IGNORE).noLootTable()), ModBlocks::basicProperties);
     public static final DeferredBlock<VelmorraAltarBlock> VELMORRA_ALTAR = registerBlock("velmorra_altar", VelmorraAltarBlock::new, ModBlocks::basicProperties);
+    public static final DeferredBlock<ChaliceBlock> CHALICE = BLOCKS.registerBlock("chalice", ChaliceBlock::new, x -> x.explosionResistance(3600000.0F).mapColor(MapColor.GOLD).pushReaction(PushReaction.IGNORE));
 
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties,T> supplier, Supplier<BlockBehaviour.Properties> blockProperties) {
-        return BLOCKS.registerBlock(name, props -> supplier.apply(blockProperties.get().setId(ResourceKey.create(Registries.BLOCK, VIdentifier.mod(name)))));
+        return BLOCKS.registerBlock(name, supplier, blockProperties);
+    }
+
+
+    private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties,T> supplier) {
+        return BLOCKS.registerBlock(name, supplier);
     }
 
     private static DeferredBlock<FlowerPotBlock> registerPottedPlant(String name, DeferredBlock<?> plantBlock) {
