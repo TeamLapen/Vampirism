@@ -357,7 +357,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
                 ModBlocks.ALTAR_TIP,
                 ModBlocks.BLOOD_PEDESTAL,
                 ModBlocks.VAPOR_STILL,
-                ModBlocks.FIRE_PLACE,
                 ModBlocks.CROSS,
                 ModBlocks.TOMBSTONE_SHORT,
                 ModBlocks.TOMBSTONE_MEDIUM,

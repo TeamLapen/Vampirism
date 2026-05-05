@@ -282,13 +282,6 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     }
 
     private void recipesDecorationalBlocks() {
-        shaped(RecipeCategory.DECORATIONS, ModItems.FIRE_PLACE)
-                .pattern(" X ")
-                .pattern("XYX")
-                .define('X', LOG)
-                .define('Y', COAL_BLOCK)
-                .unlockedBy("has_logs", has(LOG))
-                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK)
                 .pattern(" I ")
                 .pattern("NNN")
