@@ -14,6 +14,7 @@ import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.factions.tasks.TaskUnlocker;
 import de.teamlapen.faction.common.factions.tasks.reward.ItemReward;
 import de.teamlapen.vampirism.common.tags.ModTaskTags;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
@@ -50,25 +51,23 @@ public class PageTask extends PageText {
             if (holder.is(ModTaskTags.HAS_FACTION)) {
                 // Old ModRegistries.FACTIONS.stream().filter(x -> x.getTag(VampirismRegistries.Keys.TASK).filter(holder::is).isPresent())
                 //Check if this task is contained in the faction task tag
-                text.add(Component.translatable("text.vampirism.task.reward_obtain_for", String.join(", ", FactionRegistries.FACTION.get().stream().filter(x -> FactionsMod.services().factionTags().get(FactionRegistries.FACTION.get().wrapAsHolder(x),FactionRegistries.Keys.TASK).map(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " ")); //TODO is this correct, can this be done simpler? We want to find all factions that have this task
+                text.add(Component.translatable("gui.vampirism.guide.task.reward_obtain_for", String.join(", ", FactionRegistries.FACTION.get().stream().filter(x -> FactionsMod.services().factionTags().get(FactionRegistries.FACTION.get().wrapAsHolder(x), FactionRegistries.Keys.TASK).map(holder::is).isPresent()).map(IFaction::getNamePlural).map(Component::getString).toList()) + " ")); //TODO is this correct, can this be done simpler? We want to find all factions that have this task
             } else {
-                text.add(Component.translatable("text.vampirism.task.reward_obtain_all"));
+                text.add(Component.translatable("gui.vampirism.guide.task.reward_obtain_all"));
             }
             text.add(newLine);
             text.add(newLine);
-            text.add(task.title());
+            text.add(task.title().copy().withStyle(ChatFormatting.BOLD));
             text.add(newLine);
-            text.add(Component.translatable("text.vampirism.task.prerequisites"));
-            text.add(newLine);
+            text.add(Component.translatable("gui.vampirism.guide.task.prerequisites").append(":\n"));
             List<TaskUnlocker> unlockers = task.unlocker();
             if (!unlockers.isEmpty()) {
                 for (TaskUnlocker u : unlockers) {
-                    text.add(Component.literal("- ").append(u.getDescription()).append(newLine));
+                    text.add(Component.literal("- ").append(u.getDescription()).append(newLine).withStyle(ChatFormatting.ITALIC));
                 }
 
-
             } else {
-                text.add(Component.translatable("text.vampirism.task.prerequisites.none"));
+                text.add(Component.translatable("gui.vampirism.guide.task.prerequisites.none").withStyle(ChatFormatting.ITALIC));
             }
             this.draw = FormattedText.composite(text);
             this.setup = true;

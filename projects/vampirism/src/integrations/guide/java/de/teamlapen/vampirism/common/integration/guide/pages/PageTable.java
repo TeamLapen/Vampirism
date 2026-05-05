@@ -49,7 +49,7 @@ public class PageTable extends Page {
             y += font.lineHeight;
         }
         GuiHelper.drawLine(guiGraphics, x, y + font.lineHeight, x + screen.pageWidth(), y + font.lineHeight, 1, book.getTextColor());
-        y += 2;
+        y += 1;
         for (Component[] l : lines) {
             x = pageLeft - 39 + 39;
             for (int i = 0; i < l.length; i++) {
@@ -59,7 +59,7 @@ public class PageTable extends Page {
                 guiGraphics.drawString(font, l[i], x + dw, y, book.getTextColor(), false);
                 x += mw;
             }
-            y += font.lineHeight;
+            y += font.lineHeight + 1;
 
         }
 

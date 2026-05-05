@@ -62,7 +62,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe, Q exte
 
         int y = pageTop - 13 + 120;
         if (recipe.value().getRequiredLevel() > 1) {
-            Component level = Component.translatable("container.vampirism.hunter_table.level", recipe.value().getRequiredLevel());
+            Component level = Component.translatable("container.vampirism.weapon_table.level", recipe.value().getRequiredLevel());
             guiGraphics.drawString(fontRenderer, level, pageLeft - 39 + 40, y, Color.GRAY.getRGB(), false);
             y += fontRenderer.lineHeight + 2;
         }
@@ -74,7 +74,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe, Q exte
                 skills.add(skill.value().getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
-            guiGraphics.drawWordWrap(fontRenderer, FormattedText.composite(skills), pageLeft - 39 + 40, y, 110, Color.GRAY.getRGB());
+            guiGraphics.drawWordWrap(fontRenderer, FormattedText.composite(skills), pageLeft - 39 + 40, y, 110, Color.GRAY.getRGB(), false);
         }
     }
 
