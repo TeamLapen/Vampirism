@@ -11,6 +11,7 @@ import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -59,7 +60,7 @@ public class ModelProvider {
 //            ModelHelper.generateDefaultGuidebookModel(itemModels, GuideBook.guideBook); //We don't use the default model
             Identifier baseTexture = Identifier.fromNamespaceAndPath(REFERENCE.MODID, "item/guidebook");
             Item item = GuideAPI.getItemForBook(GuideBook.guideBook).value();
-            Identifier model = ModelTemplates.FLAT_ITEM.create(ModelLocationUtils.decorateItemModelLocation(item.toString()), TextureMapping.layer0(baseTexture), itemModels.modelOutput);
+            Identifier model = ModelTemplates.FLAT_ITEM.create(ModelLocationUtils.decorateItemModelLocation(item.toString()), TextureMapping.layer0(new Material(baseTexture)), itemModels.modelOutput);
             itemModels.itemModelOutput.accept(item, ItemModelUtils.plainModel(model));
         }
 

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.integration.guide;
 
 import de.maxanier.guideapi.api.book.Book;
 import de.maxanier.guideapi.api.book.BookBinder;
+import de.maxanier.guideapi.api.book.IBookContentCollector;
 import de.maxanier.guideapi.api.book.IGuideBook;
 import de.maxanier.guideapi.api.category.CategoryBase;
 import de.maxanier.guideapi.api.category.CategoryItemStack;
@@ -74,10 +75,11 @@ public class GuideBook implements IGuideBook {
     @SuppressWarnings("FieldCanBeLocal")
     static Book guideBook;
 
-    static void buildCategories(RegistryAccess access, @NotNull List<CategoryBase> categories) {
+    static void buildCategories(RegistryAccess access, IBookContentCollector contentCollector) {
         LOGGER.debug("Building content");
+        List<CategoryBase> categories = new ArrayList<>();
         long start = System.currentTimeMillis();
-        BookHelper helper = new BookHelper.Builder(REFERENCE.MODID).setBaseKey("guide.vampirism").setLocalizer(GuideBook::translateComponent).setRecipeRendererSupplier(GuideBook::getRenderer).build();
+        BookHelper helper = new BookHelper.Builder(REFERENCE.MODID).setBaseKey("guide.vampirism").setLocalizer(GuideBook::translateComponent).setRecipeRendererSupplier(GuideBook::getRenderer).build(access);
         categories.add(new CategoryItemStack(buildOverview(helper), translateComponent("guide.vampirism.overview.title"), new ItemStack(ModItems.VAMPIRE_FANG.get())));
         categories.add(new CategoryItemStack(buildVampire(helper), translateComponent("guide.vampirism.vampire.title"), BloodBottleItem.createStackWithBlood(BloodBottleItem.AMOUNT)));
         categories.add(new CategoryItemStack(buildHunter(helper), translateComponent("guide.vampirism.hunter.title"), new ItemStack(ModItems.HUMAN_HEART.get())));
@@ -88,6 +90,8 @@ public class GuideBook implements IGuideBook {
         categories.add(new CategoryItemStack(buildChangelog(helper), translateComponent("guide.vampirism.changelog.title"), new ItemStack(Items.WRITABLE_BOOK)));
         NeoForge.EVENT_BUS.post(new VampirismGuideBookCategoriesEvent(categories));
         helper.registerLinkablePages(categories);
+        contentCollector.addCategories(categories);
+        helper.registerBlockLinkedEntries(contentCollector);
         LOGGER.debug("Built content in {} ms", System.currentTimeMillis() - start);
     }
 
@@ -466,7 +470,7 @@ public class GuideBook implements IGuideBook {
 
         //Vampire
         ItemStack blood = BloodBottleItem.createStackWithBlood(BloodBottleItem.AMOUNT);
-        helper.info(false, DataComponentIngredient.of(false, blood), blood).build(entries);
+        helper.info(DataComponentIngredient.of(false, blood), blood).build(entries);
         helper.info(ModItems.BLOOD_INFUSED_IRON_INGOT.get(), ModItems.BLOOD_INFUSED_GOLD_INGOT.get()).recipes("blood_infused_iron_ingot_pure_0_to_3", "blood_infused_raw_iron_pure_0_smelting", "blood_infused_raw_gold_pure_0_smelting").build(entries);
         helper.info(ModItems.HEART_SEEKER_NORMAL.get(), ModItems.HEART_SEEKER_ENHANCED.get(), ModItems.HEART_SEEKER_ULTIMATE.get()).setKeyName("heart_seeker").useCustomEntryName().recipes("iron_heart_seeker_pure_0", "diamond_heart_seeker_pure_0", "netherite_heart_seeker_pure_0").build(entries);
         helper.info(ModItems.HEART_STRIKER_NORMAL.get(), ModItems.HEART_STRIKER_ENHANCED.get(), ModItems.HEART_STRIKER_ULTIMATE.get()).setKeyName("heart_striker").useCustomEntryName().recipes("iron_heart_striker_pure_0", "diamond_heart_striker_pure_0", "netherite_heart_striker_pure_0").build(entries);
@@ -477,7 +481,7 @@ public class GuideBook implements IGuideBook {
         helper.info(ModItems.AMULET.get(), ModItems.RING.get(), ModItems.OBI_BELT.get()).setLinks(VIdentifier.mod("guide.vampirism.vampire.vampirism_menu")).useCustomEntryName().setKeyName("accessories").build(entries);
 
         //Hunter
-        helper.info(ModBlocks.GARLIC.get()).build(entries);
+        helper.infoBlocks(ModBlocks.GARLIC.get()).build(entries);
         helper.info(ModItems.SYRINGE_EMPTY.get(), ModItems.INJECTION_GARLIC.get(), ModItems.INJECTION_SANGUINARE.get()).useCustomEntryName().setKeyName("syringe").recipes("syringe_empty", "injection_garlic", "injection_sanguinare").setLinks(VIdentifier.mod("guide.vampirism.blocks.injection_chair")).build(entries);
         helper.info(ModItems.HUNTER_INTEL_0.get()).setLinks(VIdentifier.mod("guide.vampirism.blocks.hunter_table")).setFormats(loc(ModBlocks.HUNTER_TABLE.get())).build(entries);
         helper.info(ModItems.PURIFIED_GARLIC.get()).setFormats(loc(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())).setLinks(VIdentifier.mod("guide.vampirism.blocks.garlic_diffuser")).recipes("purified_garlic").build(entries);
@@ -500,30 +504,30 @@ public class GuideBook implements IGuideBook {
         Map<Identifier, EntryBase> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.blocks.";
         //General
-        helper.info(ModBlocks.DARK_STONE_BRICKS.get()).recipes("dark_stone_tiles_stairs", "dark_stone_tiles_slab", "dark_stone_tiles_wall", "polished_dark_stone", "polished_dark_stone_stairs", "polished_dark_stone_slab", "polished_dark_stone_wall", "dark_stone_brick_stairs", "dark_stone_brick_slab", "dark_stone_brick_wall").build(entries);
-        helper.info(ModBlocks.VAMPIRE_ORCHID.get()).build(entries);
+        helper.infoBlocks(ModBlocks.DARK_STONE_BRICKS.get()).recipes("dark_stone_tiles_stairs", "dark_stone_tiles_slab", "dark_stone_tiles_wall", "polished_dark_stone", "polished_dark_stone_stairs", "polished_dark_stone_slab", "polished_dark_stone_wall", "dark_stone_brick_stairs", "dark_stone_brick_slab", "dark_stone_brick_wall").build(entries);
+        helper.infoBlocks(ModBlocks.VAMPIRE_ORCHID.get()).build(entries);
         //Vampire
-        helper.info(ModBlocks.BLOOD_CONTAINER.get()).recipes("blood_container").build(entries);
-        helper.info(ModBlocks.ALTAR_INSPIRATION.get()).setLinks(VIdentifier.mod("guide.vampirism.vampire.leveling")).recipes("altar_inspiration").build(entries);
-        helper.info(ModBlocks.ALTAR_INFUSION.get()).setLinks(VIdentifier.mod("guide.vampirism.vampire.leveling")).recipes("altar_infusion", "altar_pillar", "altar_tip").build(entries);
-        helper.info(ModBlocks.COFFIN_RED.get()).setKeyName("blocks.coffin").useCustomEntryName().recipes("coffin_red").build(entries);
-        helper.info(ModBlocks.ALTAR_CLEANSING.get()).build(entries);
+        helper.infoBlocks(ModBlocks.BLOOD_CONTAINER.get()).recipes("blood_container").build(entries);
+        helper.infoBlocks(ModBlocks.ALTAR_INSPIRATION.get()).setLinks(VIdentifier.mod("guide.vampirism.vampire.leveling")).recipes("altar_inspiration").build(entries);
+        helper.infoBlocks(ModBlocks.ALTAR_INFUSION.get()).setLinks(VIdentifier.mod("guide.vampirism.vampire.leveling")).recipes("altar_infusion", "altar_pillar", "altar_tip").build(entries);
+        helper.infoBlocks(ModBlocks.COFFIN_RED.get()).setKeyName("blocks.coffin").useCustomEntryName().recipes("coffin_red").build(entries);
+        helper.infoBlocks(ModBlocks.ALTAR_CLEANSING.get()).build(entries);
         //Hunter
-        helper.info(ModBlocks.INJECTION_CHAIR.get()).setFormats(loc(ModItems.INJECTION_GARLIC.get()), loc(ModItems.INJECTION_SANGUINARE.get())).recipes("injection_chair").setLinks(VIdentifier.mod("guide.vampirism.items.syringe")).build(entries);
-        helper.info(ModBlocks.HUNTER_TABLE.get()).setFormats(loc(ModItems.HUNTER_INTEL_0.get())).setLinks(VIdentifier.mod("guide.vampirism.hunter.leveling"), VIdentifier.mod("guide.vampirism.items.hunter_intel")).recipes("hunter_table").build(entries);
-        helper.info(ModBlocks.WEAPON_TABLE.get()).recipes("weapon_table").build(entries);
-        helper.info(ModBlocks.ALCHEMICAL_CAULDRON.get()).recipes("alchemical_cauldron").build(entries);
+        helper.infoBlocks(ModBlocks.INJECTION_CHAIR.get()).setFormats(loc(ModItems.INJECTION_GARLIC.get()), loc(ModItems.INJECTION_SANGUINARE.get())).recipes("injection_chair").setLinks(VIdentifier.mod("guide.vampirism.items.syringe")).build(entries);
+        helper.infoBlocks(ModBlocks.HUNTER_TABLE.get()).setFormats(loc(ModItems.HUNTER_INTEL_0.get())).setLinks(VIdentifier.mod("guide.vampirism.hunter.leveling"), VIdentifier.mod("guide.vampirism.items.hunter_intel")).recipes("hunter_table").build(entries);
+        helper.infoBlocks(ModBlocks.WEAPON_TABLE.get()).recipes("weapon_table").build(entries);
+        helper.infoBlocks(ModBlocks.ALCHEMICAL_CAULDRON.get()).recipes("alchemical_cauldron").build(entries);
         int cn = ModConfig.balance().hsGarlicDiffuserNormalDist.get() * 2 + 1;
         int ce = ModConfig.balance().hsGarlicDiffuserEnhancedDist.get() * 2 + 1;
-        helper.info(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), ModBlocks.GARLIC_DIFFUSER_WEAK.get(), ModBlocks.GARLIC_DIFFUSER_WEAK.get()).setFormats(cn, cn, ce, ce, loc(ModItems.PURIFIED_GARLIC.get())).useCustomEntryName().setKeyName("garlic_diffuser").setLinks(VIdentifier.mod("guide.vampirism.blocks.garlic"), VIdentifier.mod("guide.vampirism.items.purified_garlic"), VIdentifier.mod("guide.vampirism.items.holy_water_bottle")).recipes("garlic_diffuser_normal", "garlic_diffuser_improved", "garlic_diffuser_core", "garlic_diffuser_core_improved").build(entries);
-        helper.info(ModBlocks.BLOOD_PEDESTAL.get()).recipes("blood_pedestal").build(entries);
-        helper.info(ModBlocks.BLOOD_GRINDER.get()).recipes("blood_grinder").setFormats(loc(ModItems.HUMAN_HEART.get()), loc(Items.BEEF), loc(ModBlocks.BLOOD_SIEVE.get())).build(entries);
-        helper.info(ModBlocks.BLOOD_SIEVE.get()).recipes("blood_sieve").setFormats(ModFluids.BLOOD_TYPE.get().getDescription(), loc(ModBlocks.BLOOD_GRINDER.get())).setLinks(VIdentifier.mod("guide.vampirism.blocks.blood_grinder")).build(entries); //TODO update blood
-        helper.info(FactionBlocks.TOTEM_TOP_CRAFTED.get(), FactionBlocks.TOTEM_TOP.get()).recipes(Identifier.fromNamespaceAndPath(de.teamlapen.faction.api.util.REFERENCE.MOD_ID, "totem_top_crafted")).setLinks(VIdentifier.mod("guide.vampirism.blocks.totem_base"), VIdentifier.mod("guide.vampirism.world.villages")).build(entries);
-        helper.info(FactionBlocks.TOTEM_BASE.get()).recipes(Identifier.fromNamespaceAndPath(de.teamlapen.faction.api.util.REFERENCE.MOD_ID, "totem_base")).setLinks(VIdentifier.mod("guide.vampirism.blocks.totem_top_crafted"), VIdentifier.mod("guide.vampirism.world.villages")).build(entries);
-        helper.info(ModBlocks.VAPOR_STILL.get()).recipes("vapor_still").customPages(generatePotionMixes()).build(entries);
+        helper.infoBlocks(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), ModBlocks.GARLIC_DIFFUSER_WEAK.get(), ModBlocks.GARLIC_DIFFUSER_WEAK.get()).setFormats(cn, cn, ce, ce, loc(ModItems.PURIFIED_GARLIC.get())).useCustomEntryName().setKeyName("garlic_diffuser").setLinks(VIdentifier.mod("guide.vampirism.blocks.garlic"), VIdentifier.mod("guide.vampirism.items.purified_garlic"), VIdentifier.mod("guide.vampirism.items.holy_water_bottle")).recipes("garlic_diffuser_normal", "garlic_diffuser_improved", "garlic_diffuser_core", "garlic_diffuser_core_improved").build(entries);
+        helper.infoBlocks(ModBlocks.BLOOD_PEDESTAL.get()).recipes("blood_pedestal").build(entries);
+        helper.infoBlocks(ModBlocks.BLOOD_GRINDER.get()).recipes("blood_grinder").setFormats(loc(ModItems.HUMAN_HEART.get()), loc(Items.BEEF), loc(ModBlocks.BLOOD_SIEVE.get())).build(entries);
+        helper.infoBlocks(ModBlocks.BLOOD_SIEVE.get()).recipes("blood_sieve").setFormats(ModFluids.BLOOD_TYPE.get().getDescription(), loc(ModBlocks.BLOOD_GRINDER.get())).setLinks(VIdentifier.mod("guide.vampirism.blocks.blood_grinder")).build(entries); //TODO update blood
+        helper.infoBlocks(FactionBlocks.TOTEM_TOP_CRAFTED.get(), FactionBlocks.TOTEM_TOP.get()).recipes(Identifier.fromNamespaceAndPath(de.teamlapen.faction.api.util.REFERENCE.MOD_ID, "totem_top_crafted")).setLinks(VIdentifier.mod("guide.vampirism.blocks.totem_base"), VIdentifier.mod("guide.vampirism.world.villages")).build(entries);
+        helper.infoBlocks(FactionBlocks.TOTEM_BASE.get()).recipes(Identifier.fromNamespaceAndPath(de.teamlapen.faction.api.util.REFERENCE.MOD_ID, "totem_base")).setLinks(VIdentifier.mod("guide.vampirism.blocks.totem_top_crafted"), VIdentifier.mod("guide.vampirism.world.villages")).build(entries);
+        helper.infoBlocks(ModBlocks.VAPOR_STILL.get()).recipes("vapor_still").customPages(generatePotionMixes()).build(entries);
         ItemStack activatedOil = ModItems.OIL_BOTTLE.get().withOil(ModOils.VAMPIRE_BLOOD);
-        helper.info(ModBlocks.ALCHEMY_TABLE.get()).recipes("alchemy_table").setFormats(ModItems.OIL_BOTTLE.get().getName(activatedOil)).build(entries);
+        helper.infoBlocks(ModBlocks.ALCHEMY_TABLE.get()).recipes("alchemy_table").setFormats(ModItems.OIL_BOTTLE.get().getName(activatedOil)).build(entries);
 
         List<IPage> decorativeBlocks = new ArrayList<>(PageHelper.pagesForLongText(translateComponent(base + "decorative.text"), ModItems.CANDELABRA.get()));
         decorativeBlocks.add(helper.getRecipePage(VIdentifier.mod("candelabra")));

@@ -38,7 +38,6 @@ repositories {
 }
 
 dependencies {
-    //Don't export dependencies to pom as their deobfuscated version would be used which cannot be found in dependent projects
     if (include_jei.toBoolean()) {
         compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${project.jei_version}"
         compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${project.jei_version}"
@@ -46,8 +45,8 @@ dependencies {
     }
 
     if (include_guideapi.toBoolean()) {
-        compileOnly "de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}"
-        runtimeOnly "de.maxanier.guideapi:Guide-API-VP:${project.guideapi_version}"
+        compileOnly "de.maxanier.guideapi:Guide-API-VP:${guideapi_mc_version}-${project.guideapi_version}"
+        runtimeOnly "de.maxanier.guideapi:Guide-API-VP:${guideapi_mc_version}-${project.guideapi_version}"
     }
 
     if (include_terrablender.toBoolean()) {

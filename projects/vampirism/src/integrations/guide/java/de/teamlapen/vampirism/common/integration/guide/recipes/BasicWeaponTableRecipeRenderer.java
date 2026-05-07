@@ -11,11 +11,11 @@ import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.maxanier.guideapi.api.util.SubTexture;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.util.Color;
-import de.teamlapen.vampirism.api.world.items.IWeaponTableRecipe;
 import de.teamlapen.vampirism.common.core.ModBlocks;
+import de.teamlapen.vampirism.common.world.items.recipes.IWeaponTableRecipe;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -39,7 +39,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe, Q exte
     }
 
     @Override
-    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int pageLeft, int pageTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, IngredientCycler ingredientCycler) {
+    public void draw(@NotNull GuiGraphicsExtractor guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int pageLeft, int pageTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, IngredientCycler ingredientCycler) {
 
         CRAFTING_GRID.draw(guiGraphics, pageLeft - 39 + 62, pageTop - 13 + 43);
         GuiHelper.drawCenteredStringWithoutShadow(guiGraphics, fontRenderer, ModBlocks.WEAPON_TABLE.get().getName(), baseScreen.pageXCenter(), pageTop - 13 + 12, book.getTextColor());
@@ -63,7 +63,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe, Q exte
         int y = pageTop - 13 + 120;
         if (recipe.value().getRequiredLevel() > 1) {
             Component level = Component.translatable("container.vampirism.weapon_table.level", recipe.value().getRequiredLevel());
-            guiGraphics.drawString(fontRenderer, level, pageLeft - 39 + 40, y, Color.GRAY.getRGB(), false);
+            guiGraphics.text(fontRenderer, level, pageLeft - 39 + 40, y, Color.GRAY.getRGB(), false);
             y += fontRenderer.lineHeight + 2;
         }
         if (!recipe.value().getRequiredSkills().isEmpty()) {
@@ -74,7 +74,7 @@ public class BasicWeaponTableRecipeRenderer<T extends IWeaponTableRecipe, Q exte
                 skills.add(skill.value().getName().copy().withStyle(ChatFormatting.ITALIC));
                 skills.add(newLine);
             }
-            guiGraphics.drawWordWrap(fontRenderer, FormattedText.composite(skills), pageLeft - 39 + 40, y, 110, Color.GRAY.getRGB(), false);
+            guiGraphics.textWithWordWrap(fontRenderer, FormattedText.composite(skills), pageLeft - 39 + 40, y, 110, Color.GRAY.getRGB(), false);
         }
     }
 

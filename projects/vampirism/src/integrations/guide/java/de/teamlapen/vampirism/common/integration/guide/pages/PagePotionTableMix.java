@@ -11,7 +11,7 @@ import de.maxanier.guideapi.api.util.SubTexture;
 import de.teamlapen.vampirism.api.world.items.ExtendedPotionMix;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -59,7 +59,7 @@ public class PagePotionTableMix extends Page {
     }
 
     @Override
-    public void draw(GuiGraphics graphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
+    public void draw(GuiGraphicsExtractor graphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
 
         //Update cycle
         long time = screen.getMinecraft().level != null ? screen.getMinecraft().level.getGameTime() : 0L;
@@ -111,7 +111,7 @@ public class PagePotionTableMix extends Page {
     private final List<Component> tooltips = Lists.newArrayList();
 
     @Override
-    public void drawExtras(GuiGraphics graphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
+    public void drawExtras(GuiGraphicsExtractor graphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font fontRendererObj) {
         super.drawExtras(graphics, book, category, entry, pageLeft, pageTop, mouseX, mouseY, screen, fontRendererObj);
 
         graphics.setTooltipForNextFrame(Minecraft.getInstance().font,

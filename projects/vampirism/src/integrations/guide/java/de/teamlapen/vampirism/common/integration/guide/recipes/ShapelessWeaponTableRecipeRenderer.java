@@ -9,7 +9,7 @@ import de.maxanier.guideapi.api.util.GuiHelper;
 import de.maxanier.guideapi.api.util.IngredientCycler;
 import de.teamlapen.vampirism.common.world.items.recipes.ShapelessWeaponTableRecipe;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.context.ContextMap;
@@ -30,7 +30,7 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
     }
 
     @Override
-    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int pageLeft, int pageTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
+    public void draw(@NotNull GuiGraphicsExtractor guiGraphics, Book book, CategoryBase categoryAbstract, EntryBase entryAbstract, int pageLeft, int pageTop, int mouseX, int mouseY, @NotNull GuideBookScreen baseScreen, @NotNull Font fontRenderer, @NotNull IngredientCycler ingredientCycler) {
         super.draw(guiGraphics, book, categoryAbstract, entryAbstract, pageLeft, pageTop, mouseX, mouseY, baseScreen, fontRenderer, ingredientCycler);
 
         for (int y = 0; y < 3; y++) {

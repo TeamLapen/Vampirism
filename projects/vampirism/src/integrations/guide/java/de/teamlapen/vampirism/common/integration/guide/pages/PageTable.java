@@ -9,7 +9,7 @@ import de.maxanier.guideapi.api.pages.Page;
 import de.maxanier.guideapi.api.util.GuiHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.NotNull;
@@ -39,13 +39,13 @@ public class PageTable extends Page {
 
 
     @Override
-    public void draw(@NotNull GuiGraphics guiGraphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font font) {
+    public void draw(@NotNull GuiGraphicsExtractor guiGraphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font font) {
 
         float charWidth = font.width("W");
         int x = pageLeft - 39 + 39;
         int y = pageTop - 13 + 12;
         if (headline != null) {
-            guiGraphics.drawString(font, headline.withStyle(ChatFormatting.BOLD), x, y, book.getTextColor(), false);
+            guiGraphics.text(font, headline.withStyle(ChatFormatting.BOLD), x, y, book.getTextColor(), false);
             y += font.lineHeight;
         }
         GuiHelper.drawLine(guiGraphics, x, y + font.lineHeight, x + screen.pageWidth(), y + font.lineHeight, 1, book.getTextColor());
@@ -56,7 +56,7 @@ public class PageTable extends Page {
                 int mw = (int) (width[i] * charWidth);
                 int aw = font.width(l[i]);
                 int dw = (mw - aw) / 2;
-                guiGraphics.drawString(font, l[i], x + dw, y, book.getTextColor(), false);
+                guiGraphics.text(font, l[i], x + dw, y, book.getTextColor(), false);
                 x += mw;
             }
             y += font.lineHeight + 1;
