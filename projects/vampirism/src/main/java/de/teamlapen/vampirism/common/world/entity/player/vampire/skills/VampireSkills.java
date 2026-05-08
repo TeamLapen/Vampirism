@@ -98,12 +98,12 @@ public class VampireSkills {
 
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LORD_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.VampireLordSkill(3, true).setToggleActions(vampire -> vampire.updateMinionAttributes(true), vampire -> vampire.updateMinionAttributes(false)));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_COLLECT = SKILLS.register("vampire_minion_collect", () -> new VampirismSkill.VampireLordSkill(2, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.SimpleVampireSkill(3, true).setToggleActions(vampire -> vampire.updateMinionAttributes(true), vampire -> vampire.updateMinionAttributes(false)));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_COLLECT = SKILLS.register("vampire_minion_collect", () -> new VampirismSkill.SimpleVampireSkill(2, true));
 
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DRACULA_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_dracula").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, true));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> WANDER_THE_SUN = SKILLS.register("wander_the_sun", () -> new VampirismSkill.SimpleVampireSkill(1, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> WANDER_THE_SUN = SKILLS.register("wander_the_sun", () -> new VampirismSkill.DraculaSkill(1, true));
     public static final DeferredHolder<ISkill<?>, ActionSkill<IVampirePlayer>> BLINDING = SKILLS.register("blinding", () -> new ActionSkill<>(VampireActions.BLINDING, ModSkillTreeTags.DRACULA, 1, true));
 
     @ApiStatus.Internal
@@ -205,7 +205,7 @@ public class VampireSkills {
 
             context.register(LEVEL, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.faction(ModFactions.VAMPIRE)).build(), new ItemStackTemplate(ModItems.VAMPIRE_BOOK.get()), Component.translatable("gui.vampirism.skills.level"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
             context.register(LORD, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.VAMPIRE)).build(), new ItemStackTemplate(ModItems.VAMPIRE_MINION_BINDING.get()), Component.translatable("gui.vampirism.skills.lord"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
-            context.register(DRACULA, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(DraculaCriterion.INSTANCE).build(), new ItemStack(ModItems.VAMPIRE_CLOTHING_HAT.get()), Component.translatable("text.vampirism.skills.dracula"), Optional.of(VIdentifier.mod("block/dark_stone_bricks")), ModSkillTreeTags.DRACULA));
+            context.register(DRACULA, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(DraculaCriterion.INSTANCE).build(), new ItemStackTemplate(ModItems.VAMPIRE_CLOTHING_HAT), Component.translatable("gui.vampirism.skills.dracula"), Optional.of(VIdentifier.mod("block/dark_stone_bricks")), ModSkillTreeTags.DRACULA));
         }
     }
 }

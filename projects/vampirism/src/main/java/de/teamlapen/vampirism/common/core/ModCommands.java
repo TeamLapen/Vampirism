@@ -8,6 +8,7 @@ import de.teamlapen.faction.common.server.commands.arguments.MinionArgument;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.server.commands.*;
+import de.teamlapen.vampirism.common.server.commands.dev.DevFactionCommand;
 import de.teamlapen.vampirism.common.server.commands.test.*;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;

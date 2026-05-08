@@ -172,7 +172,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public Component getShortLevelDisplay() {
         if (this.draculaData.isDracula()) {
-            return Component.translatable("text.vampirism.dracula_title.short");
+            return Component.translatable("dracula_title.vampirism.short");
         }
         return super.getShortLevelDisplay();
     }
@@ -180,7 +180,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public Component getLevelDisplay() {
         if (this.draculaData.isDracula()) {
-            return Component.translatable("text.vampirism.dracula_title");
+            return Component.translatable("dracula_title.vampirism");
         }
         return super.getLevelDisplay();
     }

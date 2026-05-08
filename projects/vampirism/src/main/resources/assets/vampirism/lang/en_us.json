@@ -36,6 +36,8 @@
   "lord_title.vampirism.hunter.3.short": "Maj",
   "lord_title.vampirism.hunter.4.short": "Col",
   "lord_title.vampirism.hunter.5.short": "Bgr",
+  "dracula_title.vampirism": "Dracula",
+  "dracula_title.vampirism.short": "Dra",
 
   "itemGroup.vampirism": "Vampirism",
   "itemGroup.vampirism.vampire": "Vampirism: Vampire",
@@ -1010,7 +1012,7 @@
   "gui.vampirism.actions": "Actions",
   "gui.vampirism.skills.level": "Level Skills",
   "gui.vampirism.skills.lord": "Lord Skills",
-  "gui.vampirism.skills.draula": "Dracula Skills",
+  "gui.vampirism.skills.dracula": "Dracula Skills",
   "gui.vampirism.skill_required": "Required Skill: %s",
   "gui.vampirism.revertback.head": "Revert back to normal human",
   "gui.vampirism.revertback.desc": "You will loose all your levels and die",
@@ -1079,6 +1081,9 @@
   "gui.vampirism.jei.task.representative": "Faction representative",
   "gui.vampirism.jei.task.prerequisites": "Prerequisites",
   "gui.vampirism.jei.task.prerequisites.none": "None",
+
+  "gui.vampirism.skills.skill_points.dracula": "%d dracula marks",
+  "gui.vampirism.skills.skill_points.dracula.single": "%d dracula mark",
 
   "message.vampirism.restriction.faction.vampire": "How do those vampires even use this thing...",
   "message.vampirism.restriction.faction.hunter": "How do those hunters even use this thing...",

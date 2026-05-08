@@ -28,7 +28,7 @@ public class WingsModel extends Model<WingsModel.State> {
     private final KeyframeAnimation shrinkAnimation;
 
     public WingsModel(ModelPart root) {
-        super(root, RenderTypes::entityCutoutNoCull);
+        super(root, RenderTypes::entityCutout);
         this.wings = root.getChild(WINGS);
         this.left_wing = this.wings.getChild(LEFT_WING);
         this.outer_left_wing = this.left_wing.getChild(OUTER_LEFT_WING);

@@ -1,10 +1,15 @@
 package de.teamlapen.vampirism.common.world.entity.dracula;
 
 import com.mojang.serialization.Codec;
+import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModDimensions;
 import de.teamlapen.vampirism.common.core.ModEntities;
+import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.world.blocks.ChaliceBlock;
 import de.teamlapen.vampirism.common.world.dimensions.DimensionManager;
 import de.teamlapen.vampirism.common.world.portal.VelmorraPortalShape;
@@ -132,7 +137,7 @@ public class DraculaFightData implements ValueIOSerializable {
 
     private void destroyDimension() {
 
-        this.level.players().forEach(player -> {
+        new ArrayList<>(this.level.players()).forEach(player -> {
             GlobalPos data = player.getData(ModAttachments.VELMORRA_PORTAL.get());
             ServerLevel targetLevel = this.level.getServer().getLevel(data.dimension());
             if (targetLevel != null) {
@@ -198,6 +203,18 @@ public class DraculaFightData implements ValueIOSerializable {
 
     public void applyAward() {
         Set<ServerPlayer> players = this.event.getPlayers();
+
+        for (ServerPlayer player : players) {
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            handler.factionPlayer(ModFactions.VAMPIRE).ifPresent(vampire -> {
+
+                // TODO rewards for other player
+                if (vampire.getLordLevel() == vampire.getMaxLordLevel()) {
+                    handler.setFaction(LevelingChange.builder().add(new IDraculaPlayer.DraculaChange()).build());
+                }
+
+            });
+        }
     }
 
     public void activatePortal() {

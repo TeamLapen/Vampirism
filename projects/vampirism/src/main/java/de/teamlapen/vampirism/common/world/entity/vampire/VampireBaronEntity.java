@@ -123,7 +123,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             }
             case OPENING, CLOSING -> {
                 int startTicks = asEntity().tickCount;
-                int currentTicks = this.growAnimationState.vampirism$getStartTick();
+                int currentTicks = this.growAnimationState.vampirism$startTick();
                 if (currentTicks != Integer.MIN_VALUE) {
                     int div = startTicks - currentTicks;
                     if (div < IWingsEntity.GROW_TICKS) {

@@ -6,6 +6,7 @@ import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.factions.skills.DefaultSkill;
+import de.teamlapen.faction.common.tags.FactionSkillTreeTags;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
@@ -96,7 +97,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
          * @param desc Enable description using the default unlocalized key
          */
         public SimpleHunterSkill(int skillPointCost, boolean desc) {
-            super(Either.right(VampirismTags.Factions.IS_HUNTER), skillPointCost, desc);
+            super(Either.right(FactionSkillTreeTags.DEFAULT), skillPointCost, desc);
         }
 
         @Override
@@ -111,7 +112,19 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
     public static class SimpleVampireSkill extends VampirismSkill<IVampirePlayer> {
 
         public SimpleVampireSkill(int skillPointCost, boolean desc) {
-            super(Either.right(VampirismTags.Factions.IS_VAMPIRE), skillPointCost, desc);
+            super(Either.right(ModSkillTreeTags.VAMPIRE), skillPointCost, desc);
+        }
+
+        @Override
+        public TagKey<? extends IFaction<?>> factions() {
+            return VampirismTags.Factions.IS_VAMPIRE;
+        }
+    }
+
+    public static class DraculaSkill extends VampirismSkill<IVampirePlayer> {
+
+        public DraculaSkill(int skillPointCost, boolean desc) {
+            super(Either.right(ModSkillTreeTags.DRACULA), skillPointCost, desc);
         }
 
         @Override

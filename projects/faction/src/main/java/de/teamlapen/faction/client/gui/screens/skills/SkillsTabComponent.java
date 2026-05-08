@@ -104,17 +104,8 @@ public class SkillsTabComponent {
         }
     }
 
-    public void drawTab(GuiGraphicsExtractor guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, boolean selected) {
-        int i = offsetX + this.position.getX(this.index);
-        int j = offsetY + this.position.getY(this.index);
-        this.position.draw(guiGraphics, i, j, selected, this.index);
-        if (!selected && mouseX > i && mouseY > j && mouseX < i + this.position.getWidth() && mouseY < j + this.position.getHeight()) {
-            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
-        }
-    }
-
     public void drawIcon(GuiGraphicsExtractor graphics, int x, int y) {
-        this.position.drawIcon(graphics, x, y, this.index, this.icon);
+        this.position.extractIcon(graphics, x, y, this.index, this.icon);
     }
 
     public boolean isMouseOverTabItem(int guiLeft, int guiTop, double mouseX, double mouseY) {

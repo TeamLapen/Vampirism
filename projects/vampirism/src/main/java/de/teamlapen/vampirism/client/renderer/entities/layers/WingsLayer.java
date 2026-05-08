@@ -31,7 +31,7 @@ public class WingsLayer<T extends LivingEntity, S extends LivingEntityRenderStat
         default -> VIdentifier.mod("textures/entity/wings/wings.png");
     });
 
-    public WingsLayer(RenderLayerParent<S, Q> renderer, @NotNull EntityModelSet modelSet, BiConsumer<S, PoseStack> attachmentPointModifier) {
+    public WingsLayer(RenderLayerParent<S, Q> renderer, EntityModelSet modelSet, BiConsumer<S, PoseStack> attachmentPointModifier) {
         super(renderer);
         this.model = new WingsModel(modelSet.bakeLayer(ModEntitiesRender.WINGS));
         this.attachmentPointModifier = attachmentPointModifier;
@@ -51,7 +51,7 @@ public class WingsLayer<T extends LivingEntity, S extends LivingEntityRenderStat
         poseStack.pushPose();
         this.attachmentPointModifier.accept(renderState, poseStack);
         poseStack.scale(s, s, s);
-        nodeCollector.submitModel(this.model, state, poseStack, RenderTypes.entityCutoutNoCull(TEXTURE_MAP.get(renderState.getRenderDataOrDefault(ModEntityRenderStates.DRACULA_WINGS_TEXTURE, IWingsEntity.Texture.DEFAULT))), packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0), -1, null, 0, null);
+        nodeCollector.submitModel(this.model, state, poseStack, RenderTypes.entityCutout(TEXTURE_MAP.get(renderState.getRenderDataOrDefault(ModEntityRenderStates.DRACULA_WINGS_TEXTURE, IWingsEntity.Texture.DEFAULT))), packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0), -1, null, 0, null);
         poseStack.popPose();
     }
 }

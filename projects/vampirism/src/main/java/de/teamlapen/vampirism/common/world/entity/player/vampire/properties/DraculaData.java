@@ -126,7 +126,7 @@ public class DraculaData extends PropertyParentSync {
             }
             case OPENING, CLOSING -> {
                 int startTicks = player.asEntity().tickCount;
-                int currentTicks = this.growAnimationState.vampirism$getStartTick();
+                int currentTicks = this.growAnimationState.vampirism$startTick();
                 if (currentTicks != Integer.MIN_VALUE) {
                     int div = startTicks - currentTicks;
                     if (div < IWingsEntity.GROW_TICKS) {

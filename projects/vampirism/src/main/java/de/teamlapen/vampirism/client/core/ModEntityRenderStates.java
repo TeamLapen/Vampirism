@@ -80,6 +80,12 @@ public class ModEntityRenderStates {
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractConvertedOverlay);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractCoffinSleepPosition);
         event.registerEntityModifier(VampireBaronRenderer.class, ModEntityRenderStates::extractWings);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends AggressiveVillagerEntity, ? extends VillagerRenderState>>>cast(HunterVillagerRenderer.class), ModEntityRenderStates::extractHunterVillager);
+    }
+
+    private static void extractHunterVillager(AggressiveVillagerEntity entity, VillagerRenderState renderState) {
+        renderState.setRenderData(ModEntityRenderStates.ATTACK_TIME, entity.getAttackAnim(renderState.partialTick));
+        renderState.setRenderData(ModEntityRenderStates.ATTACK_ARM, entity.getMainArm());
     }
 
     private static void extractWings(VampireBaronEntity livingEntity, VampireBaronRenderer.VampireBaronRenderState livingEntityRenderState) {
@@ -159,10 +165,6 @@ public class ModEntityRenderStates {
     private static void extractCoffinSleepPosition(LivingEntity entity, LivingEntityRenderState renderState) {
         entity.getSleepingPos().map(x -> entity.level().getBlockState(x)).map(BlockBehaviour.BlockStateBase::getBlock).filter(CoffinBlock.class::isInstance).ifPresent(x -> {
             renderState.setRenderData(VAMPIRE_SLEEPING_IN_COFFIN, true);
-        });
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends AggressiveVillagerEntity, ? extends VillagerRenderState>>>cast(HunterVillagerRenderer.class), (entity, renderState) -> {
-            renderState.setRenderData(ModEntityRenderStates.ATTACK_TIME, entity.getAttackAnim(renderState.partialTick));
-            renderState.setRenderData(ModEntityRenderStates.ATTACK_ARM, entity.getMainArm());
         });
     }
 }
