@@ -8,6 +8,7 @@ import de.teamlapen.faction.common.components.FactionSlayer;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.config.BalanceConfig;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -46,6 +47,8 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.skeleton.Stray;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -468,6 +471,13 @@ public class ModPlayerEventHandler {
             VampirismMod.services().sunDamageRegistry().updateClient(event.getPlayer());
         } else {
             event.getPlayerList().getPlayers().forEach(player -> VampirismMod.services().sunDamageRegistry().updateClient(player));
+        }
+    }
+
+    @SubscribeEvent
+    public void gilderEquipped(LivingEquipmentChangeEvent event) {
+        if (event.getEntity() instanceof Player player && event.getSlot() == EquipmentSlot.CHEST && event.getTo().has(DataComponents.GLIDER)) {
+            IDraculaPlayer.getDracula(player).ifPresent(IDraculaPlayer::closeWings);
         }
     }
 

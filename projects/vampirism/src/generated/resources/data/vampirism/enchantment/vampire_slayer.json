@@ -19,7 +19,7 @@
           "entity": "this",
           "predicate": {
             "type_specific": {
-              "type": "vampirism:faction",
+              "type": "factionapi:faction",
               "faction": "vampirism:vampire"
             }
           }
@@ -35,7 +35,7 @@
           "entity": "this",
           "predicate": {
             "type_specific": {
-              "type": "vampirism:faction",
+              "type": "factionapi:faction",
               "faction": "vampirism:vampire"
             }
           }

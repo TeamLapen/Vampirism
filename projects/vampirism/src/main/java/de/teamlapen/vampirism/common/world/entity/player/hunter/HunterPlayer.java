@@ -83,11 +83,6 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         return this.disguise;
     }
 
-    @Override
-    public int getMaxLevel() {
-        return REFERENCE.HIGHEST_HUNTER_LEVEL;
-    }
-
     public HunterSkillProperties getSpecialAttributes() {
         return this.specialAttributes;
     }

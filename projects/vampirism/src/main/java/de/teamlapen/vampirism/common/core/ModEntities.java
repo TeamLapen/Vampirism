@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.common.core;
 
 import com.mojang.serialization.MapCodec;
-import de.teamlapen.faction.common.advancements.criterion.FactionSubPredicate;
-import de.teamlapen.faction.common.advancements.criterion.PlayerFactionSubPredicate;
 import de.teamlapen.faction.common.event.PlayerEventHandlerEvent;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
 import de.teamlapen.vampirism.common.util.serialization.ModStreamCodecs;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
+import de.teamlapen.vampirism.common.advancements.critereon.DraculaCriterion;
 import de.teamlapen.vampirism.common.util.serialization.conditions.EntityExistsCondition;
 import de.teamlapen.vampirism.common.world.entity.*;
 import de.teamlapen.vampirism.common.world.entity.converted.*;
@@ -39,6 +39,7 @@ import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -124,8 +125,8 @@ public class ModEntities {
     public static final DeferredHolder<MapCodec<? extends Converter>, MapCodec<? extends Converter>> DEFAULT_CONVERTER = CONVERTING_HELPER.register("default", () -> DefaultConverter.CODEC);
     public static final DeferredHolder<MapCodec<? extends Converter>, MapCodec<? extends Converter>> SPECIAL_CONVERTER = CONVERTING_HELPER.register("special", () -> SpecialConverter.CODEC);
 
-    public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<PlayerFactionSubPredicate>> PLAYER_FACTION_SUB_PREDICATE = ENTITY_SUB_PREDICATES.register("player_faction", () -> PlayerFactionSubPredicate.CODEC);
-    public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<FactionSubPredicate>> FACTION_SUB_PREDICATE = ENTITY_SUB_PREDICATES.register("faction", () -> FactionSubPredicate.CODEC);
+
+    public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<DraculaCriterion>> DRACULA_PREDICATE = ENTITY_SUB_PREDICATES.register("dracula", () -> DraculaCriterion.CODEC);
 
     @SuppressWarnings("unused")
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<? extends ICondition>> ENTITY_EXISTS = CONDITIONS.register("entity_exists", () -> EntityExistsCondition.CODEC);
@@ -136,6 +137,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<DraculaState>> DRACULA_STATE = DATA_SERIALIZER.register("dracula_state", () -> (EntityDataSerializer.ForValueType<DraculaState>) (() -> DraculaState.STREAM_CODEC));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<AnimationState>> ANIMATION_STATE = DATA_SERIALIZER.register("animation_state", () -> (EntityDataSerializer.ForValueType<AnimationState>) (() -> ModStreamCodecs.ANIMATION_STATE));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<IDraculaAnimations.Animation>> DRACULA_ANIMATION = DATA_SERIALIZER.register("dracula_animation", () -> (EntityDataSerializer.ForValueType<IDraculaAnimations.Animation>) (() -> IDraculaAnimations.Animation.STREAM_CODEC));
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<IWingsEntity.WingsState>> WINGS_STATE = DATA_SERIALIZER.register("wings_state", () -> (EntityDataSerializer.ForValueType<IWingsEntity.WingsState>) (() -> NeoForgeStreamCodecs.enumCodec(IWingsEntity.WingsState.class)));
 
     static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);

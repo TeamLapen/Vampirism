@@ -29,7 +29,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -38,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> implements ExtendedScreen {
 
@@ -144,13 +144,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
     @Override
     protected void init() {
         super.init();
-        if (factionPlayer.getLevel() > 0) {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(factionPlayer.asEntity());
-            MutableComponent component = handler.getLordPlayer().filter(x -> x.getLordLevel() > 0).map(ILordPlayer::getLordTitle).map(x -> x.plainCopy().append(" (" + handler.getLordLevel() + ")")).orElseGet(() -> Component.translatable("gui.factionapi.faction_menu.level", factionPlayer.getLevel()));
-            this.level = component.withStyle(style -> style.withColor(factionPlayer.getFaction().value().getChatColor()));
-        } else {
-            this.level = Component.empty();
-        }
+        this.level = Objects.requireNonNullElseGet(factionPlayer.getLevelDisplay(), Component::empty).copy().withStyle(style -> style.withColor(factionPlayer.getFaction().value().getChatColor()));
 
         this.taskList = this.addRenderableWidget(new TaskListWidget(
                 this.menu, this.factionPlayer,

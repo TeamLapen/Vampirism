@@ -314,8 +314,15 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         }
         if (param.hasLordLevelChange()) {
             newLordLevel = param.getNewLordLevel();
-            newLevel = newFaction.value().getHighestReachableLevel();
+            if (newLordLevel > 0) {
+                newLevel = newFaction.value().getHighestReachableLevel();
+            } else {
+                newLevel = param.getNewLevel(newFaction.value().getHighestReachableLevel());
+            }
         }
+
+        newLevel = Math.min(newLevel, newFaction.value().getHighestReachableLevel());
+        newLordLevel = Math.min(newLordLevel, newFaction.value().getHighestLordLevel());
 
         newLevel = Math.clamp(newLevel, 0, newFaction.value().getHighestReachableLevel());
         newLordLevel = Math.clamp(newLordLevel, 0, newFaction.value().getHighestLordLevel());

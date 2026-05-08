@@ -13,6 +13,8 @@ import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
+import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.common.world.entity.player.skills.ActionSkill;
@@ -52,7 +54,7 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> GARLIC_DIFFUSER_IMPROVED = SKILLS.register("garlic_diffuser_improved", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ENHANCED_BLESSING = SKILLS.register("enhanced_blessing", () -> new VampirismSkill.SimpleHunterSkill(3, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_AWARENESS = SKILLS.register("hunter_awareness", () -> new ActionSkill<>(HunterActions.AWARENESS_HUNTER, Trees.LEVEL, 2, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_AWARENESS = SKILLS.register("hunter_awareness", () -> new ActionSkill<>(HunterActions.AWARENESS_HUNTER, ModSkillTreeTags.HUNTER, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CRUCIFIX_REPEL = SKILLS.register("crucifix_repel", () -> new VampirismSkill.SimpleHunterSkill(2, true));
 
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MULTITASK_BREWING = SKILLS.register("multitask_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
@@ -61,7 +63,7 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> SWIFT_BREWING = SKILLS.register("swift_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> EFFICIENT_BREWING = SKILLS.register("efficient_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_BREWER = SKILLS.register("master_brewer", () -> new VampirismSkill.SimpleHunterSkill(3, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.register("potion_resistance", () -> new ActionSkill<>(HunterActions.POTION_RESISTANCE_HUNTER, Trees.LEVEL, 2, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.register("potion_resistance", () -> new ActionSkill<>(HunterActions.POTION_RESISTANCE_HUNTER, ModSkillTreeTags.HUNTER, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CONCENTRATED_DURABLE_BREWING = SKILLS.register("concentrated_durable_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
 
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_SPEED, () -> ModConfig.balance().hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
@@ -77,9 +79,9 @@ public class HunterSkills {
 
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LORD_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.HunterLordSkill(3, true).setToggleActions(hunter -> hunter.updateMinionAttributes(true), hunter -> hunter.updateMinionAttributes(false)));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_TECH_CROSSBOWS = SKILLS.register("minion_tech_crossbows", () -> new VampirismSkill.HunterLordSkill(1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.HunterLordSkill(2, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.SimpleHunterSkill(3, true).setToggleActions(hunter -> hunter.updateMinionAttributes(true), hunter -> hunter.updateMinionAttributes(false)));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_TECH_CROSSBOWS = SKILLS.register("minion_tech_crossbows", () -> new VampirismSkill.SimpleHunterSkill(1, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.SimpleHunterSkill(2, true));
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {

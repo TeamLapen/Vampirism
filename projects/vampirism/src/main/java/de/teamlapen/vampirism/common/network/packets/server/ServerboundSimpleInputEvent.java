@@ -30,6 +30,8 @@ public record ServerboundSimpleInputEvent(Event event) implements CustomPacketPa
         TRAINER_LEVELUP,
         BASIC_HUNTER_LEVELUP,
         RESURRECT,
-        GIVE_UP
+        GIVE_UP,
+        JUMP,
+        GROW_WINGS
     }
 }

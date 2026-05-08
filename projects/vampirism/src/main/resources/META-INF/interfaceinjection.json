@@ -104,5 +104,8 @@
   ],
   "net/minecraft/world/level/levelgen/WorldGenSettings": [
     "de/teamlapen/vampirism/misc/injection/IWorldGenSettingsVampirismMock"
+  ],
+  "net/minecraft/client/model/geom/ModelPart": [
+    "de/teamlapen/vampirism/misc/injection/client/IModelPartVampirismMock"
   ]
 }

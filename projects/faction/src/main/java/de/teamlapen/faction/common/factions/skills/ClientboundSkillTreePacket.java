@@ -24,7 +24,7 @@ public record ClientboundSkillTreePacket(List<ConfigHolder> skillTrees) implemen
     );
 
     public static ClientboundSkillTreePacket of(List<SkillTreeConfiguration> configurations) {
-        return new ClientboundSkillTreePacket(configurations.stream().map(x -> new ConfigHolder(x.skillTree().unwrapKey().get(), x.root().unwrapKey().get(), x.children().stream().map(ClientboundSkillTreePacket::children).toList())).toList());
+        return new ClientboundSkillTreePacket(configurations.stream().map(x -> new ConfigHolder(x.skillTree().unwrapKey().get(), x.root().unwrapKey().get(), x.children().stream().map(ClientboundSkillTreePacket::children).toList(), x.orderAfter())).toList());
     }
 
     private static NodeHolder children(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
@@ -36,16 +36,17 @@ public record ClientboundSkillTreePacket(List<ConfigHolder> skillTrees) implemen
         return TYPE;
     }
 
-    public record ConfigHolder(ResourceKey<ISkillTree> skillTree, ResourceKey<ISkillNode> root, List<NodeHolder> children) {
+    public record ConfigHolder(ResourceKey<ISkillTree> skillTree, ResourceKey<ISkillNode> root, List<NodeHolder> children, List<ResourceKey<ISkillTree>> orderAfter) {
         public static final StreamCodec<RegistryFriendlyByteBuf, ConfigHolder> CODEC = StreamCodec.composite(
                 ResourceKey.streamCodec(FactionRegistries.Keys.SKILL_TREE), ConfigHolder::skillTree,
                 ResourceKey.streamCodec(FactionRegistries.Keys.SKILL_NODE), ConfigHolder::root,
                 NodeHolder.CODEC.apply(ByteBufCodecs.list()), ConfigHolder::children,
+                ResourceKey.streamCodec(FactionRegistries.Keys.SKILL_TREE).apply(ByteBufCodecs.list()), ConfigHolder::orderAfter,
                 ConfigHolder::new
         );
 
         public SkillTreeConfiguration toConfiguration(Registry<ISkillTree> treeRegistry, Registry<ISkillNode> nodeRegistry) {
-            return new SkillTreeConfiguration(treeRegistry.getOrThrow(skillTree), nodeRegistry.getOrThrow(root), children.stream().map(x -> x.toConfiguration(nodeRegistry)).toList());
+            return new SkillTreeConfiguration(treeRegistry.getOrThrow(skillTree), nodeRegistry.getOrThrow(root), children.stream().map(x -> x.toConfiguration(nodeRegistry)).toList(), orderAfter);
         }
     }
 

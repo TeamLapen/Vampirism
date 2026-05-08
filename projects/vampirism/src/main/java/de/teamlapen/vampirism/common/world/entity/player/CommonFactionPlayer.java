@@ -152,6 +152,22 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
         return lordTitles().map(titles -> titles.getShort(getLordLevel(), factionHandler().titleGender())).orElse(null);
     }
 
+    @Override
+    public Component getShortLevelDisplay() {
+        if (getLordLevel() > 0 && getLordTitleShort() instanceof Component shortLord) {
+            return shortLord;
+        }
+        return Component.literal(String.valueOf(getLevel()));
+    }
+
+    @Override
+    public Component getLevelDisplay() {
+        if (getLordLevel() > 0 && getLordTitle() instanceof Component longLord) {
+            return longLord;
+        }
+        return Component.literal(String.valueOf(getLevel()));
+    }
+
     @MustBeInvokedByOverriders
     @Override
     protected void registerProperties() {

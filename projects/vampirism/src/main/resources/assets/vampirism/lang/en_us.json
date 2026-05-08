@@ -548,6 +548,8 @@
   "action.vampirism.lord_attack_speed": "Lord Attack Speed",
   "action.vampirism.lord_attack_speed.desc": "Boost the attack speed of nearby faction members",
   "action.vampirism.jump_boost": "Jump Boost",
+  "action.vampirism.blinding": "Blinding",
+  "action.vampirism.blinding.desc": "Blind nearby entities",
 
   "skill.vampirism.vampire": "Becoming a Vampire",
   "skill.vampirism.night_vision": "Night Vision",
@@ -652,6 +654,10 @@
   "skill.vampirism.hunter_minion_collect.desc": "Send your minions out to collect resources",
   "skill.vampirism.minion_recovery": "Minion Recovery",
   "skill.vampirism.minion_recovery.desc": "Speeds up the time your minions need to recover",
+  "skill.vampirism.vampire_dracula": "Becoming Dracula",
+  "skill.vampirism.vampire_dracula.desc": "You are now Dracula, with wings",
+  "skill.vampirism.wander_the_sun": "Wander the Sun",
+  "skill.vampirism.wander_the_sun.desc": "You no longer receive damage from the sun",
 
   "advancement.vampirism": "Vampirism",
   "advancement.vampirism.desc": "Getting started with Vampirism",
@@ -1004,6 +1010,7 @@
   "gui.vampirism.actions": "Actions",
   "gui.vampirism.skills.level": "Level Skills",
   "gui.vampirism.skills.lord": "Lord Skills",
+  "gui.vampirism.skills.draula": "Dracula Skills",
   "gui.vampirism.skill_required": "Required Skill: %s",
   "gui.vampirism.revertback.head": "Revert back to normal human",
   "gui.vampirism.revertback.desc": "You will loose all your levels and die",
@@ -1326,10 +1333,16 @@
   "command.vampirism.base.config.bat_dim.not_blacklisted": "Dimension %s is no longer blacklisted",
   "command.vampirism.argument.selector.faction": "Faction selector",
   "command.vampirism.argument.selector.level": "Level selector",
+  "command.vampirism.base.dracula.success": "Successfully changed %s to Dracula level",
 
   "notification.vampirism.guideapi_available": "To get a GuideBook for Vampirism install GuideAPI-VP",
   "notification.vampirism.guideapi_available.download": "Click here to go to the mod page",
   "notification.vampirism.warning_optifine_blood_vision": "You appear to be running Optifine with shaders. Blood vision won't work with that. Therefore a substitute glowing effect is used. Not all shaders actually render the glowing effect though.",
+
+  "wings.vampirism.default": "Default",
+  "wings.vampirism.dev": "Dev",
+  "wings.vampirism.contributor": "Contributor",
+  "wings.vampirism.special": "Special",
 
   "vampirism.configuration.title": "Vampirism Configuration",
 

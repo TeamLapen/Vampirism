@@ -11,6 +11,8 @@ import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.common.tags.ModFactionTags;
+import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -94,22 +96,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
          * @param desc Enable description using the default unlocalized key
          */
         public SimpleHunterSkill(int skillPointCost, boolean desc) {
-            super(Either.left(HunterSkills.Trees.LEVEL), skillPointCost, desc);
-        }
-
-        @Override
-        public TagKey<? extends IFaction<?>> factions() {
-            return VampirismTags.Factions.IS_HUNTER;
-        }
-    }
-
-    public static class HunterLordSkill extends VampirismSkill<IHunterPlayer> {
-
-        /**
-         * @param desc Enable description using the default unlocalized key
-         */
-        public HunterLordSkill(int skillPointCost, boolean desc) {
-            super(Either.left(HunterSkills.Trees.LORD), skillPointCost, desc);
+            super(Either.right(VampirismTags.Factions.IS_HUNTER), skillPointCost, desc);
         }
 
         @Override
@@ -124,18 +111,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
     public static class SimpleVampireSkill extends VampirismSkill<IVampirePlayer> {
 
         public SimpleVampireSkill(int skillPointCost, boolean desc) {
-            super(Either.left(VampireSkills.Trees.LEVEL), skillPointCost, desc);
-        }
-
-        @Override
-        public TagKey<? extends IFaction<?>> factions() {
-            return VampirismTags.Factions.IS_VAMPIRE;
-        }
-    }
-
-    public static class VampireLordSkill extends VampirismSkill<IVampirePlayer> {
-        public VampireLordSkill(int skillPointCost, boolean desc) {
-            super(Either.left(VampireSkills.Trees.LORD), skillPointCost, desc);
+            super(Either.right(VampirismTags.Factions.IS_VAMPIRE), skillPointCost, desc);
         }
 
         @Override

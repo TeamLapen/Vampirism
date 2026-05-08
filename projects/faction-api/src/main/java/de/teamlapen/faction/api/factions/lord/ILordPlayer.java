@@ -14,6 +14,10 @@ public interface ILordPlayer<T extends ILordPlayer<T>> extends IFactionPlayer<T>
 
     int getLordLevel();
 
+    default int getMaxLordLevel() {
+        return getFaction().value().getHighestLordLevel();
+    }
+
     int getMaxMinions();
 
     @Nullable

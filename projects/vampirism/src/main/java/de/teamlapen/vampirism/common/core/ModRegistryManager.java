@@ -43,6 +43,7 @@ public class ModRegistryManager {
         ModRecipes.register(eventBus);
         ModMapDecorations.register(eventBus);
         ModRefinements.register(eventBus);
+        ModSkillPointProvider.register(eventBus);
         ModRefinementSets.register(eventBus);
         ModSounds.register(eventBus);
         ModTasks.register(eventBus);

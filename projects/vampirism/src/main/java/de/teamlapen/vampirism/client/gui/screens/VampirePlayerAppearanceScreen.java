@@ -7,6 +7,7 @@ import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
@@ -30,6 +32,8 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private int eyeType;
     private boolean glowingEyes;
     private boolean titleGender;
+    private IWingsEntity.Texture wingsTexture = IWingsEntity.Texture.DEFAULT;
+    private List<IWingsEntity.Texture> availableWingsTextures = List.of();
 
 
     public VampirePlayerAppearanceScreen(@Nullable Screen backScreen) {
@@ -38,7 +42,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     @Override
     public void removed() {
-        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0, titleGender ? 1 : 0));
+        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0, titleGender ? 1 : 0, wingsTexture.ordinal()));
         super.removed();
     }
 
@@ -50,6 +54,10 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.eyeType = customization.eyeType();
         this.glowingEyes = customization.glowingEyes();
         this.titleGender = vampire.titleGender() == IPlayableFaction.TitleGender.FEMALE;
+        this.wingsTexture = customization.wingsTexture();
+        if (vampire.isDracula()) {
+            this.availableWingsTextures = VampirismMod.services().wingsManager().getAvailableWings(vampire.asEntity()).sorted().toList();
+        }
         super.init();
     }
 
@@ -93,6 +101,16 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
                         .toList())
                         .build());
 
+        if (this.availableWingsTextures.size() > 1) {
+            vertical.addChild(DropdownWidget.builder(0,0)
+                    .width(120)
+                    .itemHeight(20)
+                    .maxVisibleItems(5)
+                    .initialSelection(this.wingsTexture.ordinal())
+                    .onSelect(this::wingsTexture)
+                    .items(availableWingsTextures.stream().map(x -> x.name).toList())
+                    .build());
+        }
 
         vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.appearance.title_gender"), minecraft.font).selected(titleGender).onValueChange((button, selected) -> {
             titleGender = selected;
@@ -111,6 +129,11 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private void eye(int eyeType) {
         VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
         vampire.setEyeType(this.eyeType = eyeType);
+    }
+
+    private void wingsTexture(int wingsTexture) {
+        VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
+        vampire.getCustomization().setWingsTexture(this.wingsTexture = availableWingsTextures.get(wingsTexture));
     }
 
     private void fang(int fangType) {

@@ -11,26 +11,15 @@ import de.teamlapen.vampirism.api.VampirismFactions;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface for the player vampire data.
  * Attached to all players as capability
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, ITaskPlayer<IVampirePlayer>, IRefinementPlayer<IVampirePlayer>, ILordPlayer<IVampirePlayer> {
-
-    /**
-     * Force enables the vision
-     * Does NOT unlock the vision
-     *
-     * @param vision Null to disable all
-     */
-    void activateVision(@Nullable ResourceKey<IVampireVision> vision);
+public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, ITaskPlayer<IVampirePlayer>, IRefinementPlayer<IVampirePlayer>, ILordPlayer<IVampirePlayer>, IVampireVisionUser, IDraculaPlayer {
 
     /**
      * Increases exhaustion level by supplied amount
@@ -50,33 +39,23 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * @return The bite type which would be applied to the give entity
      */
-    @NotNull
     BITE_TYPE determineBiteType(LivingEntity entity);
 
     /**
      * @return The players vampire skill handler
      */
-    @NotNull
     IActionHandler<IVampirePlayer> getActionHandler();
 
     @Override
-    @NotNull
     default Holder<? extends IPlayableFaction<IVampirePlayer>> getFaction() {
         return VampirismFactions.VAMPIRE;
     }
-
-    /**
-     * @return The currently active vision. May be null
-     */
-    @Nullable
-    Holder<IVampireVision> getActiveVision();
 
     int getBloodLevel();
 
     /**
      * @return The players blood stats (similar to food stats)
      */
-    @NotNull
     IBloodStats getBloodStats();
 
     /**
@@ -99,17 +78,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     boolean onDeadlyHit(DamageSource source);
 
     /**
-     * Locks the vision again, preventing the player from using it
-     */
-    void unUnlockVision(@NotNull ResourceKey<IVampireVision> vision);
-
-    /**
-     * Unlocks the given vision, so the player can activate it.
-     * Is not saved to nbt
-     */
-    void unlockVision(@NotNull ResourceKey<IVampireVision> vision);
-
-    /**
      * updates attributes of all minions
      */
     void updateMinionAttributes(boolean increasedStats);
@@ -128,7 +96,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
         }
 
         @Override
-        public @NotNull String getSerializedName() {
+        public String getSerializedName() {
             return this.name;
         }
     }

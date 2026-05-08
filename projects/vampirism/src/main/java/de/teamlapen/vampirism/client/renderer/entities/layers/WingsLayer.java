@@ -2,55 +2,56 @@ package de.teamlapen.vampirism.client.renderer.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.client.models.armor.WingModel;
-import de.teamlapen.vampirism.client.renderer.entities.VampireBaronRenderer;
+import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
+import de.teamlapen.vampirism.client.models.layers.WingsModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.LivingEntity;
 
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
+public class WingsLayer<T extends LivingEntity, S extends LivingEntityRenderState, Q extends EntityModel<S>> extends RenderLayer<S, Q> {
 
-public class WingsLayer<T extends LivingEntity, S extends HumanoidRenderState, Q extends EntityModel<S>> extends RenderLayer<S, Q> {
+    private final WingsModel model;
+    private final BiConsumer<S, PoseStack> attachmentPointModifier;
 
-    private final WingModel<S> model;
-    private final Predicate<S> predicateRender;
-    private final BiFunction<S, Q, ModelPart> bodyPartFunction;
-    private final Identifier texture = VIdentifier.mod("textures/entity/wings.png");
+    private static final Map<IWingsEntity.Texture, Identifier> TEXTURE_MAP = Util.makeEnumMap(IWingsEntity.Texture.class, x -> switch (x) {
+        case DEV -> VIdentifier.mod("textures/entity/wings/wings_dev.png");
+        default -> VIdentifier.mod("textures/entity/wings/wings.png");
+    });
 
-    /**
-     * @param predicateRender  Decides if the layer is rendered
-     * @param bodyPartFunction Should return the main body part. The returned ModelRenderer is used to adjust the wing rotation
-     */
-    public WingsLayer(RenderLayerParent<S, Q> entityRendererIn, EntityModelSet modelSet, Predicate<S> predicateRender, BiFunction<S, Q, ModelPart> bodyPartFunction) {
-        super(entityRendererIn);
-        this.model = new WingModel<>(modelSet.bakeLayer(ModEntitiesRender.WING));
-        this.predicateRender = predicateRender;
-        this.bodyPartFunction = bodyPartFunction;
+    public WingsLayer(RenderLayerParent<S, Q> renderer, @NotNull EntityModelSet modelSet, BiConsumer<S, PoseStack> attachmentPointModifier) {
+        super(renderer);
+        this.model = new WingsModel(modelSet.bakeLayer(ModEntitiesRender.WINGS));
+        this.attachmentPointModifier = attachmentPointModifier;
     }
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, S renderState, float yRot, float xRot) {
         if (renderState.isInvisible) return;
-        if (!predicateRender.test(renderState)) return;
-
-        this.model.copyRotationFromBody(bodyPartFunction.apply(renderState, this.getParentModel()));
+        if (renderState.getRenderDataOrDefault(ModEntityRenderStates.DRACULA_WINGS_STATE, IWingsEntity.WingsState.CLOSED) == IWingsEntity.WingsState.CLOSED) return;
         float s = 1f;
-        if (renderState instanceof VampireBaronRenderer.VampireBaronRenderState baron) {
-            s = baron.enragedProgress;
-        }
+        WingsModel.State state = new WingsModel.State();
+        state.wingsState = renderState.getRenderDataOrThrow(ModEntityRenderStates.DRACULA_WINGS_STATE);
+        state.growState = renderState.getRenderDataOrThrow(ModEntityRenderStates.DRACULA_WINGS_GROW);
+        state.flyState = renderState.getRenderDataOrThrow(ModEntityRenderStates.DRACULA_WINGS_FLY);
+        state.ageInTicks = renderState.ageInTicks;
+
         poseStack.pushPose();
-        poseStack.translate(0f, 0, 0.02f);
+        this.attachmentPointModifier.accept(renderState, poseStack);
         poseStack.scale(s, s, s);
-        coloredCutoutModelCopyLayerRender(model, texture, poseStack, nodeCollector, packedLight, renderState, -1, 1);
+        nodeCollector.submitModel(this.model, state, poseStack, RenderTypes.entityCutoutNoCull(TEXTURE_MAP.get(renderState.getRenderDataOrDefault(ModEntityRenderStates.DRACULA_WINGS_TEXTURE, IWingsEntity.Texture.DEFAULT))), packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0), -1, null, 0, null);
         poseStack.popPose();
     }
 }

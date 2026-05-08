@@ -9,9 +9,11 @@ import de.teamlapen.vampirism.client.models.entities.dracula.DraculaPhase1Model;
 import de.teamlapen.vampirism.client.models.entities.dracula.DraculaPhase2Model;
 import de.teamlapen.vampirism.client.models.entities.dracula.DraculaPhase3Model;
 import de.teamlapen.vampirism.client.models.entities.flying_needle.FlyingNeedleModel;
+import de.teamlapen.vampirism.client.models.layers.WingsModel;
 import de.teamlapen.vampirism.client.renderer.entities.*;
 import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.VampirePlayerHeadLayer;
+import de.teamlapen.vampirism.client.renderer.entities.layers.WingsLayer;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -63,6 +65,7 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation CURSED_SPRUCE_BOAT = new ModelLayerLocation(VIdentifier.mod("boat/cursed_spruce"), "main");
     public static final ModelLayerLocation CURSED_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VIdentifier.mod("chest_boat/cursed_spruce"), "main");
     public static final ModelLayerLocation FLYING_NEEDLE = new ModelLayerLocation(VIdentifier.mod("flying_needle"), "main");
+    public static final ModelLayerLocation WINGS = new ModelLayerLocation(VIdentifier.mod("wings"), "main");
 
 
     public static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
@@ -144,6 +147,7 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(DRACULA_PHASE_2, DraculaPhase2Model::createBodyLayer);
         event.registerLayerDefinition(DRACULA_PHASE_3, DraculaPhase3Model::createBodyLayer);
         event.registerLayerDefinition(FLYING_NEEDLE, FlyingNeedleModel::createBodyLayer);
+        event.registerLayerDefinition(WINGS, WingsModel::createLayer);
     }
 
     public static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
@@ -158,6 +162,9 @@ public class ModEntitiesRender {
             if (renderPlayer != null && renderPlayer.getModel() instanceof PlayerModel) {
                 LivingEntityRenderer<S, T, PlayerModel> renderPlayer2 = (LivingEntityRenderer<S, T, PlayerModel>) renderPlayer;
                 renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));
+                renderPlayer.addLayer(new WingsLayer<>(renderPlayer, event.getEntityModels(), (state, poseStack) -> {
+                    poseStack.translate(0,-11/16f,2/16f);
+                }));
             }
         }
     }
@@ -174,7 +181,7 @@ public class ModEntitiesRender {
     private interface LivingEntityRendererProvider<T extends LivingEntity, U extends LivingEntityRenderState, Z extends EntityModel<? super U>> extends EntityRendererProvider<T> {
         @Override
         @NotNull
-        LivingEntityRenderer<T, U, Z> create(EntityRendererProvider.@NotNull Context pContext);
+        LivingEntityRenderer<T, U, Z> create(@NotNull Context pContext);
     }
 
 }
