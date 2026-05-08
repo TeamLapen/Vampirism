@@ -17,16 +17,20 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +103,18 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void tickDeath() {
+        super.tickDeath();
+
+        if (this.level() instanceof ServerLevel level){
+            if (this.deathTime % 5 == 0 && level.getGameRules().get(GameRules.MOB_DROPS)) {
+                int award = net.neoforged.neoforge.event.EventHooks.getExperienceDrop(this, null, Mth.floor((float) 1000 * 0.08F));
+                ExperienceOrb.award((ServerLevel) this.level(), this.position(), award);
+            }
+        }
     }
 
     protected void updateEvent() {
