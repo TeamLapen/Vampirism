@@ -64,6 +64,10 @@ public class VampirismConfig {
         return specs == clientSpec;
     }
 
+    public static boolean isServerConfigLoaded() {
+        return serverSpec.isLoaded();
+    }
+
     @ThreadSafeAPI
     public static <T extends BalanceBuilder.Conf> void addBalanceModification(@NotNull String key, @NotNull Consumer<T> modifier) {
         if (balanceBuilder == null) {
