@@ -140,8 +140,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         int i = Mth.floor(this.getBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
-        BlockPos blockpos = new BlockPos((int) this.getX(), (int) this.getBoundingBox().minY, (int) this.getZ());
-        return worldIn.getBlockState(blockpos.below()).is(ModTags.Blocks.CURSED_EARTH) && super.checkSpawnRules(worldIn, spawnReasonIn);
+        return super.checkSpawnRules(worldIn, spawnReasonIn);
     }
 
     @Override
