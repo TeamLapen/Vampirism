@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.storage.IAttachment;
 import de.teamlapen.lib.lib.util.LogUtil;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.advancements.critereon.FactionCriterionTrigger;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -227,7 +226,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
             this.titleGender = IPlayableFaction.TitleGender.valueOf(nbt.getString("title_gender"));
         }
         this.loadBoundActions(nbt);
-        updateCache();
+        updateCache(false);
         notifyFaction(old, oldLevel);
     }
 
@@ -312,7 +311,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
             this.setLordLevel(newLordLevel, false);
         }
         this.checkSkillTreeLocks();
-        updateCache();
+        updateCache(false);
         notifyFaction(old, oldLevel);
         if (this.player instanceof ServerPlayer && !(currentFaction == old && oldLevel == currentLevel)) {
             if (old == currentFaction) {
@@ -442,7 +441,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
 
         this.currentLordLevel = level;
         this.checkSkillTreeLocks();
-        this.updateCache();
+        this.updateCache(false);
         MinionWorldData.getData(player.level()).ifPresent(data -> {
             PlayerMinionController c = data.getController(this.player.getUUID());
             if (c != null) {
@@ -470,13 +469,18 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
         HelperLib.sync(this, player, all);
     }
 
-    private void updateCache() {
+    private void updateCache(boolean duringLoad) {
         player.refreshDisplayName();
         VampirismPlayerAttributes atts = ((IVampirismPlayer) player).getVampAtts();
         atts.hunterLevel = this.currentFaction == VReference.HUNTER_FACTION ? this.currentLevel : 0;
         atts.vampireLevel = this.currentFaction == VReference.VAMPIRE_FACTION ? this.currentLevel : 0;
         atts.lordLevel = this.currentLordLevel;
         atts.faction = this.currentFaction;
+        if (!duringLoad) {
+            //This triggers an update name event which we listen to and update the player name formatting based on the formatting.
+            // However, if this FactionPlayerHandler is still being initialized/deserialized, it cannot be accessed yet -> don't refresh the name here -> instead do it during EntityJoinWorld
+            player.refreshDisplayName();
+        }
     }
 
     private void writeBoundActions(@NotNull CompoundTag nbt) {
@@ -519,7 +523,7 @@ public class FactionPlayerHandler implements IAttachment, IFactionPlayerHandler 
             this.titleGender = IPlayableFaction.TitleGender.valueOf(nbt.getString("title_gender"));
         }
         loadBoundActions(nbt);
-        updateCache();
+        updateCache(true);
     }
 
     @Override

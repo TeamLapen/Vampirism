@@ -64,6 +64,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
@@ -428,6 +429,13 @@ public class ModPlayerEventHandler {
                     event.setDisplayname(displayName.withStyle(style -> style.withColor((f.getChatColor()))));
                 }
             });
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerJoinWorld(EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            player.refreshDisplayName(); //Update name cache here as it is not possible during entity load {@link de.teamlapen.vampirism.entity.factions.FactionPlayerHandler#updateCache}
         }
     }
 
