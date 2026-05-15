@@ -270,30 +270,31 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
         return Component.translatable("container.vampirism.vapor_still");
     }
 
+    @Nullable
     @Override
-    public boolean canOpen(Player player) {
-        if (!super.canOpen(player)) return false;
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        if (!canOpen(player)) return null;
 
         HunterPlayer hunter = HunterPlayer.get(player);
         if (hunter.getLevel() <= 0) {
             player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
-            return false;
+            return null;
         }
 
         if (this.ownerID == null) {
             setOwnerID(player);
-            this.config.deriveFromHunter(hunter);
-            return true;
         }
 
         if (this.ownerID.equals(player.getUUID())) {
             this.config.deriveFromHunter(hunter);
-            return true;
+            return createMenu(containerId, inventory);
+        } else {
+            player.sendOverlayMessage(Component.translatable("message.vampirism.vapor_still.other_owner", getOwnerName()));
+            return null;
         }
 
-        player.sendOverlayMessage(Component.translatable("message.vampirism.vapor_still.other_owner", getOwnerName()));
-        return false;
     }
+
 
     @Override
     public boolean stillValid(Player player) {

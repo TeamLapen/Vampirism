@@ -136,7 +136,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     @Override
     public boolean matches(@NotNull AlchemicalCauldronRecipeInput inv, @NotNull Level worldIn) {
         boolean match = this.ingredient.test(inv.ingredient());
-        Boolean fluidMatch = fluid.map(ingredient1 -> ingredient1.test(inv.fluid()), fluid1 -> {
+        Boolean fluidMatch = !inv.fluid().isEmpty() && fluid.map(ingredient1 -> ingredient1.test(inv.fluid()), fluid1 -> {
             try (var transaction = Transaction.openRoot()) {
                 var inputHandler = inv.fluid().getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(inv.fluid()));
                 var extracted = ResourceHandlerUtil.extractFirst(inputHandler, x -> x.is(fluid1.fluid()), fluid1.amount(), transaction);

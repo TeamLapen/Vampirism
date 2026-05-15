@@ -31,6 +31,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -38,8 +39,17 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.resource.ResourceStack;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -132,19 +142,18 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     }
 
 
+    @Nullable
     @Override
-    public boolean canOpen(Player player) {
-        if (super.canOpen(player)) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        if (canOpen(player)) {
             if (!Helper.isHunter(player)) {
                 player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
-                return false;
-            }
-            if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.BASIC_ALCHEMY)) {
+            } else if (HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.BASIC_ALCHEMY)) {
                 if (ownerID == null) {
                     setOwnerID(player);
-                    return true;
-                } else if (ownerID.equals(player.getUUID())) {
-                    return true;
+                }
+                if (ownerID.equals(player.getUUID())) {
+                    return this.createMenu(containerId, inventory);
                 } else {
                     player.sendOverlayMessage(Component.translatable("message.vampirism.alchemical_cauldron.other_owner", getOwnerName()));
                 }
@@ -152,7 +161,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
                 player.sendOverlayMessage(FactionRestriction.MESSAGE_MISSING_SKILLS);
             }
         }
-        return false;
+        return null;
     }
 
     @Override
@@ -207,9 +216,9 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input, this.items);
         this.litTime = input.getIntOr("BurnTime", this.litTime);
+        this.litDuration = input.getIntOr("lit_duration", 0);
         this.cookingProgress = input.getIntOr("CookTime", this.cookingProgress);
         this.cookingTotalTime = input.getIntOr("CookTimeTotal", this.cookingTotalTime);
-        this.litDuration = this.getBurnDuration(this.items.get(1));
         this.recipesUsed.clear();
         this.recipesUsed.putAll(input.read("RecipesUsed", RECIPES_USED_CODEC).orElse(Map.of()));
     }
@@ -230,6 +239,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putInt("BurnTime", this.litTime);
+        output.putInt("lit_duration", this.litDuration);
         output.putInt("CookTime", this.cookingProgress);
         output.putInt("CookTimeTotal", this.cookingTotalTime);
         ContainerHelper.saveAllItems(output, this.items);
@@ -314,6 +324,22 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
             RecipeHolder<AlchemicalCauldronRecipe> recipeholder;
             if (hasIngredient && hasFluid) {
                 recipeholder = pBlockEntity.quickCheck.getRecipeFor(new AlchemicalCauldronRecipeInput(ingredient, fluid, pBlockEntity.getPlayerSkillHandler()), (ServerLevel) pLevel).orElse(null);
+
+                //The above does not work e.g. for the garlic -> salt recipe using a water bucket.
+                //I think the ItemAccess#forStack(fluid) in AlchemicalCauldronRecipe#matches is the problem because it does not allow changing the item from water bucket to empty bucket (and vice versa)
+                //Demo code that also does not work:-----------------------------------------
+                FluidStack waterStack = new FluidStack(Fluids.WATER, 1000);
+                ItemStack waterBucket = new ItemStack(Items.WATER_BUCKET);
+                try (var transaction = Transaction.openRoot()) {
+                    ResourceHandler<FluidResource> inputHandler = waterBucket.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(waterBucket));
+                    ResourceStack<FluidResource> extracted = ResourceHandlerUtil.extractFirst(inputHandler, x -> x.is(waterStack.getFluid()), waterStack.amount(), transaction);
+                    if (extracted == null || extracted.isEmpty()) {
+                        //It won't brew
+                    }
+                }
+                //----------------------------------------
+
+
             } else {
                 recipeholder = null;
             }
