@@ -30,7 +30,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -285,6 +284,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
     }
 
     public Optional<ISkillHandler<?>> getPlayerSkillHandler() {
+        if (this.level == null || this.ownerID == null) return Optional.empty();
         return Optional.ofNullable(this.level.getPlayerByUUID(ownerID)).map(HunterPlayer::get).map(HunterPlayer::getSkillHandler);
     }
 
@@ -292,21 +292,27 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
      * copy of AbstractFurnaceTileEntity#tick() with modification
      */
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, AlchemicalCauldronBlockEntity pBlockEntity) {
-        boolean flag = pBlockEntity.isLit();
-        boolean flag1 = false;
+        boolean flagWasLit;
+        boolean flagChanged = false;
         if (pBlockEntity.isLit()) {
             pBlockEntity.litTime--;
+        }
+        if (pBlockEntity.litTime > 0) {
+            flagWasLit = true;
+            --pBlockEntity.litTime;
+        } else {
+            flagWasLit = false;
         }
 
         ItemStack fuel = pBlockEntity.items.get(3);
         ItemStack ingredient = pBlockEntity.items.get(1);
         ItemStack fluid = pBlockEntity.items.get(0);
-        boolean flag2 = !ingredient.isEmpty();
-        boolean flag3 = !fuel.isEmpty();
-        boolean flag4 = !fluid.isEmpty();
-        if (pBlockEntity.isLit() || flag3 && flag2 && flag4) {
+        boolean hasIngredient = !ingredient.isEmpty();
+        boolean hasFuel = !fuel.isEmpty();
+        boolean hasFluid = !fluid.isEmpty();
+        if (pBlockEntity.isLit() || hasFuel && hasIngredient && hasFluid) {
             RecipeHolder<AlchemicalCauldronRecipe> recipeholder;
-            if (flag2 && flag4) {
+            if (hasIngredient && hasFluid) {
                 recipeholder = pBlockEntity.quickCheck.getRecipeFor(new AlchemicalCauldronRecipeInput(ingredient, fluid, pBlockEntity.getPlayerSkillHandler()), (ServerLevel) pLevel).orElse(null);
             } else {
                 recipeholder = null;
@@ -317,17 +323,8 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
                 pBlockEntity.litTime = pBlockEntity.getBurnDuration(fuel);
                 pBlockEntity.litDuration = pBlockEntity.litTime;
                 if (pBlockEntity.isLit()) {
-                    flag1 = true;
-                    var remainder = fuel.getCraftingRemainder().create();
-                    if (!remainder.isEmpty()) {
-                        pBlockEntity.items.set(3, remainder);
-                    } else if (flag3) {
-                        Item item = fuel.getItem();
-                        fuel.shrink(1);
-                        if (fuel.isEmpty()) {
-                            pBlockEntity.items.set(3, remainder);
-                        }
-                    }
+                    flagChanged = true;
+                    pBlockEntity.items.set(3, Helper.shrinkItemStack(fuel, pLevel, pPos)); //Reduce fuel
                 }
             }
 
@@ -340,7 +337,7 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
                         pBlockEntity.setRecipeUsed(recipeholder);
                     }
 
-                    flag1 = true;
+                    flagChanged = true;
                 }
             } else {
                 pBlockEntity.cookingProgress = 0;
@@ -349,14 +346,12 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
             pBlockEntity.cookingProgress = Mth.clamp(pBlockEntity.cookingProgress - 2, 0, pBlockEntity.cookingTotalTime);
         }
 
-        if (flag != pBlockEntity.isLit()) {
-            flag1 = true;
-            pState = pState.setValue(AbstractFurnaceBlock.LIT, pBlockEntity.isLit());
-            pLevel.setBlock(pPos, pState, 3);
+        if (flagWasLit != pBlockEntity.isLit()) {
+            flagChanged = true;
         }
 
-        if (flag1) {
-            setChanged(pLevel, pPos, pState);
+        if (flagChanged) {
+            pBlockEntity.setChanged();
         }
     }
 
