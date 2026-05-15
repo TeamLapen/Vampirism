@@ -25,10 +25,23 @@ public interface IExtendedBrewingRecipeRegistry {
 
     boolean hasOutput(Level level, ItemStack input, ItemStack ingredient, ItemStack extraIngredient, IExtendedBrewingCapabilities capabilities);
 
+    /**
+     * Ignores stack size
+     *
+     * @return Whether the given stack is a valid extra ingredient (Vampirism's extra ingredient) to any recipe.
+     */
     boolean isValidExtraIngredient(ItemStack stack);
 
+    /**
+     * Ignores stack size
+     * @return Whether the given stack is a valid ingredient (vanilla potion ingredient such as gunpowder) to any recipe.
+     */
     boolean isValidIngredient(PotionBrewing registry, ItemStack stack);
 
+    /**
+     * Ignores stack size
+     * @return Whether the given stack is a valid input (potion slot) (to any recipe).
+     */
     boolean isValidInput(PotionBrewing registry, ItemStack stack);
 
     interface IExtendedBrewingCapabilities {

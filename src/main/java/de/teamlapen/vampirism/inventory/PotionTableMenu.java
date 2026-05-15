@@ -66,9 +66,9 @@ public class PotionTableMenu extends InventoryContainerMenu {
         SELECTOR_INFOS[0] = SELECTOR_INFOS_EXTENDED[0] = new SelectorInfo(Ingredient.of(Items.BLAZE_POWDER), 23, 14);
         SELECTOR_INFOS[1] = SELECTOR_INFOS_EXTENDED[1] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidExtraIngredient(stack), 101, 16);
         SELECTOR_INFOS[2] = SELECTOR_INFOS_EXTENDED[2] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidIngredient(level.potionBrewing(), stack), 126, 8);
-        SELECTOR_INFOS[3] = SELECTOR_INFOS_EXTENDED[3] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidInput(level.potionBrewing(), stack), 148, 59);
-        SELECTOR_INFOS[4] = SELECTOR_INFOS_EXTENDED[4] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidInput(level.potionBrewing(), stack), 126, 59);
-        SELECTOR_INFOS[5] = SELECTOR_INFOS_EXTENDED[5] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidInput(level.potionBrewing(), stack), 104, 59);
+        SELECTOR_INFOS[3] = SELECTOR_INFOS_EXTENDED[3] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidInput(level.potionBrewing(), stack), 148, 59, false, 1, null);
+        SELECTOR_INFOS[4] = SELECTOR_INFOS_EXTENDED[4] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidInput(level.potionBrewing(), stack), 126, 59, false, 1, null);
+        SELECTOR_INFOS[5] = SELECTOR_INFOS_EXTENDED[5] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidInput(level.potionBrewing(), stack), 104, 59, false, 1, null);
         SELECTOR_INFOS_EXTENDED[6] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidInput(level.potionBrewing(), stack), 82, 59);
         SELECTOR_INFOS_EXTENDED[7] = new SelectorInfo(stack -> VampirismAPI.extendedBrewingRecipeRegistry().isValidInput(level.potionBrewing(), stack), 60, 59);
         return extended ? SELECTOR_INFOS_EXTENDED : SELECTOR_INFOS;

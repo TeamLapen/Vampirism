@@ -93,8 +93,12 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
             return Optional.of(Triple.of(ItemDataUtils.setPotion(new ItemStack(item), mix.output), mix.reagent1Count, mix.reagent2Count));
 
         }
-        ItemStack output = level.potionBrewing().mix(ingredient, bottle);
-        return output.isEmpty() ? Optional.empty() : Optional.of(Triple.of(output, 1, 0));
+        //Check vanilla mixes
+        if (level.potionBrewing().hasMix(bottle, ingredient)) {  //The parameters here are labeled incorrectly in parchment? and ordered the other way around than in #mix
+            ItemStack output = level.potionBrewing().mix(ingredient, bottle);
+            return Optional.of(Triple.of(output, 1, 0));
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -132,8 +136,6 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
 
     @Override
     public boolean isValidInput(PotionBrewing registry, @NotNull ItemStack stack) {
-        if (stack.getCount() != 1) return false;
-
         Item item = stack.getItem();
         return item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION || item == Items.GLASS_BOTTLE || registry.isInput(stack);
     }

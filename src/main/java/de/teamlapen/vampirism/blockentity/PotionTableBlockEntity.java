@@ -52,8 +52,10 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
     private static final int[] SLOTS_FOR_UP = new int[]{0, 1, 2};
     private static final int[] SLOTS_FOR_DOWN = new int[]{3, 4, 5, 1, 2};
     private static final int[] SLOTS_FOR_DOWN_EXTENDED = new int[]{3, 4, 5, 6, 7, 1, 2};
-    private static final int[] OUTPUT_SLOTS = new int[]{3, 4, 5, 0};
-    private static final int[] OUTPUT_SLOTS_EXTENDED = new int[]{3, 4, 5, 6, 7, 0};
+    private static final int[] SLOTS_FOR_SIDE = new int[]{3, 4, 5, 0};
+    private static final int[] SLOTS_FOR_SIDE_EXTENDED = new int[]{3, 4, 5, 6, 7, 0};
+    private static final int[] OUTPUT_SLOTS = new int[]{3, 4, 5};
+    private static final int[] OUTPUT_SLOTS_EXTENDED = new int[]{3, 4, 5, 6, 7};
     private final BrewingCapabilities config = new BrewingCapabilities();
     @Nullable
     private UUID ownerID;
@@ -183,7 +185,7 @@ public class PotionTableBlockEntity extends BaseContainerBlockEntity implements 
         if (side == Direction.UP) {
             return SLOTS_FOR_UP;
         } else {
-            return side == Direction.DOWN ? config.multiTaskBrewing ? SLOTS_FOR_DOWN_EXTENDED : SLOTS_FOR_DOWN : config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS;
+            return side == Direction.DOWN ? config.multiTaskBrewing ? SLOTS_FOR_DOWN_EXTENDED : SLOTS_FOR_DOWN : config.multiTaskBrewing ? SLOTS_FOR_SIDE_EXTENDED : SLOTS_FOR_SIDE;
         }
     }
 
