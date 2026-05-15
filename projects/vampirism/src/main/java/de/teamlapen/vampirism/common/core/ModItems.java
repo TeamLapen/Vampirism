@@ -15,7 +15,9 @@ import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.*;
 import de.teamlapen.vampirism.common.world.items.component.PureLevel;
-import de.teamlapen.vampirism.common.world.items.consume.*;
+import de.teamlapen.vampirism.common.world.items.consume.AffectGarlic;
+import de.teamlapen.vampirism.common.world.items.consume.ModConsumables;
+import de.teamlapen.vampirism.common.world.items.consume.ModFoods;
 import de.teamlapen.vampirism.common.world.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.common.world.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.SingleCrossbowItem;
@@ -200,7 +202,7 @@ public class ModItems {
     public static final DeferredItem<Item> SYRINGE_BLOOD = ITEMS.registerItem("syringe_blood", x -> new Item(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()).factions$factionFood(new FactionFoodList(new FoodProperties.Builder().build(), new FactionFoodEntry(VampirismTags.Factions.IS_VAMPIRE, new FoodProperties.Builder().nutrition(BloodSyringeFluidHandler.CAPACITY / IBottleBlood.MULTIPLIER).saturationModifier(0.8F).build(), ModFoodBehaviours.VAMPIRE_FOOD)), Consumables.defaultDrink().build()));
     public static final DeferredItem<GarlicInjectionItem> INJECTION_GARLIC = ITEMS.registerItem("injection_garlic", x -> new GarlicInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
     public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", x -> new SanguinareInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
-    public static final DeferredItem<SerumInjectionItem> SERUM_INJECTION = ITEMS.registerItem("serum_injection", SerumInjectionItem::new, props -> props.component(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).component(DataComponents.POTION_DURATION_SCALE, 0.25F).stacksTo(4).useCooldown(8));
+    public static final DeferredItem<SerumInjectionItem> SERUM_INJECTION = ITEMS.registerItem("serum_injection", SerumInjectionItem::new, props -> props.component(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).component(DataComponents.POTION_DURATION_SCALE, 0.25F).stacksTo(4).craftRemainder(SYRINGE_EMPTY.get()).useCooldown(8));
 
     public static final DeferredItem<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = ITEMS.registerItem("item_alchemical_fire", AlchemicalFireItem::new);
 
