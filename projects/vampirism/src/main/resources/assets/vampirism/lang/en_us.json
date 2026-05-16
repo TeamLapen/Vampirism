@@ -1070,6 +1070,10 @@
   "gui.vampirism.jei.task.representative": "Faction representative",
   "gui.vampirism.jei.task.prerequisites": "Prerequisites",
   "gui.vampirism.jei.task.prerequisites.none": "None",
+  "gui.vampirism.guide.task.reward_obtain_all": "Can be obtained as a task reward",
+  "gui.vampirism.guide.task.reward_obtain_for": "Can be obtained as a task reward for %s",
+  "gui.vampirism.guide.task.prerequisites": "Prerequisites",
+  "gui.vampirism.guide.task.prerequisites.none": "None",
 
   "message.vampirism.restriction.faction.vampire": "How do those vampires even use this thing...",
   "message.vampirism.restriction.faction.hunter": "How do those hunters even use this thing...",
@@ -1765,5 +1769,6 @@
   "vampirism.configuration.lordAttackSpeedDuration": "Lord Attack Speed Duration",
   "vampirism.configuration.lordAttackSpeedDuration.tooltip": "Duration of the vampire lord attack speed action, in seconds.",
   "vampirism.configuration.lordAttackSpeedCooldown": "Lord Attack Speed Cooldown",
-  "vampirism.configuration.lordAttackSpeedCooldown.tooltip": "Cooldown for the vampire lord attack speed action, in seconds."
+  "vampirism.configuration.lordAttackSpeedCooldown.tooltip": "Cooldown for the vampire lord attack speed action, in seconds.",
+  "text.vampirism.translators": "No translators"
 }
