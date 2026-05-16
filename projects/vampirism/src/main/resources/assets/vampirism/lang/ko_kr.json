@@ -506,6 +506,8 @@
   "gui.vampirism.jei.task.representative": "진영 대리인",
   "gui.vampirism.jei.task.prerequisites": "전제 조건",
   "gui.vampirism.jei.task.prerequisites.none": "없음",
+  "gui.vampirism.guide.task.prerequisites": "전제 조건",
+  "gui.vampirism.guide.task.prerequisites.none": "없음",
   "message.vampirism.action.bat.cant_fly_umbrella": "우산을 쓴 채로 날 수 없습니다",
   "message.vampirism.action.bat.cant_fly_dimension": "이 차원에서는 박쥐 변신을 유지할 수 없습니다",
   "message.vampirism.altar_inspiration.not_enough_blood": "제단에 피가 부족합니다.",
