@@ -28,6 +28,7 @@
   "gui.factionapi.minion.name": "Nome: ",
   "gui.factionapi.minion_stats": "Statistiche minion",
   "gui.factionapi.minion_stats.level": "Livello",
+  "gui.factionapi.level": "Livello",
   "message.factionapi.village_raid.abandoned": "Un villaggio vicino è stato abbandonato",
   "message.factionapi.village_totem.fail_other_component": "Non è possibile distruggere i componenti del villaggio di un villaggio di un'altra fazione",
   "message.factionapi.village_totem.no_faction": "Devi essere in una fazione",
