@@ -77,4 +77,11 @@ public interface IProxy {
     default void addAltarOfInfusionSound(AltarInfusionBlockEntity blockEntity) {
 
     }
+
+    /**
+     * @return The string describing the currently active language. "English" on server side
+     */
+    default String getActiveLanguage(){
+        return "English";
+    }
 }

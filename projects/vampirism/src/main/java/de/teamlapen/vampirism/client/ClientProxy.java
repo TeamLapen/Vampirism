@@ -165,4 +165,9 @@ public class ClientProxy extends CommonProxy {
     public void addAltarOfInfusionSound(AltarInfusionBlockEntity blockEntity) {
         Minecraft.getInstance().getSoundManager().play(new SphereSoundInstance(blockEntity));
     }
+    @Override
+    public @NotNull String getActiveLanguage() {
+        return Minecraft.getInstance().getLanguageManager().getSelected();
+    }
+
 }

@@ -76,13 +76,6 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         recipesWeaponTable();
         recipesInfuser();
 
-        BuiltInRegistries.ITEM.getOptional(REFERENCE.GUIDEBOOK_LOCATION).ifPresent(guideBook ->
-                shapeless(RecipeCategory.MISC, guideBook)
-                        .requires(ModItems.VAMPIRE_FANG)
-                        .requires(Items.BOOK)
-                        .unlockedBy("has_fang", has(ModItems.VAMPIRE_FANG))
-                        .save(output.withConditions(new ModLoadedCondition(REFERENCE.GUIDEAPI_MODID)), modString("vampirism_guidebook"))
-        );
 
         SpecialRecipeBuilder.special(ApplicableOilRecipe::new).save(output, modString("applicable_oil"));
         SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, modString("clean_oil"));
