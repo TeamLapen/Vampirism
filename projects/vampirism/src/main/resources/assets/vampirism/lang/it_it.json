@@ -205,6 +205,7 @@
   "gui.vampirism.jei.task.reward_obtain": "Può essere ottenuto come ricompensa per un'attività da un %s",
   "gui.vampirism.jei.task.representative": "Fazione rappresentativa",
   "gui.vampirism.jei.task.prerequisites": "Prerequisiti",
+  "gui.vampirism.guide.task.prerequisites": "Prerequisiti",
   "message.vampirism.action.bat.cant_fly_umbrella": "Non puoi volare con un ombrello equipaggiato",
   "message.vampirism.altar_inspiration.not_enough_blood": "Non c'è abbastanza sangue nell'altare",
   "message.vampirism.already_vampire": "Sei già un Vampiro",
