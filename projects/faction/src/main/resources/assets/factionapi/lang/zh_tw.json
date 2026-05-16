@@ -66,6 +66,7 @@
   "gui.factionapi.reordering.excluded": "排除",
   "gui.factionapi.reset": "重置",
   "gui.factionapi.reset_question": "你確定嗎？",
+  "gui.factionapi.level": "等級",
   "message.factionapi.action.not_bound": "沒有招式綁定到這個按鍵。請見 %s。",
   "message.factionapi.village_raid.almost_captured": "村莊將要佔領完成，剩下 %s 個防守者",
   "message.factionapi.village_raid.abandoned": "附近的村莊已被廢棄",
