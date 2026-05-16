@@ -7,6 +7,7 @@
   "gui.factionapi.skills.skills_reset": "スキルがリセットされました。",
   "gui.factionapi.minion.active_task": "現在のタスク",
   "gui.factionapi.minion_stats.level": "レベル",
+  "gui.factionapi.level": "レベル",
   "message.factionapi.action.not_bound": "このキーにはアクションが割り当てられていません。%sを確認して下さい。",
   "message.factionapi.village_raid.almost_captured": "村はほぼ占領されました。残り %s 名の敵",
   "command.factionapi.base.bind_action.success": "アクション\"%s\"を[%s]キーに設定しました。",
