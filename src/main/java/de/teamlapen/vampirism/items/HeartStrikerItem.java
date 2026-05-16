@@ -15,9 +15,9 @@ import java.util.List;
 
 public class HeartStrikerItem extends VampireSwordItem implements IItemWithTier {
 
-    public static final VampireSwordMaterial NORMAL = new VampireSwordMaterial(TIER.NORMAL, BlockTags.INCORRECT_FOR_IRON_TOOL, 500, -3.9f, 2.2F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get()), 1.25f);
-    public static final VampireSwordMaterial ENHANCED = new VampireSwordMaterial(TIER.ENHANCED,BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1750, -3.9f, 4.2F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.3f);
-    public static final VampireSwordMaterial ULTIMATE = new VampireSwordMaterial(TIER.ULTIMATE,BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2500, -3.9f, 6.2F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1.35f);
+    public static final VampireSwordMaterial NORMAL = new VampireSwordMaterial(TIER.NORMAL, BlockTags.INCORRECT_FOR_IRON_TOOL, 500, -3.6f, 3F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_IRON_INGOT.get()), 1f);
+    public static final VampireSwordMaterial ENHANCED = new VampireSwordMaterial(TIER.ENHANCED,BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1750, -3.7f, 5F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1f);
+    public static final VampireSwordMaterial ULTIMATE = new VampireSwordMaterial(TIER.ULTIMATE,BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2500, -3.8f, 7F, 14, () -> Ingredient.of(ModItems.BLOOD_INFUSED_ENHANCED_IRON_INGOT.get()), 1f);
 
     private final @NotNull TIER tier;
 

@@ -2,25 +2,25 @@
   "type": "vampirism:shaped_crafting_weapontable",
   "category": "equipment",
   "key": {
-    "W": {
+    "B": {
+      "tag": "c:storage_blocks/diamond"
+    },
+    "D": {
       "tag": "c:gems/diamond"
     },
-    "X": {
-      "tag": "c:ingots/iron"
+    "G": {
+      "item": "vampirism:purified_garlic"
     },
-    "Y": {
-      "tag": "c:crops/garlic"
-    },
-    "Z": {
+    "S": {
       "tag": "c:rods/wooden"
     }
   },
   "lava": 5,
   "pattern": [
-    "XWZY",
-    "XWZY",
-    "  ZY",
-    "  Z "
+    "GBDD",
+    "GBD ",
+    "  S ",
+    "  S "
   ],
   "result": {
     "count": 1,

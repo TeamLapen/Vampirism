@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_leather": {
+    "has_diamond": {
       "conditions": {
         "items": [
           {
-            "items": "#c:leathers"
+            "items": "#c:gems/diamond"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:armor_of_swiftness_legs_normal"
+        "recipe": "vampirism:hunter_coat_feet_ultimate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_leather"
+      "has_diamond"
     ]
   ],
   "rewards": {
     "recipes": [
-      "vampirism:armor_of_swiftness_legs_normal"
+      "vampirism:hunter_coat_feet_ultimate"
     ]
   }
 }

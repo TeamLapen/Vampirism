@@ -92,56 +92,8 @@
               "function": "vampirism:set_item_blood_charge"
             }
           ],
-          "name": "vampirism:heart_seeker_ultimate",
-          "weight": 9
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "damage": {
-                "type": "minecraft:uniform",
-                "max": 0.99,
-                "min": 0.6
-              },
-              "function": "minecraft:set_damage"
-            },
-            {
-              "charge": {
-                "type": "minecraft:uniform",
-                "max": 2000.0,
-                "min": 500.0
-              },
-              "function": "vampirism:set_item_blood_charge"
-            }
-          ],
           "name": "vampirism:heart_striker_enhanced",
           "weight": 21
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "damage": {
-                "type": "minecraft:uniform",
-                "max": 0.99,
-                "min": 0.6
-              },
-              "function": "minecraft:set_damage"
-            },
-            {
-              "charge": {
-                "type": "minecraft:uniform",
-                "max": 2000.0,
-                "min": 500.0
-              },
-              "function": "vampirism:set_item_blood_charge"
-            }
-          ],
-          "name": "vampirism:heart_striker_ultimate",
-          "weight": 9
         },
         {
           "type": "minecraft:empty",

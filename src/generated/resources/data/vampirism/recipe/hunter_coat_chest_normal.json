@@ -2,25 +2,19 @@
   "type": "vampirism:shaped_crafting_weapontable",
   "category": "equipment",
   "key": {
-    "W": {
-      "item": "vampirism:vampire_fang"
-    },
-    "X": {
-      "tag": "c:ingots/iron"
-    },
-    "Y": {
-      "tag": "c:leathers"
-    },
-    "Z": {
+    "G": {
       "tag": "c:crops/garlic"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
     }
   },
   "lava": 2,
   "pattern": [
-    "XWWX",
-    "XZZX",
-    "XZZX",
-    "XYYX"
+    "I  I",
+    "IGGI",
+    "IIII",
+    " II "
   ],
   "result": {
     "count": 1,

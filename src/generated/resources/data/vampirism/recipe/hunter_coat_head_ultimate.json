@@ -2,24 +2,21 @@
   "type": "vampirism:shaped_crafting_weapontable",
   "category": "equipment",
   "key": {
-    "G": {
-      "tag": "c:ingots/gold"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
+    "D": {
+      "tag": "c:gems/diamond"
     },
     "S": {
-      "item": "vampirism:pure_salt"
+      "item": "vampirism:purified_garlic"
     }
   },
-  "lava": 4,
+  "lava": 5,
   "pattern": [
-    "IGGI",
-    "ISSI"
+    "DDDD",
+    "DSSD"
   ],
   "result": {
     "count": 1,
-    "id": "vampirism:hunter_coat_head_enhanced"
+    "id": "vampirism:hunter_coat_head_ultimate"
   },
   "skill": [
     "vampirism:enhanced_armor"

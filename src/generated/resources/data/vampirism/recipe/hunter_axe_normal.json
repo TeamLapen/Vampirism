@@ -2,22 +2,25 @@
   "type": "vampirism:shaped_crafting_weapontable",
   "category": "equipment",
   "key": {
-    "X": {
-      "tag": "c:ingots/iron"
+    "B": {
+      "tag": "c:storage_blocks/iron"
     },
-    "Y": {
+    "G": {
       "tag": "c:crops/garlic"
     },
-    "Z": {
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "S": {
       "tag": "c:rods/wooden"
     }
   },
   "lava": 5,
   "pattern": [
-    "XXZY",
-    "XXZY",
-    "  ZY",
-    "  Z "
+    "GBII",
+    "GBI ",
+    "  S ",
+    "  S "
   ],
   "result": {
     "count": 1,

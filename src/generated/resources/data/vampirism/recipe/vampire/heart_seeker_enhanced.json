@@ -2,17 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "X": {
+    "B": {
+      "item": "vampirism:blood_infused_iron_ingot"
+    },
+    "E": {
       "item": "vampirism:blood_infused_enhanced_iron_ingot"
     },
-    "Y": {
+    "S": {
       "tag": "c:rods/wooden"
     }
   },
   "pattern": [
-    "X",
-    "X",
-    "Y"
+    "BEB",
+    "BEB",
+    " S "
   ],
   "result": {
     "count": 1,

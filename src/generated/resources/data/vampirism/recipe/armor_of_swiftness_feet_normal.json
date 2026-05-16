@@ -2,13 +2,13 @@
   "type": "vampirism:shaped_crafting_weapontable",
   "category": "equipment",
   "key": {
-    "X": {
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "L": {
       "tag": "c:leathers"
     },
-    "Y": {
-      "tag": "c:crops/garlic"
-    },
-    "Z": {
+    "S": {
       "type": "neoforge:components",
       "components": {
         "minecraft:potion_contents": {
@@ -20,9 +20,10 @@
   },
   "lava": 1,
   "pattern": [
-    "XZZX",
-    "XYYX",
-    "XXXX"
+    "L  L",
+    "S  S",
+    "I  I",
+    "L  L"
   ],
   "result": {
     "count": 1,

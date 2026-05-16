@@ -134,6 +134,9 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
                             shootingEntity.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                             shootingEntity.fallDistance = 0.0F;
                         }
+                        if (arrowEntity instanceof Entity entity1) {
+                            entity1.discard();
+                        }
                     }
                 }
             }

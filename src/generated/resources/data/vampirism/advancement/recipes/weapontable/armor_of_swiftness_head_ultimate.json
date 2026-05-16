@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:armor_of_swiftness_legs_normal"
+        "recipe": "vampirism:armor_of_swiftness_head_ultimate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:armor_of_swiftness_legs_normal"
+      "vampirism:armor_of_swiftness_head_ultimate"
     ]
   }
 }

@@ -2,22 +2,31 @@
   "type": "vampirism:shaped_crafting_weapontable",
   "category": "equipment",
   "key": {
-    "X": {
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "L": {
       "tag": "c:leathers"
     },
-    "Y": {
-      "tag": "c:crops/garlic"
-    },
-    "Z": {
-      "tag": "c:ingots/gold"
+    "S": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:strong_swiftness"
+        }
+      },
+      "items": "minecraft:potion"
     }
   },
   "lava": 3,
   "pattern": [
-    "XZZX",
-    "XXXX",
-    "XYYX",
-    "XXXX"
+    "L  L",
+    "GIIG",
+    "LSSL",
+    "GIIG"
   ],
   "result": {
     "count": 1,

@@ -2,22 +2,22 @@
   "type": "vampirism:shaped_crafting_weapontable",
   "category": "equipment",
   "key": {
-    "X": {
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "I": {
       "tag": "c:ingots/iron"
     },
-    "Y": {
-      "tag": "c:gems/diamond"
-    },
-    "Z": {
-      "tag": "c:crops/garlic"
+    "S": {
+      "item": "vampirism:pure_salt"
     }
   },
-  "lava": 5,
+  "lava": 4,
   "pattern": [
-    "XYYX",
-    "XZZX",
-    "XZZX",
-    "X  X"
+    "IGGI",
+    "ISSI",
+    "I  I",
+    "I  I"
   ],
   "result": {
     "count": 1,

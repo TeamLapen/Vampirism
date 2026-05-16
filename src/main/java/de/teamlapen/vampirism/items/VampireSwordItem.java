@@ -280,7 +280,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
     }
 
     protected float getAttackDamageModifier(@NotNull ItemStack stack) {
-        return getChargePercentage(stack) > 0 ? 0.8f : 0;
+        return getChargePercentage(stack) > 0 ? 1f : 0;
     }
 
     protected float getSpeedModifier(@NotNull ItemStack stack) {

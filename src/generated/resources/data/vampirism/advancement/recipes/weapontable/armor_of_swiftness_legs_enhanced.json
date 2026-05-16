@@ -1,16 +1,6 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_garlic": {
-      "conditions": {
-        "items": [
-          {
-            "items": "#c:crops/garlic"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "has_gold": {
       "conditions": {
         "items": [
@@ -42,7 +32,6 @@
     [
       "has_the_recipe",
       "has_leather",
-      "has_garlic",
       "has_gold"
     ]
   ],

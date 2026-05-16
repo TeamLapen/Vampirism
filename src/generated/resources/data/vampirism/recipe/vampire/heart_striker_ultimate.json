@@ -2,23 +2,23 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
+    "D": {
+      "tag": "c:storage_blocks/diamond"
+    },
     "E": {
       "item": "vampirism:blood_infused_enhanced_iron_ingot"
-    },
-    "I": {
-      "item": "vampirism:blood_infused_enhanced_iron_block"
     },
     "S": {
       "tag": "c:rods/wooden"
     }
   },
   "pattern": [
-    "EI",
-    "EI",
+    "ED",
+    "ED",
     "S "
   ],
   "result": {
     "count": 1,
-    "id": "vampirism:heart_striker_enhanced"
+    "id": "vampirism:heart_striker_ultimate"
   }
 }

@@ -12,6 +12,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -33,17 +34,17 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
 
     private static float getSpeedReduction(TIER tier) {
         return switch (tier) {
-            case NORMAL -> 0.035f;
-            case ENHANCED -> 0.075f;
-            case ULTIMATE -> 0.1f;
+            case NORMAL -> 0.05f;
+            case ENHANCED -> 0.1f;
+            case ULTIMATE -> 0.15f;
         };
     }
 
     public ArmorOfSwiftnessItem(@NotNull Holder<net.minecraft.world.item.ArmorMaterial> material, @NotNull ArmorItem.Type type, @NotNull TIER tier) {
         super(material, type, new Item.Properties().durability(type.getDurability(switch (tier) {
-            case NORMAL -> 5;
-            case ENHANCED -> 6;
-            case ULTIMATE -> 7;
+            case NORMAL -> 11;
+            case ENHANCED -> 13;
+            case ULTIMATE -> 15;
         })));
         this.tier = tier;
         Supplier<ItemAttributeModifiers> defaultModifiers = ((ArmorItemAccessor) this).getDefaultModifiers();
@@ -100,6 +101,10 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
         };
     }
 
+    @Override
+    public boolean canWalkOnPowderedSnow(ItemStack stack, LivingEntity wearer) {
+        return true;
+    }
 
     private String getTextureLocationLeather(EquipmentSlot slot) {
         return String.format("minecraft:textures/models/armor/leather_layer_%d.png", slot == EquipmentSlot.LEGS ? 2 : 1);

@@ -2,30 +2,33 @@
   "type": "vampirism:shaped_crafting_weapontable",
   "category": "equipment",
   "key": {
-    "I": {
-      "tag": "c:ingots/iron"
+    "D": {
+      "tag": "c:gems/diamond"
     },
     "L": {
       "tag": "c:leathers"
     },
-    "S": {
+    "P": {
       "type": "neoforge:components",
       "components": {
         "minecraft:potion_contents": {
-          "potion": "minecraft:swiftness"
+          "potion": "vampirism:very_strong_swiftness"
         }
       },
       "items": "minecraft:potion"
     }
   },
-  "lava": 1,
+  "lava": 5,
   "pattern": [
-    "LIIL",
-    "ISSI",
+    "LDDL",
+    "DPPD",
     "L  L"
   ],
   "result": {
     "count": 1,
-    "id": "vampirism:armor_of_swiftness_head_normal"
-  }
+    "id": "vampirism:armor_of_swiftness_head_ultimate"
+  },
+  "skill": [
+    "vampirism:enhanced_armor"
+  ]
 }

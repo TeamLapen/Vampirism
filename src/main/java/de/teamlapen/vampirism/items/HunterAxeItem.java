@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.ModDisplayItemGenerator;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.util.ToolMaterial;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -12,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -25,14 +27,14 @@ import java.util.List;
 
 public class HunterAxeItem extends HunterSwordItem implements IItemWithTier, ModDisplayItemGenerator.CreativeTabItemProvider {
 
-    public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL, BlockTags.INCORRECT_FOR_IRON_TOOL, 250, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
-    public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
-    public static final ToolMaterial.Tiered ULTIMATE = new ToolMaterial.Tiered(TIER.ULTIMATE, BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2031, 3.6f, 7.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_NETHERITE));
+    public static final ToolMaterial.Tiered NORMAL = new ToolMaterial.Tiered(TIER.NORMAL, BlockTags.INCORRECT_FOR_IRON_TOOL, 250, 3.6f, 8.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_IRON));
+    public static final ToolMaterial.Tiered ENHANCED = new ToolMaterial.Tiered(TIER.ENHANCED, BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 3.4f, 9.0F, 14, () -> Ingredient.of(Tags.Items.GEMS_DIAMOND));
+    public static final ToolMaterial.Tiered ULTIMATE = new ToolMaterial.Tiered(TIER.ULTIMATE, BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2031, 3.3f, 10.0F, 14, () -> Ingredient.of(Tags.Items.INGOTS_NETHERITE));
 
     private final TIER tier;
 
-    public HunterAxeItem(ToolMaterial.Tiered material) {
-        super(material, 3, -2.9f, new Properties());
+    public HunterAxeItem(ToolMaterial.Tiered material, Item.Properties properties) {
+        super(material, 3, -2.9f, properties);
         this.tier = material.getTier();
     }
 
@@ -96,8 +98,9 @@ public class HunterAxeItem extends HunterSwordItem implements IItemWithTier, Mod
 
     private float getVampireMult() {
         return switch (tier) {
-            case ULTIMATE, ENHANCED -> 1.3F;
-            default -> 1.2F;
+            case NORMAL -> 1.1f;
+            case ENHANCED -> 1.2f;
+            case ULTIMATE -> 1.3F;
         };
     }
 
