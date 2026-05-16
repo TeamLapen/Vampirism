@@ -12,17 +12,21 @@ import de.teamlapen.vampirism.api.util.VResourceLocation;
 import de.teamlapen.vampirism.core.ModEffects;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.data.ClientSkillTreeData;
+import de.teamlapen.vampirism.data.ISkillTreeData;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
+import de.teamlapen.vampirism.network.ServerboundRequestSkillTreePacket;
 import de.teamlapen.vampirism.network.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.network.ServerboundUnlockSkillPacket;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.GameNarrator;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -93,8 +97,27 @@ public class SkillsScreen extends Screen {
         if (this.factionPlayer != null) {
             int index = 0;
             SkillHandler<?> skillHandler = (SkillHandler<?>) this.factionPlayer.getSkillHandler();
+            ClientSkillTreeData treeData = (ClientSkillTreeData) skillHandler.getTreeData();
+
+            // apparently in weird system setups the skill trees are not synced
+            // this force closes the screen and requests a new sync
+            // https://github.com/TeamLapen/Vampirism/issues/1570
+            boolean failed = false;
             for (Holder<ISkillTree> unlockedSkillTree : skillHandler.unlockedSkillTrees()) {
-                this.tabs.add(new SkillsTabScreen(this.minecraft, this, index++, unlockedSkillTree, this.factionPlayer.getSkillHandler(), ((ClientSkillTreeData) skillHandler.getTreeData())));
+
+                if (treeData.getConfiguration(unlockedSkillTree) == null) {
+                    failed = true;
+                    continue;
+                }
+                this.tabs.add(new SkillsTabScreen(this.minecraft, this, index++, unlockedSkillTree, this.factionPlayer.getSkillHandler(), treeData));
+            }
+
+            if (failed) {
+                ClientPacketListener connection = Minecraft.getInstance().getConnection();
+                if (connection != null) {
+                    connection.send(ServerboundRequestSkillTreePacket.INSTANCE);
+                }
+                Minecraft.getInstance().setScreen(null);
             }
         }
 
