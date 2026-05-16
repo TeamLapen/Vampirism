@@ -124,6 +124,7 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
     /**
      * Cache structure. Should be mostly valid because blocks cannot be destroyed by survival player. Is (unreliably) invalidated when a block is destroyed nonetheless.
      */
+    @Nullable
     private MotherTreeStructure cachedStructure;
     private boolean isFrozen = false;
     private int freezeTimer = 0;
@@ -233,7 +234,7 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
     }
 
     private void endFight() {
-        this.activePlayers.forEach(p -> p.connection.send(new ClientboundPlayEventPacket(2, getBlockPos(), 0)));
+        this.activePlayers.forEach(p -> p.connection.send(new ClientboundPlayEventPacket(ClientboundPlayEventPacket.Event.STOP_MUSIC)));
         this.bossEvent.removeAllPlayers();
         this.bossEvent.setVisible(false);
         this.activePlayers.clear();
@@ -248,7 +249,6 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
         this.bossEvent.setColor(BossEvent.BossBarColor.WHITE);
     }
 
-    @NotNull
     private MotherTreeStructure getTreeStructure(boolean forceRefresh) {
         if (forceRefresh || this.cachedStructure == null) {
             this.cachedStructure = MotherTreeStructure.getTreeView(this.level, this.worldPosition);

@@ -4,10 +4,13 @@ import de.teamlapen.faction.api.factions.LevelingChange;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.blockentity.NetworkedContainerBlockEntity;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.client.ClientProxy;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.core.*;
+import de.teamlapen.vampirism.common.network.packets.client.ClientboundPlayEventPacket;
 import de.teamlapen.vampirism.common.particles.BloodShredParticleOptions;
 import de.teamlapen.vampirism.common.world.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.common.world.blocks.AltarTipBlock;
@@ -16,13 +19,12 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.world.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.common.world.items.PureBloodItem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -61,7 +63,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     public static final float MAX_SPHERE_RITUAL_HEIGHT = 2.25F;
 
     private NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
-    private @Nullable SphereSoundInstance sphereSoundInstance;
+    private boolean sphereSoundInstanceSpawned;
     private @Nullable Player player;
     private @Nullable UUID playerToLoadUUID;
     private List<BlockPos> tips = List.of();
@@ -420,12 +422,12 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     }
 
     private static void tickClientSound(AltarInfusionBlockEntity blockEntity) {
-        if (blockEntity.getCurrentPhase() != Phase.NOT_RUNNING && blockEntity.sphereSoundInstance == null) {
-            SphereSoundInstance sound = new SphereSoundInstance(blockEntity);
-            Minecraft.getInstance().getSoundManager().play(sound);
-            blockEntity.sphereSoundInstance = sound;
+        if (blockEntity.getCurrentPhase() != Phase.NOT_RUNNING && !blockEntity.sphereSoundInstanceSpawned) {
+            blockEntity.sphereSoundInstanceSpawned = true;
+
+            ClientProxy.get().addAltarOfInfusionSound(blockEntity);
         } else if (blockEntity.getCurrentPhase() == Phase.NOT_RUNNING) {
-            blockEntity.sphereSoundInstance = null;
+            blockEntity.sphereSoundInstanceSpawned = false;
         }
     }
 
@@ -527,46 +529,5 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
 
     public record ValuedPos(BlockPos pos, int value) {}
 
-    public static class SphereSoundInstance extends AbstractTickableSoundInstance {
 
-        private final AltarInfusionBlockEntity blockEntity;
-
-        public SphereSoundInstance(AltarInfusionBlockEntity blockEntity) {
-            super(ModSounds.SPHERE_SPINNING.get(), SoundSource.BLOCKS, RandomSource.create());
-            this.blockEntity = blockEntity;
-            this.looping = false;
-            this.delay = 0;
-            this.volume = 0.75f;
-            this.pitch = 1.0f;
-
-            updatePosition();
-        }
-
-        @Override
-        public boolean canPlaySound() {
-            return !isStopped();
-        }
-
-        @Override
-        public void tick() {
-            if (blockEntity.isRemoved()) {
-                stop();
-                return;
-            }
-
-            AltarInfusionBlockEntity.Phase phase = blockEntity.getCurrentPhase();
-            if (phase == AltarInfusionBlockEntity.Phase.NOT_RUNNING) {
-                stop();
-                return;
-            }
-
-            updatePosition();
-        }
-
-        private void updatePosition() {
-            this.x = blockEntity.getBlockPos().getX() + 0.5;
-            this.y = blockEntity.getBlockPos().getY() + 0.75 + blockEntity.verticalOffset;
-            this.z = blockEntity.getBlockPos().getZ() + 0.5;
-        }
-    }
 }

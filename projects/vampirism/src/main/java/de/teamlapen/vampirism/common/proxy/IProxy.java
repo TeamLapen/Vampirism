@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.proxy;
 
+import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import net.minecraft.core.BlockPos;
@@ -70,6 +71,10 @@ public interface IProxy {
     }
 
     default void displayHunterMinionStatsScreen(HunterMinionEntity entity) {
+
+    }
+
+    default void addAltarOfInfusionSound(AltarInfusionBlockEntity blockEntity) {
 
     }
 }

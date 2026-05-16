@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.client;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.screens.*;
+import de.teamlapen.vampirism.client.resources.sounds.SphereSoundInstance;
 import de.teamlapen.vampirism.common.proxy.CommonProxy;
+import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.blocks.TentBlock;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
@@ -159,4 +161,8 @@ public class ClientProxy extends CommonProxy {
         return this.bossEventSounds.get(bossEventUuid);
     }
 
+    @Override
+    public void addAltarOfInfusionSound(AltarInfusionBlockEntity blockEntity) {
+        Minecraft.getInstance().getSoundManager().play(new SphereSoundInstance(blockEntity));
+    }
 }
