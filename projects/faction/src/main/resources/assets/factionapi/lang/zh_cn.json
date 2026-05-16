@@ -64,6 +64,7 @@
   "gui.factionapi.reordering.excluded": "排除",
   "gui.factionapi.reset": "重置",
   "gui.factionapi.reset_question": "你确定吗？",
+  "gui.factionapi.level": "等级",
   "message.factionapi.action.not_bound": "没有任何行动被绑定到这个按键。要绑定按键，请使用%s。",
   "message.factionapi.village_raid.almost_captured": "村庄将被捕获，剩余%s名保卫者",
   "message.factionapi.village_raid.abandoned": "附近的一个村庄被遗弃了",
