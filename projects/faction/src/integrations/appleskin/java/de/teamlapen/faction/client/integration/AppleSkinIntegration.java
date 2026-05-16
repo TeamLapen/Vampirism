@@ -3,18 +3,16 @@ package de.teamlapen.faction.client.integration;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
+import de.teamlapen.integration.Integration;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import squeek.appleskin.api.event.FoodValuesEvent;
 
 import java.util.List;
 
-/**
- * Registered in {@link AppleSkinCompat}
- */
-public class AppleSkinEventHandler {
+@Integration(modId = "appleskin")
+public class AppleSkinIntegration {
 
     @SubscribeEvent
     public static void applyFactionFoodValues(FoodValuesEvent event) {
