@@ -56,6 +56,7 @@
   "gui.factionapi.reordering.excluded": "Excluído",
   "gui.factionapi.reset": "Redefinir",
   "gui.factionapi.reset_question": "Tem certeza dessa decisão?",
+  "gui.factionapi.level": "Nível",
   "message.factionapi.action.not_bound": "Nenhuma ação está vinculada a esta chave. Veja %s.",
   "message.factionapi.village_raid.almost_captured": "Aldeia quase capturada. %s defensores restantes",
   "message.factionapi.village_raid.abandoned": "Uma aldeia nas proximidades foi abandonada",
