@@ -29,7 +29,7 @@ public class AltarInfusionRenderer implements BlockEntityRenderer<AltarInfusionB
 
     private static final Identifier SPHERE_TEXTURE = VIdentifier.mod("textures/entity/blood_sphere.png");
     private static final Identifier INFUSION_BEAM_LOCATION = VIdentifier.mod("textures/entity/infusion_beam.png");
-    private static final Identifier BEACON_BEAM_LOCATION = VIdentifier.mc("textures/entity/beacon_beam.png");
+    private static final Identifier BEACON_BEAM_LOCATION = VIdentifier.mc("textures/entity/beacon/beacon_beam.png");
 
     private static final int BEAM_SIDES = 8;
     private static final float BEAM_NEAR_RADIUS = 0.2F;
