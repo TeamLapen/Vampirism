@@ -48,6 +48,7 @@
   "gui.factionapi.minion_screen.reset_stats": "%s을 소모해 스탯을 초기화 합니다",
   "gui.factionapi.minion_stats": "미니언 능력치",
   "gui.factionapi.minion_stats.level": "레벨",
+  "gui.factionapi.level": "레벨",
   "message.factionapi.action.not_bound": "이 키에는 액션이 지정되어 있지 않습니다 %s를 보세요",
   "message.factionapi.village_raid.almost_captured": "마을이 거의 다 점령 되었습니다 %s명의 방어 인원이 남아있습니다",
   "message.factionapi.village_raid.abandoned": "근처 마을이 버려짐",
