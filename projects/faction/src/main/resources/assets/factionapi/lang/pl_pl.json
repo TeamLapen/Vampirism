@@ -44,6 +44,7 @@
   "gui.factionapi.minion_screen.reset_stats": "Zresetuj statystyki. Zużywa to %s",
   "gui.factionapi.minion_stats": "Statystyki sług",
   "gui.factionapi.minion_stats.level": "Poziom",
+  "gui.factionapi.level": "Poziom",
   "message.factionapi.action.not_bound": "Żadna akcja nie jest przypisana do tego klawisza. Zobacz %s.",
   "message.factionapi.village_raid.almost_captured": "Wioska prawie przejęta. Zostało %s obrońców",
   "message.factionapi.village_raid.abandoned": "Pobliska wioska została porzucona",
