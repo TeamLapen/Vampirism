@@ -53,6 +53,7 @@
   "gui.factionapi.reordering.excluded": "Đã loại trừ",
   "gui.factionapi.reset": "Đặt lại",
   "gui.factionapi.reset_question": "Bạn có chắc không?",
+  "gui.factionapi.level": "Cấp độ",
   "message.factionapi.action.not_bound": "Chưa có hành động nào được gán cho phím này. Xem %s.",
   "message.factionapi.village_raid.almost_captured": "Ngôi làng sắp bị chiếm. Còn lại %s quân phòng thủ",
   "message.factionapi.village_raid.abandoned": "Một ngôi làng gần đây đã bị bỏ hoang",
