@@ -388,6 +388,8 @@
   "gui.vampirism.jei.task.representative": "Przedstawiciel frakcji",
   "gui.vampirism.jei.task.prerequisites": "Wymagania",
   "gui.vampirism.jei.task.prerequisites.none": "Brak",
+  "gui.vampirism.guide.task.prerequisites": "Wymagania",
+  "gui.vampirism.guide.task.prerequisites.none": "Brak",
   "message.vampirism.action.bat.cant_fly_umbrella": "Nie możesz latać z parasolem",
   "message.vampirism.altar_inspiration.not_enough_blood": "Nie ma wystarczająco dużo krwi w ołtarzu",
   "message.vampirism.already_vampire": "Jesteś już wampirem",
