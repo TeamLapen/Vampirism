@@ -103,6 +103,7 @@
   "gui.factionapi.reordering.excluded": "Versteckt",
   "gui.factionapi.reset": "Zurücksetzen",
   "gui.factionapi.reset_question": "Bist du dir sicher?",
+  "gui.factionapi.level": "Stufe",
   "narration.factionapi.skill": "Fertigkeit",
   "message.factionapi.restriction.faction.neutral": "Wie nutzen diese Menschen dieses Ding...",
   "message.factionapi.restriction.faction": "Wie nutzen die dieses Ding...",
