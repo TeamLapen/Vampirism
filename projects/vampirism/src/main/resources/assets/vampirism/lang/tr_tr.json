@@ -334,6 +334,8 @@
   "gui.vampirism.jei.task.reward_obtain": "%s aracılığıyla görev ödülü olarak edinilebilir",
   "gui.vampirism.jei.task.prerequisites": "Gereksinimler",
   "gui.vampirism.jei.task.prerequisites.none": "Yok",
+  "gui.vampirism.guide.task.prerequisites": "Gereksinimler",
+  "gui.vampirism.guide.task.prerequisites.none": "Yok",
   "message.vampirism.action.bat.cant_fly_umbrella": "Şemsiye kuşanmışken uçamazsın",
   "message.vampirism.action.bat.cant_fly_garlic": "Sarımsak etkisindeyken uçamazsın",
   "message.vampirism.altar_inspiration.not_enough_blood": "Sunağın içinde yeterince kan yok",
