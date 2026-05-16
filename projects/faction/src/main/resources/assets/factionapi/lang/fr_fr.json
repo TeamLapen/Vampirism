@@ -38,6 +38,7 @@
   "gui.factionapi.reordering.excluded": "Exclu",
   "gui.factionapi.reset": "Réinitialiser",
   "gui.factionapi.reset_question": "Êtes-vous sûr ?",
+  "gui.factionapi.level": "Niveau",
   "message.factionapi.action.not_bound": "Aucune action n'est liée à cette clé. Voir %s.",
   "message.factionapi.village_raid.almost_captured": "Village presque capturé. %s défenseurs restants",
   "message.factionapi.village_raid.abandoned": "Un village proche a été abandonné",
