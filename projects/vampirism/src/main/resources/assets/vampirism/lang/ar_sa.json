@@ -109,6 +109,7 @@
   "gui.vampirism.alchemical_cauldron.skill": "المهارات المطلوبة: %s",
   "gui.vampirism.level_up": "تطوير المستوى",
   "gui.vampirism.jei.task.prerequisites.none": "AnmaRR\\nbrakat07",
+  "gui.vampirism.guide.task.prerequisites.none": "AnmaRR\\nbrakat07",
   "message.vampirism.altar_inspiration.not_enough_blood": "لا يوجد ما يكفي من الدم في المذبح",
   "message.vampirism.already_vampire": "انت بلفعل مصاص دماء!",
   "message.vampirism.coffin.occupied": "التابوت هذا مشغول",
