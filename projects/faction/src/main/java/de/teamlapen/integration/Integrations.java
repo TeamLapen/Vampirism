@@ -21,11 +21,9 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Type;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +49,7 @@ public class Integrations {
                     List<ModFileScanData.AnnotationData> list = scanProvider.apply((FMLModContainer) container)
                             .stream()
                             .flatMap(scan -> scan.getAnnotatedBy(Integration.class, ElementType.TYPE))
-                            .filter(data -> data.annotationData().get("modId") instanceof String s && ModList.get().isLoaded(s))
+                            .filter(data -> data.annotationData().get("modIds") instanceof String[] s && s.length > 0 && Stream.of(s).allMatch(modId -> ModList.get().isLoaded(modId)))
                             .filter(x -> AutomaticEventSubscriber.getSides(x.annotationData().get("dist")).contains(FMLLoader.getCurrent().getDist())).toList();
                     if (!list.isEmpty()) {
                         return list.stream().map(data -> new IntegrationProvider(container.getModId(), (String) data.annotationData().get("modId"), data.clazz()));

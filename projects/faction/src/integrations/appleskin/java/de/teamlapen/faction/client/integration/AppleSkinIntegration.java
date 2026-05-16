@@ -11,7 +11,7 @@ import squeek.appleskin.api.event.FoodValuesEvent;
 
 import java.util.List;
 
-@Integration(modId = "appleskin")
+@Integration(modIds = "appleskin")
 public class AppleSkinIntegration {
 
     @SubscribeEvent

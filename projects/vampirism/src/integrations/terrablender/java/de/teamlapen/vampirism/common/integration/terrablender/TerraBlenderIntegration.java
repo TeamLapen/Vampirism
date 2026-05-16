@@ -36,7 +36,7 @@ import java.util.function.Consumer;
  * #registerBiomeProviderIfPresentUnsafe() is called during common setup.
  * The hack code in VampirismWorldGen is called during LoadComplete and can therefore check #arreBiomesAddedViaTerraBlender
  */
-@Integration(modId = "terrablender")
+@Integration(modIds = "terrablender")
 public class TerraBlenderIntegration {
 
     private static final Logger LOGGER = LogManager.getLogger();

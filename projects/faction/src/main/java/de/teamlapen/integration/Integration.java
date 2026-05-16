@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Integration {
 
-    String modId();
+    String[] modIds();
 
     Dist[] dist() default { Dist.CLIENT, Dist.DEDICATED_SERVER };
 }
