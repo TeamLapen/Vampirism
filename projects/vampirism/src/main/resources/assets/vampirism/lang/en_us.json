@@ -1770,5 +1770,5 @@
   "vampirism.configuration.lordAttackSpeedDuration.tooltip": "Duration of the vampire lord attack speed action, in seconds.",
   "vampirism.configuration.lordAttackSpeedCooldown": "Lord Attack Speed Cooldown",
   "vampirism.configuration.lordAttackSpeedCooldown.tooltip": "Cooldown for the vampire lord attack speed action, in seconds.",
-  "text.vampirism.translatorso": "No translators"
+  "text.vampirism.translators": "No translators"
 }

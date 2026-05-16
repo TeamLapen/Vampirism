@@ -159,9 +159,9 @@ public class GuideBook implements IGuideBook {
         entries.put(VIdentifier.mod(base + "support"), new EntryText(supportPages, translateComponent(base + "support")));
 
         List<IPage> creditsPages = new ArrayList<>();
-        String lang = VampirismMod.proxy.getActiveLanguage();
-        String credits = "§lDeveloper:§r\nMaxanier\nCheaterpaul\n§lThanks to:§r\nMistadon\nwildbill22\n1LiterZinalco\nAlis\ndimensionpainter\nS_olace\nPiklach\n\n§lTranslators:§r\n§b" + lang + "§r\n" + translateComponent("text.vampirism.translators").getString();
-        creditsPages.addAll(PageHelper.pagesForLongText(translateComponent(credits)));
+        String lang = VampirismMod.proxy.getActiveLanguageName();
+        String credits = "§lDeveloper:§r\nMaxanier\nCheaterpaul\n§lThanks to:§r\nMistadon\nwildbill22\n1LiterZinalco\nAlis\ndimensionpainter\nS_olace\nPiklach\n\n§lTranslators:§r\n§b" + lang + "§r\n%s";
+        creditsPages.addAll(PageHelper.pagesForLongText(translateComponent(credits, Component.translatable("text.vampirism.translators"))));
         entries.put(VIdentifier.mod(base + "credits"), new EntryText(creditsPages, translateComponent(base + "credits")));
         return entries;
     }

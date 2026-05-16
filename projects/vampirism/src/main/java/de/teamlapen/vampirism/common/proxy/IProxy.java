@@ -81,7 +81,11 @@ public interface IProxy {
     /**
      * @return The string describing the currently active language. "English" on server side
      */
-    default String getActiveLanguage(){
+    default String getActiveLanguageCode(){
+        return "en_us";
+    }
+
+    default String getActiveLanguageName(){
         return "English";
     }
 }

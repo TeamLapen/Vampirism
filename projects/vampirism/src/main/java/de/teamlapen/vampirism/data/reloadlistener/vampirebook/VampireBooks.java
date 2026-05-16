@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.data.reloadlistener.vampirebook;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.general.IBookContents;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
-import de.teamlapen.vampirism.common.util.LanguageUtil;
 import de.teamlapen.vampirism.common.core.ModVampireBooks;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -22,7 +22,7 @@ public class VampireBooks {
 
     @NotNull
     public IBookContents getContentsFor(IVampireBook book) {
-        return getContentsFor(book, LanguageUtil.getActiveLanguageCode());
+        return getContentsFor(book, VampirismMod.proxy.getActiveLanguageCode());
     }
 
     @NotNull

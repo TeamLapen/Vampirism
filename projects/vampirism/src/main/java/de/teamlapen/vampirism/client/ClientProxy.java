@@ -13,6 +13,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TerrainParticle;
+import net.minecraft.client.resources.language.LanguageInfo;
+import net.minecraft.client.resources.language.LanguageManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -166,8 +168,14 @@ public class ClientProxy extends CommonProxy {
         Minecraft.getInstance().getSoundManager().play(new SphereSoundInstance(blockEntity));
     }
     @Override
-    public @NotNull String getActiveLanguage() {
+    public @NotNull String getActiveLanguageCode() {
         return Minecraft.getInstance().getLanguageManager().getSelected();
+    }
+
+    @Override
+    public @NotNull String getActiveLanguageName() {
+        LanguageInfo language = Minecraft.getInstance().getLanguageManager().getLanguage(getActiveLanguageCode());
+        return language != null ? language.name() : LanguageManager.DEFAULT_LANGUAGE.name();
     }
 
 }
