@@ -65,6 +65,7 @@
   "gui.factionapi.reordering.excluded": "Исключено",
   "gui.factionapi.reset": "Сброс",
   "gui.factionapi.reset_question": "Вы уверены?",
+  "gui.factionapi.level": "Уровень",
   "message.factionapi.action.not_bound": "Никакое действие не привязано к этому ключу. Смотреть %s.",
   "message.factionapi.village_raid.almost_captured": "Деревня почти захвачена. Осталось %s защитников",
   "message.factionapi.village_raid.abandoned": "Близлежащая деревня была покинута",
