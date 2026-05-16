@@ -38,6 +38,7 @@
   "gui.factionapi.minion_stats.level": "Seviye",
   "gui.factionapi.reset": "Sıfırla",
   "gui.factionapi.reset_question": "Emin misin?",
+  "gui.factionapi.level": "Seviye",
   "message.factionapi.action.not_bound": "Bu tuşa bir aksiyon bağlanmamıs. Bak %s.",
   "message.factionapi.village_raid.almost_captured": "Köy neredeyse ele geçirildi. %s koruyucu kaldı",
   "message.factionapi.village_raid.abandoned": "Yakın bir köy terk edildi",
