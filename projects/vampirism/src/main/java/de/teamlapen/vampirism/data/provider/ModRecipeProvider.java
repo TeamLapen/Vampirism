@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
-import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModOils;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
@@ -28,7 +28,10 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -42,6 +45,7 @@ import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.fluids.FluidStackTemplate;
+import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
 import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
 import org.jetbrains.annotations.Range;
@@ -830,7 +834,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     private void recipesAlchemyCauldron() {
         cauldronRecipe(ModItems.PURE_SALT, 4)
                 .withIngredient(GARLIC)
-                .withFluid(new FluidStackTemplate(Fluids.WATER, 1))
+                .withFluid(new FluidStackTemplate(Fluids.WATER, FluidType.BUCKET_VOLUME))
                 .withSkills(HunterSkills.BASIC_ALCHEMY)
                 .cookTime(1200)
                 .save(output);

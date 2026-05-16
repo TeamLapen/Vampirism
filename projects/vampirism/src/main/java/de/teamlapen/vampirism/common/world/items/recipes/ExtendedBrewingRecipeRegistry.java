@@ -131,9 +131,7 @@ public class ExtendedBrewingRecipeRegistry implements IExtendedBrewingRecipeRegi
     }
 
     @Override
-    public boolean isValidInput(PotionBrewing registry, @NotNull ItemStack stack) {
-        if (stack.getCount() != 1) return false;
-
+    public boolean isValidInput(PotionBrewing registry, ItemStack stack) {
         Item item = stack.getItem();
         return item == Items.POTION || item == Items.SPLASH_POTION || item == Items.LINGERING_POTION || item == Items.GLASS_BOTTLE || registry.isInput(stack);
     }

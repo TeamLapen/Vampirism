@@ -228,7 +228,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
         this.canDespawn = input.getBooleanOr("converted_canDespawn", true);
         input.getInt("ConversionTime").filter(time -> time > -1).ifPresent(time -> this.startConverting(input.read("ConversionPlayer", UUIDUtil.CODEC).orElse(null), time, this));
-        if (input.child("source_entity").isEmpty()) {
+        if (input.keySet().contains("source_entity")) {
             getSourceEntityDataParamOpt().ifPresent(p -> getOldCreature().ifPresent(old -> this.asEntity().getEntityData().set(p, BuiltInRegistries.ENTITY_TYPE.getKey(old.getType()).toString())));
         }
     }

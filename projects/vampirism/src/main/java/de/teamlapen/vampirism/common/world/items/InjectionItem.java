@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blocks.InjectionChairBlock;
 import de.teamlapen.vampirism.misc.sit.SitEntity;
 import net.minecraft.core.BlockPos;
@@ -26,12 +27,7 @@ public abstract class InjectionItem extends Item {
 
     public void consumeInjectionItem(ItemStack stack, Player player, InteractionHand hand) {
         if (!player.isCreative()) {
-            if (stack.getCount() == 1) {
-                player.setItemInHand(hand, stack.getCraftingRemainder().create());
-            } else {
-                stack.shrink(1);
-                player.getInventory().placeItemBackInInventory(stack.getCraftingRemainder().create());
-            }
+            player.setItemInHand(hand, Helper.shrinkItemStack(stack, player));
         }
     }
 

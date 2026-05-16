@@ -28,6 +28,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LevelEvent;
@@ -60,8 +61,10 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
     private static final int[] SLOTS_FOR_UP = {0, 1, 2};
     private static final int[] SLOTS_FOR_DOWN = {3, 4, 5, 1, 2};
     private static final int[] SLOTS_FOR_DOWN_EXTENDED = {3, 4, 5, 6, 7, 1, 2};
-    private static final int[] OUTPUT_SLOTS = {3, 4, 5, 0};
-    private static final int[] OUTPUT_SLOTS_EXTENDED = {3, 4, 5, 6, 7, 0};
+    private static final int[] SLOTS_FOR_SIDE = {3, 4, 5, 0};
+    private static final int[] SLOTS_FOR_SIDE_EXTENDED = {3, 4, 5, 6, 7, 0};
+    private static final int[] OUTPUT_SLOTS = {3, 4, 5};
+    private static final int[] OUTPUT_SLOTS_EXTENDED = {3, 4, 5, 6, 7};
 
     private static final int BREW_TIME_NORMAL = 200;
     private static final int BREW_TIME_SWIFT  = 400;
@@ -225,7 +228,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
     public int[] getSlotsForFace(Direction side) {
         if (side == Direction.UP) return SLOTS_FOR_UP;
         if (side == Direction.DOWN) return this.config.multiTaskBrewing ? SLOTS_FOR_DOWN_EXTENDED : SLOTS_FOR_DOWN;
-        return this.config.multiTaskBrewing ? OUTPUT_SLOTS_EXTENDED : OUTPUT_SLOTS;
+        return this.config.multiTaskBrewing ? SLOTS_FOR_SIDE_EXTENDED : SLOTS_FOR_SIDE;
     }
 
     @Override
@@ -267,30 +270,31 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
         return Component.translatable("container.vampirism.vapor_still");
     }
 
+    @Nullable
     @Override
-    public boolean canOpen(Player player) {
-        if (!super.canOpen(player)) return false;
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        if (!canOpen(player)) return null;
 
         HunterPlayer hunter = HunterPlayer.get(player);
         if (hunter.getLevel() <= 0) {
             player.sendOverlayMessage(FactionRestriction.getFactionRestrictionMessage(ModFactions.HUNTER.get()));
-            return false;
+            return null;
         }
 
         if (this.ownerID == null) {
             setOwnerID(player);
-            this.config.deriveFromHunter(hunter);
-            return true;
         }
 
         if (this.ownerID.equals(player.getUUID())) {
             this.config.deriveFromHunter(hunter);
-            return true;
+            return createMenu(containerId, inventory);
+        } else {
+            player.sendOverlayMessage(Component.translatable("message.vampirism.vapor_still.other_owner", getOwnerName()));
+            return null;
         }
 
-        player.sendOverlayMessage(Component.translatable("message.vampirism.vapor_still.other_owner", getOwnerName()));
-        return false;
     }
+
 
     @Override
     public boolean stillValid(Player player) {
@@ -334,6 +338,8 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
         }
 
         BlockPos blockpos = this.getBlockPos();
+        //If the stacks have been reduced we may need to drop a remainder e.g. a container item such as a glass bottle
+        //To be exact we would need to drop the remainder as many times as items were consumed
         ingredient = dropRemainder(ingredient, blockpos);
         extraIngredient = dropRemainder(extraIngredient, blockpos);
 
@@ -347,11 +353,11 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
     }
 
     private ItemStack dropRemainder(ItemStack stack, BlockPos pos) {
-        ItemStack remainder = stack.getCraftingRemainder().create();
-        if (remainder.isEmpty()) return stack;
-        if (stack.isEmpty()) return remainder;
+        ItemStackTemplate remainder = stack.getCraftingRemainder();
+        if (remainder == null) return stack;
+        if (stack.isEmpty()) return remainder.create();
         if (this.level != null && !this.level.isClientSide()) {
-            Containers.dropItemStack(this.level, pos.getX(), pos.getY(), pos.getZ(), remainder);
+            Containers.dropItemStack(this.level, pos.getX(), pos.getY(), pos.getZ(), remainder.create());
         }
         return stack;
     }
@@ -365,11 +371,11 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
     }
 
     public int getMaxBrewTime() {
-        return this.config.isSwiftBrewing() ? BREW_TIME_SWIFT : BREW_TIME_NORMAL;
+        return this.config.hasSwiftBrewing() ? BREW_TIME_SWIFT : BREW_TIME_NORMAL;
     }
 
     public boolean isExtended() {
-        return this.config.isMultiTaskBrewing();
+        return this.config.hasMultiTaskBrewing();
     }
 
     public void setOwnerID(Player player) {
@@ -422,32 +428,32 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
         }
 
         @Override
-        public boolean isConcentratedBrewing() {
+        public boolean hasConcentratedBrewing() {
             return concentratedBrewing;
         }
 
         @Override
-        public boolean isDurableBrewing() {
+        public boolean hasDurableBrewing() {
             return durableBrewing;
         }
 
         @Override
-        public boolean isEfficientBrewing() {
+        public boolean hasEfficientBrewing() {
             return efficientBrewing;
         }
 
         @Override
-        public boolean isMasterBrewing() {
+        public boolean hasMasterBrewing() {
             return masterBrewing;
         }
 
         @Override
-        public boolean isMultiTaskBrewing() {
+        public boolean hasMultiTaskBrewing() {
             return multiTaskBrewing;
         }
 
         @Override
-        public boolean isSwiftBrewing() {
+        public boolean hasSwiftBrewing() {
             return swiftBrewing;
         }
     }

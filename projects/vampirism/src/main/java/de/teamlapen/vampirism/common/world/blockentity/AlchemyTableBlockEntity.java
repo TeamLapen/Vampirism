@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.blockentity;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModRecipes;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blocks.AlchemyTableBlock;
 import de.teamlapen.vampirism.common.world.inventory.AlchemyTableMenu;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
@@ -10,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -234,17 +234,8 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             }
         }
         BlockPos blockpos = this.getBlockPos();
-        ItemStack craftingRemainder = itemstack.getCraftingRemainder().create();
-        if (!craftingRemainder.isEmpty()) {
-            itemstack.shrink(1);
-            if (itemstack.isEmpty()) {
-                itemstack = craftingRemainder;
-            } else if (!level.isClientSide()) {
-                Containers.dropItemStack(level, blockpos.getX(), blockpos.getY(), blockpos.getZ(), craftingRemainder);
-            }
-        } else {
-            itemstack.shrink(1);
-        }
+
+        itemstack = Helper.shrinkItemStack(itemstack, level, blockpos); //Reduce ingredient by 1
 
         this.items.set(4, itemstack);
         level.levelEvent(1035, blockpos, 0);

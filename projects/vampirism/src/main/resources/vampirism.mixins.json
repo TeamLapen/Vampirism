@@ -53,13 +53,13 @@
     "accessor.TargetConditionAccessor",
     "accessor.VanillaBlockLootAccessor",
     "accessor.VillagerHostilesSensorAccessor",
-    "accessor.WalkAnimationStateAccessor",
-    "client.ItemInHandRendererMixin"
+    "accessor.WalkAnimationStateAccessor"
   ],
   "client": [
     "client.CapeLayerMixin",
     "client.GuiGraphicsExtractorMixin",
     "client.HumanoidArmorLayerMixin",
+    "client.ItemInHandRendererMixin",
     "client.LivingEntityRendererAccessor",
     "client.MinecraftMixin",
     "client.MutableSpriteSetMixin",

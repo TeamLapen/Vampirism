@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModSounds;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -51,13 +52,8 @@ public class GarlicInjectionItem extends InjectionItem {
             if (!player.level().isClientSide()) {
                 target.setPoisonousBlood(ExtendedCreature.POISONOUS_BLOOD_DOSE_DURATION);
 
-                if (!player.isCreative() && stack.getCraftingRemainder() != null) {
-                    if (stack.getCount() == 1) {
-                        player.setItemInHand(usedHand, stack.getCraftingRemainder().create());
-                    } else {
-                        stack.shrink(1);
-                        player.addItem(stack.getCraftingRemainder().create());
-                    }
+                if (!player.isCreative()) {
+                    player.setItemInHand(usedHand, Helper.shrinkItemStack(stack, player));
                 }
 
                 // TODO: Find some other sound for vaccinating mobs

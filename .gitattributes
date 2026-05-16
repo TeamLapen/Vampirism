@@ -9,3 +9,4 @@
 *.cfg text eol=lf
 *.psd binary
 *.bdc3D binary
+*.ogg binary

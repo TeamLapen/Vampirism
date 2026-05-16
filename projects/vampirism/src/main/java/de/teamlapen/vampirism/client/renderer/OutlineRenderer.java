@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
@@ -24,7 +25,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-@EventBusSubscriber(modid = REFERENCE.MODID)
+@EventBusSubscriber(modid = REFERENCE.MODID, value = Dist.CLIENT)
 public class OutlineRenderer {
 
     private static final int HIGHLIGHT_RADIUS = 40;
