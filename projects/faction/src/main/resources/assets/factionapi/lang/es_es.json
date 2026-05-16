@@ -66,6 +66,7 @@
   "gui.factionapi.reordering.excluded": "Excluido",
   "gui.factionapi.reset": "Reiniciar",
   "gui.factionapi.reset_question": "¿Estás seguro?",
+  "gui.factionapi.level": "Nivel",
   "message.factionapi.action.not_bound": "Ninguna acción está vinculada a esta tecla. Ver %s.",
   "message.factionapi.village_raid.almost_captured": "Aldea casi capturada. Quedan %s defensores",
   "message.factionapi.village_raid.abandoned": "Una aldea cercana ha sido abandonada",
