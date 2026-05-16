@@ -64,6 +64,7 @@
   "gui.factionapi.reordering.excluded": "Виключено",
   "gui.factionapi.reset": "Скинути",
   "gui.factionapi.reset_question": "Ви впевнені?",
+  "gui.factionapi.level": "Рівень",
   "message.factionapi.action.not_bound": "Ніяка дія не прив'язана до цього ключа. Див. %s.",
   "message.factionapi.village_raid.almost_captured": "Село майже завойоване. Залишилося %s захисників",
   "message.factionapi.village_raid.abandoned": "Сусіднє село було покинуте",
