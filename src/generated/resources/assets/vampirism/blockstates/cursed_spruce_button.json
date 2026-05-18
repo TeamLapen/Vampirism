@@ -35,7 +35,8 @@
     },
     "face=ceiling,facing=west,powered=true": {
       "model": "vampirism:block/cursed_spruce_button_pressed",
-      "x": 180
+      "x": 180,
+      "y": 90
     },
     "face=floor,facing=east,powered=false": {
       "model": "vampirism:block/cursed_spruce_button",
@@ -65,7 +66,7 @@
     },
     "face=floor,facing=west,powered=true": {
       "model": "vampirism:block/cursed_spruce_button_pressed",
-      "x": 270
+      "y": 270
     },
     "face=wall,facing=east,powered=false": {
       "model": "vampirism:block/cursed_spruce_button",
