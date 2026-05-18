@@ -449,7 +449,7 @@ public class BlockStateProvider extends net.minecraftforge.client.model.generato
                 .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationX(180).addModel()
                 .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(180).addModel()
                 .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).rotationX(180).addModel()
-                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(90).rotationX(180).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.CEILING).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(90).rotationX(180).addModel()
 
                 .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).addModel()
                 .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(90).addModel()
@@ -458,7 +458,7 @@ public class BlockStateProvider extends net.minecraftforge.client.model.generato
                 .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(180).addModel()
                 .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.SOUTH).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(180).addModel()
                 .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(270).addModel()
-                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationX(270).addModel()
+                .partialState().with(ButtonBlock.FACE, AttachFace.FLOOR).with(ButtonBlock.FACING, Direction.WEST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(270).addModel()
 
                 .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, false).modelForState().modelFile(button).rotationY(90).rotationX(90).uvLock(true).addModel()
                 .partialState().with(ButtonBlock.FACE, AttachFace.WALL).with(ButtonBlock.FACING, Direction.EAST).with(ButtonBlock.POWERED, true).modelForState().modelFile(button_pressed).rotationY(90).rotationX(90).uvLock(true).addModel()
