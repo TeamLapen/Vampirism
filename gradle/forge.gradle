@@ -94,7 +94,7 @@ runs {
 
     data {
         systemProperty 'vampirism_target', 'dev_data'
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('build/resources/main').getAbsolutePath()
     }
 }
 
