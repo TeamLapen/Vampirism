@@ -11,11 +11,9 @@ import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModTags;
 import de.teamlapen.vampirism.entity.ai.goals.GolemTargetNonVillageFactionGoal;
 import de.teamlapen.vampirism.entity.ai.goals.NearestTargetGoalModifier;
-import de.teamlapen.vampirism.entity.hunter.HunterBaseEntity;
 import de.teamlapen.vampirism.entity.minion.MinionEntity;
 import de.teamlapen.vampirism.entity.player.VampirismPlayerAttributes;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.vampire.VampireBaseEntity;
 import de.teamlapen.vampirism.items.VampireSwordItem;
 import de.teamlapen.vampirism.items.oil.EvasionOil;
 import de.teamlapen.vampirism.mixin.accessor.GoalSelectorAccessor;
@@ -49,7 +47,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
-import net.neoforged.neoforge.event.entity.EntityEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -106,7 +103,9 @@ public class ModEntityEventHandler {
         BlockState blockState = event.getLevel().getBlockState(pos);
 
         if (blockState.is(ModTags.Blocks.NO_SPAWN) || (blockState.is(ModTags.Blocks.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VEnums.VAMPIRE_CATEGORY.getValue())) {
-            event.setSpawnCancelled(true);
+            if (!event.getEntity().isAddedToLevel()) { //Entity may already be added to the level which would lead to UnsupportedOperationException
+                event.setSpawnCancelled(true);
+            }
         }
     }
 
