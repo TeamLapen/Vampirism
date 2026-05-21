@@ -112,7 +112,9 @@ public class ModEntityEventHandler {
         BlockState blockState = event.getLevel().getBlockState(pos);
 
         if (blockState.is(ModTags.Blocks.NO_SPAWN) || (blockState.is(ModTags.Blocks.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VReference.VAMPIRE_CREATURE_TYPE)) {
-            event.setSpawnCancelled(true);
+            if (!event.getEntity().isAddedToWorld()) {
+                event.setSpawnCancelled(true);
+            }
         }
     }
 
