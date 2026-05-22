@@ -65,25 +65,36 @@ public class WeaponTableCraftingSlot extends Slot {
                 }
             }));
         }
-        net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(playerIn);
-        NonNullList<ItemStack> remaining = playerIn.level().getRecipeManager().getRemainingItemsFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems()), playerIn.level());
-        net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(null);
-        for (int i = 0; i < remaining.size(); ++i) {
-            ItemStack itemstack = this.craftMatrix.getItem(i);
-            ItemStack itemstack1 = remaining.get(i);
 
-            if (!itemstack.isEmpty()) {
-                this.craftMatrix.removeItem(i, 1);
-                itemstack = this.craftMatrix.getItem(i);
-            }
-            if (!itemstack1.isEmpty()) {
-                if (itemstack.isEmpty()) {
-                    this.craftMatrix.setItem(i, itemstack1);
-                } else if (ItemStack.isSameItem(itemstack, itemstack1) && ItemStack.isSameItemSameComponents(itemstack, itemstack1)) {
-                    itemstack1.grow(itemstack.getCount());
-                    this.craftMatrix.setItem(i, itemstack1);
-                } else if (!this.player.getInventory().add(itemstack1)) {
-                    this.player.drop(itemstack1, false);
+        //Compare with {@link  net.minecraft.world.inventory.ResultSlot#onTake}
+        //Remove 1 ingredient from every used input stack, put back potential crafting remainders from the recipe
+        CraftingInput.Positioned positionedCraftInput = this.craftMatrix.asPositionedCraftInput();
+        CraftingInput craftInput = positionedCraftInput.input();
+        net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(playerIn);
+        NonNullList<ItemStack> remainders = playerIn.level().getRecipeManager().getRemainingItemsFor(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get(), craftInput, playerIn.level());
+        //noinspection DataFlowIssue
+        net.neoforged.neoforge.common.CommonHooks.setCraftingPlayer(null);
+
+
+        for (int k = 0; k < craftInput.height(); k++) {
+            for (int l = 0; l < craftInput.width(); l++) {
+                int slot_index = l + positionedCraftInput.left() + (k + positionedCraftInput.top()) * this.craftMatrix.getWidth();
+                ItemStack stackInMatrix = this.craftMatrix.getItem(slot_index);
+                ItemStack stackRemainder = remainders.get(l + k * craftInput.width());
+
+                if (!stackInMatrix.isEmpty()) {
+                    this.craftMatrix.removeItem(slot_index, 1);
+                    stackInMatrix = this.craftMatrix.getItem(slot_index);
+                }
+                if (!stackRemainder.isEmpty()) {
+                    if (stackInMatrix.isEmpty()) {
+                        this.craftMatrix.setItem(slot_index, stackRemainder);
+                    } else if (ItemStack.isSameItem(stackInMatrix, stackRemainder) && ItemStack.isSameItemSameComponents(stackInMatrix, stackRemainder)) {
+                        stackRemainder.grow(stackInMatrix.getCount());
+                        this.craftMatrix.setItem(slot_index, stackRemainder);
+                    } else if (!this.player.getInventory().add(stackRemainder)) {
+                        this.player.drop(stackRemainder, false);
+                    }
                 }
             }
         }

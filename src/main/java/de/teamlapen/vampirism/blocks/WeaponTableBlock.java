@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -95,7 +94,7 @@ public class WeaponTableBlock extends VampirismHorizontalBlock {
                         drainable = fluidHandler.drain(missing, IFluidHandler.FluidAction.SIMULATE);
                     }
                     if (drainable.getAmount() >= MB_PER_META) {
-                        FluidStack drained = fluidHandler.drain(missing, IFluidHandler.FluidAction.EXECUTE);
+                        FluidStack drained = fluidHandler.drain(missing, player.hasInfiniteMaterials() ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE); //Only consume fluid when not creative mode
                         if (drained.getAmount() > 0) {
                             world.setBlockAndUpdate(pos, state.setValue(LAVA, Math.min(MAX_LAVA, fluid + drained.getAmount() / MB_PER_META)));
                             player.setItemInHand(hand, fluidHandler.getContainer());
