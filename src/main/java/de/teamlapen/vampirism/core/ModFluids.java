@@ -60,7 +60,7 @@ public class ModFluids {
             .viscosity(3000)
             .temperature(309)
             .density(1300)
-            .descriptionId(ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID) ? "fluid.vampirism.blood.vampirism" : "fluid.vampirism.blood")) {
+            .descriptionId(ModList.get().isLoaded(REFERENCE.INTEGRATIONS_MODID) ? "fluid.vampirism.impure_blood.vampirism" : "fluid.vampirism.impure_blood")) {
 
         @Override
         public void initializeClient(@NotNull Consumer<IClientFluidTypeExtensions> consumer) {
