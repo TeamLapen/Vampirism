@@ -37,11 +37,6 @@ integrations.each {
     }
 }
 
-//if (project.vampirism_factions_source_dependency.toBoolean()) {
-//    dependencyProjects.add(project(':faction-api'))
-//    dependencyProjects.add(project(':faction'))
-//}
-
 apply from: file('dependencies.gradle')
 
 neoForge {
@@ -49,7 +44,15 @@ neoForge {
 
 //    validateAccessTransformers = true
 
-    interfaceInjectionData.from project.file("src/main/resources/META-INF/interfaceinjection.json")
+    interfaceInjectionData {
+        from project.file("src/main/resources/META-INF/interfaceinjection.json")
+        publish project.file("src/main/resources/META-INF/interfaceinjection.json")
+    }
+
+    accessTransformers {
+        from project.file("src/main/resources/META-INF/accesstransformer.cfg")
+        publish project.file("src/main/resources/META-INF/accesstransformer.cfg")
+    }
 
     runs {
         configureEach {
