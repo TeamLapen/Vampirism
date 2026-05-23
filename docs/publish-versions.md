@@ -8,7 +8,7 @@ Tags look like this:
 
 **There is no need to modify any gradle properties in the repository anymore**
 
-It is only required to change `factions_version` in the [gradle.properties](/gradle.properties) file if vampirism uses features of the new faction version.
+If you want Vampirism to depend on the new version. You only need to change the `vampirism_factions_version` in the [gradle.properties](/gradle.properties) file.
 
 ## What is deployed?
 
