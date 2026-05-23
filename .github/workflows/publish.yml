@@ -44,7 +44,7 @@ jobs:
             echo "environment=${project}/staging" >> $GITHUB_OUTPUT
             echo "run_publish=true" >> $GITHUB_OUTPUT
           elif [[ $version =~ -(dev|test)\. ]]; then
-            echo "environment=${project}/dev" >> $GITHUB_OUTPUT
+            echo "environment=${project}/staging" >> $GITHUB_OUTPUT
             echo "run_publish=false" >> $GITHUB_OUTPUT
           else
             echo "environment=${project}/release" >> $GITHUB_OUTPUT
