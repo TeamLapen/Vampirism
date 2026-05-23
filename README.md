@@ -88,28 +88,11 @@ If you want to use FactionApi or Vampirism in your own mod, configure your Gradl
 
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg)](./docs/depend-on.md)
 
-## Code Structure
+## Project / Code Structure
 
-### Branches
+For more information about the project structure:
 
-| Branch                                             | Description                                |
-|----------------------------------------------------|--------------------------------------------|
-| dev                                                | The main development branch.               |
-| version/<mc-version>/[<sub-version>/]<mod-version> | The main branch for a specific MC version. |
-| feature/*                                          | A feature branches.                        |
-| pages/*                                            | The wiki pages deployed to github pages.   |
-
-### Projects
-
-| Project         | Description                                                                                                                                                                                                                                               |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `faction-api`   | Pure API module defining the faction system: interfaces for faction registration, player faction handlers, events, registries, and sync abstractions. Depend on this when you only need to read/interact with faction state.                              |
-| `faction`       | Implementation of `faction-api`. Contains the full faction logic.                                                                                                                                                                                         |
-| `vampirism-api` | Pure API module for the Vampirism mod, extending `faction-api`. Exposes interfaces for vampire and hunter players, creature conversion, world events, difficulty, data maps, and all Vampirism registries. This is the primary dependency for addon mods. |
-| `vampirism`     | Full implementation of the Vampirism mod. Implements all vampire/hunter mechanics, world generation, entity conversions, mod integrations (JEI, GuideAPI, TerraBlender, …), and NeoForge service wiring. Depends on `vampirism-api` and `faction`;        |
-
-## Code Style
-The code style used in this project is the IntelliJ default one.
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg)](./docs/structure.md)
 
 ## License
 The content in this repository is licensed as follows:  
