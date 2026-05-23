@@ -65,7 +65,7 @@ side = "BOTH"
 [[dependencies.${ mod_id }]]
 modId="${factions_mod_id}"
 type = "required"
-versionRange = "[${factions_version},)"
+versionRange = "[${vampirism_factions_version},)"
 ordering="AFTER"
 side="BOTH"
 

@@ -1,0 +1,47 @@
+repositories {
+    maven {
+        // location of a maven mirror for JEI files
+        name = "ModMaven"
+        url = "https://modmaven.dev/"
+        content {
+            includeGroup "mezz.jei"
+        }
+    }
+    maven {
+        name = "Maxanier Releases"
+        url = "https://maven.maxanier.de/releases"
+        content {
+            includeGroupAndSubgroups "de.teamlapen"
+            includeGroupAndSubgroups "de.maxanier"
+        }
+    }
+    maven {
+        name = "Maxanier Snapshots"
+        url = "https://maven.maxanier.de/snapshots"
+        content {
+            includeGroupAndSubgroups "de.teamlapen"
+            includeGroupAndSubgroups "de.maxanier"
+        }
+    }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = "MinecraftForge"
+        url "https://maven.minecraftforge.net/"
+        content {
+            includeGroup "com.github.glitchfiend"
+        }
+    }
+    maven {
+        name = "RyanLiptak"
+        url = "https://maven.ryanliptak.com/"
+        content {
+            includeGroupAndSubgroups "squeek"
+        }
+    }
+    mavenLocal()
+}

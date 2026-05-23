@@ -1,16 +1,26 @@
-repositories {
-    maven {
-        name = "RyanLiptak"
-        url = "https://maven.ryanliptak.com/"
-        content {
-            includeGroupAndSubgroups "squeek"
-        }
-    }
+apply from: rootProject.file('gradle/repositories.gradle')
+
+configurations {
+    localRuntime
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+List<Project> dependencyProjects = [project(':faction-api')]
+
+dependencyProjects.forEach {
+    project.evaluationDependsOn(it.path)
 }
 
 dependencies {
+
+    dependencyProjects.forEach {
+        compileOnly(it)
+        localRuntime(it)
+        testImplementation(it)
+    }
+
     if (include_appleskin.toBoolean()) {
         compileOnly "squeek.appleskin:appleskin-neoforge:${appleskin_version}:api"
-        runtimeOnly "squeek.appleskin:appleskin-neoforge:${appleskin_version}"
+        localRuntime "squeek.appleskin:appleskin-neoforge:${appleskin_version}"
     }
 }

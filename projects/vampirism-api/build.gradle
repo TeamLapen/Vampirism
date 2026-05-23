@@ -5,27 +5,11 @@ plugins {
 group = project.vampirism_group_id
 version = project.vampirism_version
 
-base {
-    archivesName = "${project.vampirism_mod_name}-api"
-}
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(project.java_version)
     }
     withSourcesJar()
-}
-
-List<Project> dependencyProjects = [project(':faction-api')]
-
-dependencyProjects.forEach {
-    project.evaluationDependsOn(it.path)
-}
-
-dependencies {
-    dependencyProjects.forEach {
-        implementation(it)
-    }
 }
 
 neoForge {
@@ -41,18 +25,13 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-tasks.jar {
-    from (sourceSets.main.output)
-}
+apply from: file('dependencies.gradle')
 
-var sourcesJarTask = tasks.named("sourcesJar", Jar) {
-    from(sourceSets.main.allJava)
-
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archiveClassifier.set("sources")
-}
-
-artifacts {
-    archives(tasks.jar)
-    archives(sourcesJarTask.get())
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            it.artifactId = "${project.vampirism_mod_name}-api"
+        }
+    }
 }

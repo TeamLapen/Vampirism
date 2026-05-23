@@ -10,6 +10,14 @@ ext.registerJarFiles = { List<String> filePaths ->
     }
 }
 
+if (!project.hasProperty("factions_version")) {
+    project.ext.factions_version = project.minecraft_version + "-" + project.factions_mod_version
+}
+
+if (!project.hasProperty("vampirism_version")) {
+    project.ext.vampirism_version = project.minecraft_version + "-" + project.vampirism_mod_version
+}
+
 subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'maven-publish'
