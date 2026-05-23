@@ -27,6 +27,7 @@ jobs:
       environment: ${{ steps.extract.outputs.environment }}
       jar_name: ${{ steps.extract.outputs.jar_name }}
       run_publish: ${{ steps.extract.outputs.run_publish }}
+      registry: ${{ steps.extract.outputs.registry }}
     steps:
       - name: Extract mod version from tag
         id: extract
@@ -41,14 +42,17 @@ jobs:
           echo "mc_version=${version%%-*}" >> $GITHUB_OUTPUT
           echo "mod_version=${version}" >> $GITHUB_OUTPUT
           if [[ $version =~ -(alpha|beta)\. ]]; then
-            echo "environment=${project}/staging" >> $GITHUB_OUTPUT
+            echo "environment=${project}/release" >> $GITHUB_OUTPUT
             echo "run_publish=true" >> $GITHUB_OUTPUT
+            echo "registry=snapshots" >> $GITHUB_OUTPUT
           elif [[ $version =~ -(dev|test)\. ]]; then
-            echo "environment=${project}/staging" >> $GITHUB_OUTPUT
+            echo "environment=${project}/dev" >> $GITHUB_OUTPUT
             echo "run_publish=false" >> $GITHUB_OUTPUT
+            echo "registry=snapshots" >> $GITHUB_OUTPUT
           else
             echo "environment=${project}/release" >> $GITHUB_OUTPUT
             echo "run_publish=true" >> $GITHUB_OUTPUT
+            echo "registry=releases" >> $GITHUB_OUTPUT
           fi
           if [[ $project == 'vampirism' ]]; then
             echo "jar_name=Vampirism" >> $GITHUB_OUTPUT
@@ -110,10 +114,17 @@ jobs:
           path: projects/
       - name: Setup Gradle
         run: ./gradlew
+      - name: Select Maven Repository
+        run: |
+          if [[ ${{ needs.prepare.outputs.registry }} == 'snapshots' ]]; then
+            echo "MAVEN_URL=${{ secrets.MAVEN_URL_SNAPSHOTS }}" >> "$GITHUB_ENV"
+          elif [[ ${{ needs.prepare.outputs.registry }} == 'releases' ]]; then
+            echo "MAVEN_URL=${{ secrets.MAVEN_URL_RELEASES }}" >> "$GITHUB_ENV"
+          fi
       - name: Publish to Maven
         run: ./gradlew ${{ needs.prepare.outputs.project }}-api:publish ${{ needs.prepare.outputs.project }}:publish
         env:
-          MAVEN_URL: ${{ secrets.MAVEN_URL }}
+          MAVEN_URL: ${{ env.MAVEN_URL }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
 

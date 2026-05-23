@@ -17,7 +17,7 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/vampirism/versions)
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/translate/crowdin_vector.svg)](https://translate.vampirism.dev)
-[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/ghpages_vector.svg)](https://wiki.vampirism.dev/docs/wiki/intro)
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/gitbook_vector.svg)](https://wiki.vampirism.dev/docs/wiki/intro)
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/website_vector.svg)](https://vampirism.dev)
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_vector.svg)](https://discord.gg/wuamm4P)
 
@@ -72,38 +72,21 @@ The following labeling scheme is used:
 - Zeyke _Textures_
 - zozozrob _Textures/Models_
 
+## Datapacks
+Vampirism uses datapacks to configure blood values and other settings.
+
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg)](https://wiki.vampirism.dev/docs/data/intro)
+
 ## API
-Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more. For more information and an overview checkout the wiki https://wiki.vampirism.dev/docs/api/intro.
+Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more. For more information and an overview checkout the wiki.
 
-## Integrated Mods in gradle
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg)](https://wiki.vampirism.dev/docs/api/intro)
 
-To use Vampirism or FactionAPI as a compile-time dependency in your own mod, add the [Maxanier Maven repository](https://maven.maxanier.de/#/releases/de/teamlapen) and the relevant artifact to your build configuration.
+## Integrated Mods in Gradle
 
-Addon mods typically only need `faction-api` or `vampirism-api`. Use the full `Vampirism` artifact only if you need access to implementation internals at runtime.
+If you want to use FactionApi or Vampirism in your own mod, configure your Gradle setup as follows:
 
-### Gradle
-
-```groovy
-repositories {
-    maven {
-        name = "Maxanier"
-        url = "https://maven.maxanier.de/releases"
-        content {
-            includeGroupAndSubgroups "de.teamlapen"
-        }
-    }
-}
-
-dependencies {
-    // FactionAPI
-    compileOnly "de.teamlapen.faction:FactionAPI-api:2.0.0"
-    runtimeOnly "de.teamlapen.faction:FactionAPI:2.0.0"
-    
-    // Vampirism API
-    compileOnly "de.teamlapen.vampirism:Vampirism-api:2.0.0"
-    runtimeOnly "de.teamlapen.vampirism:Vampirism:2.0.0"
-}
-```
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg)](./docs/depend-on.md)
 
 ## Code Structure
 
