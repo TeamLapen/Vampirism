@@ -1,5 +1,6 @@
 # Publish a new version
 
+### Git-based
 FactionApi and Vampirism are in the same mono repository but are deployed separately based on the tags.
 
 Tags look like this:
@@ -9,6 +10,9 @@ Tags look like this:
 **There is no need to modify any gradle properties in the repository anymore**
 
 If you want Vampirism to depend on the new version. You only need to change the `vampirism_factions_version` in the [gradle.properties](/gradle.properties) file.
+
+### Local test version
+If you only want to create a local test version you can use `make create-test <project> <test-id>`. It automatically sets the correct versions
 
 ## What is deployed?
 

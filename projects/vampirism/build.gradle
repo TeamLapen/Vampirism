@@ -139,7 +139,6 @@ def generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             jei_version            : jei_version,
             guideapi_version       : guideapi_version,
             terrablender_version   : terrablender_version,
-            factions_version       : factions_version,
             vampirism_factions_version : vampirism_factions_version,
     ]
     inputs.properties replaceProperties
