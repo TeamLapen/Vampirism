@@ -17,29 +17,25 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class ChandelierBlock extends CandleHolderBlock {
     public static final MapCodec<ChandelierBlock> CODEC = RecordCodecBuilder.mapCodec(inst ->
             candleStickParts(inst).apply(inst, ChandelierBlock::new)
     );
 
-    private final static VoxelShape SHAPE = Shapes.join(Block.box(1, 1, 1, 15, 6, 15), Block.box(6, 6, 6, 10, 16, 10), BooleanOp.OR);
-    private static final VoxelShape SHAPE_WITH_CANDLE = Shapes.or(SHAPE, Stream.of(Block.box(1.6, 6, 1.6, 4.5, 11, 4.5), Block.box(11.5, 6, 1.6, 14.4, 11, 4.5), Block.box(11.5, 6, 11.5, 14.4, 11, 14.4), Block.box(1.6, 6, 11.5, 4.5, 11, 14.4)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get());
+    private final static VoxelShape SHAPE = Block.box(1, 0, 1, 15, 16, 15);
 
     private static final ImmutableList<Vec3> PARTICLE_OFFSET = ImmutableList.of(
-            new Vec3(3 / 16d, 11.75 / 16d, 3 / 16d),
-            new Vec3(13 / 16d, 11.75 / 16d, 3 / 16d),
-            new Vec3(13 / 16d, 11.75 / 16d, 13 / 16d),
-            new Vec3(3 / 16d, 11.75 / 16d, 13 / 16d)
+            new Vec3(2 / 16d, 10.75 / 16d, 2 / 16d),
+            new Vec3(14 / 16d, 10.75 / 16d, 2 / 16d),
+            new Vec3(14 / 16d, 10.75 / 16d, 14 / 16d),
+            new Vec3(2 / 16d, 10.75 / 16d, 14 / 16d)
     );
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -63,7 +59,7 @@ public class ChandelierBlock extends CandleHolderBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return isEmpty() ? SHAPE : SHAPE_WITH_CANDLE;
+        return SHAPE;
     }
 
     @Override

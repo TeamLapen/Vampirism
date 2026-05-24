@@ -261,7 +261,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         Identifier model = ModModelTemplates.CHANDELIER_FILLED.create(block, new TextureMapping().put(ModTextureSlots.CANDLE, new Material(candleTexture)), this.modelOutput);
         Identifier litModel = ModModelTemplates.CHANDELIER_FILLED.createWithSuffix(block, "_lit", new TextureMapping().put(ModTextureSlots.CANDLE, new Material(candleTexture.withSuffix("_lit"))), this.modelOutput);
         this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(model))
-                .with(HORIZONTAL_ROTATION)
                 .with(PropertyDispatch.modify(AbstractCandleBlock.LIT)
                         .select(false, x -> x)
                         .select(true, x -> x.withModel(litModel)))
