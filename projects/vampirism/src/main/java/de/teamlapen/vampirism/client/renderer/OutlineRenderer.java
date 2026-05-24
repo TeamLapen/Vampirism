@@ -110,7 +110,7 @@ public class OutlineRenderer {
             return;
         }
 
-        GizmoStyle style = GizmoStyle.fill(ARGB.color(1.0F, ModConfig.helper().getGarlicFinderAuraColor()));
+        GizmoStyle style = GizmoStyle.fill(ARGB.color(1.0F, ModConfig.client().garlicFinderAuraColor.get()));
 
         for (BlockPos pos : cachedHighlightPositions) {
             double distance = playerPos.distanceToSqr(pos.getCenter());

@@ -123,9 +123,7 @@ public class ModConfig extends Services {
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);
         }
-        if (configEvent.getConfig().getSpec() == client.spec()) {
-            helper.onClientConfigChanged(configEvent);
-        }
+        ColorConfigValue.reloadAll(configEvent.getConfig().getSpec());
     }
 
     public void onReload(final ModConfigEvent.Reloading configEvent) {
@@ -135,9 +133,7 @@ public class ModConfig extends Services {
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);
         }
-        if (configEvent.getConfig().getSpec() == client.spec()) {
-            helper.onClientConfigChanged(configEvent);
-        }
+        ColorConfigValue.reloadAll(configEvent.getConfig().getSpec());
     }
 
     //</editor-fold>
@@ -161,8 +157,11 @@ public class ModConfig extends Services {
     private record Config<T>(T config, ModConfigSpec spec) {
 
         public static <T> Config<T> create(Function<ModConfigSpec.Builder, T> consumer) {
+            ColorConfigValue.beginCollection();
             var builder = new ModConfigSpec.Builder().configure(consumer);
-            return new Config<>(builder.getLeft(), builder.getRight());
+            ModConfigSpec spec = builder.getRight();
+            ColorConfigValue.endCollection(spec);
+            return new Config<>(builder.getLeft(), spec);
         }
 
         public boolean isSpec(IConfigSpec spec) {
