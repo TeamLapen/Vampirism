@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.config;
 
-import de.teamlapen.vampirism.common.config.ColorConfigValue;
+import de.teamlapen.faction.client.config.values.ColorConfigValue;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig {

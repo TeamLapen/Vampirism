@@ -1,13 +1,19 @@
-package de.teamlapen.vampirism.common.config;
+package de.teamlapen.faction.client.config.values;
 
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.config.IConfigSpec;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class ColorConfigValue {
@@ -16,6 +22,7 @@ public class ColorConfigValue {
 
     private static final ThreadLocal<@Nullable List<ColorConfigValue>> ACTIVE_COLLECTION = new ThreadLocal<>();
     private static final Map<IConfigSpec, List<ColorConfigValue>> BY_SPEC = new IdentityHashMap<>();
+    private static final Set<IEventBus> SUBSCRIBED_BUSES = Collections.newSetFromMap(new IdentityHashMap<>());
 
     private final ModConfigSpec.ConfigValue<String> value;
     private final int defaultColor;
@@ -41,20 +48,25 @@ public class ColorConfigValue {
         return color;
     }
 
-    public static void beginCollection() {
+    public static <T> Pair<T, ModConfigSpec> configure(Function<ModConfigSpec.Builder, T> consumer) {
         ACTIVE_COLLECTION.set(new ArrayList<>());
-    }
-
-    public static void endCollection(IConfigSpec spec) {
+        Pair<T, ModConfigSpec> result = new ModConfigSpec.Builder().configure(consumer);
         List<ColorConfigValue> list = ACTIVE_COLLECTION.get();
         ACTIVE_COLLECTION.remove();
         if (list != null && !list.isEmpty()) {
-            BY_SPEC.put(spec, list);
+            BY_SPEC.put(result.getRight(), list);
+        }
+        return result;
+    }
+
+    public static void subscribe(IEventBus modBus) {
+        if (SUBSCRIBED_BUSES.add(modBus)) {
+            modBus.addListener(ColorConfigValue::onConfigEvent);
         }
     }
 
-    public static void reloadAll(IConfigSpec spec) {
-        List<ColorConfigValue> list = BY_SPEC.get(spec);
+    private static void onConfigEvent(ModConfigEvent event) {
+        List<ColorConfigValue> list = BY_SPEC.get(event.getConfig().getSpec());
         if (list == null) return;
         for (ColorConfigValue color : list) {
             color.reload();

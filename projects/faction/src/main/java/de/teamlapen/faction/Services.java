@@ -1,5 +1,6 @@
 package de.teamlapen.faction;
 
+import de.teamlapen.faction.client.config.values.ColorConfigValue;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.common.NeoForge;
@@ -28,5 +29,6 @@ public class Services {
     public void register(IEventBus bus) {
         this.registerModBus(bus);
         this.registerGameBus(NeoForge.EVENT_BUS);
+        ColorConfigValue.subscribe(bus);
     }
 }
