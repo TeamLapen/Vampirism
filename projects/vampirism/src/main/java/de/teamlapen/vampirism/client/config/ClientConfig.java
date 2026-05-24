@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.config;
 
+import de.teamlapen.vampirism.common.config.ColorConfigValue;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig {
@@ -10,7 +11,7 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue correctVampireFOV;
     public final ModConfigSpec.BooleanValue renderBloodVision;
     public final ModConfigSpec.BooleanValue renderVampireSwordParticles;
-    public final ModConfigSpec.ConfigValue<String> garlicFinderAuraColor;
+    public final ColorConfigValue garlicFinderAuraColor;
 
     // Overlays
     public final ModConfigSpec.BooleanValue showFullScreenOverlay;
@@ -38,9 +39,9 @@ public class ClientConfig {
         this.renderVampireSwordParticles = builder
                 .comment("When enabled, renders particles when holding a charged vampire sword.")
                 .define("renderVampireSwordParticles", true);
-        this.garlicFinderAuraColor = builder
-                .comment("The color used by the garlic finder to highlight blocks, in HEX without an alpha channel.")
-                .define("garlicFinderAuraColor", "#e0b74f");
+        this.garlicFinderAuraColor = ColorConfigValue.define(builder,
+                "garlicFinderAuraColor", "#e0b74f",
+                "The color used by the garlic finder to highlight blocks.");
 
         builder.push("overlays");
         this.showFullScreenOverlay = builder
