@@ -16,7 +16,6 @@ import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
@@ -233,18 +232,14 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         Identifier factionLocation = ModRegistries.FACTIONS.getKey(faction);
 
         if (factionLocation != null) {
-            String messageKey = getFactionMessageKey(factionLocation);
-
-            if (I18n.exists(messageKey)) {
-                return Component.translatable(messageKey);
-            }
+            return Component.translatable(getFactionMessageKey(factionLocation));
         }
 
         return MESSAGE_WRONG_FACTION;
     }
 
     public static String getFactionMessageKey(Identifier factionId) {
-        return "text." + factionId.getNamespace() + ".restriction.faction." + factionId.getPath();
+        return "message." + factionId.getNamespace() + ".restriction.faction." + factionId.getPath();
     }
 
     public static Builder builder(TagKey<IFaction<?>> tagKey) {
