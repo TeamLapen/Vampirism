@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.common.world.items.PureBloodItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
@@ -30,6 +31,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -495,6 +497,17 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     @Override
     protected AbstractContainerMenu createMenu(int id, Inventory inventory) {
         return new AltarInfusionMenu(id, inventory, this);
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (player != null) {
+            AttributeInstance attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (attribute != null  && attribute.hasModifier(ID_MOVEMENT_SLOWDOWN)) {
+                attribute.removeModifier(ID_MOVEMENT_SLOWDOWN);
+            }
+        }
     }
 
     public enum Phase {
