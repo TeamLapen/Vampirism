@@ -26,7 +26,6 @@ import de.teamlapen.faction.common.event.FactionEventFactory;
 import de.teamlapen.faction.common.factions.actions.ActionKeys;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
-import de.teamlapen.faction.common.network.packets.client.ClientboundPlaySoundEventPacket;
 import de.teamlapen.faction.common.tags.FactionTaskTags;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.common.util.DamageHandler;
@@ -370,8 +369,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
             });
         }
 
-        if (this.player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.connection.send(new ClientboundPlaySoundEventPacket(FactionSounds.LEVEL_UP));
+        if (this.player instanceof ServerPlayer) {
             FactionLogger.info(FactionLogger.FACTION, param.toJson());
         }
 

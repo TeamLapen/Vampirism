@@ -18,6 +18,6 @@ public class SoundDefinitionsProvider extends net.neoforged.neoforge.common.data
         this.add(FactionSounds.TASK_COMPLETE, definition().subtitle("subtitles.factionapi.task_complete").with(sound(mod("cc/fx/task_complete"))));
         this.add(FactionSounds.RAID_WON, definition().with(sound(mod("reserved/event/raid_won"))));
         this.add(FactionSounds.RAID_FAILED, definition().with(sound(mod("reserved/event/raid_failed"))));
-        this.add(FactionSounds.LEVEL_UP, definition().with(sound(mod("reserved/fx/level_up"))));
+        this.add(FactionSounds.CHOIR_SHORT, definition().with(sound(mod("cc/fx/choir_short"))));
     }
 }

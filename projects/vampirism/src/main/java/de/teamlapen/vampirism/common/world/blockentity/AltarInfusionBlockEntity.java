@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
 import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.blockentity.NetworkedContainerBlockEntity;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
@@ -305,7 +306,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     }
 
     private void handleLevelUp() {
-        if (this.player == null) return;
+        if (this.level == null || this.level.isClientSide() || this.player == null) return;
 
         FactionPlayerHandler handler = FactionPlayerHandler.get(this.player);
         if (handler.getCurrentLevel(ModFactions.VAMPIRE) != this.targetLevel - 1) return;
@@ -315,6 +316,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
 
         if (this.player instanceof ServerPlayer serverPlayer) {
             ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INFUSION);
+            FactionSounds.playLevelUpSoundServer(serverPlayer);
         }
 
         applyPostRitualEffects();

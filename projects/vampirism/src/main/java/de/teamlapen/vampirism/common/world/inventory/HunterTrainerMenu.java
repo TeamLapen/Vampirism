@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.inventory;
 
 import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.vampirism.common.core.ModEffects;
@@ -8,6 +9,7 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModMenus;
 import de.teamlapen.vampirism.common.world.entity.hunter.HunterTrainerEntity;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterLeveling;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -96,6 +98,9 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
                 InventoryHelper.removeItems(getInputSlots(), req.ironQuantity(), req.goldQuantity(), 1);
                 this.player.addEffect(new MobEffectInstance(ModEffects.SATURATION, 400, 2));
                 this.lvlRequirement = HunterLeveling.getTrainerRequirement(req.targetLevel() + 1);
+                if (this.player instanceof ServerPlayer serverPlayer) {
+                    FactionSounds.playLevelUpSoundServer(serverPlayer);
+                }
             });
         }
     }

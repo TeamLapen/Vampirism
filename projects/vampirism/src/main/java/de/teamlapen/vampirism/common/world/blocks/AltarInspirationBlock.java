@@ -68,7 +68,7 @@ public class AltarInspirationBlock extends BaseContainerBlock {
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!player.isShiftKeyDown()) {
-            if (BloodHelper.handleFluidItemBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection())) {
+            if (BloodHelper.handleFluidBlockInteraction(stack, level, pos, player, hand, hitResult.getDirection())) {
                 player.awardStat(ModStats.INTERACT_WITH_ALTAR_INSPIRATION.get());
 
                 return InteractionResult.SUCCESS;
