@@ -285,11 +285,6 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     }
 
     private void handleLevelUp() {
-        if (this.level != null && this.level.isClientSide()) {
-            playLevelUpEffects();
-            return;
-        }
-
         if (this.player == null) return;
 
         FactionPlayerHandler handler = FactionPlayerHandler.get(this.player);
@@ -303,12 +298,6 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         }
 
         applyPostRitualEffects();
-    }
-
-    private void playLevelUpEffects() {
-        if (this.level == null || this.player == null) return;
-
-        this.player.playSound(ModSounds.CHOIR_SHORT.get(), 0.5f, 1.0f + (this.level.getRandom().nextFloat() - 0.5f) / 5.0f);
     }
 
     private void applyPostRitualEffects() {
