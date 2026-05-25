@@ -4,13 +4,11 @@ import de.teamlapen.faction.api.factions.LevelingChange;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.blockentity.NetworkedContainerBlockEntity;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.ClientProxy;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.core.*;
-import de.teamlapen.vampirism.common.network.packets.client.ClientboundPlayEventPacket;
 import de.teamlapen.vampirism.common.particles.BloodShredParticleOptions;
 import de.teamlapen.vampirism.common.world.blocks.AltarPillarBlock;
 import de.teamlapen.vampirism.common.world.blocks.AltarTipBlock;
@@ -20,12 +18,10 @@ import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.world.inventory.AltarInfusionMenu;
 import de.teamlapen.vampirism.common.world.items.PureBloodItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -33,7 +29,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -57,16 +52,22 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     public static final String KEY_PLAYER_UUID = "PlayerUUID";
     public static final String KEY_RUN_TIME = "RunTime";
 
+    // ServerEventHandler.onPlayerLoggedIn strips ID_MOVEMENT_SLOWDOWN on login; tick() below re-applies if a ritual is still active.
     public static final Identifier ID_MOVEMENT_SLOWDOWN = VIdentifier.mod("altar_infusion_slowdown");
 
     public static final int DURATION_TICK = 450;
     public static final int MAX_PILLARS = 9;
     public static final int RISING_TICKS = 60;
     public static final float MAX_SPHERE_RITUAL_HEIGHT = 2.25F;
+    public static final double MAX_PLAYER_DISTANCE_SQ = 30.0 * 30.0;
 
     private NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
     private boolean sphereSoundInstanceSpawned;
+    // Transient live reference; may be null mid-ritual while the player is offline (paused).
     private @Nullable Player player;
+    // Persistent identity that survives disconnect/reload. Drives the abort/pause decisions in tick().
+    private @Nullable UUID playerUUID;
+    // Set by loadAdditional when the chunk loaded before the player was reachable; tick() retries loadRitual until it succeeds.
     private @Nullable UUID playerToLoadUUID;
     private List<BlockPos> tips = List.of();
     private int runTime;
@@ -202,6 +203,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         if (this.level == null) return;
 
         this.player = player;
+        this.playerUUID = player.getUUID();
         this.runTime = DURATION_TICK;
         player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, DURATION_TICK, MobEffectInstance.MAX_AMPLIFIER, false, false));
 
@@ -232,6 +234,24 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         }
 
         if (blockEntity.isRunning()) {
+            if (!level.isClientSide()) {
+                // The ritual is paused if the player is offline. Ticking stops;
+                // If the player is in a different dimension, leaves the 30-block radius or dies, the ritual is aborted (endRitual cleans the slowdown);
+                // Otherwise, runs as normal, but re-applies the slowdown modifier in case it was stripped on login.
+                ServerPlayer onlinePlayer = blockEntity.resolveOnlinePlayer();
+                if (onlinePlayer == null) {
+                    blockEntity.player = null;
+                    return;
+                }
+                if (onlinePlayer.level() != level || onlinePlayer.isDeadOrDying() || onlinePlayer.distanceToSqr(blockEntity.worldPosition.getX() + 0.5, blockEntity.worldPosition.getY() + 0.5, blockEntity.worldPosition.getZ() + 0.5) > MAX_PLAYER_DISTANCE_SQ) {
+                    blockEntity.player = onlinePlayer;
+                    blockEntity.endRitual();
+                    return;
+                }
+                blockEntity.player = onlinePlayer;
+                blockEntity.ensureSlowdownModifier(onlinePlayer);
+            }
+
             blockEntity.runTime--;
             blockEntity.tickRitual();
             if (!blockEntity.isRunning()) {
@@ -247,8 +267,8 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     }
 
     private void tickRitual() {
+        // Server already guards player liveness in tick(). This guard is for the client tick: if the block entity hasn't synced yet, skip silently.
         if (this.player == null || !this.player.isAlive()) {
-            this.runTime = 1;
             return;
         }
 
@@ -309,19 +329,41 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     }
 
     private void endRitual() {
-        if (this.player != null) {
-            AttributeInstance movementSpeedAttribute = this.player.getAttribute(Attributes.MOVEMENT_SPEED);
+        // Fall back to a cross-dimensional lookup so we can still clean up the modifier when this.player was  set to null out during a pause.
+        Player target = this.player != null ? this.player : resolveOnlinePlayer();
+        if (target != null) {
+            AttributeInstance movementSpeedAttribute = target.getAttribute(Attributes.MOVEMENT_SPEED);
             if (movementSpeedAttribute != null) {
                 movementSpeedAttribute.removeModifier(ID_MOVEMENT_SLOWDOWN);
             }
         }
 
         this.player = null;
+        this.playerUUID = null;
         this.tips = List.of();
         this.runTime = 0;
 
         updateClient();
         setChanged();
+    }
+
+    // Uses the server PlayerList (not level.getPlayerByUUID) so the abort check can see the player even when they've crossed dimensions.
+    private @Nullable ServerPlayer resolveOnlinePlayer() {
+        if (this.playerUUID == null || this.level == null || this.level.getServer() == null) return null;
+        return this.level.getServer().getPlayerList().getPlayer(this.playerUUID);
+    }
+
+    // Re-applies the slowdown each server tick. ServerEventHandler.onPlayerLoggedIn strips it unconditionally to clean up stranded modifiers; this restores it if the ritual is still active.
+    private void ensureSlowdownModifier(Player target) {
+        AttributeInstance speed = target.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null && !speed.hasModifier(ID_MOVEMENT_SLOWDOWN)) {
+            speed.addPermanentModifier(new AttributeModifier(ID_MOVEMENT_SLOWDOWN, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
+    }
+
+    // Non-user break attempts are canceled in ServerEventHandler.onBlockBreak.
+    public @Nullable UUID getOwnerUUID() {
+        return isRunning() ? this.playerUUID : null;
     }
 
     private void consumeItems() {
@@ -333,14 +375,12 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
 
         this.player = this.level.getPlayerByUUID(playerID);
         if (this.player != null && this.player.isAlive()) {
+            this.playerUUID = playerID;
             this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
             checkStructureLevel(checkRequiredLevel());
 
             return true;
         }
-
-        this.runTime = 0;
-        this.tips = List.of();
 
         return false;
     }
@@ -463,6 +503,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         this.runTime = input.getIntOr(KEY_RUN_TIME, 0);
         if (isRunning() && player == null) {
             input.read(KEY_PLAYER_UUID, UUIDUtil.CODEC).ifPresent(uuid -> {
+                this.playerUUID = uuid;
                 if (!loadRitual(uuid)) {
                     this.playerToLoadUUID = uuid;
                 }
@@ -475,8 +516,9 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         super.saveAdditional(output);
         ContainerHelper.saveAllItems(output, this.items);
         output.putInt(KEY_RUN_TIME, this.runTime);
-        if (player != null) {
-            output.store(KEY_PLAYER_UUID, UUIDUtil.CODEC, player.getUUID());
+        // Use playerUUID, not this.player.getUUID(): the latter is null during a pause and the ritual would lose its owner across a save/load cycle.
+        if (playerUUID != null) {
+            output.store(KEY_PLAYER_UUID, UUIDUtil.CODEC, playerUUID);
         }
     }
 
@@ -493,9 +535,11 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     @Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
-        if (player != null) {
-            AttributeInstance attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
-            if (attribute != null  && attribute.hasModifier(ID_MOVEMENT_SLOWDOWN)) {
+        // Owner break is already gated to the ritual owner by ServerEventHandler.onBlockBreak; here we just clean up. Fall back to PlayerList lookup in case this.player was set to null during a pause.
+        Player target = this.player != null ? this.player : resolveOnlinePlayer();
+        if (target != null) {
+            AttributeInstance attribute = target.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (attribute != null && attribute.hasModifier(ID_MOVEMENT_SLOWDOWN)) {
                 attribute.removeModifier(ID_MOVEMENT_SLOWDOWN);
             }
         }
@@ -530,6 +574,4 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     }
 
     public record ValuedPos(BlockPos pos, int value) {}
-
-
 }
