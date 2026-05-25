@@ -49,6 +49,7 @@ public class ModConfig extends Services {
         bus.addListener(this::setup);
         bus.addListener(this::onLoad);
         bus.addListener(this::onReload);
+        ColorConfigValue.subscribe(bus);
     }
 
     @ThreadSafeAPI

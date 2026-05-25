@@ -70,6 +70,7 @@ public class FactionConfig extends Services {
     protected void registerModBus(IEventBus bus) {
         bus.addListener(this::setup);
         bus.addListener(this::configLoaded);
+        ColorConfigValue.subscribe(bus);
     }
 
     private void setup(NewRegistryEvent event) {

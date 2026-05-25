@@ -1,5 +1,6 @@
 package de.teamlapen.faction.client.config.values;
 
+import de.teamlapen.faction.Services;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.config.IConfigSpec;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -16,6 +17,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+/**
+ * If you want to use this value type in your mod, make sure to subscribe {@link ColorConfigValue#subscribe(IEventBus)}
+ * to your event bus; inside {@link Services#registerModBus(IEventBus)} if you're using {@link Services}.
+ */
 public class ColorConfigValue {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("^#?[0-9a-fA-F]{6}$");
