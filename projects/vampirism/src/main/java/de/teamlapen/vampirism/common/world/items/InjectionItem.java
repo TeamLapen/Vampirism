@@ -14,14 +14,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public abstract class InjectionItem extends Item {
 
     public InjectionItem(Properties properties) {
         super(properties);
     }
 
-    public boolean handleInjection(Level level, BlockPos pos, Player player, IFactionPlayerHandler handler, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction) {
+    public boolean handleInjection(Level level, BlockPos pos, Player player, IFactionPlayerHandler handler, Holder<? extends IPlayableFaction<?>> currentFaction) {
         return false;
     }
 

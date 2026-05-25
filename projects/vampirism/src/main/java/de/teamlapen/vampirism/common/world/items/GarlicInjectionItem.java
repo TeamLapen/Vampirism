@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.vampirism.client.VampirismModClient;
@@ -29,7 +30,7 @@ public class GarlicInjectionItem extends InjectionItem {
     }
 
     @Override
-    public boolean handleInjection(Level level, BlockPos pos, Player player, IFactionPlayerHandler handler, @Nullable Holder<? extends IPlayableFaction<?>> currentFaction) {
+    public boolean handleInjection(Level level, BlockPos pos, Player player, IFactionPlayerHandler handler, Holder<? extends IPlayableFaction<?>> currentFaction) {
         if (handler.canJoin(ModFactions.HUNTER)) {
             if (level.isClientSide()) {
                 VampirismModClient.services().fullScreenOverlay().start(level, 4, 30, 0xBBBBBBFF);
@@ -38,7 +39,7 @@ public class GarlicInjectionItem extends InjectionItem {
                 player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 200, 1));
             }
             return true;
-        } else if (currentFaction != null) {
+        } else if (!IFaction.isNeutral(currentFaction)) {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.sendSystemMessage(Component.translatable("message.vampirism.injection_chair.already_non_hunter", currentFaction.value().getName()));
             }
