@@ -1,9 +1,4 @@
 {
-  "choir_short": {
-    "sounds": [
-      "factionapi:cc/fx/choir_short"
-    ]
-  },
   "event.raid_failed": {
     "sounds": [
       "factionapi:reserved/event/raid_failed"
@@ -12,6 +7,11 @@
   "event.raid_won": {
     "sounds": [
       "factionapi:reserved/event/raid_won"
+    ]
+  },
+  "fx.level_up": {
+    "sounds": [
+      "factionapi:reserved/fx/level_up"
     ]
   },
   "fx.unlock_skills": {

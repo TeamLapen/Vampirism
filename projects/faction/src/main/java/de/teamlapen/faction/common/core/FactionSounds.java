@@ -3,7 +3,7 @@ package de.teamlapen.faction.common.core;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.util.REFERENCE;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -15,7 +15,7 @@ public class FactionSounds {
 
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(Registries.SOUND_EVENT, REFERENCE.MOD_ID);
 
-    public static final DeferredHolder<SoundEvent, SoundEvent> CHOIR_SHORT = create("choir_short");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LEVEL_UP = create("fx.level_up");
     public static final DeferredHolder<SoundEvent, SoundEvent> UNLOCK_SKILLS = create("fx.unlock_skills");
     public static final DeferredHolder<SoundEvent, SoundEvent> TASK_COMPLETE = create("task_complete");
     public static final DeferredHolder<SoundEvent, SoundEvent> RAID_FAILED = create("event.raid_failed");
@@ -30,6 +30,6 @@ public class FactionSounds {
     }
 
     public static void playLevelUpSoundServer(ServerPlayer serverPlayer) {
-        serverPlayer.connection.send(new ClientboundSoundPacket(FactionSounds.CHOIR_SHORT, SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 0.5f, 1.0f + (serverPlayer.getRandom().nextFloat() - 0.5f) / 5.0f, serverPlayer.getRandom().nextLong()));
+        serverPlayer.connection.send(new ClientboundSoundEntityPacket(LEVEL_UP, SoundSource.PLAYERS, serverPlayer, 1.0f, 1.0f, serverPlayer.getRandom().nextLong()));
     }
 }
