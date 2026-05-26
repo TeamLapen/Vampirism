@@ -230,11 +230,6 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
             return;
         }
 
-        if (blockEntity.runTime == DURATION_TICK && !level.isClientSide()) {
-            blockEntity.consumeItems();
-            blockEntity.setChanged();
-        }
-
         if (blockEntity.isRunning()) {
             if (!level.isClientSide()) {
                 // Aborts if the player is offline, in a different dimension, dies, or leaves the 30-block radius. The slowdown is removed inside endRitual().
@@ -305,7 +300,13 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         FactionPlayerHandler handler = FactionPlayerHandler.get(this.player);
         if (handler.getCurrentLevel(ModFactions.VAMPIRE) != this.targetLevel - 1) return;
 
+        if (!checkItemRequirements()) {
+            endRitual();
+            return;
+        }
+
         handler.setFaction(LevelingChange.builder().faction(ModFactions.VAMPIRE).level(this.targetLevel));
+        consumeItems();
         VampirePlayer.get(this.player).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());
 
         if (this.player instanceof ServerPlayer serverPlayer) {
@@ -314,6 +315,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         }
 
         applyPostRitualEffects();
+        setChanged();
     }
 
     private void applyPostRitualEffects() {
