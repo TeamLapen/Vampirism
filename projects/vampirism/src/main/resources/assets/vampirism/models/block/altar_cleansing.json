@@ -1,63 +1,72 @@
 {
-	"credit": "Designed by Zozozrob",
 	"parent": "block/block",
 	"render_type": "minecraft:cutout",
-	"texture_size": [32, 32],
 	"textures": {
-		"particle": "block/stripped_spruce_log",
-		"altar": "vampirism:block/altar_cleansing"
+		"planks": "block/spruce_planks",
+		"particle": "block/spruce_planks",
+		"book": "vampirism:block/altar_cleansing_book"
 	},
 	"elements": [
 		{
+			"from": [3, 10.5, 4.5],
+			"to": [13, 11.5, 11.5],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [3, 11.5, 4.5]},
+			"faces": {
+				"north": {"uv": [0, 7, 10, 8], "texture": "#book"},
+				"east": {"uv": [9, 7, 10, 14], "rotation": 90, "texture": "#book"},
+				"south": {"uv": [0, 13, 10, 14], "texture": "#book"},
+				"west": {"uv": [0, 7, 1, 14], "rotation": 90, "texture": "#book"},
+				"up": {"uv": [0, 0, 10, 7], "texture": "#book"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#book"}
+			}
+		},
+		{
 			"from": [1, 0, 5],
 			"to": [15, 1, 12],
-			"rotation": {"angle": 0, "axis": "y", "origin": [1, 0, 5]},
 			"faces": {
-				"north": {"uv": [0, 0, 7, 0.5], "texture": "#altar"},
-				"east": {"uv": [0, 0, 3.5, 0.5], "texture": "#altar"},
-				"south": {"uv": [0, 0, 7, 0.5], "texture": "#altar"},
-				"west": {"uv": [0, 0, 3.5, 0.5], "texture": "#altar"},
-				"up": {"uv": [0, 0, 7, 3.5], "texture": "#altar"},
-				"down": {"uv": [0, 0, 7, 3.5], "texture": "#altar"}
+				"north": {"uv": [1, 15, 15, 16], "texture": "#planks"},
+				"east": {"uv": [3, 15, 13, 16], "texture": "#planks"},
+				"south": {"uv": [1, 15, 15, 16], "texture": "#planks"},
+				"west": {"uv": [3, 15, 13, 16], "texture": "#planks"},
+				"up": {"uv": [1, 3, 15, 13], "rotation": 180, "texture": "#planks"},
+				"down": {"uv": [15, 13, 1, 3], "rotation": 180, "texture": "#planks", "cullface": "down"}
 			}
 		},
 		{
 			"from": [7, 1, 7],
-			"to": [9, 13, 11],
-			"rotation": {"angle": 0, "axis": "y", "origin": [7, 1, 7]},
+			"to": [9, 11, 11],
 			"faces": {
-				"north": {"uv": [9, 0, 10, 6], "texture": "#altar"},
-				"east": {"uv": [9, 0, 7, 6], "texture": "#altar"},
-				"south": {"uv": [10, 0, 11, 6], "texture": "#altar"},
-				"west": {"uv": [7, 0, 9, 6], "texture": "#altar"},
-				"up": {"uv": [11, 0, 12, 2], "texture": "#altar"},
-				"down": {"uv": [10, 0, 11, 2], "texture": "#altar"}
+				"north": {"uv": [7.0635, 5, 9.0615, 15], "texture": "#planks"},
+				"east": {"uv": [12, 0, 16, 10], "texture": "#planks"},
+				"south": {"uv": [6.9385, 5, 8.9365, 15], "texture": "#planks"},
+				"west": {"uv": [12, 0, 16, 10], "texture": "#planks"},
+				"up": {"uv": [7.0635, 5, 9.0615, 9], "rotation": 180, "texture": "#planks"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#planks"}
 			}
 		},
 		{
-			"from": [1, 8, 3],
-			"to": [15, 10, 14],
-			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 9, 3]},
+			"from": [1, 8.5, 2.5],
+			"to": [15, 9.5, 13.5],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [1, 9.5, 2.5]},
 			"faces": {
-				"north": {"uv": [0, 3.5, 7, 4.5], "texture": "#altar"},
-				"east": {"uv": [0, 3.5, 5.5, 4.5], "texture": "#altar"},
-				"south": {"uv": [0, 3.5, 7, 4.5], "texture": "#altar"},
-				"west": {"uv": [0, 3.5, 5.5, 4.5], "texture": "#altar"},
-				"up": {"uv": [0, 3.5, 7, 9], "texture": "#altar"},
-				"down": {"uv": [0, 3.5, 7, 9], "texture": "#altar"}
+				"north": {"uv": [1, 4, 15, 5], "texture": "#planks"},
+				"east": {"uv": [2, 4, 14, 5], "texture": "#planks"},
+				"south": {"uv": [1, 4, 15, 5], "texture": "#planks"},
+				"west": {"uv": [2, 4, 14, 5], "texture": "#planks"},
+				"up": {"uv": [1, 2, 15, 14], "rotation": 180, "texture": "#planks"},
+				"down": {"uv": [15, 14, 1, 2], "rotation": 180, "texture": "#planks"}
 			}
 		},
 		{
-			"from": [3, 10, 5],
-			"to": [13, 11, 12],
-			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 9, 3]},
+			"from": [7, 11, 9.5],
+			"to": [9, 12, 11],
 			"faces": {
-				"north": {"uv": [0, 15.5, 5, 16], "texture": "#altar"},
-				"east": {"uv": [0, 12.5, 0.5, 16], "rotation": 270, "texture": "#altar"},
-				"south": {"uv": [0, 12.5, 5, 13], "texture": "#altar"},
-				"west": {"uv": [4.5, 12.5, 5, 16], "rotation": 90, "texture": "#altar"},
-				"up": {"uv": [0, 9, 5, 12.5], "texture": "#altar"},
-				"down": {"uv": [0, 12.5, 5, 16], "texture": "#altar"}
+				"north": {"uv": [7, 4, 9, 5], "texture": "#planks"},
+				"east": {"uv": [5, 4, 6.5, 5], "texture": "#planks"},
+				"south": {"uv": [7, 4, 9, 5], "texture": "#planks"},
+				"west": {"uv": [9.5, 4, 11, 5], "texture": "#planks"},
+				"up": {"uv": [7, 5, 9, 6.5], "rotation": 180, "texture": "#planks"},
+				"down": {"uv": [9, 6.5, 7, 5], "rotation": 180, "texture": "#planks"}
 			}
 		}
 	],
