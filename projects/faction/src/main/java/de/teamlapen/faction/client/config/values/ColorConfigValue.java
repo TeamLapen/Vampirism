@@ -13,21 +13,19 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
 /**
  * If you want to use this value type in your mod, make sure to subscribe {@link ColorConfigValue#subscribe(IEventBus)}
- * to your event bus; inside {@link Services#registerModBus(IEventBus)} if you're using {@link Services}.
+ * to your event bus exactly once; inside {@link Services#registerModBus(IEventBus)} if you're using {@link Services}.
  */
 public class ColorConfigValue {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("^#?[0-9a-fA-F]{6}$");
 
     private static final ThreadLocal<@Nullable List<ColorConfigValue>> ACTIVE_COLLECTION = new ThreadLocal<>();
-    private static final Map<IConfigSpec, List<ColorConfigValue>> BY_SPEC = new IdentityHashMap<>();
-    private static final Set<IEventBus> SUBSCRIBED_BUSES = Collections.newSetFromMap(new IdentityHashMap<>());
+    private static final Map<IConfigSpec, List<ColorConfigValue>> BY_SPEC = Collections.synchronizedMap(new IdentityHashMap<>());
 
     private final ModConfigSpec.ConfigValue<String> value;
     private final int defaultColor;
@@ -54,20 +52,21 @@ public class ColorConfigValue {
     }
 
     public static <T> Pair<T, ModConfigSpec> configure(Function<ModConfigSpec.Builder, T> consumer) {
-        ACTIVE_COLLECTION.set(new ArrayList<>());
-        Pair<T, ModConfigSpec> result = new ModConfigSpec.Builder().configure(consumer);
-        List<ColorConfigValue> list = ACTIVE_COLLECTION.get();
-        ACTIVE_COLLECTION.remove();
-        if (list != null && !list.isEmpty()) {
-            BY_SPEC.put(result.getRight(), list);
+        List<ColorConfigValue> list = new ArrayList<>();
+        ACTIVE_COLLECTION.set(list);
+        try {
+            Pair<T, ModConfigSpec> result = new ModConfigSpec.Builder().configure(consumer);
+            if (!list.isEmpty()) {
+                BY_SPEC.put(result.getRight(), list);
+            }
+            return result;
+        } finally {
+            ACTIVE_COLLECTION.remove();
         }
-        return result;
     }
 
     public static void subscribe(IEventBus modBus) {
-        if (SUBSCRIBED_BUSES.add(modBus)) {
-            modBus.addListener(ColorConfigValue::onConfigEvent);
-        }
+        modBus.addListener(ColorConfigValue::onConfigEvent);
     }
 
     private static void onConfigEvent(ModConfigEvent event) {
