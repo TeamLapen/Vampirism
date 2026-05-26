@@ -1,62 +1,87 @@
 {
-	"credit": "Designed by Zozozrob",
+	"credit": "Designed by Oreo365",
 	"parent": "block/block",
-	"texture_size": [32, 32],
 	"textures": {
-		"tombstone": "vampirism:block/tombstone_cross",
-		"particle": "block/stone"
+		"particle": "block/cracked_stone_bricks",
+		"stone": "block/cracked_stone_bricks"
 	},
 	"elements": [
 		{
-			"from": [2, 0, 1],
-			"to": [14, 2, 9],
-			"rotation": {"angle": 0, "axis": "y", "origin": [3, 0, 1]},
+			"from": [5, 26, 4],
+			"to": [11, 27, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [19, 34, 12]},
 			"faces": {
-				"north": {"uv": [1, 15, 7, 16], "texture": "#tombstone"},
-				"east": {"uv": [10, 15, 14, 16], "texture": "#tombstone"},
-				"south": {"uv": [1, 15, 7, 16], "texture": "#tombstone"},
-				"west": {"uv": [10, 15, 14, 16], "texture": "#tombstone"},
-				"up": {"uv": [9, 7, 15, 11], "texture": "#tombstone"},
-				"down": {"uv": [9, 11, 15, 15], "texture": "#tombstone"}
+				"north": {"uv": [0, 1, 6, 2], "texture": "#stone"},
+				"east": {"uv": [0, 1, 4, 2], "texture": "#stone"},
+				"south": {"uv": [0, 1, 6, 2], "texture": "#stone"},
+				"west": {"uv": [0, 1, 4, 2], "texture": "#stone"},
+				"up": {"uv": [0, 1, 4, 7], "rotation": 270, "texture": "#stone"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#stone"}
 			}
 		},
 		{
-			"from": [5, 2, 2],
-			"to": [11, 17, 8],
-			"rotation": {"angle": 0, "axis": "y", "origin": [9, 2, 2]},
+			"from": [2, 0, 2],
+			"to": [14, 2, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [19, 9, 12]},
 			"faces": {
-				"north": {"uv": [2.5, 7.5, 5.5, 15], "texture": "#tombstone"},
-				"east": {"uv": [2.5, 7.5, 5.5, 15], "texture": "#tombstone"},
-				"south": {"uv": [2.5, 7.5, 5.5, 15], "texture": "#tombstone"},
-				"west": {"uv": [2.5, 7.5, 5.5, 15], "texture": "#tombstone"},
-				"up": {"uv": [10.5, 7.5, 13.5, 10.5], "texture": "#tombstone"},
-				"down": {"uv": [10.5, 7.5, 13.5, 10.5], "texture": "#tombstone"}
+				"north": {"uv": [0, 0, 12, 2], "texture": "#stone"},
+				"east": {"uv": [0, 0, 8, 2], "texture": "#stone"},
+				"south": {"uv": [0, 0, 12, 2], "texture": "#stone"},
+				"west": {"uv": [0, 0, 8, 2], "texture": "#stone"},
+				"up": {"uv": [0, 0, 8, 12], "rotation": 270, "texture": "#stone"},
+				"down": {"uv": [0, 0, 8, 12], "rotation": 90, "texture": "#stone"}
 			}
 		},
 		{
-			"from": [0, 17, 2],
-			"to": [16, 23, 8],
-			"rotation": {"angle": 0, "axis": "y", "origin": [0, 17, 2]},
+			"from": [4, 2, 4],
+			"to": [12, 14, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [19, 10, 12]},
 			"faces": {
-				"north": {"uv": [0, 4.5, 8, 7.5], "texture": "#tombstone"},
-				"east": {"uv": [5.5, 12, 8.5, 15], "texture": "#tombstone"},
-				"south": {"uv": [0, 4.5, 8, 7.5], "texture": "#tombstone"},
-				"west": {"uv": [5.5, 12, 8.5, 15], "texture": "#tombstone"},
-				"up": {"uv": [8, 1, 16, 4], "texture": "#tombstone"},
-				"down": {"uv": [8, 4, 16, 7], "texture": "#tombstone"}
+				"north": {"uv": [8, 4, 16, 16], "texture": "#stone"},
+				"east": {"uv": [7, 4, 11, 16], "texture": "#stone"},
+				"south": {"uv": [0, 4, 8, 16], "texture": "#stone"},
+				"west": {"uv": [0, 4, 4, 16], "texture": "#stone"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#stone"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#stone"}
 			}
 		},
 		{
-			"from": [5, 23, 2],
-			"to": [11, 29, 8],
-			"rotation": {"angle": 0, "axis": "y", "origin": [5, 23, -3]},
+			"from": [0, 14, 4],
+			"to": [16, 18, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [19, 22, 12]},
 			"faces": {
-				"north": {"uv": [2.5, 1.5, 5.5, 4.5], "texture": "#tombstone"},
-				"east": {"uv": [2.5, 1.5, 5.5, 4.5], "texture": "#tombstone"},
-				"south": {"uv": [2.5, 1.5, 5.5, 4.5], "texture": "#tombstone"},
-				"west": {"uv": [2.5, 1.5, 5.5, 4.5], "texture": "#tombstone"},
-				"up": {"uv": [5.5, 9, 8.5, 12], "texture": "#tombstone"},
-				"down": {"uv": [10.5, 1, 13.5, 4], "texture": "#tombstone"}
+				"north": {"uv": [0, 0, 16, 4], "texture": "#stone"},
+				"east": {"uv": [0, 0, 4, 4], "texture": "#stone"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#stone"},
+				"west": {"uv": [0, 0, 4, 4], "texture": "#stone"},
+				"up": {"uv": [0, 0, 4, 16], "rotation": 270, "texture": "#stone"},
+				"down": {"uv": [0, 0, 4, 16], "rotation": 90, "texture": "#stone"}
+			}
+		},
+		{
+			"from": [5, 18, 4],
+			"to": [11, 20, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [19, 26, 12]},
+			"faces": {
+				"north": {"uv": [0, 0, 6, 2], "texture": "#stone"},
+				"east": {"uv": [0, 0, 4, 2], "texture": "#stone"},
+				"south": {"uv": [0, 0, 6, 2], "texture": "#stone"},
+				"west": {"uv": [0, 0, 4, 2], "texture": "#stone"},
+				"up": {"uv": [0, 0, 0, 0], "texture": "#stone"},
+				"down": {"uv": [0, 0, 0, 0], "texture": "#stone"}
+			}
+		},
+		{
+			"from": [4, 20, 4],
+			"to": [12, 26, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [19, 28, 12]},
+			"faces": {
+				"north": {"uv": [0, 0, 8, 6], "texture": "#stone"},
+				"east": {"uv": [0, 0, 4, 6], "texture": "#stone"},
+				"south": {"uv": [0, 0, 8, 6], "texture": "#stone"},
+				"west": {"uv": [0, 0, 4, 6], "texture": "#stone"},
+				"up": {"uv": [0, 0, 4, 8], "rotation": 270, "texture": "#stone"},
+				"down": {"uv": [0, 0, 4, 8], "rotation": 90, "texture": "#stone"}
 			}
 		}
 	],
@@ -73,12 +98,12 @@
 		},
 		"firstperson_righthand": {
 			"rotation": [0, 25, 0],
-			"translation": [1.75, -1.5, 1.75],
+			"translation": [1.75, -1.25, 1.75],
 			"scale": [0.4, 0.4, 0.4]
 		},
 		"firstperson_lefthand": {
 			"rotation": [0, 25, 0],
-			"translation": [1.75, -1.5, 1.75],
+			"translation": [1.75, -1.25, 1.75],
 			"scale": [0.4, 0.4, 0.4]
 		},
 		"ground": {
