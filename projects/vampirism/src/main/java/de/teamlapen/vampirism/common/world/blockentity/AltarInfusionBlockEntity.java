@@ -53,7 +53,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     public static final String KEY_PLAYER_UUID = "PlayerUUID";
     public static final String KEY_RUN_TIME = "RunTime";
 
-    // ServerEventHandler.onPlayerLoggedIn strips ID_MOVEMENT_SLOWDOWN on login; tick() below re-applies if a ritual is still active.
+    // Applied as a transient modifier so it disappears automatically when the player logs off, but it should be removed explicitly if the ritual ends or get aborted or the altar is broken.
     public static final Identifier ID_MOVEMENT_SLOWDOWN = VIdentifier.mod("altar_infusion_slowdown");
 
     public static final int DURATION_TICK = 450;
@@ -64,12 +64,12 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
 
     private NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
     private boolean sphereSoundInstanceSpawned;
-    // Transient live reference; may be null mid-ritual while the player is offline (paused).
+    // Transient live reference; resolved each server tick from the PlayerList. Null until the first tick after load.
     private @Nullable Player player;
-    // Persistent identity that survives disconnect/reload. Drives the abort/pause decisions in tick().
+    // Persistent identity used to resolve the live player each tick and to abort if they go offline.
     private @Nullable UUID playerUUID;
-    // Set by loadAdditional when the chunk loaded before the player was reachable; tick() retries loadRitual until it succeeds.
-    private @Nullable UUID playerToLoadUUID;
+    // Used as a marker to end the ritual when tick() runs. Used for cases when the ritual is interrupted and unloaded afterward.
+    private boolean abortPendingFromLoad;
     private List<BlockPos> tips = List.of();
     private int runTime;
     private int targetLevel;
@@ -210,7 +210,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
 
         AttributeInstance movementSpeedAttribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
         if (movementSpeedAttribute != null && !movementSpeedAttribute.hasModifier(ID_MOVEMENT_SLOWDOWN)) {
-            movementSpeedAttribute.addPermanentModifier(new AttributeModifier(ID_MOVEMENT_SLOWDOWN, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            movementSpeedAttribute.addTransientModifier(new AttributeModifier(ID_MOVEMENT_SLOWDOWN, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
 
         if (!this.tips.isEmpty()) {
@@ -224,9 +224,10 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, AltarInfusionBlockEntity blockEntity) {
-        if (blockEntity.playerToLoadUUID != null && blockEntity.loadRitual(blockEntity.playerToLoadUUID)) {
-            blockEntity.playerToLoadUUID = null;
-            blockEntity.updateClient();
+        if (blockEntity.abortPendingFromLoad && !level.isClientSide()) {
+            blockEntity.abortPendingFromLoad = false;
+            blockEntity.endRitual();
+            return;
         }
 
         if (blockEntity.runTime == DURATION_TICK && !level.isClientSide()) {
@@ -236,21 +237,14 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
 
         if (blockEntity.isRunning()) {
             if (!level.isClientSide()) {
-                // The ritual is paused if the player is offline. Ticking stops;
-                // If the player is in a different dimension, leaves the 30-block radius or dies, the ritual is aborted (endRitual cleans the slowdown);
-                // Otherwise, runs as normal, but re-applies the slowdown modifier in case it was stripped on login.
+                // Aborts if the player is offline, in a different dimension, dies, or leaves the 30-block radius. The slowdown is removed inside endRitual().
                 ServerPlayer onlinePlayer = blockEntity.resolveOnlinePlayer();
-                if (onlinePlayer == null) {
-                    blockEntity.player = null;
-                    return;
-                }
-                if (onlinePlayer.level() != level || onlinePlayer.isDeadOrDying() || onlinePlayer.distanceToSqr(blockEntity.worldPosition.getX() + 0.5, blockEntity.worldPosition.getY() + 0.5, blockEntity.worldPosition.getZ() + 0.5) > MAX_PLAYER_DISTANCE_SQ) {
+                if (onlinePlayer == null || onlinePlayer.level() != level || onlinePlayer.isDeadOrDying() || onlinePlayer.distanceToSqr(blockEntity.worldPosition.getX() + 0.5, blockEntity.worldPosition.getY() + 0.5, blockEntity.worldPosition.getZ() + 0.5) > MAX_PLAYER_DISTANCE_SQ) {
                     blockEntity.player = onlinePlayer;
                     blockEntity.endRitual();
                     return;
                 }
                 blockEntity.player = onlinePlayer;
-                blockEntity.ensureSlowdownModifier(onlinePlayer);
             }
 
             blockEntity.runTime--;
@@ -331,7 +325,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     }
 
     private void endRitual() {
-        // Fall back to a cross-dimensional lookup so we can still clean up the modifier when this.player was  set to null out during a pause.
+        // Falls back to PlayerList lookup in case this.player hasn't been resolved yet (the live reference is set in tick) or the player is in another dimension.
         Player target = this.player != null ? this.player : resolveOnlinePlayer();
         if (target != null) {
             AttributeInstance movementSpeedAttribute = target.getAttribute(Attributes.MOVEMENT_SPEED);
@@ -355,14 +349,6 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         return this.level.getServer().getPlayerList().getPlayer(this.playerUUID);
     }
 
-    // Re-applies the slowdown each server tick. ServerEventHandler.onPlayerLoggedIn strips it unconditionally to clean up stranded modifiers; this restores it if the ritual is still active.
-    private void ensureSlowdownModifier(Player target) {
-        AttributeInstance speed = target.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (speed != null && !speed.hasModifier(ID_MOVEMENT_SLOWDOWN)) {
-            speed.addPermanentModifier(new AttributeModifier(ID_MOVEMENT_SLOWDOWN, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-        }
-    }
-
     // Non-user break attempts are canceled in ServerEventHandler.onBlockBreak.
     public @Nullable UUID getOwnerUUID() {
         return isRunning() ? this.playerUUID : null;
@@ -380,7 +366,6 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
             this.playerUUID = playerID;
             this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
             checkStructureLevel(checkRequiredLevel());
-
             return true;
         }
 
@@ -503,11 +488,12 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         super.loadAdditional(input);
         ContainerHelper.loadAllItems(input, this.items);
         this.runTime = input.getIntOr(KEY_RUN_TIME, 0);
-        if (isRunning() && player == null) {
+        if (isRunning()) {
             input.read(KEY_PLAYER_UUID, UUIDUtil.CODEC).ifPresent(uuid -> {
                 this.playerUUID = uuid;
+                // loadRitual returns false if the player is unreachable, then the ritual should be marked for abortion.
                 if (!loadRitual(uuid)) {
-                    this.playerToLoadUUID = uuid;
+                    this.abortPendingFromLoad = true;
                 }
             });
         }
@@ -518,7 +504,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
         super.saveAdditional(output);
         ContainerHelper.saveAllItems(output, this.items);
         output.putInt(KEY_RUN_TIME, this.runTime);
-        // Use playerUUID, not this.player.getUUID(): the latter is null during a pause and the ritual would lose its owner across a save/load cycle.
+        // Use playerUUID, not this.player.getUUID(): the latter is null until tick() resolves the live reference after load, so we'd lose the owner if a save happens in that window.
         if (playerUUID != null) {
             output.store(KEY_PLAYER_UUID, UUIDUtil.CODEC, playerUUID);
         }
@@ -537,7 +523,8 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
     @Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
-        // Owner break is already gated to the ritual owner by ServerEventHandler.onBlockBreak; here we just clean up. Fall back to PlayerList lookup in case this.player was set to null during a pause.
+        // Removes the slowdown if the altar is broken. Falls back to PlayerList lookup in case this.player hasn't been resolved yet (the live reference is set in tick) or the player is in another dimension;
+        // Non-owner block breaking is canceled inside ServerEventHandler.onBlockBreak.
         Player target = this.player != null ? this.player : resolveOnlinePlayer();
         if (target != null) {
             AttributeInstance attribute = target.getAttribute(Attributes.MOVEMENT_SPEED);

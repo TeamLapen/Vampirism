@@ -15,8 +15,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -50,11 +48,6 @@ public class ServerEventHandler {
 
         if (player instanceof ServerPlayer serverPlayer && !Permissions.isSetupCorrectly(serverPlayer)) {
             serverPlayer.sendSystemMessage(Component.literal("[" + ChatFormatting.DARK_PURPLE + "Vampirism" + ChatFormatting.RESET + "] It seems like the permission plugin used is not properly set up. Make sure all players have 'vampirism.*' for the mod to work (or at least '" + Permissions.GENERAL_CHECK.getNodeName() + "' to suppress this warning)."));
-        }
-
-        AttributeInstance speed = player.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (speed != null && speed.hasModifier(AltarInfusionBlockEntity.ID_MOVEMENT_SLOWDOWN)) {
-            speed.removeModifier(AltarInfusionBlockEntity.ID_MOVEMENT_SLOWDOWN);
         }
     }
 
