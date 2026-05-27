@@ -1,0 +1,99 @@
+{
+	"credit": "Designed by Oreo365",
+	"parent": "block/block",
+	"textures": {
+		"particle": "block/cracked_stone_bricks",
+		"stone": "block/cracked_stone_bricks"
+	},
+	"elements": [
+		{
+			"from": [6, 10, 3],
+			"to": [10, 11, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [17, 18, 6]},
+			"faces": {
+				"north": {"uv": [4, 0, 0, 1], "texture": "#stone"},
+				"east": {"uv": [3, 0, 0, 1], "texture": "#stone"},
+				"south": {"uv": [4, 0, 0, 1], "texture": "#stone"},
+				"west": {"uv": [3, 0, 0, 1], "texture": "#stone"},
+				"up": {"uv": [3, 0, 0, 4], "rotation": 270, "texture": "#stone"},
+				"down": {"uv": [3, 0, 0, 4], "rotation": 90, "texture": "#stone"}
+			}
+		},
+		{
+			"from": [2, 0, 2],
+			"to": [14, 1, 7],
+			"rotation": {"angle": 0, "axis": "y", "origin": [17, 8, 6]},
+			"faces": {
+				"north": {"uv": [12, 0, 0, 1], "texture": "#stone"},
+				"east": {"uv": [5, 0, 0, 1], "texture": "#stone"},
+				"south": {"uv": [12, 0, 0, 1], "texture": "#stone"},
+				"west": {"uv": [5, 0, 0, 1], "texture": "#stone"},
+				"up": {"uv": [5, 0, 0, 12], "rotation": 270, "texture": "#stone"},
+				"down": {"uv": [5, 0, 0, 12], "rotation": 90, "texture": "#stone"}
+			}
+		},
+		{
+			"from": [3, 1, 3],
+			"to": [13, 9, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [17, 9, 6]},
+			"faces": {
+				"north": {"uv": [10, 0, 0, 8], "texture": "#stone"},
+				"east": {"uv": [3, 0, 0, 8], "texture": "#stone"},
+				"south": {"uv": [10, 0, 0, 8], "texture": "#stone"},
+				"west": {"uv": [3, 0, 0, 8], "texture": "#stone"},
+				"up": {"uv": [3, 0, 0, 10], "rotation": 270, "texture": "#stone"},
+				"down": {"uv": [3, 0, 0, 10], "rotation": 90, "texture": "#stone"}
+			}
+		},
+		{
+			"from": [4, 9, 3],
+			"to": [12, 10, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [17, 17, 6]},
+			"faces": {
+				"north": {"uv": [8, 0, 0, 1], "texture": "#stone"},
+				"east": {"uv": [3, 0, 0, 1], "texture": "#stone"},
+				"south": {"uv": [8, 0, 0, 1], "texture": "#stone"},
+				"west": {"uv": [3, 0, 0, 1], "texture": "#stone"},
+				"up": {"uv": [3, 0, 0, 8], "rotation": 270, "texture": "#stone"},
+				"down": {"uv": [3, 0, 0, 8], "rotation": 90, "texture": "#stone"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0.75, 0, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [75, 45, 0],
+			"translation": [0.75, 0, 0],
+			"scale": [0.375, 0.375, 0.375]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 25, 0],
+			"translation": [1.75, 1.75, 1.75],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, 25, 0],
+			"translation": [1.75, 1.75, 1.75],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"ground": {
+			"translation": [0, 3, 0.75],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"gui": {
+			"rotation": [30, -135, 0],
+			"translation": [-1.75, 1.15, 0],
+			"scale": [0.82, 0.82, 0.82]
+		},
+		"head": {
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"translation": [0, 0, 2]
+		}
+	}
+}

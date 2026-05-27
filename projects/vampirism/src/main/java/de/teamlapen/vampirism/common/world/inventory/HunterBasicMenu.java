@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.inventory;
 
 import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -10,6 +11,7 @@ import de.teamlapen.vampirism.common.world.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterLeveling;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -56,6 +58,9 @@ public class HunterBasicMenu extends ItemCombinerMenu {
             int required = req.vampireBloodAmount();
             getSlot(0).remove(required);
             FactionPlayerHandler.get(player).setFaction(LevelingChange.builder().faction(ModFactions.HUNTER).level(targetLevel));
+            if (player instanceof ServerPlayer serverPlayer) {
+                FactionSounds.playLevelUpSoundServer(serverPlayer);
+            }
             player.sendOverlayMessage(Component.translatable("gui.vampirism.hunter.level_up"));
             player.closeContainer();
         });

@@ -43,8 +43,8 @@ public class PedestalBlock extends BaseContainerBlock {
 
     private static final VoxelShape SHAPE = Stream.of(
             Block.box(1, 0, 1, 15, 2, 15),
-            Block.box(6, 2, 6, 10, 8, 10),
-            Block.box(3, 8, 3, 13, 9, 13)
+            Block.box(2, 8, 2, 14, 10, 14),
+            Block.box(4, 2, 4, 12, 8, 12)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public PedestalBlock(Properties properties) {

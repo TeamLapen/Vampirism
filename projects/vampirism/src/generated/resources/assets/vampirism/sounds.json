@@ -84,11 +84,6 @@
       }
     ]
   },
-  "choir_short": {
-    "sounds": [
-      "vampirism:cc/fx/choir_short"
-    ]
-  },
   "entity.bat_swarm": {
     "sounds": [
       "vampirism:cc/fx/bat_swarm"

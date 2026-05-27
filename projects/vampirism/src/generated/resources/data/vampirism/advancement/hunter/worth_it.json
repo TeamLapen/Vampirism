@@ -23,7 +23,7 @@
     "frame": "challenge",
     "hidden": true,
     "icon": {
-      "id": "vampirism:tombstone1"
+      "id": "vampirism:tombstone_medium"
     },
     "title": {
       "translate": "advancement.vampirism.worth_it"

@@ -122,6 +122,7 @@ The sounds used in this mod are individually licensed and may only be used outsi
 | blood_sucker              | Bernuy                | [freesound](https://freesound.org/people/Bernuy/sounds/268499/)                | CC Attribution |
 | Organ Ambience, Calm, A   | InspectorJ            | [freesound](https://freesound.org/people/InspectorJ/sounds/411991/)            | CC Attribution |
 | two drops.WAV             | Millavsb              | [freesound](https://freesound.org/people/Millavsb/sounds/197900/)              | CC0            |
+| Dark Choir 01             | Exsomniel             | [freesound](https://freesound.org/people/Exsomniel/sounds/207809/)             | CC0            |
 
 ##### Sit functionality - `sit` package
 

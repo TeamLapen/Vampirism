@@ -48,10 +48,9 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 .add(ModBlocks.BLOOD_SIEVE.get())
                 .add(ModBlocks.WEAPON_TABLE.get())
                 .add(ModBlocks.GRAVE_CAGE.get())
-                .add(ModBlocks.TOMBSTONE1.get())
-                .add(ModBlocks.TOMBSTONE2.get())
-                .add(ModBlocks.TOMBSTONE3.get())
-                .add(ModBlocks.FIRE_PLACE.get())
+                .add(ModBlocks.TOMBSTONE_SHORT.get())
+                .add(ModBlocks.TOMBSTONE_MEDIUM.get())
+                .add(ModBlocks.TOMBSTONE_CROSS.get())
                 .add(ModBlocks.GRAVE_CAGE.get())
                 .add(ModBlocks.ALCHEMICAL_CAULDRON.get())
                 .add(ModBlocks.VAPOR_STILL.get())
@@ -185,7 +184,5 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
     private void addCompatibilityTags() {
         tag(ModBlockTags.Compatibility.SERENE_SEASONS_AUTUMN_CROPS).add(ModBlocks.GARLIC.get());
         tag(ModBlockTags.Compatibility.SERENE_SEASONS_SUMMER_CROPS).add(ModBlocks.GARLIC.get());
-
-        tag(ModBlockTags.Compatibility.TRAY_HEAT_SOURCES).add(ModBlocks.FIRE_PLACE.get());
     }
 }

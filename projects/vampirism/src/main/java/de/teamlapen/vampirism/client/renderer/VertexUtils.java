@@ -13,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.fluid.FluidTintSource;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +35,7 @@ public class VertexUtils {
 
         FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluidState);
         ChunkSectionLayer renderLayer = fluidModel.layer();
-        int tintColor = fluidModel.fluidTintSource() instanceof FluidTintSource source ? source.color(fluidState) : 0;
+        int tintColor = fluidModel.fluidTintSource() != null ? fluidModel.fluidTintSource().color(fluidState) : -1;
         TextureAtlasSprite still = fluidModel.stillMaterial().sprite();
 
         RenderType type = switch (renderLayer) {

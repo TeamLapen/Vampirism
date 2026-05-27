@@ -3,8 +3,10 @@ package de.teamlapen.faction.common.core;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.util.REFERENCE;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.network.protocol.game.ClientboundSoundEntityPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -19,12 +21,15 @@ public class FactionSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> RAID_FAILED = create("event.raid_failed");
     public static final DeferredHolder<SoundEvent, SoundEvent> RAID_WON = create("event.raid_won");
 
+    private static DeferredHolder<SoundEvent, SoundEvent> create(String soundNameIn) {
+        return SOUND_EVENTS.register(soundNameIn, () -> SoundEvent.createVariableRangeEvent(FIdentifier.mod(soundNameIn)));
+    }
+
     static void register(IEventBus bus) {
         SOUND_EVENTS.register(bus);
     }
 
-    private static DeferredHolder<SoundEvent, SoundEvent> create(String soundNameIn) {
-        Identifier resourcelocation = FIdentifier.mod(soundNameIn);
-        return SOUND_EVENTS.register(soundNameIn, () -> SoundEvent.createVariableRangeEvent(resourcelocation));
+    public static void playLevelUpSoundServer(ServerPlayer serverPlayer) {
+        serverPlayer.connection.send(new ClientboundSoundEntityPacket(LEVEL_UP, SoundSource.PLAYERS, serverPlayer, 1.0f, 1.0f, serverPlayer.getRandom().nextLong()));
     }
 }

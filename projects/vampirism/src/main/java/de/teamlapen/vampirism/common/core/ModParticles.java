@@ -21,7 +21,6 @@ public class ModParticles {
 
     public static final DeferredHolder<ParticleType<?>, ParticleType<SwordChargeParticleOptions>> SWORD_CHARGE = PARTICLE_TYPES.register("sword_charge", () -> create(SwordChargeParticleOptions.CODEC, SwordChargeParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<SwordChargedParticleOptions>> SWORD_CHARGED = PARTICLE_TYPES.register("sword_charged", () -> create(SwordChargedParticleOptions.CODEC, SwordChargedParticleOptions.STREAM_CODEC));
-    public static final DeferredHolder<ParticleType<?>, ParticleType<PedestalParticleOptions>> PEDESTAL = PARTICLE_TYPES.register("pedestal", () -> create(PedestalParticleOptions.CODEC, PedestalParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<MotherParticleOptions>> MOTHER = PARTICLE_TYPES.register("mother", () -> create(MotherParticleOptions.CODEC, MotherParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<AltarInfusionParticleOptions>> ALTAR_INFUSION = PARTICLE_TYPES.register("altar_infusion", () -> create(AltarInfusionParticleOptions.CODEC, AltarInfusionParticleOptions.STREAM_CODEC));
     public static final DeferredHolder<ParticleType<?>, ParticleType<FlyingBloodEntityParticleOptions>> FLYING_BLOOD_ENTITY = PARTICLE_TYPES.register("flying_blood_entity", () -> create(FlyingBloodEntityParticleOptions.CODEC,FlyingBloodEntityParticleOptions.STREAM_CODEC));

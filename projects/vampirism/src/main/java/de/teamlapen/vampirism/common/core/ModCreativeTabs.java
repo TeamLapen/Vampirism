@@ -196,15 +196,14 @@ public class ModCreativeTabs {
         }
 
         private void addDecorativeBlocks() {
-            add(FIRE_PLACE);
             addCandleHolders(ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.stream().map(pair -> pair.getFirst().asItem()).toList());
             addCandleHolders(ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.stream().map(pair -> pair.getFirst().asItem()).toList());
             addCandleHolders(ColorListsUtil.HANGING_CHANDELIERS.stream().map(Block::asItem).toList());
             add(VAMPIRE_SOUL_LANTERN);
             add(CROSS);
-            add(TOMBSTONE1);
-            add(TOMBSTONE2);
-            add(TOMBSTONE3);
+            add(TOMBSTONE_SHORT);
+            add(TOMBSTONE_MEDIUM);
+            add(TOMBSTONE_CROSS);
             add(GRAVE_CAGE);
             add(VAMPIRE_RACK);
             add(THRONE);

@@ -35,8 +35,9 @@
   "key.factionapi.action8": "Action 8",
   "key.factionapi.action9": "Action 9",
   "key.factionapi.minion_task": "Open Minion Radial Menu",
-  "key.factionapi.faction_screen": "Open Faction Screen",
+  "key.factionapi.faction_menu": "Open Faction Menu",
   "key.factionapi.skill_screen": "Open Skill Screen",
+  "key.factionapi.item_description": "Show Item Description",
 
   "minion_task.factionapi.stay": "Stay here",
   "minion_task.factionapi.defend_area": "Defend area",
@@ -178,6 +179,7 @@
 
   "subtitles.factionapi.task_complete": "Task completed",
 
+  "tooltip.factionapi.hold_shift_for_info": "Hold [%s] for Info",
   "tooltip.factionapi.faction_specifics": "Faction Specifics:",
   "tooltip.factionapi.required_skill": "Required skill: %s",
   "tooltip.factionapi.required_level": "Required level: %s",
