@@ -1,6 +1,6 @@
 # Depending on FactionApi/Vampirism in gradle
 
-To use Vampirism or FactionAPI as a compile-time dependency in your own mod, add the maven repository and the relevant artifact to your build configuration.
+To use Vampirism or FactionApi as a compile-time dependency in your own mod, add the maven repository and the relevant artifact to your build configuration.
 
 Addon mods typically only need `FactionApi-api` or `Vampirism-api`. Use the full `Vampirism` artifact only if you need access to implementation internals.
 

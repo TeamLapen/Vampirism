@@ -228,7 +228,7 @@
   "command.factionapi.failed_to_execute": "Failed to execute command. Internal error.",
   "command.factionapi.failed_to_execute.players": "Failed to execute command for %s. Internal error.",
 
-  "factionapi.configuration.title": "FactionAPI Configuration",
+  "factionapi.configuration.title": "FactionApi Configuration",
 
   "factionapi.configuration.section.factionapi.client.toml": "Client settings",
   "factionapi.configuration.section.factionapi.client.toml.title": "Client settings",
