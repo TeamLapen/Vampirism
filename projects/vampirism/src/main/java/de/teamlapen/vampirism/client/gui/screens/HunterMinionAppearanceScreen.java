@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.faction.client.gui.components.DropdownWidget;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.renderer.entities.HunterMinionRenderer;
@@ -29,7 +30,7 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
     private int minionSkinCount;
     private String minionName;
 
-    public HunterMinionAppearanceScreen(HunterMinionEntity minion, Screen backScreen) {
+    public HunterMinionAppearanceScreen(HunterMinionEntity minion, ILastScreenProvider backScreen) {
         super(NAME, minion, backScreen);
     }
 

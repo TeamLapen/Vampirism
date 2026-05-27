@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client;
 
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.gui.screens.*;
 import de.teamlapen.vampirism.client.resources.sounds.SphereSoundInstance;
@@ -59,22 +60,22 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void displayVampireMinionAppearanceScreen(VampireMinionEntity entity) {
-        openScreen(new VampireMinionAppearanceScreen(entity, Minecraft.getInstance().screen));
+        openScreen(new VampireMinionAppearanceScreen(entity, ILastScreenProvider.current()));
     }
 
     @Override
     public void displayVampireMinionStatsaScreen(VampireMinionEntity entity) {
-        openScreen(new VampireMinionStatsScreen(entity, Minecraft.getInstance().screen));
+        openScreen(new VampireMinionStatsScreen(entity, ILastScreenProvider.current()));
     }
 
     @Override
     public void displayHunterMinionAppearanceScreen(HunterMinionEntity entity) {
-        openScreen(new HunterMinionAppearanceScreen(entity, Minecraft.getInstance().screen));
+        openScreen(new HunterMinionAppearanceScreen(entity, ILastScreenProvider.current()));
     }
 
     @Override
     public void displayHunterMinionStatsScreen(HunterMinionEntity entity) {
-        openScreen(new HunterMinionStatsScreen(entity, Minecraft.getInstance().screen));
+        openScreen(new HunterMinionStatsScreen(entity, ILastScreenProvider.current()));
     }
 
     @Nullable

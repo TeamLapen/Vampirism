@@ -8,6 +8,7 @@ import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.client.IMinecraftAccessor;
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.client.gui.screens.SelectActionRadialScreen;
 import de.teamlapen.faction.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.faction.client.gui.screens.skills.SkillsScreen;
@@ -118,7 +119,7 @@ public class FactionKeys implements IMinecraftAccessor {
 
     private void openSkillScreen() {
         FactionPlayerHandler.get(player()).getCurrentSkillPlayer().ifPresent(factionPlayer -> {
-            mc().setScreen(new SkillsScreen(factionPlayer, mc().screen));
+            mc().setScreen(new SkillsScreen(factionPlayer, ILastScreenProvider.current()));
         });
     }
 

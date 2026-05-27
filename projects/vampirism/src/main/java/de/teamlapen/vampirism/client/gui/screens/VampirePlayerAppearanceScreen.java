@@ -4,6 +4,7 @@ import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.client.gui.components.DropdownWidget;
 import de.teamlapen.faction.client.gui.components.IRenderLast;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -32,7 +33,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private boolean titleGender;
 
 
-    public VampirePlayerAppearanceScreen(@Nullable Screen backScreen) {
+    public VampirePlayerAppearanceScreen(@Nullable ILastScreenProvider backScreen) {
         super(NAME, Minecraft.getInstance().player, backScreen);
     }
 

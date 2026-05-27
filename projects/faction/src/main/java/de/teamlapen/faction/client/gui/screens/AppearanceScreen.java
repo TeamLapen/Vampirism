@@ -27,12 +27,12 @@ public abstract class AppearanceScreen<T extends LivingEntity> extends Screen {
 
     protected final T entity;
     @Nullable
-    private final Screen backScreen;
+    private final ILastScreenProvider backScreen;
     protected final GridLayout layout = new GridLayout();
     @UnknownNullability
     private ImageWidget background;
 
-    public AppearanceScreen(@NotNull Component titleIn, T entity, @Nullable Screen backScreen) {
+    public AppearanceScreen(@NotNull Component titleIn, T entity, @Nullable ILastScreenProvider backScreen) {
         super(titleIn);
         this.entity = entity;
         this.backScreen = backScreen;
@@ -71,7 +71,9 @@ public abstract class AppearanceScreen<T extends LivingEntity> extends Screen {
         GridLayout buttonsLayout = innerGrid.addChild(new GridLayout(),2,0,1,2, rowHelper.newCellSettings().alignHorizontallyCenter().padding(4));
         buttonsLayout.columnSpacing(50);
         buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.back"), x -> {
-            if (this.minecraft != null && this.backScreen != null) this.minecraft.setScreen(this.backScreen);
+            if (this.minecraft != null && this.backScreen != null){
+                this.backScreen.returnToLastScreen();
+            }
         }), 0, 0, buttonsLayout.newCellSettings().alignHorizontallyCenter());
         buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.done"), x -> this.onClose()),0,1, buttonsLayout.newCellSettings().alignHorizontallyCenter());
 

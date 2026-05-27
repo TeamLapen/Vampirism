@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.client.gui.screens.MinionStatsScreen;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import net.minecraft.client.gui.screens.Screen;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class HunterMinionStatsScreen extends MinionStatsScreen<HunterMinionEntity.HunterMinionData, HunterMinionEntity> {
 
-    public HunterMinionStatsScreen(HunterMinionEntity entity, @Nullable Screen backScreen) {
+    public HunterMinionStatsScreen(HunterMinionEntity entity, @Nullable ILastScreenProvider backScreen) {
         super(entity, backScreen);
 
     }

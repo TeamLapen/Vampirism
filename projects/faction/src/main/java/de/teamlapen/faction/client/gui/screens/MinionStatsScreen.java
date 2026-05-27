@@ -34,7 +34,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     protected final Q entity;
     @Nullable
-    protected final Screen backScreen;
+    protected final ILastScreenProvider backScreen;
     private Button reset;
     protected T minionData;
 
@@ -47,7 +47,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     private StringWidget skillPointWidget;
     private final List<StatRow> statRows = new ArrayList<>();
 
-    protected MinionStatsScreen(Q entity, @Nullable Screen backScreen) {
+    protected MinionStatsScreen(Q entity, @Nullable ILastScreenProvider backScreen) {
         super(Component.translatable("gui.factionapi.minion.stats"));
         this.entity = entity;
         this.minionData = entity.getMinionData().orElseThrow();
@@ -129,7 +129,9 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         GridLayout buttonsLayout = layout.addChild(new GridLayout(),2,0,1,2, layout.newCellSettings().alignHorizontallyCenter());
         buttonsLayout.columnSpacing(20);
         buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.back"), x -> {
-            if (this.minecraft != null && this.backScreen != null) this.minecraft.setScreen(this.backScreen);
+            if (this.minecraft != null && this.backScreen != null) {
+                this.backScreen.returnToLastScreen();
+            }
         }), 0, 0, buttonsLayout.newCellSettings().alignHorizontallyCenter());
         buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.done"), x -> this.onClose()),0,1, buttonsLayout.newCellSettings().alignHorizontallyCenter());
 
