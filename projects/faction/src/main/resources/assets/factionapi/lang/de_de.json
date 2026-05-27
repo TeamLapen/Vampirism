@@ -189,7 +189,6 @@
   "command.factionapi.test.skill.not_enabled": "Fertigkeit %s wurde nicht aktiviert",
   "command.factionapi.failed_to_execute": "Interner Fehler beim Ausführen des Befehls.",
   "command.factionapi.failed_to_execute.players": "Interner Fehler beim Ausführen des Befehls %s.",
-  "factionapi.configuration.title": "FactionAPI Konfiguration",
   "factionapi.configuration.section.factionapi.client.toml": "Client-Einstellungen",
   "factionapi.configuration.section.factionapi.client.toml.title": "Client-Einstellungen",
   "factionapi.configuration.section.factionapi.common.toml": "Common settings",
