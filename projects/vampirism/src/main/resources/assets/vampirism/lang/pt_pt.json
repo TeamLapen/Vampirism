@@ -22,7 +22,7 @@
   "action.vampirism.sunscreen": "Protetor solar",
   "skill.vampirism.night_vision": "Visão noturna",
   "advancement.vampirism": "Vampirismo",
-  "key.vampirism.category.main": "Vampirismo",
+  "key.category.vampirism.main": "Vampirismo",
   "minion_task.vampirism.collect_blood": "Colheita de sangue",
   "gui.vampirism.revertback.head": "Voltar a ser humano",
   "gui.vampirism.revertback.desc": "Vais perder os teus níveis e morrer",
