@@ -13,8 +13,8 @@ on:
       - 'version/*'
       - 'translate/*'
 
-env:
-  ORG_GRADLE_PROJECT_vampirism_factions_source_dependency: false
+#env:
+#  ORG_GRADLE_PROJECT_vampirism_factions_source_dependency: false
 
 jobs:
   build:
