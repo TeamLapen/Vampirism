@@ -6,6 +6,7 @@
     "base": "vampirism:block/candle_stick_base"
   },
   "render_type": "minecraft:cutout",
+  "ambientocclusion": false,
   "elements": [
     {
       "from": [5, 0, 5],
