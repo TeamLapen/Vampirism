@@ -22,7 +22,7 @@
   "skill.vampirism.blood_charge": "Vér Feltöltés",
   "skill.vampirism.water_resistance": "Víz ellenállás",
   "advancement.vampirism": "Vámpirizmus",
-  "key.vampirism.category.main": "Vámpirizmus",
+  "key.category.vampirism.main": "Vámpirizmus",
   "minion_task.vampirism.collect_blood": "Vér Gyűjtése",
   "gui.vampirism.revertback.head": "Vissza változás emberré",
   "gui.vampirism.revertback.desc": "Elfogod veszíteni az összes szinted és meghalsz",
