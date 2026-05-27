@@ -32,10 +32,10 @@ public class ChandelierBlock extends CandleHolderBlock {
     private final static VoxelShape SHAPE = Block.box(1, 0, 1, 15, 16, 15);
 
     private static final ImmutableList<Vec3> PARTICLE_OFFSET = ImmutableList.of(
-            new Vec3(2 / 16d, 10.75 / 16d, 2 / 16d),
-            new Vec3(14 / 16d, 10.75 / 16d, 2 / 16d),
-            new Vec3(14 / 16d, 10.75 / 16d, 14 / 16d),
-            new Vec3(2 / 16d, 10.75 / 16d, 14 / 16d)
+            new Vec3(3 / 16d, 11.75 / 16d, 3 / 16d),
+            new Vec3(13 / 16d, 11.75 / 16d, 3 / 16d),
+            new Vec3(13 / 16d, 11.75 / 16d, 13 / 16d),
+            new Vec3(3 / 16d, 11.75 / 16d, 13 / 16d)
     );
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
