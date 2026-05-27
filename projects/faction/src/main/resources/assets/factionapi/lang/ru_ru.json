@@ -195,7 +195,6 @@
   "command.factionapi.test.skill.not_enabled": "Навык %s не включен",
   "command.factionapi.failed_to_execute": "Не удалось выполнить команду. Внутренняя ошибка.",
   "command.factionapi.failed_to_execute.players": "Не удалось выполнить команду %s. Внутренняя ошибка.",
-  "factionapi.configuration.title": "Конфигурация FactionAPI",
   "factionapi.configuration.section.factionapi.client.toml": "Клиентские настройки",
   "factionapi.configuration.section.factionapi.client.toml.title": "Клиентские настройки",
   "factionapi.configuration.section.factionapi.common.toml": "Общие настройки",
