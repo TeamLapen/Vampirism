@@ -1,12 +1,13 @@
-package de.teamlapen.faction.client.config.values;
+package de.teamlapen.faction.client.config.preferences;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.JsonOps;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.actions.IAction;
+import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.minion.IFactionMinionTask;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.api.world.entities.minion.INoGlobalCommandTask;
@@ -14,42 +15,46 @@ import de.teamlapen.faction.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.util.ModCodecs;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.StrictJsonParser;
-import net.neoforged.neoforge.common.ModConfigSpec;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class MinionTaskOrderValue {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MinionTaskOrderValue.class);
-    private static final Codec<Map<Holder<? extends IFaction<?>>, List<SelectMinionTaskRadialScreen.Entry>>> CODEC = Codec.lazyInitialized(() -> Codec.simpleMap(ModCodecs.faction(), EntryCodec.CODEC.listOf(), FactionRegistries.FACTION.get()).codec());
+public class MinionTaskOrder extends PreferenceValue<Map<Holder<? extends IFaction<?>>, List<SelectMinionTaskRadialScreen.Entry>>> {
 
-    public final ModConfigSpec.ConfigValue<String> order;
-    private Map<Holder<? extends IFaction<?>>, List<SelectMinionTaskRadialScreen.Entry>> minionTasks = new HashMap<>();
+    private static final Identifier ID = FIdentifier.mod("minion_task_order");
+    private static final Codec<Map<Holder<? extends IFaction<?>>, List<SelectMinionTaskRadialScreen.Entry>>> CODEC = Codec.unboundedMap(
+            ModCodecs.faction(),
+            EntryCodec.CODEC.listOf()
+    );
+    private final RegistryAccess registryAccess;
 
-    public MinionTaskOrderValue(ModConfigSpec.Builder builder, String path) {
-        this.order = builder.define(path, "{}", this::test);
+    public MinionTaskOrder(RegistryAccess registryAccess) {
+        super(ID, CODEC, registryAccess, () -> provideDefault(registryAccess));
+        this.registryAccess = registryAccess;
     }
 
-    private boolean test(Object o) {
-        if (!(o instanceof String string)) return false;
-        return CODEC.parse(JsonOps.INSTANCE, StrictJsonParser.parse(string)).result().isPresent();
-    }
+    private static Map<Holder<? extends IFaction<?>>, List<SelectMinionTaskRadialScreen.Entry>> provideDefault(RegistryAccess registryAccess) {
+        Registry<IFaction<?>> iFactions = registryAccess.lookupOrThrow(FactionRegistries.Keys.FACTION);
+        Map<Holder<? extends IFaction<?>>, List<SelectMinionTaskRadialScreen.Entry>> map = iFactions.listElements().collect(Collectors.toMap(x -> x, faction -> new ArrayList<>()));
+        map.forEach((faction, list) -> list.addAll(SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.values()));
+        registryAccess.lookupOrThrow(FactionRegistries.Keys.MINION_TASK)
+                .listElements().forEach(task -> {
+                    map.entrySet().stream().filter(x -> !(task.value() instanceof INoGlobalCommandTask<?, ?>) && (!(task.value() instanceof IFactionMinionTask<?, ?> s) || IFaction.is(x.getKey(), s.getFaction()))).forEach(list -> list.getValue().add(new SelectMinionTaskRadialScreen.Entry(task)));
+                });
 
-    public List<SelectMinionTaskRadialScreen.Entry> get(Holder<? extends IFaction<?>> faction) {
-        if(this.minionTasks.containsKey(faction)){
-            return this.minionTasks.get(faction);
-        }
-        return setAndSave(faction, allowedValues(faction));
+        return map;
     }
 
     public List<SelectMinionTaskRadialScreen.Entry> allowedValues(Holder<? extends IFaction<?>> faction) {
-        return Stream.concat(ModRegistries.MINION_TASKS.listElements()
+        Registry<IMinionTask<?, ?>> registry = registryAccess.lookupOrThrow(FactionRegistries.Keys.MINION_TASK);
+        return Stream.concat(registry.listElements()
                                 .filter(x -> !(x.value() instanceof INoGlobalCommandTask<?, ?>))
                                 .filter(x -> !(x.value() instanceof IFactionMinionTask<?, ?> factionTask) || IFaction.is(faction, factionTask.getFaction()))
                                 .map(SelectMinionTaskRadialScreen.Entry::new),
@@ -57,28 +62,26 @@ public class MinionTaskOrderValue {
                 .toList();
     }
 
-    /**
-     * @param faction The minion faction to save the given list for
-     * @param tasks A list of available minions tasks
-     * return The given task list
-     */
-    public List<SelectMinionTaskRadialScreen.Entry> setAndSave(Holder<? extends IFaction<?>> faction, List<SelectMinionTaskRadialScreen.Entry> tasks) {
-        this.minionTasks.put(faction, tasks);
+    public boolean isAllowed(Holder<? extends IFaction<?>> faction, SelectMinionTaskRadialScreen.Entry task) {
+        return SelectMinionTaskRadialScreen.CUSTOM_ENTRIES.containsKey(task.getId()) ||
+                (task.getTask() != null && ((!(task.getTask().value() instanceof INoGlobalCommandTask<?,?>) || (!(task.getTask().value() instanceof IFactionMinionTask<?,?> fac) || IFaction.is(faction, fac.getFaction())))));
+    }
+
+    public <T extends Holder<? extends IFaction<?>>> List<SelectMinionTaskRadialScreen.Entry> getOrder(T faction) {
+        return this.getValue().getOrDefault(faction, List.of());
+    }
+
+    public <T extends Holder<? extends IFaction<?>>> void update(T faction,  List<SelectMinionTaskRadialScreen.Entry> order) {
+        List<SelectMinionTaskRadialScreen.Entry> tasks = new ArrayList<>();
+        for (SelectMinionTaskRadialScreen.Entry holder : order) {
+            if(isAllowed(faction, holder)) {
+                tasks.add(holder);
+            }
+        }
+        Map<Holder<? extends IFaction<?>>,  List<SelectMinionTaskRadialScreen.Entry>> value = new HashMap<>(getValue());
+        value.put(faction, List.copyOf(tasks));
+        setValue(Map.copyOf(value));
         save();
-        return tasks;
-    }
-
-    public void save() {
-        CODEC.encodeStart(JsonOps.INSTANCE, this.minionTasks)
-                .resultOrPartial(error -> LOGGER.error("Failed to encode minion tasks: {}", error))
-                .ifPresent(json -> this.order.set(json.toString()));
-    }
-
-    public void refresh() {
-        var result = CODEC.parse(JsonOps.INSTANCE, StrictJsonParser.parse(this.order.get()));
-        this.minionTasks = result
-                .resultOrPartial(error -> LOGGER.error("Failed to parse minion task order: {}\n", error)).map(HashMap::new)
-                .orElseGet(HashMap::new);
     }
 
     private static class EntryCodec implements Codec<SelectMinionTaskRadialScreen.Entry> {

@@ -3,6 +3,7 @@ package de.teamlapen.faction.common.config;
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.Services;
 import de.teamlapen.faction.client.config.ClientConfig;
+import de.teamlapen.faction.client.config.preferences.UserPreferences;
 import de.teamlapen.faction.client.config.values.ColorConfigValue;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -36,6 +37,10 @@ public class FactionConfig extends Services {
 
     public static ClientConfig client() {
         return FactionsMod.config().client.config();
+    }
+
+    public static UserPreferences preferences() {
+        return UserPreferences.get();
     }
 
     public static ServerConfig server() {

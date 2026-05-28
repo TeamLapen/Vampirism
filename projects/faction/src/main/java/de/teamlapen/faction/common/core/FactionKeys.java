@@ -12,6 +12,7 @@ import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.client.gui.screens.SelectActionRadialScreen;
 import de.teamlapen.faction.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.faction.client.gui.screens.skills.SkillsScreen;
+import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionKeys;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
@@ -106,9 +107,14 @@ public class FactionKeys implements IMinecraftAccessor {
         long t = System.currentTimeMillis();
         if (t - this.actionTriggerTime.getOrDefault(key, 0) > ACTION_BUTTON_COOLDOWN) {
             this.actionTriggerTime.put(key, t);
+
             if (player().isAlive()) {
                 FactionPlayerHandler handler = FactionPlayerHandler.get(player());
-                toggleBoundAction(handler.factionPlayer(), handler.getBoundAction(key));
+                @Nullable
+                Holder<? extends IAction<?>> action = FactionConfig.preferences().actionBindings().getOrder(handler.getFaction(), key);
+                if (action != null) {
+                    toggleBoundAction(handler.factionPlayer(), action);
+                }
             }
         }
     }
@@ -136,7 +142,7 @@ public class FactionKeys implements IMinecraftAccessor {
         }
     }
 
-    private void toggleBoundAction(IFactionPlayer<?> player, @Nullable Holder<IAction<?>> action) {
+    private void toggleBoundAction(IFactionPlayer<?> player, @Nullable Holder<? extends IAction<?>> action) {
         if (action == null) {
             player.asEntity().sendOverlayMessage(Component.translatable("message.factionapi.action.not_bound", "/factions bind-action"));
         } else {

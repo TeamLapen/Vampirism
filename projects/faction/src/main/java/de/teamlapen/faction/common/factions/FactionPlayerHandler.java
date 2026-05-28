@@ -69,7 +69,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     }
 
     private final Player player;
-    private final Map<ActionKeys, Holder<IAction<?>>> boundActions = new HashMap<>();
     private Holder<? extends IPlayableFaction<?>> currentFaction = DefaultFactions.NEUTRAL;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
@@ -96,14 +95,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     @Override
     public boolean canLeaveFaction() {
         return currentFaction.value().getPlayerCapability(player).canLeaveFaction();
-    }
-
-    /**
-     * @return action if bound
-     */
-    @Nullable
-    public Holder<IAction<?>> getBoundAction(ActionKeys key) {
-        return this.boundActions.get(key);
     }
 
     @Override
@@ -235,17 +226,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
                 holder.unwrapKey().ifPresent(manager::resetUniqueTask);
             });
         });
-    }
-
-    public void setBoundAction(ActionKeys key, @Nullable Holder<IAction<?>> boundAction, boolean sync) {
-        if (boundAction == null) {
-            this.boundActions.remove(key);
-        } else {
-            this.boundActions.put(key, boundAction);
-        }
-        if (sync) {
-            sync();
-        }
     }
 
     public boolean setTitleGender(boolean female) {
@@ -401,11 +381,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         registerProperty(FIdentifier.mod("level")).simple(0, () -> this.currentLevel, l -> this.currentLevel = l);
         registerProperty(FIdentifier.mod("lord_level")).simple(0, () -> this.currentLordLevel, l -> this.currentLordLevel = l);
         registerProperty(FIdentifier.mod("title_gender")).simple(IPlayableFaction.TitleGender.CODEC).defaultValue(IPlayableFaction.TitleGender.UNKNOWN).provider(() -> this.titleGender).commonLoader(l -> this.titleGender = l, Enum::compareTo).register();
-        registerProperty(FIdentifier.mod("bound_action")).list(ActionBinding.CODEC).provider(() -> this.boundActions.entrySet().stream().map(s -> new ActionBinding(s.getKey(), s.getValue())).toList()).commonLoader((l) -> {
-            this.boundActions.clear();
-            this.boundActions.putAll(l.stream().collect(Collectors.toMap(ActionBinding::key, ActionBinding::action)));
-            return true;
-        });
     }
 
     @Override
@@ -413,10 +388,10 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         this.player.refreshDisplayName();
     }
 
-    private record ActionBinding(ActionKeys key, Holder<IAction<?>> action) {
+    private record ActionBinding(ActionKeys key, Holder<? extends IAction<?>> action) {
         public static final Codec<ActionBinding> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ActionKeys.CODEC.fieldOf("key").forGetter(ActionBinding::key),
-                ModRegistries.ACTIONS.holderByNameCodec().fieldOf("action").forGetter(ActionBinding::action)
+                ((Codec<Holder<? extends IAction<?>>>) (Object) ModRegistries.ACTIONS.holderByNameCodec()).fieldOf("action").forGetter(ActionBinding::action)
         ).apply(instance, ActionBinding::new));
     }
 

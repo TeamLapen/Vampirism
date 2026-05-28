@@ -6,6 +6,7 @@ import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionKeys;
+import de.teamlapen.faction.common.network.packets.server.ClientboundActionBindingPacket;
 import de.teamlapen.faction.common.server.commands.arguments.ActionArgument;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -27,8 +28,7 @@ public class BindActionCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int bindAction(CommandContext<CommandSourceStack> context, ServerPlayer asPlayer, ActionKeys key, Holder<IAction<?>> action) {
-        FactionPlayerHandler handler = FactionPlayerHandler.get(asPlayer);
-        handler.setBoundAction(key, action, true);
+        asPlayer.connection.send(new ClientboundActionBindingPacket(key, action));
         context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.bind_action.success", action.value().getName(), key.ordinal() + 1), false);
         return 0;
     }

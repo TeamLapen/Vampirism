@@ -2,15 +2,19 @@ package de.teamlapen.faction.client.network;
 
 import de.teamlapen.faction.client.FactionsClientMod;
 import de.teamlapen.faction.client.gui.screens.SelectMinionScreen;
+import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.skills.ClientSkillTreeData;
 import de.teamlapen.faction.common.factions.skills.ClientboundSkillTreePacket;
 import de.teamlapen.faction.common.network.packets.client.*;
+import de.teamlapen.faction.common.network.packets.server.ClientboundActionBindingPacket;
 import de.teamlapen.faction.common.world.inventory.FactionMenu;
 import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -56,5 +60,12 @@ public class FactionClientPayloadHandler {
 
     private static void openScreen(Screen screen) {
         Minecraft.getInstance().setScreen(screen);
+    }
+
+    public static void handleActionBindingPacket(ClientboundActionBindingPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var player = FactionPlayerHandler.get(context.player());
+            FactionConfig.preferences().actionBindings().update(player.getFaction(), msg.actionBindingId(), msg.action());
+        });
     }
 }

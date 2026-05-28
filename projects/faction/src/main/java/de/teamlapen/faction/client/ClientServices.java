@@ -5,7 +5,7 @@ import de.teamlapen.faction.client.core.*;
 import de.teamlapen.faction.client.entity.ClientEventHandler;
 import de.teamlapen.faction.client.gui.overlay.CustomBossEventOverlay;
 import de.teamlapen.faction.client.gui.screens.ScreenEventHandler;
-import de.teamlapen.faction.client.world.ClientLevelEventHandler;
+import de.teamlapen.faction.client.world.ClientConnectionEventHandler;
 import de.teamlapen.faction.common.core.FactionKeys;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -16,7 +16,7 @@ public class ClientServices extends Services {
     private final ScreenEventHandler screenEventHandler = new ScreenEventHandler();
     private final FactionKeys modKeys = new FactionKeys();
     private final CustomBossEventOverlay bossInfoOverlay = new CustomBossEventOverlay();
-    private final ClientLevelEventHandler worldEventHandler = new ClientLevelEventHandler();
+    private final ClientConnectionEventHandler worldEventHandler = new ClientConnectionEventHandler();
     private final ClientEventHandler entityEventHandler = new ClientEventHandler();
     private final DescriptionTooltips descriptionTooltips = new DescriptionTooltips();
 

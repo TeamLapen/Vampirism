@@ -5,7 +5,8 @@ import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.faction.client.config.values.ActionOrderValue;
+import de.teamlapen.faction.client.config.preferences.ActionBindings;
+import de.teamlapen.faction.client.config.preferences.ActionOrder;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.components.ColoredImageWidget;
 import de.teamlapen.faction.client.gui.components.EmptyComponent;
@@ -14,7 +15,6 @@ import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionKeys;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionKeys;
-import de.teamlapen.faction.common.network.packets.server.ServerboundActionBindingPacket;
 import de.teamlapen.faction.common.util.IntReference;
 import de.teamlapen.faction.common.util.ItemOrdering;
 import net.minecraft.client.KeyMapping;
@@ -38,34 +38,35 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
-public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends ReorderingGuiRadialMenu<Holder<IAction<?>>> {
+public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends ReorderingGuiRadialMenu<Holder<? extends IAction<?>>> {
 
     public static void show() {
         FactionPlayerHandler.get(Minecraft.getInstance().player).getCurrentSkillPlayer().ifPresent(factionPlayer -> Minecraft.getInstance().setScreen(new EditSelectActionScreen<>(factionPlayer)));
     }
 
-    private static void drawActionPart(@Nullable Holder<IAction<?>> action, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
+    private static void drawActionPart(@Nullable Holder<? extends IAction<?>> action, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
         if (action == null) return;
         GuiRenderer.blit(graphics, getActionIcon(action), posX, posY, 16, 16, 16, 16);
     }
 
-    private static Identifier getActionIcon(Holder<IAction<?>> action) {
+    private static Identifier getActionIcon(Holder<? extends IAction<?>> action) {
         return action.unwrapKey().map(ResourceKey::identifier).map(s -> s.withPath("textures/actions/" + s.getPath() + ".png")).orElseThrow();
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends ISkillPlayer<T>> boolean isEnabled(T player, @NotNull Holder<IAction<?>> item) {
-        return player.getActionHandler().isActionUnlocked((Holder<IAction<T>>) (Object) item);
+    private static <T extends ISkillPlayer<T>> boolean isEnabled(T player, @NotNull Holder<? extends IAction<?>> item) {
+        return player.getActionHandler().isActionUnlocked((Holder<? extends IAction<T>>) (Object) item);
     }
 
-    private static <T extends IFactionPlayer<T>> ItemOrdering<Holder<IAction<?>>> getOrdering(T player) {
-        ActionOrderValue actionOrder = FactionConfig.client().actionOrder;
-        return new ItemOrdering<>(actionOrder.get(player.getFaction()), new ArrayList<>(), () -> actionOrder.allowedValues(player.getFaction()));
+    private static <T extends IFactionPlayer<T>> ItemOrdering<Holder<? extends IAction<?>>> getOrdering(T player) {
+        ActionOrder actionOrder = FactionConfig.preferences().actionOrder();
+        return new ItemOrdering<>(actionOrder.getOrder(player.getFaction()), new ArrayList<>(), () -> actionOrder.allowedActions(player.getFaction()));
     }
 
-    private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<Holder<IAction<?>>> ordering) {
-        FactionConfig.client().actionOrder.setAndSave(player.getFaction(), ordering.getOrdering());
+    private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<Holder<? extends IAction<?>>> ordering) {
+        FactionConfig.preferences().actionOrder().update(player.getFaction(), ordering.getOrdering());
     }
 
     private KeyBindingList keyBindingList;
@@ -117,8 +118,8 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
 
     private void resetKeyBindings() {
         FactionKeys.ACTION_KEYS.keySet().forEach(key -> {
-            FactionPlayerHandler.get(getMinecraft().player).setBoundAction(key, null, false);
-            FactionsMod.proxy.sendToServer(new ServerboundActionBindingPacket(key));
+            FactionPlayerHandler handler = FactionPlayerHandler.get(getMinecraft().player);
+            FactionConfig.preferences().actionBindings().update(handler.getFaction(), Map.of());
         });
         this.keyBindingList.clearActions();
     }
@@ -134,7 +135,8 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         public KeyBindingList(int pWidth, int pHeight) {
             super(Minecraft.getInstance(), pWidth, pHeight, 0, 20);
             FactionPlayerHandler handler = FactionPlayerHandler.get(Minecraft.getInstance().player);
-            replaceEntries(FactionKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), handler.getBoundAction(pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.actionKey.ordinal())).toList());
+            ActionBindings actionBindings = FactionConfig.preferences().actionBindings();
+            replaceEntries(FactionKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), actionBindings.getOrder(handler.getFaction(), pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.actionKey.ordinal())).toList());
         }
 
         @Override
@@ -176,12 +178,12 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
             private static final WidgetSprites REMOVE_ICON = new WidgetSprites(FIdentifier.mod("widget/remove"), FIdentifier.mod("widget/remove_highlighted"));
 
             private final ActionKeys actionKey;
-            private Holder<IAction<?>> action;
+            private Holder<? extends IAction<?>> action;
             private final StringWidget stringWidget;
             private ImageWidget imageWidget;
             private final ImageButton imageButton;
 
-            public KeyBindingSetting(ActionKeys actionKey, KeyMapping keyMapping, Holder<IAction<?>> action) {
+            public KeyBindingSetting(ActionKeys actionKey, KeyMapping keyMapping, Holder<? extends IAction<?>> action) {
                 this.actionKey = actionKey;
                 this.stringWidget = new StringWidget(0, 0, 80, 20, keyMapping.getTranslatedKeyMessage(), Minecraft.getInstance().font);
                 this.imageButton = new ImageButton(0, 0, 16, 16, REMOVE_ICON, (a) -> switchAction(null));
@@ -201,13 +203,12 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
                 return false;
             }
 
-            private void switchAction(@Nullable Holder<IAction<?>> action) {
+            private void switchAction(@Nullable Holder<? extends IAction<?>> action) {
                 applyAction(action);
-                FactionsMod.proxy.sendToServer(new ServerboundActionBindingPacket(this.actionKey, this.action));
-                FactionPlayerHandler.get(Minecraft.getInstance().player).setBoundAction(this.actionKey, this.action, false);
+                FactionConfig.preferences().actionBindings().update(FactionPlayerHandler.get(Minecraft.getInstance().player).getFaction(), this.actionKey, this.action);
             }
 
-            private void applyAction(@Nullable Holder<IAction<?>> action) {
+            private void applyAction(@Nullable Holder<? extends IAction<?>> action) {
                 this.action = action;
                 if (action != null) {
                     this.imageWidget = ImageWidget.texture(16, 16, getActionIcon(action), 16, 16);
