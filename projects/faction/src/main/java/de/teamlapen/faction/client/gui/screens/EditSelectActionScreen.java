@@ -1,6 +1,5 @@
 package de.teamlapen.faction.client.gui.screens;
 
-import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
@@ -9,7 +8,7 @@ import de.teamlapen.faction.client.config.preferences.ActionBindings;
 import de.teamlapen.faction.client.config.preferences.ActionOrder;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.components.ColoredImageWidget;
-import de.teamlapen.faction.client.gui.components.EmptyComponent;
+import de.teamlapen.gui.components.EmptyComponent;
 import de.teamlapen.faction.client.gui.screens.radial.edit.ReorderingGuiRadialMenu;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionKeys;

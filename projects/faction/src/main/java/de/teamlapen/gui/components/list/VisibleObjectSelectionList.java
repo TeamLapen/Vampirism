@@ -1,4 +1,4 @@
-package de.teamlapen.faction.client.gui.components;
+package de.teamlapen.gui.components.list;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A simple {@link ObjectSelectionList} that can be hidden
  */
-public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.Entry<T>> extends ObjectSelectionList<T> {
+public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.Entry<T>> extends ObjectSelectionListExtended<T> {
 
     public VisibleObjectSelectionList(Minecraft pMinecraft, int pWidth, int pHeight, int pY0, int pItemHeight) {
         super(pMinecraft, pWidth, pHeight, pY0, pItemHeight);
@@ -43,7 +43,7 @@ public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.E
     }
 
     @Override
-    public boolean mouseDragged(@NotNull MouseButtonEvent event, double pDragX, double pDragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double pDragX, double pDragY) {
         if (this.visible) {
             return super.mouseDragged(event, pDragX, pDragY);
         } else {
@@ -52,7 +52,7 @@ public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.E
     }
 
     @Override
-    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         if (this.visible) {
             return super.mouseReleased(event);
         } else {
@@ -61,7 +61,7 @@ public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.E
     }
 
     @Override
-    public boolean keyPressed(@NotNull KeyEvent event) {
+    public boolean keyPressed(KeyEvent event) {
         if (this.visible) {
             return super.keyPressed(event);
         } else {
@@ -70,7 +70,7 @@ public abstract class VisibleObjectSelectionList<T extends ObjectSelectionList.E
     }
 
     @Override
-    public boolean keyReleased(@NotNull KeyEvent event) {
+    public boolean keyReleased(KeyEvent event) {
         if (this.visible) {
             return super.keyReleased(event);
         } else {

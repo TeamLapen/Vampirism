@@ -1,4 +1,4 @@
-package de.teamlapen.faction.client.gui.components;
+package de.teamlapen.gui.components;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.layouts.LayoutElement;
@@ -55,7 +55,7 @@ public class EmptyComponent implements LayoutElement {
     }
 
     @Override
-    public void visitWidgets(@NotNull Consumer<AbstractWidget> consumer) {
+    public void visitWidgets(Consumer<AbstractWidget> consumer) {
 
     }
 }

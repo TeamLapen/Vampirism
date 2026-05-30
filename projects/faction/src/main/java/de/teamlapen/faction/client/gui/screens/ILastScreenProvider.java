@@ -11,8 +11,18 @@ public interface ILastScreenProvider {
 
     void returnToLastScreen();
 
+    default boolean hasLastScreen() {
+        return false;
+    }
+
+    ILastScreenProvider NONE = new ScreenProvider(null);
+
     static ILastScreenProvider of(Screen screen) {
         return new ScreenProvider(screen);
+    }
+
+    static ILastScreenProvider of() {
+        return NONE;
     }
 
     static ILastScreenProvider current() {
@@ -25,6 +35,12 @@ public interface ILastScreenProvider {
         public void returnToLastScreen() {
             Minecraft.getInstance().setScreen(lastScreen);
         }
+
+        @Override
+        public boolean hasLastScreen() {
+            return lastScreen != null;
+        }
     }
+
 
 }

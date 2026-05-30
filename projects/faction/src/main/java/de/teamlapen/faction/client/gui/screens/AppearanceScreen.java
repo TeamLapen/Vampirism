@@ -1,7 +1,7 @@
 package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.client.gui.components.IRenderLast;
+import de.teamlapen.gui.components.IRenderLast;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageWidget;

@@ -81,7 +81,6 @@ public class SkillsScreen extends Screen {
 
     @Override
     protected void init() {
-        assert this.minecraft != null;
         this.tabs.clear();
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;

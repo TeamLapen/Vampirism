@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.client.gui.components.DropdownWidget;
-import de.teamlapen.faction.client.gui.components.IRenderLast;
+import de.teamlapen.gui.components.DropdownWidget;
+import de.teamlapen.gui.components.IRenderLast;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
 import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
@@ -16,7 +16,6 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;

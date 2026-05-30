@@ -2,8 +2,8 @@ package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.gui.GuiRenderer;
-import de.teamlapen.faction.client.gui.components.DropdownWidget;
-import de.teamlapen.faction.client.gui.components.IRenderLast;
+import de.teamlapen.gui.components.DropdownWidget;
+import de.teamlapen.gui.components.IRenderLast;
 import de.teamlapen.faction.common.world.inventory.MinionContainer;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
@@ -44,12 +44,6 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
     }
 
     @Override
-    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
-        this.extractTooltip(graphics, mouseX, mouseY);
-    }
-
-    @Override
     public void extractContents(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
         super.extractContents(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
         for (Renderable renderable : this.renderables) {
@@ -86,9 +80,8 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
 
     @Override
     protected void extractLabels(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        graphics.text(this.font, title, 5, 6, 0x404040, false);
-        graphics.text(this.font, Component.translatable("gui.factionapi.minion.active_task"), 120, 10, 0x404040, false);
-
+        graphics.text(this.font, title, 5, 6, 0xff404040, false);
+        graphics.text(this.font, Component.translatable("gui.factionapi.minion.active_task"), 120, 10, 0xff404040, false);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.faction.client.gui.components.DropdownWidget;
+import de.teamlapen.gui.components.DropdownWidget;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
 import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -13,7 +13,6 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 

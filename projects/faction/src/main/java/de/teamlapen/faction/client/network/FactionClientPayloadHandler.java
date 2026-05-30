@@ -1,20 +1,23 @@
 package de.teamlapen.faction.client.network;
 
+import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.client.FactionsClientMod;
-import de.teamlapen.faction.client.gui.screens.SelectMinionScreen;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.skills.ClientSkillTreeData;
 import de.teamlapen.faction.common.factions.skills.ClientboundSkillTreePacket;
 import de.teamlapen.faction.common.network.packets.client.*;
 import de.teamlapen.faction.common.network.packets.server.ClientboundActionBindingPacket;
+import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.faction.common.world.inventory.FactionMenu;
 import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
+import de.teamlapen.gui.components.IComponentWithAction;
+import de.teamlapen.gui.screens.SelectionScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -34,7 +37,9 @@ public class FactionClientPayloadHandler {
     }
 
     public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> openScreen(new SelectMinionScreen(msg.action(), msg.minions())));
+        context.enqueueWork(() -> openScreen(new SelectionScreen(Component.translatable("gui.factionapi.select_minion"), msg.minions().stream().map(x -> IComponentWithAction.of(x.getSecond(), () -> {
+            FactionsMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(x.getFirst(), ServerboundSelectMinionTaskPacket.RECALL));
+        })).toList())));
     }
 
     public static void handleTaskPacket(ClientboundTaskPacket msg, IPayloadContext context) {

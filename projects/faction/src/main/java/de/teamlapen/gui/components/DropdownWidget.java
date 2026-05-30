@@ -1,4 +1,4 @@
-package de.teamlapen.faction.client.gui.components;
+package de.teamlapen.gui.components;
 
 import de.teamlapen.faction.api.util.FIdentifier;
 import net.minecraft.client.Minecraft;
@@ -11,6 +11,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
     }
 
     @Override
-    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // Check if mouse left the entire dropdown area and close if needed
         if (expanded && !isMouseOverDropdownArea(mouseX, mouseY)) {
             expanded = false;
@@ -78,7 +79,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
         }
     }
 
-    public void renderLast(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void renderLast(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (this.expanded) {
             renderDropdownList(graphics, mouseX, mouseY);
         }
@@ -103,7 +104,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
         return false;
     }
 
-    private void renderDropdownList(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void renderDropdownList(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         int visibleItems = Math.min(maxVisibleItems, entries.size());
         int listHeight = visibleItems * itemHeight;
         int listY = this.getY() + this.itemHeight;
@@ -155,7 +156,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
         }
     }
 
-    private void renderScrollbar(@NotNull GuiGraphicsExtractor graphics, int listY, int listHeight) {
+    private void renderScrollbar(GuiGraphicsExtractor graphics, int listY, int listHeight) {
         int scrollbarWidth = 4;
         int scrollbarX = this.getX() + this.getWidth() - scrollbarWidth - 2;
 
@@ -170,7 +171,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
     }
 
     @Override
-    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubleClick) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         if (!this.active || !this.visible) {
             return false;
         }
@@ -289,7 +290,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
     }
 
     @Override
-    protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
+    protected void updateWidgetNarration(NarrationElementOutput output) {
         output.add(NarratedElementType.TITLE, this.getMessage());
     }
 
@@ -304,7 +305,9 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
         private int maxVisibleItems = 5;
         private List<Component> items = new ArrayList<>();
         private int initialSelection = 0;
+        @Nullable
         private Consumer<Integer> onSelect;
+        @Nullable
         private BiConsumer<Integer, Boolean> onHover;
 
         public Builder(int x, int y) {

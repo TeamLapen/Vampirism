@@ -1,6 +1,7 @@
-package de.teamlapen.faction.client.gui.components;
+package de.teamlapen.gui.components.list;
 
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.gui.components.IComponentWithAction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -8,11 +9,11 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSelectionList<T> {
@@ -25,27 +26,10 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
     protected void extractListBackground(GuiGraphicsExtractor graphics) {
     }
 
-    //    @Override
-//    protected void renderDecorations(@NotNull GuiGraphicsExtractor graphics, int pMouseX, int pMouseY) {
-//        graphics.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getBottom() + 4, -16777216, 0);
-//        graphics.fillGradient(this.getX(), this.getY() - 4, this.getRight() - 6, this.getBottom(), 0, -16777216);
-//    }
-
 //    @Override
-//    protected void renderItem(@NotNull GuiGraphicsExtractor graphics, int pMouseX, int pMouseY, float pPartialTick, int pIndex, int pLeft, int pTop, int pWidth, int pHeight) {
-//        super.renderItem(graphics, pMouseX, pMouseY, pPartialTick, pIndex, pLeft, pTop, pWidth - 6, pHeight);
-//    }
-
-    @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int p_283242_, int p_282891_, float p_283683_) {
-        GuiGraphicsExtractor.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getBottom(), -1072689136, -804253680);
-        super.extractWidgetRenderState(GuiGraphicsExtractor, p_283242_, p_282891_, p_283683_);
-    }
-
-//    @Override
-//    protected void renderSelection(GuiGraphicsExtractor p_283589_, int p_240142_, int p_240143_, int p_240144_, int p_240145_, int p_240146_) {
-
-    /// /        super.renderSelection(p_283589_, p_240142_,p_240143_ +6, p_240144_, p_240145_, p_240146_);
+//    public void extractWidgetRenderState(GuiGraphicsExtractor GuiGraphicsExtractor, int p_283242_, int p_282891_, float p_283683_) {
+////        GuiGraphicsExtractor.fillGradient(this.getX(), this.getY(), this.getRight() - 6, this.getBottom(), -1072689136, -804253680);
+//        super.extractWidgetRenderState(GuiGraphicsExtractor, p_283242_, p_282891_, p_283683_);
 //    }
 
     @Override
@@ -84,7 +68,9 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
         protected final int pWidth;
         protected final int pHeight;
         protected int itemHeight = 19;
-        protected List<Pair<Component, Runnable>> components;
+        @Nullable
+        protected Runnable anyClicked;
+        protected Collection<IComponentWithAction> components = List.of();
 
         public Builder(int x, int y, int pWidth, int pHeight) {
             this.x = x;
@@ -93,32 +79,40 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
             this.pHeight = pHeight;
         }
 
+        public Builder<T> anyClicked(Runnable runnable) {
+            this.anyClicked = runnable;
+            return this;
+        }
+
         public Builder<T> itemHeight(int itemHeight) {
             this.itemHeight = itemHeight;
             return this;
         }
 
-        public Builder<T> components(List<Component> components) {
-            this.components = components.stream().map(x -> Pair.of(x, (Runnable) () -> {
-            })).toList();
+        public Builder<T> displayOnly(Collection<Component> components) {
+            this.components = components.stream().map(IComponentWithAction::of).toList();
             return this;
         }
 
-        public Builder<T> componentsWithClick(List<Pair<Component, Runnable>> components) {
+        public Builder<T> components(Collection<IComponentWithAction> components) {
             this.components = components;
             return this;
         }
 
-        public Builder<T> componentsWithClick(List<Component> components, Consumer<Integer> onClick) {
-            this.components = components.stream().map(x -> Pair.<Component, Runnable>of(x, () -> onClick.accept(components.indexOf(x)))).toList();
+        public Builder<T> components(List<Component> components, Consumer<Integer> onClick) {
+            this.components = components.stream().map(x -> IComponentWithAction.of(x, () -> onClick.accept(components.indexOf(x)))).toList();
+            return this;
+        }
+
+        public Builder<T> components(List<Component> components, Consumer<Integer> onClick, BiConsumer<Integer, Boolean> onHover) {
+            this.components = components.stream().map(x -> IComponentWithAction.of(x, () -> onClick.accept(components.indexOf(x)), (b) -> onHover.accept(components.indexOf(x), b))).toList();
             return this;
         }
 
         public SimpleList<T> build() {
             SimpleList<T> simpleList = new SimpleList<>(Minecraft.getInstance(), this.pWidth, this.pHeight, this.y, this.itemHeight);
-            simpleList.setX(this.x);
             //noinspection unchecked
-            simpleList.replaceEntries(((Collection<T>) components.stream().map(x -> new Entry<T>(x.getKey(), x.getValue())).toList()));
+            simpleList.replaceEntries(((Collection<T>) components.stream().map(x -> new Entry<>(x, this.anyClicked)).toList()));
             return simpleList;
         }
     }
@@ -126,27 +120,38 @@ public class SimpleList<T extends SimpleList.Entry<T>> extends VisibleObjectSele
     public static class Entry<T extends Entry<T>> extends ObjectSelectionList.Entry<T> {
         protected static final WidgetSprites SPRITES = new WidgetSprites(FIdentifier.mc("widget/button"), FIdentifier.mc("widget/button_disabled"), FIdentifier.mc("widget/button_highlighted"));
 
-        private final Component component;
+        private final IComponentWithAction action;
+        @Nullable
         private final Runnable onClick;
+        private boolean hovered;
 
-        public Entry(Component component, Runnable onClick) {
-            this.component = component;
+        public Entry(IComponentWithAction action, @Nullable Runnable onClick) {
+            this.action = action;
             this.onClick = onClick;
         }
 
         @Override
-        public @NotNull Component getNarration() {
-            return this.component;
+        public Component getNarration() {
+            return this.action.component();
         }
 
         @Override
         public void extractContent(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, boolean isHovering, float partialTick) {
             GuiGraphicsExtractor.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(true, isHovering), getContentX(), getContentY(), getContentWidth(), getContentHeight());
+            GuiGraphicsExtractor.centeredText(Minecraft.getInstance().font, this.action.component(), getContentX() + getContentWidth() / 2, getContentY() + (getContentHeight() - 8) / 2, 0xFFFFFFFF);
+            boolean newHovered = this.isMouseOver(mouseX, mouseY);
+            if (newHovered != this.hovered) {
+                this.hovered = newHovered;
+                this.action.onHover().accept(this.hovered);
+            }
         }
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-            this.onClick.run();
+            this.action.action().run();
+            if (this.onClick != null) {
+                this.onClick.run();
+            }
             return true;
         }
     }
