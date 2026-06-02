@@ -22,6 +22,8 @@
     "PotionBrewingMixin",
     "PowderSnowBlockMixin",
     "SpawnStateMixin",
+    "StructureMixin",
+    "StructurePacketMixin",
     "SweetBerryBushBlockMixin",
     "ThrowablePotionItemMixin",
     "ThrownPotionMixin",
