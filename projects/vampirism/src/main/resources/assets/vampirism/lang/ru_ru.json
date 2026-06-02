@@ -1,7 +1,9 @@
 {
   "faction.vampirism.vampire": "Вампиры",
+  "faction.vampirism.vampire.singular": "Вампир",
   "faction.vampirism.vampire.plural": "Вампиры",
   "faction.vampirism.hunter": "Охотники",
+  "faction.vampirism.hunter.singular": "Охотник",
   "faction.vampirism.hunter.plural": "Охотники",
 
   "lord_title.vampirism.vampire.male.1": "Барон",
@@ -481,7 +483,7 @@
   "effect.vampirism.bad_omen_hunter": "Охотничье знамение",
   "effect.vampirism.lord_speed": "Скорость",
   "effect.vampirism.lord_attack_speed": "Скорость атаки",
-  "effect.vampirism.no_blood": "Жажда крови",
+  "effect.vampirism.no_blood": "Жажда",
   "effect.vampirism.bleeding": "Кровотечение",
   "effect.vampirism.crucifix_suppression": "Подавление распятий",
   "effect.vampirism.exposed": "Уязвимость",
@@ -1169,7 +1171,7 @@
   "tooltip.vampirism.arrow_clip.desc1": "Можно использовать, чтобы наполнить %s",
   "tooltip.vampirism.arrow_clip.desc2": "Нажмите ПКМ с болтами, чтобы зарядить",
   "tooltip.vampirism.crossbow.selected_ammo": "Выбранный боеприпас: %s",
-  "tooltip.vampirism.for_level": "Вплоть до %s уровня",
+  "tooltip.vampirism.for_level": "Для перехода на %s уровень",
   "tooltip.vampirism.alchemical_fire.desc1": "Не распространяется",
   "tooltip.vampirism.alchemical_fire.desc2": "Горит бесконечно",
   "tooltip.vampirism.purity": "Чистота: %s",

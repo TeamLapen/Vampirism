@@ -90,6 +90,6 @@ public class WallCandleStickBlock extends CandleHolderBlock {
 
     @Override
     public String getDescriptionKey() {
-        return BuiltInRegistries.ITEM.getKey(ModBlocks.CANDLE_STICK.asItem()).getPath() + (emptyBlock != null ? ".filled" : "");
+        return BuiltInRegistries.BLOCK.getKey(ModBlocks.CANDLE_STICK.get()).getPath() + (emptyBlock != null ? ".filled" : "");
     }
 }

@@ -1,7 +1,9 @@
 {
   "faction.vampirism.vampire": "Vampire",
+  "faction.vampirism.vampire.singular": "Vampire",
   "faction.vampirism.vampire.plural": "Vampires",
   "faction.vampirism.hunter": "Hunter",
+  "faction.vampirism.hunter.singular": "Hunter",
   "faction.vampirism.hunter.plural": "Hunters",
 
   "lord_title.vampirism.vampire.male.1": "Baron",
