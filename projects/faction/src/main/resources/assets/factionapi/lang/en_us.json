@@ -1,5 +1,7 @@
 {
   "faction.factionapi.neutral": "Neutral",
+  "faction.factionapi.neutral.singular": "Human",
+  "faction.factionapi.neutral.plural": "Humans",
 
   "block.factionapi.totem_base": "Village Totem Base",
   "block.factionapi.totem_top": "Fragile Village Totem Top",
