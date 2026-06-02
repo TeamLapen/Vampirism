@@ -10,6 +10,7 @@ import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.world.entities.EntityProperties;
+import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.sync.PropertySync;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +33,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public abstract class MinionData extends PropertySync implements IMinionData {
+public abstract class MinionData extends PropertySync implements IMinionData, IAppearanceHolder {
+
+    public static final de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<Integer> AppearanceType = new de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<>(FIdentifier.mod("type"));
+    public static final de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<Integer> SkinType = new de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<>(FIdentifier.mod("skin"));
+    public static final de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<String> NameType = new de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<>(FIdentifier.mod("name"));
 
     private static final Codec<IMinionTask.IMinionTaskDesc<MinionData>> MINION_TASK_CODEC = SafeCast.cast(IMinionTask.IMinionTaskDesc.TASK_CODEC);
     public static final int MAX_NAME_LENGTH = 15;
@@ -126,7 +131,10 @@ public abstract class MinionData extends PropertySync implements IMinionData {
         this.name = name;
     }
 
-    public void handleMinionAppearanceConfig(String name, List<Integer> data) {
+    public <T> void setAppearanceData(de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<T> id, T data) {
+        if (id.equals(NameType)) {
+            setName((String) data);
+        }
     }
 
     public boolean hasUsedSkillPoints() {

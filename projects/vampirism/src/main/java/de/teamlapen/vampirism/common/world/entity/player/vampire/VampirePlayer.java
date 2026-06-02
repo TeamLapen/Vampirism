@@ -10,6 +10,8 @@ import de.teamlapen.faction.common.factions.skills.RefinementHandler;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.sounds.ISoundReference;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
+import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
+import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
 import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -91,14 +93,13 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
+public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer, IAppearanceHolder {
     public static final Identifier NATURAL_ARMOR_UUID = VIdentifier.mod("natural_armor");
     private static final Identifier LEVEL_DAMAGE_UUID = VIdentifier.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger();
@@ -882,22 +883,22 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return this.customization.setFangType(fangType);
     }
 
-    public void setSkinData(List<Integer> data) {
-        for (int i = 0; i < data.size(); i++) {
-            switch (i) {
-                case 0:
-                    setFangType(data.get(i));
-                    break;
-                case 1:
-                    setEyeType(data.get(i));
-                    break;
-                case 2:
-                    setGlowingEyes(data.get(i) > 0);
-                    break;
-                case 3:
-                    FactionPlayerHandler.get(this.player).setTitleGender(data.get(i) > 0);
-                    break;
-            }
+    public static final AppearanceKey<Integer> FangType = new AppearanceKey<>(VIdentifier.mod("fang_type"));
+    public static final AppearanceKey<Integer> EyeType = new AppearanceKey<>(VIdentifier.mod("eye_type"));
+    public static final AppearanceKey<Integer> GlowingEye = new AppearanceKey<>(VIdentifier.mod("glowing_eye"));
+    public static final AppearanceKey<Integer> TitleGenderType = new AppearanceKey<>(VIdentifier.mod("title_gender_type"));
+
+
+    @Override
+    public <T> void setAppearanceData(AppearanceKey<T> id, T data) {
+        if (id.equals(FangType)) {
+            setFangType((Integer) data);
+        } else if (id.equals(EyeType)) {
+            setEyeType((Integer) data);
+        } else if (id.equals(GlowingEye)) {
+            setGlowingEyes(((Integer) data) > 0);
+        } else if (id.equals(TitleGenderType)) {
+            FactionPlayerHandler.get(this.player).setTitleGender(((Integer) data) > 0);
         }
     }
 
