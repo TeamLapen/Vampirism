@@ -504,7 +504,12 @@ public class ModItems {
     }
 
     private static DeferredItem<BlockItem> fromChandelier(Holder<Block> block) {
-        return fromBlock(block, (b, itemProps) -> new BlockItem(b, itemProps.useBlockDescriptionPrefix().factions$withShiftDescription(Component.translatable("tooltip.vampirism.chandelier.filled"))));
+        Identifier id = block.unwrapKey().orElseThrow().identifier();
+        return ITEMS.registerItem(id.getPath(), props -> {
+            CandleHolderBlock candleHolder = (CandleHolderBlock) block.value();
+            Component description = Component.translatable("tooltip." + id.getNamespace() + "." + candleHolder.getDescriptionKey());
+            return new BlockItem(candleHolder, props.useBlockDescriptionPrefix().factions$withShiftDescription(description));
+        });
     }
 
     private static DeferredItem<CoffinItem> fromCoffin(DeferredHolder<Block, CoffinBlock> block) {
