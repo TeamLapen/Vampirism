@@ -40,7 +40,7 @@ public class VampireBeaconScreen extends AbstractContainerScreen<VampireBeaconMe
     static final Identifier BUTTON_SPRITE = VIdentifier.mc("container/beacon/button");
     static final Identifier CONFIRM_SPRITE = VIdentifier.mc("container/beacon/confirm");
     static final Identifier CANCEL_SPRITE = VIdentifier.mc("container/beacon/cancel");
-    private static final Component EFFECT_LABEL = Component.translatable("container.vampirism.vampire_beacon.power");
+    private static final Component EFFECT_LABEL = Component.translatable("gui.vampirism.vampire_beacon.power");
     private final List<BeaconButton> beaconButtons = new ArrayList<>();
     @Nullable
     private Holder<MobEffect> primary;
