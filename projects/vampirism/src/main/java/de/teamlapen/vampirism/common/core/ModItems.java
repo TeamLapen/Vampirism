@@ -206,7 +206,7 @@ public class ModItems {
     public static final DeferredItem<SanguinareInjectionItem> INJECTION_SANGUINARE = ITEMS.registerItem("injection_sanguinare", x -> new SanguinareInjectionItem(x.factions$withShiftDescription()), props -> props.stacksTo(16).craftRemainder(SYRINGE_EMPTY.get()));
     public static final DeferredItem<SerumInjectionItem> SERUM_INJECTION = ITEMS.registerItem("serum_injection", SerumInjectionItem::new, props -> props.component(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).component(DataComponents.POTION_DURATION_SCALE, 0.25F).stacksTo(4).craftRemainder(SYRINGE_EMPTY.get()).useCooldown(8));
 
-    public static final DeferredItem<AlchemicalFireItem> ITEM_ALCHEMICAL_FIRE = ITEMS.registerItem("item_alchemical_fire", AlchemicalFireItem::new);
+    public static final DeferredItem<AlchemicalFireItem> ALCHEMICAL_FIRE = ITEMS.registerItem("alchemical_fire", props -> new AlchemicalFireItem(props.useBlockDescriptionPrefix()));
 
     public static final DeferredItem<Item> PURIFIED_GARLIC = ITEMS.registerItem("purified_garlic",  Item::new, props -> props.stacksTo(16));
     public static final DeferredItem<Item> PURE_SALT = ITEMS.registerItem("pure_salt", Item::new);

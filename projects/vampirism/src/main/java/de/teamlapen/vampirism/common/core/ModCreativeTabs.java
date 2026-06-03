@@ -407,7 +407,7 @@ public class ModCreativeTabs {
             add(HUNTER_MINION_UPGRADE_ENHANCED);
             add(HUNTER_MINION_UPGRADE_SPECIAL);
 
-            add(ITEM_ALCHEMICAL_FIRE);
+            add(ALCHEMICAL_FIRE);
         }
 
         private void addBlocks() {

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
@@ -21,7 +20,6 @@ import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.provider.base.VampirismRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -40,7 +38,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
@@ -798,7 +795,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output, modString("luck_oil"));
         alchemyTable(ModOils.SMELT)
                 .bloodOilIngredient()
-                .input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE))
+                .input(Ingredient.of(ModItems.ALCHEMICAL_FIRE))
                 .save(output, modString("smelt_oil"));
         alchemyTable(ModOils.TELEPORT)
                 .bloodOilIngredient()
@@ -814,7 +811,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output, modString("garlic_oil"));
         alchemyTable(ModOils.SPITFIRE)
                 .plantOilIngredient()
-                .input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE))
+                .input(Ingredient.of(ModItems.ALCHEMICAL_FIRE))
                 .save(output, modString("spitfire_oil"));
         alchemyTable(ModOils.BLEEDING)
                 .plantOilIngredient()
@@ -833,15 +830,15 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .withSkills(HunterSkills.BASIC_ALCHEMY)
                 .cookTime(1200)
                 .save(output);
-        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE, 4)
+        cauldronRecipe(ModItems.ALCHEMICAL_FIRE, 4)
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_NORMAL)
                 .save(output, modString("alchemical_fire_4"));
-        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE, 5)
+        cauldronRecipe(ModItems.ALCHEMICAL_FIRE, 5)
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ENHANCED)
                 .save(output, modString("alchemical_fire_5"));
-        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE, 6)
+        cauldronRecipe(ModItems.ALCHEMICAL_FIRE, 6)
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
                 .save(output, modString("alchemical_fire_6"));
@@ -1383,11 +1380,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("YZAY")
                 .pattern("XYYX")
                 .pattern("XYYX")
-                .define('X', ModItems.ITEM_ALCHEMICAL_FIRE)
+                .define('X', ModItems.ALCHEMICAL_FIRE)
                 .define('Y', GOLD_BLOCK)
                 .define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED)
                 .define('A', ModItems.STAKE)
-                .unlockedBy("fire", has(ModItems.ITEM_ALCHEMICAL_FIRE))
+                .unlockedBy("fire", has(ModItems.ALCHEMICAL_FIRE))
                 .unlockedBy("gold", has(GOLD_BLOCK))
                 .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
                 .unlockedBy("stake", has(ModItems.STAKE))
