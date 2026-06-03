@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.common.core.DefaultFactions;
 import de.teamlapen.faction.common.core.FactionBlockEntities;
 import de.teamlapen.faction.common.core.FactionBlocks;
@@ -86,7 +87,7 @@ public class TotemTopBlock extends BaseEntityBlock {
      * @param faction faction must be faction registryname;
      */
     public TotemTopBlock(boolean crafted, @Nullable Holder<? extends IFaction<?>> faction, Properties properties) {
-        super(properties);
+        super(properties.overrideDescription("block." + REFERENCE.MOD_ID + (crafted ? ".totem_top_crafted" : ".totem_top")));
         this.faction = faction;
         this.crafted = crafted;
         blocks.add(this);
