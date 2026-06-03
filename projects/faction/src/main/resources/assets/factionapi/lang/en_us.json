@@ -177,7 +177,7 @@
 
   "dialogue.factionapi.minion.can_respawn": "%s: My Lord, I have recovered",
   "dialogue.factionapi.minion.died": "%s: My Lord, I have died",
-  "dialogue.factionapi.minion.died_on_task": "My lord, I am sorry, but I died while fulfilling your task",
+  "dialogue.factionapi.minion.died_on_task": "My Lord, I am sorry, but I died while fulfilling your task",
 
   "subtitles.factionapi.task_complete": "Task completed",
 
@@ -298,9 +298,9 @@
   "factionapi.configuration.factionUnlockAllSkills": "Unlock All Skills",
   "factionapi.configuration.factionUnlockAllSkills.tooltip": "When enabled, allows unlocking all skills upon reaching max level.",
   "factionapi.configuration.factionSkillPointsPerLevel": "Skill Points Per Level",
-  "factionapi.configuration.factionSkillPointsPerLevel.tooltip": "Number of skill points awarded per level-up. Values other than 2 are unbalanced. To unlock all skills at max level, set to skill-amount ",
+  "factionapi.configuration.factionSkillPointsPerLevel.tooltip": "Number of skill points awarded per level-up. Values other than 2 are unbalanced. To unlock all skills at max level, set to skill-amount.",
   "factionapi.configuration.factionSkillPointsPerLordLevel": "Skill Points Per Lord Level",
-  "factionapi.configuration.factionSkillPointsPerLordLevel.tooltip": "Number of skill points awarded per lord level-up. Values other than 2 are unbalanced. To unlock all skills at max lord level, set to skill-amount ",
+  "factionapi.configuration.factionSkillPointsPerLordLevel.tooltip": "Number of skill points awarded per lord level-up. Values other than 2 are unbalanced. To unlock all skills at max lord level, set to skill-amount.",
 
   "factionapi.configuration.minionDeathRecoveryTime": "Death Recovery Time",
   "factionapi.configuration.minionDeathRecoveryTime.tooltip": "Time in seconds a minion needs to recover after death.",
