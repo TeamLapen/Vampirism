@@ -112,6 +112,7 @@
   "gui.factionapi.minion_stats": "Minion Stats",
   "gui.factionapi.minion_stats.level": "Level",
   "gui.factionapi.minion_stats.stat_level": "Lvl %1$s/%2$s",
+  "gui.factionapi.select_minion": "Select Minion",
 
   "gui.factionapi.radial_menu.excluded_actions": "Excluded Actions",
   "gui.factionapi.radial_menu.place_exclude": "Place here to exclude",
@@ -124,6 +125,7 @@
   "gui.factionapi.level": "Level",
   "gui.factionapi.level_short": "Lvl.",
   "gui.factionapi.title": "Title",
+
 
   "narration.factionapi.skill": "Skill",
 
