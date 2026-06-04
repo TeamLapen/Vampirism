@@ -211,12 +211,15 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
 
         if (!skills.isEmpty()) {
             var skillHandler = factionPlayerHandler == null ? null : factionPlayerHandler.getSkillHandler().orElse(null);
-            skills.stream().map(skill -> Component.translatable("tooltip.factionapi.required_skill", skill.value().getName().withStyle(style -> {
+
+            tooltips.accept(Component.empty());
+            tooltips.accept(Component.translatable("tooltip.factionapi.required_skills").withStyle(ChatFormatting.GRAY));
+
+            skills.forEach(skill -> tooltips.accept(Component.literal(" ").append(skill.value().getName().withStyle(style -> {
                 if (skillHandler == null) return style;
                 return skillHandler.isSkillEnabled(skill) ? style.withColor(ChatFormatting.DARK_GREEN) : style.withColor(ChatFormatting.DARK_RED);
-            }))).forEach(tooltips);
+            }))));
         }
-
     }
 
     public static Component getFactionRestrictionMessage(IFaction<?> faction) {

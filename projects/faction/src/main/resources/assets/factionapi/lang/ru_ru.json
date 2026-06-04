@@ -183,7 +183,7 @@
 
   "tooltip.factionapi.hold_shift_for_info": "Удерживайте [%s] для подсказки",
   "tooltip.factionapi.faction_specifics": "Особенности фракции:",
-  "tooltip.factionapi.required_skill": "Требуется навык: %s",
+  "tooltip.factionapi.required_skills": "Требуется изучить:",
   "tooltip.factionapi.required_level": "Требуется уровень: %s",
   "tooltip.factionapi.oblivion_potion.desc": "Сбрасывает навыки при употреблении",
 
