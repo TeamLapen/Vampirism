@@ -1158,7 +1158,7 @@
   "tooltip.vampirism.quarrel_teleport": "Телепортирует стрелка в точку попадания",
   "tooltip.vampirism.quarrel_bleeding": "Накладывает эффект кровотечения",
   "tooltip.vampirism.quarrel_garlic": "Накладывает эффект чеснока",
-  "tooltip.vampirism.arrow_clip.desc1": "Можно использовать, чтобы наполнить %s",
+  "tooltip.vampirism.arrow_clip.desc1": "Можно использовать, чтобы наполнить арбалет-полуавтомат",
   "tooltip.vampirism.arrow_clip.desc2": "Нажмите ПКМ с болтами, чтобы зарядить",
   "tooltip.vampirism.crossbow.selected_ammo": "Выбранный боеприпас: %s",
   "tooltip.vampirism.for_level": "Для перехода на %s уровень",

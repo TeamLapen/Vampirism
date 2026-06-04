@@ -117,9 +117,9 @@ public class SkillsScreen extends Screen {
         }));
         if ((this.factionPlayer.getLevel() < 2 || this.minecraft.player.getInventory().countItem(FactionItems.OBLIVION_POTION.get()) <= 0) && !test) {
             resetSkills.active = false;
-            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.skills.reset_consume", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
+            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.skills.reset_consume")));
         } else {
-            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.skills.reset_req", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
+            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.skills.reset_req")));
         }
     }
 

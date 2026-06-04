@@ -102,7 +102,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         this.reset = layout.addChild(new ImageButton(18,18, RESET, s -> {
             FactionsMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
-        }, Component.translatable("gui.factionapi.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))) {
+        }, Component.translatable("gui.factionapi.minion_screen.reset_stats")) {
             @Override
             public boolean shouldTakeFocusAfterInteraction() {
                 return false;
