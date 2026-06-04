@@ -191,7 +191,7 @@
   "command.factionapi.base.get_level.successful": "%1$s is a %2$s level %3$s and lord level %4$s",
   "command.factionapi.base.bind_action.success": "Successfully bound action %1$s to action key %2$s",
   "command.factionapi.base.bind_action.not_existing": "The given action %s does not exist",
-  "command.factionapi.base.bind_action.help": "You can bind custom actions (e.g. bat mode) to the two available action keys (see keybindings).",
+  "command.factionapi.base.bind_action.help": "You can bind custom actions (e.g. bat mode) to the two available action keys (see keybindings)",
   "command.factionapi.base.gender.success": "Successfully set gender for lord title display",
   "command.factionapi.base.lord.successful": "%1$s is now a %2$s lord level %3$s",
   "command.factionapi.base.lord.no_faction": "You have to be in a faction to become a lord",
@@ -227,8 +227,8 @@
   "command.factionapi.test.skill.all_unlocked": "All skills are now unlocked",
   "command.factionapi.test.skill.all_locked": "All skills are now locked",
   "command.factionapi.test.skill.not_enabled": "Skill %s was not enabled",
-  "command.factionapi.failed_to_execute": "Failed to execute command. Internal error.",
-  "command.factionapi.failed_to_execute.players": "Failed to execute command for %s. Internal error.",
+  "command.factionapi.failed_to_execute": "Failed to execute command. Internal error",
+  "command.factionapi.failed_to_execute.players": "Failed to execute command for %s. Internal error",
 
   "factionapi.configuration.title": "FactionApi Configuration",
 

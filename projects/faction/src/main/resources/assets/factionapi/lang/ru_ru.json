@@ -191,7 +191,7 @@
   "command.factionapi.base.get_level.successful": "%1$s — %2$s %3$s уровня и %4$s уровня лорда",
   "command.factionapi.base.bind_action.success": "Умение %1$s успешно назначено на клавишу умений %2$s",
   "command.factionapi.base.bind_action.not_existing": "Указанное умение %s не существует",
-  "command.factionapi.base.bind_action.help": "Вы можете назначить произвольные умения (например, форму летучей мыши) на две доступные клавиши умений (см. назначения клавиш).",
+  "command.factionapi.base.bind_action.help": "Вы можете назначить произвольные умения (например, форму летучей мыши) на две доступные клавиши умений (см. назначения клавиш)",
   "command.factionapi.base.gender.success": "Пол для отображения титула лорда успешно задан",
   "command.factionapi.base.lord.successful": "%1$s теперь %2$s %3$s уровня лорда",
   "command.factionapi.base.lord.no_faction": "Чтобы стать лордом, нужно состоять во фракции",
