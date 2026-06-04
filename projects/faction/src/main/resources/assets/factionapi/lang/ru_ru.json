@@ -25,7 +25,7 @@
   "stat.factionapi.defend_village": "Деревень защищено",
   "stat.factionapi.win_village_capture": "Выиграно захватов деревень",
 
-  "key.category.factionapi.main": "Factions",
+  "key.category.factionapi.main": "FactionApi",
   "key.factionapi.action": "Открыть круговое меню умений",
   "key.factionapi.action1": "Умение 1",
   "key.factionapi.action2": "Умение 2",

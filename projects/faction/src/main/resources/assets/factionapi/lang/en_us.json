@@ -25,7 +25,7 @@
   "stat.factionapi.defend_village": "Villages Defended",
   "stat.factionapi.win_village_capture": "Won Village Captures",
 
-  "key.category.factionapi.main": "Factions",
+  "key.category.factionapi.main": "FactionApi",
   "key.factionapi.action": "Open Action Radial Menu",
   "key.factionapi.action1": "Action 1",
   "key.factionapi.action2": "Action 2",
