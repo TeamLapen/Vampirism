@@ -1756,6 +1756,5 @@
   "vampirism.configuration.lordAttackSpeedDuration": "Длительность скорости атаки лорда",
   "vampirism.configuration.lordAttackSpeedDuration.tooltip": "Длительность умения скорости атаки лорда-вампира, в секундах.",
   "vampirism.configuration.lordAttackSpeedCooldown": "Перезарядка скорости атаки лорда",
-  "vampirism.configuration.lordAttackSpeedCooldown.tooltip": "Перезарядка умения скорости атаки лорда-вампира, в секундах.",
-  "text.vampirism.translators": "No translators"
+  "vampirism.configuration.lordAttackSpeedCooldown.tooltip": "Перезарядка умения скорости атаки лорда-вампира, в секундах."
 }
