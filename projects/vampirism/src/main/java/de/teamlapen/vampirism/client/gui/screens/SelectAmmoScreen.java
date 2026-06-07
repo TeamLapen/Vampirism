@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.common.network.packets.server.ServerboundSelectAmm
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.items.QuarrelPouch;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
-import de.teamlapen.vampirism.common.world.items.crossbow.CrossbowArrowHandler;
+import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -42,7 +42,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         ItemStack crossbowStack = player.getMainHandItem();
         if (Helper.isHunter(player) && crossbowStack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack)) {
             @NotNull Map<Item, Integer> list = player.getInventory().getNonEquipmentItems().stream().filter(s -> s.getItem() instanceof QuarrelPouch).map(x -> x.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY)).flatMap(s -> s.items().stream()).collect(Collectors.groupingBy(ItemStack::getItem, Collectors.summingInt(ItemStack::getCount)));
-            var ammoTypes = CrossbowArrowHandler.getCrossbowArrows().stream().map(item -> new AmmoType(item, player.getInventory().countItem(item) + list.getOrDefault(item, 0))).collect(Collectors.toList());
+            var ammoTypes = QuarrelHandler.getQuarrels().stream().map(item -> new AmmoType(item, player.getInventory().countItem(item) + list.getOrDefault(item, 0))).collect(Collectors.toList());
             ammoTypes.add(new AmmoType((ItemStack) null, 0));
             Minecraft.getInstance().setScreen(new SelectAmmoScreen(ammoTypes));
         }

@@ -50,8 +50,8 @@ public class ModItemTags {
     public static final TagKey<Item> ENHANCED_CROSSBOWS = tag("crossbows/enhanced");
     public static final TagKey<Item> CROSSBOWS = tag("crossbows");
 
-    public static final TagKey<Item> CROSSBOW_ARROW = tag("crossbow_arrow");
-    public static final TagKey<Item> ADVANCED_HUNTER_CROSSBOW_ARROWS = tag("advanced_hunter_crossbow_arrows");
+    public static final TagKey<Item> QUARRELS = tag("quarrels");
+    public static final TagKey<Item> ADVANCED_HUNTER_USABLE_QUARRELS = tag("advanced_hunter_usable_quarrels");
 
     public static final TagKey<Item> ARMOR_OF_SWIFTNESS = tag("armors/armor_of_swiftness");
     public static final TagKey<Item> ARMOR_OF_SWIFTNESS_NORMAL = tag("armors/armor_of_swiftness/normal");

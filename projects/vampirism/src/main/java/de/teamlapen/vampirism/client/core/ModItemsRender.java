@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
-import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
+import de.teamlapen.vampirism.client.color.item.QuarrelTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.client.models.armor.*;
@@ -29,7 +29,7 @@ public class ModItemsRender {
 
 
     public static void registerColors(RegisterColorHandlersEvent.@NotNull ItemTintSources event) {
-        event.register(CrossbowArrowTint.ID, CrossbowArrowTint.CODEC);
+        event.register(QuarrelTint.ID, QuarrelTint.CODEC);
         event.register(OilBottleTint.ID, OilBottleTint.CODEC);
     }
 

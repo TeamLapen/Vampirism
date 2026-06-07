@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.provider.models;
 
 import de.teamlapen.faction.client.color.tint.RefinementTint;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.client.color.item.CrossbowArrowTint;
+import de.teamlapen.vampirism.client.color.item.QuarrelTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
@@ -88,9 +88,9 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void generateArrows() {
-        Stream.of(ModItems.CROSSBOW_ARROW_NORMAL, ModItems.CROSSBOW_ARROW_SPITFIRE, ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, ModItems.CROSSBOW_ARROW_TELEPORT, ModItems.CROSSBOW_ARROW_BLEEDING, ModItems.CROSSBOW_ARROW_GARLIC).map(DeferredHolder::get).forEach(item -> {
-            var model = ModModelTemplates.TWO_LAYERED_ITEM.create(item, TextureMapping.layered(new Material(VIdentifier.mod("item/crossbow_arrow")), new Material(VIdentifier.mod("item/crossbow_arrow_tip"))), this.modelOutput);
-            this.itemModelOutput.accept(item, ItemModelUtils.tintedModel(model, BLANK_LAYER, new CrossbowArrowTint()));
+        Stream.of(ModItems.QUARREL_NORMAL, ModItems.QUARREL_SPITFIRE, ModItems.QUARREL_VAMPIRE_KILLER, ModItems.QUARREL_TELEPORT, ModItems.QUARREL_BLEEDING, ModItems.QUARREL_GARLIC).map(DeferredHolder::get).forEach(item -> {
+            var model = ModModelTemplates.TWO_LAYERED_ITEM.create(item, TextureMapping.layered(new Material(VIdentifier.mod("item/quarrel")), new Material(VIdentifier.mod("item/quarrel_tip"))), this.modelOutput);
+            this.itemModelOutput.accept(item, ItemModelUtils.tintedModel(model, BLANK_LAYER, new QuarrelTint()));
         });
     }
 

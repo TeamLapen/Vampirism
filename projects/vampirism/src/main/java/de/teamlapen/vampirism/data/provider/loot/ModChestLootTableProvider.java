@@ -326,7 +326,7 @@ public record ModChestLootTableProvider(HolderLookup.Provider holderProvider) im
                         .add(LootItem.lootTableItem(ModItems.STAKE.get()).setWeight(20))
                         .add(LootItem.lootTableItem(ModItems.HOLY_WATER_BOTTLE_NORMAL.get()).setWeight(10))
                         .add(LootItem.lootTableItem(ModItems.BASIC_CROSSBOW.get()).setWeight(5))
-                        .add(LootItem.lootTableItem(ModItems.CROSSBOW_ARROW_NORMAL.get()).setWeight(15))
+                        .add(LootItem.lootTableItem(ModItems.QUARREL_NORMAL.get()).setWeight(15))
                         .add(LootItem.lootTableItem(Items.BREAD).setWeight(20)))
         );
         output.accept(ModLootTables.DRACULA_CAVE_CHEST, LootTable.lootTable()

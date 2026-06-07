@@ -22,7 +22,7 @@ import de.teamlapen.vampirism.common.world.items.crossbow.ArrowContainer;
 import de.teamlapen.vampirism.common.world.items.crossbow.DoubleCrossbowItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.SingleCrossbowItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.TechCrossbowItem;
-import de.teamlapen.vampirism.common.world.items.crossbow.arrow.*;
+import de.teamlapen.vampirism.common.world.items.crossbow.quarrel.*;
 import de.teamlapen.vampirism.common.world.items.dispenser.SyringeDispenseBehavior;
 import de.teamlapen.vampirism.common.world.items.display.ItemStackWithSize;
 import net.minecraft.core.Direction;
@@ -86,14 +86,14 @@ public class ModItems {
     public static final DeferredItem<TechCrossbowItem> BASIC_TECH_CROSSBOW = ITEMS.registerItem("basic_tech_crossbow",  props -> new TechCrossbowItem(props.durability(930), 1.6F, 40, ToolMaterial.DIAMOND, HunterSkills.WEAPON_TABLE));
     public static final DeferredItem<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = ITEMS.registerItem("enhanced_tech_crossbow",  props -> new TechCrossbowItem(props.durability(1860), 1.7F, 30, ToolMaterial.DIAMOND, HunterSkills.MASTER_CRAFTSMANSHIP));
 
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_NORMAL = ITEMS.registerItem("crossbow_arrow_normal", props -> new CrossbowArrowItem(new NormalBehavior(), props));
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_SPITFIRE = ITEMS.registerItem("crossbow_arrow_spitfire",  props -> new CrossbowArrowItem(new SpitfireBehavior(), props));
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_GARLIC = ITEMS.registerItem("crossbow_arrow_garlic",  props -> new CrossbowArrowItem(new GarlicBehavior(), props));
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_VAMPIRE_KILLER = ITEMS.registerItem("crossbow_arrow_vampire_killer",  props -> new CrossbowArrowItem(new VampireKillerBehavior(), props));
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_TELEPORT = ITEMS.registerItem("crossbow_arrow_teleport",  props -> new CrossbowArrowItem(new TeleportBehavior(), props));
-    public static final DeferredItem<CrossbowArrowItem> CROSSBOW_ARROW_BLEEDING = ITEMS.registerItem("crossbow_arrow_bleeding",  props -> new CrossbowArrowItem(new BleedingBehavior(), props));
+    public static final DeferredItem<QuarrelItem> QUARREL_NORMAL = ITEMS.registerItem("quarrel_normal", props -> new QuarrelItem(new NormalBehavior(), props));
+    public static final DeferredItem<QuarrelItem> QUARREL_SPITFIRE = ITEMS.registerItem("quarrel_spitfire", props -> new QuarrelItem(new SpitfireBehavior(), props));
+    public static final DeferredItem<QuarrelItem> QUARREL_GARLIC = ITEMS.registerItem("quarrel_garlic", props -> new QuarrelItem(new GarlicBehavior(), props));
+    public static final DeferredItem<QuarrelItem> QUARREL_VAMPIRE_KILLER = ITEMS.registerItem("quarrel_vampire_killer", props -> new QuarrelItem(new VampireKillerBehavior(), props));
+    public static final DeferredItem<QuarrelItem> QUARREL_TELEPORT = ITEMS.registerItem("quarrel_teleport", props -> new QuarrelItem(new TeleportBehavior(), props));
+    public static final DeferredItem<QuarrelItem> QUARREL_BLEEDING = ITEMS.registerItem("quarrel_bleeding", props -> new QuarrelItem(new BleedingBehavior(), props));
 
-    public static final DeferredItem<ArrowContainer> ARROW_CLIP = ITEMS.registerItem("tech_crossbow_ammo_package",  props -> new ArrowContainer(props.stacksTo(1), 12, (stack) -> stack.is(CROSSBOW_ARROW_NORMAL.get())));
+    public static final DeferredItem<ArrowContainer> ARROW_CLIP = ITEMS.registerItem("tech_crossbow_ammo_package",  props -> new ArrowContainer(props.stacksTo(1), 12, (stack) -> stack.is(QUARREL_NORMAL.get())));
     public static final DeferredItem<Item> QUARREL_POUCH = ITEMS.registerItem("quarrel_pouch",  props -> new QuarrelPouch(props.stacksTo(1)));
 
     public static final DeferredItem<Item> PITCHFORK = ITEMS.registerSimpleItem("pitchfork", props -> props.sword(ToolMaterial.IRON, 6, -3));
@@ -467,10 +467,10 @@ public class ModItems {
         DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_BOAT.get(), new BoatDispenseItemBehavior(ModEntities.CURSED_SPRUCE_BOAT.get()));
         DispenserBlock.registerBehavior(ModItems.DARK_SPRUCE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(ModEntities.DARK_SPRUCE_CHEST_BOAT.get()));
         DispenserBlock.registerBehavior(ModItems.CURSED_SPRUCE_CHEST_BOAT.get(), new BoatDispenseItemBehavior(ModEntities.CURSED_SPRUCE_CHEST_BOAT.get()));
-        DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_NORMAL.get());
-        DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_SPITFIRE.get());
-        DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_TELEPORT.get());
-        DispenserBlock.registerProjectileBehavior(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get());
+        DispenserBlock.registerProjectileBehavior(ModItems.QUARREL_NORMAL.get());
+        DispenserBlock.registerProjectileBehavior(ModItems.QUARREL_SPITFIRE.get());
+        DispenserBlock.registerProjectileBehavior(ModItems.QUARREL_TELEPORT.get());
+        DispenserBlock.registerProjectileBehavior(ModItems.QUARREL_VAMPIRE_KILLER.get());
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_NORMAL.get());
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_ENHANCED.get());
         DispenserBlock.registerProjectileBehavior(ModItems.HOLY_WATER_SPLASH_BOTTLE_ULTIMATE.get());

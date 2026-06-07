@@ -1,0 +1,39 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_quarrel_normal": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:quarrel_normal"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_skill": {
+      "conditions": {
+        "skill": "vampirism:weapon_table"
+      },
+      "trigger": "factionapi:skill_unlocked"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:quarrel_garlic_3"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_skill",
+      "has_quarrel_normal"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:quarrel_garlic_3"
+    ]
+  }
+}

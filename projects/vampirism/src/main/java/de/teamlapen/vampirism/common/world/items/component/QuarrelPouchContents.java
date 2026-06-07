@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.items.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import de.teamlapen.vampirism.common.world.items.CrossbowArrowItem;
+import de.teamlapen.vampirism.common.world.items.QuarrelItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -36,7 +36,7 @@ public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComp
     }
 
     public static boolean canItemBeInPouch(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem().canFitInsideContainerItems() && stack.getItem() instanceof CrossbowArrowItem;
+        return !stack.isEmpty() && stack.getItem().canFitInsideContainerItems() && stack.getItem() instanceof QuarrelItem;
     }
 
     public Mutable asMutable() {

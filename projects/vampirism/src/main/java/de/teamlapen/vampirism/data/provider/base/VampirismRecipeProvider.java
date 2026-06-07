@@ -261,24 +261,24 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
     }
 
     /**
-     * Generates three recipes for a crossbow arrow with an oil effect with one, two and three arrows per oil bottle.
+     * Generates three recipes for a quarrel with an oil effect with one, two and three quarrels per oil bottle.
      */
-    protected void upToThreeCrossbowArrowRecipe(ItemLike arrow, Holder<IOil> oil) {
+    protected void upToThreeQuarrelRecipe(ItemLike quarrel, Holder<IOil> oil) {
         for (int i = 1; i <= 3; i++) {
-            crossbowArrowRecipe(arrow, oil, i);
+            quarrelRecipe(quarrel, oil, i);
         }
     }
 
     /**
-     * Generates a recipe for a crossbow arrow with an oil effect. {@code quantity} refers to the number of arrows in the recipe for one oil item. It is recommended to make three recipes for one, two and three arrows (use {@link #upToThreeCrossbowArrowRecipe(net.minecraft.world.level.ItemLike, net.minecraft.core.Holder)}), although it depends on the oil value. Teleport arrow, for example, only allows one arrow for one oil bottle.
+     * Generates a recipe for a quarrel with an oil effect. {@code quantity} refers to the number of quarrels in the recipe for one oil item. It is recommended to make three recipes for one, two and three quarrels (use {@link #upToThreeQuarrelRecipe(net.minecraft.world.level.ItemLike, net.minecraft.core.Holder)}), although it depends on the oil value. Teleport quarrel, for example, only allows one quarrel for one oil bottle.
      */
-    protected void crossbowArrowRecipe(ItemLike arrow, Holder<IOil> oil, int quantity) {
-        shapelessWeaponTable(RecipeCategory.COMBAT, arrow, quantity)
+    protected void quarrelRecipe(ItemLike quarrel, Holder<IOil> oil, int quantity) {
+        shapelessWeaponTable(RecipeCategory.COMBAT, quarrel, quantity)
                 .lava(1)
-                .requires(ModItems.CROSSBOW_ARROW_NORMAL, quantity)
+                .requires(ModItems.QUARREL_NORMAL, quantity)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(oil), ModItems.OIL_BOTTLE))
-                .unlockedBy("has_crossbow_arrow_normal", has(ModItems.CROSSBOW_ARROW_NORMAL))
-                .save(output, RegUtil.id(arrow) + "_" + quantity);
+                .unlockedBy("has_quarrel_normal", has(ModItems.QUARREL_NORMAL))
+                .save(output, RegUtil.id(quarrel) + "_" + quantity);
     }
 
     protected void nineBlockStorageRecipes(RecipeCategory unpackedCategory, ItemStackTemplate unpacked, RecipeCategory packedCategory, ItemStackTemplate packed, String pathSuffix) {

@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.common.world.items.crossbow;
 
 import de.teamlapen.vampirism.api.world.items.IArrowContainer;
-import de.teamlapen.vampirism.api.world.items.IEntityCrossbowArrow;
+import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
-import de.teamlapen.vampirism.api.world.items.IVampirismCrossbowArrow;
+import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
@@ -160,8 +160,8 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
     @Override
     public AbstractArrow customArrow(AbstractArrow arrow, ItemStack projectileStack, ItemStack weapon) {
-        if (ignoreHurtTimer(projectileStack) && arrow instanceof IEntityCrossbowArrow) {
-            ((IEntityCrossbowArrow) arrow).setIgnoreHurtTimer();
+        if (ignoreHurtTimer(projectileStack) && arrow instanceof IEntityQuarrel) {
+            ((IEntityQuarrel) arrow).setIgnoreHurtTimer();
         }
         return arrow;
     }
@@ -281,7 +281,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     public boolean testProjectile(ItemStack crossbow, ItemStack projectile) {
-        if (projectile.getItem() instanceof IVampirismCrossbowArrow<?>) {
+        if (projectile.getItem() instanceof IVampirismQuarrel<?>) {
             return testQuarrel(crossbow, projectile);
         } else if (projectile.getItem() instanceof QuarrelPouch) {
             return testQuarrelPouch(crossbow, projectile);

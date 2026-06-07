@@ -324,12 +324,12 @@ public class ModCreativeTabs {
             add(BASIC_TECH_CROSSBOW);
             add(ENHANCED_TECH_CROSSBOW);
 
-            add(CROSSBOW_ARROW_NORMAL);
-            add(CROSSBOW_ARROW_SPITFIRE);
-            add(CROSSBOW_ARROW_GARLIC);
-            add(CROSSBOW_ARROW_VAMPIRE_KILLER);
-            add(CROSSBOW_ARROW_TELEPORT);
-            add(CROSSBOW_ARROW_BLEEDING);
+            add(QUARREL_NORMAL);
+            add(QUARREL_SPITFIRE);
+            add(QUARREL_GARLIC);
+            add(QUARREL_VAMPIRE_KILLER);
+            add(QUARREL_TELEPORT);
+            add(QUARREL_BLEEDING);
 
             add(ARROW_CLIP);
             add(QUARREL_POUCH);

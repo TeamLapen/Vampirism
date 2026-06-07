@@ -1,0 +1,23 @@
+{
+  "type": "vampirism:shapeless_crafting_weapontable",
+  "category": "equipment",
+  "ingredients": [
+    "vampirism:quarrel_normal",
+    "vampirism:quarrel_normal",
+    "vampirism:quarrel_normal",
+    {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "vampirism:oil_contents": {
+          "oil": "vampirism:spitfire"
+        }
+      },
+      "items": "vampirism:oil_bottle"
+    }
+  ],
+  "lava": 1,
+  "result": {
+    "count": 3,
+    "id": "vampirism:quarrel_spitfire"
+  }
+}

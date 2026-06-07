@@ -19,7 +19,7 @@ public class BalanceConfig {
     private static final Logger LOGGER = LogManager.getLogger();
 
     // General
-    public final ModConfigSpec.IntValue arrowVampireKillerMaxHealth;
+    public final ModConfigSpec.IntValue quarrelVampireKillerMaxHealth;
     public final ModConfigSpec.IntValue holyWaterSplashDamage;
     public final ModConfigSpec.DoubleValue holyWaterTierDamageInc;
     public final ModConfigSpec.IntValue holyWaterNauseaDuration;
@@ -230,7 +230,7 @@ public class BalanceConfig {
         builder.comment("General options.");
         builder.category("general", "");
 
-        arrowVampireKillerMaxHealth = builder
+        quarrelVampireKillerMaxHealth = builder
                 .comment("The vampire killer arrow can only instantly kill NPC vampires whose maximum health does not exceed this value.")
                 .defineInRange("arrowVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);
         holyWaterSplashDamage = builder
@@ -270,10 +270,10 @@ public class BalanceConfig {
                 .comment("Maximum number of hunters that can spawn at a single tent per day.")
                 .defineInRange("hunterTentMaxSpawn", 4, 0, 20);
         crossbowDamageMult = builder
-                .comment("Multiplier applied to base damage dealt by crossbow arrows.")
+                .comment("Multiplier applied to base damage dealt by quarrels.")
                 .defineInRange("crossbowDamageMult", 1, 0.2, 5);
         allowInfiniteSpecialArrows = builder
-                .comment("When enabled, special crossbow arrows (e.g. spitfire) can be used with the Infinity enchantment.")
+                .comment("When enabled, special quarrels (e.g. spitfire) can be used with the Infinity enchantment.")
                 .define("allowInfiniteSpecialArrows", false);
         garlicDiffuserStartupTime = builder
                 .comment("Delay in ticks before a newly placed garlic diffuser becomes active. Scaled to 0.25x in singleplayer.")

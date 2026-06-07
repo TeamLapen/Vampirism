@@ -108,7 +108,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<ChestBoat>> CURSED_SPRUCE_CHEST_BOAT = registerEntityType("cursed_spruce_chest_boat", EntityType.chestBoatFactory(ModItems.CURSED_SPRUCE_CHEST_BOAT::get), MobCategory.MISC, x -> x.sized(1.375f,0.5625f).eyeHeight(0.5625f).clientTrackingRange(10).noLootTable().noSummon());
 
     // Projectiles
-    public static final DeferredHolder<EntityType<?>, EntityType<CrossbowArrowEntity>> CROSSBOW_ARROW = registerEntityType("crossbow_arrow", CrossbowArrowEntity::new, MobCategory.MISC, x -> x.sized(0.5F, 0.5F).noSummon());
+    public static final DeferredHolder<EntityType<?>, EntityType<QuarrelEntity>> QUARREL = registerEntityType("quarrel", QuarrelEntity::new, MobCategory.MISC, x -> x.sized(0.5F, 0.5F).noSummon());
     public static final DeferredHolder<EntityType<?>, EntityType<DarkBloodProjectileEntity>> DARK_BLOOD_PROJECTILE = registerEntityType("dark_blood_projectile", DarkBloodProjectileEntity::new, MobCategory.MISC, x -> x.sized(0.6F, 0.6F).fireImmune().noSummon());
     public static final DeferredHolder<EntityType<?>, EntityType<AreaParticleCloud>> PARTICLE_CLOUD = registerEntityType("particle_cloud", AreaParticleCloud::new, MobCategory.MISC, x -> x.sized(6.0F, 0.5F).fireImmune().noSummon());
     public static final DeferredHolder<EntityType<?>, EntityType<ThrowableItemEntity>> THROWABLE_ITEM = registerEntityType("throwable_item", ThrowableItemEntity::new, MobCategory.MISC, x -> x.sized(0.25F, 0.25F).noSummon());

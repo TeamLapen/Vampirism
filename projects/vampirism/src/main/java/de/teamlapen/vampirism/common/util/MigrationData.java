@@ -92,6 +92,12 @@ public class MigrationData {
         mapping.remap("vampirism:hunter_hat_head_0", "vampirism:hunter_hat_tall");
         mapping.remap("vampirism:hunter_hat_head_1", "vampirism:hunter_hat_broad");
         mapping.remap("vampirism:injection_empty", "vampirism:syringe_empty");
+        mapping.remap("vampirism:crossbow_arrow_normal", "vampirism:quarrel_normal");
+        mapping.remap("vampirism:crossbow_arrow_spitfire", "vampirism:quarrel_spitfire");
+        mapping.remap("vampirism:crossbow_arrow_garlic", "vampirism:quarrel_garlic");
+        mapping.remap("vampirism:crossbow_arrow_vampire_killer", "vampirism:quarrel_vampire_killer");
+        mapping.remap("vampirism:crossbow_arrow_teleport", "vampirism:quarrel_teleport");
+        mapping.remap("vampirism:crossbow_arrow_bleeding", "vampirism:quarrel_bleeding");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {
@@ -139,6 +145,7 @@ public class MigrationData {
         mapping.remap("vampirism:vampire_hunter_imob", "vampirism:hunter_imob");
         mapping.remap("vampirism:boat", "boat");
         mapping.remap("vampirism:chest_boat", "chest_boat");
+        mapping.remap("vampirism:crossbow_arrow", "vampirism:quarrel");
     }
 
     private static void fixEffects(@NotNull Mapping mapping) {

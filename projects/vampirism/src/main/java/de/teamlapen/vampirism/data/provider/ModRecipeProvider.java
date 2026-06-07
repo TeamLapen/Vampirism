@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
@@ -21,7 +20,6 @@ import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.provider.base.VampirismRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -40,7 +38,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
@@ -590,17 +587,17 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("planks", has(PLANKS))
                 .save(output);
 
-        shaped(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL, 6)
+        shaped(RecipeCategory.COMBAT, ModItems.QUARREL_NORMAL, 6)
                 .pattern("X")
                 .pattern("Y")
                 .define('X', IRON_INGOT)
                 .define('Y', STICK)
                 .unlockedBy("has_iron_ingot", has(IRON_INGOT))
                 .save(output);
-        shapeless(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL)
+        shapeless(RecipeCategory.COMBAT, ModItems.QUARREL_NORMAL)
                 .requires(Items.ARROW)
                 .unlockedBy("has_arrow", has(Items.ARROW))
-                .save(output, modString("crossbow_arrow_from_vanilla"));
+                .save(output, modString("quarrel_from_vanilla_arrow"));
 
         shaped(RecipeCategory.MISC, ModItems.UMBRELLA)
                 .pattern("###")
@@ -1394,11 +1391,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .skills(HunterSkills.ULTIMATE_CRUCIFIX)
                 .save(output);
 
-        crossbowArrowRecipe(ModItems.CROSSBOW_ARROW_TELEPORT, ModOils.TELEPORT, 1);
-        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_SPITFIRE, ModOils.SPITFIRE);
-        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_GARLIC, ModOils.GARLIC);
-        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_BLEEDING, ModOils.BLEEDING);
-        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, ModOils.VAMPIRE_KILLER);
+        quarrelRecipe(ModItems.QUARREL_TELEPORT, ModOils.TELEPORT, 1);
+        upToThreeQuarrelRecipe(ModItems.QUARREL_SPITFIRE, ModOils.SPITFIRE);
+        upToThreeQuarrelRecipe(ModItems.QUARREL_GARLIC, ModOils.GARLIC);
+        upToThreeQuarrelRecipe(ModItems.QUARREL_BLEEDING, ModOils.BLEEDING);
+        upToThreeQuarrelRecipe(ModItems.QUARREL_VAMPIRE_KILLER, ModOils.VAMPIRE_KILLER);
     }
 
     private void recipesInfuser() {

@@ -126,7 +126,7 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 GHOST,
                 THROWABLE_ITEM,
                 SIT,
-                CROSSBOW_ARROW,
+                QUARREL,
                 DARK_BLOOD_PROJECTILE,
                 SOUL_ORB,
                 HUNTER_TRAINER_DUMMY,

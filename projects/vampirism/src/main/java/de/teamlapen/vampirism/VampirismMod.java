@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.common.CommonServices;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.integration.IntegrationServices;
 import de.teamlapen.vampirism.common.proxy.IProxy;
-import de.teamlapen.vampirism.common.world.items.crossbow.CrossbowArrowHandler;
+import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelHandler;
 import de.teamlapen.vampirism.server.proxy.ServerProxy;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.neoforged.api.distmarker.Dist;
@@ -71,7 +71,7 @@ public class VampirismMod {
     }
 
     private void processIMC(final InterModProcessEvent event) {
-        CrossbowArrowHandler.collectCrossbowArrows();
+        QuarrelHandler.collectQuarrels();
     }
 
 }

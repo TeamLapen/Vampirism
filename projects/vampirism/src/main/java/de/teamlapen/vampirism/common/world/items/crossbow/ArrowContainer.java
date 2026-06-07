@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.items.crossbow;
 
 import de.teamlapen.vampirism.api.world.items.IArrowContainer;
-import de.teamlapen.vampirism.api.world.items.IVampirismCrossbowArrow;
+import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.items.component.ContainedProjectiles;
@@ -142,7 +142,7 @@ public class ArrowContainer extends Item implements IArrowContainer {
 
     private int addArrows(ItemStack container, ItemStack otherStack) {
         int i = 0;
-        if (otherStack.getItem() instanceof IVampirismCrossbowArrow<?> && canContainArrow(container, otherStack)) {
+        if (otherStack.getItem() instanceof IVampirismQuarrel<?> && canContainArrow(container, otherStack)) {
             i = otherStack.getCount();
             if (i > getMaxArrows(container) - getArrows(container).size()) {
                 i = getMaxArrows(container) - getArrows(container).size();

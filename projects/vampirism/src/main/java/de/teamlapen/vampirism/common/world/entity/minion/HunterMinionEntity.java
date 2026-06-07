@@ -221,10 +221,10 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         if (stack.getItem() instanceof IHunterCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
                 var clip = ModItems.ARROW_CLIP.get().getDefaultInstance();
-                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance())); //Careful, all entries of the list are the same object, not copies
+                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.QUARREL_NORMAL.get().getDefaultInstance())); //Careful, all entries of the list are the same object, not copies
                 return clip;
             } else {
-                return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
+                return ModItems.QUARREL_NORMAL.get().getDefaultInstance();
             }
         }
         return ItemStack.EMPTY;
