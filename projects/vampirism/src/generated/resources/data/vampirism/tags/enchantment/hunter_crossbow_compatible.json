@@ -1,6 +1,7 @@
 {
   "values": [
     "minecraft:piercing",
-    "minecraft:power"
+    "minecraft:power",
+    "vampirism:precision"
   ]
 }

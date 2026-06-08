@@ -497,6 +497,8 @@
 
   "enchantment.vampirism.arrow_frugality": "Arrow Frugality",
   "enchantment.vampirism.arrow_frugality.desc": "Occasionally preserves a quarrel when shooting.",
+  "enchantment.vampirism.precision": "Precision",
+  "enchantment.vampirism.precision.desc": "Improves accuracy when shooting a hunter crossbow and reduces quarrel drop.",
   "enchantment.vampirism.vampire_slayer": "Vampire Slayer",
   "enchantment.vampirism.vampire_slayer.desc": "Increases damage dealt to vampiric creatures.",
 
@@ -772,6 +774,9 @@
   "task.vampirism.h_capture1": "Village Reclamation I",
   "task.vampirism.h_kill1": "Cleansing I",
   "task.vampirism.h_kill2": "Cleansing II",
+  "task.vampirism.precision_1": "Sights Calibration I",
+  "task.vampirism.precision_2": "Sights Calibration II",
+  "task.vampirism.precision_3": "Sights Calibration III",
   "task.vampirism.totem_top": "Village Control",
   "task.vampirism.oblivion_potion": "Path to Oblivion",
   "task.vampirism.oblivion_potion_pure_blood_1": "Path to Oblivion",
@@ -816,6 +821,7 @@
   "stat.vampirism.blood_drunk": "Blood Drunk",
   "stat.vampirism.resurrected": "Times Resurrected",
   "stat.vampirism.killed_with_stake": "Vampires Killed with Stake",
+  "stat.vampirism.vampire_killed_with_crossbow": "Vampires Killed with Hunter Crossbow",
   "stat.vampirism.mother_defeated": "Ancient Remains Defeated",
 
   "key.category.vampirism.main": "Vampirism",

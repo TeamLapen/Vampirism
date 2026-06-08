@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -55,11 +56,12 @@ public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelE
     }
 
     public AbstractArrow createArrow(Level level, ItemStack stack, @Nullable LivingEntity shooter, Position position, @Nullable ItemStack weapon) {
+        boolean intangible = stack.has(DataComponents.INTANGIBLE_PROJECTILE);
         QuarrelEntity arrowEntity = new QuarrelEntity(level, position.x(), position.y(), position.z(), stack, weapon);
         arrowEntity.setBaseDamage(this.behavior.baseDamage(level, stack, shooter) * ModConfig.balance().crossbowDamageMult.get());
         this.behavior.modifyArrow(level, stack, shooter, arrowEntity);
         if (shooter instanceof Player || shooter == null) {
-            arrowEntity.pickup = this.behavior.pickupBehavior();
+            arrowEntity.pickup = intangible ? AbstractArrow.Pickup.CREATIVE_ONLY : this.behavior.pickupBehavior();
         } else {
             arrowEntity.pickup = AbstractArrow.Pickup.DISALLOWED;
         }

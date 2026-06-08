@@ -4,7 +4,9 @@ import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModEnchantments;
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
@@ -108,7 +110,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
                 List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.itemCopies());
                 List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles);
                 ItemStack otherStack = shooter.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-                this.shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow), shooter instanceof Player, p_331602_);
+                this.shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow) * getPrecisionFactor(crossbow, level), shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
                 crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(availableProjectiles));
 
@@ -160,11 +162,24 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         if (ignoreHurtTimer(projectileStack) && arrow instanceof IEntityQuarrel) {
             ((IEntityQuarrel) arrow).setIgnoreHurtTimer();
         }
+        if (arrow instanceof QuarrelEntity quarrel) {
+            quarrel.setGravityFactor(getPrecisionFactor(weapon, arrow.level()));
+        }
         return arrow;
     }
 
     protected boolean ignoreHurtTimer(ItemStack crossbow) {
         return false;
+    }
+
+    protected int getPrecisionLevel(ItemStack crossbow, Level level) {
+        Registry<Enchantment> enchantments = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+        return crossbow.getEnchantmentLevel(enchantments.getOrThrow(ModEnchantments.PRECISION));
+    }
+
+    protected float getPrecisionFactor(ItemStack crossbow, Level level) {
+        int precision = getPrecisionLevel(crossbow, level);
+        return precision <= 0 ? 1f : Math.max(0.1f, 1f - 0.3f * precision);
     }
 
     @Override

@@ -5,19 +5,26 @@ import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelItem;
-import net.minecraft.util.RandomSource;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-
 public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
+
+    public static final String TAG_GRAVITY_FACTOR = "GravityFactor";
+
+    private static final EntityDataAccessor<Float> GRAVITY_FACTOR = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.FLOAT);
 
     @NotNull
     private ItemStack arrowStack = new ItemStack(ModItems.QUARREL_NORMAL.get());
@@ -33,7 +40,6 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
         this.arrowStack.setCount(1);
     }
 
-
     /**
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
@@ -41,7 +47,7 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
         super(ModEntities.QUARREL.get(), x, y, z, worldIn, arrow, weapon);
         this.setPos(x, y, z);
         this.arrowStack = arrow.copy();
-        arrowStack.setCount(1);
+        this.arrowStack.setCount(1);
     }
 
     @Nullable
@@ -49,9 +55,38 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
         return getPickupItem().getItem() instanceof QuarrelItem ? ((QuarrelItem) getPickupItem().getItem()).getBehavior() : null;
     }
 
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(GRAVITY_FACTOR, 1.0f);
+    }
 
-    public @NotNull RandomSource getRNG() {
-        return this.random;
+    /**
+     * @param factor multiplier applied to the arrow's gravity (1 = normal, 0 = none)
+     */
+    public void setGravityFactor(float factor) {
+        this.entityData.set(GRAVITY_FACTOR, factor);
+    }
+
+    public float getGravityFactor() {
+        return this.entityData.get(GRAVITY_FACTOR);
+    }
+
+    @Override
+    protected double getDefaultGravity() {
+        return super.getDefaultGravity() * getGravityFactor();
+    }
+
+    @Override
+    protected void addAdditionalSaveData(@NotNull ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putFloat(TAG_GRAVITY_FACTOR, getGravityFactor());
+    }
+
+    @Override
+    protected void readAdditionalSaveData(@NotNull ValueInput input) {
+        super.readAdditionalSaveData(input);
+        setGravityFactor(input.getFloatOr(TAG_GRAVITY_FACTOR, 1.0f));
     }
 
     /**
