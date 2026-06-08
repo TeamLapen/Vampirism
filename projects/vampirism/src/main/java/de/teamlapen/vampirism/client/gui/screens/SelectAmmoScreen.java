@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSelectAmmoTypePacket;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelPouchItem;
-import de.teamlapen.vampirism.common.world.items.crossbow.TechCrossbowItem;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelHandler;
 import net.minecraft.client.Minecraft;
@@ -58,20 +57,16 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
                 }
             }
 
-            boolean loadsFromPouch = crossbowStack.getItem() instanceof TechCrossbowItem;
-            Map<Item, Integer> loadable = loadsFromPouch ? inPouch : loose;
-            Map<Item, Integer> unloadable = loadsFromPouch ? loose : inPouch;
             List<AmmoType> ammoTypes = new ArrayList<>();
 
             for (Item quarrel : QuarrelHandler.getQuarrels()) {
-                int loadableCount = loadable.getOrDefault(quarrel, 0);
-                int unloadableCount = unloadable.getOrDefault(quarrel, 0);
-                if (loadableCount > 0 || unloadableCount > 0) {
-                    ammoTypes.add(new AmmoType(quarrel, loadableCount, unloadableCount));
+                int count = loose.getOrDefault(quarrel, 0) + inPouch.getOrDefault(quarrel, 0);
+                if (count > 0) {
+                    ammoTypes.add(new AmmoType(quarrel, count));
                 }
             }
 
-            ammoTypes.add(new AmmoType((ItemStack) null, 0, 0));
+            ammoTypes.add(new AmmoType((ItemStack) null, 0));
             Minecraft.getInstance().setScreen(new SelectAmmoScreen(ammoTypes));
         }
     }
@@ -88,10 +83,6 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
             if (action.count > 0) {
                 graphics.itemDecorations(font, action.renderStack, posX, posY, String.valueOf(action.count));
             }
-            if (action.unavailableCount > 0) {
-                String text = String.valueOf(action.unavailableCount);
-                graphics.text(font, text, posX + 16 - font.width(text), posY, 0xFFFF5555);
-            }
         } else {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NO_RESTRICTION, posX, posY, 16, 16);
         }
@@ -101,10 +92,10 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
     public void drawSliceName(GuiGraphicsExtractor graphics, String sliceName, ItemStack stack, int posX, int posY) {
     }
 
-    public record AmmoType(@Nullable ItemStack renderStack, int count, int unavailableCount) {
+    public record AmmoType(@Nullable ItemStack renderStack, int count) {
 
-        public AmmoType(@Nullable Item renderStack, int count, int unavailableCount) {
-            this(renderStack == null ? null : renderStack.getDefaultInstance(), count, unavailableCount);
+        public AmmoType(@Nullable Item renderStack, int count) {
+            this(renderStack == null ? null : renderStack.getDefaultInstance(), count);
         }
 
         public Component getDisplayName() {

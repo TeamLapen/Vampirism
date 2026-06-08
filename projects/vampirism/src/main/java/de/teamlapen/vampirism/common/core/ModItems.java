@@ -90,7 +90,9 @@ public class ModItems {
     public static final DeferredItem<QuarrelItem> QUARREL_TELEPORT = ITEMS.registerItem("quarrel_teleport", props -> new QuarrelItem(new TeleportBehavior(), props));
     public static final DeferredItem<QuarrelItem> QUARREL_BLEEDING = ITEMS.registerItem("quarrel_bleeding", props -> new QuarrelItem(new BleedingBehavior(), props));
 
-    public static final DeferredItem<Item> QUARREL_POUCH = ITEMS.registerItem("quarrel_pouch",  props -> new QuarrelPouchItem(props.stacksTo(1)));
+    public static final DeferredItem<Item> QUARREL_CLIP = ITEMS.registerItem("quarrel_clip", Item::new);
+
+    public static final DeferredItem<QuarrelPouchItem> QUARREL_POUCH = ITEMS.registerItem("quarrel_pouch", props -> new QuarrelPouchItem(props.stacksTo(1)));
 
     public static final DeferredItem<Item> PITCHFORK = ITEMS.registerSimpleItem("pitchfork", props -> props.sword(ToolMaterial.IRON, 6, -3));
     public static final DeferredItem<StakeItem> STAKE = ITEMS.registerItem("stake", props -> new StakeItem(props.factions$withShiftDescription()));

@@ -15,7 +15,6 @@
       "items": "vampirism:oil_bottle"
     }
   ],
-  "lava": 1,
   "result": {
     "count": 3,
     "id": "vampirism:quarrel_garlic"

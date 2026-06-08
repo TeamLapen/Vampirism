@@ -331,6 +331,8 @@ public class ModCreativeTabs {
             add(QUARREL_TELEPORT);
             add(QUARREL_BLEEDING);
 
+            add(QUARREL_CLIP);
+
             add(QUARREL_POUCH);
 
             add(PITCHFORK);

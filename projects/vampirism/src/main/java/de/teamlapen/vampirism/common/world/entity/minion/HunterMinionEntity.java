@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.api.world.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModAttachments;
-import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
@@ -25,7 +24,6 @@ import de.teamlapen.vampirism.common.world.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.MinionUpgradeItem;
-import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.world.items.crossbow.TechCrossbowItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -221,9 +219,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IHunterCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
-                var pouch = ModItems.QUARREL_POUCH.get().getDefaultInstance();
-                pouch.set(ModDataComponents.QUARREL_POUCH_CONTENTS, new QuarrelPouchContents(List.of(ModItems.QUARREL_NORMAL.get().getDefaultInstance().copyWithCount(12))));
-                return pouch;
+                return ModItems.QUARREL_CLIP.get().getDefaultInstance();
             } else {
                 return ModItems.QUARREL_NORMAL.get().getDefaultInstance();
             }

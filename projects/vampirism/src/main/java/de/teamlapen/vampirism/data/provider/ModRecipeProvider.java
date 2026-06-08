@@ -1396,6 +1396,13 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         upToThreeQuarrelRecipe(ModItems.QUARREL_GARLIC, ModOils.GARLIC);
         upToThreeQuarrelRecipe(ModItems.QUARREL_BLEEDING, ModOils.BLEEDING);
         upToThreeQuarrelRecipe(ModItems.QUARREL_VAMPIRE_KILLER, ModOils.VAMPIRE_KILLER);
+
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_CLIP)
+                .requires(ModItems.QUARREL_NORMAL, 16)
+                .unlockedBy("has_quarrel_normal", has(ModItems.QUARREL_NORMAL))
+                .unlockedBy("has_tech_crossbow", has(ModItemTags.TECH_CROSSBOWS))
+                .lava(0)
+                .save(output);
     }
 
     private void recipesInfuser() {

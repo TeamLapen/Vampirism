@@ -297,7 +297,8 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE,
                 ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL,
                 ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED,
-                ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE
+                ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE,
+                ModItems.QUARREL_CLIP
                 ).map(DeferredItem::asItem);
     }
 

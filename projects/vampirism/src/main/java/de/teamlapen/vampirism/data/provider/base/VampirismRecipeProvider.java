@@ -278,6 +278,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
                 .requires(ModItems.QUARREL_NORMAL, quantity)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(oil), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_quarrel_normal", has(ModItems.QUARREL_NORMAL))
+                .lava(0)
                 .save(output, RegUtil.id(quarrel) + "_" + quantity);
     }
 
