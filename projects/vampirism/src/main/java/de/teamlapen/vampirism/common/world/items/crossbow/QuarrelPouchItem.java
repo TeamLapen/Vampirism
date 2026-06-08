@@ -1,13 +1,19 @@
-package de.teamlapen.vampirism.common.world.items;
+package de.teamlapen.vampirism.common.world.items.crossbow;
 
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.world.items.tooltip.QuarrelPouchTooltip;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.ARGB;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickAction;
@@ -15,17 +21,76 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 
-public class QuarrelPouch extends Item {
+public class QuarrelPouchItem extends Item {
 
     private static final int FULL_BAR_COLOR = ARGB.colorFromFloat(1.0F, 1.0F, 0.33F, 0.33F);
     private static final int BAR_COLOR = ARGB.colorFromFloat(1.0F, 0.44F, 0.53F, 1.0F);
+    private static final int TICKS_AFTER_FIRST_THROW = 10;
+    private static final int TICKS_BETWEEN_THROWS = 2;
+    private static final int TICKS_MAX_THROW_DURATION = 200;
 
-    public QuarrelPouch(Properties properties) {
+    public QuarrelPouchItem(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        player.startUsingItem(hand);
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingTicks) {
+        if (entity instanceof Player player) {
+            int useDuration = this.getUseDuration(stack, entity);
+            boolean firstTick = remainingTicks == useDuration;
+            if (firstTick || remainingTicks < useDuration - TICKS_AFTER_FIRST_THROW && remainingTicks % TICKS_BETWEEN_THROWS == 0) {
+                dropContent(level, player, stack);
+            }
+        }
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return TICKS_MAX_THROW_DURATION;
+    }
+
+    @Override
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.BUNDLE;
+    }
+
+    @Override
+    public void onDestroyed(ItemEntity entity) {
+        QuarrelPouchContents contents = entity.getItem().get(ModDataComponents.QUARREL_POUCH_CONTENTS);
+        if (contents != null) {
+            entity.getItem().set(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
+            ItemUtils.onContainerDestroyed(entity, contents.items().stream());
+        }
+    }
+
+    private void dropContent(Level level, Player player, ItemStack stack) {
+        QuarrelPouchContents contents = stack.get(ModDataComponents.QUARREL_POUCH_CONTENTS);
+        if (contents == null || contents.isEmpty()) {
+            return;
+        }
+        QuarrelPouchContents.Mutable mutable = contents.asMutable();
+        ItemStack removed = mutable.getFirst();
+        if (removed.isEmpty()) {
+            return;
+        }
+        stack.set(ModDataComponents.QUARREL_POUCH_CONTENTS, mutable.toImmutable());
+        playRemoveOneSound(player);
+        player.drop(removed, true);
+        playDropContentsSound(level, player);
+        player.awardStat(Stats.ITEM_USED.get(this));
     }
 
     @Override
@@ -73,7 +138,7 @@ public class QuarrelPouch extends Item {
             return true;
         } else if(action == ClickAction.SECONDARY && item.isEmpty()) {
             ItemStack firstStack = mutable.getFirstStack();
-            if (!stack.isEmpty()) {
+            if (!firstStack.isEmpty()) {
                 ItemStack itemStack = slot.safeInsert(firstStack);
                 if (itemStack.getCount() > 0) {
                     mutable.tryAdd(itemStack);
@@ -121,9 +186,15 @@ public class QuarrelPouch extends Item {
         entity.playSound(SoundEvents.BUNDLE_INSERT_FAIL, 1.0F, 1.0F);
     }
 
+    private static void playDropContentsSound(Level level, Entity entity) {
+        level.playSound(null, entity.blockPosition(), SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + entity.level().getRandom().nextFloat() * 0.4F);
+    }
+
     private void broadcastChangesOnContainerMenu(Player player) {
         AbstractContainerMenu abstractcontainermenu = player.containerMenu;
-        abstractcontainermenu.slotsChanged(player.getInventory());
+        if (abstractcontainermenu != null) {
+            abstractcontainermenu.slotsChanged(player.getInventory());
+        }
     }
 
     @Override

@@ -232,7 +232,7 @@ public class BalanceConfig {
 
         quarrelVampireKillerMaxHealth = builder
                 .comment("The vampire killer arrow can only instantly kill NPC vampires whose maximum health does not exceed this value.")
-                .defineInRange("arrowVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);
+                .defineInRange("quarrelVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);
         holyWaterSplashDamage = builder
                 .comment("Damage dealt by a normal holy water splash bottle when it directly hits a vampire.")
                 .defineInRange("holyWaterSplashDamage", 5, 0, Integer.MAX_VALUE);

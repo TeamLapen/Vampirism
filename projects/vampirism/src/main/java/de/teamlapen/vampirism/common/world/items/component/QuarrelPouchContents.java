@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.items.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import de.teamlapen.vampirism.common.world.items.QuarrelItem;
+import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

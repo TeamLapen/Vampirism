@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.world.items.QuarrelItem;
+import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelItem;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;

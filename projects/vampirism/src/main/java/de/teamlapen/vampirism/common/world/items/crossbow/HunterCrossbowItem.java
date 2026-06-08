@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.common.world.items.crossbow;
 
-import de.teamlapen.vampirism.api.world.items.IArrowContainer;
 import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.world.items.QuarrelPouch;
-import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.world.items.component.SelectedAmmunition;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -91,11 +89,6 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     public boolean canUseDoubleCrossbow(LivingEntity entity) {
         return entity instanceof Player player && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.DOUBLE_IT);
     }
-
-//    @Override
-//    public ItemUseAnimation getUseAnimation(ItemStack pStack) {
-//        return ItemUseAnimation.CUSTOM;
-//    }
 
     @Override
     public int getUseDuration(ItemStack pStack, LivingEntity entity) {
@@ -218,23 +211,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     protected List<ItemStack> getLoadingProjectiles(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
-        if (projectileStack.getItem() instanceof QuarrelPouch) {
-            QuarrelPouchContents orDefault = projectileStack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
-            if (!orDefault.isEmpty()) {
-                QuarrelPouchContents.Mutable mutable = orDefault.asMutable();
-                ItemStack itemStack = getAmmunition(crossbowStack).map(mutable::getSpecific).orElseGet(mutable::getFirst);
-                projectileStack.set(ModDataComponents.QUARREL_POUCH_CONTENTS, mutable.toImmutable());
-                return List.of(itemStack);
-            }
-            return List.of();
-        } else if (projectileStack.getItem() instanceof IArrowContainer container) {
-            if (shooter.hasInfiniteMaterials()) {
-                projectileStack = projectileStack.copy();
-            }
-            return container.getAndRemoveArrows(projectileStack).stream().toList();
-        } else {
-            return List.of(projectileStack);
-        }
+        return List.of(projectileStack);
     }
 
     protected List<ItemStack> drawMod(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
@@ -280,19 +257,16 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         }
     }
 
+    @Override
+    public ItemStack getDefaultCreativeAmmo(@Nullable Player player, ItemStack weapon) {
+        return ModItems.QUARREL_NORMAL.get().getDefaultInstance();
+    }
+
     public boolean testProjectile(ItemStack crossbow, ItemStack projectile) {
         if (projectile.getItem() instanceof IVampirismQuarrel<?>) {
             return testQuarrel(crossbow, projectile);
-        } else if (projectile.getItem() instanceof QuarrelPouch) {
-            return testQuarrelPouch(crossbow, projectile);
         }
         return false;
-    }
-
-    public boolean testQuarrelPouch(ItemStack crossbow, ItemStack quarrelPouch) {
-        QuarrelPouchContents orDefault = quarrelPouch.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
-        ItemStack stack = getAmmunition(crossbow).map(orDefault::getSpecific).orElseGet(orDefault::getFirst);
-        return testProjectile(crossbow, stack);
     }
 
     public boolean testQuarrel(ItemStack crossbow, ItemStack quarrel) {

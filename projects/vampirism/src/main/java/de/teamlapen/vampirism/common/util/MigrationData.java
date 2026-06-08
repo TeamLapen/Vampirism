@@ -98,6 +98,7 @@ public class MigrationData {
         mapping.remap("vampirism:crossbow_arrow_vampire_killer", "vampirism:quarrel_vampire_killer");
         mapping.remap("vampirism:crossbow_arrow_teleport", "vampirism:quarrel_teleport");
         mapping.remap("vampirism:crossbow_arrow_bleeding", "vampirism:quarrel_bleeding");
+        mapping.remap("vampirism:tech_crossbow_ammo_package", "vampirism:quarrel_pouch");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {

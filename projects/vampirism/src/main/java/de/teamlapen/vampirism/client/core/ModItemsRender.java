@@ -47,9 +47,11 @@ public class ModItemsRender {
             event.register(item.get(), (graphics, font, stack, xOffset, yOffset) -> {
                 ((IHunterCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
                     Matrix3x2fStack posestack = graphics.pose();
+                    posestack.pushMatrix();
                     posestack.translate(xOffset, yOffset + 8);
                     posestack.scale(0.5f);
                     graphics.item(ammo.getDefaultInstance(), 0, 0);
+                    posestack.popMatrix();
                 });
                 return false;
             });

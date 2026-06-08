@@ -39,7 +39,6 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         getFlatItemWithTexture().forEach(this::generateFlatItemWithTexture);
         generateArrows();
         generateBloodBottle();
-        generateAmmoClip();
         generateQuarrelPouch();
         generateHunterIntel();
         generateAccessories();
@@ -142,23 +141,13 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ));
     }
 
-    protected void generateAmmoClip() {
-        this.itemModelOutput.accept(ModItems.ARROW_CLIP.asItem(),
-                ItemModelUtils.rangeSelect(new ClipFilled(),
-                        ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("arrow_clip_0"), VIdentifier.mod("item/arrow_clip0"))),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("arrow_clip_1"), VIdentifier.mod("item/arrow_clip1"))), 0.01f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("arrow_clip_2"), VIdentifier.mod("item/arrow_clip2"))), 0.55f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("arrow_clip_3"), VIdentifier.mod("item/arrow_clip3"))), 0.99f)
-                ));
-    }
-
     protected void generateQuarrelPouch() {
         this.itemModelOutput.accept(ModItems.QUARREL_POUCH.asItem(),
                 ItemModelUtils.rangeSelect(new ClipFilled(),
-                        ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_0"), VIdentifier.mod("item/arrow_clip0"))),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_1"), VIdentifier.mod("item/arrow_clip1"))), 0.01f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_2"), VIdentifier.mod("item/arrow_clip2"))), 0.55f),
-                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_3"), VIdentifier.mod("item/arrow_clip3"))), 0.99f)
+                        ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_0"), VIdentifier.mod("item/quarrel_pouch_0"))),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_1"), VIdentifier.mod("item/quarrel_pouch_1"))), 0.01f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_2"), VIdentifier.mod("item/quarrel_pouch_2"))), 0.55f),
+                        ItemModelUtils.override(ItemModelUtils.plainModel(createFlatItemWithTexture(VIdentifier.mod("quarrel_pouch_3"), VIdentifier.mod("item/quarrel_pouch_3"))), 0.99f)
                 ));
     }
 

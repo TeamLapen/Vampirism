@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.color.item;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.common.world.items.QuarrelItem;
+import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelItem;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.Identifier;

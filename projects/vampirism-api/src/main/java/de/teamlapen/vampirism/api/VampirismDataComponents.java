@@ -20,7 +20,6 @@ public class VampirismDataComponents {
     public static final Supplier<DataComponentType<IAppliedOilContent>> APPLIED_OIL = supplyDataComponent(VampirismDataComponents.Keys.APPLIED_OIL);
     public static final Supplier<DataComponentType<IVampireBook>> VAMPIRE_BOOK = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_BOOK);
     public static final Supplier<DataComponentType<IContainedFluid>> BLOOD_CONTAINER = supplyDataComponent(VampirismDataComponents.Keys.BLOOD_CONTAINER);
-    public static final Supplier<DataComponentType<IContainedProjectiles>> CONTAINED_PROJECTILES = supplyDataComponent(VampirismDataComponents.Keys.CONTAINED_PROJECTILES);
     public static final Supplier<DataComponentType<Unit>> DO_NOT_NAME = supplyDataComponent(VampirismDataComponents.Keys.DO_NOT_NAME);
     public static final Supplier<DataComponentType<ISwordTraining>> VAMPIRE_SWORD = supplyDataComponent(VampirismDataComponents.Keys.VAMPIRE_SWORD);
     public static final Supplier<DataComponentType<IBloodCharged>> BLOOD_CHARGED = supplyDataComponent(VampirismDataComponents.Keys.BLOOD_CHARGED);
@@ -34,7 +33,6 @@ public class VampirismDataComponents {
         public static final Identifier APPLIED_OIL = VIdentifier.mod( "applied_oil");
         public static final Identifier VAMPIRE_BOOK = VIdentifier.mod( "vampire_book");
         public static final Identifier BLOOD_CONTAINER = VIdentifier.mod( "blood_container");
-        public static final Identifier CONTAINED_PROJECTILES = VIdentifier.mod( "contained_projectiles");
         public static final Identifier DO_NOT_NAME = VIdentifier.mod( "do_not_name");
         public static final Identifier VAMPIRE_SWORD = VIdentifier.mod( "vampire_sword");
         public static final Identifier TRAINING_CACHE = VIdentifier.mod( "training_cache");

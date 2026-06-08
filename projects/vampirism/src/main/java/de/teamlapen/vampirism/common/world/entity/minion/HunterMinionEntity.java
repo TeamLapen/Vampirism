@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.api.world.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModAttachments;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
@@ -24,6 +25,7 @@ import de.teamlapen.vampirism.common.world.entity.hunter.BasicHunterEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.MinionUpgradeItem;
+import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.world.items.crossbow.TechCrossbowItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -52,7 +54,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -220,9 +221,9 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IHunterCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
-                var clip = ModItems.ARROW_CLIP.get().getDefaultInstance();
-                ModItems.ARROW_CLIP.get().addArrows(clip, Collections.nCopies(12, ModItems.QUARREL_NORMAL.get().getDefaultInstance())); //Careful, all entries of the list are the same object, not copies
-                return clip;
+                var pouch = ModItems.QUARREL_POUCH.get().getDefaultInstance();
+                pouch.set(ModDataComponents.QUARREL_POUCH_CONTENTS, new QuarrelPouchContents(List.of(ModItems.QUARREL_NORMAL.get().getDefaultInstance().copyWithCount(12))));
+                return pouch;
             } else {
                 return ModItems.QUARREL_NORMAL.get().getDefaultInstance();
             }

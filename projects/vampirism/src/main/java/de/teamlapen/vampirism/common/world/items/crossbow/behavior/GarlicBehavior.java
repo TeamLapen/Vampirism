@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.common.world.items.crossbow.quarrel;
+package de.teamlapen.vampirism.common.world.items.crossbow.behavior;
 
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.common.config.ModConfig;

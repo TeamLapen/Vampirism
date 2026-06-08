@@ -18,11 +18,8 @@ import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import de.teamlapen.vampirism.common.world.items.consume.AffectGarlic;
 import de.teamlapen.vampirism.common.world.items.consume.ModConsumables;
 import de.teamlapen.vampirism.common.world.items.consume.ModFoods;
-import de.teamlapen.vampirism.common.world.items.crossbow.ArrowContainer;
-import de.teamlapen.vampirism.common.world.items.crossbow.DoubleCrossbowItem;
-import de.teamlapen.vampirism.common.world.items.crossbow.SingleCrossbowItem;
-import de.teamlapen.vampirism.common.world.items.crossbow.TechCrossbowItem;
-import de.teamlapen.vampirism.common.world.items.crossbow.quarrel.*;
+import de.teamlapen.vampirism.common.world.items.crossbow.*;
+import de.teamlapen.vampirism.common.world.items.crossbow.behavior.*;
 import de.teamlapen.vampirism.common.world.items.dispenser.SyringeDispenseBehavior;
 import de.teamlapen.vampirism.common.world.items.display.ItemStackWithSize;
 import net.minecraft.core.Direction;
@@ -93,8 +90,7 @@ public class ModItems {
     public static final DeferredItem<QuarrelItem> QUARREL_TELEPORT = ITEMS.registerItem("quarrel_teleport", props -> new QuarrelItem(new TeleportBehavior(), props));
     public static final DeferredItem<QuarrelItem> QUARREL_BLEEDING = ITEMS.registerItem("quarrel_bleeding", props -> new QuarrelItem(new BleedingBehavior(), props));
 
-    public static final DeferredItem<ArrowContainer> ARROW_CLIP = ITEMS.registerItem("tech_crossbow_ammo_package",  props -> new ArrowContainer(props.stacksTo(1), 12, (stack) -> stack.is(QUARREL_NORMAL.get())));
-    public static final DeferredItem<Item> QUARREL_POUCH = ITEMS.registerItem("quarrel_pouch",  props -> new QuarrelPouch(props.stacksTo(1)));
+    public static final DeferredItem<Item> QUARREL_POUCH = ITEMS.registerItem("quarrel_pouch",  props -> new QuarrelPouchItem(props.stacksTo(1)));
 
     public static final DeferredItem<Item> PITCHFORK = ITEMS.registerSimpleItem("pitchfork", props -> props.sword(ToolMaterial.IRON, 6, -3));
     public static final DeferredItem<StakeItem> STAKE = ITEMS.registerItem("stake", props -> new StakeItem(props.factions$withShiftDescription()));
