@@ -37,7 +37,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     public void run() {
         getFlatItems().forEach(item -> generateFlatItem(item, ModModelTemplates.FLAT_ITEM));
         getFlatItemWithTexture().forEach(this::generateFlatItemWithTexture);
-        generateArrows();
+        generateTippedQuarrels();
         generateBloodBottle();
         generateQuarrelPouch();
         generateHunterIntel();
@@ -86,8 +86,9 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         this.itemModelOutput.accept(item, ItemModelUtils.plainModel(ModModelTemplates.CRUCIFIX.create(ModelLocationUtils.getModelLocation(item), TextureMapping.defaultTexture(new Material(texture)).put(TextureSlot.PARTICLE, new Material(texture)), this.modelOutput)));
     }
 
-    protected void generateArrows() {
-        Stream.of(ModItems.QUARREL_NORMAL, ModItems.QUARREL_SPITFIRE, ModItems.QUARREL_VAMPIRE_KILLER, ModItems.QUARREL_TELEPORT, ModItems.QUARREL_BLEEDING, ModItems.QUARREL_GARLIC).map(DeferredHolder::get).forEach(item -> {
+    protected void generateTippedQuarrels() {
+        generateFlatItemWithTexture(ModItems.QUARREL_NORMAL.get(), VIdentifier.mod("item/quarrel"));
+        Stream.of(ModItems.QUARREL_SPITFIRE, ModItems.QUARREL_VAMPIRE_KILLER, ModItems.QUARREL_TELEPORT, ModItems.QUARREL_BLEEDING, ModItems.QUARREL_GARLIC).map(DeferredHolder::get).forEach(item -> {
             var model = ModModelTemplates.TWO_LAYERED_ITEM.create(item, TextureMapping.layered(new Material(VIdentifier.mod("item/quarrel")), new Material(VIdentifier.mod("item/quarrel_tip"))), this.modelOutput);
             this.itemModelOutput.accept(item, ItemModelUtils.tintedModel(model, BLANK_LAYER, new QuarrelTint()));
         });
