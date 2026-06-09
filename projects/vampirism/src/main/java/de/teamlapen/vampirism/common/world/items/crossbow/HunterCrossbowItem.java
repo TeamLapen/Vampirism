@@ -210,7 +210,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         if (level.isClientSide()) {
             return;
         }
-        float progress = (float) (this.getUseDuration(stack, entity) - count) / CrossbowItem.getChargeDuration(stack, entity);
+        float progress = (float) (this.getUseDuration(stack, entity) - count) / getChargeDurationMod(stack, level);
         if (progress < 0.2F) {
             this.chargeStartSoundPlayed = false;
             this.chargeMidSoundPlayed = false;
