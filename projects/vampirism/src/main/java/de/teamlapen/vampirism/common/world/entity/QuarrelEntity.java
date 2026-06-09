@@ -17,12 +17,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     public static final String TAG_GRAVITY_FACTOR = "GravityFactor";
+
+    private static final double MIN_PRECISION_HORIZONTAL_SPEED = 1.0;
 
     private static final EntityDataAccessor<Float> GRAVITY_FACTOR = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.FLOAT);
 
@@ -74,7 +77,17 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     @Override
     protected double getDefaultGravity() {
-        return super.getDefaultGravity() * getGravityFactor();
+        return super.getDefaultGravity() * getEffectiveGravityFactor();
+    }
+
+    private float getEffectiveGravityFactor() {
+        float factor = getGravityFactor();
+        if (factor >= 1.0f) {
+            return factor;
+        }
+        Vec3 movement = getDeltaMovement();
+        double horizontalSpeed = Math.sqrt(movement.x * movement.x + movement.z * movement.z);
+        return horizontalSpeed >= MIN_PRECISION_HORIZONTAL_SPEED ? factor : 1.0f;
     }
 
     @Override
