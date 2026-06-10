@@ -14,6 +14,6 @@
       "type": "minecraft:model",
       "model": "vampirism:item/basic_tech_crossbow"
     },
-    "property": "minecraft:crossbow/pull"
+    "property": "vampirism:hunter_crossbow_pull"
   }
 }

@@ -110,27 +110,21 @@ public class ItemExtensions {
         public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
             if (itemStack.getItem() instanceof HunterCrossbowItem crossbow) {
                 ItemStack otherStack = entityLiving.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+                boolean thisCharged = CrossbowItem.isCharged(itemStack);
                 if (crossbow.canUseDoubleCrossbow(entityLiving) && otherStack.getItem() instanceof IHunterCrossbow) {
-                    if (entityLiving.getUseItemRemainingTicks() > 0) {
-                        if (CrossbowItem.isCharged(otherStack)) {
-                            return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
-                        }
-                        return ModClientEnums.DOUBLE_CROSSBOW_CHARGE.getValue();
-                    } else if (!entityLiving.swinging) {
-                        boolean charged1 = CrossbowItem.isCharged(itemStack);
-                        boolean charged2 = CrossbowItem.isCharged(otherStack);
-                        if (charged1 && charged2) {
-                            return ModClientEnums.DOUBLE_CROSSBOW_HOLD.getValue();
-                        } else if (charged1) {
-                            return HumanoidModel.ArmPose.CROSSBOW_HOLD;
-                        } else if (charged2) {
-                            return HumanoidModel.ArmPose.ITEM;
-                        }
+                    if (thisCharged && CrossbowItem.isCharged(otherStack)) {
+                        return entityLiving.swinging ? HumanoidModel.ArmPose.ITEM : ModClientEnums.DOUBLE_CROSSBOW_HOLD.getValue();
+                    }
+                    if (crossbow.isChargingHand(entityLiving, hand, itemStack)) {
+                        return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
+                    }
+                    if (thisCharged && !entityLiving.swinging) {
+                        return HumanoidModel.ArmPose.CROSSBOW_HOLD;
                     }
                 } else {
-                    if (entityLiving.getUsedItemHand() == hand && entityLiving.getUseItemRemainingTicks() > 0) {
+                    if (entityLiving.getUsedItemHand() == hand && entityLiving.isUsingItem() && entityLiving.getUseItemRemainingTicks() > 0 && !thisCharged) {
                         return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
-                    } else if (!entityLiving.swinging && CrossbowItem.isCharged(itemStack)) {
+                    } else if (!entityLiving.swinging && thisCharged) {
                         return HumanoidModel.ArmPose.CROSSBOW_HOLD;
                     }
                 }
@@ -140,59 +134,41 @@ public class ItemExtensions {
 
         @Override
         public boolean applyForgeHandTransform(PoseStack pPoseStack, LocalPlayer pPlayer, HumanoidArm humanoidarm, ItemStack pStack, float pPartialTicks, float pEquippedProgress, float pSwingProgress) {
-            boolean flag = humanoidarm == pPlayer.getMainArm();
-            InteractionHand pHand = flag ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
-            if (pStack.getItem() instanceof HunterCrossbowItem) {
-                applyCrossbowTransform(pPoseStack, pPlayer, humanoidarm, pStack, pPartialTicks, pEquippedProgress, pSwingProgress, flag, !flag && pPlayer.isUsingItem() && pPlayer.getUsedItemHand() != pHand);
+            if (pStack.getItem() instanceof HunterCrossbowItem crossbow) {
+                boolean mainArm = humanoidarm == pPlayer.getMainArm();
+                InteractionHand hand = mainArm ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+                applyCrossbowTransform(pPoseStack, pPlayer, humanoidarm, pStack, crossbow, hand, pPartialTicks, pEquippedProgress, pSwingProgress, mainArm);
             }
             return true;
         }
 
-        private void applyCrossbowTransform(PoseStack pPoseStack, LocalPlayer pPlayer, HumanoidArm humanoidarm, ItemStack pStack, float pPartialTicks, float pEquippedProgress, float pSwingProgress, boolean isMainArm, boolean usingMainHand) {
-            InteractionHand pHand = isMainArm ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
-            boolean flag1 = CrossbowItem.isCharged(pStack);
+        private void applyCrossbowTransform(PoseStack pPoseStack, LocalPlayer pPlayer, HumanoidArm humanoidarm, ItemStack pStack, HunterCrossbowItem crossbow, InteractionHand hand, float pPartialTicks, float pEquippedProgress, float pSwingProgress, boolean mainArm) {
             boolean flag2 = humanoidarm == HumanoidArm.RIGHT;
             int i = flag2 ? 1 : -1;
-
-            HunterCrossbowItem item = (HunterCrossbowItem) pStack.getItem();
-            int totalDuration = item.getCombinedUseDuration(pStack, pPlayer, pHand);
-            int itemDuration = item.getUseDuration(pStack, pPlayer);
-            float itemUseDuration = pPlayer.getUseItemRemainingTicks();
-            if (usingMainHand && itemUseDuration > itemDuration) {
-                itemUseDuration = 0;
-            } else if (!usingMainHand && totalDuration != itemDuration) {
-                itemUseDuration = Math.max(0, itemUseDuration - (totalDuration - itemDuration));
-            }
-            if (pPlayer.isUsingItem() && itemUseDuration > 0 && (pPlayer.getUsedItemHand() == pHand) != usingMainHand && (item.canUseDoubleCrossbow(pPlayer) || !usingMainHand) && !CrossbowItem.isCharged(pStack)) {
-                ((ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer()).invokeApplyItemArmTransform(pPoseStack, humanoidarm, pEquippedProgress);
+            ItemInHandRendererAccessor renderer = (ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer();
+            if (crossbow.isChargingHand(pPlayer, hand, pStack)) {
+                float charge = crossbow.getChargeProgress(pStack, pPlayer, hand);
+                renderer.invokeApplyItemArmTransform(pPoseStack, humanoidarm, pEquippedProgress);
                 pPoseStack.translate((float) i * -0.4785682F, -0.094387F, 0.05731531F);
                 pPoseStack.mulPose(Axis.XP.rotationDegrees(-11.935F));
                 pPoseStack.mulPose(Axis.YP.rotationDegrees((float) i * 65.3F));
                 pPoseStack.mulPose(Axis.ZP.rotationDegrees((float) i * -9.785F));
-                float f9 = (float) pStack.getUseDuration(pPlayer) - (itemUseDuration - pPartialTicks + 1.0F);
-                float f13 = f9 / item.getChargeDurationMod(pStack, pPlayer.level());
-                if (f13 > 1.0F) {
-                    f13 = 1.0F;
+                float ticks = charge * crossbow.getChargeDurationMod(pStack, pPlayer.level());
+                if (charge > 0.1F) {
+                    float f4 = Mth.sin((ticks - 0.1F) * 1.3F) * (charge - 0.1F);
+                    pPoseStack.translate(0.0F, f4 * 0.004F, 0.0F);
                 }
-
-                if (f13 > 0.1F) {
-                    float f16 = Mth.sin((f9 - 0.1F) * 1.3F);
-                    float f3 = f13 - 0.1F;
-                    float f4 = f16 * f3;
-                    pPoseStack.translate(f4 * 0.0F, f4 * 0.004F, f4 * 0.0F);
-                }
-
-                pPoseStack.translate(f13 * 0.0F, f13 * 0.0F, f13 * 0.04F);
-                pPoseStack.scale(1.0F, 1.0F, 1.0F + f13 * 0.2F);
+                pPoseStack.translate(0.0F, 0.0F, charge * 0.04F);
+                pPoseStack.scale(1.0F, 1.0F, 1.0F + charge * 0.2F);
                 pPoseStack.mulPose(Axis.YN.rotationDegrees((float) i * 45.0F));
             } else {
                 float f = -0.4F * Mth.sin(Mth.sqrt(pSwingProgress) * (float) Math.PI);
                 float f1 = 0.2F * Mth.sin(Mth.sqrt(pSwingProgress) * (float) (Math.PI * 2));
                 float f2 = -0.2F * Mth.sin(pSwingProgress * (float) Math.PI);
                 pPoseStack.translate((float) i * f, f1, f2);
-                ((ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer()).invokeApplyItemArmTransform(pPoseStack, humanoidarm, pEquippedProgress);
-                ((ItemInHandRendererAccessor) Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer()).invokeApplyItemArmAttackTransform(pPoseStack, humanoidarm, pSwingProgress);
-                if (flag1 && pSwingProgress < 0.001F && isMainArm && (!(pPlayer.getOffhandItem().getItem() instanceof HunterCrossbowItem) || !CrossbowItem.isCharged(pPlayer.getOffhandItem()))) {
+                renderer.invokeApplyItemArmTransform(pPoseStack, humanoidarm, pEquippedProgress);
+                renderer.invokeApplyItemArmAttackTransform(pPoseStack, humanoidarm, pSwingProgress);
+                if (CrossbowItem.isCharged(pStack) && pSwingProgress < 0.001F && mainArm && (!(pPlayer.getOffhandItem().getItem() instanceof HunterCrossbowItem) || !CrossbowItem.isCharged(pPlayer.getOffhandItem()))) {
                     pPoseStack.translate((float) i * -0.641864F, 0.0F, 0.0F);
                     pPoseStack.mulPose(Axis.YP.rotationDegrees((float) i * 10.0F));
                 }

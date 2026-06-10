@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.client.color.item.QuarrelTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
+import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowPull;
 import de.teamlapen.vampirism.common.components.predicates.ChargedRitualKnifePredicate;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
@@ -13,7 +14,6 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.item.properties.conditional.ComponentMatches;
-import net.minecraft.client.renderer.item.properties.numeric.CrossbowPull;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.component.predicates.DataComponentPredicate;
 import net.minecraft.resources.Identifier;
@@ -107,27 +107,27 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     protected void generateCrossbows() {
         Identifier basicModel = ModModelTemplates.CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_CROSSBOW.get()), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/crossbow"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_string"))).put(ModTextureSlots.ARROW, new Material(mod("item/crossbow_part_arrow"))), this.modelOutput);
         Identifier basicModelUnloaded = ModModelTemplates.CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/crossbow"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_string"))), this.modelOutput);
-        this.itemModelOutput.accept(ModItems.BASIC_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(basicModel), ItemModelUtils.override(ItemModelUtils.plainModel(basicModelUnloaded), 0.99f)));
+        this.itemModelOutput.accept(ModItems.BASIC_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new HunterCrossbowPull(), ItemModelUtils.plainModel(basicModel), ItemModelUtils.override(ItemModelUtils.plainModel(basicModelUnloaded), 0.99f)));
 
         Identifier enhancedModel = ModModelTemplates.CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_CROSSBOW.get()), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/crossbow_enhanced"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_string"))).put(ModTextureSlots.ARROW, new Material(mod("item/crossbow_part_arrow"))), this.modelOutput);
         Identifier enhancedModelUnloaded = ModModelTemplates.CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/crossbow_enhanced"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_string"))), this.modelOutput);
-        this.itemModelOutput.accept(ModItems.ENHANCED_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(enhancedModel), ItemModelUtils.override(ItemModelUtils.plainModel(enhancedModelUnloaded), 0.99f)));
+        this.itemModelOutput.accept(ModItems.ENHANCED_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new HunterCrossbowPull(), ItemModelUtils.plainModel(enhancedModel), ItemModelUtils.override(ItemModelUtils.plainModel(enhancedModelUnloaded), 0.99f)));
 
         Identifier doubleModel = ModModelTemplates.DOUBLE_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_DOUBLE_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/crossbow_double"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_double_string"))).put(ModTextureSlots.ARROW, new Material(mod("item/crossbow_part_arrow"))), this.modelOutput);
         Identifier doubleModelUnloaded = ModModelTemplates.DOUBLE_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_DOUBLE_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/crossbow_double"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_double_string"))), this.modelOutput);
-        this.itemModelOutput.accept(ModItems.BASIC_DOUBLE_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(doubleModel), ItemModelUtils.override(ItemModelUtils.plainModel(doubleModelUnloaded), 0.99f)));
+        this.itemModelOutput.accept(ModItems.BASIC_DOUBLE_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new HunterCrossbowPull(), ItemModelUtils.plainModel(doubleModel), ItemModelUtils.override(ItemModelUtils.plainModel(doubleModelUnloaded), 0.99f)));
 
         Identifier enhancedDoubleModel = ModModelTemplates.DOUBLE_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_DOUBLE_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/crossbow_double_enhanced"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_double_string"))).put(ModTextureSlots.ARROW, new Material(mod("item/crossbow_part_arrow"))), this.modelOutput);
         Identifier enhancedDoubleModelUnloaded = ModModelTemplates.DOUBLE_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_DOUBLE_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/crossbow_double_enhanced"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_double_string"))), this.modelOutput);
-        this.itemModelOutput.accept(ModItems.ENHANCED_DOUBLE_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(enhancedDoubleModel), ItemModelUtils.override(ItemModelUtils.plainModel(enhancedDoubleModelUnloaded), 0.99f)));
+        this.itemModelOutput.accept(ModItems.ENHANCED_DOUBLE_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new HunterCrossbowPull(), ItemModelUtils.plainModel(enhancedDoubleModel), ItemModelUtils.override(ItemModelUtils.plainModel(enhancedDoubleModelUnloaded), 0.99f)));
 
         Identifier techModel = ModModelTemplates.TECH_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_TECH_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/tech_crossbow"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_tech_string"))), this.modelOutput);
         Identifier techModelUnloaded = ModModelTemplates.TECH_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.BASIC_TECH_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/tech_crossbow"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_tech_string_unloaded"))), this.modelOutput);
-        this.itemModelOutput.accept(ModItems.BASIC_TECH_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(techModel), ItemModelUtils.override(ItemModelUtils.plainModel(techModelUnloaded), 0.99f)));
+        this.itemModelOutput.accept(ModItems.BASIC_TECH_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new HunterCrossbowPull(), ItemModelUtils.plainModel(techModel), ItemModelUtils.override(ItemModelUtils.plainModel(techModelUnloaded), 0.99f)));
 
         Identifier enhancedTechModel = ModModelTemplates.TECH_CROSSBOW.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_TECH_CROSSBOW.asItem()), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/tech_crossbow_enhanced"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_tech_string"))), this.modelOutput);
         Identifier enhancedTechModelUnloaded = ModModelTemplates.TECH_CROSSBOW_UNLOADED.create(ModelLocationUtils.getModelLocation(ModItems.ENHANCED_TECH_CROSSBOW.get()).withSuffix("_unloaded"), new TextureMapping().put(TextureSlot.TEXTURE, new Material(mod("item/tech_crossbow_enhanced"))).put(ModTextureSlots.STRING, new Material(mod("item/crossbow_part_tech_string_unloaded"))), this.modelOutput);
-        this.itemModelOutput.accept(ModItems.ENHANCED_TECH_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new CrossbowPull(), ItemModelUtils.plainModel(enhancedTechModel), ItemModelUtils.override(ItemModelUtils.plainModel(enhancedTechModelUnloaded), 0.99f)));
+        this.itemModelOutput.accept(ModItems.ENHANCED_TECH_CROSSBOW.asItem(), ItemModelUtils.rangeSelect(new HunterCrossbowPull(), ItemModelUtils.plainModel(enhancedTechModel), ItemModelUtils.override(ItemModelUtils.plainModel(enhancedTechModelUnloaded), 0.99f)));
     }
 
     protected void generateBloodBottle() {
