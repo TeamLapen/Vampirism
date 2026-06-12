@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
 import de.teamlapen.vampirism.client.models.items.properties.HasName;
+import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowCharging;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowPull;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
@@ -42,6 +43,7 @@ public class ModItemsRender {
 
     public static void registerConditional(RegisterConditionalItemModelPropertyEvent event) {
         event.register(HasName.ID, HasName.CODEC);
+        event.register(HunterCrossbowCharging.ID, HunterCrossbowCharging.CODEC);
     }
 
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {

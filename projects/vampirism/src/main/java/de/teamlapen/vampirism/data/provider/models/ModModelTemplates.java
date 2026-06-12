@@ -30,11 +30,22 @@ public class ModModelTemplates extends ModelTemplates {
     public static final ModelTemplate HEART_SEEKER = createItem(mod("heart_seeker_model"), ModTextureSlots.TEXTURE_3);
     public static final ModelTemplate CROSSBOW = createItem(mod("crossbow"), TextureSlot.TEXTURE, ModTextureSlots.STRING, ModTextureSlots.ARROW);
     public static final ModelTemplate CROSSBOW_UNLOADED = createItem(mod("crossbow_unloaded"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
+    public static final ModelTemplate[] CROSSBOW_PULLING = pullingStages("crossbow");
     public static final ModelTemplate DOUBLE_CROSSBOW = createItem(mod("double_crossbow"), TextureSlot.TEXTURE, ModTextureSlots.STRING, ModTextureSlots.ARROW);
     public static final ModelTemplate DOUBLE_CROSSBOW_UNLOADED = createItem(mod("double_crossbow_unloaded"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
+    public static final ModelTemplate[] DOUBLE_CROSSBOW_PULLING = pullingStages("double_crossbow");
     public static final ModelTemplate TECH_CROSSBOW = createItem(mod("tech_crossbow"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
     public static final ModelTemplate TECH_CROSSBOW_UNLOADED = createItem(mod("tech_crossbow_unloaded"), TextureSlot.TEXTURE, ModTextureSlots.STRING);
+    public static final ModelTemplate[] TECH_CROSSBOW_PULLING = pullingStages("tech_crossbow");
     public static final ModelTemplate VELMORRA_ALTAR = create(mod("velmorra_altar"), ModTextureSlots.TOP);
+
+    private static ModelTemplate[] pullingStages(String name) {
+        ModelTemplate[] stages = new ModelTemplate[3];
+        for (int i = 0; i < stages.length; i++) {
+            stages[i] = createItem(mod(name + "_pulling_" + i), TextureSlot.TEXTURE, ModTextureSlots.STRING);
+        }
+        return stages;
+    }
 
     public static ModelTemplate createItem(Identifier modelName, TextureSlot... textures) {
         return ModelTemplates.createItem(modelName.toString(), textures);

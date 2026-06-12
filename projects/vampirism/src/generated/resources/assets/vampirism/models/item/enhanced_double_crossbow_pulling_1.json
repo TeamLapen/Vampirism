@@ -1,0 +1,7 @@
+{
+  "parent": "vampirism:item/double_crossbow_pulling_1",
+  "textures": {
+    "string": "vampirism:item/crossbow_part_double_string",
+    "texture": "vampirism:item/crossbow_double_enhanced"
+  }
+}
