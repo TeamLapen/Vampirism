@@ -187,9 +187,22 @@ public class ServerPayloadHandler {
             Player player = context.player();
             Entity entity = player.level().getEntity(msg.entityId());
             if (entity instanceof MinionEntity<?> minion) {
-                if (minion.getMinionData().map(d -> d.upgradeStat(msg.statId(), minion)).orElse(false)) {
+                if (minion.getMinionData().map(d -> d.upgradeStat(msg.stat(), minion)).orElse(false)) {
                     minion.sync();
                 }
+            }
+        });
+    }
+
+    public static void handleResetMinionStatPacket(ServerboundResetMinionStatPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            Entity entity = player.level().getEntity(msg.entityId());
+            if (entity instanceof MinionEntity<?> minion) {
+                minion.getMinionData().ifPresent(d -> {
+                    d.resetStats(minion);
+                    minion.sync();
+                });
             }
         });
     }

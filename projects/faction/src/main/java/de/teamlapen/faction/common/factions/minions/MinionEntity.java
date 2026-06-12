@@ -159,6 +159,10 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         return this;
     }
 
+    public void updateAttributes() {
+
+    }
+
     @Override
     public void aiStep() {
         super.aiStep();
@@ -658,6 +662,11 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
                     .withFactory(MinionEntity.this::createData)
                     .withNewInstanceSetter(MinionEntity.this::setData)
                     .register();
+        }
+
+        @Override
+        protected void onPropertyChanged() {
+            updateAttributes();
         }
     }
 }

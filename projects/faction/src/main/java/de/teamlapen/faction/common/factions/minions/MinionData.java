@@ -9,6 +9,7 @@ import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.core.ModRegistries;
+import de.teamlapen.faction.common.factions.minions.stats.MinionStat;
 import de.teamlapen.faction.common.world.entities.EntityProperties;
 import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
 import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
@@ -31,9 +32,8 @@ import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class MinionData extends PropertySync implements IMinionData, IAppearanceHolder {
@@ -64,6 +64,7 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
     private float health;
     private String name;
     private @NotNull CompoundTag entityCaps = new CompoundTag();
+    private MinionStat.StatCollection statCollection;
 
 
     @NotNull
@@ -75,11 +76,34 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
         this.name = name;
         this.inventory = new MinionInventory(invSize);
         this.activeTaskDesc = new IMinionTask.NoDesc<>(FactionMinionTasks.NOTHING.get());
+        this.collectStats();
     }
 
     protected MinionData() {
         this.inventory = new MinionInventory();
         this.activeTaskDesc = new IMinionTask.NoDesc<>(FactionMinionTasks.NOTHING.get());
+        this.collectStats();
+    }
+
+    private void collectStats() {
+        List<MinionStat<?>> stats = new ArrayList<>();
+        registerStats(stats::add);
+        this.statCollection = new MinionStat.StatCollection(this, stats);
+    }
+
+    public abstract int getLevel();
+
+
+    protected int getMaxStatLevel() {
+        return 0;
+    }
+
+    protected void registerStats(Consumer<MinionStat<?>> consumer) {
+
+    }
+
+    public int getStatLevel(Identifier identifier) {
+        return this.statCollection.getStatLevel(identifier);
     }
 
     @Override
@@ -134,14 +158,14 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
         this.name = name;
     }
 
-    public <T> void setAppearanceData(de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<T> id, T data) {
+    public <T> void setAppearanceData(AppearanceKey<T> id, T data) {
         if (id.equals(NameType)) {
             setName((String) data);
         }
     }
 
     public boolean hasUsedSkillPoints() {
-        return false;
+        return this.statCollection.getLevels() > 0;
     }
 
     public boolean isTaskLocked() {
@@ -162,31 +186,23 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
                 entity.getLordOpt().ifPresent(lord -> InventoryHelper.removeItemFromInventory(lord.asEntity().getInventory(), new ItemStack(FactionItems.OBLIVION_POTION.get())));
             }
         });
+        this.statCollection.reset(entity, this);
     }
 
     @MustBeInvokedByOverriders
     @Override
     public void serialize(@NotNull ValueOutput output) {
-        output.putInt("inv_size", this.inventory.getAvailableSize());
+        super.serialize(output);
         inventory.write(output.list("inv", ItemStackWithSlot.CODEC));
-        output.putFloat("health", this.health);
-        output.putString("name", this.name);
         output.store("data_type", Identifier.CODEC, getDataType());
-        output.putBoolean("locked", this.taskLocked);
-        output.store("task", MINION_TASK_CODEC, this.activeTaskDesc);
         output.store("caps", CompoundTag.CODEC, this.entityCaps);
     }
 
     @MustBeInvokedByOverriders
     @Override
     public void deserialize(@NotNull ValueInput input) {
+        super.deserialize(input);
         this.inventory.read(input.listOrEmpty("inv", ItemStackWithSlot.CODEC));
-        input.getInt("inv_size").ifPresent(this.inventory::setAvailableSize);
-        this.health = input.getFloatOr("health", 10);
-        input.getString("name").ifPresent(x -> this.name = x);
-        this.taskLocked = input.getBooleanOr("locked", false);
-
-        this.activeTaskDesc = input.read("task", MINION_TASK_CODEC).orElseGet(() -> new IMinionTask.NoDesc<>(FactionMinionTasks.NOTHING.get()));
         this.entityCaps = input.read("caps", CompoundTag.CODEC).orElse(new CompoundTag());
     }
 
@@ -203,6 +219,7 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
             this.activeTaskDesc = x;
             return old.getTask().equals(x.getTask());
         }).register();
+        this.registerProperty(FIdentifier.mod("stats")).subProperty(() -> this.statCollection).register();
     }
 
     public boolean setTaskLocked(boolean locked) {
@@ -221,7 +238,6 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
                     stacks.add(stack);
                 }
             }
-            inv.setAvailableSize(getInventorySize());
             for (ItemStack stack : stacks) {
                 if (!stack.isEmpty()) {
                     inv.addItemStack(stack);
@@ -243,21 +259,15 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
         this.activeTaskDesc = newDesc;
     }
 
-    /**
-     * Called on server side to upgrade a stat of the given id
-     * <p>
-     *
-     * @param statId values:<br>
-     *               -1: reset all stats<br>
-     *               -2: update attributes<br>
-     * @return if attributes where changed and a sync is required
-     */
-    public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {
-        if (statId == -1) {
-            resetStats(entity);
-            return true;
+    public int getRemainingStatPoints() {
+        return Math.max(0, getLevel() - this.statCollection.getLevels());
+    }
+
+    public boolean upgradeStat(@NotNull Identifier statId, @NotNull MinionEntity<?> entity) {
+        if (this.statCollection.getLevels() >= getLevel()) {
+            return false;
         }
-        return false;
+        return this.statCollection.upgrade(statId, entity, this);
     }
 
     protected abstract Identifier getDataType();

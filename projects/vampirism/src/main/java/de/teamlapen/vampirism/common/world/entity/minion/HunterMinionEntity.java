@@ -9,6 +9,8 @@ import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.common.factions.minions.stats.MinionStat;
+import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunter;
@@ -54,6 +56,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 
@@ -178,6 +181,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     private void updateAttackGoal() {
     }
 
+    @Override
     public void updateAttributes() {
         float statsMultiplier = this.getMinionData().filter(d -> d.hasIncreasedStats).map(a -> 1.2f).orElse(1f);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(HunterMinionData::getHealthLevel).orElse(0)) * statsMultiplier);
@@ -242,24 +246,51 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public static class HunterMinionData extends MinionData {
         public static final Identifier ID = VIdentifier.mod("hunter");
 
+        private static final Identifier INVENTORY_STATS_ID = VIdentifier.mod("inventory");
+        private static final Identifier HEALTH_STATS_ID = VIdentifier.mod("health");
+        private static final Identifier STRENGTH_STATS_ID = VIdentifier.mod("strength");
+        private static final Identifier RESOURCES_STATS_ID = VIdentifier.mod("resources");
+        public static final MinionStat<HunterMinionData> INVENTORY_STATS = new MinionStat<>(INVENTORY_STATS_ID, 2, Component.translatable("gui.vampirism.minion.stats.inventory_level")) {
+            @Override
+            public void apply(int level, MinionEntity<?> minion, HunterMinionData data) {
+                int size = data.getDefaultInventorySize();
+                data.getInventory().setAvailableSize(level == 1 ? size + 3 : (level == 2 ? size + 6 : size));
+                if (level == 0) {
+                    data.shrinkInventory(minion);
+                }
+            }
+
+            @Override
+            public String currentValue(MinionEntity<?> minion, MinionData data) {
+                return String.valueOf(data.getInventory().getContainerSize());
+            }
+        };
+        public static final MinionStat<HunterMinionData> HEALTH_STATS = new MinionStat<>(HEALTH_STATS_ID, 3, Component.translatable(Attributes.MAX_HEALTH.value().getDescriptionId())) {
+            @Override
+            public String currentValue(MinionEntity<?> minion, MinionData data) {
+                return String.format("%.1f", minion.getAttribute(Attributes.MAX_HEALTH).getBaseValue());
+            }
+        };
+        public static final MinionStat<HunterMinionData> STRENGTH_STATS = new MinionStat<>(STRENGTH_STATS_ID, 3, Component.translatable(Attributes.ATTACK_DAMAGE.value().getDescriptionId())) {
+            @Override
+            public String currentValue(MinionEntity<?> minion, MinionData data) {
+                return String.format("%.1f", minion.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
+            }
+        };
+        public static final MinionStat<HunterMinionData> RESOURCES_STATS = new MinionStat<>(RESOURCES_STATS_ID, 2, Component.translatable("gui.vampirism.minion.stats.resource_level")) {
+            @Override
+            public String currentValue(MinionEntity<?> minion, MinionData data) {
+                return String.format("%.1f", (Math.ceil((float) (currentLevel(data) + 1) / (HunterMinionEntity.HunterMinionData.RESOURCES_STATS.getMaxLevel() + 1) * 100))) + "%";
+            }
+        };
+
         public static final int MAX_LEVEL = 6;
-        public static final int MAX_LEVEL_INVENTORY = 2;
-        public static final int MAX_LEVEL_HEALTH = 3;
-        public static final int MAX_LEVEL_STRENGTH = 3;
-        public static final int MAX_LEVEL_RESOURCES = 2;
 
         private int type;
         private boolean useLordSkin;
         private boolean minionSkin;
 
-        /**
-         * Should be between 0 and {@link HunterMinionData#MAX_LEVEL}
-         */
         private int level;
-        private int inventoryLevel;
-        private int healthLevel;
-        private int strengthLevel;
-        private int resourceEfficiencyLevel;
 
         private boolean hasIncreasedStats;
 
@@ -277,17 +308,17 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public void deserialize(@NotNull ValueInput input) {
-            super.deserialize(input);
-            type = input.getIntOr("hunter_type", 0);
-            level = input.getIntOr("level", 0);
-            useLordSkin = input.getBooleanOr("use_lord_skin", false);
-            inventoryLevel = input.getIntOr("l_inv", 0);
-            healthLevel = input.getIntOr("l_he", 0);
-            strengthLevel = input.getIntOr("l_str", 0);
-            resourceEfficiencyLevel = input.getIntOr("l_res", 0);
-            minionSkin = input.getBooleanOr("ms", false);
-            hasIncreasedStats = input.getBooleanOr("hasIncreasedStats", false);
+        protected int getMaxStatLevel() {
+            return MAX_LEVEL;
+        }
+
+        @Override
+        protected void registerStats(Consumer<MinionStat<?>> consumer) {
+            super.registerStats(consumer);
+            consumer.accept(INVENTORY_STATS);
+            consumer.accept(HEALTH_STATS);
+            consumer.accept(STRENGTH_STATS);
+            consumer.accept(RESOURCES_STATS);
         }
 
         @Override
@@ -296,10 +327,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             this.registerProperty(VIdentifier.mod("type")).simple(0, () -> type, x -> type = x);
             this.registerProperty(VIdentifier.mod("level")).simple(0, () -> level, x -> level = x);
             this.registerProperty(VIdentifier.mod("use_lord_skin")).simple(false, () -> useLordSkin, x -> useLordSkin = x);
-            this.registerProperty(VIdentifier.mod("inventory_level")).simple(0, () -> inventoryLevel, x -> inventoryLevel = x);
-            this.registerProperty(VIdentifier.mod("health_level")).simple(0, () -> healthLevel, x -> healthLevel = x);
-            this.registerProperty(VIdentifier.mod("strength_level")).simple(0, () -> strengthLevel, x -> strengthLevel = x);
-            this.registerProperty(VIdentifier.mod("resource_efficiency_level")).simple(0, () -> resourceEfficiencyLevel, x -> resourceEfficiencyLevel = x);
             this.registerProperty(VIdentifier.mod("minion_skin")).simple(false, () -> minionSkin, x -> minionSkin = x);
             this.registerProperty(VIdentifier.mod("has_increased_stats")).simple(false, () -> hasIncreasedStats, x -> hasIncreasedStats = x);
         }
@@ -310,37 +337,23 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         public int getHealthLevel() {
-            return healthLevel;
-        }
-
-        public int getInventoryLevel() {
-            return this.inventoryLevel;
-        }
-
-        @Override
-        public int getInventorySize() {
-            int size = getDefaultInventorySize();
-            return inventoryLevel == 1 ? size + 3 : (inventoryLevel == 2 ? size + 6 : size);
+            return this.getStatLevel(HEALTH_STATS_ID);
         }
 
         public int getLevel() {
             return this.level;
         }
 
-        public int getRemainingStatPoints() {
-            return Math.max(0, this.level - inventoryLevel - healthLevel - resourceEfficiencyLevel - strengthLevel);
-        }
-
         public int getResourceEfficiencyLevel() {
-            return resourceEfficiencyLevel;
+            return getStatLevel(RESOURCES_STATS_ID);
         }
 
         public int getStrengthLevel() {
-            return strengthLevel;
+            return getStatLevel(STRENGTH_STATS_ID);
         }
 
         @Override
-        public <T> void setAppearanceData(de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<T> id, T data) {
+        public <T> void setAppearanceData(AppearanceKey<T> id, T data) {
             super.setAppearanceData(id, data);
             if (id.equals(SkinType)) {
                 this.type = (Integer) data;
@@ -349,37 +362,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
                 this.minionSkin = (intData & 0b10) == 0b10;
                 this.useLordSkin = (intData & 0b1) == 1;
             }
-        }
-
-        @Override
-        public boolean hasUsedSkillPoints() {
-            return this.inventoryLevel + this.healthLevel + this.strengthLevel + this.resourceEfficiencyLevel > 0;
-        }
-
-        @Override
-        public void resetStats(@NotNull MinionEntity<?> entity) {
-            assert entity instanceof HunterMinionEntity;
-            this.inventoryLevel = 0;
-            this.healthLevel = 0;
-            this.strengthLevel = 0;
-            this.resourceEfficiencyLevel = 0;
-            this.shrinkInventory(entity);
-            ((HunterMinionEntity) entity).updateAttributes();
-            super.resetStats(entity);
-        }
-
-        @Override
-        public void serialize(@NotNull ValueOutput output) {
-            super.serialize(output);
-            output.putInt("hunter_type", type);
-            output.putInt("level", level);
-            output.putInt("l_inv", inventoryLevel);
-            output.putInt("l_he", healthLevel);
-            output.putInt("l_str", strengthLevel);
-            output.putInt("l_res", resourceEfficiencyLevel);
-            output.putBoolean("use_lord_skin", useLordSkin);
-            output.putBoolean("ms", minionSkin);
-            output.putBoolean("hasIncreasedStats", hasIncreasedStats);
         }
 
         /**
@@ -391,59 +373,6 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             boolean levelup = level > this.level;
             this.level = level;
             return levelup;
-        }
-
-        /**
-         * Called on server side to upgrade a stat of the given id
-         * <p>
-         *
-         * @param statId values: <br>
-         *               -1: reset all stats <br>
-         *               -2: update attributes <br>
-         *               0: increases inventory level <br>
-         *               1: increases health level <br>
-         *               2: increases strength level <br>
-         *               3: increases resource efficiency level <br>
-         * @return if attributes where changed and a sync is required
-         */
-        @Override
-        public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {
-            if (super.upgradeStat(statId, entity)) return true;
-            if (getRemainingStatPoints() == 0) {
-                LOGGER.warn("Cannot upgrade minion stat as no stat points are left");
-                return false;
-            }
-            assert entity instanceof HunterMinionEntity;
-            switch (statId) {
-                case 0 -> {
-                    if (inventoryLevel >= MAX_LEVEL_INVENTORY) return false;
-                    inventoryLevel++;
-                    this.getInventory().setAvailableSize(getInventorySize());
-                    return true;
-                }
-                case 1 -> {
-                    if (healthLevel >= MAX_LEVEL_HEALTH) return false;
-                    healthLevel++;
-                    ((HunterMinionEntity) entity).updateAttributes();
-                    entity.setHealth(entity.getMaxHealth());
-                    return true;
-                }
-                case 2 -> {
-                    if (strengthLevel >= MAX_LEVEL_STRENGTH) return false;
-                    strengthLevel++;
-                    ((HunterMinionEntity) entity).updateAttributes();
-                    return true;
-                }
-                case 3 -> {
-                    if (resourceEfficiencyLevel >= MAX_LEVEL_RESOURCES) return false;
-                    resourceEfficiencyLevel++;
-                    return true;
-                }
-                default -> {
-                    LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
-                    return false;
-                }
-            }
         }
 
         public void setIncreasedStats(boolean hasIncreasedStats) {
