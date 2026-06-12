@@ -369,9 +369,9 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         @Override
         public <T> void setAppearanceData(de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<T> id, T data) {
             super.setAppearanceData(id, data);
-            if (id.equals(AppearanceType)) {
+            if (id.equals(SkinType)) {
                 this.type = (Integer) data;
-            } else if (id.equals(SkinType)) {
+            } else if (id.equals(AppearanceType)) {
                 int intData = (Integer) data;
                 this.minionSkin = (intData & 0b10) == 0b10;
                 this.useLordSkin = (intData & 0b1) == 1;

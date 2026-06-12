@@ -10,12 +10,15 @@ import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.world.entities.EntityProperties;
+import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
+import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
 import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.sync.PropertySync;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.ItemStackWithSlot;
@@ -35,9 +38,9 @@ import java.util.function.Supplier;
 
 public abstract class MinionData extends PropertySync implements IMinionData, IAppearanceHolder {
 
-    public static final de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<Integer> AppearanceType = new de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<>(FIdentifier.mod("type"));
-    public static final de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<Integer> SkinType = new de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<>(FIdentifier.mod("skin"));
-    public static final de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<String> NameType = new de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<>(FIdentifier.mod("name"));
+    public static final AppearanceKey<Integer> AppearanceType = AppearancePacket.register(FIdentifier.mod("type"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<Integer> SkinType = AppearancePacket.register(FIdentifier.mod("skin"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<String> NameType = AppearancePacket.register(FIdentifier.mod("name"), ByteBufCodecs.STRING_UTF8);
 
     private static final Codec<IMinionTask.IMinionTaskDesc<MinionData>> MINION_TASK_CODEC = SafeCast.cast(IMinionTask.IMinionTaskDesc.TASK_CODEC);
     public static final int MAX_NAME_LENGTH = 15;

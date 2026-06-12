@@ -11,6 +11,7 @@ import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.sounds.ISoundReference;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
+import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
 import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
 import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.REFERENCE;
@@ -56,6 +57,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -883,10 +885,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return this.customization.setFangType(fangType);
     }
 
-    public static final AppearanceKey<Integer> FangType = new AppearanceKey<>(VIdentifier.mod("fang_type"));
-    public static final AppearanceKey<Integer> EyeType = new AppearanceKey<>(VIdentifier.mod("eye_type"));
-    public static final AppearanceKey<Integer> GlowingEye = new AppearanceKey<>(VIdentifier.mod("glowing_eye"));
-    public static final AppearanceKey<Integer> TitleGenderType = new AppearanceKey<>(VIdentifier.mod("title_gender_type"));
+    public static final AppearanceKey<Integer> FangType = AppearancePacket.register(VIdentifier.mod("fang_type"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<Integer> EyeType = AppearancePacket.register(VIdentifier.mod("eye_type"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<Integer> GlowingEye = AppearancePacket.register(VIdentifier.mod("glowing_eye"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<Integer> TitleGenderType = AppearancePacket.register(VIdentifier.mod("title_gender_type"), ByteBufCodecs.VAR_INT);
 
 
     @Override

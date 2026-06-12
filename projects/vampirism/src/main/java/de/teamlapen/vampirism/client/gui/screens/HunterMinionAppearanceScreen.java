@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
+import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
+import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
 import de.teamlapen.gui.components.DropdownWidget;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
 import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
@@ -41,11 +43,11 @@ public class HunterMinionAppearanceScreen extends AppearanceScreen<HunterMinionE
         if (name.isEmpty()) {
             name = Component.translatable("gui.vampirism.minion_appearance.minion").toString() + entity.getMinionId().orElse(0);
         }
-        Map<de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<?>, Object> map = new java.util.HashMap<>();
+        Map<AppearanceKey<?>, Object> map = new HashMap<>();
         map.put(MinionData.NameType, name);
         map.put(MinionData.SkinType, this.skinType);
         map.put(MinionData.AppearanceType, (isMinionSpecificSkin ? 0b10 : 0b0) | (useLordSkin ? 0b1 : 0b0));
-        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), new de.teamlapen.faction.common.world.entities.appearance.AppearancePacket(map)));
+        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), new AppearancePacket(map)));
         super.removed();
     }
 
