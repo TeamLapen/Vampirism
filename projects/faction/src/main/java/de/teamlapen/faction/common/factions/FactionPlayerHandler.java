@@ -340,6 +340,12 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
 
         ScoreboardUtil.updateScoreboard(this.player, ScoreboardUtil.FACTION_CRITERIA, this.currentFaction.value().hashCode());
 
+        if (changedFaction && oldFaction instanceof ILordPlayer<?> lordPlayer) {
+            MinionWorldData.getData(this.player.level()).ifPresent(data -> {
+                data.removeController(this.player.getUUID());
+            });
+        }
+
         if (newFactionData instanceof ILordPlayer<?> lordPlayer) {
             MinionWorldData.getData(this.player.level()).ifPresent(data -> {
                 PlayerMinionController c = data.getController(this.player.getUUID());

@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
@@ -18,6 +20,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
+import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
@@ -29,6 +32,7 @@ import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.FleeSunVampireGoal;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.common.world.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
@@ -55,10 +59,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -336,6 +339,11 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             super();
         }
 
+        public VampireMinionData(ILordPlayer<?> player, ICustomizationHolder customizationHolder) {
+            boolean skillEnabled = player.asSkillPlayer().map(ISkillPlayer::getSkillHandler).map(x -> x.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+            this("Minion", customizationHolder.getEntityTextureType(),false, skillEnabled);
+        }
+
         @Override
         protected int getMaxStatLevel() {
             return MAX_LEVEL;
@@ -386,7 +394,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         @Override
-        public <T> void setAppearanceData(de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<T> id, T data) {
+        public <T> void setAppearanceData(de.teamlapen.faction.common.world.entities.appearance.@NonNull AppearanceKey<T> id, @NonNull T data) {
             super.setAppearanceData(id, data);
             if (id.equals(SkinType)) {
                 this.type = (Integer) data;

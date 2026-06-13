@@ -5,6 +5,7 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -13,6 +14,7 @@ import de.teamlapen.faction.common.factions.minions.stats.MinionStat;
 import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
 import de.teamlapen.vampirism.api.world.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.world.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
@@ -49,10 +51,9 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -307,6 +308,11 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             super();
         }
 
+        public HunterMinionData(ILordPlayer<?> player, ICustomizationHolder customizationHolder) {
+            boolean skillEnabled = player.asSkillPlayer().map(ISkillPlayer::getSkillHandler).map(x -> x.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+            this("Minion", customizationHolder.getEntityTextureType(), false, skillEnabled);
+        }
+
         @Override
         protected int getMaxStatLevel() {
             return MAX_LEVEL;
@@ -353,7 +359,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         @Override
-        public <T> void setAppearanceData(AppearanceKey<T> id, T data) {
+        public <T> void setAppearanceData(@NonNull AppearanceKey<T> id, @NonNull T data) {
             super.setAppearanceData(id, data);
             if (id.equals(SkinType)) {
                 this.type = (Integer) data;

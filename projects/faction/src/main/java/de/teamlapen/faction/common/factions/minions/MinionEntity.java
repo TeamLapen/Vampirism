@@ -587,7 +587,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     public final void handleLoadedMinionData(@NotNull T data) {
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(data.getMaxHealth());
+        this.updateAttributes();
         super.setHealth(data.getHealth());
         super.setCustomName(data.getFormattedName());
         try {

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.entity.player.hunter;
 
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
+import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
@@ -166,9 +167,12 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     @Override
     public void updateMinionAttributes(boolean increasedStats) {
         MinionWorldData.getData(this.player.level()).ifPresent(a -> {
-            a.getOrCreateController(this).contactMinions((minion) -> {
-                (minion.getMinionData()).ifPresent(b -> ((HunterMinionEntity.HunterMinionData) b).setIncreasedStats(increasedStats));
-                minion.sync();
+            a.getOrCreateController(this).forEach((data, minion) -> {
+                ((HunterMinionEntity.HunterMinionData) data).setIncreasedStats(increasedStats);
+                minion.ifPresent(x -> {
+                    x.updateAttributes();
+                    x.sync();
+                });
             });
         });
     }

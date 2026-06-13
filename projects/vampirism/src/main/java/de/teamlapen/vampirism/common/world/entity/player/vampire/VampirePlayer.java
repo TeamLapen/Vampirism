@@ -40,6 +40,7 @@ import de.teamlapen.vampirism.common.util.*;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
+import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
@@ -1286,10 +1287,15 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public void updateMinionAttributes(boolean enabled) {
-        MinionWorldData.getData(this.player.level()).ifPresent(a -> a.getOrCreateController(this).contactMinions((minion) -> {
-            (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData) b).setIncreasedStats(enabled));
-            minion.sync();
-        }));
+        MinionWorldData.getData(this.player.level()).ifPresent(a ->
+            a.getOrCreateController(this).forEach((data, minion) -> {
+                ((HunterMinionEntity.HunterMinionData) data).setIncreasedStats(enabled);
+                minion.ifPresent(x -> {
+                    x.updateAttributes();
+                    x.sync();
+                });
+            })
+        );
     }
 
     public void effectCrucifixSuppression() {

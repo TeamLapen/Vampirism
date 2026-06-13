@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -48,7 +49,7 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
 
     @Nullable
     public static <T extends MinionData> T fromNBT(ValueInput input) {
-        return input.read("data_type", Identifier.CODEC).map(ModRegistries.MINIONS::getValue).map(IMinionEntry::data).map(Supplier::get).map(x -> {
+        return input.read("data_type", Identifier.CODEC).map(ModRegistries.MINIONS::getValue).map(IMinionEntry::data).map(IMinionEntry.IMinionCreator::create).map(x -> {
             try {
                 @SuppressWarnings("unchecked")
                 T t = (T) x;
@@ -158,7 +159,7 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
         this.name = name;
     }
 
-    public <T> void setAppearanceData(AppearanceKey<T> id, T data) {
+    public <T> void setAppearanceData(@NonNull AppearanceKey<T> id, @NonNull T data) {
         if (id.equals(NameType)) {
             setName((String) data);
         }

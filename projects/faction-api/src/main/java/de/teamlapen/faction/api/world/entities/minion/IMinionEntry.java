@@ -2,6 +2,7 @@ package de.teamlapen.faction.api.world.entities.minion;
 
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.lord.IMinionEntryBuilder;
+import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.EntityType;
@@ -14,7 +15,7 @@ public interface IMinionEntry<T extends IFactionPlayer<T>, Z extends IMinionData
     /**
      * @return a supplier to create a fresh {@link IMinionData}
      */
-    Supplier<Z> data();
+    IMinionCreator<T, Z> data();
 
     /**
      * @return The entity type of the minion
@@ -30,4 +31,11 @@ public interface IMinionEntry<T extends IFactionPlayer<T>, Z extends IMinionData
      * @return The command arguments for this minion used by the MinionCommand to create a minion using commands
      */
     List<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<Z, ?>> commandArguments();
+
+    interface IMinionCreator<T extends IFactionPlayer<T>, Z extends IMinionData> {
+
+        Z create(T player, ICustomizationHolder customizationHolder);
+
+        Z create();
+    }
 }
