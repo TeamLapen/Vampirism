@@ -1,8 +1,9 @@
-package de.teamlapen.faction.common.server.commands;
+package de.teamlapen.faction.common.server.commands.actions;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.server.commands.BasicCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ResetActionsCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
-        return Commands.literal("resetActions")
+        return Commands.literal("reset")
                 .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .executes(context -> resetActions(context.getSource(), Lists.newArrayList(context.getSource().getPlayerOrException())))
                 .then(Commands.argument("players", EntityArgument.entities())

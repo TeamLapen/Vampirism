@@ -1,4 +1,4 @@
-package de.teamlapen.faction.common.server.commands;
+package de.teamlapen.faction.common.server.commands.minion;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -21,6 +21,7 @@ import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
+import de.teamlapen.faction.common.server.commands.BasicCommand;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -33,7 +34,6 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -46,17 +46,21 @@ public class MinionCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext buildContext) {
         return Commands.literal("minion")
-                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
-                .then(registerNew(buildContext))
+                .then(MinionInventoryCommand.register(buildContext))
+                .then(registerNew(buildContext)
+                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)))
                 .then(Commands.literal("recall")
+                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .executes(context -> recall(context.getSource(), context.getSource().getPlayerOrException()))
                         .then(Commands.argument("target", EntityArgument.player())
                                 .executes(context -> recall(context.getSource(), EntityArgument.getPlayer(context, "target")))))
-                .then(Commands.literal("respawnAll")
+                .then(Commands.literal("respawn")
+                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .executes(context -> respawn(context.getSource(), context.getSource().getPlayerOrException()))
                         .then(Commands.argument("target", EntityArgument.player())
                                 .executes(context -> respawn(context.getSource(), EntityArgument.getPlayer(context, "target")))))
                 .then(Commands.literal("purge")
+                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .executes(context -> purge(context.getSource(), context.getSource().getPlayerOrException()))
                         .then(Commands.argument("target", EntityArgument.player())
                                 .executes(context -> purge(context.getSource(), EntityArgument.getPlayer(context, "target")))));
@@ -64,7 +68,7 @@ public class MinionCommand extends BasicCommand {
 
     @SuppressWarnings("unchecked")
     public static ArgumentBuilder<CommandSourceStack, ?> registerNew(CommandBuildContext buildContext) {
-        LiteralArgumentBuilder<CommandSourceStack> spawnNew = Commands.literal("spawnNew");
+        LiteralArgumentBuilder<CommandSourceStack> spawnNew = Commands.literal("create");
         var minionRegistry = buildContext.lookupOrThrow(FactionRegistries.Keys.MINION);
         for (Holder<IMinionEntry<?, ?>> entry : minionRegistry.listElements().toList()) {
             var minion = entry.value();
