@@ -6,6 +6,7 @@ import de.teamlapen.faction.common.world.blockentity.NetworkedBlockEntity;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.util.Helper;
+import de.teamlapen.vampirism.common.world.inventory.VampireBeaconMenu;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -37,7 +38,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -85,21 +85,15 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
 
         public void set(int slot, int value) {
             switch (slot) {
-                case DATA_LEVELS:
-                    VampireBeaconBlockEntity.this.levels = value;
-                    break;
-                case DATA_PRIMARY:
+                case DATA_LEVELS -> VampireBeaconBlockEntity.this.levels = value;
+                case DATA_PRIMARY -> {
                     if (!VampireBeaconBlockEntity.this.level.isClientSide() && !VampireBeaconBlockEntity.this.beamSections.isEmpty()) {
                         playSound(VampireBeaconBlockEntity.this.level, VampireBeaconBlockEntity.this.worldPosition, SoundEvents.BEACON_POWER_SELECT);
                     }
                     VampireBeaconBlockEntity.this.primaryPower = VampireBeaconBlockEntity.getValidEffectById(value);
-                    break;
-                case DATA_AMPLIFIER:
-                    VampireBeaconBlockEntity.this.effectAmplifier = value;
-                    break;
-                case DATA_UPGRADED:
-                    VampireBeaconBlockEntity.this.isUpgraded = value != 0;
-                    break;
+                }
+                case DATA_AMPLIFIER -> VampireBeaconBlockEntity.this.effectAmplifier = value;
+                case DATA_UPGRADED -> VampireBeaconBlockEntity.this.isUpgraded = value != 0;
             }
 
         }
@@ -261,7 +255,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
     }
 
     @Override
-    public void loadAdditional(@NotNull ValueInput input) {
+    public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         this.primaryPower = input.read("primary_effect", BuiltInRegistries.MOB_EFFECT.holderByNameCodec()).orElse(null);
         input.read("CustomName", ComponentSerialization.CODEC).ifPresent(this::setCustomName);
@@ -272,7 +266,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
     }
 
     @Override
-    protected void saveAdditional(@NotNull ValueOutput output) {
+    protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         if (this.primaryPower != null) {
             output.store("primary_effect", BuiltInRegistries.MOB_EFFECT.holderByNameCodec(), this.primaryPower);
@@ -300,7 +294,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
     @Override
     public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         if (this.lockKey.canUnlock(pPlayer)) {
-            return new BeaconMenu(pContainerId, pPlayerInventory, this.dataAccess, ContainerLevelAccess.create(this.level, this.getBlockPos()));
+            return new VampireBeaconMenu(pContainerId, pPlayerInventory, this.dataAccess, ContainerLevelAccess.create(this.level, this.getBlockPos()));
         } else {
             BaseContainerBlockEntity.sendChestLockedNotifications(this.getBlockPos().getCenter(), pPlayer, this.getDisplayName());
             return null;
@@ -308,17 +302,17 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
     }
 
     @Override
-    public @NotNull Component getDisplayName() {
+    public Component getDisplayName() {
         return this.getName();
     }
 
     @Override
-    public @NotNull Component getName() {
+    public Component getName() {
         return this.name != null ? this.name : DEFAULT_NAME;
     }
 
     @Override
-    public void setLevel(@NotNull Level pLevel) {
+    public void setLevel(Level pLevel) {
         super.setLevel(pLevel);
         this.lastCheckY = pLevel.getMinY() - 1;
     }
