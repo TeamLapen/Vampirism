@@ -49,14 +49,9 @@
   "message.factionapi.village_totem.already_capturing": "Il y a déjà une capture en cours",
   "message.factionapi.minion.still_recovering": "%s est toujours en train de se récupérer",
   "message.factionapi.minion.minions_recovering": "%s serviteurs sont toujours en train de se récupérer",
-  "dialogue.factionapi.minion.died_on_task": "Mon seigneur, je suis navré, je suis mort en accomplissant votre tâche",
-  "tooltip.factionapi.required_skill": "Compétence requise : %s",
-  "tooltip.factionapi.required_level": "Niveau requis : %s",
-  "command.factionapi.base.bind_action.success": "Action %s liée avec succès à la clé d'action %s",
   "command.factionapi.base.bind_action.not_existing": "L'action mentionné %s n'existe pas",
   "command.factionapi.argument.action.notfound": "L'action mentionné %s n'existe pas",
   "command.factionapi.test.village.no_village": "Aucun village à proximité",
   "command.factionapi.test.skill.noinfaction": "Vous devez être dans une faction",
-  "command.factionapi.failed_to_execute": "Exécution impossible. Erreur interne.",
   "factionapi.configuration.world": "Monde"
 }
