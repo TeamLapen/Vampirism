@@ -10,9 +10,7 @@
   "gui.factionapi.level": "レベル",
   "message.factionapi.action.not_bound": "このキーにはアクションが割り当てられていません。%sを確認して下さい。",
   "message.factionapi.village_raid.almost_captured": "村はほぼ占領されました。残り %s 名の敵",
-  "command.factionapi.base.bind_action.success": "アクション\"%s\"を[%s]キーに設定しました。",
   "command.factionapi.base.bind_action.not_existing": "アクション\"%s\"は存在しません。",
   "command.factionapi.argument.action.notfound": "アクション\"%s\"は存在しません。",
-  "command.factionapi.test.village.no_village": "近くに村がありません",
-  "command.factionapi.failed_to_execute": "(内部エラー) コマンド実行に失敗しました。"
+  "command.factionapi.test.village.no_village": "近くに村がありません"
 }
