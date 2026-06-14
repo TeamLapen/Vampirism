@@ -9,6 +9,5 @@
   "gui.factionapi.taskmaster.abort_task": "Ματαίωση",
   "gui.factionapi.minion.active_task": "Τρέχουσα εργασία",
   "gui.factionapi.minion_stats.level": "Επίπεδο",
-  "gui.factionapi.level": "Επίπεδο",
-  "command.factionapi.failed_to_execute": "Απέτυχε η εκτέλεση της εντολής. Εσωτερικό σφάλμα."
+  "gui.factionapi.level": "Επίπεδο"
 }
