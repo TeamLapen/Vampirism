@@ -22,6 +22,10 @@ public interface IFactionPredicate extends Predicate<LivingEntity>, TargetingCon
         return FactionsApi.services().factionPredicates().builder();
     }
 
+    default Predicate<Entity> forEntity() {
+        return entity -> entity instanceof LivingEntity livingEntity && IFactionPredicate.this.test(livingEntity);
+    }
+
     interface Builder {
 
         /**
