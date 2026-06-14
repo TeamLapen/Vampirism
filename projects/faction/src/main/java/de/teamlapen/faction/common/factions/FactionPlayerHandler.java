@@ -244,7 +244,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     public void leaveFaction(boolean die) {
         Holder<? extends IFaction<?>> oldFaction = currentFaction;
         setFaction(LevelingChange.neutral());
-        player.sendOverlayMessage(Component.translatable("command.factionapi.base.level.successful", player.getName(), oldFaction.value().getName(), 0));
+        player.sendOverlayMessage(Component.translatable("command.factionapi.base.level.successful", player.getName(), oldFaction.value().getNameSingular(), 0));
         if (die) {
             DamageHandler.hurtModded((ServerLevel) this.player.level(), player, ModDamageSources::leaveFaction, 10000);
         }

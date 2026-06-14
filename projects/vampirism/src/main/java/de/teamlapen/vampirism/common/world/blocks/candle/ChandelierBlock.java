@@ -84,6 +84,6 @@ public class ChandelierBlock extends CandleHolderBlock {
 
     @Override
     public String getDescriptionKey() {
-        return BuiltInRegistries.ITEM.getKey(ModBlocks.CHANDELIER.asItem()).getPath() + (emptyBlock != null ? ".filled" : "");
+        return BuiltInRegistries.BLOCK.getKey(ModBlocks.CHANDELIER.get()).getPath() + (emptyBlock != null ? ".filled" : "");
     }
 }

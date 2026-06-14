@@ -5,6 +5,6 @@
   "ingredient": "minecraft:gunpowder",
   "result": {
     "count": 4,
-    "id": "vampirism:item_alchemical_fire"
+    "id": "vampirism:alchemical_fire"
   }
 }

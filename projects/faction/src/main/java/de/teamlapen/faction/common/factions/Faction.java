@@ -19,6 +19,8 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Nullable
     private String descriptionId;
     @Nullable
+    private String descriptionIdSingular;
+    @Nullable
     private String descriptionIdPlural;
     private final TextColor chatColor;
 
@@ -44,6 +46,14 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
             this.descriptionId = Util.makeDescriptionId("faction", RegUtil.id(this));
         }
         return this.descriptionId;
+    }
+
+    @Override
+    public String getDescriptionIdSingular() {
+        if (this.descriptionIdSingular == null) {
+            this.descriptionIdSingular = getDescriptionId() + ".singular";
+        }
+        return this.descriptionIdSingular;
     }
 
     @Override

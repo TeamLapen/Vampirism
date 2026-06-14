@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -208,6 +209,14 @@ public abstract class VampirismEntity extends PathfinderMob implements IEntityWi
      */
     protected @NotNull EntityType<?> getIMobTypeOpt(boolean iMob) {
         return this.getType();
+    }
+
+    /**
+     * IMob variants should have the same names as their non-IMob variants, that's why this is resolved here.
+     */
+    @Override
+    protected @NotNull Component getTypeName() {
+        return getIMobTypeOpt(false).getDescription();
     }
 
     @NotNull

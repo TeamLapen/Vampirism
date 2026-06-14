@@ -57,7 +57,8 @@ public class ModFactions {
             .village(VampireVillage::vampireVillage)
             .lord(builder -> builder
                     .lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD)
-                    .lordTitle(new LordTitles.VampireTitles()))
+                    .lordTitle(new LordTitles.VampireTitles())
+            )
             .build());
 
     public static final DeferredFaction<IHunterPlayer, IPlayableFaction<IHunterPlayer>> HUNTER = FACTIONS.registerFaction(VampirismFactions.Keys.HUNTER.getPath(), () -> new PlayableFactionBuilder<>(SafeCast.<Supplier<AttachmentType<IHunterPlayer>>>cast(ModAttachments.HUNTER_PLAYER))
@@ -66,8 +67,9 @@ public class ModFactions {
             .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
             .village(HunterVillage::hunterVillage)
             .lord(builder -> builder
+                    .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD)
                     .lordTitle(new LordTitles.HunterTitles())
-                    .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).build())
+            )
             .build());
 
     public static final DeferredHolder<IMinionEntry<?, ?>, IMinionEntry<IVampirePlayer, VampireMinionEntity.VampireMinionData>> VAMPIRE_MINION = MINIONS.register(VampirismFactions.Keys.VAMPIRE.getPath(), () ->
@@ -120,8 +122,7 @@ public class ModFactions {
                 .add(FactionRegistries.Keys.FACTION, VampirismTags.Factions.IS_HUNTER)
                 .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.HUNTER_FOOD)
                 .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_HUNTER)
-                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_HUNTER)
-        ;
+                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_HUNTER);
 
         event.faction(VAMPIRE)
                 .add(Registries.BIOME, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME)
@@ -132,9 +133,7 @@ public class ModFactions {
                 .add(FactionRegistries.Keys.FACTION, VampirismTags.Factions.IS_VAMPIRE)
                 .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.VAMPIRE_FOOD)
                 .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_VAMPIRE)
-                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_VAMPIRE)
-        ;
-
+                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_VAMPIRE);
     }
 
 }

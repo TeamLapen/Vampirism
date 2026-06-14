@@ -86,7 +86,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "vampirism:item_alchemical_fire",
+          "name": "vampirism:alchemical_fire",
           "weight": 15
         }
       ],

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.world.items.crossbow;
 import de.teamlapen.vampirism.api.world.items.IArrowContainer;
 import de.teamlapen.vampirism.api.world.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
-import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.items.component.ContainedProjectiles;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -41,7 +40,7 @@ public class ArrowContainer extends Item implements IArrowContainer {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> texts, TooltipFlag flag) {
         getArrows(stack).stream().map(ItemStack::getItem).collect(Collectors.groupingBy(a -> a)).forEach((item, items) -> texts.accept(item.getName(item.getDefaultInstance()).copy().append(" " + items.size())));
-        texts.accept(Component.translatable("tooltip.vampirism.arrow_clip.desc1", Component.translatable(ModItems.BASIC_TECH_CROSSBOW.get().getDescriptionId())).withStyle(ChatFormatting.GRAY));
+        texts.accept(Component.translatable("tooltip.vampirism.arrow_clip.desc1").withStyle(ChatFormatting.GRAY));
         texts.accept(Component.translatable("tooltip.vampirism.arrow_clip.desc2").withStyle(ChatFormatting.GRAY));
     }
 
