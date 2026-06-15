@@ -99,6 +99,7 @@
   "gui.factionapi.minion_stats": "Характеристики подручного",
   "gui.factionapi.minion_stats.level": "Уровень",
   "gui.factionapi.minion_stats.stat_level": "Ур. %1$s/%2$s",
+  "gui.factionapi.select_minion": "Выбрать миньона",
   "gui.factionapi.radial_menu.excluded_actions": "Исключённые умения",
   "gui.factionapi.radial_menu.place_exclude": "Поместите сюда, чтобы исключить",
   "gui.factionapi.action_radial.no_actions": "Нет назначенных умений",
