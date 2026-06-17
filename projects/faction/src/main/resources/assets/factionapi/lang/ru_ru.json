@@ -53,7 +53,7 @@
   "gui.factionapi.faction_menu.distance": " (в %s блоках отсюда)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Местоположение неизвестно",
   "gui.factionapi.faction_menu.last_known_pos": "Последнее известное местоположение: ",
-  "gui.factionapi.faction_menu.skill_screen": "Экран навыков",
+  "gui.factionapi.faction_menu.skill_screen": "Навыки",
   "gui.factionapi.faction_menu.edit_actions": "Настроить умения",
   "gui.factionapi.faction_menu.edit_tasks": "Настроить приказы подручных",
   "gui.factionapi.faction_menu.no_tasks": "Нет принятых поручений",
