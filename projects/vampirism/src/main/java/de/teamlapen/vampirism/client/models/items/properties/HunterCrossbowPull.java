@@ -25,7 +25,10 @@ public record HunterCrossbowPull() implements RangeSelectItemModelProperty {
         if (entity == null || CrossbowItem.isCharged(stack) || !(stack.getItem() instanceof HunterCrossbowItem crossbow)) {
             return 0f;
         }
-        InteractionHand hand = entity.getItemInHand(InteractionHand.OFF_HAND) == stack ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+        InteractionHand hand = HunterCrossbowItem.getHeldHand(entity, stack);
+        if (hand == null) {
+            return 0f; // Not actually held
+        }
         return crossbow.getChargeProgress(stack, entity, hand);
     }
 

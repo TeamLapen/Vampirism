@@ -1,14 +1,6 @@
 {
-  "parent": "vampirism:item/crossbow",
-  "overrides": [
-    {
-      "predicate": {
-        "vampirism:charged": 0.01
-      },
-      "model": "vampirism:item/enhanced_crossbow_unloaded"
-    }
-  ],
+  "parent": "vampirism:item/crossbow20x",
   "textures": {
-    "layer0": "vampirism:item/crossbow_enhanced"
+    "layer0": "vampirism:item/enhanced_crossbow_arrow"
   }
 }

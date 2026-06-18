@@ -23,7 +23,10 @@ public record HunterCrossbowCharging() implements ConditionalItemModelProperty {
         if (entity == null || !(stack.getItem() instanceof HunterCrossbowItem crossbow)) {
             return false;
         }
-        InteractionHand hand = entity.getItemInHand(InteractionHand.OFF_HAND) == stack ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+        InteractionHand hand = HunterCrossbowItem.getHeldHand(entity, stack);
+        if (hand == null) {
+            return false; // Not actually held
+        }
         return crossbow.isChargingHand(entity, hand, stack);
     }
 

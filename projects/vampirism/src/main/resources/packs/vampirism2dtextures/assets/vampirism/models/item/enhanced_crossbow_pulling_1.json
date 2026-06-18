@@ -1,6 +1,6 @@
 {
   "parent": "vampirism:item/crossbow20x",
   "textures": {
-    "layer0": "vampirism:item/enhanced_crossbow"
+    "layer0": "vampirism:item/enhanced_crossbow_pulling_1"
   }
 }

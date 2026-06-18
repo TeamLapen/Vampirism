@@ -121,6 +121,17 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         return Mth.clamp((float) elapsed / chargeDuration, 0f, 1f);
     }
 
+    @Nullable
+    public static InteractionHand getHeldHand(LivingEntity entity, ItemStack stack) {
+        if (entity.getItemInHand(InteractionHand.MAIN_HAND) == stack) {
+            return InteractionHand.MAIN_HAND;
+        }
+        if (entity.getItemInHand(InteractionHand.OFF_HAND) == stack) {
+            return InteractionHand.OFF_HAND;
+        }
+        return null;
+    }
+
     public boolean isChargingHand(LivingEntity entity, InteractionHand hand, ItemStack stack) {
         if (CrossbowItem.isCharged(stack) || !entity.isUsingItem()) {
             return false;
