@@ -1138,7 +1138,7 @@
   "dialogue.vampirism.vampire_minion.available": "This vampire can be bound to you making it your minion",
   "dialogue.vampirism.vampire_minion.start_serving1": "You appear to be someone of great value, I shall endeavor with you my lord",
   "dialogue.vampirism.vampire_minion.start_serving2": "It's indeed an honor to be sired to one such as yourself!",
-  "dialogue.vampirism.vampire_minion.start_serving3": "I appreciate your kindness and hospitality, I shall serve for you, Sire",
+  "dialogue.vampirism.vampire_minion.start_serving3": "I appreciate your kindness and hospitality, I shall serve you, Sire",
   "dialogue.vampirism.vampire_minion.no_free_slot": "You are not able to control more minions",
   "dialogue.vampirism.vampire_minion.require_binding": "You need a %s to bind this vampire to you",
   "dialogue.vampirism.vampire_minion.upgrade": "I am grateful for the upgrade, I shall serve you even better now, Sire. Please choose in which area I should improve",
