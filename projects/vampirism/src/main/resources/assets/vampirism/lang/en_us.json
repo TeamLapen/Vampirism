@@ -597,7 +597,7 @@
   "skill.vampirism.ultimate_crucifix": "Crucifixion",
   "skill.vampirism.ultimate_crucifix.desc": "Gain access to the most powerful crucifix",
   "skill.vampirism.crucifix_repel": "Crucifix Repelling",
-  "skill.vampirism.crucifix_repel.desc": "Push vampires back when using a crucifix",
+  "skill.vampirism.crucifix_repel.desc": "Right-click your crucifix to knock back nearby vampires and undead, instead of only slowing those that approach you",
   "skill.vampirism.multitask_brewing": "Multitask Brewing",
   "skill.vampirism.multitask_brewing.desc": "Brew 5 potions at once instead of 3 in a batch",
   "skill.vampirism.durable_brewing": "Durable Brewing",
@@ -1216,6 +1216,7 @@
   "tooltip.vampirism.stake": "A lightweight wooden weapon that can be used to extract vampire blood from vampires. Recommended to be paired with a stronger weapon to weaken vampires, then finish them with the stake.",
   "tooltip.vampirism.garlic_finder": "Pure blood stirs more fiercely in the presence of garlic than the blood of inferior vampires. This device harnesses that peculiarity to estimate the proximity of garlic sources. Garlic diffusers and their cores within 40 blocks will be revealed to you if held in either hands or in the hotbar.",
   "tooltip.vampirism.vapor_still": "A copper distiller capable of separating liquid mixtures into fractions. Primarily used by hunters to augment ordinary potions by infusing them with distilled vampire blood. However, creating most advanced concoctions can be tricky. Therefore, knowledge of certain skills may be required.\n\nThe still needs blaze powder as fuel, one piece is enough for 20 potion batches. Interacts with hoppers similarly to brewing stands, allowing for process automation.",
+  "tooltip.vampirism.crucifix": "A sacramental used by hunters to ward off vampires and other undead. Right-click and hold to slow any that draw near within %s blocks, keeping them from reaching you. Affected vampires are also briefly blocked from using their powers. Channeling its power demands proper training, however: a crucifix concentrates such holiness that even a hunter may feel a sharp pain in the heart should they try to wield it untrained.",
 
   "subtitles.vampirism.entity.vampire_scream": "Vampire hisses",
   "subtitles.vampirism.player.bite": "Vampire bites",
