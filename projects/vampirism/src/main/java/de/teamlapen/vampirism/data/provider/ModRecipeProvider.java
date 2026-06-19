@@ -1402,6 +1402,16 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_quarrel_normal", has(ModItems.QUARREL_NORMAL))
                 .unlockedBy("has_tech_crossbow", has(ModItemTags.TECH_CROSSBOWS))
                 .lava(0)
+                .save(output, modString("quarrel_clip_from_quarrels"));
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_CLIP)
+                .pattern(" NN ")
+                .pattern("NIIN")
+                .pattern(" SS ")
+                .pattern(" NN ")
+                .define('I', IRON_INGOT)
+                .define('N', IRON_NUGGET)
+                .define('S', STICK)
+                .lava(0)
                 .save(output);
     }
 

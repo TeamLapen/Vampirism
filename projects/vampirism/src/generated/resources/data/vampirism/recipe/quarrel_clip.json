@@ -1,23 +1,16 @@
 {
-  "type": "vampirism:shapeless_crafting_weapontable",
+  "type": "vampirism:shaped_crafting_weapontable",
   "category": "equipment",
-  "ingredients": [
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal",
-    "vampirism:quarrel_normal"
+  "key": {
+    "I": "#c:ingots/iron",
+    "N": "#c:nuggets/iron",
+    "S": "#c:rods/wooden"
+  },
+  "pattern": [
+    " NN ",
+    "NIIN",
+    " SS ",
+    " NN "
   ],
   "result": {
     "id": "vampirism:quarrel_clip"
