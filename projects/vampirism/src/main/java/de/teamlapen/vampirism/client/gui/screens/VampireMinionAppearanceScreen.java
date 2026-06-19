@@ -16,6 +16,7 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.stream.IntStream;
 
 public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinionEntity> {
@@ -38,7 +39,11 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         if (name.isEmpty()) {
             name = Component.translatable("gui.vampirism.minion_appearance.minion").getString() + entity.getMinionId().orElse(0);
         }
-        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), name, this.skinType, (isMinionSpecificSkin ? 0b10 : 0b0) | (useLordSkin ? 0b1 : 0b0)));
+        Map<de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<?>, Object> map = new java.util.HashMap<>();
+        map.put(MinionData.NameType, name);
+        map.put(MinionData.SkinType, this.skinType);
+        map.put(MinionData.AppearanceType, (isMinionSpecificSkin ? 0b10 : 0b0) | (useLordSkin ? 0b1 : 0b0));
+        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), new de.teamlapen.faction.common.world.entities.appearance.AppearancePacket(map)));
         super.removed();
     }
 

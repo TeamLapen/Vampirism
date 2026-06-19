@@ -1,4 +1,4 @@
-package de.teamlapen.faction.common.server.commands;
+package de.teamlapen.faction.common.server.commands.minion;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.teamlapen.faction.common.factions.minions.MinionInventory;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
+import de.teamlapen.faction.common.server.commands.BasicCommand;
 import de.teamlapen.faction.common.server.commands.arguments.MinionArgument;
 import de.teamlapen.faction.common.util.RegUtil;
 import de.teamlapen.faction.server.FactionLogger;
@@ -31,7 +32,7 @@ public class MinionInventoryCommand extends BasicCommand {
     private static final SimpleCommandExceptionType NO_MINION = new SimpleCommandExceptionType(Component.translatable("command.factionapi.base.minion_inventory.no_minion"));
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext builderContext) {
-        return Commands.literal("modifyMinionInventory")
+        return Commands.literal("inventory")
                 .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
                 .then(Commands.argument("minion", MinionArgument.minions())
                         .then(Commands.literal("list")
@@ -84,7 +85,7 @@ public class MinionInventoryCommand extends BasicCommand {
                 source.sendSuccess(() -> Component.translatable("command.factionapi.base.minion_inventory.empty", playerMinionIdentifier).withStyle(ChatFormatting.AQUA), false);
             } else {
                 FactionLogger.info(FactionLogger.MINION_INVENTORY, "{} views inventory of {}", player.getName().getString(), playerMinionIdentifier);
-                source.sendSuccess(() -> Component.translatable("command.factionapi.base.minion_inventory.content", playerMinionIdentifier).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.UNDERLINE), false);
+                source.sendSuccess(() -> Component.translatable("command.factionapi.base.minion_inventory.content", playerMinionIdentifier.toString()).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.UNDERLINE), false);
                 source.sendSuccess(() -> Component.literal(count.entrySet().stream().map(a -> a.getValue() + " " + RegUtil.id(a.getKey())).collect(Collectors.joining("\n"))).withStyle(ChatFormatting.AQUA), false);
             }
         });

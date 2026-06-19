@@ -13,16 +13,23 @@ public class CollectionUtil {
     /**
      * @implNote this only checks for updates in the keys, not the values. It assumes the values are immutable.
      */
-    public static <TKey, TEntity> void updateCollection(Map<TKey, TEntity> oldMap, Map<TKey, TEntity> newMap, BiConsumer<TKey, TEntity> removeAction, BiConsumer<TKey, TEntity> addAction) {
+    public static <TKey, TEntity> boolean updateCollection(Map<TKey, TEntity> oldMap, Map<TKey, TEntity> newMap, BiConsumer<TKey, TEntity> removeAction, BiConsumer<TKey, TEntity> addAction) {
+        boolean changes = false;
         for (TKey tKey : new ArrayList<>(Sets.difference(oldMap.keySet(), newMap.keySet()))) {
             removeAction.accept(tKey, oldMap.get(tKey));
             oldMap.remove(tKey);
+            changes = true;
         }
 
         for (TKey tKey : new ArrayList<>(Sets.difference(newMap.keySet(), oldMap.keySet()))) {
             oldMap.put(tKey, newMap.get(tKey));
             addAction.accept(tKey, newMap.get(tKey));
+            changes = true;
         }
+
+        oldMap.putAll(newMap);
+
+        return changes;
     }
 
     public static <TEntity> boolean updateCollection(Set<TEntity> oldMap, Set<TEntity> newMap, Consumer<TEntity> removeAction, Consumer<TEntity> addAction) {
@@ -44,8 +51,8 @@ public class CollectionUtil {
     /**
      * @see #updateCollection(Map, Map, BiConsumer, BiConsumer)
      */
-    public static <TKey, TEntity> void updateCollection(Map<TKey, TEntity> oldMap, Map<TKey, TEntity> newMap) {
-        updateCollection(oldMap, newMap, (k, v) -> {}, (k, v) -> {});
+    public static <TKey, TEntity> boolean updateCollection(Map<TKey, TEntity> oldMap, Map<TKey, TEntity> newMap) {
+        return updateCollection(oldMap, newMap, (k, v) -> {}, (k, v) -> {});
     }
 
     public static <TEntity> boolean updateCollection(Set<TEntity> oldMap, Set<TEntity> newMap) {

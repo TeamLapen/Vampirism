@@ -201,8 +201,8 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void createAlchemicalFire() {
-        var model = ItemModelUtils.plainModel(ModelTemplates.TWO_LAYERED_ITEM.create(ModItems.ITEM_ALCHEMICAL_FIRE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/alchemical_fire_layer0"))).put(TextureSlot.LAYER1, new Material(VIdentifier.mod("item/alchemical_fire_layer1"))), this.modelOutput));
-        this.itemModelOutput.accept(ModItems.ITEM_ALCHEMICAL_FIRE.get(), model);
+        var model = ItemModelUtils.plainModel(ModelTemplates.TWO_LAYERED_ITEM.create(ModItems.ALCHEMICAL_FIRE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/alchemical_fire_layer0"))).put(TextureSlot.LAYER1, new Material(VIdentifier.mod("item/alchemical_fire_layer1"))), this.modelOutput));
+        this.itemModelOutput.accept(ModItems.ALCHEMICAL_FIRE.get(), model);
     }
 
     protected void createRitualKnife() {

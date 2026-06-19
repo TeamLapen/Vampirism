@@ -244,7 +244,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     public void leaveFaction(boolean die) {
         Holder<? extends IFaction<?>> oldFaction = currentFaction;
         setFaction(LevelingChange.neutral());
-        player.sendOverlayMessage(Component.translatable("command.factionapi.base.level.successful", player.getName(), oldFaction.value().getName(), 0));
+        player.sendOverlayMessage(Component.translatable("command.factionapi.base.level.successful", player.getName(), oldFaction.value().getNameSingular(), 0));
         if (die) {
             DamageHandler.hurtModded((ServerLevel) this.player.level(), player, ModDamageSources::leaveFaction, 10000);
         }
@@ -339,6 +339,12 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         this.updateCache();
 
         ScoreboardUtil.updateScoreboard(this.player, ScoreboardUtil.FACTION_CRITERIA, this.currentFaction.value().hashCode());
+
+        if (changedFaction && oldFaction instanceof ILordPlayer<?> lordPlayer) {
+            MinionWorldData.getData(this.player.level()).ifPresent(data -> {
+                data.removeController(this.player.getUUID());
+            });
+        }
 
         if (newFactionData instanceof ILordPlayer<?> lordPlayer) {
             MinionWorldData.getData(this.player.level()).ifPresent(data -> {

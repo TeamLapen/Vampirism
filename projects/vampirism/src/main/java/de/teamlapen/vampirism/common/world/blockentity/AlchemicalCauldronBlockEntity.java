@@ -31,7 +31,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -39,18 +39,14 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
-import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.resource.ResourceStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -324,22 +320,6 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
             RecipeHolder<AlchemicalCauldronRecipe> recipeholder;
             if (hasIngredient && hasFluid) {
                 recipeholder = pBlockEntity.quickCheck.getRecipeFor(new AlchemicalCauldronRecipeInput(ingredient, fluid, pBlockEntity.getPlayerSkillHandler()), (ServerLevel) pLevel).orElse(null);
-
-                //The above does not work e.g. for the garlic -> salt recipe using a water bucket.
-                //I think the ItemAccess#forStack(fluid) in AlchemicalCauldronRecipe#matches is the problem because it does not allow changing the item from water bucket to empty bucket (and vice versa)
-                //Demo code that also does not work:-----------------------------------------
-                FluidStack waterStack = new FluidStack(Fluids.WATER, 1000);
-                ItemStack waterBucket = new ItemStack(Items.WATER_BUCKET);
-                try (var transaction = Transaction.openRoot()) {
-                    ResourceHandler<FluidResource> inputHandler = waterBucket.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(waterBucket));
-                    ResourceStack<FluidResource> extracted = ResourceHandlerUtil.extractFirst(inputHandler, x -> x.is(waterStack.getFluid()), waterStack.amount(), transaction);
-                    if (extracted == null || extracted.isEmpty()) {
-                        //It won't brew
-                    }
-                }
-                //----------------------------------------
-
-
             } else {
                 recipeholder = null;
             }
@@ -381,13 +361,11 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
         }
     }
 
-    @NotNull
     @Override
     protected AbstractContainerMenu createMenu(int id, Inventory player) {
         return new AlchemicalCauldronMenu(id, player, this, this.dataAccess);
     }
 
-    @NotNull
     @Override
     protected Component getDefaultName() {
         return Component.translatable("container.vampirism.alchemical_cauldron");
@@ -443,7 +421,11 @@ public class AlchemicalCauldronBlockEntity extends NetworkedContainerBlockEntity
             } else if (ItemStack.isSameItemSameComponents(currentResult, newResult)) {
                 currentResult.grow(newResult.getCount());
             }
+            ItemStackTemplate craftingRemainder = fluid.getCraftingRemainder();
             fluid.shrink(1);
+            if (fluid.isEmpty() && craftingRemainder != null) {
+                pInventory.set(AlchemicalCauldronMenu.FLUID_SLOT, craftingRemainder.create());
+            }
             ingredient.shrink(1);
             return true;
         } else {

@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.stream.IntStream;
 
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
@@ -38,7 +39,12 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     @Override
     public void removed() {
-        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0, titleGender ? 1 : 0));
+        Map<de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<?>, Object> map = new java.util.HashMap<>();
+        map.put(VampirePlayer.FangType, fangType);
+        map.put(VampirePlayer.EyeType, eyeType);
+        map.put(VampirePlayer.GlowingEye, glowingEyes ? 1 : 0);
+        map.put(VampirePlayer.TitleGenderType, titleGender ? 1 : 0);
+        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), new de.teamlapen.faction.common.world.entities.appearance.AppearancePacket(map)));
         super.removed();
     }
 

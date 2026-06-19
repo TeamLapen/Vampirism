@@ -21,7 +21,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 public class GarlicInjectionItem extends InjectionItem {
 
@@ -41,7 +40,7 @@ public class GarlicInjectionItem extends InjectionItem {
             return true;
         } else if (!IFaction.isNeutral(currentFaction)) {
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.sendSystemMessage(Component.translatable("message.vampirism.injection_chair.already_non_hunter", currentFaction.value().getName()));
+                serverPlayer.sendSystemMessage(Component.translatable("message.vampirism.injection_chair.already_non_hunter", currentFaction.value().getNameSingular()));
             }
         }
         return false;
