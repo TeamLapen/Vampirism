@@ -124,6 +124,8 @@
   "message.factionapi.action.on_cooldown": "Diese Aktion ist immer noch auf Abklingzeit",
   "message.factionapi.action.cancelled": "Diese Aktion konnte nicht aktiviert werden",
   "message.factionapi.village_raid.defended": "Dorf wurde erfolgreich verteidigt",
+  "message.factionapi.village_raid.attacked.neutral": "%s greifen ein neutrales Dorf in der Nähe an",
+  "message.factionapi.village_raid.captured_by": "%s haben ein Dorf in der Nähe erobert",
   "message.factionapi.village_raid.almost_captured": "Dorf fast erobert. %s Verteidiger übrig",
   "message.factionapi.village_raid.abandoned": "Ein nahe gelegenes Dorf wurde aufgegeben",
   "message.factionapi.village_raid.neutral": "Neutraler Überfall",
@@ -265,7 +267,11 @@
   "factionapi.configuration.minionOfflineResourceCooldownMultiplier.tooltip": "Cooldown-Multiplikator für Ressourcen-Aufgabentypen während der besitzende Spieler offline ist.",
   "factionapi.configuration.minionEquipmentRepairAmount": "Reparaturmenge der Ausrüstung",
   "factionapi.configuration.minionEquipmentRepairAmount.tooltip": "Betrag, um der die Dienerausrüstung repariert wird, wenn Ressourcen Aufgaben erledigt werden.",
+  "factionapi.configuration.entitiesIMob": "IMob Entities",
+  "factionapi.configuration.preventDebugBoundingBoxes": "Debug-Bounding-Boxen verhindern",
+  "factionapi.configuration.preventDebugBoundingBoxes.tooltip": "Wenn aktiviert, verhindert, dass Spieler Debug-Begrenzungsbox Rendering aktivieren, was versteckte Entitäten aufdecken kann.",
   "factionapi.configuration.usePermissions": "Berechtigungen verwenden",
   "factionapi.configuration.usePermissions.tooltip": "Wenn aktiviert, verwendet das Forge-Berechtigungssystem für bestimmte Aktionen. Weitere Informationen finden Sie im Wiki.",
-  "factionapi.configuration.enableFactionLogging": "Fraktionsprotokollierung aktivieren"
+  "factionapi.configuration.enableFactionLogging": "Fraktionsprotokollierung aktivieren",
+  "factionapi.configuration.enableFactionLogging.tooltip": "Wenn aktiviert, schreibt eine benutzerdefinierte Protokolldatei für bestimmte Fraktions-Aktionen. Gilt nur für dedizierte Server. Erfordert einen Neustart des Servers."
 }
