@@ -700,6 +700,7 @@
   "command.vampirism.base.reset_balance.help2": "Verwende '/vampirism resetBalance all' um alle Kategorien zurückzusetzen oder setze mit '/vampirism resetBalance <category>' eine bestimmte Kategorie zurück",
   "command.vampirism.base.levelup.nofaction": "%s muss in einer Fraktion sein, um im Level aufzusteigen",
   "command.vampirism.base.levelup.max": "%s ist bereits auf der höchsten Stufe",
+  "command.vampirism.base.levelup.newlevel": "%1$s ist jetzt ein %2$s Level %3$s",
   "command.vampirism.base.glowing_eyes.enabled": "Leuchtende Augen erfolgreich aktiviert",
   "command.vampirism.base.glowing_eyes.disabled": "Leuchtende Augen erfolgreich deaktiviert",
   "command.vampirism.base.fang.success": "Fangzahn Typ erfolgreich zu %s geändert",
