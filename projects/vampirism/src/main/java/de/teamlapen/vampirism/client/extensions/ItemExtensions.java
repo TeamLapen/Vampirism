@@ -168,7 +168,8 @@ public class ItemExtensions {
                 pPoseStack.translate((float) i * f, f1, f2);
                 renderer.invokeApplyItemArmTransform(pPoseStack, humanoidarm, pEquippedProgress);
                 renderer.invokeApplyItemArmAttackTransform(pPoseStack, humanoidarm, pSwingProgress);
-                if (CrossbowItem.isCharged(pStack) && pSwingProgress < 0.001F && mainArm && (!(pPlayer.getOffhandItem().getItem() instanceof HunterCrossbowItem) || !CrossbowItem.isCharged(pPlayer.getOffhandItem()))) {
+                boolean dualWielding = crossbow.canUseDoubleCrossbow(pPlayer) && pPlayer.getOffhandItem().getItem() instanceof IHunterCrossbow;
+                if (CrossbowItem.isCharged(pStack) && pSwingProgress < 0.001F && mainArm && !dualWielding) {
                     pPoseStack.translate((float) i * -0.641864F, 0.0F, 0.0F);
                     pPoseStack.mulPose(Axis.YP.rotationDegrees((float) i * 10.0F));
                 }
