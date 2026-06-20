@@ -51,10 +51,6 @@ public class TechCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int count) {
-    }
-
-    @Override
     protected List<ItemStack> getLoadingProjectiles(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
         if (projectileStack.is(ModItems.QUARREL_CLIP)) {
             if (!shooter.hasInfiniteMaterials()) {
