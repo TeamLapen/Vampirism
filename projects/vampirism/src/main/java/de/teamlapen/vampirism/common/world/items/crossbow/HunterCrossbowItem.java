@@ -26,6 +26,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -36,6 +37,7 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -51,6 +53,9 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     protected final int chargeTime;
     private boolean chargeStartSoundPlayed = false;
     private boolean chargeMidSoundPlayed = false;
+
+    private static final double VOLLEY_ARROW_SPACING = 0.225;
+    private static final double DUAL_WIELD_SPACING = 0.3;
 
     public HunterCrossbowItem(Properties properties, float arrowVelocity, int chargeTime, ToolMaterial itemTier) {
         super(properties.repairable(ModItemTags.CROSSBOW_REPAIRABLE).enchantable(itemTier.enchantmentValue()));
@@ -206,9 +211,31 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
                     arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
                 }
                 this.shootProjectile(shooter, projectile, i, speed, inaccuracy, 0, p_331167_);
+                applyHorizontalSpread(shooter, hand, projectile, i, projectiles.size());
                 level.addFreshEntity(projectile);
             }
         }
+    }
+
+    protected void applyHorizontalSpread(LivingEntity shooter, InteractionHand hand, Projectile projectile, int index, int count) {
+        Vec3 look = shooter.getViewVector(1.0F);
+        Vec3 right = new Vec3(-look.z, 0.0, look.x);
+        double length = right.length();
+        if (length < 0.0001) {
+            return;
+        }
+        right = right.scale(1.0 / length);
+
+        double offset = (index - (count - 1) / 2.0) * VOLLEY_ARROW_SPACING;
+        if (isDualWielding(shooter)) {
+            boolean rightArm = (hand == InteractionHand.MAIN_HAND) == (shooter.getMainArm() == HumanoidArm.RIGHT);
+            offset += (rightArm ? 1 : -1) * DUAL_WIELD_SPACING;
+        }
+        projectile.setPos(projectile.getX() + right.x * offset, projectile.getY(), projectile.getZ() + right.z * offset);
+    }
+
+    private boolean isDualWielding(LivingEntity shooter) {
+        return canUseDoubleCrossbow(shooter) && shooter.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HunterCrossbowItem && shooter.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof HunterCrossbowItem;
     }
 
     @Override
