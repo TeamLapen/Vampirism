@@ -84,13 +84,18 @@ public class TechCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
-        if (ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
+    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles, @Nullable Boolean sharedFrugality) {
+        boolean frugality = sharedFrugality != null ? sharedFrugality : ModEnchantmentHelper.processFrugality(serverLevel, crossbow);
+        if (frugality) {
             crossbow.set(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED, Unit.INSTANCE);
-        } else {
-            return List.of(availableProjectiles.removeFirst());
+            return List.of(availableProjectiles.getFirst());
         }
-        return List.of(availableProjectiles.getFirst());
+        return List.of(availableProjectiles.removeFirst());
+    }
+
+    @Override
+    protected Boolean rollSharedFrugality(ServerLevel level, ItemStack crossbow) {
+        return ModEnchantmentHelper.processFrugality(level, crossbow, 2); // half chance, but both crossbows skip consuming together
     }
 
     @Override

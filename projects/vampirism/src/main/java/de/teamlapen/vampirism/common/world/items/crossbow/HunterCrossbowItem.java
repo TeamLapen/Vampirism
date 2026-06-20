@@ -168,19 +168,29 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
     @Override
     public void performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, float speed, float inacurracy, @Nullable LivingEntity p_331602_) {
+        performShooting(level, shooter, hand, crossbow, speed, inacurracy, p_331602_, null);
+    }
+
+    protected void performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, float speed, float inacurracy, @Nullable LivingEntity p_331602_, @Nullable Boolean sharedFrugality) {
         if (level instanceof ServerLevel serverLevel) {
             if (shooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(crossbow, shooter.level(), player, 1, true) < 0) return;
             ChargedProjectiles chargedprojectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (!chargedprojectiles.isEmpty()) {
                 List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.itemCopies());
-                List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles);
                 ItemStack otherStack = shooter.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+                boolean dualFire = hand == InteractionHand.MAIN_HAND && canUseDoubleCrossbow(shooter) && otherStack.getItem() instanceof HunterCrossbowItem && CrossbowItem.isCharged(otherStack);
+                // When both crossbows fire together, decide frugality once and reuse it for both so their magazines stay in sync.
+                Boolean frugality = sharedFrugality;
+                if (frugality == null && dualFire) {
+                    frugality = rollSharedFrugality(serverLevel, crossbow);
+                }
+                List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles, frugality);
                 this.shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow) * getPrecisionFactor(crossbow, level), shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
                 crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(availableProjectiles));
 
-                if (hand == InteractionHand.MAIN_HAND && shooter instanceof Player player && canUseDoubleCrossbow(player) && otherStack.getItem() instanceof HunterCrossbowItem otherCrossbow && CrossbowItem.isCharged(otherStack)) {
-                    otherCrossbow.performShooting(level, player, InteractionHand.OFF_HAND, otherStack, speed, inacurracy, p_331602_);
+                if (dualFire) {
+                    ((HunterCrossbowItem) otherStack.getItem()).performShooting(level, shooter, InteractionHand.OFF_HAND, otherStack, speed, inacurracy, p_331602_, frugality);
                 }
             }
         }
@@ -207,10 +217,15 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         return 1;
     }
 
-    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
+    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles, @Nullable Boolean sharedFrugality) {
         List<ItemStack> shootingProjectiles = List.copyOf(availableProjectiles);
         availableProjectiles.clear();
         return shootingProjectiles;
+    }
+
+    @Nullable
+    protected Boolean rollSharedFrugality(ServerLevel level, ItemStack crossbow) {
+        return null;
     }
 
     protected void onShoot(LivingEntity shooter, ItemStack crossbow) {
