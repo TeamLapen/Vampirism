@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.world.items.crossbow;
 
-import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
@@ -237,17 +236,11 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
     @Override
     public AbstractArrow customArrow(AbstractArrow arrow, ItemStack projectileStack, ItemStack weapon) {
-        if (ignoreHurtTimer(projectileStack) && arrow instanceof IEntityQuarrel) {
-            ((IEntityQuarrel) arrow).setIgnoreHurtTimer();
-        }
         if (arrow instanceof QuarrelEntity quarrel) {
+            quarrel.setIgnoreHurtTimer();
             quarrel.setGravityFactor(getPrecisionFactor(weapon, arrow.level()));
         }
         return arrow;
-    }
-
-    protected boolean ignoreHurtTimer(ItemStack crossbow) {
-        return false;
     }
 
     protected int getPrecisionLevel(ItemStack crossbow, Level level) {

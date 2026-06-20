@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.entity;
 
 import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
+import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelItem;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,6 +28,9 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     public static final String TAG_GRAVITY_FACTOR = "GravityFactor";
 
     private static final double MIN_PRECISION_HORIZONTAL_SPEED = 1.0;
+
+    private static final int MAX_RAPID_HITS = 3;
+    private static final int RAPID_HIT_WINDOW = 10;
 
     private static final EntityDataAccessor<Float> GRAVITY_FACTOR = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.FLOAT);
 
@@ -110,13 +115,18 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     }
 
     @Override
+    protected void onHitEntity(@NotNull EntityHitResult result) {
+        if (ignoreHurtTimer && !level().isClientSide() && result.getEntity() instanceof LivingEntity living && living.getData(ModAttachments.QUARREL_HURT_BYPASS).registerHit(living.level().getGameTime())) {
+            living.invulnerableTime = 0;
+        }
+        super.onHitEntity(result);
+    }
+
+    @Override
     protected void doPostHurtEffects(@NotNull LivingEntity living) {
         super.doPostHurtEffects(living);
         Item item = arrowStack.getItem();
         if (item instanceof IVampirismQuarrel) {
-            if (ignoreHurtTimer && living.invulnerableTime > 0) {
-                living.invulnerableTime = 0;
-            }
             ((IVampirismQuarrel<?>) item).onHitEntity(arrowStack, living, this, getOwner());
         }
     }
@@ -144,5 +154,23 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     @Override
     public void shoot(double pX, double pY, double pZ, float pVelocity, float pInaccuracy) {
         super.shoot(pX, pY, pZ, pVelocity, pInaccuracy);
+    }
+
+    public static final class HurtBypassTracker {
+        
+        private int count;
+        private long lastTick;
+
+        boolean registerHit(long gameTime) {
+            if (gameTime - this.lastTick > RAPID_HIT_WINDOW) {
+                this.count = 0;
+            }
+            this.lastTick = gameTime;
+            if (this.count >= MAX_RAPID_HITS) {
+                return false;
+            }
+            this.count++;
+            return true;
+        }
     }
 }
