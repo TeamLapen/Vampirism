@@ -12,7 +12,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
@@ -34,12 +32,11 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     private static final EntityDataAccessor<Float> GRAVITY_FACTOR = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.FLOAT);
 
-    @NotNull
     private ItemStack arrowStack = new ItemStack(ModItems.QUARREL_NORMAL.get());
     private boolean ignoreHurtTimer = false;
 
-    public QuarrelEntity(@NotNull EntityType<? extends QuarrelEntity> type, @NotNull Level world) {
-        super(type, world);
+    public QuarrelEntity(EntityType<? extends QuarrelEntity> type, Level level) {
+        super(type, level);
     }
 
     public QuarrelEntity(Level level, LivingEntity entity, ItemStack stack, ItemStack weapon) {
@@ -51,8 +48,8 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     /**
      * @param arrow ItemStack of the represented arrow. Is copied.
      */
-    public QuarrelEntity(@NotNull Level worldIn, double x, double y, double z, @NotNull ItemStack arrow, ItemStack weapon) {
-        super(ModEntities.QUARREL.get(), x, y, z, worldIn, arrow, weapon);
+    public QuarrelEntity(Level level, double x, double y, double z, ItemStack arrow, ItemStack weapon) {
+        super(ModEntities.QUARREL.get(), x, y, z, level, arrow, weapon);
         this.setPos(x, y, z);
         this.arrowStack = arrow.copy();
         this.arrowStack.setCount(1);
@@ -60,7 +57,7 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     @Nullable
     public IVampirismQuarrel.IQuarrelBehavior getArrowType() {
-        return getPickupItem().getItem() instanceof QuarrelItem ? ((QuarrelItem) getPickupItem().getItem()).getBehavior() : null;
+        return getPickupItem().getItem() instanceof QuarrelItem quarrel ? quarrel.getBehavior() : null;
     }
 
     @Override
@@ -96,13 +93,13 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull ValueOutput output) {
+    protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putFloat(TAG_GRAVITY_FACTOR, getGravityFactor());
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull ValueInput input) {
+    protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         setGravityFactor(input.getFloatOr(TAG_GRAVITY_FACTOR, 1.0f));
     }
@@ -115,26 +112,24 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult result) {
-        if (ignoreHurtTimer && !level().isClientSide() && result.getEntity() instanceof LivingEntity living && living.getData(ModAttachments.QUARREL_HURT_BYPASS).registerHit(living.level().getGameTime())) {
+    protected void onHitEntity(EntityHitResult hitResult) {
+        if (this.ignoreHurtTimer && !level().isClientSide() && hitResult.getEntity() instanceof LivingEntity living && living.getData(ModAttachments.QUARREL_HURT_BYPASS).registerHit(living.level().getGameTime())) {
             living.invulnerableTime = 0;
         }
-        super.onHitEntity(result);
+        super.onHitEntity(hitResult);
     }
 
     @Override
-    protected void doPostHurtEffects(@NotNull LivingEntity living) {
-        super.doPostHurtEffects(living);
-        Item item = arrowStack.getItem();
-        if (item instanceof IVampirismQuarrel) {
-            ((IVampirismQuarrel<?>) item).onHitEntity(arrowStack, living, this, getOwner());
+    protected void doPostHurtEffects(LivingEntity mob) {
+        super.doPostHurtEffects(mob);
+        if (this.arrowStack.getItem() instanceof IVampirismQuarrel<?> quarrel) {
+            quarrel.onHitEntity(this.arrowStack, mob, this, getOwner());
         }
     }
 
-    @NotNull
     @Override
     protected ItemStack getPickupItem() {
-        return arrowStack;
+        return this.arrowStack;
     }
 
     @Override
@@ -143,21 +138,15 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     }
 
     @Override
-    protected void onHitBlock(@NotNull BlockHitResult blockRayTraceResult) { //onHitBlock
-        Item item = arrowStack.getItem();
-        if (item instanceof IVampirismQuarrel) {
-            ((IVampirismQuarrel<?>) item).onHitBlock(arrowStack, (blockRayTraceResult).getBlockPos(), this, getOwner(), blockRayTraceResult.getDirection());
+    protected void onHitBlock(BlockHitResult hitResult) {
+        if (this.arrowStack.getItem() instanceof IVampirismQuarrel<?> quarrel) {
+            quarrel.onHitBlock(this.arrowStack, hitResult.getBlockPos(), this, getOwner(), hitResult.getDirection());
         }
-        super.onHitBlock(blockRayTraceResult);
-    }
-
-    @Override
-    public void shoot(double pX, double pY, double pZ, float pVelocity, float pInaccuracy) {
-        super.shoot(pX, pY, pZ, pVelocity, pInaccuracy);
+        super.onHitBlock(hitResult);
     }
 
     public static final class HurtBypassTracker {
-        
+
         private int count;
         private long lastTick;
 

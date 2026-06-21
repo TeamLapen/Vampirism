@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.world.items.crossbow;
 
-
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
@@ -27,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+@SuppressWarnings("deprecation")
 public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelEntity> {
 
     private final IQuarrelBehavior behavior;
@@ -37,18 +37,18 @@ public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelE
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flag) {
         Component effectDescription = this.behavior.getEffectDescription();
         if (!Objects.equals(effectDescription, Component.empty())) {
-            tooltipAdder.accept(CommonComponents.EMPTY);
-            tooltipAdder.accept(Component.translatable("tooltip.vampirism.quarrel_effect").withStyle(ChatFormatting.GRAY));
-            tooltipAdder.accept(Component.literal(" ").append(effectDescription).withStyle(ChatFormatting.DARK_GREEN));
+            tooltips.accept(CommonComponents.EMPTY);
+            tooltips.accept(Component.translatable("tooltip.vampirism.quarrel_effect").withStyle(ChatFormatting.GRAY));
+            tooltips.accept(Component.literal(" ").append(effectDescription).withStyle(ChatFormatting.DARK_GREEN));
         }
     }
 
     @Override
-    public AbstractArrow createArrow(Level level, ItemStack stack, LivingEntity entity, @Nullable ItemStack weapon) {
-        return createArrow(level, stack, entity, entity.position().add(0, entity.getEyeHeight(), 0), weapon);
+    public AbstractArrow createArrow(Level level, ItemStack stack, LivingEntity shooter, @Nullable ItemStack weapon) {
+        return createArrow(level, stack, shooter, shooter.position().add(0, shooter.getEyeHeight(), 0), weapon);
     }
 
     public AbstractArrow createArrow(Level level, ItemStack stack, Position position, @Nullable ItemStack weapon) {
@@ -66,6 +66,7 @@ public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelE
             arrowEntity.pickup = AbstractArrow.Pickup.DISALLOWED;
         }
         arrowEntity.setOwner(shooter);
+
         return arrowEntity;
     }
 

@@ -60,8 +60,10 @@ public class TechCrossbowItem extends HunterCrossbowItem {
             for (int i = 0; i < MAGAZINE_SIZE; i++) {
                 magazine.add(ModItems.QUARREL_NORMAL.get().getDefaultInstance());
             }
+
             return magazine;
         }
+
         return super.getLoadingProjectiles(crossbowStack, projectileStack, shooter);
     }
 
@@ -86,6 +88,7 @@ public class TechCrossbowItem extends HunterCrossbowItem {
             crossbow.set(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED, Unit.INSTANCE);
             return List.of(availableProjectiles.getFirst());
         }
+
         return List.of(availableProjectiles.removeFirst());
     }
 

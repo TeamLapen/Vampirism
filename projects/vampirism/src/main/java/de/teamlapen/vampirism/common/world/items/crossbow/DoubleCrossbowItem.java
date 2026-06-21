@@ -20,9 +20,9 @@ public class DoubleCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    protected boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
-        var first = super.tryLoadProjectiles(pShooter, pCrossbowStack);
-        var second = super.tryLoadProjectiles(pShooter, pCrossbowStack);
+    protected boolean tryLoadProjectiles(LivingEntity shooter, ItemStack crossbow) {
+        boolean first = super.tryLoadProjectiles(shooter, crossbow);
+        boolean second = super.tryLoadProjectiles(shooter, crossbow);
         return first || second;
     }
 
