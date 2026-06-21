@@ -195,9 +195,12 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         for (int i = 0; i < projectiles.size(); i++) {
             ItemStack projectileStack = projectiles.get(i);
             if (projectileStack.isEmpty()) continue;
+
             crossbowStack.hurtAndBreak(getDurabilityUse(projectileStack), shooter, hand.asEquipmentSlot());
             Projectile projectile = createProjectile(level, shooter, crossbowStack, projectileStack, isPlayer);
-            if (crossbowStack.remove(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED) != null && projectile instanceof AbstractArrow arrow) arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+            if (crossbowStack.remove(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED) != null && projectile instanceof AbstractArrow arrow) {
+                arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+            }
             shootProjectile(shooter, projectile, i, speed, inaccuracy, 0, targetOverride);
             applyHorizontalSpread(shooter, hand, projectile, i, projectiles.size());
             level.addFreshEntity(projectile);
