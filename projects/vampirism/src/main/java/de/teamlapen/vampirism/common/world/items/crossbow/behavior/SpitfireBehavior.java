@@ -6,16 +6,15 @@ import de.teamlapen.vampirism.common.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseFireBlock;
-import net.minecraft.world.level.block.CampfireBlock;
-import net.minecraft.world.level.block.CandleBlock;
-import net.minecraft.world.level.block.CandleCakeBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 public class SpitfireBehavior implements IVampirismQuarrel.IQuarrelBehavior {
@@ -26,19 +25,79 @@ public class SpitfireBehavior implements IVampirismQuarrel.IQuarrelBehavior {
     }
 
     @Override
-    public void onHitBlock(ItemStack arrow, BlockPos blockpos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction direction) {
-        Level level = arrowEntity.level();
-        BlockState blockstate = level.getBlockState(blockpos);
-        if (!CampfireBlock.canLight(blockstate) && !CandleBlock.canLight(blockstate) && !CandleCakeBlock.canLight(blockstate)) {
-            BlockPos blockpos1 = blockpos.relative(direction);
-            if (BaseFireBlock.canBePlacedAt(level, blockpos1, direction)) {
-                BlockState blockstate1 = BaseFireBlock.getState(level, blockpos1);
-                if (blockstate1.getBlock() instanceof BaseFireBlock) {
-                    blockstate1 = ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState();
-                }
-                level.setBlock(blockpos1, blockstate1, 11);
+    public void onHitBlock(ItemStack arrow, BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction direction) {
+        createAlchemicalFireSplash(arrowEntity.level(), blockPos, direction, 2, 0.25, 5);
+    }
+
+    /**
+     * Creates a circular splash of alchemical fire centered on the hit block. Every block within the radius has a
+     * chance to be set alight that is higher towards the center, and any campfires, candles or candle cakes the splash
+     * covers are lit instead. Does nothing if the hit block was reached through a fluid (e.g. an arrow shot into
+     * water and lodged in the floor), so submerged hits never ignite anything.
+     *
+     * @param pos the hit block, used as the center of the splash. Not the air block, the block that was hit
+     * @param direction the direction from which the hit came. Therefore, if an arrow hit the block
+     *                  from the top, the direction should be up
+     * @param radius the radius of the fire splash
+     * @param chanceMultiple the value the chance of the block being on fire is rounded up to. This is
+     *                       added for cases where the splash is not big enough so that the blocks
+     *                       closest to the center always have a 100% chance of ignition. Smaller
+     *                       values (in the form of decimal fractions) may look better with a bigger
+     *                       radius. It is recommended to input a number that is a fraction of 1
+     *                       (1 / n where n is any whole number), e.g. 0.1, 0.2, 0.25.
+     * @param surfaceDepth the depth that the alchemical fire can reach. Blocks below + center + blocks above
+     */
+    public static void createAlchemicalFireSplash(Level level, BlockPos pos, Direction direction, double radius, double chanceMultiple, int surfaceDepth) {
+        RandomSource random = level.getRandom();
+        int ceilRadius = (int) Math.ceil(radius);
+
+        if (!level.getBlockState(pos.relative(direction)).getFluidState().isEmpty()) return;
+
+        for (int dx = -ceilRadius; dx <= ceilRadius; dx++) {
+            for (int dz = -ceilRadius; dz <= ceilRadius; dz++) {
+                BlockPos targetPos = pos.offset(dx, 0, dz);
+
+                double distance = Math.sqrt(dx * dx + dz * dz);
+                if (distance > radius) continue;
+
+                double relative = 1 - distance / radius;
+                double chance = Math.ceil(relative / chanceMultiple) * chanceMultiple;
+                if (random.nextDouble() > chance) continue;
+
+                placeFire(level, targetPos, surfaceDepth);
             }
         }
+    }
+
+    private static void placeFire(Level level, BlockPos pos, int surfaceDepth) {
+        for (int n = 0; n <= surfaceDepth; n++) {
+            BlockPos basePos = pos.above(getHeightSearchOffset(n));
+            BlockPos targetPos = basePos.above();
+            BlockState baseState = level.getBlockState(basePos);
+            BlockState targetState = level.getBlockState(targetPos);
+
+            if (!targetState.getFluidState().isEmpty()) return;
+
+            if (!targetState.canBeReplaced() || baseState.canBeReplaced()) {
+                continue;
+            }
+
+            if (CampfireBlock.canLight(baseState) || CandleBlock.canLight(baseState) || CandleCakeBlock.canLight(baseState)) {
+                level.setBlock(basePos, baseState.setValue(BlockStateProperties.LIT, true), Block.UPDATE_ALL_IMMEDIATE);
+                return;
+            }
+
+            BlockState fireState = BaseFireBlock.getState(level, targetPos);
+            if (fireState.getBlock() instanceof BaseFireBlock) {
+                fireState = ModBlocks.ALCHEMICAL_FIRE.get().defaultBlockState();
+            }
+            level.setBlock(targetPos, fireState, Block.UPDATE_ALL_IMMEDIATE);
+            return;
+        }
+    }
+
+    private static int getHeightSearchOffset(int n) {
+        return Math.powExact(-1, n + 1) * (int) Math.ceil(n * 0.5); // 0, 1, -1, 2, -2 and so on
     }
 
     @Override

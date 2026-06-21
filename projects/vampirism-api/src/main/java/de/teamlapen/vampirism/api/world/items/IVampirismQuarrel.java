@@ -48,11 +48,9 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
         int color();
 
         default void onHitEntity(ItemStack arrow, LivingEntity entity, AbstractArrow arrowEntity, Entity shootingEntity) {
-
         }
 
-        default void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction up) {
-
+        default void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction direction) {
         }
 
         default Component getEffectDescription() {
@@ -68,7 +66,6 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
         float baseDamage(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter);
 
         default void modifyArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, @NotNull AbstractArrow arrow) {
-
         }
     }
 }
