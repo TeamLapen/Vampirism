@@ -26,7 +26,7 @@ public class SpitfireBehavior implements IVampirismQuarrel.IQuarrelBehavior {
 
     @Override
     public void onHitBlock(ItemStack arrow, BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction direction) {
-        createAlchemicalFireSplash(arrowEntity.level(), blockPos, direction, 2, 0.25, 5);
+        createAlchemicalFireSplash(arrowEntity.level(), blockPos, direction, 2.5, 5);
     }
 
     /**
@@ -39,15 +39,9 @@ public class SpitfireBehavior implements IVampirismQuarrel.IQuarrelBehavior {
      * @param direction the direction from which the hit came. Therefore, if an arrow hit the block
      *                  from the top, the direction should be up
      * @param radius the radius of the fire splash
-     * @param chanceMultiple the value the chance of the block being on fire is rounded up to. This is
-     *                       added for cases where the splash is not big enough so that the blocks
-     *                       closest to the center always have a 100% chance of ignition. Smaller
-     *                       values (in the form of decimal fractions) may look better with a bigger
-     *                       radius. It is recommended to input a number that is a fraction of 1
-     *                       (1 / n where n is any whole number), e.g. 0.1, 0.2, 0.25.
      * @param surfaceDepth the depth that the alchemical fire can reach. Blocks below + center + blocks above
      */
-    public static void createAlchemicalFireSplash(Level level, BlockPos pos, Direction direction, double radius, double chanceMultiple, int surfaceDepth) {
+    public static void createAlchemicalFireSplash(Level level, BlockPos pos, Direction direction, double radius, int surfaceDepth) {
         RandomSource random = level.getRandom();
         int ceilRadius = (int) Math.ceil(radius);
 
@@ -60,8 +54,9 @@ public class SpitfireBehavior implements IVampirismQuarrel.IQuarrelBehavior {
                 double distance = Math.sqrt(dx * dx + dz * dz);
                 if (distance > radius) continue;
 
-                double relative = 1 - distance / radius;
-                double chance = Math.ceil(relative / chanceMultiple) * chanceMultiple;
+                double relative = distance / radius;
+                double chance = Math.pow(2, -relative * relative * 9);
+
                 if (random.nextDouble() > chance) continue;
 
                 placeFire(level, targetPos, surfaceDepth);
