@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     public static final String TAG_GRAVITY_FACTOR = "GravityFactor";
+    public static final String TAG_ARROW_STACK = "ArrowStack";
 
     private static final double MIN_PRECISION_HORIZONTAL_SPEED = 1.0;
 
@@ -31,8 +32,8 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     private static final int RAPID_HIT_WINDOW = 10;
 
     private static final EntityDataAccessor<Float> GRAVITY_FACTOR = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<ItemStack> ARROW_STACK = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.ITEM_STACK);
 
-    private ItemStack arrowStack = new ItemStack(ModItems.QUARREL_NORMAL.get());
     private boolean ignoreHurtTimer = false;
 
     public QuarrelEntity(EntityType<? extends QuarrelEntity> type, Level level) {
@@ -41,8 +42,7 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     public QuarrelEntity(Level level, LivingEntity entity, ItemStack stack, ItemStack weapon) {
         super(ModEntities.QUARREL.get(), entity, level, stack, weapon);
-        this.arrowStack = stack.copy();
-        this.arrowStack.setCount(1);
+        setArrowStack(stack);
     }
 
     /**
@@ -51,8 +51,11 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     public QuarrelEntity(Level level, double x, double y, double z, ItemStack arrow, ItemStack weapon) {
         super(ModEntities.QUARREL.get(), x, y, z, level, arrow, weapon);
         this.setPos(x, y, z);
-        this.arrowStack = arrow.copy();
-        this.arrowStack.setCount(1);
+        setArrowStack(arrow);
+    }
+
+    private void setArrowStack(ItemStack stack) {
+        this.entityData.set(ARROW_STACK, stack.copyWithCount(1));
     }
 
     @Nullable
@@ -64,6 +67,7 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(GRAVITY_FACTOR, 1.0f);
+        builder.define(ARROW_STACK, ModItems.QUARREL_NORMAL.toStack());
     }
 
     /**
@@ -96,12 +100,14 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putFloat(TAG_GRAVITY_FACTOR, getGravityFactor());
+        output.store(TAG_ARROW_STACK, ItemStack.CODEC, getPickupItem());
     }
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         setGravityFactor(input.getFloatOr(TAG_GRAVITY_FACTOR, 1.0f));
+        setArrowStack(input.read(TAG_ARROW_STACK, ItemStack.CODEC).orElse(ModItems.QUARREL_NORMAL.toStack()));
     }
 
     /**
@@ -122,14 +128,15 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     @Override
     protected void doPostHurtEffects(LivingEntity mob) {
         super.doPostHurtEffects(mob);
-        if (this.arrowStack.getItem() instanceof IVampirismQuarrel<?> quarrel) {
-            quarrel.onHitEntity(this.arrowStack, mob, this, getOwner());
+        ItemStack arrow = getPickupItem();
+        if (arrow.getItem() instanceof IVampirismQuarrel<?> quarrel) {
+            quarrel.onHitEntity(arrow, mob, this, getOwner());
         }
     }
 
     @Override
     protected ItemStack getPickupItem() {
-        return this.arrowStack;
+        return this.entityData.get(ARROW_STACK).copy();
     }
 
     @Override
@@ -139,8 +146,9 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     @Override
     protected void onHitBlock(BlockHitResult hitResult) {
-        if (this.arrowStack.getItem() instanceof IVampirismQuarrel<?> quarrel) {
-            quarrel.onHitBlock(this.arrowStack, hitResult.getBlockPos(), this, getOwner(), hitResult.getDirection());
+        ItemStack arrow = getPickupItem();
+        if (arrow.getItem() instanceof IVampirismQuarrel<?> quarrel) {
+            quarrel.onHitBlock(arrow, hitResult.getBlockPos(), this, getOwner(), hitResult.getDirection());
         }
         super.onHitBlock(hitResult);
     }
