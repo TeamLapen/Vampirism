@@ -1164,7 +1164,7 @@
   "tooltip.vampirism.quarrel_teleport": "Teleports the shooter to the point of impact",
   "tooltip.vampirism.quarrel_bleeding": "Applies bleeding effect",
   "tooltip.vampirism.quarrel_garlic": "Applies garlic effect",
-  "tooltip.vampirism.crossbow.selected_ammo": "Selected Ammo: %",
+  "tooltip.vampirism.crossbow.selected_ammo": "Selected Ammo: %s",
   "tooltip.vampirism.quarrel_pouch.empty": "Can hold several stacks of quarrels for quick reloading",
   "tooltip.vampirism.for_level": "For up to level %s",
   "tooltip.vampirism.alchemical_fire.desc1": "Does not spread",
