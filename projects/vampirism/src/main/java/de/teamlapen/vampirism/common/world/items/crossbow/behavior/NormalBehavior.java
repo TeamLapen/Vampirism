@@ -20,11 +20,6 @@ public class NormalBehavior implements IVampirismQuarrel.IQuarrelBehavior {
     }
 
     @Override
-    public boolean canBeInfinite() {
-        return true;
-    }
-
-    @Override
     public float baseDamage(Level level, ItemStack stack, @Nullable LivingEntity shooter) {
         return 2;
     }

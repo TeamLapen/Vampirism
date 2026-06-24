@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.world.items.crossbow.behavior;
 
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
-import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -98,11 +97,6 @@ public class SpitfireBehavior implements IVampirismQuarrel.IQuarrelBehavior {
     @Override
     public Component getEffectDescription() {
         return Component.translatable("tooltip.vampirism.quarrel_spitfire");
-    }
-
-    @Override
-    public boolean canBeInfinite() {
-        return ModConfig.balance().allowInfiniteSpecialArrows.get();
     }
 
     @Override

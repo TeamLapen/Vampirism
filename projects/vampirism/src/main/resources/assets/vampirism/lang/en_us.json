@@ -1464,8 +1464,6 @@
   "vampirism.configuration.hunterTentMaxSpawn.tooltip": "Maximum number of hunters that can spawn at a single tent per day.",
   "vampirism.configuration.crossbowDamageMult": "Crossbow Damage Multiplier",
   "vampirism.configuration.crossbowDamageMult.tooltip": "Multiplier applied to base damage dealt by quarrels.",
-  "vampirism.configuration.allowInfiniteSpecialArrows": "Allow Infinite Special Arrows",
-  "vampirism.configuration.allowInfiniteSpecialArrows.tooltip": "When enabled, special quarrels (e.g. spitfire) can be used with the Infinity enchantment.",
   "vampirism.configuration.garlicDiffuserStartupTime": "Garlic Diffuser Startup Time",
   "vampirism.configuration.garlicDiffuserStartupTime.tooltip": "Delay in ticks before a newly placed garlic diffuser becomes active. Scaled to 0.25x in singleplayer.",
 

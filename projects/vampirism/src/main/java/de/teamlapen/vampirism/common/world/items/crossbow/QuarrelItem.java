@@ -79,11 +79,6 @@ public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelE
     }
 
     @Override
-    public boolean isCanBeInfinite() {
-        return this.behavior.canBeInfinite();
-    }
-
-    @Override
     public void onHitBlock(ItemStack arrow, BlockPos blockPos, IEntityQuarrel arrowEntity, @Nullable Entity shootingEntity) {
         this.behavior.onHitBlock(arrow, blockPos, (AbstractArrow) arrowEntity, shootingEntity, Direction.UP);
     }

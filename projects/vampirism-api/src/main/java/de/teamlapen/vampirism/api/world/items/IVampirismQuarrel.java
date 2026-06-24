@@ -15,11 +15,6 @@ import org.jetbrains.annotations.Nullable;
 public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> extends ItemLike {
 
     /**
-     * @return If an arrow of this type can be used in an infinite crossbow
-     */
-    boolean isCanBeInfinite();
-
-    /**
      * Called when the {@link IVampirismQuarrel} hits a block
      *
      * @param arrow          The itemstack of the shot arrow
@@ -56,8 +51,6 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
         default Component getEffectDescription() {
             return Component.empty();
         }
-
-        boolean canBeInfinite();
 
         default AbstractArrow.Pickup pickupBehavior() {
             return AbstractArrow.Pickup.CREATIVE_ONLY;

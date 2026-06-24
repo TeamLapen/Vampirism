@@ -35,7 +35,6 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue diffuserBootTime;
     public final ModConfigSpec.IntValue hunterTentMaxSpawn;
     public final ModConfigSpec.DoubleValue crossbowDamageMult;
-    public final ModConfigSpec.BooleanValue allowInfiniteSpecialArrows;
     public final ModConfigSpec.IntValue garlicDiffuserStartupTime;
 
     // Entity Actions
@@ -272,9 +271,6 @@ public class BalanceConfig {
         crossbowDamageMult = builder
                 .comment("Multiplier applied to base damage dealt by quarrels.")
                 .defineInRange("crossbowDamageMult", 1, 0.2, 5);
-        allowInfiniteSpecialArrows = builder
-                .comment("When enabled, special quarrels (e.g. spitfire) can be used with the Infinity enchantment.")
-                .define("allowInfiniteSpecialArrows", false);
         garlicDiffuserStartupTime = builder
                 .comment("Delay in ticks before a newly placed garlic diffuser becomes active. Scaled to 0.25x in singleplayer.")
                 .defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);

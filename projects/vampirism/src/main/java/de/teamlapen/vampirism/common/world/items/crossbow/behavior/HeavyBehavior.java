@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.common.world.items.crossbow.behavior;
 
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
-import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,11 +25,6 @@ public class HeavyBehavior implements IVampirismQuarrel.IQuarrelBehavior {
     @Override
     public AbstractArrow.Pickup pickupBehavior() {
         return AbstractArrow.Pickup.ALLOWED;
-    }
-
-    @Override
-    public boolean canBeInfinite() {
-        return ModConfig.balance().allowInfiniteSpecialArrows.get();
     }
 
     @Override
