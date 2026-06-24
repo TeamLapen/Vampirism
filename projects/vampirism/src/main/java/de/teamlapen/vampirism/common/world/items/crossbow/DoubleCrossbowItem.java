@@ -6,7 +6,6 @@ import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import net.minecraft.core.Holder;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ToolMaterial;
@@ -19,10 +18,8 @@ public class DoubleCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    protected boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
-        var first = super.tryLoadProjectiles(pShooter, pCrossbowStack);
-        var second = super.tryLoadProjectiles(pShooter, pCrossbowStack);
-        return first || second;
+    public int getMaxLoadedProjectiles() {
+        return 2;
     }
 
     @Override

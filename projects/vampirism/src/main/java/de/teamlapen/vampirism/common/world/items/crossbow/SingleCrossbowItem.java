@@ -18,6 +18,11 @@ public class SingleCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
+    public int getMaxLoadedProjectiles() {
+        return 1;
+    }
+
+    @Override
     public float getInaccuracy(ItemStack stack, boolean doubleCrossbow) {
         return doubleCrossbow ? 2f : 0.4f;
     }

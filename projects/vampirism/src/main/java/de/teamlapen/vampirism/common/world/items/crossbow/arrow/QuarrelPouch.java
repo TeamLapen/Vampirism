@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.common.world.items;
+package de.teamlapen.vampirism.common.world.items.crossbow.arrow;
 
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
@@ -35,7 +35,7 @@ public class QuarrelPouch extends Item {
 
         QuarrelPouchContents.Mutable content = stack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY).asMutable();
         if (action == ClickAction.PRIMARY && !other.isEmpty()) {
-            if (content.tryAdd(other)) {
+            if (content.tryAdd(other) > 0) {
                 playInsertSound(player);
             } else {
                 playInsertFailSound(player);
@@ -62,7 +62,7 @@ public class QuarrelPouch extends Item {
         QuarrelPouchContents.Mutable mutable = stack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY).asMutable();
         ItemStack item = slot.getItem();
         if (action == ClickAction.PRIMARY && !item.isEmpty()) {
-            if (mutable.tryAdd(item)) {
+            if (mutable.tryAdd(item) > 0) {
                 playInsertSound(player);
             } else {
                 playInsertFailSound(player);

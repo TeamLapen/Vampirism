@@ -4,12 +4,12 @@ import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.api.VampirismTags;
-import de.teamlapen.vampirism.api.world.items.IArrowContainer;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.common.util.ModEnchantmentHelper;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.common.world.items.crossbow.arrow.ArrowContainer;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Unit;
@@ -17,6 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
@@ -32,9 +33,15 @@ public class TechCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
+    public int getMaxLoadedProjectiles() {
+        return 15;
+    }
+
+    @Override
     public boolean testProjectile(ItemStack crossbow, ItemStack projectile) {
-        if (projectile.getItem() instanceof IArrowContainer container) {
-            return !container.getArrows(projectile).isEmpty();
+        if (projectile.getItem() instanceof ArrowContainer) {
+            ItemStackTemplate arrows = projectile.get(ModDataComponents.CONTAINED_PROJECTILES);
+            return arrows != null && arrows.count() > 0;
         }
         return false;
     }

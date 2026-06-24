@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.common.world.items.crossbow.arrow;
+package de.teamlapen.vampirism.common.world.items.crossbow.arrow.arrowbehavior;
 
 import de.teamlapen.vampirism.api.world.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.common.config.ModConfig;

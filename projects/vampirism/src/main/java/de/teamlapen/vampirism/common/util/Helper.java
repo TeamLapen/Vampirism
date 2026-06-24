@@ -20,7 +20,7 @@ import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.common.world.items.StakeItem;
-import de.teamlapen.vampirism.common.world.items.crossbow.arrow.VampireKillerBehavior;
+import de.teamlapen.vampirism.common.world.items.crossbow.arrow.arrowbehavior.VampireKillerBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.world.items.crossbow;
 
-import de.teamlapen.vampirism.api.world.items.IArrowContainer;
 import de.teamlapen.vampirism.api.world.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.api.world.items.IVampirismCrossbowArrow;
@@ -8,9 +7,10 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.world.items.QuarrelPouch;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.world.items.component.SelectedAmmunition;
+import de.teamlapen.vampirism.common.world.items.crossbow.arrow.ArrowContainer;
+import de.teamlapen.vampirism.common.world.items.crossbow.arrow.QuarrelPouch;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.Registry;
@@ -34,6 +34,13 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.TransferPreconditions;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -47,12 +54,26 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     protected final ToolMaterial itemTier;
     protected final float arrowVelocity;
     protected final int chargeTime;
+    private boolean startSoundPlayed = false;
+    private boolean midLoadSoundPlayed = false;
 
     public HunterCrossbowItem(Properties properties, float arrowVelocity, int chargeTime, ToolMaterial itemTier) {
         super(properties.repairable(ModItemTags.CROSSBOW_REPAIRABLE).enchantable(itemTier.enchantmentValue()));
         this.arrowVelocity = arrowVelocity;
         this.chargeTime = chargeTime;
         this.itemTier = itemTier;
+    }
+
+    /**
+     * @return the maximum number of projectiles this crossbow can hold loaded at once
+     */
+    public abstract int getMaxLoadedProjectiles();
+
+    /**
+     * @return the number of projectiles currently loaded into the crossbow
+     */
+    public static int getLoadedCount(ItemStack crossbow) {
+        return crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).items().size();
     }
 
     @Override
@@ -109,11 +130,13 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
             ChargedProjectiles chargedprojectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (!chargedprojectiles.isEmpty()) {
                 List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.itemCopies());
+                int loadedBefore = availableProjectiles.size();
                 List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles);
+                int consumed = loadedBefore - availableProjectiles.size();
                 ItemStack otherStack = shooter.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
                 this.shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow), shooter instanceof Player, p_331602_);
                 onShoot(shooter, crossbow);
-                crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(availableProjectiles));
+                consumeLoadedProjectiles(crossbow, consumed);
 
                 if (hand == InteractionHand.MAIN_HAND) {
                     if (shooter instanceof Player player && canUseDoubleCrossbow(player) && otherStack.getItem() instanceof HunterCrossbowItem otherCrossbow && CrossbowItem.isCharged(otherStack)) {
@@ -170,24 +193,45 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         return false;
     }
 
+    /**
+     * Mirrors {@link CrossbowItem#onUseTick} but calls our own {@link #tryLoadProjectiles} (which loads via the
+     * crossbow's {@link ResourceHandler}) instead of the vanilla private static loading, and additionally charges the
+     * off-hand crossbow when the {@code DOUBLE_IT} skill is active. Vanilla loads inside {@code onUseTick}, so without
+     * this override the bolts would be drawn with vanilla logic before our loading code ever runs.
+     */
     @Override
-    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity entity, int pTimeCharged) {
-        int combinedUseDuration = this.getCombinedUseDuration(itemStack, entity, entity.getUsedItemHand());
-        int useDuration = this.getUseDuration(itemStack, entity);
-        int combinedChargingDuration = combinedUseDuration - pTimeCharged;
-        int chargingDuration = useDuration - pTimeCharged;
-        if (combinedChargingDuration != useDuration) {
-            chargingDuration += combinedUseDuration - useDuration;
-        }
-        if ((float) chargingDuration / getChargeDurationMod(itemStack, level) >= 1.0F && !CrossbowItem.isCharged(itemStack) && tryLoadProjectiles(entity, itemStack)) {
-            ItemStack otherStack = entity.getItemInHand(entity.getUsedItemHand() == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-            if (canUseDoubleCrossbow(entity) && (float) combinedChargingDuration / getCombinedChargeDurationMod(itemStack, entity, entity.getUsedItemHand()) >= 1f && otherStack.getItem() instanceof HunterCrossbowItem && !CrossbowItem.isCharged(otherStack)) {
-                tryLoadProjectiles(entity, otherStack);
+    public void onUseTick(Level level, LivingEntity entity, ItemStack itemStack, int ticksRemaining) {
+        if (!level.isClientSide()) {
+            int useDuration = this.getUseDuration(itemStack, entity);
+            int combinedUseDuration = this.getCombinedUseDuration(itemStack, entity, entity.getUsedItemHand());
+            int combinedChargingDuration = combinedUseDuration - ticksRemaining;
+            int chargingDuration = useDuration - ticksRemaining;
+            if (combinedChargingDuration != useDuration) {
+                chargingDuration += combinedUseDuration - useDuration;
             }
-            SoundSource source = entity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-            level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_END, source, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
+            float chargePercent = (float) chargingDuration / getChargeDurationMod(itemStack, level);
+
+            if (chargePercent < 0.2F) {
+                this.startSoundPlayed = false;
+                this.midLoadSoundPlayed = false;
+            }
+            if (chargePercent >= 0.2F && !this.startSoundPlayed) {
+                this.startSoundPlayed = true;
+                level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_START, SoundSource.PLAYERS, 0.5F, 1.0F);
+            }
+            if (chargePercent >= 0.5F && !this.midLoadSoundPlayed) {
+                this.midLoadSoundPlayed = true;
+                level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_MIDDLE, SoundSource.PLAYERS, 0.5F, 1.0F);
+            }
+            if (chargePercent >= 1.0F && !CrossbowItem.isCharged(itemStack) && tryLoadProjectiles(entity, itemStack)) {
+                ItemStack otherStack = entity.getItemInHand(entity.getUsedItemHand() == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+                if (canUseDoubleCrossbow(entity) && (float) combinedChargingDuration / getCombinedChargeDurationMod(itemStack, entity, entity.getUsedItemHand()) >= 1f && otherStack.getItem() instanceof HunterCrossbowItem && !CrossbowItem.isCharged(otherStack)) {
+                    tryLoadProjectiles(entity, otherStack);
+                }
+                SoundSource source = entity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
+                level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_END, source, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
+            }
         }
-        return false;
     }
 
     public int getCombinedChargeDurationMod(ItemStack crossbow, LivingEntity entity, InteractionHand hand) {
@@ -205,59 +249,94 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         return i == 0 ? this.chargeTime : this.chargeTime - 2 * i;
     }
 
-    protected boolean tryLoadProjectiles(LivingEntity pShooter, ItemStack pCrossbowStack) {
-        List<ItemStack> list = drawMod(pCrossbowStack, pShooter.getProjectile(pCrossbowStack), pShooter);
-        if (!list.isEmpty()) {
-            ArrayList<ItemStack> itemStacks = new ArrayList<>(pCrossbowStack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).itemCopies());
-            itemStacks.addAll(list);
-            pCrossbowStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(itemStacks));
-            return true;
-        } else {
+    protected boolean tryLoadProjectiles(LivingEntity shooter, ItemStack crossbow) {
+        ItemStack ammo = shooter.getProjectile(crossbow);
+        if (ammo.isEmpty()) {
             return false;
         }
-    }
-
-    protected List<ItemStack> getLoadingProjectiles(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
-        if (projectileStack.getItem() instanceof QuarrelPouch) {
-            QuarrelPouchContents orDefault = projectileStack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
-            if (!orDefault.isEmpty()) {
-                QuarrelPouchContents.Mutable mutable = orDefault.asMutable();
-                ItemStack itemStack = getAmmunition(crossbowStack).map(mutable::getSpecific).orElseGet(mutable::getFirst);
-                projectileStack.set(ModDataComponents.QUARREL_POUCH_CONTENTS, mutable.toImmutable());
-                return List.of(itemStack);
-            }
-            return List.of();
-        } else if (projectileStack.getItem() instanceof IArrowContainer container) {
-            if (shooter.hasInfiniteMaterials()) {
-                projectileStack = projectileStack.copy();
-            }
-            return container.getAndRemoveArrows(projectileStack).stream().toList();
-        } else {
-            return List.of(projectileStack);
+        int capacityLeft = getMaxLoadedProjectiles() - getLoadedCount(crossbow);
+        if (capacityLeft <= 0) {
+            return false;
         }
-    }
-
-    protected List<ItemStack> drawMod(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
-        if (projectileStack.isEmpty()) {
-            return List.of();
-        } else {
-            return getLoadingProjectiles(crossbowStack, projectileStack, shooter).stream().map(projectile -> useAmmo(crossbowStack, projectile, shooter, false)).toList();
+        var crossbowHandler = crossbow.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(crossbow));
+        if (crossbowHandler == null) {
+            return false;
         }
+
+        Predicate<ItemResource> filter = res -> res.is(holder -> holder.value() instanceof IVampirismCrossbowArrow<?>) && getAmmunition(crossbow).map(res::is).orElse(true);
+        boolean infinite = shooter.hasInfiniteMaterials() || (ammo.getItem() instanceof ArrowItem arrowItem && arrowItem.isInfinite(ammo, crossbow, shooter));
+
+        try (var transaction = Transaction.openRoot()) {
+            int loaded;
+            if (infinite) {
+                // Creative / infinite: don't consume the source, just fill with intangible copies that won't drop when fired.
+                ItemResource source = resolveInfiniteResource(ammo, filter, transaction);
+                if (source == null) {
+                    return false;
+                }
+                loaded = ResourceHandlerUtil.insertStacking(crossbowHandler, source.with(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE), capacityLeft, transaction);
+            } else {
+                var ammoHandler = ammo.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(ammo));
+                if (ammoHandler != null) {
+                    // Quarrel pouch / arrow clip: move bolts from the container's handler into the crossbow.
+                    loaded = ResourceHandlerUtil.move(ammoHandler, crossbowHandler, filter, capacityLeft, transaction);
+                } else {
+                    // Plain arrow stack held in the inventory.
+                    ItemResource res = ItemResource.of(ammo);
+                    if (!filter.test(res)) {
+                        return false;
+                    }
+                    loaded = ResourceHandlerUtil.insertStacking(crossbowHandler, res, Math.min(capacityLeft, ammo.getCount()), transaction);
+                    if (loaded > 0) {
+                        ammo.shrink(loaded);
+                        if (ammo.isEmpty() && shooter instanceof Player player) {
+                            player.getInventory().removeItem(ammo);
+                        }
+                    }
+                }
+            }
+            if (loaded > 0) {
+                transaction.commit();
+                return true;
+            }
+        }
+        return false;
     }
 
-    protected static ItemStack useAmmo(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter, boolean infinite) {
-        boolean flag = !infinite && !(shooter.hasInfiniteMaterials() || (projectileStack.getItem() instanceof ArrowItem && ((ArrowItem) projectileStack.getItem()).isInfinite(projectileStack, crossbowStack, shooter)));
-        if (!flag) {
-            ItemStack itemstack1 = projectileStack.copyWithCount(1);
-            itemstack1.set(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
-            return itemstack1;
-        } else {
-            ItemStack itemstack = projectileStack.split(1);
-            if (projectileStack.isEmpty() && shooter instanceof Player player) {
-                player.getInventory().removeItem(projectileStack);
-            }
+    /**
+     * Resolves which arrow resource to load for creative / infinite shooters without consuming the source.
+     */
+    @Nullable
+    protected ItemResource resolveInfiniteResource(ItemStack ammo, Predicate<ItemResource> filter, @Nullable Transaction transaction) {
+        var ammoHandler = ammo.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(ammo));
+        if (ammoHandler != null) {
+            ItemResource found = ResourceHandlerUtil.findExtractableResource(ammoHandler, filter, transaction);
+            return found == null || found.isEmpty() ? null : found;
+        }
+        ItemResource res = ItemResource.of(ammo);
+        return filter.test(res) ? res : null;
+    }
 
-            return itemstack;
+    /**
+     * Removes the given number of loaded projectiles from the front of the crossbow's resource handler.
+     */
+    protected void consumeLoadedProjectiles(ItemStack crossbow, int count) {
+        if (count <= 0) {
+            return;
+        }
+        var handler = crossbow.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(crossbow));
+        if (handler == null) {
+            return;
+        }
+        try (var transaction = Transaction.openRoot()) {
+            for (int i = 0; i < count; i++) {
+                ItemResource res = handler.getResource(0);
+                if (res.isEmpty()) {
+                    break;
+                }
+                handler.extract(0, res, 1, transaction);
+            }
+            transaction.commit();
         }
     }
 
@@ -291,12 +370,102 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
     public boolean testQuarrelPouch(ItemStack crossbow, ItemStack quarrelPouch) {
         QuarrelPouchContents orDefault = quarrelPouch.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
-        ItemStack stack = getAmmunition(crossbow).map(orDefault::getSpecific).orElseGet(orDefault::getFirst);
+        QuarrelPouchContents.Mutable mutable = orDefault.asMutable();
+        ItemStack stack = getAmmunition(crossbow).map(mutable::getSpecific).orElseGet(mutable::getFirst);
         return testProjectile(crossbow, stack);
     }
 
     public boolean testQuarrel(ItemStack crossbow, ItemStack quarrel) {
         return getAmmunition(crossbow).map(quarrel::is).orElse(true);
+    }
+
+    /**
+     * Slot-based handler over the loaded projectiles, backed by the vanilla {@link DataComponents#CHARGED_PROJECTILES}
+     * component. Each slot holds a single bolt, the number of slots is the crossbow's {@link #getMaxLoadedProjectiles()}.
+     */
+    public static class ResourceHandler implements net.neoforged.neoforge.transfer.ResourceHandler<ItemResource> {
+
+        private final ItemAccess itemAccess;
+        private final HunterCrossbowItem crossbow;
+
+        public ResourceHandler(ItemAccess itemAccess) {
+            this.itemAccess = itemAccess;
+            this.crossbow = (HunterCrossbowItem) itemAccess.getResource().getItem();
+        }
+
+        private List<ItemStack> items() {
+            ChargedProjectiles charged = this.itemAccess.getResource().get(DataComponents.CHARGED_PROJECTILES);
+            return charged == null ? List.of() : charged.itemCopies();
+        }
+
+        @Override
+        public int size() {
+            return this.crossbow.getMaxLoadedProjectiles();
+        }
+
+        @Override
+        public ItemResource getResource(int index) {
+            List<ItemStack> items = items();
+            return index < 0 || index >= items.size() ? ItemResource.EMPTY : ItemResource.of(items.get(index));
+        }
+
+        @Override
+        public long getAmountAsLong(int index) {
+            List<ItemStack> items = items();
+            return index < 0 || index >= items.size() ? 0 : items.get(index).getCount();
+        }
+
+        @Override
+        public long getCapacityAsLong(int index, ItemResource resource) {
+            return index >= 0 && index < size() ? 1 : 0;
+        }
+
+        @Override
+        public boolean isValid(int index, ItemResource resource) {
+            return index >= 0 && index < size() && resource.is(holder -> holder.value() instanceof IVampirismCrossbowArrow<?>);
+        }
+
+        @Override
+        public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+            TransferPreconditions.checkNonNegative(index);
+            if (!isValid(index, resource)) {
+                return 0;
+            }
+            int accessAmount = this.itemAccess.getAmount();
+            if (accessAmount <= 0) {
+                return 0;
+            }
+            ItemResource accessResource = this.itemAccess.getResource();
+            List<ItemStack> items = new ArrayList<>(items());
+            // one bolt per slot, slots are filled contiguously
+            if (index != items.size() || items.size() >= size()) {
+                return 0;
+            }
+            items.add(resource.toStack(1));
+            ItemResource newResource = accessResource.with(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(items));
+            return this.itemAccess.exchange(newResource, accessAmount, transaction) > 0 ? 1 : 0;
+        }
+
+        @Override
+        public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+            TransferPreconditions.checkNonNegative(index);
+            int accessAmount = this.itemAccess.getAmount();
+            if (accessAmount <= 0) {
+                return 0;
+            }
+            ItemResource accessResource = this.itemAccess.getResource();
+            List<ItemStack> items = new ArrayList<>(items());
+            if (index >= items.size() || !resource.matches(items.get(index))) {
+                return 0;
+            }
+            items.remove(index);
+            ItemResource newResource = items.isEmpty()
+                    ? accessResource.without(DataComponents.CHARGED_PROJECTILES)
+                    : accessResource.with(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(items));
+            return this.itemAccess.exchange(newResource, accessAmount, transaction) > 0 ? 1 : 0;
+        }
     }
 
 }
