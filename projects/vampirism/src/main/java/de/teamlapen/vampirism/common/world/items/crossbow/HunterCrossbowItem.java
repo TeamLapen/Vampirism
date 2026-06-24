@@ -359,8 +359,30 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     public int getChargeDurationMod(ItemStack crossbow, Level level) {
         Registry<Enchantment> enchantments = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
         int quickCharge = crossbow.getEnchantmentLevel(enchantments.getOrThrow(Enchantments.QUICK_CHARGE));
+        int base = quickCharge == 0 ? this.chargeTime : this.chargeTime - 2 * quickCharge;
 
-        return quickCharge == 0 ? this.chargeTime : this.chargeTime - 2 * quickCharge;
+        return applyChargeMultiplier(crossbow, base);
+    }
+
+    protected int applyChargeMultiplier(ItemStack crossbow, int base) {
+        return Mth.ceil(base * getChargeMultiplier(crossbow));
+    }
+
+    private float getChargeMultiplier(ItemStack crossbow) {
+        return getAmmunition(crossbow).map(HunterCrossbowItem::chargeMultiplierFor).orElse(1f);
+    }
+
+    private static float chargeMultiplierFor(Item ammo) {
+        IVampirismQuarrel.IQuarrelBehavior behavior = null;
+        if (ammo instanceof QuarrelItem quarrel) {
+            behavior = quarrel.getBehavior();
+        } else {
+            ItemStackTemplate contained = ammo.components().get(ModDataComponents.CONTAINED_PROJECTILES.get());
+            if (contained != null && contained.item().value() instanceof QuarrelItem quarrel) {
+                behavior = quarrel.getBehavior();
+            }
+        }
+        return behavior != null ? behavior.chargeMultiplier() : 1f;
     }
 
     protected boolean tryLoadProjectiles(LivingEntity shooter, ItemStack crossbow) {

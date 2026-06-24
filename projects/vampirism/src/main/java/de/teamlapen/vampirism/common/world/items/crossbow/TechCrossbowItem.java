@@ -100,7 +100,7 @@ public class TechCrossbowItem extends HunterCrossbowItem {
 
     @Override
     public int getChargeDurationMod(ItemStack crossbow, Level level) {
-        return this.chargeTime;
+        return applyChargeMultiplier(crossbow, this.chargeTime);
     }
 
     @Override

@@ -64,6 +64,11 @@ public class HeavyBehavior implements IVampirismQuarrel.IQuarrelBehavior {
     }
 
     @Override
+    public float chargeMultiplier() {
+        return 1.33f;
+    }
+
+    @Override
     public void onHitEntity(ItemStack arrow, LivingEntity entity, AbstractArrow arrowEntity, Entity shootingEntity) {
         Vec3 movement = arrowEntity.getDeltaMovement();
         entity.knockback(0.5f, -movement.x, -movement.z);

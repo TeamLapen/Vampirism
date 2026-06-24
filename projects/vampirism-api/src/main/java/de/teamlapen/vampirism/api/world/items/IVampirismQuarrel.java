@@ -101,5 +101,13 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
         default int extraPierceLevel() {
             return 0;
         }
+
+        /**
+         * Multiplier applied to the crossbow's charge time when this quarrel is the selected/loaded ammo. Above 1 takes
+         * longer to charge. 1 = unchanged.
+         */
+        default float chargeMultiplier() {
+            return 1f;
+        }
     }
 }
