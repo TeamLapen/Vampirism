@@ -86,13 +86,15 @@ public class ModItems {
     public static final DeferredItem<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = ITEMS.registerItem("enhanced_tech_crossbow",  props -> new TechCrossbowItem(props.durability(1860), 1.7F, 30, ToolMaterial.DIAMOND, HunterSkills.WEAPON_TABLE, HunterSkills.MASTER_CRAFTSMANSHIP));
 
     public static final DeferredItem<QuarrelItem> QUARREL_NORMAL = ITEMS.registerItem("quarrel_normal", props -> new QuarrelItem(new NormalBehavior(), props));
+    public static final DeferredItem<QuarrelItem> QUARREL_HEAVY = ITEMS.registerItem("quarrel_heavy", props -> new QuarrelItem(new HeavyBehavior(), props));
     public static final DeferredItem<QuarrelItem> QUARREL_SPITFIRE = ITEMS.registerItem("quarrel_spitfire", props -> new QuarrelItem(new SpitfireBehavior(), props));
     public static final DeferredItem<QuarrelItem> QUARREL_GARLIC = ITEMS.registerItem("quarrel_garlic", props -> new QuarrelItem(new GarlicBehavior(), props));
     public static final DeferredItem<QuarrelItem> QUARREL_VAMPIRE_KILLER = ITEMS.registerItem("quarrel_vampire_killer", props -> new QuarrelItem(new VampireKillerBehavior(), props));
     public static final DeferredItem<QuarrelItem> QUARREL_TELEPORT = ITEMS.registerItem("quarrel_teleport", props -> new QuarrelItem(new TeleportBehavior(), props));
     public static final DeferredItem<QuarrelItem> QUARREL_BLEEDING = ITEMS.registerItem("quarrel_bleeding", props -> new QuarrelItem(new BleedingBehavior(), props));
 
-    public static final DeferredItem<Item> QUARREL_CLIP = ITEMS.registerItem("quarrel_clip", Item::new);
+    public static final DeferredItem<Item> QUARREL_CLIP = ITEMS.registerItem("quarrel_clip", props -> new Item(props.component(ModDataComponents.CONTAINED_PROJECTILES.get(), new ItemStackTemplate(QUARREL_NORMAL, 16))));
+    public static final DeferredItem<Item> HEAVY_QUARREL_CLIP = ITEMS.registerItem("heavy_quarrel_clip", props -> new Item(props.component(ModDataComponents.CONTAINED_PROJECTILES.get(), new ItemStackTemplate(QUARREL_HEAVY, 8))));
 
     public static final DeferredItem<QuarrelPouchItem> QUARREL_POUCH = ITEMS.registerItem("quarrel_pouch", props -> new QuarrelPouchItem(props.stacksTo(1)));
 

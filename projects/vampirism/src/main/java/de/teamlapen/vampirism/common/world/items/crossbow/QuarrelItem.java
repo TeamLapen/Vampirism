@@ -58,7 +58,7 @@ public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelE
     public AbstractArrow createArrow(Level level, ItemStack stack, @Nullable LivingEntity shooter, Position position, @Nullable ItemStack weapon) {
         boolean intangible = stack.has(DataComponents.INTANGIBLE_PROJECTILE);
         QuarrelEntity arrowEntity = new QuarrelEntity(level, position.x(), position.y(), position.z(), stack, weapon);
-        arrowEntity.setBaseDamage(this.behavior.baseDamage(level, stack, shooter) * ModConfig.balance().crossbowDamageMult.get());
+        arrowEntity.setBaseDamage(this.behavior.baseDamage(level, stack, shooter) * this.behavior.damageMultiplier() * ModConfig.balance().crossbowDamageMult.get());
         this.behavior.modifyArrow(level, stack, shooter, arrowEntity);
         if (shooter instanceof Player || shooter == null) {
             arrowEntity.pickup = intangible ? AbstractArrow.Pickup.CREATIVE_ONLY : this.behavior.pickupBehavior();

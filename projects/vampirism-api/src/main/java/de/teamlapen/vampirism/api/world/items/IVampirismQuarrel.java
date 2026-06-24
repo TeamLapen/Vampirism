@@ -65,7 +65,41 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
 
         float baseDamage(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter);
 
+        default float damageMultiplier() {
+            return 1f;
+        }
+
         default void modifyArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, @NotNull AbstractArrow arrow) {
+        }
+
+        /**
+         * Multiplier applied to the launch speed. Values below 1 make the quarrel slower (and, since arrow damage scales
+         * with speed, softer at range). 1 = vanilla speed.
+         */
+        default float velocityFactor() {
+            return 1f;
+        }
+
+        /**
+         * Multiplier applied to the quarrel's gravity, composed on top of the crossbow's precision factor. Values above
+         * 1 make it drop faster (heavier). 1 = unchanged.
+         */
+        default float gravityFactor() {
+            return 1f;
+        }
+
+        /**
+         * Multiplier applied to the shot's inaccuracy. Values below 1 tighten the grouping. 1 = unchanged.
+         */
+        default float inaccuracyFactor() {
+            return 1f;
+        }
+
+        /**
+         * Pierce levels granted innately, added on top of the weapon's Piercing enchantment. 0 = none.
+         */
+        default int extraPierceLevel() {
+            return 0;
         }
     }
 }

@@ -5,9 +5,12 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
+import de.teamlapen.vampirism.client.models.entities.HeavyQuarrelModel;
 import de.teamlapen.vampirism.client.models.entities.QuarrelModel;
 import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
+import de.teamlapen.vampirism.common.world.items.crossbow.behavior.HeavyBehavior;
 import de.teamlapen.vampirism.common.world.items.crossbow.behavior.SpitfireBehavior;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -26,17 +29,20 @@ import org.joml.Quaternionf;
 
 public class QuarrelRenderer extends EntityRenderer<QuarrelEntity, QuarrelRenderer.QuarrelRenderState> {
 
-    public static final Identifier QUARREL_LOCATION = VIdentifier.mod("textures/entity/quarrel.png");
+    public static final Identifier QUARREL_LOCATION = VIdentifier.mod("textures/entity/quarrel/quarrel.png");
+    public static final Identifier HEAVY_QUARREL_LOCATION = VIdentifier.mod("textures/entity/quarrel/heavy_quarrel.png");
 
     private static final SpriteId ALCHEMICAL_FIRE_0 = Sheets.BLOCKS_MAPPER.apply(VIdentifier.mod("alchemical_fire_0"));
     private static final SpriteId ALCHEMICAL_FIRE_1 = Sheets.BLOCKS_MAPPER.apply(VIdentifier.mod("alchemical_fire_1"));
 
     private final QuarrelModel model;
+    private final HeavyQuarrelModel heavyModel;
     private final SpriteGetter sprites;
 
     public QuarrelRenderer(EntityRendererProvider.Context context) {
         super(context);
         this.model = new QuarrelModel(context.bakeLayer(ModEntitiesRender.QUARREL));
+        this.heavyModel = new HeavyQuarrelModel(context.bakeLayer(ModEntitiesRender.HEAVY_QUARREL));
         this.sprites = context.getSprites();
     }
 
@@ -45,7 +51,8 @@ public class QuarrelRenderer extends EntityRenderer<QuarrelEntity, QuarrelRender
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(state.yRot - 90.0F));
         poseStack.mulPose(Axis.ZP.rotationDegrees(state.xRot));
-        submitNodeCollector.submitModel(this.model, state, poseStack, this.getTextureLocation(state), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
+        EntityModel<ArrowRenderState> model = state.heavy ? this.heavyModel : this.model;
+        submitNodeCollector.submitModel(model, state, poseStack, this.getTextureLocation(state), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);
         poseStack.popPose();
         if (state.alchemicalFire) {
             submitAlchemicalFlame(state, poseStack, submitNodeCollector, camera);
@@ -59,7 +66,7 @@ public class QuarrelRenderer extends EntityRenderer<QuarrelEntity, QuarrelRender
     }
 
     protected Identifier getTextureLocation(QuarrelRenderState state) {
-        return QUARREL_LOCATION;
+        return state.heavy ? HEAVY_QUARREL_LOCATION : QUARREL_LOCATION;
     }
 
     @Override
@@ -68,6 +75,7 @@ public class QuarrelRenderer extends EntityRenderer<QuarrelEntity, QuarrelRender
         state.xRot = entity.getXRot(partialTicks);
         state.yRot = entity.getYRot(partialTicks);
         state.shake = (float) entity.shakeTime - partialTicks;
+        state.heavy = entity.getArrowType() instanceof HeavyBehavior;
         // Render alchemical fire instead of the normal one for the spitfire quarrel
         state.alchemicalFire = state.displayFireAnimation && entity.getArrowType() instanceof SpitfireBehavior;
         if (state.alchemicalFire) {
@@ -122,5 +130,6 @@ public class QuarrelRenderer extends EntityRenderer<QuarrelEntity, QuarrelRender
     public static class QuarrelRenderState extends ArrowRenderState {
 
         public boolean alchemicalFire;
+        public boolean heavy;
     }
 }

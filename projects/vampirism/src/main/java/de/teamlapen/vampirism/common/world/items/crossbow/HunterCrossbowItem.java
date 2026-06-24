@@ -42,6 +42,7 @@ import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -201,7 +202,10 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
             if (crossbowStack.remove(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED) != null && projectile instanceof AbstractArrow arrow) {
                 arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
-            shootProjectile(shooter, projectile, i, speed, inaccuracy, 0, targetOverride);
+            IVampirismQuarrel.IQuarrelBehavior behavior = behaviorOf(projectileStack);
+            float projectileSpeed = behavior != null ? speed * behavior.velocityFactor() : speed;
+            float projectileInaccuracy = behavior != null ? inaccuracy * behavior.inaccuracyFactor() : inaccuracy;
+            shootProjectile(shooter, projectile, i, projectileSpeed, projectileInaccuracy, 0, targetOverride);
             applyHorizontalSpread(shooter, hand, projectile, i, projectiles.size());
             level.addFreshEntity(projectile);
         }
@@ -255,10 +259,23 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     public AbstractArrow customArrow(AbstractArrow arrow, ItemStack projectileStack, ItemStack weapon) {
         if (arrow instanceof QuarrelEntity quarrel) {
             quarrel.setIgnoreHurtTimer();
-            quarrel.setGravityFactor(getPrecisionFactor(weapon, arrow.level()));
+            IVampirismQuarrel.IQuarrelBehavior behavior = behaviorOf(projectileStack);
+            float gravity = getPrecisionFactor(weapon, arrow.level());
+            if (behavior != null) {
+                gravity *= behavior.gravityFactor();
+                if (behavior.extraPierceLevel() > 0) {
+                    quarrel.setPierceLevel((byte) Math.min(Byte.MAX_VALUE, quarrel.getPierceLevel() + behavior.extraPierceLevel()));
+                }
+            }
+            quarrel.setGravityFactor(gravity);
         }
 
         return arrow;
+    }
+
+    @Nullable
+    private static IVampirismQuarrel.IQuarrelBehavior behaviorOf(ItemStack projectileStack) {
+        return projectileStack.getItem() instanceof QuarrelItem quarrel ? quarrel.getBehavior() : null;
     }
 
     protected int getPrecisionLevel(ItemStack crossbow, Level level) {
@@ -433,6 +450,10 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     @Override
     public boolean canSelectAmmunition(ItemStack crossbow) {
         return true;
+    }
+
+    public Collection<Item> getSelectableAmmo() {
+        return QuarrelHandler.getQuarrels();
     }
 
     @Override

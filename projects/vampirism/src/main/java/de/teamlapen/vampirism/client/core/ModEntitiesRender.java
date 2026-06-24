@@ -56,6 +56,7 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation CURSED_SPRUCE_BOAT = new ModelLayerLocation(VIdentifier.mod("boat/cursed_spruce"), "main");
     public static final ModelLayerLocation CURSED_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VIdentifier.mod("chest_boat/cursed_spruce"), "main");
     public static final ModelLayerLocation QUARREL = new ModelLayerLocation(VIdentifier.mod("quarrel"), "main");
+    public static final ModelLayerLocation HEAVY_QUARREL = new ModelLayerLocation(VIdentifier.mod("heavy_quarrel"), "main");
 
 
     public static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
@@ -130,6 +131,7 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(CURSED_SPRUCE_BOAT, () -> boatDefinition);
         event.registerLayerDefinition(CURSED_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
         event.registerLayerDefinition(QUARREL, QuarrelModel::createBodyLayer);
+        event.registerLayerDefinition(HEAVY_QUARREL, HeavyQuarrelModel::createBodyLayer);
     }
 
     public static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {

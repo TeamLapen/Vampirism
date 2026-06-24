@@ -325,6 +325,7 @@ public class ModCreativeTabs {
             add(ENHANCED_TECH_CROSSBOW);
 
             add(QUARREL_NORMAL);
+            add(QUARREL_HEAVY);
             add(QUARREL_SPITFIRE);
             add(QUARREL_GARLIC);
             add(QUARREL_VAMPIRE_KILLER);
@@ -332,6 +333,7 @@ public class ModCreativeTabs {
             add(QUARREL_BLEEDING);
 
             add(QUARREL_CLIP);
+            add(HEAVY_QUARREL_CLIP);
 
             add(QUARREL_POUCH);
 

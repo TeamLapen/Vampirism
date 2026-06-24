@@ -1,0 +1,17 @@
+{
+  "type": "vampirism:shapeless_crafting_weapontable",
+  "category": "equipment",
+  "ingredients": [
+    "vampirism:quarrel_heavy",
+    "vampirism:quarrel_heavy",
+    "vampirism:quarrel_heavy",
+    "vampirism:quarrel_heavy",
+    "vampirism:quarrel_heavy",
+    "vampirism:quarrel_heavy",
+    "vampirism:quarrel_heavy",
+    "vampirism:quarrel_heavy"
+  ],
+  "result": {
+    "id": "vampirism:heavy_quarrel_clip"
+  }
+}

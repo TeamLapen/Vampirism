@@ -47,7 +47,7 @@ public class ModItemsRender {
     }
 
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {
-        Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW).forEach(item -> {
+        Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW, ModItems.BASIC_TECH_CROSSBOW, ModItems.ENHANCED_TECH_CROSSBOW).forEach(item -> {
             event.register(item.get(), (graphics, font, stack, xOffset, yOffset) -> {
                 ((IHunterCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
                     Matrix3x2fStack posestack = graphics.pose();

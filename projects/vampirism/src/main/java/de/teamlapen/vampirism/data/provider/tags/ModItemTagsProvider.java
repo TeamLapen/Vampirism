@@ -61,7 +61,7 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         copy(BlockTags.WALLS, ItemTags.WALLS);
         copy(ModBlockTags.GARLIC, ModItemTags.GARLIC);
 
-        tag(ModItemTags.QUARRELS).add(ModItems.QUARREL_NORMAL.get(), ModItems.QUARREL_SPITFIRE.get(), ModItems.QUARREL_VAMPIRE_KILLER.get(), ModItems.QUARREL_TELEPORT.get(), ModItems.QUARREL_BLEEDING.get(), ModItems.QUARREL_GARLIC.get());
+        tag(ModItemTags.QUARRELS).add(ModItems.QUARREL_NORMAL.get(), ModItems.QUARREL_HEAVY.get(), ModItems.QUARREL_SPITFIRE.get(), ModItems.QUARREL_VAMPIRE_KILLER.get(), ModItems.QUARREL_TELEPORT.get(), ModItems.QUARREL_BLEEDING.get(), ModItems.QUARREL_GARLIC.get());
         tag(ModItemTags.HUNTER_INTEL).add(ModItems.HUNTER_INTEL_0.get(), ModItems.HUNTER_INTEL_1.get(), ModItems.HUNTER_INTEL_2.get(), ModItems.HUNTER_INTEL_3.get(), ModItems.HUNTER_INTEL_4.get(), ModItems.HUNTER_INTEL_5.get(), ModItems.HUNTER_INTEL_6.get(), ModItems.HUNTER_INTEL_7.get(), ModItems.HUNTER_INTEL_8.get(), ModItems.HUNTER_INTEL_9.get());
         tag(ModItemTags.PURE_BLOOD).add(ModItems.PURE_BLOOD_0.get(), ModItems.PURE_BLOOD_1.get(), ModItems.PURE_BLOOD_2.get(), ModItems.PURE_BLOOD_3.get(), ModItems.PURE_BLOOD_4.get());
         ColorListsUtil.VAMPIRE_CLOAKS.values().forEach(item -> tag(ModItemTags.VAMPIRE_CLOAK).add(item));

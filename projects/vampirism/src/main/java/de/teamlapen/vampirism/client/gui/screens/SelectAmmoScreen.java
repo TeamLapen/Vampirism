@@ -6,14 +6,12 @@ import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
-import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
+import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSelectAmmoTypePacket;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelPouchItem;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
-import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -43,26 +41,28 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
         if (player == null) return;
 
         ItemStack crossbowStack = player.getMainHandItem();
-        if (Helper.isHunter(player) && crossbowStack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack)) {
-            Map<Item, Integer> inPouch = new HashMap<>();
-            Map<Item, Integer> loose = new HashMap<>();
+        if (Helper.isHunter(player) && crossbowStack.getItem() instanceof HunterCrossbowItem crossbow && crossbow.canSelectAmmunition(crossbowStack)) {
+            Collection<Item> selectable = crossbow.getSelectableAmmo();
+            Map<Item, Integer> available = new HashMap<>();
 
             for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
                 if (stack.getItem() instanceof QuarrelPouchItem) {
                     for (ItemStack quarrel : stack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY).items()) {
-                        inPouch.merge(quarrel.getItem(), quarrel.getCount(), Integer::sum);
+                        if (selectable.contains(quarrel.getItem())) {
+                            available.merge(quarrel.getItem(), quarrel.getCount(), Integer::sum);
+                        }
                     }
-                } else if (stack.getItem() instanceof IVampirismQuarrel<?>) {
-                    loose.merge(stack.getItem(), stack.getCount(), Integer::sum);
+                } else if (selectable.contains(stack.getItem())) {
+                    available.merge(stack.getItem(), stack.getCount(), Integer::sum);
                 }
             }
 
             List<AmmoType> ammoTypes = new ArrayList<>();
 
-            for (Item quarrel : QuarrelHandler.getQuarrels()) {
-                int count = loose.getOrDefault(quarrel, 0) + inPouch.getOrDefault(quarrel, 0);
+            for (Item ammo : selectable) {
+                int count = available.getOrDefault(ammo, 0);
                 if (count > 0) {
-                    ammoTypes.add(new AmmoType(quarrel, count));
+                    ammoTypes.add(new AmmoType(ammo, count));
                 }
             }
 

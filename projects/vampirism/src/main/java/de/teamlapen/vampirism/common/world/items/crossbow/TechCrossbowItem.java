@@ -17,6 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
@@ -24,11 +25,10 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class TechCrossbowItem extends HunterCrossbowItem {
-
-    public static final int MAGAZINE_SIZE = 16;
 
     @SafeVarargs
     public TechCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, ToolMaterial itemTier, Holder<ISkill<?>>... requiredSkills) {
@@ -36,8 +36,8 @@ public class TechCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    public boolean canSelectAmmunition(ItemStack crossbow) {
-        return false;
+    public Collection<Item> getSelectableAmmo() {
+        return QuarrelHandler.getClips();
     }
 
     @Override
@@ -47,18 +47,19 @@ public class TechCrossbowItem extends HunterCrossbowItem {
 
     @Override
     public boolean testProjectile(ItemStack crossbow, ItemStack projectile) {
-        return projectile.is(ModItems.QUARREL_CLIP);
+        return projectile.has(ModDataComponents.CONTAINED_PROJECTILES.get()) && getAmmunition(crossbow).map(projectile::is).orElse(true);
     }
 
     @Override
     protected List<ItemStack> getLoadingProjectiles(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
-        if (projectileStack.is(ModItems.QUARREL_CLIP)) {
+        ItemStackTemplate contained = projectileStack.get(ModDataComponents.CONTAINED_PROJECTILES.get());
+        if (contained != null) {
             if (!shooter.hasInfiniteMaterials()) {
                 projectileStack.shrink(1);
             }
-            List<ItemStack> magazine = new ArrayList<>(MAGAZINE_SIZE);
-            for (int i = 0; i < MAGAZINE_SIZE; i++) {
-                magazine.add(ModItems.QUARREL_NORMAL.get().getDefaultInstance());
+            List<ItemStack> magazine = new ArrayList<>(contained.count());
+            for (int i = 0; i < contained.count(); i++) {
+                magazine.add(new ItemStack(contained.item(), 1, contained.components()));
             }
 
             return magazine;
