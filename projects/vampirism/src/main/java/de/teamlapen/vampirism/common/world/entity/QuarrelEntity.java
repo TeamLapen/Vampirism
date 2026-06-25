@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelItem;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
@@ -119,10 +120,31 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     @Override
     protected void onHitEntity(EntityHitResult hitResult) {
-        if (this.ignoreHurtTimer && !level().isClientSide() && hitResult.getEntity() instanceof LivingEntity living && living.getData(ModAttachments.QUARREL_HURT_BYPASS).registerHit(living.level().getGameTime())) {
+        Entity hit = hitResult.getEntity();
+        if (dealsNoDamage()) {
+            if (!level().isClientSide() && hit instanceof LivingEntity target) {
+                ItemStack arrow = getPickupItem();
+                if (arrow.getItem() instanceof IVampirismQuarrel<?> quarrel) {
+                    quarrel.onHitEntity(arrow, target, this, getOwner());
+                }
+            }
+            return;
+        }
+
+        if (this.ignoreHurtTimer && !level().isClientSide() && hit instanceof LivingEntity living && living.getData(ModAttachments.QUARREL_HURT_BYPASS).registerHit(living.level().getGameTime())) {
             living.invulnerableTime = 0;
         }
+
+        float knockbackFactor = behaviorKnockbackMultiplier();
+        Vec3 preHitVelocity = knockbackFactor != 1f && hit instanceof LivingEntity ? hit.getDeltaMovement() : null;
+
         super.onHitEntity(hitResult);
+
+        if (preHitVelocity != null && hit.isAlive()) {
+            Vec3 imparted = hit.getDeltaMovement().subtract(preHitVelocity);
+            hit.setDeltaMovement(preHitVelocity.add(imparted.scale(knockbackFactor)));
+            hit.hurtMarked = true; // resync the corrected velocity to clients
+        }
     }
 
     @Override
@@ -132,6 +154,16 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
         if (arrow.getItem() instanceof IVampirismQuarrel<?> quarrel) {
             quarrel.onHitEntity(arrow, mob, this, getOwner());
         }
+    }
+
+    private float behaviorKnockbackMultiplier() {
+        IVampirismQuarrel.IQuarrelBehavior behavior = getArrowType();
+        return behavior != null ? behavior.knockbackMultiplier() : 1f;
+    }
+
+    private boolean dealsNoDamage() {
+        IVampirismQuarrel.IQuarrelBehavior behavior = getArrowType();
+        return behavior != null && behavior.damageMultiplier() <= 0f;
     }
 
     @Override

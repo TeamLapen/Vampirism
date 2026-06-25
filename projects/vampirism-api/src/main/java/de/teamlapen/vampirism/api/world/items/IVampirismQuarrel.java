@@ -48,6 +48,9 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
         default void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction direction) {
         }
 
+        default void modifyArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, @NotNull AbstractArrow arrow) {
+        }
+
         default Component getEffectDescription() {
             return Component.empty();
         }
@@ -58,11 +61,18 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
 
         float baseDamage(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter);
 
+        /**
+         * Multiplier applied to the damage the quarrel deals. 1 = no changes, 0 = no damage.
+         */
         default float damageMultiplier() {
             return 1f;
         }
 
-        default void modifyArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, @NotNull AbstractArrow arrow) {
+        /**
+         * Multiplier applied to the knockback the quarrel imparts on an entity hit. 1 = vanilla knockback, 0 = none.
+         */
+        default float knockbackMultiplier() {
+            return 1f;
         }
 
         /**
