@@ -222,7 +222,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onLivingAttack(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player) {
-            if (event.getEntity().isAlive() && !FactionPlayerHandler.get((Player) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
+            if (event.getEntity().isAlive() && FactionPlayerHandler.get((Player) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
                 event.setCanceled(true);
             }
         }

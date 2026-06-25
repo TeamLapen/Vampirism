@@ -32,6 +32,7 @@ import de.teamlapen.faction.common.util.DamageHandler;
 import de.teamlapen.faction.common.util.ModCodecs;
 import de.teamlapen.faction.common.util.ScoreboardUtil;
 import de.teamlapen.faction.common.world.ModDamageSources;
+import de.teamlapen.faction.common.world.entities.IPlayerEventListener;
 import de.teamlapen.faction.server.FactionLogger;
 import de.teamlapen.sync.AttachmentSync;
 import net.minecraft.core.Holder;
@@ -41,6 +42,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.extensions.IHolderExtension;
@@ -57,7 +59,7 @@ import java.util.stream.Collectors;
 /**
  * Extended entity property that handles factions and levels for the player
  */
-public class FactionPlayerHandler extends AttachmentSync implements IFactionPlayerHandler {
+public class FactionPlayerHandler extends AttachmentSync implements IFactionPlayerHandler, IPlayerEventListener {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static FactionPlayerHandler get(Player player) {
@@ -212,9 +214,9 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (FactionConfig.server().factionPvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
             Holder<? extends IPlayableFaction<?>> otherFaction = get((Player) src.getEntity()).getFaction();
-            return !IFaction.is(this.currentFaction, otherFaction);
+            return IFaction.is(this.currentFaction, otherFaction);
         }
-        return true;
+        return false;
     }
 
     /**
@@ -255,6 +257,13 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         if (this.player.level() instanceof ServerLevel level) {
             Registry<ISkillTree> registryAccess = this.player.level().registryAccess().lookupOrThrow(FactionRegistries.Keys.SKILL_TREE);
             getSkillHandler().ifPresent(handler -> handler.updateUnlockedSkillTrees(registryAccess.listElements().filter(s -> s.value().unlockPredicate().matches(level, null, this.player)).collect(Collectors.toList())));
+        }
+    }
+
+    @Override
+    public void onRespawn() {
+        if (!IFaction.isNeutral(this.currentFaction)) {
+            this.player.addEffect(new MobEffectInstance(FactionEffects.RESURRECTION_FATIGUE, 300));
         }
     }
 

@@ -76,12 +76,6 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
 
     @MustBeInvokedByOverriders
     @Override
-    public void onRespawn() {
-        this.player.addEffect(new MobEffectInstance(FactionEffects.RESURRECTION_FATIGUE, 300));
-    }
-
-    @MustBeInvokedByOverriders
-    @Override
     public void onUpdate() {
         if (!isRemote()) {
             assert this.taskManager != null;
