@@ -6,6 +6,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
@@ -20,6 +21,7 @@ public interface IRefinement {
      * If this refinement modifies an attribute, this factory is used to create the attribute modifier for the {@link #getAttribute()} with {@link #getModifierValue()}
      */
     @Nullable
+    @Contract(pure = true)
     BiFunction<Identifier, Double, AttributeModifier> attributeFactory();
 
     /**
