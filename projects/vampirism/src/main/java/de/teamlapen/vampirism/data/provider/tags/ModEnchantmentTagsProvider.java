@@ -24,7 +24,7 @@ public class ModEnchantmentTagsProvider extends KeyTagProvider<Enchantment> {
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
         this.tag(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS).add(ModEnchantments.VAMPIRE_SLAYER);
         this.tag(ModEnchantmentTags.CROSSBOW_INCOMPATIBLE).add(Enchantments.PIERCING);
-        this.tag(ModEnchantmentTags.HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.PIERCING, Enchantments.POWER);
+        this.tag(ModEnchantmentTags.HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.PIERCING, Enchantments.POWER, Enchantments.MENDING, Enchantments.UNBREAKING, ModEnchantments.ARROW_FRUGALITY);
         this.tag(ModEnchantmentTags.SINGLE_HUNTER_CROSSBOW_COMPATIBLE).addTag(ModEnchantmentTags.HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.QUICK_CHARGE);
         this.tag(ModEnchantmentTags.DOUBLE_HUNTER_CROSSBOW_COMPATIBLE).addTag(ModEnchantmentTags.HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.QUICK_CHARGE);
         this.tag(ModEnchantmentTags.SEMI_AUTOMATIC_HUNTER_CROSSBOW_COMPATIBLE).addTag(ModEnchantmentTags.HUNTER_CROSSBOW_COMPATIBLE);

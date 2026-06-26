@@ -1,6 +1,9 @@
 {
   "values": [
     "minecraft:piercing",
-    "minecraft:power"
+    "minecraft:power",
+    "minecraft:mending",
+    "minecraft:unbreaking",
+    "vampirism:arrow_frugality"
   ]
 }

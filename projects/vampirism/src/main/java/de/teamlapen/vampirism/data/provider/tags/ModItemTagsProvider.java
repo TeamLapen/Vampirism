@@ -10,6 +10,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
@@ -114,6 +115,13 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         tag(ItemTags.BOOKSHELF_BOOKS).addTag(ModItemTags.HUNTER_INTEL).add(ModItems.VAMPIRE_BOOK.get())
 //                .addOptional(ResourceLocation.fromNamespaceAndPath("guideapi_vp", "vampirism-guidebook")) FIXME
         ;
+        tag(ModItemTags.HUNTER_AXE).add(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get());
+        tag(ItemTags.DURABILITY_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE).add(ModItems.STAKE.get());
+        tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
+        tag(ItemTags.MELEE_WEAPON_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
+        tag(ItemTags.SWEEPING_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
+        tag(ItemTags.FIRE_ASPECT_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
+        tag(ItemTags.MINING_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
 
         addCompatibilityTags();
     }
