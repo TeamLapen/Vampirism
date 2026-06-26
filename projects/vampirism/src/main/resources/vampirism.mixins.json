@@ -55,7 +55,8 @@
     "accessor.TargetConditionAccessor",
     "accessor.VanillaBlockLootAccessor",
     "accessor.VillagerHostilesSensorAccessor",
-    "accessor.WalkAnimationStateAccessor"
+    "accessor.WalkAnimationStateAccessor",
+    "MobEffectUtilMixin"
   ],
   "client": [
     "client.CapeLayerMixin",

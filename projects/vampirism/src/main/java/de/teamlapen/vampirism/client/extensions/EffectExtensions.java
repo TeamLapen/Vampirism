@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,13 +19,6 @@ public class EffectExtensions {
             return false;
         }
 
-        @Override
-        public boolean renderInventoryText(MobEffectInstance instance, AbstractContainerScreen<?> screen, GuiGraphicsExtractor guiGraphics, int x, int y, int blitOffset) {
-            MutableComponent component = instance.getEffect().value().getDisplayName().copy();
-            guiGraphics.text(screen.getFont(), component, x + 10 + 18, y + 6, 16777215);
-            guiGraphics.text(screen.getFont(), Component.translatable("effect.duration.infinite"), x + 10 + 18, y + 6 + 10, 8355711);
-            return true;
-        }
     };
 
     public static final IClientMobEffectExtensions NIGHT_VISION = new IClientMobEffectExtensions() {

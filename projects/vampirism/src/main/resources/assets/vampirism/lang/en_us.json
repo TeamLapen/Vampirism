@@ -478,6 +478,7 @@
   "effect.vampirism.crucifix_suppression": "Crucifix Suppression",
   "effect.vampirism.exposed": "Exposed",
   "effect.vampirism.whispers_of_the_veil": "Whispers of The Veil",
+  "effect.vampirism.duration.unknown": "?",
 
   "attribute.vampirism.sundamage": "Sun Damage",
   "attribute.vampirism.blood_exhaustion": "Blood Exhaustion",
