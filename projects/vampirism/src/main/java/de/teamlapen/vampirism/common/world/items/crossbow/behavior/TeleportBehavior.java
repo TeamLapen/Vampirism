@@ -9,6 +9,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -83,6 +84,7 @@ public class TeleportBehavior implements IVampirismQuarrel.IQuarrelBehavior {
     private static void teleport(ServerLevel level, Entity shooter, Vec3 destination, float yaw) {
         Vec3 origin = shooter.position();
         float height = shooter.getBbHeight();
+
         if (shooter.isPassenger()) {
             shooter.stopRiding();
         }
@@ -99,6 +101,20 @@ public class TeleportBehavior implements IVampirismQuarrel.IQuarrelBehavior {
 
     private static void createTeleportParticles(ServerLevel level, Vec3 feet, float height) {
         level.sendParticles(ParticleTypes.PORTAL, feet.x, feet.y + height / 2.0, feet.z, 32, 0.4, height / 2.0, 0.4, 0.5);
+    }
+
+    @Override
+    public void onChargeTick(ServerLevel level, LivingEntity shooter, ItemStack crossbow, float chargeProgress) {
+        RandomSource random = shooter.getRandom();
+        double width = shooter.getBbWidth();
+        int count = 1 + (int) (chargeProgress * 3);
+        for (int i = 0; i < count; i++) {
+            double x = shooter.getX() + (random.nextDouble() - 0.5) * width * 2.5;
+            double y = shooter.getY() + random.nextDouble() * shooter.getBbHeight() * chargeProgress;
+            double z = shooter.getZ() + (random.nextDouble() - 0.5) * width * 2.5;
+            double riseSpeed = (0.4 + random.nextDouble() * 0.4) * (chargeProgress + 1);
+            level.sendParticles(ParticleTypes.REVERSE_PORTAL, x, y, z, 0, 0.02, riseSpeed, 0.02, 0.6);
+        }
     }
 
     @Override

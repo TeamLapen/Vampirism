@@ -306,9 +306,23 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         InteractionHand hand = entity.getUsedItemHand();
         int elapsed = getCombinedUseDuration(stack, entity, hand) - ticksRemaining;
         playChargeSounds(level, entity, stack, hand, elapsed);
+        if (level instanceof ServerLevel serverLevel) {
+            tickChargingBehavior(serverLevel, entity, stack, elapsed);
+        }
         if (chargeCrossbows(level, entity, stack, hand, elapsed)) {
             playLoadingEndSound(level, entity);
         }
+    }
+
+    private void tickChargingBehavior(ServerLevel level, LivingEntity entity, ItemStack stack, int elapsed) {
+        if (CrossbowItem.isCharged(stack)) return;
+
+        IVampirismQuarrel.IQuarrelBehavior behavior = getChargingBehavior(entity, stack);
+        if (behavior == null) return;
+        
+        int chargeDuration = getChargeDurationMod(stack, level);
+        float progress = chargeDuration <= 0 ? 1f : Mth.clamp((float) elapsed / chargeDuration, 0f, 1f);
+        behavior.onChargeTick(level, entity, stack, progress);
     }
 
     private boolean chargeCrossbows(Level level, LivingEntity entity, ItemStack stack, InteractionHand hand, int elapsed) {
@@ -369,20 +383,40 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     private float getChargeMultiplier(ItemStack crossbow) {
-        return getAmmunition(crossbow).map(HunterCrossbowItem::chargeMultiplierFor).orElse(1f);
+        IVampirismQuarrel.IQuarrelBehavior behavior = getChargingBehavior(crossbow);
+        return behavior != null ? behavior.chargeMultiplier() : 1f;
     }
 
-    private static float chargeMultiplierFor(Item ammo) {
-        IVampirismQuarrel.IQuarrelBehavior behavior = null;
-        if (ammo instanceof QuarrelItem quarrel) {
-            behavior = quarrel.getBehavior();
-        } else {
-            ItemStackTemplate contained = ammo.components().get(ModDataComponents.CONTAINED_PROJECTILES.get());
-            if (contained != null && contained.item().value() instanceof QuarrelItem quarrel) {
-                behavior = quarrel.getBehavior();
+    @Nullable
+    private IVampirismQuarrel.IQuarrelBehavior getChargingBehavior(ItemStack crossbow) {
+        return getAmmunition(crossbow).map(HunterCrossbowItem::behaviorFor).orElse(null);
+    }
+
+    @Nullable
+    private IVampirismQuarrel.IQuarrelBehavior getChargingBehavior(LivingEntity shooter, ItemStack crossbow) {
+        IVampirismQuarrel.IQuarrelBehavior selected = getChargingBehavior(crossbow);
+        if (selected != null) return selected;
+
+        if (usesQuarrelPouch()) {
+            ItemStack pouch = findLoadablePouch(shooter, crossbow);
+            if (!pouch.isEmpty()) {
+                return behaviorFor(matchingQuarrelInPouch(crossbow, pouch).getItem());
             }
         }
-        return behavior != null ? behavior.chargeMultiplier() : 1f;
+        return behaviorFor(shooter.getProjectile(crossbow).getItem());
+    }
+
+    @Nullable
+    private static IVampirismQuarrel.IQuarrelBehavior behaviorFor(Item ammo) {
+        if (ammo instanceof QuarrelItem quarrel) {
+            return quarrel.getBehavior();
+        }
+        ItemStackTemplate contained = ammo.components().get(ModDataComponents.CONTAINED_PROJECTILES.get());
+        if (contained != null && contained.item().value() instanceof QuarrelItem quarrel) {
+            return quarrel.getBehavior();
+        }
+
+        return null;
     }
 
     protected boolean tryLoadProjectiles(LivingEntity shooter, ItemStack crossbow) {

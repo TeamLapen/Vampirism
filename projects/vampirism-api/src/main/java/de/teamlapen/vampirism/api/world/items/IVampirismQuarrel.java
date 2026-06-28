@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.world.items;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
@@ -46,6 +47,13 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
         }
 
         default void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction direction) {
+        }
+
+        /**
+         * Called every tick on the server while a crossbow loaded with this quarrel as its selected ammunition is being
+         * charged, until it is fully charged.
+         */
+        default void onChargeTick(@NotNull ServerLevel level, @NotNull LivingEntity shooter, @NotNull ItemStack crossbow, float chargeProgress) {
         }
 
         default void modifyArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, @NotNull AbstractArrow arrow) {
