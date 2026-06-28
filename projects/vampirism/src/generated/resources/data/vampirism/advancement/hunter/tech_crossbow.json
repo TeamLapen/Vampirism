@@ -1,0 +1,43 @@
+{
+  "parent": "vampirism:hunter/enhanced_crossbow",
+  "criteria": {
+    "crossbow": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#vampirism:crossbows/tech"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "faction": {
+      "conditions": {
+        "type": "level",
+        "faction": "vampirism:hunter",
+        "level": 1
+      },
+      "trigger": "factionapi:faction"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.tech_crossbow.desc"
+    },
+    "icon": {
+      "id": "vampirism:basic_tech_crossbow"
+    },
+    "title": {
+      "translate": "advancement.vampirism.tech_crossbow"
+    }
+  },
+  "requirements": [
+    [
+      "crossbow"
+    ],
+    [
+      "faction"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

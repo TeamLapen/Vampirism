@@ -1,27 +1,17 @@
 {
   "parent": "vampirism:hunter/become_hunter",
   "criteria": {
-    "advanced": {
+    "crossbow": {
       "conditions": {
         "items": [
           {
-            "items": "vampirism:enhanced_tech_crossbow"
+            "items": "#vampirism:crossbows/basic"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "basic": {
-      "conditions": {
-        "items": [
-          {
-            "items": "vampirism:basic_tech_crossbow"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "main": {
+    "faction": {
       "conditions": {
         "type": "level",
         "faction": "vampirism:hunter",
@@ -32,24 +22,21 @@
   },
   "display": {
     "description": {
-      "translate": "advancement.vampirism.technology.desc"
+      "translate": "advancement.vampirism.hunter_crossbow.desc"
     },
     "icon": {
-      "id": "vampirism:basic_tech_crossbow"
+      "id": "vampirism:basic_crossbow"
     },
     "title": {
-      "translate": "advancement.vampirism.technology"
+      "translate": "advancement.vampirism.hunter_crossbow"
     }
   },
   "requirements": [
     [
-      "basic"
+      "crossbow"
     ],
     [
-      "advanced"
-    ],
-    [
-      "main"
+      "faction"
     ]
   ],
   "sends_telemetry_event": true
