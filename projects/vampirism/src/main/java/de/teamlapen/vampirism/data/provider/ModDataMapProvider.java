@@ -1,19 +1,16 @@
 package de.teamlapen.vampirism.data.provider;
 
 import de.teamlapen.vampirism.api.datamaps.*;
-import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataMaps;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.datamaps.*;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
-import de.teamlapen.vampirism.common.world.entity.converted.converter.SpecialConverter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -40,7 +37,6 @@ public class ModDataMapProvider extends DataMapProvider {
         gatherItemBlood(builder(ModDataMaps.ITEM_BLOOD_MAP));
         gatherFluidBloodConversion(builder(ModDataMaps.FLUID_BLOOD_CONVERSION_MAP));
         gatherEntityBlood(builder(ModDataMaps.ENTITY_BLOOD_MAP));
-        gatherEntityConverter(builder(ModDataMaps.ENTITY_CONVERTER_MAP));
         gatherLiquidColors(builder(ModDataMaps.LIQUID_COLOR_MAP));
         gatherGarlicDiffuserFuel(builder(ModDataMaps.GARLIC_DIFFUSER_FUEL_MAP));
         gatherFogDiffuserFuel(builder(ModDataMaps.FOG_DIFFUSER_FUEL_MAP));
@@ -127,27 +123,6 @@ public class ModDataMapProvider extends DataMapProvider {
         entityValues.add(holder.apply(EntityType.GOAT), new EntityBloodEntry(7), false);
         entityValues.add(holder.apply(EntityType.CAMEL), new EntityBloodEntry(15), false);
         entityValues.add(holder.apply(EntityType.SNIFFER), new EntityBloodEntry(20), false);
-    }
-
-    protected void gatherEntityConverter(Builder<IConverterEntry, EntityType<?>> entityValues) {
-        Function<String, Identifier> overlay = (String name) -> VIdentifier.mod(String.format("textures/entity/vanilla/%s_overlay.png", name));
-        Function<EntityType<?>, Holder<EntityType<?>>> holder = BuiltInRegistries.ENTITY_TYPE::wrapAsHolder;
-
-        entityValues.add(holder.apply(EntityType.COW), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_COW), overlay.apply("cow")), false);
-        entityValues.add(holder.apply(EntityType.SHEEP), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_SHEEP), overlay.apply("sheep")), false);
-        entityValues.add(holder.apply(EntityType.HORSE), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_HORSE), overlay.apply("horse")), false);
-        entityValues.add(holder.apply(EntityType.DONKEY), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_DONKEY), overlay.apply("horse")), false);
-        entityValues.add(holder.apply(EntityType.MULE), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_MULE), overlay.apply("horse")), false);
-        entityValues.add(holder.apply(EntityType.VILLAGER), new ConverterEntry(new SpecialConverter<>(ModEntities.VILLAGER_CONVERTED), overlay.apply("villager")), false);
-        entityValues.add(holder.apply(EntityType.FOX), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_FOX), overlay.apply("fox")), false);
-        entityValues.add(holder.apply(EntityType.GOAT), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_GOAT), overlay.apply("goat")), false);
-        entityValues.add(holder.apply(EntityType.CAMEL), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_CAMEL), overlay.apply("camel")), false);
-        entityValues.add(holder.apply(EntityType.CAT), new ConverterEntry(new SpecialConverter<>(ModEntities.CONVERTED_CAT), overlay.apply("cat")), false);
-        entityValues.add(holder.apply(EntityType.PIG), new ConverterEntry(overlay.apply("pig")), false);
-        entityValues.add(holder.apply(EntityType.RABBIT), new ConverterEntry(overlay.apply("rabbit")), false);
-        entityValues.add(holder.apply(EntityType.LLAMA), new ConverterEntry(overlay.apply("llama")), false);
-        entityValues.add(holder.apply(EntityType.POLAR_BEAR), new ConverterEntry(overlay.apply("polarbear")), false);
-        entityValues.add(holder.apply(EntityType.PANDA), new ConverterEntry(overlay.apply("panda")), false);
     }
 
     protected void gatherStrippables(Builder<Strippable, Block> strippables) {

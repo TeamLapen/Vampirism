@@ -36,7 +36,6 @@ public class VampirismModClient {
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ConfigFilter()));
 
         modEventBus.register(this);
-        NeoForge.EVENT_BUS.addListener(this::onDataMapsUpdated);
 
         if (OptifineHandler.isOptifineLoaded()) {
             LOGGER.warn("Using Optifine. Expect visual glitches and reduces blood vision functionality if using shaders.");
@@ -53,10 +52,6 @@ public class VampirismModClient {
             Sheets.addWoodType(ModBlocks.WoodTypes.DARK_SPRUCE);
             Sheets.addWoodType(ModBlocks.WoodTypes.CURSED_SPRUCE);
         });
-    }
-
-    public void onDataMapsUpdated(DataMapsUpdatedEvent event) {
-        services().renderHandler().syncOverlays();
     }
 
     public static IProxy getProxy() {

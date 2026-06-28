@@ -16,10 +16,12 @@ include(
         ':faction-api',
         ':faction',
         ':vampirism-api',
+        ':vampirism-processor',
         ':vampirism'
 )
 
 project(':faction-api').projectDir = file("projects/faction-api")
 project(':faction').projectDir = file("projects/faction")
 project(':vampirism-api').projectDir = file("projects/vampirism-api")
+project(':vampirism-processor').projectDir = file("projects/vampirism/processor")
 project(':vampirism').projectDir = file("projects/vampirism")

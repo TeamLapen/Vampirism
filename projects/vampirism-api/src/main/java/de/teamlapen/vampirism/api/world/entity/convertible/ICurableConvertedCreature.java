@@ -94,22 +94,6 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
     @NotNull
     EntityDataAccessor<Boolean> getConvertingDataParam();
 
-    @Nullable
-    default EntityDataAccessor<String> getSourceEntityDataParam() {
-        return null;
-    }
-
-    @NotNull
-    @Deprecated
-    default Optional<EntityDataAccessor<String>> getSourceEntityDataParamOpt() {
-        return Optional.ofNullable(getSourceEntityDataParam());
-    }
-
-    @Override
-    default @Nullable String getSourceEntityId() {
-        return getSourceEntityDataParamOpt().map(s -> this.asEntity().getEntityData().get(s)).orElse(null);
-    }
-
     /**
      * call in {@link Entity#handleEntityEvent(byte)}
      *
@@ -162,7 +146,6 @@ public interface ICurableConvertedCreature<T extends PathfinderMob> extends ICon
      */
     default void registerConvertingData(@NotNull SynchedEntityData.Builder builder) {
         builder.define(this.getConvertingDataParam(), false);
-        getSourceEntityDataParamOpt().ifPresent(s -> builder.define(s, ""));
     }
 
     /**

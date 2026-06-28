@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.misc.mixin;
 
-import de.teamlapen.vampirism.common.core.ModEntities;
+import de.teamlapen.vampirism.common.world.entity.converted.GeneratedVampirismConvertedEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
@@ -17,7 +17,7 @@ public class SweetBerryBushBlockMixin {
 
     @Inject(method = "entityInside", at = @At(value = "HEAD"), cancellable = true)
     private void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise, CallbackInfo ci) {
-        if (entity.getType() == ModEntities.CONVERTED_FOX.get()) {
+        if (entity.getType() == GeneratedVampirismConvertedEntities.CONVERTED_FOX.get()) {
             ci.cancel();
         }
     }

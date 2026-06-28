@@ -35,20 +35,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nullable
     public IConvertedCreature<?> convert(@NotNull PathfinderMob entity) {
         Holder<EntityType<?>> holder = entity.getType().builtInRegistryHolder();
-        return Optional.ofNullable(holder.getData(VampirismDataMaps.ENTITY_BLOOD.get())).filter(s -> s.blood() > 0).map(a -> holder.getData(VampirismDataMaps.ENTITY_CONVERTER.get())).map(s -> s.converter().createHandler(s.overlay().orElse(null))).map(s -> ((IConvertingHandler<PathfinderMob>) s).createFrom(entity)).orElse(null);
-    }
-
-    @NotNull
-    public Map<EntityType<?>, Identifier> getConvertibleOverlay() {
-        DefaultedRegistry<EntityType<?>> registry = BuiltInRegistries.ENTITY_TYPE;
-        Stream<Map.Entry<? extends EntityType<?>, Identifier>> entryStream = registry.getDataMap(ModDataMaps.ENTITY_CONVERTER_MAP).entrySet().stream().flatMap(s -> s.getValue().overlay().flatMap(l -> Optional.ofNullable(registry.getValue(s.getKey())).map(p -> Map.entry(p, l))).stream());
-        //noinspection unchecked
-        return Map.ofEntries(entryStream.toArray(Map.Entry[]::new));
-    }
-
-    @Override
-    public @Nullable Identifier getConvertibleOverlay(@NotNull String originalEntity) {
-        return BuiltInRegistries.ENTITY_TYPE.get(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.parse(originalEntity))).map(s -> s.getData(VampirismDataMaps.ENTITY_CONVERTER.get())).flatMap(IConverterEntry::overlay).orElse(null);
+        return Optional.ofNullable(holder.getData(VampirismDataMaps.ENTITY_BLOOD.get())).filter(s -> s.blood() > 0).map(a -> holder.getData(VampirismDataMaps.ENTITY_CONVERTER.get())).map(s -> s.converter().createHandler()).map(s -> ((IConvertingHandler<PathfinderMob>) s).createFrom(entity)).orElse(null);
     }
 
     @Override

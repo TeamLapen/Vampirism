@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.common.world.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.AttackMeleeNoSunGoal;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -199,9 +200,6 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         input.getInt("ConversionTime").filter(x -> x > -1).ifPresent(time -> {
             this.startConverting(input.getString("ConversionPlayer").map(UUID::fromString).orElse(null), time, ((PathfinderMob) this));
         });
-        input.getString("source_entity").ifPresent(source -> {
-            getSourceEntityDataParamOpt().ifPresent(s -> this.asEntity().getEntityData().set(s, source));
-        });
     }
 
     /**
@@ -214,9 +212,6 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         output.putInt("ConversionTime", this.isConverting(((PathfinderMob) this)) ? data().conversionTime : -1);
         if (data().conversationStarter != null) {
             output.putString("ConversionPlayer", data().conversationStarter.toString());
-        }
-        if (getSourceEntityId() != null) {
-            output.putString("source_entity", getSourceEntityId());
         }
     }
 

@@ -1,0 +1,33 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.141'
+}
+
+group = project.vampirism_group_id
+version = project.vampirism_version
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(project.java_version)
+    }
+    withSourcesJar()
+}
+
+neoForge {
+    neoFormVersion = "${project.minecraft_version}-1"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    // This module *is* the annotation processor; don't run processors on itself.
+    options.compilerArgs += ['-proc:none']
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            it.artifactId = "${project.vampirism_mod_name}-processor"
+        }
+    }
+}
