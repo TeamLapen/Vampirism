@@ -1176,6 +1176,7 @@
   "tooltip.vampirism.quarrel_garlic": "Applies garlic effect",
   "tooltip.vampirism.crossbow.selected_ammo": "Selected Ammo: %s",
   "tooltip.vampirism.quarrel_pouch.empty": "Can hold several stacks of quarrels for quick reloading",
+  "tooltip.vampirism.contained_projectiles": "Loaded: %1$s x [%2$s]",
   "tooltip.vampirism.for_level": "For up to level %s",
   "tooltip.vampirism.alchemical_fire.desc1": "Does not spread",
   "tooltip.vampirism.alchemical_fire.desc2": "Burns indefinitely",
