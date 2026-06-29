@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.items.crossbow.behavior;
 
-import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
+import de.teamlapen.vampirism.api.world.items.QuarrelProperties;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.util.DamageHandler;
 import net.minecraft.core.BlockPos;
@@ -24,13 +24,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public class TeleportBehavior implements IVampirismQuarrel.IQuarrelBehavior {
+public class TeleportBehavior extends QuarrelBehavior {
 
     private static final double BACK_GAP = 0.6;
 
-    @Override
-    public int color() {
-        return 0xFF0b4d42;
+    public TeleportBehavior() {
+        super(QuarrelProperties.of(0xFF0b4d42).baseDamage(0).damageMultiplier(0).knockbackMultiplier(0).effectDescription(Component.translatable("tooltip.vampirism.quarrel_teleport")).build());
     }
 
     @Override
@@ -129,25 +128,5 @@ public class TeleportBehavior implements IVampirismQuarrel.IQuarrelBehavior {
 
             level.sendParticles(serverPlayer, ParticleTypes.REVERSE_PORTAL, true, true, x, y, z, 0, dirX, dirY, dirZ, 1.0);
         }
-    }
-
-    @Override
-    public Component getEffectDescription() {
-        return Component.translatable("tooltip.vampirism.quarrel_teleport");
-    }
-
-    @Override
-    public float baseDamage(Level level, ItemStack stack, @Nullable LivingEntity shooter) {
-        return 0f;
-    }
-
-    @Override
-    public float damageMultiplier() {
-        return 0f;
-    }
-
-    @Override
-    public float knockbackMultiplier() {
-        return 0f;
     }
 }

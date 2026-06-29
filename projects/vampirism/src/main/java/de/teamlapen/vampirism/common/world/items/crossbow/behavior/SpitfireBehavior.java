@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.items.crossbow.behavior;
 
-import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
+import de.teamlapen.vampirism.api.world.items.QuarrelProperties;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,11 +16,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
-public class SpitfireBehavior implements IVampirismQuarrel.IQuarrelBehavior {
+public class SpitfireBehavior extends QuarrelBehavior {
 
-    @Override
-    public int color() {
-        return 0xFFFF2211;
+    public SpitfireBehavior() {
+        super(QuarrelProperties.of(0xFFFF2211).baseDamage(0.5f).effectDescription(Component.translatable("tooltip.vampirism.quarrel_spitfire")).build());
     }
 
     @Override
@@ -92,16 +91,6 @@ public class SpitfireBehavior implements IVampirismQuarrel.IQuarrelBehavior {
 
     private static int getHeightSearchOffset(int n) {
         return Math.powExact(-1, n + 1) * (int) Math.ceil(n * 0.5); // 0, 1, -1, 2, -2 and so on
-    }
-
-    @Override
-    public Component getEffectDescription() {
-        return Component.translatable("tooltip.vampirism.quarrel_spitfire");
-    }
-
-    @Override
-    public float baseDamage(Level level, ItemStack stack, @Nullable LivingEntity shooter) {
-        return 0.5f;
     }
 
     @Override

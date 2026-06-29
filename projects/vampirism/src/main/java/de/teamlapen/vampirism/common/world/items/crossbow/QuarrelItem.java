@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.items.crossbow;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
+import de.teamlapen.vampirism.api.world.items.QuarrelProperties;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
 import net.minecraft.ChatFormatting;
@@ -38,7 +39,7 @@ public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelE
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flag) {
-        Component effectDescription = this.behavior.getEffectDescription();
+        Component effectDescription = this.behavior.properties().effectDescription();
         if (!Objects.equals(effectDescription, Component.empty())) {
             tooltips.accept(CommonComponents.EMPTY);
             tooltips.accept(Component.translatable("tooltip.vampirism.quarrel_effect").withStyle(ChatFormatting.GRAY));
@@ -57,11 +58,12 @@ public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelE
 
     public AbstractArrow createArrow(Level level, ItemStack stack, @Nullable LivingEntity shooter, Position position, @Nullable ItemStack weapon) {
         boolean intangible = stack.has(DataComponents.INTANGIBLE_PROJECTILE);
+        QuarrelProperties properties = this.behavior.properties();
         QuarrelEntity arrowEntity = new QuarrelEntity(level, position.x(), position.y(), position.z(), stack, weapon);
-        arrowEntity.setBaseDamage(this.behavior.baseDamage(level, stack, shooter) * this.behavior.damageMultiplier() * ModConfig.balance().crossbowDamageMult.get());
+        arrowEntity.setBaseDamage(properties.baseDamage() * properties.damageMultiplier() * ModConfig.balance().crossbowDamageMult.get());
         this.behavior.modifyArrow(level, stack, shooter, arrowEntity);
         if (shooter instanceof Player || shooter == null) {
-            arrowEntity.pickup = intangible ? AbstractArrow.Pickup.CREATIVE_ONLY : this.behavior.pickupBehavior();
+            arrowEntity.pickup = intangible ? AbstractArrow.Pickup.CREATIVE_ONLY : properties.pickupBehavior();
         } else {
             arrowEntity.pickup = AbstractArrow.Pickup.DISALLOWED;
         }
@@ -75,7 +77,7 @@ public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelE
     }
 
     public int tintIndex() {
-        return this.behavior.color();
+        return this.behavior.properties().color();
     }
 
     @Override

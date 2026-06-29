@@ -203,8 +203,8 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
                 arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
             IVampirismQuarrel.IQuarrelBehavior behavior = behaviorOf(projectileStack);
-            float projectileSpeed = behavior != null ? speed * behavior.velocityFactor() : speed;
-            float projectileInaccuracy = behavior != null ? inaccuracy * behavior.inaccuracyFactor() : inaccuracy;
+            float projectileSpeed = behavior != null ? speed * behavior.properties().velocityFactor() : speed;
+            float projectileInaccuracy = behavior != null ? inaccuracy * behavior.properties().inaccuracyFactor() : inaccuracy;
             shootProjectile(shooter, projectile, i, projectileSpeed, projectileInaccuracy, 0, targetOverride);
             applyHorizontalSpread(shooter, hand, projectile, i, projectiles.size());
             level.addFreshEntity(projectile);
@@ -262,9 +262,9 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
             IVampirismQuarrel.IQuarrelBehavior behavior = behaviorOf(projectileStack);
             float gravity = getPrecisionFactor(weapon, arrow.level());
             if (behavior != null) {
-                gravity *= behavior.gravityFactor();
-                if (behavior.extraPierceLevel() > 0) {
-                    quarrel.setPierceLevel((byte) Math.min(Byte.MAX_VALUE, quarrel.getPierceLevel() + behavior.extraPierceLevel()));
+                gravity *= behavior.properties().gravityFactor();
+                if (behavior.properties().extraPierceLevel() > 0) {
+                    quarrel.setPierceLevel((byte) Math.min(Byte.MAX_VALUE, quarrel.getPierceLevel() + behavior.properties().extraPierceLevel()));
                 }
             }
             quarrel.setGravityFactor(gravity);
@@ -384,7 +384,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
     private float getChargeMultiplier(ItemStack crossbow) {
         IVampirismQuarrel.IQuarrelBehavior behavior = getChargingBehavior(crossbow);
-        return behavior != null ? behavior.chargeMultiplier() : 1f;
+        return behavior != null ? behavior.properties().chargeMultiplier() : 1f;
     }
 
     @Nullable

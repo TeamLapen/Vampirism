@@ -158,21 +158,21 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     private float behaviorKnockbackMultiplier() {
         IVampirismQuarrel.IQuarrelBehavior behavior = getArrowType();
-        return behavior != null ? behavior.knockbackMultiplier() : 1f;
+        return behavior != null ? behavior.properties().knockbackMultiplier() : 1f;
     }
 
     private boolean dealsNoDamage() {
         IVampirismQuarrel.IQuarrelBehavior behavior = getArrowType();
-        return behavior != null && behavior.damageMultiplier() <= 0f;
+        return behavior != null && behavior.properties().damageMultiplier() <= 0f;
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    public ItemStack getPickupItem() {
         return this.entityData.get(ARROW_STACK).copy();
     }
 
     @Override
-    protected ItemStack getDefaultPickupItem() {
+    public ItemStack getDefaultPickupItem() {
         return ModItems.QUARREL_NORMAL.toStack();
     }
 

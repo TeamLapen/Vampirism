@@ -7,8 +7,8 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.HeavyQuarrelModel;
 import de.teamlapen.vampirism.client.models.entities.QuarrelModel;
+import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
-import de.teamlapen.vampirism.common.world.items.crossbow.behavior.HeavyBehavior;
 import de.teamlapen.vampirism.common.world.items.crossbow.behavior.SpitfireBehavior;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.Sheets;
@@ -75,7 +75,7 @@ public class QuarrelRenderer extends EntityRenderer<QuarrelEntity, QuarrelRender
         state.xRot = entity.getXRot(partialTicks);
         state.yRot = entity.getYRot(partialTicks);
         state.shake = (float) entity.shakeTime - partialTicks;
-        state.heavy = entity.getArrowType() instanceof HeavyBehavior;
+        state.heavy = entity.getPickupItem().is(ModItems.QUARREL_HEAVY);
         // Render alchemical fire instead of the normal one for the spitfire quarrel
         state.alchemicalFire = state.displayFireAnimation && entity.getArrowType() instanceof SpitfireBehavior;
         if (state.alchemicalFire) {

@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
+import de.teamlapen.vampirism.api.world.items.QuarrelProperties;
 import de.teamlapen.vampirism.api.world.items.components.IBottleBlood;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.blocks.candle.CandleHolderBlock;
@@ -30,6 +31,7 @@ import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -85,8 +87,8 @@ public class ModItems {
     public static final DeferredItem<TechCrossbowItem> BASIC_TECH_CROSSBOW = ITEMS.registerItem("basic_tech_crossbow",  props -> new TechCrossbowItem(props.durability(930), 1.6F, 40, ToolMaterial.DIAMOND, HunterSkills.WEAPON_TABLE));
     public static final DeferredItem<TechCrossbowItem> ENHANCED_TECH_CROSSBOW = ITEMS.registerItem("enhanced_tech_crossbow",  props -> new TechCrossbowItem(props.durability(1860), 1.7F, 30, ToolMaterial.DIAMOND, HunterSkills.WEAPON_TABLE, HunterSkills.MASTER_CRAFTSMANSHIP));
 
-    public static final DeferredItem<QuarrelItem> QUARREL_NORMAL = ITEMS.registerItem("quarrel_normal", props -> new QuarrelItem(new NormalBehavior(), props.factions$withShiftDescription()));
-    public static final DeferredItem<QuarrelItem> QUARREL_HEAVY = ITEMS.registerItem("quarrel_heavy", props -> new QuarrelItem(new HeavyBehavior(), props.factions$withShiftDescription()));
+    public static final DeferredItem<QuarrelItem> QUARREL_NORMAL = ITEMS.registerItem("quarrel_normal", props -> new QuarrelItem(new QuarrelBehavior(QuarrelProperties.of(0xFFFFFFFF).pickupBehavior(AbstractArrow.Pickup.ALLOWED).baseDamage(2).build()), props.factions$withShiftDescription()));
+    public static final DeferredItem<QuarrelItem> QUARREL_HEAVY = ITEMS.registerItem("quarrel_heavy", props -> new QuarrelItem(new QuarrelBehavior(QuarrelProperties.of(0xFF9DA0A8).pickupBehavior(AbstractArrow.Pickup.ALLOWED).baseDamage(2.5f).damageMultiplier(1.6f).knockbackMultiplier(1.4f).velocityFactor(0.8f).gravityFactor(1.5f).inaccuracyFactor(0.5f).extraPierceLevel(2).chargeMultiplier(1.33f).build()), props.factions$withShiftDescription()));
     public static final DeferredItem<QuarrelItem> QUARREL_SPITFIRE = ITEMS.registerItem("quarrel_spitfire", props -> new QuarrelItem(new SpitfireBehavior(), props));
     public static final DeferredItem<QuarrelItem> QUARREL_GARLIC = ITEMS.registerItem("quarrel_garlic", props -> new QuarrelItem(new GarlicBehavior(), props));
     public static final DeferredItem<QuarrelItem> QUARREL_VAMPIRE_KILLER = ITEMS.registerItem("quarrel_vampire_killer", props -> new QuarrelItem(new VampireKillerBehavior(), props));

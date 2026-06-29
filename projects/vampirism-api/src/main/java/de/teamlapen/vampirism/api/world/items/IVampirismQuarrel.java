@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.api.world.items;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,11 +40,20 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
 
     interface IQuarrelBehavior {
 
-        int color();
+        /**
+         * Constants describing the quarrel behavior where overrides would be obsolete.
+         */
+        QuarrelProperties properties();
 
+        /**
+         * Called when the quarrel hits an entity.
+         */
         default void onHitEntity(ItemStack arrow, LivingEntity entity, AbstractArrow arrowEntity, Entity shootingEntity) {
         }
 
+        /**
+         * Called when the quarrel hits a block.
+         */
         default void onHitBlock(ItemStack arrow, @NotNull BlockPos blockPos, AbstractArrow arrowEntity, @Nullable Entity shootingEntity, Direction direction) {
         }
 
@@ -56,69 +64,10 @@ public interface IVampirismQuarrel<T extends AbstractArrow & IEntityQuarrel> ext
         default void onChargeTick(@NotNull ServerLevel level, @NotNull LivingEntity shooter, @NotNull ItemStack crossbow, float chargeProgress) {
         }
 
+        /**
+         * Called during a quarrel entity creation. Can be used to apply special properties or stats on it if needed.
+         */
         default void modifyArrow(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter, @NotNull AbstractArrow arrow) {
-        }
-
-        default Component getEffectDescription() {
-            return Component.empty();
-        }
-
-        default AbstractArrow.Pickup pickupBehavior() {
-            return AbstractArrow.Pickup.CREATIVE_ONLY;
-        }
-
-        float baseDamage(@NotNull Level level, @NotNull ItemStack stack, @Nullable LivingEntity shooter);
-
-        /**
-         * Multiplier applied to the damage the quarrel deals. 1 = no changes, 0 = no damage.
-         */
-        default float damageMultiplier() {
-            return 1f;
-        }
-
-        /**
-         * Multiplier applied to the knockback the quarrel imparts on an entity hit. 1 = vanilla knockback, 0 = none.
-         */
-        default float knockbackMultiplier() {
-            return 1f;
-        }
-
-        /**
-         * Multiplier applied to the launch speed. Values below 1 make the quarrel slower (and, since arrow damage scales
-         * with speed, softer at range). 1 = vanilla speed.
-         */
-        default float velocityFactor() {
-            return 1f;
-        }
-
-        /**
-         * Multiplier applied to the quarrel's gravity, composed on top of the crossbow's precision factor. Values above
-         * 1 make it drop faster (heavier). 1 = unchanged.
-         */
-        default float gravityFactor() {
-            return 1f;
-        }
-
-        /**
-         * Multiplier applied to the shot's inaccuracy. Values below 1 tighten the grouping. 1 = unchanged.
-         */
-        default float inaccuracyFactor() {
-            return 1f;
-        }
-
-        /**
-         * Pierce levels granted innately, added on top of the weapon's Piercing enchantment. 0 = none.
-         */
-        default int extraPierceLevel() {
-            return 0;
-        }
-
-        /**
-         * Multiplier applied to the crossbow's charge time when this quarrel is the selected/loaded ammo. Above 1 takes
-         * longer to charge. 1 = unchanged.
-         */
-        default float chargeMultiplier() {
-            return 1f;
         }
     }
 }
