@@ -1170,7 +1170,7 @@
   "tooltip.vampirism.for_to_levels": "For Levels %1$s To %2$s",
   "tooltip.vampirism.quarrel_effect": "On Impact:",
   "tooltip.vampirism.quarrel_vampire_killer": "Instantly kills low-level vampire NPCs",
-  "tooltip.vampirism.quarrel_spitfire": "Creates an alchemical fire",
+  "tooltip.vampirism.quarrel_spitfire": "Creates an alchemical fire splash",
   "tooltip.vampirism.quarrel_teleport": "Teleports the shooter to the point of impact, or behind an entity if one is hit",
   "tooltip.vampirism.quarrel_bleeding": "Applies bleeding effect",
   "tooltip.vampirism.quarrel_garlic": "Applies garlic effect",
