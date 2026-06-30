@@ -4,9 +4,9 @@ import de.teamlapen.vampirism.client.renderer.entities.wrapper.FixedDonkeyRender
 import de.teamlapen.vampirism.client.renderer.entities.wrapper.FixedLlamaRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.wrapper.FixedMuleRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.wrapper.FixedTraderLlamaRenderer;
-import de.teamlapen.vampirism.processor.AdditionalConverter;
-import de.teamlapen.vampirism.processor.ConvertedCreature;
-import de.teamlapen.vampirism.processor.ModId;
+import de.teamlapen.vampirism.annotation.AdditionalConverter;
+import de.teamlapen.vampirism.annotation.ConvertedCreature;
+import de.teamlapen.vampirism.annotation.ModId;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.cow.Cow;
@@ -35,7 +35,7 @@ import net.minecraft.world.entity.npc.villager.Villager;
  *     <li>an entry in {@code GeneratedConvertedEntitiesClient} when a {@code renderer} is declared.</li>
  * </ul>
  * <p>
- * Use {@link de.teamlapen.vampirism.processor.AdditionalConverter} to declare vanilla→converted mappings for
+ * Use {@link de.teamlapen.vampirism.annotation.AdditionalConverter} to declare vanilla→converted mappings for
  * entities whose converted type is registered outside this system (e.g. {@code VillagerConvertedEntity}).
  * <p>
  * Entities that need extra behaviour reference a handwritten {@code subclass} which extends the generated base

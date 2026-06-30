@@ -25,8 +25,6 @@ dependencies {
         testImplementation(it)
     }
 
-    // Annotation processor that generates the Converted<Name> base classes (@ConvertedCreature)
-    compileOnly(project(':vampirism-processor'))
     annotationProcessor(project(':vampirism-processor'))
 
     if (project.vampirism_factions_source_dependency.toBoolean()) {

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Generates {@code Generated<ModId>ConvertedEntitiesClient}: the client-only class that registers the
  * vanilla entity renderer wrapped with the converted-overlay layer for each converted creature that
- * declares a {@link de.teamlapen.vampirism.processor.ConvertedCreature#renderer()}.
+ * declares a {@link de.teamlapen.vampirism.annotation.ConvertedCreature#renderer()}.
  */
 public final class ClientGenerator {
 

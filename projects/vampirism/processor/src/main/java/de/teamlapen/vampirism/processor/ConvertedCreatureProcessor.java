@@ -1,5 +1,10 @@
 package de.teamlapen.vampirism.processor;
 
+import de.teamlapen.vampirism.annotation.AdditionalConverter;
+import de.teamlapen.vampirism.annotation.AdditionalConverters;
+import de.teamlapen.vampirism.annotation.ConvertedCreature;
+import de.teamlapen.vampirism.annotation.ConvertedCreatures;
+import de.teamlapen.vampirism.annotation.ModId;
 import de.teamlapen.vampirism.processor.generator.ClientGenerator;
 import de.teamlapen.vampirism.processor.generator.ConvertedEntityClassGenerator;
 import de.teamlapen.vampirism.processor.generator.DatagenGenerator;
@@ -31,11 +36,11 @@ import java.util.stream.Collectors;
  * </ul>
  */
 @SupportedAnnotationTypes({
-        "de.teamlapen.vampirism.processor.ConvertedCreature",
-        "de.teamlapen.vampirism.processor.ConvertedCreatures",
-        "de.teamlapen.vampirism.processor.AdditionalConverter",
-        "de.teamlapen.vampirism.processor.AdditionalConverters",
-        "de.teamlapen.vampirism.processor.ModId"
+        "de.teamlapen.vampirism.annotation.ConvertedCreature",
+        "de.teamlapen.vampirism.annotation.ConvertedCreatures",
+        "de.teamlapen.vampirism.annotation.AdditionalConverter",
+        "de.teamlapen.vampirism.annotation.AdditionalConverters",
+        "de.teamlapen.vampirism.annotation.ModId"
 })
 public class ConvertedCreatureProcessor extends AbstractProcessor {
 

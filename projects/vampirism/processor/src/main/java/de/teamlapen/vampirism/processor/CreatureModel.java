@@ -5,7 +5,7 @@ import org.jspecify.annotations.Nullable;
 import javax.lang.model.element.Element;
 
 /**
- * Data model for a single {@link ConvertedCreature} annotation, with all defaults already resolved.
+ * Data model for a single {@link de.teamlapen.vampirism.annotation.ConvertedCreature} annotation, with all defaults already resolved.
  *
  * <p>{@code width}/{@code height} may be {@code -1f} to signal "use entity type dimensions" — only
  * {@link de.teamlapen.vampirism.processor.generator.RegistrarGenerator} interprets this sentinel.

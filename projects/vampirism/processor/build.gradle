@@ -3,7 +3,7 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.141'
 }
 
-group = project.vampirism_group_id
+group = "${project.vampirism_group_id}.processor"
 version = project.vampirism_version
 
 java {
@@ -17,6 +17,10 @@ neoForge {
     neoFormVersion = "${project.minecraft_version}-1"
 }
 
+dependencies {
+    implementation(project(':vampirism-api'))
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     // This module *is* the annotation processor; don't run processors on itself.
@@ -27,7 +31,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             from components.java
-            it.artifactId = "${project.vampirism_mod_name}-processor"
+            it.artifactId = "VampirismProcessor"
         }
     }
 }

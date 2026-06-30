@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.processor;
+package de.teamlapen.vampirism.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;

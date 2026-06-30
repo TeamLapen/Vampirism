@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.processor.ProcessorUtil;
  *
  * <p>The generated class extends the vanilla entity, implements {@code CurableConvertedCreature},
  * and wires all boilerplate lifecycle methods to the extension hooks ({@code *C()} methods).
- * When no {@link de.teamlapen.vampirism.processor.ConvertedCreature#subclass()} is provided it also carries
+ * When no {@link de.teamlapen.vampirism.annotation.ConvertedCreature#subclass()} is provided it also carries
  * {@code getAttributeBuilder()} and {@code checkSpawnRules()} statics.
  */
 public final class ConvertedEntityClassGenerator {
