@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.data.provider.tags;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.tags.ModEntityTags;
+import de.teamlapen.vampirism.common.world.entity.converted.GeneratedVampirismConvertedEntities;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
@@ -31,5 +32,11 @@ public class ModEntityTypeTagsProvider extends EntityTypeTagsProvider {
         tag(EntityTypeTags.POWDER_SNOW_WALKABLE_MOBS).addTag(ModEntityTags.HUNTER);
         tag(ModEntityTags.HUNTER_VILLAGE_GUARDS).add(ModEntities.HUNTER.get(), ModEntities.HUNTER_IMOB.get(), ModEntities.ADVANCED_HUNTER.get(), ModEntities.ADVANCED_HUNTER_IMOB.get());
         tag(ModEntityTags.VAMPIRE_VILLAGE_GUARDS).add(ModEntities.VAMPIRE.get(), ModEntities.VAMPIRE_IMOB.get(), ModEntities.ADVANCED_VAMPIRE.get(), ModEntities.ADVANCED_VAMPIRE_IMOB.get());
+        tag(EntityTypeTags.CAN_WEAR_HORSE_ARMOR).add(GeneratedVampirismConvertedEntities.CONVERTED_HORSE.get());
+        tag(EntityTypeTags.CAN_EQUIP_SADDLE).add(GeneratedVampirismConvertedEntities.CONVERTED_HORSE.get())
+                .add(GeneratedVampirismConvertedEntities.CONVERTED_MULE.get())
+                .add(GeneratedVampirismConvertedEntities.CONVERTED_DONKEY.get())
+                .add(GeneratedVampirismConvertedEntities.CONVERTED_PIG.get())
+        ;
     }
 }

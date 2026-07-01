@@ -17,9 +17,9 @@ public class SweetBerryBushBlockMixin {
 
     @Inject(method = "entityInside", at = @At(value = "HEAD"), cancellable = true)
     private void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise, CallbackInfo ci) {
-        if (entity.getType() == GeneratedVampirismConvertedEntities.CONVERTED_FOX.get()) {
-            ci.cancel();
-        }
+//        if (entity.getType() == GeneratedVampirismConvertedEntities.CONVERTED_FOX.get()) {
+//            ci.cancel();
+//        }
     }
 
 
