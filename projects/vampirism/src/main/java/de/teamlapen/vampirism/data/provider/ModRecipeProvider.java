@@ -1405,13 +1405,13 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_CLIP)
                 .requires(ModItems.QUARREL_NORMAL, 16)
                 .unlockedBy("has_quarrel_normal", has(ModItems.QUARREL_NORMAL))
-                .unlockedBy("has_tech_crossbow", has(ModItemTags.TECH_CROSSBOWS))
+                .unlockedBy("has_tech_crossbow", has(ModItemTags.TECH_HUNTER_CROSSBOWS))
                 .lava(0)
                 .save(output, modString("quarrel_clip_from_quarrels"));
         shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.HEAVY_QUARREL_CLIP)
                 .requires(ModItems.QUARREL_HEAVY, 8)
                 .unlockedBy("has_quarrel_heavy", has(ModItems.QUARREL_HEAVY))
-                .unlockedBy("has_tech_crossbow", has(ModItemTags.TECH_CROSSBOWS))
+                .unlockedBy("has_tech_crossbow", has(ModItemTags.TECH_HUNTER_CROSSBOWS))
                 .lava(0)
                 .save(output, modString("heavy_quarrel_clip_from_quarrels"));
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_CLIP)

@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#vampirism:crossbows/tech"
+            "items": "#vampirism:hunter_crossbows/tech"
           }
         ]
       },

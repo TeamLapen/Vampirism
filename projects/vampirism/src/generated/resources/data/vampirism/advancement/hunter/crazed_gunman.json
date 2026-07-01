@@ -12,7 +12,7 @@
     "killed": {
       "conditions": {
         "fired_from_weapon": {
-          "items": "#vampirism:crossbows"
+          "items": "#vampirism:hunter_crossbows"
         },
         "victims": [
           [

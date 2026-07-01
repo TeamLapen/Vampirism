@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#vampirism:crossbows/enhanced"
+            "items": "#vampirism:hunter_crossbows/enhanced"
           }
         ]
       },
