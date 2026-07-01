@@ -211,8 +211,8 @@ public class Helper {
                 if (source.getDirectEntity() instanceof LivingEntity) {
                     //Maybe use all IVampireFinisher??
                     return source.getDirectEntity() instanceof IHunterMob || ((LivingEntity) source.getDirectEntity()).getMainHandItem().getItem() instanceof StakeItem;
-                } else if (source.getDirectEntity() instanceof QuarrelEntity) {
-                    return ((QuarrelEntity) source.getDirectEntity()).getArrowType() instanceof VampireKillerBehavior;
+                } else if (source.getDirectEntity() instanceof QuarrelEntity quarrel) {
+                    return quarrel.getBehavior().orElse(null) instanceof VampireKillerBehavior;
                 }
                 return false;
             }

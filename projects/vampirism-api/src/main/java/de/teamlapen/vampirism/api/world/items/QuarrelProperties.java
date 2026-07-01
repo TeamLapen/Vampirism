@@ -9,7 +9,9 @@ import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 public record QuarrelProperties(int color, Component effectDescription, AbstractArrow.Pickup pickupBehavior,
                                 float baseDamage, float damageMultiplier, float knockbackMultiplier,
                                 float velocityFactor, float gravityFactor, float inaccuracyFactor,
-                                int extraPierceLevel, float chargeMultiplier) {
+                                int extraPierceLevel, float chargeMultiplier, boolean forcesChunkLoading) {
+
+    public static final QuarrelProperties DEFAULT = of(0xFFFFFFFF).build();
 
     public static Builder of(int color) {
         return new Builder(color);
@@ -28,6 +30,7 @@ public record QuarrelProperties(int color, Component effectDescription, Abstract
         private float inaccuracyFactor = 1f;
         private int extraPierceLevel = 0;
         private float chargeMultiplier = 1f;
+        private boolean forcesChunkLoading = false;
 
         private Builder(int color) {
             this.color = color;
@@ -116,8 +119,17 @@ public record QuarrelProperties(int color, Component effectDescription, Abstract
             return this;
         }
 
+        /**
+         * Makes the quarrel entity keep the chunks along its flight path loaded, like an ender pearl.
+         * This is only needed for the teleport quarrel, do not use for normal quarrels unless necessary; defaults to false.
+         */
+        public Builder forcesChunkLoading() {
+            this.forcesChunkLoading = true;
+            return this;
+        }
+
         public QuarrelProperties build() {
-            return new QuarrelProperties(color, effectDescription, pickupBehavior, baseDamage, damageMultiplier, knockbackMultiplier, velocityFactor, gravityFactor, inaccuracyFactor, extraPierceLevel, chargeMultiplier);
+            return new QuarrelProperties(color, effectDescription, pickupBehavior, baseDamage, damageMultiplier, knockbackMultiplier, velocityFactor, gravityFactor, inaccuracyFactor, extraPierceLevel, chargeMultiplier, forcesChunkLoading);
         }
     }
 }

@@ -29,7 +29,7 @@ public class TeleportBehavior extends QuarrelBehavior {
     private static final double BACK_GAP = 0.6;
 
     public TeleportBehavior() {
-        super(QuarrelProperties.of(0xFF0b4d42).baseDamage(0).damageMultiplier(0).knockbackMultiplier(0).effectDescription(Component.translatable("tooltip.vampirism.quarrel_teleport")).build());
+        super(QuarrelProperties.of(0xFF0B4D42).baseDamage(0).damageMultiplier(0).knockbackMultiplier(0).forcesChunkLoading().effectDescription(Component.translatable("tooltip.vampirism.quarrel_teleport")).build());
     }
 
     @Override

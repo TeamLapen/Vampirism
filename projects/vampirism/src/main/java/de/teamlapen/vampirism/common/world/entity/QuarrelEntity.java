@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.entity;
 
 import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
+import de.teamlapen.vampirism.api.world.items.QuarrelProperties;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -9,6 +10,8 @@ import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelItem;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +23,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
@@ -31,6 +35,8 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     private static final int MAX_RAPID_HITS = 3;
     private static final int RAPID_HIT_WINDOW = 10;
+
+    private static final int CHUNK_LOADING_RADIUS = 2;
 
     private static final EntityDataAccessor<Float> GRAVITY_FACTOR = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<ItemStack> ARROW_STACK = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.ITEM_STACK);
@@ -59,9 +65,20 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
         this.entityData.set(ARROW_STACK, stack.copyWithCount(1));
     }
 
-    @Nullable
-    public IVampirismQuarrel.IQuarrelBehavior getArrowType() {
-        return getPickupItem().getItem() instanceof QuarrelItem quarrel ? quarrel.getBehavior() : null;
+    public Optional<IVampirismQuarrel.IQuarrelBehavior> getBehavior() {
+        return Optional.ofNullable(getPickupItem().getItem() instanceof QuarrelItem quarrel ? quarrel.getBehavior() : null);
+    }
+
+    public QuarrelProperties properties() {
+        return getBehavior().map(IVampirismQuarrel.IQuarrelBehavior::properties).orElse(QuarrelProperties.DEFAULT);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (isAlive() && level() instanceof ServerLevel serverLevel && properties().forcesChunkLoading()) {
+            serverLevel.getChunkSource().addTicketWithRadius(TicketType.ENDER_PEARL, chunkPosition(), CHUNK_LOADING_RADIUS);
+        }
     }
 
     @Override
@@ -121,7 +138,7 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
     @Override
     protected void onHitEntity(EntityHitResult hitResult) {
         Entity hit = hitResult.getEntity();
-        if (dealsNoDamage()) {
+        if (properties().damageMultiplier() <= 0f) {
             if (!level().isClientSide() && hit instanceof LivingEntity target) {
                 ItemStack arrow = getPickupItem();
                 if (arrow.getItem() instanceof IVampirismQuarrel<?> quarrel) {
@@ -135,7 +152,7 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
             living.invulnerableTime = 0;
         }
 
-        float knockbackFactor = behaviorKnockbackMultiplier();
+        float knockbackFactor = properties().knockbackMultiplier();
         Vec3 preHitVelocity = knockbackFactor != 1f && hit instanceof LivingEntity ? hit.getDeltaMovement() : null;
 
         super.onHitEntity(hitResult);
@@ -154,16 +171,6 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
         if (arrow.getItem() instanceof IVampirismQuarrel<?> quarrel) {
             quarrel.onHitEntity(arrow, mob, this, getOwner());
         }
-    }
-
-    private float behaviorKnockbackMultiplier() {
-        IVampirismQuarrel.IQuarrelBehavior behavior = getArrowType();
-        return behavior != null ? behavior.properties().knockbackMultiplier() : 1f;
-    }
-
-    private boolean dealsNoDamage() {
-        IVampirismQuarrel.IQuarrelBehavior behavior = getArrowType();
-        return behavior != null && behavior.properties().damageMultiplier() <= 0f;
     }
 
     @Override

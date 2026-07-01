@@ -77,7 +77,7 @@ public class QuarrelRenderer extends EntityRenderer<QuarrelEntity, QuarrelRender
         state.shake = (float) entity.shakeTime - partialTicks;
         state.heavy = entity.getPickupItem().is(ModItems.QUARREL_HEAVY);
         // Render alchemical fire instead of the normal one for the spitfire quarrel
-        state.alchemicalFire = state.displayFireAnimation && entity.getArrowType() instanceof SpitfireBehavior;
+        state.alchemicalFire = state.displayFireAnimation && entity.getBehavior().orElse(null) instanceof SpitfireBehavior;
         if (state.alchemicalFire) {
             state.displayFireAnimation = false;
         }
