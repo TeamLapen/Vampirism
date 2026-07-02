@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModEnchantments;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
+import de.teamlapen.vampirism.common.world.items.component.EnchantmentOverride;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
@@ -13,6 +14,7 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSki
 import de.teamlapen.vampirism.common.world.items.component.SelectedAmmunition;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -39,6 +41,10 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.transfer.TransferPreconditions;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -66,6 +72,11 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         this.chargeTime = chargeTime;
         this.itemTier = itemTier;
     }
+
+    /**
+     * @return the maximum number of projectiles this crossbow can hold loaded at once
+     */
+    public abstract int getMaxLoadedProjectiles();
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flag) {
@@ -544,5 +555,104 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
     public boolean testQuarrel(ItemStack crossbow, ItemStack quarrel) {
         return getAmmunition(crossbow).map(quarrel::is).orElse(true);
+    }
+
+    @Override
+    public boolean isPrimaryItemFor(ItemStack stack, Holder<Enchantment> enchantment) {
+        return EnchantmentOverride.isPrimary(stack, enchantment) || super.isPrimaryItemFor(stack, enchantment);
+    }
+
+    @Override
+    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+        return EnchantmentOverride.isPrimary(stack, enchantment) || super.supportsEnchantment(stack, enchantment);
+    }
+
+    /**
+     * Slot-based handler over the loaded projectiles, backed by the vanilla {@link DataComponents#CHARGED_PROJECTILES}
+     * component. Each slot holds a single bolt, the number of slots is the crossbow's {@link #getMaxLoadedProjectiles()}.
+     */
+    public static class ResourceHandler implements net.neoforged.neoforge.transfer.ResourceHandler<ItemResource> {
+
+        private final ItemAccess itemAccess;
+        private final HunterCrossbowItem crossbow;
+
+        public ResourceHandler(ItemAccess itemAccess) {
+            this.itemAccess = itemAccess;
+            this.crossbow = (HunterCrossbowItem) itemAccess.getResource().getItem();
+        }
+
+        private List<ItemStack> items() {
+            ChargedProjectiles charged = this.itemAccess.getResource().get(DataComponents.CHARGED_PROJECTILES);
+            return charged == null ? List.of() : charged.itemCopies();
+        }
+
+        @Override
+        public int size() {
+            return this.crossbow.getMaxLoadedProjectiles();
+        }
+
+        @Override
+        public ItemResource getResource(int index) {
+            List<ItemStack> items = items();
+            return index < 0 || index >= items.size() ? ItemResource.EMPTY : ItemResource.of(items.get(index));
+        }
+
+        @Override
+        public long getAmountAsLong(int index) {
+            List<ItemStack> items = items();
+            return index < 0 || index >= items.size() ? 0 : items.get(index).getCount();
+        }
+
+        @Override
+        public long getCapacityAsLong(int index, ItemResource resource) {
+            return index >= 0 && index < size() ? 1 : 0;
+        }
+
+        @Override
+        public boolean isValid(int index, ItemResource resource) {
+            return index >= 0 && index < size() && resource.is(holder -> holder.value() instanceof IVampirismQuarrel<?>);
+        }
+
+        @Override
+        public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+            TransferPreconditions.checkNonNegative(index);
+            if (!isValid(index, resource)) {
+                return 0;
+            }
+            int accessAmount = this.itemAccess.getAmount();
+            if (accessAmount <= 0) {
+                return 0;
+            }
+            ItemResource accessResource = this.itemAccess.getResource();
+            List<ItemStack> items = new ArrayList<>(items());
+            // one bolt per slot, slots are filled contiguously
+            if (index != items.size() || items.size() >= size()) {
+                return 0;
+            }
+            items.add(resource.toStack(1));
+            ItemResource newResource = accessResource.with(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(items));
+            return this.itemAccess.exchange(newResource, accessAmount, transaction) > 0 ? 1 : 0;
+        }
+
+        @Override
+        public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+            TransferPreconditions.checkNonNegative(index);
+            int accessAmount = this.itemAccess.getAmount();
+            if (accessAmount <= 0) {
+                return 0;
+            }
+            ItemResource accessResource = this.itemAccess.getResource();
+            List<ItemStack> items = new ArrayList<>(items());
+            if (index >= items.size() || !resource.matches(items.get(index))) {
+                return 0;
+            }
+            items.remove(index);
+            ItemResource newResource = items.isEmpty()
+                    ? accessResource.without(DataComponents.CHARGED_PROJECTILES)
+                    : accessResource.with(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(items));
+            return this.itemAccess.exchange(newResource, accessAmount, transaction) > 0 ? 1 : 0;
+        }
     }
 }

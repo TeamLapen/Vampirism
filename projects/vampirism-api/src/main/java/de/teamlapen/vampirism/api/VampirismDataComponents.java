@@ -47,5 +47,6 @@ public class VampirismDataComponents {
         public static final Identifier HELD_ENTITY = VIdentifier.mod("held_entity");
         public static final Identifier CHARGED_RITUAL_KNIFE = VIdentifier.mod("charged_ritual_knife");
         public static final Identifier CONTAINED_PROJECTILES = VIdentifier.mod("contained_projectiles");
+        public static final Identifier ENCHANTMENT_OVERRIDE = VIdentifier.mod("enchantment_override");
     }
 }

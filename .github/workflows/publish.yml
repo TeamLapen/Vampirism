@@ -122,7 +122,12 @@ jobs:
             echo "MAVEN_URL=${{ secrets.MAVEN_URL_RELEASES }}" >> "$GITHUB_ENV"
           fi
       - name: Publish to Maven
-        run: ./gradlew ${{ needs.prepare.outputs.project }}-api:publish ${{ needs.prepare.outputs.project }}:publish
+        run: |
+          if [[ "${{ needs.prepare.outputs.project }}" == "vampirism" ]]; then
+            ./gradlew vampirism-processor:publish vampirism-api:publish vampirism:publish
+          else
+            ./gradlew ${{ needs.prepare.outputs.project }}-api:publish ${{ needs.prepare.outputs.project }}:publish
+          fi
         env:
           MAVEN_URL: ${{ env.MAVEN_URL }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}

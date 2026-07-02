@@ -44,8 +44,8 @@ public class SpecialConverter<T extends PathfinderMob, Z extends PathfinderMob &
     }
 
     @Override
-    public IConvertingHandler<?> createHandler(@Nullable Identifier texture) {
-        return new SpecialConvertingHandler<>(() -> this.convertedType, texture, new VampirismEntityRegistry.DefaultHelper(this.helper));
+    public IConvertingHandler<?> createHandler() {
+        return new SpecialConvertingHandler<>(() -> this.convertedType, new VampirismEntityRegistry.DefaultHelper(this.helper));
     }
 
     @Override

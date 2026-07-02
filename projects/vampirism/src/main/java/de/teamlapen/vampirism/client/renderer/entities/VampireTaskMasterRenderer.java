@@ -20,7 +20,7 @@ import net.minecraft.resources.Identifier;
  */
 public class VampireTaskMasterRenderer extends MobRenderer<VampireTaskMasterEntity, VampireTaskMasterRenderer.VampireTaskMasterRenderState, VillagerModel> {
     private final static Identifier texture = VIdentifier.mc("textures/entity/villager/villager.png");
-    private final static Identifier vampireOverlay = VIdentifier.mod("textures/entity/vanilla/villager_overlay.png");
+    private final static Identifier vampireOverlay = VIdentifier.mod("textures/entity/overlay/converted_villager.png");
     private final static Identifier overlay = VIdentifier.mod("textures/entity/vampire_task_master_overlay.png");
 
     public VampireTaskMasterRenderer(EntityRendererProvider.Context context) {

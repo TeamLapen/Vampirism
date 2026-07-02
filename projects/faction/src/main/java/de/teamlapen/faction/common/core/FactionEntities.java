@@ -1,6 +1,7 @@
 package de.teamlapen.faction.common.core;
 
 import de.teamlapen.faction.api.util.REFERENCE;
+import de.teamlapen.faction.common.event.PlayerEventHandlerEvent;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -20,5 +21,9 @@ public class FactionEntities {
 
     static void register(IEventBus bus) {
         DATA_SERIALIZER.register(bus);
+    }
+
+    static void registerPlayerEventHandler(PlayerEventHandlerEvent event) {
+        event.addAttachmentListener(FactionAttachments.FACTION_PLAYER_HANDLER);
     }
 }

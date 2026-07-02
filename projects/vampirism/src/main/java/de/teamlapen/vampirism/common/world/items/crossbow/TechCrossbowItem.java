@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.common.util.ModEnchantmentHelper;
+import de.teamlapen.vampirism.common.world.items.component.EnchantmentOverride;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import net.minecraft.core.Holder;
@@ -32,7 +33,12 @@ public class TechCrossbowItem extends HunterCrossbowItem {
 
     @SafeVarargs
     public TechCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, ToolMaterial itemTier, Holder<ISkill<?>>... requiredSkills) {
-        super(properties.repairable(Tags.Items.INGOTS_IRON).component(FactionDataComponents.FACTION_RESTRICTION, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(requiredSkills).build()), arrowVelocity, chargeTime, itemTier);
+        super(properties.repairable(Tags.Items.INGOTS_IRON).component(FactionDataComponents.FACTION_RESTRICTION, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(requiredSkills).build()).component(ModDataComponents.ENCHANTMENT_OVERRIDE, new EnchantmentOverride(ModEnchantmentTags.SEMI_AUTOMATIC_HUNTER_CROSSBOW_COMPATIBLE)), arrowVelocity, chargeTime, itemTier);
+    }
+
+    @Override
+    public int getMaxLoadedProjectiles() {
+        return 16; // If a bigger clip is ever added, scale this value
     }
 
     @Override

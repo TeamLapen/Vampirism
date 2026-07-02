@@ -55,7 +55,8 @@
     "accessor.TargetConditionAccessor",
     "accessor.VanillaBlockLootAccessor",
     "accessor.VillagerHostilesSensorAccessor",
-    "accessor.WalkAnimationStateAccessor"
+    "accessor.WalkAnimationStateAccessor",
+    "MobEffectUtilMixin"
   ],
   "client": [
     "client.CapeLayerMixin",
@@ -65,7 +66,6 @@
     "client.LivingEntityRendererAccessor",
     "client.MinecraftMixin",
     "client.MutableSpriteSetMixin",
-    "client.ResourceLoadStateTrackerMixin",
     "client.SplashManagerMixin",
     "client.StatsScreenMixin",
     "client.accessor.FeatureRenderDispatcherAccessor",

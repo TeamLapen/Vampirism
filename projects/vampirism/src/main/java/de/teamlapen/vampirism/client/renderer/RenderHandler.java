@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.renderer;
 
 import de.teamlapen.faction.client.IMinecraftAccessor;
 import de.teamlapen.faction.common.config.FactionConfig;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
@@ -187,19 +186,6 @@ public class RenderHandler implements IMinecraftAccessor {
             EntityRenderer<? super Bat, ?> renderer = mc().getEntityRenderDispatcher().getRenderer(bat);
             EntityRenderState batRenderState = renderer.createRenderState(bat, partialTicks);
             mc().getEntityRenderDispatcher().submit(batRenderState, new CameraRenderState(), 0, 0, 0, event.getPoseStack(), event.getSubmitNodeCollector());
-        }
-    }
-
-    public <I extends LivingEntity, S extends LivingEntityRenderState, U extends EntityModel<S>> void syncOverlays() {
-        for (EntityType<?> type : VampirismMod.services().entityRegistry().getConvertibleOverlay().keySet()) {
-            LivingEntityRenderer<I, S, U> render = (LivingEntityRenderer<I, S, U>) Minecraft.getInstance().getEntityRenderDispatcher().getRenderers().get(type);
-            if (render == null) {
-                LOGGER.error("Did not find renderer for {}", type);
-                continue;
-            }
-            if (render.getLayers().stream().noneMatch(s -> s instanceof ConvertedVampireEntityLayer<?, ?>)) {
-                render.addLayer(new ConvertedVampireEntityLayer<>(render, true));
-            }
         }
     }
 

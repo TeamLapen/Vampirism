@@ -198,9 +198,9 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
                     }, Component.empty()) {
 
                         @Override
-                        public void extractContents(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+                        public void extractContents(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
                             if (!refinementList.get(slot.index).isEmpty() && ((AbstractContainerScreenAccessor) FactionMenuScreen.this).getDraggingItem().isEmpty() && overSlot(slot, mouseX, mouseY)) {
-                                super.extractWidgetRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
+                                super.extractContents(guiGraphicsExtractor, mouseX, mouseY, partialTick);
                             }
                         }
 

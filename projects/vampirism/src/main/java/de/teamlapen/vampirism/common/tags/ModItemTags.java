@@ -42,6 +42,7 @@ public class ModItemTags {
 
     public static final TagKey<Item> HEART_SEEKER = tag("swords/heart_seeker");
     public static final TagKey<Item> HEART_STRIKER = tag("swords/heart_striker");
+    public static final TagKey<Item> HUNTER_AXE = tag("swords/hunter_axe");
 
     public static final TagKey<Item> SINGLE_HUNTER_CROSSBOWS = tag("hunter_crossbows/single");
     public static final TagKey<Item> DOUBLE_HUNTER_CROSSBOWS = tag("hunter_crossbows/double");

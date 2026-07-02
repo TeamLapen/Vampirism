@@ -25,6 +25,8 @@ dependencies {
         testImplementation(it)
     }
 
+    annotationProcessor(project(':vampirism-processor'))
+
     if (project.vampirism_factions_source_dependency.toBoolean()) {
         interfaceInjectionData project(':faction')
         accessTransformers project(':faction')

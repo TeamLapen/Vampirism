@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.common.world.items.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -9,6 +11,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.TransferPreconditions;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,6 +178,118 @@ public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComp
 
         public QuarrelPouchContents toImmutable() {
             return new QuarrelPouchContents(List.copyOf(this.items));
+        }
+    }
+
+    public static class ResourceHandler implements net.neoforged.neoforge.transfer.ResourceHandler<ItemResource> {
+
+        private final ItemAccess itemAccess;
+
+        public ResourceHandler(ItemAccess itemAccess) {
+            this.itemAccess = itemAccess;
+        }
+
+        @Nullable
+        private QuarrelPouchContents contents() {
+            return this.itemAccess.getResource().get(ModDataComponents.QUARREL_POUCH_CONTENTS);
+        }
+
+        @Override
+        public int size() {
+            QuarrelPouchContents contents = contents();
+            return contents == null ? 0 : contents.items.size();
+        }
+
+        @Override
+        public ItemResource getResource(int index) {
+            QuarrelPouchContents contents = contents();
+            if (contents == null || index < 0 || index >= contents.items.size()) {
+                return ItemResource.EMPTY;
+            }
+            return ItemResource.of(contents.items.get(index));
+        }
+
+        @Override
+        public long getAmountAsLong(int index) {
+            QuarrelPouchContents contents = contents();
+            if (contents == null || index < 0 || index >= contents.items.size()) {
+                return 0;
+            }
+            return contents.items.get(index).getCount();
+        }
+
+        @Override
+        public long getCapacityAsLong(int index, ItemResource resource) {
+            return resource.is(holder -> holder.value() instanceof IVampirismQuarrel<?>) ? MAX_ITEMS : 0;
+        }
+
+        @Override
+        public boolean isValid(int index, ItemResource resource) {
+            return resource.is(holder -> holder.value() instanceof IVampirismQuarrel<?>);
+        }
+
+        @Override
+        public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+            TransferPreconditions.checkNonNegative(index);
+            if (!isValid(index, resource)) {
+                return 0;
+            }
+            int accessAmount = this.itemAccess.getAmount();
+            if (accessAmount <= 0) {
+                return 0;
+            }
+            ItemResource accessResource = this.itemAccess.getResource();
+            QuarrelPouchContents contents = accessResource.get(ModDataComponents.QUARREL_POUCH_CONTENTS);
+            if (contents == null) {
+                contents = EMPTY;
+            }
+            int allowed = MAX_ITEMS - contents.getCount();
+            if (allowed <= 0) {
+                return 0;
+            }
+            Mutable mutable = contents.asMutable();
+            ItemStack toInsert = resource.toStack(Math.min(amount, allowed));
+            int requested = toInsert.getCount();
+            mutable.tryAdd(toInsert);
+            int inserted = requested - toInsert.getCount();
+            if (inserted <= 0) {
+                return 0;
+            }
+            return inserted * this.itemAccess.exchange(accessResource.with(ModDataComponents.QUARREL_POUCH_CONTENTS, mutable.toImmutable()), accessAmount, transaction);
+        }
+
+        @Override
+        public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+            TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+            TransferPreconditions.checkNonNegative(index);
+            int accessAmount = this.itemAccess.getAmount();
+            if (accessAmount <= 0) {
+                return 0;
+            }
+            ItemResource accessResource = this.itemAccess.getResource();
+            QuarrelPouchContents contents = accessResource.get(ModDataComponents.QUARREL_POUCH_CONTENTS);
+            if (contents == null || index < 0 || index >= contents.items.size()) {
+                return 0;
+            }
+            ItemStack stack = contents.items.get(index);
+            if (!resource.matches(stack)) {
+                return 0;
+            }
+            int toExtract = Math.min(amount, stack.getCount());
+            if (toExtract <= 0) {
+                return 0;
+            }
+            List<ItemStack> items = new ArrayList<>(contents.items.size());
+            for (ItemStack existing : contents.items) {
+                items.add(existing.copy());
+            }
+            ItemStack target = items.get(index);
+            target.shrink(toExtract);
+            if (target.isEmpty()) {
+                items.remove(index);
+            }
+            return toExtract * this.itemAccess.exchange(accessResource.with(ModDataComponents.QUARREL_POUCH_CONTENTS, new QuarrelPouchContents(items)), accessAmount, transaction);
         }
     }
 }

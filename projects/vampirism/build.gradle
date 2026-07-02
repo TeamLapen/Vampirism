@@ -152,6 +152,12 @@ sourceSets.main.resources.srcDir generateModMetadata
 
 neoForge.ideSyncTask generateModMetadata
 
+idea {
+    module {
+        generatedSourceDirs += file('build/generated/sources/annotationProcessor/java/main')
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     javaToolchains {

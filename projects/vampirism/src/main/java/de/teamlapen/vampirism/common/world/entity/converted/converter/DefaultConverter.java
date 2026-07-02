@@ -35,8 +35,8 @@ public class DefaultConverter implements Converter {
     }
 
     @Override
-    public IConvertingHandler<?> createHandler(@Nullable Identifier texture) {
-        return new DefaultConvertingHandler<>(new VampirismEntityRegistry.DefaultHelper(this.helper), texture);
+    public IConvertingHandler<?> createHandler() {
+        return new DefaultConvertingHandler<>(new VampirismEntityRegistry.DefaultHelper(this.helper));
     }
 
     @Override

@@ -20,8 +20,4 @@ public interface IConvertedCreature<T extends PathfinderMob> extends IVampireMob
     }
 
 
-    @Nullable
-    default String getSourceEntityId() {
-        return null;
-    }
 }

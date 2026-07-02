@@ -4,7 +4,9 @@ import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.api.VampirismTags;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
+import de.teamlapen.vampirism.common.world.items.component.EnchantmentOverride;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -16,7 +18,12 @@ public class DoubleCrossbowItem extends HunterCrossbowItem {
 
     @SafeVarargs
     public DoubleCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, ToolMaterial itemTier, Holder<ISkill<?>>... requiredSkills) {
-        super(properties.component(FactionDataComponents.FACTION_RESTRICTION, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(requiredSkills).build()), arrowVelocity, chargeTime, itemTier);
+        super(properties.component(FactionDataComponents.FACTION_RESTRICTION, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(requiredSkills).build()).component(ModDataComponents.ENCHANTMENT_OVERRIDE, new EnchantmentOverride(ModEnchantmentTags.DOUBLE_HUNTER_CROSSBOW_COMPATIBLE)), arrowVelocity, chargeTime, itemTier);
+    }
+
+    @Override
+    public int getMaxLoadedProjectiles() {
+        return 2;
     }
 
     @Override

@@ -65,6 +65,7 @@ public class ModCommands {
                                     .then(InfoEntityCommand.register())
                                     .then(TentCommand.register())
                                     .then(GarlicCheckCommand.register())
+                                    .then(EnchantmentTestCommand.register(buildContext))
                                     .then(SpawnTestAnimalCommand.register())
                                     .then(HealCommand.register())
                                     .then(TaskCommand.register())

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.common.world.entity.converted.GeneratedVampirismConvertedEntitiesClient;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
@@ -42,7 +43,6 @@ public class ModEntityRenderStates {
     public static final ContextKey<Float> ATTACK_TIME = create("attack_time");
     public static final ContextKey<HumanoidArm> ATTACK_ARM = create("attack_arm");
     public static final ContextKey<Identifier> OVERLAY = create("overlay");
-    public static final ContextKey<Identifier> CONVERTED_OVERLAY = create("converted_overlay");
     public static final ContextKey<Boolean> HUNTER = create("hunter");
     public static final ContextKey<Boolean> HUNTER_DISGUISED = create("hunter/disguised");
     public static final ContextKey<Boolean> HUNTER_FULL_COAT = create("hunter/full_coat");
@@ -102,18 +102,6 @@ public class ModEntityRenderStates {
                     bat.yBodyRotO = player.yBodyRotO;
                     state.setRenderData(VAMPIRE_BAT, bat);
                 }
-            }
-        });
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), (entity, renderState) -> {
-            if (entity instanceof IConvertedCreature<?> creature) {
-                Optional.ofNullable(creature.getSourceEntityId()).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> renderState.setRenderData(CONVERTED_OVERLAY, location));
-            }
-        });
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), (entity, renderState) -> {
-            if (ConvertedCreatureRenderer.renderOverlay) {
-                Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(Identifier::toString).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
-                    renderState.setRenderData(ModEntityRenderStates.OVERLAY, location);
-                });
             }
         });
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), (entity, renderState) -> {
