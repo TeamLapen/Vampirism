@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.converted;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
+import de.teamlapen.lib.network.IMessage;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
@@ -10,10 +11,12 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.client.renderer.entity.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.data.reloadlistener.ConvertiblesReloadListener;
 import de.teamlapen.vampirism.entity.converted.converter.DefaultConverter;
 import de.teamlapen.vampirism.mixin.client.LivingEntityRendererAccessor;
+import de.teamlapen.vampirism.network.ClientboundBloodValuePacket;
 import de.teamlapen.vampirism.util.RegUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -21,6 +24,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
@@ -241,5 +246,27 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         public Map<Attribute, Pair<FloatProvider, Double>> getAttributeModifier() {
             return this.attributes.attributeModifier();
         }
+    }
+
+    /**
+     * Sent blood values to client
+     *
+     * @param player If null, sent to all
+     */
+    @SuppressWarnings("unchecked")
+    public void syncBloodValuesToClient(@Nullable ServerPlayer player) {
+        Map<ResourceLocation, Float>[] bloodValues = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 3);
+        bloodValues[0] = BloodConversionRegistry.getEntityConversions();
+        bloodValues[1] = BloodConversionRegistry.getItemConversions();
+        bloodValues[2] = BloodConversionRegistry.getFluidConversions();
+        Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = getConvertibleOverlay();
+
+        IMessage.IClientBoundMessage msg = new ClientboundBloodValuePacket(bloodValues, (Map<EntityType<?>, ResourceLocation>) (Object) convertibleOverlay);
+        if (player != null) {
+            VampirismMod.dispatcher.sendTo(msg, player);
+        } else {
+            VampirismMod.dispatcher.sendToAll(msg);
+        }
+
     }
 }

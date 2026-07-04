@@ -189,7 +189,9 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             entityCreature.deathTime = this.deathTime;
         });
         if (entityChanged) {
-            this.updateEntityAttributes();
+            if (!this.level().isClientSide()) {
+                this.updateEntityAttributes();
+            }
             entityChanged = false;
         }
     }
@@ -276,7 +278,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
             this.entityChanged = true;
             this.dimensions = this.entityCreature.map(s -> s.dimensions).orElseGet(() -> EntityDimensions.fixed(0.5f,0.5f));
         }
-        if (this.entityCreature.isPresent() && getConvertedHandler() == null) {
+        if (this.entityCreature.isPresent() && (!this.level().isClientSide() && getConvertedHandler() == null)) {
             LOGGER.warn("Cannot find converting handler for converted creature {} ({})", this, this.entityCreature);
             this.entityCreature = Optional.empty();
         }

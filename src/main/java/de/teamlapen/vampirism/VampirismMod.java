@@ -195,6 +195,7 @@ public class VampirismMod {
         } else {
             event.getPlayerList().getPlayers().forEach(player -> ((SundamageRegistry) VampirismAPI.sundamageRegistry()).updateClient(player));
         }
+        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).syncBloodValuesToClient(event.getPlayer()); //Sync blood values
     }
 
     private void finalizeConfiguration(RegisterEvent event) {

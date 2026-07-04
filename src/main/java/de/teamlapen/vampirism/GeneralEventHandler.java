@@ -1,12 +1,9 @@
 package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.network.ClientboundBloodValuePacket;
 import de.teamlapen.vampirism.network.ClientboundSkillTreePacket;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.world.MinionWorldData;
@@ -14,11 +11,8 @@ import de.teamlapen.vampirism.world.VampirismWorld;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -33,8 +27,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -80,16 +72,6 @@ public class GeneralEventHandler {
             VampirismMod.dispatcher.sendTo(new ClientboundSkillTreePacket(VampirismMod.proxy.getSkillTree(false).getCopy()), serverPlayer);
         }
 
-        @SuppressWarnings("unchecked")
-        Map<ResourceLocation, Float>[] bloodValues = (Map<ResourceLocation, Float>[]) Array.newInstance(Map.class, 3);
-        bloodValues[0] = BloodConversionRegistry.getEntityConversions();
-        bloodValues[1] = BloodConversionRegistry.getItemConversions();
-        bloodValues[2] = BloodConversionRegistry.getFluidConversions();
-        Map<EntityType<? extends PathfinderMob>, ResourceLocation> convertibleOverlay = VampirismAPI.entityRegistry().getConvertibleOverlay();
-
-        if (player instanceof ServerPlayer serverPlayer) {
-            VampirismMod.dispatcher.sendTo(new ClientboundBloodValuePacket(bloodValues, (Map<EntityType<?>, ResourceLocation>) (Object) convertibleOverlay), serverPlayer);
-        }
         FactionPlayerHandler.getOpt(player).ifPresent(FactionPlayerHandler::onPlayerLoggedIn);
 
         if (player instanceof ServerPlayer && !Permissions.isSetupCorrectly(((ServerPlayer) player))) {
