@@ -51,7 +51,7 @@ public class QuarrelPouchClientTooltip extends ClientBundleTooltip {
 
     private static BundleContents convert(QuarrelPouchContents contents) {
         List<ItemStackTemplate> items = contents.items().stream().map(stack -> {
-            ItemStack scaled = stack.copy();
+            ItemStack scaled = stack.create();
             scaled.set(DataComponents.MAX_STACK_SIZE, QuarrelPouchContents.MAX_ITEMS);
             return ItemStackTemplate.fromNonEmptyStack(scaled);
         }).toList();

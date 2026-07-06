@@ -21,6 +21,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.component.TooltipDisplay;
@@ -72,7 +73,7 @@ public class QuarrelPouchItem extends Item {
         QuarrelPouchContents contents = entity.getItem().get(ModDataComponents.QUARREL_POUCH_CONTENTS);
         if (contents != null) {
             entity.getItem().set(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
-            ItemUtils.onContainerDestroyed(entity, contents.items().stream());
+            ItemUtils.onContainerDestroyed(entity, contents.items().stream().map(ItemStackTemplate::create));
         }
     }
 

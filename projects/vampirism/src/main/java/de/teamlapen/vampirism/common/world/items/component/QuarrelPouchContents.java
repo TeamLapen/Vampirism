@@ -11,6 +11,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -20,17 +21,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComponent {
+public record QuarrelPouchContents(List<ItemStackTemplate> items) implements TooltipComponent {
 
     public static final QuarrelPouchContents EMPTY = new QuarrelPouchContents(List.of());
     public static final int MAX_ITEMS = 256;
 
-    public static final Codec<QuarrelPouchContents> CODEC = ItemStack.CODEC.listOf().flatXmap(QuarrelPouchContents::checkAndCreate, x -> DataResult.success(x.items));
-    public static final StreamCodec<RegistryFriendlyByteBuf, QuarrelPouchContents> STREAM_CODEC = ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()).map(QuarrelPouchContents::new, o -> o.items);
+    public static final Codec<QuarrelPouchContents> CODEC = ItemStackTemplate.CODEC.listOf().flatXmap(QuarrelPouchContents::checkAndCreate, x -> DataResult.success(x.items));
+    public static final StreamCodec<RegistryFriendlyByteBuf, QuarrelPouchContents> STREAM_CODEC = ItemStackTemplate.STREAM_CODEC.apply(ByteBufCodecs.list()).map(QuarrelPouchContents::new, o -> o.items);
 
-    private static DataResult<QuarrelPouchContents> checkAndCreate(List<ItemStack> items) {
-        int sum = items.stream().mapToInt(ItemStack::getCount).sum();
+    private static DataResult<QuarrelPouchContents> checkAndCreate(List<ItemStackTemplate> items) {
+        int sum = items.stream().mapToInt(ItemStackTemplate::count).sum();
         if (sum > MAX_ITEMS) {
             return DataResult.error(() -> "Excessive total item count");
         }
@@ -38,7 +40,7 @@ public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComp
     }
 
     @Override
-    public List<ItemStack> items() {
+    public List<ItemStackTemplate> items() {
         return List.copyOf(items);
     }
 
@@ -55,31 +57,31 @@ public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComp
     }
 
     public int getCount() {
-        return this.items.stream().mapToInt(ItemStack::getCount).sum();
+        return this.items.stream().mapToInt(ItemStackTemplate::count).sum();
     }
 
     public ItemStack getFirst() {
         if (this.items.isEmpty()) {
             return ItemStack.EMPTY;
         } else {
-            return this.items.getFirst().copyWithCount(1);
+            return this.items.getFirst().withCount(1).create();
         }
     }
 
     public ItemStack getSpecific(Item item) {
-        return this.items.stream().filter(x -> x.is(item)).findFirst().map(s -> s.copyWithCount(1)).orElse(ItemStack.EMPTY);
+        return this.items.stream().filter(x -> x.item().value() == item).findFirst().map(s -> s.withCount(1).create()).orElse(ItemStack.EMPTY);
     }
 
     @Override
     public int hashCode() {
-        return ItemStack.hashStackList(this.items);
+        return this.items.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj instanceof QuarrelPouchContents(List<ItemStack> items1)) {
-            return ItemStack.listMatches(this.items, items1);
+        if (obj instanceof QuarrelPouchContents(List<ItemStackTemplate> items1)) {
+            return this.items.equals(items1);
         }
         return false;
     }
@@ -89,7 +91,7 @@ public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComp
         private final List<ItemStack> items;
 
         public Mutable(QuarrelPouchContents contents) {
-            this.items = new ArrayList<>(contents.items);
+            this.items = contents.items.stream().map(ItemStackTemplate::create).collect(Collectors.toCollection(ArrayList::new));
         }
 
         public Mutable clear() {
@@ -177,7 +179,7 @@ public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComp
         }
 
         public QuarrelPouchContents toImmutable() {
-            return new QuarrelPouchContents(List.copyOf(this.items));
+            return new QuarrelPouchContents(this.items.stream().map(ItemStackTemplate::fromNonEmptyStack).toList());
         }
     }
 
@@ -215,7 +217,7 @@ public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComp
             if (contents == null || index < 0 || index >= contents.items.size()) {
                 return 0;
             }
-            return contents.items.get(index).getCount();
+            return contents.items.get(index).count();
         }
 
         @Override
@@ -272,22 +274,20 @@ public record QuarrelPouchContents(List<ItemStack> items) implements TooltipComp
             if (contents == null || index < 0 || index >= contents.items.size()) {
                 return 0;
             }
-            ItemStack stack = contents.items.get(index);
-            if (!resource.matches(stack)) {
+            ItemStackTemplate template = contents.items.get(index);
+            if (!resource.matches(template)) {
                 return 0;
             }
-            int toExtract = Math.min(amount, stack.getCount());
+            int toExtract = Math.min(amount, template.count());
             if (toExtract <= 0) {
                 return 0;
             }
-            List<ItemStack> items = new ArrayList<>(contents.items.size());
-            for (ItemStack existing : contents.items) {
-                items.add(existing.copy());
-            }
-            ItemStack target = items.get(index);
-            target.shrink(toExtract);
-            if (target.isEmpty()) {
+            List<ItemStackTemplate> items = new ArrayList<>(contents.items);
+            int remaining = template.count() - toExtract;
+            if (remaining <= 0) {
                 items.remove(index);
+            } else {
+                items.set(index, template.withCount(remaining));
             }
             return toExtract * this.itemAccess.exchange(accessResource.with(ModDataComponents.QUARREL_POUCH_CONTENTS, new QuarrelPouchContents(items)), accessAmount, transaction);
         }

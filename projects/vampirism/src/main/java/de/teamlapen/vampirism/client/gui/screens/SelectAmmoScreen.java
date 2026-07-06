@@ -20,6 +20,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -47,9 +48,9 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
 
             for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
                 if (stack.getItem() instanceof QuarrelPouchItem) {
-                    for (ItemStack quarrel : stack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY).items()) {
-                        if (selectable.contains(quarrel.getItem())) {
-                            available.merge(quarrel.getItem(), quarrel.getCount(), Integer::sum);
+                    for (ItemStackTemplate quarrel : stack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY).items()) {
+                        if (selectable.contains(quarrel.item().value())) {
+                            available.merge(quarrel.item().value(), quarrel.count(), Integer::sum);
                         }
                     }
                 } else if (selectable.contains(stack.getItem())) {
