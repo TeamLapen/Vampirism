@@ -6,14 +6,12 @@ import de.teamlapen.vampirism.common.CommonServices;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.integration.IntegrationServices;
 import de.teamlapen.vampirism.common.proxy.IProxy;
-import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelHandler;
 import de.teamlapen.vampirism.server.proxy.ServerProxy;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.UnknownNullability;
@@ -38,8 +36,6 @@ public class VampirismMod {
     public VampirismMod(IEventBus modEventBus, ModContainer modContainer) {
         checkEnv();
 
-        modEventBus.addListener(this::processIMC);
-
         ShapedRecipePattern.setCraftingSize(4, 4);
         NeoForgeMod.enableMergedAttributeTooltips();
 
@@ -55,9 +51,11 @@ public class VampirismMod {
     public static CommonServices services() {
         return SERVICES;
     }
+
     public static IntegrationServices integrations() {
         return INTEGRATIONS;
     }
+
     public static ModConfig config() {
         return CONFIG;
     }
@@ -69,9 +67,4 @@ public class VampirismMod {
             inDataGen = true;
         }
     }
-
-    private void processIMC(final InterModProcessEvent event) {
-        QuarrelHandler.collectQuarrels();
-    }
-
 }

@@ -23,6 +23,14 @@ public class QuarrelHandler {
     }
 
     /**
+     * collects all registered clip items (carrying a {@link ModDataComponents#CONTAINED_PROJECTILES} component)
+     */
+    @ApiStatus.Internal
+    public static void collectClips() {
+        clips = BuiltInRegistries.ITEM.stream().filter(item -> item.components().has(ModDataComponents.CONTAINED_PROJECTILES.get())).collect(Collectors.toUnmodifiableSet());
+    }
+
+    /**
      * @return all registered items that inherit {@link IVampirismQuarrel}
      */
     public static Set<Item> getQuarrels() {
@@ -33,9 +41,6 @@ public class QuarrelHandler {
      * @return all registered clip items (carrying a {@link ModDataComponents#CONTAINED_PROJECTILES} component)
      */
     public static Set<Item> getClips() {
-        if (clips == null) {
-            clips = BuiltInRegistries.ITEM.stream().filter(item -> item.components().has(ModDataComponents.CONTAINED_PROJECTILES.get())).collect(Collectors.toUnmodifiableSet());
-        }
         return clips;
     }
 }
