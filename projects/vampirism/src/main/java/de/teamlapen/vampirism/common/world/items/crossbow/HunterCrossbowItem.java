@@ -57,6 +57,9 @@ import java.util.function.Predicate;
 @SuppressWarnings("deprecation")
 public abstract class HunterCrossbowItem extends CrossbowItem implements IHunterCrossbow {
 
+    private static final float ACCURACY_PER_PRECISION_LEVEL = 0.3f;
+    private static final float GRAVITY_PER_PRECISION_LEVEL = 0.133f;
+
     private static final double VOLLEY_ARROW_SPACING = 0.225;
     private static final double DUAL_WIELD_SPACING = 0.3;
 
@@ -193,7 +196,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
             frugality = rollSharedFrugality(serverLevel, crossbow);
         }
         List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles, frugality);
-        shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inaccuracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow) * getPrecisionFactor(crossbow, level), shooter instanceof Player, targetOverride);
+        shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inaccuracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow) * getAccuracyFactor(crossbow, level), shooter instanceof Player, targetOverride);
         onShoot(shooter, crossbow);
         crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(availableProjectiles));
 
@@ -271,7 +274,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         if (arrow instanceof QuarrelEntity quarrel) {
             quarrel.setIgnoreHurtTimer();
             IVampirismQuarrel.IQuarrelBehavior behavior = behaviorOf(projectileStack);
-            float gravity = getPrecisionFactor(weapon, arrow.level());
+            float gravity = getGravityFactor(weapon, arrow.level());
             if (behavior != null) {
                 gravity *= behavior.properties().gravityFactor();
                 if (behavior.properties().extraPierceLevel() > 0) {
@@ -294,9 +297,14 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         return crossbow.getEnchantmentLevel(enchantments.getOrThrow(ModEnchantments.PRECISION));
     }
 
-    protected float getPrecisionFactor(ItemStack crossbow, Level level) {
+    protected float getAccuracyFactor(ItemStack crossbow, Level level) {
         int precision = getPrecisionLevel(crossbow, level);
-        return precision <= 0 ? 1f : Math.max(0.1f, 1f - 0.3f * precision);
+        return precision <= 0 ? 1f : Math.max(0.1f, 1f - ACCURACY_PER_PRECISION_LEVEL * precision);
+    }
+
+    protected float getGravityFactor(ItemStack crossbow, Level level) {
+        int precision = getPrecisionLevel(crossbow, level);
+        return precision <= 0 ? 1f : Math.max(0.1f, 1f - GRAVITY_PER_PRECISION_LEVEL * precision);
     }
 
     @Override
