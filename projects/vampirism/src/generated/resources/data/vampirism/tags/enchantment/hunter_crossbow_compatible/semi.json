@@ -1,5 +1,6 @@
 {
   "values": [
-    "#vampirism:hunter_crossbow_compatible"
+    "minecraft:piercing",
+    "vampirism:arrow_frugality"
   ]
 }

@@ -85,7 +85,7 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         tag(ItemTags.SWORDS).addTags(ModItemTags.HEART_STRIKER, ModItemTags.HEART_SEEKER);
         tag(ModItemTags.VAMPIRE_SLAYER_ITEMS).addTag(ItemTags.SWORDS).add(ModItems.PITCHFORK.get());
         tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(ModItems.PITCHFORK.get());
-        tag(ModItemTags.CROSSBOW_ENCHANTABLE).addTag(ModItemTags.HUNTER_CROSSBOWS);
+        tag(ModItemTags.CROSSBOW_ENCHANTABLE).addTags(ModItemTags.SINGLE_HUNTER_CROSSBOWS, ModItemTags.DOUBLE_HUNTER_CROSSBOWS);
         tag(ModItemTags.TECH_CROSSBOW_ENCHANTABLE).add(ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
         tag(ModItemTags.HUNTER_CROSSBOWS).addTags(ModItemTags.BASIC_HUNTER_CROSSBOWS, ModItemTags.ENHANCED_HUNTER_CROSSBOWS, ModItemTags.SINGLE_HUNTER_CROSSBOWS, ModItemTags.DOUBLE_HUNTER_CROSSBOWS, ModItemTags.TECH_HUNTER_CROSSBOWS);
         tag(ModItemTags.BASIC_HUNTER_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get());
