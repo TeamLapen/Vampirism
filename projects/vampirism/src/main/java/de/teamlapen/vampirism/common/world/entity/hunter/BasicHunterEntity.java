@@ -438,7 +438,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IHunterCrossbow) {
-            return net.neoforged.neoforge.common.CommonHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
+            return net.neoforged.neoforge.common.CommonHooks.getProjectile(this, stack, ModItems.QUARREL_NORMAL.get().getDefaultInstance());
         }
         return super.getProjectile(stack);
     }

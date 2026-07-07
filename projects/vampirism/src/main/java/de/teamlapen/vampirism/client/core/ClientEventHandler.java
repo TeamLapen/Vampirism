@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.config.ModConfig;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.alchemy.Potion;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
@@ -50,6 +52,11 @@ public class ClientEventHandler {
         Player player = event.getEntity();
 
         AppliedOilContent.addTooltipIfExist(player, stack, tooltip, event.getFlags());
+
+        ItemStackTemplate containedProjectiles = stack.get(ModDataComponents.CONTAINED_PROJECTILES.get());
+        if (containedProjectiles != null) {
+            tooltip.add(Component.translatable("tooltip.vampirism.contained_projectiles", containedProjectiles.count(), containedProjectiles.create().getHoverName()).withStyle(ChatFormatting.GRAY));
+        }
 
         if (BasePotion.isHunterPotion(stack, true).map(Potion::getEffects).map(effectInstances -> effectInstances.stream().map(MobEffectInstance::getEffect).anyMatch(s -> s.value().isBeneficial())).orElse(false) && (player == null || !Helper.isHunter(player))) {
             tooltip.add(Component.translatable("tooltip.vampirism.deadly_hunter_potion").withStyle(ChatFormatting.DARK_RED));

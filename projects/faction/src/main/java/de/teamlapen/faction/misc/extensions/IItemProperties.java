@@ -32,6 +32,8 @@ public interface IItemProperties {
 
     Item.Properties factions$withShiftDescription(ShiftDescription description);
 
+    Item.Properties factions$withShiftDescriptionWithId(String id);
+
     Item.Properties factions$factionFood(FactionFoodList factionFoodList);
 
     Item.Properties factions$factionFood(FactionFoodList factionFoodList, Consumable consumable);

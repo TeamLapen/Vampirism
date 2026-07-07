@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.common.world.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.common.world.items.BloodSyringeFluidHandler;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
-import de.teamlapen.vampirism.common.world.items.crossbow.arrow.ArrowContainer;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -28,7 +27,6 @@ public class ModCapabilities {
         event.registerItem(Capabilities.Fluid.ITEM, (stack, access) -> new BloodSyringeFluidHandler(access), ModItems.SYRINGE_EMPTY.get());
         event.registerItem(Capabilities.Fluid.ITEM, (stack, access) -> new BloodSyringeFluidHandler(access), ModItems.SYRINGE_BLOOD.get());
         event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new QuarrelPouchContents.ResourceHandler(access), ModItems.QUARREL_POUCH);
-        event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ArrowContainer.ResourceHandler(access), ModItems.ARROW_CLIP);
         event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new HunterCrossbowItem.ResourceHandler(access), ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
 
         // Blocks

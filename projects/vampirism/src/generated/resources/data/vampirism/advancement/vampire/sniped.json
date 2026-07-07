@@ -22,7 +22,7 @@
     },
     "hidden": true,
     "icon": {
-      "id": "minecraft:arrow"
+      "id": "vampirism:quarrel_normal"
     },
     "title": {
       "translate": "advancement.vampirism.sniped"

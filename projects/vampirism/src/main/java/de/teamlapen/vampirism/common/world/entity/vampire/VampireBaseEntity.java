@@ -18,7 +18,7 @@ import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
-import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
+import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
 import de.teamlapen.vampirism.common.world.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -162,7 +162,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public void die(DamageSource cause) {
         super.die(cause);
-        if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
+        if (cause.getDirectEntity() instanceof QuarrelEntity && Helper.isHunter(cause.getEntity())) {
             dropSoul = true;
         } else if (cause.getDirectEntity() instanceof Player && Helper.isHunter(cause.getDirectEntity())) {
             ItemStack weapon = ((Player) cause.getDirectEntity()).getMainHandItem();

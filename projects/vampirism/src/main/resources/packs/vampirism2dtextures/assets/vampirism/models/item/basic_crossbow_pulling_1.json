@@ -1,0 +1,6 @@
+{
+  "parent": "item/crossbow",
+  "textures": {
+    "layer0": "vampirism:item/basic_crossbow_pulling_1"
+  }
+}

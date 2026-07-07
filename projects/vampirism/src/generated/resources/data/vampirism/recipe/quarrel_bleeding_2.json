@@ -1,0 +1,21 @@
+{
+  "type": "vampirism:shapeless_crafting_weapontable",
+  "category": "equipment",
+  "ingredients": [
+    "vampirism:quarrel_normal",
+    "vampirism:quarrel_normal",
+    {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "vampirism:oil_contents": {
+          "oil": "vampirism:bleeding"
+        }
+      },
+      "items": "vampirism:oil_bottle"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "id": "vampirism:quarrel_bleeding"
+  }
+}

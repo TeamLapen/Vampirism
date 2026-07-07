@@ -12,7 +12,7 @@ import de.teamlapen.vampirism.common.util.DamageHandler;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.entity.ConvertedCreature;
-import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
+import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
 import de.teamlapen.vampirism.common.world.entity.SoulOrbEntity;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.AttackMeleeNoSunGoal;
 import net.minecraft.nbt.CompoundTag;
@@ -178,7 +178,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
      * call in {@link PathfinderMob#die(DamageSource)}
      */
     default void dieC(@NotNull DamageSource cause) {
-        if (cause.getDirectEntity() instanceof CrossbowArrowEntity && Helper.isHunter(cause.getEntity())) {
+        if (cause.getDirectEntity() instanceof QuarrelEntity && Helper.isHunter(cause.getEntity())) {
             data().dropSoul = true;
         } else if (cause.getDirectEntity() instanceof Player && Helper.isHunter(cause.getDirectEntity())) {
             ItemStack weapon = ((Player) cause.getDirectEntity()).getMainHandItem();

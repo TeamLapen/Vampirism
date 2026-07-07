@@ -1,19 +1,47 @@
 {
   "model": {
-    "type": "minecraft:range_dispatch",
-    "entries": [
+    "type": "minecraft:select",
+    "cases": [
       {
         "model": {
           "type": "minecraft:model",
-          "model": "vampirism:item/enhanced_tech_crossbow_unloaded"
+          "model": "vampirism:item/enhanced_tech_crossbow"
         },
-        "threshold": 0.99
+        "when": "arrow"
       }
     ],
     "fallback": {
-      "type": "minecraft:model",
-      "model": "vampirism:item/enhanced_tech_crossbow"
+      "type": "minecraft:condition",
+      "on_false": {
+        "type": "minecraft:model",
+        "model": "vampirism:item/enhanced_tech_crossbow_unloaded"
+      },
+      "on_true": {
+        "type": "minecraft:range_dispatch",
+        "entries": [
+          {
+            "model": {
+              "type": "minecraft:model",
+              "model": "vampirism:item/enhanced_tech_crossbow_pulling_1"
+            },
+            "threshold": 0.58
+          },
+          {
+            "model": {
+              "type": "minecraft:model",
+              "model": "vampirism:item/enhanced_tech_crossbow_pulling_2"
+            },
+            "threshold": 1.0
+          }
+        ],
+        "fallback": {
+          "type": "minecraft:model",
+          "model": "vampirism:item/enhanced_tech_crossbow_pulling_0"
+        },
+        "property": "vampirism:hunter_crossbow_pull"
+      },
+      "property": "vampirism:hunter_crossbow_charging"
     },
-    "property": "minecraft:crossbow/pull"
+    "property": "minecraft:charge_type"
   }
 }

@@ -20,7 +20,7 @@ public record ClientboundTaskPacket(int containerId,
     public static final Type<ClientboundTaskPacket> TYPE = new Type<>(FIdentifier.mod("task"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundTaskPacket> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, ClientboundTaskPacket::containerId,
-            ByteBufCodecs.map(i -> new HashMap<>(), UUIDUtil.STREAM_CODEC, ByteBufCodecs.fromCodec(TaskManager.TaskWrapper.CODEC)), ClientboundTaskPacket::taskWrappers,
+            ByteBufCodecs.map(i -> new HashMap<>(), UUIDUtil.STREAM_CODEC, ByteBufCodecs.fromCodecWithRegistries(TaskManager.TaskWrapper.CODEC)), ClientboundTaskPacket::taskWrappers,
             ByteBufCodecs.map(i -> new HashMap<>(), UUIDUtil.STREAM_CODEC, UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.collection(s -> new HashSet<>()))), ClientboundTaskPacket::completableTasks,
             ByteBufCodecs.map(i -> new HashMap<>(), UUIDUtil.STREAM_CODEC, ByteBufCodecs.map(i -> new HashMap<>(), UUIDUtil.STREAM_CODEC, ByteBufCodecs.map(i -> new HashMap<>(), Identifier.STREAM_CODEC, ByteBufCodecs.INT))), ClientboundTaskPacket::completedRequirements,
             ClientboundTaskPacket::new

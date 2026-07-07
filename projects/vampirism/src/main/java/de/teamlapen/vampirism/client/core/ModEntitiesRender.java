@@ -54,6 +54,8 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation DARK_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VIdentifier.mod("chest_boat/dark_spruce"), "main");
     public static final ModelLayerLocation CURSED_SPRUCE_BOAT = new ModelLayerLocation(VIdentifier.mod("boat/cursed_spruce"), "main");
     public static final ModelLayerLocation CURSED_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VIdentifier.mod("chest_boat/cursed_spruce"), "main");
+    public static final ModelLayerLocation QUARREL = new ModelLayerLocation(VIdentifier.mod("quarrel"), "main");
+    public static final ModelLayerLocation HEAVY_QUARREL = new ModelLayerLocation(VIdentifier.mod("heavy_quarrel"), "main");
 
 
     public static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
@@ -72,7 +74,7 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.ADVANCED_VAMPIRE_IMOB.get(), (AdvancedVampireRenderer::new));
         event.registerEntityRenderer(ModEntities.VILLAGER_CONVERTED.get(), convertedRenderer(VillagerRenderer::new));
         event.registerEntityRenderer(ModEntities.VILLAGER_ANGRY.get(), HunterVillagerRenderer::new);
-        event.registerEntityRenderer(ModEntities.CROSSBOW_ARROW.get(), (CrossbowArrowRenderer::new));
+        event.registerEntityRenderer(ModEntities.QUARREL.get(), (QuarrelRenderer::new));
         event.registerEntityRenderer(ModEntities.PARTICLE_CLOUD.get(), (NoopRenderer::new));
         event.registerEntityRenderer(ModEntities.THROWABLE_ITEM.get(), ThrowableItemRenderer::new);
         event.registerEntityRenderer(ModEntities.DARK_BLOOD_PROJECTILE.get(), (DarkBloodProjectileRenderer::new));
@@ -118,6 +120,8 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(DARK_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
         event.registerLayerDefinition(CURSED_SPRUCE_BOAT, () -> boatDefinition);
         event.registerLayerDefinition(CURSED_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
+        event.registerLayerDefinition(QUARREL, QuarrelModel::createBodyLayer);
+        event.registerLayerDefinition(HEAVY_QUARREL, HeavyQuarrelModel::createBodyLayer);
     }
 
     public static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {

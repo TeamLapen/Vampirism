@@ -21,7 +21,6 @@ import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModFactionTags;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.RangedHunterCrossbowAttackGoal;
@@ -50,7 +49,6 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -226,11 +224,9 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IHunterCrossbow) {
             if (stack.getItem() instanceof TechCrossbowItem) {
-                var clip = ModItems.ARROW_CLIP.get().getDefaultInstance();
-                clip.set(ModDataComponents.CONTAINED_PROJECTILES, ItemStackTemplate.fromNonEmptyStack(new ItemStack(ModItems.CROSSBOW_ARROW_NORMAL.get(), 12)));
-                return clip;
+                return ModItems.QUARREL_CLIP.get().getDefaultInstance();
             } else {
-                return ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance();
+                return ModItems.QUARREL_NORMAL.get().getDefaultInstance();
             }
         }
         return ItemStack.EMPTY;

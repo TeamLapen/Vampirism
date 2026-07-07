@@ -1,21 +1,20 @@
 package de.teamlapen.vampirism.common.world.items.crossbow;
 
-import de.teamlapen.vampirism.api.world.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
-import de.teamlapen.vampirism.api.world.items.IVampirismCrossbowArrow;
+import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModEnchantments;
+import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
+import de.teamlapen.vampirism.common.world.items.component.EnchantmentOverride;
+import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.common.world.items.component.EnchantmentOverride;
-import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
 import de.teamlapen.vampirism.common.world.items.component.SelectedAmmunition;
-import de.teamlapen.vampirism.common.world.items.crossbow.arrow.ArrowContainer;
-import de.teamlapen.vampirism.common.world.items.crossbow.arrow.QuarrelPouch;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -25,8 +24,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -35,32 +37,37 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+@SuppressWarnings("deprecation")
 public abstract class HunterCrossbowItem extends CrossbowItem implements IHunterCrossbow {
+
+    private static final float ACCURACY_PER_PRECISION_LEVEL = 0.3f;
+    private static final float GRAVITY_PER_PRECISION_LEVEL = 0.133f;
+
+    private static final double VOLLEY_ARROW_SPACING = 0.225;
+    private static final double DUAL_WIELD_SPACING = 0.3;
 
     protected final ToolMaterial itemTier;
     protected final float arrowVelocity;
     protected final int chargeTime;
-    private boolean startSoundPlayed = false;
-    private boolean midLoadSoundPlayed = false;
+    private boolean chargeStartSoundPlayed = false;
+    private boolean chargeMidSoundPlayed = false;
 
     public HunterCrossbowItem(Properties properties, float arrowVelocity, int chargeTime, ToolMaterial itemTier) {
         super(properties.repairable(ModItemTags.CROSSBOW_REPAIRABLE).enchantable(itemTier.enchantmentValue()));
@@ -74,21 +81,10 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
      */
     public abstract int getMaxLoadedProjectiles();
 
-    /**
-     * @return the number of projectiles currently loaded into the crossbow
-     */
-    public static int getLoadedCount(ItemStack crossbow) {
-        return crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).items().size();
-    }
-
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltipDisplay, tooltips, flag);
-        this.addAmmunitionTypeHoverText(stack, context, tooltipDisplay, tooltips, flag);
-    }
-
-    protected void addAmmunitionTypeHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltips, TooltipFlag flag) {
-        getAmmunition(stack).ifPresent(ammunition -> tooltips.accept(Component.translatable("tooltip.vampirism.crossbow.selected_ammo", ammunition.getName(stack)).withStyle(ChatFormatting.GRAY)));
+        if (!canSelectAmmunition(stack)) return;
+        getAmmunition(stack).ifPresent(ammunition -> tooltips.accept(Component.translatable("tooltip.vampirism.crossbow.selected_ammo", ammunition.getDefaultInstance().getHoverName()).withStyle(ChatFormatting.GRAY)));
     }
 
     @Override
@@ -98,7 +94,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
     @Override
     public Predicate<ItemStack> getAllSupportedProjectiles(ItemStack stack) {
-        return x -> testProjectile(stack, x);
+        return projectile -> testProjectile(stack, projectile);
     }
 
     @Override
@@ -106,66 +102,147 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         return getAllSupportedProjectiles();
     }
 
-    public int getCombinedUseDuration(ItemStack stack, LivingEntity entity, InteractionHand hand) {
-        ItemStack otherItemStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-        if (otherItemStack.getItem() instanceof HunterCrossbowItem otherItem && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
-            return this.getUseDuration(stack, entity) + otherItem.getUseDuration(otherItemStack, entity);
-        }
-        return this.getUseDuration(stack, entity);
-    }
-
     public boolean canUseDoubleCrossbow(LivingEntity entity) {
         return entity instanceof Player player && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.DOUBLE_IT);
     }
 
-//    @Override
-//    public ItemUseAnimation getUseAnimation(ItemStack pStack) {
-//        return ItemUseAnimation.CUSTOM;
-//    }
+    public int getCombinedUseDuration(ItemStack stack, LivingEntity entity, InteractionHand hand) {
+        ItemStack otherStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+        if (otherStack.getItem() instanceof HunterCrossbowItem otherCrossbow && !CrossbowItem.isCharged(otherStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherStack).isEmpty()) {
+            return getUseDuration(stack, entity) + otherCrossbow.getUseDuration(otherStack, entity);
+        }
 
-    @Override
-    public int getUseDuration(ItemStack pStack, LivingEntity entity) {
-        return getChargeDurationMod(pStack, entity.level()) + 3;
+        return getUseDuration(stack, entity);
+    }
+
+    public float getChargeProgress(ItemStack stack, LivingEntity entity, InteractionHand hand) {
+        if (CrossbowItem.isCharged(stack)) return 1f;
+
+        if (!entity.isUsingItem()) return 0f;
+
+        InteractionHand usedHand = entity.getUsedItemHand();
+        ItemStack usedStack = entity.getItemInHand(usedHand);
+        if (!(usedStack.getItem() instanceof HunterCrossbowItem usedCrossbow)) return 0f;
+
+        int chargeDuration = getChargeDurationMod(stack, entity.level());
+        if (chargeDuration <= 0) return 1f;
+
+        int elapsed = usedCrossbow.getCombinedUseDuration(usedStack, entity, usedHand) - entity.getUseItemRemainingTicks();
+        if (hand != usedHand) {
+            elapsed -= usedCrossbow.getChargeDurationMod(usedStack, entity.level());
+        }
+
+        return Mth.clamp((float) elapsed / chargeDuration, 0f, 1f);
+    }
+
+    @Nullable
+    public static InteractionHand getHeldHand(LivingEntity entity, ItemStack stack) {
+        if (entity.getItemInHand(InteractionHand.MAIN_HAND) == stack) return InteractionHand.MAIN_HAND;
+        if (entity.getItemInHand(InteractionHand.OFF_HAND) == stack) return InteractionHand.OFF_HAND;
+        return null;
+    }
+
+    public boolean isChargingHand(LivingEntity entity, InteractionHand hand, ItemStack stack) {
+        if (CrossbowItem.isCharged(stack) || !entity.isUsingItem()) return false;
+
+        InteractionHand usedHand = entity.getUsedItemHand();
+        ItemStack usedStack = entity.getItemInHand(usedHand);
+        if (!(usedStack.getItem() instanceof HunterCrossbowItem)) return false;
+
+        if (hand == usedHand) return true;
+
+        return canUseDoubleCrossbow(entity) && CrossbowItem.isCharged(usedStack);
     }
 
     @Override
-    public void performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, float speed, float inacurracy, @Nullable LivingEntity p_331602_) {
-        if (level instanceof ServerLevel serverLevel) {
-            if (shooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(crossbow, shooter.level(), player, 1, true) < 0) return;
-            ChargedProjectiles chargedprojectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
-            if (!chargedprojectiles.isEmpty()) {
-                List<ItemStack> availableProjectiles = new ArrayList<>(chargedprojectiles.itemCopies());
-                int loadedBefore = availableProjectiles.size();
-                List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles);
-                int consumed = loadedBefore - availableProjectiles.size();
-                ItemStack otherStack = shooter.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-                this.shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inacurracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow), shooter instanceof Player, p_331602_);
-                onShoot(shooter, crossbow);
-                consumeLoadedProjectiles(crossbow, consumed);
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return getChargeDurationMod(stack, entity.level()) + 3;
+    }
 
-                if (hand == InteractionHand.MAIN_HAND) {
-                    if (shooter instanceof Player player && canUseDoubleCrossbow(player) && otherStack.getItem() instanceof HunterCrossbowItem otherCrossbow && CrossbowItem.isCharged(otherStack)) {
-                        otherCrossbow.use(level, player, InteractionHand.OFF_HAND);
-                    }
-                }
+    @Override
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (CrossbowItem.isCharged(stack) && !player.isUsingItem() && canUseDoubleCrossbow(player)) {
+            InteractionHand otherHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+            ItemStack otherStack = player.getItemInHand(otherHand);
+            if (otherStack.getItem() instanceof HunterCrossbowItem && !CrossbowItem.isCharged(otherStack) && !player.getProjectile(otherStack).isEmpty()) {
+                player.startUsingItem(otherHand);
+
+                return InteractionResult.CONSUME;
             }
+        }
+
+        return super.use(level, player, hand);
+    }
+
+    @Override
+    public void performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, float speed, float inaccuracy, @Nullable LivingEntity targetOverride) {
+        performShooting(level, shooter, hand, crossbow, speed, inaccuracy, targetOverride, null);
+    }
+
+    protected void performShooting(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbow, float speed, float inaccuracy, @Nullable LivingEntity targetOverride, @Nullable Boolean sharedFrugality) {
+        if (!(level instanceof ServerLevel serverLevel)) return;
+        if (shooter instanceof Player player && EventHooks.onArrowLoose(crossbow, shooter.level(), player, 1, true) < 0) return;
+
+        ChargedProjectiles chargedProjectiles = crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
+        if (chargedProjectiles.isEmpty()) return;
+
+        List<ItemStack> availableProjectiles = new ArrayList<>(chargedProjectiles.itemCopies());
+        ItemStack otherStack = shooter.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+        boolean dualFire = hand == InteractionHand.MAIN_HAND && canUseDoubleCrossbow(shooter) && otherStack.getItem() instanceof HunterCrossbowItem && CrossbowItem.isCharged(otherStack);
+        // When both crossbows fire together, decide frugality once and reuse it for both so their magazines stay in sync.
+        Boolean frugality = sharedFrugality;
+        if (frugality == null && dualFire) {
+            frugality = rollSharedFrugality(serverLevel, crossbow);
+        }
+        List<ItemStack> arrows = getShootingProjectiles(serverLevel, crossbow, availableProjectiles, frugality);
+        shoot(serverLevel, shooter, hand, crossbow, arrows, speed, inaccuracy * getInaccuracy(crossbow, otherStack.getItem() instanceof IHunterCrossbow) * getAccuracyFactor(crossbow, level), shooter instanceof Player, targetOverride);
+        onShoot(shooter, crossbow);
+        crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(availableProjectiles));
+
+        if (dualFire) {
+            ((HunterCrossbowItem) otherStack.getItem()).performShooting(level, shooter, InteractionHand.OFF_HAND, otherStack, speed, inaccuracy, targetOverride, frugality);
         }
     }
 
     @Override
-    protected void shoot(ServerLevel level, LivingEntity shooter, InteractionHand hand, ItemStack crossbowStack, List<ItemStack> projectiles, float speed, float inaccuracy, boolean isPlayer, @Nullable LivingEntity p_331167_) {
+    protected void shoot(ServerLevel level, LivingEntity shooter, InteractionHand hand, ItemStack crossbowStack, List<ItemStack> projectiles, float speed, float inaccuracy, boolean isPlayer, @Nullable LivingEntity targetOverride) {
         for (int i = 0; i < projectiles.size(); i++) {
-            ItemStack itemstack = projectiles.get(i);
-            if (!itemstack.isEmpty()) {
-                crossbowStack.hurtAndBreak(this.getDurabilityUse(itemstack), shooter, hand.asEquipmentSlot());
-                Projectile projectile = this.createProjectile(level, shooter, crossbowStack, itemstack, isPlayer);
-                if(crossbowStack.remove(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED) != null && projectile instanceof AbstractArrow arrow) {
-                    arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-                }
-                this.shootProjectile(shooter, projectile, i, speed, inaccuracy, 0, p_331167_);
-                level.addFreshEntity(projectile);
+            ItemStack projectileStack = projectiles.get(i);
+            if (projectileStack.isEmpty()) continue;
+
+            crossbowStack.hurtAndBreak(getDurabilityUse(projectileStack), shooter, hand.asEquipmentSlot());
+            Projectile projectile = createProjectile(level, shooter, crossbowStack, projectileStack, isPlayer);
+            if (crossbowStack.remove(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED) != null && projectile instanceof AbstractArrow arrow) {
+                arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
+            IVampirismQuarrel.IQuarrelBehavior behavior = behaviorOf(projectileStack);
+            float projectileSpeed = behavior != null ? speed * behavior.properties().velocityFactor() : speed;
+            float projectileInaccuracy = behavior != null ? inaccuracy * behavior.properties().inaccuracyFactor() : inaccuracy;
+            shootProjectile(shooter, projectile, i, projectileSpeed, projectileInaccuracy, 0, targetOverride);
+            applyHorizontalSpread(shooter, hand, projectile, i, projectiles.size());
+            level.addFreshEntity(projectile);
         }
+    }
+
+    protected void applyHorizontalSpread(LivingEntity shooter, InteractionHand hand, Projectile projectile, int index, int count) {
+        Vec3 look = shooter.getViewVector(1.0F);
+        Vec3 right = new Vec3(-look.z, 0.0, look.x);
+        double length = right.length();
+        if (length < 0.0001) return;
+        right = right.scale(1.0 / length);
+
+        double offset = (index - (count - 1) / 2.0) * VOLLEY_ARROW_SPACING;
+        if (isDualWielding(shooter)) {
+            boolean rightArm = (hand == InteractionHand.MAIN_HAND) == (shooter.getMainArm() == HumanoidArm.RIGHT);
+            offset += (rightArm ? 1 : -1) * DUAL_WIELD_SPACING;
+        }
+
+        projectile.setPos(projectile.getX() + right.x * offset, projectile.getY(), projectile.getZ() + right.z * offset);
+    }
+
+    private boolean isDualWielding(LivingEntity shooter) {
+        return canUseDoubleCrossbow(shooter) && shooter.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof HunterCrossbowItem && shooter.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof HunterCrossbowItem;
     }
 
     @Override
@@ -173,191 +250,285 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         return 1;
     }
 
-    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
+    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles, @Nullable Boolean sharedFrugality) {
         List<ItemStack> shootingProjectiles = List.copyOf(availableProjectiles);
         availableProjectiles.clear();
+
         return shootingProjectiles;
     }
 
+    @Nullable
+    protected Boolean rollSharedFrugality(ServerLevel level, ItemStack crossbow) {
+        return null;
+    }
+
     protected void onShoot(LivingEntity shooter, ItemStack crossbow) {
-        if (shooter instanceof ServerPlayer serverplayer) {
-            CriteriaTriggers.SHOT_CROSSBOW.trigger(serverplayer, crossbow);
-            serverplayer.awardStat(Stats.ITEM_USED.get(crossbow.getItem()));
+        if (shooter instanceof ServerPlayer serverPlayer) {
+            CriteriaTriggers.SHOT_CROSSBOW.trigger(serverPlayer, crossbow);
+            serverPlayer.awardStat(Stats.ITEM_USED.get(crossbow.getItem()));
         }
     }
 
     @Override
     public AbstractArrow customArrow(AbstractArrow arrow, ItemStack projectileStack, ItemStack weapon) {
-        if (ignoreHurtTimer(projectileStack) && arrow instanceof IEntityCrossbowArrow) {
-            ((IEntityCrossbowArrow) arrow).setIgnoreHurtTimer();
+        if (arrow instanceof QuarrelEntity quarrel) {
+            quarrel.setIgnoreHurtTimer();
+            IVampirismQuarrel.IQuarrelBehavior behavior = behaviorOf(projectileStack);
+            float gravity = getGravityFactor(weapon, arrow.level());
+            if (behavior != null) {
+                gravity *= behavior.properties().gravityFactor();
+                if (behavior.properties().extraPierceLevel() > 0) {
+                    quarrel.setPierceLevel((byte) Math.min(Byte.MAX_VALUE, quarrel.getPierceLevel() + behavior.properties().extraPierceLevel()));
+                }
+            }
+            quarrel.setGravityFactor(gravity);
         }
+
         return arrow;
     }
 
-    protected boolean ignoreHurtTimer(ItemStack crossbow) {
+    @Nullable
+    private static IVampirismQuarrel.IQuarrelBehavior behaviorOf(ItemStack projectileStack) {
+        return projectileStack.getItem() instanceof QuarrelItem quarrel ? quarrel.getBehavior() : null;
+    }
+
+    protected int getPrecisionLevel(ItemStack crossbow, Level level) {
+        Registry<Enchantment> enchantments = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+        return crossbow.getEnchantmentLevel(enchantments.getOrThrow(ModEnchantments.PRECISION));
+    }
+
+    protected float getAccuracyFactor(ItemStack crossbow, Level level) {
+        int precision = getPrecisionLevel(crossbow, level);
+        return precision <= 0 ? 1f : Math.max(0.1f, 1f - ACCURACY_PER_PRECISION_LEVEL * precision);
+    }
+
+    protected float getGravityFactor(ItemStack crossbow, Level level) {
+        int precision = getPrecisionLevel(crossbow, level);
+        return precision <= 0 ? 1f : Math.max(0.1f, 1f - GRAVITY_PER_PRECISION_LEVEL * precision);
+    }
+
+    @Override
+    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity entity, int remainingTime) {
+        InteractionHand hand = entity.getUsedItemHand();
+        int elapsed = getCombinedUseDuration(itemStack, entity, hand) - remainingTime;
+        if (chargeCrossbows(level, entity, itemStack, hand, elapsed)) {
+            playLoadingEndSound(level, entity);
+        }
+
         return false;
     }
 
-    /**
-     * Mirrors {@link CrossbowItem#onUseTick} but calls our own {@link #tryLoadProjectiles} (which loads via the
-     * crossbow's {@link ResourceHandler}) instead of the vanilla private static loading, and additionally charges the
-     * off-hand crossbow when the {@code DOUBLE_IT} skill is active. Vanilla loads inside {@code onUseTick}, so without
-     * this override the bolts would be drawn with vanilla logic before our loading code ever runs.
-     */
     @Override
-    public void onUseTick(Level level, LivingEntity entity, ItemStack itemStack, int ticksRemaining) {
-        if (!level.isClientSide()) {
-            int useDuration = this.getUseDuration(itemStack, entity);
-            int combinedUseDuration = this.getCombinedUseDuration(itemStack, entity, entity.getUsedItemHand());
-            int combinedChargingDuration = combinedUseDuration - ticksRemaining;
-            int chargingDuration = useDuration - ticksRemaining;
-            if (combinedChargingDuration != useDuration) {
-                chargingDuration += combinedUseDuration - useDuration;
-            }
-            float chargePercent = (float) chargingDuration / getChargeDurationMod(itemStack, level);
+    public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int ticksRemaining) {
+        if (level.isClientSide()) return;
 
-            if (chargePercent < 0.2F) {
-                this.startSoundPlayed = false;
-                this.midLoadSoundPlayed = false;
-            }
-            if (chargePercent >= 0.2F && !this.startSoundPlayed) {
-                this.startSoundPlayed = true;
-                level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_START, SoundSource.PLAYERS, 0.5F, 1.0F);
-            }
-            if (chargePercent >= 0.5F && !this.midLoadSoundPlayed) {
-                this.midLoadSoundPlayed = true;
-                level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_MIDDLE, SoundSource.PLAYERS, 0.5F, 1.0F);
-            }
-            if (chargePercent >= 1.0F && !CrossbowItem.isCharged(itemStack) && tryLoadProjectiles(entity, itemStack)) {
-                ItemStack otherStack = entity.getItemInHand(entity.getUsedItemHand() == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-                if (canUseDoubleCrossbow(entity) && (float) combinedChargingDuration / getCombinedChargeDurationMod(itemStack, entity, entity.getUsedItemHand()) >= 1f && otherStack.getItem() instanceof HunterCrossbowItem && !CrossbowItem.isCharged(otherStack)) {
-                    tryLoadProjectiles(entity, otherStack);
-                }
-                SoundSource source = entity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-                level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_END, source, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
-            }
+        InteractionHand hand = entity.getUsedItemHand();
+        int elapsed = getCombinedUseDuration(stack, entity, hand) - ticksRemaining;
+        playChargeSounds(level, entity, stack, hand, elapsed);
+        if (level instanceof ServerLevel serverLevel) {
+            tickChargingBehavior(serverLevel, entity, stack, elapsed);
+        }
+        if (chargeCrossbows(level, entity, stack, hand, elapsed)) {
+            playLoadingEndSound(level, entity);
         }
     }
 
-    public int getCombinedChargeDurationMod(ItemStack crossbow, LivingEntity entity, InteractionHand hand) {
-        ItemStack otherItemStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-        if (otherItemStack.getItem() instanceof HunterCrossbowItem other && !CrossbowItem.isCharged(otherItemStack) && canUseDoubleCrossbow(entity) && !entity.getProjectile(otherItemStack).isEmpty()) {
-            return this.getChargeDurationMod(crossbow, entity.level()) + other.getChargeDurationMod(otherItemStack, entity.level());
+    private void tickChargingBehavior(ServerLevel level, LivingEntity entity, ItemStack stack, int elapsed) {
+        if (CrossbowItem.isCharged(stack)) return;
+
+        IVampirismQuarrel.IQuarrelBehavior behavior = getChargingBehavior(entity, stack);
+        if (behavior == null) return;
+        
+        int chargeDuration = getChargeDurationMod(stack, level);
+        float progress = chargeDuration <= 0 ? 1f : Mth.clamp((float) elapsed / chargeDuration, 0f, 1f);
+        behavior.onChargeTick(level, entity, stack, progress);
+    }
+
+    private boolean chargeCrossbows(Level level, LivingEntity entity, ItemStack stack, InteractionHand hand, int elapsed) {
+        int chargeDuration = getChargeDurationMod(stack, level);
+        boolean loaded = !CrossbowItem.isCharged(stack) && elapsed >= chargeDuration && tryLoadProjectiles(entity, stack);
+
+        if (CrossbowItem.isCharged(stack) && canUseDoubleCrossbow(entity)) {
+            ItemStack otherStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+            if (otherStack.getItem() instanceof HunterCrossbowItem otherCrossbow && !CrossbowItem.isCharged(otherStack) && !entity.getProjectile(otherStack).isEmpty() && elapsed - chargeDuration >= otherCrossbow.getChargeDurationMod(otherStack, level) && otherCrossbow.tryLoadProjectiles(entity, otherStack)) {
+                loaded = true;
+            }
         }
-        return this.getChargeDurationMod(crossbow, entity.level());
+
+        return loaded;
+    }
+
+    private void playChargeSounds(Level level, LivingEntity entity, ItemStack stack, InteractionHand hand, int elapsed) {
+        float progress;
+
+        if (!CrossbowItem.isCharged(stack)) {
+            progress = (float) elapsed / getChargeDurationMod(stack, level);
+        } else {
+            ItemStack otherStack = entity.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+            if (!canUseDoubleCrossbow(entity) || !(otherStack.getItem() instanceof HunterCrossbowItem otherCrossbow) || CrossbowItem.isCharged(otherStack)) return;
+            progress = (float) (elapsed - getChargeDurationMod(stack, level)) / otherCrossbow.getChargeDurationMod(otherStack, level);
+        }
+
+        if (progress < 0.2F) {
+            this.chargeStartSoundPlayed = false;
+            this.chargeMidSoundPlayed = false;
+        }
+        if (progress >= 0.2F && !this.chargeStartSoundPlayed) {
+            this.chargeStartSoundPlayed = true;
+            level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_START, SoundSource.PLAYERS, 0.5F, 1.0F);
+        }
+        if (progress >= 0.5F && !this.chargeMidSoundPlayed) {
+            this.chargeMidSoundPlayed = true;
+            level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_MIDDLE, SoundSource.PLAYERS, 0.5F, 1.0F);
+        }
+    }
+
+    private void playLoadingEndSound(Level level, LivingEntity entity) {
+        SoundSource source = entity instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
+        level.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.CROSSBOW_LOADING_END, source, 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
     }
 
     @Override
     public int getChargeDurationMod(ItemStack crossbow, Level level) {
         Registry<Enchantment> enchantments = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-        int i = crossbow.getEnchantmentLevel(enchantments.getOrThrow(Enchantments.QUICK_CHARGE));
-        return i == 0 ? this.chargeTime : this.chargeTime - 2 * i;
+        int quickCharge = crossbow.getEnchantmentLevel(enchantments.getOrThrow(Enchantments.QUICK_CHARGE));
+        int base = quickCharge == 0 ? this.chargeTime : this.chargeTime - 2 * quickCharge;
+
+        return applyChargeMultiplier(crossbow, base);
     }
 
-    @Override
-    public boolean isPrimaryItemFor(ItemStack stack, Holder<Enchantment> enchantment) {
-        return EnchantmentOverride.isPrimary(stack, enchantment) || super.isPrimaryItemFor(stack, enchantment);
+    protected int applyChargeMultiplier(ItemStack crossbow, int base) {
+        return Mth.ceil(base * getChargeMultiplier(crossbow));
     }
 
-    @Override
-    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
-        return EnchantmentOverride.isPrimary(stack, enchantment) || super.supportsEnchantment(stack, enchantment);
+    private float getChargeMultiplier(ItemStack crossbow) {
+        IVampirismQuarrel.IQuarrelBehavior behavior = getChargingBehavior(crossbow);
+        return behavior != null ? behavior.properties().chargeMultiplier() : 1f;
+    }
+
+    @Nullable
+    private IVampirismQuarrel.IQuarrelBehavior getChargingBehavior(ItemStack crossbow) {
+        return getAmmunition(crossbow).map(HunterCrossbowItem::behaviorFor).orElse(null);
+    }
+
+    @Nullable
+    private IVampirismQuarrel.IQuarrelBehavior getChargingBehavior(LivingEntity shooter, ItemStack crossbow) {
+        IVampirismQuarrel.IQuarrelBehavior selected = getChargingBehavior(crossbow);
+        if (selected != null) return selected;
+
+        if (usesQuarrelPouch()) {
+            ItemStack pouch = findLoadablePouch(shooter, crossbow);
+            if (!pouch.isEmpty()) {
+                return behaviorFor(matchingQuarrelInPouch(crossbow, pouch).getItem());
+            }
+        }
+        return behaviorFor(shooter.getProjectile(crossbow).getItem());
+    }
+
+    @Nullable
+    private static IVampirismQuarrel.IQuarrelBehavior behaviorFor(Item ammo) {
+        if (ammo instanceof QuarrelItem quarrel) {
+            return quarrel.getBehavior();
+        }
+        ItemStackTemplate contained = ammo.components().get(ModDataComponents.CONTAINED_PROJECTILES.get());
+        if (contained != null && contained.item().value() instanceof QuarrelItem quarrel) {
+            return quarrel.getBehavior();
+        }
+
+        return null;
     }
 
     protected boolean tryLoadProjectiles(LivingEntity shooter, ItemStack crossbow) {
-        ItemStack ammo = shooter.getProjectile(crossbow);
-        if (ammo.isEmpty()) {
-            return false;
-        }
-        int capacityLeft = getMaxLoadedProjectiles() - getLoadedCount(crossbow);
-        if (capacityLeft <= 0) {
-            return false;
-        }
-        var crossbowHandler = crossbow.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(crossbow));
-        if (crossbowHandler == null) {
-            return false;
-        }
-
-        Predicate<ItemResource> filter = res -> res.is(holder -> holder.value() instanceof IVampirismCrossbowArrow<?>) && getAmmunition(crossbow).map(res::is).orElse(true);
-        boolean infinite = shooter.hasInfiniteMaterials() || (ammo.getItem() instanceof ArrowItem arrowItem && arrowItem.isInfinite(ammo, crossbow, shooter));
-
-        try (var transaction = Transaction.openRoot()) {
-            int loaded;
-            if (infinite) {
-                // Creative / infinite: don't consume the source, just fill with intangible copies that won't drop when fired.
-                ItemResource source = resolveInfiniteResource(ammo, filter, transaction);
-                if (source == null) {
-                    return false;
-                }
-                loaded = ResourceHandlerUtil.insertStacking(crossbowHandler, source.with(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE), capacityLeft, transaction);
-            } else {
-                var ammoHandler = ammo.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(ammo));
-                if (ammoHandler != null) {
-                    // Quarrel pouch / arrow clip: move bolts from the container's handler into the crossbow.
-                    loaded = ResourceHandlerUtil.move(ammoHandler, crossbowHandler, filter, capacityLeft, transaction);
-                } else {
-                    // Plain arrow stack held in the inventory.
-                    ItemResource res = ItemResource.of(ammo);
-                    if (!filter.test(res)) {
-                        return false;
-                    }
-                    loaded = ResourceHandlerUtil.insertStacking(crossbowHandler, res, Math.min(capacityLeft, ammo.getCount()), transaction);
-                    if (loaded > 0) {
-                        ammo.shrink(loaded);
-                        if (ammo.isEmpty() && shooter instanceof Player player) {
-                            player.getInventory().removeItem(ammo);
-                        }
-                    }
-                }
-            }
-            if (loaded > 0) {
-                transaction.commit();
+        if (usesQuarrelPouch()) {
+            ItemStack pouch = findLoadablePouch(shooter, crossbow);
+            if (!pouch.isEmpty() && loadProjectiles(shooter, crossbow, pouch)) {
                 return true;
             }
         }
-        return false;
+
+        return loadProjectiles(shooter, crossbow, shooter.getProjectile(crossbow));
     }
 
-    /**
-     * Resolves which arrow resource to load for creative / infinite shooters without consuming the source.
-     */
-    @Nullable
-    protected ItemResource resolveInfiniteResource(ItemStack ammo, Predicate<ItemResource> filter, @Nullable Transaction transaction) {
-        var ammoHandler = ammo.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(ammo));
-        if (ammoHandler != null) {
-            ItemResource found = ResourceHandlerUtil.findExtractableResource(ammoHandler, filter, transaction);
-            return found == null || found.isEmpty() ? null : found;
-        }
-        ItemResource res = ItemResource.of(ammo);
-        return filter.test(res) ? res : null;
+    protected boolean loadProjectiles(LivingEntity shooter, ItemStack crossbow, ItemStack projectileStack) {
+        List<ItemStack> drawn = drawMod(crossbow, projectileStack, shooter);
+        if (drawn.isEmpty()) return false;
+
+        ArrayList<ItemStack> projectiles = new ArrayList<>(crossbow.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY).itemCopies());
+        projectiles.addAll(drawn);
+        crossbow.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(projectiles));
+
+        return true;
     }
 
-    /**
-     * Removes the given number of loaded projectiles from the front of the crossbow's resource handler.
-     */
-    protected void consumeLoadedProjectiles(ItemStack crossbow, int count) {
-        if (count <= 0) {
-            return;
+    protected boolean usesQuarrelPouch() {
+        return true;
+    }
+
+    protected ItemStack findLoadablePouch(LivingEntity shooter, ItemStack crossbow) {
+        if (!(shooter instanceof Player player)) return ItemStack.EMPTY;
+
+        for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
+            if (stack.getItem() instanceof QuarrelPouchItem && !matchingQuarrelInPouch(crossbow, stack).isEmpty()) return stack;
         }
-        var handler = crossbow.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(crossbow));
-        if (handler == null) {
-            return;
-        }
-        try (var transaction = Transaction.openRoot()) {
-            for (int i = 0; i < count; i++) {
-                ItemResource res = handler.getResource(0);
-                if (res.isEmpty()) {
-                    break;
-                }
-                handler.extract(0, res, 1, transaction);
+
+        return ItemStack.EMPTY;
+    }
+
+    protected ItemStack matchingQuarrelInPouch(ItemStack crossbow, ItemStack pouch) {
+        QuarrelPouchContents contents = pouch.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
+        return getAmmunition(crossbow).map(contents::getSpecific).orElseGet(contents::getFirst);
+    }
+
+    protected List<ItemStack> getLoadingProjectiles(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
+        if (projectileStack.getItem() instanceof QuarrelPouchItem) {
+            if (shooter.hasInfiniteMaterials()) {
+                projectileStack = projectileStack.copy();
             }
-            transaction.commit();
+
+            QuarrelPouchContents.Mutable contents = projectileStack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY).asMutable();
+            Item selected = getAmmunition(crossbowStack).orElse(null);
+            ItemStack quarrel = selected != null ? contents.getSpecific(selected) : contents.getFirst();
+            if (quarrel.isEmpty()) {
+                return List.of();
+            }
+
+            projectileStack.set(ModDataComponents.QUARREL_POUCH_CONTENTS, contents.toImmutable());
+
+            return List.of(quarrel);
         }
+
+        return List.of(projectileStack);
+    }
+
+    protected List<ItemStack> drawMod(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
+        if (projectileStack.isEmpty()) return List.of();
+        return getLoadingProjectiles(crossbowStack, projectileStack, shooter).stream().map(projectile -> useAmmo(crossbowStack, projectile, shooter, false)).toList();
+    }
+
+    protected static ItemStack useAmmo(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter, boolean infinite) {
+        boolean consume = !infinite && !(shooter.hasInfiniteMaterials() || (projectileStack.getItem() instanceof ArrowItem arrowItem && arrowItem.isInfinite(projectileStack, crossbowStack, shooter)));
+        if (!consume) {
+            ItemStack copy = projectileStack.copyWithCount(1);
+            copy.set(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
+
+            return copy;
+        }
+
+        ItemStack used = projectileStack.split(1);
+        if (projectileStack.isEmpty() && shooter instanceof Player player) {
+            player.getInventory().removeItem(projectileStack);
+        }
+
+        return used;
     }
 
     @Override
     public boolean canSelectAmmunition(ItemStack crossbow) {
         return true;
+    }
+
+    public Collection<Item> getSelectableAmmo() {
+        return QuarrelHandler.getQuarrels();
     }
 
     @Override
@@ -374,24 +545,34 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
         }
     }
 
-    public boolean testProjectile(ItemStack crossbow, ItemStack projectile) {
-        if (projectile.getItem() instanceof IVampirismCrossbowArrow<?>) {
-            return testQuarrel(crossbow, projectile);
-        } else if (projectile.getItem() instanceof QuarrelPouch) {
-            return testQuarrelPouch(crossbow, projectile);
-        }
-        return false;
+    @Override
+    public ItemStack getDefaultCreativeAmmo(@Nullable Player player, ItemStack weapon) {
+        return ModItems.QUARREL_NORMAL.get().getDefaultInstance();
     }
 
-    public boolean testQuarrelPouch(ItemStack crossbow, ItemStack quarrelPouch) {
-        QuarrelPouchContents orDefault = quarrelPouch.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY);
-        QuarrelPouchContents.Mutable mutable = orDefault.asMutable();
-        ItemStack stack = getAmmunition(crossbow).map(mutable::getSpecific).orElseGet(mutable::getFirst);
-        return testProjectile(crossbow, stack);
+    public boolean testProjectile(ItemStack crossbow, ItemStack projectile) {
+        if (projectile.getItem() instanceof IVampirismQuarrel<?>) {
+            return testQuarrel(crossbow, projectile);
+        }
+        if (usesQuarrelPouch() && projectile.getItem() instanceof QuarrelPouchItem) {
+            return !matchingQuarrelInPouch(crossbow, projectile).isEmpty();
+        }
+
+        return false;
     }
 
     public boolean testQuarrel(ItemStack crossbow, ItemStack quarrel) {
         return getAmmunition(crossbow).map(quarrel::is).orElse(true);
+    }
+
+    @Override
+    public boolean isPrimaryItemFor(ItemStack stack, Holder<Enchantment> enchantment) {
+        return EnchantmentOverride.isPrimary(stack, enchantment) || super.isPrimaryItemFor(stack, enchantment);
+    }
+
+    @Override
+    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+        return EnchantmentOverride.isPrimary(stack, enchantment) || super.supportsEnchantment(stack, enchantment);
     }
 
     /**
@@ -437,7 +618,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
 
         @Override
         public boolean isValid(int index, ItemResource resource) {
-            return index >= 0 && index < size() && resource.is(holder -> holder.value() instanceof IVampirismCrossbowArrow<?>);
+            return index >= 0 && index < size() && resource.is(holder -> holder.value() instanceof IVampirismQuarrel<?>);
         }
 
         @Override
@@ -482,5 +663,4 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
             return this.itemAccess.exchange(newResource, accessAmount, transaction) > 0 ? 1 : 0;
         }
     }
-
 }

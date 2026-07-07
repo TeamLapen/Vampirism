@@ -18,9 +18,9 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
-import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
+import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
 import de.teamlapen.vampirism.common.world.items.StakeItem;
-import de.teamlapen.vampirism.common.world.items.crossbow.arrow.arrowbehavior.VampireKillerBehavior;
+import de.teamlapen.vampirism.common.world.items.crossbow.behavior.VampireKillerBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -211,8 +211,8 @@ public class Helper {
                 if (source.getDirectEntity() instanceof LivingEntity) {
                     //Maybe use all IVampireFinisher??
                     return source.getDirectEntity() instanceof IHunterMob || ((LivingEntity) source.getDirectEntity()).getMainHandItem().getItem() instanceof StakeItem;
-                } else if (source.getDirectEntity() instanceof CrossbowArrowEntity) {
-                    return ((CrossbowArrowEntity) source.getDirectEntity()).getArrowType() instanceof VampireKillerBehavior;
+                } else if (source.getDirectEntity() instanceof QuarrelEntity quarrel) {
+                    return quarrel.getBehavior().orElse(null) instanceof VampireKillerBehavior;
                 }
                 return false;
             }
