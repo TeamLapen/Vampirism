@@ -49,13 +49,18 @@ public class Integrations {
                     List<ModFileScanData.AnnotationData> list = scanProvider.apply((FMLModContainer) container)
                             .stream()
                             .flatMap(scan -> scan.getAnnotatedBy(Integration.class, ElementType.TYPE))
-                            .filter(data -> data.annotationData().get("modIds") instanceof String[] s && s.length > 0 && Stream.of(s).allMatch(modId -> ModList.get().isLoaded(modId)))
+                            .filter(data -> !requiredModIds(data).isEmpty())
+                            .filter(data -> requiredModIds(data).stream().allMatch(modId -> ModList.get().isLoaded(modId)))
                             .filter(x -> AutomaticEventSubscriber.getSides(x.annotationData().get("dist")).contains(FMLLoader.getCurrent().getDist())).toList();
                     if (!list.isEmpty()) {
-                        return list.stream().map(data -> new IntegrationProvider(container.getModId(), (String) data.annotationData().get("modId"), data.clazz()));
+                        return list.stream().map(data -> new IntegrationProvider(container.getModId(), String.join("_", requiredModIds(data)), data.clazz()));
                     }
                     return Stream.empty();
                 }).toList();
+    }
+
+    private static List<String> requiredModIds(ModFileScanData.AnnotationData data) {
+        return data.annotationData().get("modIds") instanceof List<?> modIds ? modIds.stream().map(String::valueOf).toList() : List.of();
     }
 
     private static Function<FMLModContainer, Optional<ModFileScanData>> scanDataProvider() {
