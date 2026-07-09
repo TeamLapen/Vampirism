@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.world.items.oil.IOil;
+import de.teamlapen.vampirism.common.world.features.ModNoiseParameters;
 import de.teamlapen.vampirism.common.world.features.VampirismFeatures;
 import de.teamlapen.vampirism.common.world.items.component.VampireBook;
 import net.minecraft.core.Registry;
@@ -46,6 +47,7 @@ public class ModRegistries {
             .add(Registries.DIMENSION_TYPE, ModDimensions::bootstrapDimensionTypes)
             .add(Registries.NOISE_SETTINGS, ModDimensions::bootstrapNoise)
             .add(Registries.DENSITY_FUNCTION, ModDimensions::bootstrapDensityFunctions)
+            .add(Registries.NOISE, ModNoiseParameters::bootstrapNoises)
             ;
 
     static void registerRegistries(NewRegistryEvent event) {
