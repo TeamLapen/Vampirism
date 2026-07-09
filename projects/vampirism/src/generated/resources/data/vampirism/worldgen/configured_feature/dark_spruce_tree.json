@@ -21,7 +21,14 @@
         }
       ]
     },
-    "decorators": [],
+    "decorators": [
+      {
+        "type": "vampirism:tall_grass_near_tree",
+        "max": 9,
+        "min": 4,
+        "radius": 3
+      }
+    ],
     "foliage_placer": {
       "type": "minecraft:spruce_foliage_placer",
       "offset": {
