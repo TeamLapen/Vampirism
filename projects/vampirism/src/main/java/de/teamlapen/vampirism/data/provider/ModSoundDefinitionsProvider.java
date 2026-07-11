@@ -51,6 +51,15 @@ public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
         this.add(ModSounds.REMAINS_DEATH, definition().subtitle("subtitles.vampirism.remains.death").with(sound(mod("reserved/block/remains_destroyed"))));
         this.add(ModSounds.REMAINS_HURT, definition().subtitle("subtitles.vampirism.remains.hurt").with(sound(mc("block/rooted_dirt/step1")).volume(0.8), sound(mc("block/rooted_dirt/step2")).volume(0.8), sound(mc("block/rooted_dirt/step3")).volume(0.8), sound(mc("block/rooted_dirt/step4")).volume(0.8), sound(mc("block/rooted_dirt/step5")).volume(0.8), sound(mc("block/rooted_dirt/step6")).volume(0.8)));
         this.add(ModSounds.BUBBLES, definition().with(sound(mod("reserved/block/bubbles_1")), sound(mod("reserved/block/bubbles_2")), sound(mod("reserved/block/bubbles_3"))));
+        // dracula fight sounds; currently placeholders until dedicated sound files are available
+        this.add(ModSounds.DRACULA_AMBIENT, definition().subtitle("subtitles.vampirism.entity.dracula.ambient").with(sound(mod("cc/entity/vampire_scream")).volume(0.5).pitch(0.6)));
+        this.add(ModSounds.DRACULA_HURT, definition().subtitle("subtitles.vampirism.entity.dracula.hurt").with(sound(mc("mob/endermen/hit1")).pitch(0.6), sound(mc("mob/endermen/hit2")).pitch(0.6), sound(mc("mob/endermen/hit3")).pitch(0.6), sound(mc("mob/endermen/hit4")).pitch(0.6)));
+        this.add(ModSounds.DRACULA_DEATH, definition().subtitle("subtitles.vampirism.entity.dracula.death").with(sound(mod("reserved/fx/mother_death")).pitch(0.9)));
+        this.add(ModSounds.DRACULA_TELEPORT, definition().subtitle("subtitles.vampirism.entity.dracula.teleport").with(sound(mod("reserved/fx/teleport1")).pitch(0.7)));
+        this.add(ModSounds.DRACULA_TRANSFORM, definition().subtitle("subtitles.vampirism.entity.dracula.transform").with(sound(mc("mob/wither/spawn")).pitch(1.3).volume(0.8)));
+        this.add(ModSounds.DRACULA_TRANSFORM_END, definition().subtitle("subtitles.vampirism.entity.dracula.transform").with(sound(mc("random/explode1")).pitch(0.7), sound(mc("random/explode2")).pitch(0.7), sound(mc("random/explode3")).pitch(0.7), sound(mc("random/explode4")).pitch(0.7)));
+        this.add(ModSounds.DRACULA_SIPHON, definition().subtitle("subtitles.vampirism.entity.dracula.siphon").with(sound(mod("cc/block/beam_enter_player")).pitch(0.6)));
+        this.add(ModSounds.VELMORRA_RUMBLE, definition().with(sound(mc("mob/wither/idle1")).pitch(0.4), sound(mc("mob/wither/idle2")).pitch(0.4), sound(mc("mob/wither/idle3")).pitch(0.4), sound(mc("mob/wither/idle4")).pitch(0.4)));
     }
 
     private void addVariedSound(SoundEvent sound, String fileName, int count, boolean hasSubtitle) {

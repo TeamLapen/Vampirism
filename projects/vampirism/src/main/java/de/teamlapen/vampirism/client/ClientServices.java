@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.renderer.bloodvision.BloodVisionRenderer;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
+import de.teamlapen.vampirism.client.renderer.VelmorraCollapseHandler;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.data.reloadlistener.vampirebook.VampireBooks;
 import net.neoforged.bus.api.IEventBus;
@@ -30,6 +31,7 @@ public class ClientServices extends Services {
     private final ClientTooltips clientTooltips = new ClientTooltips();
     private final FullScreenOverlay fullScreenOverlay = new FullScreenOverlay();
     private final DraculaEventOverlay draculaEventOverlay = new DraculaEventOverlay();
+    private final VelmorraCollapseHandler velmorraCollapseHandler = new VelmorraCollapseHandler();
 
     //</editor-fold>
 
@@ -79,6 +81,10 @@ public class ClientServices extends Services {
         return this.draculaEventOverlay;
     }
 
+    public VelmorraCollapseHandler velmorraCollapseHandler() {
+        return this.velmorraCollapseHandler;
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="Register" >
@@ -117,6 +123,7 @@ public class ClientServices extends Services {
     protected void registerGameBus(IEventBus bus) {
         bus.register(this.vampirismHUDOverlay);
         bus.register(this.renderHandler);
+        bus.register(this.velmorraCollapseHandler);
         bus.register(this.bloodVisionRenderer);
         bus.register(this.modKeys);
         bus.register(this.screenEventHandler);

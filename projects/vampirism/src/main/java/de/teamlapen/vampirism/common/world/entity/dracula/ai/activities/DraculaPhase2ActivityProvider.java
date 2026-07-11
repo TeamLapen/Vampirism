@@ -30,5 +30,6 @@ public class DraculaPhase2ActivityProvider extends AiActivityProvider<Dracula> {
         actionBuilder.addAction(ModActivities.DRACULA_FLYING_SWORD, FlyingSwordAttack::configure);
         actionBuilder.addAction(ModActivities.DRACULA_FLYING_NEEDLE, FlyingNeedleAttack::configure);
         actionBuilder.addAction(ModActivities.DRACULA_BACKSTAB, BackstabBehavior::configure);
+        actionBuilder.addAction(ModActivities.DRACULA_BAT_SWARM_DASH, BatSwarmDashBehavior::configure);
     }
 }

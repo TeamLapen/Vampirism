@@ -224,6 +224,11 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("killed", ModAdvancements.TRIGGER_MOTHER_WIN.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/kill_mother");
+            AdvancementHolder defeat_dracula = Advancement.Builder.advancement()
+                    .display(ModItems.CHALICE.get(), Component.translatable("advancement.vampirism.defeat_dracula"), Component.translatable("advancement.vampirism.defeat_dracula.desc"), null, AdvancementType.CHALLENGE, true, true, true)
+                    .parent(max_lord)
+                    .addCriterion("killed", ModAdvancements.TRIGGER_DRACULA_WIN.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
+                    .save(consumer, REFERENCE.MODID + ":vampire/defeat_dracula");
         }
     }
 

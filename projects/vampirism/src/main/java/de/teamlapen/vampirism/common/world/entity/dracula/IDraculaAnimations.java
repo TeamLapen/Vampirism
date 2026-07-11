@@ -28,7 +28,8 @@ public interface IDraculaAnimations {
         FLYING_SWORD_1(VIdentifier.mod("flying_sword_1")),
         FLYING_SWORD_2(VIdentifier.mod("flying_sword_2")),
         ATTACK_1(VIdentifier.mod("attack_1")),
-        ATTACK_2(VIdentifier.mod("attack_2"))
+        ATTACK_2(VIdentifier.mod("attack_2")),
+        BLOOD_SIPHON(VIdentifier.mod("blood_siphon"))
         ;
 
         public static final StreamCodec<? super RegistryFriendlyByteBuf, Animation> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(Animation.class);

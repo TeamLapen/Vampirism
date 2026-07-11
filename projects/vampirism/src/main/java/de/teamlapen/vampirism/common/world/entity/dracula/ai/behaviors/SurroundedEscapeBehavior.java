@@ -67,7 +67,7 @@ public class SurroundedEscapeBehavior {
             actionActive.set(Unit.INSTANCE);
             actionCooldown.erase();
             cooldown.setWithExpiry(Unit.INSTANCE, 20 * 10);
-            return false;
+            return true;
         }));
     }
 

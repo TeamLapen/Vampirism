@@ -14,6 +14,8 @@ public class DraculaPhase3Model extends DraculaModel {
     private final KeyframeAnimation idleAnimation;
     private final KeyframeAnimation attack1;
     private final KeyframeAnimation attack2;
+    private final KeyframeAnimation transformationAnimation;
+    private final KeyframeAnimation bloodSiphonAnimation;
 
     private final ModelPart leftArm;
     private final ModelPart rightArm;
@@ -30,6 +32,8 @@ public class DraculaPhase3Model extends DraculaModel {
         this.idleAnimation = DraculaAnimations.Phase3.IDLE.bake(root);
         this.attack1 = DraculaAnimations.Phase3.ATTACK_1.bake(root);
         this.attack2 = DraculaAnimations.Phase3.ATTACK_2.bake(root);
+        this.transformationAnimation = DraculaAnimations.Phase3.TRANSFORMATION.bake(root);
+        this.bloodSiphonAnimation = DraculaAnimations.Phase3.BLOOD_SIPHON.bake(root);
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -62,12 +66,17 @@ public class DraculaPhase3Model extends DraculaModel {
     @Override
     public void setupAnim(DraculaRenderer.DraculaRenderState renderState) {
         super.setupAnim(renderState);
+        if (renderState.draculaState.isTransforming) {
+            this.transformationAnimation.apply(renderState.transformationAnimation, renderState.ageInTicks);
+            return;
+        }
         this.walkAnimation.applyWalk(renderState.walkAnimationPos, renderState.walkAnimationSpeed, 1,1);
         this.idleAnimation.apply((long) renderState.ageInTicks * 50,  1);
 
         var keyFrame = switch (renderState.attackAnimationType) {
             case ATTACK_1 -> this.attack1;
             case ATTACK_2 -> this.attack2;
+            case BLOOD_SIPHON -> this.bloodSiphonAnimation;
             default -> null;
         };
         if (keyFrame != null) {

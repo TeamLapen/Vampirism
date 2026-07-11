@@ -7,15 +7,21 @@ import de.teamlapen.faction.common.world.entities.IEntityEventReceiver;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModMemoryTypes;
+import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.world.entity.ai.memory.HurtByEntities;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.DraculaAiSystem;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.DraculaState;
+import net.minecraft.core.particles.DustColorTransitionOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -39,18 +45,67 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
 
     public static final EntityDataAccessor<DraculaState> FIGHT_STAGE = SynchedEntityData.defineId(Dracula.class, ModEntities.DRACULA_STATE.get());
     public static final EntityDataAccessor<Long> TRANSFORMATION_START = SynchedEntityData.defineId(Dracula.class, EntityDataSerializers.LONG);
+    /** Entity ids of the current blood siphon victims; empty while not channeling. Used client side to render the siphon beams. */
+    public static final EntityDataAccessor<List<Integer>> SIPHON_TARGETS = SynchedEntityData.defineId(Dracula.class, ModEntities.INT_LIST.get());
 
     private final List<Pair<Long, Float>> recentDamage = new ArrayList<>();
     private long mistStartTime = -1;
+    private long mistCooldownUntil = -1;
     private static final int MIST_DURATION = 5 * 20;
+    private static final int MIST_COOLDOWN = 30 * 20;
+    /** Amount of extra max health per additional player in the fight */
+    private static final float HEALTH_SCALE_PER_PLAYER = 0.5f;
+    private int fightScalePlayers = 1;
 
     public Dracula(EntityType<? extends Dracula> type, Level level) {
         super(type, level);
     }
 
+    /**
+     * Starts the boss fight. Dracula enters the passive stage and scales with the players present in the dimension.
+     */
+    public void startFight(int playerCount) {
+        this.fightScalePlayers = Math.max(1, playerCount);
+        this.setState(DraculaState.PASSIVE);
+        this.updateAttributes(this.getStage());
+        this.setHealth(this.getMaxHealth());
+    }
+
+    public float healthScale() {
+        return 1.0f + HEALTH_SCALE_PER_PLAYER * (this.fightScalePlayers - 1);
+    }
+
+    public int getFightScalePlayers() {
+        return this.fightScalePlayers;
+    }
+
+    /** Debug command hook: jumps directly to the given fight state, skipping the transformation. */
+    public void debugSetState(DraculaState state) {
+        this.setState(state);
+        this.setTransformationStart(-1);
+        this.updateAttributes(this.getStage());
+        this.setHealth(this.getMaxHealth());
+        updateEvent();
+    }
+
     @Override
     public HumanoidArm getMainArm() {
         return HumanoidArm.LEFT;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.DRACULA_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return ModSounds.DRACULA_HURT.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.DRACULA_DEATH.get();
     }
 
     public FightStage getStage() {
@@ -63,6 +118,15 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         tickTransformation();
         if (this.getState() == DraculaState.MIST) {
             tickMistForm();
+            if (this.level().isClientSide()) {
+                for (int i = 0; i < 2; i++) {
+                    this.level().addParticle(ParticleTypes.LARGE_SMOKE,
+                            this.getX() + (this.random.nextDouble() - 0.5) * 3.0,
+                            this.getY() + this.random.nextDouble() * 2.5,
+                            this.getZ() + (this.random.nextDouble() - 0.5) * 3.0,
+                            0, 0.02, 0);
+                }
+            }
         }
     }
 
@@ -146,11 +210,26 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         this.entityData.set(FIGHT_STAGE, stage);
     }
 
+    public List<Integer> getSiphonTargets() {
+        return this.entityData.get(SIPHON_TARGETS);
+    }
+
+    public void setSiphonTargets(List<Integer> targets) {
+        this.entityData.set(SIPHON_TARGETS, List.copyOf(targets));
+    }
+
+    public void clearSiphonTargets() {
+        if (!this.getSiphonTargets().isEmpty()) {
+            this.entityData.set(SIPHON_TARGETS, List.of());
+        }
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(FIGHT_STAGE, DraculaState.DEFAULT);
         builder.define(TRANSFORMATION_START, -1L);
+        builder.define(SIPHON_TARGETS, List.of());
     }
 
     //</editor-fold>
@@ -223,7 +302,7 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
 
     @SuppressWarnings("DataFlowIssue")
     private void updateAttributes(FightStage fightStage) {
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(createMaxHealth(fightStage));
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(createMaxHealth(fightStage) * healthScale());
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(createAttackDamage(fightStage));
         this.getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(createAttackKnockback(fightStage));
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(createKnockbackResistance(fightStage));
@@ -252,7 +331,24 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
     //<editor-fold desc="Animation">
 
     private final AnimationState attackAnimationState = new AnimationState();
+    private final AnimationState transformationAnimationState = new AnimationState();
     private IDraculaAnimations.Animation attackAnimationType = IDraculaAnimations.Animation.NONE;
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (FIGHT_STAGE.equals(key)) {
+            if (this.getState().isTransforming) {
+                this.transformationAnimationState.start(this.tickCount);
+            } else {
+                this.transformationAnimationState.stop();
+            }
+        }
+    }
+
+    public void copyTransformationAnimationTo(AnimationState state) {
+        state.copyFrom(this.transformationAnimationState);
+    }
 
     public void triggerAnim(Animation... animations) {
         if (animations.length == 0) {
@@ -291,6 +387,7 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         super.readAdditionalSaveData(input);
         setState(input.read("fight_stage", DraculaState.CODEC).orElse(DraculaState.DEFAULT));
         setTransformationStart(input.getLongOr("transformation_start", -1));
+        this.fightScalePlayers = Math.max(1, input.getIntOr("fight_scale_players", 1));
     }
 
     @Override
@@ -300,6 +397,7 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         if (getTransformationStart() != -1) {
             output.putLong("transformation_start", getTransformationStart());
         }
+        output.putInt("fight_scale_players", this.fightScalePlayers);
     }
 
     //</editor-fold>
@@ -345,6 +443,10 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
 
         setHealth(Math.max(1, getMaxHealth() * percentage));
 
+        if (serverLevel.getGameTime() % 4 == 0) {
+            serverLevel.sendParticles(new DustColorTransitionOptions(0x750014, 0x46011a, 1.5f), this.getX(), this.getY() + this.random.nextDouble() * this.getBbHeight(), this.getZ(), 4, 0.6, 0.4, 0.6, 0.02);
+        }
+
         if (percentage >= 1) {
             finishTransformation();
         }
@@ -360,6 +462,10 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         this.setState(stage);
         this.setTransformationStart(-1);
 
+        this.level().playSound(null, this.blockPosition(), ModSounds.DRACULA_TRANSFORM_END.get(), SoundSource.HOSTILE, 2.0f, 1.0f);
+        if (this.level() instanceof ServerLevel serverLevel) {
+            serverLevel.sendParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY() + 1.0, this.getZ(), 4, 0.5, 0.5, 0.5, 0);
+        }
         knockbackEntities();
     }
 
@@ -380,13 +486,35 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
             default -> throw new IllegalStateException("Unexpected value: " + this.getStage());
         };
 
+        teleportToTransformationMarker();
         this.setTransformationStart(this.level().getGameTime());
         this.setState(nextStage);
         updateAttributes(getStage());
         if (level() instanceof ServerLevel serverLevel) {
             DraculaAiSystem.AI.stop(serverLevel, this);
         }
+        this.level().playSound(null, this.blockPosition(), ModSounds.DRACULA_TRANSFORM.get(), SoundSource.HOSTILE, 2.0f, 1.0f);
+        DraculaFightData.getOpt(this.level()).ifPresent(data -> data.sendMessage(Component.translatable("message.vampirism.dracula.transformation")));
         updateEvent();
+    }
+
+    /**
+     * Teleports to a random spawn marker so the transformation happens at a set piece location.
+     * Falls back to transforming in place if no (other) marker exists.
+     */
+    private void teleportToTransformationMarker() {
+        if (!(this.level() instanceof ServerLevel serverLevel)) return;
+        List<Marker> markers = DraculaFightData.findMarkers(serverLevel, DraculaFightData.DRACULA_SPAWN_MARKER);
+        markers.removeIf(marker -> marker.distanceToSqr(this) < 16);
+        if (markers.isEmpty()) return;
+        Marker target = markers.get(this.random.nextInt(markers.size()));
+
+        serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 1.0, this.getZ(), 30, 0.5, 1.0, 0.5, 0.02);
+        serverLevel.playSound(null, this.blockPosition(), ModSounds.DRACULA_TELEPORT.get(), SoundSource.HOSTILE, 2.0f, 1.0f);
+        this.getNavigation().stop();
+        this.teleportTo(target.getX(), target.getY(), target.getZ());
+        serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, target.getX(), target.getY() + 1.0, target.getZ(), 30, 0.5, 1.0, 0.5, 0.02);
+        serverLevel.playSound(null, target.blockPosition(), ModSounds.DRACULA_TELEPORT.get(), SoundSource.HOSTILE, 2.0f, 1.0f);
     }
 
     @Override
@@ -446,13 +574,14 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
 
         if (this.getState() == DraculaState.RAGED) {
             this.recentDamage.add(Pair.of(level.getGameTime(), amount));
-//            this.checkMistFormTrigger();
+            this.checkMistFormTrigger();
         }
         updateEvent();
     }
 
     private void checkMistFormTrigger() {
         long gameTime = this.level().getGameTime();
+        if (gameTime < this.mistCooldownUntil) return;
         this.recentDamage.removeIf(p -> gameTime - p.getFirst() > 100);
         float total = 0;
         for (Pair<Long, Float> p : this.recentDamage) {
@@ -461,6 +590,7 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         if (total > this.getMaxHealth() * 0.2f) {
             this.setState(DraculaState.MIST);
             this.mistStartTime = gameTime;
+            this.mistCooldownUntil = gameTime + MIST_COOLDOWN;
             this.recentDamage.clear();
         }
     }

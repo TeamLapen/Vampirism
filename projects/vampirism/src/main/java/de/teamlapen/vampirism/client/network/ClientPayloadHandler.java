@@ -93,4 +93,8 @@ public class ClientPayloadHandler {
     public static void handleDraculaEventPacket(ClientboundDraculaEventPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> VampirismModClient.services().draculaEventOverlay().handle(msg));
     }
+
+    public static void handleVelmorraCollapsePacket(ClientboundVelmorraCollapsePacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> VampirismModClient.services().velmorraCollapseHandler().setProgress(msg.progress()));
+    }
 }

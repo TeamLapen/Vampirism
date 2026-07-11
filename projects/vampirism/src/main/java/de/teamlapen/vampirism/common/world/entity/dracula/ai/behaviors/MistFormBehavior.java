@@ -37,8 +37,13 @@ public class MistFormBehavior {
 
             LivingEntity target = inst.tryGet(attackTarget).orElse(null);
             if (target != null) {
-                Vec3 away = dracula.position().subtract(target.position()).normalize().scale(15);
-                walkTarget.set(new WalkTarget(dracula.position().add(away), speed, 0));
+                // drift through the target so entities caught inside the mist take damage
+                Vec3 through = target.position().subtract(dracula.position());
+                if (through.lengthSqr() < 0.01) {
+                    through = new Vec3(dracula.getRandom().nextDouble() - 0.5, 0, dracula.getRandom().nextDouble() - 0.5);
+                }
+                Vec3 destination = target.position().add(through.normalize().scale(6));
+                walkTarget.set(new WalkTarget(destination, speed, 0));
                 return true;
             }
             return false;

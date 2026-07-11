@@ -44,6 +44,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -137,6 +138,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<DraculaState>> DRACULA_STATE = DATA_SERIALIZER.register("dracula_state", () -> (EntityDataSerializer.ForValueType<DraculaState>) (() -> DraculaState.STREAM_CODEC));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<AnimationState>> ANIMATION_STATE = DATA_SERIALIZER.register("animation_state", () -> (EntityDataSerializer.ForValueType<AnimationState>) (() -> ModStreamCodecs.ANIMATION_STATE));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<IDraculaAnimations.Animation>> DRACULA_ANIMATION = DATA_SERIALIZER.register("dracula_animation", () -> (EntityDataSerializer.ForValueType<IDraculaAnimations.Animation>) (() -> IDraculaAnimations.Animation.STREAM_CODEC));
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<List<Integer>>> INT_LIST = DATA_SERIALIZER.register("int_list", () -> (EntityDataSerializer.ForValueType<List<Integer>>) (() -> ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list())));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<IWingsEntity.WingsState>> WINGS_STATE = DATA_SERIALIZER.register("wings_state", () -> (EntityDataSerializer.ForValueType<IWingsEntity.WingsState>) (() -> NeoForgeStreamCodecs.enumCodec(IWingsEntity.WingsState.class)));
 
     static void register(IEventBus bus) {

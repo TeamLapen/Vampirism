@@ -15,7 +15,9 @@ import org.joml.Matrix3x2fStack;
 public class DraculaEventOverlay extends BaseOverlay {
 
     private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/overlay/dracula_event.png");
-    private static final Identifier TEXTURE_STAGE = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay_1.png");
+    private static final Identifier TEXTURE_STAGE_1 = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay_1.png");
+    private static final Identifier TEXTURE_STAGE_2 = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay_2.png");
+    private static final Identifier TEXTURE_STAGE_3 = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay_3.png");
     private static final Identifier TEXTURE_LOCKED = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay_locked.png");
 
     @Nullable
@@ -32,7 +34,12 @@ public class DraculaEventOverlay extends BaseOverlay {
             int yPos = 3;
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, xPos,yPos,0,0, 360,34,360,34);
 
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE_STAGE, xPos + 45,yPos + 12,45,12, (int) (294 * this.event.getPercentage()),10,360,34);
+            Identifier stageTexture = switch (this.event.getStage()) {
+                case PHASE_2 -> TEXTURE_STAGE_2;
+                case PHASE_3 -> TEXTURE_STAGE_3;
+                default -> TEXTURE_STAGE_1;
+            };
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, stageTexture, xPos + 45,yPos + 12,45,12, (int) (294 * this.event.getPercentage()),10,360,34);
 
             if (this.event.isInVulnerable()) {
                 guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE_LOCKED, xPos + 45,yPos + 12,45,12, 294,10,360,34);

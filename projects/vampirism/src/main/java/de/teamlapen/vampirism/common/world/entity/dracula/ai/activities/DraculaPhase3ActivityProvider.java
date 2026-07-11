@@ -7,9 +7,13 @@ import de.teamlapen.vampirism.common.world.entity.ai.activities.ActivityBuilder;
 import de.teamlapen.vampirism.common.world.entity.ai.activities.BehaviorDescription;
 import de.teamlapen.vampirism.common.world.entity.ai.system.AiActivityProvider;
 import de.teamlapen.vampirism.common.world.entity.dracula.Dracula;
+import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.AnimatedMeleeAttackBehavior;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.BloodProjectilesBehavior;
+import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.BloodSiphonBehavior;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.MistFormBehavior;
+import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.NearbyKnockbackBehavior;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.RegenerationBehavior;
+import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.SummonVampireBats;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.*;
@@ -35,6 +39,7 @@ public class DraculaPhase3ActivityProvider extends AiActivityProvider<Dracula> {
                 .add(buildOutOfRange())
                 .add(buildStartAttack())
                 .add(buildMelee())
+                .add(NearbyKnockbackBehavior.build(2, 0.5))
                 .add(DraculaIdleActivityProvider.buildLook())
                 .add(DraculaIdleActivityProvider.buildMovement(0.4f))
         ;
@@ -43,6 +48,8 @@ public class DraculaPhase3ActivityProvider extends AiActivityProvider<Dracula> {
 
         actions.addAction(ModActivities.DRACULA_REGENERATION, RegenerationBehavior::configure);
         actions.addAction(ModActivities.DRACULA_BLOOD_PROJECTILES, BloodProjectilesBehavior::configure);
+        actions.addAction(ModActivities.DRACULA_SUMMON_BATS, SummonVampireBats::configure);
+        actions.addAction(ModActivities.DRACULA_BLOOD_SIPHON, BloodSiphonBehavior::configure);
     }
 
     private static Optional<? extends LivingEntity> findNearestValidAttackTarget(ServerLevel level, Dracula dracula) {
@@ -69,7 +76,7 @@ public class DraculaPhase3ActivityProvider extends AiActivityProvider<Dracula> {
     }
 
     public BehaviorDescription<Dracula> buildMelee() {
-        return new BehaviorDescription<>(MeleeAttack.create(15), Set.of(SensorType.NEAREST_LIVING_ENTITIES), Set.of(MemoryModuleType.LOOK_TARGET, MemoryModuleType.ATTACK_TARGET, MemoryModuleType.ATTACK_COOLING_DOWN, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES));
+        return AnimatedMeleeAttackBehavior.build(15);
     }
 
     //</editor-fold>

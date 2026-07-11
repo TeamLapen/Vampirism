@@ -5,9 +5,10 @@ import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModMemoryTypes;
 import de.teamlapen.vampirism.common.world.entity.ai.activities.actions.ActionBuilder;
 import de.teamlapen.vampirism.common.world.entity.dracula.Dracula;
-import de.teamlapen.vampirism.common.world.entity.vampire.BasicVampireEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,12 +61,13 @@ public class SummonProtectorsBehavior {
                             List<LivingEntity> entities = new ArrayList<>();
                             for (UUID uuid : uuids) {
                                 Entity entity = level.getEntity(uuid);
-                                if (entity instanceof LivingEntity livingEntity && livingEntity.distanceToSqr(entity) < 100 * 100) {
+                                if (entity instanceof LivingEntity livingEntity && livingEntity.isAlive() && livingEntity.distanceToSqr(dracula) < 100 * 100) {
                                     entities.add(livingEntity);
                                 }
                             }
+                            int maxSummons = MAX_SUMMONS + 2 * (dracula.getFightScalePlayers() - 1);
                             int spawned = 0;
-                            while (entities.size() < MAX_SUMMONS && spawned < 4) {
+                            while (entities.size() < maxSummons && spawned < 2 + 2 * dracula.getFightScalePlayers()) {
                                 LivingEntity summon = summon(level, dracula);
                                 if (summon != null) {
                                     entities.add(summon);
@@ -88,17 +90,15 @@ public class SummonProtectorsBehavior {
 
 
     protected static @Nullable LivingEntity summon(ServerLevel level, Dracula dracula) {
-        BasicVampireEntity basicVampireEntity = ModEntities.VAMPIRE.get().create(level, EntitySpawnReason.EVENT);
-        if (basicVampireEntity != null) {
-            RandomSource random = dracula.getRandom();
-            // TODO spawn on ground
-            basicVampireEntity.setPos(dracula.position().add( (random.nextDouble() - random.nextDouble()) * 5 + 0.5, random.nextInt(3) - 1, (random.nextDouble() - random.nextDouble()) * 5 + 0.5));
-            basicVampireEntity.setYRot(random.nextFloat() * 360);
-//            if (level.noCollision(basicVampireEntity)) {
-                level.addFreshEntity(basicVampireEntity);
-//            }
-            basicVampireEntity.setAdvancedLeader(dracula);
-        }
-        return basicVampireEntity;
+        RandomSource random = dracula.getRandom();
+        BlockPos pos = BlockPos.containing(
+                dracula.getX() + (random.nextDouble() - random.nextDouble()) * 5 + 0.5,
+                dracula.getY() + 1,
+                dracula.getZ() + (random.nextDouble() - random.nextDouble()) * 5 + 0.5);
+        return SpawnUtil.trySpawnMob(ModEntities.VAMPIRE.get(), EntitySpawnReason.EVENT, level, pos, 5, 3, 3, SpawnUtil.Strategy.ON_TOP_OF_COLLIDER, false).map(vampire -> {
+            vampire.setYRot(random.nextFloat() * 360);
+            vampire.setAdvancedLeader(dracula);
+            return vampire;
+        }).orElse(null);
     }
 }

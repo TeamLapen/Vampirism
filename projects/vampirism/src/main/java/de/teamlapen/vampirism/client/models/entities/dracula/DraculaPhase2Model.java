@@ -16,6 +16,7 @@ public class DraculaPhase2Model extends DraculaModel {
     private final KeyframeAnimation needleAttack2;
     private final KeyframeAnimation flyingSwordAttack1;
     private final KeyframeAnimation flyingSwordAttack2;
+    private final KeyframeAnimation transformationAnimation;
 
     private final ModelPart body;
     private final ModelPart shirt;
@@ -40,6 +41,7 @@ public class DraculaPhase2Model extends DraculaModel {
         this.needleAttack2 = DraculaAnimations.Phase2.NEEDLES_ATTACK_2.bake(root);
         this.flyingSwordAttack1 = DraculaAnimations.Phase2.FLYING_SWORD_ATTACK_1.bake(root);
         this.flyingSwordAttack2 = DraculaAnimations.Phase2.FLYING_SWORD_ATTACK_2.bake(root);
+        this.transformationAnimation = DraculaAnimations.Phase2.TRANSFORMATION.bake(root);
     }
 
     public static LayerDefinition createBodyLayer() {
@@ -81,6 +83,10 @@ public class DraculaPhase2Model extends DraculaModel {
     @Override
     public void setupAnim(DraculaRenderer.DraculaRenderState renderState) {
         super.setupAnim(renderState);
+        if (renderState.draculaState.isTransforming) {
+            this.transformationAnimation.apply(renderState.transformationAnimation, renderState.ageInTicks);
+            return;
+        }
         this.walkAnimation.applyWalk(renderState.walkAnimationPos, renderState.walkAnimationSpeed, 2,2);
         this.idleAnimation.apply((long) renderState.ageInTicks * 50,  1);
 

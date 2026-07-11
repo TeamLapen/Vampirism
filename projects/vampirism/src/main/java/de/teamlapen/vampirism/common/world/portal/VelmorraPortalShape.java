@@ -52,6 +52,29 @@ public class VelmorraPortalShape {
         }
     }
 
+    /**
+     * Places the portal frame blocks (dark stone brick base + gateway arches) with the interior cleared.
+     * {@code start} is the first bottom frame block, the frame extends towards {@code facing.getClockWise()}.
+     */
+    public static void buildFrame(ServerLevel level, BlockPos start, Direction facing) {
+        Direction clockWise = facing.getClockWise();
+        for (int i = 0; i <= 4; i++) {
+            level.setBlockAndUpdate(start.relative(clockWise, i), ModBlocks.DARK_STONE_BRICKS.get().defaultBlockState());
+        }
+        PortalGatewayBlock.Type[] types = {PortalGatewayBlock.Type.FIRST, PortalGatewayBlock.Type.SECOND, PortalGatewayBlock.Type.THIRD, PortalGatewayBlock.Type.FOURTH};
+        for (int height = 1; height <= 4; height++) {
+            PortalGatewayBlock.Type type = types[height - 1];
+            level.setBlockAndUpdate(start.above(height), ModBlocks.VELMORRA_PORTAL_ARCH.get().defaultBlockState().setValue(PortalGatewayBlock.TYPE, type).setValue(PortalGatewayBlock.FACING, facing));
+            for (int i = 1; i <= 3; i++) {
+                level.setBlockAndUpdate(start.above(height).relative(clockWise, i), Blocks.AIR.defaultBlockState());
+            }
+            level.setBlockAndUpdate(start.above(height).relative(clockWise, 4), ModBlocks.VELMORRA_PORTAL_ARCH.get().defaultBlockState().setValue(PortalGatewayBlock.TYPE, type).setValue(PortalGatewayBlock.FACING, facing.getOpposite()));
+        }
+        level.setBlockAndUpdate(start.above(5).relative(clockWise), ModBlocks.VELMORRA_PORTAL_ARCH.get().defaultBlockState().setValue(PortalGatewayBlock.TYPE, PortalGatewayBlock.Type.FIFTH).setValue(PortalGatewayBlock.FACING, facing));
+        level.setBlockAndUpdate(start.above(5).relative(clockWise, 2), Blocks.AIR.defaultBlockState());
+        level.setBlockAndUpdate(start.above(5).relative(clockWise, 3), ModBlocks.VELMORRA_PORTAL_ARCH.get().defaultBlockState().setValue(PortalGatewayBlock.TYPE, PortalGatewayBlock.Type.FIFTH).setValue(PortalGatewayBlock.FACING, facing.getOpposite()));
+    }
+
     private void executeInner(ServerLevel level, BlockState blockState) {
         level.setBlockAndUpdate(this.bottom.above(1).relative(this.direction, 1), blockState);
         level.setBlockAndUpdate(this.bottom.above(1).relative(this.direction, 2), blockState);

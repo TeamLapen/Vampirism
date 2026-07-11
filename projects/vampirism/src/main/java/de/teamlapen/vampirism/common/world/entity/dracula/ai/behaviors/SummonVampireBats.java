@@ -54,8 +54,9 @@ public class SummonVampireBats {
     }
 
     protected static void summonBats(ServerLevel level, Dracula dracula) {
-        for (int i = 0; i < 10; i++) {
-            double angle = i * (Math.PI * 2 / 10);
+        int count = 10 + 2 * (dracula.getFightScalePlayers() - 1);
+        for (int i = 0; i < count; i++) {
+            double angle = i * (Math.PI * 2 / count);
             double x = dracula.getX() + Math.cos(angle) * 2;
             double z = dracula.getZ() + Math.sin(angle) * 2;
             BlockPos pos = BlockPos.containing(x, dracula.getY() + 1.5, z);

@@ -66,6 +66,12 @@ public class ModMemoryTypes {
 
     public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Unit>> REGENERATION_ACTIVE = unit("action.regeneration.active");
     public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Unit>> REGENERATION_COOLDOWN = unit("action.regeneration.cooldown");
+
+    public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Unit>> BLOOD_SIPHON_ACTIVE = unit("action.blood_siphon.active");
+    public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Unit>> BLOOD_SIPHON_COOLDOWN = unit("action.blood_siphon.cooldown");
+
+    public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Unit>> BAT_SWARM_DASH_ACTIVE = unit("action.bat_swarm_dash.active");
+    public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Unit>> BAT_SWARM_DASH_COOLDOWN = unit("action.bat_swarm_dash.cooldown");
     //</editor-fold>
     //</editor-fold>
 

@@ -164,6 +164,27 @@ public class DraculaCastlePieces {
                     marker.setPos(pos.getCenter());
                     level.addFreshEntity(marker);
                 }
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+            } else if (name.startsWith("vampirism:return_portal")) {
+                Marker marker = EntityType.MARKER.create(level.getLevel(), EntitySpawnReason.STRUCTURE);
+                if (marker == null) {
+                    LOGGER.error("Failed to spawn return portal marker");
+                } else {
+                    marker.setData(ModAttachments.MARKER, DraculaFightData.RETURN_PORTAL_MARKER);
+                    marker.setPos(pos.getCenter());
+                    // the portal facing is encoded in the marker rotation
+                    Direction facing = Direction.NORTH;
+                    if (name.contains("south")) {
+                        facing = Direction.SOUTH;
+                    } else if (name.contains("east")) {
+                        facing = Direction.EAST;
+                    } else if (name.contains("west")) {
+                        facing = Direction.WEST;
+                    }
+                    marker.setYRot(facing.toYRot());
+                    level.addFreshEntity(marker);
+                }
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
             }
         }
 
