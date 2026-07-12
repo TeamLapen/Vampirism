@@ -1,0 +1,16 @@
+{
+  "type": "vampirism:giant_root",
+  "config": {
+    "block": {
+      "Name": "vampirism:dark_stone"
+    },
+    "max_horizontal_offset": 4.0,
+    "max_lowest_reach_y": 1,
+    "max_top_radius": 5,
+    "min_lowest_reach_y": 40,
+    "min_top_radius": 3,
+    "taper_exponent": 0.9,
+    "tip_radius": 0.6,
+    "top_offset": 5
+  }
+}

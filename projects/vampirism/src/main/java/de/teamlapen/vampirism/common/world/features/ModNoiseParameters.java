@@ -26,10 +26,10 @@ public class ModNoiseParameters {
         for (int i = 0; i < DARK_STONE_ROOT_DEPTH; i++) {
             int depth = DARK_STONE_ROOT_DEPTH - i;
             double threshold = DARK_STONE_ROOT_NOISE_START + (depth - 1) * DARK_STONE_ROOT_NOISE_STEP;
-            tiers[i] = SurfaceRules.ifTrue(SurfaceRules.noiseCondition(DARK_STONE_ROOTS, threshold),
-                    SurfaceRules.ifTrue(SurfaceRules.stoneDepthCheck(DARK_STONE_BASE_DEPTH + depth, true, 2, CaveSurface.FLOOR), darkStone));
+            tiers[i] = SurfaceRules.ifTrue(SurfaceRules.noiseCondition(DARK_STONE_ROOTS, threshold), SurfaceRules.ifTrue(SurfaceRules.stoneDepthCheck(DARK_STONE_BASE_DEPTH + depth, true, 2, CaveSurface.FLOOR), darkStone));
         }
         tiers[DARK_STONE_ROOT_DEPTH] = SurfaceRules.ifTrue(SurfaceRules.stoneDepthCheck(DARK_STONE_BASE_DEPTH, true, 2, CaveSurface.FLOOR), darkStone);
+
         return SurfaceRules.sequence(tiers);
     }
 }
