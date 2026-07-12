@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
+import de.teamlapen.vampirism.common.world.structures.crypt.CryptPiece;
+import de.teamlapen.vampirism.common.world.structures.crypt.CryptStructure;
 import de.teamlapen.vampirism.common.world.structures.crypt.CryptStructurePieces;
 import de.teamlapen.vampirism.common.world.structures.draculacastle.DraculaCastlePieces;
 import de.teamlapen.vampirism.common.world.structures.draculacastle.DraculaCastleStructure;
@@ -48,7 +50,6 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType;
-import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
@@ -58,7 +59,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static de.teamlapen.vampirism.common.world.structures.VanillaStructureModifications.singleJigsawPieceFunction;
@@ -74,6 +74,7 @@ public class ModStructures {
     public static final DeferredHolder<StructureType<?>, StructureType<VampireHutStructure>> VAMPIRE_HUT_TYPE = STRUCTURE_TYPES.register("vampire_hut", () -> () -> VampireHutStructure.CODEC);
     public static final DeferredHolder<StructureType<?>, StructureType<VampireAltarStructure>> VAMPIRE_ALTAR_TYPE = STRUCTURE_TYPES.register("vampire_altar", () -> () -> VampireAltarStructure.CODEC);
     public static final DeferredHolder<StructureType<?>, StructureType<MotherStructure>> MOTHER_TYPE = STRUCTURE_TYPES.register("mother", () -> () -> MotherStructure.CODEC);
+    public static final DeferredHolder<StructureType<?>, StructureType<CryptStructure>> CRYPT_TYPE = STRUCTURE_TYPES.register("crypt", () -> () -> CryptStructure.CODEC);
     public static final DeferredHolder<StructureType<?>, StructureType<DraculaCastleStructure>> DRACULA_CASTLE_TYPE = STRUCTURE_TYPES.register("dracula_castle", () -> () -> DraculaCastleStructure.CODEC);
     public static final DeferredHolder<StructureType<?>, StructureType<DraculaCaveStructure>> DRACULA_CAVE_TYPE = STRUCTURE_TYPES.register("dracula_cave", () -> () -> DraculaCaveStructure.CODEC);
 
@@ -85,6 +86,7 @@ public class ModStructures {
     public static final DeferredHolder<StructurePieceType, StructurePieceType> VAMPIRE_HUT_PIECE = STRUCTURE_PIECES.register("vampire_hut", () -> (StructurePieceType.StructureTemplateType) VampireHutPieces.VampireHutPiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> VAMPIRE_ALTAR_PIECE = STRUCTURE_PIECES.register("vampire_altar", () -> (StructurePieceType.StructureTemplateType) VampireAltarPieces.VampireAltarPiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> MOTHER_PIECE = STRUCTURE_PIECES.register("mother", () -> (StructurePieceType.ContextlessType) MotherPiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> CRYPT_PIECE = STRUCTURE_PIECES.register("crypt", () -> CryptPiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> DRACULA_CASTLE_PIECE = STRUCTURE_PIECES.register("dracula_castle", () -> (StructurePieceType.StructureTemplateType) DraculaCastlePieces.CastlePiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> DRACULA_CAVE_PIECE = STRUCTURE_PIECES.register("dracula_cave", () -> (StructurePieceType.StructureTemplateType) DraculaCastlePieces.CavePiece::new);
 
@@ -196,7 +198,7 @@ public class ModStructures {
         context.register(HUNTER_OUTPOST_BADLANDS, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.HUNTER_OUTPOST_BADLANDS)).spawnOverrides(Map.of(VEnums.HUNTER_CATEGORY.getValue(), new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.PIECE, WeightedList.<MobSpawnSettings.SpawnerData>builder().add(new MobSpawnSettings.SpawnerData(ModEntities.HUNTER.get(), 2, 4), 80).add(new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_HUNTER.get(), 1, 22), 20).build()))).generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), lookup1.getOrThrow(BadlandsHunterOutpostPools.START), 7, ConstantHeight.of(VerticalAnchor.absolute(0)), true, Heightmap.Types.WORLD_SURFACE_WG));
         context.register(VAMPIRE_ALTAR, new VampireAltarStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.VAMPIRE_ALTAR)).terrainAdapation(TerrainAdjustment.BEARD_BOX).build()));
         context.register(MOTHER, new MotherStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.MOTHER)).terrainAdapation(TerrainAdjustment.NONE).build()));
-        context.register(CRYPT, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.CRYPT)).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), lookup1.getOrThrow(CryptStructurePieces.START), Optional.empty(), 9, ConstantHeight.of(VerticalAnchor.absolute(0)), false, Optional.of(Heightmap.Types.WORLD_SURFACE_WG), new JigsawStructure.MaxDistance(80, 80), List.of(), DimensionPadding.ZERO, LiquidSettings.IGNORE_WATERLOGGING));
+        context.register(CRYPT, new CryptStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.CRYPT)).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), lookup1.getOrThrow(CryptStructurePieces.START), 9));
         context.register(VELMORRA_PORTAL, new JigsawStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.VELMORRA_PORTAL)).terrainAdapation(TerrainAdjustment.BURY).build(), lookup1.getOrThrow(VelmorraPortalPools.START),1, ConstantHeight.of(VerticalAnchor.absolute(0)), false));
         context.register(DRACULA_CASTLE, new DraculaCastleStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.DRACULA_CASTLE)).terrainAdapation(TerrainAdjustment.BEARD_BOX).build()));
         context.register(DRACULA_CAVE, new DraculaCaveStructure(new Structure.StructureSettings.Builder(lookup.getOrThrow(ModBiomeTags.HasStructure.DRACULA_CASTLE)).terrainAdapation(TerrainAdjustment.BURY).build()));
