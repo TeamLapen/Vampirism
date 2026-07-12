@@ -25,7 +25,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
-import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
@@ -100,10 +99,10 @@ public class VampirismFeatures {
         registerPlaced(context, VAMPIRE_TREES_PLACED, VAMPIRE_TREES, VegetationPlacements.treePlacement(PlacementUtils.countExtra(15, 0.1f, 1)));
         registerPlaced(context, VAMPIRE_TREES_SPARSE_PLACED, VAMPIRE_TREES, VegetationPlacements.treePlacement(PlacementUtils.countExtra(3, 0.1f, 1)));
 
-        registerPlaced(context, VAMPIRE_FLOWER_PLACED, VAMPIRE_FLOWER, RarityFilter.onAverageOnceEvery(4), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, InSquarePlacement.spread(), BiomeFilter.biome(), BlockPredicateFilter.forPredicate(BlockPredicate.ONLY_IN_AIR_PREDICATE));
-        registerPlaced(context, CURSED_ROOT_PLACED, CURSED_ROOT, Util.copyAndAdd(VegetationPlacements.worldSurfaceSquaredWithCount(2), BlockPredicateFilter.forPredicate(BlockPredicate.ONLY_IN_AIR_PREDICATE)));
-        registerPlaced(context, VAMPIRE_FOREST_GRASS_PLACED, VegetationFeatures.GRASS, Util.copyAndAdd(VegetationPlacements.worldSurfaceSquaredWithCount(12), BlockPredicateFilter.forPredicate(BlockPredicate.ONLY_IN_AIR_PREDICATE)));
-        registerPlaced(context, VAMPIRE_FOREST_TALL_GRASS_PLACED, VegetationFeatures.TALL_GRASS, NoiseThresholdCountPlacement.of(-0.8, 0, 7), RarityFilter.onAverageOnceEvery(24), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome(), BlockPredicateFilter.forPredicate(BlockPredicate.ONLY_IN_AIR_PREDICATE));
+        registerPlaced(context, VAMPIRE_FLOWER_PLACED, VAMPIRE_FLOWER, RarityFilter.onAverageOnceEvery(2), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, InSquarePlacement.spread(), BiomeFilter.biome(), CountPlacement.of(5), RandomOffsetPlacement.ofTriangle(2, 1), PlacementUtils.isEmpty());
+        registerPlaced(context, CURSED_ROOT_PLACED, CURSED_ROOT, Util.copyAndAdd(VegetationPlacements.worldSurfaceSquaredWithCount(3), CountPlacement.of(6), RandomOffsetPlacement.ofTriangle(3, 1), PlacementUtils.isEmpty()));
+        registerPlaced(context, VAMPIRE_FOREST_GRASS_PLACED, VegetationFeatures.GRASS, Util.copyAndAdd(VegetationPlacements.worldSurfaceSquaredWithCount(30), PlacementUtils.isEmpty()));
+        registerPlaced(context, VAMPIRE_FOREST_TALL_GRASS_PLACED, VegetationFeatures.TALL_GRASS, NoiseThresholdCountPlacement.of(-0.8, 1, 9), RarityFilter.onAverageOnceEvery(8), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome(), PlacementUtils.isEmpty());
     }
 
     public static void createBiomeModifier(BootstrapContext<BiomeModifier> context) {
