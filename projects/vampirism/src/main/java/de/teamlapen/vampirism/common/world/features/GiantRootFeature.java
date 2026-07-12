@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,6 +27,7 @@ public class GiantRootFeature extends Feature<GiantRootConfiguration> {
         WorldGenLevel level = context.level();
         RandomSource random = context.random();
         BlockPos origin = context.origin();
+        StructureManager structureManager = level.getLevel().structureManager();
 
         int topRadius = Mth.nextInt(random, config.minTopRadius(), config.maxTopRadius());
         double thickness = (double) (topRadius - config.minTopRadius()) / (config.maxTopRadius() - config.minTopRadius());
@@ -72,6 +74,7 @@ public class GiantRootFeature extends Feature<GiantRootConfiguration> {
                     if (distSq > innerSq && random.nextInt(3) == 0) continue;
 
                     pos.set(blockX, y, blockZ);
+                    if (isInsideStructure(structureManager, pos)) continue;
                     if (canReplace(level, pos)) {
                         this.setBlock(level, pos, config.block());
                         placedAny = true;
@@ -81,6 +84,10 @@ public class GiantRootFeature extends Feature<GiantRootConfiguration> {
         }
 
         return placedAny;
+    }
+
+    private static boolean isInsideStructure(StructureManager structureManager, BlockPos pos) {
+        return structureManager.hasAnyStructureAt(pos) && structureManager.getStructureWithPieceAt(pos, _ -> true).isValid();
     }
 
     private static boolean canReplace(WorldGenLevel level, BlockPos pos) {
