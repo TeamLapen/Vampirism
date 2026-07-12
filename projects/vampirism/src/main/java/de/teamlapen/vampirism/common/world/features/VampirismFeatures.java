@@ -71,6 +71,42 @@ public class VampirismFeatures {
     public static final ResourceKey<BiomeModifier> ADVANCED_HUNTER_SPAWN = createModifierKey("spawn/advanced_hunter_spawns");
     public static final ResourceKey<BiomeModifier> VAMPIRE_DUNGEON_MODIFIER = createModifierKey("feature/vampire_dungeon");
 
+    public static void createConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+        HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
+
+        registerConfigured(context, VAMPIRE_FLOWER, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(ModBlocks.VAMPIRE_ORCHID.get())));
+        registerConfigured(context, CURSED_ROOT, Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(ModBlocks.CURSED_ROOTS.get())));
+        registerConfigured(context, DARK_SPRUCE_TREE, Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(ModBlocks.DARK_SPRUCE_LOG.get()), new StraightTrunkPlacer(11, 2, 2), BlockStateProvider.simple(ModBlocks.DARK_SPRUCE_LEAVES.get().defaultBlockState()), new SpruceFoliagePlacer(UniformInt.of(2, 3), UniformInt.of(0, 2), UniformInt.of(3, 7)), new ThreeLayersFeatureSize(5, 8, 0, 3, 3, OptionalInt.of(5))).decorators(ImmutableList.of(new TallGrassNearTreeDecorator())).ignoreVines().build());
+        registerConfigured(context, CURSED_SPRUCE_TREE, Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(new SimpleStateProvider(ModBlocks.CURSED_SPRUCE_LOG.get().activeBlockState()), new StraightTrunkPlacer(11, 2, 2), BlockStateProvider.simple(ModBlocks.DARK_SPRUCE_LEAVES.get().defaultBlockState()), new SpruceFoliagePlacer(UniformInt.of(2, 3), UniformInt.of(0, 2), UniformInt.of(3, 7)), new ThreeLayersFeatureSize(5, 8, 0, 3, 3, OptionalInt.of(5))).decorators(ImmutableList.of(TrunkCursedVineDecorator.INSTANCE, new TallGrassNearTreeDecorator())).ignoreVines().build());
+        registerConfigured(context, VAMPIRE_DUNGEON, ModFeatures.VAMPIRE_DUNGEON.get(), FeatureConfiguration.NONE);
+        registerConfigured(context, VAMPIRE_TREES, Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(List.of(new WeightedPlacedFeature(placedFeatures.getOrThrow(CURSED_SPRUCE_TREE_PLACED), 0.3f)), placedFeatures.getOrThrow(DARK_SPRUCE_TREE_PLACED)));
+        registerConfigured(context, GIANT_DARK_STONE_ROOT, ModFeatures.GIANT_ROOT.get(), new GiantRootConfiguration(ModBlocks.DARK_STONE.get().defaultBlockState(), 3, 5, 5, 1, 40, 0.6, 0.9, 4.0));
+        registerConfigured(context, ORE_CURSED_DIRT, Feature.ORE, new OreConfiguration(new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD), ModBlocks.CURSED_EARTH.get().defaultBlockState(), 33));
+    }
+
+    public static void createPlacedFeatures(BootstrapContext<PlacedFeature> context) {
+        registerPlaced(context, VAMPIRE_FLOWER_PLACED, VAMPIRE_FLOWER, RarityFilter.onAverageOnceEvery(4), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, InSquarePlacement.spread(), BiomeFilter.biome());
+        registerPlaced(context, CURSED_ROOT_PLACED, CURSED_ROOT, VegetationPlacements.worldSurfaceSquaredWithCount(2));
+        registerPlaced(context, DARK_SPRUCE_TREE_PLACED, DARK_SPRUCE_TREE, PlacementUtils.filteredByBlockSurvival((ModBlocks.DARK_SPRUCE_SAPLING.get())));
+        registerPlaced(context, CURSED_SPRUCE_TREE_PLACED, CURSED_SPRUCE_TREE, PlacementUtils.filteredByBlockSurvival((ModBlocks.CURSED_SPRUCE_SAPLING.get())));
+        registerPlaced(context, VAMPIRE_DUNGEON_PLACED, VAMPIRE_DUNGEON, CountPlacement.of(3), InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.top()), BiomeFilter.biome());
+        registerPlaced(context, VAMPIRE_TREES_PLACED, VAMPIRE_TREES, VegetationPlacements.treePlacement(PlacementUtils.countExtra(15, 0.1f, 1)));
+        registerPlaced(context, VAMPIRE_TREES_SPARSE_PLACED, VAMPIRE_TREES, VegetationPlacements.treePlacement(PlacementUtils.countExtra(3, 0.1f, 1)));
+        registerPlaced(context, GIANT_DARK_STONE_ROOT_PLACED, GIANT_DARK_STONE_ROOT, RarityFilter.onAverageOnceEvery(3), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome());
+        registerPlaced(context, ORE_CURSED_DIRT_PLACED, ORE_CURSED_DIRT, OrePlacementAccessor.invokeCommonOrePlacement(7, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(160))));
+        registerPlaced(context, VAMPIRE_FOREST_GRASS_PLACED, VegetationFeatures.GRASS, VegetationPlacements.worldSurfaceSquaredWithCount(12));
+        registerPlaced(context, VAMPIRE_FOREST_TALL_GRASS_PLACED, VegetationFeatures.TALL_GRASS, NoiseThresholdCountPlacement.of(-0.8, 0, 7), RarityFilter.onAverageOnceEvery(24), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome());
+    }
+
+    public static void createBiomeModifier(BootstrapContext<BiomeModifier> context) {
+        HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
+        HolderGetter<PlacedFeature> placedFeatureLookup = context.lookup(Registries.PLACED_FEATURE);
+
+        context.register(VAMPIRE_SPAWN, BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModBiomeTags.HasSpawn.VAMPIRE), new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 1, 3), 80)));
+        context.register(ADVANCED_VAMPIRE_SPAWN, BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModBiomeTags.HasSpawn.ADVANCED_VAMPIRE), new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_VAMPIRE.get(), 1, 3), 30)));
+        context.register(VAMPIRE_DUNGEON_MODIFIER, new BiomeModifiers.AddFeaturesBiomeModifier(biomeLookup.getOrThrow(ModBiomeTags.HasStructure.VAMPIRE_DUNGEON), HolderSet.direct(placedFeatureLookup.getOrThrow(VampirismFeatures.VAMPIRE_DUNGEON_PLACED)), GenerationStep.Decoration.UNDERGROUND_STRUCTURES));
+    }
+
     private static ResourceKey<ConfiguredFeature<?, ?>> createConfiguredKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, VIdentifier.mod(name));
     }
@@ -83,38 +119,15 @@ public class VampirismFeatures {
         return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, VIdentifier.mod(name));
     }
 
-    public static void createConfiguredFeatures(BootstrapContext<ConfiguredFeature<?, ?>> context) {
-        HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
-        context.register(VAMPIRE_FLOWER, new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(ModBlocks.VAMPIRE_ORCHID.get()))));
-        context.register(CURSED_ROOT, new ConfiguredFeature<>(Feature.SIMPLE_BLOCK, new SimpleBlockConfiguration(BlockStateProvider.simple(ModBlocks.CURSED_ROOTS.get()))));
-        context.register(DARK_SPRUCE_TREE, new ConfiguredFeature<>(Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(ModBlocks.DARK_SPRUCE_LOG.get()), new StraightTrunkPlacer(11, 2, 2), BlockStateProvider.simple(ModBlocks.DARK_SPRUCE_LEAVES.get().defaultBlockState()), new SpruceFoliagePlacer(UniformInt.of(2, 3), UniformInt.of(0, 2), UniformInt.of(3, 7)), new ThreeLayersFeatureSize(5, 8, 0, 3, 3, OptionalInt.of(5))).decorators(ImmutableList.of(new TallGrassNearTreeDecorator())).ignoreVines().build()));
-        context.register(CURSED_SPRUCE_TREE, new ConfiguredFeature<>(Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(new SimpleStateProvider(ModBlocks.CURSED_SPRUCE_LOG.get().activeBlockState()), new StraightTrunkPlacer(11, 2, 2), BlockStateProvider.simple(ModBlocks.DARK_SPRUCE_LEAVES.get().defaultBlockState()), new SpruceFoliagePlacer(UniformInt.of(2, 3), UniformInt.of(0, 2), UniformInt.of(3, 7)), new ThreeLayersFeatureSize(5, 8, 0, 3, 3, OptionalInt.of(5))).decorators(ImmutableList.of(TrunkCursedVineDecorator.INSTANCE, new TallGrassNearTreeDecorator())).ignoreVines().build()));
-        context.register(VAMPIRE_DUNGEON, new ConfiguredFeature<>(ModFeatures.VAMPIRE_DUNGEON.get(), FeatureConfiguration.NONE));
-        context.register(VAMPIRE_TREES, new ConfiguredFeature<>(Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(List.of(new WeightedPlacedFeature(placedFeatures.getOrThrow(CURSED_SPRUCE_TREE_PLACED), 0.3f)), placedFeatures.getOrThrow(DARK_SPRUCE_TREE_PLACED))));
-        context.register(GIANT_DARK_STONE_ROOT, new ConfiguredFeature<>(ModFeatures.GIANT_ROOT.get(), new GiantRootConfiguration(ModBlocks.DARK_STONE.get().defaultBlockState(), 3, 5, 5, 1, 40, 0.6, 0.9, 4.0)));
-        context.register(ORE_CURSED_DIRT, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(new TagMatchTest(BlockTags.BASE_STONE_OVERWORLD), ModBlocks.CURSED_EARTH.get().defaultBlockState(), 33)));
+    public static <FC extends FeatureConfiguration, F extends Feature<FC>> void registerConfigured(BootstrapContext<ConfiguredFeature<?, ?>> context, ResourceKey<ConfiguredFeature<?, ?>> key, F feature, FC configuration) {
+        context.register(key, new ConfiguredFeature<>(feature, configuration));
     }
 
-    public static void createPlacedFeatures(BootstrapContext<PlacedFeature> context) {
-        HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
-        context.register(VAMPIRE_FLOWER_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VAMPIRE_FLOWER), List.of(RarityFilter.onAverageOnceEvery(4), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, InSquarePlacement.spread(), BiomeFilter.biome())));
-        context.register(CURSED_ROOT_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(CURSED_ROOT), VegetationPlacements.worldSurfaceSquaredWithCount(2)));
-        context.register(DARK_SPRUCE_TREE_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(DARK_SPRUCE_TREE), List.of(PlacementUtils.filteredByBlockSurvival((ModBlocks.DARK_SPRUCE_SAPLING.get())))));
-        context.register(CURSED_SPRUCE_TREE_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(CURSED_SPRUCE_TREE), List.of(PlacementUtils.filteredByBlockSurvival((ModBlocks.CURSED_SPRUCE_SAPLING.get())))));
-        context.register(VAMPIRE_DUNGEON_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VAMPIRE_DUNGEON), List.of(CountPlacement.of(3), InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.top()), BiomeFilter.biome())));
-        context.register(VAMPIRE_TREES_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VAMPIRE_TREES), VegetationPlacements.treePlacement(PlacementUtils.countExtra(15, 0.1f, 1))));
-        context.register(VAMPIRE_TREES_SPARSE_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VAMPIRE_TREES), VegetationPlacements.treePlacement(PlacementUtils.countExtra(3, 0.1f, 1))));
-        context.register(GIANT_DARK_STONE_ROOT_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(GIANT_DARK_STONE_ROOT), List.of(RarityFilter.onAverageOnceEvery(3), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome())));
-        context.register(ORE_CURSED_DIRT_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(ORE_CURSED_DIRT), OrePlacementAccessor.invokeCommonOrePlacement(7, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(160)))));
-        context.register(VAMPIRE_FOREST_GRASS_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VegetationFeatures.GRASS), VegetationPlacements.worldSurfaceSquaredWithCount(12)));
-        context.register(VAMPIRE_FOREST_TALL_GRASS_PLACED, new PlacedFeature(configuredFeatures.getOrThrow(VegetationFeatures.TALL_GRASS), List.of(NoiseThresholdCountPlacement.of(-0.8, 0, 7), RarityFilter.onAverageOnceEvery(24), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP, BiomeFilter.biome())));
+    public static void registerPlaced(BootstrapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key, ResourceKey<ConfiguredFeature<?, ?>> configuredFeature, PlacementModifier... modifiers) {
+        registerPlaced(context, key, configuredFeature, List.of(modifiers));
     }
 
-    public static void createBiomeModifier(BootstrapContext<BiomeModifier> context) {
-        HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
-        HolderGetter<PlacedFeature> placedFeatureLookup = context.lookup(Registries.PLACED_FEATURE);
-        context.register(VAMPIRE_SPAWN, BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModBiomeTags.HasSpawn.VAMPIRE), new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 1, 3), 80)));
-        context.register(ADVANCED_VAMPIRE_SPAWN, BiomeModifiers.AddSpawnsBiomeModifier.singleSpawn(biomeLookup.getOrThrow(ModBiomeTags.HasSpawn.ADVANCED_VAMPIRE), new Weighted<>(new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_VAMPIRE.get(), 1, 3), 30)));
-        context.register(VAMPIRE_DUNGEON_MODIFIER, new BiomeModifiers.AddFeaturesBiomeModifier(biomeLookup.getOrThrow(ModBiomeTags.HasStructure.VAMPIRE_DUNGEON), HolderSet.direct(placedFeatureLookup.getOrThrow(VampirismFeatures.VAMPIRE_DUNGEON_PLACED)), GenerationStep.Decoration.UNDERGROUND_STRUCTURES));
+    public static void registerPlaced(BootstrapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key, ResourceKey<ConfiguredFeature<?, ?>> configuredFeature, List<PlacementModifier> modifiers) {
+        context.register(key, new PlacedFeature(context.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(configuredFeature), modifiers));
     }
 }
