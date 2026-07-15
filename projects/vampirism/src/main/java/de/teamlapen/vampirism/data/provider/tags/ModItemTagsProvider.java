@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -17,6 +18,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagCopyingItemTagProvider;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
@@ -112,9 +114,8 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         tag(ItemTags.MEAT).add(ModItems.HUMAN_HEART.get(), ModItems.WEAK_HUMAN_HEART.get());
         tag(ModItemTags.CROSSBOW_REPAIRABLE).addTag(Tags.Items.STRINGS);
         tag(ItemTags.VILLAGER_PLANTABLE_SEEDS).add(ModBlocks.GARLIC.asItem());
-        tag(ItemTags.BOOKSHELF_BOOKS).addTag(ModItemTags.HUNTER_INTEL).add(ModItems.VAMPIRE_BOOK.get())
-//                .addOptional(ResourceLocation.fromNamespaceAndPath("guideapi_vp", "vampirism-guidebook")) FIXME
-        ;
+        tag(ItemTags.BOOKSHELF_BOOKS).addTag(ModItemTags.HUNTER_INTEL).add(ModItems.VAMPIRE_BOOK.get());
+        Optional.of(BuiltInRegistries.ITEM.getValue(REFERENCE.GUIDEBOOK_LOCATION)).ifPresent(book -> tag(ItemTags.BOOKSHELF_BOOKS).addOptional(book));
         tag(ModItemTags.HUNTER_AXE).add(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get());
         tag(ItemTags.DURABILITY_ENCHANTABLE).addTags(ModItemTags.HUNTER_AXE, ModItemTags.HUNTER_CROSSBOWS).add(ModItems.STAKE.get());
         tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
