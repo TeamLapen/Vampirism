@@ -116,6 +116,8 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         tag(ItemTags.VILLAGER_PLANTABLE_SEEDS).add(ModBlocks.GARLIC.asItem());
         tag(ItemTags.BOOKSHELF_BOOKS).addTag(ModItemTags.HUNTER_INTEL).add(ModItems.VAMPIRE_BOOK.get());
         Optional.of(BuiltInRegistries.ITEM.getValue(REFERENCE.GUIDEBOOK_LOCATION)).ifPresent(book -> tag(ItemTags.BOOKSHELF_BOOKS).addOptional(book));
+        tag(ItemTags.STONE_TOOL_MATERIALS).add(ModItems.COBBLED_DARK_STONE.get());
+        tag(ItemTags.STONE_CRAFTING_MATERIALS).add(ModItems.COBBLED_DARK_STONE.get());
         tag(ModItemTags.HUNTER_AXE).add(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get());
         tag(ItemTags.DURABILITY_ENCHANTABLE).addTags(ModItemTags.HUNTER_AXE, ModItemTags.HUNTER_CROSSBOWS).add(ModItems.STAKE.get());
         tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
