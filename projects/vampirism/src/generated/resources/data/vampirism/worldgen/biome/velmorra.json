@@ -1,5 +1,8 @@
 {
   "attributes": {
+    "minecraft:visual/fog_color": "#171717",
+    "minecraft:visual/sky_color": "#131313",
+    "minecraft:visual/water_fog_color": "#670717",
     "vampirism:sun_damage": false
   },
   "carvers": [
@@ -10,8 +13,9 @@
   "creature_spawn_probability": 0.5,
   "downfall": 0.0,
   "effects": {
+    "dry_foliage_color": "#383838",
     "foliage_color": "#101010",
-    "grass_color": "#101010",
+    "grass_color": "#242424",
     "water_color": "#670717"
   },
   "features": [
@@ -42,6 +46,7 @@
       "vampirism:cursed_root",
       "vampirism:vampire_forest_grass",
       "vampirism:vampire_forest_tall_grass",
+      "minecraft:patch_bush",
       "minecraft:patch_grass_forest",
       "vampirism:vampire_trees_sparse"
     ]

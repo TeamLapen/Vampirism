@@ -12,6 +12,7 @@ import net.minecraft.data.worldgen.placement.MiscOverworldPlacements;
 import net.minecraft.data.worldgen.placement.OrePlacements;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.attribute.*;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
@@ -20,122 +21,134 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.common.world.BiomeSpecialEffectsBuilder;
 
 import java.util.List;
 import java.util.Optional;
 
 public class VampirismBiomes {
 
-    public static @NotNull Biome createVampireForest(HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
-        MobSpawnSettings.Builder mobSpawnBuilder = new MobSpawnSettings.Builder();
-        mobSpawnBuilder.creatureGenerationProbability(0.25f);
-        mobSpawnBuilder.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 80, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 1, 3));
-        mobSpawnBuilder.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 27, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE_BARON.get(), 1, 1));
-        mobSpawnBuilder.addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
-        mobSpawnBuilder.addSpawn(MobCategory.CREATURE, 80, new MobSpawnSettings.SpawnerData(ModEntities.DUMMY_CREATURE.get(), 3, 6));
+    private static final BiomeSpecialEffects.Builder VAMPIRE_FOREST_EFFECTS = BiomeSpecialEffectsBuilder
+            .create(0x670717)
+            .foliageColorOverride(0x1f1f1f)
+            .dryFoliageColorOverride(0x383838)
+            .grassColorOverride(0x242424);
 
-        BiomeSpecialEffects.Builder biomeSpecialEffectsBuilder = new BiomeSpecialEffects.Builder().waterColor(0x670717).foliageColorOverride(0x1f1f1f).grassColorOverride(0x242424).dryFoliageColorOverride(0x383838);
+    public static Biome createVampireForest(HolderGetter<PlacedFeature> placedFeatures, HolderGetter<ConfiguredWorldCarver<?>> worldCarvers) {
+        MobSpawnSettings.Builder mobSpawns = new MobSpawnSettings.Builder();
 
-        var builder = prepareVampireForestBuilder(featureGetter, carverGetter, mobSpawnBuilder, biomeSpecialEffectsBuilder)
-                .setAttribute(EnvironmentAttributes.FOG_COLOR, 0x171717)
+        mobSpawns.creatureGenerationProbability(0.25f);
+        mobSpawns.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 80, spawnerData(ModEntities.VAMPIRE.get(), 1, 3));
+        mobSpawns.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 27, spawnerData(ModEntities.VAMPIRE_BARON.get(), 1, 1));
+        mobSpawns.addSpawn(MobCategory.AMBIENT, 60, spawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
+        mobSpawns.addSpawn(MobCategory.CREATURE, 80, spawnerData(ModEntities.DUMMY_CREATURE.get(), 3, 6));
+
+        BiomeGenerationSettings.Builder generationSettings = new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers);
+
+        BiomeDefaultFeatures.addDefaultCarversAndLakes(generationSettings);
+
+        addVampireFlower(generationSettings);
+        addBushPatch(generationSettings);
+        BiomeDefaultFeatures.addBushes(generationSettings);
+        BiomeDefaultFeatures.addForestGrass(generationSettings);
+        addVampireTrees(generationSettings);
+        addWaterSprings(generationSettings);
+
+        addUndergroundVariety(generationSettings);
+        BiomeDefaultFeatures.addDefaultOres(generationSettings);
+        BiomeDefaultFeatures.addDefaultSoftDisks(generationSettings);
+
+        Biome.BiomeBuilder builder = new Biome.BiomeBuilder()
+                .hasPrecipitation(false)
+                .temperature(0.3f)
+                .downfall(0.6f)
+                .specialEffects(VAMPIRE_FOREST_EFFECTS.build())
+                .mobSpawnSettings(mobSpawns.build())
+                .generationSettings(generationSettings.build());
+
+        builder.setAttribute(EnvironmentAttributes.FOG_COLOR, 0x171717)
                 .setAttribute(EnvironmentAttributes.WATER_FOG_COLOR, 0x670717)
                 .setAttribute(EnvironmentAttributes.SKY_COLOR, 0x131313)
                 .setAttribute(ModEnvironmentAttributes.SUN_DAMAGE.get(), false)
                 .setAttribute(EnvironmentAttributes.AMBIENT_SOUNDS, new AmbientSounds(
                         Optional.empty(),
                         Optional.of(new AmbientMoodSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_MOOD, 6000, 8, 2.0D)),
-                        List.of(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D))))
-                ;
+                        List.of(new AmbientAdditionsSettings(SoundEvents.AMBIENT_CRIMSON_FOREST_ADDITIONS, 0.0111D))));
 
         ModSounds.VAMPIRE_FOREST_AMBIENT.asOptional().map(BuiltInRegistries.SOUND_EVENT::wrapAsHolder).ifPresent(soundEvent -> builder.setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, new BackgroundMusic(soundEvent)));
 
         return builder.build();
     }
 
-    public static Biome.@NotNull BiomeBuilder prepareVampireForestBuilder(HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter, MobSpawnSettings.@NotNull Builder spawnBuilder, BiomeSpecialEffects.@NotNull Builder ambienceBuilder) {
-        BiomeGenerationSettings.Builder builder = new BiomeGenerationSettings.Builder(featureGetter, carverGetter);
-        BiomeDefaultFeatures.addDefaultCarversAndLakes(builder);
+    public static Biome createVelmorra(HolderGetter<PlacedFeature> placedFeatures, HolderGetter<ConfiguredWorldCarver<?>> worldCarvers) {
+        MobSpawnSettings.Builder mobSpawns = new MobSpawnSettings.Builder();
 
-        addVampireFlower(builder);
-        addBushPatch(builder);
-        BiomeDefaultFeatures.addBushes(builder);
-        BiomeDefaultFeatures.addForestGrass(builder);
+        mobSpawns.creatureGenerationProbability(0.5f);
+        mobSpawns.addSpawn(MobCategory.AMBIENT, 60, spawnerData(ModEntities.BLINDING_BAT.get(), 2, 4));
+        mobSpawns.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 60, spawnerData(ModEntities.VAMPIRE.get(), 1, 2));
+        mobSpawns.addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 27, spawnerData(ModEntities.ADVANCED_VAMPIRE.get(), 1, 2));
 
-        addUndergroundVariety(builder);
-        BiomeDefaultFeatures.addDefaultOres(builder);
-        BiomeDefaultFeatures.addDefaultSoftDisks(builder);
+        BiomeGenerationSettings.Builder generationSettings = new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers);
 
-        addVampireTrees(builder);
+        BiomeDefaultFeatures.addDefaultCarversAndLakes(generationSettings);
 
-        addWaterSprings(builder);
-        return new Biome.BiomeBuilder().hasPrecipitation(false).temperature(0.3F).downfall(0.6F).specialEffects(ambienceBuilder.build()).mobSpawnSettings(spawnBuilder.build()).generationSettings(builder.build());
-    }
+        addVampireFlower(generationSettings);
+        addBushPatch(generationSettings);
+        BiomeDefaultFeatures.addBushes(generationSettings);
+        BiomeDefaultFeatures.addForestGrass(generationSettings);
+        addVampireTreesSparse(generationSettings);
+        addWaterSprings(generationSettings);
 
-    public static void addVampireFlower(BiomeGenerationSettings.@NotNull Builder builder) {
-        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FLOWER_PLACED);
-    }
+        addUndergroundVariety(generationSettings);
+        BiomeDefaultFeatures.addDefaultSoftDisks(generationSettings);
 
-    public static Biome createVelmorra(HolderGetter<PlacedFeature> placedFeatures, HolderGetter<ConfiguredWorldCarver<?>> configuredCarvers) {
-
-        var mobSettings = new MobSpawnSettings.Builder()
-                .creatureGenerationProbability(0.5f)
-                .addSpawn(MobCategory.AMBIENT, 60, new MobSpawnSettings.SpawnerData(ModEntities.BLINDING_BAT.get(), 2, 4))
-                .addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 60, new MobSpawnSettings.SpawnerData(ModEntities.VAMPIRE.get(), 1, 2))
-                .addSpawn(VEnums.VAMPIRE_CATEGORY.getValue(), 27, new MobSpawnSettings.SpawnerData(ModEntities.ADVANCED_VAMPIRE.get(), 1, 2));
-
-        var specialEffects = new BiomeSpecialEffects.Builder()
-                .waterColor(0x670717)
-                .foliageColorOverride(0x101010)
-                .grassColorOverride(0x101010);
-
-        var generation = new BiomeGenerationSettings.Builder(placedFeatures, configuredCarvers);
-        BiomeDefaultFeatures.addDefaultCarversAndLakes(generation);
-
-        addVampireFlower(generation);
-        addBushPatch(generation);
-        BiomeDefaultFeatures.addForestGrass(generation);
-
-        addUndergroundVariety(generation);
-
-        BiomeDefaultFeatures.addDefaultSoftDisks(generation);
-
-        addVampireTreesSparse(generation);
-
-        addWaterSprings(generation);
-
-        return new Biome.BiomeBuilder()
+        Biome.BiomeBuilder builder = new Biome.BiomeBuilder()
                 .hasPrecipitation(false)
                 .temperature(0.6f)
                 .downfall(0)
-                .setAttribute(ModEnvironmentAttributes.SUN_DAMAGE.get(), false)
-                .specialEffects(specialEffects.build())
-                .mobSpawnSettings(mobSettings.build())
-                .generationSettings(generation.build())
-                .build();
+                .specialEffects(VAMPIRE_FOREST_EFFECTS
+                        .foliageColorOverride(0x101010)
+                        .build())
+                .mobSpawnSettings(mobSpawns.build())
+                .generationSettings(generationSettings.build());
+
+        builder.setAttribute(EnvironmentAttributes.FOG_COLOR, 0x171717)
+                .setAttribute(EnvironmentAttributes.WATER_FOG_COLOR, 0x670717)
+                .setAttribute(EnvironmentAttributes.SKY_COLOR, 0x131313)
+                .setAttribute(ModEnvironmentAttributes.SUN_DAMAGE.get(), false);
+
+        return builder.build();
     }
 
-    public static void addWaterSprings(BiomeGenerationSettings.@NotNull Builder builder) {
+    public static void addVampireFlower(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FLOWER_PLACED);
+    }
+
+    public static void addWaterSprings(BiomeGenerationSettings.Builder builder) {
         builder.addFeature(GenerationStep.Decoration.FLUID_SPRINGS, MiscOverworldPlacements.SPRING_WATER);
     }
 
-    public static void addVampireTrees(BiomeGenerationSettings.@NotNull Builder builder) {
+    public static void addVampireTrees(BiomeGenerationSettings.Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_TREES_PLACED);
     }
 
-    public static void addVampireTreesSparse(BiomeGenerationSettings.@NotNull Builder builder) {
+    public static void addVampireTreesSparse(BiomeGenerationSettings.Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_TREES_SPARSE_PLACED);
     }
 
-    public static void addUndergroundVariety(BiomeGenerationSettings.@NotNull Builder builder) {
+    public static void addUndergroundVariety(BiomeGenerationSettings.Builder builder) {
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, OrePlacements.ORE_GRAVEL);
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.ORE_CURSED_DIRT_PLACED);
         builder.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, VampirismFeatures.GIANT_DARK_STONE_ROOT_PLACED);
     }
 
-    public static void addBushPatch(BiomeGenerationSettings.@NotNull Builder builder) {
+    public static void addBushPatch(BiomeGenerationSettings.Builder builder) {
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.CURSED_ROOT_PLACED);
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FOREST_GRASS_PLACED);
         builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VampirismFeatures.VAMPIRE_FOREST_TALL_GRASS_PLACED);
+    }
+
+    private static MobSpawnSettings.SpawnerData spawnerData(EntityType<?> type, int minCount, int maxCount) {
+            return new MobSpawnSettings.SpawnerData(type, minCount, maxCount);
     }
 }
