@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.common.world.features.treedecorators;
+package de.teamlapen.vampirism.common.world.features.decorators;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.vampirism.common.core.ModBlocks;
@@ -15,6 +15,7 @@ import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorTy
 import org.jetbrains.annotations.NotNull;
 
 public class TrunkCursedVineDecorator extends TreeDecorator {
+
     public static final TrunkCursedVineDecorator INSTANCE = new TrunkCursedVineDecorator();
     public static final MapCodec<TrunkCursedVineDecorator> CODEC = MapCodec.unit(() -> INSTANCE);
 
