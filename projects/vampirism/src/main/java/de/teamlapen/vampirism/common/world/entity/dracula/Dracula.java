@@ -29,6 +29,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.level.Level;
@@ -139,18 +140,17 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
             return;
         }
 
-        if (this.level() instanceof ServerLevel serverLevel) {
-            serverLevel.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.0)).forEach(entity -> {
-                if (entity != this) {
-                    entity.hurtServer(serverLevel, serverLevel.damageSources().mobAttack(this), 10.0f);
-                }
-            });
-        }
     }
 
     @Override
     public boolean isInvulnerable() {
-        return super.isInvulnerable() || this.isTransforming() || this.getState() == DraculaState.MIST;
+        return super.isInvulnerable() || this.isTransforming() || this.getState() == DraculaState.MIST || this.hasActiveInvulnerableAction();
+    }
+
+    /** True while Dracula is channeling a phase 2 flying needle/sword attack, during which he should not be able to be hit. */
+    private boolean hasActiveInvulnerableAction() {
+        Brain<Dracula> brain = this.getBrain();
+        return brain.hasMemoryValue(ModMemoryTypes.FLYING_NEEDLE_ACTIVE.get()) || brain.hasMemoryValue(ModMemoryTypes.FLYING_SWORD_ACTIVE.get());
     }
 
     @Override
@@ -158,7 +158,7 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         if (super.isInvulnerableTo(level, damageSource)) return true;
         if (damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
         DraculaState state = this.getState();
-        if (state.isTransforming || state == DraculaState.MIST) return true;
+        if (state.isTransforming || state == DraculaState.MIST || this.hasActiveInvulnerableAction()) return true;
         if (damageSource.is(DamageTypeTags.IS_PROJECTILE) && (state == DraculaState.PASSIVE || state == DraculaState.DEFAULT)) {
             if (damageSource.getDirectEntity() instanceof AbstractArrow arrow) {
                 arrow.setDeltaMovement(arrow.getDeltaMovement().scale(-1.0));
@@ -269,8 +269,8 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
 
     private static double createAttackDamage(FightStage stage) {
         return switch (stage) {
-            case NONE, PHASE_1 -> 5d;
-            case PHASE_2 -> 10d;
+            case NONE, PHASE_1 -> 10d;
+            case PHASE_2 -> 15d;
             case PHASE_3 -> 20d;
         };
     }
@@ -589,6 +589,7 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         }
         if (total > this.getMaxHealth() * 0.2f) {
             this.setState(DraculaState.MIST);
+            this.getBrain().eraseMemory(MemoryModuleType.ATTACK_TARGET);
             this.mistStartTime = gameTime;
             this.mistCooldownUntil = gameTime + MIST_COOLDOWN;
             this.recentDamage.clear();

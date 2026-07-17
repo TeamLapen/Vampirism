@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.dracula.ai.activities;
 
+import de.teamlapen.vampirism.common.core.ModSensors;
 import de.teamlapen.vampirism.common.world.entity.ai.activities.ActivityBuilder;
 import de.teamlapen.vampirism.common.world.entity.ai.activities.BehaviorDescription;
 import de.teamlapen.vampirism.common.world.entity.ai.system.AiActivityProvider;
@@ -24,7 +25,8 @@ public class DraculaCoreActivityProvider extends AiActivityProvider<Dracula> {
         builder.startPriority(0)
                 .add(new Swim<>(0.8f))
                 .add(look())
-                .add(moveToTarget());
+                .add(moveToTarget())
+                .add(ModSensors.DRACULA_STAGE_SENSOR.get());
     }
 
     private BehaviorDescription<Dracula> look() {

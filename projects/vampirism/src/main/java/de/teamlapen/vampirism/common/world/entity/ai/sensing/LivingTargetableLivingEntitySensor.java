@@ -20,17 +20,17 @@ public class LivingTargetableLivingEntitySensor<T extends LivingEntity> extends 
     @Override
     protected void doTick(ServerLevel level, T entity) {
         Brain<?> brain = entity.getBrain();
-        var entities = brain.getMemory(MemoryModuleType.NEAREST_LIVING_ENTITIES).stream().flatMap(Collection::stream);
+        List<LivingEntity> nearest = brain.getMemory(MemoryModuleType.NEAREST_LIVING_ENTITIES).orElse(List.of());
+        var entities = nearest.stream();
 
         Optional<Set<UUID>> allies = brain.getMemory(ModMemoryTypes.ALLIES.get());
         if (allies.isPresent()) {
             entities = entities.filter(x -> !allies.get().contains(x.getUUID()));
         }
+        List<LivingEntity> afterAllies = entities.toList();
 
         // the list is already sorted by distance
-        entities = entities.filter(x -> isAttackable(level, entity, x));
-
-        List<LivingEntity> list = entities.toList();
+        List<LivingEntity> list = afterAllies.stream().filter(x -> isAttackable(level, entity, x)).toList();
         brain.setMemory(ModMemoryTypes.NEAREST_ATTACKABLE.get(), list);
         brain.setMemory(ModMemoryTypes.NEAREST_VISIBLE_ATTACKABLE.get(), new NearestVisibleLivingEntities(level, entity, list));
     }

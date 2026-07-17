@@ -28,7 +28,7 @@ public class FlyingSwordAttack extends Behavior<Dracula> {
 
     public static void configure(ActionBuilder<Dracula> builder) {
         builder.activeMemory(ModMemoryTypes.FLYING_SWORD_ACTIVE)
-                .cooldown(ModMemoryTypes.FLYING_SWORD_COOLDOWN, () -> 5 * 20)
+                .cooldown(ModMemoryTypes.FLYING_SWORD_COOLDOWN, () -> 30 * 20)
                 .add(EquipSword.create(), EquipSword.sensors(), EquipSword.memories())
                 .add(FlyingSwordAttack.create(), FlyingSwordAttack.sensors(), FlyingSwordAttack.memories())
                 .add(UnEquipSword.create(), UnEquipSword.sensors(), UnEquipSword.memories());
@@ -125,7 +125,7 @@ public class FlyingSwordAttack extends Behavior<Dracula> {
                     entity.swing(InteractionHand.MAIN_HAND);
                     BehaviorUtils.lookAtEntity(entity, target);
 
-                    float damage = 5.0f + (targets.size() * 0.5f);
+                    float damage = 10f + (targets.size() * 0.5f);
                     FlyingSwordEntity sword = new FlyingSwordEntity(level, entity, target, damage);
                     level.addFreshEntity(sword);
                     entity.triggerAnim(IDraculaAnimations.Animation.FLYING_SWORD_1, IDraculaAnimations.Animation.FLYING_SWORD_2);

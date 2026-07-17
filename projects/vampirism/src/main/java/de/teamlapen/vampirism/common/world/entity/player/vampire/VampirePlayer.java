@@ -34,6 +34,7 @@ import de.teamlapen.vampirism.common.util.*;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
+import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
@@ -594,6 +595,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         wasDead = true;
         this.setDBNOTimer(-1);
         dbnoMessage = null;
+        if (this.player instanceof ServerPlayer serverPlayer) {
+            DraculaFightData.getOpt(serverPlayer.level()).ifPresent(s -> s.getEvent().removePlayer(serverPlayer));
+        }
     }
 
     @Override

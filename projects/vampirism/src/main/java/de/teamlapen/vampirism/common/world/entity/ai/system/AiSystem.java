@@ -10,13 +10,13 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Base class for object-oriented AI systems.
@@ -28,7 +28,11 @@ public abstract class AiSystem<E extends LivingEntity> {
 
     public AiSystem() {
         this.activityProviders = this.createActivityProviders();
-        this.brainProvider = Brain.provider(getSensors(), (entity) -> this.activityProviders.stream().flatMap(x -> x.getData(entity)).toList());
+        this.brainProvider = Brain.provider(Stream.concat(getMemoryModules().stream(), extraMemories().stream()).collect(Collectors.toSet()), getSensors(), (entity) -> this.activityProviders.stream().flatMap(x -> x.getData(entity)).toList());
+    }
+
+    protected Set<? extends MemoryModuleType<?>> extraMemories() {
+        return Set.of();
     }
 
     /**

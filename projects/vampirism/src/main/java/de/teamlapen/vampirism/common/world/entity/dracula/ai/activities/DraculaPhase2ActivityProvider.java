@@ -20,8 +20,8 @@ public class DraculaPhase2ActivityProvider extends AiActivityProvider<Dracula> {
     protected void createActivity(ActivityBuilder<Dracula> builder) {
         builder.requires(ModMemoryTypes.DRACULA_PHASE_2, MemoryStatus.VALUE_PRESENT)
                 .add(DraculaIdleActivityProvider.buildLook())
-                .add(KeepDistanceBehavior.build(0.4f, 10))
-                .add(NearbyKnockbackBehavior.build(2, 0.5))
+                .add(KeepDistanceBehavior.build(0.6f, 14))
+                .add(NearbyKnockbackBehavior.build(4, 1.2))
                 .add(SurroundedEscapeBehavior.build(4.0, 60, 2))
         ;
 

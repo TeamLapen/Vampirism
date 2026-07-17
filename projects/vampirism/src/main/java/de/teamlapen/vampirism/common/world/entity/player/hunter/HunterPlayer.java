@@ -110,7 +110,11 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     @Override
     public void onLevelChanged(int newLevel) {
         ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.HUNTER_LEVEL_CRITERIA, newLevel);
-        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_DAMAGE, "Hunter", newLevel, getMaxLevel(), ModConfig.balance().hpStrengthMaxMod.get(), ModConfig.balance().hpStrengthType.get(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
+        applyAttributes();
+    }
+
+    private void applyAttributes() {
+        LevelAttributeModifier.applyModifier(player, Attributes.ATTACK_DAMAGE, "Hunter", getLevel(), getMaxLevel(), ModConfig.balance().hpStrengthMaxMod.get(), ModConfig.balance().hpStrengthType.get(), AttributeModifier.Operation.ADD_MULTIPLIED_BASE, false);
     }
 
     @Override

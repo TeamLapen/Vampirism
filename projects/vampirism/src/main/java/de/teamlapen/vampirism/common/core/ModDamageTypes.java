@@ -22,6 +22,8 @@ public class ModDamageTypes {
     public static final ResourceKey<DamageType> BLEEDING = createKey("bleeding");
     public static final ResourceKey<DamageType> LEAVE_FACTION = createKey("leave_faction");
     public static final ResourceKey<DamageType> RITUAL_KNIFE = createKey("ritual_knife");
+    public static final ResourceKey<DamageType> FLYING_NEEDLE = createKey("flying_needle");
+    public static final ResourceKey<DamageType> FLYING_SWORD = createKey("flying_sword");
 
     private static ResourceKey<DamageType> createKey(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, VIdentifier.mod(name));
@@ -39,6 +41,8 @@ public class ModDamageTypes {
         context.register(BLEEDING, new DamageType(mod("bleeding"), 0.2F));
         context.register(LEAVE_FACTION, new DamageType(mod("leave_faction"), 0.0F));
         context.register(RITUAL_KNIFE, new DamageType(mod("ritual_knife"), DamageScaling.NEVER, 0.0F));
+        context.register(FLYING_NEEDLE, new DamageType(mod("flying_needle"), DamageScaling.NEVER, 0.0F));
+        context.register(FLYING_SWORD, new DamageType(mod("flying_sword"), DamageScaling.NEVER, 0.0F));
     }
     
     private static String mod(String id) {

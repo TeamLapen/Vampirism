@@ -23,7 +23,7 @@ public class FlyingNeedleAttack extends Behavior<Dracula> {
 
     public static void configure(ActionBuilder<Dracula> builder) {
         builder.activeMemory(ModMemoryTypes.FLYING_NEEDLE_ACTIVE)
-                .cooldown(ModMemoryTypes.FLYING_NEEDLE_COOLDOWN, () -> 20 * 20)
+                .cooldown(ModMemoryTypes.FLYING_NEEDLE_COOLDOWN, () -> 30 * 20)
                 .add(FlyingNeedleAttack.create(), FlyingNeedleAttack.sensors(), FlyingNeedleAttack.memories());
     }
     private enum Phase {
@@ -80,7 +80,7 @@ public class FlyingNeedleAttack extends Behavior<Dracula> {
 
         if (this.phase == Phase.CHARGING) {
             if (this.ticks % 10 == 0 && needles.size() < MAX_NEEDLES) {
-                FlyingNeedleEntity needle = new FlyingNeedleEntity(level, entity, 4.0f, this.needles.size(), MAX_NEEDLES);
+                FlyingNeedleEntity needle = new FlyingNeedleEntity(level, entity, 50.0f, this.needles.size(), MAX_NEEDLES);
                 level.addFreshEntity(needle);
                 this.needles.add(needle);
                 entity.getBrain().setMemory(ModMemoryTypes.FLYING_NEEDLES.get(), this.needles.stream().map(Entity::getUUID).toList());

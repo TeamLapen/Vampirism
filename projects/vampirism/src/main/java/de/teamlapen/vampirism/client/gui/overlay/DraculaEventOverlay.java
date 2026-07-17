@@ -15,9 +15,9 @@ import org.joml.Matrix3x2fStack;
 public class DraculaEventOverlay extends BaseOverlay {
 
     private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/overlay/dracula_event.png");
-    private static final Identifier TEXTURE_STAGE_1 = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay_1.png");
-    private static final Identifier TEXTURE_STAGE_2 = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay_2.png");
-    private static final Identifier TEXTURE_STAGE_3 = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay_3.png");
+    private static final Identifier TEXTURE_STAGE_1 = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay.png");
+    private static final Identifier TEXTURE_STAGE_2 = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay.png");
+    private static final Identifier TEXTURE_STAGE_3 = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay.png");
     private static final Identifier TEXTURE_LOCKED = VIdentifier.mod("textures/gui/overlay/dracula_event_overlay_locked.png");
 
     @Nullable

@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.common.world.entity.ai.activities.ActivityBuilder;
 import de.teamlapen.vampirism.common.world.entity.ai.activities.BehaviorDescription;
 import de.teamlapen.vampirism.common.world.entity.ai.system.AiActivityProvider;
 import de.teamlapen.vampirism.common.world.entity.dracula.Dracula;
+import de.teamlapen.vampirism.common.world.entity.dracula.ai.DraculaState;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.AnimatedMeleeAttackBehavior;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.BloodProjectilesBehavior;
 import de.teamlapen.vampirism.common.world.entity.dracula.ai.behaviors.BloodSiphonBehavior;
@@ -53,12 +54,17 @@ public class DraculaPhase3ActivityProvider extends AiActivityProvider<Dracula> {
     }
 
     private static Optional<? extends LivingEntity> findNearestValidAttackTarget(ServerLevel level, Dracula dracula) {
-        Optional<LivingEntity> optional = BehaviorUtils.getLivingEntityFromUUIDMemory(dracula, MemoryModuleType.ANGRY_AT);
-        if (optional.isPresent() && Sensor.isEntityAttackableIgnoringLineOfSight(level, dracula, optional.get())) {
-            return optional;
-        } else {
-            return dracula.getBrain().getMemory(ModMemoryTypes.NEAREST_VISIBLE_ATTACKABLE.get()).flatMap(x -> x.findClosest(y -> true));
+        if (dracula.getState() == DraculaState.MIST) {
+            return Optional.empty();
         }
+        Optional<LivingEntity> optional = BehaviorUtils.getLivingEntityFromUUIDMemory(dracula, MemoryModuleType.ANGRY_AT);
+        Optional<? extends LivingEntity> result;
+        if (optional.isPresent() && Sensor.isEntityAttackableIgnoringLineOfSight(level, dracula, optional.get())) {
+            result = optional;
+        } else {
+            result = dracula.getBrain().getMemory(ModMemoryTypes.NEAREST_VISIBLE_ATTACKABLE.get()).flatMap(x -> x.findClosest(y -> true));
+        }
+        return result;
     }
 
     //<editor-fold desc="Phase Behaviors">

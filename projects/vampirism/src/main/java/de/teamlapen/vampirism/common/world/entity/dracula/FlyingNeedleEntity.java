@@ -129,7 +129,7 @@ public class FlyingNeedleEntity extends Projectile {
         if (entity instanceof LivingEntity living && !this.level().isClientSide()) {
             if (living != this.getOwner()) {
                 if (this.level() instanceof ServerLevel serverLevel) {
-                    DamageHandler.hurtVanilla(serverLevel, living, damageSources -> damageSources.mobAttack((LivingEntity) this.getOwner()), damage);
+                    DamageHandler.hurtModded(serverLevel, living, damageSources -> damageSources.flyingNeedle((LivingEntity) this.getOwner()), damage);
                     this.discard();
                 }
             }

@@ -24,7 +24,7 @@ public class ModBiomeTagsProvider extends BiomeTagsProvider {
     protected void addTags(HolderLookup.@NotNull Provider holderProvider) {
         tag(ModBiomeTags.HasStructure.HUNTER_TENT).addTags(BiomeTags.IS_BADLANDS, BiomeTags.IS_FOREST, BiomeTags.IS_TAIGA).add(Biomes.PLAINS, Biomes.DESERT, Biomes.MEADOW, Biomes.SNOWY_PLAINS, Biomes.SPARSE_JUNGLE).remove(Biomes.PALE_GARDEN);
         tag(ModBiomeTags.HasFaction.IS_FACTION_BIOME).addTags(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME, ModBiomeTags.HasFaction.IS_HUNTER_BIOME);
-        tag(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST);
+        tag(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME).add(ModBiomes.VAMPIRE_FOREST, ModBiomes.VELMORRA);
         tag(ModBiomeTags.HasFaction.IS_HUNTER_BIOME);
         tag(ModBiomeTags.HasStructure.VAMPIRE_ALTAR).addTags(Tags.Biomes.IS_WASTELAND, Tags.Biomes.IS_PLATEAU, Tags.Biomes.IS_RARE, Tags.Biomes.IS_SPOOKY, Tags.Biomes.IS_SWAMP, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME).remove(ModBiomes.VELMORRA);
         tag(ModBiomeTags.HasStructure.HUNTER_OUTPOST_PLAINS).addTags(Tags.Biomes.IS_PLAINS, BiomeTags.IS_FOREST).remove(Biomes.PALE_GARDEN);

@@ -24,8 +24,10 @@ public class ModDamageTypeTagsProvider extends KeyTagProvider<DamageType> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
-        this.tag(DamageTypeTags.BYPASSES_ARMOR).add(ModDamageTypes.SUN_DAMAGE, ModDamageTypes.NO_BLOOD, ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.DBNO, ModDamageTypes.MOTHER, ModDamageTypes.STAKE, ModDamageTypes.RITUAL_KNIFE);
-        this.tag(DamageTypeTags.BYPASSES_EFFECTS).add(ModDamageTypes.DBNO, ModDamageTypes.STAKE, ModDamageTypes.RITUAL_KNIFE);
+        this.tag(DamageTypeTags.BYPASSES_ARMOR).add(ModDamageTypes.SUN_DAMAGE, ModDamageTypes.NO_BLOOD, ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.DBNO, ModDamageTypes.MOTHER, ModDamageTypes.STAKE, ModDamageTypes.RITUAL_KNIFE, ModDamageTypes.FLYING_NEEDLE);
+        this.tag(DamageTypeTags.BYPASSES_EFFECTS).add(ModDamageTypes.DBNO, ModDamageTypes.STAKE, ModDamageTypes.RITUAL_KNIFE, ModDamageTypes.FLYING_SWORD);
+        this.tag(DamageTypeTags.BYPASSES_SHIELD).add(ModDamageTypes.FLYING_NEEDLE);
+        this.tag(DamageTypeTags.BYPASSES_ENCHANTMENTS).add(ModDamageTypes.FLYING_SWORD);
         this.tag(DamageTypeTags.IS_FIRE).add(ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.VAMPIRE_IN_FIRE);
         this.tag(DamageTypeTags.WITCH_RESISTANT_TO).add(ModDamageTypes.SUN_DAMAGE, ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.VAMPIRE_IN_FIRE, ModDamageTypes.NO_BLOOD, ModDamageTypes.HOLY_WATER);
         this.tag(ModDamageTypeTags.ENTITY_PHYSICAL).add(DamageTypes.PLAYER_ATTACK, DamageTypes.MOB_ATTACK, DamageTypes.MOB_ATTACK_NO_AGGRO, DamageTypes.MOB_PROJECTILE, DamageTypes.ARROW, DamageTypes.STING, DamageTypes.THORNS, ModDamageTypes.RITUAL_KNIFE);

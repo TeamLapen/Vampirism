@@ -34,6 +34,11 @@ public class DraculaAiSystem extends AiSystem<Dracula> {
     }
 
     @Override
+    protected Set<? extends MemoryModuleType<?>> extraMemories() {
+        return Set.of(ModMemoryTypes.AI_SYSTEM.get(), MemoryModuleType.ANGRY_AT);
+    }
+
+    @Override
     public void tick(ServerLevel level, Dracula entity) {
         this.updateMemories(entity);
         this.updateActivity(level, entity);
@@ -45,28 +50,10 @@ public class DraculaAiSystem extends AiSystem<Dracula> {
         if (!brain.hasMemoryValue(ModMemoryTypes.AI_SYSTEM.get())) {
             brain.setMemory(ModMemoryTypes.AI_SYSTEM.get(), this);
         }
-        Set<MemoryModuleType<Unit>> stageMemories = Stream.of(ModMemoryTypes.DRACULA_PHASE_1.get(), ModMemoryTypes.DRACULA_PHASE_2.get(), ModMemoryTypes.DRACULA_PHASE_3.get()).collect(Collectors.toSet());
-        MemoryModuleType<Unit> unitMemoryModuleType = memoryForStage(entity.getState());
-
-        if (unitMemoryModuleType != null) {
-            stageMemories.remove(unitMemoryModuleType);
-            brain.setMemory(unitMemoryModuleType, Unit.INSTANCE);
-        }
-        stageMemories.forEach(brain::eraseMemory);
     }
 
     private void updateActivity(ServerLevel level, Dracula entity) {
         Brain<Dracula> brain = entity.getBrain();
         brain.setActiveActivityToFirstValid(StreamUtil.append(this.activityProviders.stream().filter(AiActivityProvider::isNonCore).flatMap(AiActivityProvider::allActivities), Activity.IDLE).toList());
-    }
-
-    @Nullable
-    private static MemoryModuleType<Unit> memoryForStage(DraculaState state) {
-        return switch (state) {
-            case PASSIVE -> ModMemoryTypes.DRACULA_PHASE_1.get();
-            case RANGED -> ModMemoryTypes.DRACULA_PHASE_2.get();
-            case RAGED, MIST -> ModMemoryTypes.DRACULA_PHASE_3.get();
-            default -> null;
-        };
     }
 }

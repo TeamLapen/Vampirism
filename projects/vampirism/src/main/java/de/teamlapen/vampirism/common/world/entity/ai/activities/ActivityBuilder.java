@@ -115,6 +115,11 @@ public class ActivityBuilder<E extends LivingEntity> {
         return this;
     }
 
+    public ActivityBuilder<E> add(SensorType<? extends Sensor<? super E>> sensorType) {
+        this.sensors.add(sensorType);
+        return this;
+    }
+
     private ImmutableList<? extends Pair<Integer, ? extends BehaviorControl<? super E>>> buildBehaviors() {
         ImmutableList.Builder<Pair<Integer, ? extends BehaviorControl<? super E>>> builder = ImmutableList.builder();
 

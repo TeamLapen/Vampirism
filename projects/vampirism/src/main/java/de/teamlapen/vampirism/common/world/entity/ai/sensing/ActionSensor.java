@@ -56,7 +56,9 @@ public class ActionSensor<T extends LivingEntity> extends Sensor<T> {
         } else if (!brain.hasMemoryValue(ModMemoryTypes.ACTION_COOLDOWN.get())) {
             var activity = brain.getActiveNonCoreActivity().orElse(null);
             if (activity == null || activity == Activity.IDLE) return;
-            ArrayList<Action<T>> actions = new ArrayList<>(actionsByActivity.get(activity));
+            var actionsSource = actionsByActivity.get(activity);
+            if (actionsSource == null) return;
+            ArrayList<Action<T>> actions = new ArrayList<>(actionsSource);
             Collections.shuffle(actions);
 
             for (Action<T> action : actions) {
