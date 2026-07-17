@@ -49,7 +49,6 @@ public class Integrations {
                     List<ModFileScanData.AnnotationData> list = scanProvider.apply((FMLModContainer) container)
                             .stream()
                             .flatMap(scan -> scan.getAnnotatedBy(Integration.class, ElementType.TYPE))
-                            .filter(data -> !requiredModIds(data).isEmpty())
                             .filter(data -> requiredModIds(data).stream().allMatch(modId -> ModList.get().isLoaded(modId)))
                             .filter(x -> AutomaticEventSubscriber.getSides(x.annotationData().get("dist")).contains(FMLLoader.getCurrent().getDist())).toList();
                     if (!list.isEmpty()) {
@@ -59,8 +58,10 @@ public class Integrations {
                 }).toList();
     }
 
+    /// Although the {@link Integration#modIds()} field is of type {@code String[]} is is read by the mod file scanner as {@code ArrayList<String>}
+    @SuppressWarnings("unchecked")
     private static List<String> requiredModIds(ModFileScanData.AnnotationData data) {
-        return data.annotationData().get("modIds") instanceof List<?> modIds ? modIds.stream().map(String::valueOf).toList() : List.of();
+        return data.annotationData().get("modIds") instanceof List<?> list ? (List<String>) list : List.of();
     }
 
     private static Function<FMLModContainer, Optional<ModFileScanData>> scanDataProvider() {
