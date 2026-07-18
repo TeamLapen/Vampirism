@@ -54,7 +54,6 @@ import java.util.stream.Gatherers;
 public class DraculaFightData implements ValueIOSerializable {
 
     public final static Identifier DRACULA_SPAWN_MARKER = VIdentifier.mod("dracula_spawn");
-    public final static Identifier RETURN_PORTAL_MARKER = VIdentifier.mod("return_portal");
     /** Time between Dracula's death and the destruction of the dimension */
     public static final int COLLAPSE_DURATION = 10 * 60 * 20;
     private static final Warning[] COLLAPSE_WARNINGS = {
@@ -291,22 +290,9 @@ public class DraculaFightData implements ValueIOSerializable {
         }
     }
 
-    /**
-     * Builds and activates the victory exit portal at the {@link #RETURN_PORTAL_MARKER} structure marker inside the
-     * castle (the marker rotation encodes the portal facing), falling back to the dimension spawn point.
-     */
     public void activatePortal() {
-        List<Marker> markers = findMarkers(this.level, RETURN_PORTAL_MARKER);
-        BlockPos anchor;
-        Direction facing;
-        if (markers.isEmpty()) {
-            anchor = VelmorraDimension.SPAWN_POINT;
-            facing = Direction.NORTH;
-        } else {
-            Marker marker = markers.get(0);
-            anchor = marker.blockPosition();
-            facing = Direction.fromYRot(marker.getYRot());
-        }
+        BlockPos anchor = VelmorraDimension.SPAWN_POINT;
+        Direction facing = Direction.NORTH;
         BlockPos frameStart = anchor.below().relative(facing.getCounterClockWise(), 2);
         VelmorraPortalShape.buildFrame(this.level, frameStart, facing);
         VelmorraPortalShape.findEmptyPortalShape(this.level, anchor).ifPresentOrElse(shape -> {
