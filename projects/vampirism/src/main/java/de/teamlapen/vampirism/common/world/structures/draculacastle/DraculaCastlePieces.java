@@ -59,19 +59,6 @@ public class DraculaCastlePieces {
         }
     }
 
-    public static void addCavePieces(StructureTemplateManager structureTemplateManager, BlockPos startPos, StructurePieceAccessor pieces) {
-
-        var pos = startPos.offset(-structureWidth / 2 + 5, 0, -structureDepth / 2 + 5);
-
-        for (int x = 0; x < 6; x++) {
-            for (int z = 0; z < 6; z++) {
-                for (int y = -3; y < 0; y++) {
-                    pieces.addPiece(new CavePiece(structureTemplateManager, pos, x, y, z));
-                }
-            }
-        }
-    }
-
     public static class CastlePiece extends Piece {
 
         public CastlePiece(StructureTemplateManager structureTemplateManager, BlockPos position, int xIndex, int yIndex, int zIndex) {
@@ -80,17 +67,6 @@ public class DraculaCastlePieces {
 
         public CastlePiece(StructureTemplateManager structureTemplateManager, CompoundTag tag) {
             super(ModStructures.DRACULA_CASTLE_PIECE.get(), structureTemplateManager, tag);
-        }
-    }
-
-    public static class CavePiece extends Piece {
-
-        public CavePiece(StructureTemplateManager structureTemplateManager, BlockPos position, int xIndex, int yIndex, int zIndex) {
-            super(ModStructures.DRACULA_CAVE_PIECE.get(), structureTemplateManager, VIdentifier.mod("dracula_cave/" + xIndex + "_" + zIndex + "_" + yIndex), position.offset(zIndex * 48, yIndex * 48 + (yIndex == -3 ? 32 : 0), xIndex * 48));
-        }
-
-        public CavePiece(StructureTemplateManager structureTemplateManager, CompoundTag tag) {
-            super(ModStructures.DRACULA_CAVE_PIECE.get(), structureTemplateManager, tag);
         }
     }
 
