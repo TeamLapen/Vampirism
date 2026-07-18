@@ -36,6 +36,8 @@
   "lord_title.vampirism.hunter.3.short": "Maj",
   "lord_title.vampirism.hunter.4.short": "Col",
   "lord_title.vampirism.hunter.5.short": "Bgr",
+  "dracula_title.vampirism": "Dracula",
+  "dracula_title.vampirism.short": "Dra",
 
   "itemGroup.vampirism": "Vampirism",
   "itemGroup.vampirism.vampire": "Vampirism: Vampire",
@@ -271,6 +273,7 @@
   "block.vampirism.velmorra_portal": "Velmorra Portal",
   "block.vampirism.velmorra_portal_arch": "Velmorra Portal Arch",
   "block.vampirism.velmorra_altar": "Velmorra Altar",
+  "block.vampirism.chalice": "Chalice",
 
   "item.vampirism.iron_heart_seeker": "Iron Heartseeker",
   "item.vampirism.diamond_heart_seeker": "Diamond Heartseeker",
@@ -458,6 +461,7 @@
   "entity.vampirism.dark_blood_projectile": "Dark Blood Projectile",
   "entity.vampirism.particle_cloud": "Particle Cloud",
   "entity.vampirism.throwable_item": "Thrown Item",
+  "entity.vampirism.dracula": "Dracula",
 
   "entity.minecraft.villager.vampirism.hunter_expert": "Hunter Expert",
   "entity.minecraft.villager.vampirism.vampire_expert": "Vampire Expert",
@@ -540,6 +544,8 @@
   "action.vampirism.lord_attack_speed": "Lord Attack Speed",
   "action.vampirism.lord_attack_speed.desc": "Boost the attack speed of nearby faction members",
   "action.vampirism.jump_boost": "Jump Boost",
+  "action.vampirism.blinding": "Blinding",
+  "action.vampirism.blinding.desc": "Blind nearby entities",
 
   "skill.vampirism.vampire": "Becoming a Vampire",
   "skill.vampirism.night_vision": "Night Vision",
@@ -644,6 +650,10 @@
   "skill.vampirism.hunter_minion_collect.desc": "Send your minions out to collect resources",
   "skill.vampirism.minion_recovery": "Minion Recovery",
   "skill.vampirism.minion_recovery.desc": "Speeds up the time your minions need to recover",
+  "skill.vampirism.vampire_dracula": "Becoming Dracula",
+  "skill.vampirism.vampire_dracula.desc": "You are now Dracula, with wings",
+  "skill.vampirism.wander_the_sun": "Wander the Sun",
+  "skill.vampirism.wander_the_sun.desc": "You no longer receive damage from the sun",
 
   "advancement.vampirism": "Vampirism",
   "advancement.vampirism.desc": "Getting started with Vampirism",
@@ -691,6 +701,8 @@
   "advancement.vampirism.max_lord_vampire.desc": "Reach the highest vampire lord level",
   "advancement.vampirism.vampire_kill_mother": "Ancient Dominion",
   "advancement.vampirism.vampire_kill_mother.desc": "You've vanquished the local source of power, a questionable accomplishment",
+  "advancement.vampirism.defeat_dracula": "The King is Dead",
+  "advancement.vampirism.defeat_dracula.desc": "Defeat Dracula in his crumbling realm of Velmorra",
   "advancement.vampirism.become_hunter": "Start Hunting",
   "advancement.vampirism.become_hunter.desc": "Become a Vampire Hunter",
   "advancement.vampirism.stake": "Through the Heart",
@@ -1006,6 +1018,7 @@
   "gui.vampirism.actions": "Actions",
   "gui.vampirism.skills.level": "Level Skills",
   "gui.vampirism.skills.lord": "Lord Skills",
+  "gui.vampirism.skills.dracula": "Dracula Skills",
   "gui.vampirism.skill_required": "Required Skill: %s",
   "gui.vampirism.revertback.head": "Revert back to normal human",
   "gui.vampirism.revertback.desc": "You will lose all your levels and die",
@@ -1081,6 +1094,9 @@
   "gui.vampirism.guide.task.prerequisites": "Prerequisites",
   "gui.vampirism.guide.task.prerequisites.none": "None",
 
+  "gui.vampirism.skills.skill_points.dracula": "%d dracula marks",
+  "gui.vampirism.skills.skill_points.dracula.single": "%d dracula mark",
+
   "message.vampirism.restriction.faction.vampire": "How do those vampires even use this thing...",
   "message.vampirism.restriction.faction.hunter": "How do those hunters even use this thing...",
   "message.vampirism.restriction.vampire_clothing": "Something is resonating inside this... I'm not wearing it",
@@ -1137,6 +1153,24 @@
   "message.vampirism.village_raid.attacked.hunter": "%s attacked a nearby hunter village",
   "message.vampirism.village_raid.vampire": "Vampire Raid",
   "message.vampirism.village_raid.hunter": "Hunter Raid",
+
+  "subtitles.vampirism.entity.dracula.ambient": "Dracula murmurs",
+  "subtitles.vampirism.entity.dracula.hurt": "Dracula hurts",
+  "subtitles.vampirism.entity.dracula.death": "Dracula dies",
+  "subtitles.vampirism.entity.dracula.teleport": "Dracula teleports",
+  "subtitles.vampirism.entity.dracula.transform": "Dracula transforms",
+  "subtitles.vampirism.entity.dracula.siphon": "Dracula siphons blood",
+
+  "message.vampirism.velmorra.crumblin": "Without its master, the realm of Velmorra rejects its own existence",
+  "message.vampirism.velmorra.crumblin2": "Velmorra consumes itself. Leave now, or be lost to the void",
+  "message.vampirism.velmorra.collapse.5min": "The void gnaws at the edges of Velmorra. Five minutes remain",
+  "message.vampirism.velmorra.collapse.2min": "The mists thicken as Velmorra fades. Two minutes remain",
+  "message.vampirism.velmorra.collapse.30s": "The last light of Velmorra is dying. Thirty seconds!",
+  "message.vampirism.velmorra.collapse.countdown": "Velmorra collapses in %s...",
+  "message.vampirism.velmorra.portal_opened": "A portal has opened within the castle. Your way home awaits",
+  "message.vampirism.dracula.defeated": "A hollow silence falls over the mansion... Dracula is no more",
+  "message.vampirism.dracula.summoned": "The scent of blood awakens the master of the mansion",
+  "message.vampirism.dracula.transformation": "Dracula sheds his form... something darker takes its place",
 
   "dialogue.vampirism.hunter.occupied": "I'm busy right now",
   "dialogue.vampirism.hunter.cured_sanguinare": "You have come to the right person. I have cured you of sanguinare",
@@ -1275,6 +1309,10 @@
   "death.attack.vampirism.bleeding": "%1$s bled out",
   "death.attack.vampirism.bleeding.player": "%1$s bled out while fighting %2$s",
   "death.attack.vampirism.leave_faction": "%1$s renounced their nature and perished",
+  "death.attack.vampirism.flying_needles": "%1$s was pierces clean through",
+  "death.attack.vampirism.flying_needles.player": "%1$s was pierces clean through, while battling %2$s",
+  "death.attack.vampirism.flying_swords": "%1$s was sliced clean through",
+  "death.attack.vampirism.flying_swords.player": "%1$s was sliced clean through, while battling %2$s",
 
   "command.vampirism.failed_to_execute": "Failed to execute command. Internal error.",
   "command.vampirism.failed_to_execute.players": "Failed to execute command for %s. Internal error.",
@@ -1332,10 +1370,16 @@
   "command.vampirism.base.config.bat_dim.not_blacklisted": "Dimension %s is no longer blacklisted",
   "command.vampirism.argument.selector.faction": "Faction selector",
   "command.vampirism.argument.selector.level": "Level selector",
+  "command.vampirism.base.dracula.success": "Successfully changed %s to Dracula level",
 
   "notification.vampirism.guideapi_available": "To get a GuideBook for Vampirism install GuideAPI-VP",
   "notification.vampirism.guideapi_available.download": "Click here to go to the mod page",
   "notification.vampirism.warning_optifine_blood_vision": "You appear to be running OptiFine with shaders. Blood vision won't work with that. Therefore a substitute glowing effect is used. Not all shaders actually render the glowing effect though.",
+
+  "wings.vampirism.default": "Default",
+  "wings.vampirism.dev": "Dev",
+  "wings.vampirism.contributor": "Contributor",
+  "wings.vampirism.special": "Special",
 
   "vampirism.configuration.title": "Vampirism Configuration",
 
