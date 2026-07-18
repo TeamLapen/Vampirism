@@ -7,5 +7,5 @@
   "gui.factionapi.skills.skills_reset": "Uw vaardigheden zijn hersteld",
   "gui.factionapi.minion.active_task": "Huidige taak",
   "gui.factionapi.minion_stats.level": "Niveau",
-  "command.factionapi.failed_to_execute": "Kan de opdracht niet uitvoeren. Interne fout."
+  "gui.factionapi.level": "Niveau"
 }

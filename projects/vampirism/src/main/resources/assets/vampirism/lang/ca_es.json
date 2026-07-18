@@ -3,6 +3,7 @@
   "gui.vampirism.jei.task.reward": "Recompensa de missió",
   "gui.vampirism.jei.task.reward_obtain": "Es pot obtenir com a recompensa de missió de %s",
   "gui.vampirism.jei.task.prerequisites": "Prerequisit",
+  "gui.vampirism.guide.task.prerequisites": "Prerequisit",
   "message.vampirism.action.bat.cant_fly_umbrella": "No pot volar amb un paraigua equipat",
   "message.vampirism.action.bat.cant_fly_dimension": "No pots mantenir-te com a ratpenat in aquesta dimensió",
   "message.vampirism.coffin.day_only": "Només pot dormir de dia",
