@@ -6,6 +6,8 @@ import de.teamlapen.faction.client.gui.screens.taskboard.SeparatorWidget;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.common.factions.minions.stats.MinionStat;
+import de.teamlapen.faction.common.network.packets.server.ServerboundResetMinionStatPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundUpgradeMinionStatPacket;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import net.minecraft.client.gui.components.*;
@@ -34,7 +36,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
     protected final Q entity;
     @Nullable
-    protected final Screen backScreen;
+    protected final ILastScreenProvider backScreen;
     private Button reset;
     protected T minionData;
 
@@ -47,7 +49,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     private StringWidget skillPointWidget;
     private final List<StatRow> statRows = new ArrayList<>();
 
-    protected MinionStatsScreen(Q entity, @Nullable Screen backScreen) {
+    protected MinionStatsScreen(Q entity, @Nullable ILastScreenProvider backScreen) {
         super(Component.translatable("gui.factionapi.minion.stats"));
         this.entity = entity;
         this.minionData = entity.getMinionData().orElseThrow();
@@ -65,18 +67,18 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected abstract int getMaxLevel();
 
     protected void updateStats() {
+        this.statRows.forEach(row -> row.update(this.entity, this.minionData));
         this.levelWidget.setMessage(Component.literal((getLevel() + 1) + "/" + (getMaxLevel() + 1)));
         this.skillPointWidget.setMessage(Component.literal("(" + getRemainingStatPoints() + ")"));
-        this.statRows.forEach(StatRow::changed);
     }
 
     private void updateStat(StatRow row) {
-        FactionsMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), statRows.indexOf(row)));
+        FactionsMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), row.id()));
         updateStats();
     }
 
-    protected void addStatRow(StatRow statRow) {
-        this.statRows.add(statRow);
+    protected void addStatRow(MinionStat<T> stat) {
+        this.statRows.add(new StatRow(this.entity, this.minionData, stat));
     }
 
     @Override
@@ -89,7 +91,7 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     public void tick() {
         updateStats();
 
-        this.reset.active = entity.getMinionData().map(MinionData::hasUsedSkillPoints).orElse(false) && getOblivionPotion().isPresent();
+        this.reset.active = this.minionData.hasUsedSkillPoints() && getOblivionPotion().isPresent();
     }
 
     @Override
@@ -100,9 +102,9 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
 
         layout.addChild(new StringWidget(this.title, this.font),0,0);
         this.reset = layout.addChild(new ImageButton(18,18, RESET, s -> {
-            FactionsMod.proxy.sendToServer(new ServerboundUpgradeMinionStatPacket(entity.getId(), -1));
+            FactionsMod.proxy.sendToServer(new ServerboundResetMinionStatPacket(entity.getId()));
             getOblivionPotion().ifPresent(stack -> stack.shrink(1));//server syncs after the screen is closed
-        }, Component.translatable("gui.factionapi.minion_screen.reset_stats", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))) {
+        }, Component.translatable("gui.factionapi.minion_screen.reset_stats")) {
             @Override
             public boolean shouldTakeFocusAfterInteraction() {
                 return false;
@@ -129,7 +131,9 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
         GridLayout buttonsLayout = layout.addChild(new GridLayout(),2,0,1,2, layout.newCellSettings().alignHorizontallyCenter());
         buttonsLayout.columnSpacing(20);
         buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.back"), x -> {
-            if (this.minecraft != null && this.backScreen != null) this.minecraft.setScreen(this.backScreen);
+            if (this.minecraft != null && this.backScreen != null) {
+                this.backScreen.returnToLastScreen();
+            }
         }), 0, 0, buttonsLayout.newCellSettings().alignHorizontallyCenter());
         buttonsLayout.addChild(new ExtendedButton(0,0, 80, 20,  Component.translatable("gui.done"), x -> this.onClose()),0,1, buttonsLayout.newCellSettings().alignHorizontallyCenter());
 
@@ -173,19 +177,22 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
     protected static class StatRow {
 
         private final Component name;
+        @NotNull
+        private final MinionStat<?> stat;
         private final int totalLevels;
-        private final Supplier<String> valueSupplier;
-        private final Supplier<Integer> currentLevelSupplier;
         private String value = "";
         private int currentLevel;
         @Nullable
         private Runnable onChange;
 
-        public StatRow(Component name, int totalLevels, Supplier<String> valueSupplier, Supplier<Integer> currentLevelSupplier) {
-            this.totalLevels = totalLevels;
-            this.name = name;
-            this.valueSupplier = valueSupplier;
-            this.currentLevelSupplier = currentLevelSupplier;
+        public StatRow(MinionEntity<?> entity, MinionData data, MinionStat<?> stat) {
+            this.totalLevels = stat.getMaxLevel();
+            this.name = stat.getDescription();
+            this.stat = stat;
+        }
+
+        public Identifier id() {
+            return this.stat.getIdentifier();
         }
 
         public boolean canUpgrade() {
@@ -196,11 +203,11 @@ public abstract class MinionStatsScreen<T extends MinionData, Q extends MinionEn
             this.onChange = onChange;
         }
 
-        public void changed() {
-            value = this.valueSupplier.get();
-            currentLevel = this.currentLevelSupplier.get();
-            if (this.onChange != null) {
-                this.onChange.run();
+        public void update(MinionEntity<?> entity, MinionData data) {
+            this.value = this.stat.currentValue(entity, data);
+            this.currentLevel = this.stat.currentLevel(data);
+            if (onChange != null) {
+                onChange.run();
             }
         }
     }

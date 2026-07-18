@@ -11,7 +11,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Set;
@@ -30,10 +29,7 @@ public class ClientPayloadHandler {
     public static void handlePlayEventPacket(ClientboundPlayEventPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             switch (msg.event()) {
-                case 1:
-                    VampirismMod.proxy.spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
-                    break;
-                case 2:
+                case STOP_MUSIC:
                     Minecraft.getInstance().getMusicManager().stopPlaying();
                     break;
             }

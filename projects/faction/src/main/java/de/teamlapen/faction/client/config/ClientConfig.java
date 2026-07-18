@@ -1,7 +1,5 @@
 package de.teamlapen.faction.client.config;
 
-import de.teamlapen.faction.client.config.values.ActionOrderValue;
-import de.teamlapen.faction.client.config.values.MinionTaskOrderValue;
 import de.teamlapen.faction.common.config.FactionConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -21,10 +19,6 @@ public class ClientConfig implements FactionConfig.IConfigs {
     public final ModConfigSpec.BooleanValue showFactionRaidBarOverlay;
     public final ModConfigSpec.BooleanValue showActionCooldownOverlay;
     public final ModConfigSpec.BooleanValue showActionDurationOverlay;
-
-    // Internal
-    public final ActionOrderValue actionOrder;
-    public final MinionTaskOrderValue minionTaskOrder;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
         this.renderTotemFactionName = builder
@@ -64,19 +58,6 @@ public class ClientConfig implements FactionConfig.IConfigs {
                 .define("showActionDurationOverlay", true);
         builder.pop();
 
-        builder.push("internal");
-        this.actionOrder = new ActionOrderValue(
-                builder.comment("Defines the display order of faction actions in the HUD and menus."),
-                "actionOrder");
-        this.minionTaskOrder = new MinionTaskOrderValue(
-                builder.comment("Defines the display order of minion tasks in the minion management screen."),
-                "minionTaskOrder");
-        builder.pop();
     }
 
-    @Override
-    public void refresh() {
-        this.actionOrder.refresh();
-        this.minionTaskOrder.refresh();
-    }
 }

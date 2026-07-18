@@ -43,7 +43,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.golem.IronGolem;
-import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.skeleton.Stray;
@@ -112,7 +112,9 @@ public class ModEntityEventHandler {
         BlockState blockState = event.getLevel().getBlockState(pos);
 
         if (blockState.is(ModBlockTags.NO_SPAWN) || (blockState.is(ModBlockTags.VAMPIRE_SPAWN) && event.getEntity().getClassification(false) != VEnums.VAMPIRE_CATEGORY.getValue())) {
-            event.setSpawnCancelled(true);
+            if (!event.getEntity().isAddedToLevel()) { //Entity may already be added to the level which would lead to UnsupportedOperationException
+                event.setSpawnCancelled(true);
+            }
         }
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public record MinionEntry<T extends IFactionPlayer<T>, Z extends IMinionData>(Holder<? extends IPlayableFaction<T>> faction,
-                                                                              Supplier<Z> data,
+                                                                              IMinionCreator<T, Z> data,
                                                                               Supplier<EntityType<? extends IMinionEntity>> type,
                                                                               List<IMinionEntryBuilder.IMinionCommandBuilder.ICommandArgument<Z, ?>> commandArguments) implements IMinionEntry<T, Z> {
     public MinionEntry(MinionEntryBuilder<T, Z> builder) {

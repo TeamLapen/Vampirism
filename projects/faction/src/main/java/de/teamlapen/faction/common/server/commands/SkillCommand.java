@@ -36,20 +36,22 @@ public class SkillCommand extends BasicCommand {
 
     private static ArgumentBuilder<CommandSourceStack, ?> create(ArgumentBuilder<CommandSourceStack, ?> builder, CommandBuildContext buildContext) {
         return builder.requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
-                .then(Commands.literal("disableall")
-                        .executes(context -> disableAll(context.getSource(), context.getSource().getPlayerOrException()))
-                        .then(Commands.argument("player", EntityArgument.players())
-                                .executes(context -> disableAll(context.getSource(), EntityArgument.getPlayers(context, "player")))))
                 .then(Commands.literal("disable")
+                        .then(Commands.literal("all")
+                                .executes(context -> disableAll(context.getSource(), context.getSource().getPlayerOrException()))
+                                .then(Commands.argument("player", EntityArgument.players())
+                                        .executes(context -> disableAll(context.getSource(), EntityArgument.getPlayers(context, "player"))))
+                        )
                         .then(Commands.argument("skill", ResourceArgument.resource(buildContext, FactionRegistries.Keys.SKILL))
                                 .executes(context -> disable(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "skill")))
                                 .then(Commands.argument("player", EntityArgument.player())
                                         .executes(context -> disable(context.getSource(), EntityArgument.getPlayer(context, "player"), SkillArgument.getSkill(context, "skill"))))))
-                .then(Commands.literal("enableall")
-                        .executes(context -> enableAll(context.getSource(), context.getSource().getPlayerOrException()))
-                        .then(Commands.argument("player", EntityArgument.players())
-                                .executes(context -> enableAll(context.getSource(), EntityArgument.getPlayers(context, "player")))))
                 .then(Commands.literal("enable")
+                        .then(Commands.literal("all")
+                                .executes(context -> enableAll(context.getSource(), context.getSource().getPlayerOrException()))
+                                .then(Commands.argument("player", EntityArgument.players())
+                                        .executes(context -> enableAll(context.getSource(), EntityArgument.getPlayers(context, "player"))))
+                        )
                         .then(Commands.argument("skill", ResourceArgument.resource(buildContext, FactionRegistries.Keys.SKILL))
                                 .executes(context -> enable(context.getSource(), context.getSource().getPlayerOrException(), SkillArgument.getSkill(context, "skill"), false))
                                 .then(Commands.argument("player", EntityArgument.player())
@@ -95,7 +97,7 @@ public class SkillCommand extends BasicCommand {
         ISkillHandler<T> skillHandler = handler.<T>getSkillHandler().orElseThrow(NO_FACTION::create);
         ModRegistries.SKILLS.listElements().forEach(holder -> {
             if (IFaction.is(handler.getFaction(), holder.value().factions())) {
-                //noinspection unchecked
+                //noinspection unchecked,deprecation
                 skillHandler.enableSkill((Holder<ISkill<T>>) (Object) holder);
             }
         });
@@ -113,13 +115,14 @@ public class SkillCommand extends BasicCommand {
 
     private static <T extends IFactionPlayer<T> & ISkillPlayer<T>> int enable(CommandSourceStack commandSource, ServerPlayer asPlayer, Holder<ISkill<?>> skill, boolean force) throws CommandSyntaxException {
         ISkillHandler<T> skillHandler = ISkillHandler.<T>get(asPlayer).orElseThrow(NO_FACTION::create);
+        //noinspection deprecation
         ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
         if (force) {
             result = ISkillHandler.Result.OK;
         }
         switch (result) {
             case OK -> {
-                //noinspection unchecked
+                //noinspection unchecked,deprecation
                 skillHandler.enableSkill((Holder<ISkill<T>>) (Object) skill);
                 commandSource.sendSuccess(() -> Component.translatable("command.factionapi.test.skill.enabled", skill.unwrapKey().map(ResourceKey::identifier).map(Identifier::toString).orElseThrow() + " (" + skill.value().getName().getString() + ")"), false);
             }
@@ -138,7 +141,7 @@ public class SkillCommand extends BasicCommand {
         FactionPlayerHandler handler = FactionPlayerHandler.get(asPlayer);
         ISkillHandler<T> skillHandler = handler.<T>getSkillHandler().orElseThrow(NO_FACTION::create);
         if (skillHandler.isSkillEnabled(skill)) {
-            //noinspection unchecked
+            //noinspection unchecked,deprecation
             skillHandler.disableSkill((Holder<ISkill<T>>) (Object) skill);
             return true;
         }

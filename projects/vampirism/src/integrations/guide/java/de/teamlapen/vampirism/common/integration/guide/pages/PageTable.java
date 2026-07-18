@@ -1,24 +1,18 @@
 package de.teamlapen.vampirism.common.integration.guide.pages;
 
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
-import de.maxanier.guideapi.api.impl.Book;
-import de.maxanier.guideapi.api.impl.Page;
-import de.maxanier.guideapi.api.impl.abstraction.CategoryAbstract;
-import de.maxanier.guideapi.api.impl.abstraction.EntryAbstract;
-import de.maxanier.guideapi.gui.BaseScreen;
+import de.maxanier.guideapi.api.GuideBookScreen;
+import de.maxanier.guideapi.api.book.Book;
+import de.maxanier.guideapi.api.category.CategoryBase;
+import de.maxanier.guideapi.api.entry.EntryBase;
+import de.maxanier.guideapi.api.pages.Page;
+import de.maxanier.guideapi.api.util.GuiHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,45 +39,30 @@ public class PageTable extends Page {
 
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void draw(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, RegistryAccess registryAccess, Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, @NotNull BaseScreen guiBase, @NotNull Font font) {
+    public void draw(@NotNull GuiGraphicsExtractor guiGraphics, Book book, CategoryBase category, EntryBase entry, int pageLeft, int pageTop, int mouseX, int mouseY, GuideBookScreen screen, Font font) {
+
         float charWidth = font.width("W");
-        int y = guiTop + 12;
-        int x = guiLeft + 39;
+        int x = pageLeft - 39 + 39;
+        int y = pageTop - 13 + 12;
         if (headline != null) {
-            GuiGraphicsExtractor.drawString(font, headline.withStyle(ChatFormatting.BOLD), x, y, 0, false);
+            guiGraphics.text(font, headline.withStyle(ChatFormatting.BOLD), x, y, book.getTextColor(), false);
             y += font.lineHeight;
         }
-        drawLine(GuiGraphicsExtractor, x, y + font.lineHeight, x + (guiBase.xSize * 3F / 5F), y + font.lineHeight, 0);
+        GuiHelper.drawLine(guiGraphics, x, y + font.lineHeight, x + screen.pageWidth(), y + font.lineHeight, 1, book.getTextColor());
+        y += 1;
         for (Component[] l : lines) {
-            x = guiLeft + 39;
+            x = pageLeft - 39 + 39;
             for (int i = 0; i < l.length; i++) {
                 int mw = (int) (width[i] * charWidth);
                 int aw = font.width(l[i]);
                 int dw = (mw - aw) / 2;
-                GuiGraphicsExtractor.drawString(font, l[i], x + dw, y, 0, false);
+                guiGraphics.text(font, l[i], x + dw, y, book.getTextColor(), false);
                 x += mw;
             }
-            y += font.lineHeight;
+            y += font.lineHeight + 1;
 
         }
 
-    }
-
-
-    protected void drawLine(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, double x1, double y1, double x2, double y2, float publicZLevel) {
-        PoseStack pose = GuiGraphicsExtractor.pose();
-        pose.pushPose();
-        Matrix4f matrix = pose.last().pose();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        RenderSystem.lineWidth(2F);
-        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
-        bufferBuilder.addVertex((float) x1, (float) y1, publicZLevel).setColor(0, 0, 0, 255);
-        bufferBuilder.addVertex((float) x2, (float) y2, publicZLevel).setColor(0, 0, 0, 255);
-        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        pose.popPose();
     }
 
 

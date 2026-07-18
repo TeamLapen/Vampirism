@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModFluids;
 import de.teamlapen.vampirism.common.core.ModParticles;
-import de.teamlapen.vampirism.common.particles.PedestalParticleOptions;
+import de.teamlapen.vampirism.common.particles.BloodShredParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +22,6 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -39,10 +38,9 @@ public class PedestalBlockEntity extends NetworkedBlockEntity {
      */
     private int chargingTicks;
     private int bloodStored = 0;
-    @NotNull
     private ItemStack internalStack;
 
-    public PedestalBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public PedestalBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.BLOOD_PEDESTAL.get(), pos, state);
         this.internalStack = ItemStack.EMPTY;
     }
@@ -83,7 +81,7 @@ public class PedestalBlockEntity extends NetworkedBlockEntity {
         output.putInt("charging_ticks", chargingTicks);
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, @NotNull PedestalBlockEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity blockEntity) {
         if (blockEntity.chargingTicks > 0) {
             blockEntity.chargingTicks--;
             if (blockEntity.chargingTicks == 0) {
@@ -116,7 +114,7 @@ public class PedestalBlockEntity extends NetworkedBlockEntity {
         }
     }
 
-    public static void clientTick(@NotNull Level level, @NotNull BlockPos pos, BlockState state, @NotNull PedestalBlockEntity blockEntity) {
+    public static void clientTick(Level level, BlockPos pos, BlockState state, PedestalBlockEntity blockEntity) {
         blockEntity.ticksExistedClient++;
         if (blockEntity.chargingTicks > 0 && blockEntity.ticksExistedClient % 8 == 0) {
             spawnChargedParticle(level, pos, blockEntity.rand);
@@ -149,7 +147,7 @@ public class PedestalBlockEntity extends NetworkedBlockEntity {
      * @return May be null
      */
     @Nullable
-    private static IBloodChargeable getChargeItem(@NotNull ItemStack stack) {
+    private static IBloodChargeable getChargeItem(ItemStack stack) {
         return stack.isEmpty() ? null : (stack.getItem() instanceof IBloodChargeable chargeable ? chargeable : null);
     }
 
@@ -161,13 +159,12 @@ public class PedestalBlockEntity extends NetworkedBlockEntity {
         }
     }
 
-    private static void spawnChargedParticle(@NotNull Level level, @NotNull BlockPos blockPos, @NotNull Random rand) {
+    private static void spawnChargedParticle(Level level, BlockPos blockPos, Random rand) {
         Vec3 pos = Vec3.upFromBottomCenterOf(blockPos, 0.8);
-        ModParticles.spawnParticleClient(level, new PedestalParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
-        ModParticles.spawnParticleClient(level, new PedestalParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
-        ModParticles.spawnParticleClient(level, new PedestalParticleOptions((int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
-        ModParticles.spawnParticleClient(level, new PedestalParticleOptions((int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), true, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
-
+        ModParticles.spawnParticleClient(level, new BloodShredParticleOptions(new Vec3(pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), false, BloodShredParticleOptions.DEFAULT_COLOR, 0.8f), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
+        ModParticles.spawnParticleClient(level, new BloodShredParticleOptions(new Vec3(pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), false, BloodShredParticleOptions.DEFAULT_COLOR, 0.8f), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.20);
+        ModParticles.spawnParticleClient(level, new BloodShredParticleOptions(new Vec3(pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), false, BloodShredParticleOptions.DEFAULT_COLOR, 0.8f), blockPos.getX() + 0.20, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
+        ModParticles.spawnParticleClient(level, new BloodShredParticleOptions(new Vec3(pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1), (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), false, BloodShredParticleOptions.DEFAULT_COLOR, 0.8f), blockPos.getX() + 0.80, blockPos.getY() + 0.65, blockPos.getZ() + 0.80);
     }
 
     public class ItemWrapper extends SnapshotJournal<ItemStack> implements ResourceHandler<ItemResource> {

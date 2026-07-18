@@ -1,0 +1,11 @@
+{
+  "values": [
+    "vampirism:quarrel_normal",
+    "vampirism:quarrel_heavy",
+    "vampirism:quarrel_spitfire",
+    "vampirism:quarrel_vampire_killer",
+    "vampirism:quarrel_teleport",
+    "vampirism:quarrel_bleeding",
+    "vampirism:quarrel_garlic"
+  ]
+}

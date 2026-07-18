@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "vampirism:quarrel_normal",
+    "vampirism:quarrel_normal",
+    "vampirism:quarrel_normal",
+    "vampirism:quarrel_normal",
+    "vampirism:quarrel_normal",
+    "vampirism:quarrel_normal",
+    "#c:ingots/iron"
+  ],
+  "result": {
+    "count": 6,
+    "id": "vampirism:quarrel_heavy"
+  }
+}

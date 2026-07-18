@@ -12,6 +12,7 @@ import de.teamlapen.faction.client.gui.screens.taskboard.TaskListWidget;
 import de.teamlapen.faction.common.core.FactionKeys;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.server.ServerboundDeleteRefinementPacket;
+import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.faction.common.world.inventory.FactionMenu;
 import de.teamlapen.faction.common.world.inventory.ITaskMenu;
 import de.teamlapen.faction.misc.mixin.client.accessor.AbstractContainerScreenAccessor;
@@ -156,7 +157,8 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
 
         var button1 = this.addRenderableWidget(new ImageButton(this.leftPos + 7, this.topPos + 90, 20, 20, SKILLS, context -> {
             if (this.minecraft.player.isAlive()) {
-                FactionPlayerHandler.get(this.minecraft.player).getCurrentSkillPlayer().ifPresent(f -> Minecraft.getInstance().setScreen(new SkillsScreen(f, this)));
+                this.minecraft.player.closeContainer();
+                FactionPlayerHandler.get(this.minecraft.player).getCurrentSkillPlayer().ifPresent(f -> Minecraft.getInstance().setScreen(new SkillsScreen(f, () -> FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU)))));
             }
         }, Component.empty()));
         button1.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.faction_menu.skill_screen")));
@@ -175,7 +177,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
 
         if (definition != null) {
             Button appearanceButton = this.addRenderableWidget(new ImageButton(this.leftPos + 29, this.topPos + 90, 20, 20, definition.widgetSpritesSupplier(), (context) -> {
-                Minecraft.getInstance().setScreen(definition.provider().create(this));
+                Minecraft.getInstance().setScreen(definition.provider().create(() -> FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU))));
             }, Component.empty()));
             appearanceButton.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.faction_menu.appearance_menu")));
         }
@@ -184,15 +186,15 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
             NonNullList<ItemStack> refinementList = this.menu.getRefinementStacks();
             for (Slot slot : this.menu.slots) {
                 if (slot instanceof FactionMenu.RemovingSelectorSlot) {
-                    Button xButton = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + slot.x + 16 - 5, this.getGuiTop() + slot.y + 16 - 5, 5, 5, REMOVE_ACCESSORY, (button) -> {
+                    Button xButton = this.addRenderableWidget(new ImageButton(this.getLeftPos() + slot.x + 16 - 5, this.getTopPos() + slot.y + 16 - 5, 5, 5, REMOVE_ACCESSORY, (button) -> {
                         FactionsMod.proxy.sendToServer(new ServerboundDeleteRefinementPacket(IRefinementItem.AccessorySlotType.values()[slot.index]));
                         refinementList.set(slot.index, ItemStack.EMPTY);
                     }, Component.empty()) {
 
                         @Override
-                        public void extractContents(GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
+                        public void extractContents(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
                             if (!refinementList.get(slot.index).isEmpty() && ((AbstractContainerScreenAccessor) FactionMenuScreen.this).getDraggingItem().isEmpty() && overSlot(slot, mouseX, mouseY)) {
-                                super.extractWidgetRenderState(GuiGraphicsExtractor, mouseX, mouseY, partialTick);
+                                super.extractContents(guiGraphicsExtractor, mouseX, mouseY, partialTick);
                             }
                         }
 

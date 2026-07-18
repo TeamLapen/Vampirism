@@ -7,6 +7,7 @@ import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.gui.GuiRenderer;
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.core.FactionEffects;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionSounds;
@@ -60,7 +61,7 @@ public class SkillsScreen extends Screen {
     private final ISkillPlayer<?> factionPlayer;
     private final List<SkillsTabComponent> tabs = new ArrayList<>();
     @Nullable
-    private final Screen backScreen;
+    private final ILastScreenProvider backScreen;
     @Nullable
     private SkillsTabComponent selectedTab;
 
@@ -71,7 +72,7 @@ public class SkillsScreen extends Screen {
     private Vec3 mousePos;
     private boolean clicked;
 
-    public SkillsScreen(ISkillPlayer<?> factionPlayer, @Nullable Screen backScreen) {
+    public SkillsScreen(ISkillPlayer<?> factionPlayer, @Nullable ILastScreenProvider backScreen) {
         super(GameNarrator.NO_TITLE);
         this.factionPlayer = factionPlayer;
         this.backScreen = backScreen;
@@ -104,7 +105,6 @@ public class SkillsScreen extends Screen {
 
     @Override
     protected void init() {
-        assert this.minecraft != null;
         this.tabs.clear();
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
@@ -123,7 +123,7 @@ public class SkillsScreen extends Screen {
 
         if (this.backScreen != null) {
             this.addRenderableWidget(new ExtendedButton(guiLeft + 4, guiTop + 194, 80, 20, Component.translatable("gui.back"), (context) -> {
-                this.minecraft.setScreen(this.backScreen);
+                this.backScreen.returnToLastScreen();
             }));
         }
         this.addRenderableWidget(new ExtendedButton(guiLeft + 168, guiTop + 194, 80, 20, Component.translatable("gui.done"), (context) -> {
@@ -142,9 +142,9 @@ public class SkillsScreen extends Screen {
         }));
         if ((this.factionPlayer.getLevel() < 2 || this.minecraft.player.getInventory().countItem(FactionItems.OBLIVION_POTION.get()) <= 0) && !test) {
             resetSkills.active = false;
-            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.skills.reset_consume", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
+            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.skills.reset_consume")));
         } else {
-            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.skills.reset_req", Component.translatable(FactionItems.OBLIVION_POTION.get().getDescriptionId()))));
+            resetSkills.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.skills.reset_req")));
         }
     }
 

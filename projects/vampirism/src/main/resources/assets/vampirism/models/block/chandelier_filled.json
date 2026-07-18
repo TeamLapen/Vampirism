@@ -7,6 +7,7 @@
 		"candle": "minecraft:block/candle"
 	},
 	"render_type": "minecraft:cutout",
+	"ambientocclusion": false,
 	"elements": [
 		{
 			"from": [1, 1, 5.1],

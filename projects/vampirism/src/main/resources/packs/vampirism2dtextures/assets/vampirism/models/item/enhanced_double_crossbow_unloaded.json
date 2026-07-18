@@ -1,6 +1,6 @@
 {
-  "parent": "vampirism:item/double_crossbow_unloaded",
+  "parent": "item/generated",
   "textures": {
-    "layer0": "vampirism:item/crossbow_double_enhanced_unloaded"
+    "layer0": "vampirism:item/enhanced_double_crossbow"
   }
 }

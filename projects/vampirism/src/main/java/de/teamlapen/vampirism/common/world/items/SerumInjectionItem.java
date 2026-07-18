@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModPotionTags;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.potions.BasePotion;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -38,20 +38,21 @@ public class SerumInjectionItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (level.isClientSide()) {
+            return InteractionResult.PASS;
+        }
         ItemStack stack = player.getItemInHand(hand);
         PotionContents potionContents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
         potionContents.applyToLivingEntity(player, stack.getOrDefault(DataComponents.POTION_DURATION_SCALE, 0.5F));
         player.addEffect(new MobEffectInstance(ModEffects.EXPOSED, 100));
-        stack.consume(1, player);
-        ItemStack emptySyringe = ModItems.SYRINGE_EMPTY.get().getDefaultInstance();
-        if (!player.hasInfiniteMaterials() && !player.getInventory().add(emptySyringe)) {
-            player.drop(emptySyringe, false);
+        if (!player.hasInfiniteMaterials()) {
+            stack = Helper.shrinkItemStack(stack, player);
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
             ModAdvancements.TRIGGER_SERUM_INJECTED.get().trigger(serverPlayer, potionContents);
         }
-
-        return InteractionResult.SUCCESS.withoutItem();
+        //item transformed
+        return InteractionResult.SUCCESS_SERVER.heldItemTransformedTo(stack);
     }
 }

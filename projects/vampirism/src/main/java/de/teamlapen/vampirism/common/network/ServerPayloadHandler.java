@@ -26,10 +26,12 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             Entity entity1 = context.player().level().getEntity(msg.entityId());
             if (entity1 instanceof Player player) {
-                VampirePlayer.get(player).setSkinData(msg.data());
+                VampirePlayer vampirePlayer = VampirePlayer.get(player);
+                msg.data().data().forEach((k, v) -> vampirePlayer.setAppearanceData((de.teamlapen.faction.common.world.entities.appearance.AppearanceKey) k, v));
+                vampirePlayer.sync();
             } else if (entity1 instanceof MinionEntity<?> minion) {
                 minion.getMinionData().ifPresent(minionData -> {
-                    minionData.handleMinionAppearanceConfig(msg.name(), msg.data());
+                    msg.data().data().forEach((k, v) -> minionData.setAppearanceData((de.teamlapen.faction.common.world.entities.appearance.AppearanceKey) k, v));
                     minion.sync();
                 });
             }

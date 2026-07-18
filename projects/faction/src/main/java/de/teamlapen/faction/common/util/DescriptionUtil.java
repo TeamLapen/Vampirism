@@ -1,6 +1,9 @@
 package de.teamlapen.faction.common.util;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import de.teamlapen.faction.common.core.FactionKeys;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
@@ -12,10 +15,12 @@ import java.util.function.Consumer;
 public class DescriptionUtil {
 
     public static void addDescriptionTooltip(Component component, Item.TooltipContext context, TooltipFlag tooltipFlag, Consumer<Component> tooltipComponents) {
+        tooltipComponents.accept(Component.translatable("tooltip.factionapi.hold_shift_for_info", FactionKeys.ITEM_DESCRIPTION.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY));
 
-        tooltipComponents.accept(Component.translatable("tooltip.vampirism.hold_shift_for_info").withStyle(ChatFormatting.DARK_GRAY));
+        int keyCode = FactionKeys.ITEM_DESCRIPTION.getKey().getValue();
+        boolean isHeld = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), keyCode);
 
-        if (tooltipFlag.hasShiftDown()) {
+        if (isHeld) {
             List<String> lines = normalizeTextWidth(component.getString(), 40);
 
             tooltipComponents.accept(Component.empty());

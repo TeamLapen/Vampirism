@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "vampirism:block/blood_container/blood_container"
+      "model": "vampirism:block/blood_container"
     }
   }
 }

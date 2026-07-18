@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
-import de.teamlapen.faction.client.gui.components.DropdownWidget;
+import de.teamlapen.gui.components.DropdownWidget;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.renderer.entities.VampireMinionRenderer;
@@ -12,10 +13,10 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.stream.IntStream;
 
 public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinionEntity> {
@@ -28,7 +29,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     private int minionSkinCount;
     private String minionName;
 
-    public VampireMinionAppearanceScreen(VampireMinionEntity minion, Screen backScreen) {
+    public VampireMinionAppearanceScreen(VampireMinionEntity minion, ILastScreenProvider backScreen) {
         super(NAME, minion, backScreen);
     }
 
@@ -38,7 +39,11 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         if (name.isEmpty()) {
             name = Component.translatable("gui.vampirism.minion_appearance.minion").getString() + entity.getMinionId().orElse(0);
         }
-        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), name, this.skinType, (isMinionSpecificSkin ? 0b10 : 0b0) | (useLordSkin ? 0b1 : 0b0)));
+        Map<de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<?>, Object> map = new java.util.HashMap<>();
+        map.put(MinionData.NameType, name);
+        map.put(MinionData.SkinType, this.skinType);
+        map.put(MinionData.AppearanceType, (isMinionSpecificSkin ? 0b10 : 0b0) | (useLordSkin ? 0b1 : 0b0));
+        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), new de.teamlapen.faction.common.world.entities.appearance.AppearancePacket(map)));
         super.removed();
     }
 

@@ -9,32 +9,32 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Render the vampire overlay for converted creatures
  */
 public class ConvertedVampireEntityLayer<Z extends LivingEntityRenderState, U extends EntityModel<Z>> extends RenderLayer<Z, U> {
 
-    public final boolean checkIfRender;
+    @Nullable
+    public Identifier overlay;
 
-    /**
-     * @param checkIfRender If it should check if {@link ConvertedCreatureRenderer#renderOverlay} is true
-     */
-    public ConvertedVampireEntityLayer(RenderLayerParent<Z, U> entityRendererIn, boolean checkIfRender) {
+    public ConvertedVampireEntityLayer(RenderLayerParent<Z, U> entityRendererIn) {
+        this(entityRendererIn, null);
+    }
+    public ConvertedVampireEntityLayer(RenderLayerParent<Z, U> entityRendererIn, @Nullable Identifier overlay) {
         super(entityRendererIn);
-        this.checkIfRender = checkIfRender;
+        this.overlay = overlay;
     }
 
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector nodeCollector, int packedLight, Z renderState, float yRot, float xRot) {
         if (!renderState.isInvisible) {
-            Identifier texture = renderState.getRenderData(ModEntityRenderStates.CONVERTED_OVERLAY);
-            if (texture == null) {
-                texture = renderState.getRenderData(ModEntityRenderStates.OVERLAY);
+            var overlay = this.overlay;
+            if (overlay == null) {
+                this.overlay = overlay = renderState.entityType.builtInRegistryHolder().key().identifier().withPrefix("textures/entity/overlay/").withSuffix(".png");
             }
-            if (texture != null) {
-                renderColoredCutoutModel(this.getParentModel(), texture, poseStack, nodeCollector, packedLight, renderState, -1, 1);
-            }
+            renderColoredCutoutModel(this.getParentModel(), overlay, poseStack, nodeCollector, packedLight, renderState, -1, 1);
         }
     }
 }

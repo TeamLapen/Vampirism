@@ -7,6 +7,7 @@ import de.teamlapen.faction.api.factions.lord.IMinionEntryBuilder;
 import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
+import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Holder;
@@ -15,18 +16,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class MinionEntryBuilder<T extends IFactionPlayer<T>, Z extends IMinionData> implements IMinionEntryBuilder<T, Z> {
 
     public final Holder<? extends IPlayableFaction<T>> faction;
-    public final Supplier<Z> data;
+    public final IMinionEntry.IMinionCreator<T, Z> data;
     public IMinionCommandBuilder<T, Z> commandBuilder;
 
-    public MinionEntryBuilder(Holder<? extends IPlayableFaction<T>> faction, @NotNull Supplier<Z> data) {
+    public MinionEntryBuilder(Holder<? extends IPlayableFaction<T>> faction, @NotNull IMinionEntry.IMinionCreator<T, Z> data) {
         this.faction = faction;
         this.data = data;
     }

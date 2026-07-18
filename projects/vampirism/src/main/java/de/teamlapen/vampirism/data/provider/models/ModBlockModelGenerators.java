@@ -94,7 +94,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         Identifier batCageModel = ModelLocationUtils.getModelLocation(ModBlocks.BAT_CAGE.get());
         this.itemModelOutput.accept(ModBlocks.BAT_CAGE.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(batCageModel), ItemModelUtils.specialModel(batCageModel, new BatCageSpecialRenderer.Unbaked())));
 
-        Identifier bloodContainerModel = mod("block/blood_container/blood_container");
+        Identifier bloodContainerModel = mod("block/blood_container");
         this.blockStateOutput.accept(createSimpleBlock(ModBlocks.BLOOD_CONTAINER.get(), plainVariant(bloodContainerModel)));
         this.itemModelOutput.accept(ModBlocks.BLOOD_CONTAINER.asItem(), ItemModelUtils.composite(ItemModelUtils.plainModel(bloodContainerModel), ItemModelUtils.specialModel(bloodContainerModel, new BloodContainerRenderer.Unbaked())));
 
@@ -266,7 +266,6 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         Identifier model = ModModelTemplates.CHANDELIER_FILLED.create(block, new TextureMapping().put(ModTextureSlots.CANDLE, new Material(candleTexture)), this.modelOutput);
         Identifier litModel = ModModelTemplates.CHANDELIER_FILLED.createWithSuffix(block, "_lit", new TextureMapping().put(ModTextureSlots.CANDLE, new Material(candleTexture.withSuffix("_lit"))), this.modelOutput);
         this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(model))
-                .with(HORIZONTAL_ROTATION)
                 .with(PropertyDispatch.modify(AbstractCandleBlock.LIT)
                         .select(false, x -> x)
                         .select(true, x -> x.withModel(litModel)))
@@ -362,11 +361,10 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
                 ModBlocks.ALTAR_TIP,
                 ModBlocks.BLOOD_PEDESTAL,
                 ModBlocks.VAPOR_STILL,
-                ModBlocks.FIRE_PLACE,
                 ModBlocks.CROSS,
-                ModBlocks.TOMBSTONE1,
-                ModBlocks.TOMBSTONE2,
-                ModBlocks.TOMBSTONE3,
+                ModBlocks.TOMBSTONE_SHORT,
+                ModBlocks.TOMBSTONE_MEDIUM,
+                ModBlocks.TOMBSTONE_CROSS,
                 ModBlocks.GRAVE_CAGE,
                 ModBlocks.VAMPIRE_RACK,
                 ModBlocks.THRONE,

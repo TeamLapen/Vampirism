@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.client.gui.components.DropdownWidget;
-import de.teamlapen.faction.client.gui.components.IRenderLast;
+import de.teamlapen.gui.components.DropdownWidget;
+import de.teamlapen.gui.components.IRenderLast;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -16,11 +17,11 @@ import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -36,13 +37,19 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
     private List<IWingsEntity.Texture> availableWingsTextures = List.of();
 
 
-    public VampirePlayerAppearanceScreen(@Nullable Screen backScreen) {
+    public VampirePlayerAppearanceScreen(@Nullable ILastScreenProvider backScreen) {
         super(NAME, Minecraft.getInstance().player, backScreen);
     }
 
     @Override
     public void removed() {
-        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), "", fangType, eyeType, glowingEyes ? 1 : 0, titleGender ? 1 : 0, wingsTexture.ordinal()));
+        Map<de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<?>, Object> map = new java.util.HashMap<>();
+        map.put(VampirePlayer.FangType, fangType);
+        map.put(VampirePlayer.EyeType, eyeType);
+        map.put(VampirePlayer.GlowingEye, glowingEyes ? 1 : 0);
+        map.put(VampirePlayer.TitleGenderType, titleGender ? 1 : 0);
+        map.put(VampirePlayer.WingsTexture, wingsTexture.ordinal());
+        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), new de.teamlapen.faction.common.world.entities.appearance.AppearancePacket(map)));
         super.removed();
     }
 

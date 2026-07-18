@@ -10,6 +10,33 @@ ext.registerJarFiles = { List<String> filePaths ->
     }
 }
 
+if (!project.hasProperty("factions_version")) {
+    var tmpVersion = project.minecraft_version + "-" + project.factions_mod_version
+    if (project.hasProperty("factions_test_id")) {
+        tmpVersion += "-test." + project.property("factions_test_id")
+    }
+    allprojects {
+        ext.factions_version = tmpVersion
+    }
+}
+
+if (!project.hasProperty("vampirism_version")) {
+    var tmpVersion = project.minecraft_version + "-" + project.vampirism_mod_version
+    if (project.hasProperty("vampirism_test_id")) {
+        tmpVersion += "-test." + project.property("vampirism_test_id")
+    }
+    allprojects {
+        ext.vampirism_version = tmpVersion
+    }
+}
+
+if (vampirism_factions_source_dependency.toBoolean()) {
+    allprojects {
+        ext.vampirism_factions_version = factions_version
+    }
+    print vampirism_factions_version
+}
+
 subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'maven-publish'

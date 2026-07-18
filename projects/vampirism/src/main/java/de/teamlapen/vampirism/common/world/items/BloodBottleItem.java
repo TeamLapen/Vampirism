@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.LevelReader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import static de.teamlapen.vampirism.api.world.items.components.IBottleBlood.MULTIPLIER;
@@ -65,17 +67,25 @@ public class BloodBottleItem extends Item implements BaseDisplayItemGenerator.Cr
             VampirePlayer vampire = VampirePlayer.get(player);
             ItemStack consumed = stack.copyWithCount(1);
 
-            var bottleResource = consumed.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(consumed));
+            SimpleContainer consumedContainer = new SimpleContainer(consumed) {
+                @Override
+                public void setItem(int slot, ItemStack stack, boolean performSideEffects) {
+                    getItems().set(slot, stack);
+                }
+            };
+            var consumedHandler = VanillaContainerWrapper.of(consumedContainer);
+
+            var bottleResource = consumed.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forHandlerIndex(consumedHandler, 0));
             try (var transaction = Transaction.openRoot()) {
                 var extracted = ResourceHandlerUtil.extractFirst(bottleResource, s -> s.is(ModFluids.BLOOD), CAPACITY, transaction);
                 if (extracted != null) {
                     vampire.drinkBlood(extracted.amount() / MULTIPLIER, 0, new DrinkBloodContext(consumed).setReturnsSpareBlood(false));
                     transaction.commit();
                     super.finishUsingItem(stack, level, livingEntity);
-                    if (stack.getCount() == 1) {
+                    consumed = consumedContainer.getItem(0);
+                    if (stack.isEmpty()) {
                         return consumed;
                     } else {
-                        stack.shrink(1);
                         if (!player.getInventory().add(consumed)) {
                             player.drop(consumed, false);
                         }

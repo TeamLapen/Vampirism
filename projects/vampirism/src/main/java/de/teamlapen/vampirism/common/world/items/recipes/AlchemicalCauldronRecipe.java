@@ -25,9 +25,7 @@ import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +36,6 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     private final Either<Ingredient, FluidStackTemplate> fluid;
     protected final Ingredient ingredient;
     protected final ItemStackTemplate result;
-    @NotNull
     private final List<Holder<ISkill<?>>> skills;
     private final int reqLevel;
     protected final float experience;
@@ -47,7 +44,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     private PlacementInfo placementInfo;
     private final CommonInfo info;
 
-    public AlchemicalCauldronRecipe(CommonInfo info, @NotNull String groupIn, @NotNull Ingredient ingredientIn, Either<Ingredient, FluidStackTemplate> fluidIn, @NotNull ItemStackTemplate resultIn, @NotNull List<Holder<ISkill<?>>> skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+    public AlchemicalCauldronRecipe(CommonInfo info, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStackTemplate> fluidIn, ItemStackTemplate resultIn, List<Holder<ISkill<?>>> skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
         this.info = info;
         this.group = groupIn;
         this.ingredient = ingredientIn;
@@ -64,13 +61,13 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
         return this.info.showNotification();
     }
 
-    public boolean canBeCooked(int level, @NotNull ISkillHandler<IHunterPlayer> skillHandler) {
+    public boolean canBeCooked(int level, ISkillHandler<IHunterPlayer> skillHandler) {
         if (level < reqLevel) return false;
         return Helper.areSkillsEnabled(skillHandler, skills);
     }
 
     @Override
-    public @NotNull PlacementInfo placementInfo() {
+    public PlacementInfo placementInfo() {
         if (this.placementInfo == null) {
             this.placementInfo = PlacementInfo.create(this.ingredient);
         }
@@ -78,12 +75,12 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     }
 
     @Override
-    public @NotNull RecipeBookCategory recipeBookCategory() {
+    public RecipeBookCategory recipeBookCategory() {
         return ModRecipes.ALCHEMICAL_CAULDRON_CATEGORY.get();
     }
 
     @Override
-    public @NonNull ItemStack assemble(@NonNull AlchemicalCauldronRecipeInput p_345149_) {
+    public ItemStack assemble(AlchemicalCauldronRecipeInput p_345149_) {
         return this.result.create();
     }
 
@@ -104,7 +101,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
         return fluid;
     }
 
-    public @NotNull Ingredient getIngredient() {
+    public Ingredient getIngredient() {
         return ingredient;
     }
 
@@ -112,7 +109,6 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
         return reqLevel;
     }
 
-    @NotNull
     public List<Holder<ISkill<?>>> getRequiredSkills() {
         return skills;
     }
@@ -127,18 +123,17 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
 
 
 
-    @NotNull
     @Override
     public RecipeSerializer<AlchemicalCauldronRecipe> getSerializer() {
         return ModRecipes.ALCHEMICAL_CAULDRON.get();
     }
 
     @Override
-    public boolean matches(@NotNull AlchemicalCauldronRecipeInput inv, @NotNull Level worldIn) {
+    public boolean matches(AlchemicalCauldronRecipeInput inv, Level worldIn) {
         boolean match = this.ingredient.test(inv.ingredient());
-        Boolean fluidMatch = fluid.map(ingredient1 -> ingredient1.test(inv.fluid()), fluid1 -> {
+        var fluidMatch = !inv.fluid().isEmpty() && fluid.map(ingredient1 -> ingredient1.test(inv.fluid()), fluid1 -> {
             try (var transaction = Transaction.openRoot()) {
-                var inputHandler = inv.fluid().getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(inv.fluid()));
+                var inputHandler = inv.fluid().getCapability(Capabilities.Fluid.ITEM, ItemStackMatch.forRecipeStack(inv.fluid()));
                 var extracted = ResourceHandlerUtil.extractFirst(inputHandler, x -> x.is(fluid1.fluid()), fluid1.amount(), transaction);
                 return extracted != null && extracted.amount() >= fluid1.amount();
             }

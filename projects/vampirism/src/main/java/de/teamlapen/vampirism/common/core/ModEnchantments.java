@@ -33,8 +33,10 @@ import java.util.List;
 
 public class ModEnchantments {
     public static final DeferredRegister<DataComponentType<?>> ENCHANTMENT_DATA_COMPONENTS = DeferredRegister.create(Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, VReference.MODID);
+
     public static final ResourceKey<Enchantment> VAMPIRE_SLAYER = ResourceKey.create(Registries.ENCHANTMENT, VIdentifier.mod("vampire_slayer"));
     public static final ResourceKey<Enchantment> ARROW_FRUGALITY = ResourceKey.create(Registries.ENCHANTMENT, VIdentifier.mod("arrow_frugality"));
+    public static final ResourceKey<Enchantment> PRECISION = ResourceKey.create(Registries.ENCHANTMENT, VIdentifier.mod("precision"));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> FRUGALITY_DATA = ENCHANTMENT_DATA_COMPONENTS.register(VampirismDataComponents.Keys.FRUGALITY.getPath(), () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder().persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC).listOf()).build());
 
@@ -86,5 +88,16 @@ public class ModEnchantments {
                         .exclusiveWith(enchantments.getOrThrow(ModEnchantmentTags.CROSSBOW_INCOMPATIBLE))
                         .withEffect(FRUGALITY_DATA.get(), new AddValue(LevelBasedValue.perLevel(1F)))
                         .build(ARROW_FRUGALITY.identifier()));
+        context.register(PRECISION,
+                new Enchantment.Builder(
+                        Enchantment.definition(
+                                items.getOrThrow(ModItemTags.CROSSBOW_ENCHANTABLE),
+                                2,
+                                3,
+                                Enchantment.dynamicCost(20, 9),
+                                Enchantment.dynamicCost(65, 9),
+                                4,
+                                EquipmentSlotGroup.MAINHAND))
+                        .build(PRECISION.identifier()));
     }
 }

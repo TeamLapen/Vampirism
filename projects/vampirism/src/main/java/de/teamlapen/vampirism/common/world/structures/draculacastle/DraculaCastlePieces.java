@@ -97,7 +97,7 @@ public class DraculaCastlePieces {
         }
 
         public Piece(StructurePieceType type, StructureTemplateManager structureTemplateManager, CompoundTag tag) {
-            super(type, tag, structureTemplateManager, (id) -> new StructurePlaceSettings());
+            super(type, tag, structureTemplateManager, (id) -> makeSettings());
         }
 
         private static StructurePlaceSettings makeSettings() {

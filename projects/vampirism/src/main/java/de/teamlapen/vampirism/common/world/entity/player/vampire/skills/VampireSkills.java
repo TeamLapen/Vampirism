@@ -92,7 +92,7 @@ public class VampireSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LESS_BLOOD_THIRST = SKILLS.register("less_blood_thirst", () -> new VampirismSkill.SimpleVampireSkill(1, true).registerAttributeModifier(ModAttributes.BLOOD_EXHAUSTION, () -> ModConfig.balance().vsBloodThirstReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_DISGUISE = SKILLS.register("vampire_disguise", () -> new ActionSkill<>(VampireActions.DISGUISE_VAMPIRE, Trees.LEVEL, 1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> HALF_INVULNERABLE = SKILLS.register("half_invulnerable", () -> new ActionSkill<>(VampireActions.HALF_INVULNERABLE, Trees.LEVEL, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_INVISIBILITY = SKILLS.register("vampire_invisibility", () -> new ActionSkill<>(VampireActions.VAMPIRE_INVISIBILITY, Trees.LEVEL, 3));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_INVISIBILITY = SKILLS.register("vampire_invisibility", () -> new ActionSkill<>(VampireActions.VAMPIRE_INVISIBILITY, Trees.LEVEL, 3, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DARK_STALKER = SKILLS.register("dark_stalker", () -> new ActionSkill<>(VampireActions.DARK_STALKER, Trees.LEVEL, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> HISSING = SKILLS.register("hissing", () -> new ActionSkill<>(VampireActions.HISSING, Trees.LEVEL, 1, true));
 

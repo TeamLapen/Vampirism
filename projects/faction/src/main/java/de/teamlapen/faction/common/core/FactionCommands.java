@@ -5,8 +5,13 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.common.server.commands.*;
+import de.teamlapen.faction.common.server.commands.actions.ActionsCommand;
+import de.teamlapen.faction.common.server.commands.actions.ResetActionsCommand;
 import de.teamlapen.faction.common.server.commands.arguments.FactionArgument;
 import de.teamlapen.faction.common.server.commands.arguments.MinionArgument;
+import de.teamlapen.faction.common.server.commands.customization.CustomizationCommand;
+import de.teamlapen.faction.common.server.commands.minion.MinionCommand;
+import de.teamlapen.faction.common.server.commands.minion.MinionInventoryCommand;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -52,11 +57,10 @@ public class FactionCommands {
     }
 
     private static void registerCommand(LiteralArgumentBuilder<CommandSourceStack> parent, CommandBuildContext buildContext) {
-        parent.then(BindActionCommand.register(buildContext))
+        parent.then(ActionsCommand.register(buildContext))
                 .then(FactionCommand.register(buildContext))
-                .then(GenderCommand.register())
+                .then(CustomizationCommand.register())
                 .then(SkillCommand.register(buildContext))
-                .then(MinionInventoryCommand.register(buildContext))
                 .then(VillageCommand.register(buildContext))
                 .then(MinionCommand.register(buildContext))
                 .then(ResetActionsCommand.register())

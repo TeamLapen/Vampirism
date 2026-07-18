@@ -10,7 +10,7 @@
     },
     "items": "vampirism:oil_bottle"
   },
-  "input": "vampirism:item_alchemical_fire",
+  "input": "vampirism:alchemical_fire",
   "result": {
     "components": {
       "vampirism:oil_contents": {

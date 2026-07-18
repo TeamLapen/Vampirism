@@ -26,9 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 // TODO add default target factions based on tags. -> hunter ignore neutral by default. better compatibility between additional factions -> maybe use FRIENDLY_TOWARDS_NEUTRAL
-public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFaction, Predicate<LivingEntity> predicate, boolean ignoreDisguise, HolderSet<IFaction<?>> targetFaction, Function<LivingEntity, Holder<? extends IFaction<?>>> factionFallback) implements IFactionPredicate {
+public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFaction, Predicate<LivingEntity> predicate, boolean ignoreDisguise, Supplier<HolderSet<IFaction<?>>> targetFaction, Function<LivingEntity, Holder<? extends IFaction<?>>> factionFallback) implements IFactionPredicate {
 
     @Override
     public boolean test(@Nullable LivingEntity livingEntity) {
@@ -36,7 +37,7 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
         if (!predicate.test(livingEntity)) return false;
 
         return switch (livingEntity) {
-            case IFactionEntity iFactionEntity -> this.targetFaction.contains(SafeCast.cast(iFactionEntity.getFaction()));
+            case IFactionEntity iFactionEntity -> this.targetFaction.get().contains(SafeCast.cast(iFactionEntity.getFaction()));
             case Player player -> {
                 FactionPlayerHandler handler = FactionPlayerHandler.get(player);
                 Holder<? extends IFaction<?>> faction = handler.getFaction();
@@ -44,9 +45,9 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
                 if (viewedFaction != null) {
                     faction = viewedFaction;
                 }
-                yield this.targetFaction.contains(SafeCast.cast(faction));
+                yield this.targetFaction.get().contains(SafeCast.cast(faction));
             }
-            default -> this.targetFaction.contains(SafeCast.cast(factionFallback.apply(livingEntity)));
+            default -> this.targetFaction.get().contains(SafeCast.cast(factionFallback.apply(livingEntity)));
         };
     }
 
@@ -174,7 +175,46 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
             IFactionPredicate existing = this.lookup.getExisting(this);
             if (existing != null) return existing;
 
+            var pred = new Predicate<LivingEntity>() {
+
+                @Override
+                public boolean test(LivingEntity livingEntity) {
+                    return (targetPlayers && livingEntity instanceof Player) || targetNonPlayers;
+                }
+            };
+
+            var predicate = new FactionPredicate(this.sourceFaction, pred.and(other), this.ignoreDisguise, new LazyFactionResolver(this), this.lookup::getFallbackFaction);
+            this.lookup.update(this, predicate);
+            return predicate;
+        }
+
+        private static class LazyFactionResolver implements Supplier<HolderSet<IFaction<?>>> {
+
+            @Nullable
+            private Builder builder;
+            @Nullable
+            private HolderSet<IFaction<?>> holder;
+
+            public LazyFactionResolver(Builder builder) {
+                this.builder = builder;
+            }
+
+            @Override
+            public HolderSet<IFaction<?>> get() {
+                if (this.holder == null) {
+                    if (this.builder == null) {
+                        throw new IllegalStateException("FactionPredicate has not been initialized yet!");
+                    }
+                    this.holder = this.builder.faction();
+                    this.builder = null;
+                }
+                return this.holder;
+            }
+        }
+
+        private HolderSet<IFaction<?>> faction() {
             Registry<IFaction<?>> iFactions = this.lookup.registry();
+
             HolderSet<IFaction<?>> holderSet;
             if (this.targetFaction != null) {
                 holderSet = iFactions.getOrThrow(this.targetFaction);
@@ -197,17 +237,7 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
                 }
             }
 
-            var pred = new Predicate<LivingEntity>() {
-
-                @Override
-                public boolean test(LivingEntity livingEntity) {
-                    return (targetPlayers && livingEntity instanceof Player) || targetNonPlayers;
-                }
-            };
-
-            var predicate = new FactionPredicate(this.sourceFaction, pred.and(other), this.ignoreDisguise, holderSet, this.lookup::getFallbackFaction);
-            this.lookup.update(this, predicate);
-            return predicate;
+            return holderSet;
         }
     }
 

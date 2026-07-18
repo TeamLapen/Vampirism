@@ -20,6 +20,7 @@ public class HunterSkillProperties {
     public IItemWithTier.Tier fullHunterCoat;
     private boolean concealed = false;
     private int concealmentTicks = 0;
+    private double vampireDistanceRel = 0;
 
     /**
      * Set while blessing an item.
@@ -42,6 +43,18 @@ public class HunterSkillProperties {
 
     public boolean isConcealed() {
         return this.concealed;
+    }
+
+    public boolean isVampireNearby() {
+        return vampireDistanceRel > 0;
+    }
+
+    public void nearbyVampire(double distanceRel) {
+        vampireDistanceRel = distanceRel;
+    }
+
+    public float getVampireNearbyProgress() {
+        return (float) vampireDistanceRel;
     }
 
     public void resetConcealment() {

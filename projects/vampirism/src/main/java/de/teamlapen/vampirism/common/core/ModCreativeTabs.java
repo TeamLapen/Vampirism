@@ -196,15 +196,14 @@ public class ModCreativeTabs {
         }
 
         private void addDecorativeBlocks() {
-            add(FIRE_PLACE);
             addCandleHolders(ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.stream().map(pair -> pair.getFirst().asItem()).toList());
             addCandleHolders(ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.stream().map(pair -> pair.getFirst().asItem()).toList());
             addCandleHolders(ColorListsUtil.HANGING_CHANDELIERS.stream().map(Block::asItem).toList());
             add(VAMPIRE_SOUL_LANTERN);
             add(CROSS);
-            add(TOMBSTONE1);
-            add(TOMBSTONE2);
-            add(TOMBSTONE3);
+            add(TOMBSTONE_SHORT);
+            add(TOMBSTONE_MEDIUM);
+            add(TOMBSTONE_CROSS);
             add(GRAVE_CAGE);
             add(VAMPIRE_RACK);
             add(THRONE);
@@ -326,14 +325,17 @@ public class ModCreativeTabs {
             add(BASIC_TECH_CROSSBOW);
             add(ENHANCED_TECH_CROSSBOW);
 
-            add(CROSSBOW_ARROW_NORMAL);
-            add(CROSSBOW_ARROW_SPITFIRE);
-            add(CROSSBOW_ARROW_GARLIC);
-            add(CROSSBOW_ARROW_VAMPIRE_KILLER);
-            add(CROSSBOW_ARROW_TELEPORT);
-            add(CROSSBOW_ARROW_BLEEDING);
+            add(QUARREL_NORMAL);
+            add(QUARREL_HEAVY);
+            add(QUARREL_SPITFIRE);
+            add(QUARREL_GARLIC);
+            add(QUARREL_VAMPIRE_KILLER);
+            add(QUARREL_TELEPORT);
+            add(QUARREL_BLEEDING);
 
-            add(ARROW_CLIP);
+            add(QUARREL_CLIP);
+            add(HEAVY_QUARREL_CLIP);
+
             add(QUARREL_POUCH);
 
             add(PITCHFORK);
@@ -409,7 +411,7 @@ public class ModCreativeTabs {
             add(HUNTER_MINION_UPGRADE_ENHANCED);
             add(HUNTER_MINION_UPGRADE_SPECIAL);
 
-            add(ITEM_ALCHEMICAL_FIRE);
+            add(ALCHEMICAL_FIRE);
         }
 
         private void addBlocks() {

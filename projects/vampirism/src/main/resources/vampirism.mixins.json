@@ -22,6 +22,8 @@
     "PotionBrewingMixin",
     "PowderSnowBlockMixin",
     "SpawnStateMixin",
+    "StructureMixin",
+    "StructurePacketMixin",
     "SweetBerryBushBlockMixin",
     "ThrowablePotionItemMixin",
     "ThrownPotionMixin",
@@ -56,16 +58,16 @@
     "accessor.VanillaBlockLootAccessor",
     "accessor.VillagerHostilesSensorAccessor",
     "accessor.WalkAnimationStateAccessor",
-    "client.ItemInHandRendererMixin"
+    "MobEffectUtilMixin"
   ],
   "client": [
     "client.CapeLayerMixin",
     "client.GuiGraphicsExtractorMixin",
     "client.HumanoidArmorLayerMixin",
+    "client.ItemInHandRendererMixin",
     "client.LivingEntityRendererAccessor",
     "client.MinecraftMixin",
     "client.MutableSpriteSetMixin",
-    "client.ResourceLoadStateTrackerMixin",
     "client.SplashManagerMixin",
     "client.StatsScreenMixin",
     "client.accessor.FeatureRenderDispatcherAccessor",

@@ -1,16 +1,23 @@
 package de.teamlapen.faction.client.network;
 
+import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.client.FactionsClientMod;
-import de.teamlapen.faction.client.gui.screens.SelectMinionScreen;
+import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.skills.ClientSkillTreeData;
 import de.teamlapen.faction.common.factions.skills.ClientboundSkillTreePacket;
 import de.teamlapen.faction.common.network.packets.client.*;
+import de.teamlapen.faction.common.network.packets.server.ClientboundActionBindingPacket;
+import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
 import de.teamlapen.faction.common.world.IEventReceiver;
 import de.teamlapen.faction.common.world.inventory.FactionMenu;
 import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
+import de.teamlapen.gui.components.IComponentWithAction;
+import de.teamlapen.gui.screens.SelectionScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -32,7 +39,9 @@ public class FactionClientPayloadHandler {
     }
 
     public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> openScreen(new SelectMinionScreen(msg.action(), msg.minions())));
+        context.enqueueWork(() -> openScreen(new SelectionScreen(Component.translatable("gui.factionapi.select_minion"), msg.minions().stream().map(x -> IComponentWithAction.of(x.getSecond(), () -> {
+            FactionsMod.proxy.sendToServer(new ServerboundSelectMinionTaskPacket(x.getFirst(), ServerboundSelectMinionTaskPacket.RECALL));
+        })).toList())));
     }
 
     public static void handleTaskPacket(ClientboundTaskPacket msg, IPayloadContext context) {
@@ -58,6 +67,13 @@ public class FactionClientPayloadHandler {
 
     private static void openScreen(Screen screen) {
         Minecraft.getInstance().setScreen(screen);
+    }
+
+    public static void handleActionBindingPacket(ClientboundActionBindingPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var player = FactionPlayerHandler.get(context.player());
+            FactionConfig.preferences().actionBindings().update(player.getFaction(), msg.actionBindingId(), msg.action());
+        });
     }
 
     public static void handleEventPacket(ClientboundEventPacket msg, IPayloadContext context) {

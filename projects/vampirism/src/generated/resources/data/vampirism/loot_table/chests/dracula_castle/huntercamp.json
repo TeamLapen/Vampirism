@@ -21,7 +21,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "vampirism:crossbow_arrow_normal",
+          "name": "vampirism:quarrel_normal",
           "weight": 15
         },
         {

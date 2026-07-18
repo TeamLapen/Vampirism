@@ -1,0 +1,57 @@
+{
+  "parent": "vampirism:hunter/hunter_crossbow",
+  "criteria": {
+    "faction": {
+      "conditions": {
+        "type": "level",
+        "faction": "vampirism:hunter",
+        "level": 1
+      },
+      "trigger": "factionapi:faction"
+    },
+    "killed": {
+      "conditions": {
+        "fired_from_weapon": {
+          "items": "#vampirism:hunter_crossbows"
+        },
+        "victims": [
+          [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "distance": {
+                  "horizontal": {
+                    "min": 128.0
+                  }
+                }
+              }
+            }
+          ]
+        ]
+      },
+      "trigger": "minecraft:killed_by_arrow"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.crazed_gunman.desc"
+    },
+    "frame": "challenge",
+    "icon": {
+      "id": "vampirism:quarrel_normal"
+    },
+    "title": {
+      "translate": "advancement.vampirism.crazed_gunman"
+    }
+  },
+  "requirements": [
+    [
+      "killed"
+    ],
+    [
+      "faction"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

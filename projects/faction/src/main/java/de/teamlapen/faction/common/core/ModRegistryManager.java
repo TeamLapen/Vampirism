@@ -36,5 +36,6 @@ public class ModRegistryManager {
         eventBus.addListener(ModRegistries::registerDatapackRegistries);
         eventBus.addListener(FMLCommonSetupEvent.class, e -> e.enqueueWork(FactionStats::registerFormatter));
         eventBus.addListener(FactionCreativeTabs::addToExistingCreativeTabs);
+        eventBus.addListener(FactionEntities::registerPlayerEventHandler);
     }
 }

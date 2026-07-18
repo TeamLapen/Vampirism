@@ -32,14 +32,12 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
     private static final Logger LOGGER = LogManager.getLogger();
 
     protected final @NotNull IDefaultHelper helper;
-    protected final @Nullable Identifier overlayTexture;
 
     /**
      * @param helper If null a default one will be used
      */
-    public DefaultConvertingHandler(@Nullable IDefaultHelper helper, @Nullable Identifier overlayTexture) {
+    public DefaultConvertingHandler(@Nullable IDefaultHelper helper) {
         this.helper = Objects.requireNonNullElse(helper, new VampirismEntityRegistry.DefaultHelper(ConverterEntry.ConvertingAttributeModifier.DEFAULT));
-        this.overlayTexture = overlayTexture;
     }
 
     @Nullable
@@ -50,7 +48,6 @@ public class DefaultConvertingHandler<T extends PathfinderMob> implements IConve
             copyImportantStuff(convertedCreature, entity);
             convertedCreature.setUUID(Mth.createInsecureUUID(convertedCreature.getRandom())); //Set a new uuid to avoid confusion as the class of the entity associated with the uuid changes
             convertedCreature.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
-            convertedCreature.getSourceEntityDataParamOpt().ifPresent(s -> convertedCreature.asEntity().getEntityData().set(s, BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString()));
             return convertedCreature;
         }).orElse(null);
     }

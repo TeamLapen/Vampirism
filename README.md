@@ -17,7 +17,7 @@ For a more detailed description head over to the Minecraft Forum or the Cursefor
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/vampirism/versions)
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/translate/crowdin_vector.svg)](https://translate.vampirism.dev)
-[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/ghpages_vector.svg)](https://wiki.vampirism.dev/docs/wiki/intro)
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/gitbook_vector.svg)](https://wiki.vampirism.dev/docs/wiki/intro)
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/website_vector.svg)](https://vampirism.dev)
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_vector.svg)](https://discord.gg/wuamm4P)
 
@@ -72,61 +72,27 @@ The following labeling scheme is used:
 - Zeyke _Textures_
 - zozozrob _Textures/Models_
 
+## Datapacks
+Vampirism uses datapacks to configure blood values and other settings.
+
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg)](https://wiki.vampirism.dev/docs/data/intro)
+
 ## API
-Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more. For more information and an overview checkout the wiki https://wiki.vampirism.dev/docs/api/intro.
+Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more. For more information and an overview checkout the wiki.
 
-## Integrated Mods in gradle
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg)](https://wiki.vampirism.dev/docs/api/intro)
 
-To use Vampirism or FactionAPI as a compile-time dependency in your own mod, add the [Maxanier Maven repository](https://maven.maxanier.de/#/releases/de/teamlapen) and the relevant artifact to your build configuration.
+## Integrated Mods in Gradle
 
-Addon mods typically only need `faction-api` or `vampirism-api`. Use the full `Vampirism` artifact only if you need access to implementation internals at runtime.
+If you want to use FactionApi or Vampirism in your own mod, configure your Gradle setup as follows:
 
-### Gradle
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg)](./docs/depend-on.md)
 
-```groovy
-repositories {
-    maven {
-        name = "Maxanier"
-        url = "https://maven.maxanier.de/releases"
-        content {
-            includeGroupAndSubgroups "de.teamlapen"
-        }
-    }
-}
+## Project / Code Structure
 
-dependencies {
-    // FactionAPI
-    compileOnly "de.teamlapen.faction:FactionAPI-api:2.0.0"
-    runtimeOnly "de.teamlapen.faction:FactionAPI:2.0.0"
-    
-    // Vampirism API
-    compileOnly "de.teamlapen.vampirism:Vampirism-api:2.0.0"
-    runtimeOnly "de.teamlapen.vampirism:Vampirism:2.0.0"
-}
-```
+For more information about the project structure:
 
-## Code Structure
-
-### Branches
-
-| Branch                                             | Description                                |
-|----------------------------------------------------|--------------------------------------------|
-| dev                                                | The main development branch.               |
-| version/<mc-version>/[<sub-version>/]<mod-version> | The main branch for a specific MC version. |
-| feature/*                                          | A feature branches.                        |
-| pages/*                                            | The wiki pages deployed to github pages.   |
-
-### Projects
-
-| Project         | Description                                                                                                                                                                                                                                               |
-|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `faction-api`   | Pure API module defining the faction system: interfaces for faction registration, player faction handlers, events, registries, and sync abstractions. Depend on this when you only need to read/interact with faction state.                              |
-| `faction`       | Implementation of `faction-api`. Contains the full faction logic.                                                                                                                                                                                         |
-| `vampirism-api` | Pure API module for the Vampirism mod, extending `faction-api`. Exposes interfaces for vampire and hunter players, creature conversion, world events, difficulty, data maps, and all Vampirism registries. This is the primary dependency for addon mods. |
-| `vampirism`     | Full implementation of the Vampirism mod. Implements all vampire/hunter mechanics, world generation, entity conversions, mod integrations (JEI, GuideAPI, TerraBlender, …), and NeoForge service wiring. Depends on `vampirism-api` and `faction`;        |
-
-## Code Style
-The code style used in this project is the IntelliJ default one.
+[![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg)](./docs/structure.md)
 
 ## License
 The content in this repository is licensed as follows:  
@@ -156,6 +122,7 @@ The sounds used in this mod are individually licensed and may only be used outsi
 | blood_sucker              | Bernuy                | [freesound](https://freesound.org/people/Bernuy/sounds/268499/)                | CC Attribution |
 | Organ Ambience, Calm, A   | InspectorJ            | [freesound](https://freesound.org/people/InspectorJ/sounds/411991/)            | CC Attribution |
 | two drops.WAV             | Millavsb              | [freesound](https://freesound.org/people/Millavsb/sounds/197900/)              | CC0            |
+| Dark Choir 01             | Exsomniel             | [freesound](https://freesound.org/people/Exsomniel/sounds/207809/)             | CC0            |
 
 ##### Sit functionality - `sit` package
 

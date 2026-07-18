@@ -12,8 +12,4 @@ public interface IConverterEntry {
      */
     Converter converter();
 
-    /**
-     * @return The texture overlay for the converted entity
-     */
-    Optional<Identifier> overlay();
 }

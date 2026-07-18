@@ -26,7 +26,6 @@ public class ModDamageSources {
     private final DamageSource noBlood;
     private final DamageSource mother;
     private final DamageSource bleeding;
-    private final DamageSource leaveFaction;
     private final DamageSource ritualKnife;
 
     public ModDamageSources(RegistryAccess access) {
@@ -38,7 +37,6 @@ public class ModDamageSources {
         this.noBlood = init(ModDamageTypes.NO_BLOOD);
         this.mother = init(ModDamageTypes.MOTHER);
         this.bleeding = init(ModDamageTypes.BLEEDING);
-        this.leaveFaction = init(ModDamageTypes.LEAVE_FACTION);
         this.ritualKnife = init(ModDamageTypes.RITUAL_KNIFE);
     }
 
@@ -88,10 +86,6 @@ public class ModDamageSources {
 
     public DamageSource bleeding() {
         return this.bleeding;
-    }
-
-    public DamageSource leaveFaction() {
-        return leaveFaction;
     }
 
     public DamageSource flyingNeedle(LivingEntity attacker) {

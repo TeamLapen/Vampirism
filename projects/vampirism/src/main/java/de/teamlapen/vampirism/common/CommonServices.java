@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.common.world.entity.SundamageRegistry;
 import de.teamlapen.vampirism.common.world.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.common.world.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.common.world.items.ItemEventHandler;
+import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelHandler;
 import de.teamlapen.vampirism.common.world.items.recipes.ExtendedBrewingRecipeRegistry;
 import de.teamlapen.vampirism.common.world.items.recipes.RecipesSync;
 import de.teamlapen.vampirism.data.BloodConversionRegistry;
@@ -31,6 +32,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
+import net.neoforged.neoforge.event.DefaultDataComponentsBoundEvent;
 
 public class CommonServices extends Services implements IVampirismServices {
 
@@ -113,9 +116,10 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.addListener(this.versionUpdater::catchModVersionMismatch);
         bus.addListener(FMLCommonSetupEvent.class, e -> e.enqueueWork(ModEntitySelectors::registerSelectors));
         bus.addListener(FMLLoadCompleteEvent.class, e -> e.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe));
-        bus.addListener(FMLCommonSetupEvent.class, e -> this.supporterManager.init());
-        bus.addListener(FMLCommonSetupEvent.class, e -> this.settingsProvider.syncSettingsCache());
-        bus.addListener(FMLLoadCompleteEvent.class, e -> TelemetryCollector.execute());
+        bus.addListener(FMLCommonSetupEvent.class, _ -> this.supporterManager.init());
+        bus.addListener(FMLCommonSetupEvent.class, _ -> this.settingsProvider.syncSettingsCache());
+        bus.addListener(FMLLoadCompleteEvent.class, _ -> TelemetryCollector.execute());
+        bus.addListener(InterModProcessEvent.class, _ -> QuarrelHandler.collectQuarrels());
         bus.addListener(AddFactionTagEvent.class, ModFactions::registerFactionTags);
         bus.addListener(ModCreativeTabs::addToExistingCreativeTabs);
         bus.addListener(ModPacketDispatcher::registerHandler);
@@ -135,6 +139,7 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.register(this.villageEventHandler);
         bus.addListener(Permissions::registerNodes);
         bus.register(this.itemEventHandler);
+        bus.addListener(DefaultDataComponentsBoundEvent.class, _ -> QuarrelHandler.collectClips());
         bus.register(this.levelEventHandler);
     }
 }

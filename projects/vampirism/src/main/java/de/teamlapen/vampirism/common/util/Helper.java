@@ -18,18 +18,19 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
-import de.teamlapen.vampirism.common.world.entity.CrossbowArrowEntity;
+import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
 import de.teamlapen.vampirism.common.world.items.StakeItem;
-import de.teamlapen.vampirism.common.world.items.crossbow.arrow.VampireKillerBehavior;
+import de.teamlapen.vampirism.common.world.items.crossbow.behavior.VampireKillerBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.Containers;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -38,6 +39,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
@@ -209,8 +211,8 @@ public class Helper {
                 if (source.getDirectEntity() instanceof LivingEntity) {
                     //Maybe use all IVampireFinisher??
                     return source.getDirectEntity() instanceof IHunterMob || ((LivingEntity) source.getDirectEntity()).getMainHandItem().getItem() instanceof StakeItem;
-                } else if (source.getDirectEntity() instanceof CrossbowArrowEntity) {
-                    return ((CrossbowArrowEntity) source.getDirectEntity()).getArrowType() instanceof VampireKillerBehavior;
+                } else if (source.getDirectEntity() instanceof QuarrelEntity quarrel) {
+                    return quarrel.getBehavior().orElse(null) instanceof VampireKillerBehavior;
                 }
                 return false;
             }
@@ -238,5 +240,50 @@ public class Helper {
             }
         }
         return false;
+    }
+
+    /**
+     * Reduce stack size by one and handle remainder (e.g. empty bucket when crafting with a water bucket)
+     * If the stack is not empty, the remainder is added to the player's inventory
+     *
+     * @param stack  Will be shrunk by 1
+     * @param player The player to give the crafting remainder to, if necessary
+     * @return The reduced stack if still >0 or the remainder or empty if neither exist. Update the inventory with this.
+     */
+    public static ItemStack shrinkItemStack(ItemStack stack, Player player) {
+        ItemStackTemplate remainder = stack.getCraftingRemainder();
+        stack.shrink(1);
+        if (remainder != null) {
+            if (stack.isEmpty()) {
+                return remainder.create();
+            } else {
+                player.getInventory().placeItemBackInInventory(remainder.create());
+
+            }
+        }
+        return stack;
+    }
+
+    /**
+     * Reduce stack size by one and handle remainder (e.g. empty bucket when crafting with a water bucket)
+     * If the stack is not empty, the remainder is added to the player's inventory
+     *
+     * @param stack Will be shrunk by 1
+     * @param level The level to spawn the remainder itemstack in, if necessary
+     * @param pos   The position to spawn the remainder itemstack at, if necessary
+     * @return The reduced stack if still >0 or the remainder or empty if neither exist. Update the inventory with this.
+     */
+    public static ItemStack shrinkItemStack(ItemStack stack, Level level, BlockPos pos) {
+        ItemStackTemplate remainder = stack.getCraftingRemainder();
+        stack.shrink(1);
+        if (remainder != null) {
+            if (stack.isEmpty()) {
+                return remainder.create();
+            } else {
+                Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), remainder.create());
+
+            }
+        }
+        return stack;
     }
 }

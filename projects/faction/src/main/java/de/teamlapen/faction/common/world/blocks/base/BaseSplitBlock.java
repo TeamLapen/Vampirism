@@ -30,7 +30,7 @@ public class BaseSplitBlock extends Block {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
 
     private final VoxelShape NORTH_MAIN, EAST_MAIN, SOUTH_MAIN, WEST_MAIN;
-    private final VoxelShape NORTH_SUB,  EAST_SUB,  SOUTH_SUB,  WEST_SUB;
+    private final VoxelShape NORTH_SUB, EAST_SUB, SOUTH_SUB, WEST_SUB;
 
     private final boolean vertical;
 
@@ -137,7 +137,7 @@ public class BaseSplitBlock extends Block {
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+        return rotate(state, mirror.getRotation(state.getValue(FACING)));
     }
 
     @Override

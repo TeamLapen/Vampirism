@@ -4,11 +4,11 @@
     "models": [
       {
         "type": "minecraft:model",
-        "model": "vampirism:block/blood_container/blood_container"
+        "model": "vampirism:block/blood_container"
       },
       {
         "type": "minecraft:special",
-        "base": "vampirism:block/blood_container/blood_container",
+        "base": "vampirism:block/blood_container",
         "model": {
           "type": "vampirism:blood_container"
         }

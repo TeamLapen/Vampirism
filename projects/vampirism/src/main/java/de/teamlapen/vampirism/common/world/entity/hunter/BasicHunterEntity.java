@@ -152,8 +152,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
         FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    boolean hasIncreasedStats = lord.asSkillPlayer().map(ISkillPlayer::getSkillHandler).map(s -> s.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
-                    HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
+                    HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(lord, this);
                     var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registryAccess());
                     this.serializeAttachments(output);
                     data.updateEntityCaps(output.buildResult());
@@ -163,6 +162,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                         return;
                     }
                     HunterMinionEntity minion = ModEntities.HUNTER_MINION.get().create(this.level(), EntitySpawnReason.CONVERSION);
+                    minion.setHealth(data.getMaxHealth());
                     minion.claimMinionSlot(id, controller);
                     minion.copyPosition(this);
                     minion.markAsConverted();
@@ -438,7 +438,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IHunterCrossbow) {
-            return net.neoforged.neoforge.common.CommonHooks.getProjectile(this, stack, ModItems.CROSSBOW_ARROW_NORMAL.get().getDefaultInstance());
+            return net.neoforged.neoforge.common.CommonHooks.getProjectile(this, stack, ModItems.QUARREL_NORMAL.get().getDefaultInstance());
         }
         return super.getProjectile(stack);
     }

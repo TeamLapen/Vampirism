@@ -47,6 +47,7 @@ public class ModStats {
     public static final DeferredHolder<Identifier, Identifier> BLOOD_DRUNK = add("blood_drunk", BUCKED_FORMATTER);
     public static final DeferredHolder<Identifier, Identifier> RESURRECTED = add("resurrected");
     public static final DeferredHolder<Identifier, Identifier> KILLED_WITH_STAKE = add("killed_with_stake");
+    public static final DeferredHolder<Identifier, Identifier> VAMPIRE_KILLED_WITH_CROSSBOW = add("vampire_killed_with_crossbow");
     public static final DeferredHolder<Identifier, Identifier> MOTHER_DEFEATED = add("mother_defeated");
 
     private static DeferredHolder<Identifier, Identifier> add(String name) {

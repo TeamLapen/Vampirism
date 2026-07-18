@@ -125,6 +125,13 @@ public class MinionWorldData extends SavedData implements ValueIOSerializable {
         controllers.remove(lordID);
     }
 
+    public void removeController(UUID lordID) {
+        var c = controllers.remove(lordID);
+        if (c != null) {
+            c.removeMinions();
+        }
+    }
+
     /**
      * Tick server side
      */

@@ -2,6 +2,7 @@ package de.teamlapen.faction.common.core;
 
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.api.util.REFERENCE;
+import de.teamlapen.faction.common.event.PlayerEventHandlerEvent;
 import de.teamlapen.faction.common.advancements.criterion.FactionSubPredicate;
 import de.teamlapen.faction.common.advancements.criterion.PlayerFactionSubPredicate;
 import net.minecraft.advancements.criterion.EntitySubPredicate;
@@ -30,5 +31,9 @@ public class FactionEntities {
     static void register(IEventBus bus) {
         DATA_SERIALIZER.register(bus);
         ENTITY_SUB_PREDICATES.register(bus);
+    }
+
+    static void registerPlayerEventHandler(PlayerEventHandlerEvent event) {
+        event.addAttachmentListener(FactionAttachments.FACTION_PLAYER_HANDLER);
     }
 }

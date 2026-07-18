@@ -47,7 +47,6 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
     private static final Logger LOGGER = LogManager.getLogger();
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedCreatureEntity.class, EntityDataSerializers.STRING);
 
     public static boolean spawnPredicate(EntityType<? extends ConvertedCreatureEntity<?>> entityType, @NotNull LevelAccessor iWorld, EntitySpawnReason spawnReason, @NotNull BlockPos blockPos, RandomSource random) {
         return (iWorld.getBlockState(blockPos.below()).getBlock() == Blocks.GRASS_BLOCK || iWorld.getBlockState(blockPos.below()).is(ModBlockTags.CURSED_EARTH)) && iWorld.getRawBrightness(blockPos, 0) > 8;
@@ -204,12 +203,6 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         return CONVERTING;
     }
 
-    @Override
-    public EntityDataAccessor<String> getSourceEntityDataParam() {
-        return OVERLAY_TEXTURE;
-    }
-
-
     public Optional<T> getOldCreature() {
         return this.entityCreature;
     }
@@ -228,9 +221,6 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
 
         this.canDespawn = input.getBooleanOr("converted_canDespawn", true);
         input.getInt("ConversionTime").filter(time -> time > -1).ifPresent(time -> this.startConverting(input.read("ConversionPlayer", UUIDUtil.CODEC).orElse(null), time, this));
-        if (input.child("source_entity").isEmpty()) {
-            getSourceEntityDataParamOpt().ifPresent(p -> getOldCreature().ifPresent(old -> this.asEntity().getEntityData().set(p, BuiltInRegistries.ENTITY_TYPE.getKey(old.getType()).toString())));
-        }
     }
 
     @Override
@@ -294,7 +284,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
     @Nullable
     protected IConvertingHandler<?> getConvertedHandler() {
         if (entityCreature.isEmpty()) return null;
-        IConvertingHandler<?> handler = this.entityCreature.map(s -> VampirismApi.services().entityRegistry().getConverterEntry(s)).map(s -> s.converter().createHandler(s.overlay().orElse(null))).orElse(null);
+        IConvertingHandler<?> handler = this.entityCreature.map(s -> VampirismApi.services().entityRegistry().getConverterEntry(s)).map(s -> s.converter().createHandler()).orElse(null);
         if (handler == null) {
             LOGGER.warn("No converting handler found for {}", entityCreature.get());
         }

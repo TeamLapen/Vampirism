@@ -42,16 +42,17 @@ public class ModItemTags {
 
     public static final TagKey<Item> HEART_SEEKER = tag("swords/heart_seeker");
     public static final TagKey<Item> HEART_STRIKER = tag("swords/heart_striker");
+    public static final TagKey<Item> HUNTER_AXE = tag("swords/hunter_axe");
 
-    public static final TagKey<Item> SINGLE_CROSSBOWS = tag("crossbows/single");
-    public static final TagKey<Item> DOUBLE_CROSSBOWS = tag("crossbows/double");
-    public static final TagKey<Item> TECH_CROSSBOWS = tag("crossbows/tech");
-    public static final TagKey<Item> BASIC_CROSSBOWS = tag("crossbows/basic");
-    public static final TagKey<Item> ENHANCED_CROSSBOWS = tag("crossbows/enhanced");
-    public static final TagKey<Item> CROSSBOWS = tag("crossbows");
+    public static final TagKey<Item> SINGLE_HUNTER_CROSSBOWS = tag("hunter_crossbows/single");
+    public static final TagKey<Item> DOUBLE_HUNTER_CROSSBOWS = tag("hunter_crossbows/double");
+    public static final TagKey<Item> TECH_HUNTER_CROSSBOWS = tag("hunter_crossbows/tech");
+    public static final TagKey<Item> BASIC_HUNTER_CROSSBOWS = tag("hunter_crossbows/basic");
+    public static final TagKey<Item> ENHANCED_HUNTER_CROSSBOWS = tag("hunter_crossbows/enhanced");
+    public static final TagKey<Item> HUNTER_CROSSBOWS = tag("hunter_crossbows");
 
-    public static final TagKey<Item> CROSSBOW_ARROW = tag("crossbow_arrow");
-    public static final TagKey<Item> ADVANCED_HUNTER_CROSSBOW_ARROWS = tag("advanced_hunter_crossbow_arrows");
+    public static final TagKey<Item> QUARRELS = tag("quarrels");
+    public static final TagKey<Item> ADVANCED_HUNTER_USABLE_QUARRELS = tag("advanced_hunter_usable_quarrels");
 
     public static final TagKey<Item> ARMOR_OF_SWIFTNESS = tag("armors/armor_of_swiftness");
     public static final TagKey<Item> ARMOR_OF_SWIFTNESS_NORMAL = tag("armors/armor_of_swiftness/normal");

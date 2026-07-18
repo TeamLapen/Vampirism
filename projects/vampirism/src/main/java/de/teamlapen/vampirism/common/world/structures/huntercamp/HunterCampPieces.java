@@ -106,7 +106,7 @@ public abstract class HunterCampPieces extends StructurePiece {
             }
 
             //generation
-            this.placeBlock(worldIn, ModConfig.common().useVanillaCampfire.get() ? Blocks.CAMPFIRE.defaultBlockState() : ModBlocks.FIRE_PLACE.get().defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
+            this.placeBlock(worldIn, Blocks.CAMPFIRE.defaultBlockState(), 1, 0, 1, structureBoundingBoxIn);
             this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), 1, 1, 1, structureBoundingBoxIn);
         }
 

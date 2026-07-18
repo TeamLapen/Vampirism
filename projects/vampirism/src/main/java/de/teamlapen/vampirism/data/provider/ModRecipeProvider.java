@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
-import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModOils;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
@@ -21,14 +20,16 @@ import de.teamlapen.vampirism.data.ModBlockFamilies;
 import de.teamlapen.vampirism.data.provider.base.VampirismRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -37,11 +38,11 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.fluids.FluidStackTemplate;
+import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
 import net.neoforged.neoforge.registries.holdersets.NotHolderSet;
 import org.jetbrains.annotations.Range;
@@ -72,13 +73,6 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         recipesWeaponTable();
         recipesInfuser();
 
-        BuiltInRegistries.ITEM.getOptional(REFERENCE.GUIDEBOOK_LOCATION).ifPresent(guideBook ->
-                shapeless(RecipeCategory.MISC, guideBook)
-                        .requires(ModItems.VAMPIRE_FANG)
-                        .requires(Items.BOOK)
-                        .unlockedBy("has_fang", has(ModItems.VAMPIRE_FANG))
-                        .save(output.withConditions(new ModLoadedCondition(REFERENCE.GUIDEAPI_MODID)), modString("vampirism_guidebook"))
-        );
 
         SpecialRecipeBuilder.special(ApplicableOilRecipe::new).save(output, modString("applicable_oil"));
         SpecialRecipeBuilder.special(CleanOilRecipe::new).save(output, modString("clean_oil"));
@@ -293,13 +287,6 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     }
 
     private void recipesDecorationalBlocks() {
-        shaped(RecipeCategory.DECORATIONS, ModItems.FIRE_PLACE)
-                .pattern(" X ")
-                .pattern("XYX")
-                .define('X', LOG)
-                .define('Y', COAL_BLOCK)
-                .unlockedBy("has_logs", has(LOG))
-                .save(output);
         shaped(RecipeCategory.DECORATIONS, ModItems.CANDLE_STICK)
                 .pattern(" I ")
                 .pattern("NNN")
@@ -342,23 +329,25 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_planks", has(PLANKS))
                 .unlockedBy("has_holy", has(HOLY_WATER))
                 .save(output);
-        shapeless(RecipeCategory.DECORATIONS, ModItems.TOMBSTONE1)
-                .requires(ModItems.TOMBSTONE2)
-                .unlockedBy("has_tomb", has(ModItems.TOMBSTONE2))
+        shaped(RecipeCategory.DECORATIONS, ModItems.TOMBSTONE_SHORT)
+                .pattern("SS")
+                .pattern("SS")
+                .define('S', Items.STONE_SLAB)
+                .unlockedBy("has_stone_slab", has(Items.STONE_SLAB))
                 .save(output);
-        shaped(RecipeCategory.DECORATIONS, ModItems.TOMBSTONE2)
-                .pattern("XX ")
-                .pattern("XYX")
-                .pattern("XXX")
-                .define('X', COBBLESTONE)
-                .define('Y', STONE)
-                .unlockedBy("has_coble", has(COBBLESTONE))
-                .unlockedBy("has_stone", has(STONE))
+        shaped(RecipeCategory.DECORATIONS, ModItems.TOMBSTONE_MEDIUM)
+                .pattern("SS")
+                .pattern("SS")
+                .pattern("SS")
+                .define('S', Items.STONE_SLAB)
+                .unlockedBy("has_stone_slab", has(Items.STONE_SLAB))
                 .save(output);
-        shapeless(RecipeCategory.DECORATIONS, ModItems.TOMBSTONE3)
-                .requires(ModItems.TOMBSTONE2)
-                .requires(Blocks.COBBLESTONE)
-                .unlockedBy("has_tomb", has(ModItems.TOMBSTONE2))
+        shaped(RecipeCategory.DECORATIONS, ModItems.TOMBSTONE_CROSS)
+                .pattern(" S ")
+                .pattern("SSS")
+                .pattern(" S ")
+                .define('S', Items.STONE_SLAB)
+                .unlockedBy("has_stone_slab", has(Items.STONE_SLAB))
                 .save(output);
         shaped(RecipeCategory.DECORATIONS, ModItems.GRAVE_CAGE)
                 .pattern(" X ")
@@ -606,17 +595,22 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("planks", has(PLANKS))
                 .save(output);
 
-        shaped(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL, 6)
+        shaped(RecipeCategory.COMBAT, ModItems.QUARREL_NORMAL, 6)
                 .pattern("X")
                 .pattern("Y")
                 .define('X', IRON_INGOT)
                 .define('Y', STICK)
                 .unlockedBy("has_iron_ingot", has(IRON_INGOT))
                 .save(output);
-        shapeless(RecipeCategory.COMBAT, ModItems.CROSSBOW_ARROW_NORMAL)
+        shapeless(RecipeCategory.COMBAT, ModItems.QUARREL_NORMAL)
                 .requires(Items.ARROW)
                 .unlockedBy("has_arrow", has(Items.ARROW))
-                .save(output, modString("crossbow_arrow_from_vanilla"));
+                .save(output, modString("quarrel_from_vanilla_arrow"));
+        shapeless(RecipeCategory.COMBAT, ModItems.QUARREL_HEAVY, 6)
+                .requires(ModItems.QUARREL_NORMAL, 6)
+                .requires(IRON_INGOT)
+                .unlockedBy("has_quarrel_normal", has(ModItems.QUARREL_NORMAL))
+                .save(output);
 
         shaped(RecipeCategory.MISC, ModItems.UMBRELLA)
                 .pattern("###")
@@ -814,7 +808,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output, modString("luck_oil"));
         alchemyTable(ModOils.SMELT)
                 .bloodOilIngredient()
-                .input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE))
+                .input(Ingredient.of(ModItems.ALCHEMICAL_FIRE))
                 .save(output, modString("smelt_oil"));
         alchemyTable(ModOils.TELEPORT)
                 .bloodOilIngredient()
@@ -830,7 +824,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output, modString("garlic_oil"));
         alchemyTable(ModOils.SPITFIRE)
                 .plantOilIngredient()
-                .input(Ingredient.of(ModItems.ITEM_ALCHEMICAL_FIRE))
+                .input(Ingredient.of(ModItems.ALCHEMICAL_FIRE))
                 .save(output, modString("spitfire_oil"));
         alchemyTable(ModOils.BLEEDING)
                 .plantOilIngredient()
@@ -845,19 +839,19 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
     private void recipesAlchemyCauldron() {
         cauldronRecipe(ModItems.PURE_SALT, 4)
                 .withIngredient(GARLIC)
-                .withFluid(new FluidStackTemplate(Fluids.WATER, 1))
+                .withFluid(new FluidStackTemplate(Fluids.WATER, FluidType.BUCKET_VOLUME))
                 .withSkills(HunterSkills.BASIC_ALCHEMY)
                 .cookTime(1200)
                 .save(output);
-        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE, 4)
+        cauldronRecipe(ModItems.ALCHEMICAL_FIRE, 4)
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_NORMAL)
                 .save(output, modString("alchemical_fire_4"));
-        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE, 5)
+        cauldronRecipe(ModItems.ALCHEMICAL_FIRE, 5)
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ENHANCED)
                 .save(output, modString("alchemical_fire_5"));
-        cauldronRecipe(ModItems.ITEM_ALCHEMICAL_FIRE, 6)
+        cauldronRecipe(ModItems.ALCHEMICAL_FIRE, 6)
                 .withIngredient(Items.GUNPOWDER)
                 .withFluid(ModItems.HOLY_WATER_BOTTLE_ULTIMATE)
                 .save(output, modString("alchemical_fire_6"));
@@ -1399,22 +1393,55 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .pattern("YZAY")
                 .pattern("XYYX")
                 .pattern("XYYX")
-                .define('X', ModItems.ITEM_ALCHEMICAL_FIRE)
+                .define('X', ModItems.ALCHEMICAL_FIRE)
                 .define('Y', GOLD_BLOCK)
                 .define('Z', ModItems.HOLY_WATER_BOTTLE_ENHANCED)
                 .define('A', ModItems.STAKE)
-                .unlockedBy("fire", has(ModItems.ITEM_ALCHEMICAL_FIRE))
+                .unlockedBy("fire", has(ModItems.ALCHEMICAL_FIRE))
                 .unlockedBy("gold", has(GOLD_BLOCK))
                 .unlockedBy("holy_water", has(ModItems.HOLY_WATER_BOTTLE_ENHANCED))
                 .unlockedBy("stake", has(ModItems.STAKE))
                 .skills(HunterSkills.ULTIMATE_CRUCIFIX)
                 .save(output);
 
-        crossbowArrowRecipe(ModItems.CROSSBOW_ARROW_TELEPORT, ModOils.TELEPORT, 1);
-        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_SPITFIRE, ModOils.SPITFIRE);
-        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_GARLIC, ModOils.GARLIC);
-        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_BLEEDING, ModOils.BLEEDING);
-        upToThreeCrossbowArrowRecipe(ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER, ModOils.VAMPIRE_KILLER);
+        quarrelRecipe(ModItems.QUARREL_TELEPORT, ModOils.TELEPORT, 1);
+        upToThreeQuarrelRecipe(ModItems.QUARREL_SPITFIRE, ModOils.SPITFIRE);
+        upToThreeQuarrelRecipe(ModItems.QUARREL_GARLIC, ModOils.GARLIC);
+        upToThreeQuarrelRecipe(ModItems.QUARREL_BLEEDING, ModOils.BLEEDING);
+        upToThreeQuarrelRecipe(ModItems.QUARREL_VAMPIRE_KILLER, ModOils.VAMPIRE_KILLER);
+
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_CLIP)
+                .requires(ModItems.QUARREL_NORMAL, 16)
+                .unlockedBy("has_quarrel_normal", has(ModItems.QUARREL_NORMAL))
+                .unlockedBy("has_tech_crossbow", has(ModItemTags.TECH_HUNTER_CROSSBOWS))
+                .lava(0)
+                .save(output, modString("quarrel_clip_from_quarrels"));
+        shapelessWeaponTable(RecipeCategory.COMBAT, ModItems.HEAVY_QUARREL_CLIP)
+                .requires(ModItems.QUARREL_HEAVY, 8)
+                .unlockedBy("has_quarrel_heavy", has(ModItems.QUARREL_HEAVY))
+                .unlockedBy("has_tech_crossbow", has(ModItemTags.TECH_HUNTER_CROSSBOWS))
+                .lava(0)
+                .save(output, modString("heavy_quarrel_clip_from_quarrels"));
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.QUARREL_CLIP)
+                .pattern(" NN ")
+                .pattern("NIIN")
+                .pattern(" SS ")
+                .pattern(" NN ")
+                .define('I', IRON_INGOT)
+                .define('N', IRON_NUGGET)
+                .define('S', STICK)
+                .lava(0)
+                .save(output);
+        shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HEAVY_QUARREL_CLIP)
+                .pattern("NIIN")
+                .pattern("NIIN")
+                .pattern(" SS ")
+                .pattern(" NN ")
+                .define('I', IRON_INGOT)
+                .define('N', IRON_NUGGET)
+                .define('S', STICK)
+                .lava(0)
+                .save(output);
     }
 
     private void recipesInfuser() {

@@ -56,7 +56,6 @@ import java.util.Optional;
 public class ConvertedVillagerEntity extends VampirismVillagerEntity implements CurableConvertedCreature<Villager, ConvertedVillagerEntity>, ICaptureStrengthProvider {
 
     private static final EntityDataAccessor<Boolean> CONVERTING = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<String> OVERLAY_TEXTURE = SynchedEntityData.defineId(ConvertedVillagerEntity.class, EntityDataSerializers.STRING);
 
     protected static final Brain.Provider<Villager> BRAIN_PROVIDER;
 
@@ -151,11 +150,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     }
 
     @Override
-    public @NotNull EntityDataAccessor<String> getSourceEntityDataParam() {
-        return OVERLAY_TEXTURE;
-    }
-
-    @Override
     public void drinkBlood(int amt, float saturationMod, boolean useRemaining, IDrinkBloodContext drinkContext) {
         BloodDrinkEvent.@NotNull EntityDrinkBloodEvent event = VampirismEventFactory.fireVampireDrinkBlood(this, amt, saturationMod, useRemaining, drinkContext);
         this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, event.getAmount() * 20));
@@ -230,11 +224,6 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     public void readAdditionalSaveData(@NotNull ValueInput input) {
         super.readAdditionalSaveData(input);
         this.readAdditionalSaveDataC(input);
-        String source = getSourceEntityId();
-        if(source == null || source.isEmpty()) {
-            //Converted villager entity should always have the villager source entity id. However, if summoned this field is not yet set, so setting it here
-            this.asEntity().getEntityData().set(this.getSourceEntityDataParam(), BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VILLAGER).toString());
-        }
     }
 
     @Override

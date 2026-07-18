@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.common.world.entity.converted.GeneratedVampirismConvertedEntitiesClient;
 import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
@@ -46,7 +47,6 @@ public class ModEntityRenderStates {
     public static final ContextKey<Float> ATTACK_TIME = create("attack_time");
     public static final ContextKey<HumanoidArm> ATTACK_ARM = create("attack_arm");
     public static final ContextKey<Identifier> OVERLAY = create("overlay");
-    public static final ContextKey<Identifier> CONVERTED_OVERLAY = create("converted_overlay");
     public static final ContextKey<Boolean> HUNTER = create("hunter");
     public static final ContextKey<Boolean> HUNTER_DISGUISED = create("hunter/disguised");
     public static final ContextKey<Boolean> HUNTER_FULL_COAT = create("hunter/full_coat");
@@ -145,20 +145,6 @@ public class ModEntityRenderStates {
                 state.setRenderData(DRACULA_WINGS_FLY, vampire.flyAnimationState());
                 state.setRenderData(DRACULA_WINGS_TEXTURE, vampire.getCustomization().wingsTexture());
             }
-        }
-    }
-
-    private static void extractConvertedCreature(LivingEntity entity, LivingEntityRenderState renderState) {
-        if (entity instanceof IConvertedCreature<?> creature) {
-            Optional.ofNullable(creature.getSourceEntityId()).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> renderState.setRenderData(CONVERTED_OVERLAY, location));
-        }
-    }
-
-    private static void extractConvertedOverlay(LivingEntity entity, LivingEntityRenderState renderState) {
-        if (ConvertedCreatureRenderer.renderOverlay) {
-            Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType())).map(Identifier::toString).map(s -> VampirismApi.services().entityRegistry().getConvertibleOverlay(s)).ifPresent(location -> {
-                renderState.setRenderData(ModEntityRenderStates.OVERLAY, location);
-            });
         }
     }
 

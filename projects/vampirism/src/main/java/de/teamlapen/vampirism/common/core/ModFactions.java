@@ -10,6 +10,8 @@ import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.registries.factions.DeferredFaction;
 import de.teamlapen.faction.api.registries.factions.DeferredFactionRegister;
 import de.teamlapen.faction.api.util.SafeCast;
+import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
+import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.factions.PlayableFactionBuilder;
@@ -55,7 +57,8 @@ public class ModFactions {
             .village(VampireVillage::vampireVillage)
             .lord(builder -> builder
                     .lordLevel(REFERENCE.HIGHEST_VAMPIRE_LORD)
-                    .lordTitle(new LordTitles.VampireTitles()))
+                    .lordTitle(new LordTitles.VampireTitles())
+            )
             .build());
 
     public static final DeferredFaction<IHunterPlayer, IPlayableFaction<IHunterPlayer>> HUNTER = FACTIONS.registerFaction(VampirismFactions.Keys.HUNTER.getPath(), () -> new PlayableFactionBuilder<>(SafeCast.<Supplier<AttachmentType<IHunterPlayer>>>cast(ModAttachments.HUNTER_PLAYER))
@@ -64,19 +67,40 @@ public class ModFactions {
             .highestLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
             .village(HunterVillage::hunterVillage)
             .lord(builder -> builder
+                    .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD)
                     .lordTitle(new LordTitles.HunterTitles())
-                    .lordLevel(REFERENCE.HIGHEST_HUNTER_LORD).build())
+            )
             .build());
 
     public static final DeferredHolder<IMinionEntry<?, ?>, IMinionEntry<IVampirePlayer, VampireMinionEntity.VampireMinionData>> VAMPIRE_MINION = MINIONS.register(VampirismFactions.Keys.VAMPIRE.getPath(), () ->
-            new MinionEntryBuilder<>(VAMPIRE, VampireMinionEntity.VampireMinionData::new)
+            new MinionEntryBuilder<>(VAMPIRE, new IMinionEntry.IMinionCreator<IVampirePlayer, VampireMinionEntity.VampireMinionData>() {
+                @Override
+                public VampireMinionEntity.VampireMinionData create(IVampirePlayer player, ICustomizationHolder customizationHolder) {
+                    return new VampireMinionEntity.VampireMinionData(player, customizationHolder);
+                }
+
+                @Override
+                public VampireMinionEntity.VampireMinionData create() {
+                    return new VampireMinionEntity.VampireMinionData();
+                }
+            })
                     .commandBuilder(ModEntities.VAMPIRE_MINION, builder -> builder
                             .with("name", "Vampire", StringArgumentType.string(), MinionData::setName, StringArgumentType::getString)
                             .with("texture", -1, IntegerArgumentType.integer(-1, IBasicVampire.TYPES), VampireMinionEntity.VampireMinionData::setType, IntegerArgumentType::getInteger)
                             .with("use_lord_skin", false, BoolArgumentType.bool(), VampireMinionEntity.VampireMinionData::setUseLordSkin, BoolArgumentType::getBool)).build());
 
     public static final DeferredHolder<IMinionEntry<?, ?>, IMinionEntry<IHunterPlayer, HunterMinionEntity.HunterMinionData>> HUNTER_MINION = MINIONS.register(VampirismFactions.Keys.HUNTER.getPath(), () ->
-            new MinionEntryBuilder<>(HUNTER, HunterMinionEntity.HunterMinionData::new)
+            new MinionEntryBuilder<>(HUNTER, new IMinionEntry.IMinionCreator<IHunterPlayer, HunterMinionEntity.HunterMinionData>() {
+                @Override
+                public HunterMinionEntity.HunterMinionData create(IHunterPlayer player, ICustomizationHolder customizationHolder) {
+                    return new HunterMinionEntity.HunterMinionData(player, customizationHolder);
+                }
+
+                @Override
+                public HunterMinionEntity.HunterMinionData create() {
+                    return new HunterMinionEntity.HunterMinionData();
+                }
+            })
                     .commandBuilder(ModEntities.HUNTER_MINION, builder -> builder
                             .with("name", "Hunter", StringArgumentType.string(), MinionData::setName, StringArgumentType::getString)
                             .with("texture", -1, IntegerArgumentType.integer(-1, IBasicHunter.TYPES), HunterMinionEntity.HunterMinionData::setType, IntegerArgumentType::getInteger)
@@ -98,8 +122,7 @@ public class ModFactions {
                 .add(FactionRegistries.Keys.FACTION, VampirismTags.Factions.IS_HUNTER)
                 .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.HUNTER_FOOD)
                 .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_HUNTER)
-                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_HUNTER)
-        ;
+                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_HUNTER);
 
         event.faction(VAMPIRE)
                 .add(Registries.BIOME, ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME)
@@ -110,9 +133,7 @@ public class ModFactions {
                 .add(FactionRegistries.Keys.FACTION, VampirismTags.Factions.IS_VAMPIRE)
                 .add(Registries.DATA_COMPONENT_TYPE, ModDataComponentTags.VAMPIRE_FOOD)
                 .add(VampirismRegistries.Keys.VAMPIRE_BOOK, ModVampireBookTags.IS_VAMPIRE)
-                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_VAMPIRE)
-        ;
-
+                .addCustom(FactionTagKeys.ACTION_DISABLES, ModEffectTags.DISABLES_ACTIONS_VAMPIRE);
     }
 
 }

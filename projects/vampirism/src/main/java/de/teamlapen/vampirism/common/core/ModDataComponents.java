@@ -16,6 +16,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Unit;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -30,7 +31,6 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<AppliedOilContent>> APPLIED_OIL = ITEM_DATA_COMPONENTS.register(VampirismDataComponents.Keys.APPLIED_OIL.getPath(), () -> DataComponentType.<AppliedOilContent>builder().persistent(AppliedOilContent.CODEC).networkSynchronized(AppliedOilContent.STREAM_CODEC).cacheEncoding().build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<IVampireBook>> VAMPIRE_BOOK = ITEM_DATA_COMPONENTS.register(VampirismDataComponents.Keys.VAMPIRE_BOOK.getPath(), () -> DataComponentType.<IVampireBook>builder().persistent(VampireBook.CODEC).networkSynchronized(VampireBook.STREAM_CODEC).cacheEncoding().build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>> BLOOD_CONTAINER = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.BLOOD_CONTAINER.getPath(), builder -> builder.persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC));
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ContainedProjectiles>> CONTAINED_PROJECTILES = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.CONTAINED_PROJECTILES.getPath(), builder -> builder.persistent(ContainedProjectiles.CODEC).networkSynchronized(ContainedProjectiles.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> DO_NOT_NAME = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.DO_NOT_NAME.getPath(), builder -> builder.persistent(MapCodec.unitCodec(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SwordTraining>> VAMPIRE_SWORD = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.VAMPIRE_SWORD.getPath(), builder -> builder.persistent(SwordTraining.CODEC).networkSynchronized(SwordTraining.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BloodCharged>> BLOOD_CHARGED = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.BLOOD_CHARGED.getPath(), builder -> builder.persistent(BloodCharged.CODEC).networkSynchronized(BloodCharged.STREAM_CODEC));
@@ -44,6 +44,8 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> ACTIVE = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.ACTIVE.getPath(), builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> HELD_ENTITY = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.HELD_ENTITY.getPath(), builder -> builder.persistent(CompoundTag.CODEC).networkSynchronized(ByteBufCodecs.COMPOUND_TAG));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> CHARGED_RITUAL_KNIFE = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.CHARGED_RITUAL_KNIFE.getPath(), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemStackTemplate>> CONTAINED_PROJECTILES = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.CONTAINED_PROJECTILES.getPath(), builder -> builder.persistent(ItemStackTemplate.CODEC).networkSynchronized(ItemStackTemplate.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<EnchantmentOverride>> ENCHANTMENT_OVERRIDE = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.ENCHANTMENT_OVERRIDE.getPath(), builder -> builder.persistent(EnchantmentOverride.CODEC).networkSynchronized(EnchantmentOverride.STREAM_CODEC));
 
     public static final DeferredHolder<DataComponentPredicate.Type<?>, DataComponentPredicate.Type<VampireBookPredicate>> VAMPIRE_BOOK_PREDICATE = ITEM_DATA_COMPONENTS_PREDICATES.register("vampire_book", () -> new DataComponentPredicate.ConcreteType<>(VampireBookPredicate.CODEC));
     public static final DeferredHolder<DataComponentPredicate.Type<?>, DataComponentPredicate.Type<ChargedRitualKnifePredicate>> CHARGED_RITUAL_KNIFE_PREDICATE = ITEM_DATA_COMPONENTS_PREDICATES.register("charged_ritual_knife", () -> new DataComponentPredicate.ConcreteType<>(ChargedRitualKnifePredicate.CODEC));

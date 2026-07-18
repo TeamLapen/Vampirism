@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "vampirism:item_alchemical_fire"
+            "items": "vampirism:alchemical_fire"
           }
         ]
       },

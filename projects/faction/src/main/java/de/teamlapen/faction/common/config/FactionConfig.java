@@ -3,6 +3,8 @@ package de.teamlapen.faction.common.config;
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.Services;
 import de.teamlapen.faction.client.config.ClientConfig;
+import de.teamlapen.faction.client.config.preferences.UserPreferences;
+import de.teamlapen.faction.client.config.values.ColorConfigValue;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.IConfigSpec;
@@ -37,6 +39,10 @@ public class FactionConfig extends Services {
         return FactionsMod.config().client.config();
     }
 
+    public static UserPreferences preferences() {
+        return UserPreferences.get();
+    }
+
     public static ServerConfig server() {
         return FactionsMod.config().server.config();
     }
@@ -69,6 +75,7 @@ public class FactionConfig extends Services {
     protected void registerModBus(IEventBus bus) {
         bus.addListener(this::setup);
         bus.addListener(this::configLoaded);
+        ColorConfigValue.subscribe(bus);
     }
 
     private void setup(NewRegistryEvent event) {
@@ -88,7 +95,7 @@ public class FactionConfig extends Services {
     public record Config<T extends IConfigs>(T config, ModConfigSpec spec) {
 
         public static <T extends IConfigs> Config<T> create(Function<ModConfigSpec.Builder, T> consumer) {
-            var builder = new ModConfigSpec.Builder().configure(consumer);
+            var builder = ColorConfigValue.configure(consumer);
             return new Config<>(builder.getLeft(), builder.getRight());
         }
 

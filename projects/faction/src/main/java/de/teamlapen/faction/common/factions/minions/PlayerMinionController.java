@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -72,7 +73,7 @@ public class PlayerMinionController implements ValueIOSerializable {
     @NotNull
     private final UUID lordID;
     private int maxMinions;
-    @Nullable
+    @NotNull
     private Holder<? extends IPlayableFaction<?>> faction;
     @NotNull
     private MinionInfo @NotNull [] minions = new MinionInfo[0];
@@ -179,6 +180,12 @@ public class PlayerMinionController implements ValueIOSerializable {
         return Optional.empty();
     }
 
+    public void forEach(@NotNull BiConsumer<MinionData, Optional<MinionEntity<?>>> consumer) {
+        for (MinionInfo minion : minions) {
+            consumer.accept(minion.data, getMinionEntity(minion));
+        }
+    }
+
     /**
      * Contact all currently loaded (checked-out) minions
      */
@@ -196,7 +203,7 @@ public class PlayerMinionController implements ValueIOSerializable {
             LOGGER.warn("Cannot create minion because type does not exist");
         } else {
             return SpawnUtil.createEntity(type, p.level(), EntitySpawnReason.LOAD).map(m -> {
-                if (faction == null || !IFactionHelper.get().isEntityOfFaction(m, faction)) {
+                if (IFaction.isNeutral(faction) || !IFactionHelper.get().isEntityOfFaction(m, faction)) {
                     LOGGER.warn("Specified minion entity is of wrong faction. This: {} Minion: {}", faction, m.getFaction());
                     m.discard();
                     return null;
@@ -206,6 +213,7 @@ public class PlayerMinionController implements ValueIOSerializable {
                     checkDeathStatus(id, m);
                     p.level().addFreshEntity(m);
                     activateTask(id, FactionMinionTasks.STAY.get());
+                    m.sync();
                     return m;
                 }
             }).orElse(null);
@@ -351,10 +359,7 @@ public class PlayerMinionController implements ValueIOSerializable {
     @Override
     public void serialize(ValueOutput output) {
         output.putInt("max_minions", maxMinions);
-        if (faction != null) {
-            //noinspection unchecked
-            output.store("faction", ModRegistries.FACTIONS.holderByNameCodec(), (Holder<IFaction<?>>) (Object) faction);
-        }
+        output.store("faction", ModCodecs.faction(), faction);
         ValueOutput.ValueOutputList data = output.childrenList("data");
         for (MinionInfo i : minions) {
             ValueOutput child = data.addChild();
@@ -411,18 +416,21 @@ public class PlayerMinionController implements ValueIOSerializable {
 
     }
 
-    public void setMaxMinions(@Nullable Holder<? extends IPlayableFaction<?>> faction, int newCount) {
+    public void removeMinions() {
+        setMaxMinions(this.faction, 0);
+    }
+
+    public void setMaxMinions(@NotNull Holder<? extends IPlayableFaction<?>> faction, int newCount) {
         assert newCount >= 0;
-        if (this.faction != null && faction != this.faction) {
+        if (!IFaction.is(faction, this.faction)) {
             LOGGER.warn("Changing player minion controller faction");
             contactMinions(MinionEntity::recallMinion);
             minions = new MinionInfo[0];
             //noinspection unchecked
             minionTokens = new Optional[0];
             this.faction = faction;
-            this.maxMinions = this.faction == null ? 0 : newCount;
+            this.maxMinions = IFaction.isNeutral(this.faction) ? 0 : newCount;
         } else {
-            this.faction = faction;
             if (newCount >= maxMinions) {
                 this.maxMinions = newCount;
             } else {

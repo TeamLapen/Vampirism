@@ -26,13 +26,13 @@ import de.teamlapen.faction.common.event.FactionEventFactory;
 import de.teamlapen.faction.common.factions.actions.ActionKeys;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
-import de.teamlapen.faction.common.network.packets.client.ClientboundPlaySoundEventPacket;
 import de.teamlapen.faction.common.tags.FactionTaskTags;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.common.util.DamageHandler;
 import de.teamlapen.faction.common.util.ModCodecs;
 import de.teamlapen.faction.common.util.ScoreboardUtil;
 import de.teamlapen.faction.common.world.ModDamageSources;
+import de.teamlapen.faction.common.world.entities.IPlayerEventListener;
 import de.teamlapen.faction.server.FactionLogger;
 import de.teamlapen.sync.AttachmentSync;
 import net.minecraft.core.Holder;
@@ -42,6 +42,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.extensions.IHolderExtension;
@@ -58,7 +59,7 @@ import java.util.stream.Collectors;
 /**
  * Extended entity property that handles factions and levels for the player
  */
-public class FactionPlayerHandler extends AttachmentSync implements IFactionPlayerHandler {
+public class FactionPlayerHandler extends AttachmentSync implements IFactionPlayerHandler, IPlayerEventListener {
     private final static Logger LOGGER = LogManager.getLogger();
 
     public static FactionPlayerHandler get(Player player) {
@@ -70,7 +71,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     }
 
     private final Player player;
-    private final Map<ActionKeys, Holder<IAction<?>>> boundActions = new HashMap<>();
     private Holder<? extends IPlayableFaction<?>> currentFaction = DefaultFactions.NEUTRAL;
     private int currentLevel = 0;
     private int currentLordLevel = 0;
@@ -97,14 +97,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     @Override
     public boolean canLeaveFaction() {
         return currentFaction.value().getPlayerCapability(player).canLeaveFaction();
-    }
-
-    /**
-     * @return action if bound
-     */
-    @Nullable
-    public Holder<IAction<?>> getBoundAction(ActionKeys key) {
-        return this.boundActions.get(key);
     }
 
     @Override
@@ -222,9 +214,9 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (FactionConfig.server().factionPvpOnlyBetweenFactions.get() && src.getEntity() instanceof Player) {
             Holder<? extends IPlayableFaction<?>> otherFaction = get((Player) src.getEntity()).getFaction();
-            return !IFaction.is(this.currentFaction, otherFaction);
+            return IFaction.is(this.currentFaction, otherFaction);
         }
-        return true;
+        return false;
     }
 
     /**
@@ -236,17 +228,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
                 holder.unwrapKey().ifPresent(manager::resetUniqueTask);
             });
         });
-    }
-
-    public void setBoundAction(ActionKeys key, @Nullable Holder<IAction<?>> boundAction, boolean sync) {
-        if (boundAction == null) {
-            this.boundActions.remove(key);
-        } else {
-            this.boundActions.put(key, boundAction);
-        }
-        if (sync) {
-            sync();
-        }
     }
 
     public boolean setTitleGender(boolean female) {
@@ -265,7 +246,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     public void leaveFaction(boolean die) {
         Holder<? extends IFaction<?>> oldFaction = currentFaction;
         setFaction(LevelingChange.neutral());
-        player.sendOverlayMessage(Component.translatable("command.factionapi.base.level.successful", player.getName(), oldFaction.value().getName(), 0));
+        player.sendOverlayMessage(Component.translatable("command.factionapi.base.level.successful", player.getName(), oldFaction.value().getNameSingular(), 0));
         if (die) {
             DamageHandler.hurtModded((ServerLevel) this.player.level(), player, ModDamageSources::leaveFaction, 10000);
         }
@@ -276,6 +257,13 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         if (this.player.level() instanceof ServerLevel level) {
             Registry<ISkillTree> registryAccess = this.player.level().registryAccess().lookupOrThrow(FactionRegistries.Keys.SKILL_TREE);
             getSkillHandler().ifPresent(handler -> handler.updateUnlockedSkillTrees(registryAccess.listElements().filter(s -> s.value().unlockPredicate().matches(level, null, this.player)).collect(Collectors.toList())));
+        }
+    }
+
+    @Override
+    public void onRespawn() {
+        if (!IFaction.isNeutral(this.currentFaction)) {
+            this.player.addEffect(new MobEffectInstance(FactionEffects.RESURRECTION_FATIGUE, 300));
         }
     }
 
@@ -368,6 +356,12 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
 
         ScoreboardUtil.updateScoreboard(this.player, ScoreboardUtil.FACTION_CRITERIA, this.currentFaction.value().hashCode());
 
+        if (changedFaction && oldFaction instanceof ILordPlayer<?> lordPlayer) {
+            MinionWorldData.getData(this.player.level()).ifPresent(data -> {
+                data.removeController(this.player.getUUID());
+            });
+        }
+
         if (newFactionData instanceof ILordPlayer<?> lordPlayer) {
             MinionWorldData.getData(this.player.level()).ifPresent(data -> {
                 PlayerMinionController c = data.getController(this.player.getUUID());
@@ -377,8 +371,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
             });
         }
 
-        if (this.player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.connection.send(new ClientboundPlaySoundEventPacket(FactionSounds.LEVEL_UP));
+        if (this.player instanceof ServerPlayer) {
             FactionLogger.info(FactionLogger.FACTION, param.toJson());
         }
 
@@ -410,11 +403,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         registerProperty(FIdentifier.mod("level")).simple(0, () -> this.currentLevel, l -> this.currentLevel = l);
         registerProperty(FIdentifier.mod("lord_level")).simple(0, () -> this.currentLordLevel, l -> this.currentLordLevel = l);
         registerProperty(FIdentifier.mod("title_gender")).simple(IPlayableFaction.TitleGender.CODEC).defaultValue(IPlayableFaction.TitleGender.UNKNOWN).provider(() -> this.titleGender).commonLoader(l -> this.titleGender = l, Enum::compareTo).register();
-        registerProperty(FIdentifier.mod("bound_action")).list(ActionBinding.CODEC).provider(() -> this.boundActions.entrySet().stream().map(s -> new ActionBinding(s.getKey(), s.getValue())).toList()).commonLoader((l) -> {
-            this.boundActions.clear();
-            this.boundActions.putAll(l.stream().collect(Collectors.toMap(ActionBinding::key, ActionBinding::action)));
-            return true;
-        });
     }
 
     @Override
@@ -422,10 +410,10 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         this.player.refreshDisplayName();
     }
 
-    private record ActionBinding(ActionKeys key, Holder<IAction<?>> action) {
+    private record ActionBinding(ActionKeys key, Holder<? extends IAction<?>> action) {
         public static final Codec<ActionBinding> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ActionKeys.CODEC.fieldOf("key").forGetter(ActionBinding::key),
-                ModRegistries.ACTIONS.holderByNameCodec().fieldOf("action").forGetter(ActionBinding::action)
+                ((Codec<Holder<? extends IAction<?>>>) (Object) ModRegistries.ACTIONS.holderByNameCodec()).fieldOf("action").forGetter(ActionBinding::action)
         ).apply(instance, ActionBinding::new));
     }
 

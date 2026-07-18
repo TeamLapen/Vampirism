@@ -23,6 +23,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.Objects;
+
 @Mixin(Item.Properties.class)
 public abstract class ItemPropertiesMixin implements IItemProperties {
 
@@ -69,6 +71,12 @@ public abstract class ItemPropertiesMixin implements IItemProperties {
     public Item.Properties factions$withShiftDescription(ShiftDescription description) {
         this.component(FactionDataComponents.SHIFT_DESCRIPTION.get(), description);
         return (Item.Properties) (Object) this;
+    }
+
+    @Override
+    public Item.Properties factions$withShiftDescriptionWithId(String id) {
+        ResourceKey<Item> itemId = Objects.requireNonNull(this.id, "Item id must be set before assigning a shift description by id");
+        return factions$withShiftDescription(ShiftDescription.of(itemId.identifier().withPath(id).toLanguageKey("tooltip")));
     }
 
     @Override

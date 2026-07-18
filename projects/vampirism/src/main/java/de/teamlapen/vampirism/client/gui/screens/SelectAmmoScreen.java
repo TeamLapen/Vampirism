@@ -6,13 +6,12 @@ import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
 import de.teamlapen.faction.client.gui.radialmenu.RadialMenuSlot;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
+import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundSelectAmmoTypePacket;
 import de.teamlapen.vampirism.common.util.Helper;
-import de.teamlapen.vampirism.common.world.items.QuarrelPouch;
+import de.teamlapen.vampirism.common.world.items.crossbow.QuarrelPouchItem;
 import de.teamlapen.vampirism.common.world.items.component.QuarrelPouchContents;
-import de.teamlapen.vampirism.common.world.items.crossbow.CrossbowArrowHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -21,13 +20,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.item.ItemStackTemplate;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
 
@@ -39,26 +39,51 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
 
     public static void show() {
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
         ItemStack crossbowStack = player.getMainHandItem();
-        if (Helper.isHunter(player) && crossbowStack.getItem() instanceof IHunterCrossbow crossbow && crossbow.canSelectAmmunition(crossbowStack)) {
-            @NotNull Map<Item, Integer> list = player.getInventory().getNonEquipmentItems().stream().filter(s -> s.getItem() instanceof QuarrelPouch).map(x -> x.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY)).flatMap(s -> s.items().stream()).collect(Collectors.groupingBy(ItemStack::getItem, Collectors.summingInt(ItemStack::getCount)));
-            var ammoTypes = CrossbowArrowHandler.getCrossbowArrows().stream().map(item -> new AmmoType(item, player.getInventory().countItem(item) + list.getOrDefault(item, 0))).collect(Collectors.toList());
+        if (Helper.isHunter(player) && crossbowStack.getItem() instanceof HunterCrossbowItem crossbow && crossbow.canSelectAmmunition(crossbowStack)) {
+            Collection<Item> selectable = crossbow.getSelectableAmmo();
+            Map<Item, Integer> available = new HashMap<>();
+
+            for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
+                if (stack.getItem() instanceof QuarrelPouchItem) {
+                    for (ItemStackTemplate quarrel : stack.getOrDefault(ModDataComponents.QUARREL_POUCH_CONTENTS, QuarrelPouchContents.EMPTY).items()) {
+                        if (selectable.contains(quarrel.item().value())) {
+                            available.merge(quarrel.item().value(), quarrel.count(), Integer::sum);
+                        }
+                    }
+                } else if (selectable.contains(stack.getItem())) {
+                    available.merge(stack.getItem(), stack.getCount(), Integer::sum);
+                }
+            }
+
+            List<AmmoType> ammoTypes = new ArrayList<>();
+
+            for (Item ammo : selectable) {
+                int count = available.getOrDefault(ammo, 0);
+                if (count > 0) {
+                    ammoTypes.add(new AmmoType(ammo, count));
+                }
+            }
+
             ammoTypes.add(new AmmoType((ItemStack) null, 0));
             Minecraft.getInstance().setScreen(new SelectAmmoScreen(ammoTypes));
         }
     }
 
     private static RadialMenu<AmmoType> getRadialMenu(Collection<AmmoType> ammoTypes) {
-        List<IRadialMenuSlot<AmmoType>> parts = (List<IRadialMenuSlot<AmmoType>>) (Object) ammoTypes.stream().map(a -> new RadialMenuSlot<>(a.getDisplayName(), a)).toList();
-        return new RadialMenu<>((i) -> {
-            VampirismMod.proxy.sendToServer(ServerboundSelectAmmoTypePacket.of(parts.get(i).primarySlotIcon()));
-        }, parts, SelectAmmoScreen::drawAmmoTypePart, 0);
+        List<IRadialMenuSlot<AmmoType>> parts = ammoTypes.stream().<IRadialMenuSlot<AmmoType>>map(a -> new RadialMenuSlot<>(a.getDisplayName(), a)).toList();
+        return new RadialMenu<>(i -> VampirismMod.proxy.sendToServer(ServerboundSelectAmmoTypePacket.of(parts.get(i).primarySlotIcon())), parts, SelectAmmoScreen::drawAmmoTypePart, 0);
     }
 
     private static void drawAmmoTypePart(AmmoType action, GuiGraphicsExtractor graphics, int posX, int posY, int size, boolean transparent) {
         if (action.renderStack != null) {
+            var font = Minecraft.getInstance().font;
             graphics.item(action.renderStack, posX, posY);
-            graphics.itemDecorations(Minecraft.getInstance().screen.font, action.renderStack, posX, posY, String.valueOf(action.count));
+            if (action.count > 0) {
+                graphics.itemDecorations(font, action.renderStack, posX, posY, String.valueOf(action.count));
+            }
         } else {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NO_RESTRICTION, posX, posY, 16, 16);
         }
@@ -69,6 +94,7 @@ public class SelectAmmoScreen extends GuiRadialMenu<SelectAmmoScreen.AmmoType> {
     }
 
     public record AmmoType(@Nullable ItemStack renderStack, int count) {
+
         public AmmoType(@Nullable Item renderStack, int count) {
             this(renderStack == null ? null : renderStack.getDefaultInstance(), count);
         }

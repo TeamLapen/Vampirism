@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
@@ -22,6 +24,8 @@ import net.minecraft.util.Util;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -32,6 +36,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.AttributeUtil;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -82,17 +87,19 @@ public class RefinementItem extends Item implements IRefinementItem, BaseDisplay
         if (set != null) {
             tooltipComponents.accept(Component.empty());
             tooltipComponents.accept(Component.translatable("tooltip.vampirism.refinement.when_equipped").withStyle(ChatFormatting.DARK_PURPLE));
-            for (Holder<IRefinement> holder : set.getRefinements()) {
-                IRefinement refinement = holder.value();
-                var mapper = refinement.attributeFactory();
-                if (mapper == null) continue;
-                var modifier = mapper.apply(holder.unwrapKey().orElseThrow().identifier(), refinement.getModifierValue());
-                if (refinement.getAttribute() != null && modifier != null) {
-                    AttributeUtil.addAttributeTooltips(stack, tooltipComponents, tooltipDisplay, net.neoforged.neoforge.common.util.AttributeTooltipContext.of(FactionsMod.proxy.getClientPlayer(), context, tooltipDisplay, flagIn));
+
+            Multimap<Holder<Attribute>, AttributeModifier> map = LinkedListMultimap.create();
+            for (Holder<IRefinement> refinement : set.getRefinements()) {
+                IRefinement value = refinement.value();
+                if (value.getAttribute() != null && value.attributeFactory() != null) {
+                    AttributeModifier apply = value.attributeFactory().apply(refinement.getKey().identifier(), value.getModifierValue());
+                    map.put(value.getAttribute(), apply);
                 } else {
-                    tooltipComponents.accept(Component.translatable(Util.makeDescriptionId("refinement", ModRegistries.REFINEMENTS.getKey(refinement)) + ".desc").withStyle(ChatFormatting.GRAY));
+                    tooltipComponents.accept(Component.translatable(Util.makeDescriptionId("refinement", refinement.getKey().identifier()) + ".desc").withStyle(ChatFormatting.GRAY));
                 }
             }
+
+            AttributeUtil.applyTextFor(stack, tooltipComponents, map, net.neoforged.neoforge.common.util.AttributeTooltipContext.of(FactionsMod.proxy.getClientPlayer(), context, tooltipDisplay, flagIn));
         }
     }
 

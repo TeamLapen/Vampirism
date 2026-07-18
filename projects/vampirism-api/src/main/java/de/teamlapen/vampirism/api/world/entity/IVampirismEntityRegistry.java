@@ -37,22 +37,6 @@ public interface IVampirismEntityRegistry {
     IConvertedCreature<?> convert(PathfinderMob entity);
 
     /**
-     * @return A mapping from source entity types (not the converted one), to {@link Identifier} of the overlay texture
-     */
-    @Unmodifiable
-    @NotNull
-    Map<EntityType<?>, Identifier> getConvertibleOverlay();
-
-    /**
-     * Get a specific overlay texture for an entity
-     *
-     * @param originalEntity the string values of the original entity's registry name
-     * @return the overlay texture or {@code null} if there is none
-     */
-    @Nullable
-    Identifier getConvertibleOverlay(@NotNull String originalEntity);
-
-    /**
      * Get the {@link IEntityBlood} for the given creature.
      *
      * @return the explicit entry

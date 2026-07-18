@@ -5,10 +5,6 @@ plugins {
 group = project.factions_group_id
 version = project.factions_version
 
-base {
-    archivesName = "${project.factions_mod_name}-api"
-}
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(project.java_version)
@@ -25,6 +21,15 @@ tasks.withType(JavaCompile).configureEach {
     javaToolchains {
         compilerFor {
             languageVersion = JavaLanguageVersion.of(project.java_version)
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            it.artifactId = "${project.factions_mod_name}-api"
         }
     }
 }

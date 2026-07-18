@@ -2,15 +2,20 @@ package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.client.gui.radialmenu.GuiRadialMenu;
+import de.teamlapen.faction.client.gui.radialmenu.RadialMenu;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.NotNull;
 
 public class ScreenEventHandler {
@@ -25,7 +30,7 @@ public class ScreenEventHandler {
             if (event.getScreen().mouseClicked(event.getMouseButtonEvent(), event.isDoubleClick())) {
                 event.setCanceled(true);
                 if (button != null) {
-                    button.setPosition(((InventoryScreen) event.getScreen()).getGuiLeft() + FactionConfig.client().factionMenuButtonXPos.get(), event.getScreen().height / 2 + FactionConfig.client().factionMenuButtonYPos.get());
+                    button.setPosition(((InventoryScreen) event.getScreen()).getLeftPos() + FactionConfig.client().factionMenuButtonXPos.get(), event.getScreen().height / 2 + FactionConfig.client().factionMenuButtonYPos.get());
                 }
             }
         }
@@ -34,10 +39,18 @@ public class ScreenEventHandler {
     @SubscribeEvent
     public void onInitGuiEventPost(ScreenEvent.Init.@NotNull Post event) {
         if (event.getScreen() instanceof InventoryScreen && FactionConfig.client().addFactionMenuButtonToInventory.get() && FactionPlayerHandler.getCurrentFactionPlayer(event.getScreen().getMinecraft().player).isPresent()) {
-            button = new ImageButton(((InventoryScreen) event.getScreen()).getGuiLeft() + FactionConfig.client().factionMenuButtonXPos.get(), event.getScreen().height / 2 + FactionConfig.client().factionMenuButtonYPos.get(), 20, 18, INVENTORY_SKILLS, (context) -> {
+            button = new ImageButton(((InventoryScreen) event.getScreen()).getLeftPos() + FactionConfig.client().factionMenuButtonXPos.get(), event.getScreen().height / 2 + FactionConfig.client().factionMenuButtonYPos.get(), 20, 18, INVENTORY_SKILLS, (context) -> {
                 FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU));
             });
             event.addListener(button);
         }
+    }
+
+    @SubscribeEvent
+    public void onRenderCrosshair(RenderGuiLayerEvent.Pre event) {
+        if (event.getName() == VanillaGuiLayers.CROSSHAIR && Minecraft.getInstance().screen instanceof GuiRadialMenu<?>) {
+            event.setCanceled(true);
+        }
+
     }
 }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.api.world.IDescriptionProvider;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
@@ -40,13 +41,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class CrucifixItem extends Item implements IItemWithTier {
+public class CrucifixItem extends Item implements IItemWithTier, IDescriptionProvider {
 
     private final Tier tier;
     private static final Identifier COOLDOWN_GROUP = VIdentifier.mod("crucifix");
 
     public CrucifixItem(Tier tier, Properties properties) {
-        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).message(HolyWaterBottleItem.MASSAGE_RESTRICTION_HOLY).apply(properties).stacksTo(1).component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {
+        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(tier == Tier.ULTIMATE ? HunterSkills.ULTIMATE_CRUCIFIX : HunterSkills.CRUCIFIX_WIELDER).message(HolyWaterBottleItem.MASSAGE_RESTRICTION_HOLY).apply(properties).stacksTo(1).factions$withShiftDescriptionWithId("crucifix").component(DataComponents.USE_COOLDOWN, new UseCooldown( switch (tier) {
             case NORMAL -> 7;
             case ENHANCED -> 5;
             case ULTIMATE -> 3;
@@ -143,6 +144,10 @@ public class CrucifixItem extends Item implements IItemWithTier {
     }
 
     protected int getRange(ItemStack stack) {
+        return getRange(tier);
+    }
+
+    public static int getRange(Tier tier) {
         return switch (tier) {
             case ENHANCED -> 8;
             case ULTIMATE -> 10;
@@ -221,5 +226,10 @@ public class CrucifixItem extends Item implements IItemWithTier {
                 VampirePlayer.get(player).effectCrucifixSuppression();
             }
         }
+    }
+
+    @Override
+    public Object[] getDescriptionParameters() {
+        return new Object[] {getRange(tier)};
     }
 }

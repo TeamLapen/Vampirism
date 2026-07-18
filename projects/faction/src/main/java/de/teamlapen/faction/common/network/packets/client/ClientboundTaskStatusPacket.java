@@ -22,7 +22,7 @@ public record ClientboundTaskStatusPacket(Set<ITaskInstance> available,
     public static final Type<ClientboundTaskStatusPacket> TYPE = new Type<>(FIdentifier.mod("task_status"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundTaskStatusPacket> CODEC = StreamCodec.composite(
-            ByteBufCodecs.fromCodec(TaskInstance.CODEC).apply(ByteBufCodecs.collection(i -> new HashSet<>())), ClientboundTaskStatusPacket::available,
+            ByteBufCodecs.fromCodecWithRegistries(TaskInstance.CODEC).apply(ByteBufCodecs.collection(i -> new HashSet<>())), ClientboundTaskStatusPacket::available,
             UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.collection(i -> new HashSet<>())), ClientboundTaskStatusPacket::completableTasks,
             ByteBufCodecs.map(l -> new HashMap<>(), UUIDUtil.STREAM_CODEC, ByteBufCodecs.map(l -> new HashMap<>(), Identifier.STREAM_CODEC, ByteBufCodecs.INT)), ClientboundTaskStatusPacket::completedRequirements,
             ByteBufCodecs.INT, ClientboundTaskStatusPacket::containerId,
