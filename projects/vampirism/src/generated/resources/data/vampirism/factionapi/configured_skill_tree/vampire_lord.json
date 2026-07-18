@@ -1,0 +1,21 @@
+{
+  "children": [
+    {
+      "node": "vampirism:vampire/lord_skill2"
+    },
+    {
+      "node": "vampirism:vampire/lord_skill3"
+    },
+    {
+      "node": "vampirism:vampire/lord_skill4"
+    },
+    {
+      "node": "vampirism:vampire/lord_skill5"
+    }
+  ],
+  "node": "vampirism:vampire/lord_root",
+  "orderAfter": [
+    "vampirism:vampire/level"
+  ],
+  "skill_tree": "vampirism:vampire/lord"
+}

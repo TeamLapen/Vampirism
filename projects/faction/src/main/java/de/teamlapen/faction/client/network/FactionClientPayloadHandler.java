@@ -9,6 +9,7 @@ import de.teamlapen.faction.common.factions.skills.ClientboundSkillTreePacket;
 import de.teamlapen.faction.common.network.packets.client.*;
 import de.teamlapen.faction.common.network.packets.server.ClientboundActionBindingPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
+import de.teamlapen.faction.common.world.IEventReceiver;
 import de.teamlapen.faction.common.world.inventory.FactionMenu;
 import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
 import de.teamlapen.gui.components.IComponentWithAction;
@@ -18,6 +19,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -71,6 +73,15 @@ public class FactionClientPayloadHandler {
         context.enqueueWork(() -> {
             var player = FactionPlayerHandler.get(context.player());
             FactionConfig.preferences().actionBindings().update(player.getFaction(), msg.actionBindingId(), msg.action());
+        });
+    }
+
+    public static void handleEventPacket(ClientboundEventPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Entity entity = context.player().level().getEntity(msg.entityId());
+            if (entity instanceof IEventReceiver receiver) {
+                receiver.onEvent(msg.eventId());
+            }
         });
     }
 }

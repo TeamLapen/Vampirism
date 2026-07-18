@@ -53,6 +53,14 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> REMAINS_DEATH = create("entity.remains.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> REMAINS_HURT = create("entity.remains.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> BUBBLES = create("block.bubbles");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_AMBIENT = create("entity.dracula.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_HURT = create("entity.dracula.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_DEATH = create("entity.dracula.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_TELEPORT = create("entity.dracula.teleport");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_TRANSFORM = create("entity.dracula.transform");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_TRANSFORM_END = create("entity.dracula.transform_end");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_SIPHON = create("entity.dracula.siphon");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VELMORRA_RUMBLE = create("ambient.velmorra_rumble");
 
 
     static void register(IEventBus bus) {

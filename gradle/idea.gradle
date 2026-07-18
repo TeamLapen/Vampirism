@@ -2,7 +2,7 @@ apply plugin: 'idea'
 
 idea {
     module {
-        for (String excludeDirName in ["run", "out", "logs", "runs"]) {
+        for (String excludeDirName in ["run", "out", "logs", "runs", "src/generated/resources/.cache"]) {
             excludeDirs.add(file(excludeDirName))
         }
         downloadSources = true

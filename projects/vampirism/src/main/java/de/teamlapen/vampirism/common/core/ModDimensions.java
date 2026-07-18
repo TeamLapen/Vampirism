@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraDensityFu
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
@@ -34,6 +35,7 @@ import java.util.Optional;
 
 public class ModDimensions {
 
+    public static final Identifier VELMORRA = VIdentifier.mod("velmorra");
     public static final DeferredRegister<MapCodec<? extends BiomeSource>> BIOME_SOURCES = DeferredRegister.create(Registries.BIOME_SOURCE, REFERENCE.MODID);
     public static final DeferredRegister<MapCodec<? extends DensityFunction>> DENSITY_FUNCTIONS = DeferredRegister.create(Registries.DENSITY_FUNCTION_TYPE, REFERENCE.MODID);
 
@@ -42,11 +44,11 @@ public class ModDimensions {
     @SuppressWarnings("unused")
     public static final DeferredHolder<MapCodec<? extends DensityFunction>, MapCodec<? extends DensityFunction>> VELMORRA_DENSITY_FUNCTION_CODEC = DENSITY_FUNCTIONS.register("velmorra", VelmorraDensityFunction.CODEC::codec);
 
-    public static final ResourceKey<DimensionType> VELMORRA_DIMENSION_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, VIdentifier.mod("velmorra"));
-    public static final ResourceKey<LevelStem> VELMORRA_LEVEL_STEM = ResourceKey.create(Registries.LEVEL_STEM, VIdentifier.mod("velmorra"));
+    public static final ResourceKey<DimensionType> VELMORRA_DIMENSION_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, VELMORRA);
+    public static final ResourceKey<LevelStem> VELMORRA_LEVEL_STEM = ResourceKey.create(Registries.LEVEL_STEM, VELMORRA);
     public static final ResourceKey<Level> VELMORRA_LEVEL = ResourceKey.create(Registries.DIMENSION, VELMORRA_LEVEL_STEM.identifier());
-    public static final ResourceKey<NoiseGeneratorSettings> VELMORRA_NOISE_GENERATOR = ResourceKey.create(Registries.NOISE_SETTINGS, VIdentifier.mod("velmorra"));
-    public static final ResourceKey<DensityFunction> VELMORRA_DENSITY_FUNCTION =  ResourceKey.create(Registries.DENSITY_FUNCTION, VIdentifier.mod("velmorra"));
+    public static final ResourceKey<NoiseGeneratorSettings> VELMORRA_NOISE_GENERATOR = ResourceKey.create(Registries.NOISE_SETTINGS, VELMORRA);
+    public static final ResourceKey<DensityFunction> VELMORRA_DENSITY_FUNCTION =  ResourceKey.create(Registries.DENSITY_FUNCTION, VELMORRA);
     public static final ResourceKey<DensityFunction> BASE_3D_NOISE_VELMORRA = ResourceKey.create(Registries.DENSITY_FUNCTION, VIdentifier.mod("base_3d_noise"));
 
 

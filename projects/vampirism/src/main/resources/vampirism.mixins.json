@@ -28,6 +28,8 @@
     "ThrowablePotionItemMixin",
     "ThrownPotionMixin",
     "VibrationSystemUserMixin",
+    "WorldGenSettingsMixin",
+    "accessor.AnimationStateAccessor",
     "accessor.AttributeInstanceAccessor",
     "accessor.EntityAccessor",
     "accessor.FoodDataAccessor",
@@ -70,7 +72,8 @@
     "client.StatsScreenMixin",
     "client.accessor.FeatureRenderDispatcherAccessor",
     "client.accessor.ItemInHandRendererAccessor",
-    "client.accessor.LevelRendererAccessor"
+    "client.accessor.LevelRendererAccessor",
+    "client.accessor.ModelPartAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -4,17 +4,16 @@ import de.teamlapen.vampirism.common.world.entity.DarkBloodProjectileEntity;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import org.jetbrains.annotations.NotNull;
 
 public class DarkBloodProjectileRenderer extends EntityRenderer<DarkBloodProjectileEntity, EntityRenderState> {
 
-    public DarkBloodProjectileRenderer(EntityRendererProvider.@NotNull Context context) {
+    public DarkBloodProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);
 
     }
 
     @Override
-    public @NotNull EntityRenderState createRenderState() {
+    public EntityRenderState createRenderState() {
         return new EntityRenderState();
     }
 

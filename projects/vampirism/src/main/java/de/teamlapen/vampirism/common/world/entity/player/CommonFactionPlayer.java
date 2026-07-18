@@ -76,6 +76,12 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
 
     @MustBeInvokedByOverriders
     @Override
+    public void onRespawn() {
+        onLevelChanged(getLevel());
+    }
+
+    @MustBeInvokedByOverriders
+    @Override
     public void onUpdate() {
         if (!isRemote()) {
             assert this.taskManager != null;
@@ -144,6 +150,22 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     @Override
     public @Nullable Component getLordTitleShort() {
         return lordTitles().map(titles -> titles.getShort(getLordLevel(), factionHandler().titleGender())).orElse(null);
+    }
+
+    @Override
+    public Component getShortLevelDisplay() {
+        if (getLordLevel() > 0 && getLordTitleShort() instanceof Component shortLord) {
+            return shortLord;
+        }
+        return Component.literal(String.valueOf(getLevel()));
+    }
+
+    @Override
+    public Component getLevelDisplay() {
+        if (getLordLevel() > 0 && getLordTitle() instanceof Component longLord) {
+            return longLord;
+        }
+        return Component.literal(String.valueOf(getLevel()));
     }
 
     @MustBeInvokedByOverriders

@@ -1,7 +1,0 @@
-{
-  "type": "vampirism:dracula_cave",
-  "biomes": "#vampirism:has_structure/dracula_castle",
-  "spawn_overrides": {},
-  "step": "surface_structures",
-  "terrain_adaptation": "bury"
-}

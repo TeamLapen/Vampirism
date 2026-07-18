@@ -28,4 +28,5 @@ public class VampirismOverlays {
     public static final Identifier FULL_SCREEN = VIdentifier.mod("fullscreen");
     public static final Identifier NEARBY_VAMPIRE = VIdentifier.mod("nearby_vampire");
     public static final Identifier ITEM_CHARGE = VIdentifier.mod("item_charge");
+    public static final Identifier DRACULA_EVENT = VIdentifier.mod("dracula_event");
 }

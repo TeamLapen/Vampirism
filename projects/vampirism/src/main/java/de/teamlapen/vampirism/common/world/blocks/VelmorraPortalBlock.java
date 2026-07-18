@@ -107,9 +107,6 @@ public class VelmorraPortalBlock extends BaseEntityBlock implements Portal {
                 f = 0.0F;
                 set = Relative.union(Relative.DELTA, Relative.ROTATION);
 
-                Vec3 vec3 = spawnPos.getCenter();
-                int i = level.getChunkAt(spawnPos).getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, spawnPos.getX(), spawnPos.getZ()) + 1;
-                floorPos =  BlockPos.containing(vec3.x, i, vec3.z).getBottomCenter();
             }
             return new TeleportTransition(serverLevel, floorPos, Vec3.ZERO, f, 0, set, TeleportTransition.PLAY_PORTAL_SOUND.then(TeleportTransition.PLACE_PORTAL_TICKET));
         }

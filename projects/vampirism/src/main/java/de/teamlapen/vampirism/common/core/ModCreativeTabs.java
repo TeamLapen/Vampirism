@@ -256,6 +256,7 @@ public class ModCreativeTabs {
             add(UMBRELLA);
             add(FABRIC_FILTER);
             add(FEEDING_ADAPTER);
+            add(CHALICE);
 
             ModRegistries.OILS.listElements().filter(s -> !s.is(ModOils.EMPTY)).map(s -> ItemDataUtils.createOil(OIL_BOTTLE.get(), s)).forEach(this::add);
         }

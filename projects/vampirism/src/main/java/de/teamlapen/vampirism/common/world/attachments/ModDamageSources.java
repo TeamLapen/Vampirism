@@ -87,4 +87,12 @@ public class ModDamageSources {
     public DamageSource bleeding() {
         return this.bleeding;
     }
+
+    public DamageSource flyingNeedle(LivingEntity attacker) {
+        return new DamageSource(this.damageTypes.getOrThrow(ModDamageTypes.FLYING_NEEDLE), attacker);
+    }
+
+    public  DamageSource flyingSword(LivingEntity attacker) {
+        return new DamageSource(this.damageTypes.getOrThrow(ModDamageTypes.FLYING_SWORD), attacker);
+    }
 }

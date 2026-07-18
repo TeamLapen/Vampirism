@@ -1,0 +1,16 @@
+{
+  "background": "vampirism:block/dark_stone_bricks",
+  "display": {
+    "id": "vampirism:vampire_clothing_hat"
+  },
+  "faction": "vampirism:vampire",
+  "name": {
+    "translate": "gui.vampirism.skills.dracula"
+  },
+  "name_suffix": "vampirism:dracula",
+  "unlock_predicate": {
+    "type_specific": {
+      "type": "vampirism:dracula"
+    }
+  }
+}

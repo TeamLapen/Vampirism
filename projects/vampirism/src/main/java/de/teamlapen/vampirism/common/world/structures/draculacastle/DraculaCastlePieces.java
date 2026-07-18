@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.common.world.structures.draculacastle;
 
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModLootTables;
 import de.teamlapen.vampirism.common.core.ModStructures;
+import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -12,13 +14,18 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Marker;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
@@ -28,11 +35,14 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSetting
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.neoforged.neoforge.common.Tags;
+import org.slf4j.Logger;
 
-import java.util.Locale;
+import java.util.*;
 
 public class DraculaCastlePieces {
 
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(DraculaCastlePieces.class);
     private static final int structureWidth = 271;
     private static final int structureDepth = 271;
 
@@ -49,19 +59,6 @@ public class DraculaCastlePieces {
         }
     }
 
-    public static void addCavePieces(StructureTemplateManager structureTemplateManager, BlockPos startPos, StructurePieceAccessor pieces) {
-
-        var pos = startPos.offset(-structureWidth / 2 + 5, 0, -structureDepth / 2 + 5);
-
-        for (int x = 0; x < 6; x++) {
-            for (int z = 0; z < 6; z++) {
-                for (int y = -3; y < 0; y++) {
-                    pieces.addPiece(new CavePiece(structureTemplateManager, pos, x, y, z));
-                }
-            }
-        }
-    }
-
     public static class CastlePiece extends Piece {
 
         public CastlePiece(StructureTemplateManager structureTemplateManager, BlockPos position, int xIndex, int yIndex, int zIndex) {
@@ -70,17 +67,6 @@ public class DraculaCastlePieces {
 
         public CastlePiece(StructureTemplateManager structureTemplateManager, CompoundTag tag) {
             super(ModStructures.DRACULA_CASTLE_PIECE.get(), structureTemplateManager, tag);
-        }
-    }
-
-    public static class CavePiece extends Piece {
-
-        public CavePiece(StructureTemplateManager structureTemplateManager, BlockPos position, int xIndex, int yIndex, int zIndex) {
-            super(ModStructures.DRACULA_CAVE_PIECE.get(), structureTemplateManager, VIdentifier.mod("dracula_cave/" + xIndex + "_" + zIndex + "_" + yIndex), position.offset(zIndex * 48, yIndex * 48 + (yIndex == -3 ? 32 : 0), xIndex * 48));
-        }
-
-        public CavePiece(StructureTemplateManager structureTemplateManager, CompoundTag tag) {
-            super(ModStructures.DRACULA_CAVE_PIECE.get(), structureTemplateManager, tag);
         }
     }
 
@@ -149,6 +135,16 @@ public class DraculaCastlePieces {
                     level.addFreshEntity(villager);
                     level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
                 }
+            } else if (name.equals("vampirism:dracula_marker")) {
+                Marker marker = EntityType.MARKER.create(level.getLevel(), EntitySpawnReason.STRUCTURE);
+                if (marker == null) {
+                    LOGGER.error("Failed to spawn dracula marker");
+                } else {
+                    marker.setData(ModAttachments.MARKER, DraculaFightData.DRACULA_SPAWN_MARKER);
+                    marker.setPos(pos.getCenter());
+                    level.addFreshEntity(marker);
+                }
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
             }
         }
 

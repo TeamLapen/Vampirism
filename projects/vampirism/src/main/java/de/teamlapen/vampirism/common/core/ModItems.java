@@ -448,6 +448,7 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CHANDELIER_RED = fromChandelier(ModBlocks.CHANDELIER_RED);
     public static final DeferredItem<BlockItem> CHANDELIER_BLACK = fromChandelier(ModBlocks.CHANDELIER_BLACK);
     public static final DeferredItem<BlockItem> VELMORRA_ALTAR = fromBlock(ModBlocks.VELMORRA_ALTAR);
+    public static final DeferredItem<BlockItem> CHALICE = fromBlock(ModBlocks.CHALICE);
 
 
     @SuppressWarnings("unchecked")

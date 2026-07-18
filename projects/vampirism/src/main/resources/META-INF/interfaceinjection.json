@@ -98,5 +98,14 @@
   ],
   "net/minecraft/server/MinecraftServer": [
     "de/teamlapen/vampirism/misc/injection/IMinecraftServerVampirismMock"
+  ],
+  "net/minecraft/world/entity/AnimationState": [
+    "de/teamlapen/vampirism/misc/injection/IAnimationStateVampirismMock"
+  ],
+  "net/minecraft/world/level/levelgen/WorldGenSettings": [
+    "de/teamlapen/vampirism/misc/injection/IWorldGenSettingsVampirismMock"
+  ],
+  "net/minecraft/client/model/geom/ModelPart": [
+    "de/teamlapen/vampirism/misc/injection/client/IModelPartVampirismMock"
   ]
 }

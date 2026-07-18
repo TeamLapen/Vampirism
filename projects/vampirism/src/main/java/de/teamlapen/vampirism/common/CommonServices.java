@@ -13,6 +13,8 @@ import de.teamlapen.vampirism.common.integration.InterModHandler;
 import de.teamlapen.vampirism.common.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.common.server.ServerEventHandler;
 import de.teamlapen.vampirism.common.util.*;
+import de.teamlapen.vampirism.common.world.LevelEventHandler;
+import de.teamlapen.vampirism.common.util.wings.WingsManager;
 import de.teamlapen.vampirism.common.world.VillageEventHandler;
 import de.teamlapen.vampirism.common.world.biomes.OverworldModifications;
 import de.teamlapen.vampirism.common.world.entity.ModEntityEventHandler;
@@ -50,7 +52,9 @@ public class CommonServices extends Services implements IVampirismServices {
     private final InterModHandler interModCommunicationHandler = new InterModHandler();
     private final IVampirismEntityRegistry entityRegistry = new VampirismEntityRegistry();
     private final VillageEventHandler villageEventHandler = new VillageEventHandler();
+    private final LevelEventHandler levelEventHandler = new LevelEventHandler();
     private final ItemEventHandler itemEventHandler = new ItemEventHandler();
+    private final WingsManager wingsManager = new WingsManager();
 
 
     public CommonServices(ModContainer container) {
@@ -96,6 +100,10 @@ public class CommonServices extends Services implements IVampirismServices {
         return this.interModCommunicationHandler;
     }
 
+    public WingsManager wingsManager() {
+        return this.wingsManager;
+    }
+
     //</editor-fold>
 
     @Override
@@ -116,6 +124,7 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.addListener(ModCreativeTabs::addToExistingCreativeTabs);
         bus.addListener(ModPacketDispatcher::registerHandler);
         bus.addListener(MigrationData::fix);
+        bus.register(this.wingsManager);
     }
 
     @Override
@@ -131,5 +140,6 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.addListener(Permissions::registerNodes);
         bus.register(this.itemEventHandler);
         bus.addListener(DefaultDataComponentsBoundEvent.class, _ -> QuarrelHandler.collectClips());
+        bus.register(this.levelEventHandler);
     }
 }

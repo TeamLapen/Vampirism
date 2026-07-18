@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GhostRenderer extends MobRenderer<GhostEntity, GhostRenderer.GhostRenderState, GhostModel> {
@@ -22,24 +21,24 @@ public class GhostRenderer extends MobRenderer<GhostEntity, GhostRenderer.GhostR
     }
 
     @Override
-    public @NotNull GhostRenderState createRenderState() {
+    public GhostRenderState createRenderState() {
         return new GhostRenderState();
     }
 
     @Override
-    public void extractRenderState(@NotNull GhostEntity ghost, @NotNull GhostRenderState renderState, float p_361157_) {
+    public void extractRenderState(GhostEntity ghost, GhostRenderState renderState, float p_361157_) {
         super.extractRenderState(ghost, renderState, p_361157_);
         renderState.aggressive = ghost.isAggressive();
     }
 
     @Override
-    public @NotNull Identifier getTextureLocation(@NotNull GhostRenderState pEntity) {
+    public Identifier getTextureLocation(GhostRenderState pEntity) {
         return TEXTURE;
     }
 
     @Nullable
     @Override
-    protected RenderType getRenderType(@NotNull GhostRenderState pLivingEntity, boolean pBodyVisible, boolean pTranslucent, boolean pGlowing) {
+    protected RenderType getRenderType(GhostRenderState pLivingEntity, boolean pBodyVisible, boolean pTranslucent, boolean pGlowing) {
         return super.getRenderType(pLivingEntity, pBodyVisible, true, pGlowing);
     }
 

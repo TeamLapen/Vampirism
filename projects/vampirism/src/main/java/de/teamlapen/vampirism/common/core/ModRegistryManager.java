@@ -43,6 +43,7 @@ public class ModRegistryManager {
         ModRecipes.register(eventBus);
         ModMapDecorations.register(eventBus);
         ModRefinements.register(eventBus);
+        ModSkillPointProvider.register(eventBus);
         ModRefinementSets.register(eventBus);
         ModSounds.register(eventBus);
         ModTasks.register(eventBus);
@@ -67,6 +68,9 @@ public class ModRegistryManager {
         VampirismVampireVisions.register(eventBus);
         ModDimensions.register(eventBus);
         ModEnvironmentAttributes.register(eventBus);
+        ModActivities.register(eventBus);
+        ModMemoryTypes.register(eventBus);
+        ModSensors.register(eventBus);
     }
 
     @SubscribeEvent
