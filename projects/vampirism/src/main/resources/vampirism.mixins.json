@@ -22,10 +22,14 @@
     "PotionBrewingMixin",
     "PowderSnowBlockMixin",
     "SpawnStateMixin",
+    "StructureMixin",
+    "StructurePacketMixin",
     "SweetBerryBushBlockMixin",
     "ThrowablePotionItemMixin",
     "ThrownPotionMixin",
     "VibrationSystemUserMixin",
+    "WorldGenSettingsMixin",
+    "accessor.AnimationStateAccessor",
     "accessor.AttributeInstanceAccessor",
     "accessor.EntityAccessor",
     "accessor.FoodDataAccessor",
@@ -54,21 +58,22 @@
     "accessor.VanillaBlockLootAccessor",
     "accessor.VillagerHostilesSensorAccessor",
     "accessor.WalkAnimationStateAccessor",
-    "client.ItemInHandRendererMixin"
+    "MobEffectUtilMixin"
   ],
   "client": [
     "client.CapeLayerMixin",
     "client.GuiGraphicsExtractorMixin",
     "client.HumanoidArmorLayerMixin",
+    "client.ItemInHandRendererMixin",
     "client.LivingEntityRendererAccessor",
     "client.MinecraftMixin",
     "client.MutableSpriteSetMixin",
-    "client.ResourceLoadStateTrackerMixin",
     "client.SplashManagerMixin",
     "client.StatsScreenMixin",
     "client.accessor.FeatureRenderDispatcherAccessor",
     "client.accessor.ItemInHandRendererAccessor",
-    "client.accessor.LevelRendererAccessor"
+    "client.accessor.LevelRendererAccessor",
+    "client.accessor.ModelPartAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

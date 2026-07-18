@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
 import de.teamlapen.faction.api.factions.IDisguise;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.LevelingChange;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
@@ -10,6 +11,9 @@ import de.teamlapen.faction.common.factions.skills.RefinementHandler;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.sounds.ISoundReference;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
+import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
+import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
+import de.teamlapen.faction.common.world.entities.appearance.IAppearanceHolder;
 import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
@@ -20,10 +24,7 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.*;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.config.BalanceConfig;
@@ -37,14 +38,18 @@ import de.teamlapen.vampirism.common.util.*;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
+import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
+import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.Customization;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.DraculaData;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VampireDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VisionStatus;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampirePlayerSkillProperties;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.common.world.entity.vampire.DrinkBloodContext;
 import de.teamlapen.vampirism.common.world.items.HunterArmorItem;
 import net.minecraft.core.BlockPos;
@@ -54,11 +59,14 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -83,6 +91,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -91,14 +100,13 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer {
+public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer, IAppearanceHolder, VampireDraculaPlayer {
     public static final Identifier NATURAL_ARMOR_UUID = VIdentifier.mod("natural_armor");
     private static final Identifier LEVEL_DAMAGE_UUID = VIdentifier.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger();
@@ -156,7 +164,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private final VampireDisguise disguise;
     private final RefinementHandler<IVampirePlayer> refinementHandler;
     private final Customization customization;
-
+    private final DraculaData draculaData;
 
     //</editor-fold>
 
@@ -167,6 +175,28 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.vision = new VisionStatus(this);
         this.refinementHandler = new RefinementHandler<>(this, de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE);
         this.customization = new Customization(this);
+        this.draculaData = new DraculaData(this);
+    }
+
+    @Override
+    public Component getShortLevelDisplay() {
+        if (this.draculaData.isDracula()) {
+            return Component.translatable("dracula_title.vampirism.short");
+        }
+        return super.getShortLevelDisplay();
+    }
+
+    @Override
+    public Component getLevelDisplay() {
+        if (this.draculaData.isDracula()) {
+            return Component.translatable("dracula_title.vampirism");
+        }
+        return super.getLevelDisplay();
+    }
+
+    @Override
+    public DraculaData draculaData() {
+        return this.draculaData;
     }
 
     @Override
@@ -297,7 +327,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return true;
     }
 
-    @NotNull
     public BITE_TYPE determineBiteType(LivingEntity entity) {
         if (player instanceof ServerPlayer && Permissions.FEED.isDisallowed(((ServerPlayer) player))) {
             return BITE_TYPE.NONE;
@@ -444,11 +473,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.customization.setGlowingEyes(value);
     }
 
-    @Override
-    public int getMaxLevel() {
-        return REFERENCE.HIGHEST_VAMPIRE_LEVEL;
-    }
-
     public VampirePlayerSkillProperties getSkillProperties() {
         return this.skillProperties;
     }
@@ -484,7 +508,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sunDamageCache = Helper.gettingSunDamage(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
+            sunDamageCache = !getSkillHandler().isSkillEnabled(VampireSkills.WANDER_THE_SUN) && Helper.gettingSunDamage(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
         }
         return sunDamageCache;
     }
@@ -579,6 +603,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         wasDead = true;
         this.setDBNOTimer(-1);
         dbnoMessage = null;
+        if (this.player instanceof ServerPlayer serverPlayer) {
+            DraculaFightData.getOpt(serverPlayer.level()).ifPresent(s -> s.getEvent().removePlayer(serverPlayer));
+        }
     }
 
     @Override
@@ -673,6 +700,12 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             maxBlood = 26;
         }
         this.bloodStats.setMaxBlood(maxBlood);
+
+        if (changes.get(DraculaChange.KEY) != null) {
+            this.makeDracula();
+        } else if (changes.getNewLevel() < getMaxLevel() || changes.getNewLordLevel() < getMaxLordLevel()){
+            this.draculaData.removeDracula();
+        }
 
         super.levelChanged(changes);
     }
@@ -819,6 +852,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 }
             }
         }
+        this.draculaData.tick();
+
         if (feed_victim == -1) {
             feedBiteTickCounter = 0;
         }
@@ -882,22 +917,25 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return this.customization.setFangType(fangType);
     }
 
-    public void setSkinData(List<Integer> data) {
-        for (int i = 0; i < data.size(); i++) {
-            switch (i) {
-                case 0:
-                    setFangType(data.get(i));
-                    break;
-                case 1:
-                    setEyeType(data.get(i));
-                    break;
-                case 2:
-                    setGlowingEyes(data.get(i) > 0);
-                    break;
-                case 3:
-                    FactionPlayerHandler.get(this.player).setTitleGender(data.get(i) > 0);
-                    break;
-            }
+    public static final AppearanceKey<Integer> FangType = AppearancePacket.register(VIdentifier.mod("fang_type"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<Integer> EyeType = AppearancePacket.register(VIdentifier.mod("eye_type"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<Boolean> GlowingEye = AppearancePacket.register(VIdentifier.mod("glowing_eye"), ByteBufCodecs.BOOL);
+    public static final AppearanceKey<IPlayableFaction.TitleGender> TitleGenderType = AppearancePacket.register(VIdentifier.mod("title_gender_type"), NeoForgeStreamCodecs.enumCodec(IPlayableFaction.TitleGender.class));
+    public static final AppearanceKey<Texture> WingsTexture = AppearancePacket.register(VIdentifier.mod("wings_texure"), NeoForgeStreamCodecs.enumCodec(Texture.class));
+
+
+    @Override
+    public <T> void setAppearanceData(AppearanceKey<T> id, T data) {
+        if (id.equals(FangType)) {
+            setFangType((Integer) data);
+        } else if (id.equals(EyeType)) {
+            setEyeType((Integer) data);
+        } else if (id.equals(GlowingEye)) {
+            setGlowingEyes((Boolean) data);
+        } else if (id.equals(TitleGenderType)) {
+            FactionPlayerHandler.get(this.player).setTitleGender(((IPlayableFaction.TitleGender) data));
+        } else if (id.equals(WingsTexture)) {
+            this.customization.setWingsTexture((Texture) data);
         }
     }
 
@@ -1036,6 +1074,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.registerProperty(VIdentifier.mod("disguise")).subProperty(() -> this.disguise).register();
         this.registerProperty(VIdentifier.mod("refinement_handler")).subProperty(() ->this.refinementHandler).register();
         this.registerProperty(VIdentifier.mod("customization")).subProperty(() -> this.customization).register();
+        this.registerProperty(VIdentifier.mod("dracula")).subProperty(() -> this.draculaData).register();
     }
 
     private void applyEntityAttributes() {
@@ -1283,10 +1322,15 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public void updateMinionAttributes(boolean enabled) {
-        MinionWorldData.getData(this.player.level()).ifPresent(a -> a.getOrCreateController(this).contactMinions((minion) -> {
-            (minion.getMinionData()).ifPresent(b -> ((VampireMinionEntity.VampireMinionData) b).setIncreasedStats(enabled));
-            minion.sync();
-        }));
+        MinionWorldData.getData(this.player.level()).ifPresent(a ->
+            a.getOrCreateController(this).forEach((data, minion) -> {
+                ((HunterMinionEntity.HunterMinionData) data).setIncreasedStats(enabled);
+                minion.ifPresent(x -> {
+                    x.updateAttributes();
+                    x.sync();
+                });
+            })
+        );
     }
 
     public void effectCrucifixSuppression() {

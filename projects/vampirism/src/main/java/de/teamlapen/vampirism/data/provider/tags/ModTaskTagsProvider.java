@@ -58,7 +58,8 @@ public class ModTaskTagsProvider extends KeyTagProvider<Task> {
                 ModTasks.HUNTER_MINION_UPGRADE_SPECIAL,
                 ModTasks.H_KILL_1,
                 ModTasks.H_KILL_2,
-                ModTasks.H_CAPTURE_1
+                ModTasks.H_CAPTURE_1,
+                ModTasks.PRECISION_1
         );
         this.tag(ModTaskTags.AWARDS_LORD_LEVEL).add(
                 ModTasks.HUNTER_LORD_1,

@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "guideapi_vp"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "vampirism:vampire_fang",
+    "minecraft:book"
+  ],
+  "result": {
+    "id": "guideapi_vp:vampirism-guidebook"
+  }
+}

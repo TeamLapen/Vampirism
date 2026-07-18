@@ -16,7 +16,6 @@ import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
@@ -212,12 +211,15 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
 
         if (!skills.isEmpty()) {
             var skillHandler = factionPlayerHandler == null ? null : factionPlayerHandler.getSkillHandler().orElse(null);
-            skills.stream().map(skill -> Component.translatable("tooltip.factionapi.required_skill", skill.value().getName().withStyle(style -> {
+
+            tooltips.accept(Component.empty());
+            tooltips.accept(Component.translatable("tooltip.factionapi.required_skills").withStyle(ChatFormatting.GRAY));
+
+            skills.forEach(skill -> tooltips.accept(Component.literal(" ").append(skill.value().getName().withStyle(style -> {
                 if (skillHandler == null) return style;
                 return skillHandler.isSkillEnabled(skill) ? style.withColor(ChatFormatting.DARK_GREEN) : style.withColor(ChatFormatting.DARK_RED);
-            }))).forEach(tooltips);
+            }))));
         }
-
     }
 
     public static Component getFactionRestrictionMessage(IFaction<?> faction) {
@@ -233,18 +235,14 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         Identifier factionLocation = ModRegistries.FACTIONS.getKey(faction);
 
         if (factionLocation != null) {
-            String messageKey = getFactionMessageKey(factionLocation);
-
-            if (I18n.exists(messageKey)) {
-                return Component.translatable(messageKey);
-            }
+            return Component.translatable(getFactionMessageKey(factionLocation));
         }
 
         return MESSAGE_WRONG_FACTION;
     }
 
     public static String getFactionMessageKey(Identifier factionId) {
-        return "text." + factionId.getNamespace() + ".restriction.faction." + factionId.getPath();
+        return "message." + factionId.getNamespace() + ".restriction.faction." + factionId.getPath();
     }
 
     public static Builder builder(TagKey<IFaction<?>> tagKey) {

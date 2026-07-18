@@ -32,7 +32,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -57,6 +56,7 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
@@ -65,6 +65,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -159,8 +160,13 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         return this;
     }
 
+    public void updateAttributes() {
+
+    }
+
     @Override
     public void aiStep() {
+        updateSwingTime();
         super.aiStep();
         if (!this.level().isClientSide() && this.isAlive()) {
             if (this.random.nextInt(900) == 0 && this.deathTime == 0) {
@@ -209,37 +215,31 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     /**
      * Copy of {@link net.minecraft.world.entity.Mob} but with modified DamageSource
      * Check if code still up to date
-     * TODO 1.22
+     * TODO 27.1
      */
     @Override
-    public boolean doHurtTarget(ServerLevel level, Entity pEntity) {
-        float f = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        DamageSource damagesource = LevelDamage.get(this.level()).minion(this);
-        if (this.level() instanceof ServerLevel serverlevel) {
-            f = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), pEntity, damagesource, f);
-        }
-
-        boolean flag = pEntity.hurtServer(level,damagesource, f);
-        if (flag) {
-            float f1 = this.getKnockback(pEntity, damagesource);
-            if (f1 > 0.0F && pEntity instanceof LivingEntity livingentity) {
-                livingentity.knockback(
-                        f1 * 0.5F,
-                        Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)),
-                        -Mth.cos(this.getYRot() * (float) (Math.PI / 180.0))
-                );
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 1.0, 0.6));
+    public boolean doHurtTarget(@NonNull ServerLevel level, @NonNull Entity target) {
+        float dmg = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        ItemStack weaponItem = this.getWeaponItem();
+        DamageSource damageSource = LevelDamage.get(this.level()).minion(this);
+        dmg = EnchantmentHelper.modifyDamage(level, weaponItem, target, damageSource, dmg);
+        dmg += weaponItem.getItem().getAttackDamageBonus(target, dmg, damageSource);
+        Vec3 oldMovement = target.getDeltaMovement();
+        boolean wasHurt = target.hurtServer(level,damageSource, dmg);
+        if (wasHurt) {
+            this.causeExtraKnockback(target, this.getKnockback(target, damageSource), oldMovement);
+            if (target instanceof LivingEntity livingTarget) {
+                weaponItem.hurtEnemy(livingTarget, this);
             }
 
-            if (this.level() instanceof ServerLevel serverlevel1) {
-                EnchantmentHelper.doPostAttackEffects(serverlevel1, pEntity, damagesource);
-            }
-
-            this.setLastHurtMob(pEntity);
+            // with item -> allow enchantments
+            EnchantmentHelper.doPostAttackEffectsWithItemSource(level, target, damageSource, weaponItem);
+            this.setLastHurtMob(target);
             this.playAttackSound();
         }
 
-        return flag;
+        this.postPiercingAttack();
+        return wasHurt;
     }
 
     @Nullable
@@ -583,7 +583,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     public final void handleLoadedMinionData(@NotNull T data) {
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(data.getMaxHealth());
+        this.updateAttributes();
         super.setHealth(data.getHealth());
         super.setCustomName(data.getFormattedName());
         try {
@@ -658,6 +658,11 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
                     .withFactory(MinionEntity.this::createData)
                     .withNewInstanceSetter(MinionEntity.this::setData)
                     .register();
+        }
+
+        @Override
+        protected void onPropertyChanged() {
+            updateAttributes();
         }
     }
 }

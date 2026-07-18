@@ -1,0 +1,27 @@
+{
+  "parent": "vampirism:vampire/max_lord",
+  "criteria": {
+    "killed": {
+      "trigger": "vampirism:dracula_win"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.vampirism.defeat_dracula.desc"
+    },
+    "frame": "challenge",
+    "hidden": true,
+    "icon": {
+      "id": "vampirism:chalice"
+    },
+    "title": {
+      "translate": "advancement.vampirism.defeat_dracula"
+    }
+  },
+  "requirements": [
+    [
+      "killed"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

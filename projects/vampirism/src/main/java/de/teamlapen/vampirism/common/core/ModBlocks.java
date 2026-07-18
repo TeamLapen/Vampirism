@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.common.core;
 import de.teamlapen.faction.common.world.blocks.TotemTopBlock;
 import de.teamlapen.faction.common.world.blocks.base.BaseHorizontalBlock;
 import de.teamlapen.faction.common.world.blocks.base.BaseSplitBlock;
+import de.teamlapen.faction.common.world.blocks.base.WaterloggedHorizontalBlock;
+import de.teamlapen.faction.common.world.blocks.base.WaterloggedSplitBlock;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.ModRegistryItems;
@@ -205,7 +207,6 @@ public class ModBlocks {
     public static final DeferredBlock<Block> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = BLOCKS.registerBlock("blood_infused_enhanced_iron_block", PureBloodBlock::new, () -> copyProperties(Blocks.IRON_BLOCK).mapColor(MapColor.CRIMSON_HYPHAE).strength(6.5F, 8.0F));
 
     // Decorative Blocks
-    public static final DeferredBlock<FirePlaceBlock> FIRE_PLACE = BLOCKS.registerBlock("fire_place", FirePlaceBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).lightLevel(state -> 15).strength(1).ignitedByLava().noOcclusion());
     public static final DeferredBlock<AlchemicalFireBlock> ALCHEMICAL_FIRE = registerBlock("alchemical_fire", AlchemicalFireBlock::new, () -> copyProperties(Blocks.FIRE).mapColor(MapColor.COLOR_PURPLE).noLootTable());
 
     public static final DeferredBlock<StandingCandleStickBlock> CANDLE_STICK = registerBlock("candle_stick", props -> new StandingCandleStickBlock(null, () -> null, props), () -> basicProperties().mapColor(MapColor.METAL).noOcclusion().strength(0.5f).sound(SoundType.METAL).pushReaction(PushReaction.DESTROY));
@@ -307,9 +308,9 @@ public class ModBlocks {
     public static final DeferredBlock<VampireSoulLanternBlock> VAMPIRE_SOUL_LANTERN = BLOCKS.registerBlock("vampire_soul_lantern", VampireSoulLanternBlock::new, () -> copyProperties(Blocks.LANTERN).mapColor(MapColor.GOLD).lightLevel(state -> 12));
 
     public static final DeferredBlock<BaseSplitBlock> CROSS = BLOCKS.registerBlock("cross", props -> new BaseSplitBlock(props, VampirismVoxelShapes.CROSS_BOTTOM, VampirismVoxelShapes.CROSS_TOP, true), () -> basicProperties().pushReaction(PushReaction.DESTROY).mapColor(MapColor.WOOD).ignitedByLava().strength(2, 3));
-    public static final DeferredBlock<BaseHorizontalBlock> TOMBSTONE1 = BLOCKS.registerBlock("tombstone1", props -> new BaseHorizontalBlock(props, VampirismVoxelShapes.TOMB_1), () -> basicProperties().mapColor(MapColor.STONE).strength(2, 6));
-    public static final DeferredBlock<BaseHorizontalBlock> TOMBSTONE2 = BLOCKS.registerBlock("tombstone2", props -> new BaseHorizontalBlock(props, VampirismVoxelShapes.TOMB_2), () -> basicProperties().mapColor(MapColor.STONE).strength(2, 6));
-    public static final DeferredBlock<BaseSplitBlock> TOMBSTONE3 = BLOCKS.registerBlock("tombstone3", props -> new BaseSplitBlock(props, VampirismVoxelShapes.TOMB_3_BASE, VampirismVoxelShapes.TOMB_3_TOP, true), () -> basicProperties().mapColor(MapColor.STONE).pushReaction(PushReaction.DESTROY).strength(2, 6));
+    public static final DeferredBlock<WaterloggedHorizontalBlock> TOMBSTONE_SHORT = BLOCKS.registerBlock("tombstone_short", props -> new WaterloggedHorizontalBlock(props, VampirismVoxelShapes.TOMBSTONE_SHORT), () -> copyProperties(Blocks.COBBLESTONE));
+    public static final DeferredBlock<WaterloggedHorizontalBlock> TOMBSTONE_MEDIUM = BLOCKS.registerBlock("tombstone_medium", props -> new WaterloggedHorizontalBlock(props, VampirismVoxelShapes.TOMBSTONE_MEDIUM), () -> copyProperties(Blocks.COBBLESTONE));
+    public static final DeferredBlock<WaterloggedSplitBlock> TOMBSTONE_CROSS = BLOCKS.registerBlock("tombstone_cross", props -> new WaterloggedSplitBlock(props, VampirismVoxelShapes.TOMBSTONE_CROSS_BOTTOM, VampirismVoxelShapes.TOMBSTONE_CROSS_TOP, true), () -> copyProperties(Blocks.COBBLESTONE).pushReaction(PushReaction.DESTROY));
     public static final DeferredBlock<BaseHorizontalBlock> GRAVE_CAGE = BLOCKS.registerBlock("grave_cage", props -> new BaseHorizontalBlock(props, VampirismVoxelShapes.GRAVE_CAGE), () -> basicProperties().mapColor(MapColor.METAL).strength(6, 8).requiresCorrectToolForDrops().sound(SoundType.METAL));
 
     public static final DeferredBlock<BaseHorizontalBlock> VAMPIRE_RACK = BLOCKS.registerBlock("vampire_rack", props -> new BaseHorizontalBlock(props.ignitedByLava().strength(2, 3), VampirismVoxelShapes.VAMPIRE_RACK));
@@ -345,10 +346,16 @@ public class ModBlocks {
     public static final DeferredBlock<VelmorraPortalBlock> VELMORRA_PORTAL = registerBlock("velmorra_portal", VelmorraPortalBlock::new, () -> basicProperties().noCollision().strength(-1, 3600000.0F).sound(SoundType.GLASS).pushReaction(PushReaction.IGNORE).lightLevel(p -> 11).noLootTable());
     public static final DeferredBlock<PortalGatewayBlock> VELMORRA_PORTAL_ARCH = registerBlock("velmorra_portal_arch", props -> new PortalGatewayBlock(props.strength(-1, 3600000.0F).mapColor(MapColor.DEEPSLATE).pushReaction(PushReaction.IGNORE).noLootTable()), ModBlocks::basicProperties);
     public static final DeferredBlock<VelmorraAltarBlock> VELMORRA_ALTAR = registerBlock("velmorra_altar", VelmorraAltarBlock::new, ModBlocks::basicProperties);
+    public static final DeferredBlock<ChaliceBlock> CHALICE = BLOCKS.registerBlock("chalice", ChaliceBlock::new, x -> x.explosionResistance(3600000.0F).mapColor(MapColor.GOLD).pushReaction(PushReaction.IGNORE));
 
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties,T> supplier, Supplier<BlockBehaviour.Properties> blockProperties) {
-        return BLOCKS.registerBlock(name, props -> supplier.apply(blockProperties.get().setId(ResourceKey.create(Registries.BLOCK, VIdentifier.mod(name)))));
+        return BLOCKS.registerBlock(name, supplier, blockProperties);
+    }
+
+
+    private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties,T> supplier) {
+        return BLOCKS.registerBlock(name, supplier);
     }
 
     private static DeferredBlock<FlowerPotBlock> registerPottedPlant(String name, DeferredBlock<?> plantBlock) {

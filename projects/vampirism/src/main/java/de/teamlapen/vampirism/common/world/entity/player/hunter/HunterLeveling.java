@@ -16,7 +16,7 @@ public class HunterLeveling {
     private static final BasicHunterRequirement LEVEL_2 = new BasicHunterRequirement(2, 1);
     private static final BasicHunterRequirement LEVEL_3 = new BasicHunterRequirement(3, 5);
     private static final BasicHunterRequirement LEVEL_4 = new BasicHunterRequirement(4, 12);
-    private static final HunterTrainerRequirement LEVEL_5 = new HunterTrainerRequirement(5, 5, 0, new HunterTableRequirement(0, 10, 0, 0, 1, ModItems.HUNTER_INTEL_0));
+    private static final HunterTrainerRequirement LEVEL_5 = new HunterTrainerRequirement(5, 5, 0, new HunterTableRequirement(0, 10, 0, -1, 1, ModItems.HUNTER_INTEL_0));
     private static final HunterTrainerRequirement LEVEL_6 = new HunterTrainerRequirement(6, 10, 0, new HunterTableRequirement(0, 0, 1, 0, 1, ModItems.HUNTER_INTEL_1));
     private static final HunterTrainerRequirement LEVEL_7 = new HunterTrainerRequirement(7, 15, 0, new HunterTableRequirement(0, 10, 1, 0, 1, ModItems.HUNTER_INTEL_2));
     private static final HunterTrainerRequirement LEVEL_8 = new HunterTrainerRequirement(8, 40, 0, new HunterTableRequirement(1, 0, 1, 1, 1, ModItems.HUNTER_INTEL_3));
@@ -59,7 +59,9 @@ public class HunterLeveling {
         int targetLevel();
     }
 
-    public record HunterTableRequirement(int requiredTableTier, int bookQuantity, int vampireFangQuantity, int pureBloodQuantity, @Range(from = 0, to = 4) int pureBloodLevel, int vampireBookQuantity, Supplier<HunterIntelItem> resultIntelItem) {
+    public record HunterTableRequirement(int requiredTableTier, int bookQuantity, int vampireFangQuantity,
+                                         int pureBloodQuantity, @Range(from = -1, to = 4) int pureBloodLevel,
+                                         int vampireBookQuantity, Supplier<HunterIntelItem> resultIntelItem) {
 
         public HunterTableRequirement(int requiredTableTier, int fangs, int blood, int pureBloodLevel, int vampireBook, Supplier<HunterIntelItem> intel) {
             this(requiredTableTier, 1, fangs, blood, pureBloodLevel, vampireBook, intel);

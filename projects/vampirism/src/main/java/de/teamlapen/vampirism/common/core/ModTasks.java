@@ -18,6 +18,8 @@ import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.tags.ModEntityTags;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -26,6 +28,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.bus.api.IEventBus;
 
 public class ModTasks {
@@ -73,6 +76,9 @@ public class ModTasks {
     public static final ResourceKey<Task> HUNTER_MINION_UPGRADE_ENHANCED = key("hunter_minion_upgrade_enhanced");
     public static final ResourceKey<Task> HUNTER_MINION_UPGRADE_SPECIAL = key("hunter_minion_upgrade_special");
     // Other
+    public static final ResourceKey<Task> PRECISION_1 = key("precision_1");
+    public static final ResourceKey<Task> PRECISION_2 = key("precision_2");
+    public static final ResourceKey<Task> PRECISION_3 = key("precision_3");
     public static final ResourceKey<Task> H_CAPTURE_1 = key("h_capture1");
     public static final ResourceKey<Task> H_KILL_1 = key("h_kill1");
     public static final ResourceKey<Task> H_KILL_2 = key("h_kill2");
@@ -99,6 +105,8 @@ public class ModTasks {
 
     static void createTasks(BootstrapContext<Task> context) {
         HolderGetter<IFaction<?>> factions = context.lookup(FactionRegistries.Keys.FACTION);
+        HolderGetter<Enchantment> enchantments = context.lookup(Registries.ENCHANTMENT);
+
         TaskBuilder.builder().unlockedBy(new LvlUnlocker(ModFactions.VAMPIRE.value().getHighestReachableLevel())).addRequirement(ModStats.INFECTED_CREATURES.get(), 25).addRequirement(new ItemStackTemplate(ModItems.PURE_BLOOD_4, 5)).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 32)).addRequirement(FactionStats.WIN_VILLAGE_CAPTURE.get(), 3).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(1, Component.translatable("task.vampirism.vampire_lord1.reward"))).build(context::register, VAMPIRE_LORD_1);
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(1, true)).addRequirement(ModEntityTags.HUNTER, 30).addRequirement(new ItemStackTemplate(ModItems.PURE_BLOOD_4.get(), 5)).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 48)).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(2)).build(context::register, VAMPIRE_LORD_2);
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(2, true)).addRequirement(ModEntityTags.HUNTER, 30).addRequirement(new ItemStackTemplate(ModItems.PURE_BLOOD_4.get(), 5)).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 48)).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(3)).build(context::register, VAMPIRE_LORD_3);
@@ -136,6 +144,9 @@ public class ModTasks {
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(3)).addRequirement(ModEntities.VAMPIRE_BARON.get(), 10).addRequirement(new ItemStackTemplate(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 16)).addRequirement(new ItemStackTemplate(ModItems.VAMPIRE_BOOK.get())).addRequirement(new ItemStackTemplate(Items.DIAMOND_BLOCK, 3)).setReward(new ItemStackTemplate(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get())).build(context::register, HUNTER_MINION_UPGRADE_ENHANCED);
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(5)).addRequirement(ModEntities.VAMPIRE_BARON.get(), 20).addRequirement(new ItemStackTemplate(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 32)).addRequirement(new ItemStackTemplate(ModItems.VAMPIRE_BOOK.get())).addRequirement(new ItemStackTemplate(Items.DIAMOND_BLOCK, 8)).setReward(new ItemStackTemplate(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get())).build(context::register, HUNTER_MINION_UPGRADE_SPECIAL);
 
+        TaskBuilder.builder().unlockedBy(new LvlUnlocker(4)).addRequirement(ModStats.VAMPIRE_KILLED_WITH_CROSSBOW.get(), 15).setReward(ItemDataUtils.createEnchantment(BuiltInRegistries.ITEM.wrapAsHolder(Items.ENCHANTED_BOOK), enchantments.getOrThrow(ModEnchantments.PRECISION), 1)).build(context::register, PRECISION_1);
+        TaskBuilder.builder().unlockedBy(new LvlUnlocker(7)).addRequirement(ModStats.VAMPIRE_KILLED_WITH_CROSSBOW.get(), 30).setReward(ItemDataUtils.createEnchantment(BuiltInRegistries.ITEM.wrapAsHolder(Items.ENCHANTED_BOOK), enchantments.getOrThrow(ModEnchantments.PRECISION), 2)).build(context::register, PRECISION_2);
+        TaskBuilder.builder().unlockedBy(new LvlUnlocker(10)).addRequirement(ModStats.VAMPIRE_KILLED_WITH_CROSSBOW.get(), 45).setReward(ItemDataUtils.createEnchantment(BuiltInRegistries.ITEM.wrapAsHolder(Items.ENCHANTED_BOOK), enchantments.getOrThrow(ModEnchantments.PRECISION), 3)).build(context::register, PRECISION_3);
         TaskBuilder.builder().addRequirement(ModEntityTags.VAMPIRE, 20).setReward(new ItemStackTemplate(Items.DIAMOND, 2)).build(context::register, H_KILL_1);
         TaskBuilder.builder().addRequirement(ModEntityTags.VAMPIRE, 15).setReward(new ItemStackTemplate(Items.DIAMOND, 2)).build(context::register, H_KILL_2);
         TaskBuilder.builder().addRequirement(FactionStats.CAPTURE_VILLAGE.get(), 2).setReward(new ItemStackTemplate(ModItems.VAMPIRE_BLOOD_BOTTLE.get(), 10)).build(context::register, H_CAPTURE_1);

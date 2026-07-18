@@ -169,7 +169,7 @@ public abstract class GuiRadialMenu<T> extends Screen {
             int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
             adjusted = adjusted == -1 ? numberOfSlices - 1 : adjusted;
             Component component = radialMenuSlots.get(adjusted).slotName();
-            graphics.centeredText(font, component, width / 2, (height - font.lineHeight) / 2, Optional.ofNullable(component.getStyle().getColor()).map(TextColor::getValue).orElse(16777215));
+            graphics.centeredText(font, component.copy(), width / 2, (height- font.lineHeight) / 2, -1);
         }
 
 

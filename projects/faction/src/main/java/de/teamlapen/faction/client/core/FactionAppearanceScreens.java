@@ -2,6 +2,7 @@ package de.teamlapen.faction.client.core;
 
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.bus.api.Event;
@@ -45,7 +46,7 @@ public class FactionAppearanceScreens {
 
     @FunctionalInterface
     public interface AppearanceScreenProvider {
-        AppearanceScreen<?> create(@Nullable Screen backScreen);
+        AppearanceScreen<?> create(@Nullable ILastScreenProvider backScreen);
     }
 
     public record AppearanceScreenDefinition(AppearanceScreenProvider provider, WidgetSprites widgetSpritesSupplier) {}

@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 public class ThrowableItemEntity extends ThrowableItemProjectile {
 
     private final static Logger LOGGER = LogManager.getLogger(ThrowableItemEntity.class);
-    private static final EntityDataAccessor<ItemStack> ITEM = SynchedEntityData.defineId(ThrowableItemEntity.class, EntityDataSerializers.ITEM_STACK);
 
     public ThrowableItemEntity(@NotNull EntityType<? extends ThrowableItemEntity> type, @NotNull Level worldIn) {
         super(type, worldIn);
@@ -55,11 +54,6 @@ public class ThrowableItemEntity extends ThrowableItemProjectile {
     public void readAdditionalSaveData(@NotNull ValueInput input) {
         super.readAdditionalSaveData(input);
         input.read("thrownItem", ItemStack.CODEC).ifPresentOrElse(this::setItem, this::discard);
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(ITEM, ItemStack.EMPTY);
     }
 
     @Override

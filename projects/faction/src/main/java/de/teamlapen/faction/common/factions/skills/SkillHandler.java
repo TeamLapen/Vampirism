@@ -157,7 +157,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
     }
 
     private void lockSkillTree(Holder<ISkillTree> tree) {
-        var enabledSkills = this.enabledSkills.getOrDefault(tree, Collections.emptyList());
+        var enabledSkills = new ArrayList<>(this.enabledSkills.getOrDefault(tree, Collections.emptyList()));
         for (Holder<ISkill<T>> enabledSkill : enabledSkills) {
             if (enabledSkill.value().allowedSkillTrees().map(tree::is, tree::is)) {
                 this.disableSkill(enabledSkill, tree);

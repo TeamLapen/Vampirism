@@ -31,8 +31,8 @@ public class FactionLogger {
     /**
      * requires common config to be loaded
      */
-    public static void init() {
-        if (!FactionConfig.server().enableFactionLogging.get() || logger != null) return;
+    public static void setup() {
+        if (!FactionConfig.server().enableFactionLogging.get()) return;
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         Configuration configuration = ctx.getConfiguration();
 
@@ -56,6 +56,10 @@ public class FactionLogger {
         configuration.addLogger(LOGGER_NAME, loggerConfig);
         ctx.updateLoggers();
         logger = LogManager.getLogger(LOGGER_NAME);
+    }
+
+    public static void destroy() {
+        logger = null;
     }
 
     public static void info(Marker marker, String msg, Object... args) {

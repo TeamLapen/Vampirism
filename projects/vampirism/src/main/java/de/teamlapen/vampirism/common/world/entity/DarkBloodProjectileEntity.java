@@ -53,7 +53,11 @@ public class DarkBloodProjectileEntity extends AbstractHurtingProjectile {
      * Adds a small random to the motion
      */
     public DarkBloodProjectileEntity(@NotNull Level worldIn, @NotNull LivingEntity shooter, Vec3 accel) {
-        super(ModEntities.DARK_BLOOD_PROJECTILE.get(), shooter, accel, worldIn);
+        this(ModEntities.DARK_BLOOD_PROJECTILE.get(), shooter, accel, worldIn);
+    }
+
+    protected DarkBloodProjectileEntity(@NotNull EntityType<? extends DarkBloodProjectileEntity> type, @NotNull LivingEntity shooter, Vec3 accel, @NotNull Level worldIn) {
+        super(type, shooter, accel, worldIn);
     }
 
     /**

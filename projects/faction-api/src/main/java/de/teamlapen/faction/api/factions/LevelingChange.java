@@ -152,9 +152,6 @@ public record LevelingChange(Map<Key<?>, Change<?>> values, boolean notifyFactio
         public Key<LevelChange> key() {
             return KEY;
         }
-
-
-
     }
 
     public record FactionChange(Holder<? extends IPlayableFaction<?>> newFaction) implements Change<FactionChange> {

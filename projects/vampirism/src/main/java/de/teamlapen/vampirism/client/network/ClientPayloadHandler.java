@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.network;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.gui.screens.VampireBookScreen;
 import de.teamlapen.vampirism.common.network.packets.client.*;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
@@ -10,7 +11,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Set;
@@ -29,10 +29,7 @@ public class ClientPayloadHandler {
     public static void handlePlayEventPacket(ClientboundPlayEventPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             switch (msg.event()) {
-                case 1:
-                    VampirismMod.proxy.spawnParticles(Minecraft.getInstance().level, msg.pos(), Block.stateById(msg.stateId()));
-                    break;
-                case 2:
+                case STOP_MUSIC:
                     Minecraft.getInstance().getMusicManager().stopPlaying();
                     break;
             }
@@ -89,4 +86,11 @@ public class ClientPayloadHandler {
         });
     }
 
+    public static void handleDraculaEventPacket(ClientboundDraculaEventPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> VampirismModClient.services().draculaEventOverlay().handle(msg));
+    }
+
+    public static void handleVelmorraCollapsePacket(ClientboundVelmorraCollapsePacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> VampirismModClient.services().velmorraCollapseHandler().setProgress(msg.progress()));
+    }
 }

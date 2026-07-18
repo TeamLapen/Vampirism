@@ -76,7 +76,6 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.add(ModBlocks.CURSED_SPRUCE_DOOR.get(), this::createDoorTable);
         this.dropSelf(ModBlocks.ALTAR_CLEANSING.get());
         this.dropSelf(ModBlocks.CURSED_EARTH.get());
-        this.dropSelf(ModBlocks.FIRE_PLACE.get());
         this.add(ModBlocks.GARLIC.get(), applyExplosionDecay(ModBlocks.GARLIC.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool()
                         .add(LootItem.lootTableItem(ModBlocks.GARLIC.get())))
@@ -109,9 +108,9 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.CURSED_SPRUCE_SAPLING.get());
         this.add(ModBlocks.DARK_SPRUCE_LEAVES.get(), (block) -> createLeavesDrops(block, ModBlocks.DARK_SPRUCE_SAPLING.get(), DARK_LEAVES_SAPLING_CHANCES));
         this.add(ModBlocks.CROSS.get(), (p_218567_0_) -> createSinglePropConditionTable(p_218567_0_, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
-        this.dropSelf(ModBlocks.TOMBSTONE1.get());
-        this.dropSelf(ModBlocks.TOMBSTONE2.get());
-        this.add(ModBlocks.TOMBSTONE3.get(), context -> createSinglePropConditionTable(context, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
+        this.dropSelf(ModBlocks.TOMBSTONE_SHORT.get());
+        this.dropSelf(ModBlocks.TOMBSTONE_MEDIUM.get());
+        this.add(ModBlocks.TOMBSTONE_CROSS.get(), context -> createSinglePropConditionTable(context, BaseSplitBlock.PART, BaseSplitBlock.Part.MAIN));
         this.dropSelf(ModBlocks.GRAVE_CAGE.get());
         this.add(ModBlocks.CURSED_GRASS.get(), block -> createSingleItemTableWithSilkTouch(block, ModBlocks.CURSED_EARTH.get()));
         this.dropSelf(ModBlocks.DARK_SPRUCE_LOG.get());
@@ -198,6 +197,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
         this.dropSelf(ModBlocks.INFUSER.get());
         this.dropSelf(ModBlocks.VELMORRA_ALTAR.get());
+        this.dropSelf(ModBlocks.CHALICE.get());
 
         ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.forEach(pair -> this.dropSelf(pair.getFirst()));
         ColorListsUtil.STANDING_AND_WALL_CANDELABRAS.forEach(pair -> this.dropSelf(pair.getFirst()));

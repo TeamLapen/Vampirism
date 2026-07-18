@@ -64,7 +64,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
 
     private static List<Entry> getTasks(ILordPlayer<?> lord) {
         if (lord.getLordLevel() == 0) return List.of();
-        return FactionConfig.client().minionTaskOrder.get(lord.getFaction()).stream()
+        return FactionConfig.preferences().minionTaskOrder().getOrder(lord.getFaction()).stream()
                 .filter(x -> Optional.ofNullable(x.getTask()).map(s -> s.value().isAvailable(lord)).orElse(true))
                 .collect(Collectors.toList());
     }

@@ -21,26 +21,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public record ConverterEntry(Converter converter, Optional<Identifier> overlay) implements IConverterEntry {
+public record ConverterEntry(Converter converter) implements IConverterEntry {
     public static final Codec<IConverterEntry> CODEC = RecordCodecBuilder.create(inst -> {
         return inst.group(
-                Converter.CODEC.optionalFieldOf("handler", new DefaultConverter()).forGetter(IConverterEntry::converter),
-                Identifier.CODEC.optionalFieldOf("overlay").forGetter(IConverterEntry::overlay)
+                Converter.CODEC.optionalFieldOf("handler", new DefaultConverter()).forGetter(IConverterEntry::converter)
         ).apply(inst, ConverterEntry::new);
     });
 
-    public ConverterEntry(Converter converter, Identifier overlay) {
-        this(converter, Optional.of(overlay));
+    public ConverterEntry() {
+        this(new DefaultConverter());
     }
-
-    public ConverterEntry(@Nullable Identifier overlay) {
-        this(new DefaultConverter(), Optional.ofNullable(overlay));
-    }
-
-    public ConverterEntry(Converter converter) {
-        this(converter, Optional.empty());
-    }
-
 
     public record ConvertingAttributeModifier(Map<Holder<Attribute>, Pair<FloatProvider, Double>> attributeModifier) {
         public static ConvertingAttributeModifier DEFAULT = new ConvertingAttributeModifier(

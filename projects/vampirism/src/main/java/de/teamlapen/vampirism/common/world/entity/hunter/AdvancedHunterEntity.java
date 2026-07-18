@@ -30,8 +30,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.world.DifficultyInstance;
@@ -282,7 +282,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         builder.define(NAME, "none");
         builder.define(TEXTURE, "none");
         builder.define(IS_CHARGING_CROSSBOW, false);
-        builder.define(SPECIAL_ARROW, ModItems.CROSSBOW_ARROW_NORMAL);
+        builder.define(SPECIAL_ARROW, ModItems.QUARREL_NORMAL);
     }
 
     @Nullable
@@ -292,8 +292,8 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
         this.getEntityData().set(NAME, supporter.name());
         this.getEntityData().set(TEXTURE, supporter.texture());
-        List<Holder<Item>> contents = BuiltInRegistries.ITEM.getOrThrow(ModItemTags.ADVANCED_HUNTER_CROSSBOW_ARROWS).stream().toList();
-        this.getEntityData().set(SPECIAL_ARROW, UtilLib.getRandomElementOr(contents, () -> ModItems.CROSSBOW_ARROW_NORMAL));
+        List<Holder<Item>> contents = BuiltInRegistries.ITEM.getOrThrow(ModItemTags.ADVANCED_HUNTER_USABLE_QUARRELS).stream().toList();
+        this.getEntityData().set(SPECIAL_ARROW, UtilLib.getRandomElementOr(contents, () -> ModItems.QUARREL_NORMAL));
         this.lootBookId = supporter.bookId();
         applyCustomisationItems(supporter);
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
@@ -369,7 +369,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Override
     public ItemStack getProjectile(ItemStack stack) {
         if (stack.getItem() instanceof IHunterCrossbow) {
-            Holder<Item> item = ModItems.CROSSBOW_ARROW_NORMAL;
+            Holder<Item> item = ModItems.QUARREL_NORMAL;
             if (random.nextFloat() < 0.2) {
                 item = getEntityData().get(SPECIAL_ARROW);
             }

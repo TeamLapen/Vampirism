@@ -1,5 +1,6 @@
 {
   "values": [
-    "#vampirism:crossbows"
+    "#vampirism:hunter_crossbows/single",
+    "#vampirism:hunter_crossbows/double"
   ]
 }

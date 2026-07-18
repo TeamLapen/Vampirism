@@ -9,10 +9,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.entity.SundamageRegistry;
 import io.netty.handler.codec.DecoderException;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -25,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
+import net.neoforged.neoforge.resource.ContextAwareReloadListener;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,19 +33,13 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class SundamageReloadListener implements PreparableReloadListener {
+public class SundamageReloadListener extends ContextAwareReloadListener {
 
     public static final Identifier SUNDAMAGE_ID = VIdentifier.mod("sundamage");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String DIRECTORY = "vampirism";
     private static final String FILE_NAME = "no_sun_damage.json";
     private static final int PATH_SUFFIX_LENGTH = ".json".length();
-
-    private final RegistryAccess registryAccess;
-
-    public SundamageReloadListener(RegistryAccess registryAccess) {
-        this.registryAccess = registryAccess;
-    }
 
     @Override
     public @NotNull CompletableFuture<Void> reload(@NotNull SharedState sharedState, @NotNull Executor exectutor, PreparationBarrier barrier, @NotNull Executor applyExectutor) {
@@ -71,11 +63,11 @@ public class SundamageReloadListener implements PreparableReloadListener {
     }
 
     private SundamageRegistry.Settings merge(List<RawFile> files) {
-        Registry<Biome> biomes = registryAccess.lookupOrThrow(Registries.BIOME);
+        HolderLookup.RegistryLookup<Biome> biomes = getRegistryLookup().lookupOrThrow(Registries.BIOME);
         List<Holder<Biome>> biomeHolder = new ArrayList<>();
         List<HolderSet<Biome>> biomeSets = new ArrayList<>();
 
-        Registry<DimensionType> dimensions = registryAccess.lookupOrThrow(Registries.DIMENSION_TYPE);
+        HolderLookup.RegistryLookup<DimensionType> dimensions = getRegistryLookup().lookupOrThrow(Registries.DIMENSION_TYPE);
         List<Holder<DimensionType>> dimensionHolder = new ArrayList<>();
         List<HolderSet<DimensionType>> dimensionSets = new ArrayList<>();
 

@@ -1,6 +1,8 @@
 {
   "values": [
-    "#vampirism:hunter_crossbow_compatible",
-    "minecraft:quick_charge"
+    "minecraft:piercing",
+    "vampirism:arrow_frugality",
+    "minecraft:quick_charge",
+    "vampirism:precision"
   ]
 }

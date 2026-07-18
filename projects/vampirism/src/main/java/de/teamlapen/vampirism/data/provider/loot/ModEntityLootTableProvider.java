@@ -106,15 +106,6 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 BLINDING_BAT,
                 CONVERTED_CREATURE,
                 CONVERTED_CREATURE_IMOB,
-                CONVERTED_SHEEP,
-                CONVERTED_COW,
-                CONVERTED_HORSE,
-                CONVERTED_CAMEL,
-                CONVERTED_DONKEY,
-                CONVERTED_MULE,
-                CONVERTED_FOX,
-                CONVERTED_GOAT,
-                CONVERTED_CAT,
                 DUMMY_CREATURE,
                 HUNTER_TRAINER,
                 VILLAGER_ANGRY,
@@ -126,13 +117,17 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 GHOST,
                 THROWABLE_ITEM,
                 SIT,
-                CROSSBOW_ARROW,
+                QUARREL,
                 DARK_BLOOD_PROJECTILE,
                 SOUL_ORB,
                 HUNTER_TRAINER_DUMMY,
                 PARTICLE_CLOUD,
                 REMAINS_DEFENDER,
-                VULNERABLE_REMAINS_DUMMY
+                VULNERABLE_REMAINS_DUMMY,
+                DRACULA,
+                BLOOD_PROJECTILE,
+                FLYING_NEEDLE,
+                FLYING_SWORD
         ).forEach(entity -> this.add(entity.get(), LootTable.lootTable()));
     }
 

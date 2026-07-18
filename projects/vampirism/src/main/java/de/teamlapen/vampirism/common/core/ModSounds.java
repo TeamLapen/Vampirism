@@ -30,7 +30,6 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> BAT_SWARM = create("entity.bat_swarm");
     public static final DeferredHolder<SoundEvent, SoundEvent> BOILING = create("block.boiling");
     public static final DeferredHolder<SoundEvent, SoundEvent> BLOOD_SQUEEZE = create("block.blood_squeeze");
-    public static final DeferredHolder<SoundEvent, SoundEvent> CHOIR_SHORT = create("choir_short");
     public static final DeferredHolder<SoundEvent, SoundEvent> VAMPIRE_FEEDING = create("entity.vampire_feeding");
     public static final DeferredHolder<SoundEvent, SoundEvent> BLESSING_MUSIC = create("block.blessing_music");
     public static final DeferredHolder<SoundEvent, SoundEvent> BLOOD_PROJECTILE_HIT = create("fx.blood_projectile_hit");
@@ -54,6 +53,14 @@ public class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> REMAINS_DEATH = create("entity.remains.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> REMAINS_HURT = create("entity.remains.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> BUBBLES = create("block.bubbles");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_AMBIENT = create("entity.dracula.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_HURT = create("entity.dracula.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_DEATH = create("entity.dracula.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_TELEPORT = create("entity.dracula.teleport");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_TRANSFORM = create("entity.dracula.transform");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_TRANSFORM_END = create("entity.dracula.transform_end");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DRACULA_SIPHON = create("entity.dracula.siphon");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VELMORRA_RUMBLE = create("ambient.velmorra_rumble");
 
 
     static void register(IEventBus bus) {

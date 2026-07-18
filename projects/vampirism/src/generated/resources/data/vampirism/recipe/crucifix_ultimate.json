@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "A": "vampirism:stake",
-    "X": "vampirism:item_alchemical_fire",
+    "X": "vampirism:alchemical_fire",
     "Y": "#c:storage_blocks/gold",
     "Z": "vampirism:holy_water_bottle_enhanced"
   },

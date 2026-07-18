@@ -7,15 +7,18 @@ import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagCopyingItemTagProvider;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
@@ -61,7 +64,7 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         copy(BlockTags.WALLS, ItemTags.WALLS);
         copy(ModBlockTags.GARLIC, ModItemTags.GARLIC);
 
-        tag(ModItemTags.CROSSBOW_ARROW).add(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_TELEPORT.get(), ModItems.CROSSBOW_ARROW_BLEEDING.get(), ModItems.CROSSBOW_ARROW_GARLIC.get());
+        tag(ModItemTags.QUARRELS).add(ModItems.QUARREL_NORMAL.get(), ModItems.QUARREL_HEAVY.get(), ModItems.QUARREL_SPITFIRE.get(), ModItems.QUARREL_VAMPIRE_KILLER.get(), ModItems.QUARREL_TELEPORT.get(), ModItems.QUARREL_BLEEDING.get(), ModItems.QUARREL_GARLIC.get());
         tag(ModItemTags.HUNTER_INTEL).add(ModItems.HUNTER_INTEL_0.get(), ModItems.HUNTER_INTEL_1.get(), ModItems.HUNTER_INTEL_2.get(), ModItems.HUNTER_INTEL_3.get(), ModItems.HUNTER_INTEL_4.get(), ModItems.HUNTER_INTEL_5.get(), ModItems.HUNTER_INTEL_6.get(), ModItems.HUNTER_INTEL_7.get(), ModItems.HUNTER_INTEL_8.get(), ModItems.HUNTER_INTEL_9.get());
         tag(ModItemTags.PURE_BLOOD).add(ModItems.PURE_BLOOD_0.get(), ModItems.PURE_BLOOD_1.get(), ModItems.PURE_BLOOD_2.get(), ModItems.PURE_BLOOD_3.get(), ModItems.PURE_BLOOD_4.get());
         ColorListsUtil.VAMPIRE_CLOAKS.values().forEach(item -> tag(ModItemTags.VAMPIRE_CLOAK).add(item));
@@ -84,14 +87,14 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         tag(ItemTags.SWORDS).addTags(ModItemTags.HEART_STRIKER, ModItemTags.HEART_SEEKER);
         tag(ModItemTags.VAMPIRE_SLAYER_ITEMS).addTag(ItemTags.SWORDS).add(ModItems.PITCHFORK.get());
         tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(ModItems.PITCHFORK.get());
-        tag(ModItemTags.CROSSBOW_ENCHANTABLE).addTag(ModItemTags.CROSSBOWS);
+        tag(ModItemTags.CROSSBOW_ENCHANTABLE).addTags(ModItemTags.SINGLE_HUNTER_CROSSBOWS, ModItemTags.DOUBLE_HUNTER_CROSSBOWS);
         tag(ModItemTags.TECH_CROSSBOW_ENCHANTABLE).add(ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
-        tag(ModItemTags.CROSSBOWS).addTags(ModItemTags.BASIC_CROSSBOWS, ModItemTags.ENHANCED_CROSSBOWS, ModItemTags.SINGLE_CROSSBOWS, ModItemTags.DOUBLE_CROSSBOWS, ModItemTags.TECH_CROSSBOWS);
-        tag(ModItemTags.BASIC_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get());
-        tag(ModItemTags.ENHANCED_CROSSBOWS).add(ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
-        tag(ModItemTags.SINGLE_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get());
-        tag(ModItemTags.DOUBLE_CROSSBOWS).add(ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get());
-        tag(ModItemTags.TECH_CROSSBOWS).add(ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
+        tag(ModItemTags.HUNTER_CROSSBOWS).addTags(ModItemTags.BASIC_HUNTER_CROSSBOWS, ModItemTags.ENHANCED_HUNTER_CROSSBOWS, ModItemTags.SINGLE_HUNTER_CROSSBOWS, ModItemTags.DOUBLE_HUNTER_CROSSBOWS, ModItemTags.TECH_HUNTER_CROSSBOWS);
+        tag(ModItemTags.BASIC_HUNTER_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get());
+        tag(ModItemTags.ENHANCED_HUNTER_CROSSBOWS).add(ModItems.ENHANCED_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
+        tag(ModItemTags.SINGLE_HUNTER_CROSSBOWS).add(ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get());
+        tag(ModItemTags.DOUBLE_HUNTER_CROSSBOWS).add(ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get());
+        tag(ModItemTags.TECH_HUNTER_CROSSBOWS).add(ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
         tag(ModItemTags.ARMOR_OF_SWIFTNESS).addTags(ModItemTags.ARMOR_OF_SWIFTNESS_NORMAL, ModItemTags.ARMOR_OF_SWIFTNESS_ENHANCED, ModItemTags.ARMOR_OF_SWIFTNESS_ULTIMATE);
         tag(ModItemTags.ARMOR_OF_SWIFTNESS_NORMAL).add(ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.get());
         tag(ModItemTags.ARMOR_OF_SWIFTNESS_ENHANCED).add(ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.get(), ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.get());
@@ -107,13 +110,21 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         tag(ModItemTags.POWDER_SNOW_WALKABLE_BOOTS).addTags(ModItemTags.HUNTER_COAT, ModItemTags.ARMOR_OF_SWIFTNESS);
         tag(ModItemTags.VAMPIRE_CLOTHING).addTag(ModItemTags.VAMPIRE_CLOAK);
         tag(ModItemTags.HUNTER_ARMOR).addTags(ModItemTags.ARMOR_OF_SWIFTNESS, ModItemTags.HUNTER_COAT);
-        tag(ModItemTags.ADVANCED_HUNTER_CROSSBOW_ARROWS).add(ModItems.CROSSBOW_ARROW_NORMAL.get(), ModItems.CROSSBOW_ARROW_GARLIC.get(), ModItems.CROSSBOW_ARROW_BLEEDING.get(), ModItems.CROSSBOW_ARROW_VAMPIRE_KILLER.get(), ModItems.CROSSBOW_ARROW_SPITFIRE.get());
+        tag(ModItemTags.ADVANCED_HUNTER_USABLE_QUARRELS).add(ModItems.QUARREL_NORMAL.get(), ModItems.QUARREL_GARLIC.get(), ModItems.QUARREL_BLEEDING.get(), ModItems.QUARREL_VAMPIRE_KILLER.get(), ModItems.QUARREL_SPITFIRE.get());
         tag(ItemTags.MEAT).add(ModItems.HUMAN_HEART.get(), ModItems.WEAK_HUMAN_HEART.get());
         tag(ModItemTags.CROSSBOW_REPAIRABLE).addTag(Tags.Items.STRINGS);
         tag(ItemTags.VILLAGER_PLANTABLE_SEEDS).add(ModBlocks.GARLIC.asItem());
-        tag(ItemTags.BOOKSHELF_BOOKS).addTag(ModItemTags.HUNTER_INTEL).add(ModItems.VAMPIRE_BOOK.get())
-//                .addOptional(ResourceLocation.fromNamespaceAndPath("guideapi_vp", "vampirism-guidebook")) FIXME
-        ;
+        tag(ItemTags.BOOKSHELF_BOOKS).addTag(ModItemTags.HUNTER_INTEL).add(ModItems.VAMPIRE_BOOK.get());
+        Optional.of(BuiltInRegistries.ITEM.getValue(REFERENCE.GUIDEBOOK_LOCATION)).ifPresent(book -> tag(ItemTags.BOOKSHELF_BOOKS).addOptional(book));
+        tag(ItemTags.STONE_TOOL_MATERIALS).add(ModItems.COBBLED_DARK_STONE.get());
+        tag(ItemTags.STONE_CRAFTING_MATERIALS).add(ModItems.COBBLED_DARK_STONE.get());
+        tag(ModItemTags.HUNTER_AXE).add(ModItems.HUNTER_AXE_NORMAL.get(), ModItems.HUNTER_AXE_ENHANCED.get(), ModItems.HUNTER_AXE_ULTIMATE.get());
+        tag(ItemTags.DURABILITY_ENCHANTABLE).addTags(ModItemTags.HUNTER_AXE, ModItemTags.HUNTER_CROSSBOWS).add(ModItems.STAKE.get());
+        tag(ItemTags.SHARP_WEAPON_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
+        tag(ItemTags.MELEE_WEAPON_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
+        tag(ItemTags.SWEEPING_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
+        tag(ItemTags.FIRE_ASPECT_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
+        tag(ItemTags.MINING_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
 
         addCompatibilityTags();
     }

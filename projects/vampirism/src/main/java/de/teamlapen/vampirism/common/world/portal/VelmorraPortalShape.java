@@ -3,8 +3,11 @@ package de.teamlapen.vampirism.common.world.portal;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.world.blocks.PortalGatewayBlock;
 import de.teamlapen.vampirism.common.world.blocks.VelmorraPortalBlock;
+import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraDimension;
+import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
@@ -28,11 +31,17 @@ public class VelmorraPortalShape {
         this.bottom = bottom;
     }
 
+    public BlockPos getBottom() {
+        return this.bottom;
+    }
+
     public void activate(ServerLevel level) {
         if (!this.isActive) {
             BlockState blockState = ModBlocks.VELMORRA_PORTAL.get().defaultBlockState().setValue(VelmorraPortalBlock.AXIS, this.direction.getAxis());
             executeInner(level, blockState);
             this.isActive = true;
+            DraculaFightData.getOpt(VelmorraDimension.createDimension(level.getServer()))
+                    .ifPresent(data -> data.registerPortal(new GlobalPos(level.dimension(), this.bottom)));
         }
     }
 
@@ -41,6 +50,29 @@ public class VelmorraPortalShape {
             executeInner(level, Blocks.AIR.defaultBlockState());
             this.isActive = false;
         }
+    }
+
+    /**
+     * Places the portal frame blocks (dark stone brick base + gateway arches) with the interior cleared.
+     * {@code start} is the first bottom frame block, the frame extends towards {@code facing.getClockWise()}.
+     */
+    public static void buildFrame(ServerLevel level, BlockPos start, Direction facing) {
+        Direction clockWise = facing.getClockWise();
+        for (int i = 0; i <= 4; i++) {
+            level.setBlockAndUpdate(start.relative(clockWise, i), ModBlocks.DARK_STONE_BRICKS.get().defaultBlockState());
+        }
+        PortalGatewayBlock.Type[] types = {PortalGatewayBlock.Type.FIRST, PortalGatewayBlock.Type.SECOND, PortalGatewayBlock.Type.THIRD, PortalGatewayBlock.Type.FOURTH};
+        for (int height = 1; height <= 4; height++) {
+            PortalGatewayBlock.Type type = types[height - 1];
+            level.setBlockAndUpdate(start.above(height), ModBlocks.VELMORRA_PORTAL_ARCH.get().defaultBlockState().setValue(PortalGatewayBlock.TYPE, type).setValue(PortalGatewayBlock.FACING, facing));
+            for (int i = 1; i <= 3; i++) {
+                level.setBlockAndUpdate(start.above(height).relative(clockWise, i), Blocks.AIR.defaultBlockState());
+            }
+            level.setBlockAndUpdate(start.above(height).relative(clockWise, 4), ModBlocks.VELMORRA_PORTAL_ARCH.get().defaultBlockState().setValue(PortalGatewayBlock.TYPE, type).setValue(PortalGatewayBlock.FACING, facing.getOpposite()));
+        }
+        level.setBlockAndUpdate(start.above(5).relative(clockWise), ModBlocks.VELMORRA_PORTAL_ARCH.get().defaultBlockState().setValue(PortalGatewayBlock.TYPE, PortalGatewayBlock.Type.FIFTH).setValue(PortalGatewayBlock.FACING, facing));
+        level.setBlockAndUpdate(start.above(5).relative(clockWise, 2), Blocks.AIR.defaultBlockState());
+        level.setBlockAndUpdate(start.above(5).relative(clockWise, 3), ModBlocks.VELMORRA_PORTAL_ARCH.get().defaultBlockState().setValue(PortalGatewayBlock.TYPE, PortalGatewayBlock.Type.FIFTH).setValue(PortalGatewayBlock.FACING, facing.getOpposite()));
     }
 
     private void executeInner(ServerLevel level, BlockState blockState) {
@@ -64,7 +96,7 @@ public class VelmorraPortalShape {
     }
 
     public static Optional<VelmorraPortalShape> findActivePortalShape(LevelAccessor level, BlockPos startPosition) {
-        return findPortalShape(level, startPosition, shape -> !shape.isActive);
+        return findPortalShape(level, startPosition, shape -> shape.isActive);
     }
 
     public static Optional<VelmorraPortalShape> findPortalShape(LevelAccessor level, BlockPos startPosition, Predicate<VelmorraPortalShape> predicate) {

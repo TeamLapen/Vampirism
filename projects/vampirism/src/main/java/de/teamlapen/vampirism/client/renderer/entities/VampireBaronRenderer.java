@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.models.entities.BaronBaseModel;
@@ -19,10 +20,10 @@ import net.minecraft.world.entity.AnimationState;
 
 public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
 
-    private static final Identifier textureLord = VIdentifier.mod("textures/entity/baron.png");
-    private static final Identifier textureLady = VIdentifier.mod("textures/entity/baroness.png");
-    private static final Identifier textureLordEnraged = VIdentifier.mod("textures/entity/baron_enraged.png");
-    private static final Identifier textureLadyEnraged = VIdentifier.mod("textures/entity/baroness_enraged.png");
+    private static final Identifier textureLord = VIdentifier.mod("textures/entity/baron/baron.png");
+    private static final Identifier textureLady = VIdentifier.mod("textures/entity/baron/baroness.png");
+    private static final Identifier textureLordEnraged = VIdentifier.mod("textures/entity/baron/baron_enraged.png");
+    private static final Identifier textureLadyEnraged = VIdentifier.mod("textures/entity/baron/baroness_enraged.png");
 
     private final BaronModel baronModel;
     private final BaronessModel baronessModel;
@@ -31,8 +32,13 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, Vampir
         super(context, new BaronModel(context.bakeLayer(ModEntitiesRender.BARON)), 0.5F);
         this.baronModel = new BaronModel(context.bakeLayer(ModEntitiesRender.BARON));
         this.baronessModel = new BaronessModel(context.bakeLayer(ModEntitiesRender.BARONESS));
-        this.addLayer(new WingsLayer<>(this, context.getModelSet(), vampireBaronEntity -> true, (entity, model) -> model.getBody()));
         this.addLayer(new BaronAttireLayer(this, context, (VampireBaronRenderState state) -> state.isLady ));
+        this.addLayer(new WingsLayer<>(this, context.getModelSet(), (state, poseStack) -> {
+            if (state.isLady) {
+                poseStack.mulPose(Axis.XP.rotationDegrees(20));
+            }
+            poseStack.translate(0,-11/16f,2/16f);
+        }));
     }
 
     @Override
@@ -56,13 +62,11 @@ public class VampireBaronRenderer extends MobRenderer<VampireBaronEntity, Vampir
         super.extractRenderState(entity, state, p_361157_);
         state.isEnraged = entity.isEnraged();
         state.isLady = entity.isLady();
-        state.enragedProgress = entity.getEnragedProgress();
     }
 
     public static class VampireBaronRenderState extends HumanoidRenderState {
         public boolean isEnraged;
         public boolean isLady;
-        public float enragedProgress;
         public AnimationState cloakState = new AnimationState();
     }
 }

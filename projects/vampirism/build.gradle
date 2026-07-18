@@ -4,10 +4,6 @@ plugins {
 group = project.vampirism_group_id
 version = project.vampirism_version
 
-base {
-    archivesName = project.vampirism_mod_name
-}
-
 apply from: file('integrations.gradle')
 
 java {
@@ -41,30 +37,22 @@ integrations.each {
     }
 }
 
-List<Project> dependencyProjects = [
-        project(':faction-api'),
-        project(':faction'),
-        project(':vampirism-api'),
-]
-
-dependencyProjects.forEach {
-    project.evaluationDependsOn(it.path)
-}
-
-dependencies {
-    implementation project(':vampirism-api')
-    implementation project(':faction-api')
-
-    implementation project(':faction')
-    interfaceInjectionData project(':faction')
-    accessTransformers project(':faction')
-}
-
+apply from: file('dependencies.gradle')
 
 neoForge {
     version = project.neoforge_version
 
-    interfaceInjectionData.from project.file("src/main/resources/META-INF/interfaceinjection.json")
+//    validateAccessTransformers = true
+
+    interfaceInjectionData {
+        from project.file("src/main/resources/META-INF/interfaceinjection.json")
+        publish project.file("src/main/resources/META-INF/interfaceinjection.json")
+    }
+
+    accessTransformers {
+        from project.file("src/main/resources/META-INF/accesstransformer.cfg")
+        publish project.file("src/main/resources/META-INF/accesstransformer.cfg")
+    }
 
     runs {
         configureEach {
@@ -131,11 +119,6 @@ neoForge {
     }
 }
 
-apply from: file('dependencies.gradle')
-
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-}
 
 // Mod metadata generation (templates located in root/src/main/templates)
 def generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
@@ -156,7 +139,7 @@ def generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             jei_version            : jei_version,
             guideapi_version       : guideapi_version,
             terrablender_version   : terrablender_version,
-            factions_version       : factions_version,
+            vampirism_factions_version : vampirism_factions_version,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
@@ -168,6 +151,12 @@ def generateModMetadata = tasks.register("generateModMetadata", ProcessResources
 sourceSets.main.resources.srcDir generateModMetadata
 
 neoForge.ideSyncTask generateModMetadata
+
+idea {
+    module {
+        generatedSourceDirs += file('build/generated/sources/annotationProcessor/java/main')
+    }
+}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
@@ -192,7 +181,7 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-var sourcesJarTask = tasks.named("sourcesJar", Jar) {
+tasks.named("sourcesJar", Jar) {
     from(sourceSets.main.allJava)
     from (project(':vampirism-api').sourceSets.main.allJava)
 
@@ -206,21 +195,11 @@ var sourcesJarTask = tasks.named("sourcesJar", Jar) {
     archiveClassifier.set("sources")
 }
 
-artifacts {
-    archives(tasks.jar)
-    archives(sourcesJarTask.get())
-}
-
-
 publishing {
     publications {
-        register("vampirism", MavenPublication) {
-            artifactId = "${project.vampirism_mod_name}"
-            artifact(tasks.jar)
-            artifact(sourcesJarTask.get())
-            artifact(project(':vampirism-api').tasks.jar) {
-                classifier = "api"
-            }
+        maven(MavenPublication) {
+            from components.java
+            it.artifactId = project.vampirism_mod_name
         }
     }
 }

@@ -13,6 +13,8 @@ import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
 import de.teamlapen.vampirism.common.world.attachments.NearestVillage;
 import de.teamlapen.vampirism.common.world.dimensions.velmorra.VelmorraDimension;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
+import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
+import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
@@ -20,6 +22,7 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.InfectionStatus
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireBat;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ambient.Bat;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -35,6 +38,7 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<LevelFog>> LEVEL_FOG = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.FOG_HANDLER.getPath(), () -> AttachmentType.builder(new LevelFog.Factory()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<LevelGarlic>> LEVEL_GARLIC = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.GARLIC_HANDLER.getPath(), () -> AttachmentType.builder(new LevelGarlic.Factory()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<LevelDamage>> LEVEL_DAMAGE = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.DAMAGE_HANDLER.getPath(), () -> AttachmentType.builder(new LevelDamage.Factory()).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<DraculaFightData>> DRACULA_FIGHT_DATA = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.DRACULA_FIGHT_DATA.getPath(), () -> AttachmentType.builder(new DraculaFightData.Factory()).serialize(new DraculaFightData.Serializer()).build());
 
     // Entity Attachments
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<ExtendedCreature>> EXTENDED_CREATURE = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.EXTENDED_CREATURE.getPath(), () -> syncAttachment(new ExtendedCreature.AttachmentOptions()).build());
@@ -42,9 +46,11 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<VampirePlayer>> VAMPIRE_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_PLAYER.getPath(), () -> syncAttachment(new VampirePlayer.AttachmentOptions()).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Bat>> VAMPIRE_BAT = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_BAT.getPath(), () -> AttachmentType.builder(new VampireBat.Factory()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<InfectionStatus>> INFECTION_STATUS = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.INFECTION_STATUS.getPath(), () -> AttachmentType.builder(new InfectionStatus.Factory()).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<QuarrelEntity.HurtBypassTracker>> QUARREL_HURT_BYPASS = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.QUARREL_HURT_BYPASS.getPath(), () -> AttachmentType.builder(QuarrelEntity.HurtBypassTracker::new).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<EntitySyncHolder<VampireMinionEntity, VampireMinionEntity.VampireMinionData>>> VAMPIRE_MINION_DATA = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_MINION_DATA.getPath(), () -> syncHolder(new EntitySyncHolder.Factory<>(VampireMinionEntity.class)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<EntitySyncHolder<HunterMinionEntity, HunterMinionEntity.HunterMinionData>>> HUNTER_MINION_DATA = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.HUNTER_MINION_DATA.getPath(), () -> syncHolder(new EntitySyncHolder.Factory<>(HunterMinionEntity.class)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<GlobalPos>> VELMORRA_PORTAL = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VELMORRA_PORTAL.getPath(), () -> AttachmentType.builder(new VelmorraDimension.VelmorraPortalPos()).serialize(GlobalPos.MAP_CODEC).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Identifier>> MARKER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.MARKER.getPath(), () -> AttachmentType.builder(() -> Identifier.withDefaultNamespace("none")).serialize(Identifier.CODEC.fieldOf("key")).build());
 
     //Blocks Attachments
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<NearestVillage>> NEAREST_VILLAGE = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.NEAREST_VILLAGE.getPath(), () -> AttachmentType.builder(new NearestVillage.Factory()).build());

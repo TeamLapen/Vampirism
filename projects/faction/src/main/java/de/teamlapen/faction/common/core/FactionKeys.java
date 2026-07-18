@@ -8,9 +8,11 @@ import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.client.IMinecraftAccessor;
+import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.client.gui.screens.SelectActionRadialScreen;
 import de.teamlapen.faction.client.gui.screens.SelectMinionTaskRadialScreen;
 import de.teamlapen.faction.client.gui.screens.skills.SkillsScreen;
+import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionKeys;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
@@ -40,6 +42,7 @@ public class FactionKeys implements IMinecraftAccessor {
     public static final KeyMapping MINION = new KeyMapping("key.factionapi.minion_task", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
     public static final KeyMapping FACTION_MENU = new KeyMapping("key.factionapi.faction_menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P, CATEGORY);
     public static final KeyMapping SKILL_SCREEN = new KeyMapping("key.factionapi.skill_screen", KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY);
+    public static final KeyMapping ITEM_DESCRIPTION = new KeyMapping("key.factionapi.item_description", KeyConflictContext.GUI, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_SHIFT, CATEGORY);
 
 
     public static final Map<ActionKeys, KeyMapping> ACTION_KEYS;
@@ -58,9 +61,9 @@ public class FactionKeys implements IMinecraftAccessor {
         ImmutableMap.Builder<ActionKeys, KeyMapping> builder = ImmutableMap.builder();
         Arrays.stream(ActionKeys.values()).forEach(x -> {
             if (x.getDefaultKey().isPresent()) {
-                builder.put(x, new KeyMapping("keys.factionapi.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, x.getDefaultKey().getAsInt(), CATEGORY));
+                builder.put(x, new KeyMapping("key.factionapi.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, KeyModifier.ALT, InputConstants.Type.KEYSYM, x.getDefaultKey().getAsInt(), CATEGORY));
             } else {
-                builder.put(x, new KeyMapping("keys.factionapi.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY));
+                builder.put(x, new KeyMapping("key.factionapi.action" + (x.ordinal() + 1), KeyConflictContext.IN_GAME, InputConstants.UNKNOWN, CATEGORY));
             }
         });
         ACTION_KEYS = builder.build();
@@ -85,6 +88,7 @@ public class FactionKeys implements IMinecraftAccessor {
         event.register(MINION);
         event.register(FACTION_MENU);
         event.register(SKILL_SCREEN);
+        event.register(ITEM_DESCRIPTION);
 
         ACTION_KEYS.forEach((i, k) -> event.register(k));
     }
@@ -103,9 +107,14 @@ public class FactionKeys implements IMinecraftAccessor {
         long t = System.currentTimeMillis();
         if (t - this.actionTriggerTime.getOrDefault(key, 0) > ACTION_BUTTON_COOLDOWN) {
             this.actionTriggerTime.put(key, t);
+
             if (player().isAlive()) {
                 FactionPlayerHandler handler = FactionPlayerHandler.get(player());
-                toggleBoundAction(handler.factionPlayer(), handler.getBoundAction(key));
+                @Nullable
+                Holder<? extends IAction<?>> action = FactionConfig.preferences().actionBindings().getOrder(handler.getFaction(), key);
+                if (action != null) {
+                    toggleBoundAction(handler.factionPlayer(), action);
+                }
             }
         }
     }
@@ -116,7 +125,7 @@ public class FactionKeys implements IMinecraftAccessor {
 
     private void openSkillScreen() {
         FactionPlayerHandler.get(player()).getCurrentSkillPlayer().ifPresent(factionPlayer -> {
-            mc().setScreen(new SkillsScreen(factionPlayer, mc().screen));
+            mc().setScreen(new SkillsScreen(factionPlayer, ILastScreenProvider.current()));
         });
     }
 
@@ -133,7 +142,7 @@ public class FactionKeys implements IMinecraftAccessor {
         }
     }
 
-    private void toggleBoundAction(IFactionPlayer<?> player, @Nullable Holder<IAction<?>> action) {
+    private void toggleBoundAction(IFactionPlayer<?> player, @Nullable Holder<? extends IAction<?>> action) {
         if (action == null) {
             player.asEntity().sendOverlayMessage(Component.translatable("message.factionapi.action.not_bound", "/factions bind-action"));
         } else {

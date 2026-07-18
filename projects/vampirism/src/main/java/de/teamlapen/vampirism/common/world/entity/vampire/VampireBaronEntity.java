@@ -4,8 +4,10 @@ import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.entities.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
+import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.AttackRangedDarkBloodGoal;
@@ -41,18 +43,18 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Vampire that spawns in the vampire forest, has minions and drops pure blood
  */
-public class VampireBaronEntity extends VampireBaseEntity implements IVampireBaron {
+public class VampireBaronEntity extends VampireBaseEntity implements IVampireBaron, IWingsEntity {
     public static final int MAX_LEVEL = 4;
-    private final static Logger LOGGER = LogManager.getLogger(VampireBaronEntity.class);
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(VampireBaronEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> ENRAGED = SynchedEntityData.defineId(VampireBaronEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> LADY = SynchedEntityData.defineId(VampireBaronEntity.class, EntityDataSerializers.BOOLEAN);
-    private final static int ENRAGED_TRANSITION_TIME = 15;
+    private static final EntityDataAccessor<WingsState> WINGS_STATE = SynchedEntityData.defineId(VampireBaronEntity.class, ModEntities.WINGS_STATE.get());
 
     public static boolean spawnPredicateBaron(EntityType<? extends VampireBaronEntity> entityType, LevelAccessor world, EntitySpawnReason spawnReason, BlockPos blockPos, RandomSource random) {
         return world.getBiome(blockPos).is(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME) && world.getDifficulty() != net.minecraft.world.Difficulty.PEACEFUL && Mob.checkMobSpawnRules(entityType, world, spawnReason, blockPos, random);
@@ -80,12 +82,132 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
      * Not guaranteed to be exact and not saved to nbt
      */
     private int followingEntities = 0;
-    private int enragedTransitionTime = 0;
 
     public VampireBaronEntity(EntityType<? extends VampireBaronEntity> type, Level world) {
         super(type, world);
         this.garlicResist = EnumStrength.MEDIUM;
         this.hasArms = true;
+    }
+
+    @Override
+    public void updateDataBeforeSync() {
+        super.updateDataBeforeSync();
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (WINGS_STATE.equals(key)) {
+            if (getWingsState() == WingsState.OPENING || getWingsState() == WingsState.CLOSING) {
+                switchState(getWingsState());
+            }
+        }
+    }
+
+    private int growTicks = 0;
+    private final AnimationState growAnimationState = new AnimationState();
+    private final AnimationState idleAnimationState = new AnimationState();
+
+
+    private void switchState(IWingsEntity.WingsState state) {
+        this.setWingsState(state);
+        this.growTicks = 0;
+        switch (state) {
+            case OPEN ->  {
+                this.idleAnimationState.start(asEntity().tickCount);
+                this.growAnimationState.stop();
+            }
+            case CLOSED -> {
+                this.idleAnimationState.stop();
+                this.growAnimationState.stop();
+            }
+            case OPENING, CLOSING -> {
+                int startTicks = asEntity().tickCount;
+                int currentTicks = this.growAnimationState.vampirism$startTick();
+                if (currentTicks != Integer.MIN_VALUE) {
+                    int div = startTicks - currentTicks;
+                    if (div < IWingsEntity.GROW_TICKS) {
+                        startTicks -= (int) IWingsEntity.GROW_TICKS - div;
+                    }
+                }
+                this.growAnimationState.start(startTicks);
+                this.idleAnimationState.stop();
+            }
+        }
+    }
+
+    @Override
+    public boolean openWings() {
+        switchState(WingsState.OPENING);
+        return true;
+    }
+
+    @Override
+    public void closeWings() {
+        switchState(WingsState.CLOSING);
+    }
+
+    @Override
+    public void swingWings() {
+        // vampire barons cannot fly
+    }
+
+    @Override
+    public void toggleWings() {
+        switch(getWingsState()) {
+            case OPEN, OPENING, FLYING -> closeWings();
+            case CLOSED, CLOSING -> openWings();
+        }
+    }
+
+    @Override
+    public AnimationState flyAnimationState() {
+        return this.idleAnimationState;
+    }
+
+    @Override
+    public AnimationState growAnimationState() {
+        return this.growAnimationState;
+    }
+
+    @Override
+    public WingsState getWingsState() {
+        return this.entityData.get(WINGS_STATE);
+    }
+
+    public void setWingsState(WingsState state) {
+        this.entityData.set(WINGS_STATE, state);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        switch (getWingsState()) {
+            case OPENING -> {
+                if (growTicks++ > IWingsEntity.GROW_TICKS) {
+                    switchState(WingsState.OPEN);
+                }
+            }
+            case CLOSING -> {
+                if (growTicks++ > IWingsEntity.GROW_TICKS) {
+                    switchState(WingsState.CLOSED);
+                }
+            }
+        }
+        if (getWingsState() != WingsState.CLOSED) {
+            updateAnimations();
+        }
+    }
+
+    private void updateAnimations() {
+        switch (this.getWingsState()) {
+            case OPENING, CLOSING -> this.growAnimationState.startIfStopped(this.tickCount);
+            case OPEN, FLYING -> this.idleAnimationState.startIfStopped(this.tickCount);
+            case CLOSED -> {
+                this.idleAnimationState.stop();
+                this.growAnimationState.stop();
+            }
+        }
     }
 
     @Override
@@ -125,13 +247,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
             }
             if (getEntityLevel() > 3 && this.random.nextInt(9) == 0) {
                 this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 60));
-            }
-        }
-        if (this.level().isClientSide()) {
-            if (isEnraged() && enragedTransitionTime < ENRAGED_TRANSITION_TIME) {
-                enragedTransitionTime++;
-            } else if (!isEnraged() && enragedTransitionTime > 0) {
-                enragedTransitionTime--;
             }
         }
         super.aiStep();
@@ -183,13 +298,6 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 //            this.setEntityLevel(getRandom().nextInt(getMaxEntityLevel() + 1));
         }
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn);
-    }
-
-    /**
-     * @return float between 0 and 1 representing the transition progress
-     */
-    public float getEnragedProgress() {
-        return enragedTransitionTime / (float) ENRAGED_TRANSITION_TIME;
     }
 
     @Override
@@ -285,8 +393,16 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
 
     @Override
     public void setTarget(@Nullable LivingEntity target) {
+        var prev = this.getTarget();
         super.setTarget(target);
         this.getEntityData().set(ENRAGED, target != null);
+        if (prev != getTarget()) {
+            if (target != null) {
+                openWings();
+            } else {
+                closeWings();
+            }
+        }
     }
 
     @Override
@@ -324,6 +440,7 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
         builder.define(LEVEL, -1);
         builder.define(ENRAGED, false);
         builder.define(LADY, false);
+        builder.define(WINGS_STATE, WingsState.CLOSED);
     }
 
     @Override

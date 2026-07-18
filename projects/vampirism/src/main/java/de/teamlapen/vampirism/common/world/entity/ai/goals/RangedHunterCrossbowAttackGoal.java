@@ -80,7 +80,8 @@ public class RangedHunterCrossbowAttackGoal<T extends PathfinderMob & RangedAtta
 
                 int i = this.mob.getTicksUsingItem();
                 ItemStack itemstack = this.mob.getUseItem();
-                if (i >= CrossbowItem.getChargeDuration(itemstack, this.mob)) {
+                int chargeDuration = itemstack.getItem() instanceof IHunterCrossbow crossbow ? crossbow.getChargeDurationMod(itemstack, this.mob.level()) : CrossbowItem.getChargeDuration(itemstack, this.mob);
+                if (i >= chargeDuration) {
                     this.mob.releaseUsingItem();
                     this.crossbowState = RangedCrossbowAttackGoal.CrossbowState.CHARGED;
                     this.attackDelay = 20 + this.mob.getRandom().nextInt(20);

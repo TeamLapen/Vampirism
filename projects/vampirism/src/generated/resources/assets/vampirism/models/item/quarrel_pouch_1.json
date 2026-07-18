@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "vampirism:item/arrow_clip1"
+    "layer0": "vampirism:item/quarrel_pouch_1"
   }
 }

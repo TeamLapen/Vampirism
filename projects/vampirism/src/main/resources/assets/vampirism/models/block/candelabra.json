@@ -6,6 +6,7 @@
 		"base": "vampirism:block/candelabra_base"
 	},
 	"render_type": "minecraft:cutout",
+	"ambientocclusion": false,
 	"elements": [
 		{
 			"name": "base",

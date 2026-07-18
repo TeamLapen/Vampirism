@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
@@ -151,8 +152,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
         FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
-                    boolean hasIncreasedStats = lord.asSkillPlayer().map(ISkillPlayer::getSkillHandler).map(skillHandler -> skillHandler.isSkillEnabled(VampireSkills.MINION_STATS_INCREASE)).orElse(false);
-                    VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData("Minion", this.getEntityTextureType(), false, hasIncreasedStats);
+                    VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(lord, this);
                     TagValueOutput withContext = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, lord.registryAccess());
                     this.serializeAttachments(withContext);
                     data.updateEntityCaps(withContext.buildResult());
@@ -162,6 +162,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
                         return;
                     }
                     VampireMinionEntity minion = ModEntities.VAMPIRE_MINION.get().create(this.level(), EntitySpawnReason.CONVERSION);
+                    minion.setHealth(minion.getMaxHealth());
                     minion.claimMinionSlot(id, controller);
                     minion.copyPosition(this);
                     minion.markAsConverted();

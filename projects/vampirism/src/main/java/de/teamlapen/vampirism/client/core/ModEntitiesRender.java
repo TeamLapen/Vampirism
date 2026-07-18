@@ -5,9 +5,15 @@ import de.teamlapen.vampirism.client.models.armor.*;
 import de.teamlapen.vampirism.client.models.blocks.BloodSphereModel;
 import de.teamlapen.vampirism.client.models.blocks.CoffinModel;
 import de.teamlapen.vampirism.client.models.entities.*;
+import de.teamlapen.vampirism.client.models.entities.dracula.DraculaPhase1Model;
+import de.teamlapen.vampirism.client.models.entities.dracula.DraculaPhase2Model;
+import de.teamlapen.vampirism.client.models.entities.dracula.DraculaPhase3Model;
+import de.teamlapen.vampirism.client.models.entities.flying_needle.FlyingNeedleModel;
+import de.teamlapen.vampirism.client.models.layers.WingsModel;
 import de.teamlapen.vampirism.client.renderer.entities.*;
 import de.teamlapen.vampirism.client.renderer.entities.layers.ConvertedVampireEntityLayer;
 import de.teamlapen.vampirism.client.renderer.entities.layers.VampirePlayerHeadLayer;
+import de.teamlapen.vampirism.client.renderer.entities.layers.WingsLayer;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -21,7 +27,6 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelType;
@@ -37,6 +42,9 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation WING = new ModelLayerLocation(VIdentifier.mod("wing"), "main");
     public static final ModelLayerLocation BARON = new ModelLayerLocation(VIdentifier.mod("baron"), "main");
     public static final ModelLayerLocation BARONESS = new ModelLayerLocation(VIdentifier.mod("baroness"), "main");
+    public static final ModelLayerLocation DRACULA_PHASE_1 = new ModelLayerLocation(VIdentifier.mod("dracula/phase1"), "main");
+    public static final ModelLayerLocation DRACULA_PHASE_2 = new ModelLayerLocation(VIdentifier.mod("dracula/phase2"), "main");
+    public static final ModelLayerLocation DRACULA_PHASE_3 = new ModelLayerLocation(VIdentifier.mod("dracula/phase3"), "main");
     public static final ModelLayerLocation BARON_ATTIRE = new ModelLayerLocation(VIdentifier.mod("baron"), "attire");
     public static final ModelLayerLocation CLOAK = new ModelLayerLocation(VIdentifier.mod("cloak"), "main");
     public static final ModelLayerLocation BARONESS_ATTIRE = new ModelLayerLocation(VIdentifier.mod("baroness"), "attire");
@@ -55,17 +63,16 @@ public class ModEntitiesRender {
     public static final ModelLayerLocation DARK_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VIdentifier.mod("chest_boat/dark_spruce"), "main");
     public static final ModelLayerLocation CURSED_SPRUCE_BOAT = new ModelLayerLocation(VIdentifier.mod("boat/cursed_spruce"), "main");
     public static final ModelLayerLocation CURSED_SPRUCE_CHEST_BOAT = new ModelLayerLocation(VIdentifier.mod("chest_boat/cursed_spruce"), "main");
+    public static final ModelLayerLocation QUARREL = new ModelLayerLocation(VIdentifier.mod("quarrel"), "main");
+    public static final ModelLayerLocation HEAVY_QUARREL = new ModelLayerLocation(VIdentifier.mod("heavy_quarrel"), "main");
+    public static final ModelLayerLocation FLYING_NEEDLE = new ModelLayerLocation(VIdentifier.mod("flying_needle"), "main");
+    public static final ModelLayerLocation WINGS = new ModelLayerLocation(VIdentifier.mod("wings"), "main");
 
 
     public static void onRegisterRenderers(EntityRenderersEvent.@NotNull RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BLINDING_BAT.get(), BatRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE_IMOB.get(), ConvertedCreatureRenderer::new);
         event.registerEntityRenderer(ModEntities.CONVERTED_CREATURE.get(), (ConvertedCreatureRenderer::new));
-        event.registerEntityRenderer(ModEntities.CONVERTED_HORSE.get(), convertedRenderer(HorseRenderer::new));
-        event.registerEntityRenderer(ModEntities.CONVERTED_DONKEY.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, EquipmentClientInfo.LayerType.DONKEY_SADDLE, ModelLayers.DONKEY_SADDLE, DonkeyRenderer.Type.DONKEY, DonkeyRenderer.Type.DONKEY_BABY)));
-        event.registerEntityRenderer(ModEntities.CONVERTED_MULE.get(), convertedRenderer(context -> new DonkeyRenderer<>(context, EquipmentClientInfo.LayerType.MULE_SADDLE, ModelLayers.MULE_SADDLE, DonkeyRenderer.Type.MULE, DonkeyRenderer.Type.MULE_BABY)));
-        event.registerEntityRenderer(ModEntities.CONVERTED_SHEEP.get(), convertedRenderer(SheepRenderer::new));
-        event.registerEntityRenderer(ModEntities.CONVERTED_COW.get(), convertedRenderer(CowRenderer::new));
         event.registerEntityRenderer(ModEntities.HUNTER.get(), (BasicHunterRenderer::new));
         event.registerEntityRenderer(ModEntities.HUNTER_IMOB.get(), (BasicHunterRenderer::new));
         event.registerEntityRenderer(ModEntities.VAMPIRE.get(), (BasicVampireRenderer::new));
@@ -78,10 +85,11 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.ADVANCED_VAMPIRE_IMOB.get(), (AdvancedVampireRenderer::new));
         event.registerEntityRenderer(ModEntities.VILLAGER_CONVERTED.get(), convertedRenderer(VillagerRenderer::new));
         event.registerEntityRenderer(ModEntities.VILLAGER_ANGRY.get(), HunterVillagerRenderer::new);
-        event.registerEntityRenderer(ModEntities.CROSSBOW_ARROW.get(), (CrossbowArrowRenderer::new));
+        event.registerEntityRenderer(ModEntities.QUARREL.get(), (QuarrelRenderer::new));
         event.registerEntityRenderer(ModEntities.PARTICLE_CLOUD.get(), (NoopRenderer::new));
         event.registerEntityRenderer(ModEntities.THROWABLE_ITEM.get(), ThrowableItemRenderer::new);
         event.registerEntityRenderer(ModEntities.DARK_BLOOD_PROJECTILE.get(), (DarkBloodProjectileRenderer::new));
+        event.registerEntityRenderer(ModEntities.BLOOD_PROJECTILE.get(), (DarkBloodProjectileRenderer::new));
         event.registerEntityRenderer(ModEntities.SOUL_ORB.get(), SoulOrbRenderer::new);
         event.registerEntityRenderer(ModEntities.HUNTER_TRAINER_DUMMY.get(), e -> new HunterTrainerRenderer(e, false));
         event.registerEntityRenderer(ModEntities.DUMMY_CREATURE.get(), (DummyRenderer::new));
@@ -90,17 +98,16 @@ public class ModEntitiesRender {
         event.registerEntityRenderer(ModEntities.TASK_MASTER_VAMPIRE.get(), (VampireTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.TASK_MASTER_HUNTER.get(), (HunterTaskMasterRenderer::new));
         event.registerEntityRenderer(ModEntities.SIT.get(), DummyRenderer::new);
-        event.registerEntityRenderer(ModEntities.CONVERTED_FOX.get(), convertedRenderer(FoxRenderer::new));
-        event.registerEntityRenderer(ModEntities.CONVERTED_GOAT.get(), convertedRenderer(GoatRenderer::new));
         event.registerEntityRenderer(ModEntities.VULNERABLE_REMAINS_DUMMY.get(), DummyRenderer::new);
         event.registerEntityRenderer(ModEntities.REMAINS_DEFENDER.get(), RemainsDefenderRenderer::new);
         event.registerEntityRenderer(ModEntities.GHOST.get(), GhostRenderer::new);
-        event.registerEntityRenderer(ModEntities.CONVERTED_CAMEL.get(), convertedRenderer(CamelRenderer::new));
-        event.registerEntityRenderer(ModEntities.CONVERTED_CAT.get(), convertedRenderer(CatRenderer::new));
         event.registerEntityRenderer(ModEntities.DARK_SPRUCE_BOAT.get(), context -> new BoatRenderer(context, DARK_SPRUCE_BOAT));
         event.registerEntityRenderer(ModEntities.DARK_SPRUCE_CHEST_BOAT.get(), context -> new BoatRenderer(context, DARK_SPRUCE_CHEST_BOAT));
         event.registerEntityRenderer(ModEntities.CURSED_SPRUCE_BOAT.get(), context -> new BoatRenderer(context, CURSED_SPRUCE_BOAT));
         event.registerEntityRenderer(ModEntities.CURSED_SPRUCE_CHEST_BOAT.get(), context -> new BoatRenderer(context, CURSED_SPRUCE_CHEST_BOAT));
+        event.registerEntityRenderer(ModEntities.DRACULA.get(), DraculaRenderer::new);
+        event.registerEntityRenderer(ModEntities.FLYING_SWORD.get(), FlyingSwordRenderer::new);
+        event.registerEntityRenderer(ModEntities.FLYING_NEEDLE.get(), FlyingNeedleRenderer::new);
     }
 
     public static void onRegisterLayers(EntityRenderersEvent.@NotNull RegisterLayerDefinitions event) {
@@ -128,6 +135,13 @@ public class ModEntitiesRender {
         event.registerLayerDefinition(DARK_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
         event.registerLayerDefinition(CURSED_SPRUCE_BOAT, () -> boatDefinition);
         event.registerLayerDefinition(CURSED_SPRUCE_CHEST_BOAT, () -> chestBoatDefinition);
+        event.registerLayerDefinition(QUARREL, QuarrelModel::createBodyLayer);
+        event.registerLayerDefinition(HEAVY_QUARREL, HeavyQuarrelModel::createBodyLayer);
+        event.registerLayerDefinition(DRACULA_PHASE_1, DraculaPhase1Model::createBodyLayer);
+        event.registerLayerDefinition(DRACULA_PHASE_2, DraculaPhase2Model::createBodyLayer);
+        event.registerLayerDefinition(DRACULA_PHASE_3, DraculaPhase3Model::createBodyLayer);
+        event.registerLayerDefinition(FLYING_NEEDLE, FlyingNeedleModel::createBodyLayer);
+        event.registerLayerDefinition(WINGS, WingsModel::createLayer);
     }
 
     public static void onAddLayers(EntityRenderersEvent.@NotNull AddLayers event) {
@@ -142,6 +156,9 @@ public class ModEntitiesRender {
             if (renderPlayer != null && renderPlayer.getModel() instanceof PlayerModel) {
                 LivingEntityRenderer<S, T, PlayerModel> renderPlayer2 = (LivingEntityRenderer<S, T, PlayerModel>) renderPlayer;
                 renderPlayer2.addLayer(new VampirePlayerHeadLayer<>(renderPlayer2));
+                renderPlayer.addLayer(new WingsLayer<>(renderPlayer, event.getEntityModels(), (state, poseStack) -> {
+                    poseStack.translate(0,-11/16f,2/16f);
+                }));
             }
         }
     }
@@ -150,7 +167,7 @@ public class ModEntitiesRender {
         return context -> {
             //noinspection unchecked
             var renderer = (LivingEntityRenderer<T, O, P>) provider.create(context);
-            renderer.addLayer(new ConvertedVampireEntityLayer<>(renderer, false));
+            renderer.addLayer(new ConvertedVampireEntityLayer<>(renderer));
             return renderer;
         };
     }
@@ -158,7 +175,7 @@ public class ModEntitiesRender {
     private interface LivingEntityRendererProvider<T extends LivingEntity, U extends LivingEntityRenderState, Z extends EntityModel<? super U>> extends EntityRendererProvider<T> {
         @Override
         @NotNull
-        LivingEntityRenderer<T, U, Z> create(EntityRendererProvider.@NotNull Context pContext);
+        LivingEntityRenderer<T, U, Z> create(@NotNull Context pContext);
     }
 
 }

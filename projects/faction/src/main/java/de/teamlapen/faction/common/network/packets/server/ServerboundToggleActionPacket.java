@@ -22,20 +22,20 @@ import java.util.Optional;
  * @param action the id of the action that was toggled
  * @param target The target the player was looking at when activating the action.
  */
-public record ServerboundToggleActionPacket(Holder<IAction<?>> action, @Nullable Either<Integer, BlockPos> target) implements CustomPacketPayload {
+public record ServerboundToggleActionPacket(Holder<? extends IAction<?>> action, @Nullable Either<Integer, BlockPos> target) implements CustomPacketPayload {
     public static final Type<ServerboundToggleActionPacket> TYPE = new Type<>(FIdentifier.mod("toggle_action"));
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundToggleActionPacket> CODEC = StreamCodec.composite(
-            ByteBufCodecs.holderRegistry(FactionRegistries.Keys.ACTION), ServerboundToggleActionPacket::action,
+            ((StreamCodec<RegistryFriendlyByteBuf, Holder<? extends IAction<?>>>) (Object)ByteBufCodecs.holderRegistry(FactionRegistries.Keys.ACTION)), ServerboundToggleActionPacket::action,
             ByteBufCodecs.optional(ByteBufCodecs.either(ByteBufCodecs.VAR_INT, BlockPos.STREAM_CODEC)), pkt -> Optional.ofNullable(pkt.target),
             ServerboundToggleActionPacket::new
     );
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private ServerboundToggleActionPacket(Holder<IAction<?>> action, Optional<Either<Integer, BlockPos>> target) {
+    private ServerboundToggleActionPacket(Holder<? extends IAction<?>> action, Optional<Either<Integer, BlockPos>> target) {
         this(action, target.orElse(null));
     }
 
-    public static @NotNull ServerboundToggleActionPacket createFromRaytrace(Holder<IAction<?>> action, @Nullable HitResult traceResult) {
+    public static @NotNull ServerboundToggleActionPacket createFromRaytrace(Holder<? extends IAction<?>> action, @Nullable HitResult traceResult) {
         if (traceResult != null) {
             if (traceResult.getType() == HitResult.Type.ENTITY) {
                 return new ServerboundToggleActionPacket(action, ((EntityHitResult) traceResult).getEntity().getId());
@@ -46,15 +46,15 @@ public record ServerboundToggleActionPacket(Holder<IAction<?>> action, @Nullable
         return new ServerboundToggleActionPacket(action);
     }
 
-    public ServerboundToggleActionPacket(Holder<IAction<?>> action, @Nullable Integer target) {
+    public ServerboundToggleActionPacket(Holder<? extends IAction<?>> action, @Nullable Integer target) {
         this(action, Either.left(target));
     }
 
-    public ServerboundToggleActionPacket(Holder<IAction<?>> action, @Nullable BlockPos target) {
+    public ServerboundToggleActionPacket(Holder<? extends IAction<?>> action, @Nullable BlockPos target) {
         this(action, Either.right(target));
     }
 
-    public ServerboundToggleActionPacket(Holder<IAction<?>> action) {
+    public ServerboundToggleActionPacket(Holder<? extends IAction<?>> action) {
         this(action, (Either<Integer, BlockPos>) null);
     }
 

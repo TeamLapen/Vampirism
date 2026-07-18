@@ -29,6 +29,8 @@ public class ModPacketDispatcher {
         registrar.playToClient(ClientboundAddFogEmitterPacket.TYPE, ClientboundAddFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleAddFogEmitterPacket(msg, context));
         registrar.playToClient(ClientboundRemoveFogEmitterPacket.TYPE, ClientboundRemoveFogEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleRemoveFogEmitterPacket(msg, context));
         registrar.playToClient(ClientboundUpdateDimensionsPacket.TYPE, ClientboundUpdateDimensionsPacket.STREAM_CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateDimensionPacket(msg, context));
+        registrar.playToClient(ClientboundDraculaEventPacket.TYPE, ClientboundDraculaEventPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleDraculaEventPacket(msg, context));
+        registrar.playToClient(ClientboundVelmorraCollapsePacket.TYPE, ClientboundVelmorraCollapsePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleVelmorraCollapsePacket(msg, context));
 
         registrar.playToServer(ServerboundAppearancePacket.TYPE, ServerboundAppearancePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleAppearancePacket(msg, context));
         registrar.playToServer(ServerboundStartFeedingPacket.TYPE, ServerboundStartFeedingPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleStartFeedingPacket(msg, context));

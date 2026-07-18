@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.entity.PathfinderMob;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -17,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureEntity<?>, ConvertedCreatureRenderer.ConvertedCreateRenderState> { // RawType because of ConvertedCreatureEntity#IMob
     public static boolean renderOverlay = false;
 
-    public ConvertedCreatureRenderer(EntityRendererProvider.@NotNull Context context) {
+    public ConvertedCreatureRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
@@ -31,7 +30,7 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     }
 
     @Override
-    public void extractRenderState(@NotNull ConvertedCreatureEntity<?> entity, @NotNull ConvertedCreateRenderState state, float p_362204_) {
+    public void extractRenderState(ConvertedCreatureEntity<?> entity, ConvertedCreateRenderState state, float p_362204_) {
         super.extractRenderState(entity, state, p_362204_);
         state.renderState = entity.getOldCreature().map(oldEntity -> {
             PathfinderMob pathfinderMob = oldEntity;
@@ -41,7 +40,7 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
     }
 
     @Override
-    public @NotNull ConvertedCreateRenderState createRenderState() {
+    public ConvertedCreateRenderState createRenderState() {
         return new ConvertedCreateRenderState();
     }
 

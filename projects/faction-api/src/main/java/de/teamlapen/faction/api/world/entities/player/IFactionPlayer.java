@@ -1,9 +1,15 @@
 package de.teamlapen.faction.api.world.entities.player;
 
+import de.teamlapen.faction.api.FactionsApi;
 import de.teamlapen.faction.api.factions.*;
 import de.teamlapen.faction.api.world.entities.extensions.IPlayer;
 import de.teamlapen.sync.api.IAttachmentSync;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * Basic interface for all of Vampirism's player types (VampirePlayer, HunterPlayer, ...)
@@ -14,6 +20,11 @@ import net.minecraft.core.Holder;
  * If you are writing an addon and not a standalone mod, consider extending FactionPlayerBase instead of implementing this
  */
 public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEntity, IPlayer, IAttachmentSync {
+
+    static <T extends IFactionPlayer<T>> Optional<T> get(Player player) {
+        return FactionsApi.factionPlayerHandler(player).getCurrentFactionPlayer();
+    }
+
     /**
      * Mostly relevant in the set level command
      * Vampirism's factions always return true here.
@@ -34,7 +45,9 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
     /**
      * @return Max level this player type can reach
      */
-    int getMaxLevel();
+    default int getMaxLevel() {
+        return getFaction().value().getHighestReachableLevel();
+    }
 
     @Override
     Holder<? extends IPlayableFaction<?>> getFaction();
@@ -59,6 +72,15 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
 
     void leaveFaction();
 
+    /**
+     * the {@link IFactionPlayerHandler} notifies the current or new faction player about level changes.
+     * @apiNote the changes passed here must have a level, lord level, and faction passed
+     */
     void levelChanged(LevelingChange changes);
 
+    @Nullable
+    Component getShortLevelDisplay();
+
+    @Nullable
+    Component getLevelDisplay();
 }

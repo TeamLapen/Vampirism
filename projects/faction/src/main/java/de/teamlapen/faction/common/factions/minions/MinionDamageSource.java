@@ -27,6 +27,11 @@ public class MinionDamageSource extends DamageSource {
         this.playerEntity = (Player) getEntity();
     }
 
+    @Override
+    public boolean isDirect() {
+        return true;
+    }
+
     @NotNull
     @Override
     public Component getLocalizedDeathMessage(@NotNull LivingEntity entityLivingBaseIn) {

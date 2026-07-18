@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.network;
 
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.network.packets.server.*;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -25,10 +26,12 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             Entity entity1 = context.player().level().getEntity(msg.entityId());
             if (entity1 instanceof Player player) {
-                VampirePlayer.get(player).setSkinData(msg.data());
+                VampirePlayer vampirePlayer = VampirePlayer.get(player);
+                msg.data().data().forEach((k, v) -> vampirePlayer.setAppearanceData((de.teamlapen.faction.common.world.entities.appearance.AppearanceKey) k, v));
+                vampirePlayer.sync();
             } else if (entity1 instanceof MinionEntity<?> minion) {
                 minion.getMinionData().ifPresent(minionData -> {
-                    minionData.handleMinionAppearanceConfig(msg.name(), msg.data());
+                    msg.data().data().forEach((k, v) -> minionData.setAppearanceData((de.teamlapen.faction.common.world.entities.appearance.AppearanceKey) k, v));
                     minion.sync();
                 });
             }
@@ -102,6 +105,8 @@ public class ServerPayloadHandler {
                 }
                 case RESURRECT -> vampirePlayer.tryResurrect();
                 case GIVE_UP -> vampirePlayer.giveUpDBNO();
+                case JUMP -> IDraculaPlayer.getDracula(player).ifPresent(IDraculaPlayer::swingWings);
+                case GROW_WINGS -> IDraculaPlayer.getDracula(player).ifPresent(IDraculaPlayer::toggleWings);
             }
         });
     }

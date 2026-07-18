@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
 import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.blockentity.NetworkedBlockEntity;
 import de.teamlapen.vampirism.api.VReference;
@@ -30,46 +31,36 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
 public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
 
+    public static final String KEY_FLUID = "Fluid";
+
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
     private static final int RITUAL_TIME = 60;
+    private static final int LIGHTNING_TICK = 5;
+    private static final int LEVELUP_TICK = 1;
 
     public final ControllableFluidTank fluidInventory;
 
     private int ritualTicksLeft = 0;
-    /**
-     * Only valid while ritualTicksLeft > 0
-     */
+    // Valid only while ritualTicksLeft > 0
     private int targetLevel;
-    private Player ritualPlayer;
+    private @Nullable Player ritualPlayer;
 
     public AltarInspirationBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ALTAR_INSPIRATION.get(), pos, state);
         this.fluidInventory = new ControllableFluidTank(CAPACITY, this::setChanged, fluid -> fluid.is(ModFluids.BLOOD), true, false);
     }
 
-    @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        this.fluidInventory.deserialize(input.childOrEmpty("fluid"));
-    }
-
-    @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        this.fluidInventory.serialize(output.child("fluid"));
-    }
-
-
     public void startRitual(Player player) {
-        if (ritualTicksLeft > 0 || !player.isAlive()) return;
+        if (isRunning() || !player.isAlive()) return;
 
-        targetLevel = VampirePlayer.get(player).getLevel() + 1;
-        Optional<AltarInspirationRequirement> requirement = VampireLeveling.getInspirationRequirement(targetLevel);
+        this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
+        Optional<AltarInspirationRequirement> requirement = VampireLeveling.getInspirationRequirement(this.targetLevel);
         if (requirement.isEmpty()) {
             if (player.level().isClientSide()) {
                 player.sendOverlayMessage(Component.translatable("message.vampirism.altar_infusion.ritual.level_wrong"));
@@ -77,59 +68,78 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
             return;
         }
 
-        int neededBlood = requirement.get().bloodAmount() * VReference.FOOD_TO_FLUID_BLOOD;
-
-        try (var transaction = Transaction.openRoot()) {
-            try (var ignored = fluidInventory.beginAccess()){
-                var blood = ResourceHandlerUtil.extractFirst(fluidInventory, x -> x.is(ModFluids.BLOOD), neededBlood, transaction);
-
-                if (blood == null || blood.amount() < neededBlood) {
-                    player.sendOverlayMessage(Component.translatable("message.vampirism.altar_inspiration.not_enough_blood"));
-                    return;
-                }
-            }
-        }
+        if (!hasEnoughBlood(player, requirement.get())) return;
 
         if (!player.level().isClientSide()) {
             ModParticles.spawnParticlesServer(player.level(), new FlyingBloodEntityParticleOptions(player.getId(), false), this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, 40, 0.1F, 0.1f, 0.1f, 0);
         }
 
+        this.ritualPlayer = player;
+        this.ritualTicksLeft = RITUAL_TIME;
         setChanged();
-        ritualPlayer = player;
-        ritualTicksLeft = RITUAL_TIME;
+    }
+
+    private boolean hasEnoughBlood(Player player, AltarInspirationRequirement requirement) {
+        int neededBlood = requirement.bloodAmount() * VReference.FOOD_TO_FLUID_BLOOD;
+
+        try (var transaction = Transaction.openRoot()) {
+            try (var ignored = this.fluidInventory.beginAccess()) {
+                var blood = ResourceHandlerUtil.extractFirst(this.fluidInventory, fluid -> fluid.is(ModFluids.BLOOD), neededBlood, transaction);
+                if (blood == null || blood.amount() < neededBlood) {
+                    player.sendOverlayMessage(Component.translatable("message.vampirism.altar_inspiration.not_enough_blood"));
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, AltarInspirationBlockEntity blockEntity) {
-        if (blockEntity.ritualTicksLeft <= 0 || blockEntity.ritualPlayer == null || !blockEntity.ritualPlayer.isAlive()) return;
+        if (!blockEntity.isRunning() || blockEntity.ritualPlayer == null || !blockEntity.ritualPlayer.isAlive()) return;
 
-        if (blockEntity.ritualTicksLeft == 5) {
-            LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(level, EntitySpawnReason.EVENT);
-            if (lightningBolt != null) {
-                lightningBolt.moveOrInterpolateTo(Vec3.atBottomCenterOf(pos));
-                lightningBolt.setVisualOnly(true);
-                level.addFreshEntity(lightningBolt);
-            }
-            blockEntity.ritualPlayer.setHealth(blockEntity.ritualPlayer.getMaxHealth());
+        if (blockEntity.ritualTicksLeft == LIGHTNING_TICK) {
+            blockEntity.strikeLightning(level, pos);
         }
-
-        if (blockEntity.ritualTicksLeft == 1) {
-            try (var transaction = Transaction.openRoot()) {
-                Optional<AltarInspirationRequirement> requirement = VampireLeveling.getInspirationRequirement(blockEntity.targetLevel);
-                int blood = requirement.map(VampireLeveling.AltarInspirationRequirement::bloodAmount).orElse(0) * VReference.FOOD_TO_FLUID_BLOOD;
-                try (var access = blockEntity.fluidInventory.beginAccess()) {
-                    blockEntity.fluidInventory.extract(FluidResource.of(ModFluids.BLOOD), blood, transaction);
-                }
-                blockEntity.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, blockEntity.targetLevel * 10 * 20));
-                FactionPlayerHandler.get(blockEntity.ritualPlayer).setFaction(LevelingChange.builder().faction(ModFactions.VAMPIRE).level(blockEntity.targetLevel));
-                VampirePlayer.get(blockEntity.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());
-                if (blockEntity.ritualPlayer instanceof ServerPlayer serverPlayer) {
-                    ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INSPIRATION);
-                }
-                transaction.commit();
-            }
+        if (blockEntity.ritualTicksLeft == LEVELUP_TICK) {
+            blockEntity.applyLevelUp();
         }
 
         blockEntity.ritualTicksLeft--;
+    }
+
+    private void strikeLightning(Level level, BlockPos pos) {
+        if (this.ritualPlayer == null) return;
+
+        LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(level, EntitySpawnReason.EVENT);
+        if (lightningBolt != null) {
+            lightningBolt.moveOrInterpolateTo(Vec3.atBottomCenterOf(pos));
+            lightningBolt.setVisualOnly(true);
+            level.addFreshEntity(lightningBolt);
+        }
+        this.ritualPlayer.setHealth(this.ritualPlayer.getMaxHealth());
+    }
+
+    private void applyLevelUp() {
+        if (this.ritualPlayer == null) return;
+
+        try (var transaction = Transaction.openRoot()) {
+            int blood = VampireLeveling.getInspirationRequirement(this.targetLevel).map(AltarInspirationRequirement::bloodAmount).orElse(0) * VReference.FOOD_TO_FLUID_BLOOD;
+            try (var ignored = this.fluidInventory.beginAccess()) {
+                this.fluidInventory.extract(FluidResource.of(ModFluids.BLOOD), blood, transaction);
+            }
+            this.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, this.targetLevel * 10 * 20));
+            FactionPlayerHandler.get(this.ritualPlayer).setFaction(LevelingChange.builder().faction(ModFactions.VAMPIRE).level(this.targetLevel));
+            VampirePlayer.get(this.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());
+            if (this.ritualPlayer instanceof ServerPlayer serverPlayer) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INSPIRATION);
+                FactionSounds.playLevelUpSoundServer(serverPlayer);
+            }
+            transaction.commit();
+        }
+    }
+
+    private boolean isRunning() {
+        return this.ritualTicksLeft > 0;
     }
 
     public FluidStack getFluid() {
@@ -151,5 +161,17 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
             }
             transaction.commit();
         }
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.fluidInventory.deserialize(input.childOrEmpty(KEY_FLUID));
+    }
+
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        this.fluidInventory.serialize(output.child(KEY_FLUID));
     }
 }

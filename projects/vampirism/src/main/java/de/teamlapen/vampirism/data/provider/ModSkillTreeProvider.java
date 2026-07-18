@@ -19,88 +19,124 @@ public class ModSkillTreeProvider extends SkillTreeProvider {
         super(packOutput, lookupProvider, REFERENCE.MODID);
     }
 
+    protected void buildHunter(HolderLookup.Provider provider, SkillTreeOutput output) {
+        tree(HunterSkills.Trees.LEVEL, HunterSkills.Nodes.LEVEL_ROOT)
+                .addNode(node(HunterSkills.Nodes.SKILL2)
+                        .addNode(node(HunterSkills.Nodes.SKILL3)
+                                .addNode(node(HunterSkills.Nodes.SKILL4)
+                                        .addNode(node(HunterSkills.Nodes.ALCHEMY1)
+                                                .addNode(node(HunterSkills.Nodes.ALCHEMY2)
+                                                        .addNode(node(HunterSkills.Nodes.ALCHEMY3)
+                                                                .addNode(node(HunterSkills.Nodes.ALCHEMY4)
+                                                                        .addNode(node(HunterSkills.Nodes.ALCHEMY5)
+                                                                                .addNode(node(HunterSkills.Nodes.ALCHEMY6))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                        .addNode(node(HunterSkills.Nodes.POTION1)
+                                                .addNode(node(HunterSkills.Nodes.POTION2)
+                                                        .addNode(node(HunterSkills.Nodes.POTION3)
+                                                                .addNode(node(HunterSkills.Nodes.POTION4)
+                                                                        .addNode(node(HunterSkills.Nodes.POTION5)
+                                                                                .addNode(node(HunterSkills.Nodes.POTION6))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                        .addNode(node(HunterSkills.Nodes.WEAPON1)
+                                                .addNode(node(HunterSkills.Nodes.WEAPON2)
+                                                        .addNode(node(HunterSkills.Nodes.WEAPON3)
+                                                                .addNode(node(HunterSkills.Nodes.WEAPON4)
+                                                                        .addNode(node(HunterSkills.Nodes.WEAPON5)
+                                                                                .addNode(node(HunterSkills.Nodes.WEAPON6)
+                                                                                        .addNode(node(HunterSkills.Nodes.WEAPON7))
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                ).build(output, modId("hunter_level"));
+
+        tree(HunterSkills.Trees.LORD, HunterSkills.Nodes.LORD_ROOT)
+                .addNode(node(HunterSkills.Nodes.LORD_2)
+                        .addNode(node(HunterSkills.Nodes.LORD_6))
+                )
+                .addNode(node(HunterSkills.Nodes.LORD_3))
+                .addNode(node(HunterSkills.Nodes.LORD_4))
+                .addNode(node(HunterSkills.Nodes.LORD_5))
+                .addAfter(HunterSkills.Trees.LEVEL)
+                .build(output, modId("hunter_lord"));
+    }
+
+    protected void buildVampire(HolderLookup.Provider provider, SkillTreeOutput output) {
+
+        tree(VampireSkills.Trees.LEVEL, VampireSkills.Nodes.LEVEL_ROOT)
+                .addNode(node(VampireSkills.Nodes.SKILL2)
+                        .addNode(node(VampireSkills.Nodes.SKILL3)
+                                .addNode(node(VampireSkills.Nodes.SKILL4)
+                                        .addNode(node(VampireSkills.Nodes.OFFENSIVE1)
+                                                .addNode(node(VampireSkills.Nodes.OFFENSIVE2)
+                                                        .addNode(node(VampireSkills.Nodes.OFFENSIVE3)
+                                                                .addNode(node(VampireSkills.Nodes.OFFENSIVE4)
+                                                                        .addNode(node(VampireSkills.Nodes.OFFENSIVE5)
+                                                                                .addNode(node(VampireSkills.Nodes.OFFENSIVE6)))
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                        .addNode(node(VampireSkills.Nodes.DEFENSIVE1)
+                                                .addNode(node(VampireSkills.Nodes.DEFENSIVE2)
+                                                        .addNode(node(VampireSkills.Nodes.DEFENSIVE3)
+                                                                .addNode(node(VampireSkills.Nodes.DEFENSIVE4))
+                                                                .addNode(node(VampireSkills.Nodes.DEFENSIVE5)
+                                                                        .addNode(node(VampireSkills.Nodes.DEFENSIVE6)
+                                                                                .addNode(node(VampireSkills.Nodes.DEFENSIVE7))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                        .addNode(node(VampireSkills.Nodes.UTIL1)
+                                                .addNode(node(VampireSkills.Nodes.UTIL2)
+                                                        .addNode(node(VampireSkills.Nodes.UTIL3)
+                                                                .addNode(node(VampireSkills.Nodes.UTIL4)
+                                                                        .addNode(node(VampireSkills.Nodes.UTIL5)
+                                                                                .addNode(node(VampireSkills.Nodes.UTIL6))
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                                .addNode(node(VampireSkills.Nodes.UTIL15))
+                                        )
+                                )
+                        )
+                )
+                .build(output, modId("vampire_level"));
+
+        tree(VampireSkills.Trees.LORD, VampireSkills.Nodes.LORD_ROOT)
+                .addNode(node(VampireSkills.Nodes.LORD_SKILL2))
+                .addNode(node(VampireSkills.Nodes.LORD_SKILL3))
+                .addNode(node(VampireSkills.Nodes.LORD_SKILL4))
+                .addNode(node(VampireSkills.Nodes.LORD_SKILL5))
+                .addAfter(VampireSkills.Trees.LEVEL)
+                .build(output, modId("vampire_lord"));
+
+        tree(VampireSkills.Trees.DRACULA, VampireSkills.Nodes.DRACULA_ROOT)
+                .addNode(node(VampireSkills.Nodes.DRACULA_1))
+                .addNode(node(VampireSkills.Nodes.DRACULA_2))
+                .addAfter(VampireSkills.Trees.LORD)
+                .build(output, modId("vampire_dracula"));
+    }
+
     @Override
     protected void buildSkillTrees(HolderLookup.Provider provider, SkillTreeOutput output) {
-        HolderLookup.RegistryLookup<ISkillTree> trees = provider.lookupOrThrow(FactionRegistries.Keys.SKILL_TREE);
-        HolderLookup.RegistryLookup<ISkillNode> nodes = provider.lookupOrThrow(FactionRegistries.Keys.SKILL_NODE);
-
-        output.accept(modId("hunter_level"), new SkillTreeConfiguration(
-                trees.getOrThrow(HunterSkills.Trees.LEVEL),
-                nodes.getOrThrow(HunterSkills.Nodes.LEVEL_ROOT),
-                node(nodes, HunterSkills.Nodes.SKILL2,
-                        node(nodes, HunterSkills.Nodes.SKILL3,
-                                node(nodes, HunterSkills.Nodes.SKILL4,
-                                        chain(nodes, HunterSkills.Nodes.ALCHEMY1, HunterSkills.Nodes.ALCHEMY2, HunterSkills.Nodes.ALCHEMY3, HunterSkills.Nodes.ALCHEMY4, HunterSkills.Nodes.ALCHEMY5, HunterSkills.Nodes.ALCHEMY6),
-                                        chain(nodes, HunterSkills.Nodes.POTION1, HunterSkills.Nodes.POTION2, HunterSkills.Nodes.POTION3, HunterSkills.Nodes.POTION4, HunterSkills.Nodes.POTION5, HunterSkills.Nodes.POTION6),
-                                        node(nodes, HunterSkills.Nodes.WEAPON1,
-                                                node(nodes, HunterSkills.Nodes.WEAPON2,
-                                                        node(nodes, HunterSkills.Nodes.WEAPON3,
-                                                                node(nodes, HunterSkills.Nodes.WEAPON4,
-                                                                        node(nodes, HunterSkills.Nodes.WEAPON5,
-                                                                                node(nodes, HunterSkills.Nodes.WEAPON6),
-                                                                                node(nodes, HunterSkills.Nodes.WEAPON7)
-                                                                        )
-                                                                )
-                                                        )
-                                                )
-                                        )
-                                )
-                        )
-                )
-        ));
-
-        output.accept(modId("hunter_lord"), new SkillTreeConfiguration(
-                trees.getOrThrow(HunterSkills.Trees.LORD),
-                nodes.getOrThrow(HunterSkills.Nodes.LORD_ROOT),
-                node(nodes, HunterSkills.Nodes.LORD_2, node(nodes, HunterSkills.Nodes.LORD_6)),
-                node(nodes, HunterSkills.Nodes.LORD_3),
-                node(nodes, HunterSkills.Nodes.LORD_4),
-                node(nodes, HunterSkills.Nodes.LORD_5)
-        ));
-
-        output.accept(modId("vampire_level"), new SkillTreeConfiguration(
-                trees.getOrThrow(VampireSkills.Trees.LEVEL),
-                nodes.getOrThrow(VampireSkills.Nodes.LEVEL_ROOT),
-                node(nodes, VampireSkills.Nodes.SKILL2,
-                        node(nodes, VampireSkills.Nodes.SKILL3,
-                                node(nodes, VampireSkills.Nodes.SKILL4,
-                                        chain(nodes, VampireSkills.Nodes.OFFENSIVE1, VampireSkills.Nodes.OFFENSIVE2, VampireSkills.Nodes.OFFENSIVE3, VampireSkills.Nodes.OFFENSIVE4, VampireSkills.Nodes.OFFENSIVE5, VampireSkills.Nodes.OFFENSIVE6),
-                                        node(nodes, VampireSkills.Nodes.DEFENSIVE1,
-                                                node(nodes, VampireSkills.Nodes.DEFENSIVE2,
-                                                        node(nodes, VampireSkills.Nodes.DEFENSIVE3,
-                                                                node(nodes, VampireSkills.Nodes.DEFENSIVE4),
-                                                                node(nodes, VampireSkills.Nodes.DEFENSIVE5,
-                                                                        node(nodes, VampireSkills.Nodes.DEFENSIVE6,
-                                                                                node(nodes, VampireSkills.Nodes.DEFENSIVE7)
-                                                                        )
-                                                                )
-                                                        )
-                                                )
-                                        ),
-                                        node(nodes, VampireSkills.Nodes.UTIL1,
-                                                node(nodes, VampireSkills.Nodes.UTIL2,
-                                                        node(nodes, VampireSkills.Nodes.UTIL3,
-                                                                node(nodes, VampireSkills.Nodes.UTIL4,
-                                                                        node(nodes, VampireSkills.Nodes.UTIL5,
-                                                                                node(nodes, VampireSkills.Nodes.UTIL6)
-                                                                        )
-                                                                )
-                                                        )
-                                                ),
-                                                node(nodes, VampireSkills.Nodes.UTIL15)
-                                        )
-                                )
-                        )
-                )
-        ));
-
-        output.accept(modId("vampire_lord"), new SkillTreeConfiguration(
-                trees.getOrThrow(VampireSkills.Trees.LORD),
-                nodes.getOrThrow(VampireSkills.Nodes.LORD_ROOT),
-                node(nodes, VampireSkills.Nodes.LORD_SKILL2),
-                node(nodes, VampireSkills.Nodes.LORD_SKILL3),
-                node(nodes, VampireSkills.Nodes.LORD_SKILL4),
-                node(nodes, VampireSkills.Nodes.LORD_SKILL5)
-        ));
+        buildHunter(provider, output);
+        buildVampire(provider, output);
     }
 }

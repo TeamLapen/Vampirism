@@ -4,11 +4,14 @@ import com.google.common.collect.Lists;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.faction.common.factions.minions.stats.MinionStat;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
 import de.teamlapen.vampirism.REFERENCE;
@@ -17,6 +20,7 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
+import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDrinkBloodContext;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
@@ -28,6 +32,7 @@ import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.FleeSunVampireGoal;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.RestrictSunVampireGoal;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.vampire.BasicVampireEntity;
 import de.teamlapen.vampirism.common.world.items.MinionUpgradeItem;
 import de.teamlapen.vampirism.common.world.items.component.BottleBlood;
@@ -54,12 +59,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.VampireMinionData> implements IVampire {
@@ -261,6 +266,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         this.goalSelector.addGoal(8, new FleeSunVampireGoal<>(this, 1, true));
     }
 
+    @Override
     public void updateAttributes() {
         float statsMultiplier = this.getMinionData().filter(d -> d.hasIncreasedStats).map(a -> 1.2f).orElse(1f);
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue((BalanceMobProps.mobProps.MINION_MAX_HEALTH + BalanceMobProps.mobProps.MINION_MAX_HEALTH_PL * getMinionData().map(VampireMinionData::getHealthLevel).orElse(0)) * statsMultiplier);
@@ -271,11 +277,45 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
     public static class VampireMinionData extends MinionData {
         public static final Identifier ID = VIdentifier.mod("vampire");
 
+        private static final Identifier INVENTORY_STATS_ID = VIdentifier.mod("inventory");
+        private static final Identifier HEALTH_STATS_ID = VIdentifier.mod("health");
+        private static final Identifier STRENGTH_STATS_ID = VIdentifier.mod("strength");
+        private static final Identifier SPEED_STATS_ID = VIdentifier.mod("speed");
+        public static final MinionStat<VampireMinionData> INVENTORY_STATS = new MinionStat<>(INVENTORY_STATS_ID, 2, Component.translatable("gui.vampirism.minion.stats.inventory_level")) {
+            @Override
+            public void apply(int level, MinionEntity<?> minion, VampireMinionData data) {
+                int size = data.getDefaultInventorySize();
+                data.getInventory().setAvailableSize(level == 1 ? size + 3 : (level == 2 ? size + 6 : size));
+                if (level == 0) {
+                    data.shrinkInventory(minion);
+                }
+            }
+
+            @Override
+            public String currentValue(MinionEntity<?> minion, MinionData data) {
+                return String.valueOf(data.getInventory().getContainerSize());
+            }
+        };
+        public static final MinionStat<VampireMinionData> HEALTH_STATS = new MinionStat<>(HEALTH_STATS_ID, 3, Component.translatable(Attributes.MAX_HEALTH.value().getDescriptionId())){
+            @Override
+            public String currentValue(MinionEntity<?> minion, MinionData data) {
+                return String.format("%.1f", minion.getAttribute(Attributes.MAX_HEALTH).getBaseValue());
+            }
+        };
+        public static final MinionStat<VampireMinionData> STRENGTH_STATS = new MinionStat<>(STRENGTH_STATS_ID, 3, Component.translatable(Attributes.ATTACK_DAMAGE.value().getDescriptionId())){
+            @Override
+            public String currentValue(MinionEntity<?> minion, MinionData data) {
+                return String.format("%.1f", minion.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue());
+            }
+        };
+        public static final MinionStat<VampireMinionData> SPEED_STATS = new MinionStat<>(SPEED_STATS_ID, 3, Component.translatable(Attributes.MOVEMENT_SPEED.value().getDescriptionId())){
+            @Override
+            public String currentValue(MinionEntity<?> minion, MinionData data) {
+                return String.format("%.1f", minion.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue());
+            }
+        };
+
         public static final int MAX_LEVEL = 6;
-        public static final int MAX_LEVEL_INVENTORY = 2;
-        public static final int MAX_LEVEL_HEALTH = 3;
-        public static final int MAX_LEVEL_STRENGTH = 3;
-        public static final int MAX_LEVEL_SPEED = 3;
         private int type;
         private boolean useLordSkin;
         private boolean minionSkin;
@@ -283,10 +323,6 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
          * Should be between 0 and {@link VampireMinionData#MAX_LEVEL}
          */
         private int level;
-        private int inventoryLevel;
-        private int healthLevel;
-        private int strengthLevel;
-        private int speedLevel;
 
         private boolean hasIncreasedStats;
 
@@ -303,18 +339,23 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             super();
         }
 
+        public VampireMinionData(ILordPlayer<?> player, ICustomizationHolder customizationHolder) {
+            boolean skillEnabled = player.asSkillPlayer().map(ISkillPlayer::getSkillHandler).map(x -> x.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+            this("Minion", customizationHolder.getEntityTextureType(),false, skillEnabled);
+        }
+
         @Override
-        public void deserialize(@NotNull ValueInput input) {
-            super.deserialize(input);
-            type = input.getIntOr("vampire_type", 0);
-            level = input.getIntOr("level", 0);
-            useLordSkin = input.getBooleanOr("use_lord_skin", false);
-            inventoryLevel = input.getIntOr("l_inv", 0);
-            healthLevel = input.getIntOr("l_he", 0);
-            strengthLevel = input.getIntOr("l_str", 0);
-            speedLevel = input.getIntOr("l_spe", 0);
-            minionSkin = input.getBooleanOr("ms", false);
-            hasIncreasedStats = input.getBooleanOr("hasIncreasedStats", false);
+        protected int getMaxStatLevel() {
+            return MAX_LEVEL;
+        }
+
+        @Override
+        protected void registerStats(Consumer<MinionStat<?>> consumer) {
+            super.registerStats(consumer);
+            consumer.accept(INVENTORY_STATS);
+            consumer.accept(HEALTH_STATS);
+            consumer.accept(STRENGTH_STATS);
+            consumer.accept(SPEED_STATS);
         }
 
         @Override
@@ -323,10 +364,6 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             registerProperty(VIdentifier.mod("type")).simple(0, () -> type, t -> type = t);
             registerProperty(VIdentifier.mod("level")).simple(0, () -> level, t -> level = t);
             registerProperty(VIdentifier.mod("use_lord_skin")).simple(false, () -> useLordSkin, t -> useLordSkin = t);
-            registerProperty(VIdentifier.mod("inventory_level")).simple(0, () -> inventoryLevel, t -> inventoryLevel = t);
-            registerProperty(VIdentifier.mod("health_level")).simple(0, () -> healthLevel, t -> healthLevel = t);
-            registerProperty(VIdentifier.mod("strength_level")).simple(0, () -> strengthLevel, t -> strengthLevel = t);
-            registerProperty(VIdentifier.mod("speed_level")).simple(0, () -> speedLevel, t -> speedLevel = t);
             registerProperty(VIdentifier.mod("minion_skin")).simple(false, () -> minionSkin, t -> minionSkin = t);
             registerProperty(VIdentifier.mod("has_increased_stats")).simple(false, () -> hasIncreasedStats, t -> hasIncreasedStats = t);
         }
@@ -337,78 +374,35 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         public int getHealthLevel() {
-            return healthLevel;
+            return getStatLevel(HEALTH_STATS_ID);
         }
 
         public int getInventoryLevel() {
-            return this.inventoryLevel;
-        }
-
-        @Override
-        public int getInventorySize() {
-            int size = getDefaultInventorySize();
-            return inventoryLevel == 1 ? size + 3 : (inventoryLevel == 2 ? size + 6 : size);
+            return this.getStatLevel(INVENTORY_STATS_ID);
         }
 
         public int getLevel() {
             return this.level;
         }
 
-        public int getRemainingStatPoints() {
-            return Math.max(0, this.level - inventoryLevel - healthLevel - speedLevel - strengthLevel);
-        }
-
         public int getSpeedLevel() {
-            return this.speedLevel;
+            return this.getStatLevel(SPEED_STATS_ID);
         }
 
         public int getStrengthLevel() {
-            return strengthLevel;
+            return getStatLevel(STRENGTH_STATS_ID);
         }
 
         @Override
-        public void handleMinionAppearanceConfig(String newName, @NotNull List<Integer> data) {
-            this.setName(newName);
-            for (int i = 0; i < data.size(); i++) {
-                switch (i) {
-                    case 0 -> this.type = data.get(i);
-                    case 1 -> {
-                        this.useLordSkin = (data.get(i) & 0b1) == 1;
-                        this.minionSkin = (data.get(i) & 0b10) == 0b10;
-                    }
-                }
+        public <T> void setAppearanceData(de.teamlapen.faction.common.world.entities.appearance.@NonNull AppearanceKey<T> id, @NonNull T data) {
+            super.setAppearanceData(id, data);
+            if (id.equals(SkinType)) {
+                this.type = (Integer) data;
+            } else if (id.equals(AppearanceType)) {
+                int intData = (Integer) data;
+                this.minionSkin = (intData & 0b10) == 0b10;
+                this.useLordSkin = (intData & 0b1) == 1;
             }
-        }
-
-        @Override
-        public boolean hasUsedSkillPoints() {
-            return this.inventoryLevel + this.healthLevel + this.strengthLevel + this.speedLevel > 0;
-        }
-
-        @Override
-        public void resetStats(@NotNull MinionEntity<?> entity) {
-            assert entity instanceof VampireMinionEntity;
-            this.inventoryLevel = 0;
-            this.healthLevel = 0;
-            this.strengthLevel = 0;
-            this.speedLevel = 0;
-            this.getInventory().setAvailableSize(getInventorySize());
-            ((VampireMinionEntity) entity).updateAttributes();
-            super.resetStats(entity);
-        }
-
-        @Override
-        public void serialize(@NotNull ValueOutput output) {
-            super.serialize(output);
-            output.putInt("vampire_type", type);
-            output.putInt("level", level);
-            output.putBoolean("use_lord_skin", useLordSkin);
-            output.putInt("l_inv", inventoryLevel);
-            output.putInt("l_he", healthLevel);
-            output.putInt("l_str", strengthLevel);
-            output.putInt("l_spe", speedLevel);
-            output.putBoolean("ms", minionSkin);
-            output.putBoolean("hasIncreasedStats", hasIncreasedStats);
         }
 
         /**
@@ -420,45 +414,6 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             boolean levelup = level > this.level;
             this.level = level;
             return levelup;
-        }
-
-        @Override
-        public boolean upgradeStat(int statId, @NotNull MinionEntity<?> entity) {
-            if (super.upgradeStat(statId, entity)) return true;
-            if (getRemainingStatPoints() == 0) {
-                LOGGER.warn("Cannot upgrade minion stat as no stat points are left");
-                return false;
-            }
-            assert entity instanceof VampireMinionEntity;
-            switch (statId) {
-                case 0 -> {
-                    if (inventoryLevel >= MAX_LEVEL_INVENTORY) return false;
-                    inventoryLevel++;
-                    this.getInventory().setAvailableSize(getInventorySize());
-                    return true;
-                }
-                case 1 -> {
-                    if (healthLevel >= MAX_LEVEL_HEALTH) return false;
-                    healthLevel++;
-                    ((VampireMinionEntity) entity).updateAttributes();
-                    return true;
-                }
-                case 2 -> {
-                    if (strengthLevel >= MAX_LEVEL_STRENGTH) return false;
-                    strengthLevel++;
-                    ((VampireMinionEntity) entity).updateAttributes();
-                    return true;
-                }
-                case 3 -> {
-                    if (speedLevel >= MAX_LEVEL_SPEED) return false;
-                    speedLevel++;
-                    return true;
-                }
-                default -> {
-                    LOGGER.warn("Cannot upgrade minion stat {} as it does not exist", statId);
-                    return false;
-                }
-            }
         }
 
         public void setIncreasedStats(boolean hasIncreasedStats) {

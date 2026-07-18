@@ -13,6 +13,9 @@ on:
       - released
       - prereleased
 
+env:
+  ORG_GRADLE_PROJECT_vampirism_factions_source_dependency: false
+
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -24,6 +27,7 @@ jobs:
       environment: ${{ steps.extract.outputs.environment }}
       jar_name: ${{ steps.extract.outputs.jar_name }}
       run_publish: ${{ steps.extract.outputs.run_publish }}
+      registry: ${{ steps.extract.outputs.registry }}
     steps:
       - name: Extract mod version from tag
         id: extract
@@ -38,14 +42,17 @@ jobs:
           echo "mc_version=${version%%-*}" >> $GITHUB_OUTPUT
           echo "mod_version=${version}" >> $GITHUB_OUTPUT
           if [[ $version =~ -(alpha|beta)\. ]]; then
-            echo "environment=${project}/staging" >> $GITHUB_OUTPUT
+            echo "environment=${project}/release" >> $GITHUB_OUTPUT
             echo "run_publish=true" >> $GITHUB_OUTPUT
+            echo "registry=snapshots" >> $GITHUB_OUTPUT
           elif [[ $version =~ -(dev|test)\. ]]; then
             echo "environment=${project}/dev" >> $GITHUB_OUTPUT
             echo "run_publish=false" >> $GITHUB_OUTPUT
+            echo "registry=snapshots" >> $GITHUB_OUTPUT
           else
             echo "environment=${project}/release" >> $GITHUB_OUTPUT
             echo "run_publish=true" >> $GITHUB_OUTPUT
+            echo "registry=releases" >> $GITHUB_OUTPUT
           fi
           if [[ $project == 'vampirism' ]]; then
             echo "jar_name=Vampirism" >> $GITHUB_OUTPUT
@@ -68,12 +75,14 @@ jobs:
           java-version: '25'
           distribution: 'adopt'
           cache: 'gradle'
+      - name: Set Gradle version property
+        run: echo "ORG_GRADLE_PROJECT_${{ needs.prepare.outputs.mod_version_parameter }}=${{ needs.prepare.outputs.mod_version }}" >> "$GITHUB_ENV"
       - name: Setup Gradle
-        run: ./gradlew -P${{ needs.prepare.outputs.mod_version_parameter }}=${{ needs.prepare.outputs.mod_version }}
+        run: ./gradlew
       - name: Build API
-        run: ./gradlew ${{ needs.prepare.outputs.project }}-api:build -P${{ needs.prepare.outputs.mod_version_parameter }}=${{ needs.prepare.outputs.mod_version }}
+        run: ./gradlew ${{ needs.prepare.outputs.project }}-api:build
       - name: Build Mod
-        run: ./gradlew ${{ needs.prepare.outputs.project }}:build -P${{ needs.prepare.outputs.mod_version_parameter }}=${{ needs.prepare.outputs.mod_version }}
+        run: ./gradlew ${{ needs.prepare.outputs.project }}:build
       - name: Upload Jars
         uses: actions/upload-artifact@v6
         with:
@@ -96,21 +105,35 @@ jobs:
           java-version: '25'
           distribution: 'adopt'
           cache: 'gradle'
+      - name: Set Gradle version property
+        run: echo "ORG_GRADLE_PROJECT_${{ needs.prepare.outputs.mod_version_parameter }}=${{ needs.prepare.outputs.mod_version }}" >> "$GITHUB_ENV"
       - name: Get Artifacts
         uses: actions/download-artifact@v6
         with:
           name: ${{ needs.prepare.outputs.project }}-jars
           path: projects/
       - name: Setup Gradle
-        run: ./gradlew -P${{ needs.prepare.outputs.mod_version_parameter }}=${{ needs.prepare.outputs.mod_version }}
+        run: ./gradlew
+      - name: Select Maven Repository
+        run: |
+          if [[ ${{ needs.prepare.outputs.registry }} == 'snapshots' ]]; then
+            echo "MAVEN_URL=${{ secrets.MAVEN_URL_SNAPSHOTS }}" >> "$GITHUB_ENV"
+          elif [[ ${{ needs.prepare.outputs.registry }} == 'releases' ]]; then
+            echo "MAVEN_URL=${{ secrets.MAVEN_URL_RELEASES }}" >> "$GITHUB_ENV"
+          fi
       - name: Publish to Maven
-        run: ./gradlew ${{ needs.prepare.outputs.project }}:publish -P${{ needs.prepare.outputs.mod_version_parameter }}=${{ needs.prepare.outputs.mod_version }}
+        run: |
+          if [[ "${{ needs.prepare.outputs.project }}" == "vampirism" ]]; then
+            ./gradlew vampirism-processor:publish vampirism-api:publish vampirism:publish
+          else
+            ./gradlew ${{ needs.prepare.outputs.project }}-api:publish ${{ needs.prepare.outputs.project }}:publish
+          fi
         env:
-          MAVEN_URL: ${{ secrets.MAVEN_URL }}
+          MAVEN_URL: ${{ env.MAVEN_URL }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
 
-  publish-curseforge:
+  publish-mods:
     needs: [ prepare, build, publish-maven ]
     environment: ${{ needs.prepare.outputs.environment }}
     if: ${{ needs.prepare.outputs.run_publish == 'true' }}

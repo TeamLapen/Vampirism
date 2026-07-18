@@ -2,7 +2,7 @@
   "type": "vampirism:alchemical_cauldron",
   "cookTime": 1200,
   "fluid": {
-    "amount": 1,
+    "amount": 1000,
     "id": "minecraft:water"
   },
   "info": {},

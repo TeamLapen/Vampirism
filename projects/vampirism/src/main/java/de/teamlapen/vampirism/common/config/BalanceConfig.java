@@ -19,7 +19,7 @@ public class BalanceConfig {
     private static final Logger LOGGER = LogManager.getLogger();
 
     // General
-    public final ModConfigSpec.IntValue arrowVampireKillerMaxHealth;
+    public final ModConfigSpec.IntValue quarrelVampireKillerMaxHealth;
     public final ModConfigSpec.IntValue holyWaterSplashDamage;
     public final ModConfigSpec.DoubleValue holyWaterTierDamageInc;
     public final ModConfigSpec.IntValue holyWaterNauseaDuration;
@@ -35,32 +35,7 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue diffuserBootTime;
     public final ModConfigSpec.IntValue hunterTentMaxSpawn;
     public final ModConfigSpec.DoubleValue crossbowDamageMult;
-    public final ModConfigSpec.BooleanValue allowInfiniteSpecialArrows;
     public final ModConfigSpec.IntValue garlicDiffuserStartupTime;
-
-    // Entity Actions
-    public final ModConfigSpec.DoubleValue eaHealthThreshold;
-    public final ModConfigSpec.IntValue eaInvisibilityCooldown;
-    public final ModConfigSpec.IntValue eaInvisibilityDuration;
-    public final ModConfigSpec.IntValue eaHealCooldown;
-    public final ModConfigSpec.IntValue eaHealAmount;
-    public final ModConfigSpec.IntValue eaRegenerationDuration;
-    public final ModConfigSpec.IntValue eaRegenerationCooldown;
-    public final ModConfigSpec.IntValue eaRegenerationAmount;
-    public final ModConfigSpec.IntValue eaSpeedDuration;
-    public final ModConfigSpec.IntValue eaSpeedCooldown;
-    public final ModConfigSpec.DoubleValue eaSpeedAmount;
-    public final ModConfigSpec.IntValue eaBatspawnCooldown;
-    public final ModConfigSpec.IntValue eaBatspawnAmount;
-    public final ModConfigSpec.IntValue eaDarkProjectileCooldown;
-    public final ModConfigSpec.DoubleValue eaDarkProjectileDamage;
-    public final ModConfigSpec.DoubleValue eaDarkProjectileIndirectDamage;
-    public final ModConfigSpec.IntValue eaSunscreenDuration;
-    public final ModConfigSpec.IntValue eaSunscreenCooldown;
-    public final ModConfigSpec.IntValue eaIgnoreSundamageDuration;
-    public final ModConfigSpec.IntValue eaIgnoreSundamageCooldown;
-    public final ModConfigSpec.IntValue eaGarlicDuration;
-    public final ModConfigSpec.IntValue eaGarlicCooldown;
 
     // Hunter Actions
     public final ModConfigSpec.BooleanValue haDisguiseEnabled;
@@ -230,9 +205,9 @@ public class BalanceConfig {
         builder.comment("General options.");
         builder.category("general", "");
 
-        arrowVampireKillerMaxHealth = builder
+        quarrelVampireKillerMaxHealth = builder
                 .comment("The vampire killer arrow can only instantly kill NPC vampires whose maximum health does not exceed this value.")
-                .defineInRange("arrowVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);
+                .defineInRange("quarrelVampireKillerMaxHealth", 40, 1, Integer.MAX_VALUE);
         holyWaterSplashDamage = builder
                 .comment("Damage dealt by a normal holy water splash bottle when it directly hits a vampire.")
                 .defineInRange("holyWaterSplashDamage", 5, 0, Integer.MAX_VALUE);
@@ -270,11 +245,8 @@ public class BalanceConfig {
                 .comment("Maximum number of hunters that can spawn at a single tent per day.")
                 .defineInRange("hunterTentMaxSpawn", 4, 0, 20);
         crossbowDamageMult = builder
-                .comment("Multiplier applied to base damage dealt by crossbow arrows.")
+                .comment("Multiplier applied to base damage dealt by quarrels.")
                 .defineInRange("crossbowDamageMult", 1, 0.2, 5);
-        allowInfiniteSpecialArrows = builder
-                .comment("When enabled, special crossbow arrows (e.g. spitfire) can be used with the Infinity enchantment.")
-                .define("allowInfiniteSpecialArrows", false);
         garlicDiffuserStartupTime = builder
                 .comment("Delay in ticks before a newly placed garlic diffuser becomes active. Scaled to 0.25x in singleplayer.")
                 .defineInRange("garlicDiffuserStartupTime", 5 * 20, 1, 10000);
@@ -285,74 +257,6 @@ public class BalanceConfig {
                 .comment("Time in seconds before a diffuser's effect becomes active after placement.")
                 .defineInRange("diffuserBootTime", 15, 1, Integer.MAX_VALUE / 20);
 
-        builder.category("entityActions", "ea");
-
-        eaHealthThreshold = builder
-                .comment("Minimum relative health an entity must have to use actions.")
-                .defineInRange("healthThreshold", 0.3, 0, 1);
-        eaInvisibilityCooldown = builder
-                .comment("Cooldown for the entity invisibility action, in seconds.")
-                .defineInRange("invisibilityCooldown", 7, 1, Integer.MAX_VALUE);
-        eaInvisibilityDuration = builder
-                .comment("Duration of the entity invisibility action, in seconds.")
-                .defineInRange("invisibilityDuration", 4, 1, Integer.MAX_VALUE);
-        eaHealAmount = builder
-                .comment("Amount healed by the entity heal action, as a percentage of max health.")
-                .defineInRange("healAmount", 30, 0, 100);
-        eaHealCooldown = builder
-                .comment("Cooldown for the entity heal action, in seconds.")
-                .defineInRange("healCooldown", 7, 1, Integer.MAX_VALUE);
-        eaRegenerationDuration = builder
-                .comment("Duration of the entity regeneration action, in seconds.")
-                .defineInRange("regenerationDuration", 5, 0, Integer.MAX_VALUE);
-        eaRegenerationAmount = builder
-                .comment("Strength of the entity regeneration action, as a percentage of max health.")
-                .defineInRange("regenerationAmount", 40, 0, 100);
-        eaRegenerationCooldown = builder
-                .comment("Cooldown for the entity regeneration action, in seconds.")
-                .defineInRange("regenerationCooldown", 8, 0, Integer.MAX_VALUE);
-        eaSpeedDuration = builder
-                .comment("Duration of the entity speed action, in seconds.")
-                .defineInRange("speedDuration", 4, 0, Integer.MAX_VALUE);
-        eaSpeedCooldown = builder
-                .comment("Cooldown for the entity speed action, in seconds.")
-                .defineInRange("speedCooldown", 6, 1, Integer.MAX_VALUE);
-        eaSpeedAmount = builder
-                .comment("Speed modifier applied during the entity speed action. Final speed = baseSpeed * (1 + speedAmount).")
-                .defineInRange("speedAmount", 0.14, 0, 2);
-        eaBatspawnAmount = builder
-                .comment("Number of bats spawned per entity bat spawn action.")
-                .defineInRange("batspawnAmount", 4, 1, 10);
-        eaBatspawnCooldown = builder
-                .comment("Cooldown for the entity bat spawn action, in seconds.")
-                .defineInRange("batspawnCooldown", 15, 1, Integer.MAX_VALUE);
-        eaDarkProjectileCooldown = builder
-                .comment("Cooldown for the entity dark projectile action, in seconds.")
-                .defineInRange("darkProjectileCooldown", 10, 1, Integer.MAX_VALUE);
-        eaDarkProjectileDamage = builder
-                .comment("Direct damage dealt by the entity dark projectile.")
-                .defineInRange("darkProjectileDamage", 5d, 0, 100);
-        eaDarkProjectileIndirectDamage = builder
-                .comment("Indirect (splash) damage dealt by the entity dark projectile.")
-                .defineInRange("darkProjectileIndirectDamage", 2d, 0, 100);
-        eaSunscreenDuration = builder
-                .comment("Duration of the entity sunscreen action, in seconds.")
-                .defineInRange("sunscreenDuration", 9, 0, Integer.MAX_VALUE);
-        eaSunscreenCooldown = builder
-                .comment("Cooldown for the entity sunscreen action, in seconds.")
-                .defineInRange("sunscreenCooldown", 10, 1, Integer.MAX_VALUE);
-        eaIgnoreSundamageCooldown = builder
-                .comment("Cooldown for the entity ignore sun damage action, in seconds.")
-                .defineInRange("ignoreSundamageCooldown", 6, 1, Integer.MAX_VALUE);
-        eaIgnoreSundamageDuration = builder
-                .comment("Duration of the entity ignore sun damage action, in seconds.")
-                .defineInRange("ignoreSundamageDuration", 5, 0, Integer.MAX_VALUE);
-        eaGarlicCooldown = builder
-                .comment("Cooldown for the entity garlic resistance action, in seconds.")
-                .defineInRange("garlicCooldown", 5, 1, Integer.MAX_VALUE);
-        eaGarlicDuration = builder
-                .comment("Duration of the entity garlic resistance action, in seconds.")
-                .defineInRange("garlicDuration", 5, 0, Integer.MAX_VALUE);
 
         builder.category("hunterActions", "ha");
 

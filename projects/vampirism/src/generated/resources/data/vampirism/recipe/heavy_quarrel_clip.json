@@ -1,0 +1,18 @@
+{
+  "type": "vampirism:shaped_crafting_weapontable",
+  "category": "equipment",
+  "key": {
+    "I": "#c:ingots/iron",
+    "N": "#c:nuggets/iron",
+    "S": "#c:rods/wooden"
+  },
+  "pattern": [
+    "NIIN",
+    "NIIN",
+    " SS ",
+    " NN "
+  ],
+  "result": {
+    "id": "vampirism:heavy_quarrel_clip"
+  }
+}

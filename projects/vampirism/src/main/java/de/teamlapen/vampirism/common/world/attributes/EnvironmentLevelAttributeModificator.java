@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.common.world.attributes;
 
+import de.teamlapen.vampirism.common.core.ModDimensions;
 import de.teamlapen.vampirism.common.core.ModEnvironmentAttributes;
 import net.minecraft.world.attribute.EnvironmentAttributeSystem;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.Level;
 
 public class EnvironmentLevelAttributeModificator {

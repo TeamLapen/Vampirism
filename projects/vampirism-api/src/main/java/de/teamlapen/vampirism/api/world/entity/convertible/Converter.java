@@ -18,10 +18,9 @@ public interface Converter {
     /**
      * Creates the actual converting handler that does the converting
      *
-     * @param texture an optional texture overlay for the converted entity
      * @return the converting handler
      */
-    IConvertingHandler<?> createHandler(@Nullable Identifier texture);
+    IConvertingHandler<?> createHandler();
 
     /**
      * @return Codec for this converter

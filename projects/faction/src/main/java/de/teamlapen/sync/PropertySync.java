@@ -8,6 +8,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 
 import java.util.*;
 
@@ -79,6 +80,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IP
     //<editor-fold desc="Serialization">
 
     @Override
+    @MustBeInvokedByOverriders
     public void serialize(ValueOutput output) {
         for (Property syncProperty : this.properties) {
             if (syncProperty.hasServerLoad()) {
@@ -88,6 +90,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IP
     }
 
     @Override
+    @MustBeInvokedByOverriders
     public void deserialize(ValueInput input) {
         for (Property syncProperty : this.properties) {
             if (!syncProperty.hasServerLoad()) continue;

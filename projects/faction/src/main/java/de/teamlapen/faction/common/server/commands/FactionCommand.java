@@ -21,7 +21,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Collection;
 import java.util.List;
@@ -112,7 +111,7 @@ public class FactionCommand extends BasicCommand {
             FactionPlayerHandler factionPlayerHandler = FactionPlayerHandler.get(player);
             int finalLevel = Math.min(level, faction.value().getHighestReachableLevel());
             if (factionPlayerHandler.setFaction(LevelingChange.builder().faction(faction).level(finalLevel).build())) {
-                context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.level.successful", player.getName(), faction.value().getName(), finalLevel), true);
+                context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.level.successful", player.getName(), faction.value().getNameSingular(), finalLevel), true);
             } else {
                 context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.factionapi.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.factionapi.failed_to_execute"));
             }
@@ -126,14 +125,14 @@ public class FactionCommand extends BasicCommand {
             if (!handler.setFaction(LevelingChange.maxLevel(faction).lordLevel(level).build())) {
                 throw LORD_FAILED.create();
             }
-            context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.lord.successful", player.getName(), faction.value().getName(), handler.getLordLevel()), true);
+            context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.lord.successful", player.getName(), faction.value().getNameSingular(), handler.getLordLevel()), true);
         }
         return 0;
     }
 
     private static int getFactionInfo(CommandContext<CommandSourceStack> context, ServerPlayer player) {
         FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-        context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.get_level.successful", player.getDisplayName(), handler.getFaction().value().getName(), handler.getCurrentLevel(), handler.getLordLevel()), true);
+        context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.get_level.successful", player.getDisplayName(), handler.getFaction().value().getNameSingular(), handler.getCurrentLevel(), handler.getLordLevel()), true);
         return 0;
     }
 }

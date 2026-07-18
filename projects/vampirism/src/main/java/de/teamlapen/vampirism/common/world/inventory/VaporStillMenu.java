@@ -9,7 +9,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewing;
@@ -51,22 +54,22 @@ public class VaporStillMenu extends AbstractContainerMenu {
     private void addInventorySlots(Level level, boolean extended) {
         PotionBrewing brewing = level.potionBrewing();
 
-        addSlot(new FilteredSlot(inventory, 0, 134, 58, Ingredient.of(Items.BLAZE_POWDER), EMPTY_SLOT_FUEL));
+        addSlot(new FilteredSlot(inventory, 0, 134, 58, Ingredient.of(Items.BLAZE_POWDER), 64, EMPTY_SLOT_FUEL));
 
         addSlot(new FilteredSlot(inventory, 1, 143, 22, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidExtraIngredient(stack)));
 
         addSlot(new FilteredSlot(inventory, 2, 125, 22, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidIngredient(brewing, stack)));
 
         if (extended) {
-            addSlot(new FilteredSlot(inventory, 3, 8, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), EMPTY_SLOT_POTION));
-            addSlot(new FilteredSlot(inventory, 4, 26, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), EMPTY_SLOT_POTION));
-            addSlot(new FilteredSlot(inventory, 5, 44, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), EMPTY_SLOT_POTION));
-            addSlot(new FilteredSlot(inventory, 6, 62, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), EMPTY_SLOT_POTION));
-            addSlot(new FilteredSlot(inventory, 7, 80, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), EMPTY_SLOT_POTION));
+            addSlot(new FilteredSlot(inventory, 3, 8, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), 1, EMPTY_SLOT_POTION));
+            addSlot(new FilteredSlot(inventory, 4, 26, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), 1, EMPTY_SLOT_POTION));
+            addSlot(new FilteredSlot(inventory, 5, 44, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), 1, EMPTY_SLOT_POTION));
+            addSlot(new FilteredSlot(inventory, 6, 62, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), 1, EMPTY_SLOT_POTION));
+            addSlot(new FilteredSlot(inventory, 7, 80, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), 1, EMPTY_SLOT_POTION));
         } else {
-            addSlot(new FilteredSlot(inventory, 3, 26, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), EMPTY_SLOT_POTION));
-            addSlot(new FilteredSlot(inventory, 4, 44, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), EMPTY_SLOT_POTION));
-            addSlot(new FilteredSlot(inventory, 5, 62, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), EMPTY_SLOT_POTION));
+            addSlot(new FilteredSlot(inventory, 3, 26, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), 1, EMPTY_SLOT_POTION));
+            addSlot(new FilteredSlot(inventory, 4, 44, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), 1, EMPTY_SLOT_POTION));
+            addSlot(new FilteredSlot(inventory, 5, 62, 51, stack -> VampirismApi.services().extendedBrewingRecipeRegistry().isValidInput(brewing, stack), 1, EMPTY_SLOT_POTION));
         }
     }
 
@@ -138,14 +141,16 @@ public class VaporStillMenu extends AbstractContainerMenu {
 
         private final Predicate<ItemStack> filter;
         private final @Nullable Identifier noItemIcon;
+        private final int maxStackSize;
 
         public FilteredSlot(Container container, int index, int x, int y, Predicate<ItemStack> filter) {
-            this(container, index, x, y, filter, null);
+            this(container, index, x, y, filter, 64, null);
         }
 
-        public FilteredSlot(Container container, int index, int x, int y, Predicate<ItemStack> filter, @Nullable Identifier noItemIcon) {
+        public FilteredSlot(Container container, int index, int x, int y, Predicate<ItemStack> filter, int maxStackSize, @Nullable Identifier noItemIcon) {
             super(container, index, x, y);
             this.filter = filter;
+            this.maxStackSize = maxStackSize;
             this.noItemIcon = noItemIcon;
         }
 
@@ -157,6 +162,11 @@ public class VaporStillMenu extends AbstractContainerMenu {
         @Override
         public @Nullable Identifier getNoItemIcon() {
             return noItemIcon;
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return this.maxStackSize;
         }
     }
 

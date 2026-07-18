@@ -6,6 +6,7 @@
 		"base": "vampirism:block/chandelier_base"
 	},
 	"render_type": "minecraft:cutout",
+	"ambientocclusion": false,
 	"elements": [
 		{
 			"from": [1, 1, 5.1],

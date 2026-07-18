@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.config;
 
 
 import de.teamlapen.faction.Services;
+import de.teamlapen.faction.client.config.values.ColorConfigValue;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.ThreadSafeAPI;
 import de.teamlapen.vampirism.client.config.ClientConfig;
@@ -48,6 +49,7 @@ public class ModConfig extends Services {
         bus.addListener(this::setup);
         bus.addListener(this::onLoad);
         bus.addListener(this::onReload);
+        ColorConfigValue.subscribe(bus);
     }
 
     @ThreadSafeAPI
@@ -123,9 +125,6 @@ public class ModConfig extends Services {
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);
         }
-        if (configEvent.getConfig().getSpec() == client.spec()) {
-            helper.onClientConfigChanged(configEvent);
-        }
     }
 
     public void onReload(final ModConfigEvent.Reloading configEvent) {
@@ -134,9 +133,6 @@ public class ModConfig extends Services {
         }
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);
-        }
-        if (configEvent.getConfig().getSpec() == client.spec()) {
-            helper.onClientConfigChanged(configEvent);
         }
     }
 
@@ -161,7 +157,7 @@ public class ModConfig extends Services {
     private record Config<T>(T config, ModConfigSpec spec) {
 
         public static <T> Config<T> create(Function<ModConfigSpec.Builder, T> consumer) {
-            var builder = new ModConfigSpec.Builder().configure(consumer);
+            var builder = ColorConfigValue.configure(consumer);
             return new Config<>(builder.getLeft(), builder.getRight());
         }
 

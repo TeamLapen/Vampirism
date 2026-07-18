@@ -4,10 +4,11 @@ import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.vampirism.api.VampirismTags;
-import de.teamlapen.vampirism.api.world.items.IArrowContainer;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModEnchantmentTags;
 import de.teamlapen.vampirism.common.util.ModEnchantmentHelper;
+import de.teamlapen.vampirism.common.world.items.component.EnchantmentOverride;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import net.minecraft.core.Holder;
@@ -17,26 +18,65 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public class TechCrossbowItem extends HunterCrossbowItem {
 
-    public TechCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, ToolMaterial itemTier, Holder<ISkill<?>> requiredSkill) {
-        super(properties.repairable(Tags.Items.INGOTS_IRON).component(FactionDataComponents.FACTION_RESTRICTION, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(requiredSkill).build()), arrowVelocity, chargeTime, itemTier);
+    @SafeVarargs
+    public TechCrossbowItem(Item.Properties properties, float arrowVelocity, int chargeTime, ToolMaterial itemTier, Holder<ISkill<?>>... requiredSkills) {
+        super(properties.repairable(Tags.Items.INGOTS_IRON).component(FactionDataComponents.FACTION_RESTRICTION, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).skill(requiredSkills).build()).component(ModDataComponents.ENCHANTMENT_OVERRIDE, new EnchantmentOverride(ModEnchantmentTags.SEMI_AUTOMATIC_HUNTER_CROSSBOW_COMPATIBLE)), arrowVelocity, chargeTime, itemTier);
+    }
+
+    @Override
+    public int getMaxLoadedProjectiles() {
+        return 16; // If a bigger clip is ever added, scale this value
+    }
+
+    @Override
+    public Collection<Item> getSelectableAmmo() {
+        return QuarrelHandler.getClips();
+    }
+
+    @Override
+    protected boolean usesQuarrelPouch() {
+        return false;
     }
 
     @Override
     public boolean testProjectile(ItemStack crossbow, ItemStack projectile) {
-        if (projectile.getItem() instanceof IArrowContainer container) {
-            return !container.getArrows(projectile).isEmpty();
+        return projectile.has(ModDataComponents.CONTAINED_PROJECTILES.get()) && getAmmunition(crossbow).map(projectile::is).orElse(true);
+    }
+
+    @Override
+    protected List<ItemStack> getLoadingProjectiles(ItemStack crossbowStack, ItemStack projectileStack, LivingEntity shooter) {
+        ItemStackTemplate contained = projectileStack.get(ModDataComponents.CONTAINED_PROJECTILES.get());
+        if (contained != null) {
+            if (!shooter.hasInfiniteMaterials()) {
+                projectileStack.shrink(1);
+            }
+            List<ItemStack> magazine = new ArrayList<>(contained.count());
+            for (int i = 0; i < contained.count(); i++) {
+                magazine.add(new ItemStack(contained.item(), 1, contained.components()));
+            }
+
+            return magazine;
         }
-        return false;
+
+        return super.getLoadingProjectiles(crossbowStack, projectileStack, shooter);
+    }
+
+    @Override
+    public ItemStack getDefaultCreativeAmmo(@Nullable Player player, ItemStack weapon) {
+        return ModItems.QUARREL_CLIP.get().getDefaultInstance();
     }
 
     @Override
@@ -49,28 +89,24 @@ public class TechCrossbowItem extends HunterCrossbowItem {
     }
 
     @Override
-    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles) {
-        if (ModEnchantmentHelper.processFrugality(serverLevel, crossbow)) {
+    protected List<ItemStack> getShootingProjectiles(ServerLevel serverLevel, ItemStack crossbow, List<ItemStack> availableProjectiles, @Nullable Boolean sharedFrugality) {
+        boolean frugality = sharedFrugality != null ? sharedFrugality : ModEnchantmentHelper.processFrugality(serverLevel, crossbow);
+        if (frugality) {
             crossbow.set(ModDataComponents.CROSSBOW_FRUGALITY_TRIGGERED, Unit.INSTANCE);
-        } else {
-            return List.of(availableProjectiles.removeFirst());
+            return List.of(availableProjectiles.getFirst());
         }
-        return List.of(availableProjectiles.getFirst());
+
+        return List.of(availableProjectiles.removeFirst());
+    }
+
+    @Override
+    protected Boolean rollSharedFrugality(ServerLevel level, ItemStack crossbow) {
+        return ModEnchantmentHelper.processFrugality(level, crossbow, 2); // half chance, but both crossbows skip consuming together
     }
 
     @Override
     public int getChargeDurationMod(ItemStack crossbow, Level level) {
-        return this.chargeTime;
-    }
-
-    @Override
-    public boolean canSelectAmmunition(ItemStack crossbow) {
-        return false;
-    }
-
-    @Override
-    public Optional<Item> getAmmunition(ItemStack crossbow) {
-        return Optional.empty();
+        return applyChargeMultiplier(crossbow, this.chargeTime);
     }
 
     @Override

@@ -29,9 +29,12 @@ public class VampirismAttachments {
         public static final Identifier DAMAGE_HANDLER = VIdentifier.mod("damage_handler");
         public static final Identifier VAMPIRE_BAT = VIdentifier.mod("vampire_bat");
         public static final Identifier INFECTION_STATUS = VIdentifier.mod("infection_status");
+        public static final Identifier QUARREL_HURT_BYPASS = VIdentifier.mod("quarrel_hurt_bypass");
         public static final Identifier NEAREST_VILLAGE = VIdentifier.mod("nearest_village");
         public static final Identifier VAMPIRE_MINION_DATA = VIdentifier.mod("vampire_minion_data");
         public static final Identifier HUNTER_MINION_DATA = VIdentifier.mod("hunter_minion_data");
         public static final Identifier VELMORRA_PORTAL = VIdentifier.mod("velmorra_portal");
+        public static final Identifier DRACULA_FIGHT_DATA = VIdentifier.mod("dracula_fight_data");
+        public static final Identifier MARKER = VIdentifier.mod("marker");
     }
 }

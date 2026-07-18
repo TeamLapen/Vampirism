@@ -41,20 +41,12 @@ integrations.each {
     }
 }
 
-List<Project> dependencyProjects = [project(':faction-api')]
-
-dependencyProjects.forEach {
-    project.evaluationDependsOn(it.path)
-}
-
-dependencies {
-    dependencyProjects.forEach {
-        implementation(it)
-    }
-}
+apply from: file('dependencies.gradle')
 
 neoForge {
     version = project.neoforge_version
+
+//    validateAccessTransformers = true
 
     interfaceInjectionData {
         from project.file("src/main/resources/META-INF/interfaceinjection.json")
@@ -96,7 +88,6 @@ neoForge {
     }
 }
 
-apply from: file('dependencies.gradle')
 
 // Mod metadata generation (templates located in root/src/main/templates)
 def generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
@@ -146,7 +137,7 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-var sourcesJarTask = tasks.named("sourcesJar", Jar) {
+tasks.named("sourcesJar", Jar) {
     from(sourceSets.main.allJava)
     from (project(':faction-api').sourceSets.main.allJava)
 
@@ -160,20 +151,11 @@ var sourcesJarTask = tasks.named("sourcesJar", Jar) {
     archiveClassifier.set("sources")
 }
 
-artifacts {
-    archives(tasks.jar)
-    archives(sourcesJarTask.get())
-}
-
 publishing {
     publications {
-        register("factions", MavenPublication) {
-            artifactId = "${project.factions_mod_name}"
-            artifact(tasks.jar)
-            artifact(sourcesJarTask.get())
-            artifact(project(':faction-api').tasks.jar) {
-                classifier = "api"
-            }
+        maven(MavenPublication) {
+            from components.java
+            artifactId = project.factions_mod_name
         }
     }
 }

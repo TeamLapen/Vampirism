@@ -5,6 +5,7 @@ import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import de.teamlapen.vampirism.api.util.VIdentifier;
@@ -76,6 +77,8 @@ public class ModRenderPipelines {
         event.registerPipeline(SOLID_TRANSPARENCY_ENTITY);
         event.registerPipeline(CUTOUT_NO_DEPTH);
         event.registerPipeline(VELMORRA_PORTAL_PIPELINE);
+        event.registerPipeline(DRACULA_MIST_PIPELINE);
+        event.registerPipeline(BLOOD_SIPHON_PIPELINE);
     }
 
     public static final RenderPipeline.Snippet VELMORRA_PORTAL_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
@@ -90,6 +93,40 @@ public class ModRenderPipelines {
             VIdentifier.modString("velmorra_portal"),
             RenderSetup.builder(VELMORRA_PORTAL_PIPELINE)
                     .withTexture("Sampler0", VelmorraPortalRenderer.PORTAL_LOCATION)
+                    .createRenderSetup()
+    );
+
+    /** Procedural black cloud rendered while Dracula is in mist form. No texture, animated via the GameTime global. */
+    public static final RenderPipeline DRACULA_MIST_PIPELINE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
+            .withVertexShader(VIdentifier.mod("core/rendertype_dracula_mist"))
+            .withFragmentShader(VIdentifier.mod("core/rendertype_dracula_mist"))
+            .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+            .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withCull(false)
+            .withLocation(VIdentifier.mod("pipeline/dracula_mist"))
+            .build();
+    public static final RenderType DRACULA_MIST_RENDER_TYPE = RenderType.create(
+            VIdentifier.modString("dracula_mist"),
+            RenderSetup.builder(DRACULA_MIST_PIPELINE)
+                    .sortOnUpload()
+                    .createRenderSetup()
+    );
+
+    /** Procedural blood streak beam between Dracula and his blood siphon victims. */
+    public static final RenderPipeline BLOOD_SIPHON_PIPELINE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
+            .withVertexShader(VIdentifier.mod("core/rendertype_blood_siphon"))
+            .withFragmentShader(VIdentifier.mod("core/rendertype_blood_siphon"))
+            .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+            .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+            .withCull(false)
+            .withLocation(VIdentifier.mod("pipeline/blood_siphon"))
+            .build();
+    public static final RenderType BLOOD_SIPHON_RENDER_TYPE = RenderType.create(
+            VIdentifier.modString("blood_siphon"),
+            RenderSetup.builder(BLOOD_SIPHON_PIPELINE)
+                    .sortOnUpload()
                     .createRenderSetup()
     );
 

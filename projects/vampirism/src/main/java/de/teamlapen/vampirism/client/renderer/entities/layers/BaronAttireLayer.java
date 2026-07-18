@@ -23,8 +23,8 @@ import java.util.function.Predicate;
 public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBaronRenderState, BaronBaseModel> {
     private final BaronessAttireModel baroness;
     private final BaronAttireModel baron;
-    private final Identifier textureBaroness = VIdentifier.mod("textures/entity/baroness_attire.png");
-    private final Identifier textureBaron = VIdentifier.mod("textures/entity/baron_attire.png");
+    private final Identifier textureBaroness = VIdentifier.mod("textures/entity/baron/baroness_attire.png");
+    private final Identifier textureBaron = VIdentifier.mod("textures/entity/baron/baron_attire.png");
     private final Predicate<VampireBaronRenderer.VampireBaronRenderState> predicateFemale;
 
     /**
@@ -42,7 +42,7 @@ public class BaronAttireLayer extends RenderLayer<VampireBaronRenderer.VampireBa
         if (!renderState.isInvisible) {
             boolean female = predicateFemale.test(renderState);
             EntityModel<VampireBaronRenderer.VampireBaronRenderState> model = female ? baroness : baron;
-            coloredCutoutModelCopyLayerRender(model, female ? textureBaroness : textureBaron, poseStack, nodeCollector, packedLight, renderState, -1, 1);
+            renderColoredCutoutModel(model, female ? textureBaroness : textureBaron, poseStack, nodeCollector, packedLight, renderState, -1, 1);
         }
     }
 }

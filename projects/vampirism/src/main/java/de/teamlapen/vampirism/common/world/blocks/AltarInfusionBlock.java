@@ -102,15 +102,19 @@ public class AltarInfusionBlock extends BaseContainerBlock implements SimpleWate
             return InteractionResult.SUCCESS;
         }
 
-        if (!player.isShiftKeyDown()) {
-            AltarInfusionBlockEntity.Result result = blockEntity.tryActivate(player);
+        AltarInfusionBlockEntity.Result activationResult = blockEntity.tryActivate(player);
+        if (activationResult == AltarInfusionBlockEntity.Result.STILL_RUNNING) {
+            player.sendOverlayMessage(activationResult.getMessage());
+            return InteractionResult.SUCCESS;
+        }
 
-            if (result == AltarInfusionBlockEntity.Result.SUCCESS) {
+        if (!player.isShiftKeyDown()) {
+            if (activationResult == AltarInfusionBlockEntity.Result.SUCCESS) {
                 player.awardStat(ModStats.ALTAR_INFUSION_RITUALS_PERFORMED.get());
                 blockEntity.startRitual(player);
                 return InteractionResult.SUCCESS;
-            } else if (result != AltarInfusionBlockEntity.Result.MISSING_ITEMS) {
-                player.sendOverlayMessage(result.getMessage());
+            } else if (activationResult != AltarInfusionBlockEntity.Result.MISSING_ITEMS) {
+                player.sendOverlayMessage(activationResult.getMessage());
                 return InteractionResult.SUCCESS;
             }
         }

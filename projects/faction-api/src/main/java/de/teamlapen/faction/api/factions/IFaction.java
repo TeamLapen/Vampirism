@@ -65,13 +65,24 @@ public interface IFaction<T extends IFactionEntity> {
     int getColor();
 
     /**
-     * @return The name of the faction
+     * @return The name of the faction.
+     * <p>
+     * Do not use as a singular form, go with {@link #getNameSingular()} instead.
      */
     default MutableComponent getName() {
         return Component.translatable(getDescriptionId());
     }
 
     String getDescriptionId();
+
+    /**
+     * @return The singular name of the faction
+     */
+    default MutableComponent getNameSingular() {
+        return Component.translatable(getDescriptionIdSingular());
+    }
+
+    String getDescriptionIdSingular();
 
     /**
      * @return The plural name of the faction

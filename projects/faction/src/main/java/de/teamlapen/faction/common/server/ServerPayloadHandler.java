@@ -44,10 +44,6 @@ public class ServerPayloadHandler {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void handleActionBindingPacket(ServerboundActionBindingPacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> FactionPlayerHandler.get(context.player()).setBoundAction(msg.actionBindingId(), msg.action(), false));
-    }
-
     public static void handleDeleteRefinementPacket(ServerboundDeleteRefinementPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> IRefinementHandler.get(context.player()).ifPresent(handler -> handler.removeRefinement(msg.slot())));
     }
@@ -134,7 +130,7 @@ public class ServerPayloadHandler {
                     return new ActionHandler.ActivationContext(e);
                 }, ActionHandler.ActivationContext::new) : new ActionHandler.ActivationContext();
 
-                Holder<IAction<?>> action = msg.action();
+                Holder<? extends IAction<?>> action = msg.action();
                 if (action != null) {
                     @SuppressWarnings("unchecked")
                     IActionResult r = handler.toggleAction((Holder<IAction<T>>) (Object) action, activationContext);
@@ -191,9 +187,22 @@ public class ServerPayloadHandler {
             Player player = context.player();
             Entity entity = player.level().getEntity(msg.entityId());
             if (entity instanceof MinionEntity<?> minion) {
-                if (minion.getMinionData().map(d -> d.upgradeStat(msg.statId(), minion)).orElse(false)) {
+                if (minion.getMinionData().map(d -> d.upgradeStat(msg.stat(), minion)).orElse(false)) {
                     minion.sync();
                 }
+            }
+        });
+    }
+
+    public static void handleResetMinionStatPacket(ServerboundResetMinionStatPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            Entity entity = player.level().getEntity(msg.entityId());
+            if (entity instanceof MinionEntity<?> minion) {
+                minion.getMinionData().ifPresent(d -> {
+                    d.resetStats(minion);
+                    minion.sync();
+                });
             }
         });
     }

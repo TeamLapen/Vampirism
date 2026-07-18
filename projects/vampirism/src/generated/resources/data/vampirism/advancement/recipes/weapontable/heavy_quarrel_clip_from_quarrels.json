@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_quarrel_heavy": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:quarrel_heavy"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_skill": {
+      "conditions": {
+        "skill": "vampirism:weapon_table"
+      },
+      "trigger": "factionapi:skill_unlocked"
+    },
+    "has_tech_crossbow": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#vampirism:hunter_crossbows/tech"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:heavy_quarrel_clip_from_quarrels"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_skill",
+      "has_quarrel_heavy",
+      "has_tech_crossbow"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:heavy_quarrel_clip_from_quarrels"
+    ]
+  }
+}

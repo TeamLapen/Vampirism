@@ -7,10 +7,10 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.KeyTagProvider;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -21,12 +21,13 @@ public class ModEnchantmentTagsProvider extends KeyTagProvider<Enchantment> {
     }
 
     @Override
-    protected void addTags(HolderLookup.@NotNull Provider pProvider) {
+    @SuppressWarnings("unchecked")
+    protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS).add(ModEnchantments.VAMPIRE_SLAYER);
+        this.tag(EnchantmentTags.TREASURE).add(ModEnchantments.PRECISION);
         this.tag(ModEnchantmentTags.CROSSBOW_INCOMPATIBLE).add(Enchantments.PIERCING);
-        this.tag(ModEnchantmentTags.HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.PIERCING, Enchantments.POWER);
-        this.tag(ModEnchantmentTags.SINGLE_HUNTER_CROSSBOW_COMPATIBLE).addTag(ModEnchantmentTags.HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.QUICK_CHARGE);
-        this.tag(ModEnchantmentTags.DOUBLE_HUNTER_CROSSBOW_COMPATIBLE).addTag(ModEnchantmentTags.HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.QUICK_CHARGE);
-        this.tag(ModEnchantmentTags.SEMI_AUTOMATIC_HUNTER_CROSSBOW_COMPATIBLE).addTag(ModEnchantmentTags.HUNTER_CROSSBOW_COMPATIBLE);
+        this.tag(ModEnchantmentTags.SINGLE_HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.PIERCING, ModEnchantments.ARROW_FRUGALITY, Enchantments.QUICK_CHARGE, ModEnchantments.PRECISION);
+        this.tag(ModEnchantmentTags.DOUBLE_HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.PIERCING, ModEnchantments.ARROW_FRUGALITY, Enchantments.QUICK_CHARGE, ModEnchantments.PRECISION);
+        this.tag(ModEnchantmentTags.SEMI_AUTOMATIC_HUNTER_CROSSBOW_COMPATIBLE).add(Enchantments.PIERCING, ModEnchantments.ARROW_FRUGALITY);
     }
 }

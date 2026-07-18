@@ -9,3 +9,8 @@
 *.cfg text eol=lf
 *.psd binary
 *.bdc3D binary
+*.ogg binary
+*.nbt binary
+*.dat binary
+*.mca binary
+*.schematic binary

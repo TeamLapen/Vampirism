@@ -1,0 +1,22 @@
+apply from: rootProject.file('gradle/repositories.gradle')
+
+List<Project> dependencyProjects = []
+
+if (project.vampirism_factions_source_dependency.toBoolean()) {
+    dependencyProjects.add(project(':faction-api'))
+}
+
+dependencyProjects.forEach {
+    project.evaluationDependsOn(it.path)
+}
+
+dependencies {
+
+    dependencyProjects.forEach {
+        implementation(it)
+    }
+
+    if (!project.vampirism_factions_source_dependency.toBoolean()) {
+        api "de.teamlapen.faction:FactionApi-api:${project.vampirism_factions_version}"
+    }
+}

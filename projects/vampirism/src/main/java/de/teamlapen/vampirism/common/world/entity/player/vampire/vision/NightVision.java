@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.effects.ModEffectInstanceHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Night Vision
@@ -20,14 +21,14 @@ public class NightVision implements IVampireVision {
     }
 
     @Override
-    public void onActivated(IVampirePlayer player) {
+    public void onActivated(@NonNull IVampirePlayer player) {
         if (player.isRemote()) {
             player.asEntity().addEffect(ModEffectInstanceHelper.createNightVision());
         }
     }
 
     @Override
-    public void onDeactivated(IVampirePlayer player) {
+    public void onDeactivated(@NonNull IVampirePlayer player) {
         MobEffectInstance nightVision = player.asEntity().getEffect(MobEffects.NIGHT_VISION);
         if (ModEffectInstanceHelper.hasSource(nightVision, VReference.VAMPIRE_NIGHT_VISION_EFFECT)) {
             player.asEntity().removeEffect(nightVision.getEffect());
@@ -35,7 +36,7 @@ public class NightVision implements IVampireVision {
     }
 
     @Override
-    public void tick(IVampirePlayer player) {
+    public void tick(@NonNull IVampirePlayer player) {
         if (player.asEntity().tickCount % 50 == 8) {
             MobEffectInstance effect = player.asEntity().getEffect(MobEffects.NIGHT_VISION);
             if (!ModEffectInstanceHelper.hasSource(effect, VReference.VAMPIRE_NIGHT_VISION_EFFECT)) {

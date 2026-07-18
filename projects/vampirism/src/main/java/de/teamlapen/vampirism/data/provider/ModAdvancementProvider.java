@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.common.components.predicates.VampireBookPredicate;
 import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.tags.ModEffectTags;
 import de.teamlapen.vampirism.common.tags.ModEntityTags;
+import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.entity.minion.management.MinionTasks;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
@@ -196,7 +197,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .rewards(AdvancementRewards.Builder.experience(100))
                     .save(consumer, REFERENCE.MODID + ":vampire/max_level");
             AdvancementHolder sniped = Advancement.Builder.advancement()
-                    .display(Items.ARROW, Component.translatable("advancement.vampirism.sniped"), Component.translatable("advancement.vampirism.sniped.desc"), null, AdvancementType.TASK, true, true, true)
+                    .display(ModItems.QUARREL_NORMAL, Component.translatable("advancement.vampirism.sniped"), Component.translatable("advancement.vampirism.sniped.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(bat)
                     .addCriterion("flower", VampireActionCriterionTrigger.TriggerInstance.of(VampireActionCriterionTrigger.Action.SNIPED_IN_BAT))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
@@ -224,6 +225,11 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("killed", ModAdvancements.TRIGGER_MOTHER_WIN.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.VAMPIRE, 1))
                     .save(consumer, REFERENCE.MODID + ":vampire/kill_mother");
+            AdvancementHolder defeat_dracula = Advancement.Builder.advancement()
+                    .display(ModItems.CHALICE.get(), Component.translatable("advancement.vampirism.defeat_dracula"), Component.translatable("advancement.vampirism.defeat_dracula.desc"), null, AdvancementType.CHALLENGE, true, true, true)
+                    .parent(max_lord)
+                    .addCriterion("killed", ModAdvancements.TRIGGER_DRACULA_WIN.get().createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
+                    .save(consumer, REFERENCE.MODID + ":vampire/defeat_dracula");
         }
     }
 
@@ -233,6 +239,8 @@ public class ModAdvancementProvider extends AdvancementProvider {
         @Override
         public void generate(AdvancementHolder root, HolderLookup.Provider holderProvider, Consumer<AdvancementHolder> consumer) {
             HolderLookup.RegistryLookup<EntityType<?>> entities = holderProvider.lookupOrThrow(Registries.ENTITY_TYPE);
+            HolderLookup.RegistryLookup<Item> items = holderProvider.lookupOrThrow(Registries.ITEM);
+            //ModItems.BASIC_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW
             AdvancementHolder become_hunter = Advancement.Builder.advancement()
                     .display(ModBlocks.GARLIC.get(), Component.translatable("advancement.vampirism.become_hunter"), Component.translatable("advancement.vampirism.become_hunter.desc"), null, AdvancementType.TASK, true, false, true)
                     .parent(root)
@@ -263,14 +271,41 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("kill", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(entities, ModEntityTags.HUNTER)))
                     .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/betrayal");
-            AdvancementHolder technology = Advancement.Builder.advancement()
-                    .display(ModItems.BASIC_TECH_CROSSBOW, Component.translatable("advancement.vampirism.technology"), Component.translatable("advancement.vampirism.technology.desc"), null, AdvancementType.TASK, true, true, false)
+            AdvancementHolder hunter_crossbow = Advancement.Builder.advancement()
+                    .display(ModItems.BASIC_CROSSBOW, Component.translatable("advancement.vampirism.hunter_crossbow"), Component.translatable("advancement.vampirism.hunter_crossbow.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(become_hunter)
-                    .addCriterion("basic", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.BASIC_TECH_CROSSBOW))
-                    .addCriterion("advanced", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.ENHANCED_TECH_CROSSBOW))
-                    .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .addCriterion("crossbow", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, ModItemTags.BASIC_HUNTER_CROSSBOWS).build()))
+                    .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .requirements(AdvancementRequirements.Strategy.AND)
-                    .save(consumer, REFERENCE.MODID + ":hunter/technology");
+                    .save(consumer, REFERENCE.MODID + ":hunter/hunter_crossbow");
+            AdvancementHolder enhanced_crossbow = Advancement.Builder.advancement()
+                    .display(ModItems.ENHANCED_CROSSBOW, Component.translatable("advancement.vampirism.enhanced_crossbow"), Component.translatable("advancement.vampirism.enhanced_crossbow.desc"), null, AdvancementType.TASK, true, true, false)
+                    .parent(hunter_crossbow)
+                    .addCriterion("crossbow", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, ModItemTags.ENHANCED_HUNTER_CROSSBOWS).build()))
+                    .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .requirements(AdvancementRequirements.Strategy.AND)
+                    .save(consumer, REFERENCE.MODID + ":hunter/enhanced_crossbow");
+            AdvancementHolder tech_crossbow = Advancement.Builder.advancement()
+                    .display(ModItems.BASIC_TECH_CROSSBOW, Component.translatable("advancement.vampirism.tech_crossbow"), Component.translatable("advancement.vampirism.tech_crossbow.desc"), null, AdvancementType.TASK, true, true, false)
+                    .parent(enhanced_crossbow)
+                    .addCriterion("crossbow", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, ModItemTags.TECH_HUNTER_CROSSBOWS).build()))
+                    .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .requirements(AdvancementRequirements.Strategy.AND)
+                    .save(consumer, REFERENCE.MODID + ":hunter/tech_crossbow");
+            AdvancementHolder brochette = Advancement.Builder.advancement()
+                    .display(ModItems.QUARREL_HEAVY, Component.translatable("advancement.vampirism.brochette"), Component.translatable("advancement.vampirism.brochette.desc"), null, AdvancementType.CHALLENGE, true, true, false)
+                    .parent(hunter_crossbow)
+                    .addCriterion("killed", CriteriaTriggers.KILLED_BY_ARROW.createCriterion(new KilledByArrowTrigger.TriggerInstance(Optional.empty(), List.of(), MinMaxBounds.Ints.exactly(7), Optional.of(ItemPredicate.Builder.item().of(items, ModItemTags.HUNTER_CROSSBOWS).build()))))
+                    .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .requirements(AdvancementRequirements.Strategy.AND)
+                    .save(consumer, REFERENCE.MODID + ":hunter/brochette");
+            AdvancementHolder crazed_gunman = Advancement.Builder.advancement()
+                    .display(ModItems.QUARREL_NORMAL, Component.translatable("advancement.vampirism.crazed_gunman"), Component.translatable("advancement.vampirism.crazed_gunman.desc"), null, AdvancementType.CHALLENGE, true, true, false)
+                    .parent(hunter_crossbow)
+                    .addCriterion("killed", CriteriaTriggers.KILLED_BY_ARROW.createCriterion(new KilledByArrowTrigger.TriggerInstance(Optional.empty(), List.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().distance(DistancePredicate.horizontal(MinMaxBounds.Doubles.atLeast(128.0))))), MinMaxBounds.Ints.ANY, Optional.of(ItemPredicate.Builder.item().of(items, ModItemTags.HUNTER_CROSSBOWS).build()))))
+                    .addCriterion("faction", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
+                    .requirements(AdvancementRequirements.Strategy.AND)
+                    .save(consumer, REFERENCE.MODID + ":hunter/crazed_gunman");
             AdvancementHolder mainline = Advancement.Builder.advancement()
                     .display(ItemDataUtils.template(Potions.REGENERATION, ModItems.SERUM_INJECTION), Component.translatable("advancement.vampirism.mainline"), Component.translatable("advancement.vampirism.mainline.desc"), null, AdvancementType.TASK, true, true, false)
                     .parent(become_hunter)
@@ -278,7 +313,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/mainline");
             AdvancementHolder worth_it = Advancement.Builder.advancement()
-                    .display(ModBlocks.TOMBSTONE1, Component.translatable("advancement.vampirism.worth_it"), Component.translatable("advancement.vampirism.worth_it.desc"), null, AdvancementType.CHALLENGE, true, true, true)
+                    .display(ModBlocks.TOMBSTONE_MEDIUM, Component.translatable("advancement.vampirism.worth_it"), Component.translatable("advancement.vampirism.worth_it.desc"), null, AdvancementType.CHALLENGE, true, true, true)
                     .parent(mainline)
                     .addCriterion("injection", SerumInjectedCriterionTrigger.TriggerInstance.injectedSerum(ModEffectTags.SELF_HARM_SERUMS))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))

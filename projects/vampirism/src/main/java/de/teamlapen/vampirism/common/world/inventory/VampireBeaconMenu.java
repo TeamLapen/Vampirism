@@ -13,46 +13,44 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class VampireBeaconMenu extends BaseContainerMenu {
 
-    private final Container beacon = new SimpleContainer(1) {
-
-        @Override
-        public boolean canPlaceItem(int pIndex, ItemStack pStack) {
-            return pStack.is(ModItemTags.VAMPIRE_BEACON_PAYMENT_ITEM);
-        }
-
-        @Override
-        public int getMaxStackSize() {
-            return 1;
-        }
-    };
+    private final Container beacon;
     private final PaymentSlot paymentSlot;
-    private final ContainerData beaconData;
     private final ContainerLevelAccess access;
+    private final ContainerData beaconData;
 
     public VampireBeaconMenu(int pContainerId, Container container) {
         this(pContainerId, container, new SimpleContainerData(VampireBeaconBlockEntity.NUM_DATA_VALUES), ContainerLevelAccess.NULL);
     }
 
-    public VampireBeaconMenu(int pContainerId, Container container, ContainerData beaconData, ContainerLevelAccess pLevelAccess) {
+    public VampireBeaconMenu(int pContainerId, Container inventory, ContainerData beaconData, ContainerLevelAccess access) {
         super(ModMenus.VAMPIRE_BEACON.get(), pContainerId, 1);
+        this.beacon = new SimpleContainer(1) {
+            public boolean canPlaceItem(int slot, ItemStack itemStack) {
+                return itemStack.is(ModItemTags.VAMPIRE_BEACON_PAYMENT_ITEM);
+            }
+
+            public int getMaxStackSize() {
+                return 1;
+            }
+        };
+        checkContainerDataCount(beaconData, 3);
         this.beaconData = beaconData;
-        this.access = pLevelAccess;
+        this.access = access;
         this.paymentSlot = new PaymentSlot(this.beacon, 0, 136, 110);
         this.addSlot(this.paymentSlot);
         this.addDataSlots(beaconData);
-        addPlayerSlots(container, 36, 137);
+        this.addStandardInventorySlots(inventory, 36, 137);
     }
 
 
     @Override
-    public void removed(@NotNull Player pPlayer) {
+    public void removed(Player pPlayer) {
         super.removed(pPlayer);
         if (pPlayer.level().isClientSide()) {
             ItemStack itemStack = this.paymentSlot.remove(this.paymentSlot.getMaxStackSize());
@@ -63,7 +61,54 @@ public class VampireBeaconMenu extends BaseContainerMenu {
     }
 
     @Override
-    public boolean stillValid(@NotNull Player pPlayer) {
+    public ItemStack quickMoveStack(Player player, int slotIndex) {
+        ItemStack clicked = ItemStack.EMPTY;
+        Slot slot = (Slot)this.slots.get(slotIndex);
+        if (slot != null && slot.hasItem()) {
+            ItemStack stack = slot.getItem();
+            clicked = stack.copy();
+            if (slotIndex == 0) {
+                if (!this.moveItemStackTo(stack, 1, 37, true)) {
+                    return ItemStack.EMPTY;
+                }
+
+                slot.onQuickCraft(stack, clicked);
+            } else {
+                if (this.moveItemStackTo(stack, 0, 1, false)) {
+                    return ItemStack.EMPTY;
+                }
+
+                if (slotIndex >= 1 && slotIndex < 28) {
+                    if (!this.moveItemStackTo(stack, 28, 37, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (slotIndex >= 28 && slotIndex < 37) {
+                    if (!this.moveItemStackTo(stack, 1, 28, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (!this.moveItemStackTo(stack, 1, 37, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (stack.isEmpty()) {
+                slot.setByPlayer(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+
+            if (stack.getCount() == clicked.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(player, stack);
+        }
+
+        return clicked;
+    }
+
+    @Override
+    public boolean stillValid(Player pPlayer) {
         return stillValid(this.access, pPlayer, ModBlocks.VAMPIRE_BEACON.get());
     }
 

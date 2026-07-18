@@ -1,12 +1,16 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
 import com.mojang.serialization.MapCodec;
+import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.world.blockentity.MotherTrophyBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -49,6 +53,12 @@ public class MotherTrophyBlock extends BaseEntityBlock {
         return new MotherTrophyBlockEntity(pos, state);
     }
 
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide() ? createTickerHelper(blockEntityType, ModBlockEntities.MOTHER_TROPHY.get(), MotherTrophyBlockEntity::clientTick) : null;
+    }
+
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
@@ -60,7 +70,7 @@ public class MotherTrophyBlock extends BaseEntityBlock {
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(ROTATION, RotationSegment.convertToSegment(context.getRotation()));
+        return this.defaultBlockState().setValue(ROTATION, RotationSegment.convertToSegment(context.getRotation() + 180.0F));
     }
 
     public BlockState rotate(BlockState state, Rotation rotation) {
