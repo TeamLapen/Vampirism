@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
 import de.teamlapen.faction.api.factions.IDisguise;
+import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.LevelingChange;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
@@ -59,11 +60,13 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -88,6 +91,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -915,9 +919,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     public static final AppearanceKey<Integer> FangType = AppearancePacket.register(VIdentifier.mod("fang_type"), ByteBufCodecs.VAR_INT);
     public static final AppearanceKey<Integer> EyeType = AppearancePacket.register(VIdentifier.mod("eye_type"), ByteBufCodecs.VAR_INT);
-    public static final AppearanceKey<Integer> GlowingEye = AppearancePacket.register(VIdentifier.mod("glowing_eye"), ByteBufCodecs.VAR_INT);
-    public static final AppearanceKey<Integer> TitleGenderType = AppearancePacket.register(VIdentifier.mod("title_gender_type"), ByteBufCodecs.VAR_INT);
-    public static final AppearanceKey<Integer> WingsTexture = AppearancePacket.register(VIdentifier.mod("wings_texure"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<Boolean> GlowingEye = AppearancePacket.register(VIdentifier.mod("glowing_eye"), ByteBufCodecs.BOOL);
+    public static final AppearanceKey<IPlayableFaction.TitleGender> TitleGenderType = AppearancePacket.register(VIdentifier.mod("title_gender_type"), NeoForgeStreamCodecs.enumCodec(IPlayableFaction.TitleGender.class));
+    public static final AppearanceKey<Texture> WingsTexture = AppearancePacket.register(VIdentifier.mod("wings_texure"), NeoForgeStreamCodecs.enumCodec(Texture.class));
 
 
     @Override
@@ -927,11 +931,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         } else if (id.equals(EyeType)) {
             setEyeType((Integer) data);
         } else if (id.equals(GlowingEye)) {
-            setGlowingEyes(((Integer) data) > 0);
+            setGlowingEyes((Boolean) data);
         } else if (id.equals(TitleGenderType)) {
-            FactionPlayerHandler.get(this.player).setTitleGender(((Integer) data) > 0);
+            FactionPlayerHandler.get(this.player).setTitleGender(((IPlayableFaction.TitleGender) data));
         } else if (id.equals(WingsTexture)) {
-            this.customization.setWingsTexture(Texture.values()[(Integer) data]);
+            this.customization.setWingsTexture((Texture) data);
         }
     }
 

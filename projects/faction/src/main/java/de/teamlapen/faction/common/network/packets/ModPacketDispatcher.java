@@ -38,7 +38,6 @@ public class ModPacketDispatcher {
         registrar.playToClient(ClientboundSkillTreePacket.TYPE, ClientboundSkillTreePacket.CODEC, (msg, context) -> FactionClientPayloadHandler.handleSkillTreePacket(msg, context));
         registrar.playToClient(ClientboundPlaySoundEventPacket.TYPE, ClientboundPlaySoundEventPacket.CODEC, (msg, context) -> FactionClientPayloadHandler.handlePlaySoundEventPacket(msg, context));
         registrar.playToClient(ClientboundActionBindingPacket.TYPE, ClientboundActionBindingPacket.CODEC, (msg, context) -> FactionClientPayloadHandler.handleActionBindingPacket(msg, context));
-        registrar.playToServer(ServerboundUpgradeMinionStatPacket.TYPE, ServerboundUpgradeMinionStatPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleUpgradeMinionStatPacket(msg, context));
         registrar.playToClient(ClientboundEventPacket.TYPE, ClientboundEventPacket.CODEC, (msg, context) -> FactionClientPayloadHandler.handleEventPacket(msg, context));
     }
 }

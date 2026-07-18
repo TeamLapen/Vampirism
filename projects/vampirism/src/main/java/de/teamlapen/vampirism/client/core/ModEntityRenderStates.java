@@ -76,8 +76,6 @@ public class ModEntityRenderStates {
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractHunterEntity);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), ModEntityRenderStates::extractHunterPlayer);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), ModEntityRenderStates::extractVampirePlayer);
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractConvertedCreature);
-        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractConvertedOverlay);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractCoffinSleepPosition);
         event.registerEntityModifier(VampireBaronRenderer.class, ModEntityRenderStates::extractWings);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends AggressiveVillagerEntity, ? extends VillagerRenderState>>>cast(HunterVillagerRenderer.class), ModEntityRenderStates::extractHunterVillager);

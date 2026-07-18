@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
+import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
 import de.teamlapen.gui.components.DropdownWidget;
 import de.teamlapen.gui.components.IRenderLast;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
@@ -43,13 +45,13 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     @Override
     public void removed() {
-        Map<de.teamlapen.faction.common.world.entities.appearance.AppearanceKey<?>, Object> map = new java.util.HashMap<>();
-        map.put(VampirePlayer.FangType, fangType);
-        map.put(VampirePlayer.EyeType, eyeType);
-        map.put(VampirePlayer.GlowingEye, glowingEyes ? 1 : 0);
-        map.put(VampirePlayer.TitleGenderType, titleGender ? 1 : 0);
-        map.put(VampirePlayer.WingsTexture, wingsTexture.ordinal());
-        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), new de.teamlapen.faction.common.world.entities.appearance.AppearancePacket(map)));
+        var map = new AppearanceKey.AppearanceMap();
+        map.set(VampirePlayer.FangType, fangType);
+        map.set(VampirePlayer.EyeType, eyeType);
+        map.set(VampirePlayer.GlowingEye, glowingEyes);
+        map.set(VampirePlayer.TitleGenderType, titleGender ? IPlayableFaction.TitleGender.FEMALE : IPlayableFaction.TitleGender.MALE);
+        map.set(VampirePlayer.WingsTexture, wingsTexture);
+        VampirismMod.proxy.sendToServer(new ServerboundAppearancePacket(this.entity.getId(), new AppearancePacket(map)));
         super.removed();
     }
 
