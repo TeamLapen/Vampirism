@@ -16,6 +16,7 @@ public class DraculaData extends PropertyParentSync {
     private final AnimationState growAnimationState = new AnimationState();
     private IWingsEntity.WingsState wingsState = IWingsEntity.WingsState.CLOSED;
     private int growTicks;
+    private int skillPoints;
 
     private final IPlayer player;
 
@@ -28,6 +29,7 @@ public class DraculaData extends PropertyParentSync {
     protected void registerProperties() {
         this.registerProperty(VIdentifier.mod("id_dracula")).simple(false, () -> this.isDracula, b -> this.isDracula = b);
         this.registerProperty(VIdentifier.mod("wings_state")).simple(IWingsEntity.WingsState.CLOSED, () -> this.wingsState, this::switchState);
+        this.registerProperty(VIdentifier.mod("skill_points")).simple(0, () -> this.skillPoints, i -> this.skillPoints = Math.clamp(i, 0, 2));
     }
 
     public boolean isDracula() {
@@ -44,6 +46,14 @@ public class DraculaData extends PropertyParentSync {
 
     public IWingsEntity.WingsState getWingsState() {
         return this.wingsState;
+    }
+
+    public int getSkillPoints(){
+        return this.skillPoints;
+    }
+
+    public void awardSkillPoint() {
+        this.skillPoints = Math.clamp(this.skillPoints + 1, 0, 2);
     }
 
     public void tick() {
@@ -141,10 +151,12 @@ public class DraculaData extends PropertyParentSync {
 
     public void makeDracula() {
         this.isDracula = true;
+        this.awardSkillPoint();
     }
 
     public void removeDracula() {
         this.isDracula = false;
+        this.skillPoints = 0;
         this.wingsState = IWingsEntity.WingsState.CLOSED;
     }
 

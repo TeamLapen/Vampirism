@@ -694,7 +694,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.bloodStats.setMaxBlood(maxBlood);
 
         if (changes.get(DraculaChange.KEY) != null) {
-            this.draculaData.makeDracula();
+            this.makeDracula();
         } else if (changes.getNewLevel() < getMaxLevel() || changes.getNewLordLevel() < getMaxLordLevel()){
             this.draculaData.removeDracula();
         }

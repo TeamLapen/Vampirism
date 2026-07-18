@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface IDraculaPlayer extends IPlayer, IWingsEntity {
 
-    @SuppressWarnings("NullableProblems")
     static Optional<IDraculaPlayer> getDracula(Player player) {
         return FactionsApi.factionPlayerHandler(player).getCurrentFactionPlayer().map(x -> x instanceof IDraculaPlayer p ? p : null).filter(IDraculaPlayer::isDracula);
     }
@@ -18,6 +17,8 @@ public interface IDraculaPlayer extends IPlayer, IWingsEntity {
     boolean isDracula();
 
     void makeDracula();
+
+    int getDraculaSkillPoints();
 
     record DraculaChange() implements LevelingChange.Change<DraculaChange> {
         public static final LevelingChange.Key<DraculaChange> KEY = new LevelingChange.Key<>(VIdentifier.mod("dracula"));

@@ -36,6 +36,11 @@ public interface VampireDraculaPlayer extends IDraculaPlayer {
     }
 
     @Override
+    default int getDraculaSkillPoints() {
+        return draculaData().getSkillPoints();
+    }
+
+    @Override
     default void swingWings() {
         DraculaData draculaData = draculaData();
         Player player = asEntity();
