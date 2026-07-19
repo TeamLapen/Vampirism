@@ -35,10 +35,12 @@
   "guide.vampirism.vampire.skills": "スキル",
   "guide.vampirism.vampire.skills.actions": "一部のスキルは能動的に使用・発動する「アクション」という位置づけになります。(例: コウモリ化)\n\nアクションを使用するには、[%s]キーを押し続けてください。\nスキルローズ(円形のスキル選択GUI)がポップアップします。\n使用したいアクションにマウスカーソルを合わせるとハイライトされますので、そこで押し続けていたキーを離してください。\n\nこのキーは、操作設定で「マウス中央ボタン」に設定しておくのが使いやすいかもしれません。",
   "guide.vampirism.vampire.unvampire": "ヴァンパイアをやめる",
+  "guide.vampirism.vampire.unvampire.text": "ふたたび普通の人間に戻りたい場合は、村の教会に設置された\"%s\"を探して下さい。\n\n但し、ヴァンパイアLvの全てを失うことになるので、くれぐれもご注意を…。",
   "guide.vampirism.hunter.title": "ハンター",
   "guide.vampirism.hunter.getting_started": "ハンター入門",
   "guide.vampirism.hunter.getting_started.as_hunter": "ハンターLvのアップによるアドバンテージはこの通りです。\nレベルが上がるごとにより強くなり、有効なスキルを使うことができるようになります。",
   "guide.vampirism.hunter.leveling": "レベル上げ",
+  "guide.vampirism.hunter.leveling.intro": "ヴァンパイア・ハンターとなったあなたは、様々なスキルを使いこなすため、レベルアップしたいと思うことでしょう。\n\nハンターLvアップのためには「訓練」を行う必要があります。",
   "guide.vampirism.hunter.leveling.to_reach": "ハンターLv %s になるために",
   "guide.vampirism.hunter.leveling.train2.req": "テーブル使用時の必要アイテム",
   "guide.vampirism.hunter.leveling.train2.fang": "ヴァンパイアの牙",
@@ -61,6 +63,7 @@
   "guide.vampirism.blocks.title": "ブロック",
   "guide.vampirism.blocks.hunter_table.text": "\"%s\"のクラフトを行うことができます。",
   "guide.vampirism.blocks.blocks.coffin": "棺",
+  "guide.vampirism.blocks.alchemical_cauldron.text": "錬金術レシピのクラフトに使用します。\n対応するスキルをアンロック済みの§4ヴァンパイア・ハンターのみが使用可能です。§r",
   "guide.vampirism.blocks.blood_pedestal.text": "血によって力を与えられる武器のパワーチャージに使用します。\n\n血液タンクの上にこの台座を設置し、適切な武器を右クリックで置くことで、タンクの血液を消費して武器に力がチャージされます。",
   "guide.vampirism.blocks.blood_sieve.text": "この装置は\"%s\"を篩過するために、\"%s\"の下に取り付けて使用します。\n\n他のmodによる血液などの変換にも一部、使用可能です。\nいずれの場合も、血液の保存されたタンクの上にこの装置を置いて使用してください。\n\nまた、この装置には、みずからの上に設置されたブロックから\"不純な血液\"を吸い出す機能もあります。"
 }
