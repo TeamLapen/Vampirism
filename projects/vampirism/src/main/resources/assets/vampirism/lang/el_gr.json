@@ -90,6 +90,7 @@
   "container.vampirism.hunter": "Κυνηγός",
   "gui.vampirism.skill_required": "Απαιτούμενη ικανότητα: %s",
   "gui.vampirism.revertback.head": "Επανέλθετε σε κανονικό άνθρωπο",
+  "gui.vampirism.revertback.desc": "Θα χάσετε όλα σας τα επίπεδα και θα πεθάνετε",
   "gui.vampirism.minion_appearance.minion": "Τσιράκι",
   "gui.vampirism.alchemical_cauldron.level": "Απαιτούμενο επίπεδο κυνηγού",
   "gui.vampirism.alchemical_cauldron.skill": "Απαιτούμενη ικανότητα: %s",
