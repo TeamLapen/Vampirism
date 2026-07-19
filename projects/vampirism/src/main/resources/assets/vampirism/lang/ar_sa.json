@@ -99,6 +99,7 @@
   "container.vampirism.hunter": "صياد",
   "gui.vampirism.skill_required": "المهارات المطلوبة: %s",
   "gui.vampirism.revertback.head": "العودة إلى الإنسان العادي",
+  "gui.vampirism.revertback.desc": "سوف تفقد كل مستوئ وتموت",
   "gui.vampirism.minion_appearance.minion": "خادم",
   "gui.vampirism.alchemical_cauldron.level": "يتطلب مستوى صياد: %s",
   "gui.vampirism.alchemical_cauldron.skill": "المهارات المطلوبة: %s",
