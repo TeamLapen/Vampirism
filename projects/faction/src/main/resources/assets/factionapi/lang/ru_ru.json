@@ -2,29 +2,23 @@
   "faction.factionapi.neutral": "Нейтральная",
   "faction.factionapi.neutral.singular": "Человек",
   "faction.factionapi.neutral.plural": "Люди",
-
   "block.factionapi.totem_base": "Основа тотема деревни",
   "block.factionapi.totem_top": "Хрупкая верхушка тотема деревни",
   "block.factionapi.totem_top_crafted": "Верхушка тотема деревни",
-
   "item.factionapi.oblivion_potion": "Зелье забвения",
-
   "effect.factionapi.oblivion": "Забвение",
   "effect.factionapi.resurrection_fatigue": "Усталость от воскрешения",
-
-  "stat_type.factionapi.action_used": "Был использован",
-  "stat_type.factionapi.action_time": "Был активен",
-  "stat_type.factionapi.action_cooldown_time": "Был на перезарядке",
+  "stat_type.factionapi.action_used": "Было использовано",
+  "stat_type.factionapi.action_time": "Было активно",
+  "stat_type.factionapi.action_cooldown_time": "Было на перезарядке",
   "stat_type.factionapi.skill_unlocked": "Был разблокирован",
   "stat_type.factionapi.skill_forgotten": "Был забыт",
-
   "stat.factionapi.tasks_accepted": "Поручений принято",
   "stat.factionapi.tasks_completed": "Поручений выполнено",
   "stat.factionapi.interact_with_totem": "Взаимодействий с тотемом деревни",
   "stat.factionapi.capture_village": "Деревень захвачено",
   "stat.factionapi.defend_village": "Деревень защищено",
   "stat.factionapi.win_village_capture": "Выиграно захватов деревень",
-
   "key.category.factionapi.main": "FactionApi",
   "key.factionapi.action": "Открыть круговое меню умений",
   "key.factionapi.action1": "Умение 1",
@@ -40,7 +34,6 @@
   "key.factionapi.faction_menu": "Открыть меню фракции",
   "key.factionapi.skill_screen": "Открыть экран навыков",
   "key.factionapi.item_description": "Показать описание предмета",
-
   "minion_task.factionapi.stay": "Стой здесь",
   "minion_task.factionapi.defend_area": "Защищай окрестности",
   "minion_task.factionapi.follow_lord": "Следуй за мной",
@@ -49,30 +42,25 @@
   "minion_task.factionapi.call_single": "Подозвать одного",
   "minion_task.factionapi.call_all": "Подозвать всех",
   "minion_task.factionapi.respawn": "Возродить мёртвых",
-
   "task_reward.factionapi.lord_level": "Уровень лорда %s",
-
   "task_requirement.factionapi.lord_level.min": "Уровень лорда %s или выше",
   "task_requirement.factionapi.lord_level.exact": "Уровень лорда %s",
   "task_requirement.factionapi.level.min": "Уровень %s или выше",
   "task_requirement.factionapi.level.range": "Уровень от %1$s до %2$s",
   "task_requirement.factionapi.parent": "Сначала выполните %s",
-
   "gui.factionapi.faction_menu.appearance_menu": "Меню внешнего вида",
   "gui.factionapi.faction_menu.locate_taskmaster": "Последнее известное местоположение",
   "gui.factionapi.faction_menu.distance": " (в %s блоках отсюда)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Местоположение неизвестно",
   "gui.factionapi.faction_menu.last_known_pos": "Последнее известное местоположение: ",
-  "gui.factionapi.faction_menu.skill_screen": "Экран навыков",
+  "gui.factionapi.faction_menu.skill_screen": "Навыки",
   "gui.factionapi.faction_menu.edit_actions": "Настроить умения",
   "gui.factionapi.faction_menu.edit_tasks": "Настроить приказы подручных",
-  "gui.factionapi.faction_menu.no_tasks": "Нет доступных поручений",
+  "gui.factionapi.faction_menu.no_tasks": "Нет принятых поручений",
   "gui.factionapi.faction_menu.destroy_item": "Уничтожает экипированный предмет",
   "gui.factionapi.faction_menu.level": "Уровень %1$s",
-
   "gui.factionapi.edit_action.open_keybinding_settings": "Открыть назначения клавиш",
   "gui.factionapi.edit_action.key_shortcuts": "Сочетания клавиш",
-
   "gui.factionapi.skills.no_tab": "Вы не можете изучать навыки",
   "gui.factionapi.skills.resetall": "Сбросить навыки",
   "gui.factionapi.skills.unlocked": "Разблокирован",
@@ -88,7 +76,6 @@
   "gui.factionapi.skills.reset_consume": "Это расходует зелье забвения",
   "gui.factionapi.skills.skill_points.default": "%s очков навыков",
   "gui.factionapi.skills.skill_points.default.single": "%s очко навыков",
-
   "gui.factionapi.taskmaster.not_accepted": "Не принято",
   "gui.factionapi.taskmaster.task_failed": "Поручение провалено",
   "gui.factionapi.taskmaster.item_req": "Принести предметы",
@@ -102,9 +89,7 @@
   "gui.factionapi.taskmaster.remove_task": "Убрать",
   "gui.factionapi.taskmaster.requirement": "Требования: ",
   "gui.factionapi.taskmaster.reward": "Награда:",
-
   "gui.factionapi.task_board.tasks": "Поручения",
-
   "gui.factionapi.minion.appearance": "Изменить внешний вид подручного",
   "gui.factionapi.minion.lock_action": "Игнорировать общие команды",
   "gui.factionapi.minion.active_task": "Текущий приказ",
@@ -114,26 +99,22 @@
   "gui.factionapi.minion_stats": "Характеристики подручного",
   "gui.factionapi.minion_stats.level": "Уровень",
   "gui.factionapi.minion_stats.stat_level": "Ур. %1$s/%2$s",
-
+  "gui.factionapi.select_minion": "Выбрать подручного",
   "gui.factionapi.radial_menu.excluded_actions": "Исключённые умения",
   "gui.factionapi.radial_menu.place_exclude": "Поместите сюда, чтобы исключить",
   "gui.factionapi.action_radial.no_actions": "Нет назначенных умений",
   "gui.factionapi.minion_radial.no_minion_tasks": "Нет назначенных приказов",
-
   "gui.factionapi.reordering.excluded": "Исключено",
   "gui.factionapi.reset": "Сбросить",
   "gui.factionapi.reset_question": "Вы уверены?",
   "gui.factionapi.level": "Уровень",
   "gui.factionapi.level_short": "Ур.",
   "gui.factionapi.title": "Титул",
-
   "narration.factionapi.skill": "Навык",
-
   "message.factionapi.restriction.faction.neutral": "И как эти людишки это используют...",
   "message.factionapi.restriction.faction": "И как только они этим пользуются...",
   "message.factionapi.restriction.level": "Я ещё недостаточно опытен, чтобы это использовать",
   "message.factionapi.restriction.skill": "Я ещё не освоил навык, чтобы это использовать",
-
   "message.factionapi.action.not_unlocked": "Это умение ещё не было открыто",
   "message.factionapi.action.disabled_by_admin": "Это умение отключено администратором сервера",
   "message.factionapi.action.not_bound": "На эту клавишу не назначено умение. См. %s.",
@@ -144,49 +125,40 @@
   "message.factionapi.action.conflicts_with": "Нельзя использовать это умение, пока активно %s",
   "message.factionapi.action.on_cooldown": "Это умение ещё перезаряжается",
   "message.factionapi.action.cancelled": "Не удалось активировать это умение",
-
   "message.factionapi.village_raid.defended": "Деревня успешно защищена",
   "message.factionapi.village_raid.attacked.neutral": "%s напали на нейтральную деревню поблизости",
   "message.factionapi.village_raid.captured_by": "%s захватили деревню поблизости",
-  "message.factionapi.village_raid.almost_captured": "Деревня почти захвачена. Осталось защитников: %s",
+  "message.factionapi.village_raid.almost_captured": "Деревня почти захвачена. Осталось %s защитников",
   "message.factionapi.village_raid.abandoned": "Деревня поблизости была заброшена",
   "message.factionapi.village_raid.neutral": "Нейтральный рейд",
   "message.factionapi.village_raid.participants_remaining": "Осталось участников",
-
   "message.factionapi.village_totem.fail_other_capturing": "Нельзя уничтожить тотем деревни, пока её захватывает другая фракция",
   "message.factionapi.village_totem.fail_other_faction": "Нельзя уничтожить тотем другой фракции",
   "message.factionapi.village_totem.fail_other_component": "Нельзя уничтожить компонент деревни, принадлежащей другой фракции",
   "message.factionapi.village_totem.no_faction": "Вы должны состоять во фракции",
   "message.factionapi.village_totem.already_capturing": "Уже идёт захват",
-  "message.factionapi.village_totem.same_faction": "Нельзя нападать на деревню своей же фракции",
+  "message.factionapi.village_totem.same_faction": "Вы не можете напасть на деревню своей же фракции",
   "message.factionapi.village_totem.no_village": "Поблизости нет деревни или она слишком мала:",
   "message.factionapi.village_totem.no_village.homes": "— Недостаточно кроватей: %1$s/%2$s",
   "message.factionapi.village_totem.no_village.workstations": "— Недостаточно рабочих мест: %1$s/%2$s",
   "message.factionapi.village_totem.no_village.villagers": "— Недостаточно жителей: %1$s/%2$s",
   "message.factionapi.village_totem.disabled": "Этот тотем не работает. Найдите другой",
   "message.factionapi.village_totem.non_village_faction": "Ваша фракция не может захватывать деревни",
-
   "message.factionapi.taskmaster.no_tasks": "Сейчас нет доступных поручений",
-
-  "message.factionapi.minion.still_recovering": "%s ещё восстанавливается",
+  "message.factionapi.minion.still_recovering": "%s всё ещё восстанавливается",
   "message.factionapi.minion.minions_recovering": "%s подручных ещё восстанавливаются",
   "message.factionapi.minion_task.could_not_activate": "Не удалось отдать приказ",
-
   "message.factionapi.task_unlocker.lord_level.exact": "Уровень лорда должен быть ровно %s",
   "message.factionapi.task_unlocker.lord_level.min": "Уровень лорда должен быть не ниже %s",
-
   "dialogue.factionapi.minion.can_respawn": "%s: Мой лорд, я восстановился",
   "dialogue.factionapi.minion.died": "%s: Мой лорд, я погиб",
   "dialogue.factionapi.minion.died_on_task": "Мой лорд, простите, я погиб, выполняя ваш приказ",
-
   "subtitles.factionapi.task_complete": "Поручение выполнено",
-
   "tooltip.factionapi.hold_shift_for_info": "Удерживайте [%s] для подсказки",
   "tooltip.factionapi.faction_specifics": "Особенности фракции:",
   "tooltip.factionapi.required_skills": "Требуется изучить:",
   "tooltip.factionapi.required_level": "Требуется уровень: %s",
   "tooltip.factionapi.oblivion_potion.desc": "Сбрасывает навыки при употреблении",
-
   "command.factionapi.base.level.successful": "%1$s теперь %2$s %3$s уровня",
   "command.factionapi.base.get_level.successful": "%1$s — %2$s %3$s уровня и %4$s уровня лорда",
   "command.factionapi.base.bind_action.success": "Умение %1$s успешно назначено на клавишу умений %2$s",
@@ -211,14 +183,14 @@
   "command.factionapi.argument.minion.notfound": "Подручный не найден",
   "command.factionapi.test.village.no_village": "Поблизости нет деревни",
   "command.factionapi.test.village.success": "Деревня успешно передана фракции «%s»",
-  "command.factionapi.test.resetactions": "Сбросить таймеры",
-  "command.factionapi.test.skill.enabled": "Навык «%s» успешно включён",
-  "command.factionapi.test.skill.alreadyenabled": "Навык уже включён («%s»)",
-  "command.factionapi.test.skill.parent": "Должен быть включён предыдущий навык («%s»)",
-  "command.factionapi.test.skill.parents": "Должен быть включён предыдущий навык («%s» или «%s»)",
-  "command.factionapi.test.skill.parents.disabled": "Должны быть включены предыдущие навыки",
+  "command.factionapi.test.resetactions": "Таймеры сброшены",
+  "command.factionapi.test.skill.enabled": "Навык «%s» успешно изучен",
+  "command.factionapi.test.skill.alreadyenabled": "Навык уже изучен (%s)",
+  "command.factionapi.test.skill.parent": "Должен быть изучен предыдущий навык (%s)",
+  "command.factionapi.test.skill.parents": "Должен быть изучен предыдущий навык (%s или %s)",
+  "command.factionapi.test.skill.parents.disabled": "Должны быть изучены предыдущие навыки",
   "command.factionapi.test.skill.nopoints": "Не осталось очков навыков",
-  "command.factionapi.test.skill.othernode": "Включён другой навык",
+  "command.factionapi.test.skill.othernode": "Изучен другой навык",
   "command.factionapi.test.skill.otherfaction": "Ваша фракция не допускает этот навык",
   "command.factionapi.test.skill.noinfaction": "Вы должны состоять во фракции",
   "command.factionapi.test.skill.disabled": "Навык отключён",
@@ -226,17 +198,14 @@
   "command.factionapi.test.skill.locked_player_state": "Заблокировано состоянием игрока",
   "command.factionapi.test.skill.all_unlocked": "Все навыки теперь разблокированы",
   "command.factionapi.test.skill.all_locked": "Все навыки теперь заблокированы",
-  "command.factionapi.test.skill.not_enabled": "Навык «%s» не был включён",
+  "command.factionapi.test.skill.not_enabled": "Навык «%s» не был изучен",
   "command.factionapi.failed_to_execute": "Не удалось выполнить команду. Внутренняя ошибка",
   "command.factionapi.failed_to_execute.players": "Не удалось выполнить команду для %s. Внутренняя ошибка",
-
   "factionapi.configuration.title": "Настройки FactionApi",
-
   "factionapi.configuration.section.factionapi.client.toml": "Настройки клиента",
   "factionapi.configuration.section.factionapi.client.toml.title": "Настройки клиента",
   "factionapi.configuration.section.factionapi.common.toml": "Общие настройки",
   "factionapi.configuration.section.factionapi.common.toml.title": "Общие настройки",
-
   "factionapi.configuration.gui": "Интерфейс",
   "factionapi.configuration.overlays": "Наложения",
   "factionapi.configuration.internal": "Внутреннее",
@@ -247,17 +216,14 @@
   "factionapi.configuration.minions": "Подручные",
   "factionapi.configuration.tasks": "Поручения",
   "factionapi.configuration.admin": "Администрирование",
-
   "factionapi.configuration.renderTotemFactionName": "Отображать название фракции тотема",
   "factionapi.configuration.renderTotemFactionName.tooltip": "Если включено, над блоками тотемов отображается название владеющей ими фракции.",
-
   "factionapi.configuration.addFactionMenuButtonToInventory": "Кнопка меню фракции в инвентаре",
   "factionapi.configuration.addFactionMenuButtonToInventory.tooltip": "Если включено, на экран инвентаря игрока добавляется кнопка-ярлык для открытия меню фракции.",
   "factionapi.configuration.factionMenuButtonXPos": "Позиция кнопки меню фракции по X",
   "factionapi.configuration.factionMenuButtonXPos.tooltip": "Горизонтальное смещение кнопки меню фракции от центра экрана, в пикселях.",
   "factionapi.configuration.factionMenuButtonYPos": "Позиция кнопки меню фракции по Y",
   "factionapi.configuration.factionMenuButtonYPos.tooltip": "Вертикальное смещение кнопки меню фракции от центра экрана, в пикселях.",
-
   "factionapi.configuration.showFactionLevelOverlay": "Уровень фракции",
   "factionapi.configuration.showFactionLevelOverlay.tooltip": "Если включено, в интерфейсе отображается индикатор уровня фракции.",
   "factionapi.configuration.factionLevelOverlayXPos": "Позиция уровня фракции по X",
@@ -270,14 +236,12 @@
   "factionapi.configuration.showActionCooldownOverlay.tooltip": "Если включено, в интерфейсе отображается индикатор перезарядки умения.",
   "factionapi.configuration.showActionDurationOverlay": "Длительность умения",
   "factionapi.configuration.showActionDurationOverlay.tooltip": "Если включено, в интерфейсе отображается индикатор длительности умения.",
-
   "factionapi.configuration.villageMaxSpawnableVillagers": "Макс. число возрождаемых жителей",
   "factionapi.configuration.villageMaxSpawnableVillagers.tooltip": "Максимальное число жителей, которых может возродить тотем.",
   "factionapi.configuration.villageAllowPoiDestruction": "Разрешить уничтожение рабочих мест",
   "factionapi.configuration.villageAllowPoiDestruction.tooltip": "Если включено, позволяет игрокам уничтожать блоки точек интереса в деревнях фракций, которыми они не владеют.",
   "factionapi.configuration.villageMaximumTotemRadius": "Максимальный радиус тотема деревни",
   "factionapi.configuration.villageMaximumTotemRadius.tooltip": "Максимальный радиус тотема, используемый для разрастания деревни.",
-
   "factionapi.configuration.raidRandomChance": "Шанс случайного рейда",
   "factionapi.configuration.raidRandomChance.tooltip": "Шанс возникновения рейда фракции за секунду.",
   "factionapi.configuration.raidPhaseOneDuration": "Длительность первой фазы рейда",
@@ -288,7 +252,6 @@
   "factionapi.configuration.raidNotifyDistance.tooltip": "Квадрат расстояния, в пределах которого игроки получают оповещение о захвате деревни.",
   "factionapi.configuration.raidDisableVillageGuards": "Отключить деревенских стражников",
   "factionapi.configuration.raidDisableVillageGuards.tooltip": "Если включено, жители в захваченных деревнях не превращаются в жителей-стражников при нападении.",
-
   "factionapi.configuration.factionColorInChat": "Цвет фракции в чате",
   "factionapi.configuration.factionColorInChat.tooltip": "Если включено, имена игроков в чате окрашиваются в цвет их текущей фракции.",
   "factionapi.configuration.factionLordPrefixInChat": "Префикс лорда в чате",
@@ -301,7 +264,6 @@
   "factionapi.configuration.factionSkillPointsPerLevel.tooltip": "Число очков навыков, выдаваемых за повышение уровня. Значения, отличные от 2, нарушают баланс. Чтобы открыть все навыки на максимальном уровне, задайте значение, равное количеству навыков ",
   "factionapi.configuration.factionSkillPointsPerLordLevel": "Очки навыков за уровень лорда",
   "factionapi.configuration.factionSkillPointsPerLordLevel.tooltip": "Число очков навыков, выдаваемых за повышение уровня лорда. Значения, отличные от 2, нарушают баланс. Чтобы открыть все навыки на максимальном уровне лорда, задайте значение, равное количеству навыков ",
-
   "factionapi.configuration.minionDeathRecoveryTime": "Время восстановления после смерти",
   "factionapi.configuration.minionDeathRecoveryTime.tooltip": "Время в секундах, необходимое подручному для восстановления после смерти.",
   "factionapi.configuration.minionPerLordLevel": "Подручных за уровень лорда",
@@ -310,20 +272,18 @@
   "factionapi.configuration.minionOfflineResourceCooldownMultiplier.tooltip": "Множитель перезарядки для приказов по сбору ресурсов, пока игрок-владелец офлайн.",
   "factionapi.configuration.minionEquipmentRepairAmount": "Объём починки снаряжения",
   "factionapi.configuration.minionEquipmentRepairAmount.tooltip": "Величина, на которую чинится снаряжение подручного при выполнении приказов по сбору ресурсов.",
-
   "factionapi.configuration.taskDurationSinglePlayer": "Время на поручение в одиночной игре",
   "factionapi.configuration.taskDurationSinglePlayer.tooltip": "Время в минутах, за которое нужно выполнить поручение в одиночном мире.",
   "factionapi.configuration.taskDurationDedicatedServer": "Время на поручение на сервере",
   "factionapi.configuration.taskDurationDedicatedServer.tooltip": "Время в минутах, за которое нужно выполнить поручение на выделенном сервере.",
   "factionapi.configuration.taskMasterMaxTasks": "Макс. число поручений у представителя",
   "factionapi.configuration.taskMasterMaxTasks.tooltip": "Максимальное число поручений, отображаемых у представителя, не считая уникальных поручений.",
-
   "factionapi.configuration.entitiesIMob": "Существа IMob",
   "factionapi.configuration.entitiesIMob.tooltip": "Определяет, распознаются ли существа фракций как враждебные другими модами. См. https://github.com/TeamLapen/Vampirism/issues/199. На серверах режим Smart откатывается к Never.",
-  "factionapi.configuration.preventDebugBoundingBoxes": "Запретить отладочные ограничивающие рамки",
-  "factionapi.configuration.preventDebugBoundingBoxes.tooltip": "Если включено, не даёт игрокам включать отрисовку отладочных ограничивающих рамок, которая может выдать замаскированных существ.",
+  "factionapi.configuration.preventDebugBoundingBoxes": "Запретить отладочные хитбоксы",
+  "factionapi.configuration.preventDebugBoundingBoxes.tooltip": "Если включено, не даёт игрокам включать отрисовку отладочных хитбоксов, которая может выдать замаскированных существ.",
   "factionapi.configuration.usePermissions": "Использовать разрешения",
   "factionapi.configuration.usePermissions.tooltip": "Если включено, для некоторых действий используется система разрешений Forge. Подробнее см. на вики.",
-  "factionapi.configuration.enableFactionLogging": "Включить журнал фракций",
+  "factionapi.configuration.enableFactionLogging": "Включить ведение логов фракций",
   "factionapi.configuration.enableFactionLogging.tooltip": "Если включено, записывает отдельный файл журнала для определённых действий фракций. Применяется только к выделенным серверам. Требует перезапуска сервера."
 }
