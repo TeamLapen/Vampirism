@@ -216,8 +216,10 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
             tooltips.accept(Component.translatable("tooltip.factionapi.required_skills").withStyle(ChatFormatting.GRAY));
 
             skills.forEach(skill -> tooltips.accept(Component.literal(" ").append(skill.value().getName().withStyle(style -> {
-                if (skillHandler == null) return style;
-                return skillHandler.isSkillEnabled(skill) ? style.withColor(ChatFormatting.DARK_GREEN) : style.withColor(ChatFormatting.DARK_RED);
+                if (skillHandler != null && skillHandler.isSkillEnabled(skill)) {
+                    return style.withColor(ChatFormatting.DARK_GREEN);
+                }
+                return style.withColor(ChatFormatting.DARK_RED);
             }))));
         }
     }
