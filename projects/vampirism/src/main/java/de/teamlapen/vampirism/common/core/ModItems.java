@@ -212,12 +212,7 @@ public class ModItems {
 
     public static final DeferredItem<Item> PURIFIED_GARLIC = ITEMS.registerItem("purified_garlic",  Item::new, props -> props.stacksTo(16));
     public static final DeferredItem<Item> PURE_SALT = ITEMS.registerItem("pure_salt", Item::new);
-    public static final DeferredItem<BlessableItem> PURE_SALT_WATER = ITEMS.registerItem("pure_salt_water",  props -> new BlessableItem(props.stacksTo(1), HOLY_WATER_BOTTLE_NORMAL, HOLY_WATER_BOTTLE_ENHANCED) {
-        @Override
-        public boolean isFoil(ItemStack stack) {
-            return true;
-        }
-    });
+    public static final DeferredItem<BlessableItem> PURE_SALT_WATER = ITEMS.registerItem("pure_salt_water",  props -> new BlessableItem(props.stacksTo(1).component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true), HOLY_WATER_BOTTLE_NORMAL, HOLY_WATER_BOTTLE_ENHANCED));
 
     public static final DeferredItem<Item> SOUL_ORB_VAMPIRE = ITEMS.registerItem("soul_orb_vampire", Item::new);
     public static final DeferredItem<Item> MOTHER_CORE = ITEMS.registerItem("mother_core",  Item::new, props -> props.rarity(Rarity.UNCOMMON));
