@@ -516,6 +516,6 @@ public class ModItems {
     }
 
     private static DeferredItem<CoffinItem> fromCoffin(DeferredHolder<Block, CoffinBlock> block) {
-        return fromBlock(block, (block1, itemProps) -> new CoffinItem((CoffinBlock) block1, itemProps.factions$withShiftDescription().rarity(Rarity.RARE).stacksTo(1).useBlockDescriptionPrefix()));
+        return fromBlock(block, (block1, itemProps) -> new CoffinItem((CoffinBlock) block1, itemProps.rarity(Rarity.RARE).stacksTo(1).useBlockDescriptionPrefix()));
     }
 }
