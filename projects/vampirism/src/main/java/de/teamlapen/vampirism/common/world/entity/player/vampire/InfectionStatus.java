@@ -50,13 +50,13 @@ public class InfectionStatus {
         if (duration <= 21) {
             finish();
             return false;
-        } else if (progress < 0.5f) {
+        } else if (progress <= 0.5f) {
             addEffectUntilTheEnd(this.entity, MobEffects.HUNGER);
 
-            if (progress < 0.25f) {
+            if (progress <= 0.25f) {
                 addEffectUntilTheEnd(this.entity, ModEffects.SUN_SENSITIVITY);
 
-                if (progress < 0.05f) {
+                if (progress <= 0.1f) {
                     addEffectUntilTheEnd(this.entity, ModEffects.EXPOSED);
                 }
             }
