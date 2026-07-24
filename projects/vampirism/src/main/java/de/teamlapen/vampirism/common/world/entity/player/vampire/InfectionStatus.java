@@ -69,7 +69,7 @@ public class InfectionStatus {
 
     private static void addEffectUntilTheEnd(LivingEntity entity, Holder<MobEffect> effect) {
         if (entity.getEffect(effect) == null) {
-            MobEffectInstance instance = new MobEffectInstance(effect, MobEffectInstance.INFINITE_DURATION);
+            MobEffectInstance instance = new MobEffectInstance(effect, MobEffectInstance.INFINITE_DURATION, 0, false, false);
             instance.factions$addProperty(ModEffects.SANGUINARE.getId());
             entity.addEffect(instance);
         }
