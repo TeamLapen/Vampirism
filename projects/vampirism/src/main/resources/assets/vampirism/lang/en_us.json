@@ -484,6 +484,7 @@
   "effect.vampirism.crucifix_suppression": "Crucifix Suppression",
   "effect.vampirism.exposed": "Exposed",
   "effect.vampirism.whispers_of_the_veil": "Whispers of The Veil",
+  "effect.vampirism.sun_sensitivity": "Sun Sensitivity",
   "effect.vampirism.duration.unknown": "?",
 
   "attribute.vampirism.sundamage": "Sun Damage",
@@ -1457,6 +1458,8 @@
   "vampirism.configuration.showVampireRageHUDOverlay.tooltip": "When enabled, shows the vampire rage indicator in the HUD.",
   "vampirism.configuration.showSunHUDOverlay": "Sun Damage HUD Warning",
   "vampirism.configuration.showSunHUDOverlay.tooltip": "When enabled, shows the sun damage warning in the HUD.",
+  "vampirism.configuration.showSunBlindOverlay": "Sun Blinding Overlay",
+  "vampirism.configuration.showSunBlindOverlay.tooltip": "When enabled, washes the screen white when a vampire looks directly at the sun.",
 
   "vampirism.configuration.enforceRenderForestFog": "Enforce Forest Fog on Clients",
   "vampirism.configuration.enforceRenderForestFog.tooltip": "When enabled, prevents clients from disabling the vampire forest fog.",

@@ -19,6 +19,7 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue showDisguiseHUDOverlay;
     public final ModConfigSpec.BooleanValue showVampireRageHUDOverlay;
     public final ModConfigSpec.BooleanValue showSunHUDOverlay;
+    public final ModConfigSpec.BooleanValue showSunBlindOverlay;
     public final ModConfigSpec.BooleanValue showNearbyVampireOverlay;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
@@ -60,6 +61,9 @@ public class ClientConfig {
         this.showSunHUDOverlay = builder
                 .comment("When enabled, shows the sun damage warning in the HUD.")
                 .define("showSunHUDOverlay", true);
+        this.showSunBlindOverlay = builder
+                .comment("When enabled, washes the screen white when a vampire looks directly at the sun.")
+                .define("showSunBlindOverlay", true);
         this.showNearbyVampireOverlay = builder
                 .comment("When enabled, shows the nearby vampire warning in the HUD.")
                 .define("showNearbyVampireOverlay", true);

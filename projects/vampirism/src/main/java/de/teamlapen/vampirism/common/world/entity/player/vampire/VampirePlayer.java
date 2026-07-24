@@ -41,7 +41,6 @@ import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
-import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
@@ -61,13 +60,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -128,6 +125,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private int feedBiteTickCounter = 0;
     private boolean forceNaturalArmorUpdate;
     private int passiveLevelTicks = 0;
+    private float sunBlindIntensity = 0f;
 
     //<editor-fold desc="Special Attributes">
 
@@ -486,6 +484,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     public int getPassiveLevelTicks() {
         return this.passiveLevelTicks;
+    }
+
+    public float getSunBlindIntensity() {
+        return this.sunBlindIntensity;
     }
 
     @Override
@@ -910,7 +912,16 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                     event.getEntity().level().addParticle(new GenericParticleOptions(VIdentifier.mc("drip_hang"),20,9145227, 0.2f), event.getEntity().getRandomX(0.5), event.getEntity().getRandomY(), event.getEntity().getRandomZ(0.5), 0, -3, 0);
                 }
             }
+
+            if (event.getEntity().level().isClientSide()) {
+                float target = isSensitiveToSun() ? SunBlindUtil.computeTarget(player) : 0f;
+                this.sunBlindIntensity = SunBlindUtil.update(this.sunBlindIntensity, target);
+            }
         }
+    }
+
+    private boolean isSensitiveToSun() {
+        return getLevel() > 0 && !getSkillHandler().isSkillEnabled(VampireSkills.WANDER_THE_SUN);
     }
 
     /**
