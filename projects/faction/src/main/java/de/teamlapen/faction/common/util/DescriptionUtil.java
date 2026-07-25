@@ -30,7 +30,7 @@ public class DescriptionUtil {
         }
     }
 
-    private static List<String> normalizeTextWidth(String text, int maxLength) {
+    public static List<String> normalizeTextWidth(String text, int maxLength) {
         List<String> lines = new ArrayList<>();
 
         for (String paragraph : text.split("\n")) {

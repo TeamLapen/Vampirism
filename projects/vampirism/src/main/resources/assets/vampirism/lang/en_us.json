@@ -1039,6 +1039,7 @@
   "gui.vampirism.minion_appearance.name": "Name",
   "gui.vampirism.minion.stats.inventory_level": "Inventory Size",
   "gui.vampirism.minion.stats.resource_level": "Resource Efficiency",
+  "gui.vampirism.faction_menu.passive_leveling.desc": "Use the altar of inspiration to level up.\n\nBut no one stays a fledgling forever: approximately every %1$s days you rise one level on your own, up to level 4 — a mature vampire with all its main abilities and weaknesses respectively.\n\nCurrent progress: %2$s%%",
   "gui.vampirism.appearance": "Change Your Appearance",
   "gui.vampirism.appearance.fang": "Fang Type",
   "gui.vampirism.appearance.eye": "Eye Type",
