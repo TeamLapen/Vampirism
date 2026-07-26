@@ -91,7 +91,7 @@
   "advancement.vampirism.become_hunter.desc": "Wordt een vampieren jager",
   "key.category.vampirism.main": "Vampirisme",
   "minion_task.vampirism.collect_blood": "Verzamel bloed",
-  "vampire_book.vampirism.unknown.author": "Onbekend",
+  "vampire_book.vampirism.author.unknown": "Onbekend",
   "container.vampirism.altar_infusion": "Altaar van de infusie",
   "container.vampirism.hunter_table": "Jager onderzoekstafel",
   "container.vampirism.weapon_table": "Jagers wapen tafel",
