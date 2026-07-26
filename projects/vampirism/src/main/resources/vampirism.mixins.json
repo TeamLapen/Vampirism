@@ -62,6 +62,7 @@
   ],
   "client": [
     "client.CapeLayerMixin",
+    "client.FlameFeatureRendererMixin",
     "client.GuiGraphicsExtractorMixin",
     "client.HumanoidArmorLayerMixin",
     "client.ItemInHandRendererMixin",

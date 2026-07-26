@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.common.tags.ModBiomeTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.items.StakeItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.behavior.VampireKillerBehavior;
 import net.minecraft.core.BlockPos;
@@ -58,6 +59,18 @@ public class Helper {
     public static boolean gettingSunDamage(LivingEntity entity, LevelAccessor world) {
         if (entity instanceof Player && entity.isSpectator()) return false;
         return world instanceof Level level && hasLevelSunDamage(level, entity.blockPosition()) && VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition());
+    }
+
+    /**
+     * Checks if the entity is currently being burned by the sun.
+     * Unlike {@link #gettingSunDamage(LivingEntity, LevelAccessor)}, this uses the cached state of the vampire itself and
+     * respects the safe period players get before they start taking damage.
+     */
+    public static boolean isBurningInSun(LivingEntity entity) {
+        if (entity instanceof Player player) {
+            return isVampire(player) && VampirePlayer.get(player).isBurningInSun();
+        }
+        return entity instanceof IVampire vampire && vampire.isGettingSundamage(entity.level());
     }
 
     public static boolean hasLevelSunDamage(Level level, BlockPos pos) {

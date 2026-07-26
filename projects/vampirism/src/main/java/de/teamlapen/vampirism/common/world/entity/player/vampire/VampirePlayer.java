@@ -109,6 +109,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private static final Identifier LEVEL_DAMAGE_UUID = VIdentifier.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int FEED_TIMER = 20;
+    private static final int SAFE_SUN_TICKS = 100;
 
     public static VampirePlayer get(Player player) {
         return player.getData(ModAttachments.VAMPIRE_PLAYER);
@@ -524,6 +525,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean isIgnoringSundamage() {
         return false;
+    }
+
+     public boolean isBurningInSun() {
+        return ticksInSun >= SAFE_SUN_TICKS && !player.getAbilities().instabuild && !player.getAbilities().invulnerable && getLevel() >= ModConfig.balance().vpSundamageMinLevel.get() && isGettingSundamage(player.level());
     }
 
     @Override
@@ -1244,7 +1249,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         BalanceConfig config = ModConfig.balance();
         MobEffectInstance potionEffect = player.getEffect(ModEffects.SUNSCREEN);
         int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
-        if (ticksInSun < 100) {
+        if (ticksInSun < SAFE_SUN_TICKS) {
             ticksInSun++;
         }
         if (ticksInSun > 50 && (sunscreen >= 4 || (config.vpSunscreenBuff.get() && sunscreen >= 0))) {
@@ -1252,7 +1257,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         if (!player.isAlive() || isRemote || player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
 
-        if (ticksInSun == 100 && config.vpSundamageInstantDeath.get()) {
+        if (ticksInSun == SAFE_SUN_TICKS && config.vpSundamageInstantDeath.get()) {
             DamageHandler.kill(((ServerLevel) asEntity().level()), player, 100000);
             turnToAsh();
         }
@@ -1263,7 +1268,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (getLevel() >= config.vpSundamageWeaknessMinLevel.get() && player.tickCount % 150 == 3 && sunscreen < 5) {
             player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 152, 0));
         }
-        if (getLevel() >= config.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
+        if (getLevel() >= config.vpSundamageMinLevel.get() && ticksInSun >= SAFE_SUN_TICKS && player.tickCount % 40 == 5) {
             float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE).getValue());
             damage *= player.level().environmentAttributes().getValue(ModEnvironmentAttributes.SUN_INTENSITY.get(), player.position());
             if (damage > 0) {

@@ -1,13 +1,9 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.faction.api.util.SafeCast;
-import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.common.world.entity.converted.GeneratedVampirismConvertedEntitiesClient;
-import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
-import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.DualSplitBipedRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.HunterVillagerRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.VampireBaronRenderer;
@@ -23,9 +19,9 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.AnimationState;
@@ -36,8 +32,6 @@ import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
-
-import java.util.Optional;
 
 public class ModEntityRenderStates {
 
@@ -59,6 +53,7 @@ public class ModEntityRenderStates {
     public static final ContextKey<Bat> VAMPIRE_BAT = create("vampire/bat");
     public static final ContextKey<Boolean> VAMPIRE_DBNO = create("vampire/dbno");
     public static final ContextKey<Boolean> VAMPIRE_SLEEPING_IN_COFFIN = create("vampire/sleeping_in_coffin");
+    public static final ContextKey<Boolean> VAMPIRE_BURNING_IN_SUN = create("vampire/burning_in_sun");
     public static final ContextKey<DualSplitBipedRenderer.RenderPart> SPLIT_RENDER_PART = create("split_render_part");
     public static final ContextKey<IWingsEntity.WingsState> DRACULA_WINGS_STATE = create("dracula/wings_state");
     public static final ContextKey<AnimationState> DRACULA_WINGS_FLY = create("dracula/wings_fly");
@@ -77,6 +72,7 @@ public class ModEntityRenderStates {
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), ModEntityRenderStates::extractHunterPlayer);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), ModEntityRenderStates::extractVampirePlayer);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractCoffinSleepPosition);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractSunBurning);
         event.registerEntityModifier(VampireBaronRenderer.class, ModEntityRenderStates::extractWings);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends AggressiveVillagerEntity, ? extends VillagerRenderState>>>cast(HunterVillagerRenderer.class), ModEntityRenderStates::extractHunterVillager);
     }
@@ -144,6 +140,17 @@ public class ModEntityRenderStates {
                 state.setRenderData(DRACULA_WINGS_TEXTURE, vampire.getCustomization().wingsTexture());
             }
         }
+    }
+
+    private static void extractSunBurning(LivingEntity entity, LivingEntityRenderState renderState) {
+        if (Helper.isBurningInSun(entity)) {
+            markSunBurning(renderState);
+        }
+    }
+
+    public static void markSunBurning(EntityRenderState renderState) {
+        renderState.displayFireAnimation = true;
+        renderState.setRenderData(VAMPIRE_BURNING_IN_SUN, true);
     }
 
     private static void extractCoffinSleepPosition(LivingEntity entity, LivingEntityRenderState renderState) {
