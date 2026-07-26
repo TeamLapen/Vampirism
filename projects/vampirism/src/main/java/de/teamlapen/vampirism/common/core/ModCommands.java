@@ -76,7 +76,8 @@ public class ModCommands {
         dispatcher.register(Commands.literal("factions")
                 .then(Commands.literal("faction")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
-                        .then(DraculaCommand.register())));
+                        .then(Commands.literal("set")
+                        .then(DraculaCommand.register()))));
     }
 
 }
