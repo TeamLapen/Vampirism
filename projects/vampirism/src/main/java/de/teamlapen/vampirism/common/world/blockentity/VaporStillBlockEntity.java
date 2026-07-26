@@ -66,8 +66,8 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
     private static final int[] OUTPUT_SLOTS = {3, 4, 5};
     private static final int[] OUTPUT_SLOTS_EXTENDED = {3, 4, 5, 6, 7};
 
-    private static final int BREW_TIME_NORMAL = 200;
-    private static final int BREW_TIME_SWIFT  = 400;
+    private static final int BREW_TIME_NORMAL = 400;
+    private static final int BREW_TIME_SWIFT  = 200;
 
     private static final int CAPABILITY_UPDATE_INTERVAL = 64;
 
