@@ -520,6 +520,7 @@
   "skill.vampirism.minion_tech_crossbows.desc": "Deine Lakaien können halbautomatische Armbrüste benutzen",
   "text.vampirism.hunter_trainer.trainer_level_wrong": "Ich trainiere nicht so unerfahrene Jäger wie dich. Suche nach jemandem, der weniger erfahren ist",
   "text.vampirism.hunter_trainer.trainer_level_to_high": "Ich kann dir nichts Neues beibringen",
+  "text.vampirism.hunter_trainer.no_hunter": "Wenn du ein Jäger werden möchtest, musst du dir zuerst eine Knoblauch-Injektion an meinem Injektions-Stuhl verabreichen",
   "text.vampirism.potion_table.other": "Dieser Brautisch gehört %s. Du solltest ihn nicht verwenden",
   "text.vampirism.potion_table.cannot_use": "Du hast noch nicht gelernt dies zu benutzen",
   "text.vampirism.alchemical_cauldron.other": "Dieser Kessel gehört %s. Du solltest ihn nicht verwenden.",
