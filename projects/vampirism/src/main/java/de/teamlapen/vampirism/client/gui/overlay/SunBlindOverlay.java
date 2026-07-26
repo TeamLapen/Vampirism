@@ -43,7 +43,7 @@ public class SunBlindOverlay extends BaseOverlay {
 
     @Override
     public void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
-        if (!canRenderOverlays() || !mc().options.getCameraType().isFirstPerson()) return;
+        if (!this.player().isAlive() || !mc().options.getCameraType().isFirstPerson()) return;
 
         float blindIntensity = Helper.isVampire(player()) ? VampirePlayer.get(player()).getSunBlindIntensity() : effectIntensity;
         if (blindIntensity <= 0) return;
