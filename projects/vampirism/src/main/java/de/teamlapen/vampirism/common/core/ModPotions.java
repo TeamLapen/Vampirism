@@ -44,7 +44,7 @@ public class ModPotions {
     public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_POISON = POTIONS.register("very_strong_poison", () -> new HunterPotion("poison", new MobEffectInstance(MobEffects.POISON, 432, 2)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_POISON = POTIONS.register("long_strong_poison", () -> new HunterPotion("poison", new MobEffectInstance(MobEffects.POISON, 1200, 1)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_POISON = POTIONS.register("very_long_poison", () -> new HunterPotion("poison", new MobEffectInstance(MobEffects.POISON, 18000)));
-    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HEALING = POTIONS.register("very_strong_healing", () -> new HunterPotion("healing", new MobEffectInstance(MobEffects.HEALTH_BOOST, 1, 2)));
+    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HEALING = POTIONS.register("very_strong_healing", () -> new HunterPotion("healing", new MobEffectInstance(MobEffects.INSTANT_HEALTH, 1, 2)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WATER_BREATHING = POTIONS.register("very_long_water_breathing", () -> new HunterPotion("water_breathing", new MobEffectInstance(MobEffects.WATER_BREATHING, 96000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_SLOWNESS = POTIONS.register("very_strong_slowness", () -> new HunterPotion("slowness", new MobEffectInstance(MobEffects.SLOWNESS, 400, 5)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SLOWNESS = POTIONS.register("very_long_slowness", () -> new HunterPotion("slowness", new MobEffectInstance(MobEffects.SLOWNESS, 48000)));
