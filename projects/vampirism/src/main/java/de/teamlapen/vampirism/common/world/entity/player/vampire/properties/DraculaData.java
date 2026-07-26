@@ -126,6 +126,9 @@ public class DraculaData extends PropertyParentSync {
     }
 
     private void switchState(IWingsEntity.WingsState state) {
+        if (this.wingsState == state) return;
+        if (state == IWingsEntity.WingsState.CLOSING && this.wingsState == IWingsEntity.WingsState.CLOSED) return;
+        if (state == IWingsEntity.WingsState.OPENING && this.wingsState == IWingsEntity.WingsState.OPEN) return;
         this.wingsState = state;
         this.growTicks = 0;
         switch (state) {

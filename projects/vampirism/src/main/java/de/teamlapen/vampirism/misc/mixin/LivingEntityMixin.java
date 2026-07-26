@@ -58,6 +58,7 @@ public abstract class LivingEntityMixin extends Entity {
             canFlyWings.set(true);
             return null;
         }
+        canFlyWings.set(false);
         return original.call(selections, random);
     }
 
