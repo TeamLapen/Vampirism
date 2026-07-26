@@ -19,6 +19,7 @@ public class ModVampireBookTagsProvider extends KeyTagProvider<IVampireBook> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(ModVampireBookTags.IS_GENERAL).add(
                 MAIDS_DIARY,
@@ -42,6 +43,7 @@ public class ModVampireBookTagsProvider extends KeyTagProvider<IVampireBook> {
                 CENTURY_OF_EVOLUTION,
                 OBSERVATION_ON_VAMPIRES,
                 INFUSION_BREAKTHROUGH,
+                MORAL_DISTORTION,
                 CASE_STUDY_ONE,
                 DEAR_MARTHA,
                 WANTED,

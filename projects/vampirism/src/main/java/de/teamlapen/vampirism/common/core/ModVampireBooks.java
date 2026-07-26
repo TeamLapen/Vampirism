@@ -24,6 +24,7 @@ public class ModVampireBooks {
     public static final ResourceKey<IVampireBook> CENTURY_OF_EVOLUTION = createKey("century_of_evolution");
     public static final ResourceKey<IVampireBook> OBSERVATION_ON_VAMPIRES = createKey("observation_on_vampires");
     public static final ResourceKey<IVampireBook> INFUSION_BREAKTHROUGH = createKey("infusion_breakthrough");
+    public static final ResourceKey<IVampireBook> MORAL_DISTORTION = createKey("moral_distortion");
     public static final ResourceKey<IVampireBook> CASE_STUDY_ONE = createKey("case_study_one");
     public static final ResourceKey<IVampireBook> WANTED = createKey("wanted");
     public static final ResourceKey<IVampireBook> CASE_FILE_144 = createKey("case_file_144");
@@ -41,24 +42,25 @@ public class ModVampireBooks {
     public static void createVampireBooks(BootstrapContext<IVampireBook> context) {
         register(context, builder(MAIDS_DIARY));
         register(context, builder(MY_MOTHER));
-        register(context, builder(MAD_MANS_JOURNAL).customAuthor());
+        register(context, builder(MAD_MANS_JOURNAL).translatableAuthor("unindentified"));
         register(context, builder(MY_PRINCE));
         register(context, builder(DEAR_MARTHA));
-        register(context, builder(NOCTURNAL).customAuthor());
+        register(context, builder(NOCTURNAL).translatableAuthor("william"));
 
         register(context, builder(HUNTERS_DIARY));
-        register(context, builder(ROYAL_RIVALRY).customAuthor());
-        register(context, builder(CENTURY_OF_EVOLUTION).author("Matheo"));
+        register(context, builder(ROYAL_RIVALRY).translatableAuthor("unknown_scribe"));
+        register(context, builder(CENTURY_OF_EVOLUTION).literalAuthor("Matheo"));
         register(context, builder(OBSERVATION_ON_VAMPIRES));
-        register(context, builder(INFUSION_BREAKTHROUGH).customAuthor());
+        register(context, builder(MORAL_DISTORTION).translatableAuthor("marcus_grid"));
+        register(context, builder(INFUSION_BREAKTHROUGH).translatableAuthor("hnat_feldsher"));
         register(context, builder(CASE_STUDY_ONE));
-        register(context, builder(WANTED).author("Kae din Saarin"));
-        register(context, builder(CASE_FILE_144).customAuthor());
+        register(context, builder(WANTED).literalAuthor("Kae din Saarin"));
+        register(context, builder(CASE_FILE_144).translatableAuthor("guard_nenna"));
 
-        register(context, builder(SINISTER_INTENTIONS).author("Sinister Solace"));
+        register(context, builder(SINISTER_INTENTIONS).literalAuthor("Sinister Solace"));
         register(context, builder(VALOROUS_TALE));
-        register(context, builder(ASHES_OF_PAST_DAWNS).customAuthor());
-        register(context, builder(PYROMANIACS_DIARY).author("Pyromaniac Pik"));
+        register(context, builder(ASHES_OF_PAST_DAWNS).translatableAuthor("marcus_grid"));
+        register(context, builder(PYROMANIACS_DIARY).literalAuthor("Pyromaniac Pik"));
     }
 
     private static ResourceKey<IVampireBook> createKey(String name) {

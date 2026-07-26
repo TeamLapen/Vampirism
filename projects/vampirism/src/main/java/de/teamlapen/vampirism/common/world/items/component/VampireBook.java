@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 public record VampireBook(Identifier id, Component author) implements IVampireBook {
 
-    public static final MutableComponent UNKNOWN_AUTHOR = Component.translatable("vampire_book.vampirism.unknown.author");
+    public static final MutableComponent UNKNOWN_AUTHOR = Component.translatable("vampire_book.vampirism.author.unknown");
 
     public static final VampireBook EMPTY = new VampireBook(VIdentifier.mod("unknown"), UNKNOWN_AUTHOR);
 
@@ -104,22 +104,22 @@ public record VampireBook(Identifier id, Component author) implements IVampireBo
     public static class Builder {
 
         public final ResourceKey<IVampireBook> id;
-        public Component author;
+        public @Nullable Component author;
 
         public Builder(ResourceKey<IVampireBook> id) {
             this.id = id;
         }
 
         /**
-         * Sets the author using a translatable component key based on the book id.
+         * Sets the author using a translatable component key based on the author id.
          * <p>
          * The translation key will look like this:
-         * {@code vampire_book.<mod_id>.<book_id>.author}
+         * {@code vampire_book.<mod_id>.author.<author_id>}
          * <p>
          * Recommended to use for names that should be localized.
          */
-        public Builder customAuthor() {
-            this.author = Component.translatable("vampire_book." + id.identifier().toLanguageKey() + ".author");
+        public Builder translatableAuthor(String authorId) {
+            this.author = Component.translatable("vampire_book." + id.identifier().getNamespace() + ".author." + authorId);
             return this;
         }
 
@@ -129,7 +129,7 @@ public record VampireBook(Identifier id, Component author) implements IVampireBo
          * Recommended to use for nicknames (e.g., {@code "Sinister Solace"}).
          * Avoid using this for names that aren't problematic to localize.
          */
-        public Builder author(String author) {
+        public Builder literalAuthor(String author) {
             this.author = Component.literal(author);
             return this;
         }
