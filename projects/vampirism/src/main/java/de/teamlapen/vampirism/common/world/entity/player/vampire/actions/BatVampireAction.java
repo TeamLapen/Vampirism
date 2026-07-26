@@ -4,6 +4,7 @@ import de.teamlapen.faction.api.factions.actions.IActionResult;
 import de.teamlapen.faction.api.factions.actions.ILastingAction;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttachments;
@@ -45,6 +46,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         Player player = vampire.asEntity();
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);
+        vampire.closeWings(true);
         return IActionResult.SUCCESS;
     }
 

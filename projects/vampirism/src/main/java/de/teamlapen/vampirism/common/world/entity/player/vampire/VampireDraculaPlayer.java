@@ -31,8 +31,8 @@ public interface VampireDraculaPlayer extends IDraculaPlayer {
     }
 
     @Override
-    default void closeWings() {
-        draculaData().closeWings();
+    default void closeWings(boolean force) {
+        draculaData().closeWings(force);
     }
 
     @Override

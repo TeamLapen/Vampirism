@@ -18,7 +18,7 @@ public class DraculaData extends PropertyParentSync {
     private int growTicks;
     private int skillPoints;
 
-    private final IPlayer player;
+    private final VampirePlayer player;
 
     public DraculaData(VampirePlayer player) {
         super(player);
@@ -101,6 +101,9 @@ public class DraculaData extends PropertyParentSync {
 
     public boolean openWings() {
         if (this.isDracula) {
+            if (player.getSkillProperties().bat) {
+                return false;
+            }
             switchState(IWingsEntity.WingsState.OPENING);
             player.asEntity().tryToStartFallFlying();
             return true;
@@ -108,8 +111,8 @@ public class DraculaData extends PropertyParentSync {
         return false;
     }
 
-    public void closeWings() {
-        switchState(IWingsEntity.WingsState.CLOSING);
+    public void closeWings(boolean force) {
+        switchState(force ? IWingsEntity.WingsState.CLOSED : IWingsEntity.WingsState.CLOSING);
     }
 
     public void toggleWings() {
@@ -117,7 +120,7 @@ public class DraculaData extends PropertyParentSync {
             return;
         }
         switch (this.wingsState) {
-            case OPENING, OPEN, FLYING -> this.closeWings();
+            case OPENING, OPEN, FLYING -> this.closeWings(false);
             case CLOSING, CLOSED -> this.openWings();
         }
     }
