@@ -83,7 +83,7 @@
   "advancement.vampirism.betrayal.desc": "Σκοτώστε έναν κυνηγό αφού γίνετε ένας κυνηγός",
   "key.category.vampirism.main": "Βαμπιρισμός",
   "minion_task.vampirism.collect_blood": "Σύλλεξε αίμα",
-  "vampire_book.vampirism.unknown.author": "Άγνωστο",
+  "vampire_book.vampirism.author.unknown": "Άγνωστο",
   "container.vampirism.altar_infusion": "Βωμό της έγχυσης",
   "container.vampirism.hunter_table": "Πίνακας έρευνας κυνηγού",
   "container.vampirism.weapon_table": "Πίνακας όπλου του κυνηγού",
