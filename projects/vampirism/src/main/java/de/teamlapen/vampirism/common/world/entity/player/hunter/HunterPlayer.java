@@ -125,16 +125,20 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         if (level > 0) {
             if (!isRemote()) {
                 if (player.level().getGameTime() % 100 == 8) {
-                    if (Arrays.stream(EquipmentSlot.values()).filter(i -> i.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).allMatch(i -> i.is(ModItemTags.HUNTER_ARMOR))) {
+                    if (Arrays.stream(EquipmentSlot.values()).filter(i -> i.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).allMatch(i -> i.is(ModItemTags.HUNTER_COAT))) {
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_JUMP)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.JUMP_BOOST, -1, 0, false, false);
                             mobEffectInstance.factions$addProperty(HunterSkills.ARMOR_JUMP.getId());
                             player.addEffect(mobEffectInstance);
+                        } else {
+                            IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
                         }
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_SPEED)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.SPEED, -1, 0, false, false);
                             mobEffectInstance.factions$addProperty(HunterSkills.ARMOR_SPEED.getId());
                             player.addEffect(mobEffectInstance);
+                        } else {
+                            IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
                         }
                     } else {
                         IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
