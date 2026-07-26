@@ -131,7 +131,7 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
 
         if (!flag && this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             int lvl = VampirismPlayerAttributes.get(player).hunterLevel;
-            if (!this.level().isClientSide && lvl > 0) {
+            if (!this.level().isClientSide) {
                 if (HunterLeveling.getTrainerRequirement(lvl + 1).isPresent()) {
                     if (trainee == null) {
                         player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerMenu(id, playerInventory, this), name));
@@ -141,10 +141,11 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
                         player.sendSystemMessage(Component.translatable("text.vampirism.i_am_busy_right_now"));
                     }
 
-                } else {
+                } else if (lvl > 0) {
                     player.sendSystemMessage(Component.translatable("text.vampirism.hunter_trainer.trainer_level_wrong"));
+                } else if (VampirismPlayerAttributes.get(player).faction == null) {
+                    player.sendSystemMessage(Component.translatable("text.vampirism.hunter_trainer.no_hunter"));
                 }
-
             }
 
             return InteractionResult.SUCCESS;
