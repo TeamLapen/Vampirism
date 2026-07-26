@@ -197,7 +197,7 @@
   "task_tag.vampirism.advanced_vampire": "Vampires Avancés",
   "key.category.vampirism.main": "Vampirisme",
   "minion_task.vampirism.collect_blood": "Recueillir le sang",
-  "vampire_book.vampirism.unknown.author": "Inconnu",
+  "vampire_book.vampirism.author.unknown": "Inconnu",
   "container.vampirism.altar_infusion": "Autel de l'Infusion",
   "container.vampirism.hunter_table": "Table de recherche du chasseur",
   "container.vampirism.weapon_table": "Table d'arme du Chasseur",
