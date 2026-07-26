@@ -72,7 +72,7 @@
   "gui.factionapi.skills.skills_reset": "Deine Fähigkeiten wurden zurückgesetzt",
   "gui.factionapi.skills.deactivated_by_serveradmin": "Diese Fähigkeit wurde durch den Serveradmin deaktiviert",
   "gui.factionapi.skills.unlock_unavailable": "Freischalten von Fähigkeiten ist derzeit nicht verfügbar",
-  "gui.factionapi.skills.reset_req": "Du benötigst ein '%s' um deine Fähigkeiten zurückzusetzen",
+  "gui.factionapi.skills.reset_req": "Du benötigst einen Oblivion Trank um deine Fähigkeiten zurückzusetzen",
   "gui.factionapi.skills.reset_consume": "Dies verbraucht ein '%s'",
   "gui.factionapi.skills.skill_points.default": "%d Fertigkeitspunkte",
   "gui.factionapi.skills.skill_points.default.single": "%d Fertigkeitspunkt",
