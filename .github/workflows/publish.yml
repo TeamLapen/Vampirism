@@ -56,34 +56,9 @@ jobs:
           echo "version=release" >> $GITHUB_OUTPUT
         fi
 
-  determine-crowdin-branch:
-    runs-on: ubuntu-latest
-    outputs:
-      crowdin_branch: ${{ steps.get_crowdin_branch.outputs.crowdin_branch }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup Java JDK
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'adopt'
-        cache: 'gradle'
-    - name: Determine Crowdin branch
-      id: get_crowdin_branch
-      run: |
-        output=$(./gradlew crowdinBranch)
-        version=$(echo "$output" | grep -oP 'Crowdin branch: \K\d+\.\d+')
-        if [[ $version =~ ^1\.[0-9]+$ ]]; then
-          echo "Crowdin branch: $version"
-          echo "crowdin_branch=$version" >> $GITHUB_OUTPUT
-        else
-          echo "Invalid version: $version"
-          exit 1
-        fi
-
   publish:
     runs-on: ubuntu-latest
-    needs: [determine-crowdin-branch, determine-environment]
+    needs: [determine-environment]
     environment: ${{ needs.determine-environment.outputs.environment }}
     if: needs.determine-environment.outputs.version != '' && needs.determine-environment.outputs.environment != ''
 
@@ -95,12 +70,6 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
         cache: 'gradle'
-    - name: Install Crowdin CLI
-      run: npm i -g @crowdin/cli
-    - name: Download translations
-      run: crowdin download -b ${{ needs.determine-crowdin-branch.outputs.crowdin_branch }}
-      env:
-        CROWDIN_KEY: ${{ secrets.CROWDIN_KEY }}
     - name: Publish
       uses: gradle/gradle-build-action@v2.7.0
       with:

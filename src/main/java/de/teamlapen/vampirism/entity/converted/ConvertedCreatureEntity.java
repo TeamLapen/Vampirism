@@ -280,7 +280,7 @@ public class ConvertedCreatureEntity<T extends PathfinderMob> extends VampireBas
         }
         if (this.entityCreature.isPresent() && (!this.level().isClientSide() && getConvertedHandler() == null)) {
             LOGGER.warn("Cannot find converting handler for converted creature {} ({})", this, this.entityCreature);
-            this.entityCreature = Optional.empty();
+//            this.entityCreature = Optional.empty();
         }
     }
 
