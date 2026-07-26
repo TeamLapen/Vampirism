@@ -1,6 +1,5 @@
-package de.teamlapen.vampirism.client;
+package de.teamlapen.vampirism.client.gui.overlay;
 
-import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.gui.overlay.TextureOverlay;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -9,14 +8,13 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterSkillPrope
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public class DisguiseOverlay extends TextureOverlay {
 
-    public static final Identifier DISGUISE_TEXTURE = VIdentifier.mod("textures/misc/disguise.png");
+    public static final Identifier DISGUISE_TEXTURE = VIdentifier.mod("textures/gui/overlay/disguise.png");
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor graphics, @NotNull DeltaTracker deltaTracker) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         if (canRenderOverlays() && ModConfig.client().showDisguiseHUDOverlay.get()) {
             HunterSkillProperties huntSpecial = HunterPlayer.get(this.player()).getSpecialAttributes();
             if (huntSpecial.isConcealed()) {

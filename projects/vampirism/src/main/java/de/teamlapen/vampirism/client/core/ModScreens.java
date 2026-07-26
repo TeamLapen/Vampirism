@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.core.FactionAppearanceScreens;
 import de.teamlapen.vampirism.api.client.VampirismOverlays;
-import de.teamlapen.vampirism.client.DisguiseOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.DisguiseOverlay;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.gui.overlay.*;
 import de.teamlapen.vampirism.client.gui.screens.*;
