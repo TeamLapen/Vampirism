@@ -44,6 +44,7 @@ import de.teamlapen.vampirism.common.world.items.BloodBottleItem;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.common.world.items.recipes.ShapedWeaponTableRecipe;
 import de.teamlapen.vampirism.common.world.items.recipes.ShapelessWeaponTableRecipe;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -663,7 +664,7 @@ public class GuideBook implements IGuideBook {
         binder.setGuideTitleKey("guide.vampirism.title");
         binder.setItemNameKey("guide.vampirism");
         binder.setHeaderKey("guide.vampirism.welcome");
-        binder.setAuthor(Component.literal("Maxanier"));
+        binder.setAuthor(Component.translatable("book.byAuthor", "Maxanier").withStyle(ChatFormatting.GRAY));
         binder.setThemeColor(Color.WHITE.getRGB());
         binder.setOutlineTexture(Identifier.fromNamespaceAndPath("vampirismguide", "textures/gui/book_violet_border.png"));
         binder.setSpawnWithBook();

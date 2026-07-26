@@ -10,12 +10,15 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class DescriptionUtil {
 
-    public static void addDescriptionTooltip(Component component, Item.TooltipContext context, TooltipFlag tooltipFlag, Consumer<Component> tooltipComponents) {
-        tooltipComponents.accept(Component.translatable("tooltip.factionapi.hold_shift_for_info", FactionKeys.ITEM_DESCRIPTION.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY));
+    public static void addDescriptionTooltip(Component component, Item.TooltipContext context, TooltipFlag tooltipFlag, List<Component> tooltipComponents) {
+        if (tooltipComponents.size() > 2) {
+            tooltipComponents.add(Component.empty());
+        }
+
+        tooltipComponents.add(Component.translatable("tooltip.factionapi.hold_shift_for_info", FactionKeys.ITEM_DESCRIPTION.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY));
 
         int keyCode = FactionKeys.ITEM_DESCRIPTION.getKey().getValue();
         boolean isHeld = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), keyCode);
@@ -23,9 +26,9 @@ public class DescriptionUtil {
         if (isHeld) {
             List<String> lines = normalizeTextWidth(component.getString(), 40);
 
-            tooltipComponents.accept(Component.empty());
+            tooltipComponents.add(Component.empty());
             for (String line : lines) {
-                tooltipComponents.accept(Component.literal(line).withStyle(ChatFormatting.GRAY));
+                tooltipComponents.add(Component.literal(line).withStyle(ChatFormatting.GRAY));
             }
         }
     }
