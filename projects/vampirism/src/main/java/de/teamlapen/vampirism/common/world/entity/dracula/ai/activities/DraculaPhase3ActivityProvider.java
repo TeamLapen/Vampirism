@@ -21,7 +21,6 @@ import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.sensing.Sensor;
-import net.minecraft.world.entity.ai.sensing.SensorType;
 
 import java.util.Optional;
 import java.util.Set;
@@ -78,7 +77,7 @@ public class DraculaPhase3ActivityProvider extends AiActivityProvider<Dracula> {
     }
 
     private BehaviorDescription<Dracula> buildStartAttack() {
-        return new BehaviorDescription<>(StartAttacking.create(DraculaPhase3ActivityProvider::findNearestValidAttackTarget), Set.of(ModSensors.NEAREST_TARGETABLE_ENTITIES.get()), Set.of(MemoryModuleType.ATTACK_TARGET,MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, ModMemoryTypes.NEAREST_ATTACKABLE.get(), MemoryModuleType.ANGRY_AT));
+        return new BehaviorDescription<>(StartAttacking.create(DraculaPhase3ActivityProvider::findNearestValidAttackTarget), Set.of(ModSensors.DRACULA_ATTACKABLE_SENSOR.get()), Set.of(MemoryModuleType.ATTACK_TARGET,MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, ModMemoryTypes.NEAREST_ATTACKABLE.get(), MemoryModuleType.ANGRY_AT));
     }
 
     public BehaviorDescription<Dracula> buildMelee() {

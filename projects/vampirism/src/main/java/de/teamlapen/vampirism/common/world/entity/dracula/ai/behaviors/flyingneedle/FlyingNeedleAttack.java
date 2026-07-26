@@ -38,7 +38,7 @@ public class FlyingNeedleAttack extends Behavior<Dracula> {
     private static final int MAX_NEEDLES = 6;
 
     public static Set<SensorType<? extends Sensor<? super Dracula>>> sensors() {
-        return Set.of(SensorType.NEAREST_LIVING_ENTITIES, ModSensors.NEAREST_TARGETABLE_ENTITIES.get());
+        return Set.of(SensorType.NEAREST_LIVING_ENTITIES, ModSensors.DRACULA_ATTACKABLE_SENSOR.get());
     }
 
     public static Set<MemoryModuleType<?>> memories() {
