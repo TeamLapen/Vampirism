@@ -1180,6 +1180,7 @@
   "dialogue.vampirism.hunter.pay_vampire_blood": "Please pay me %s vampire blood bottles to train you",
   "dialogue.vampirism.hunter.will_train_you": "Alright, I will train you",
   "dialogue.vampirism.hunter_trainer.wrong_level": "I don't train hunters as inexperienced as you are. Look for someone less experienced",
+  "dialogue.vampirism.hunter_trainer.no_hunter": "If you want to become a hunter, you must first inject yourself with garlic using my injection chair",
   "dialogue.vampirism.hunter_trainer.undercover": "I am not a hunter",
   "dialogue.vampirism.hunter_trainer.undercover.hunter": "It is not safe enough to train you here. Please free the village",
   "dialogue.vampirism.vampire_minion.available": "This vampire can be bound to you making it your minion",
