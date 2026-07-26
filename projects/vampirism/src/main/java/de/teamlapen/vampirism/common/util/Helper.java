@@ -57,13 +57,12 @@ public class Helper {
      */
     public static boolean gettingSunDamage(LivingEntity entity, LevelAccessor world) {
         if (entity instanceof Player && entity.isSpectator()) return false;
-        return world instanceof Level level && hasLevelSunDamage(level, entity.blockPosition()) && VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition());
+        return world instanceof Level level && hasLevelSunDamage(level, entity.blockPosition()) && !entity.isInRain() && entity.isInWaterOrRain() && VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition());
     }
 
     public static boolean hasLevelSunDamage(Level level, BlockPos pos) {
         return level.dimensionType().hasSkyLight()
                 && level.environmentAttributes().getValue(ModEnvironmentAttributes.SUN_DAMAGE.get(), pos)
-                && !level.isRainingAt(pos)
                 && isDay( level, pos);
     }
 
