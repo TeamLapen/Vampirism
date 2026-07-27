@@ -86,7 +86,7 @@ public class SunBlindOverlay extends BaseOverlay {
             float positionAlongAxis = 0.55f - ghostIndex * 0.34f;
             float ghostX = screenCenterX + (sunX - screenCenterX) * positionAlongAxis;
             float ghostY = screenCenterY + (sunY - screenCenterY) * positionAlongAxis;
-            float ghostSize = screenHeight * (0.1f + 0.06f * (ghostIndex % 3));
+            float ghostSize = screenHeight * (0.075f + 0.06f * (ghostIndex % 3));
             int ghostColor = ghostIndex % 2 == 0 ? LENS_FLARE_WARM_COLOR : LENS_FLARE_COOL_COLOR;
             // Warm and cool circles take turns along the line from the sun to the screen center, giving a colorful look
             drawGlow(graphics, ghostX, ghostY, ghostSize, ghostColor, blindIntensity * 0.5f);
