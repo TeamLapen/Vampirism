@@ -116,6 +116,9 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> WEAPON5 = node("weapon5");
         public static final ResourceKey<ISkillNode> WEAPON6 = node("weapon6");
         public static final ResourceKey<ISkillNode> WEAPON7 = node("weapon7");
+        public static final ResourceKey<ISkillNode> WEAPON8 = node("weapon8");
+        public static final ResourceKey<ISkillNode> WEAPON9 = node("weapon9");
+        public static final ResourceKey<ISkillNode> WEAPON10 = node("weapon10");
 
         public static final ResourceKey<ISkillNode> LORD_ROOT = node("lord_root");
         public static final ResourceKey<ISkillNode> LORD_2 = node("lord_2");
@@ -151,13 +154,16 @@ public class HunterSkills {
             context.register(POTION5, new SkillNode(POTION_RESISTANCE));
             context.register(POTION6, new SkillNode(CONCENTRATED_DURABLE_BREWING));
 
-            context.register(WEAPON1, new SkillNode(HUNTER_ATTACK_SPEED, HUNTER_ATTACK_DAMAGE));
-            context.register(WEAPON2, new SkillNode(ARMOR_SPEED, ARMOR_JUMP));
-            context.register(WEAPON3, new SkillNode(CROSSBOW_TECHNIQUE, DOUBLE_IT));
-            context.register(WEAPON4, new SkillNode(MASTER_CRAFTSMANSHIP));
-            context.register(WEAPON5, new SkillNode(STAKE2));
-            context.register(WEAPON6, new SkillNode(AXE2));
-            context.register(WEAPON7, new SkillNode(ARTISAN_CRAFTSMANSHIP));
+            context.register(WEAPON1, new SkillNode(HUNTER_ATTACK_DAMAGE));
+            context.register(WEAPON2, new SkillNode(HUNTER_ATTACK_SPEED));
+            context.register(WEAPON3, new SkillNode(ARMOR_SPEED));
+            context.register(WEAPON4, new SkillNode(ARMOR_JUMP));
+            context.register(WEAPON5, new SkillNode(CROSSBOW_TECHNIQUE));
+            context.register(WEAPON6, new SkillNode(DOUBLE_IT));
+            context.register(WEAPON7, new SkillNode(MASTER_CRAFTSMANSHIP));
+            context.register(WEAPON8, new SkillNode(AXE2));
+            context.register(WEAPON9, new SkillNode(STAKE2));
+            context.register(WEAPON10, new SkillNode(ARTISAN_CRAFTSMANSHIP));
 
             context.register(LORD_ROOT, new SkillNode(HunterSkills.LORD_ROOT));
             context.register(LORD_2, new SkillNode(MINION_STATS_INCREASE));
