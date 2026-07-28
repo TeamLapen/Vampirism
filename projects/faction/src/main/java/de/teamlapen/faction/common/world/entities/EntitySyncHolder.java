@@ -23,6 +23,7 @@ public class EntitySyncHolder<TEntity extends EntitySyncHolder.ISyncHolder<TData
 
     @Override
     protected void registerProperties() {
+        super.registerProperties();
         //noinspection Convert2MethodRef
         registerProperty(FIdentifier.mod("sub"))
                 .subProperty(() -> entity.getSyncData())

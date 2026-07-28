@@ -399,6 +399,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
 
     @Override
     protected void registerProperties() {
+        super.registerProperties();
         registerProperty(FIdentifier.mod("faction")).simple(ModCodecs.playableFaction()).defaultValue(DefaultFactions.NEUTRAL).provider(() -> this.currentFaction).commonLoader(holder -> this.currentFaction = holder, Comparator.comparing(IHolderExtension::getKey)).register();
         registerProperty(FIdentifier.mod("level")).simple(0, () -> this.currentLevel, l -> this.currentLevel = l);
         registerProperty(FIdentifier.mod("lord_level")).simple(0, () -> this.currentLordLevel, l -> this.currentLordLevel = l);

@@ -1,8 +1,10 @@
 package de.teamlapen.faction.common.util.collections;
 
 import com.google.common.collect.Sets;
+import it.unimi.dsi.fastutil.ints.IntComparator;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -76,6 +78,14 @@ public class CollectionUtil {
         }
 
         return changed;
+    }
+
+    public static class MapHashComparator<T,Z> implements Comparator<Map<T,Z>> {
+
+        @Override
+        public int compare(Map<T, Z> o1, Map<T, Z> o2) {
+            return Integer.compare(o1.hashCode(), o2.hashCode());
+        }
     }
 
 }

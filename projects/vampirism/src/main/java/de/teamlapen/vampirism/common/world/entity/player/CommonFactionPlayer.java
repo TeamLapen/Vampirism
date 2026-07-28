@@ -171,6 +171,7 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     @MustBeInvokedByOverriders
     @Override
     protected void registerProperties() {
+        super.registerProperties();
         this.registerProperty(VIdentifier.mod("action_handler")).subProperty(() -> this.actionHandler).register();
         this.registerProperty(VIdentifier.mod("skill_handler")).subProperty(() -> this.skillHandler).register();
         //noinspection DataFlowIssue
