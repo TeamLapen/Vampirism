@@ -47,12 +47,12 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_DISGUISE = SKILLS.register("hunter_disguise", () -> new ActionSkill<>(HunterActions.DISGUISE_HUNTER, Trees.LEVEL, 1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> WEAPON_TABLE = SKILLS.register("weapon_table", () -> new VampirismSkill.SimpleHunterSkill(2, true));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> BASIC_ALCHEMY = SKILLS.register("basic_alchemy", () -> new VampirismSkill.SimpleHunterSkill(2, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> BASIC_ALCHEMY = SKILLS.register("basic_alchemy", () -> new VampirismSkill.SimpleHunterSkill(1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CRUCIFIX_WIELDER = SKILLS.register("crucifix_wielder", () -> new VampirismSkill.SimpleHunterSkill(1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> GARLIC_DIFFUSER = SKILLS.register("garlic_diffuser", () -> new VampirismSkill.SimpleHunterSkill(2, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> GARLIC_DIFFUSER = SKILLS.register("garlic_diffuser", () -> new VampirismSkill.SimpleHunterSkill(1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> PURIFIED_GARLIC = SKILLS.register("purified_garlic", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> GARLIC_DIFFUSER_IMPROVED = SKILLS.register("garlic_diffuser_improved", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ENHANCED_BLESSING = SKILLS.register("enhanced_blessing", () -> new VampirismSkill.SimpleHunterSkill(3, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ENHANCED_BLESSING = SKILLS.register("enhanced_blessing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_AWARENESS = SKILLS.register("hunter_awareness", () -> new ActionSkill<>(HunterActions.AWARENESS_HUNTER, ModSkillTreeTags.HUNTER, 2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CRUCIFIX_REPEL = SKILLS.register("crucifix_repel", () -> new VampirismSkill.SimpleHunterSkill(2, true));
@@ -100,6 +100,9 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> ALCHEMY4 = node("alchemy4");
         public static final ResourceKey<ISkillNode> ALCHEMY5 = node("alchemy5");
         public static final ResourceKey<ISkillNode> ALCHEMY6 = node("alchemy6");
+        public static final ResourceKey<ISkillNode> ALCHEMY7 = node("alchemy7");
+        public static final ResourceKey<ISkillNode> ALCHEMY8 = node("alchemy8");
+        public static final ResourceKey<ISkillNode> ALCHEMY9 = node("alchemy9");
         public static final ResourceKey<ISkillNode> POTION1 = node("potion1");
         public static final ResourceKey<ISkillNode> POTION2 = node("potion2");
         public static final ResourceKey<ISkillNode> POTION3 = node("potion3");
@@ -132,11 +135,14 @@ public class HunterSkills {
             context.register(SKILL4, new SkillNode(WEAPON_TABLE));
 
             context.register(ALCHEMY1, new SkillNode(BASIC_ALCHEMY));
-            context.register(ALCHEMY2, new SkillNode(CRUCIFIX_WIELDER));
-            context.register(ALCHEMY3, new SkillNode(GARLIC_DIFFUSER));
-            context.register(ALCHEMY4, new SkillNode(PURIFIED_GARLIC, GARLIC_DIFFUSER_IMPROVED));
-            context.register(ALCHEMY5, new SkillNode(ENHANCED_BLESSING, ULTIMATE_CRUCIFIX));
-            context.register(ALCHEMY6, new SkillNode(HUNTER_AWARENESS, CRUCIFIX_REPEL));
+            context.register(ALCHEMY2, new SkillNode(PURIFIED_GARLIC));
+            context.register(ALCHEMY3, new SkillNode(CRUCIFIX_WIELDER));
+            context.register(ALCHEMY4, new SkillNode(GARLIC_DIFFUSER));
+            context.register(ALCHEMY5, new SkillNode(GARLIC_DIFFUSER_IMPROVED));
+            context.register(ALCHEMY6, new SkillNode(HUNTER_AWARENESS));
+            context.register(ALCHEMY7, new SkillNode(ULTIMATE_CRUCIFIX));
+            context.register(ALCHEMY8, new SkillNode(CRUCIFIX_REPEL));
+            context.register(ALCHEMY9, new SkillNode(ENHANCED_BLESSING));
 
             context.register(POTION1, new SkillNode(MULTITASK_BREWING));
             context.register(POTION2, new SkillNode(DURABLE_BREWING, CONCENTRATED_BREWING));

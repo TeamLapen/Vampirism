@@ -58,6 +58,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
     protected static final TagKey<Item> IRON_NUGGET = Tags.Items.NUGGETS_IRON;
     protected static final TagKey<Item> GOLD_NUGGET = Tags.Items.NUGGETS_GOLD;
     protected static final TagKey<Item> GARLIC = ModItemTags.GARLIC;
+    protected static final TagKey<Item> PURIFIED_GARLIC = ModItemTags.PURIFIED_GARLIC;
     protected static final TagKey<Item> BREAD = Tags.Items.FOODS_BREAD;
     protected static final TagKey<Item> HEART = ModItemTags.HEART;
     protected static final TagKey<Item> PURE_BLOOD = ModItemTags.PURE_BLOOD;

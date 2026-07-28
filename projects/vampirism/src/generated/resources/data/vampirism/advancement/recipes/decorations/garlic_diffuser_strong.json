@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "vampirism:garlic_diffuser_core_improved"
+            "items": "vampirism:garlic_diffuser_core_strong"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:garlic_diffuser_improved"
+        "recipe": "vampirism:garlic_diffuser_strong"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:garlic_diffuser_improved"
+      "vampirism:garlic_diffuser_strong"
     ]
   }
 }

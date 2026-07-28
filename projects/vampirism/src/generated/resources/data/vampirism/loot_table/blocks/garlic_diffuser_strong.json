@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:garlic_diffuser_core_improved"
+          "name": "vampirism:garlic_diffuser_strong"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "vampirism:blocks/garlic_diffuser_core_improved"
+  "random_sequence": "vampirism:blocks/garlic_diffuser_strong"
 }

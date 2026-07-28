@@ -11,7 +11,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
@@ -125,6 +124,7 @@ public class ModItemTagsProvider extends BlockTagCopyingItemTagProvider {
         tag(ItemTags.SWEEPING_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
         tag(ItemTags.FIRE_ASPECT_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
         tag(ItemTags.MINING_ENCHANTABLE).addTag(ModItemTags.HUNTER_AXE);
+        tag(ModItemTags.PURIFIED_GARLIC).add(ModItems.PURIFIED_GARLIC.get());
 
         addCompatibilityTags();
     }

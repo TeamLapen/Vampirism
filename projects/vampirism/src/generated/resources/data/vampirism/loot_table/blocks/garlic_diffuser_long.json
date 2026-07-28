@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vampirism:garlic_diffuser_weak"
+          "name": "vampirism:garlic_diffuser_long"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "vampirism:blocks/garlic_diffuser_weak"
+  "random_sequence": "vampirism:blocks/garlic_diffuser_long"
 }

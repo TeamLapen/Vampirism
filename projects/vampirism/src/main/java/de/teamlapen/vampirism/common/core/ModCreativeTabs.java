@@ -382,7 +382,8 @@ public class ModCreativeTabs {
             addArmor();
 
             add(GARLIC_DIFFUSER_CORE);
-            add(GARLIC_DIFFUSER_CORE_IMPROVED);
+            add(GARLIC_DIFFUSER_CORE_STRONG);
+            add(GARLIC_DIFFUSER_CORE_LONG);
 
             add(HOLY_WATER_BOTTLE_NORMAL);
             add(HOLY_WATER_BOTTLE_ENHANCED);

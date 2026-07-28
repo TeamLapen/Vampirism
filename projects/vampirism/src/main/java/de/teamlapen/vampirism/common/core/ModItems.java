@@ -303,7 +303,8 @@ public class ModItems {
     public static final DeferredItem<Item> RITUAL_KNIFE = ITEMS.registerItem("ritual_knife", RitualKnifeItem::new);
 
     public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE, x -> x.useBlockDescriptionPrefix().factions$withShiftDescription());
-    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED, x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE_STRONG = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE_STRONG, x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE_LONG = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE_LONG, x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
     public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, PureLevel.LOW)));
     public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK,  (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, new PureLevel(4))));
     public static final DeferredItem<BlockItem> ALTAR_INSPIRATION = fromBlock(ModBlocks.ALTAR_INSPIRATION);
@@ -325,8 +326,8 @@ public class ModItems {
     public static final DeferredItem<BlockItem> INJECTION_CHAIR = fromBlock(ModBlocks.INJECTION_CHAIR, props -> props.factions$withShiftDescription());
     public static final DeferredItem<BlockItem> ALTAR_CLEANSING = fromBlock(ModBlocks.ALTAR_CLEANSING);
     public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_NORMAL = fromBlock(ModBlocks.GARLIC_DIFFUSER_NORMAL, (item) -> item.factions$withShiftDescription());
-    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_WEAK = fromBlock(ModBlocks.GARLIC_DIFFUSER_WEAK, (item) -> item.factions$withShiftDescription());
-    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_IMPROVED, (item) -> item.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_WEAK = fromBlock(ModBlocks.GARLIC_DIFFUSER_LONG, (item) -> item.factions$withShiftDescription());
+    public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_IMPROVED = fromBlock(ModBlocks.GARLIC_DIFFUSER_STRONG, (item) -> item.factions$withShiftDescription());
     public static final DeferredItem<BlockItem> VAMPIRE_BEACON = fromBlock(ModBlocks.VAMPIRE_BEACON, itemProps -> itemProps.rarity(Rarity.RARE));
     public static final DeferredItem<BlockItem> DARK_SPRUCE_LEAVES = fromBlock(ModBlocks.DARK_SPRUCE_LEAVES);
     public static final DeferredItem<BlockItem> DARK_SPRUCE_SAPLING = fromBlock(ModBlocks.DARK_SPRUCE_SAPLING);

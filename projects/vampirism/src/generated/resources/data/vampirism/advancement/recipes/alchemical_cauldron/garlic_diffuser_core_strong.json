@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:garlic_diffuser_core_improved"
+        "recipe": "vampirism:garlic_diffuser_core_strong"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:garlic_diffuser_core_improved"
+      "vampirism:garlic_diffuser_core_strong"
     ]
   }
 }

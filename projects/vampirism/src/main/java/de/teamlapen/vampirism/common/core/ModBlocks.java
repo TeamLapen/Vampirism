@@ -8,7 +8,6 @@ import de.teamlapen.faction.common.world.blocks.base.WaterloggedSplitBlock;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.ModRegistryItems;
-import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.VampirismVoxelShapes;
 import de.teamlapen.vampirism.common.world.blocks.*;
@@ -23,8 +22,6 @@ import de.teamlapen.vampirism.common.world.features.ModTreeGrower;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
@@ -86,11 +83,12 @@ public class ModBlocks {
     public static final DeferredBlock<AltarCleansingBlock> ALTAR_CLEANSING = BLOCKS.registerBlock("altar_cleansing", AltarCleansingBlock::new, () -> basicProperties().mapColor(MapColor.WOOD).ignitedByLava().strength(0.5f).noOcclusion());
 
     public static final DeferredBlock<GarlicDiffuserCoreBlock> GARLIC_DIFFUSER_CORE = BLOCKS.registerBlock("garlic_diffuser_core", props -> new GarlicDiffuserCoreBlock(props, EnumStrength.WEAK), () -> copyProperties(Blocks.WHITE_WOOL));
-    public static final DeferredBlock<GarlicDiffuserCoreBlock> GARLIC_DIFFUSER_CORE_IMPROVED = BLOCKS.registerBlock("garlic_diffuser_core_improved", props -> new GarlicDiffuserCoreBlock(props, EnumStrength.MEDIUM), () -> copyProperties(Blocks.LIGHT_BLUE_WOOL));
+    public static final DeferredBlock<GarlicDiffuserCoreBlock> GARLIC_DIFFUSER_CORE_STRONG = BLOCKS.registerBlock("garlic_diffuser_core_strong", props -> new GarlicDiffuserCoreBlock(props, EnumStrength.MEDIUM), () -> copyProperties(Blocks.LIGHT_BLUE_WOOL));
+    public static final DeferredBlock<GarlicDiffuserCoreBlock> GARLIC_DIFFUSER_CORE_LONG = BLOCKS.registerBlock("garlic_diffuser_core_long", props -> new GarlicDiffuserCoreBlock(props, EnumStrength.MEDIUM), () -> copyProperties(Blocks.YELLOW_WOOL));
 
-    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = BLOCKS.registerBlock("garlic_diffuser_normal", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserNormalDist), () -> basicProperties().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion());
-    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_WEAK = BLOCKS.registerBlock("garlic_diffuser_weak", props -> new GarlicDiffuserBlock(props, EnumStrength.WEAK, ModConfig.balance().hsGarlicDiffuserWeakDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL));
-    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_IMPROVED = BLOCKS.registerBlock("garlic_diffuser_improved", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserEnhancedDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL));
+    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_NORMAL = BLOCKS.registerBlock("garlic_diffuser_normal", props -> new GarlicDiffuserBlock(props, EnumStrength.WEAK, ModConfig.balance().hsGarlicDiffuserNormalDist), () -> basicProperties().mapColor(MapColor.STONE).strength(40.0F, 1200.0F).sound(SoundType.STONE).noOcclusion());
+    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_LONG = BLOCKS.registerBlock("garlic_diffuser_long", props -> new GarlicDiffuserBlock(props, EnumStrength.WEAK, ModConfig.balance().hsGarlicDiffuserWeakDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL));
+    public static final DeferredBlock<GarlicDiffuserBlock> GARLIC_DIFFUSER_STRONG = BLOCKS.registerBlock("garlic_diffuser_strong", props -> new GarlicDiffuserBlock(props, EnumStrength.MEDIUM, ModConfig.balance().hsGarlicDiffuserEnhancedDist), () -> copyProperties(GARLIC_DIFFUSER_NORMAL));
 
     public static final DeferredBlock<VampireBeaconBlock> VAMPIRE_BEACON = BLOCKS.registerBlock("vampire_beacon", VampireBeaconBlock::new, () -> copyProperties(Blocks.BEACON).mapColor(MapColor.CRIMSON_HYPHAE));
 

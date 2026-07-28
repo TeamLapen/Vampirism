@@ -9,27 +9,36 @@
                 {
                   "children": [
                     {
+                      "node": "vampirism:hunter/alchemy2"
+                    },
+                    {
                       "children": [
                         {
                           "children": [
+                            {
+                              "node": "vampirism:hunter/alchemy5"
+                            },
                             {
                               "children": [
                                 {
                                   "children": [
                                     {
-                                      "node": "vampirism:hunter/alchemy6"
+                                      "node": "vampirism:hunter/alchemy8"
+                                    },
+                                    {
+                                      "node": "vampirism:hunter/alchemy9"
                                     }
                                   ],
-                                  "node": "vampirism:hunter/alchemy5"
+                                  "node": "vampirism:hunter/alchemy7"
                                 }
                               ],
-                              "node": "vampirism:hunter/alchemy4"
+                              "node": "vampirism:hunter/alchemy6"
                             }
                           ],
-                          "node": "vampirism:hunter/alchemy3"
+                          "node": "vampirism:hunter/alchemy4"
                         }
                       ],
-                      "node": "vampirism:hunter/alchemy2"
+                      "node": "vampirism:hunter/alchemy3"
                     }
                   ],
                   "node": "vampirism:hunter/alchemy1"

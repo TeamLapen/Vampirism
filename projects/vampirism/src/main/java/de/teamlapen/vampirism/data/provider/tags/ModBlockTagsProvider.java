@@ -54,9 +54,9 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
                 .add(ModBlocks.GRAVE_CAGE.get())
                 .add(ModBlocks.ALCHEMICAL_CAULDRON.get())
                 .add(ModBlocks.VAPOR_STILL.get())
-                .add(ModBlocks.GARLIC_DIFFUSER_WEAK.get())
+                .add(ModBlocks.GARLIC_DIFFUSER_LONG.get())
                 .add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())
-                .add(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get())
+                .add(ModBlocks.GARLIC_DIFFUSER_STRONG.get())
                 .add(ModBlocks.FOG_DIFFUSER.get())
                 .add(ModBlocks.ALCHEMY_TABLE.get())
                 .add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get())
@@ -111,9 +111,9 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         ;
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(ModBlocks.ALTAR_INFUSION.get())
-                .add(ModBlocks.GARLIC_DIFFUSER_WEAK.get())
+                .add(ModBlocks.GARLIC_DIFFUSER_LONG.get())
                 .add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get())
-                .add(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get())
+                .add(ModBlocks.GARLIC_DIFFUSER_STRONG.get())
                 .add(ModBlocks.FOG_DIFFUSER.get())
         ;
 
@@ -157,7 +157,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(ModBlockTags.VAMPIRE_BEACON_BASE_BLOCKS).add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
         tag(ModBlockTags.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS).add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
         tag(ModBlockTags.CREEPER_REPELLENT).add(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
-        tag(ModBlockTags.GARLIC_FINDER_HIGHLIGHTED).add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), ModBlocks.GARLIC_DIFFUSER_WEAK.get(), ModBlocks.GARLIC_DIFFUSER_IMPROVED.get(), ModBlocks.GARLIC_DIFFUSER_CORE.get(), ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.get());
+        tag(ModBlockTags.GARLIC_FINDER_HIGHLIGHTED).add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), ModBlocks.GARLIC_DIFFUSER_LONG.get(), ModBlocks.GARLIC_DIFFUSER_STRONG.get(), ModBlocks.GARLIC_DIFFUSER_CORE.get(), ModBlocks.GARLIC_DIFFUSER_CORE_STRONG.get());
         tag(ModBlockTags.GARLIC).add(ModBlocks.GARLIC.get());
 
         ColorListsUtil.STANDING_AND_WALL_CANDLE_STICKS.forEach(pair -> {

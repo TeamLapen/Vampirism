@@ -5,7 +5,7 @@
     "O": "#c:obsidians",
     "X": "#minecraft:planks",
     "Y": "#c:gems/diamond",
-    "Z": "vampirism:garlic_diffuser_core_improved"
+    "Z": "vampirism:garlic_diffuser_core_long"
   },
   "pattern": [
     "XYX",
@@ -13,6 +13,6 @@
     "OOO"
   ],
   "result": {
-    "id": "vampirism:garlic_diffuser_improved"
+    "id": "vampirism:garlic_diffuser_long"
   }
 }
