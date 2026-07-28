@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismTags;
+import de.teamlapen.vampirism.api.world.items.IBlessableItem;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModItems;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -12,21 +15,28 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * HolyWaterBottle
  * Exists in different tiers and as splash versions.
  */
-public class HolyWaterBottleItem extends Item implements IItemWithTier {
+public class HolyWaterBottleItem extends BlessableItem implements IItemWithTier {
 
     public static final Component MASSAGE_RESTRICTION_HOLY = Component.translatable("message.vampirism.restriction.holy");
 
     private final Tier tier;
 
     public HolyWaterBottleItem(Tier tier, Properties props) {
-        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HOLY).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")));
+        this(tier, props, null, null);
+    }
+
+    public HolyWaterBottleItem(Tier tier, Properties props, @Nullable Supplier<Item> blessedItem, @Nullable Holder<ISkill<?>> requiredBlessingSkill) {
+        super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HOLY).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")), blessedItem, requiredBlessingSkill);
         this.tier = tier;
     }
 

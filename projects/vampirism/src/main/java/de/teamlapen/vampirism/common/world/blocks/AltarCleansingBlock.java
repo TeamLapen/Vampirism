@@ -54,4 +54,6 @@ public class AltarCleansingBlock extends BaseHorizontalBlock {
         }
         return InteractionResult.PASS;
     }
+
+
 }

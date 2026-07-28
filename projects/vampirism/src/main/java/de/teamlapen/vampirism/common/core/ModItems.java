@@ -174,9 +174,9 @@ public class ModItems {
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_DIAMOND = ITEMS.registerItem("blood_infused_diamond", PureLevelItem::new);
     public static final DeferredItem<PureLevelItem> BLOOD_INFUSED_NETHERITE_INGOT = ITEMS.registerItem("blood_infused_netherite_ingot", PureLevelItem::new);
 
-    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = ITEMS.registerItem("holy_water_bottle_normal",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.NORMAL, props));
-    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_bottle_enhanced",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ULTIMATE = ITEMS.registerItem("holy_water_bottle_ultimate",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ULTIMATE, props));
+    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_bottle_enhanced",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.ENHANCED, props, HOLY_WATER_BOTTLE_ULTIMATE::get, HunterSkills.ENHANCED_BLESSING));
+    public static final DeferredItem<HolyWaterBottleItem> HOLY_WATER_BOTTLE_NORMAL = ITEMS.registerItem("holy_water_bottle_normal",  props -> new HolyWaterBottleItem(IItemWithTier.Tier.NORMAL, props, HOLY_WATER_BOTTLE_ENHANCED::get, null));
     public static final DeferredItem<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_NORMAL = ITEMS.registerItem("holy_water_splash_bottle_normal", props -> new HolyWaterSplashBottleItem(IItemWithTier.Tier.NORMAL, props));
     public static final DeferredItem<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ENHANCED = ITEMS.registerItem("holy_water_splash_bottle_enhanced",  props -> new HolyWaterSplashBottleItem(IItemWithTier.Tier.ENHANCED, props));
     public static final DeferredItem<HolyWaterSplashBottleItem> HOLY_WATER_SPLASH_BOTTLE_ULTIMATE = ITEMS.registerItem("holy_water_splash_bottle_ultimate",  props -> new HolyWaterSplashBottleItem(IItemWithTier.Tier.ULTIMATE, props));
@@ -212,7 +212,7 @@ public class ModItems {
 
     public static final DeferredItem<Item> PURIFIED_GARLIC = ITEMS.registerItem("purified_garlic",  Item::new, props -> props.stacksTo(16));
     public static final DeferredItem<Item> PURE_SALT = ITEMS.registerItem("pure_salt", Item::new);
-    public static final DeferredItem<BlessableItem> PURE_SALT_WATER = ITEMS.registerItem("pure_salt_water",  props -> new BlessableItem(props.stacksTo(1).component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true), HOLY_WATER_BOTTLE_NORMAL, HOLY_WATER_BOTTLE_ENHANCED));
+    public static final DeferredItem<BlessableItem> PURE_SALT_WATER = ITEMS.registerItem("pure_salt_water",  props -> new BlessableItem(props.stacksTo(1).component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true), HOLY_WATER_BOTTLE_NORMAL));
 
     public static final DeferredItem<Item> SOUL_ORB_VAMPIRE = ITEMS.registerItem("soul_orb_vampire", Item::new);
     public static final DeferredItem<Item> MOTHER_CORE = ITEMS.registerItem("mother_core",  Item::new, props -> props.rarity(Rarity.UNCOMMON));
