@@ -863,7 +863,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (crucifixTicks > 0) {
             --crucifixTicks;
             if (this.player.tickCount % 10 == 8 && crucifixTicks > 30) {
-                this.player.addEffect(new MobEffectInstance(ModEffects.CRUCIFIX_SUPPRESSION, 30));
+                this.player.addEffect(new MobEffectInstance(ModEffects.CRUCIFIX_SUPPRESSION, 20));
             }
         }
     }
@@ -1334,7 +1334,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     public void effectCrucifixSuppression() {
-        this.crucifixTicks = Math.max(this.crucifixTicks + 25, 70);
+        this.crucifixTicks = Math.max(this.crucifixTicks + 15, 45);
     }
 
     public static double getNaturalArmorValue(int lvl) {
