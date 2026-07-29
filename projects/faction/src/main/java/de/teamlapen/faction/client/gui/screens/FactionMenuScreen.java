@@ -9,6 +9,7 @@ import de.teamlapen.faction.client.core.FactionAppearanceScreens;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.screens.skills.SkillsScreen;
 import de.teamlapen.faction.client.gui.screens.taskboard.TaskListWidget;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionKeys;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.server.ServerboundDeleteRefinementPacket;

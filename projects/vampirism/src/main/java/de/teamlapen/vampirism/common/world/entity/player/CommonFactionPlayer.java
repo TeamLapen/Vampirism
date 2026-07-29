@@ -4,10 +4,12 @@ import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.LevelingChange;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.lord.ILordTitleProvider;
+import de.teamlapen.faction.api.factions.lord.LordTitles;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionEffects;
 import de.teamlapen.faction.common.factions.FactionBasePlayer;
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
@@ -133,23 +135,21 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
         return factionHandler().getLordLevel();
     }
 
-    public Optional<ILordTitleProvider> lordTitles() {
-        return Optional.ofNullable(getFaction().value().lordTitles());
-    }
-
     @Override
     public IPlayableFaction.TitleGender titleGender() {
         return factionHandler().titleGender();
     }
 
+    @Nullable
     @Override
-    public @Nullable Component getLordTitle() {
-        return lordTitles().map(titles -> titles.getLordTitle(getLordLevel(), factionHandler().titleGender())).orElse(null);
+    public Component getLordTitle() {
+        return getFaction().components().getOrDefault(FactionDataComponents.LORD_TITLES, LordTitles.EMPTY).get(getLordLevel(), factionHandler().titleGender());
     }
 
+    @Nullable
     @Override
-    public @Nullable Component getLordTitleShort() {
-        return lordTitles().map(titles -> titles.getShort(getLordLevel(), factionHandler().titleGender())).orElse(null);
+    public Component getLordTitleShort() {
+        return getFaction().components().getOrDefault(FactionDataComponents.LORD_TITLES, LordTitles.EMPTY).getShort(getLordLevel(), factionHandler().titleGender());
     }
 
     @Override

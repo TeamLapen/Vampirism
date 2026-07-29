@@ -11,6 +11,7 @@ import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.server.commands.arguments.FactionArgument;
 import net.minecraft.commands.CommandBuildContext;
@@ -71,26 +72,23 @@ public class FactionCommand extends BasicCommand {
 
             factionCommand.executes(context -> setLevel(context, holder, 1, Lists.newArrayList(context.getSource().getPlayerOrException())));
 
-            if (faction.getHighestReachableLevel() > 1) {
-                factionCommand.then(Commands.literal("level")
-                        .executes(context -> setLevel(context, holder, 1, Lists.newArrayList(context.getSource().getPlayerOrException())))
-                        .then(Commands.argument("level", IntegerArgumentType.integer(1, faction.getHighestReachableLevel()))
-                                .executes(context -> setLevel(context, holder, IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().getPlayerOrException())))
-                                .then(Commands.argument("players", EntityArgument.players())
-                                        .executes(context -> setLevel(context, holder, IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "players"))))
-                        )
-                );
-            }
-            if (faction.getHighestLordLevel() > 0) {
-                factionCommand.then(Commands.literal("lord")
-                        .executes(context -> setLordLevel(context, holder, 1, Lists.newArrayList(context.getSource().getPlayerOrException())))
-                        .then(Commands.argument("level", IntegerArgumentType.integer(1, faction.getHighestLordLevel()))
-                                .executes(context -> setLordLevel(context, holder, IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().getPlayerOrException())))
-                                .then(Commands.argument("players", EntityArgument.players())
-                                        .executes(context -> setLordLevel(context, holder, IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "players"))))
-                        )
-                );
-            }
+            factionCommand.then(Commands.literal("level")
+                    .executes(context -> setLevel(context, holder, 1, Lists.newArrayList(context.getSource().getPlayerOrException())))
+                    .then(Commands.argument("level", IntegerArgumentType.integer(1))
+                            .executes(context -> setLevel(context, holder, IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().getPlayerOrException())))
+                            .then(Commands.argument("players", EntityArgument.players())
+                                    .executes(context -> setLevel(context, holder, IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "players"))))
+                    )
+            );
+
+            factionCommand.then(Commands.literal("lord")
+                    .executes(context -> setLordLevel(context, holder, 1, Lists.newArrayList(context.getSource().getPlayerOrException())))
+                    .then(Commands.argument("level", IntegerArgumentType.integer(1))
+                            .executes(context -> setLordLevel(context, holder, IntegerArgumentType.getInteger(context, "level"), Lists.newArrayList(context.getSource().getPlayerOrException())))
+                            .then(Commands.argument("players", EntityArgument.players())
+                                    .executes(context -> setLordLevel(context, holder, IntegerArgumentType.getInteger(context, "level"), EntityArgument.getPlayers(context, "players"))))
+                    )
+            );
 
             setCommand.then(factionCommand);
         }

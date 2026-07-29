@@ -46,7 +46,7 @@ public class ModRegistries {
 
     public static final Registry<IFactionFoodBehavior> FOOD_BEHAVIOURS = new RegistryBuilder<>(FactionRegistries.Keys.FOOD_BEHAVIOUR).create();
 
-    public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(FactionRegistries.Keys.FACTION).sync(true).defaultKey(Factions.NEUTRAL.getRawKey()).create();
+    public static final Registry<IFaction<?>> FACTIONS = new RegistryBuilder<>(FactionRegistries.Keys.FACTION).sync(true).defaultKey(Factions.NEUTRAL.getRawKey()).withIntrusiveHolders().create();
     public static final Registry<IMinionEntry<?, ?>> MINIONS = new RegistryBuilder<>(FactionRegistries.Keys.MINION).callback(new MinionEntryCallbacks()).sync(true).create();
 
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()

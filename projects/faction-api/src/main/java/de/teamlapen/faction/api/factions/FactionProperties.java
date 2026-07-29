@@ -1,0 +1,147 @@
+package de.teamlapen.faction.api.factions;
+
+import de.teamlapen.faction.api.FactionDataComponents;
+import de.teamlapen.faction.api.factions.lord.ILordTitleProvider;
+import de.teamlapen.faction.api.factions.lord.LordTitles;
+import de.teamlapen.faction.api.factions.village.TotemPair;
+import de.teamlapen.faction.api.factions.village.VillageBanner;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.api.world.items.RefinementItems;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentInitializers;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.DependantName;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.Util;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import org.jspecify.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class FactionProperties {
+
+    private static final DependantName<IFaction<?>, String> DESCRIPTION_ID = (id) -> Util.makeDescriptionId("faction", id.identifier());
+    private static final DependantName<IFaction<?>, String> DESCRIPTION_ID_SINGULAR = (id) -> Util.makeDescriptionId("faction", id.identifier().withSuffix("/singular"));
+    private static final DependantName<IFaction<?>, String> DESCRIPTION_ID_PLURAL = (id) -> Util.makeDescriptionId("faction", id.identifier().withPrefix("/plural"));
+    private DataComponentInitializers.Initializer<IFaction<?>> componentInitializer = (builder, context, id) -> {};
+    private @Nullable ResourceKey<IFaction<?>> id;
+
+
+    public FactionProperties() {
+
+    }
+
+    public FactionProperties setId(ResourceKey<IFaction<?>> id) {
+        this.id = id;
+        return this;
+    }
+
+    public ResourceKey<IFaction<?>> itemIdOrThrow() {
+        return Objects.requireNonNull(this.id, "Faction id not set");
+    }
+
+    public String effectiveDescriptionId() {
+        return DESCRIPTION_ID.get(this.itemIdOrThrow());
+    }
+
+    public String effectiveDescriptionIdSingular() {
+        return DESCRIPTION_ID_SINGULAR.get(this.itemIdOrThrow());
+    }
+
+    public String effectiveDescriptionIdPlural() {
+        return DESCRIPTION_ID_PLURAL.get(this.itemIdOrThrow());
+    }
+
+    public FactionProperties color(int color) {
+        return component(FactionDataComponents.FACTION_COLOR, color)
+                .chatColor(TextColor.fromRgb(color));
+    }
+
+    public FactionProperties chatColor(TextColor color) {
+        return component(FactionDataComponents.CHAT_COLOR, color);
+    }
+
+    public FactionProperties chatColor(ChatFormatting color) {
+        return component(FactionDataComponents.CHAT_COLOR, TextColor.fromLegacyFormat(color));
+    }
+
+    public FactionProperties maxLevel(int level) {
+        return component(FactionDataComponents.MAX_LEVEL, level);
+    }
+
+    public FactionProperties lord(int level) {
+        return component(FactionDataComponents.MAX_LORD_LEVEL, level);
+    }
+
+    public FactionProperties lord(int level, ILordTitleProvider provider) {
+        return component(FactionDataComponents.MAX_LORD_LEVEL, level)
+                .component(FactionDataComponents.LORD_TITLES, LordTitles.provide(level, provider));
+    }
+
+    public FactionProperties playerAttachment(Holder<AttachmentType<? extends IFactionPlayer<?>>> attachment) {
+        return component(FactionDataComponents.PLAYER_CAPABILITY, (Holder<AttachmentType<?>>)(Object) attachment);
+    }
+
+    public FactionProperties refinements(RefinementItems refinementItems) {
+        return component(FactionDataComponents.REFINEMENTS, refinementItems);
+    }
+
+    public FactionProperties badOmen(Holder<MobEffect> effect) {
+        return component(FactionDataComponents.VILLAGE_BAD_OMEN, effect);
+    }
+
+    public FactionProperties villageGuards(TagKey<EntityType<?>> tag) {
+        return component(FactionDataComponents.VILLAGE_GUARDS, tag);
+    }
+
+    public FactionProperties taskMaster(Holder<EntityType<?>> taskMaster) {
+        return component(FactionDataComponents.TASK_MASTER, taskMaster);
+    }
+
+    public FactionProperties totem(Holder<Block> fragile, Holder<Block> crafted) {
+        return component(FactionDataComponents.VILLAGE_TOTEM, new TotemPair(fragile, crafted));
+    }
+
+    public FactionProperties banner(VillageBanner banner) {
+        return component(FactionDataComponents.VILLAGE_BANNER, banner);
+    }
+
+    public <T> FactionProperties component(Supplier<DataComponentType<T>> type, T value) {
+        return component(type.get(), value);
+    }
+
+    public <T> FactionProperties component(DataComponentType<T> type, T value) {
+        this.componentInitializer = this.componentInitializer.add(type, value);
+        return this;
+    }
+
+    public DataComponentInitializers.Initializer<IFaction<?>> finalizeInitializer(Component singularName, Component pluralName) {
+        return this.componentInitializer
+                .andThen((builder, _, key) -> {
+                    builder.set(FactionDataComponents.FACTION_NAME_SINGULAR, singularName).set(FactionDataComponents.FACTION_NAME_PLURAL, pluralName);
+
+                    Integer lordLevel = builder.get(FactionDataComponents.MAX_LORD_LEVEL);
+                    if (lordLevel != null && lordLevel > 0 && !builder.has(FactionDataComponents.LORD_TITLES)) {
+                        builder.set(FactionDataComponents.LORD_TITLES, LordTitles.provideDefault(key.identifier(), lordLevel));
+                    }
+                });
+    }
+
+    public FactionProperties withValidator(Consumer<DataComponentMap> validator) {
+        this.componentInitializer = this.componentInitializer.andThen((builder, _, _) -> builder.addValidator(validator));
+
+        return this;
+    }
+}

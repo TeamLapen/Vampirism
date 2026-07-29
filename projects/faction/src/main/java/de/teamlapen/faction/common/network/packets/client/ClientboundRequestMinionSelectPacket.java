@@ -6,7 +6,7 @@ import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
-import de.teamlapen.faction.common.util.serialization.ModStreamCodecs;
+import de.teamlapen.faction.api.util.ModStreamCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;

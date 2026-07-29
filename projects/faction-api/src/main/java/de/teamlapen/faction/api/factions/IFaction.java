@@ -75,29 +75,9 @@ public interface IFaction<T extends IFactionEntity> {
 
     String getDescriptionId();
 
-    /**
-     * @return The singular name of the faction
-     */
-    default MutableComponent getNameSingular() {
-        return Component.translatable(getDescriptionIdSingular());
-    }
+    Component getNameSingular();
 
-    String getDescriptionIdSingular();
+    Component getNamePlural();
 
-    /**
-     * @return The plural name of the faction
-     */
-    default MutableComponent getNamePlural() {
-        return Component.translatable(getDescriptionIdPlural());
-    }
-
-    String getDescriptionIdPlural();
-
-    /**
-     * Gets Village Totem related utility class
-     *
-     * @return the village data class
-     */
-    IFactionVillage getVillageData();
 
 }

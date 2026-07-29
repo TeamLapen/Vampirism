@@ -1,71 +1,65 @@
 package de.teamlapen.faction.common.factions;
 
+import de.teamlapen.faction.api.factions.FactionProperties;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.village.IFactionVillage;
-import de.teamlapen.faction.common.util.RegUtil;
+import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.faction.common.core.ModRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentInitializers;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.util.Util;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 /**
  * Represents an entity faction (e.g. Vampires)
  */
 public class Faction<T extends IFactionEntity> implements IFaction<T> {
-    private final int color;
-    private final IFactionVillage villageFactionData;
-    @Nullable
-    private String descriptionId;
-    @Nullable
-    private String descriptionIdSingular;
-    @Nullable
-    private String descriptionIdPlural;
-    private final TextColor chatColor;
+    private final String descriptionId;
+    private final Holder.Reference<IFaction<?>> builtInRegistryHolder;
 
-    Faction(FactionBuilder<T> builder) {
-        this.color = builder.color;
-        this.villageFactionData = Objects.requireNonNullElseGet(builder.villageFactionData, () -> new FactionVillageBuilder().build());
-        this.chatColor = builder.chatColor == null ? TextColor.fromRgb(this.color) : builder.chatColor;
+    private static final int WHITE_COLOR = 0xffffff;
+    private static final TextColor WHITE_TEXT = TextColor.fromRgb(WHITE_COLOR);
+
+
+    public Faction(FactionProperties properties) {
+        this.builtInRegistryHolder = ModRegistries.FACTIONS.createIntrusiveHolder(this);
+        this.descriptionId = properties.effectiveDescriptionId();
+        DataComponentInitializers.Initializer<IFaction<?>> iFactionInitializer = properties.finalizeInitializer(Component.translatable(properties.effectiveDescriptionIdSingular()), Component.translatable(properties.effectiveDescriptionIdPlural()));
+        BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.add(properties.itemIdOrThrow(), iFactionInitializer);
     }
 
     @Override
     public TextColor getChatColor() {
-        return this.chatColor;
+        return this.builtInRegistryHolder.components().getOrDefault(FactionDataComponents.CHAT_COLOR, WHITE_TEXT);
     }
+
+    public DataComponentMap components() {
+        return this.builtInRegistryHolder.components();
+    }
+
 
     @Override
     public int getColor() {
-        return color;
+        return this.builtInRegistryHolder.components().getOrDefault(FactionDataComponents.FACTION_COLOR, WHITE_COLOR);
     }
 
     @Override
     public String getDescriptionId() {
-        if (this.descriptionId == null) {
-            this.descriptionId = Util.makeDescriptionId("faction", RegUtil.id(this));
-        }
         return this.descriptionId;
     }
 
     @Override
-    public String getDescriptionIdSingular() {
-        if (this.descriptionIdSingular == null) {
-            this.descriptionIdSingular = getDescriptionId() + ".singular";
-        }
-        return this.descriptionIdSingular;
+    public Component getNameSingular() {
+        return this.builtInRegistryHolder.components().getOrDefault(FactionDataComponents.FACTION_NAME_SINGULAR, CommonComponents.EMPTY);
     }
 
     @Override
-    public String getDescriptionIdPlural() {
-        if (this.descriptionIdPlural == null) {
-            this.descriptionIdPlural = getDescriptionId() + ".plural";
-        }
-        return this.descriptionIdPlural;
+    public Component getNamePlural() {
+        return this.builtInRegistryHolder.components().getOrDefault(FactionDataComponents.FACTION_NAME_PLURAL, CommonComponents.EMPTY);
     }
 
-    @Override
-    public IFactionVillage getVillageData() {
-        return villageFactionData;
-    }
 }

@@ -10,6 +10,7 @@ import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.factions.tasks.TaskRequirement;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMenus;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.tasks.TaskManager;
@@ -49,7 +50,7 @@ public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu
     public FactionMenu(int id, @NotNull Inventory inventory) {
         super(FactionMenus.FACTION_MENU.get(), id, inventory, ContainerLevelAccess.NULL, createSlotDefinitions(inventory.player));
         this.factionPlayer = FactionPlayerHandler.get(inventory.player).factionPlayer();
-        this.factionColor = factionPlayer.getFaction().value().getChatColor();
+        this.factionColor = factionPlayer.getFaction().components().get(FactionDataComponents.CHAT_COLOR.get());
         this.refinementsAvailable = factionPlayer.getFaction().value().hasRefinements();
         this.addPlayerInventorySlots(inventory, 37, 124);
         this.refinementStacks = this.factionPlayer instanceof IRefinementPlayer<?> refinementPlayer ? refinementPlayer.getRefinementHandler().getRefinementItems() : NonNullList.create();

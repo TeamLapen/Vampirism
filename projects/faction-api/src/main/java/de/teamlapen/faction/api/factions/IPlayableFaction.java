@@ -4,10 +4,14 @@ import com.mojang.serialization.Codec;
 import de.teamlapen.faction.api.factions.lord.ILordTitleProvider;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
@@ -30,13 +34,6 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
      */
     @Range(from = 0, to = Integer.MAX_VALUE)
     int getHighestReachableLevel();
-
-
-    /**
-     * Gets the lord title provider for this faction
-     */
-    @Nullable
-    ILordTitleProvider lordTitles();
 
     /**
      * @return The "<? extends IFactionPlayer>" of this faction for the given player
@@ -65,6 +62,7 @@ public interface IPlayableFaction<T extends IFactionPlayer<T>> extends IFaction<
         FEMALE("female");
 
         public static final Codec<TitleGender> CODEC = StringRepresentable.fromEnum(TitleGender::values);
+        public static final StreamCodec<FriendlyByteBuf, TitleGender> STREAM_CODEC = NeoForgeStreamCodecs.enumCodec(TitleGender.class);
 
         private final String name;
 

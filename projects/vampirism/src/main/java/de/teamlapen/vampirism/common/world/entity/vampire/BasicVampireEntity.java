@@ -4,6 +4,7 @@ import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
 import de.teamlapen.faction.api.world.entities.IEntityLeader;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
@@ -234,7 +235,10 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         if ((reason == EntitySpawnReason.NATURAL || reason == EntitySpawnReason.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
-            this.setItemSlot(EquipmentSlot.HEAD, VampireVillage.createBanner(worldIn.registryAccess()));
+            var banner = getFaction().components().get(FactionDataComponents.VILLAGE_BANNER);
+            if (banner != null) {
+                this.setItemSlot(EquipmentSlot.HEAD, banner.createBanner(worldIn.registryAccess()));
+            }
         }
         getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
 
