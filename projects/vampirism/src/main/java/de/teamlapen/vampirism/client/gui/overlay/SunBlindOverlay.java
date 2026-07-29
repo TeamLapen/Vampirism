@@ -29,6 +29,12 @@ public class SunBlindOverlay extends BaseOverlay {
     private static final int EXPOSURE_WASH_COLOR = 0xFFF6E0;
     private static final int BLOOM_HALO_COLOR = 0xFFF3D0;
     private static final int BLOOM_CORE_COLOR = 0xFFFFFF;
+
+    private static final int CONTRAST_VEIL_COLOR_INVERTED = 0x655F59;
+    private static final int EXPOSURE_WASH_COLOR_INVERTED = 0x00091F;
+    private static final int BLOOM_HALO_COLOR_INVERTED = 0x000C2F;
+    private static final int BLOOM_CORE_COLOR_INVERTED = 0x000000;
+
     private static final int LENS_FLARE_WARM_COLOR = 0xFFE6B0;
     private static final int LENS_FLARE_COOL_COLOR = 0xBFE0FF;
 
@@ -51,29 +57,33 @@ public class SunBlindOverlay extends BaseOverlay {
         int screenWidth = graphics.guiWidth();
         int screenHeight = graphics.guiHeight();
 
-        renderFullScreenDazzle(graphics, screenWidth, screenHeight, blindIntensity);
+        boolean inverted = mc().options.vampirism$invertedSunBlindness().get();
+
+        renderFullScreenDazzle(graphics, screenWidth, screenHeight, blindIntensity, inverted);
 
         Vec3 sunOnScreen = projectSunOntoScreen(screenWidth, screenHeight);
         if (sunOnScreen == null) return;
 
-        renderSunBloom(graphics, sunOnScreen, screenHeight, blindIntensity);
-        renderLensFlare(graphics, sunOnScreen, screenWidth, screenHeight, blindIntensity);
+        renderSunBloom(graphics, sunOnScreen, screenHeight, blindIntensity, inverted);
+        if (!inverted) {
+            renderLensFlare(graphics, sunOnScreen, screenWidth, screenHeight, blindIntensity);
+        }
     }
 
-    private void renderFullScreenDazzle(GuiGraphicsExtractor graphics, int screenWidth, int screenHeight, float blindIntensity) {
+    private void renderFullScreenDazzle(GuiGraphicsExtractor graphics, int screenWidth, int screenHeight, float blindIntensity, boolean inverted) {
         // Gray wash over the whole screen that makes dark areas lighter, so the image looks flat
-        graphics.fill(0, 0, screenWidth, screenHeight, ARGB.color(0.2f * blindIntensity, CONTRAST_VEIL_COLOR));
+        graphics.fill(0, 0, screenWidth, screenHeight, ARGB.color(0.2f * blindIntensity, inverted ? CONTRAST_VEIL_COLOR_INVERTED : CONTRAST_VEIL_COLOR));
         // Warm white that floods the whole screen, so everything looks too bright
-        graphics.fill(0, 0, screenWidth, screenHeight, ARGB.color(0.85f * blindIntensity, EXPOSURE_WASH_COLOR));
+        graphics.fill(0, 0, screenWidth, screenHeight, ARGB.color(0.85f * blindIntensity, inverted ? EXPOSURE_WASH_COLOR_INVERTED : EXPOSURE_WASH_COLOR));
     }
 
-    private void renderSunBloom(GuiGraphicsExtractor graphics, Vec3 sunOnScreen, int screenHeight, float blindIntensity) {
+    private void renderSunBloom(GuiGraphicsExtractor graphics, Vec3 sunOnScreen, int screenHeight, float blindIntensity, boolean inverted) {
         float sunX = (float) sunOnScreen.x;
         float sunY = (float) sunOnScreen.y;
         // Soft warm glow that spreads out around the sun
-        drawGlow(graphics, sunX, sunY, screenHeight, BLOOM_HALO_COLOR, blindIntensity);
+        drawGlow(graphics, sunX, sunY, screenHeight, inverted ? BLOOM_HALO_COLOR_INVERTED : BLOOM_HALO_COLOR, blindIntensity);
         // Small, very bright white spot right on the sun
-        drawGlow(graphics, sunX, sunY, screenHeight * 0.7f, BLOOM_CORE_COLOR, blindIntensity);
+        drawGlow(graphics, sunX, sunY, screenHeight * 0.7f, inverted ? BLOOM_CORE_COLOR_INVERTED : BLOOM_CORE_COLOR, blindIntensity);
     }
 
     private void renderLensFlare(GuiGraphicsExtractor graphics, Vec3 sunOnScreen, int screenWidth, int screenHeight, float blindIntensity) {

@@ -17,6 +17,7 @@
     "ItemStackMixin",
     "JigsawPlacerMixin",
     "LivingEntityMixin",
+    "MobEffectUtilMixin",
     "NearestAttackableTargetGoalMixin",
     "NoiseGeneratorSettingsMixin",
     "PotionBrewingMixin",
@@ -57,10 +58,10 @@
     "accessor.TargetConditionAccessor",
     "accessor.VanillaBlockLootAccessor",
     "accessor.VillagerHostilesSensorAccessor",
-    "accessor.WalkAnimationStateAccessor",
-    "MobEffectUtilMixin"
+    "accessor.WalkAnimationStateAccessor"
   ],
   "client": [
+    "client.AccessibilityOptionsScreenMixin",
     "client.CapeLayerMixin",
     "client.FlameFeatureRendererMixin",
     "client.GuiGraphicsExtractorMixin",
@@ -69,6 +70,7 @@
     "client.LivingEntityRendererAccessor",
     "client.MinecraftMixin",
     "client.MutableSpriteSetMixin",
+    "client.OptionsMixin",
     "client.SplashManagerMixin",
     "client.StatsScreenMixin",
     "client.accessor.FeatureRenderDispatcherAccessor",
