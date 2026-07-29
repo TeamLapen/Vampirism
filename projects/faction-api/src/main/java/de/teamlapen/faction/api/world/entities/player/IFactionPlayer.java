@@ -19,11 +19,7 @@ import java.util.Optional;
  * <p>
  * If you are writing an addon and not a standalone mod, consider extending FactionPlayerBase instead of implementing this
  */
-public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEntity, IPlayer, IAttachmentSync {
-
-    static <T extends IFactionPlayer<T>> Optional<T> get(Player player) {
-        return FactionsApi.factionPlayerHandler(player).getCurrentFactionPlayer();
-    }
+public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEntity, IPlayer, IAttachmentSync, IFactionExtensionGetter {
 
     /**
      * Mostly relevant in the set level command

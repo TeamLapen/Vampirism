@@ -11,7 +11,10 @@ import java.util.Optional;
 public interface IDraculaPlayer extends IPlayer, IWingsEntity {
 
     static Optional<IDraculaPlayer> getDracula(Player player) {
-        return FactionsApi.factionPlayerHandler(player).getCurrentFactionPlayer().map(x -> x instanceof IDraculaPlayer p ? p : null).filter(IDraculaPlayer::isDracula);
+        if (FactionsApi.factionPlayerHandler(player).factionPlayer() instanceof IDraculaPlayer draculaPlayer) {
+            return Optional.of(draculaPlayer).filter(IDraculaPlayer::isDracula);
+        }
+        return Optional.empty();
     }
 
     boolean isDracula();

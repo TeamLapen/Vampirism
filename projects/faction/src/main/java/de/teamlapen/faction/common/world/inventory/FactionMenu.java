@@ -4,7 +4,7 @@ import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.refinements.IRefinementPlayer;
+import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.tasks.ITaskInstance;
 import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.factions.tasks.TaskRequirement;
@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu {
 
     private final IFactionPlayer<?> factionPlayer;
+    @Nullable
+    private final IRefinementHandler refinementHandler;
     private final TextColor factionColor;
     private final NonNullList<ItemStack> refinementStacks;
     public @NotNull Map<UUID, TaskManager.TaskWrapper> taskWrappers = new HashMap<>();
@@ -49,11 +51,13 @@ public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu
 
     public FactionMenu(int id, @NotNull Inventory inventory) {
         super(FactionMenus.FACTION_MENU.get(), id, inventory, ContainerLevelAccess.NULL, createSlotDefinitions(inventory.player));
-        this.factionPlayer = FactionPlayerHandler.get(inventory.player).factionPlayer();
+        var factionPlayerHandler = FactionPlayerHandler.get(inventory.player);
+        this.factionPlayer = factionPlayerHandler.factionPlayer();
         this.factionColor = factionPlayer.getFaction().components().get(FactionDataComponents.CHAT_COLOR.get());
         this.refinementsAvailable = factionPlayer.getFaction().value().hasRefinements();
         this.addPlayerInventorySlots(inventory, 37, 124);
-        this.refinementStacks = this.factionPlayer instanceof IRefinementPlayer<?> refinementPlayer ? refinementPlayer.getRefinementHandler().getRefinementItems() : NonNullList.create();
+        this.refinementHandler = factionPlayerHandler.getRefinementHandler().handler().orElse(null);
+        this.refinementStacks = this.refinementHandler != null ? this.refinementHandler.getRefinementItems() : NonNullList.create();
         this.registry = inventory.player.level().registryAccess().lookupOrThrow(FactionRegistries.Keys.TASK);
     }
 
@@ -93,8 +97,8 @@ public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu
     @Override
     protected void onInputSlotChanged(Container container) {
         super.onInputSlotChanged(container);
-        if (this.factionPlayer instanceof IRefinementPlayer<?> refinementPlayer) {
-            refinementPlayer.getRefinementHandler().updateItems();
+        if (this.refinementHandler != null) {
+            refinementHandler.updateItems();
         }
     }
 

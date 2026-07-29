@@ -162,7 +162,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private final BloodStats bloodStats;
     private final VisionStatus vision;
     private final VampireDisguise disguise;
-    private final RefinementHandler<IVampirePlayer> refinementHandler;
     private final Customization customization;
     private final DraculaData draculaData;
 
@@ -173,7 +172,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.bloodStats = new BloodStats(this);
         this.disguise = new VampireDisguise(this);
         this.vision = new VisionStatus(this);
-        this.refinementHandler = new RefinementHandler<>(this, de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE);
         this.customization = new Customization(this);
         this.draculaData = new DraculaData(this);
     }
@@ -216,11 +214,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     public Customization getCustomization() {
         return this.customization;
-    }
-
-    @Override
-    public IRefinementHandler<IVampirePlayer> getRefinementHandler() {
-        return refinementHandler;
     }
 
     @Override
@@ -594,7 +587,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public void onDeath(DamageSource src) {
         super.onDeath(src);
-        this.refinementHandler.damageRefinements();
         if (this.getActionHandler().isActionActive(VampireActions.BAT) && src.getDirectEntity() instanceof Projectile) {
             if (player instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.SNIPED_IN_BAT);
@@ -671,7 +663,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     protected void onLevelReset() {
         super.onLevelReset();
-        this.refinementHandler.reset();
         this.removeEntityAttributes();
     }
 
@@ -1072,7 +1063,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.registerProperty(VIdentifier.mod("blood_stats")).subProperty(() -> this.bloodStats).register();
         this.registerProperty(VIdentifier.mod("vision")).subProperty(() -> this.vision).register();
         this.registerProperty(VIdentifier.mod("disguise")).subProperty(() -> this.disguise).register();
-        this.registerProperty(VIdentifier.mod("refinement_handler")).subProperty(() ->this.refinementHandler).register();
         this.registerProperty(VIdentifier.mod("customization")).subProperty(() -> this.customization).register();
         this.registerProperty(VIdentifier.mod("dracula")).subProperty(() -> this.draculaData).register();
     }

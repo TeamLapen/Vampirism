@@ -1,5 +1,6 @@
 package de.teamlapen.faction.common.factions;
 
+import de.teamlapen.faction.api.factions.FactionExtensionType;
 import de.teamlapen.faction.api.factions.FactionProperties;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
@@ -13,6 +14,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 /**
  * Represents an entity faction (e.g. Vampires)
@@ -24,12 +28,26 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     private static final int WHITE_COLOR = 0xffffff;
     private static final TextColor WHITE_TEXT = TextColor.fromRgb(WHITE_COLOR);
 
+    private final Map<Class<?>, FactionExtensionType<?>> extensions;
 
     public Faction(FactionProperties properties) {
         this.builtInRegistryHolder = ModRegistries.FACTIONS.createIntrusiveHolder(this);
         this.descriptionId = properties.effectiveDescriptionId();
+        this.extensions = properties.getExtensions();
         DataComponentInitializers.Initializer<IFaction<?>> iFactionInitializer = properties.finalizeInitializer(Component.translatable(properties.effectiveDescriptionIdSingular()), Component.translatable(properties.effectiveDescriptionIdPlural()));
         BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.add(properties.itemIdOrThrow(), iFactionInitializer);
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    @Override
+    public <TInterface> FactionExtensionType<TInterface> extension(Class<TInterface> clazz) {
+        return (FactionExtensionType<TInterface>) extensions.get(clazz);
+    }
+
+    @Override
+    public Map<Class<?>, FactionExtensionType<?>> getExtensions() {
+        return extensions;
     }
 
     @Override

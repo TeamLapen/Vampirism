@@ -4,20 +4,15 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.event.PlayerFactionEvent;
-import de.teamlapen.faction.api.factions.IFaction;
-import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
-import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.*;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
-import de.teamlapen.faction.api.factions.refinements.IRefinementPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.factions.tasks.ITaskManager;
-import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.config.FactionConfig;
@@ -33,6 +28,7 @@ import de.teamlapen.faction.common.util.ModCodecs;
 import de.teamlapen.faction.common.util.ScoreboardUtil;
 import de.teamlapen.faction.common.world.ModDamageSources;
 import de.teamlapen.faction.common.world.entities.IPlayerEventListener;
+import de.teamlapen.faction.common.world.inventory.FactionMenu;
 import de.teamlapen.faction.server.FactionLogger;
 import de.teamlapen.sync.AttachmentSync;
 import net.minecraft.core.Holder;
@@ -41,6 +37,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -51,8 +48,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,7 +62,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     }
 
     public static <T extends IFactionPlayer<T>> Optional<T> getCurrentFactionPlayer(Player player) {
-        return get(player).getCurrentFactionPlayer();
+        return Optional.of(get(player).factionPlayer());
     }
 
     private final Player player;
@@ -119,21 +114,13 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         }
     }
 
-    @Override
-    public <T extends IFactionPlayer<T>> Optional<T> getCurrentFactionPlayer() {
-        return Optional.of(factionPlayer());
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public <T extends ISkillPlayer<T>> Optional<T> getCurrentSkillPlayer() {
-        return this.getCurrentFactionPlayer().filter(s -> s instanceof ISkillPlayer<?>).map(s -> (T) s);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends IRefinementPlayer<T>> Optional<T> getCurrentRefinementPlayer() {
-        return this.getCurrentFactionPlayer().filter(s -> s instanceof IRefinementPlayer<?>).map(s -> (T) s);
+        if (factionPlayer() instanceof ISkillPlayer<?> skillPlayer) {
+            return Optional.of((T)skillPlayer);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -147,25 +134,18 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     }
 
     @Override
-    public <T extends IRefinementPlayer<T>> Optional<IRefinementHandler<T>> getRefinementHandler() {
-        return this.<T>getCurrentRefinementPlayer().map(IRefinementPlayer::getRefinementHandler);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends ITaskPlayer<T>> Optional<T> getTaskPlayer() {
-        return getCurrentFactionPlayer().filter(s -> s instanceof ITaskPlayer<?>).map(s -> (T) s);
+    public <TInterface> Optional<TInterface> getExtension(Class<TInterface> type) {
+        FactionExtensionType<TInterface> extension = currentFaction.value().extension(type);
+        return extension == null ? Optional.empty() : Optional.of(extension.get(player));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T extends ILordPlayer<T>> Optional<T> getLordPlayer() {
-        return getCurrentFactionPlayer().filter(s -> s instanceof ILordPlayer<?>).map(s -> (T) s);
-    }
-
-    @Override
-    public Optional<ITaskManager> getTaskManager() {
-        return getTaskPlayer().map(ITaskPlayer::getTaskManager);
+        if (factionPlayer() instanceof ILordPlayer<?> lordPlayer) {
+            return Optional.of((T)lordPlayer);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -327,10 +307,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
             return false;
         }
 
-        if (changedFaction && factionPlayer() instanceof ITaskPlayer<?> taskPlayer) {
-            taskPlayer.getTaskManager().reset();
-        }
-
         if (changedFaction || newLordLevel < oldLordLevel) {
             resetLordTasks();
         }
@@ -347,6 +323,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
 
         if (changedFaction) {
             oldFaction.value().getPlayerCapability(this.player).leaveFaction();
+            oldFaction.value().getExtensions().values().forEach(extension -> extension.cleanup(this.player));
         }
         var newFactionData = newFaction.value().getPlayerCapability(this.player);
         newFactionData.levelChanged(param);
@@ -419,6 +396,13 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     }
 
     //</editor-fold>
+
+    public void openFactionMenu() {
+        if (!player.isAlive()) return;
+        if (IFaction.isNeutral(getFaction())) return;
+        player.openMenu(new SimpleMenuProvider((i, inventory, player) -> new FactionMenu(i, inventory), Component.empty()));
+        getTaskManager().ifPresent(ITaskManager::initializeFactionMenu);
+    }
 
     public static class AttachmentOptions extends AttachmentSynchronization.PlayerOptions<FactionPlayerHandler> {
 

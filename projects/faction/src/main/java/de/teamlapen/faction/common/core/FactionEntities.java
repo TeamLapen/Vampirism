@@ -35,5 +35,7 @@ public class FactionEntities {
 
     static void registerPlayerEventHandler(PlayerEventHandlerEvent event) {
         event.addAttachmentListener(FactionAttachments.FACTION_PLAYER_HANDLER);
+        event.addAttachmentListener(FactionAttachments.REFINEMENT_HANDLER);
+        event.addServerAttachmentListener(FactionAttachments.TASK_MANAGER);
     }
 }

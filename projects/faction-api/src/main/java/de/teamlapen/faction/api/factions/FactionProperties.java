@@ -1,15 +1,19 @@
 package de.teamlapen.faction.api.factions;
 
+import com.google.common.collect.ImmutableMap;
+import de.teamlapen.faction.api.FactionAttachments;
 import de.teamlapen.faction.api.FactionDataComponents;
 import de.teamlapen.faction.api.factions.lord.ILordTitleProvider;
 import de.teamlapen.faction.api.factions.lord.LordTitles;
+import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.faction.api.factions.tasks.ITaskManager;
 import de.teamlapen.faction.api.factions.village.TotemPair;
 import de.teamlapen.faction.api.factions.village.VillageBanner;
+import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentInitializers;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
@@ -21,11 +25,12 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jspecify.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -38,6 +43,7 @@ public class FactionProperties {
     private DataComponentInitializers.Initializer<IFaction<?>> componentInitializer = (builder, context, id) -> {};
     private @Nullable ResourceKey<IFaction<?>> id;
 
+    private final Map<Class<?>, FactionExtensionType<?>> extensions = new HashMap<>();
 
     public FactionProperties() {
 
@@ -46,6 +52,10 @@ public class FactionProperties {
     public FactionProperties setId(ResourceKey<IFaction<?>> id) {
         this.id = id;
         return this;
+    }
+
+    public Map<Class<?>, FactionExtensionType<?>> getExtensions() {
+        return ImmutableMap.copyOf(extensions);
     }
 
     public ResourceKey<IFaction<?>> itemIdOrThrow() {
@@ -85,6 +95,24 @@ public class FactionProperties {
         return component(FactionDataComponents.MAX_LORD_LEVEL, level);
     }
 
+    public FactionProperties enableTasks() {
+        return extension(ITaskManager.class, SafeCast.cast(FactionAttachments.TASK_MANAGER));
+    }
+
+    public FactionProperties enableRefinements() {
+        return extension(IRefinementHandler.class, SafeCast.cast(FactionAttachments.REFINEMENT_HANDLER));
+    }
+
+    public <TInterface> FactionProperties extension(Class<TInterface> interfaceClass, Holder<AttachmentType<? extends TInterface>> attachment) {
+        this.extensions.put(interfaceClass, new FactionExtensionType.Attachment<>(interfaceClass, attachment));
+        return this;
+    }
+
+    public <TInterface> FactionProperties extension(Class<TInterface> interfaceClass, DataComponentType<TInterface> component, TInterface defaultValue) {
+        this.extensions.put(interfaceClass, new FactionExtensionType.Component<>(interfaceClass, component, defaultValue));
+        return this;
+    }
+
     public FactionProperties lord(int level, ILordTitleProvider provider) {
         return component(FactionDataComponents.MAX_LORD_LEVEL, level)
                 .component(FactionDataComponents.LORD_TITLES, LordTitles.provide(level, provider));
@@ -95,7 +123,8 @@ public class FactionProperties {
     }
 
     public FactionProperties refinements(RefinementItems refinementItems) {
-        return component(FactionDataComponents.REFINEMENTS, refinementItems);
+        return enableRefinements()
+                .component(FactionDataComponents.REFINEMENTS, refinementItems);
     }
 
     public FactionProperties badOmen(Holder<MobEffect> effect) {
@@ -107,7 +136,8 @@ public class FactionProperties {
     }
 
     public FactionProperties taskMaster(Holder<EntityType<?>> taskMaster) {
-        return component(FactionDataComponents.TASK_MASTER, taskMaster);
+        return enableTasks()
+                .component(FactionDataComponents.TASK_MASTER, taskMaster);
     }
 
     public FactionProperties totem(Holder<Block> fragile, Holder<Block> crafted) {

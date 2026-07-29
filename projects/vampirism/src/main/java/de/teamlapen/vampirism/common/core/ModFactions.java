@@ -11,9 +11,7 @@ import de.teamlapen.faction.api.registries.factions.DeferredFaction;
 import de.teamlapen.faction.api.registries.factions.DeferredFactionRegister;
 import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
-import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
-import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.common.factions.PlayableFaction;
 import de.teamlapen.faction.common.factions.minions.MinionData;
@@ -36,12 +34,9 @@ import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
-
-import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class ModFactions {

@@ -11,6 +11,8 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 /**
  * Represents an entity faction (e.g. Vampires)
  */
@@ -53,6 +55,18 @@ public interface IFaction<T extends IFactionEntity> {
     static <T extends IFaction<?>> boolean contains(HolderSet<T> first, TagKey<IFaction<?>> second) {
         return FactionRegistries.FACTION.get().get(second).map(set -> contains(first, (HolderSet<T>) set)).orElse(false);
     }
+
+    /**
+     * @return the extension registered for the given interface, or {@code null} if none was registered for this faction
+     * @see FactionProperties#extension(Class, Holder)
+     */
+    @Nullable
+    <TInterface> FactionExtensionType<TInterface> extension(Class<TInterface> clazz);
+
+    /**
+     * @return all extensions registered for this faction, keyed by their interface class
+     */
+    Map<Class<?>, FactionExtensionType<?>> getExtensions();
 
     /**
      * If not set returns white

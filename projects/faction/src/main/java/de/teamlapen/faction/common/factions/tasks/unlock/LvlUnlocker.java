@@ -3,8 +3,9 @@ package de.teamlapen.faction.common.factions.tasks.unlock;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
+import de.teamlapen.faction.api.factions.tasks.ITaskManager;
 import de.teamlapen.faction.api.factions.tasks.TaskUnlocker;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.FactionTasks;
 import net.minecraft.network.chat.Component;
 
@@ -36,7 +37,7 @@ public record LvlUnlocker(int reqLevel, int maxLevel) implements TaskUnlocker {
     }
 
     @Override
-    public <T extends ITaskPlayer<T>> boolean isUnlocked(T playerEntity) {
+    public boolean isUnlocked(ITaskManager taskManager, IFactionPlayer<?> playerEntity) {
         return playerEntity.getLevel() >= reqLevel && (maxLevel <= 0 || playerEntity.getLevel() <= maxLevel);
     }
 

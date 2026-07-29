@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.FactionsMod;
+import de.teamlapen.faction.api.factions.refinements.IRefinementAccess;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.vampirism.VampirismMod;
@@ -122,7 +123,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         if (attacker instanceof Player player && !Helper.isVampire(target) && !target.typeHolder().is(ModEntityTags.IGNORE_VAMPIRE_SWORD_FINISHER)) {
             double relTh = 0;
             ISkillHandler<IVampirePlayer> skillHandler = VampirePlayer.get(player).getSkillHandler();
-            IRefinementHandler<IVampirePlayer> refinementHandler = VampirePlayer.get(player).getRefinementHandler();
+            IRefinementAccess refinementHandler = VampirePlayer.get(player).getRefinementHandler();
             if (skillHandler.isSkillEnabled(VampireSkills.SWORD_FINISHER) && !(target instanceof Player) || ModConfig.balance().vsSwordFinisherOnPlayer.get()) {
                 relTh = ModConfig.balance().vsSwordFinisherMaxHealth.get() * (refinementHandler.isRefinementEquipped(ModRefinements.SWORD_FINISHER) ? ModConfig.balance().vrSwordFinisherThresholdMod.get() : 1d);
             }

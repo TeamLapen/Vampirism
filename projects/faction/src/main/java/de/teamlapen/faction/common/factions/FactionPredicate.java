@@ -40,12 +40,7 @@ public record FactionPredicate(@Nullable Holder<? extends IFaction<?>> viewedFac
             case IFactionEntity iFactionEntity -> this.targetFaction.get().contains(SafeCast.cast(iFactionEntity.getFaction()));
             case Player player -> {
                 FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                Holder<? extends IFaction<?>> faction = handler.getFaction();
-                var viewedFaction = handler.getCurrentFactionPlayer().map(IFactionPlayer::getDisguise).map(x -> x.getViewedFaction(this.viewedFaction)).orElse(null);
-                if (viewedFaction != null) {
-                    faction = viewedFaction;
-                }
-                yield this.targetFaction.get().contains(SafeCast.cast(faction));
+                yield this.targetFaction.get().contains(SafeCast.cast(handler.factionPlayer().getDisguise().getViewedFaction(this.viewedFaction)));
             }
             default -> this.targetFaction.get().contains(SafeCast.cast(factionFallback.apply(livingEntity)));
         };

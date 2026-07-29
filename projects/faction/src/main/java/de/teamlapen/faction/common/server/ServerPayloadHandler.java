@@ -101,7 +101,7 @@ public class ServerPayloadHandler {
                     handler.getCurrentSkillPlayer().ifPresent(OblivionPotionItem::applyEffect);
                 }
                 case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(a -> player.connection.send(a));
-                case FACTION_MENU -> handler.getTaskManager().ifPresent(ITaskManager::openFactionMenu);
+                case FACTION_MENU -> handler.openFactionMenu();
             }
         });
     }
@@ -109,7 +109,7 @@ public class ServerPayloadHandler {
     public static void handleTaskActionPacket(ServerboundTaskActionPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             FactionPlayerHandler.get(context.player()).getTaskManager().ifPresent(m -> {
-                ((TaskManager<?>) m).handleTaskActionMessage(msg);
+                ((TaskManager) m).handleTaskActionMessage(msg);
                 CustomPacketPayload updatePacket = m.getUpdatePacket(msg.entityId());
                 if (updatePacket != null) {
                     context.reply(updatePacket);

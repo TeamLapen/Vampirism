@@ -3,17 +3,16 @@ package de.teamlapen.faction.api.factions;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
-import de.teamlapen.faction.api.factions.refinements.IRefinementPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.tasks.ITaskManager;
-import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
 import de.teamlapen.faction.api.registries.factions.DeferredFaction;
 import de.teamlapen.faction.api.world.entities.extensions.IPlayer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
+import net.neoforged.neoforge.common.MutableDataComponentHolder;
 
 import java.util.Optional;
 
@@ -21,7 +20,41 @@ import java.util.Optional;
  * Handles factions and levels for the player
  * Attached to all players as capability
  */
-public interface IFactionPlayerHandler extends IPlayer {
+public interface IFactionPlayerHandler extends IPlayer, MutableDataComponentHolder, IFactionExtensionGetter {
+
+    //<editor-fold desc="Faction access">
+
+    /**
+     * @return The currently active faction player
+     */
+    <T extends IFactionPlayer<T>> T factionPlayer();
+
+    /**
+     * @return The currently active faction
+     */
+    Holder<? extends IPlayableFaction<?>> getFaction();
+
+    <T extends IFaction<?>> boolean isInFaction(Holder<T> f);
+
+    <T extends IFaction<?>> boolean isInFaction(TagKey<T> f);
+
+    default boolean setFaction(LevelingChange.Builder param) {
+        return setFaction(param.build());
+    }
+
+    boolean setFaction(LevelingChange param);
+
+    /**
+     * Checks currents factions {@link IFactionPlayer#canLeaveFaction()}
+     */
+    boolean canLeaveFaction();
+
+    /**
+     * Leave the current faction (if in any) by setting current faction to null and level to 0.
+     *
+     * @param die Whether to attack the player with deadly damage
+     */
+    void leaveFaction(boolean die);
 
     /**
      * Players can only join a faction if they are in no other.
@@ -31,19 +64,14 @@ public interface IFactionPlayerHandler extends IPlayer {
     boolean canJoin(Holder<? extends IPlayableFaction<?>> faction);
 
     /**
-     * Checks currents factions {@link IFactionPlayer#canLeaveFaction()}
+     * Join the given faction and set the faction level to 1.
+     * Only successful if {@link IFactionPlayerHandler#canJoin(net.minecraft.core.Holder)} is true
      */
-    boolean canLeaveFaction();
+    void joinFaction(Holder<? extends IPlayableFaction<?>> faction);
 
-    /**
-     * @return The currently active faction. Can be null
-     */
-    Holder<? extends IPlayableFaction<?>> getFaction();
+    //</editor-fold>
 
-    /**
-     * @return The currently active faction player
-     */
-    <T extends IFactionPlayer<T>> T factionPlayer();
+    //<editor-fold desc="Capability Access">
 
     /**
      * returns the faction player for the given faction.
@@ -54,33 +82,25 @@ public interface IFactionPlayerHandler extends IPlayer {
      */
     <T extends IFactionPlayer<T>> Optional<T> factionPlayer(Holder<IFaction<T>> faction);
 
+    /**
+     * {@link de.teamlapen.faction.api.registries.factions.DeferredFaction} helper for {@link #factionPlayer(net.minecraft.core.Holder)}
+     */
     default <T extends IFactionPlayer<T>> Optional<T> factionPlayer(DeferredFaction<T, ? extends IFaction<T>> faction) {
         //noinspection unchecked
         return factionPlayer((Holder<IFaction<T>>) faction);
     }
 
-    /**
-     * Returns the currently active faction player.
-     *
-     * @apiNote Prefer to call interface-specific methods for granular access.
-     */
-    <T extends IFactionPlayer<T>> Optional<T> getCurrentFactionPlayer();
+    <T extends ILordPlayer<T>> Optional<T> getLordPlayer();
 
     <T extends ISkillPlayer<T>> Optional<T> getCurrentSkillPlayer();
-
-    <T extends IRefinementPlayer<T>> Optional<T> getCurrentRefinementPlayer();
 
     <T extends ISkillPlayer<T>> Optional<ISkillHandler<T>> getSkillHandler();
 
     <T extends ISkillPlayer<T>> Optional<IActionHandler<T>> getActionHandler();
 
-    <T extends IRefinementPlayer<T>> Optional<IRefinementHandler<T>> getRefinementHandler();
+    //</editor-fold>
 
-    <T extends ITaskPlayer<T>> Optional<T> getTaskPlayer();
-
-    <T extends ILordPlayer<T>> Optional<T> getLordPlayer();
-
-    Optional<ITaskManager> getTaskManager();
+    //<editor-fold desc="Faction Properties">
 
     /**
      * If no faction is active this returns 0.
@@ -109,15 +129,7 @@ public interface IFactionPlayerHandler extends IPlayer {
      */
     float getCurrentLevelRelative();
 
-    <T extends IFaction<?>> boolean isInFaction(Holder<T> f);
-
-    <T extends IFaction<?>> boolean isInFaction(TagKey<T> f);
-
-    /**
-     * Join the given faction and set the faction level to 1.
-     * Only successful if {@link IFactionPlayerHandler#canJoin(net.minecraft.core.Holder)}
-     */
-    void joinFaction(Holder<? extends IPlayableFaction<?>> faction);
+    //</editor-fold>
 
     /**
      * Should be called if the entity attacked.
@@ -127,18 +139,6 @@ public interface IFactionPlayerHandler extends IPlayer {
      */
     boolean onEntityAttacked(DamageSource src, float amt);
 
-    boolean setFaction(LevelingChange param);
-
-    default boolean setFaction(LevelingChange.Builder param) {
-        return setFaction(param.build());
-    }
-
-    /**
-     * Leave the current faction (if in any) by setting current faction to null and level to 0.
-     *
-     * @param die Whether to attack the player with deadly damage
-     */
-    void leaveFaction(boolean die);
 
     /**
      * Checks which skill trees are unlocked.
@@ -147,6 +147,5 @@ public interface IFactionPlayerHandler extends IPlayer {
      * It is called when the player level or lord level changes as well as when the player respawns. But it can be called at any time.
      */
     void checkSkillTreeLocks();
-
 
 }
