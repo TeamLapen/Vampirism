@@ -83,7 +83,7 @@ public class SunBlindOverlay extends BaseOverlay {
         // Soft warm glow that spreads out around the sun
         drawGlow(graphics, sunX, sunY, screenHeight, inverted ? BLOOM_HALO_COLOR_INVERTED : BLOOM_HALO_COLOR, blindIntensity);
         // Small, very bright white spot right on the sun
-        drawGlow(graphics, sunX, sunY, screenHeight * 0.7f, inverted ? BLOOM_CORE_COLOR_INVERTED : BLOOM_CORE_COLOR, blindIntensity);
+        drawGlow(graphics, sunX, sunY, screenHeight * (inverted ? 1.2f : 0.7f), inverted ? BLOOM_CORE_COLOR_INVERTED : BLOOM_CORE_COLOR, blindIntensity);
     }
 
     private void renderLensFlare(GuiGraphicsExtractor graphics, Vec3 sunOnScreen, int screenWidth, int screenHeight, float blindIntensity) {
