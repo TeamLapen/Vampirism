@@ -2,9 +2,12 @@ package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
 import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
 import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -13,8 +16,10 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.attachment.AttachmentSyncHandler;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.attachment.IAttachmentSerializer;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -46,6 +51,7 @@ public class InfectionStatus {
         
         if (this.totalTicks <= 0) {
             this.totalTicks = effect.getDuration();
+            this.entity.syncData(ModAttachments.INFECTION_STATUS);
         }
 
         int duration = effect.getDuration();
@@ -68,6 +74,17 @@ public class InfectionStatus {
             this.entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 120));
         }
         return true;
+    }
+
+    public int getStage() {
+        MobEffectInstance effect = this.entity.getEffect(ModEffects.SANGUINARE);
+        if (effect != null && this.totalTicks > 0) {
+            float progress = effect.getDuration() / (float) totalTicks;
+            if (progress <= 0.1) return 3;
+            if (progress <= 0.25) return 2;
+            if (progress <= 0.5) return 1;
+        }
+        return 0;
     }
 
     private static void addEffectUntilTheEnd(LivingEntity entity, Holder<MobEffect> effect) {
@@ -119,6 +136,28 @@ public class InfectionStatus {
             if (attachment.totalTicks == -1) return false;
             output.putInt("total_ticks", attachment.totalTicks);
             return true;
+        }
+    }
+
+    public static class Sync implements AttachmentSyncHandler<InfectionStatus> {
+
+        @Override
+        public boolean sendToPlayer(IAttachmentHolder holder, ServerPlayer to) {
+            return holder == to;
+        }
+
+        @Override
+        public void write(RegistryFriendlyByteBuf buf, InfectionStatus attachment, boolean initialSync) {
+            buf.writeInt(attachment.totalTicks);
+        }
+
+        @Override
+        public @Nullable InfectionStatus read(IAttachmentHolder holder, RegistryFriendlyByteBuf buf, @Nullable InfectionStatus previousValue) {
+            int totalTicks = buf.readInt();
+            if (holder instanceof LivingEntity entity) {
+                return new InfectionStatus(entity, totalTicks);
+            }
+            return previousValue;
         }
     }
 }
