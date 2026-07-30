@@ -10,8 +10,8 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.LevelingChange;
-import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.server.commands.arguments.FactionArgument;
 import net.minecraft.commands.CommandBuildContext;
@@ -108,7 +108,7 @@ public class FactionCommand extends BasicCommand {
         for (ServerPlayer player : players) {
             FactionPlayerHandler factionPlayerHandler = FactionPlayerHandler.get(player);
             int finalLevel = Math.min(level, faction.value().getHighestReachableLevel());
-            if (factionPlayerHandler.setFaction(LevelingChange.builder().faction(faction).level(finalLevel).build())) {
+            if (factionPlayerHandler.setFaction(FactionUpdate.builder().faction(faction).level(finalLevel).build())) {
                 context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.level.successful", player.getName(), faction.value().getNameSingular(), finalLevel), true);
             } else {
                 context.getSource().sendFailure(players.size() > 1 ? Component.translatable("command.factionapi.failed_to_execute.players", player.getDisplayName()) : Component.translatable("command.factionapi.failed_to_execute"));
@@ -120,17 +120,17 @@ public class FactionCommand extends BasicCommand {
     private static int setLordLevel(CommandContext<CommandSourceStack> context, Holder<? extends IPlayableFaction<?>> faction, final int level, Collection<ServerPlayer> players) throws CommandSyntaxException {
         for (ServerPlayer player : players) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            if (!handler.setFaction(LevelingChange.maxLevel(faction).lordLevel(level).build())) {
+            if (!handler.setFaction(FactionUpdate.maxLevel(faction).lordLevel(level).build())) {
                 throw LORD_FAILED.create();
             }
-            context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.lord.successful", player.getName(), faction.value().getNameSingular(), handler.getLordLevel()), true);
+            context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.lord.successful", player.getName(), faction.value().getNameSingular(), handler.getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0)), true);
         }
         return 0;
     }
 
     private static int getFactionInfo(CommandContext<CommandSourceStack> context, ServerPlayer player) {
         FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-        context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.get_level.successful", player.getDisplayName(), handler.getFaction().value().getNameSingular(), handler.getCurrentLevel(), handler.getLordLevel()), true);
+        context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.get_level.successful", player.getDisplayName(), handler.getFaction().value().getNameSingular(), handler.getCurrentLevel(), handler.getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0)), true);
         return 0;
     }
 }

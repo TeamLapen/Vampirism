@@ -1,16 +1,9 @@
 package de.teamlapen.vampirism.common.world.entity.player;
 
-import de.teamlapen.faction.api.factions.FactionExtensionType;
-import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
-import de.teamlapen.faction.api.factions.lord.LordTitles;
-import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.api.factions.tasks.ITaskManager;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
-import de.teamlapen.faction.common.config.FactionConfig;
-import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.factions.FactionBasePlayer;
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
@@ -19,9 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends FactionBasePlayer<T> implements ISkillPlayer<T> {
 
@@ -81,8 +71,8 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
 
     @MustBeInvokedByOverriders
     @Override
-    public void levelChanged(LevelingChange changes) {
-        onLevelChanged(changes.getNewLevel());
+    public void levelChanged(FactionUpdate changes) {
+        onLevelChanged(changes.getLevel());
     }
 
     protected void onLevelChanged(int newLevel) {
@@ -105,12 +95,14 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
 
     @Override
     public Component getShortLevelDisplay() {
-        return Component.literal(String.valueOf(getLevel()));
+        return getPlayerLord().filter(l -> l.getLordLevel() > 0).map(ILordPlayer::getLordTitleShort)
+                .orElseGet(() -> Component.literal(String.valueOf(getLevel())));
     }
 
     @Override
     public Component getLevelDisplay() {
-        return Component.literal(String.valueOf(getLevel()));
+        return getPlayerLord().filter(l -> l.getLordLevel() > 0).map(ILordPlayer::getLordTitle)
+                .orElseGet(() -> Component.literal(String.valueOf(getLevel())));
     }
 
     @MustBeInvokedByOverriders

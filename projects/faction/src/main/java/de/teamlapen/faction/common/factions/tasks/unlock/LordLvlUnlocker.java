@@ -3,6 +3,7 @@ package de.teamlapen.faction.common.factions.tasks.unlock;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.tasks.ITaskManager;
 import de.teamlapen.faction.api.factions.tasks.TaskUnlocker;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
@@ -30,7 +31,7 @@ public record LordLvlUnlocker(int reqLordLevel, boolean exact) implements TaskUn
 
     @Override
     public boolean isUnlocked(ITaskManager taskManager, IFactionPlayer<?> factionPlayer) {
-        int aL = FactionPlayerHandler.get(factionPlayer.asEntity()).getLordLevel();
+        int aL = FactionPlayerHandler.get(factionPlayer.asEntity()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0);
         return exact ? aL == reqLordLevel : aL >= reqLordLevel;
     }
 

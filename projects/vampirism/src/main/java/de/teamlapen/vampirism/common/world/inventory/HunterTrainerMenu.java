@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.inventory;
 
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
@@ -94,7 +94,7 @@ public class HunterTrainerMenu extends ItemCombinerMenu {
     public void onLevelupClicked() {
         if (canLevelup()) {
             this.lvlRequirement.ifPresent(req -> {
-                FactionPlayerHandler.get(this.player).setFaction(LevelingChange.builder().faction(ModFactions.HUNTER).level(req.targetLevel()));
+                FactionPlayerHandler.get(this.player).setFaction(FactionUpdate.builder().faction(ModFactions.HUNTER).level(req.targetLevel()));
                 InventoryHelper.removeItems(getInputSlots(), req.ironQuantity(), req.goldQuantity(), 1);
                 this.player.addEffect(new MobEffectInstance(ModEffects.SATURATION, 400, 2));
                 this.lvlRequirement = HunterLeveling.getTrainerRequirement(req.targetLevel() + 1);

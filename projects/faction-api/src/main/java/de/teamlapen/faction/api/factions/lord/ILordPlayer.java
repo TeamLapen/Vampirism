@@ -31,4 +31,15 @@ public interface ILordPlayer extends IPlayableFactionEntity, IPlayer, IFactionEx
     Component getLordTitleShort();
 
     void updateMinionAttributes(boolean increasedStats);
+
+    /**
+     * Reset all lord tasks that should be available again for the player's current lord level.
+     */
+    void resetLordTasks();
+
+    boolean setTitleGender(IPlayableFaction.TitleGender gender);
+
+    default boolean setTitleGender(boolean female) {
+        return setTitleGender(female ? IPlayableFaction.TitleGender.FEMALE : IPlayableFaction.TitleGender.MALE);
+    }
 }

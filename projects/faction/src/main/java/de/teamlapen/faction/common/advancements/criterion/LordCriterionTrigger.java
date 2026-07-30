@@ -20,29 +20,29 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
-public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCriterionTrigger.TriggerInstance> {
+public class LordCriterionTrigger extends SimpleCriterionTrigger<LordCriterionTrigger.TriggerInstance> {
 
     public void trigger(@NotNull ServerPlayer player, Holder<? extends IPlayableFaction<?>> faction, int level) {
         this.trigger(player, instance -> instance.matches(faction, level));
     }
 
     @Override
-    public @NotNull Codec<TriggerInstance> codec() {
-        return TriggerInstance.CODEC;
+    public @NotNull Codec<LordCriterionTrigger.TriggerInstance> codec() {
+        return LordCriterionTrigger.TriggerInstance.CODEC;
     }
 
     public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @Nullable Holder<? extends IPlayableFaction<?>> faction, int level) implements SimpleCriterionTrigger.SimpleInstance {
 
-        public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> {
+        public static final Codec<LordCriterionTrigger.TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> {
             return inst.group(
-                    EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                    EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(LordCriterionTrigger.TriggerInstance::player),
                     ModCodecs.playableFaction().optionalFieldOf("faction").forGetter(p -> Optional.ofNullable(p.faction())),
-                    ExtraCodecs.POSITIVE_INT.fieldOf("level").forGetter(TriggerInstance::level)
-            ).apply(inst, TriggerInstance::new);
+                    ExtraCodecs.POSITIVE_INT.fieldOf("level").forGetter(LordCriterionTrigger.TriggerInstance::level)
+            ).apply(inst, LordCriterionTrigger.TriggerInstance::new);
         });
 
-        public static Criterion<FactionCriterionTrigger.TriggerInstance> level(@Nullable Holder<? extends IPlayableFaction<?>> faction, int level) {
-            return FactionAdvancements.TRIGGER_FACTION.get().createCriterion(new TriggerInstance(Optional.empty(), faction, level));
+        public static Criterion<LordCriterionTrigger.TriggerInstance> lord(@Nullable Holder<? extends IPlayableFaction<?>> faction, int level) {
+            return FactionAdvancements.TRIGGER_LORD.get().createCriterion(new LordCriterionTrigger.TriggerInstance(Optional.empty(), faction, level));
         }
 
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

@@ -3,6 +3,7 @@ package de.teamlapen.faction.api.factions;
 import com.google.common.collect.ImmutableMap;
 import de.teamlapen.faction.api.FactionAttachments;
 import de.teamlapen.faction.api.FactionDataComponents;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.lord.ILordTitleProvider;
 import de.teamlapen.faction.api.factions.lord.LordTitles;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
@@ -92,7 +93,7 @@ public class FactionProperties {
     }
 
     public FactionProperties lord(int level) {
-        return component(FactionDataComponents.MAX_LORD_LEVEL, level);
+        return enableLord().component(FactionDataComponents.MAX_LORD_LEVEL, level);
     }
 
     public FactionProperties enableTasks() {
@@ -101,6 +102,10 @@ public class FactionProperties {
 
     public FactionProperties enableRefinements() {
         return extension(IRefinementHandler.class, SafeCast.cast(FactionAttachments.REFINEMENT_HANDLER));
+    }
+
+    public FactionProperties enableLord() {
+        return extension(ILordPlayer.class, SafeCast.cast(FactionAttachments.LORD_PLAYER));
     }
 
     public <TInterface> FactionProperties extension(Class<TInterface> interfaceClass, Holder<AttachmentType<? extends TInterface>> attachment) {
@@ -114,7 +119,7 @@ public class FactionProperties {
     }
 
     public FactionProperties lord(int level, ILordTitleProvider provider) {
-        return component(FactionDataComponents.MAX_LORD_LEVEL, level)
+        return enableLord().component(FactionDataComponents.MAX_LORD_LEVEL, level)
                 .component(FactionDataComponents.LORD_TITLES, LordTitles.provide(level, provider));
     }
 

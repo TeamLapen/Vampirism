@@ -1,5 +1,6 @@
 package de.teamlapen.faction.api.factions;
 
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import net.minecraft.world.entity.player.Player;
 
 /**
@@ -13,7 +14,7 @@ public interface IFactionExtension {
      */
     void onLeaveFaction(Player player);
 
-    default void setLevel(LevelingChange change) {
+    default void setLevel(FactionUpdate change) {
 
     }
 }

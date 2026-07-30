@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.blockentity.NetworkedBlockEntity;
@@ -128,7 +128,7 @@ public class AltarInspirationBlockEntity extends NetworkedBlockEntity {
                 this.fluidInventory.extract(FluidResource.of(ModFluids.BLOOD), blood, transaction);
             }
             this.ritualPlayer.addEffect(new MobEffectInstance(MobEffects.REGENERATION, this.targetLevel * 10 * 20));
-            FactionPlayerHandler.get(this.ritualPlayer).setFaction(LevelingChange.builder().faction(ModFactions.VAMPIRE).level(this.targetLevel));
+            FactionPlayerHandler.get(this.ritualPlayer).setFaction(FactionUpdate.builder().faction(ModFactions.VAMPIRE).level(this.targetLevel));
             VampirePlayer.get(this.ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());
             if (this.ritualPlayer instanceof ServerPlayer serverPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger(serverPlayer, VampireActionCriterionTrigger.Action.PERFORM_RITUAL_INSPIRATION);

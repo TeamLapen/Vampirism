@@ -124,7 +124,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
         vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.appearance.title_gender"), minecraft.font).selected(titleGender).onValueChange((button, selected) -> {
             titleGender = selected;
-            FactionPlayerHandler.get(entity).setTitleGender(titleGender);
+            FactionPlayerHandler.get(entity).getPlayerLord().ifPresent(lord -> lord.setTitleGender(titleGender));
         }).build());
 
         vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.appearance.glowing_eye"), minecraft.font).selected(glowingEyes).onValueChange((button, selected) -> {

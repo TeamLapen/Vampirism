@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.api.world.entity.player.vampire;
 
 import de.teamlapen.faction.api.FactionsApi;
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.ChangeKey;
+import de.teamlapen.faction.api.factions.level.change.Change;
 import de.teamlapen.faction.api.world.entities.extensions.IPlayer;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.world.entity.player.Player;
@@ -23,11 +24,11 @@ public interface IDraculaPlayer extends IPlayer, IWingsEntity {
 
     int getDraculaSkillPoints();
 
-    record DraculaChange() implements LevelingChange.Change<DraculaChange> {
-        public static final LevelingChange.Key<DraculaChange> KEY = new LevelingChange.Key<>(VIdentifier.mod("dracula"));
+    record DraculaChange() implements Change<DraculaChange> {
+        public static final ChangeKey<DraculaChange> KEY = new ChangeKey<>(VIdentifier.mod("dracula"));
 
         @Override
-        public LevelingChange.Key<DraculaChange> key() {
+        public ChangeKey<DraculaChange> key() {
             return KEY;
         }
     }

@@ -2,12 +2,9 @@ package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
 import de.teamlapen.faction.api.factions.IDisguise;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.LevelingChange;
-import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
-import de.teamlapen.faction.common.factions.minions.MinionWorldData;
-import de.teamlapen.faction.common.factions.skills.RefinementHandler;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.sounds.ISoundReference;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
@@ -38,9 +35,7 @@ import de.teamlapen.vampirism.common.util.*;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
-import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
-import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
@@ -60,13 +55,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -675,9 +668,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     @Override
-    public void levelChanged(LevelingChange changes) {
+    public void levelChanged(FactionUpdate changes) {
         this.applyEntityAttributes();
-        var newLevel = changes.getNewLevel();
+        var newLevel = changes.getLevel();
 
         int maxBlood = 20;
 
@@ -924,7 +917,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         } else if (id.equals(GlowingEye)) {
             setGlowingEyes((Boolean) data);
         } else if (id.equals(TitleGenderType)) {
-            FactionPlayerHandler.get(this.player).setTitleGender(((IPlayableFaction.TitleGender) data));
+            FactionPlayerHandler.get(this.player).getPlayerLord().ifPresent(lord -> lord.setTitleGender((IPlayableFaction.TitleGender) data));
         } else if (id.equals(WingsTexture)) {
             this.customization.setWingsTexture((Texture) data);
         }

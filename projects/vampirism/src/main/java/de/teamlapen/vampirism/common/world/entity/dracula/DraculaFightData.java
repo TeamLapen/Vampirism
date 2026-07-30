@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.dracula;
 
 import com.mojang.serialization.Codec;
-import de.teamlapen.faction.api.factions.LevelingChange;
-import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
@@ -10,7 +9,6 @@ import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModDimensions;
 import de.teamlapen.vampirism.common.core.ModEntities;
-import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundVelmorraCollapsePacket;
 import de.teamlapen.vampirism.common.world.blocks.ChaliceBlock;
 import de.teamlapen.vampirism.common.world.dimensions.DimensionManager;
@@ -48,8 +46,6 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Gatherer;
-import java.util.stream.Gatherers;
 
 public class DraculaFightData implements ValueIOSerializable {
 
@@ -284,7 +280,7 @@ public class DraculaFightData implements ValueIOSerializable {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.getPlayerLord().ifPresent(vampire -> { //TODO dracula
                 if (vampire.getLordLevel() == vampire.getMaxLordLevel()) {
-                    handler.setFaction(LevelingChange.builder().add(new IDraculaPlayer.DraculaChange()).build());
+                    handler.setFaction(FactionUpdate.builder().add(new IDraculaPlayer.DraculaChange()).build());
                 }
             });
         }

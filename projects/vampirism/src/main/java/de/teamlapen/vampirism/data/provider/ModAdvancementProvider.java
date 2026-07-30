@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.faction.common.advancements.criterion.ActionCriterionTrigger;
-import de.teamlapen.faction.common.advancements.criterion.FactionCriterionTrigger;
-import de.teamlapen.faction.common.advancements.criterion.FactionSubPredicate;
-import de.teamlapen.faction.common.advancements.criterion.MinionTaskCriterionTrigger;
+import de.teamlapen.faction.common.advancements.criterion.*;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.util.MapUtil;
 import de.teamlapen.vampirism.REFERENCE;
@@ -217,7 +214,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
             AdvancementHolder max_lord = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_MINION_UPGRADE_SPECIAL.get(), Component.translatable("advancement.vampirism.max_lord_vampire"), Component.translatable("advancement.vampirism.max_lord_vampire.desc"), null, AdvancementType.CHALLENGE, true, true, false)
                     .parent(max_level)
-                    .addCriterion("level", FactionCriterionTrigger.TriggerInstance.lord(ModFactions.VAMPIRE, 5))
+                    .addCriterion("level", LordCriterionTrigger.TriggerInstance.lord(ModFactions.VAMPIRE, 5))
                     .save(consumer, REFERENCE.MODID + ":vampire/max_lord");
             AdvancementHolder kill_mother = Advancement.Builder.advancement()
                     .display(ModItems.MOTHER_CORE.get(), Component.translatable("advancement.vampirism.vampire_kill_mother"), Component.translatable("advancement.vampirism.vampire_kill_mother.desc"), null, AdvancementType.CHALLENGE, true, true, true)
@@ -321,7 +318,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
             AdvancementHolder max_lord = Advancement.Builder.advancement()
                     .display(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get(), Component.translatable("advancement.vampirism.max_lord_hunter"), Component.translatable("advancement.vampirism.max_lord_hunter.desc"), null, AdvancementType.CHALLENGE, true, true, false)
                     .parent(max_level)
-                    .addCriterion("level", FactionCriterionTrigger.TriggerInstance.lord(ModFactions.HUNTER, 5))
+                    .addCriterion("level", LordCriterionTrigger.TriggerInstance.lord(ModFactions.HUNTER, 5))
                     .addCriterion("main", FactionCriterionTrigger.TriggerInstance.level(ModFactions.HUNTER, 1))
                     .save(consumer, REFERENCE.MODID + ":hunter/max_lord");
             AdvancementHolder cure_vampire = Advancement.Builder.advancement()
@@ -347,7 +344,7 @@ public class ModAdvancementProvider extends AdvancementProvider {
             AdvancementHolder become_lord = Advancement.Builder.advancement()
                     .display(ModItems.VAMPIRE_CLOTHING_CROWN.get(), Component.translatable("advancement.vampirism.become_lord"), Component.translatable("advancement.vampirism.become_lord.desc"), null, AdvancementType.TASK, true, true, true)
                     .parent(root)
-                    .addCriterion("level", FactionCriterionTrigger.TriggerInstance.lord(null, 1))
+                    .addCriterion("level", LordCriterionTrigger.TriggerInstance.lord(null, 1))
                     .save(consumer, REFERENCE.MODID + ":minion/become_lord");
             AdvancementHolder collect_blood = Advancement.Builder.advancement()
                     .display(new DisplayInfo(ItemDataUtils.createFilledBloodBottle(), Component.translatable("advancement.vampirism.collect_blood"), Component.translatable("advancement.vampirism.collect_blood.desc"), Optional.empty(), AdvancementType.TASK, true, true, false))

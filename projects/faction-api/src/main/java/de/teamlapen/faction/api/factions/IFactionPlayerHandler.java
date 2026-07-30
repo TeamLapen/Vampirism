@@ -1,11 +1,9 @@
 package de.teamlapen.faction.api.factions;
 
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
-import de.teamlapen.faction.api.factions.lord.ILordPlayer;
-import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.api.factions.tasks.ITaskManager;
 import de.teamlapen.faction.api.registries.factions.DeferredFaction;
 import de.teamlapen.faction.api.world.entities.extensions.IPlayer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
@@ -38,11 +36,11 @@ public interface IFactionPlayerHandler extends IPlayer, MutableDataComponentHold
 
     <T extends IFaction<?>> boolean isInFaction(TagKey<T> f);
 
-    default boolean setFaction(LevelingChange.Builder param) {
+    default boolean setFaction(FactionUpdate.Builder param) {
         return setFaction(param.build());
     }
 
-    boolean setFaction(LevelingChange param);
+    boolean setFaction(FactionUpdate param);
 
     /**
      * Checks currents factions {@link IFactionPlayer#canLeaveFaction()}

@@ -9,6 +9,7 @@ import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.actions.ILastingAction;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
@@ -91,7 +92,7 @@ public class FactionEventFactory {
         NeoForge.EVENT_BUS.post(event);
     }
 
-    public static void fireLevelChangedEvent(@NotNull IFactionPlayerHandler player, de.teamlapen.faction.api.factions.LevelingChange change) {
+    public static void fireLevelChangedEvent(@NotNull IFactionPlayerHandler player, FactionUpdate change) {
         PlayerFactionEvent.LevelChanged event = new PlayerFactionEvent.LevelChanged(player, change);
         NeoForge.EVENT_BUS.post(event);
     }

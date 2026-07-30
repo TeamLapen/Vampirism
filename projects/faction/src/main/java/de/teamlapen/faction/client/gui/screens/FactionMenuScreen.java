@@ -172,7 +172,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
             EditSelectMinionTaskScreen.show();
         }, Component.empty()));
         button3.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.faction_menu.edit_tasks")));
-        button3.visible = FactionPlayerHandler.get(factionPlayer.asEntity()).getLordLevel() > 0;
+        button3.visible = FactionPlayerHandler.get(factionPlayer.asEntity()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) > 0;
 
         var definition = FactionAppearanceScreens.getProvider(factionPlayer.getFaction().value());
 

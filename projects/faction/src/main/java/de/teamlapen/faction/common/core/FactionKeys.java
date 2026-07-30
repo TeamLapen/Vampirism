@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.actions.IAction;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.client.IMinecraftAccessor;
@@ -137,7 +138,7 @@ public class FactionKeys implements IMinecraftAccessor {
 
     private void openMinionTaskMenu() {
         if (Minecraft.getInstance().player.isSpectator()) return;
-        if (FactionPlayerHandler.get(player()).getLordLevel() > 0) {
+        if (FactionPlayerHandler.get(player()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) > 0) {
             SelectMinionTaskRadialScreen.show();
         }
     }

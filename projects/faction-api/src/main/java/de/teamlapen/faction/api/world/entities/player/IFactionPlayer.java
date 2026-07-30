@@ -1,15 +1,12 @@
 package de.teamlapen.faction.api.world.entities.player;
 
-import de.teamlapen.faction.api.FactionsApi;
 import de.teamlapen.faction.api.factions.*;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.api.world.entities.extensions.IPlayer;
 import de.teamlapen.sync.api.IAttachmentSync;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 /**
  * Basic interface for all of Vampirism's player types (VampirePlayer, HunterPlayer, ...)
@@ -72,7 +69,7 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
      * the {@link IFactionPlayerHandler} notifies the current or new faction player about level changes.
      * @apiNote the changes passed here must have a level, lord level, and faction passed
      */
-    void levelChanged(LevelingChange changes);
+    void levelChanged(FactionUpdate changes);
 
     @Nullable
     Component getShortLevelDisplay();
