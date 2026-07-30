@@ -11,7 +11,10 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -36,13 +39,13 @@ public class InfectionStatus {
     }
 
     public boolean checkStatus() {
-        if (this.totalTicks == -1) {
-            return false;
-        }
-
         MobEffectInstance effect = this.entity.getEffect(ModEffects.SANGUINARE);
         if (effect == null) {
             return false;
+        }
+        
+        if (this.totalTicks <= 0) {
+            this.totalTicks = effect.getDuration();
         }
 
         int duration = effect.getDuration();
@@ -98,6 +101,24 @@ public class InfectionStatus {
                 return new InfectionStatus(entity, -1);
             }
             throw new IllegalArgumentException("Cannot create infection status attachment for holder " + holder.getClass() + ". Expected LivingEntity");
+        }
+    }
+
+    public static class Serializer implements IAttachmentSerializer<InfectionStatus> {
+
+        @Override
+        public InfectionStatus read(IAttachmentHolder holder, ValueInput input) {
+            if (holder instanceof LivingEntity entity) {
+                return new InfectionStatus(entity, input.getIntOr("total_ticks", -1));
+            }
+            throw new IllegalArgumentException("Cannot create infection status attachment for holder " + holder.getClass() + ". Expected LivingEntity");
+        }
+
+        @Override
+        public boolean write(InfectionStatus attachment, ValueOutput output) {
+            if (attachment.totalTicks == -1) return false;
+            output.putInt("total_ticks", attachment.totalTicks);
+            return true;
         }
     }
 }
