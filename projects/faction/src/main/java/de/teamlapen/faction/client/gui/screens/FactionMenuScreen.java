@@ -1,6 +1,7 @@
 package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.FactionsMod;
+import de.teamlapen.faction.api.factions.FactionExtensionType;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
@@ -146,7 +147,13 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
     @Override
     protected void init() {
         super.init();
-        this.level = Objects.requireNonNullElseGet(factionPlayer.getLevelDisplay(), Component::empty).copy().withStyle(style -> style.withColor(factionPlayer.getFaction().value().getChatColor()));
+        Component levelDisplay = factionPlayer.getLevelDisplay();
+        if (levelDisplay != null) {
+            this.level = levelDisplay.copy().withStyle(style -> style.withColor(factionPlayer.getFaction().value().getChatColor()));
+        }
+        else {
+            this.level = Component.empty();
+        }
 
         this.taskList = this.addRenderableWidget(new TaskListWidget(
                 this.menu, this.factionPlayer,

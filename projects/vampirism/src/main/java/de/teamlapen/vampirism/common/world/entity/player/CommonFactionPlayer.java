@@ -102,7 +102,7 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     @Override
     public Component getLevelDisplay() {
         return getPlayerLord().filter(l -> l.getLordLevel() > 0).map(ILordPlayer::getLordTitle)
-                .orElseGet(() -> Component.literal(String.valueOf(getLevel())));
+                .orElseGet(() -> Component.translatable("gui.factionapi.level").append(" " + getLevel()));
     }
 
     @MustBeInvokedByOverriders
