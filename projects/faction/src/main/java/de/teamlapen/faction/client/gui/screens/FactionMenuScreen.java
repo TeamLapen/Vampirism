@@ -125,9 +125,6 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
         this.renderAccessorySlots(graphics, mouseX, mouseY, partialTicks);
 
         this.extractTooltip(graphics, mouseX, mouseY);
-        if (this.menu.areRefinementsAvailable()) {
-            this.renderHoveredRefinementTooltip(graphics, mouseX, mouseY);
-        }
     }
 
     protected void renderAccessorySlots(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
@@ -235,22 +232,4 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
         InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, this.leftPos + 7, this.topPos + 8, this.leftPos + 56, this.topPos + 78, 30, 0.0625f, mouseX, mouseY, this.minecraft.player);
     }
 
-    protected void renderHoveredRefinementTooltip(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        if (this.hoveredSlot != null) {
-            int index = this.hoveredSlot.index;
-            NonNullList<ItemStack> list = this.menu.getRefinementStacks();
-            if (index < list.size() && index >= 0) {
-                if (this.getMenu().getCarried().isEmpty() && !list.get(index).isEmpty()) {
-                    if (!this.refinementRemoveButtons.get(this.hoveredSlot.getSlotIndex()).isHoveredOrFocused()) {
-                        graphics.setTooltipForNextFrame(this.font, list.get(index), mouseX, mouseY);
-
-                    }
-                } else {
-                    if (!list.get(index).isEmpty() && this.menu.getSlot(index).mayPlace(this.getMenu().getCarried())) {
-                        graphics.setTooltipForNextFrame(this.font, Component.translatable("gui.factionapi.faction_menu.destroy_item").withStyle(ChatFormatting.RED), mouseX, mouseY);
-                    }
-                }
-            }
-        }
-    }
 }
