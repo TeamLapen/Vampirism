@@ -3,7 +3,6 @@
   "criteria": {
     "level": {
       "conditions": {
-        "type": "level",
         "faction": "vampirism:vampire",
         "level": 14
       },

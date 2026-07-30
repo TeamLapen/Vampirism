@@ -13,7 +13,6 @@
     },
     "main": {
       "conditions": {
-        "type": "level",
         "faction": "vampirism:vampire",
         "level": 1
       },
