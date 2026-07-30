@@ -45,7 +45,7 @@ public record PlayerFactionPredicate(Optional<HolderSet<IFaction<?>>> factions, 
         }
 
         //noinspection RedundantIfStatement
-        if (this.lordLevelRange.isPresent() && !this.lordLevelRange.get().contains(player.getLordLevel())) {
+        if (this.lordLevelRange.isPresent() && player.getPlayerLord().filter(x -> lordLevelRange.get().contains(x.getLordLevel())).isEmpty()) {
             return false;
         }
 

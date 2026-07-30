@@ -72,7 +72,7 @@ public class ModFactions {
             new MinionEntryBuilder<>(VAMPIRE, new IMinionEntry.IMinionCreator<IVampirePlayer, VampireMinionEntity.VampireMinionData>() {
                 @Override
                 public VampireMinionEntity.VampireMinionData create(IVampirePlayer player, ICustomizationHolder customizationHolder) {
-                    return new VampireMinionEntity.VampireMinionData(player, customizationHolder);
+                    return new VampireMinionEntity.VampireMinionData(player.getPlayerLord().orElseThrow(), customizationHolder);
                 }
 
                 @Override
@@ -89,7 +89,7 @@ public class ModFactions {
             new MinionEntryBuilder<>(HUNTER, new IMinionEntry.IMinionCreator<IHunterPlayer, HunterMinionEntity.HunterMinionData>() {
                 @Override
                 public HunterMinionEntity.HunterMinionData create(IHunterPlayer player, ICustomizationHolder customizationHolder) {
-                    return new HunterMinionEntity.HunterMinionData(player, customizationHolder);
+                    return new HunterMinionEntity.HunterMinionData(player.getPlayerLord().orElseThrow(), customizationHolder);
                 }
 
                 @Override

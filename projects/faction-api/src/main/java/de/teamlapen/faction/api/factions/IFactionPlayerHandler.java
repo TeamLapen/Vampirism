@@ -90,8 +90,6 @@ public interface IFactionPlayerHandler extends IPlayer, MutableDataComponentHold
         return factionPlayer((Holder<IFaction<T>>) faction);
     }
 
-    <T extends ILordPlayer<T>> Optional<T> getLordPlayer();
-
     <T extends ISkillPlayer<T>> Optional<T> getCurrentSkillPlayer();
 
     <T extends ISkillPlayer<T>> Optional<ISkillHandler<T>> getSkillHandler();
@@ -109,10 +107,6 @@ public interface IFactionPlayerHandler extends IPlayer, MutableDataComponentHold
      * @return the level of the currently active faction
      */
     int getCurrentLevel();
-
-    int getLordLevel();
-
-    IPlayableFaction.TitleGender titleGender();
 
     /**
      * Makes some things easier.

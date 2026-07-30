@@ -34,7 +34,7 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
      * @return Empty if no minions are available
      */
     public static @NotNull Optional<ClientboundRequestMinionSelectPacket> createRequestForPlayer(@NotNull ServerPlayer player, Action action) {
-        return FactionPlayerHandler.get(player).getLordPlayer().map(lord -> {
+        return FactionPlayerHandler.get(player).getPlayerLord().map(lord -> {
             PlayerMinionController controller = MinionWorldData.getData(player.level()).getOrCreateController(lord);
             Collection<Integer> ids = controller.getCallableMinions();
             if (!ids.isEmpty()) {

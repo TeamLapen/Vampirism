@@ -14,7 +14,7 @@ public class NothingTask extends SimpleMinionTask implements INoGlobalCommandTas
     }
 
     @Override
-    public boolean isAvailable(@Nullable ILordPlayer<?> player) {
+    public boolean isAvailable(@Nullable ILordPlayer player) {
         return false;
     }
 

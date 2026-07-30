@@ -17,7 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
  * Interface for the player vampire data.
  * Attached to all players as capability
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, ILordPlayer<IVampirePlayer>, IVampireVisionUser, IDraculaPlayer {
+public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, IVampireVisionUser, IDraculaPlayer {
 
     /**
      * Increases exhaustion level by supplied amount
@@ -74,11 +74,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @return Whether death event should be canceled
      */
     boolean onDeadlyHit(DamageSource source);
-
-    /**
-     * updates attributes of all minions
-     */
-    void updateMinionAttributes(boolean increasedStats);
 
     enum BITE_TYPE implements StringRepresentable {
         SUCK_BLOOD_CREATURE("suck_blood_creature"),

@@ -1,5 +1,6 @@
 package de.teamlapen.faction.common.factions.minions;
 
+import de.teamlapen.faction.api.factions.IFactionExtensionGetter;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
@@ -293,7 +294,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
 
     @Override
     @NotNull
-    public Optional<ILordPlayer<?>> getLordOpt() {
+    public Optional<ILordPlayer> getLordOpt() {
         return getLord();
     }
 
@@ -498,8 +499,8 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
         builder.define(LORD_ID, Optional.empty());
     }
 
-    protected Optional<ILordPlayer<?>> getLord() {
-        return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).map(FactionPlayerHandler::get).<ILordPlayer<?>>flatMap(x -> x.getLordPlayer());
+    protected Optional<ILordPlayer> getLord() {
+        return this.getLordID().map(this.level()::getPlayerByUUID).filter(Player::isAlive).map(FactionPlayerHandler::get).flatMap(IFactionExtensionGetter::getPlayerLord);
     }
 
     public @NotNull Optional<UUID> getLordID() {

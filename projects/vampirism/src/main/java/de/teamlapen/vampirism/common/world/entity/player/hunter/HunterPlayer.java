@@ -167,19 +167,6 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
 
     }
 
-    @Override
-    public void updateMinionAttributes(boolean increasedStats) {
-        MinionWorldData.getData(this.player.level()).ifPresent(a -> {
-            a.getOrCreateController(this).forEach((data, minion) -> {
-                ((HunterMinionEntity.HunterMinionData) data).setIncreasedStats(increasedStats);
-                minion.ifPresent(x -> {
-                    x.updateAttributes();
-                    x.sync();
-                });
-            });
-        });
-    }
-
     public static class AttachmentOptions extends AttachmentSynchronization.PlayerOptions<HunterPlayer> {
         @Override
         protected HunterPlayer create(Player player) {

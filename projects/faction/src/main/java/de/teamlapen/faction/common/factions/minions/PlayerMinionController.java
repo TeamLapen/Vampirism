@@ -478,8 +478,8 @@ public class PlayerMinionController implements ValueIOSerializable {
         }
     }
 
-    private @NotNull Optional<? extends ILordPlayer<?>> getLord() {
-        return getLordPlayer().map(FactionPlayerHandler::get).filter(x -> x.getLordLevel() > 0).flatMap(FactionPlayerHandler::getLordPlayer);
+    private @NotNull Optional<? extends ILordPlayer> getLord() {
+        return getLordPlayer().map(FactionPlayerHandler::get).filter(x -> x.getLordLevel() > 0).flatMap(FactionPlayerHandler::getPlayerLord);
     }
 
     private @NotNull Optional<Player> getLordPlayer() {

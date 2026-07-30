@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
 import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
 import de.teamlapen.gui.components.DropdownWidget;
@@ -62,7 +63,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.fangType = customization.fangType();
         this.eyeType = customization.eyeType();
         this.glowingEyes = customization.glowingEyes();
-        this.titleGender = vampire.titleGender() == IPlayableFaction.TitleGender.FEMALE;
+        this.titleGender = vampire.getPlayerLord().map(ILordPlayer::titleGender).orElse(IPlayableFaction.TitleGender.UNKNOWN) == IPlayableFaction.TitleGender.FEMALE;
         this.wingsTexture = customization.wingsTexture();
         if (vampire.isDracula()) {
             this.availableWingsTextures = VampirismMod.services().wingsManager().getAvailableWings(vampire.asEntity()).sorted().toList();

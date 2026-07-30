@@ -282,7 +282,7 @@ public class DraculaFightData implements ValueIOSerializable {
             ModAdvancements.TRIGGER_DRACULA_WIN.get().trigger(player);
             player.giveExperiencePoints(500);
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            handler.factionPlayer(ModFactions.VAMPIRE).ifPresent(vampire -> {
+            handler.getPlayerLord().ifPresent(vampire -> { //TODO dracula
                 if (vampire.getLordLevel() == vampire.getMaxLordLevel()) {
                     handler.setFaction(LevelingChange.builder().add(new IDraculaPlayer.DraculaChange()).build());
                 }

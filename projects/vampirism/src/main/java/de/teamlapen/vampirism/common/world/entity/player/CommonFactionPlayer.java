@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPlayer<T> & ILordPlayer<T>> extends FactionBasePlayer<T> implements ISkillPlayer<T>, ILordPlayer<T> {
+public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends FactionBasePlayer<T> implements ISkillPlayer<T> {
 
     /**
      * {@code @NotNull} on server, otherwise {@code null}
@@ -103,45 +103,13 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
         this.getSkillHandler().reset();
     }
 
-    public int getMaxMinions() {
-        return getLordLevel() * FactionConfig.server().minionPerLordLevel.get();
-    }
-
-    @Override
-    public int getLordLevel() {
-        return factionHandler().getLordLevel();
-    }
-
-    @Override
-    public IPlayableFaction.TitleGender titleGender() {
-        return factionHandler().titleGender();
-    }
-
-    @Nullable
-    @Override
-    public Component getLordTitle() {
-        return getFaction().components().getOrDefault(FactionDataComponents.LORD_TITLES, LordTitles.EMPTY).get(getLordLevel(), factionHandler().titleGender());
-    }
-
-    @Nullable
-    @Override
-    public Component getLordTitleShort() {
-        return getFaction().components().getOrDefault(FactionDataComponents.LORD_TITLES, LordTitles.EMPTY).getShort(getLordLevel(), factionHandler().titleGender());
-    }
-
     @Override
     public Component getShortLevelDisplay() {
-        if (getLordLevel() > 0 && getLordTitleShort() instanceof Component shortLord) {
-            return shortLord;
-        }
         return Component.literal(String.valueOf(getLevel()));
     }
 
     @Override
     public Component getLevelDisplay() {
-        if (getLordLevel() > 0 && getLordTitle() instanceof Component longLord) {
-            return longLord;
-        }
         return Component.literal(String.valueOf(getLevel()));
     }
 

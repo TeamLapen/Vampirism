@@ -50,7 +50,7 @@ public class ServerPayloadHandler {
 
     public static void handleSelectMinionTaskPacket(ServerboundSelectMinionTaskPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-            FactionPlayerHandler.get(context.player()).getLordPlayer().ifPresent(player -> {
+            FactionPlayerHandler.get(context.player()).getPlayerLord().ifPresent(player -> {
                 PlayerMinionController controller = MinionWorldData.getData(context.player().level()).get().getOrCreateController(player);
                 if (RECALL.equals(msg.taskID())) {
                     if (msg.minionID() < 0) {
@@ -150,7 +150,7 @@ public class ServerPayloadHandler {
 
     public static void handleToggleMinionTaskLock(ServerboundToggleMinionTaskLock msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-            FactionPlayerHandler.get(context.player()).getLordPlayer().flatMap(x -> MinionWorldData.getData(context.player().level()).map(y -> y.getOrCreateController(x))).ifPresent(controller -> {
+            FactionPlayerHandler.get(context.player()).getPlayerLord().flatMap(x -> MinionWorldData.getData(context.player().level()).map(y -> y.getOrCreateController(x))).ifPresent(controller -> {
                 controller.contactMinionData(msg.minionID(), data -> data.setTaskLocked(!data.isTaskLocked()));
                 controller.contactMinion(msg.minionID(), MinionEntity::onTaskChanged);
             });

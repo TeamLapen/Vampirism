@@ -14,7 +14,7 @@ import java.util.Optional;
 public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
 
 
-    private @Nullable ILordPlayer<?> lord;
+    private @Nullable ILordPlayer lord;
 
 
     public FollowLordGoal(@NotNull MinionEntity<?> entity, double followSpeedIn) {
@@ -31,7 +31,7 @@ public class FollowLordGoal extends MoveToPositionGoal<MinionEntity<?>> {
         if (this.entity.getCurrentTask().filter(task -> task.getTask() == FactionMinionTasks.FOLLOW_LORD.get() || task.getTask() == FactionMinionTasks.PROTECT_LORD.get()).isEmpty()) {
             return false;
         }
-        Optional<ILordPlayer<?>> lord = this.entity.getLordOpt();
+        Optional<ILordPlayer> lord = this.entity.getLordOpt();
         if (lord.isEmpty()) {
             return false;
         }

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.vampire;
 
+import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
@@ -150,7 +151,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
     public void convertToMinion(Player player) {
-        FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(getFaction())).ifPresentOrElse(lord -> {
+        FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).filter(x -> IFaction.is(x.getFaction(), getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
                     VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(lord, this);
@@ -397,7 +398,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (this.isAlive() && !player.isShiftKeyDown()) {
             if (!level().isClientSide()) {
-                return FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(ModFactions.VAMPIRE)).<InteractionResult>map(lord -> {
+                return FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).filter(x -> IFaction.is(x.getFaction(), ModFactions.VAMPIRE)).<InteractionResult>map(lord -> {
                     ItemStack heldItem = player.getItemInHand(hand);
                     //noinspection Convert2MethodRef
                     boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(c -> c.hasFreeMinionSlot()).orElse(false);

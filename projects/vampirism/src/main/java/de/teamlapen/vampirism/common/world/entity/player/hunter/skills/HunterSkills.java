@@ -79,7 +79,7 @@ public class HunterSkills {
 
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LORD_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.SimpleHunterSkill(3, true).setToggleActions(hunter -> hunter.updateMinionAttributes(true), hunter -> hunter.updateMinionAttributes(false)));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.SimpleHunterSkill(3, true).setToggleActions(hunter -> hunter.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(true)), hunter -> hunter.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(false))));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_TECH_CROSSBOWS = SKILLS.register("minion_tech_crossbows", () -> new VampirismSkill.SimpleHunterSkill(1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.SimpleHunterSkill(2, true));
 

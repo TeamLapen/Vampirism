@@ -692,11 +692,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         this.bloodStats.setMaxBlood(maxBlood);
 
-        if (changes.get(DraculaChange.KEY) != null) {
-            this.makeDracula();
-        } else if (changes.getNewLevel() < getMaxLevel() || changes.getNewLordLevel() < getMaxLordLevel()){
-            this.draculaData.removeDracula();
-        }
+//        if (changes.get(DraculaChange.KEY) != null) { TODO dracula
+//            this.makeDracula();
+//        } else if (changes.getNewLevel() < getMaxLevel() || changes.getNewLordLevel() < getMaxLordLevel()){
+//            this.draculaData.removeDracula();
+//        }
 
         super.levelChanged(changes);
     }
@@ -1308,19 +1308,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (!(e.distanceTo(player) <= player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE).getValue() + 1) || e.getHealth() == 0f) {
             endFeeding(true);
         }
-    }
-
-    @Override
-    public void updateMinionAttributes(boolean enabled) {
-        MinionWorldData.getData(this.player.level()).ifPresent(a ->
-            a.getOrCreateController(this).forEach((data, minion) -> {
-                ((HunterMinionEntity.HunterMinionData) data).setIncreasedStats(enabled);
-                minion.ifPresent(x -> {
-                    x.updateAttributes();
-                    x.sync();
-                });
-            })
-        );
     }
 
     public void effectCrucifixSuppression() {

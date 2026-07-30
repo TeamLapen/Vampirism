@@ -1,5 +1,6 @@
 package de.teamlapen.faction.api.factions;
 
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.refinements.IRefinementAccess;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.tasks.ITaskManager;
@@ -14,6 +15,10 @@ public interface IFactionExtensionGetter {
 
     default Optional<ITaskManager> getTaskManager() {
         return getExtension(ITaskManager.class);
+    }
+
+    default Optional<ILordPlayer> getPlayerLord() {
+        return getExtension(ILordPlayer.class);
     }
 
     /**

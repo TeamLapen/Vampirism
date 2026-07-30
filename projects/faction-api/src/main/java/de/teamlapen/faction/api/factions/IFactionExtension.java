@@ -12,4 +12,8 @@ public interface IFactionExtension {
      * Called when the owning player leaves the faction that provided this extension.
      */
     void onLeaveFaction(Player player);
+
+    default void setLevel(LevelingChange change) {
+
+    }
 }

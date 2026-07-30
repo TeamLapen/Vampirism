@@ -47,7 +47,7 @@ public class ModPlayerEventHandler {
             Holder<? extends IFaction<?>> f = handler.factionPlayer().getDisguise().getViewedFaction(Optional.ofNullable(FactionsMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
             if (!IFaction.is(f, de.teamlapen.faction.api.tags.FactionTags.IS_NEUTRAL)) {
                 MutableComponent displayName;
-                displayName = handler.getLordPlayer().filter(h -> h.getLordLevel() > 0).filter(x -> FactionConfig.server().factionLordPrefixInChat.get()).map(ILordPlayer::getLordTitle)
+                displayName = handler.getPlayerLord().filter(h -> h.getLordLevel() > 0).filter(x -> FactionConfig.server().factionLordPrefixInChat.get()).map(ILordPlayer::getLordTitle)
                         .map(x -> Component.literal("[").append(x).append("] ").append(event.getDisplayname()))
                         .orElseGet(() -> event.getDisplayname().copy());
                 event.setDisplayname(displayName.withStyle(style -> style.withColor((f.value().getChatColor()))));

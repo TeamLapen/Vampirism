@@ -68,8 +68,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     private final Player player;
     private Holder<? extends IPlayableFaction<?>> currentFaction = DefaultFactions.NEUTRAL;
     private int currentLevel = 0;
-    private int currentLordLevel = 0;
-    private IPlayableFaction.TitleGender titleGender = IPlayableFaction.TitleGender.UNKNOWN;
 
     public FactionPlayerHandler(Player player) {
         this.player = player;
@@ -139,15 +137,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         return extension == null ? Optional.empty() : Optional.of(extension.get(player));
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends ILordPlayer<T>> Optional<T> getLordPlayer() {
-        if (factionPlayer() instanceof ILordPlayer<?> lordPlayer) {
-            return Optional.of((T)lordPlayer);
-        }
-        return Optional.empty();
-    }
-
     @Override
     public int getCurrentLevel() {
         return currentLevel;
@@ -161,16 +150,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     @Override
     public float getCurrentLevelRelative() {
         return currentLevel / (float) currentFaction.value().getHighestReachableLevel();
-    }
-
-    @Override
-    public int getLordLevel() {
-        return currentLordLevel;
-    }
-
-    @Override
-    public IPlayableFaction.TitleGender titleGender() {
-        return this.titleGender;
     }
 
     @Override
@@ -208,18 +187,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
                 holder.unwrapKey().ifPresent(manager::resetUniqueTask);
             });
         });
-    }
-
-    public boolean setTitleGender(boolean female) {
-        var gender = female ? IPlayableFaction.TitleGender.FEMALE : IPlayableFaction.TitleGender.MALE;
-        return this.setTitleGender(gender);
-    }
-
-    public boolean setTitleGender(IPlayableFaction.TitleGender female) {
-        this.titleGender = female;
-        player.refreshDisplayName();
-        sync();
-        return true;
     }
 
     @Override
@@ -333,13 +300,13 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
 
         ScoreboardUtil.updateScoreboard(this.player, ScoreboardUtil.FACTION_CRITERIA, this.currentFaction.value().hashCode());
 
-        if (changedFaction && oldFaction instanceof ILordPlayer<?> lordPlayer) {
+        if (changedFaction && oldFaction instanceof ILordPlayer lordPlayer) {
             MinionWorldData.getData(this.player.level()).ifPresent(data -> {
                 data.removeController(this.player.getUUID());
             });
         }
 
-        if (newFactionData instanceof ILordPlayer<?> lordPlayer) {
+        if (newFactionData instanceof ILordPlayer lordPlayer) {
             MinionWorldData.getData(this.player.level()).ifPresent(data -> {
                 PlayerMinionController c = data.getController(this.player.getUUID());
                 if (c != null) {
@@ -379,8 +346,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         super.registerProperties();
         registerProperty(FIdentifier.mod("faction")).simple(ModCodecs.playableFaction()).defaultValue(DefaultFactions.NEUTRAL).provider(() -> this.currentFaction).commonLoader(holder -> this.currentFaction = holder, Comparator.comparing(IHolderExtension::getKey)).register();
         registerProperty(FIdentifier.mod("level")).simple(0, () -> this.currentLevel, l -> this.currentLevel = l);
-        registerProperty(FIdentifier.mod("lord_level")).simple(0, () -> this.currentLordLevel, l -> this.currentLordLevel = l);
-        registerProperty(FIdentifier.mod("title_gender")).simple(IPlayableFaction.TitleGender.CODEC).defaultValue(IPlayableFaction.TitleGender.UNKNOWN).provider(() -> this.titleGender).commonLoader(l -> this.titleGender = l, Enum::compareTo).register();
     }
 
     @Override
