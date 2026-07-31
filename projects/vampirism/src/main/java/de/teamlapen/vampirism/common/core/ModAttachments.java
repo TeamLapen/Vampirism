@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.core;
 import de.teamlapen.faction.api.world.entities.extensions.IEntity;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.common.world.entities.EntitySyncHolder;
+import de.teamlapen.sync.AttachmentSync;
 import de.teamlapen.sync.PropertySync;
 import de.teamlapen.sync.api.IAttachmentSync;
 import de.teamlapen.vampirism.REFERENCE;
@@ -18,6 +19,7 @@ import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.common.world.entity.player.vampire.DraculaPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.InfectionStatus;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireBat;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -51,6 +53,7 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<EntitySyncHolder<HunterMinionEntity, HunterMinionEntity.HunterMinionData>>> HUNTER_MINION_DATA = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.HUNTER_MINION_DATA.getPath(), () -> syncHolder(new EntitySyncHolder.Factory<>(HunterMinionEntity.class)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<GlobalPos>> VELMORRA_PORTAL = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VELMORRA_PORTAL.getPath(), () -> AttachmentType.builder(new VelmorraDimension.VelmorraPortalPos()).serialize(GlobalPos.MAP_CODEC).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Identifier>> MARKER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.MARKER.getPath(), () -> AttachmentType.builder(() -> Identifier.withDefaultNamespace("none")).serialize(Identifier.CODEC.fieldOf("key")).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<DraculaPlayer>> DRACULA_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.DRACULA_PLAYER.getPath(), () -> syncAttachment(new DraculaPlayer.AttachmentOptions()).copyOnDeath().build());
 
     //Blocks Attachments
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<NearestVillage>> NEAREST_VILLAGE = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.NEAREST_VILLAGE.getPath(), () -> AttachmentType.builder(new NearestVillage.Factory()).build());

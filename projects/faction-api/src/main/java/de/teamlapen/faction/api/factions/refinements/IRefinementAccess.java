@@ -8,7 +8,7 @@ public interface IRefinementAccess {
 
     boolean isRefinementEquipped(Holder<IRefinement> refinement);
 
-    Optional<IRefinementHandler> handler();
+    Optional<IRefinementHandler> asHandler();
 
     IRefinementAccess EMPTY = new IRefinementAccess() {
         @Override
@@ -17,7 +17,7 @@ public interface IRefinementAccess {
         }
 
         @Override
-        public Optional<IRefinementHandler> handler() {
+        public Optional<IRefinementHandler> asHandler() {
             return Optional.empty();
         }
     };
@@ -30,7 +30,7 @@ public interface IRefinementAccess {
             }
 
             @Override
-            public Optional<IRefinementHandler> handler() {
+            public Optional<IRefinementHandler> asHandler() {
                 return Optional.of(handler);
             }
         };

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.world.entity.player.vampire;
 
 import de.teamlapen.faction.api.FactionsApi;
+import de.teamlapen.faction.api.factions.IFactionExtension;
 import de.teamlapen.faction.api.factions.level.ChangeKey;
 import de.teamlapen.faction.api.factions.level.change.Change;
 import de.teamlapen.faction.api.world.entities.extensions.IPlayer;
@@ -9,13 +10,14 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;
 
-public interface IDraculaPlayer extends IPlayer, IWingsEntity {
+public interface IDraculaPlayer extends IPlayer, IWingsEntity, IFactionExtension {
+
+    static Optional<IDraculaPlayer> get(Player player) {
+        return FactionsApi.factionPlayerHandler(player).getExtension(IDraculaPlayer.class);
+    }
 
     static Optional<IDraculaPlayer> getDracula(Player player) {
-        if (FactionsApi.factionPlayerHandler(player).factionPlayer() instanceof IDraculaPlayer draculaPlayer) {
-            return Optional.of(draculaPlayer).filter(IDraculaPlayer::isDracula);
-        }
-        return Optional.empty();
+        return get(player).filter(IDraculaPlayer::isDracula);
     }
 
     boolean isDracula();

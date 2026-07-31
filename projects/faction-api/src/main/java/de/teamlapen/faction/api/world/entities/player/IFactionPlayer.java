@@ -6,6 +6,7 @@ import de.teamlapen.faction.api.world.entities.extensions.IPlayer;
 import de.teamlapen.sync.api.IAttachmentSync;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -76,4 +77,7 @@ public interface IFactionPlayer<T extends IFactionPlayer<T>> extends IFactionEnt
 
     @Nullable
     Component getLevelDisplay();
+
+    @Nullable
+    Component getChatDisplay();
 }

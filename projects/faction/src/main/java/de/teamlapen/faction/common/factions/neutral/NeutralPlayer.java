@@ -51,6 +51,12 @@ public class NeutralPlayer extends FactionBasePlayer<INeutralPlayer> implements 
         return null;
     }
 
+    @Nullable
+    @Override
+    public Component getChatDisplay() {
+        return null;
+    }
+
     public static class AttachmentOptions extends AttachmentSynchronization.PlayerOptions<NeutralPlayer> {
         @Override
         protected NeutralPlayer create(Player player) {

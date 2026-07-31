@@ -11,6 +11,7 @@ import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -65,7 +66,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.glowingEyes = customization.glowingEyes();
         this.titleGender = vampire.getPlayerLord().map(ILordPlayer::titleGender).orElse(IPlayableFaction.TitleGender.UNKNOWN) == IPlayableFaction.TitleGender.FEMALE;
         this.wingsTexture = customization.wingsTexture();
-        if (vampire.isDracula()) {
+        if (IDraculaPlayer.getDracula(minecraft.player).isPresent()) {
             this.availableWingsTextures = VampirismMod.services().wingsManager().getAvailableWings(vampire.asEntity()).sorted().toList();
         }
         super.init();

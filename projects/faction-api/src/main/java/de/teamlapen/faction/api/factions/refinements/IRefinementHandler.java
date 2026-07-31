@@ -41,7 +41,7 @@ public interface IRefinementHandler extends IRefinementAccess {
     void reset();
 
     @Override
-    default Optional<IRefinementHandler> handler() {
+    default Optional<IRefinementHandler> asHandler() {
         return Optional.of(this);
     }
 }

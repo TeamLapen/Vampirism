@@ -40,7 +40,6 @@ import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.Customization;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.DraculaData;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VampireDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VisionStatus;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampirePlayerSkillProperties;
@@ -99,7 +98,7 @@ import java.util.Optional;
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer, IAppearanceHolder, VampireDraculaPlayer {
+public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer, IAppearanceHolder {
     public static final Identifier NATURAL_ARMOR_UUID = VIdentifier.mod("natural_armor");
     private static final Identifier LEVEL_DAMAGE_UUID = VIdentifier.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger();
@@ -156,7 +155,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private final VisionStatus vision;
     private final VampireDisguise disguise;
     private final Customization customization;
-    private final DraculaData draculaData;
 
     //</editor-fold>
 
@@ -166,12 +164,11 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.disguise = new VampireDisguise(this);
         this.vision = new VisionStatus(this);
         this.customization = new Customization(this);
-        this.draculaData = new DraculaData(this);
     }
 
     @Override
     public Component getShortLevelDisplay() {
-        if (this.draculaData.isDracula()) {
+        if (IDraculaPlayer.getDracula(this.player).isPresent()) {
             return Component.translatable("dracula_title.vampirism.short");
         }
         return super.getShortLevelDisplay();
@@ -179,15 +176,19 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public Component getLevelDisplay() {
-        if (this.draculaData.isDracula()) {
+        if (IDraculaPlayer.getDracula(this.player).isPresent()) {
             return Component.translatable("dracula_title.vampirism");
         }
         return super.getLevelDisplay();
     }
 
+    @Nullable
     @Override
-    public DraculaData draculaData() {
-        return this.draculaData;
+    public Component getChatDisplay() {
+        if (IDraculaPlayer.getDracula(this.player).isPresent()) {
+            return Component.translatable("dracula_title.vampirism");
+        }
+        return super.getChatDisplay();
     }
 
     @Override
@@ -685,12 +686,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         this.bloodStats.setMaxBlood(maxBlood);
 
-//        if (changes.get(DraculaChange.KEY) != null) { TODO dracula
-//            this.makeDracula();
-//        } else if (changes.getNewLevel() < getMaxLevel() || changes.getNewLordLevel() < getMaxLordLevel()){
-//            this.draculaData.removeDracula();
-//        }
-
         super.levelChanged(changes);
     }
 
@@ -836,8 +831,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 }
             }
         }
-        this.draculaData.tick();
-
         if (feed_victim == -1) {
             feedBiteTickCounter = 0;
         }
@@ -905,7 +898,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public static final AppearanceKey<Integer> EyeType = AppearancePacket.register(VIdentifier.mod("eye_type"), ByteBufCodecs.VAR_INT);
     public static final AppearanceKey<Boolean> GlowingEye = AppearancePacket.register(VIdentifier.mod("glowing_eye"), ByteBufCodecs.BOOL);
     public static final AppearanceKey<IPlayableFaction.TitleGender> TitleGenderType = AppearancePacket.register(VIdentifier.mod("title_gender_type"), NeoForgeStreamCodecs.enumCodec(IPlayableFaction.TitleGender.class));
-    public static final AppearanceKey<Texture> WingsTexture = AppearancePacket.register(VIdentifier.mod("wings_texure"), NeoForgeStreamCodecs.enumCodec(Texture.class));
+    public static final AppearanceKey<IWingsEntity.Texture> WingsTexture = AppearancePacket.register(VIdentifier.mod("wings_texure"), NeoForgeStreamCodecs.enumCodec(IWingsEntity.Texture.class));
 
 
     @Override
@@ -919,7 +912,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         } else if (id.equals(TitleGenderType)) {
             FactionPlayerHandler.get(this.player).getPlayerLord().ifPresent(lord -> lord.setTitleGender((IPlayableFaction.TitleGender) data));
         } else if (id.equals(WingsTexture)) {
-            this.customization.setWingsTexture((Texture) data);
+            this.customization.setWingsTexture((IWingsEntity.Texture) data);
         }
     }
 
@@ -1057,7 +1050,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.registerProperty(VIdentifier.mod("vision")).subProperty(() -> this.vision).register();
         this.registerProperty(VIdentifier.mod("disguise")).subProperty(() -> this.disguise).register();
         this.registerProperty(VIdentifier.mod("customization")).subProperty(() -> this.customization).register();
-        this.registerProperty(VIdentifier.mod("dracula")).subProperty(() -> this.draculaData).register();
     }
 
     private void applyEntityAttributes() {

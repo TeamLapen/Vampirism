@@ -9,6 +9,7 @@ import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.FactionAdvancements;
 import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.faction.common.factions.FactionExtension;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
@@ -22,15 +23,13 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.Nullable;
 
-public class LordPlayer extends AttachmentSync implements ILordPlayer {
-
-    private final Player player;
+public class LordPlayer extends FactionExtension implements ILordPlayer {
 
     private IPlayableFaction.TitleGender titleGender = IPlayableFaction.TitleGender.UNKNOWN;
     private int currentLordLevel = 0;
 
     public LordPlayer(Player player) {
-        this.player = player;
+        super(player);
     }
 
     @Override
@@ -61,16 +60,6 @@ public class LordPlayer extends AttachmentSync implements ILordPlayer {
     @Override
     public @Nullable Component getLordTitleShort() {
         return getFaction().components().getOrDefault(FactionDataComponents.LORD_TITLES, LordTitles.EMPTY).getShort(getLordLevel(), titleGender());
-    }
-
-    @Override
-    public Holder<? extends IPlayableFaction<?>> getFaction() {
-        return FactionPlayerHandler.get(this.player).getFaction();
-    }
-
-    @Override
-    public Player asEntity() {
-        return this.player;
     }
 
     @Override
@@ -124,7 +113,7 @@ public class LordPlayer extends AttachmentSync implements ILordPlayer {
      */
     @Override
     public void resetLordTasks() {
-        FactionPlayerHandler.get(this.player).getTaskManager().ifPresent(manager -> {
+        getTaskManager().ifPresent(manager -> {
             this.player.level().registryAccess().lookupOrThrow(FactionRegistries.Keys.TASK).getTagOrEmpty(FactionTaskTags.AWARDS_LORD_LEVEL).forEach(holder -> {
                 holder.unwrapKey().ifPresent(manager::resetUniqueTask);
             });

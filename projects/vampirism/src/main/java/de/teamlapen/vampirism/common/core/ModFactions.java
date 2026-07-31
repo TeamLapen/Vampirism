@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.common.tags.*;
@@ -50,6 +51,7 @@ public class ModFactions {
                     .maxLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
                     .lord(REFERENCE.HIGHEST_VAMPIRE_LORD)
                     .refinements(new RefinementItems(ModItems.AMULET, ModItems.RING, ModItems.OBI_BELT))
+                    .extension(IDraculaPlayer.class, SafeCast.cast(ModAttachments.DRACULA_PLAYER))
                     .badOmen(ModEffects.BAD_OMEN_VAMPIRE)
                     .villageGuards(ModEntityTags.VAMPIRE_VILLAGE_GUARDS)
                     .taskMaster(ModEntities.TASK_MASTER_VAMPIRE)

@@ -17,7 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
  * Interface for the player vampire data.
  * Attached to all players as capability
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, IVampireVisionUser, IDraculaPlayer {
+public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, IVampireVisionUser {
 
     /**
      * Increases exhaustion level by supplied amount

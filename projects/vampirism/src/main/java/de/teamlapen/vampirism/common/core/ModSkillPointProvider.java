@@ -13,7 +13,7 @@ public class ModSkillPointProvider {
 
     public static final DeferredRegister<ISkillPointProvider> SKILL_POINT_PROVIDERS = DeferredRegister.create(FactionRegistries.Keys.SKILL_POINT_PROVIDER, REFERENCE.MODID);
 
-    public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> DRACULA = SKILL_POINT_PROVIDERS.register("dracula", () -> (factionPlayer, tree) -> tree.is(ModSkillTreeTags.DRACULA) && factionPlayer instanceof  IDraculaPlayer dracula ? dracula.getDraculaSkillPoints() : 0);
+    public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> DRACULA = SKILL_POINT_PROVIDERS.register("dracula", () -> (factionPlayer, tree) -> tree.is(ModSkillTreeTags.DRACULA) ? factionPlayer.getExtension(IDraculaPlayer.class).map(IDraculaPlayer::getDraculaSkillPoints).orElse(0) : 0);
 
 
     static void register(IEventBus bus) {

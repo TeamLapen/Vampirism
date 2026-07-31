@@ -4,14 +4,17 @@ import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionBasePlayer;
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends FactionBasePlayer<T> implements ISkillPlayer<T> {
 
@@ -103,6 +106,15 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     public Component getLevelDisplay() {
         return getPlayerLord().filter(l -> l.getLordLevel() > 0).map(ILordPlayer::getLordTitle)
                 .orElseGet(() -> Component.translatable("gui.factionapi.level").append(" " + getLevel()));
+    }
+
+    @Nullable
+    @Override
+    public Component getChatDisplay() {
+        if (FactionConfig.server().factionLordPrefixInChat.get()) {
+            return getPlayerLord().filter(x -> x.getLordLevel() > 0).map(ILordPlayer::getLordTitle).orElse(null);
+        }
+        return null;
     }
 
     @MustBeInvokedByOverriders

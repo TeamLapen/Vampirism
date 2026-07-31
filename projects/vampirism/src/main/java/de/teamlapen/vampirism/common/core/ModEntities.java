@@ -194,6 +194,7 @@ public class ModEntities {
     static void registerPlayerEventHandler(PlayerEventHandlerEvent event) {
         event.addAttachmentListener(ModAttachments.VAMPIRE_PLAYER);
         event.addAttachmentListener(ModAttachments.HUNTER_PLAYER);
+        event.addAttachmentListener(ModAttachments.DRACULA_PLAYER);
     }
 
     public static <E extends Entity> DeferredHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category) {

@@ -8,6 +8,7 @@ import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.items.IRefinementItem;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionAttachments;
+import de.teamlapen.faction.common.factions.FactionExtension;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.common.util.collections.SetView;
 import de.teamlapen.faction.common.world.entities.IPlayerEventListener;
@@ -36,16 +37,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RefinementHandler extends AttachmentSync implements IRefinementHandler, IFactionExtension, IPlayerEventListener {
+public class RefinementHandler extends FactionExtension implements IRefinementHandler, IPlayerEventListener {
 
     private final NonNullList<ItemStack> refinementItems = NonNullList.withSize(IRefinementItem.AccessorySlotType.values().length, ItemStack.EMPTY);
     private final Map<IRefinementItem.AccessorySlotType, Set<Holder<IRefinement>>> refinementSets = new HashMap<>();
 
     private final Set<Holder<IRefinement>> activeRefinements = new SetView<>(refinementSets);
-    private final Player player;
 
     public RefinementHandler(Player player) {
-        this.player = player;
+        super(player);
     }
 
     @Override
@@ -216,11 +216,6 @@ public class RefinementHandler extends AttachmentSync implements IRefinementHand
     @Override
     public void deserialize(ValueInput input) {
         super.deserialize(input);
-    }
-
-    @Override
-    public Entity asEntity() {
-        return this.player;
     }
 
     @Override

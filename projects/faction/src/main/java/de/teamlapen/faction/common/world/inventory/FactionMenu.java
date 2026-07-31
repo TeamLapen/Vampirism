@@ -56,7 +56,7 @@ public class FactionMenu extends AbstractInventoryContainer implements ITaskMenu
         this.factionColor = factionPlayer.getFaction().components().get(FactionDataComponents.CHAT_COLOR.get());
         this.refinementsAvailable = factionPlayer.getFaction().value().hasRefinements();
         this.addPlayerInventorySlots(inventory, 37, 124);
-        this.refinementHandler = factionPlayerHandler.getRefinementHandler().handler().orElse(null);
+        this.refinementHandler = factionPlayerHandler.getRefinementHandler().asHandler().orElse(null);
         this.refinementStacks = this.refinementHandler != null ? this.refinementHandler.getRefinementItems() : NonNullList.create();
         this.registry = inventory.player.level().registryAccess().lookupOrThrow(FactionRegistries.Keys.TASK);
     }
