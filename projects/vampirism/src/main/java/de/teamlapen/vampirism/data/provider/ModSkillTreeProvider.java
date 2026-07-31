@@ -1,9 +1,5 @@
 package de.teamlapen.vampirism.data.provider;
 
-import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.skills.ISkillNode;
-import de.teamlapen.faction.api.factions.skills.ISkillTree;
-import de.teamlapen.faction.common.factions.skills.SkillTreeConfiguration;
 import de.teamlapen.faction.data.provider.base.SkillTreeProvider;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
@@ -50,11 +46,12 @@ public class ModSkillTreeProvider extends SkillTreeProvider {
                                                 .addNode(node(HunterSkills.Nodes.WEAPON2)
                                                         .addNode(node(HunterSkills.Nodes.WEAPON3)
                                                                 .addNode(node(HunterSkills.Nodes.WEAPON4)
-                                                                        .addNode(node(HunterSkills.Nodes.WEAPON5)
-                                                                                .addNode(node(HunterSkills.Nodes.WEAPON6)
-                                                                                        .addNode(node(HunterSkills.Nodes.WEAPON7))
+                                                                        .addNode(node(HunterSkills.Nodes.TECHNIQUE1)
+                                                                                .addNode(node(HunterSkills.Nodes.TECHNIQUE2)
+                                                                                        .addNode(node(HunterSkills.Nodes.TECHNIQUE3))
                                                                                 )
                                                                         )
+                                                                        .addNode(node(HunterSkills.Nodes.CRAFTING1))
                                                                 )
                                                         )
                                                 )

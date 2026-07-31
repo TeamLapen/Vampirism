@@ -75,13 +75,16 @@
                                     {
                                       "children": [
                                         {
-                                          "node": "vampirism:hunter/weapon7"
+                                          "node": "vampirism:hunter/technique3"
                                         }
                                       ],
-                                      "node": "vampirism:hunter/weapon6"
+                                      "node": "vampirism:hunter/technique2"
                                     }
                                   ],
-                                  "node": "vampirism:hunter/weapon5"
+                                  "node": "vampirism:hunter/technique1"
+                                },
+                                {
+                                  "node": "vampirism:hunter/crafting1"
                                 }
                               ],
                               "node": "vampirism:hunter/weapon4"
