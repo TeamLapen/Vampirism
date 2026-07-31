@@ -115,7 +115,7 @@ public class ModKeys implements IMinecraftAccessor {
     private void updateWingsFlying() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && Helper.isVampire(player) && player.isFallFlying()) {
-            Optional<IDraculaPlayer> draculaOpt = IDraculaPlayer.getDracula(player).filter(x -> x.asEntity().isFallFlying()).filter(x -> Minecraft.getInstance().options.keyJump.consumeClick());
+            Optional<IDraculaPlayer> draculaOpt = IDraculaPlayer.getPresentDracula(player).filter(x -> x.asEntity().isFallFlying()).filter(x -> Minecraft.getInstance().options.keyJump.consumeClick());
             draculaOpt.ifPresent(dracula -> {
                 VampirismMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.JUMP));
                 dracula.swingWings();

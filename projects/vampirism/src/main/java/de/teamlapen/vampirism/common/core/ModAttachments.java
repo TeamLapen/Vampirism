@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.core;
 import de.teamlapen.faction.api.world.entities.extensions.IEntity;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.common.world.entities.EntitySyncHolder;
-import de.teamlapen.sync.AttachmentSync;
 import de.teamlapen.sync.PropertySync;
 import de.teamlapen.sync.api.IAttachmentSync;
 import de.teamlapen.vampirism.REFERENCE;
@@ -19,6 +18,7 @@ import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.MarshallPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.DraculaPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.InfectionStatus;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireBat;
@@ -26,12 +26,15 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.function.Function;
 
 public class ModAttachments {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, REFERENCE.MODID);
@@ -53,13 +56,23 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<EntitySyncHolder<HunterMinionEntity, HunterMinionEntity.HunterMinionData>>> HUNTER_MINION_DATA = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.HUNTER_MINION_DATA.getPath(), () -> syncHolder(new EntitySyncHolder.Factory<>(HunterMinionEntity.class)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<GlobalPos>> VELMORRA_PORTAL = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VELMORRA_PORTAL.getPath(), () -> AttachmentType.builder(new VelmorraDimension.VelmorraPortalPos()).serialize(GlobalPos.MAP_CODEC).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Identifier>> MARKER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.MARKER.getPath(), () -> AttachmentType.builder(() -> Identifier.withDefaultNamespace("none")).serialize(Identifier.CODEC.fieldOf("key")).build());
-    public static final DeferredHolder<AttachmentType<?>, AttachmentType<DraculaPlayer>> DRACULA_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.DRACULA_PLAYER.getPath(), () -> syncAttachment(new DraculaPlayer.AttachmentOptions()).copyOnDeath().build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<DraculaPlayer>> DRACULA_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.DRACULA_PLAYER.getPath(), () -> playerAttachment(DraculaPlayer::new).copyOnDeath().build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<MarshallPlayer>> MARSHALL_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.MARSHALL_PLAYER.getPath(), () -> playerAttachment(MarshallPlayer::new).copyOnDeath().build());
 
     //Blocks Attachments
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<NearestVillage>> NEAREST_VILLAGE = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.NEAREST_VILLAGE.getPath(), () -> AttachmentType.builder(new NearestVillage.Factory()).build());
 
     static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);
+    }
+
+    private static <T extends IAttachmentSync & IEntity> AttachmentType.Builder<T> playerAttachment(Function<Player, T> options) {
+        return syncAttachment(new AttachmentSynchronization.PlayerOptions<>() {
+            @Override
+            protected T create(Player player) {
+                return options.apply(player);
+            }
+        });
     }
 
     private static <T extends IAttachmentSync & IEntity, Z extends IAttachmentHolder> AttachmentType.Builder<T> syncAttachment(AttachmentSynchronization<T, Z> options) {

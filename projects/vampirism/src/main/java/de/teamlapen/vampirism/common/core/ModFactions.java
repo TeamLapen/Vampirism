@@ -9,7 +9,6 @@ import de.teamlapen.faction.api.event.AddFactionTagEvent;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.registries.factions.DeferredFaction;
 import de.teamlapen.faction.api.registries.factions.DeferredFactionRegister;
-import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.ICustomizationHolder;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntry;
 import de.teamlapen.faction.api.world.items.RefinementItems;
@@ -22,6 +21,7 @@ import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.world.entity.player.hunter.IMarshallPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IBasicVampire;
@@ -45,13 +45,13 @@ public class ModFactions {
     private static final DeferredRegister<IMinionEntry<?, ?>> MINIONS = DeferredRegister.create(FactionRegistries.Keys.MINION, REFERENCE.MODID);
 
     public static final DeferredFaction<IVampirePlayer, IPlayableFaction<IVampirePlayer>> VAMPIRE = FACTIONS.registerFaction(VampirismFactions.Keys.VAMPIRE.getPath(), props ->
-            new PlayableFaction<>(props.playerAttachment(SafeCast.cast(ModAttachments.VAMPIRE_PLAYER))
+            new PlayableFaction<>(props.playerAttachment(ModAttachments.VAMPIRE_PLAYER)
                     .color(Color.MAGENTA_DARK.getRGB())
                     .chatColor(ChatFormatting.DARK_PURPLE)
                     .maxLevel(REFERENCE.HIGHEST_VAMPIRE_LEVEL)
                     .lord(REFERENCE.HIGHEST_VAMPIRE_LORD)
                     .refinements(new RefinementItems(ModItems.AMULET, ModItems.RING, ModItems.OBI_BELT))
-                    .extension(IDraculaPlayer.class, SafeCast.cast(ModAttachments.DRACULA_PLAYER))
+                    .extension(IDraculaPlayer.class, ModAttachments.DRACULA_PLAYER)
                     .badOmen(ModEffects.BAD_OMEN_VAMPIRE)
                     .villageGuards(ModEntityTags.VAMPIRE_VILLAGE_GUARDS)
                     .taskMaster(ModEntities.TASK_MASTER_VAMPIRE)
@@ -59,7 +59,7 @@ public class ModFactions {
                     .totem(ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE, ModBlocks.TOTEM_TOP_VAMPIRISM_VAMPIRE_CRAFTED)));
 
     public static final DeferredFaction<IHunterPlayer, IPlayableFaction<IHunterPlayer>> HUNTER = FACTIONS.registerFaction(VampirismFactions.Keys.HUNTER.getPath(), props ->
-            new PlayableFaction<>(props.playerAttachment(SafeCast.cast(ModAttachments.HUNTER_PLAYER))
+            new PlayableFaction<>(props.playerAttachment(ModAttachments.HUNTER_PLAYER)
                     .color(Color.BLUE.getRGB())
                     .chatColor(ChatFormatting.BLUE)
                     .maxLevel(REFERENCE.HIGHEST_HUNTER_LEVEL)
@@ -68,6 +68,7 @@ public class ModFactions {
                     .taskMaster(ModEntities.TASK_MASTER_HUNTER)
                     .villageGuards(ModEntityTags.HUNTER_VILLAGE_GUARDS)
                     .banner(HunterVillage.create())
+                    .extension(IMarshallPlayer.class, ModAttachments.MARSHALL_PLAYER)
                     .totem(ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER, ModBlocks.TOTEM_TOP_VAMPIRISM_HUNTER_CRAFTED)));
 
     public static final DeferredHolder<IMinionEntry<?, ?>, IMinionEntry<IVampirePlayer, VampireMinionEntity.VampireMinionData>> VAMPIRE_MINION = MINIONS.register(VampirismFactions.Keys.VAMPIRE.getPath(), () ->

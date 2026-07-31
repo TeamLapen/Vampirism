@@ -133,4 +133,16 @@ public abstract class VampirismSkill<T extends IFactionPlayer<T> & ISkillPlayer<
         }
     }
 
+    public static class MarshallSkill extends VampirismSkill<IHunterPlayer> {
+
+        public MarshallSkill(int skillPointCost, boolean desc) {
+            super(Either.right(ModSkillTreeTags.MARSHALL), skillPointCost, desc);
+        }
+
+        @Override
+        public TagKey<? extends IFaction<?>> factions() {
+            return VampirismTags.Factions.IS_HUNTER;
+        }
+    }
+
 }

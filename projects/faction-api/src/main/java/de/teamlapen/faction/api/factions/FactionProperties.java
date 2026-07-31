@@ -10,7 +10,6 @@ import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.tasks.ITaskManager;
 import de.teamlapen.faction.api.factions.village.TotemPair;
 import de.teamlapen.faction.api.factions.village.VillageBanner;
-import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import net.minecraft.ChatFormatting;
@@ -28,6 +27,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -97,18 +97,18 @@ public class FactionProperties {
     }
 
     public FactionProperties enableTasks() {
-        return extension(ITaskManager.class, SafeCast.cast(FactionAttachments.TASK_MANAGER));
+        return extension(ITaskManager.class, FactionAttachments.TASK_MANAGER);
     }
 
     public FactionProperties enableRefinements() {
-        return extension(IRefinementHandler.class, SafeCast.cast(FactionAttachments.REFINEMENT_HANDLER));
+        return extension(IRefinementHandler.class, FactionAttachments.REFINEMENT_HANDLER);
     }
 
     public FactionProperties enableLord() {
-        return extension(ILordPlayer.class, SafeCast.cast(FactionAttachments.LORD_PLAYER));
+        return extension(ILordPlayer.class, FactionAttachments.LORD_PLAYER);
     }
 
-    public <TInterface> FactionProperties extension(Class<TInterface> interfaceClass, Holder<AttachmentType<? extends TInterface>> attachment) {
+    public <TInterface> FactionProperties extension(Class<TInterface> interfaceClass, Supplier<? extends AttachmentType<? extends TInterface>> attachment) {
         this.extensions.put(interfaceClass, new FactionExtensionType.Attachment<>(interfaceClass, attachment));
         return this;
     }
@@ -123,8 +123,8 @@ public class FactionProperties {
                 .component(FactionDataComponents.LORD_TITLES, LordTitles.provide(level, provider));
     }
 
-    public FactionProperties playerAttachment(Holder<AttachmentType<? extends IFactionPlayer<?>>> attachment) {
-        return component(FactionDataComponents.PLAYER_CAPABILITY, (Holder<AttachmentType<?>>)(Object) attachment);
+    public <TPlayer extends IFactionPlayer<?>> FactionProperties playerAttachment(DeferredHolder<AttachmentType<?>, ? extends AttachmentType<? extends TPlayer>> attachment) {
+        return component(FactionDataComponents.PLAYER_CAPABILITY, attachment);
     }
 
     public FactionProperties refinements(RefinementItems refinementItems) {

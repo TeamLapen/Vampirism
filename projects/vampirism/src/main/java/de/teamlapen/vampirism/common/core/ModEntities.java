@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
+import de.teamlapen.vampirism.common.advancements.critereon.MarshallCriterion;
 import de.teamlapen.vampirism.common.util.serialization.ModStreamCodecs;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.common.advancements.critereon.DraculaCriterion;
@@ -120,6 +121,7 @@ public class ModEntities {
 
 
     public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<DraculaCriterion>> DRACULA_PREDICATE = ENTITY_SUB_PREDICATES.register("dracula", () -> DraculaCriterion.CODEC);
+    public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<MarshallCriterion>> MARSHALL_PREDICATE = ENTITY_SUB_PREDICATES.register("marshall", () -> MarshallCriterion.CODEC);
 
     @SuppressWarnings("unused")
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<? extends ICondition>> ENTITY_EXISTS = CONDITIONS.register("entity_exists", () -> EntityExistsCondition.CODEC);
@@ -195,6 +197,7 @@ public class ModEntities {
         event.addAttachmentListener(ModAttachments.VAMPIRE_PLAYER);
         event.addAttachmentListener(ModAttachments.HUNTER_PLAYER);
         event.addAttachmentListener(ModAttachments.DRACULA_PLAYER);
+        event.addAttachmentListener(ModAttachments.MARSHALL_PLAYER);
     }
 
     public static <E extends Entity> DeferredHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category) {

@@ -77,6 +77,12 @@ public class ModSkillTreeProvider extends SkillTreeProvider {
                 .addNode(node(HunterSkills.Nodes.LORD_5))
                 .addAfter(HunterSkills.Trees.LEVEL)
                 .build(output, modId("hunter_lord"));
+
+        tree(HunterSkills.Trees.MARSHALL, HunterSkills.Nodes.MARSHALL_ROOT)
+                .addNode(node(HunterSkills.Nodes.MARSHALL_2))
+                .addNode(node(HunterSkills.Nodes.MARSHALL_3))
+                .addAfter(HunterSkills.Trees.LORD)
+                .build(output, modId("hunter_marshall"));
     }
 
     protected void buildVampire(HolderLookup.Provider provider, SkillTreeOutput output) {

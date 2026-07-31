@@ -16,15 +16,13 @@ public interface IDraculaPlayer extends IPlayer, IWingsEntity, IFactionExtension
         return FactionsApi.factionPlayerHandler(player).getExtension(IDraculaPlayer.class);
     }
 
-    static Optional<IDraculaPlayer> getDracula(Player player) {
+    static Optional<IDraculaPlayer> getPresentDracula(Player player) {
         return get(player).filter(IDraculaPlayer::isDracula);
     }
 
     boolean isDracula();
 
-    void makeDracula();
-
-    int getDraculaSkillPoints();
+    int getSkillPoints();
 
     record DraculaChange() implements Change<DraculaChange> {
         public static final ChangeKey<DraculaChange> KEY = new ChangeKey<>(VIdentifier.mod("dracula"));

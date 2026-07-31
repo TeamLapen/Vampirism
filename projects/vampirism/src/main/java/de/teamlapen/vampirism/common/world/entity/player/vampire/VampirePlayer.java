@@ -168,7 +168,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public Component getShortLevelDisplay() {
-        if (IDraculaPlayer.getDracula(this.player).isPresent()) {
+        if (IDraculaPlayer.getPresentDracula(this.player).isPresent()) {
             return Component.translatable("dracula_title.vampirism.short");
         }
         return super.getShortLevelDisplay();
@@ -176,7 +176,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public Component getLevelDisplay() {
-        if (IDraculaPlayer.getDracula(this.player).isPresent()) {
+        if (IDraculaPlayer.getPresentDracula(this.player).isPresent()) {
             return Component.translatable("dracula_title.vampirism");
         }
         return super.getLevelDisplay();
@@ -185,7 +185,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Nullable
     @Override
     public Component getChatDisplay() {
-        if (IDraculaPlayer.getDracula(this.player).isPresent()) {
+        if (IDraculaPlayer.getPresentDracula(this.player).isPresent()) {
             return Component.translatable("dracula_title.vampirism");
         }
         return super.getChatDisplay();

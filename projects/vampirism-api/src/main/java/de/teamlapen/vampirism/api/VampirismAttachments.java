@@ -29,6 +29,7 @@ public class VampirismAttachments {
         public static final Identifier DAMAGE_HANDLER = VIdentifier.mod("damage_handler");
         public static final Identifier VAMPIRE_BAT = VIdentifier.mod("vampire_bat");
         public static final Identifier DRACULA_PLAYER = VIdentifier.mod("dracula_player");
+        public static final Identifier MARSHALL_PLAYER = VIdentifier.mod("marshall_player");
         public static final Identifier INFECTION_STATUS = VIdentifier.mod("infection_status");
         public static final Identifier QUARREL_HURT_BYPASS = VIdentifier.mod("quarrel_hurt_bypass");
         public static final Identifier NEAREST_VILLAGE = VIdentifier.mod("nearest_village");

@@ -1,14 +1,10 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.faction.api.util.SafeCast;
-import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.common.world.entity.converted.GeneratedVampirismConvertedEntitiesClient;
-import de.teamlapen.vampirism.api.world.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
-import de.teamlapen.vampirism.client.renderer.entities.ConvertedCreatureRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.DualSplitBipedRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.HunterVillagerRenderer;
 import de.teamlapen.vampirism.client.renderer.entities.VampireBaronRenderer;
@@ -26,7 +22,6 @@ import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.AnimationState;
@@ -37,8 +32,6 @@ import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
-
-import java.util.Optional;
 
 public class ModEntityRenderStates {
 
@@ -138,7 +131,7 @@ public class ModEntityRenderStates {
                 state.setRenderData(VAMPIRE_BAT, bat);
             }
 
-            IDraculaPlayer.getDracula(player).ifPresent(dracula -> {
+            IDraculaPlayer.getPresentDracula(player).ifPresent(dracula -> {
                 state.setRenderData(DRACULA_WINGS_STATE, dracula.getWingsState());
                 state.setRenderData(DRACULA_WINGS_GROW, dracula.growAnimationState());
                 state.setRenderData(DRACULA_WINGS_FLY, dracula.flyAnimationState());

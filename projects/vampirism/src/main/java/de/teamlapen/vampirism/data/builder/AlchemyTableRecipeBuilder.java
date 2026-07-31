@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModOils;
+import de.teamlapen.vampirism.common.util.OilUtils;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemyTableRecipe;
 import net.minecraft.advancements.*;
@@ -14,6 +15,7 @@ import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
@@ -56,6 +58,11 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
 
     @Override
     public @NonNull ResourceKey<Recipe<?>> defaultId() {
+        @Nullable
+        var oilContent = this.result.components().getPatch(ModDataComponents.OIL.get());
+        if (oilContent != null && oilContent.isPresent()) {
+            return ResourceKey.create(Registries.RECIPE, oilContent.get().oil().unwrapKey().orElseThrow().identifier().withSuffix("_oil"));
+        }
         return RecipeBuilder.getDefaultRecipeId(this.result);
     }
 
@@ -80,6 +87,10 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
 
     public AlchemyTableRecipeBuilder bloodOilIngredient() {
         return ingredient(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_BLOOD), ModItems.OIL_BOTTLE.get())).unlockedBy("has_bottles", has(this.itemLookup, ModItems.OIL_BOTTLE.get()));
+    }
+
+    public AlchemyTableRecipeBuilder draculaOilIngredient() {
+        return ingredient(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.DRACULA_BLOOD), ModItems.OIL_BOTTLE.get())).unlockedBy("has_bottles", has(this.itemLookup, ModItems.OIL_BOTTLE.get()));
     }
 
     public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input) {

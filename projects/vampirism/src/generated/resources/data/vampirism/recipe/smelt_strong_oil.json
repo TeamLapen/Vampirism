@@ -1,0 +1,22 @@
+{
+  "type": "vampirism:alchemical_table",
+  "common_info": {},
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:dracula_blood"
+      }
+    },
+    "items": "vampirism:oil_bottle"
+  },
+  "input": "vampirism:alchemical_fire",
+  "result": {
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:smelt_strong"
+      }
+    },
+    "id": "vampirism:oil_bottle"
+  }
+}

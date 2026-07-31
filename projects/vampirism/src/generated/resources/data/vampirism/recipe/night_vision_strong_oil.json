@@ -1,0 +1,44 @@
+{
+  "type": "vampirism:alchemical_table",
+  "common_info": {},
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:dracula_blood"
+      }
+    },
+    "items": "vampirism:oil_bottle"
+  },
+  "input": {
+    "neoforge:ingredient_type": "neoforge:compound",
+    "children": [
+      {
+        "neoforge:ingredient_type": "neoforge:components",
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:night_vision"
+          }
+        },
+        "items": "minecraft:potion"
+      },
+      {
+        "neoforge:ingredient_type": "neoforge:components",
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:long_night_vision"
+          }
+        },
+        "items": "minecraft:potion"
+      }
+    ]
+  },
+  "result": {
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:night_vision_strong"
+      }
+    },
+    "id": "vampirism:oil_bottle"
+  }
+}

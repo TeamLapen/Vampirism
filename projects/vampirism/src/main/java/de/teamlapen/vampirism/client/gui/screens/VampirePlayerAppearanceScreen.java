@@ -25,7 +25,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -66,7 +65,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.glowingEyes = customization.glowingEyes();
         this.titleGender = vampire.getPlayerLord().map(ILordPlayer::titleGender).orElse(IPlayableFaction.TitleGender.UNKNOWN) == IPlayableFaction.TitleGender.FEMALE;
         this.wingsTexture = customization.wingsTexture();
-        if (IDraculaPlayer.getDracula(minecraft.player).isPresent()) {
+        if (IDraculaPlayer.getPresentDracula(minecraft.player).isPresent()) {
             this.availableWingsTextures = VampirismMod.services().wingsManager().getAvailableWings(vampire.asEntity()).sorted().toList();
         }
         super.init();

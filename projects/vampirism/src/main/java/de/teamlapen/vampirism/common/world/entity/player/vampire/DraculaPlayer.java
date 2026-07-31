@@ -67,7 +67,7 @@ public class DraculaPlayer extends FactionExtension implements IDraculaPlayer, I
     }
 
     @Override
-    public int getDraculaSkillPoints() {
+    public int getSkillPoints() {
         return this.skillPoints;
     }
 
@@ -171,8 +171,7 @@ public class DraculaPlayer extends FactionExtension implements IDraculaPlayer, I
         }
     }
 
-    @Override
-    public void makeDracula() {
+    private void makeDracula() {
         this.isDracula = true;
         this.awardSkillPoint();
     }
@@ -233,13 +232,6 @@ public class DraculaPlayer extends FactionExtension implements IDraculaPlayer, I
                 }
             }
             updateAnimations();
-        }
-    }
-
-    public static class AttachmentOptions extends AttachmentSynchronization.PlayerOptions<DraculaPlayer> {
-        @Override
-        protected DraculaPlayer create(Player player) {
-            return new DraculaPlayer(player);
         }
     }
 }
