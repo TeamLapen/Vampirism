@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.entity;
 import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.api.world.items.QuarrelProperties;
+import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -12,6 +13,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.TicketType;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,6 +32,10 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     public static final String TAG_GRAVITY_FACTOR = "GravityFactor";
     public static final String TAG_ARROW_STACK = "ArrowStack";
+    public static final String TAG_BALLISTA_START_Y = "BallistaStartY";
+    public static final String TAG_BALLISTA_APEX_Y = "BallistaApexY";
+    public static final String TAG_BALLISTA_FROZEN_Y = "BallistaFrozenY";
+    public static final String TAG_BALLISTA_MAX_RISE = "BallistaMaxRise";
 
     private static final double MIN_PRECISION_HORIZONTAL_SPEED = 1.0;
 
@@ -38,10 +44,19 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     private static final int CHUNK_LOADING_RADIUS = 2;
 
+    private static final double AIR_INERTIA = 0.99;
+    private static final double BALLISTA_RISE_WEIGHT = 1.25;
+    private static final int MAX_RISE_SIMULATION_TICKS = 2000;
+
     private static final EntityDataAccessor<Float> GRAVITY_FACTOR = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<ItemStack> ARROW_STACK = SynchedEntityData.defineId(QuarrelEntity.class, EntityDataSerializers.ITEM_STACK);
 
     private boolean ignoreHurtTimer = false;
+
+    private double ballistaStartY = Double.NaN;
+    private double ballistaApexY;
+    private double ballistaFrozenY = Double.NaN;
+    private double ballistaMaxRise;
 
     public QuarrelEntity(EntityType<? extends QuarrelEntity> type, Level level) {
         super(type, level);
@@ -75,10 +90,72 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
 
     @Override
     public void tick() {
+        if (!level().isClientSide()) {
+            trackBallisticArc();
+        }
         super.tick();
         if (isAlive() && level() instanceof ServerLevel serverLevel && properties().forcesChunkLoading()) {
             serverLevel.getChunkSource().addTicketWithRadius(TicketType.ENDER_PEARL, chunkPosition(), CHUNK_LOADING_RADIUS);
         }
+    }
+
+    private void trackBallisticArc() {
+        if (!hasBallistaScaling()) return;
+
+        if (Double.isNaN(this.ballistaStartY)) {
+            this.ballistaStartY = getY();
+            this.ballistaApexY = getY();
+            this.ballistaMaxRise = maxBallisticRise(getDeltaMovement().length(), getDefaultGravity());
+        }
+
+        if (!Double.isNaN(this.ballistaFrozenY)) return;
+
+        if (isInWater() || isInLava() || isInGround()) {
+            this.ballistaFrozenY = getY();
+        } else {
+            this.ballistaApexY = Math.max(this.ballistaApexY, getY());
+        }
+    }
+
+    private static double maxBallisticRise(double launchSpeed, double gravity) {
+        if (gravity <= 0) return Double.POSITIVE_INFINITY;
+
+        double rise = 0;
+        double velocity = launchSpeed;
+        for (int i = 0; i < MAX_RISE_SIMULATION_TICKS && velocity > 0; i++) {
+            rise += velocity;
+            velocity = velocity * AIR_INERTIA - gravity;
+        }
+
+        return rise;
+    }
+
+    private boolean hasBallistaScaling() {
+        return properties().ballistaMultiplier() > 1f;
+    }
+
+    private double ballistaProgress() {
+        if (Double.isNaN(this.ballistaStartY) || !(this.ballistaMaxRise > 0)) return 0;
+
+        double impactY = Double.isNaN(this.ballistaFrozenY) ? getY() : this.ballistaFrozenY;
+        double rise = this.ballistaApexY - this.ballistaStartY;
+        double descent = this.ballistaApexY - impactY;
+
+        return Mth.clamp(Math.min(descent, rise * BALLISTA_RISE_WEIGHT) / this.ballistaMaxRise, 0, 1);
+    }
+
+    private double ballistaDamageScale() {
+        if (!hasBallistaScaling()) return 1;
+
+        return Mth.lerp(ballistaProgress(), 1, properties().ballistaMultiplier());
+    }
+
+    /**
+     * The damage {@link QuarrelItem} hands a freshly loosed quarrel. Recomputed rather than remembered so that it
+     * survives the quarrel being saved and loaded mid-flight, which bypasses {@link #setBaseDamage(double)}.
+     */
+    public static double launchBaseDamage(QuarrelProperties properties) {
+        return properties.baseDamage() * properties.damageMultiplier() * ModConfig.balance().crossbowDamageMult.get();
     }
 
     @Override
@@ -119,6 +196,10 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
         super.addAdditionalSaveData(output);
         output.putFloat(TAG_GRAVITY_FACTOR, getGravityFactor());
         output.store(TAG_ARROW_STACK, ItemStack.CODEC, getPickupItem());
+        output.putDouble(TAG_BALLISTA_START_Y, this.ballistaStartY);
+        output.putDouble(TAG_BALLISTA_APEX_Y, this.ballistaApexY);
+        output.putDouble(TAG_BALLISTA_FROZEN_Y, this.ballistaFrozenY);
+        output.putDouble(TAG_BALLISTA_MAX_RISE, this.ballistaMaxRise);
     }
 
     @Override
@@ -126,6 +207,10 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
         super.readAdditionalSaveData(input);
         setGravityFactor(input.getFloatOr(TAG_GRAVITY_FACTOR, 1.0f));
         setArrowStack(input.read(TAG_ARROW_STACK, ItemStack.CODEC).orElse(ModItems.QUARREL_NORMAL.toStack()));
+        this.ballistaStartY = input.getDoubleOr(TAG_BALLISTA_START_Y, Double.NaN);
+        this.ballistaApexY = input.getDoubleOr(TAG_BALLISTA_APEX_Y, 0);
+        this.ballistaFrozenY = input.getDoubleOr(TAG_BALLISTA_FROZEN_Y, Double.NaN);
+        this.ballistaMaxRise = input.getDoubleOr(TAG_BALLISTA_MAX_RISE, 0);
     }
 
     /**
@@ -155,7 +240,15 @@ public class QuarrelEntity extends AbstractArrow implements IEntityQuarrel {
         float knockbackFactor = properties().knockbackMultiplier();
         Vec3 preHitVelocity = knockbackFactor != 1f && hit instanceof LivingEntity ? hit.getDeltaMovement() : null;
 
-        super.onHitEntity(hitResult);
+        double ballistaScale = ballistaDamageScale();
+        if (ballistaScale > 1) {
+            double launchDamage = launchBaseDamage(properties());
+            super.setBaseDamage(launchDamage * ballistaScale);
+            super.onHitEntity(hitResult);
+            super.setBaseDamage(launchDamage);
+        } else {
+            super.onHitEntity(hitResult);
+        }
 
         if (preHitVelocity != null && hit.isAlive()) {
             Vec3 imparted = hit.getDeltaMovement().subtract(preHitVelocity);
