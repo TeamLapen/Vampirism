@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.common.config.ModConfig;
-import net.minecraft.SharedConstants;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
@@ -51,14 +49,6 @@ public class VampireLeveling {
 
     public static AltarInspirationRequirement[] getInspirationRequirements() {
         return Arrays.stream(LEVEL_REQUIREMENTS).filter(AltarInspirationRequirement.class::isInstance).map(AltarInspirationRequirement.class::cast).toArray(AltarInspirationRequirement[]::new);
-    }
-
-    public static boolean canLevelPassively(int currentLevel) {
-        return currentLevel > 0 && currentLevel < 4 && ModConfig.balance().vpPassiveLevelingEnabled.get();
-    }
-
-    public static int getPassiveLevelingDuration() {
-        return (int) (ModConfig.balance().vpPassiveLevelingDays.get() * SharedConstants.TICKS_PER_GAME_DAY);
     }
 
     public interface VampireLevelRequirement {
