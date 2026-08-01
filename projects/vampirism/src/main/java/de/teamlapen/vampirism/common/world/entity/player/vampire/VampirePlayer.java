@@ -581,7 +581,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public boolean onDeadlyHit(DamageSource source) {
-        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL) && !Helper.canKillVampires(source)) {
+        if (getLevel() >= ModConfig.balance().vpDbnoMinLevel.get() && !this.player.hasEffect(ModEffects.NEONATAL) && !Helper.canKillVampires(source)) {
             int timePreviouslySpentInPlayerRevive = PlayerReviveHelper.getPreviousDownTime(this.player);
             int dbnoTime = Math.max(1, getDbnoDuration() - timePreviouslySpentInPlayerRevive);
             this.setDBNOTimer(dbnoTime);

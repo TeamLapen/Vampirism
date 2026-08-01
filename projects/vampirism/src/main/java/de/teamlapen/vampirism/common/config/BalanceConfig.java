@@ -101,6 +101,7 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue vpMaxYellowBorderPercentage;
     public final ModConfigSpec.ConfigValue<List<? extends String>> vpImmortalFromDamageSources;
     public final ModConfigSpec.IntValue vpDbnoDuration;
+    public final ModConfigSpec.IntValue vpDbnoMinLevel;
     public final ModConfigSpec.IntValue vpNeonatalDuration;
     public final ModConfigSpec.IntValue vpNaturalArmorRegenDuration;
     public final ModConfigSpec.IntValue vpNaturalArmorBaseValue;
@@ -437,6 +438,9 @@ public class BalanceConfig {
         vpDbnoDuration = builder
                 .comment("Base duration a downed vampire must wait before being able to resurrect, in seconds.")
                 .defineInRange("dbnoDuration", 60, 1, 1000);
+        vpDbnoMinLevel = builder
+                .comment("Minimum vampire level required to go down instead of dying. Lower level vampires die normally.")
+                .defineInRange("dbnoMinLevel", 4, 1, Integer.MAX_VALUE);
         vpNeonatalDuration = builder
                 .comment("Base duration of the neonatal debuff applied after a vampire resurrects, in seconds.")
                 .defineInRange("neonatalDuration", 120, 1, Integer.MAX_VALUE);
