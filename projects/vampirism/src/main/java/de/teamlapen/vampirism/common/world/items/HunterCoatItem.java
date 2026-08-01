@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterSkillProperties;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -13,14 +15,15 @@ import net.minecraft.world.item.equipment.ArmorType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
 
     private final Tier tier;
 
-    public HunterCoatItem(ArmorMaterial material, ArmorType type, Tier tier, Properties properties) {
-        super(material, type, properties);
+    public HunterCoatItem(ArmorMaterial material, ArmorType type, Tier tier, List<Holder<ISkill<?>>> skills, Properties properties) {
+        super(material, type, skills, properties);
         this.tier = tier;
     }
 

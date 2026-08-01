@@ -286,8 +286,13 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         }
 
         @SuppressWarnings("unchecked")
-        public Builder skill(Holder<ISkill<?>>... skill) {
-            this.skillHolder.addAll(Arrays.asList(skill));
+        public Builder skill(Holder<ISkill<?>>... skills) {
+            this.skillHolder.addAll(Arrays.asList(skills));
+            return this;
+        }
+
+        public Builder skill(List<Holder<ISkill<?>>> skills) {
+            this.skillHolder.addAll(skills);
             return this;
         }
 
