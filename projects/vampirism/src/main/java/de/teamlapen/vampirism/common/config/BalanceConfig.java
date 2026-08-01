@@ -110,6 +110,8 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vpArmorPenalty;
     public final ModConfigSpec.BooleanValue vpNightVisionDisabled;
     public final ModConfigSpec.BooleanValue vpBloodVisionDisabled;
+    public final ModConfigSpec.BooleanValue vpPassiveLevelingEnabled;
+    public final ModConfigSpec.DoubleValue vpPassiveLevelingDays;
 
     // Vampire Actions
     public final ModConfigSpec.IntValue vaFreezeCooldown;
@@ -465,6 +467,12 @@ public class BalanceConfig {
         vpBloodVisionDisabled = builder
                 .comment("When enabled, disables the blood vision ability for vampire players.")
                 .define("bloodVisionDisabled", false);
+        vpPassiveLevelingEnabled = builder
+                .comment("When enabled, vampires are able to level up passively without using an altar up to level 4.")
+                .define("passiveLevelingEnabled", true);
+        vpPassiveLevelingDays = builder
+                .comment("In-game days a vampire player must spend online to passively gain one level from levels 1 to 4.")
+                .defineInRange("passiveLevelingDays", 5.0, 0.0001, 1000.0);
 
         builder.category("vampireActions", "va");
 

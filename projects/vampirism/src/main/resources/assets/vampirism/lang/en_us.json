@@ -1042,6 +1042,7 @@
   "gui.vampirism.minion_appearance.name": "Name",
   "gui.vampirism.minion.stats.inventory_level": "Inventory Size",
   "gui.vampirism.minion.stats.resource_level": "Resource Efficiency",
+  "gui.vampirism.faction_menu.passive_leveling.desc": "Use the altar of inspiration to level up.\n\nBut no one stays a fledgling forever: approximately every %1$s days you rise one level on your own, up to level 4 — a mature vampire with all its main abilities and weaknesses respectively.\n\nCurrent progress: %2$s%%",
   "gui.vampirism.appearance": "Change Your Appearance",
   "gui.vampirism.appearance.fang": "Fang Type",
   "gui.vampirism.appearance.eye": "Eye Type",
@@ -1650,6 +1651,10 @@
   "vampirism.configuration.nightVisionDisabled.tooltip": "When enabled, disables the passive night vision effect for vampire players.",
   "vampirism.configuration.bloodVisionDisabled": "Blood Vision Disabled",
   "vampirism.configuration.bloodVisionDisabled.tooltip": "When enabled, disables the blood vision ability for vampire players.",
+  "vampirism.configuration.passiveLevelingEnabled": "Passive Leveling",
+  "vampirism.configuration.passiveLevelingEnabled.tooltip": "When enabled, vampires are able to level up passively without using an altar up to level 4.",
+  "vampirism.configuration.passiveLevelingDays": "Passive Leveling Days",
+  "vampirism.configuration.passiveLevelingDays.tooltip": "In-game days a vampire player must spend online to passively gain one level from levels 1 to 4.",
 
   "vampirism.configuration.freezeEnabled": "Freeze Enabled",
   "vampirism.configuration.freezeEnabled.tooltip": "When enabled, vampires can use the freeze action.",
