@@ -125,7 +125,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private @Nullable BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
     private boolean forceNaturalArmorUpdate;
-    private int passiveLevelTicks = 0;
+    private int passiveLevelBlood = 0;
     private float sunBlindIntensity = 0f;
 
     //<editor-fold desc="Special Attributes">
@@ -371,6 +371,19 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             handleSpareBlood(remainingBlood);
         }
         this.player.awardStat(ModStats.BLOOD_DRUNK.get(), amt * VReference.FOOD_TO_FLUID_BLOOD);
+        if (event.getBloodSource().getEntity().isPresent()) {
+            progressPassiveLeveling(event.getAmount() - remainingBlood);
+        }
+    }
+
+    private void progressPassiveLeveling(int blood) {
+        if (isRemote() || blood <= 0) return;
+        int level = getLevel();
+        if (!VampireLeveling.canLevelPassively(level)) return;
+        this.passiveLevelBlood += blood;
+        if (this.passiveLevelBlood >= VampireLeveling.getPassiveLevelingBlood(level + 1)) {
+            levelUpPassively(level + 1);
+        }
     }
 
     /**
@@ -483,8 +496,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return ticksInSun;
     }
 
-    public int getPassiveLevelTicks() {
-        return this.passiveLevelTicks;
+    public int getPassiveLevelBlood() {
+        return this.passiveLevelBlood;
     }
 
     public float getSunBlindIntensity() {
@@ -697,7 +710,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     private void levelUpPassively(int targetLevel) {
-        this.passiveLevelTicks = 0;
+        this.passiveLevelBlood = 0;
         boolean leveled = FactionPlayerHandler.get(this.player).setFaction(LevelingChange.builder().faction(ModFactions.VAMPIRE).level(targetLevel));
         if (leveled && this.player instanceof ServerPlayer serverPlayer) {
             FactionSounds.playLevelUpSoundServer(serverPlayer);
@@ -707,7 +720,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public void levelChanged(LevelingChange changes) {
         this.applyEntityAttributes();
-        this.passiveLevelTicks = 0;
+        this.passiveLevelBlood = 0;
         var newLevel = changes.getNewLevel();
 
         int maxBlood = 20;
@@ -845,15 +858,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 if (forceNaturalArmorUpdate || player.tickCount % 128 == 0) {
                     updateNaturalArmor(getLevel());
                     forceNaturalArmorUpdate = false;
-                }
-
-                if (VampireLeveling.canLevelPassively(level)) {
-                    passiveLevelTicks++;
-                    if (passiveLevelTicks >= VampireLeveling.getPassiveLevelingDuration()) {
-                        levelUpPassively(level + 1);
-                    } else if (player.tickCount % 20 == 0) {
-                        sync();
-                    }
                 }
             } else {
                 ticksInSun = 0;
@@ -1114,7 +1118,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.registerProperty(VIdentifier.mod("refinement_handler")).subProperty(() ->this.refinementHandler).register();
         this.registerProperty(VIdentifier.mod("customization")).subProperty(() -> this.customization).register();
         this.registerProperty(VIdentifier.mod("dracula")).subProperty(() -> this.draculaData).register();
-        this.registerProperty(VIdentifier.mod("passive_level_ticks")).simple(0, () -> this.passiveLevelTicks, x -> this.passiveLevelTicks = x);
+        this.registerProperty(VIdentifier.mod("passive_level_blood")).simple(0, () -> this.passiveLevelBlood, x -> this.passiveLevelBlood = x);
     }
 
     private void applyEntityAttributes() {

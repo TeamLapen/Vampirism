@@ -38,7 +38,7 @@ public class ModDebugEntries {
                 displayer.addLine("Passive leveling: unavailable");
                 return;
             }
-            displayer.addLine("Passive leveling: " + vampire.getPassiveLevelTicks() + " / " + VampireLeveling.getPassiveLevelingDuration() + " ticks");
+            displayer.addLine("Passive leveling: " + vampire.getPassiveLevelBlood() + " / " + VampireLeveling.getPassiveLevelingBlood(vampire.getLevel() + 1) + " blood");
         }
     }
 }

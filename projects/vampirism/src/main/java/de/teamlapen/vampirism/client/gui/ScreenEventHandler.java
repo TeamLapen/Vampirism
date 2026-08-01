@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.gui;
 import de.teamlapen.faction.client.gui.screens.FactionMenuScreen;
 import de.teamlapen.faction.common.util.DescriptionUtil;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.blocks.TentBlock;
@@ -47,7 +46,8 @@ public class ScreenEventHandler {
         VampirePlayer vampire = VampirePlayer.get(player);
         if (!VampireLeveling.canLevelPassively(vampire.getLevel())) return;
 
-        float progress = Math.clamp(vampire.getPassiveLevelTicks() / (float) VampireLeveling.getPassiveLevelingDuration(), 0f, 1f);
+        int requiredBlood = VampireLeveling.getPassiveLevelingBlood(vampire.getLevel() + 1);
+        float progress = requiredBlood <= 0 ? 0f : Math.clamp(vampire.getPassiveLevelBlood() / (float) requiredBlood, 0f, 1f);
 
         GuiGraphicsExtractor graphics = event.getGuiGraphics();
         int backgroundX = screen.getLeftPos() - LEVELING_BACKGROUND_WIDTH;
@@ -65,7 +65,7 @@ public class ScreenEventHandler {
         int mouseX = event.getMouseX();
         int mouseY = event.getMouseY();
         if (mouseX >= backgroundX && mouseX <= backgroundX + LEVELING_BACKGROUND_WIDTH && mouseY >= backgroundY && mouseY <= backgroundY + LEVELING_BACKGROUND_HEIGHT) {
-            String rawText = I18n.get("gui.vampirism.faction_menu.passive_leveling.desc", (int) Math.ceil(ModConfig.balance().vpPassiveLevelingDays.get()), (int) (progress * 100));
+            String rawText = I18n.get("gui.vampirism.faction_menu.passive_leveling.desc", (int) (progress * 100));
             List<ClientTooltipComponent> lines = DescriptionUtil.normalizeTextWidth(rawText, 40).stream().map(line -> ClientTooltipComponent.create(FormattedCharSequence.forward(line, Style.EMPTY.withColor(ChatFormatting.GRAY)))).toList();
             graphics.tooltip(screen.font, lines, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
         }
