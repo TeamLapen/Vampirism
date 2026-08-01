@@ -17,7 +17,7 @@ public class AccessibilityOptionsScreenMixin {
     @ModifyReturnValue(method = "options(Lnet/minecraft/client/Options;)[Lnet/minecraft/client/OptionInstance;", at = @At("RETURN"))
     private static OptionInstance<?>[] vampirism$options(OptionInstance<?>[] original, Options options) {
         List<OptionInstance<?>> extended = new ArrayList<>(Arrays.asList(original));
-        extended.add(options.vampirism$invertedSunBlindness());
+        extended.add(options.vampirism$sunBlindnessIntensity());
         return extended.toArray(new OptionInstance<?>[0]);
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.client.OptionInstance;
 public interface IOptionsVampirismMock extends IOptions {
 
     @Override
-    default OptionInstance<Boolean> vampirism$invertedSunBlindness() {
+    default OptionInstance<Double> vampirism$sunBlindnessIntensity() {
         throw new IllegalStateException("This class is only supported as injection class");
     }
 }

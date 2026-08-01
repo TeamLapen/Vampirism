@@ -845,8 +845,7 @@
   "key.vampirism.toggle_vision": "Toggle Vampire Vision",
   "key.vampirism.select_ammo": "Select Quarrel Type",
 
-  "options.vampirism.invertedSunBlindness": "Inverted Sun Blindness",
-  "options.vampirism.invertedSunBlindness.tooltip": "Makes the overlay when looking at the sun as a vampire black instead of white.",
+  "options.vampirism.sunBlindnessIntensity": "Sun Blindness Intensity",
 
   "oil.vampirism.empty": "Uncraftable Oil",
   "oil.vampirism.plant": "Plant Oil",

@@ -4,5 +4,5 @@ import net.minecraft.client.OptionInstance;
 
 public interface IOptions {
 
-    OptionInstance<Boolean> vampirism$invertedSunBlindness();
+    OptionInstance<Double> vampirism$sunBlindnessIntensity();
 }
