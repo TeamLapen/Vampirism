@@ -44,7 +44,7 @@ public class SunBlindOverlay extends BaseOverlay {
         LocalPlayer player = mc().player;
         // This is for non-vampires, vampires are affected in the VampirePlayer class
         boolean affected = player != null && !Helper.isVampire(player) && player.hasEffect(ModEffects.SUN_SENSITIVITY);
-        this.effectIntensity = SunBlindUtil.update(this.effectIntensity, affected ? SunBlindUtil.computeTarget(player) : 0f);
+        this.effectIntensity = SunBlindUtil.update(this.effectIntensity, affected ? SunBlindUtil.computeTarget(player) * SunBlindUtil.EFFECT_INTENSITY : 0f);
     }
 
     @Override

@@ -16,6 +16,13 @@ public final class SunBlindUtil {
     private static final double RAY_MAX_DISTANCE = 128;
     private static final float RAMP_UP_SPEED = 0.5f;
     private static final float FADE_OUT_SPEED = 0.08f;
+    private static final int FULL_INTENSITY_LEVEL = 4;
+
+    public static final float EFFECT_INTENSITY = 1f / FULL_INTENSITY_LEVEL;
+
+    public static float levelIntensity(int vampireLevel) {
+        return Math.clamp(vampireLevel, 0, FULL_INTENSITY_LEVEL) / (float) FULL_INTENSITY_LEVEL;
+    }
 
     public static float update(float intensity, float target) {
         float speed = target > intensity ? RAMP_UP_SPEED : FADE_OUT_SPEED;

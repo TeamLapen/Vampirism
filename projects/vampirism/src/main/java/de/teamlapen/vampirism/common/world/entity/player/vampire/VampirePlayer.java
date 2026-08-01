@@ -923,7 +923,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             }
 
             if (event.getEntity().level().isClientSide()) {
-                float target = isSensitiveToSun() ? SunBlindUtil.computeTarget(player) : 0f;
+                float target = isSensitiveToSun() ? SunBlindUtil.computeTarget(player) * SunBlindUtil.levelIntensity(getLevel()) : 0f;
                 this.sunBlindIntensity = SunBlindUtil.update(this.sunBlindIntensity, target);
             }
         }
