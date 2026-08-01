@@ -1464,6 +1464,8 @@
   "vampirism.configuration.showSunHUDOverlay.tooltip": "When enabled, shows the sun damage warning in the HUD.",
   "vampirism.configuration.showSunBlindOverlay": "Sun Blinding Overlay",
   "vampirism.configuration.showSunBlindOverlay.tooltip": "When enabled, washes the screen white when a vampire looks directly at the sun.",
+  "vampirism.configuration.showSunBlindOverlayWithShaders": "Sun Blinding Overlay With Shaders",
+  "vampirism.configuration.showSunBlindOverlayWithShaders.tooltip": "When enabled, keeps the sun blinding overlay while an Iris shader pack is active. Shader packs usually apply their own sun glare, so the overlay is hidden by default in that case.",
 
   "vampirism.configuration.enforceRenderForestFog": "Enforce Forest Fog on Clients",
   "vampirism.configuration.enforceRenderForestFog.tooltip": "When enabled, prevents clients from disabling the vampire forest fog.",

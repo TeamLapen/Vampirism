@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui.overlay;
 
 import de.teamlapen.faction.client.gui.overlay.BaseOverlay;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.client.ShaderHandler;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.util.Helper;
@@ -49,7 +50,7 @@ public class SunBlindOverlay extends BaseOverlay {
 
     @Override
     public void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
-        if (!this.player().isAlive() || !mc().options.getCameraType().isFirstPerson()) return;
+        if (!this.player().isAlive() || !mc().options.getCameraType().isFirstPerson() || !isEnabledInConfig()) return;
 
         float blindIntensity = Helper.isVampire(player()) ? VampirePlayer.get(player()).getSunBlindIntensity() : effectIntensity;
         if (blindIntensity <= 0) return;
@@ -143,6 +144,7 @@ public class SunBlindOverlay extends BaseOverlay {
 
     @Override
     protected boolean isEnabledInConfig() {
-        return ModConfig.client().showSunBlindOverlay.get();
+        if (!ModConfig.client().showSunBlindOverlay.get()) return false;
+        return ModConfig.client().showSunBlindOverlayWithShaders.get() || !ShaderHandler.areShadersActive();
     }
 }

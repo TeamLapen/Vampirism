@@ -20,6 +20,7 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue showVampireRageHUDOverlay;
     public final ModConfigSpec.BooleanValue showSunHUDOverlay;
     public final ModConfigSpec.BooleanValue showSunBlindOverlay;
+    public final ModConfigSpec.BooleanValue showSunBlindOverlayWithShaders;
     public final ModConfigSpec.BooleanValue showNearbyVampireOverlay;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
@@ -64,6 +65,9 @@ public class ClientConfig {
         this.showSunBlindOverlay = builder
                 .comment("When enabled, washes the screen white when a vampire looks directly at the sun.")
                 .define("showSunBlindOverlay", true);
+        this.showSunBlindOverlayWithShaders = builder
+                .comment("When enabled, keeps the sun blinding overlay while an Iris shader pack is active. Shader packs usually apply their own sun glare, so the overlay is hidden by default in that case.")
+                .define("showSunBlindOverlayWithShaders", false);
         this.showNearbyVampireOverlay = builder
                 .comment("When enabled, shows the nearby vampire warning in the HUD.")
                 .define("showNearbyVampireOverlay", true);

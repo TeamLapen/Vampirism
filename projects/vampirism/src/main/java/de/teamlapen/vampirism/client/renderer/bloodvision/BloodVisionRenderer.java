@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.renderer.bloodvision;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.faction.client.IMinecraftAccessor;
-import de.teamlapen.vampirism.client.OptifineHandler;
+import de.teamlapen.vampirism.client.ShaderHandler;
 import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
 import de.teamlapen.vampirism.client.core.ModRenderPipelines;
 import de.teamlapen.vampirism.client.renderer.bloodvision.entries.BloodEntityEntry;
@@ -59,7 +59,7 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
     @SubscribeEvent
     public void onCameraSetup(ViewportEvent.ComputeCameraAngles event) {
         if (shouldRenderBloodVision()) {
-            this.reducedBloodVision = OptifineHandler.isShaders();
+            this.reducedBloodVision = ShaderHandler.areShadersActive();
             if (this.reducedBloodVision) {
                 MixinHooks.enforcingGlowing_bloodVision = true;
             }
