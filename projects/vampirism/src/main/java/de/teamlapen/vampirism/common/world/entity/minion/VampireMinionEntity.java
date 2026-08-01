@@ -9,6 +9,7 @@ import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.factions.minions.stats.MinionStat;
@@ -339,8 +340,8 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             super();
         }
 
-        public VampireMinionData(ILordPlayer<?> player, ICustomizationHolder customizationHolder) {
-            boolean skillEnabled = player.asSkillPlayer().map(ISkillPlayer::getSkillHandler).map(x -> x.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+        public VampireMinionData(ILordPlayer player, ICustomizationHolder customizationHolder) {
+            boolean skillEnabled = FactionPlayerHandler.get(player.asEntity()).getSkillHandler().map(x -> x.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
             this("Minion", customizationHolder.getEntityTextureType(),false, skillEnabled);
         }
 
@@ -416,6 +417,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
             return levelup;
         }
 
+        @Override
         public void setIncreasedStats(boolean hasIncreasedStats) {
             this.hasIncreasedStats = hasIncreasedStats;
         }

@@ -98,7 +98,7 @@ public class VampireSkills {
 
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LORD_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.SimpleVampireSkill(3, true).setToggleActions(vampire -> vampire.updateMinionAttributes(true), vampire -> vampire.updateMinionAttributes(false)));
+    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.SimpleVampireSkill(3, true).setToggleActions(vampire -> vampire.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(true)), vampire -> vampire.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(false))));
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_COLLECT = SKILLS.register("vampire_minion_collect", () -> new VampirismSkill.SimpleVampireSkill(2, true));
 
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DRACULA_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_dracula").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, true));

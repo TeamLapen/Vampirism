@@ -22,7 +22,7 @@ class GenderCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int setGender(CommandContext<CommandSourceStack> context, Player player, IPlayableFaction.TitleGender gender) {
-        FactionPlayerHandler.get(player).setTitleGender(gender);
+        FactionPlayerHandler.get(player).getPlayerLord().ifPresent(lord -> lord.setTitleGender(gender));
         context.getSource().sendSuccess(() -> Component.translatable("command.factionapi.base.gender.success"), false);
         return 0;
     }

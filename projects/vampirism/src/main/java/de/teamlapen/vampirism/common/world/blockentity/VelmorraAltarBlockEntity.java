@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
 import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.util.DamageHandler;
@@ -33,7 +34,7 @@ public class VelmorraAltarBlockEntity extends BlockEntity {
 
         FactionPlayerHandler factionPlayerHandler = FactionPlayerHandler.get(player);
         IPlayableFaction<?> faction = factionPlayerHandler.getFaction().value();
-        if (factionPlayerHandler.getLordLevel() != faction.getHighestLordLevel()) {
+        if (factionPlayerHandler.getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) != faction.getHighestLordLevel()) {
             player.sendOverlayMessage(Component.translatable("message.vampirism.velmorra_altar.weak"));
             return false;
         }

@@ -42,6 +42,7 @@ public class ExtendedPotionMix {
     public static class Builder {
         private final static Supplier<Ingredient> EMPTY_SUPPLIER = Ingredient::of;
         private static final Supplier<Ingredient> VAMPIRE_BLOOD = () -> Ingredient.of(BuiltInRegistries.ITEM.getValue(VIdentifier.mod("vampire_blood_bottle")));
+        private static final Supplier<Ingredient> DRACULA_BLOOD = () -> Ingredient.of(BuiltInRegistries.ITEM.getValue(VIdentifier.mod("draculas_blood")));
         private final Holder<Potion> input;
         private final Holder<Potion> output;
         private @NotNull Supplier<Ingredient> reagent1 = EMPTY_SUPPLIER;
@@ -61,6 +62,10 @@ public class ExtendedPotionMix {
 
         public Builder blood() {
             return this.extraIngredient(VAMPIRE_BLOOD);
+        }
+
+        public Builder draculaBlood() {
+            return this.extraIngredient(DRACULA_BLOOD);
         }
 
         public ExtendedPotionMix @NotNull [] build() {

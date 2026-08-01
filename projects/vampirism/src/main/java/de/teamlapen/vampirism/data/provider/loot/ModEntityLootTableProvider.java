@@ -100,6 +100,10 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 ;
         this.add(ADVANCED_HUNTER.get(), advancedHunter);
         this.add(ADVANCED_HUNTER_IMOB.get(), advancedHunter);
+        this.add(DRACULA.get(), LootTable.lootTable()
+                .withPool(LootPool.lootPool()
+                        .add(LootItem.lootTableItem(ModItems.DRACULAS_BLOOD).apply(SetItemCountFunction.setCount(UniformGenerator.between(15, 48))))
+                ));
 
         // No loot table
         Stream.of(
@@ -124,7 +128,6 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
                 PARTICLE_CLOUD,
                 REMAINS_DEFENDER,
                 VULNERABLE_REMAINS_DUMMY,
-                DRACULA,
                 BLOOD_PROJECTILE,
                 FLYING_NEEDLE,
                 FLYING_SWORD

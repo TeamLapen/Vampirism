@@ -5,6 +5,7 @@ import de.teamlapen.faction.api.factions.IFactionSpecificTags;
 import de.teamlapen.faction.api.factions.tasks.Task;
 import de.teamlapen.faction.api.factions.tasks.TaskReward;
 import de.teamlapen.faction.api.factions.tasks.TaskUnlocker;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.faction.common.factions.tasks.reward.ItemReward;
 import de.teamlapen.faction.common.util.Color;
@@ -22,6 +23,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -46,7 +48,7 @@ public class TaskRecipeCategory implements IRecipeCategory<Task> {
         int y = 40;
         graphics.vampirism$centeredText(minecraft.font, task.title(), getWidth()/2, 2, Color.GRAY.getRGB(), false);
         Registry<Task> tasks = minecraft.level.registryAccess().lookupOrThrow(FactionRegistries.Keys.TASK);
-        Component taskmasterComponent = ModRegistries.FACTIONS.listElements().filter(s -> IFactionSpecificTags.get().get(s, FactionRegistries.Keys.TASK).filter(t -> tasks.wrapAsHolder(task).is(t)).isPresent()).map(a -> a.value().getVillageData().getTaskMasterEntity()).filter(Objects::nonNull).map(EntityType::getDescriptionId).map(Component::translatable).reduce((comp1, comp2) -> comp1.append(", ").append(comp2)).orElse(Component.translatable("gui.vampirism.jei.task.representative"));
+        Component taskmasterComponent = ModRegistries.FACTIONS.listElements().filter(s -> IFactionSpecificTags.get().get(s, FactionRegistries.Keys.TASK).filter(t -> tasks.wrapAsHolder(task).is(t)).isPresent()).map(a -> a.components().get(FactionDataComponents.TASK_MASTER)).filter(Objects::nonNull).map(Holder::value).map(EntityType::getDescriptionId).map(Component::translatable).reduce((comp1, comp2) -> comp1.append(", ").append(comp2)).orElse(Component.translatable("gui.vampirism.jei.task.representative"));
         Component text = Component.translatable("gui.vampirism.jei.task.reward_obtain", taskmasterComponent);
 
         y += UtilLib.renderMultiLine(minecraft.font, graphics, text, 160, x, y, Color.GRAY.getRGB());

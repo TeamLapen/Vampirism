@@ -22,8 +22,8 @@ import java.util.Optional;
 
 public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCriterionTrigger.TriggerInstance> {
 
-    public void trigger(@NotNull ServerPlayer player, Holder<? extends IPlayableFaction<?>> faction, int level, int lordLevel) {
-        this.trigger(player, instance -> instance.matches(faction, level, lordLevel));
+    public void trigger(@NotNull ServerPlayer player, Holder<? extends IPlayableFaction<?>> faction, int level) {
+        this.trigger(player, instance -> instance.matches(faction, level));
     }
 
     @Override
@@ -31,53 +31,28 @@ public class FactionCriterionTrigger extends SimpleCriterionTrigger<FactionCrite
         return TriggerInstance.CODEC;
     }
 
-    public enum Type implements StringRepresentable {
-        LEVEL("level"),
-        LORD("lord");
-
-        private final String name;
-
-        Type(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public @NotNull String getSerializedName() {
-            return this.name;
-        }
-    }
-
-    public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull Type type, @Nullable Holder<? extends IPlayableFaction<?>> faction, int level) implements SimpleCriterionTrigger.SimpleInstance {
+    public record TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @Nullable Holder<? extends IPlayableFaction<?>> faction, int level) implements SimpleCriterionTrigger.SimpleInstance {
 
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(inst -> {
             return inst.group(
                     EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
-                    StringRepresentable.fromEnum(Type::values).fieldOf("type").forGetter(TriggerInstance::type),
                     ModCodecs.playableFaction().optionalFieldOf("faction").forGetter(p -> Optional.ofNullable(p.faction())),
                     ExtraCodecs.POSITIVE_INT.fieldOf("level").forGetter(TriggerInstance::level)
             ).apply(inst, TriggerInstance::new);
         });
 
         public static Criterion<FactionCriterionTrigger.TriggerInstance> level(@Nullable Holder<? extends IPlayableFaction<?>> faction, int level) {
-            return FactionAdvancements.TRIGGER_FACTION.get().createCriterion(new TriggerInstance(Optional.empty(), Type.LEVEL, faction, level));
-        }
-
-        public static Criterion<FactionCriterionTrigger.TriggerInstance> lord(@Nullable Holder<? extends IPlayableFaction<?>> faction, int level) {
-            return FactionAdvancements.TRIGGER_FACTION.get().createCriterion(new TriggerInstance(Optional.empty(), Type.LORD, faction, level));
+            return FactionAdvancements.TRIGGER_FACTION.get().createCriterion(new TriggerInstance(Optional.empty(), faction, level));
         }
 
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-        public TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull Type type, @NotNull Optional<Holder<? extends IPlayableFaction<?>>> faction, int level) {
-            this(player, type, faction.orElse(null), level);
+        public TriggerInstance(@NotNull Optional<ContextAwarePredicate> player, @NotNull Optional<Holder<? extends IPlayableFaction<?>>> faction, int level) {
+            this(player, faction.orElse(null), level);
         }
 
-        public boolean matches(Holder<? extends IFaction<?>> faction, int level, int lordLevel) {
+        public boolean matches(Holder<? extends IFaction<?>> faction, int level) {
             if ((faction == null && this.faction == null) || Objects.equals(this.faction, faction)) {
-                if (type == Type.LEVEL) {
-                    return level >= this.level;
-                } else if (type == Type.LORD) {
-                    return lordLevel >= this.level;
-                }
+                return level >= this.level;
             }
             return false;
         }

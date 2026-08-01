@@ -8,6 +8,7 @@ import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.factions.minions.stats.MinionStat;
@@ -211,7 +212,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     @Override
     public boolean canUseCrossbow(ItemStack stack) {
-        return stack.getItem() instanceof TechCrossbowItem ? getLordOpt().flatMap(ILordPlayer::asSkillPlayer).map(x -> x.getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false) : true;
+        return stack.getItem() instanceof TechCrossbowItem ? getLordOpt().flatMap(x -> FactionPlayerHandler.get(x.asEntity()).getSkillHandler()).map(x -> x.isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false) : true;
     }
 
     @Override
@@ -236,7 +237,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public @NotNull Predicate<ItemStack> getEquipmentPredicate(EquipmentSlot slotType) {
         Predicate<ItemStack> predicate = super.getEquipmentPredicate(slotType);
         if (slotType == EquipmentSlot.MAINHAND) {
-            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || getLord().flatMap(ILordPlayer::asSkillPlayer).map(s -> s.getSkillHandler().isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false));
+            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || getLord().flatMap(x -> FactionPlayerHandler.get(x.asEntity()).getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false));
         }
         return predicate;
     }
@@ -305,8 +306,8 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             super();
         }
 
-        public HunterMinionData(ILordPlayer<?> player, ICustomizationHolder customizationHolder) {
-            boolean skillEnabled = player.asSkillPlayer().map(ISkillPlayer::getSkillHandler).map(x -> x.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+        public HunterMinionData(ILordPlayer player, ICustomizationHolder customizationHolder) {
+            boolean skillEnabled = FactionPlayerHandler.get(player.asEntity()).getSkillHandler().map(x -> x.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
             this("Minion", customizationHolder.getEntityTextureType(), false, skillEnabled);
         }
 
@@ -378,6 +379,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
             return levelup;
         }
 
+        @Override
         public void setIncreasedStats(boolean hasIncreasedStats) {
             this.hasIncreasedStats = hasIncreasedStats;
         }

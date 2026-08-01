@@ -37,7 +37,7 @@ public class TotemRenderer implements BlockEntityRenderer<TotemBlockEntity, Tote
         renderState.capturingProgress = blockEntity.getCaptureProgress();
         Holder<? extends IFaction<?>> controllingFaction = blockEntity.getControllingFaction();
         if (!IFaction.isNeutral(controllingFaction) && FactionConfig.client().renderTotemFactionName.getAsBoolean()) {
-            renderState.factionName = controllingFaction.value().getNamePlural().withStyle(style -> style.withColor(controllingFaction.value().getChatColor()));
+            renderState.factionName = controllingFaction.value().getNamePlural().plainCopy().withStyle(style -> style.withColor(controllingFaction.value().getChatColor()));
         }
         renderState.distanceToCamera = blockEntity.getBlockPos().distToCenterSqr(cameraPosition);
 

@@ -307,6 +307,7 @@ public class ModItems {
     public static final DeferredItem<BlockItem> GARLIC_DIFFUSER_CORE_LONG = fromBlock(ModBlocks.GARLIC_DIFFUSER_CORE_LONG, x -> x.factions$withShiftDescription(Component.translatable("tooltip.vampirism.garlic_diffuser_core")));
     public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_IRON_BLOCK, (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, PureLevel.LOW)));
     public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK,  (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, new PureLevel(4))));
+    public static final DeferredItem<PureLevelBlockItem> BLOOD_INFUSED_REFINED_IRON_BLOCK = fromBlock(ModBlocks.BLOOD_INFUSED_REFINED_IRON_BLOCK,  (block, itemProps) -> new PureLevelBlockItem(block, itemProps.component(ModDataComponents.PURE_LEVEL, new PureLevel(5))));
     public static final DeferredItem<BlockItem> ALTAR_INSPIRATION = fromBlock(ModBlocks.ALTAR_INSPIRATION);
     public static final DeferredItem<BlockItem> ALTAR_INFUSION = fromBlock(ModBlocks.ALTAR_INFUSION);
     public static final DeferredItem<BlockItem> ALTAR_PILLAR = fromBlock(ModBlocks.ALTAR_PILLAR);
@@ -445,6 +446,7 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CHANDELIER_BLACK = fromChandelier(ModBlocks.CHANDELIER_BLACK);
     public static final DeferredItem<BlockItem> VELMORRA_ALTAR = fromBlock(ModBlocks.VELMORRA_ALTAR);
     public static final DeferredItem<BlockItem> CHALICE = fromBlock(ModBlocks.CHALICE);
+    public static final DeferredItem<Item> DRACULAS_BLOOD = ITEMS.registerItem("draculas_blood", Item::new);
 
 
     @SuppressWarnings("unchecked")

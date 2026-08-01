@@ -3,10 +3,9 @@
   "criteria": {
     "level": {
       "conditions": {
-        "type": "lord",
         "level": 1
       },
-      "trigger": "factionapi:faction"
+      "trigger": "factionapi:lord"
     }
   },
   "display": {

@@ -1,7 +1,7 @@
 package de.teamlapen.faction.common.factions.neutral;
 
 import de.teamlapen.faction.api.factions.IDisguise;
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.api.world.entities.player.INeutralPlayer;
 import de.teamlapen.faction.common.core.DefaultFactions;
 import de.teamlapen.faction.common.core.FactionAttachments;
@@ -32,7 +32,7 @@ public class NeutralPlayer extends FactionBasePlayer<INeutralPlayer> implements 
     }
 
     @Override
-    public void levelChanged(LevelingChange changes) {
+    public void levelChanged(FactionUpdate changes) {
 
     }
 
@@ -48,6 +48,12 @@ public class NeutralPlayer extends FactionBasePlayer<INeutralPlayer> implements 
 
     @Override
     public @Nullable Component getLevelDisplay() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Component getChatDisplay() {
         return null;
     }
 

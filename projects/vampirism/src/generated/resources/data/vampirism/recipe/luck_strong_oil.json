@@ -1,0 +1,30 @@
+{
+  "type": "vampirism:alchemical_table",
+  "common_info": {},
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:dracula_blood"
+      }
+    },
+    "items": "vampirism:oil_bottle"
+  },
+  "input": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:luck"
+      }
+    },
+    "items": "minecraft:potion"
+  },
+  "result": {
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:luck_strong"
+      }
+    },
+    "id": "vampirism:oil_bottle"
+  }
+}

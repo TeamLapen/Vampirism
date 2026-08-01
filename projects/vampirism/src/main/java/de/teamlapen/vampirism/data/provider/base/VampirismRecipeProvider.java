@@ -173,38 +173,46 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
 
     protected void fiveTieredMetalInfusionRecipe(ItemLike ingredientItem, Holder<Item> result) {
         for (int i = 0; i < 5; i++) {
-            metalInfusionRecipe(ingredientItem, result, i);
+            metalInfusionRecipe(PureBloodItem.getBloodItemForLevel(i), ingredientItem, result, i);
         }
+    }
+
+    protected void extraTieredMetalInfusionRecipe(ItemLike ingredientItem, Holder<Item> result) {
+        metalInfusionRecipe(ModItems.DRACULAS_BLOOD.get(), ingredientItem, result, 5);
     }
 
     protected void fiveTieredMetalInfusionRecipe(TagKey<Item> ingredientTag, Holder<Item> result) {
         for (int i = 0; i < 5; i++) {
-            metalInfusionRecipe(ingredientTag, result, i);
+            metalInfusionRecipe(PureBloodItem.getBloodItemForLevel(i), ingredientTag, result, i);
         }
     }
 
-    protected void metalInfusionRecipe(Ingredient inputIngredient, String ingredientName, Holder<Item> result, int level, Criterion<InventoryChangeTrigger.TriggerInstance> hasIngredientTrigger) {
-        ItemLike pureBloodRequired = PureBloodItem.getBloodItemForLevel(level);
+    protected void extraTieredMetalInfusionRecipe(TagKey<Item> ingredientTag, Holder<Item> result) {
+        metalInfusionRecipe(ModItems.DRACULAS_BLOOD.get(), ingredientTag, result, 5);
+    }
+
+
+    protected void metalInfusionRecipe(ItemLike baseIngredient, Ingredient inputIngredient, String ingredientName, Holder<Item> result, int level, Criterion<InventoryChangeTrigger.TriggerInstance> hasIngredientTrigger) {
         Holder<Item> leftoverBloodItem = level == 0 ? ModItems.VAMPIRE_BLOOD_BOTTLE : PureBloodItem.getPureBloodHolder(level - 1);
         int burnTime = 200 + 100 * level;
 
         infuser(PureLevel.template(result, level))
-                .ingredients(Ingredient.of(pureBloodRequired))
+                .ingredients(Ingredient.of(baseIngredient))
                 .input(inputIngredient)
                 .results(new ItemStackTemplate(leftoverBloodItem))
                 .burnTime(burnTime)
                 .unlockedBy(ingredientName, hasIngredientTrigger)
-                .unlockedBy("has_pure_blood", has(pureBloodRequired))
+                .unlockedBy("has_pure_blood", has(baseIngredient))
                 .save(this.output, modString(ingredientName + "_pure_" + level));
     }
 
-    protected void metalInfusionRecipe(ItemLike ingredientItem, Holder<Item> result, int level) {
+    protected void metalInfusionRecipe(ItemLike baseIngredient, ItemLike ingredientItem, Holder<Item> result, int level) {
         String ingredientName = RegUtil.id(ingredientItem.asItem()).getPath();
-        metalInfusionRecipe(Ingredient.of(ingredientItem), ingredientName, result, level, has(ingredientItem));
+        metalInfusionRecipe(baseIngredient, Ingredient.of(ingredientItem), ingredientName, result, level, has(ingredientItem));
     }
 
-    protected void metalInfusionRecipe(TagKey<Item> ingredientTag, Holder<Item> result, int level) {
-        metalInfusionRecipe(tag(ingredientTag), getTagName(ingredientTag), result, level, has(ingredientTag));
+    protected void metalInfusionRecipe(ItemLike baseIngredient, TagKey<Item> ingredientTag, Holder<Item> result, int level) {
+        metalInfusionRecipe(baseIngredient, tag(ingredientTag), getTagName(ingredientTag), result, level, has(ingredientTag));
     }
 
     protected static String getTagName(TagKey<Item> tag) {
@@ -213,8 +221,8 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
         return lastSeparator == -1 ? path : path.substring(lastSeparator + 1);
     }
 
-    protected void fiveTieredInfusedMetalSmeltingRecipe(ItemLike rawIngredient, Holder<Item> result) {
-        for (int i = 0; i < 5; i++) {
+    protected void sixTieredInfusedMetalSmeltingRecipe(ItemLike rawIngredient, Holder<Item> result) {
+        for (int i = 0; i < 6; i++) {
             infusedMetalSmeltingRecipe(rawIngredient, result, i);
         }
     }

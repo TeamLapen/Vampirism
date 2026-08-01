@@ -97,7 +97,7 @@ public class TaskEntryWidget extends AbstractWidget {
         } else {
             message = Component.translatable("gui.factionapi.faction_menu.last_known_pos.unknown").withStyle(ChatFormatting.GOLD);
         }
-        Minecraft.getInstance().player.sendOverlayMessage(message);
+        Minecraft.getInstance().player.sendSystemMessage(message);
     }
 
     private void buildWidgets() {

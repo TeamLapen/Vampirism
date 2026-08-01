@@ -4,35 +4,27 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.event.PlayerFactionEvent;
-import de.teamlapen.faction.api.factions.IFaction;
-import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
-import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.*;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
-import de.teamlapen.faction.api.factions.lord.ILordPlayer;
-import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
-import de.teamlapen.faction.api.factions.refinements.IRefinementPlayer;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.factions.tasks.ITaskManager;
-import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.core.*;
 import de.teamlapen.faction.common.event.FactionEventFactory;
 import de.teamlapen.faction.common.factions.actions.ActionKeys;
-import de.teamlapen.faction.common.factions.minions.MinionWorldData;
-import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
-import de.teamlapen.faction.common.tags.FactionTaskTags;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.common.util.DamageHandler;
 import de.teamlapen.faction.common.util.ModCodecs;
 import de.teamlapen.faction.common.util.ScoreboardUtil;
 import de.teamlapen.faction.common.world.ModDamageSources;
 import de.teamlapen.faction.common.world.entities.IPlayerEventListener;
+import de.teamlapen.faction.common.world.inventory.FactionMenu;
 import de.teamlapen.faction.server.FactionLogger;
 import de.teamlapen.sync.AttachmentSync;
 import net.minecraft.core.Holder;
@@ -41,6 +33,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -51,8 +44,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,14 +58,12 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     }
 
     public static <T extends IFactionPlayer<T>> Optional<T> getCurrentFactionPlayer(Player player) {
-        return get(player).getCurrentFactionPlayer();
+        return Optional.of(get(player).factionPlayer());
     }
 
     private final Player player;
     private Holder<? extends IPlayableFaction<?>> currentFaction = DefaultFactions.NEUTRAL;
     private int currentLevel = 0;
-    private int currentLordLevel = 0;
-    private IPlayableFaction.TitleGender titleGender = IPlayableFaction.TitleGender.UNKNOWN;
 
     public FactionPlayerHandler(Player player) {
         this.player = player;
@@ -119,21 +108,13 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         }
     }
 
-    @Override
-    public <T extends IFactionPlayer<T>> Optional<T> getCurrentFactionPlayer() {
-        return Optional.of(factionPlayer());
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public <T extends ISkillPlayer<T>> Optional<T> getCurrentSkillPlayer() {
-        return this.getCurrentFactionPlayer().filter(s -> s instanceof ISkillPlayer<?>).map(s -> (T) s);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends IRefinementPlayer<T>> Optional<T> getCurrentRefinementPlayer() {
-        return this.getCurrentFactionPlayer().filter(s -> s instanceof IRefinementPlayer<?>).map(s -> (T) s);
+        if (factionPlayer() instanceof ISkillPlayer<?> skillPlayer) {
+            return Optional.of((T)skillPlayer);
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -147,25 +128,9 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     }
 
     @Override
-    public <T extends IRefinementPlayer<T>> Optional<IRefinementHandler<T>> getRefinementHandler() {
-        return this.<T>getCurrentRefinementPlayer().map(IRefinementPlayer::getRefinementHandler);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends ITaskPlayer<T>> Optional<T> getTaskPlayer() {
-        return getCurrentFactionPlayer().filter(s -> s instanceof ITaskPlayer<?>).map(s -> (T) s);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends ILordPlayer<T>> Optional<T> getLordPlayer() {
-        return getCurrentFactionPlayer().filter(s -> s instanceof ILordPlayer<?>).map(s -> (T) s);
-    }
-
-    @Override
-    public Optional<ITaskManager> getTaskManager() {
-        return getTaskPlayer().map(ITaskPlayer::getTaskManager);
+    public <TInterface> Optional<TInterface> getExtension(Class<TInterface> type) {
+        FactionExtensionType<TInterface> extension = currentFaction.value().extension(type);
+        return extension == null ? Optional.empty() : Optional.of(extension.get(player));
     }
 
     @Override
@@ -184,16 +149,6 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     }
 
     @Override
-    public int getLordLevel() {
-        return currentLordLevel;
-    }
-
-    @Override
-    public IPlayableFaction.TitleGender titleGender() {
-        return this.titleGender;
-    }
-
-    @Override
     public <T extends IFaction<?>> boolean isInFaction(@Nullable Holder<T> f) {
         return IFaction.is(currentFaction, f);
     }
@@ -206,7 +161,7 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
     @Override
     public void joinFaction(Holder<? extends IPlayableFaction<?>> faction) {
         if (canJoin(faction)) {
-            setFaction(LevelingChange.builder().faction(faction).level(1).build());
+            setFaction(FactionUpdate.builder().faction(faction).level(1).build());
         }
     }
 
@@ -219,33 +174,10 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         return false;
     }
 
-    /**
-     * Reset all lord task that should be available for players at the given lord level
-     */
-    public void resetLordTasks() {
-        getTaskManager().ifPresent(manager -> {
-            this.player.level().registryAccess().lookupOrThrow(FactionRegistries.Keys.TASK).getTagOrEmpty(FactionTaskTags.AWARDS_LORD_LEVEL).forEach(holder -> {
-                holder.unwrapKey().ifPresent(manager::resetUniqueTask);
-            });
-        });
-    }
-
-    public boolean setTitleGender(boolean female) {
-        var gender = female ? IPlayableFaction.TitleGender.FEMALE : IPlayableFaction.TitleGender.MALE;
-        return this.setTitleGender(gender);
-    }
-
-    public boolean setTitleGender(IPlayableFaction.TitleGender female) {
-        this.titleGender = female;
-        player.refreshDisplayName();
-        sync();
-        return true;
-    }
-
     @Override
     public void leaveFaction(boolean die) {
         Holder<? extends IFaction<?>> oldFaction = currentFaction;
-        setFaction(LevelingChange.neutral());
+        setFaction(FactionUpdate.neutral());
         player.sendOverlayMessage(Component.translatable("command.factionapi.base.level.successful", player.getName(), oldFaction.value().getNameSingular(), 0));
         if (die) {
             DamageHandler.hurtModded((ServerLevel) this.player.level(), player, ModDamageSources::leaveFaction, 10000);
@@ -267,53 +199,27 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         }
     }
 
-    private void updateCache() {
-        player.refreshDisplayName();
+    @Override
+    public void onPlayerLoggedIn() {
+        this.player.refreshDisplayName();
     }
 
     @Override
-    public boolean setFaction(LevelingChange param) {
+    public boolean setFaction(FactionUpdate param) {
         var oldFaction = this.currentFaction;
         var oldLevel = this.currentLevel;
-        var oldLordLevel = this.currentLordLevel;
-        var newFaction = param.getNewFaction(oldFaction);
+        var newFaction = param.getFaction(oldFaction);
         boolean changedFaction = !IFaction.is(currentFaction, newFaction);
         int newLevel = oldLevel;
-        int newLordLevel = oldLordLevel;
 
-        if (changedFaction) {
-            if (!param.hasLevelChange() && !param.hasLordLevelChange()) {
-                newLevel = 1;
-                newLordLevel = 0;
-            } else if (!param.hasLordLevelChange()) {
-                newLordLevel = 0;
-            }
-        }
-         if (changedFaction && (!param.hasLevelChange() && !param.hasLordLevelChange())) {
+        if (changedFaction && !param.hasLevelChange()) {
             newLevel = 1;
-            newLordLevel = 0;
         }
-
-        if (param.hasLevelChange() && !param.hasLordLevelChange()) {
-            newLevel = param.getNewLevel();
-            if (newLevel < newFaction.value().getHighestReachableLevel()) {
-                newLordLevel = 0;
-            }
+        if (param.hasLevelChange()) {
+            newLevel = param.getLevel();
         }
-        if (param.hasLordLevelChange()) {
-            newLordLevel = param.getNewLordLevel();
-            if (newLordLevel > 0) {
-                newLevel = newFaction.value().getHighestReachableLevel();
-            } else {
-                newLevel = param.getNewLevel(newFaction.value().getHighestReachableLevel());
-            }
-        }
-
-        newLevel = Math.min(newLevel, newFaction.value().getHighestReachableLevel());
-        newLordLevel = Math.min(newLordLevel, newFaction.value().getHighestLordLevel());
 
         newLevel = Math.clamp(newLevel, 0, newFaction.value().getHighestReachableLevel());
-        newLordLevel = Math.clamp(newLordLevel, 0, newFaction.value().getHighestLordLevel());
 
         if (changedFaction) {
             if (!this.currentFaction.value().getPlayerCapability(player).canLeaveFaction()) {
@@ -327,49 +233,29 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
             return false;
         }
 
-        if (changedFaction && factionPlayer() instanceof ITaskPlayer<?> taskPlayer) {
-            taskPlayer.getTaskManager().reset();
-        }
+        final var finalParam = param.copy()
+                .level(newLevel)
+                .faction(newFaction).build();
+        param = finalParam;
 
-        if (changedFaction || newLordLevel < oldLordLevel) {
-            resetLordTasks();
+        if (changedFaction) {
+            oldFaction.value().getExtensions().values().forEach(extension -> extension.cleanup(this.player));
+            oldFaction.value().getPlayerCapability(this.player).leaveFaction();
         }
-
 
         this.currentFaction = newFaction;
         this.currentLevel = newLevel;
-        this.currentLordLevel = newLordLevel;
 
-        param = param.copy()
-                .level(this.currentLevel)
-                .lordLevel(this.currentLordLevel)
-                .faction(this.currentFaction).build();
-
-        if (changedFaction) {
-            oldFaction.value().getPlayerCapability(this.player).leaveFaction();
-        }
-        var newFactionData = newFaction.value().getPlayerCapability(this.player);
-        newFactionData.levelChanged(param);
+        newFaction.value().getPlayerCapability(this.player).levelChanged(finalParam);
+        newFaction.value().getExtensions().values().forEach(extension -> {
+            if (extension.get(player) instanceof IFactionExtension fe) {
+                fe.setLevel(finalParam);
+            }
+        });
 
         this.checkSkillTreeLocks();
-        this.updateCache();
 
         ScoreboardUtil.updateScoreboard(this.player, ScoreboardUtil.FACTION_CRITERIA, this.currentFaction.value().hashCode());
-
-        if (changedFaction && oldFaction instanceof ILordPlayer<?> lordPlayer) {
-            MinionWorldData.getData(this.player.level()).ifPresent(data -> {
-                data.removeController(this.player.getUUID());
-            });
-        }
-
-        if (newFactionData instanceof ILordPlayer<?> lordPlayer) {
-            MinionWorldData.getData(this.player.level()).ifPresent(data -> {
-                PlayerMinionController c = data.getController(this.player.getUUID());
-                if (c != null) {
-                    c.setMaxMinions(this.currentFaction, lordPlayer.getMaxMinions());
-                }
-            });
-        }
 
         if (this.player instanceof ServerPlayer) {
             FactionLogger.info(FactionLogger.FACTION, param.toJson());
@@ -381,9 +267,10 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
 
         FactionEventFactory.fireLevelChangedEvent(this, param);
 
+        this.player.refreshDisplayName();
         sync();
-        if (player instanceof ServerPlayer serverPlayer) {
-            FactionAdvancements.TRIGGER_FACTION.get().trigger(serverPlayer, currentFaction, currentLevel, currentLordLevel);
+        if (this.player instanceof ServerPlayer serverPlayer) {
+            FactionAdvancements.TRIGGER_FACTION.get().trigger(serverPlayer, currentFaction, currentLevel);
         }
         return true;
     }
@@ -399,10 +286,9 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
 
     @Override
     protected void registerProperties() {
+        super.registerProperties();
         registerProperty(FIdentifier.mod("faction")).simple(ModCodecs.playableFaction()).defaultValue(DefaultFactions.NEUTRAL).provider(() -> this.currentFaction).commonLoader(holder -> this.currentFaction = holder, Comparator.comparing(IHolderExtension::getKey)).register();
         registerProperty(FIdentifier.mod("level")).simple(0, () -> this.currentLevel, l -> this.currentLevel = l);
-        registerProperty(FIdentifier.mod("lord_level")).simple(0, () -> this.currentLordLevel, l -> this.currentLordLevel = l);
-        registerProperty(FIdentifier.mod("title_gender")).simple(IPlayableFaction.TitleGender.CODEC).defaultValue(IPlayableFaction.TitleGender.UNKNOWN).provider(() -> this.titleGender).commonLoader(l -> this.titleGender = l, Enum::compareTo).register();
     }
 
     @Override
@@ -410,14 +296,14 @@ public class FactionPlayerHandler extends AttachmentSync implements IFactionPlay
         this.player.refreshDisplayName();
     }
 
-    private record ActionBinding(ActionKeys key, Holder<? extends IAction<?>> action) {
-        public static final Codec<ActionBinding> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ActionKeys.CODEC.fieldOf("key").forGetter(ActionBinding::key),
-                ((Codec<Holder<? extends IAction<?>>>) (Object) ModRegistries.ACTIONS.holderByNameCodec()).fieldOf("action").forGetter(ActionBinding::action)
-        ).apply(instance, ActionBinding::new));
-    }
-
     //</editor-fold>
+
+    public void openFactionMenu() {
+        if (!player.isAlive()) return;
+        if (IFaction.isNeutral(getFaction())) return;
+        player.openMenu(new SimpleMenuProvider((i, inventory, player) -> new FactionMenu(i, inventory), Component.empty()));
+        getTaskManager().ifPresent(ITaskManager::initializeFactionMenu);
+    }
 
     public static class AttachmentOptions extends AttachmentSynchronization.PlayerOptions<FactionPlayerHandler> {
 

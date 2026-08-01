@@ -1,6 +1,7 @@
 package de.teamlapen.faction.common.core;
 
 import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillPointProvider;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.util.REFERENCE;
@@ -19,7 +20,7 @@ public class FactionSkillPointProvider {
 
     public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> NONE = SKILL_POINT_PROVIDERS.register("none", () -> (factionPlayer, tree) -> 0);
     public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> LEVELING = SKILL_POINT_PROVIDERS.register("leveling", () -> (factionPlayer, tree) -> tree.is(FactionSkillTreeTags.DEFAULT) ? (int) (Math.max(0, factionPlayer.getLevel() - 1) * FactionConfig.server().factionSkillPointsPerLevel.get()) : 0);
-    public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> LORD_LEVELING = SKILL_POINT_PROVIDERS.register("lord_leveling", () -> (factionPlayer, tree) -> tree.is(FactionSkillTreeTags.DEFAULT) ? (int) (Math.max(0, FactionPlayerHandler.get(factionPlayer.asEntity()).getLordLevel() - 1) * FactionConfig.server().factionSkillPointsPerLordLevel.get()) : 0);
+    public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> LORD_LEVELING = SKILL_POINT_PROVIDERS.register("lord_leveling", () -> (factionPlayer, tree) -> tree.is(FactionSkillTreeTags.DEFAULT) ? (int) (Math.max(0, FactionPlayerHandler.get(factionPlayer.asEntity()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) - 1) * FactionConfig.server().factionSkillPointsPerLordLevel.get()) : 0);
     public static final DeferredHolder<ISkillPointProvider, ISkillPointProvider> CONFIG_UNLOCK_ALL = SKILL_POINT_PROVIDERS.register("config_unlock_all", () -> new ISkillPointProvider() {
 
         @Override

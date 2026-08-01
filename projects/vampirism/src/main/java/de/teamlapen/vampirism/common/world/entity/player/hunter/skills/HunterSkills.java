@@ -10,6 +10,8 @@ import de.teamlapen.faction.common.factions.skills.SkillTree;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.common.advancements.critereon.DraculaCriterion;
+import de.teamlapen.vampirism.common.advancements.critereon.MarshallCriterion;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -17,6 +19,7 @@ import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
+import de.teamlapen.vampirism.common.world.entity.player.refinements.Refinement;
 import de.teamlapen.vampirism.common.world.entity.player.skills.ActionSkill;
 import de.teamlapen.vampirism.common.world.entity.player.skills.VampirismSkill;
 import net.minecraft.advancements.criterion.EntityPredicate;
@@ -79,9 +82,14 @@ public class HunterSkills {
 
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LORD_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.SimpleHunterSkill(3, true).setToggleActions(hunter -> hunter.updateMinionAttributes(true), hunter -> hunter.updateMinionAttributes(false)));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.SimpleHunterSkill(3, true).setToggleActions(hunter -> hunter.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(true)), hunter -> hunter.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(false))));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_TECH_CROSSBOWS = SKILLS.register("minion_tech_crossbows", () -> new VampirismSkill.SimpleHunterSkill(1, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.SimpleHunterSkill(2, true));
+
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MARSHALL_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().identifier().withSuffix("_marshall").getPath(), () -> new VampirismSkill.MarshallSkill(1, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_ALCHEMIST = SKILLS.register("master_alchemist", () -> new VampirismSkill.MarshallSkill(1, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ULTIMATE_BREWER = SKILLS.register("ultimate_brewer", () -> new VampirismSkill.MarshallSkill(1, true));
+
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {
@@ -127,6 +135,10 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> LORD_5 = node("lord_5");
         public static final ResourceKey<ISkillNode> LORD_6 = node("lord_6");
 
+        public static final ResourceKey<ISkillNode> MARSHALL_ROOT = node("marshall_root");
+        public static final ResourceKey<ISkillNode> MARSHALL_2 = node("marshall_2");
+        public static final ResourceKey<ISkillNode> MARSHALL_3 = node("marshall_3");
+
         private static ResourceKey<ISkillNode> node(String path) {
             return ResourceKey.create(FactionRegistries.Keys.SKILL_NODE, VIdentifier.mod("hunter/" + path));
         }
@@ -171,12 +183,17 @@ public class HunterSkills {
             context.register(LORD_4, new SkillNode(MINION_COLLECT));
             context.register(LORD_5, new SkillNode(LordSkills.MINION_RECOVERY));
             context.register(LORD_6, new SkillNode(MINION_TECH_CROSSBOWS));
+
+            context.register(MARSHALL_ROOT, new SkillNode(HunterSkills.MARSHALL_ROOT));
+            context.register(MARSHALL_2, new SkillNode(MASTER_ALCHEMIST));
+            context.register(MARSHALL_3, new SkillNode(ULTIMATE_BREWER));
         }
     }
 
     public static class Trees {
         public static final ResourceKey<ISkillTree> LEVEL = tree("level");
         public static final ResourceKey<ISkillTree> LORD = tree("lord");
+        public static final ResourceKey<ISkillTree> MARSHALL = tree("marshall");
 
         private static ResourceKey<ISkillTree> tree(String path) {
             return ResourceKey.create(FactionRegistries.Keys.SKILL_TREE, VIdentifier.mod("hunter/" + path));
@@ -186,6 +203,7 @@ public class HunterSkills {
             HolderGetter<ISkillNode> lookup = context.lookup(FactionRegistries.Keys.SKILL_NODE);
             context.register(LEVEL, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.faction(ModFactions.HUNTER)).build(), new ItemStackTemplate(ModItems.VAMPIRE_BOOK), Component.translatable("gui.vampirism.skills.level"), Optional.of(VIdentifier.mc("block/spruce_planks"))));
             context.register(LORD, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.HUNTER)).build(), new ItemStackTemplate(ModItems.HUNTER_MINION_EQUIPMENT), Component.translatable("gui.vampirism.skills.lord"), Optional.of(VIdentifier.mc("block/spruce_planks"))));
+            context.register(MARSHALL, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(MarshallCriterion.INSTANCE).build(), new ItemStackTemplate(ModItems.STAKE), Component.translatable("gui.vampirism.skills.marshall"), Optional.of(VIdentifier.mc("block/spruce_planks")), ModSkillTreeTags.MARSHALL));
         }
 
     }

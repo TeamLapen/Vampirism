@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public IActionResult activate(final @NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activate(final IVampirePlayer vampire, ActivationContext context) {
         if (vampire.asEntity().level().environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, vampire.asEntity().position())) {
             return IActionResult.SUCCESS;
         }
@@ -42,7 +41,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
         return IActionResult.SUCCESS;
     }
 
-    protected void freezeEntities(@NotNull IVampirePlayer vampire) {
+    protected void freezeEntities(IVampirePlayer vampire) {
         Player player = vampire.asEntity();
         IFactionPredicate build = IFactionPredicate.builder(ModFactions.VAMPIRE).ignoreDisguise().and(EntitySelector.NO_SPECTATORS).build();
         List<LivingEntity> l = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(7, 4, 7), build);
@@ -62,7 +61,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
         }
     }
 
-    protected void freezeBlocks(@NotNull IVampirePlayer vampire) {
+    protected void freezeBlocks(IVampirePlayer vampire) {
         Player player = vampire.asEntity();
         Level level = player.level();
         for (int i = -7; i < 7; i++) {

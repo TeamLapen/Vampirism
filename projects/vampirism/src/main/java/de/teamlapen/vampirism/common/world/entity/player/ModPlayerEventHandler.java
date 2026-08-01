@@ -484,7 +484,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void gilderEquipped(LivingEquipmentChangeEvent event) {
         if (event.getEntity() instanceof Player player && event.getSlot() == EquipmentSlot.CHEST && event.getTo().has(DataComponents.GLIDER)) {
-            IDraculaPlayer.getDracula(player).ifPresent(IDraculaPlayer::closeWings);
+            IDraculaPlayer.getPresentDracula(player).ifPresent(IDraculaPlayer::closeWings);
         }
     }
 

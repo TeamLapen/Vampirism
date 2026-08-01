@@ -22,6 +22,6 @@ public class DraculaCriterion implements EntitySubPredicate {
 
     @Override
     public boolean matches(@NonNull Entity entity, @NonNull ServerLevel level, @Nullable Vec3 p_468681_) {
-        return entity instanceof Player player && IDraculaPlayer.getDracula(player).filter(IDraculaPlayer::isDracula).isPresent();
+        return entity instanceof Player player && IDraculaPlayer.getPresentDracula(player).isPresent();
     }
 }

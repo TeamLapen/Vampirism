@@ -754,96 +754,165 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(Ingredient.of(Items.WHEAT_SEEDS))
                 .unlockedBy("has_bottles", has(Items.GLASS_BOTTLE))
                 .unlockedBy("has_wheat_seeds", has(Items.WHEAT_SEEDS))
-                .save(output, modString("plant_oil"));
+                .save(output);
         alchemyTable(ModOils.VAMPIRE_BLOOD)
                 .plantOilIngredient()
                 .input(Ingredient.of(ModItems.VAMPIRE_BLOOD_BOTTLE))
                 .unlockedBy("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE))
-                .save(output, modString("vampire_blood_oil"));
+                .save(output);
+        alchemyTable(ModOils.DRACULA_BLOOD)
+                .plantOilIngredient()
+                .input(Ingredient.of(ModItems.DRACULAS_BLOOD))
+                .unlockedBy("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE))
+                .save(output);
         alchemyTable(ModOils.HEALING)
                 .bloodOilIngredient()
                 .input(potion(Potions.HEALING, Potions.STRONG_HEALING))
-                .save(output, modString("healing_oil"));
+                .save(output);
+        alchemyTable(ModOils.HEALING_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.HEALING, Potions.STRONG_HEALING))
+                .save(output);
         alchemyTable(ModOils.POISON)
                 .bloodOilIngredient()
                 .input(potion(Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON))
-                .save(output, modString("poison_oil"));
+                .save(output);
+        alchemyTable(ModOils.POISON_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON))
+                .save(output);
         alchemyTable(ModOils.WEAKNESS)
                 .bloodOilIngredient()
                 .input(potion(Potions.WEAKNESS, Potions.LONG_WEAKNESS))
-                .save(output, modString("weakness_oil"));
+                .save(output);
+        alchemyTable(ModOils.WEAKNESS_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.WEAKNESS, Potions.LONG_WEAKNESS))
+                .save(output);
         alchemyTable(ModOils.SLOWNESS)
                 .bloodOilIngredient()
                 .input(potion(Potions.SLOWNESS, Potions.STRONG_SLOWNESS, Potions.LONG_SLOWNESS))
-                .save(output, modString("slowness_oil"));
+                .save(output);
+        alchemyTable(ModOils.SLOWNESS_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.SLOWNESS, Potions.STRONG_SLOWNESS, Potions.LONG_SLOWNESS))
+                .save(output);
         alchemyTable(ModOils.FIRE_RESISTANCE)
                 .bloodOilIngredient()
                 .input(potion(Potions.FIRE_RESISTANCE, Potions.LONG_FIRE_RESISTANCE))
-                .save(output, modString("fire_resistance_oil"));
+                .save(output);
+        alchemyTable(ModOils.FIRE_RESISTANCE_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.FIRE_RESISTANCE, Potions.LONG_FIRE_RESISTANCE))
+                .save(output);
         alchemyTable(ModOils.SWIFTNESS)
                 .bloodOilIngredient()
                 .input(potion(Potions.SWIFTNESS, Potions.LONG_SWIFTNESS, Potions.STRONG_SWIFTNESS))
-                .save(output, modString("swiftness_oil"));
+                .save(output);
+        alchemyTable(ModOils.SWIFTNESS_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.SWIFTNESS, Potions.LONG_SWIFTNESS, Potions.STRONG_SWIFTNESS))
+                .save(output);
         alchemyTable(ModOils.REGENERATION)
                 .bloodOilIngredient()
                 .input(potion(Potions.REGENERATION, Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION))
-                .save(output, modString("regeneration_oil"));
+                .save(output);
+        alchemyTable(ModOils.REGENERATION_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.REGENERATION, Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION))
+                .save(output);
         alchemyTable(ModOils.NIGHT_VISION)
                 .bloodOilIngredient()
                 .input(potion(Potions.NIGHT_VISION, Potions.LONG_NIGHT_VISION))
-                .save(output, modString("night_vision_oil"));
+                .save(output);
+        alchemyTable(ModOils.NIGHT_VISION_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.NIGHT_VISION, Potions.LONG_NIGHT_VISION))
+                .save(output);
         alchemyTable(ModOils.STRENGTH)
                 .bloodOilIngredient()
                 .input(potion(Potions.STRENGTH, Potions.STRONG_STRENGTH, Potions.LONG_STRENGTH))
-                .save(output, modString("strength_oil"));
+                .save(output);
+        alchemyTable(ModOils.STRENGTH_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.STRENGTH, Potions.STRONG_STRENGTH, Potions.LONG_STRENGTH))
+                .save(output);
         alchemyTable(ModOils.JUMP)
                 .bloodOilIngredient()
                 .input(potion(Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING))
-                .save(output, modString("jump_oil"));
+                .save(output);
+        alchemyTable(ModOils.JUMP_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING))
+                .save(output);
         alchemyTable(ModOils.WATER_BREATHING)
                 .bloodOilIngredient()
                 .input(potion(Potions.WATER_BREATHING, Potions.LONG_WATER_BREATHING))
-                .save(output, modString("water_breathing_oil"));
+                .save(output);
+        alchemyTable(ModOils.WATER_BREATHING_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.WATER_BREATHING, Potions.LONG_WATER_BREATHING))
+                .save(output);
         alchemyTable(ModOils.INVISIBILITY)
                 .bloodOilIngredient()
                 .input(potion(Potions.INVISIBILITY, Potions.LONG_INVISIBILITY))
-                .save(output, modString("invisibility_oil"));
+                .save(output);
+        alchemyTable(ModOils.INVISIBILITY_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.INVISIBILITY, Potions.LONG_INVISIBILITY))
+                .save(output);
         alchemyTable(ModOils.SLOW_FALLING)
                 .bloodOilIngredient()
                 .input(potion(Potions.SLOW_FALLING, Potions.LONG_SLOW_FALLING))
-                .save(output, modString("slow_falling_oil"));
+                .save(output);
+        alchemyTable(ModOils.SLOW_FALLING_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.SLOW_FALLING, Potions.LONG_SLOW_FALLING))
+                .save(output);
         alchemyTable(ModOils.LUCK)
                 .bloodOilIngredient()
                 .input(potion(Potions.LUCK))
-                .save(output, modString("luck_oil"));
+                .save(output);
+        alchemyTable(ModOils.LUCK_STRONG)
+                .draculaOilIngredient()
+                .input(potion(Potions.LUCK))
+                .save(output);
         alchemyTable(ModOils.SMELT)
                 .bloodOilIngredient()
                 .input(Ingredient.of(ModItems.ALCHEMICAL_FIRE))
-                .save(output, modString("smelt_oil"));
+                .save(output);
+        alchemyTable(ModOils.SMELT_STRONG)
+                .draculaOilIngredient()
+                .input(Ingredient.of(ModItems.ALCHEMICAL_FIRE))
+                .save(output);
         alchemyTable(ModOils.TELEPORT)
                 .bloodOilIngredient()
                 .input(Ingredient.of(Items.ENDER_PEARL))
-                .save(output, modString("teleport_oil"));
+                .save(output);
         alchemyTable(ModOils.EVASION)
                 .bloodOilIngredient()
                 .input(Ingredient.of(Items.HONEY_BOTTLE))
-                .save(output, modString("evasion_oil"));
+                .save(output);
+        alchemyTable(ModOils.EVASION_STRONG)
+                .draculaOilIngredient()
+                .input(Ingredient.of(Items.HONEY_BOTTLE))
+                .save(output);
         alchemyTable(ModOils.GARLIC)
                 .plantOilIngredient()
                 .input(tag(GARLIC))
-                .save(output, modString("garlic_oil"));
+                .save(output);
         alchemyTable(ModOils.SPITFIRE)
                 .plantOilIngredient()
                 .input(Ingredient.of(ModItems.ALCHEMICAL_FIRE))
-                .save(output, modString("spitfire_oil"));
+                .save(output);
         alchemyTable(ModOils.BLEEDING)
                 .plantOilIngredient()
                 .input(Ingredient.of(Items.AMETHYST_SHARD))
-                .save(output, modString("bleeding_oil"));
+                .save(output);
         alchemyTable(ModOils.VAMPIRE_KILLER)
                 .oilIngredient(ModOils.GARLIC)
                 .input(tag(HOLY_WATER))
-                .save(output, modString("vampire_killer_oil"));
+                .save(output);
     }
 
     private void recipesAlchemyCauldron() {
@@ -917,6 +986,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .cookTime(300)
                 .experience(0.3f)
                 .save(output, modString("blood_infused_enhanced_iron_ingot_from_pure_blood_4"));
+        cauldronRecipe(ModItems.BLOOD_INFUSED_REFINED_IRON_BLOCK)
+                .withFluid(ModItems.DRACULAS_BLOOD)
+                .withIngredient(Items.IRON_BLOCK)
+                .cookTime(450)
+                .experience(1f)
+                .save(output, modString("blood_infused_refined_iron_ingot_from_dracula_blood"));
     }
 
     private void recipesWeaponTable() {
@@ -1465,10 +1540,10 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         fiveTieredMetalInfusionRecipe(Items.RAW_GOLD, ModItems.BLOOD_INFUSED_RAW_GOLD);
         fiveTieredMetalInfusionRecipe(DIAMOND, ModItems.BLOOD_INFUSED_DIAMOND);
 
-        fiveTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_IRON, ModItems.BLOOD_INFUSED_IRON_INGOT);
-        fiveTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_GOLD, ModItems.BLOOD_INFUSED_GOLD_INGOT);
+        sixTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_IRON, ModItems.BLOOD_INFUSED_IRON_INGOT);
+        sixTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_GOLD, ModItems.BLOOD_INFUSED_GOLD_INGOT);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, i))
                     .requires(Items.NETHERITE_SCRAP, 4)
                     .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(i), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
@@ -1493,11 +1568,15 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         fiveTieredInfusedSwordCrafting(ModItems.HEART_STRIKER_ENHANCED, ModItems.BLOOD_INFUSED_DIAMOND, heartStrikerPattern);
         fiveTieredInfusedSwordCrafting(ModItems.HEART_STRIKER_ULTIMATE, ModItems.BLOOD_INFUSED_NETHERITE_INGOT, heartStrikerPattern);
 
-        for (int i = 0; i < 5; i++) {
-            nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_IRON_INGOT, i), RecipeCategory.BUILDING_BLOCKS, PureLevel.template(i == 4 ? ModItems.BLOOD_INFUSED_ENHANCED_IRON_BLOCK : ModItems.BLOOD_INFUSED_IRON_BLOCK, i), "_purity_" + i);
+        for (int i = 0; i < 6; i++) {
+            nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_IRON_INGOT, i), RecipeCategory.BUILDING_BLOCKS, PureLevel.template(switch (i) {
+                case 4 -> ModItems.BLOOD_INFUSED_ENHANCED_IRON_BLOCK;
+                case 5 -> ModItems.BLOOD_INFUSED_REFINED_IRON_BLOCK;
+                default -> ModItems.BLOOD_INFUSED_IRON_BLOCK;
+            }, i), "_purity_" + i);
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             smithingPure(ModItems.HEART_SEEKER_ENHANCED, i, ModItems.HEART_SEEKER_ULTIMATE);
             smithingPure(ModItems.HEART_STRIKER_ENHANCED, i, ModItems.HEART_STRIKER_ULTIMATE);
         }

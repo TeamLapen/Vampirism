@@ -186,6 +186,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropPottedContents(ModBlocks.POTTED_CURSED_SPRUCE_SAPLING.get());
         this.dropSelf(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
         this.dropSelf(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+        this.dropSelf(ModBlocks.BLOOD_INFUSED_REFINED_IRON_BLOCK.get());
         this.add(ModBlocks.VAMPIRE_BEACON.get(), this::createNameableBlockEntityTable);
         this.dropSelf(ModBlocks.PURPLE_STONE_BRICKS.get());
         this.dropSelf(ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());

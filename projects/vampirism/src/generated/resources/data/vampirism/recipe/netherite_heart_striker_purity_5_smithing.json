@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "components": {
+      "vampirism:pure_level": {
+        "level": 5
+      }
+    },
+    "items": "vampirism:blood_infused_netherite_ingot"
+  },
+  "base": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "components": {
+      "vampirism:pure_level": {
+        "level": 5
+      }
+    },
+    "items": "vampirism:diamond_heart_striker"
+  },
+  "result": {
+    "components": {
+      "vampirism:pure_level": {
+        "level": 5
+      }
+    },
+    "id": "vampirism:netherite_heart_striker"
+  },
+  "show_notification": false,
+  "template": "minecraft:netherite_upgrade_smithing_template"
+}

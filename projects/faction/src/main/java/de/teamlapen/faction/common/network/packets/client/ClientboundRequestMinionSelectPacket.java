@@ -6,7 +6,7 @@ import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
-import de.teamlapen.faction.common.util.serialization.ModStreamCodecs;
+import de.teamlapen.faction.api.util.ModStreamCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -34,7 +34,7 @@ public record ClientboundRequestMinionSelectPacket(Action action, List<Pair<Inte
      * @return Empty if no minions are available
      */
     public static @NotNull Optional<ClientboundRequestMinionSelectPacket> createRequestForPlayer(@NotNull ServerPlayer player, Action action) {
-        return FactionPlayerHandler.get(player).getLordPlayer().map(lord -> {
+        return FactionPlayerHandler.get(player).getPlayerLord().map(lord -> {
             PlayerMinionController controller = MinionWorldData.getData(player.level()).getOrCreateController(lord);
             Collection<Integer> ids = controller.getCallableMinions();
             if (!ids.isEmpty()) {

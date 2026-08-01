@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
 import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
 import de.teamlapen.faction.common.world.entities.appearance.AppearancePacket;
 import de.teamlapen.gui.components.DropdownWidget;
@@ -10,6 +11,7 @@ import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -23,7 +25,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -62,9 +63,9 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         this.fangType = customization.fangType();
         this.eyeType = customization.eyeType();
         this.glowingEyes = customization.glowingEyes();
-        this.titleGender = vampire.titleGender() == IPlayableFaction.TitleGender.FEMALE;
+        this.titleGender = vampire.getPlayerLord().map(ILordPlayer::titleGender).orElse(IPlayableFaction.TitleGender.UNKNOWN) == IPlayableFaction.TitleGender.FEMALE;
         this.wingsTexture = customization.wingsTexture();
-        if (vampire.isDracula()) {
+        if (IDraculaPlayer.getPresentDracula(minecraft.player).isPresent()) {
             this.availableWingsTextures = VampirismMod.services().wingsManager().getAvailableWings(vampire.asEntity()).sorted().toList();
         }
         super.init();
@@ -123,7 +124,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
         vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.appearance.title_gender"), minecraft.font).selected(titleGender).onValueChange((button, selected) -> {
             titleGender = selected;
-            FactionPlayerHandler.get(entity).setTitleGender(titleGender);
+            FactionPlayerHandler.get(entity).getPlayerLord().ifPresent(lord -> lord.setTitleGender(titleGender));
         }).build());
 
         vertical.addChild(Checkbox.builder(Component.translatable("gui.vampirism.appearance.glowing_eye"), minecraft.font).selected(glowingEyes).onValueChange((button, selected) -> {
