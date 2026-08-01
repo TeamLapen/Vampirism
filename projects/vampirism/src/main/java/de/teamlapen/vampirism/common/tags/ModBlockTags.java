@@ -41,6 +41,7 @@ public class ModBlockTags {
 
     public static final TagKey<Block> VAMPIRE_BEACON_BASE_BLOCKS = tag("vampire_beacon_base_blocks");
     public static final TagKey<Block> VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS = tag("vampire_beacon_base_enhanced_blocks");
+    public static final TagKey<Block> VAMPIRE_BEACON_BASE_REFINED_BLOCKS = tag("vampire_beacon_base_refined_blocks");
 
     public static final TagKey<Block> CREEPER_REPELLENT = tag("creeper_repellent");
     public static final TagKey<Block> GARLIC_FINDER_HIGHLIGHTED = tag("garlic_finder_highlighted");

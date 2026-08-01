@@ -385,6 +385,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
                 ModBlocks.CURSED_EARTH,
                 ModBlocks.BLOOD_INFUSED_IRON_BLOCK,
                 ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK,
+                ModBlocks.BLOOD_INFUSED_REFINED_IRON_BLOCK,
                 ModBlocks.REMAINS,
                 ModBlocks.INCAPACITATED_VULNERABLE_REMAINS,
                 ModBlocks.VULNERABLE_REMAINS,

@@ -68,7 +68,8 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.accept(Component.translatable("tooltip.vampirism.purity", stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level() + 1).withStyle(ChatFormatting.DARK_RED));
+        int level = stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level();
+        tooltipComponents.accept(Component.translatable("tooltip.vampirism.purity", level + 1).withStyle(level == 5 ? ChatFormatting.DARK_PURPLE : ChatFormatting.DARK_RED));
         float charged = getChargePercentage(stack);
         float trained = getTrained(stack, FactionsMod.proxy.getClientPlayer());
         tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
@@ -333,7 +334,8 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
             case 1 -> 0.9f;
             case 2 -> 0.8f;
             case 3 -> 0.6f;
-            default -> 0.4f;
+            case 4 -> 0.4f;
+            default -> 0.1f;
         };
     }
 
@@ -344,7 +346,8 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
             case 1 -> 1.2f;
             case 2 -> 1.4f;
             case 3 -> 1.6f;
-            default -> 2f;
+            case 4 -> 2f;
+            default -> 2.5f;
         };
     }
 }

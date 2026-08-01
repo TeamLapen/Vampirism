@@ -154,8 +154,9 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.SLABS).add(ModBlocks.DARK_STONE_BRICK_SLAB.get(), ModBlocks.POLISHED_DARK_STONE_SLAB.get(), ModBlocks.COBBLED_DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_SLAB.get(), ModBlocks.DARK_STONE_TILES_SLAB.get(), ModBlocks.PURPLE_STONE_BRICK_SLAB.get(), ModBlocks.PURPLE_STONE_TILES_SLAB.get());
         tag(ModBlockTags.MOTHER_GROWS_ON).addTag(BlockTags.DIRT);
         tag(Tags.Blocks.STORAGE_BLOCKS).add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
-        tag(ModBlockTags.VAMPIRE_BEACON_BASE_BLOCKS).add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
-        tag(ModBlockTags.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS).add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+        tag(ModBlockTags.VAMPIRE_BEACON_BASE_BLOCKS).add(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_REFINED_IRON_BLOCK.get());
+        tag(ModBlockTags.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS).add(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get(), ModBlocks.BLOOD_INFUSED_REFINED_IRON_BLOCK.get());
+        tag(ModBlockTags.VAMPIRE_BEACON_BASE_REFINED_BLOCKS).add(ModBlocks.BLOOD_INFUSED_REFINED_IRON_BLOCK.get());
         tag(ModBlockTags.CREEPER_REPELLENT).add(ModBlocks.VAMPIRE_SOUL_LANTERN.get());
         tag(ModBlockTags.GARLIC_FINDER_HIGHLIGHTED).add(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), ModBlocks.GARLIC_DIFFUSER_LONG.get(), ModBlocks.GARLIC_DIFFUSER_STRONG.get(), ModBlocks.GARLIC_DIFFUSER_CORE.get(), ModBlocks.GARLIC_DIFFUSER_CORE_STRONG.get());
         tag(ModBlockTags.GARLIC).add(ModBlocks.GARLIC.get());

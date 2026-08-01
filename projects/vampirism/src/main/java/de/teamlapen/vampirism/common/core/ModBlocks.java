@@ -203,6 +203,7 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> BLOOD_INFUSED_IRON_BLOCK = BLOCKS.registerBlock("blood_infused_iron_block", PureBloodBlock::new, () -> copyProperties(Blocks.IRON_BLOCK).mapColor(MapColor.CRIMSON_HYPHAE).strength(6.0F, 7.0F));
     public static final DeferredBlock<Block> BLOOD_INFUSED_ENHANCED_IRON_BLOCK = BLOCKS.registerBlock("blood_infused_enhanced_iron_block", PureBloodBlock::new, () -> copyProperties(Blocks.IRON_BLOCK).mapColor(MapColor.CRIMSON_HYPHAE).strength(6.5F, 8.0F));
+    public static final DeferredBlock<Block> BLOOD_INFUSED_REFINED_IRON_BLOCK = BLOCKS.registerBlock("blood_infused_refined_iron_block", PureBloodBlock::new, () -> copyProperties(Blocks.IRON_BLOCK).mapColor(MapColor.CRIMSON_HYPHAE).strength(7F, 9.0F));
 
     // Decorative Blocks
     public static final DeferredBlock<AlchemicalFireBlock> ALCHEMICAL_FIRE = registerBlock("alchemical_fire", AlchemicalFireBlock::new, () -> copyProperties(Blocks.FIRE).mapColor(MapColor.COLOR_PURPLE).noLootTable());

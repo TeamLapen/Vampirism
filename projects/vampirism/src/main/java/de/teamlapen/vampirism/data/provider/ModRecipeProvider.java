@@ -986,6 +986,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .cookTime(300)
                 .experience(0.3f)
                 .save(output, modString("blood_infused_enhanced_iron_ingot_from_pure_blood_4"));
+        cauldronRecipe(ModItems.BLOOD_INFUSED_REFINED_IRON_BLOCK)
+                .withFluid(ModItems.DRACULAS_BLOOD)
+                .withIngredient(Items.IRON_BLOCK)
+                .cookTime(450)
+                .experience(1f)
+                .save(output, modString("blood_infused_refined_iron_ingot_from_dracula_blood"));
     }
 
     private void recipesWeaponTable() {
@@ -1534,10 +1540,10 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         fiveTieredMetalInfusionRecipe(Items.RAW_GOLD, ModItems.BLOOD_INFUSED_RAW_GOLD);
         fiveTieredMetalInfusionRecipe(DIAMOND, ModItems.BLOOD_INFUSED_DIAMOND);
 
-        fiveTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_IRON, ModItems.BLOOD_INFUSED_IRON_INGOT);
-        fiveTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_GOLD, ModItems.BLOOD_INFUSED_GOLD_INGOT);
+        sixTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_IRON, ModItems.BLOOD_INFUSED_IRON_INGOT);
+        sixTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_GOLD, ModItems.BLOOD_INFUSED_GOLD_INGOT);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             shapeless(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_NETHERITE_INGOT, i))
                     .requires(Items.NETHERITE_SCRAP, 4)
                     .requires(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, new PureLevel(i), ModItems.BLOOD_INFUSED_GOLD_INGOT), 4)
@@ -1562,11 +1568,15 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         fiveTieredInfusedSwordCrafting(ModItems.HEART_STRIKER_ENHANCED, ModItems.BLOOD_INFUSED_DIAMOND, heartStrikerPattern);
         fiveTieredInfusedSwordCrafting(ModItems.HEART_STRIKER_ULTIMATE, ModItems.BLOOD_INFUSED_NETHERITE_INGOT, heartStrikerPattern);
 
-        for (int i = 0; i < 5; i++) {
-            nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_IRON_INGOT, i), RecipeCategory.BUILDING_BLOCKS, PureLevel.template(i == 4 ? ModItems.BLOOD_INFUSED_ENHANCED_IRON_BLOCK : ModItems.BLOOD_INFUSED_IRON_BLOCK, i), "_purity_" + i);
+        for (int i = 0; i < 6; i++) {
+            nineBlockStorageRecipes(RecipeCategory.BUILDING_BLOCKS, PureLevel.template(ModItems.BLOOD_INFUSED_IRON_INGOT, i), RecipeCategory.BUILDING_BLOCKS, PureLevel.template(switch (i) {
+                case 4 -> ModItems.BLOOD_INFUSED_ENHANCED_IRON_BLOCK;
+                case 5 -> ModItems.BLOOD_INFUSED_REFINED_IRON_BLOCK;
+                default -> ModItems.BLOOD_INFUSED_IRON_BLOCK;
+            }, i), "_purity_" + i);
         }
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             smithingPure(ModItems.HEART_SEEKER_ENHANCED, i, ModItems.HEART_SEEKER_ULTIMATE);
             smithingPure(ModItems.HEART_STRIKER_ENHANCED, i, ModItems.HEART_STRIKER_ULTIMATE);
         }
