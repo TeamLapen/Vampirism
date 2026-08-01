@@ -94,9 +94,17 @@ public class MistAction extends FormAction {
         AttributeInstance gravity = player.getAttribute(Attributes.GRAVITY);
         if (gravity != null) {
             if (enabled) {
-                gravity.addOrReplacePermanentModifier(new AttributeModifier(key, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+                gravity.addOrReplacePermanentModifier(new AttributeModifier(key, -0.7, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
             } else {
                 gravity.removeModifier(key);
+            }
+        }
+        AttributeInstance jump = player.getAttribute(Attributes.JUMP_STRENGTH);
+        if (jump != null) {
+            if (enabled) {
+                jump.addOrReplacePermanentModifier(new AttributeModifier(key, -0.7, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            } else {
+                jump.removeModifier(key);
             }
         }
 

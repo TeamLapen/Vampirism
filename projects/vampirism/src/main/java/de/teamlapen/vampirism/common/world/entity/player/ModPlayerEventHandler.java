@@ -70,6 +70,7 @@ import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.common.util.ClockAdjustment;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -257,6 +258,13 @@ public class ModPlayerEventHandler {
         }
     }
 
+    @SubscribeEvent
+    public void isEntityInvulnerable(EntityInvulnerabilityCheckEvent event) {
+        if (event.getEntity() instanceof Player player && VampirePlayer.get(player).getSkillProperties().mist) {
+            event.setInvulnerable(true);
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onLivingHurt(LivingDamageEvent.Pre event) {
         DamageContainer d = event.getContainer();
@@ -271,10 +279,6 @@ public class ModPlayerEventHandler {
             VampirePlayer vampire = VampirePlayer.get(player);
             float mod = (float) (0.2 * (float)vampire.getLevel()/ (float)vampire.getMaxLevel());
             d.setNewDamage(d.getNewDamage() * (1 - mod));
-
-            if (vampire.getSkillProperties().mist) {
-                d.setNewDamage(0);
-            }
         }
 
         if (event.getEntity() instanceof Player player && Helper.isHunter(player)) {

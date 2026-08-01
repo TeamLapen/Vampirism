@@ -9,11 +9,14 @@ import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.client.config.ClientConfig;
 import de.teamlapen.vampirism.client.renderer.blockentity.VelmorraPortalRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.*;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
 import java.util.function.Supplier;
 
 public class ModRenderPipelines {
@@ -77,8 +80,10 @@ public class ModRenderPipelines {
         event.registerPipeline(SOLID_TRANSPARENCY_ENTITY);
         event.registerPipeline(CUTOUT_NO_DEPTH);
         event.registerPipeline(VELMORRA_PORTAL_PIPELINE);
-        event.registerPipeline(DRACULA_MIST_PIPELINE);
         event.registerPipeline(BLOOD_SIPHON_PIPELINE);
+        event.registerPipeline(MIST_LOW);
+        event.registerPipeline(MIST_MEDIUM);
+        event.registerPipeline(MIST_HIGH);
     }
 
     public static final RenderPipeline.Snippet VELMORRA_PORTAL_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
@@ -93,23 +98,6 @@ public class ModRenderPipelines {
             VIdentifier.modString("velmorra_portal"),
             RenderSetup.builder(VELMORRA_PORTAL_PIPELINE)
                     .withTexture("Sampler0", VelmorraPortalRenderer.PORTAL_LOCATION)
-                    .createRenderSetup()
-    );
-
-    /** Procedural black cloud rendered while Dracula is in mist form. No texture, animated via the GameTime global. */
-    public static final RenderPipeline DRACULA_MIST_PIPELINE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
-            .withVertexShader(VIdentifier.mod("core/rendertype_dracula_mist"))
-            .withFragmentShader(VIdentifier.mod("core/rendertype_dracula_mist"))
-            .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
-            .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
-            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-            .withCull(false)
-            .withLocation(VIdentifier.mod("pipeline/dracula_mist"))
-            .build();
-    public static final RenderType DRACULA_MIST_RENDER_TYPE = RenderType.create(
-            VIdentifier.modString("dracula_mist"),
-            RenderSetup.builder(DRACULA_MIST_PIPELINE)
-                    .sortOnUpload()
                     .createRenderSetup()
     );
 
@@ -129,5 +117,49 @@ public class ModRenderPipelines {
                     .sortOnUpload()
                     .createRenderSetup()
     );
+
+    /**
+     * Volumetric cloud raymarched on a camera-facing billboard while an entity is in mist form.
+     * <p>
+     * Unlike every other pipeline here this one is not wrapped in a {@link RenderType}: it is bound directly on a
+     * custom render pass by {@link de.teamlapen.vampirism.client.renderer.MistRenderer}, because the shader needs
+     * the scene depth texture bound as a sampler and {@link RenderSetup} can only bind textures registered with
+     * the texture manager. That pass binds no depth attachment, hence the disabled depth test here - occlusion is
+     * resolved in the shader against {@code DepthSampler} instead, which is what gives the soft edge.
+     * <p>
+     * The raymarch step count is a compile-time define, so each quality level gets its own pipeline and
+     * {@link #mist(ClientConfig.MistQuality)} picks between them at draw time.
+     */
+    public static final RenderPipeline MIST_LOW = mistPipeline(ClientConfig.MistQuality.LOW);
+    public static final RenderPipeline MIST_MEDIUM = mistPipeline(ClientConfig.MistQuality.MEDIUM);
+    public static final RenderPipeline MIST_HIGH = mistPipeline(ClientConfig.MistQuality.HIGH);
+
+    private static RenderPipeline mistPipeline(ClientConfig.MistQuality quality) {
+        return RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
+                .withVertexShader(VIdentifier.mod("core/rendertype_mist"))
+                .withFragmentShader(VIdentifier.mod("core/rendertype_mist"))
+                .withSampler("DepthSampler")
+                .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+                // Deliberately no depth stencil state: RenderPipeline#wantsDepthTexture is simply "has a depth
+                // stencil state", so setting one - even a never-testing, never-writing one - makes the command
+                // encoder warn about the missing depth attachment this pass intentionally does not bind.
+                .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                .withCull(false)
+                .withShaderDefine("STEPS", quality.steps())
+                .withLocation(VIdentifier.mod("pipeline/mist_" + quality.name().toLowerCase(Locale.ROOT)))
+                .build();
+    }
+
+    /**
+     * @return the mist pipeline for the given quality, or null when mist rendering is disabled.
+     */
+    public static @Nullable RenderPipeline mist(ClientConfig.MistQuality quality) {
+        return switch (quality) {
+            case OFF -> null;
+            case LOW -> MIST_LOW;
+            case MEDIUM -> MIST_MEDIUM;
+            case HIGH -> MIST_HIGH;
+        };
+    }
 
 }

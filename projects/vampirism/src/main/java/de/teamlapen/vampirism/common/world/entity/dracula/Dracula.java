@@ -52,7 +52,8 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
     private final List<Pair<Long, Float>> recentDamage = new ArrayList<>();
     private long mistStartTime = -1;
     private long mistCooldownUntil = -1;
-    private static final int MIST_DURATION = 5 * 20;
+    /** Duration of mist form in ticks. Public so the client renderer can compute a fade-out envelope. */
+    public static final int MIST_DURATION = 5 * 20;
     private static final int MIST_COOLDOWN = 30 * 20;
     /** Amount of extra max health per additional player in the fight */
     private static final float HEALTH_SCALE_PER_PLAYER = 0.5f;
@@ -119,15 +120,6 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         tickTransformation();
         if (this.getState() == DraculaState.MIST) {
             tickMistForm();
-            if (this.level().isClientSide()) {
-                for (int i = 0; i < 2; i++) {
-                    this.level().addParticle(ParticleTypes.LARGE_SMOKE,
-                            this.getX() + (this.random.nextDouble() - 0.5) * 3.0,
-                            this.getY() + this.random.nextDouble() * 2.5,
-                            this.getZ() + (this.random.nextDouble() - 0.5) * 3.0,
-                            0, 0.02, 0);
-                }
-            }
         }
     }
 
@@ -332,6 +324,7 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
 
     private final AnimationState attackAnimationState = new AnimationState();
     private final AnimationState transformationAnimationState = new AnimationState();
+    private final AnimationState mistAnimationState = new AnimationState();
     private IDraculaAnimations.Animation attackAnimationType = IDraculaAnimations.Animation.NONE;
 
     @Override
@@ -343,11 +336,21 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
             } else {
                 this.transformationAnimationState.stop();
             }
+            if (this.getState() == DraculaState.MIST) {
+                this.mistAnimationState.start(this.tickCount);
+            } else {
+                this.mistAnimationState.stop();
+            }
         }
     }
 
     public void copyTransformationAnimationTo(AnimationState state) {
         state.copyFrom(this.transformationAnimationState);
+    }
+
+    /** Client-observed mist-form start, used by the renderer to drive the volumetric mist's fade in/out envelope. */
+    public void copyMistAnimationTo(AnimationState state) {
+        state.copyFrom(this.mistAnimationState);
     }
 
     public void triggerAnim(Animation... animations) {

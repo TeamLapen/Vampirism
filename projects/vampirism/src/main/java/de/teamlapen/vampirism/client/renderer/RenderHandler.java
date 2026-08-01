@@ -28,6 +28,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
@@ -172,6 +173,13 @@ public class RenderHandler implements IMinecraftAccessor {
         this.insideFog = false;
     }
 
+    @SubscribeEvent
+    public void onPreFrame(ExtractLevelRenderStateEvent event) {
+        if (VampirePlayer.get(player()).getSkillProperties().mist) {
+            mc().gameRenderer.getGameRenderState().optionsRenderState.bobView = false;
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderPlayerPreHigh(RenderPlayerEvent.@NotNull Pre<AbstractClientPlayer> event) {
         var renderState = event.getRenderState();
@@ -186,6 +194,16 @@ public class RenderHandler implements IMinecraftAccessor {
             EntityRenderer<? super Bat, ?> renderer = mc().getEntityRenderDispatcher().getRenderer(bat);
             EntityRenderState batRenderState = renderer.createRenderState(bat, partialTicks);
             mc().getEntityRenderDispatcher().submit(batRenderState, new CameraRenderState(), 0, 0, 0, event.getPoseStack(), event.getSubmitNodeCollector());
+        } else if (Boolean.TRUE.equals(renderState.getRenderData(ModEntityRenderStates.MIST))) {
+            // Hidden for the whole fade envelope, not just while the form is active, so the model does not
+            // reappear inside a cloud that is still dissipating.
+            event.setCanceled(true);
+            if (MistRenderer.isEnabled()) {
+                Vec3 velocity = renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_VELOCITY, Vec3.ZERO);
+                Vec3 flow = renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_FLOW, Vec3.ZERO);
+                float fade = renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_FADE, 1f);
+                MistRenderer.submitMistCloud(fade, renderState.boundingBoxWidth, renderState.boundingBoxHeight, velocity, flow, event.getPoseStack());
+            }
         }
     }
 

@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.SunBlindOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.renderer.bloodvision.BloodVisionRenderer;
+import de.teamlapen.vampirism.client.renderer.MistStateTracker;
+import de.teamlapen.vampirism.client.renderer.MistRenderer;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.VelmorraCollapseHandler;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
@@ -34,6 +36,8 @@ public class ClientServices extends Services {
     private final SunBlindOverlay sunBlindOverlay = new SunBlindOverlay();
     private final DraculaEventOverlay draculaEventOverlay = new DraculaEventOverlay();
     private final VelmorraCollapseHandler velmorraCollapseHandler = new VelmorraCollapseHandler();
+    private final MistRenderer mistRenderer = new MistRenderer();
+    private final MistStateTracker mistStateTracker = new MistStateTracker();
 
     //</editor-fold>
 
@@ -61,6 +65,10 @@ public class ClientServices extends Services {
 
     public BloodVisionRenderer bloodVisionRenderer() {
         return this.bloodVisionRenderer;
+    }
+
+    public MistStateTracker mistStateTracker() {
+        return this.mistStateTracker;
     }
 
     public VampireBooks vampireBooks() {
@@ -132,6 +140,8 @@ public class ClientServices extends Services {
         bus.register(this.renderHandler);
         bus.register(this.velmorraCollapseHandler);
         bus.register(this.bloodVisionRenderer);
+        bus.register(this.mistRenderer);
+        bus.register(this.mistStateTracker);
         bus.register(this.modKeys);
         bus.register(this.screenEventHandler);
         bus.register(this.clientEventHandler);
