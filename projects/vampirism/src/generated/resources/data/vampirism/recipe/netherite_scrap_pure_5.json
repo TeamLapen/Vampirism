@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    "minecraft:netherite_scrap",
+    "minecraft:netherite_scrap",
+    "minecraft:netherite_scrap",
+    "minecraft:netherite_scrap",
+    {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "vampirism:pure_level": {
+          "level": 5
+        }
+      },
+      "items": "vampirism:blood_infused_gold_ingot"
+    },
+    {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "vampirism:pure_level": {
+          "level": 5
+        }
+      },
+      "items": "vampirism:blood_infused_gold_ingot"
+    },
+    {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "vampirism:pure_level": {
+          "level": 5
+        }
+      },
+      "items": "vampirism:blood_infused_gold_ingot"
+    },
+    {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "vampirism:pure_level": {
+          "level": 5
+        }
+      },
+      "items": "vampirism:blood_infused_gold_ingot"
+    }
+  ],
+  "result": {
+    "components": {
+      "vampirism:pure_level": {
+        "level": 5
+      }
+    },
+    "id": "vampirism:blood_infused_netherite_ingot"
+  }
+}

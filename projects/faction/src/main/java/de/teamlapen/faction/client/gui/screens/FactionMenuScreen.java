@@ -1,6 +1,7 @@
 package de.teamlapen.faction.client.gui.screens;
 
 import de.teamlapen.faction.FactionsMod;
+import de.teamlapen.faction.api.factions.FactionExtensionType;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
@@ -9,6 +10,7 @@ import de.teamlapen.faction.client.core.FactionAppearanceScreens;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.screens.skills.SkillsScreen;
 import de.teamlapen.faction.client.gui.screens.taskboard.TaskListWidget;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionKeys;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.network.packets.server.ServerboundDeleteRefinementPacket;
@@ -123,9 +125,6 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
         this.renderAccessorySlots(graphics, mouseX, mouseY, partialTicks);
 
         this.extractTooltip(graphics, mouseX, mouseY);
-        if (this.menu.areRefinementsAvailable()) {
-            this.renderHoveredRefinementTooltip(graphics, mouseX, mouseY);
-        }
     }
 
     protected void renderAccessorySlots(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
@@ -145,7 +144,13 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
     @Override
     protected void init() {
         super.init();
-        this.level = Objects.requireNonNullElseGet(factionPlayer.getLevelDisplay(), Component::empty).copy().withStyle(style -> style.withColor(factionPlayer.getFaction().value().getChatColor()));
+        Component levelDisplay = factionPlayer.getLevelDisplay();
+        if (levelDisplay != null) {
+            this.level = levelDisplay.copy().withStyle(style -> style.withColor(factionPlayer.getFaction().value().getChatColor()));
+        }
+        else {
+            this.level = Component.empty();
+        }
 
         this.taskList = this.addRenderableWidget(new TaskListWidget(
                 this.menu, this.factionPlayer,
@@ -171,7 +176,7 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
             EditSelectMinionTaskScreen.show();
         }, Component.empty()));
         button3.setTooltip(Tooltip.create(Component.translatable("gui.factionapi.faction_menu.edit_tasks")));
-        button3.visible = FactionPlayerHandler.get(factionPlayer.asEntity()).getLordLevel() > 0;
+        button3.visible = FactionPlayerHandler.get(factionPlayer.asEntity()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) > 0;
 
         var definition = FactionAppearanceScreens.getProvider(factionPlayer.getFaction().value());
 
@@ -227,22 +232,4 @@ public class FactionMenuScreen extends AbstractContainerScreen<FactionMenu> impl
         InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, this.leftPos + 7, this.topPos + 8, this.leftPos + 56, this.topPos + 78, 30, 0.0625f, mouseX, mouseY, this.minecraft.player);
     }
 
-    protected void renderHoveredRefinementTooltip(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        if (this.hoveredSlot != null) {
-            int index = this.hoveredSlot.index;
-            NonNullList<ItemStack> list = this.menu.getRefinementStacks();
-            if (index < list.size() && index >= 0) {
-                if (this.getMenu().getCarried().isEmpty() && !list.get(index).isEmpty()) {
-                    if (!this.refinementRemoveButtons.get(this.hoveredSlot.getSlotIndex()).isHoveredOrFocused()) {
-                        graphics.setTooltipForNextFrame(this.font, list.get(index), mouseX, mouseY);
-
-                    }
-                } else {
-                    if (!list.get(index).isEmpty() && this.menu.getSlot(index).mayPlace(this.getMenu().getCarried())) {
-                        graphics.setTooltipForNextFrame(this.font, Component.translatable("gui.factionapi.faction_menu.destroy_item").withStyle(ChatFormatting.RED), mouseX, mouseY);
-                    }
-                }
-            }
-        }
-    }
 }

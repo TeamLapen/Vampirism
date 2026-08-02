@@ -29,7 +29,7 @@ public class BackstabBehavior extends Behavior<Dracula> {
     }
 
     private static Set<SensorType<? extends Sensor<? super Dracula>>> sensors() {
-        return Set.of(ModSensors.NEAREST_TARGETABLE_ENTITIES.get(), SensorType.NEAREST_LIVING_ENTITIES, ModSensors.HURT_BY.get());
+        return Set.of(ModSensors.DRACULA_ATTACKABLE_SENSOR.get(), SensorType.NEAREST_LIVING_ENTITIES, ModSensors.HURT_BY.get());
     }
 
     private static Set<MemoryModuleType<?>> memories() {

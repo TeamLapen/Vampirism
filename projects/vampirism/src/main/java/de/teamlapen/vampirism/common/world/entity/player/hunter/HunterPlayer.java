@@ -9,6 +9,8 @@ import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.world.entity.player.hunter.IMarshallPlayer;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAdvancements;
@@ -25,6 +27,7 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterAc
 import de.teamlapen.vampirism.common.world.entity.player.hunter.properties.HunterDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.HunterCoatItem;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -34,6 +37,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -125,16 +129,20 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         if (level > 0) {
             if (!isRemote()) {
                 if (player.level().getGameTime() % 100 == 8) {
-                    if (Arrays.stream(EquipmentSlot.values()).filter(i -> i.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).allMatch(i -> i.is(ModItemTags.HUNTER_ARMOR))) {
+                    if (Arrays.stream(EquipmentSlot.values()).filter(i -> i.getType() == EquipmentSlot.Type.HUMANOID_ARMOR).map(player::getItemBySlot).allMatch(i -> i.is(ModItemTags.HUNTER_COAT))) {
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_JUMP)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.JUMP_BOOST, -1, 0, false, false);
                             mobEffectInstance.factions$addProperty(HunterSkills.ARMOR_JUMP.getId());
                             player.addEffect(mobEffectInstance);
+                        } else {
+                            IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
                         }
                         if (this.getSkillHandler().isSkillEnabled(HunterSkills.ARMOR_SPEED)) {
                             MobEffectInstance mobEffectInstance = new MobEffectInstance(MobEffects.SPEED, -1, 0, false, false);
                             mobEffectInstance.factions$addProperty(HunterSkills.ARMOR_SPEED.getId());
                             player.addEffect(mobEffectInstance);
+                        } else {
+                            IEffectInstanceWithSource.removePotionEffect(player, MobEffects.SPEED, HunterSkills.ARMOR_SPEED.getId());
                         }
                     } else {
                         IEffectInstanceWithSource.removePotionEffect(player, MobEffects.JUMP_BOOST, HunterSkills.ARMOR_JUMP.getId());
@@ -164,16 +172,28 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     }
 
     @Override
-    public void updateMinionAttributes(boolean increasedStats) {
-        MinionWorldData.getData(this.player.level()).ifPresent(a -> {
-            a.getOrCreateController(this).forEach((data, minion) -> {
-                ((HunterMinionEntity.HunterMinionData) data).setIncreasedStats(increasedStats);
-                minion.ifPresent(x -> {
-                    x.updateAttributes();
-                    x.sync();
-                });
-            });
-        });
+    public Component getShortLevelDisplay() {
+        if (IMarshallPlayer.getPresent(this.player).isPresent()) {
+            return Component.translatable("marshall_title.vampirism.short");
+        }
+        return super.getShortLevelDisplay();
+    }
+
+    @Override
+    public Component getLevelDisplay() {
+        if (IMarshallPlayer.getPresent(this.player).isPresent()) {
+            return Component.translatable("marshall_title.vampirism");
+        }
+        return super.getLevelDisplay();
+    }
+
+    @Nullable
+    @Override
+    public Component getChatDisplay() {
+        if (IMarshallPlayer.getPresent(this.player).isPresent()) {
+            return Component.translatable("marshall_title.vampirism");
+        }
+        return super.getChatDisplay();
     }
 
     public static class AttachmentOptions extends AttachmentSynchronization.PlayerOptions<HunterPlayer> {

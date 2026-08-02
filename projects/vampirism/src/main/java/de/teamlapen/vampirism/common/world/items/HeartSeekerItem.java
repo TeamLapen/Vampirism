@@ -51,7 +51,7 @@ public class HeartSeekerItem extends VampireSwordItem implements BaseDisplayItem
     @Override
     public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         output.accept(PureLevel.pureBlood(this, 0));
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < 6; i++) {
             output.accept(PureLevel.pureBlood(this, i), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
         }
     }

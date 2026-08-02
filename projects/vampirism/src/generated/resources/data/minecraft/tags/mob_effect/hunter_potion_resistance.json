@@ -4,6 +4,8 @@
     "minecraft:nausea",
     "minecraft:hunger",
     "minecraft:poison",
-    "vampirism:freeze"
+    "vampirism:freeze",
+    "minecraft:weakness",
+    "minecraft:slowness"
   ]
 }

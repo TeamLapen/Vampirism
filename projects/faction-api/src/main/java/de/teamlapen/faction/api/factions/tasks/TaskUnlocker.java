@@ -3,6 +3,7 @@ package de.teamlapen.faction.api.factions.tasks;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Function;
@@ -13,7 +14,7 @@ public interface TaskUnlocker {
 
     Component getDescription();
 
-    <T extends ITaskPlayer<T>> boolean isUnlocked(T playerEntity);
+    boolean isUnlocked(ITaskManager taskPlayer, IFactionPlayer<?> playerEntity);
 
     MapCodec<? extends TaskUnlocker> codec();
 }

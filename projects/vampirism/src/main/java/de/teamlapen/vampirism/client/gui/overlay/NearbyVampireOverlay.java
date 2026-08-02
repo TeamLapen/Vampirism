@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class NearbyVampireOverlay extends TextureOverlay {
 
-    public static final Identifier AWARENESS_TEXTURE = VIdentifier.mod("textures/misc/awareness.png");
+    public static final Identifier AWARENESS_TEXTURE = VIdentifier.mod("textures/gui/overlay/awareness.png");
 
     @Override
     public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {

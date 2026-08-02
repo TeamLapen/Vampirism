@@ -1,0 +1,13 @@
+{
+  "type": "vampirism:alchemical_cauldron",
+  "experience": 2.0,
+  "fluid": "#c:crops/garlic/purified",
+  "info": {},
+  "ingredient": "#minecraft:wool",
+  "result": {
+    "id": "vampirism:garlic_diffuser_core_long"
+  },
+  "skill": [
+    "vampirism:garlic_diffuser_improved"
+  ]
+}

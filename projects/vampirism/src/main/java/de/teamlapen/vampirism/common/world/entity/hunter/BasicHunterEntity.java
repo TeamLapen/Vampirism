@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.common.world.entity.hunter;
 
+import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
@@ -149,7 +151,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
     public void convertToMinion(@NotNull Player player) {
-        FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(getFaction())).ifPresentOrElse(lord -> {
+        FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).filter(x -> IFaction.is(x.getFaction(), getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
                     HunterMinionEntity.HunterMinionData data = new HunterMinionEntity.HunterMinionData(lord, this);
@@ -213,7 +215,10 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
     @Override
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         if (!(reason == EntitySpawnReason.SPAWN_ITEM_USE || reason == EntitySpawnReason.BUCKET || reason == EntitySpawnReason.CONVERSION || reason == EntitySpawnReason.COMMAND) && this.getRandom().nextInt(50) == 0) {
-            this.setItemSlot(EquipmentSlot.HEAD, HunterVillage.createBanner(worldIn.registryAccess()));
+            var banner = getFaction().components().get(FactionDataComponents.VILLAGE_BANNER);
+            if (banner != null) {
+                this.setItemSlot(EquipmentSlot.HEAD, banner.createBanner(worldIn.registryAccess()));
+            }
         }
         getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
         randomEquipments();
@@ -375,7 +380,7 @@ public class BasicHunterEntity extends HunterBaseEntity implements IBasicHunter,
                     return InteractionResult.SUCCESS;
                 } else if (hunterLevel > 0) {
                     @Nullable
-                    var lord = FactionPlayerHandler.get(player).getLordPlayer().orElse(null);
+                    var lord = FactionPlayerHandler.get(player).getPlayerLord().orElse(null);
                     if (lord != null && lord.getMaxMinions() > 0) {
                         ItemStack heldItem = player.getItemInHand(hand);
 

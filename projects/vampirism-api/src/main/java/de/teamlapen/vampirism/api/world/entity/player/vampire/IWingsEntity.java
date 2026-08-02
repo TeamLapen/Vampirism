@@ -22,7 +22,11 @@ public interface IWingsEntity {
 
     boolean openWings();
 
-    void closeWings();
+    default void closeWings() {
+        closeWings(false);
+    }
+
+    void closeWings(boolean force);
 
     void swingWings();
     void toggleWings();

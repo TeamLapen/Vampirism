@@ -1,0 +1,11 @@
+{
+  "type": "vampirism:alchemical_cauldron",
+  "cookTime": 450,
+  "experience": 1.0,
+  "fluid": "vampirism:draculas_blood",
+  "info": {},
+  "ingredient": "minecraft:iron_block",
+  "result": {
+    "id": "vampirism:blood_infused_refined_iron_block"
+  }
+}

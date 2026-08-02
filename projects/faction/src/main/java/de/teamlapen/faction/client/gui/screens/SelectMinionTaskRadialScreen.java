@@ -47,7 +47,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     }
 
     public static void show(KeyMapping mapping) {
-        FactionPlayerHandler.get(Minecraft.getInstance().player).getLordPlayer().filter(x -> x.getLordLevel() > 0).ifPresent(lord -> {
+        FactionPlayerHandler.get(Minecraft.getInstance().player).getPlayerLord().filter(x -> x.getLordLevel() > 0).ifPresent(lord -> {
             Collection<Entry> tasks = getTasks(lord);
             if (tasks.isEmpty()) {
                 Minecraft.getInstance().player.sendOverlayMessage(Component.translatable("gui.factionapi.minion_radial.no_minion_tasks"));
@@ -62,7 +62,7 @@ public class SelectMinionTaskRadialScreen extends DualSwitchingRadialMenu<Select
     public void extractBackground(@NonNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
     }
 
-    private static List<Entry> getTasks(ILordPlayer<?> lord) {
+    private static List<Entry> getTasks(ILordPlayer lord) {
         if (lord.getLordLevel() == 0) return List.of();
         return FactionConfig.preferences().minionTaskOrder().getOrder(lord.getFaction()).stream()
                 .filter(x -> Optional.ofNullable(x.getTask()).map(s -> s.value().isAvailable(lord)).orElse(true))

@@ -316,6 +316,7 @@ public class ExtendedCreature extends AttachmentSync implements IExtendedCreatur
 
     @Override
     protected void registerProperties() {
+        super.registerProperties();
         this.registerProperty(VIdentifier.mod("blood")).simple(0, () -> this.blood, b -> this.blood = b);
         this.registerProperty(VIdentifier.mod("max_blood")).simple(0, () -> this.maxBlood, b -> this.maxBlood = b);
         this.registerProperty(VIdentifier.mod("poisonous_blood")).simple(0, () -> this.poisonousBlood, b -> this.poisonousBlood = b);

@@ -49,8 +49,6 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.monster.skeleton.Stray;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -167,7 +165,7 @@ public class ModPlayerEventHandler {
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         if (VampirePlayer.get(event.getEntity()).getSkillProperties().isCannotInteract()) {
             event.setCanceled(true);
-        } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == event.getState().getBlock()) && VampirePlayer.get(event.getEntity()).getLevel() > 0) {
+        } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_LONG.get() == event.getState().getBlock() || ModBlocks.GARLIC_DIFFUSER_STRONG.get() == event.getState().getBlock()) && VampirePlayer.get(event.getEntity()).getLevel() > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
@@ -361,7 +359,7 @@ public class ModPlayerEventHandler {
             world.levelEvent(null, 1009, pos, 0);
             world.removeBlock(pos, false);
             event.setCanceled(true);
-        } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_WEAK.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_IMPROVED.get() == state.getBlock()) && Helper.isVampire(event.getEntity())) {
+        } else if ((ModBlocks.GARLIC_DIFFUSER_NORMAL.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_LONG.get() == state.getBlock() || ModBlocks.GARLIC_DIFFUSER_STRONG.get() == state.getBlock()) && Helper.isVampire(event.getEntity())) {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.GARLIC));
         }
     }
@@ -486,7 +484,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void gilderEquipped(LivingEquipmentChangeEvent event) {
         if (event.getEntity() instanceof Player player && event.getSlot() == EquipmentSlot.CHEST && event.getTo().has(DataComponents.GLIDER)) {
-            IDraculaPlayer.getDracula(player).ifPresent(IDraculaPlayer::closeWings);
+            IDraculaPlayer.getPresentDracula(player).ifPresent(IDraculaPlayer::closeWings);
         }
     }
 

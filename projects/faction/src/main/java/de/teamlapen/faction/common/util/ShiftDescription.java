@@ -15,8 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public record ShiftDescription(@Nullable Component component, @Nullable String formatableString) {
 
@@ -48,7 +48,7 @@ public record ShiftDescription(@Nullable Component component, @Nullable String f
         return new ShiftDescription((Component) null, null);
     }
 
-    public void addTooltips(ItemStack stack, @Nullable Player player, Item.TooltipContext context, TooltipFlag tooltipFlag, Consumer<Component> tooltipAdder) {
+    public void addTooltips(ItemStack stack, @Nullable Player player, Item.TooltipContext context, TooltipFlag tooltipFlag, List<Component> tooltipComponents) {
         var component = this.component;
         if (component == null) {
             component = Optional.ofNullable(this.formatableString).or(() -> stack.typeHolder().unwrapKey().map(x -> x.identifier().toLanguageKey("tooltip"))).map(x -> {
@@ -61,7 +61,7 @@ public record ShiftDescription(@Nullable Component component, @Nullable String f
             }).orElse(Component.empty());
         }
 
-        DescriptionUtil.addDescriptionTooltip(component, context, tooltipFlag, tooltipAdder);
+        DescriptionUtil.addDescriptionTooltip(component, context, tooltipFlag, tooltipComponents);
     }
 
     @Nullable

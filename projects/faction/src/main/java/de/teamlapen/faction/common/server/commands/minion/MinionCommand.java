@@ -115,13 +115,13 @@ public class MinionCommand extends BasicCommand {
         if(!handler.isInFaction(faction)) {
             throw WRONG_FACTION.create(faction.value().getName());
         }
-        var lordPlayer = handler.getLordPlayer();
+        var lordPlayer = handler.getPlayerLord();
 
         if (lordPlayer.isEmpty()) {
             throw CANT_HAVE_MINIONS.create();
         }
 
-        ILordPlayer<?> fph = lordPlayer.get();
+        ILordPlayer fph = lordPlayer.get();
 
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
         if (controller.hasFreeMinionSlot()) {
@@ -142,13 +142,13 @@ public class MinionCommand extends BasicCommand {
         return 0;
     }
 
-    private static ILordPlayer<?> handler(Player player) {
-        return FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).orElseThrow(() -> new IllegalArgumentException("Can't have minions"));
+    private static ILordPlayer handler(Player player) {
+        return FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).orElseThrow(() -> new IllegalArgumentException("Can't have minions"));
     }
 
     @SuppressWarnings("SameReturnValue")
     private static int recall(CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
-        ILordPlayer<?> factionPlayerHandler = handler(player);
+        ILordPlayer factionPlayerHandler = handler(player);
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(factionPlayerHandler);
         Collection<Integer> ids = controller.recallMinions(true);
         for (Integer id : ids) {
@@ -161,7 +161,7 @@ public class MinionCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int respawn(CommandSourceStack ctx, ServerPlayer player) throws CommandSyntaxException {
-        ILordPlayer<?> fph = handler(player);
+        ILordPlayer fph = handler(player);
         PlayerMinionController controller = MinionWorldData.getData(ctx.getServer()).getOrCreateController(fph);
         Collection<Integer> ids = controller.getUnclaimedMinions();
         for (Integer id : ids) {

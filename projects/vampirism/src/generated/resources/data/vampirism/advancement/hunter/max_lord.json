@@ -3,15 +3,13 @@
   "criteria": {
     "level": {
       "conditions": {
-        "type": "lord",
         "faction": "vampirism:hunter",
         "level": 5
       },
-      "trigger": "factionapi:faction"
+      "trigger": "factionapi:lord"
     },
     "main": {
       "conditions": {
-        "type": "level",
         "faction": "vampirism:hunter",
         "level": 1
       },

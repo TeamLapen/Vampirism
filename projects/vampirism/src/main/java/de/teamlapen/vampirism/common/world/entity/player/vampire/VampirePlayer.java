@@ -2,13 +2,10 @@ package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
 import de.teamlapen.faction.api.factions.IDisguise;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.LevelingChange;
-import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
-import de.teamlapen.faction.common.factions.minions.MinionWorldData;
-import de.teamlapen.faction.common.factions.skills.RefinementHandler;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.sounds.ISoundReference;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
@@ -39,13 +36,11 @@ import de.teamlapen.vampirism.common.util.*;
 import de.teamlapen.vampirism.common.world.attachments.ModDamageSources;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.entity.ExtendedCreature;
-import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.Customization;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.DraculaData;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VampireDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VisionStatus;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.skills.VampirePlayerSkillProperties;
@@ -104,7 +99,7 @@ import java.util.Optional;
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer, IAppearanceHolder, VampireDraculaPlayer {
+public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implements IVampirePlayer, IAppearanceHolder {
     public static final Identifier NATURAL_ARMOR_UUID = VIdentifier.mod("natural_armor");
     private static final Identifier LEVEL_DAMAGE_UUID = VIdentifier.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger();
@@ -163,9 +158,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private final BloodStats bloodStats;
     private final VisionStatus vision;
     private final VampireDisguise disguise;
-    private final RefinementHandler<IVampirePlayer> refinementHandler;
     private final Customization customization;
-    private final DraculaData draculaData;
 
     //</editor-fold>
 
@@ -174,14 +167,12 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.bloodStats = new BloodStats(this);
         this.disguise = new VampireDisguise(this);
         this.vision = new VisionStatus(this);
-        this.refinementHandler = new RefinementHandler<>(this, de.teamlapen.vampirism.common.core.ModFactions.VAMPIRE);
         this.customization = new Customization(this);
-        this.draculaData = new DraculaData(this);
     }
 
     @Override
     public Component getShortLevelDisplay() {
-        if (this.draculaData.isDracula()) {
+        if (IDraculaPlayer.getPresentDracula(this.player).isPresent()) {
             return Component.translatable("dracula_title.vampirism.short");
         }
         return super.getShortLevelDisplay();
@@ -189,15 +180,19 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public Component getLevelDisplay() {
-        if (this.draculaData.isDracula()) {
+        if (IDraculaPlayer.getPresentDracula(this.player).isPresent()) {
             return Component.translatable("dracula_title.vampirism");
         }
         return super.getLevelDisplay();
     }
 
+    @Nullable
     @Override
-    public DraculaData draculaData() {
-        return this.draculaData;
+    public Component getChatDisplay() {
+        if (IDraculaPlayer.getPresentDracula(this.player).isPresent()) {
+            return Component.translatable("dracula_title.vampirism");
+        }
+        return super.getChatDisplay();
     }
 
     @Override
@@ -217,11 +212,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     public Customization getCustomization() {
         return this.customization;
-    }
-
-    @Override
-    public IRefinementHandler<IVampirePlayer> getRefinementHandler() {
-        return refinementHandler;
     }
 
     @Override
@@ -620,7 +610,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public void onDeath(DamageSource src) {
         super.onDeath(src);
-        this.refinementHandler.damageRefinements();
         if (this.getActionHandler().isActionActive(VampireActions.BAT) && src.getDirectEntity() instanceof Projectile) {
             if (player instanceof ServerPlayer) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.get().trigger((ServerPlayer) player, VampireActionCriterionTrigger.Action.SNIPED_IN_BAT);
@@ -697,7 +686,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     protected void onLevelReset() {
         super.onLevelReset();
-        this.refinementHandler.reset();
         this.removeEntityAttributes();
     }
 
@@ -711,17 +699,17 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     private void levelUpPassively(int targetLevel) {
         this.passiveLevelBlood = 0;
-        boolean leveled = FactionPlayerHandler.get(this.player).setFaction(LevelingChange.builder().faction(ModFactions.VAMPIRE).level(targetLevel));
+        boolean leveled = FactionPlayerHandler.get(this.player).setFaction(FactionUpdate.builder().faction(ModFactions.VAMPIRE).level(targetLevel));
         if (leveled && this.player instanceof ServerPlayer serverPlayer) {
             FactionSounds.playLevelUpSoundServer(serverPlayer);
         }
     }
 
     @Override
-    public void levelChanged(LevelingChange changes) {
+    public void levelChanged(FactionUpdate changes) {
         this.applyEntityAttributes();
         this.passiveLevelBlood = 0;
-        var newLevel = changes.getNewLevel();
+        var newLevel = changes.getLevel();
 
         int maxBlood = 20;
 
@@ -735,12 +723,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             maxBlood = 26;
         }
         this.bloodStats.setMaxBlood(maxBlood);
-
-        if (changes.get(DraculaChange.KEY) != null) {
-            this.makeDracula();
-        } else if (changes.getNewLevel() < getMaxLevel() || changes.getNewLordLevel() < getMaxLordLevel()){
-            this.draculaData.removeDracula();
-        }
 
         super.levelChanged(changes);
     }
@@ -886,8 +868,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                 }
             }
         }
-        this.draculaData.tick();
-
         if (feed_victim == -1) {
             feedBiteTickCounter = 0;
         }
@@ -897,7 +877,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (crucifixTicks > 0) {
             --crucifixTicks;
             if (this.player.tickCount % 10 == 8 && crucifixTicks > 30) {
-                this.player.addEffect(new MobEffectInstance(ModEffects.CRUCIFIX_SUPPRESSION, 30));
+                this.player.addEffect(new MobEffectInstance(ModEffects.CRUCIFIX_SUPPRESSION, 20));
             }
         }
     }
@@ -964,7 +944,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public static final AppearanceKey<Integer> EyeType = AppearancePacket.register(VIdentifier.mod("eye_type"), ByteBufCodecs.VAR_INT);
     public static final AppearanceKey<Boolean> GlowingEye = AppearancePacket.register(VIdentifier.mod("glowing_eye"), ByteBufCodecs.BOOL);
     public static final AppearanceKey<IPlayableFaction.TitleGender> TitleGenderType = AppearancePacket.register(VIdentifier.mod("title_gender_type"), NeoForgeStreamCodecs.enumCodec(IPlayableFaction.TitleGender.class));
-    public static final AppearanceKey<Texture> WingsTexture = AppearancePacket.register(VIdentifier.mod("wings_texure"), NeoForgeStreamCodecs.enumCodec(Texture.class));
+    public static final AppearanceKey<IWingsEntity.Texture> WingsTexture = AppearancePacket.register(VIdentifier.mod("wings_texure"), NeoForgeStreamCodecs.enumCodec(IWingsEntity.Texture.class));
 
 
     @Override
@@ -976,9 +956,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         } else if (id.equals(GlowingEye)) {
             setGlowingEyes((Boolean) data);
         } else if (id.equals(TitleGenderType)) {
-            FactionPlayerHandler.get(this.player).setTitleGender(((IPlayableFaction.TitleGender) data));
+            FactionPlayerHandler.get(this.player).getPlayerLord().ifPresent(lord -> lord.setTitleGender((IPlayableFaction.TitleGender) data));
         } else if (id.equals(WingsTexture)) {
-            this.customization.setWingsTexture((Texture) data);
+            this.customization.setWingsTexture((IWingsEntity.Texture) data);
         }
     }
 
@@ -1115,9 +1095,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.registerProperty(VIdentifier.mod("blood_stats")).subProperty(() -> this.bloodStats).register();
         this.registerProperty(VIdentifier.mod("vision")).subProperty(() -> this.vision).register();
         this.registerProperty(VIdentifier.mod("disguise")).subProperty(() -> this.disguise).register();
-        this.registerProperty(VIdentifier.mod("refinement_handler")).subProperty(() ->this.refinementHandler).register();
         this.registerProperty(VIdentifier.mod("customization")).subProperty(() -> this.customization).register();
-        this.registerProperty(VIdentifier.mod("dracula")).subProperty(() -> this.draculaData).register();
         this.registerProperty(VIdentifier.mod("passive_level_blood")).simple(0, () -> this.passiveLevelBlood, x -> this.passiveLevelBlood = x);
     }
 
@@ -1364,21 +1342,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
     }
 
-    @Override
-    public void updateMinionAttributes(boolean enabled) {
-        MinionWorldData.getData(this.player.level()).ifPresent(a ->
-            a.getOrCreateController(this).forEach((data, minion) -> {
-                ((HunterMinionEntity.HunterMinionData) data).setIncreasedStats(enabled);
-                minion.ifPresent(x -> {
-                    x.updateAttributes();
-                    x.sync();
-                });
-            })
-        );
-    }
-
     public void effectCrucifixSuppression() {
-        this.crucifixTicks = Math.max(this.crucifixTicks + 25, 70);
+        this.crucifixTicks = Math.max(this.crucifixTicks + 15, 45);
     }
 
     public static double getNaturalArmorValue(int lvl) {

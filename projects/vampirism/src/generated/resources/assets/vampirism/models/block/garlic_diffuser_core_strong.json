@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:block/garlic_diffuser_core",
+  "textures": {
+    "core": "vampirism:block/garlic_diffuser_core_strong"
+  }
+}

@@ -19,7 +19,7 @@ public class DescriptionTooltips {
         }
 
         if (orDefault.shows(FactionDataComponents.SHIFT_DESCRIPTION.get()) && event.getItemStack().get(FactionDataComponents.SHIFT_DESCRIPTION) instanceof ShiftDescription shiftDescription) {
-            shiftDescription.addTooltips(event.getItemStack(), event.getEntity(), event.getContext(), event.getFlags(), event.getToolTip()::add);
+            shiftDescription.addTooltips(event.getItemStack(), event.getEntity(), event.getContext(), event.getFlags(), event.getToolTip());
         }
     }
 }

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 350,
+  "experience": 32.0,
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "components": {
+      "vampirism:pure_level": {
+        "level": 5
+      }
+    },
+    "items": "vampirism:blood_infused_raw_gold"
+  },
+  "result": {
+    "components": {
+      "vampirism:pure_level": {
+        "level": 5
+      }
+    },
+    "id": "vampirism:blood_infused_gold_ingot"
+  }
+}

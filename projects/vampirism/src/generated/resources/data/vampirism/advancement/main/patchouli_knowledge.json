@@ -136,6 +136,21 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "has_moral_distortion": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:vampire_book",
+            "predicates": {
+              "vampirism:vampire_book": {
+                "id": "vampirism:moral_distortion"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_my_mother": {
       "conditions": {
         "items": [
@@ -311,6 +326,9 @@
     ],
     [
       "has_maids_diary"
+    ],
+    [
+      "has_moral_distortion"
     ],
     [
       "has_my_mother"

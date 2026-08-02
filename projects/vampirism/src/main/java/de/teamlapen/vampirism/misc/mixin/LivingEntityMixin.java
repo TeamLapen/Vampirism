@@ -58,6 +58,7 @@ public abstract class LivingEntityMixin extends Entity {
             canFlyWings.set(true);
             return null;
         }
+        canFlyWings.set(false);
         return original.call(selections, random);
     }
 
@@ -73,6 +74,6 @@ public abstract class LivingEntityMixin extends Entity {
     @SuppressWarnings("ConstantValue")
     @Unique
     private boolean vampirism$canFlyWings() {
-        return ((Object)this) instanceof Player player && IDraculaPlayer.getDracula(player).filter(IDraculaPlayer::wingsFunctionalOpen).isPresent();
+        return ((Object)this) instanceof Player player && IDraculaPlayer.getPresentDracula(player).filter(IDraculaPlayer::wingsFunctionalOpen).isPresent();
     }
 }

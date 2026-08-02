@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.common.world.entity.hunter;
 
 import com.mojang.serialization.Codec;
+import de.teamlapen.faction.api.Factions;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.world.entities.ICaptureIgnore;
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.HunterHurtByTargetGoal;
@@ -129,17 +131,21 @@ public class HunterTrainerEntity extends HunterBaseEntity implements ForceLookEn
 
         if (!flag && this.isAlive() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             int lvl = HunterPlayer.get(player).getLevel();
-            if (!this.level().isClientSide() && lvl > 0) {
-                if (HunterLeveling.getTrainerRequirement(lvl + 1).isPresent()) {
-                    if (trainee == null) {
-                        player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerMenu(id, playerInventory, this), name));
-                        this.trainee = player;
-                        this.getNavigation().stop();
+            if (!this.level().isClientSide()) {
+                if (lvl > 0) {
+                    if (HunterLeveling.getTrainerRequirement(lvl + 1).isPresent()) {
+                        if (trainee == null) {
+                            player.openMenu(new SimpleMenuProvider((id, playerInventory, playerEntity) -> new HunterTrainerMenu(id, playerInventory, this), name));
+                            this.trainee = player;
+                            this.getNavigation().stop();
+                        } else {
+                            player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter.occupied"));
+                        }
                     } else {
-                        player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter.occupied"));
+                        player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_trainer.wrong_level"));
                     }
-                } else {
-                    player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_trainer.wrong_level"));
+                } else if (FactionPlayerHandler.get(player).isInFaction(Factions.NEUTRAL)) {
+                    player.sendSystemMessage(Component.translatable("dialogue.vampirism.hunter_trainer.no_hunter"));
                 }
 
             }

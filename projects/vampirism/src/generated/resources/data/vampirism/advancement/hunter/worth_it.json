@@ -9,7 +9,6 @@
     },
     "main": {
       "conditions": {
-        "type": "level",
         "faction": "vampirism:hunter",
         "level": 1
       },

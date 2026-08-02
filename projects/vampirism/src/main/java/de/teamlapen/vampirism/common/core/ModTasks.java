@@ -13,6 +13,7 @@ import de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward;
 import de.teamlapen.faction.common.factions.tasks.reward.RefinementItemReward;
 import de.teamlapen.faction.common.factions.tasks.unlock.LordLvlUnlocker;
 import de.teamlapen.faction.common.factions.tasks.unlock.LvlUnlocker;
+import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.tags.ModEntityTags;
@@ -107,7 +108,7 @@ public class ModTasks {
         HolderGetter<IFaction<?>> factions = context.lookup(FactionRegistries.Keys.FACTION);
         HolderGetter<Enchantment> enchantments = context.lookup(Registries.ENCHANTMENT);
 
-        TaskBuilder.builder().unlockedBy(new LvlUnlocker(ModFactions.VAMPIRE.value().getHighestReachableLevel())).addRequirement(ModStats.INFECTED_CREATURES.get(), 25).addRequirement(new ItemStackTemplate(ModItems.PURE_BLOOD_4, 5)).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 32)).addRequirement(FactionStats.WIN_VILLAGE_CAPTURE.get(), 3).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(1, Component.translatable("task.vampirism.vampire_lord1.reward"))).build(context::register, VAMPIRE_LORD_1);
+        TaskBuilder.builder().unlockedBy(new LvlUnlocker(REFERENCE.HIGHEST_VAMPIRE_LEVEL)).addRequirement(ModStats.INFECTED_CREATURES.get(), 25).addRequirement(new ItemStackTemplate(ModItems.PURE_BLOOD_4, 5)).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 32)).addRequirement(FactionStats.WIN_VILLAGE_CAPTURE.get(), 3).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(1, Component.translatable("task.vampirism.vampire_lord1.reward"))).build(context::register, VAMPIRE_LORD_1);
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(1, true)).addRequirement(ModEntityTags.HUNTER, 30).addRequirement(new ItemStackTemplate(ModItems.PURE_BLOOD_4.get(), 5)).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 48)).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(2)).build(context::register, VAMPIRE_LORD_2);
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(2, true)).addRequirement(ModEntityTags.HUNTER, 30).addRequirement(new ItemStackTemplate(ModItems.PURE_BLOOD_4.get(), 5)).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 48)).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(3)).build(context::register, VAMPIRE_LORD_3);
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(3, true)).addRequirement(ModEntityTags.ADVANCED_HUNTER, 5).addRequirement(new ItemStackTemplate(ModItems.PURE_BLOOD_4.get(), 10)).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 64)).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(4)).build(context::register, VAMPIRE_LORD_4);
@@ -133,7 +134,7 @@ public class ModTasks {
         TaskBuilder.builder().addRequirement(ModEntityTags.HUNTER, 10).setReward(new ItemStackTemplate(ModItems.HUMAN_HEART.get(), 5)).build(context::register, V_KILL_1);
         TaskBuilder.builder().addRequirement(ModEntityTags.ADVANCED_HUNTER, 4).setReward(new ItemStackTemplate(ModItems.HUMAN_HEART.get(), 8)).build(context::register, V_KILL_2);
 
-        TaskBuilder.builder().unlockedBy(new LvlUnlocker(ModFactions.HUNTER.value().getHighestReachableLevel())).addRequirement(ModEntityTags.VAMPIRE, 50).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 32)).addRequirement(FactionStats.WIN_VILLAGE_CAPTURE.get(), 3).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(1, Component.translatable("task.vampirism.hunter_lord1.reward"))).build(context::register, HUNTER_LORD_1);
+        TaskBuilder.builder().unlockedBy(new LvlUnlocker(REFERENCE.HIGHEST_HUNTER_LEVEL)).addRequirement(ModEntityTags.VAMPIRE, 50).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 32)).addRequirement(FactionStats.WIN_VILLAGE_CAPTURE.get(), 3).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(1, Component.translatable("task.vampirism.hunter_lord1.reward"))).build(context::register, HUNTER_LORD_1);
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(1, true)).addRequirement(ModEntityTags.VAMPIRE, 50).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 32)).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(2)).build(context::register, HUNTER_LORD_2);
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(2, true)).addRequirement(ModEntityTags.VAMPIRE, 50).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 32)).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(3)).build(context::register, HUNTER_LORD_3);
         TaskBuilder.builder().unlockedBy(new LordLvlUnlocker(3, true)).addRequirement(ModEntityTags.VAMPIRE, 75).addRequirement(new ItemStackTemplate(Items.GOLD_INGOT, 64)).setReward(new de.teamlapen.faction.common.factions.tasks.reward.LordLevelReward(4)).build(context::register, HUNTER_LORD_4);

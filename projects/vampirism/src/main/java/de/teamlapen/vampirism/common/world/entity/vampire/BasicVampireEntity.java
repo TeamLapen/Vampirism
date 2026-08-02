@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.common.world.entity.vampire;
 
+import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
 import de.teamlapen.faction.api.world.entities.IEntityLeader;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
@@ -149,7 +151,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
      * Assumes preconditions as been met. Check conditions but does not give feedback to user
      */
     public void convertToMinion(Player player) {
-        FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(getFaction())).ifPresentOrElse(lord -> {
+        FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).filter(x -> IFaction.is(x.getFaction(), getFaction())).ifPresentOrElse(lord -> {
             MinionWorldData.getData(player.level()).map(w -> w.getOrCreateController(lord)).ifPresent(controller -> {
                 if (controller.hasFreeMinionSlot()) {
                     VampireMinionEntity.VampireMinionData data = new VampireMinionEntity.VampireMinionData(lord, this);
@@ -234,7 +236,10 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, EntitySpawnReason reason, @Nullable SpawnGroupData spawnDataIn) {
         if ((reason == EntitySpawnReason.NATURAL || reason == EntitySpawnReason.STRUCTURE) && this.getRandom().nextInt(50) == 0) {
-            this.setItemSlot(EquipmentSlot.HEAD, VampireVillage.createBanner(worldIn.registryAccess()));
+            var banner = getFaction().components().get(FactionDataComponents.VILLAGE_BANNER);
+            if (banner != null) {
+                this.setItemSlot(EquipmentSlot.HEAD, banner.createBanner(worldIn.registryAccess()));
+            }
         }
         getEntityData().set(TYPE, this.getRandom().nextInt(TYPES));
 
@@ -393,7 +398,7 @@ public class BasicVampireEntity extends VampireBaseEntity implements IBasicVampi
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (this.isAlive() && !player.isShiftKeyDown()) {
             if (!level().isClientSide()) {
-                return FactionPlayerHandler.get(player).getLordPlayer().filter(x -> x.getMaxMinions() > 0).filter(x -> x.is(ModFactions.VAMPIRE)).<InteractionResult>map(lord -> {
+                return FactionPlayerHandler.get(player).getPlayerLord().filter(x -> x.getMaxMinions() > 0).filter(x -> IFaction.is(x.getFaction(), ModFactions.VAMPIRE)).<InteractionResult>map(lord -> {
                     ItemStack heldItem = player.getItemInHand(hand);
                     //noinspection Convert2MethodRef
                     boolean freeSlot = MinionWorldData.getData(player.level()).map(data -> data.getOrCreateController(lord)).map(c -> c.hasFreeMinionSlot()).orElse(false);

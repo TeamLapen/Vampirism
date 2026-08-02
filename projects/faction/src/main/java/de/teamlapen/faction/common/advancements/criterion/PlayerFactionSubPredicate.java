@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.util.ModCodecs;
 import net.minecraft.advancements.criterion.EntitySubPredicate;
@@ -73,7 +74,7 @@ public class PlayerFactionSubPredicate implements EntitySubPredicate {
             FactionPlayerHandler fph = FactionPlayerHandler.get(player);
             return (faction == null || IFaction.is(fph.getFaction(), faction))
                     && (level.isEmpty() || fph.getCurrentLevel() >= level.get())
-                    && (lordLevel.isEmpty() || fph.getLordLevel() >= lordLevel.get());
+                    && (lordLevel.isEmpty() || fph.getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) >= lordLevel.get());
         }
         return false;
     }

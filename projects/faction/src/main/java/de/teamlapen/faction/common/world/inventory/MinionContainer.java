@@ -31,7 +31,7 @@ import java.util.Optional;
 
 public class MinionContainer extends AbstractInventoryContainer {
 
-    public static Optional<MinionContainer> create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity<?> minionEntity, @NotNull ILordPlayer<?> lord) {
+    public static Optional<MinionContainer> create(int id, @NotNull Inventory playerInventory, @NotNull MinionEntity<?> minionEntity, @NotNull ILordPlayer lord) {
         Optional<IMinionInventory> minionInv = minionEntity.getInventory();
         return minionInv.map(inv -> new MinionContainer(id, playerInventory, lord, minionEntity, inv, inv.getAvailableSize(), createSelectors(minionEntity, inv.getAvailableSize())));
     }
@@ -65,7 +65,7 @@ public class MinionContainer extends AbstractInventoryContainer {
     private IMinionTask<?, ?> taskToActivate;
     private boolean taskLocked;
 
-    public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer<?> lord, @NotNull MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, List<SlotDefinition> selectorInfos) {
+    public MinionContainer(int id, @NotNull Inventory playerInventory, @NotNull ILordPlayer lord, @NotNull MinionEntity<?> minionEntity, @NotNull Container inventory, int extraSlots, List<SlotDefinition> selectorInfos) {
         super(FactionMenus.MINION.get(), id, playerInventory, ContainerLevelAccess.create(minionEntity.level(), minionEntity.blockPosition()),inventory, selectorInfos);
         this.minionEntity = minionEntity;
         this.extraSlots = extraSlots;
@@ -153,7 +153,7 @@ public class MinionContainer extends AbstractInventoryContainer {
             if (!(e instanceof MinionEntity<?> minion)) {
                 throw new IllegalStateException("Cannot find related minion entity " + entityId);
             }
-            ILordPlayer<?> player = FactionPlayerHandler.get(inv.player).getLordPlayer().orElseThrow();
+            ILordPlayer player = FactionPlayerHandler.get(inv.player).getPlayerLord().orElseThrow();
             return MinionContainer.create(windowId, inv, minion, player).orElseThrow(() -> new IllegalStateException("Could not create container for minion " + minion.getId() + ". Data is not available"));
         }
     }

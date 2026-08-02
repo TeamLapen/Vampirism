@@ -1,0 +1,15 @@
+{
+  "children": [
+    {
+      "node": "vampirism:hunter/marshall_2"
+    },
+    {
+      "node": "vampirism:hunter/marshall_3"
+    }
+  ],
+  "node": "vampirism:hunter/marshall_root",
+  "orderAfter": [
+    "vampirism:hunter/lord"
+  ],
+  "skill_tree": "vampirism:hunter/marshall"
+}

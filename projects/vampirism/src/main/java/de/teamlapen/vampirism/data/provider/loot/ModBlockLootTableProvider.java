@@ -83,10 +83,11 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                         .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.GARLIC.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(GarlicBlock.AGE, 7)))
                         .add(LootItem.lootTableItem(ModBlocks.GARLIC.get()).apply(ApplyBonusCount.addBonusBinomialDistributionCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE), 0.5714286F, 3))))));
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_CORE.get());
-        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_CORE_IMPROVED.get());
-        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_WEAK.get());
+        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_CORE_STRONG.get());
+        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_CORE_LONG.get());
+        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_LONG.get());
         this.dropSelf(ModBlocks.GARLIC_DIFFUSER_NORMAL.get());
-        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_IMPROVED.get());
+        this.dropSelf(ModBlocks.GARLIC_DIFFUSER_STRONG.get());
         this.dropSelf(ModBlocks.HUNTER_TABLE.get());
         this.dropSelf(ModBlocks.SUNSCREEN_BEACON.get());
         this.add(ModBlocks.TENT_MAIN.get(), createSingleItemTable(ModItems.ITEM_TENT.get())
@@ -185,6 +186,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropPottedContents(ModBlocks.POTTED_CURSED_SPRUCE_SAPLING.get());
         this.dropSelf(ModBlocks.BLOOD_INFUSED_IRON_BLOCK.get());
         this.dropSelf(ModBlocks.BLOOD_INFUSED_ENHANCED_IRON_BLOCK.get());
+        this.dropSelf(ModBlocks.BLOOD_INFUSED_REFINED_IRON_BLOCK.get());
         this.add(ModBlocks.VAMPIRE_BEACON.get(), this::createNameableBlockEntityTable);
         this.dropSelf(ModBlocks.PURPLE_STONE_BRICKS.get());
         this.dropSelf(ModBlocks.PURPLE_STONE_BRICK_STAIRS.get());

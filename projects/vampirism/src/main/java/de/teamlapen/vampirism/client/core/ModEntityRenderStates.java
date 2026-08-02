@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.client.renderer.entities.DualSplitBipedRenderer;
@@ -133,12 +134,12 @@ public class ModEntityRenderStates {
                 state.setRenderData(VAMPIRE_BAT, bat);
             }
 
-            if (vampire.isDracula()) {
-                state.setRenderData(DRACULA_WINGS_STATE, vampire.getWingsState());
-                state.setRenderData(DRACULA_WINGS_GROW, vampire.growAnimationState());
-                state.setRenderData(DRACULA_WINGS_FLY, vampire.flyAnimationState());
+            IDraculaPlayer.getPresentDracula(player).ifPresent(dracula -> {
+                state.setRenderData(DRACULA_WINGS_STATE, dracula.getWingsState());
+                state.setRenderData(DRACULA_WINGS_GROW, dracula.growAnimationState());
+                state.setRenderData(DRACULA_WINGS_FLY, dracula.flyAnimationState());
                 state.setRenderData(DRACULA_WINGS_TEXTURE, vampire.getCustomization().wingsTexture());
-            }
+            });
         }
     }
 

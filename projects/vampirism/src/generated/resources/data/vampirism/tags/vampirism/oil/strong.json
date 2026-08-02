@@ -1,0 +1,22 @@
+{
+  "values": [
+    "vampirism:dracula_blood",
+    "vampirism:poison_strong",
+    "vampirism:weakness_strong",
+    "vampirism:slowness_strong",
+    "vampirism:healing_strong",
+    "vampirism:fire_resistance_strong",
+    "vampirism:swiftness_strong",
+    "vampirism:regeneration_strong",
+    "vampirism:night_vision_strong",
+    "vampirism:strength_strong",
+    "vampirism:jump_strong",
+    "vampirism:water_breathing_strong",
+    "vampirism:invisibility_strong",
+    "vampirism:slow_falling_strong",
+    "vampirism:luck_strong",
+    "vampirism:harm_strong",
+    "vampirism:smelt_strong",
+    "vampirism:evasion_strong"
+  ]
+}

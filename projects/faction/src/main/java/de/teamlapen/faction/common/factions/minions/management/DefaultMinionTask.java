@@ -2,6 +2,7 @@ package de.teamlapen.faction.common.factions.minions.management;
 
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionData;
 import de.teamlapen.faction.api.world.entities.minion.IMinionEntity;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
@@ -14,6 +15,8 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+
+import java.util.Optional;
 
 
 public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> implements IMinionTask<T, Q> {
@@ -51,7 +54,7 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
         }
     }
 
-    public boolean isRequiredSkillUnlocked(@Nullable ILordPlayer<?> player) {
-        return this.requiredSkill == null || player == null || player.asSkillPlayer().map(x -> x.getSkillHandler().isSkillEnabled(this.requiredSkill)).orElse(false);
+    public boolean isRequiredSkillUnlocked(Optional<? extends ISkillPlayer<?>> player) {
+        return this.requiredSkill == null || player.map(x -> x.getSkillHandler().isSkillEnabled(this.requiredSkill)).orElse(false);
     }
 }

@@ -73,6 +73,7 @@ public class ModCreativeTabs {
             add(SOUL_ORB_VAMPIRE);
             add(MOTHER_CORE);
             add(VAMPIRE_BLOOD_BOTTLE);
+            add(DRACULAS_BLOOD);
             addItemGen(VAMPIRE_BOOK);
             addIfPresent(VIdentifier.loc(REFERENCE.GUIDEAPI_MODID, REFERENCE.GUIDEBOOK_ID));
             add(VAMPIRE_FANG);
@@ -382,7 +383,8 @@ public class ModCreativeTabs {
             addArmor();
 
             add(GARLIC_DIFFUSER_CORE);
-            add(GARLIC_DIFFUSER_CORE_IMPROVED);
+            add(GARLIC_DIFFUSER_CORE_STRONG);
+            add(GARLIC_DIFFUSER_CORE_LONG);
 
             add(HOLY_WATER_BOTTLE_NORMAL);
             add(HOLY_WATER_BOTTLE_ENHANCED);

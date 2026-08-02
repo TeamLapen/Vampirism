@@ -42,7 +42,7 @@ public class FactionBadOmenMobEffect extends MobEffect {
             if (victim.asEntity().getItemBySlot(EquipmentSlot.HEAD).has(FactionDataComponents.IS_FACTION_BANNER)) {
                 Holder<? extends IPlayableFaction<?>> playerFaction = IFactionHelper.get().getFaction(player);
                 if (playerFaction != faction) {
-                    Holder<MobEffect> badOmen = faction.value().getVillageData().badOmenEffect();
+                    Holder<MobEffect> badOmen = faction.components().get(FactionDataComponents.VILLAGE_BAD_OMEN);
                     if (badOmen != null) {
                         MobEffectInstance inst = player.getEffect(badOmen);
                         int i = inst != null ? Math.min(inst.getAmplifier() + 1, 4) : 0;

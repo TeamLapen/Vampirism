@@ -26,7 +26,7 @@ public class SurroundedEscapeBehavior {
     }
 
     public static Set<SensorType<? extends Sensor<? super Dracula>>> sensors() {
-        return Set.of(ModSensors.IS_SURROUNDED.get(), ModSensors.NEAREST_TARGETABLE_ENTITIES.get());
+        return Set.of(ModSensors.IS_SURROUNDED.get(), ModSensors.DRACULA_ATTACKABLE_SENSOR.get());
     }
 
     public static Set<MemoryModuleType<?>> memories() {

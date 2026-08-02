@@ -61,7 +61,9 @@ public class ChaliceBlock extends Block {
     @Override
     protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!state.getValue(FILLED) && itemStack.is(ModItems.VAMPIRE_BLOOD_BOTTLE)) {
-            itemStack.shrink(1);
+            if (!player.getAbilities().instabuild) {
+                itemStack.shrink(1);
+            }
             level.setBlock(pos, state.setValue(FILLED, true), UPDATE_ALL);
             DraculaFightData.getOpt(level).ifPresent(x -> x.registerChalice(pos));
             return InteractionResult.SUCCESS_SERVER;

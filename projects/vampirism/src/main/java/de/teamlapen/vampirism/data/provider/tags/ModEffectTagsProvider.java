@@ -23,7 +23,15 @@ public class ModEffectTagsProvider extends KeyTagProvider<MobEffect> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
-        this.tag(ModEffectTags.HUNTER_POTION_RESISTANCE).add(MobEffects.BLINDNESS.unwrapKey().orElseThrow(), MobEffects.NAUSEA.unwrapKey().orElseThrow(), MobEffects.HUNGER.unwrapKey().orElseThrow(), MobEffects.POISON.unwrapKey().orElseThrow(), ModEffects.FREEZE.getKey());
+        this.tag(ModEffectTags.HUNTER_POTION_RESISTANCE)
+                .add(MobEffects.BLINDNESS.getKey())
+                .add(MobEffects.NAUSEA.getKey())
+                .add(MobEffects.HUNGER.getKey())
+                .add(MobEffects.POISON.getKey())
+                .add(ModEffects.FREEZE.getKey())
+                .add(MobEffects.WEAKNESS.getKey())
+                .add(MobEffects.SLOWNESS.getKey())
+        ;
         this.tag(ModEffectTags.DISABLES_ACTIONS_HUNTER)
                 .addTag(FactionEffectTags.DISABLES_ACTIONS);
         this.tag(ModEffectTags.DISABLES_ACTIONS_VAMPIRE)

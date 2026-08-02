@@ -1,0 +1,44 @@
+{
+  "type": "vampirism:alchemical_table",
+  "common_info": {},
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:dracula_blood"
+      }
+    },
+    "items": "vampirism:oil_bottle"
+  },
+  "input": {
+    "neoforge:ingredient_type": "neoforge:compound",
+    "children": [
+      {
+        "neoforge:ingredient_type": "neoforge:components",
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:water_breathing"
+          }
+        },
+        "items": "minecraft:potion"
+      },
+      {
+        "neoforge:ingredient_type": "neoforge:components",
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:long_water_breathing"
+          }
+        },
+        "items": "minecraft:potion"
+      }
+    ]
+  },
+  "result": {
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:water_breathing_strong"
+      }
+    },
+    "id": "vampirism:oil_bottle"
+  }
+}

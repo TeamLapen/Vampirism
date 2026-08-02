@@ -1,6 +1,7 @@
 package de.teamlapen.faction.api.registries.factions;
 
 import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.FactionProperties;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import net.minecraft.core.Registry;
@@ -30,18 +31,14 @@ public class DeferredFactionRegister extends DeferredRegister<IFaction<?>> {
     }
 
     @SuppressWarnings({"unchecked", "RedundantCast"})
-    public <T extends IFactionEntity, I extends IFaction<T>> DeferredFaction<T, I> registerFaction(String name, Supplier<? extends I> sup) {
-        return (DeferredFaction<T, I>) (Object) super.register(name, sup);
+    public <T extends IFactionEntity, I extends IFaction<T>> DeferredFaction<T, I> registerFaction(String name, Function<FactionProperties,? extends I> sup) {
+        return (DeferredFaction<T, I>) (Object) super.register(name, key -> sup.apply(new FactionProperties().setId(ResourceKey.create(FactionRegistries.Keys.FACTION, key))));
     }
 
     @Override
+    @Deprecated
     public <I extends IFaction<?>> DeferredHolder<IFaction<?>, I> register(String name, Function<Identifier, ? extends I> func) {
         return super.register(name, func);
-    }
-
-    @SuppressWarnings({"unchecked", "RedundantCast"})
-    public <T extends IFactionEntity, I extends IFaction<T>> DeferredFaction<T, I> registerFaction(String name, Function<Identifier, ? extends I> func) {
-        return (DeferredFaction<T, I>) (Object) super.register(name, func);
     }
 
     @SuppressWarnings("unchecked")

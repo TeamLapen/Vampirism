@@ -13,10 +13,22 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.ItemLike;
 
+///
+/// | Level | Item |
+/// |-------|------|
+/// | -1    | none |
+/// | 0    | pure blood 1 |
+/// | 1    | pure blood 2 |
+/// | 2    | pure blood 3 |
+/// | 3    | pure blood 4 |
+/// | 4    | pure blood 5 |
+/// | 5    | draculas blood |
+/// @param level
 public record PureLevel(int level) {
 
     public static final PureLevel EMPTY = new PureLevel(-1);
     public static final PureLevel LOW = new PureLevel(0);
+    public static final PureLevel DRACULA = new PureLevel(5);
 
     public static final Codec<PureLevel> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             Codec.INT.fieldOf("level").forGetter(PureLevel::level)

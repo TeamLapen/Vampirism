@@ -63,14 +63,14 @@ public class BlessingRecipeCategory implements IRecipeCategory<BlessableRecipe> 
     @Override
     public void draw(BlessableRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         this.background.draw(graphics, (getWidth() - BACKGROUND_WIDTH)/2, 0);
-        if (recipe.enhanced()) {
-            graphics.textWithWordWrap(Minecraft.getInstance().font, Component.translatable("gui.vampirism.skill_required", HunterSkills.ENHANCED_BLESSING.get().getName()), 7, 52, 100, Color.gray.getRGB(), false);
+        if (recipe.requiredSkill() != null) {
+            graphics.textWithWordWrap(Minecraft.getInstance().font, Component.translatable("gui.vampirism.skill_required", recipe.requiredSkill().value().getName()), 7, 52, 100, Color.gray.getRGB(), false);
         }
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, BlessableRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 22, 17).add(recipe.input().getDefaultInstance());
+        builder.addSlot(RecipeIngredientRole.INPUT, 22, 17).add(recipe.item().asItem().getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 74, 17).add(recipe.output().getDefaultInstance());
     }
 }

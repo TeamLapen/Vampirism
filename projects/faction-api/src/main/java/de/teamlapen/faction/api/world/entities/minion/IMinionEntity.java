@@ -26,7 +26,7 @@ public interface IMinionEntity extends IFactionEntity {
     /**
      * @return The lord player. Empty if minion data is not available or lord is not loaded
      */
-    Optional<ILordPlayer<?>> getLordOpt();
+    Optional<ILordPlayer> getLordOpt();
 
     /**
      * @return The id of this minion. Empty if failed to check out minion data

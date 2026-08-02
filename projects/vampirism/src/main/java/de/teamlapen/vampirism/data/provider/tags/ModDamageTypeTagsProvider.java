@@ -29,7 +29,7 @@ public class ModDamageTypeTagsProvider extends KeyTagProvider<DamageType> {
         this.tag(DamageTypeTags.BYPASSES_SHIELD).add(ModDamageTypes.FLYING_NEEDLE);
         this.tag(DamageTypeTags.BYPASSES_ENCHANTMENTS).add(ModDamageTypes.FLYING_SWORD);
         this.tag(DamageTypeTags.IS_FIRE).add(ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.VAMPIRE_IN_FIRE);
-        this.tag(DamageTypeTags.NO_KNOCKBACK).add(ModDamageTypes.SUN_DAMAGE);
+        this.tag(DamageTypeTags.NO_KNOCKBACK).add(ModDamageTypes.SUN_DAMAGE, ModDamageTypes.BLEEDING);
         this.tag(DamageTypeTags.WITCH_RESISTANT_TO).add(ModDamageTypes.SUN_DAMAGE, ModDamageTypes.VAMPIRE_ON_FIRE, ModDamageTypes.VAMPIRE_IN_FIRE, ModDamageTypes.NO_BLOOD, ModDamageTypes.HOLY_WATER);
         this.tag(ModDamageTypeTags.ENTITY_PHYSICAL).add(DamageTypes.PLAYER_ATTACK, DamageTypes.MOB_ATTACK, DamageTypes.MOB_ATTACK_NO_AGGRO, DamageTypes.MOB_PROJECTILE, DamageTypes.ARROW, DamageTypes.STING, DamageTypes.THORNS, ModDamageTypes.RITUAL_KNIFE);
         this.tag(ModDamageTypeTags.REMAINS_INVULNERABLE).add(DamageTypes.IN_WALL, DamageTypes.DROWN);

@@ -4,6 +4,7 @@ import de.teamlapen.faction.api.factions.actions.IActionResult;
 import de.teamlapen.faction.api.factions.actions.ILastingAction;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttachments;
@@ -24,7 +25,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -42,15 +42,16 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activate(IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);
+        IDraculaPlayer.get(player).ifPresent(d -> d.closeWings(true));
         return IActionResult.SUCCESS;
     }
 
     @Override
-    public @NotNull IActionResult canBeUsedBy(@NotNull IVampirePlayer vampire) {
+    public IActionResult canBeUsedBy(IVampirePlayer vampire) {
         Player player = vampire.asEntity();
         if (vampire.isGettingSundamage(player.level())) {
             return IActionResult.fail(Component.translatable("message.vampirism.action.bat.in_sun"));
@@ -87,7 +88,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public void onActivatedClient(@NotNull IVampirePlayer vampire) {
+    public void onActivatedClient(IVampirePlayer vampire) {
         if (!((VampirePlayer) vampire).getSkillProperties().bat) {
             updatePlayer((VampirePlayer) vampire, true);
             setModifier(vampire.asEntity(), true);
@@ -100,7 +101,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public void onDeactivated(@NotNull IVampirePlayer vampire) {
+    public void onDeactivated(IVampirePlayer vampire) {
         Player player = vampire.asEntity();
         setModifier(player, false);
         if (!player.onGround()) {
@@ -112,7 +113,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public void onReActivated(@NotNull IVampirePlayer vampire) {
+    public void onReActivated(IVampirePlayer vampire) {
         setModifier(vampire.asEntity(), true);
         if (!((VampirePlayer) vampire).getSkillProperties().bat) {
             updatePlayer((VampirePlayer) vampire, true);
@@ -120,7 +121,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public boolean onUpdate(@NotNull IVampirePlayer vampire) {
+    public boolean onUpdate(IVampirePlayer vampire) {
         if (vampire.asEntity() instanceof ServerPlayer player) {
             if (vampire.isGettingSundamage(player.level()) && !vampire.isRemote()) {
                 player.sendSystemMessage(Component.translatable("message.vampirism.action.bat.cant_fly_day"));
@@ -146,11 +147,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Set's flightspeed capability
      */
-    private void setFlightSpeed(@NotNull Player player, float speed) {
+    private void setFlightSpeed(Player player, float speed) {
         player.getAbilities().setFlyingSpeed(speed);
     }
 
-    private void setModifier(@NotNull Player player, boolean enabled) {
+    private void setModifier(Player player, boolean enabled) {
         Identifier key = ModRegistries.ACTIONS.getKey(this);
         if (key == null) {
             return;
@@ -184,7 +185,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Adjust the players size and eye height to fit to the bat model
      */
-    private void updatePlayer(@NotNull VampirePlayer vampire, boolean bat) {
+    private void updatePlayer(VampirePlayer vampire, boolean bat) {
         Player player = vampire.asEntity();
         vampire.getSkillProperties().bat = bat;
         player.setForcedPose(bat ? Pose.STANDING : null);

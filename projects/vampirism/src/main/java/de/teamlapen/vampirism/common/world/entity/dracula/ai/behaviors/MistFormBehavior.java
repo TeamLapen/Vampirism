@@ -23,7 +23,7 @@ public class MistFormBehavior {
     }
 
     public static Set<SensorType<? extends Sensor<? super Dracula>>> sensors() {
-        return Set.of(ModSensors.NEAREST_TARGETABLE_ENTITIES.get());
+        return Set.of(ModSensors.DRACULA_ATTACKABLE_SENSOR.get());
     }
 
     public static Set<MemoryModuleType<?>> memories() {

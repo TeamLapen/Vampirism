@@ -41,7 +41,7 @@ public class FlyingSwordAttack extends Behavior<Dracula> {
     private final List<LivingEntity> targets = new ArrayList<>();
 
     public static Set<SensorType<? extends Sensor<? super Dracula>>> sensors() {
-        return Set.of(SensorType.NEAREST_LIVING_ENTITIES, ModSensors.NEAREST_TARGETABLE_ENTITIES.get());
+        return Set.of(SensorType.NEAREST_LIVING_ENTITIES, ModSensors.DRACULA_ATTACKABLE_SENSOR.get());
     }
 
     public static Set<MemoryModuleType<?>> memories() {

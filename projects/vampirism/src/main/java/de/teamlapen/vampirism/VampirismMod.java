@@ -37,7 +37,6 @@ public class VampirismMod {
         checkEnv();
 
         ShapedRecipePattern.setCraftingSize(4, 4);
-        NeoForgeMod.enableMergedAttributeTooltips();
 
         CONFIG = new ModConfig(modContainer);
         CONFIG.register(modEventBus);

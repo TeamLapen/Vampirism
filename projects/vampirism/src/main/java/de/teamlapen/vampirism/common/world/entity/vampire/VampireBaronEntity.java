@@ -143,8 +143,8 @@ public class VampireBaronEntity extends VampireBaseEntity implements IVampireBar
     }
 
     @Override
-    public void closeWings() {
-        switchState(WingsState.CLOSING);
+    public void closeWings(boolean force) {
+        switchState(force ? WingsState.CLOSED : WingsState.CLOSING);
     }
 
     @Override

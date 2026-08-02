@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.util.SpawnUtil;
 import de.teamlapen.faction.common.world.blockentity.NetworkedBlockEntity;
@@ -35,7 +35,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -307,7 +306,7 @@ public class MotherBlockEntity extends NetworkedBlockEntity {
                 serverplayer.awardStat(ModStats.MOTHER_DEFEATED.get(), 1);
                 FactionPlayerHandler handler = FactionPlayerHandler.get(serverplayer);
                 if (handler.getCurrentLevel() < handler.getFaction().value().getHighestReachableLevel()) {
-                    handler.setFaction(LevelingChange.builder().level(handler.getCurrentLevel() + 1));
+                    handler.setFaction(FactionUpdate.builder().level(handler.getCurrentLevel() + 1));
                 }
             }
         }
