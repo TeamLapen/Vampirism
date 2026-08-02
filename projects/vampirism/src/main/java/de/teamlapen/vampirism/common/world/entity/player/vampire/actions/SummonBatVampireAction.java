@@ -63,8 +63,4 @@ public class SummonBatVampireAction extends DefaultVampireAction {
         return ModConfig.balance().vaSummonBatsEnabled.get();
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
 }

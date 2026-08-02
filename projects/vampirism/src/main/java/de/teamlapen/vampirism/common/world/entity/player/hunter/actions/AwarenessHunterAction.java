@@ -92,14 +92,4 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
         return player.level().getEntities(player, area, vampirePredicate).stream().map(x -> x.distanceTo(player)).sorted().findFirst().orElse(Float.MAX_VALUE);
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
-
 }

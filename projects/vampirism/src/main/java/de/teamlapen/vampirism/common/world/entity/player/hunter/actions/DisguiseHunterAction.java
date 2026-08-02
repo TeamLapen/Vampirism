@@ -67,8 +67,4 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
         return false;
     }
 
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
 }

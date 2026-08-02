@@ -105,6 +105,7 @@ public class VampireSkills {
 
     public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> WANDER_THE_SUN = SKILLS.register("wander_the_sun", () -> new VampirismSkill.DraculaSkill(1, true));
     public static final DeferredHolder<ISkill<?>, ActionSkill<IVampirePlayer>> BLINDING = SKILLS.register("blinding", () -> new ActionSkill<>(VampireActions.BLINDING, ModSkillTreeTags.DRACULA, 1, true));
+    public static final DeferredHolder<ISkill<?>, ActionSkill<IVampirePlayer>> MIST_FORM = SKILLS.register("mist_form", () -> new ActionSkill<>(VampireActions.MIST_FORM, ModSkillTreeTags.DRACULA, 1, true));
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {

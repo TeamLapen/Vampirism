@@ -90,8 +90,4 @@ public class FreezeVampireAction extends DefaultVampireAction {
         return ModConfig.balance().vaFreezeEnabled.get();
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
 }

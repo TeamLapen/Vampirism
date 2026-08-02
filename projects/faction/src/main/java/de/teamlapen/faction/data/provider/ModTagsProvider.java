@@ -18,5 +18,6 @@ public class ModTagsProvider {
         generator.addProvider(true, new ModProfessionTagProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModEffectsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModDamageTypeTagsProvider(output, lookupProviderFuture));
+        generator.addProvider(true, new ModActionTagsProvider(output, lookupProviderFuture));
     }
 }

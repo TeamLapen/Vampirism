@@ -61,13 +61,4 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
         return ILastingAction.super.onUpdate(player);
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
 }

@@ -1,17 +1,20 @@
 package de.teamlapen.faction.client.gui.overlay;
 
+import de.teamlapen.faction.api.FactionTagKeys;
 import de.teamlapen.faction.api.FactionsApi;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.faction.common.tags.FactionActionTags;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.ARGB;
 
 import java.util.Optional;
@@ -35,7 +38,8 @@ public class ActionCooldownOverlay<T extends ISkillPlayer<T>> extends BaseOverla
                 int x = this.mc.getWindow().getGuiScaledWidth() - 12 - 16;
 
                 for (Holder<? extends IAction<T>> action : actionHandler.getUnlockedActionHolder()) {
-                    if (!(action.value().showHudCooldown(this.player()))) continue;
+                    //noinspection unchecked,rawtypes
+                    if (!(action.is((TagKey) FactionActionTags.SHOW_COOLDOWN_IN_HUD))) continue;
                     if (!actionHandler.isActionOnCooldown(action)) continue;
                     Optional<Identifier> texture = action.unwrapKey().map(ResourceKey::identifier).map(key -> key.withPath("textures/actions/" + key.getPath() + ".png"));
                     if (texture.isPresent()) {

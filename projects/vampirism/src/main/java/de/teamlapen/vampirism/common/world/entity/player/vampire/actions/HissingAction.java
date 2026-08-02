@@ -36,8 +36,4 @@ public class HissingAction extends DefaultVampireAction {
         return IActionResult.SUCCESS;
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
 }

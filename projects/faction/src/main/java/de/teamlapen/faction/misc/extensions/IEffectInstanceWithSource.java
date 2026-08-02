@@ -44,11 +44,9 @@ public interface IEffectInstanceWithSource {
     static void removePotionEffect(@NotNull LivingEntity entity, @NotNull Holder<MobEffect> effect, @NotNull Identifier source) {
         MobEffectInstance ins = entity.getEffect(effect);
         while (ins != null) {
-            if (ins.factions$hasProperties()) {
-                if (ins.factions$getProperties().contains(source)) {
-                    ins.factions$removeEffect();
-                    break;
-                }
+            if (ins.factions$getProperties().contains(source)) {
+                ins.factions$removeEffect();
+                break;
             }
             ins = ins.factions$getHiddenEffect();
         }

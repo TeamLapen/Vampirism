@@ -63,13 +63,4 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
         return false;
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
 }

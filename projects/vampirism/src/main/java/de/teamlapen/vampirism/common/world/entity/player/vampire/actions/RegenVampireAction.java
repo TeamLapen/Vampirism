@@ -30,17 +30,6 @@ public class RegenVampireAction extends DefaultVampireAction implements ILasting
     }
 
     @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
-
-
-    @Override
     public int getDuration(IVampirePlayer player) {
         return ModConfig.balance().vaRegenerationDuration.get() * 20;
     }
