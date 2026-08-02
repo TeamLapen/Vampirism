@@ -9,6 +9,7 @@ import de.teamlapen.faction.common.core.ModRegistryManager;
 import de.teamlapen.faction.common.factions.FactionPredicates;
 import de.teamlapen.faction.common.factions.FactionHelper;
 import de.teamlapen.faction.common.factions.FactionSpecificTags;
+import de.teamlapen.faction.common.factions.skills.SkillCallbacks;
 import de.teamlapen.faction.common.network.packets.ModPacketDispatcher;
 import de.teamlapen.faction.common.world.entities.ModPlayerEventHandler;
 import de.teamlapen.faction.common.world.entities.PlayerListenerEventHandler;
@@ -59,5 +60,6 @@ public class CommonServices extends Services implements IFactionServices {
         bus.addListener(Permissions::registerNodes);
         bus.register(this.playerEventHandler);
         bus.register(this.playerListenerEventHandler);
+        bus.addListener(SkillCallbacks::onBound);
     }
 }

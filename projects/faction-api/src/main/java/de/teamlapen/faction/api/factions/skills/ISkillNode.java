@@ -14,7 +14,7 @@ public interface ISkillNode {
     /**
      * @return The skills contained in this node
      */
-    List<Holder<ISkill<?>>> skills();
+    List<Holder<? extends ISkill<?>>> skills();
 
     /**
      * Nodes that are mutually exclusive to this node. Each node must define this.
@@ -24,6 +24,6 @@ public interface ISkillNode {
     /**
      * checks if a skill is contained in this node
      */
-    boolean containsSkill(Holder<ISkill<?>> skill);
+    boolean containsSkill(Holder<? extends ISkill<?>> skill);
 
 }

@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 
 public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends PropertySync implements ISkillHandler<T> {
     private final static Logger LOGGER = LogManager.getLogger();
-    private final Map<Holder<ISkillTree>, List<Holder<ISkill<T>>>> enabledSkills = new HashMap<>();
-    private final LiveMap<Holder<ISkill<T>>> skills = new LiveMap<>(enabledSkills);
+    private final Map<Holder<ISkillTree>, List<Holder<? extends ISkill<T>>>> enabledSkills = new HashMap<>();
+    private final LiveMap<Holder<? extends ISkill<T>>> skills = new LiveMap<>(enabledSkills);
     private final T player;
     private final SkillPoints skillPoints = new SkillPoints();
     private final Set<Holder<ISkillTree>> unlockedTrees = new LinkedHashSet<>();
@@ -53,7 +53,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
     }
 
     @Override
-    public Result canSkillBeEnabled(Holder<ISkill<?>> skill, Holder<ISkillTree> skillTree) {
+    public Result canSkillBeEnabled(Holder<? extends ISkill<?>> skill, Holder<ISkillTree> skillTree) {
         var preResult = FactionEventFactory.fireSkillUnlockCheckEvent(this.player, skill);
         if (preResult != null) {
             return preResult;
@@ -87,36 +87,36 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
     }
 
     @Override
-    public Result canSkillBeEnabled(Holder<ISkill<?>> skill) {
+    public Result canSkillBeEnabled(Holder<? extends ISkill<?>> skill) {
         return this.treeData.getNodeForSkill(unlockedTrees, skill).map(s -> canSkillBeEnabled(skill, s.getTreeConfig().skillTree())).orElse(Result.NOT_FOUND);
     }
 
     @Override
-    public void disableSkill(Holder<ISkill<T>> skill) {
+    public void disableSkill(Holder<? extends ISkill<T>> skill) {
         this.treeData.getNodeForSkill(unlockedTrees, SafeCast.cast(skill)).ifPresent(a  -> disableSkill(skill, a.getTreeConfig().skillTree()));
     }
 
     @Override
-    public void enableSkill(Holder<ISkill<T>> skill) {
+    public void enableSkill(Holder<? extends ISkill<T>> skill) {
         this.treeData.getNodeForSkill(unlockedTrees, SafeCast.cast(skill)).ifPresent(a  -> enableSkill(skill, a.getTreeConfig().skillTree()));
     }
 
     public void disableAllSkills() {
-        for (Map.Entry<Holder<ISkillTree>, List<Holder<ISkill<T>>>> entry : enabledSkills.entrySet()) {
-            for (Holder<ISkill<T>> skill : entry.getValue()) {
+        for (Map.Entry<Holder<ISkillTree>, List<Holder<? extends ISkill<T>>>> entry : enabledSkills.entrySet()) {
+            for (Holder<? extends ISkill<T>> skill : entry.getValue()) {
                 FactionEventFactory.fireSkillDisabledEvent(player, skill);
                 skill.value().onDisable(player);
             }
         }
         for (var entry : enabledSkills.entrySet()) {
             var root = this.treeData.root(entry.getKey());
-            Set<Holder<ISkill<?>>> rootSkills = new HashSet<>(root.elements());
+            Set<Holder<? extends ISkill<?>>> rootSkills = new HashSet<>(root.elements());
             entry.getValue().removeIf(x -> !rootSkills.contains(x));
         }
     }
 
     @Override
-    public void disableSkill(Holder<ISkill<T>> skill, Holder<ISkillTree> tree) {
+    public void disableSkill(Holder<? extends ISkill<T>> skill, Holder<ISkillTree> tree) {
         if (enabledSkills.containsKey(tree) && enabledSkills.get(tree).remove(skill)) {
             FactionEventFactory.fireSkillDisabledEvent(player, skill);
             skill.value().onDisable(player);
@@ -125,8 +125,8 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
     }
 
     @Override
-    public void enableSkill(Holder<ISkill<T>> skill, Holder<ISkillTree>  tree, boolean fromLoading) {
-        List<Holder<ISkill<T>>> skills = this.enabledSkills.computeIfAbsent(tree, x -> new ArrayList<>());
+    public void enableSkill(Holder<? extends ISkill<T>> skill, Holder<ISkillTree>  tree, boolean fromLoading) {
+        List<Holder<? extends ISkill<T>>> skills = this.enabledSkills.computeIfAbsent(tree, x -> new ArrayList<>());
         if (!skills.contains(skill)) {
             FactionEventFactory.fireSkillEnableEvent(player, skill, tree, fromLoading);
             skill.value().onEnable(player);
@@ -158,8 +158,8 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
 
     private void lockSkillTree(Holder<ISkillTree> tree) {
         var enabledSkills = new ArrayList<>(this.enabledSkills.getOrDefault(tree, Collections.emptyList()));
-        for (Holder<ISkill<T>> enabledSkill : enabledSkills) {
-            if (enabledSkill.value().allowedSkillTrees().map(tree::is, tree::is)) {
+        for (Holder<? extends ISkill<T>> enabledSkill : enabledSkills) {
+            if (enabledSkill.value().allowedSkillTrees().is(tree)) {
                 this.disableSkill(enabledSkill, tree);
             }
         }
@@ -195,7 +195,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
 
     @SuppressWarnings("unchecked")
     public boolean isNodeEnabled(Holder<ISkillTree> skillTree, ISkillNode node) {
-        for (Holder<ISkill<T>> s : enabledSkills.getOrDefault(skillTree, Collections.emptyList())) {
+        for (Holder<? extends ISkill<T>> s : enabledSkills.getOrDefault(skillTree, Collections.emptyList())) {
             if (node.containsSkill((Holder<ISkill<?>>) (Object) s)) return true;
         }
         return false;
@@ -203,12 +203,12 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Override
-    public boolean areSkillsEnabled(Collection<Holder<ISkill<?>>> skill) {
+    public boolean areSkillsEnabled(Collection<Holder<? extends ISkill<?>>> skill) {
         return skills.containsAll(skill);
     }
 
     @Override
-    public boolean isSkillEnabled(Holder<ISkill<?>> skill) {
+    public boolean isSkillEnabled(Holder<? extends ISkill<?>> skill) {
         return skills.contains(skill);
     }
 
@@ -217,12 +217,12 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
         return nodeIn.lockingNodes().stream().flatMap(s -> nodes.getOptional(s).stream()).flatMap(s -> s.skills().stream()).anyMatch(this::isSkillEnabled);
     }
 
-    private static final Codec<Map<Holder<ISkillTree>, List<Holder<ISkill<?>>>>> ENABLED_SKILLS_CODEC = Codec.simpleMap(ISkillTree.CODEC, ISkill.CODEC.listOf().xmap(x -> (List<Holder<ISkill<?>>>) new ArrayList(x), x -> x), ModRegistries.SKILLS).codec();
+    private static final Codec<Map<Holder<ISkillTree>, List<Holder<? extends ISkill<?>>>>> ENABLED_SKILLS_CODEC = Codec.simpleMap(ISkillTree.CODEC, ISkill.CODEC.listOf().xmap(x -> (List<Holder<? extends ISkill<?>>>)new ArrayList<>(x), x -> x), ModRegistries.SKILLS).codec();
 
     @Override
     protected void registerProperties() {
         this.registerProperty(FIdentifier.mod("unlocked_trees")).set(RegistryFixedCodec.create(FactionRegistries.Keys.SKILL_TREE)).provider(() -> this.unlockedTrees).commonLoader(x -> CollectionUtil.updateCollection(this.unlockedTrees, x)).register();
-        this.registerProperty(FIdentifier.mod("skills")).simple(SafeCast.<Codec<Map<Holder<ISkillTree>, List<Holder<ISkill<T>>>>>>cast(ENABLED_SKILLS_CODEC)).defaultValue(HashMap::new).provider(() -> this.enabledSkills).commonLoader(map -> {
+        this.registerProperty(FIdentifier.mod("skills")).simple(SafeCast.<Codec<Map<Holder<ISkillTree>, List<Holder<? extends ISkill<T>>>>>>cast(ENABLED_SKILLS_CODEC)).defaultValue(HashMap::new).provider(() -> this.enabledSkills).commonLoader(map -> {
             var old = new HashSet<>(this.skills);
             this.enabledSkills.clear();
             this.enabledSkills.putAll(map);

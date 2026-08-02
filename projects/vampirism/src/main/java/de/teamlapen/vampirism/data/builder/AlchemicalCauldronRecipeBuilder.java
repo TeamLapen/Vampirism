@@ -37,7 +37,7 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
     protected String group;
     protected Ingredient ingredient;
     protected Either<Ingredient, FluidStackTemplate> fluid;
-    protected List<Holder<ISkill<?>>> skills = new LinkedList<>();
+    protected List<Holder<? extends ISkill<?>>> skills = new LinkedList<>();
     protected int reqLevel = 1;
     protected int cookTime = 200;
     protected float exp = 0.2f;
@@ -117,7 +117,7 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
     }
 
     @SafeVarargs
-    public final @NotNull AlchemicalCauldronRecipeBuilder withSkills(@NotNull Holder<ISkill<?>>... skills) {
+    public final @NotNull AlchemicalCauldronRecipeBuilder withSkills(@NotNull Holder<? extends ISkill<?>>... skills) {
         this.skills.addAll(Arrays.asList(skills));
         return this;
     }

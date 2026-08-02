@@ -55,7 +55,7 @@ public class CollectResourcesTask<Q extends MinionData> extends DefaultMinionTas
     /**
      * @param faction If given, only available to this faction
      */
-    public CollectResourcesTask(Supplier<CollectResourcesTask<Q>> taskSupplier, @Nullable Holder<? extends IFaction<?>> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull Supplier<List<Weighted<ItemStack>>> resources, @NotNull Holder<ISkill<?>> requiredSkill) {
+    public CollectResourcesTask(Supplier<CollectResourcesTask<Q>> taskSupplier, @Nullable Holder<? extends IFaction<?>> faction, @NotNull Function<Q, Integer> coolDownSupplier, @NotNull Supplier<List<Weighted<ItemStack>>> resources, @NotNull Holder<? extends ISkill<?>> requiredSkill) {
         super(requiredSkill);
         this.descriptionCodec = Desc.createCodec(taskSupplier);
         this.coolDownSupplier = coolDownSupplier;

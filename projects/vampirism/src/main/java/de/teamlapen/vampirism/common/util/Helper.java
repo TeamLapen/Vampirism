@@ -140,8 +140,8 @@ public class Helper {
     /**
      * @return Checks if all given skills are enabled
      */
-    public static boolean areSkillsEnabled(@NotNull ISkillHandler<?> skillHandler, @NotNull List<Holder<ISkill<?>>> skills) {
-        for (Holder<ISkill<?>> skill : skills) {
+    public static boolean areSkillsEnabled(@NotNull ISkillHandler<?> skillHandler, @NotNull List<Holder<? extends ISkill<?>>> skills) {
+        for (Holder<? extends ISkill<?>> skill : skills) {
             if (!skillHandler.isSkillEnabled(skill)) {
                 return false;
             }

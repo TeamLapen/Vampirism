@@ -13,7 +13,7 @@ public interface IBlessableItem extends ItemLike {
     Item getBlessedItem();
 
     @Nullable
-    Holder<ISkill<?>> requiredSkill();
+    Holder<? extends ISkill<?>> requiredSkill();
 
     default boolean canBeBlessed() {
         return getBlessedItem() != null;

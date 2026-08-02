@@ -1,26 +1,24 @@
 package de.teamlapen.vampirism.common.world.entity.player.lord.skills;
 
-import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.faction.common.tags.FactionSkillTreeTags;
+import de.teamlapen.faction.api.registries.skills.DeferredSkill;
+import de.teamlapen.faction.api.registries.skills.DeferredSkillRegister;
+import de.teamlapen.faction.api.tags.FactionSkillTreeTags;
+import de.teamlapen.faction.api.tags.FactionTags;
+import de.teamlapen.faction.common.factions.skills.Skill;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.world.entity.player.lord.actions.LordActions;
-import de.teamlapen.vampirism.common.world.entity.player.skills.ActionSkill;
+import net.minecraft.core.Holder;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
 
 public class LordSkills {
 
-    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(FactionRegistries.Keys.SKILL, REFERENCE.MODID);
+    public static final DeferredSkillRegister SKILLS = DeferredSkillRegister.create(REFERENCE.MODID);
 
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static final DeferredHolder<ISkill<?>, ActionSkill<?>> LORD_SPEED = SKILLS.register("lord_speed", () -> new ActionSkill(LordActions.LORD_SPEED, FactionSkillTreeTags.LORD, 1, true));
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static final DeferredHolder<ISkill<?>, ActionSkill<?>> LORD_ATTACK_SPEED = SKILLS.register("lord_attack_speed", () -> new ActionSkill(LordActions.LORD_ATTACK_SPEED, FactionSkillTreeTags.LORD, 1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<?>> MINION_RECOVERY = SKILLS.register("minion_recovery", () -> new SimpleLordSkill<>(2, true));
+    public static final DeferredSkill<?, ISkill<?>> LORD_SPEED = SKILLS.registerGenericSkill("lord_speed", props -> new Skill<>(props.cost(1).withDescription().actionSkill((Holder) LordActions.LORD_SPEED).tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
+    public static final DeferredSkill<?, ISkill<?>> LORD_ATTACK_SPEED = SKILLS.registerGenericSkill("lord_attack_speed", props -> new Skill<>(props.cost(1).withDescription().actionSkill((Holder) LordActions.LORD_ATTACK_SPEED).tree(FactionSkillTreeTags.LORD).factions(FactionTags.HAS_LORD_SKILLS)));
 
 
     @ApiStatus.Internal

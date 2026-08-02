@@ -75,7 +75,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
 
     @Override
     public ISkill<T> asSkill() {
-        return SkillCallbacks.<T>getActionSkillMap().get(this);
+        return SkillCallbacks.getActionSkillMap(this);
     }
 
     /**

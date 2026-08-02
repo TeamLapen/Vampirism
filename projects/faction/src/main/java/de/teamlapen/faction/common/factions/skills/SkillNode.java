@@ -9,7 +9,6 @@ import de.teamlapen.faction.common.core.ModRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ExtraCodecs;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,33 +18,34 @@ import java.util.Optional;
 /**
  * A node for the skill tree. Can contain multiple skills which only can be activated exclusively to each other.
  */
-public record SkillNode(@NotNull List<Holder<ISkill<?>>> skills, @NotNull List<ResourceKey<ISkillNode>> lockingNodes) implements ISkillNode {
+public record SkillNode(List<Holder<? extends ISkill<?>>> skills, List<ResourceKey<ISkillNode>> lockingNodes) implements ISkillNode {
 
     public static final Codec<ISkillNode> CODEC = Codec.lazyInitialized(() -> RecordCodecBuilder.create(inst ->
             inst.group(
-                    ExtraCodecs.nonEmptyList(ModRegistries.SKILLS.holderByNameCodec().listOf()).fieldOf("skills").forGetter(ISkillNode::skills),
+                    ExtraCodecs.nonEmptyList(ISkill.CODEC.listOf()).fieldOf("skills").forGetter(ISkillNode::skills),
                     Codec.lazyInitialized(() -> ResourceKey.codec(FactionRegistries.Keys.SKILL_NODE)).listOf().optionalFieldOf("locking_nodes", List.of()).forGetter(ISkillNode::lockingNodes)
             ).apply(inst, SkillNode::new)
     ));
 
-    public SkillNode(@NotNull List<Holder<ISkill<?>>> elements) {
+    public SkillNode(List<Holder<? extends ISkill<?>>> elements) {
         this(elements, new ArrayList<>());
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public SkillNode(@NotNull List<Holder<ISkill<?>>> elements, @NotNull Optional<List<ResourceKey<ISkillNode>>> lockingNodes) {
+    public SkillNode(List<Holder<? extends ISkill<?>>> elements, Optional<List<ResourceKey<ISkillNode>>> lockingNodes) {
         this(elements, lockingNodes.orElse(List.of()));
     }
 
 
     @SafeVarargs
-    public SkillNode(@NotNull Holder<ISkill<?>>... skill) {
+    public SkillNode(Holder<? extends ISkill<?>>... skill) {
         this(Arrays.asList(skill), new ArrayList<>());
     }
 
     @Override
-    public boolean containsSkill(Holder<ISkill<?>> skill) {
-        return skills.stream().anyMatch(s -> s.is(skill));
+    public boolean containsSkill(Holder<? extends ISkill<?>> skill) {
+        //noinspection rawtypes,unchecked,deprecation
+        return skills.stream().anyMatch(s -> s.is((Holder)skill));
     }
 
 }

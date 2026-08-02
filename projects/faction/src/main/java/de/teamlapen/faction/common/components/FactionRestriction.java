@@ -167,7 +167,8 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         if (!IFaction.contains(factions, player.getFaction())) {
             return new Result(customMessage.or(() -> Optional.of(getFactionRestrictionMessage(factions))), false);
         }
-        if (skills().isPresent() && player.getSkillHandler().map(s -> !s.areSkillsEnabled(skills().get().stream().toList())).orElse(true)) {
+        //noinspection unchecked,rawtypes
+        if (skills().isPresent() && player.getSkillHandler().map(s -> !s.areSkillsEnabled((List) skills().get().stream().toList())).orElse(true)) {
             return new Result(customMessage.or(() -> Optional.of(MESSAGE_MISSING_SKILLS)), false);
         }
         if (minLevel().isPresent() && player.getCurrentLevel() < minLevel().get()) {
@@ -215,7 +216,7 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
             tooltips.accept(Component.empty());
             tooltips.accept(Component.translatable("tooltip.factionapi.required_skills").withStyle(ChatFormatting.GRAY));
 
-            skills.forEach(skill -> tooltips.accept(Component.literal(" ").append(skill.value().getName().withStyle(style -> {
+            skills.forEach(skill -> tooltips.accept(Component.literal(" ").append(skill.value().getName().copy().withStyle(style -> {
                 if (skillHandler != null && skillHandler.isSkillEnabled(skill)) {
                     return style.withColor(ChatFormatting.DARK_GREEN);
                 }
@@ -263,7 +264,7 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
         private final List<Holder<? extends IFaction<?>>> factionHolder = new ArrayList<>();
         @Nullable
         private TagKey<ISkill<?>> skillTag;
-        private final List<Holder<ISkill<?>>> skillHolder = new ArrayList<>();
+        private final List<Holder<? extends ISkill<?>>> skillHolder = new ArrayList<>();
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         private Optional<Integer> minLevel = Optional.empty();
         private Optional<Component> customMessage = Optional.empty();
@@ -282,13 +283,13 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
             return this;
         }
 
-        public Builder skill(Holder<ISkill<?>> skill) {
+        public Builder skill(Holder<? extends ISkill<?>> skill) {
             this.skillHolder.add(skill);
             return this;
         }
 
         @SuppressWarnings("unchecked")
-        public Builder skill(Holder<ISkill<?>>... skill) {
+        public Builder skill(Holder<? extends ISkill<?>>... skill) {
             this.skillHolder.addAll(Arrays.asList(skill));
             return this;
         }
@@ -308,8 +309,8 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
             HolderGetter<ISkill<?>> skills = BuiltInRegistries.acquireBootstrapRegistrationLookup(ModRegistries.SKILLS);
             Preconditions.checkArgument((this.factionTag != null && this.factionHolder.isEmpty() )|| (this.factionTag == null && !this.factionHolder.isEmpty()), "You need to provide either a faction tag or a list of factions");
             Preconditions.checkArgument(!(this.skillTag != null && !this.skillHolder.isEmpty()), "You can only supply a skill tag or a list of skills or not skills at all");
-            //noinspection unchecked,RedundantCast
-            return new FactionRestriction(factionTag != null ? factions.getOrThrow(factionTag) : HolderSet.direct((List< ? extends Holder<IFaction<?>>>) (Object) factionHolder), skillTag != null ? Optional.of(skillTag).map(skills::getOrThrow) : !skillHolder.isEmpty() ? Optional.of(HolderSet.direct(skillHolder)) : Optional.empty(), minLevel, customMessage);
+            //noinspection unchecked,RedundantCast,rawtypes
+            return new FactionRestriction(factionTag != null ? factions.getOrThrow(factionTag) : HolderSet.direct((List< ? extends Holder<IFaction<?>>>) (Object) factionHolder), skillTag != null ? Optional.of(skillTag).map(skills::getOrThrow) : !skillHolder.isEmpty() ? Optional.of(HolderSet.direct((List) skillHolder)) : Optional.empty(), minLevel, customMessage);
         }
 
         public Item.Properties apply(Item.Properties properties) {

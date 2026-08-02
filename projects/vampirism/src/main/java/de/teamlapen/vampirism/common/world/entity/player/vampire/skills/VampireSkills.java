@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.skills;
 
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillNode;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.api.registries.skills.DeferredSkill;
+import de.teamlapen.faction.api.registries.skills.DeferredSkillRegister;
 import de.teamlapen.faction.common.advancements.criterion.PlayerFactionSubPredicate;
+import de.teamlapen.faction.common.core.FactionConsumer;
+import de.teamlapen.faction.common.core.FactionSkills;
 import de.teamlapen.faction.common.factions.skills.SkillNode;
 import de.teamlapen.faction.common.factions.skills.SkillTree;
 import de.teamlapen.vampirism.REFERENCE;
@@ -14,33 +17,23 @@ import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.advancements.critereon.DraculaCriterion;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAttributes;
+import de.teamlapen.vampirism.common.core.ModConsumer;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
-import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
-import de.teamlapen.vampirism.common.world.entity.player.skills.ActionSkill;
-import de.teamlapen.vampirism.common.world.entity.player.skills.VampirismSkill;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirismVampireVisions;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
-import org.jspecify.annotations.NonNull;
 
-import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -48,64 +41,54 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 public class VampireSkills {
-    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(FactionRegistries.Keys.SKILL, REFERENCE.MODID);
+    public static final DeferredSkillRegister SKILLS = DeferredSkillRegister.create(REFERENCE.MODID);
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LEVEL_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LEVEL_ROOT = SKILLS.registerSkill(ModFactions.VAMPIRE.getKey().identifier().getPath(), VampireSkill::new);
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> NIGHT_VISION = SKILLS.register("night_vision", () -> new VampirismSkill.SimpleVampireSkill(2, true)
-            .setToggleActions(player -> {
-                player.unlockVision(VampirismVampireVisions.NIGHT_VISION.getKey());
-                player.activateVision(VampirismVampireVisions.NIGHT_VISION.getKey());
-            }, player -> player.unUnlockVision(VampirismVampireVisions.NIGHT_VISION.getKey())));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_REGENERATION = SKILLS.register("vampire_regeneration", () -> new ActionSkill<>(VampireActions.REGEN, Trees.LEVEL, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> FLEDGLING = SKILLS.register("fledgling", () -> new VampirismSkill.SimpleVampireSkill(2, true) {
-        @Override
-        protected void collectActions(@NonNull Collection<Holder<? extends IAction<IVampirePlayer>>> list) {
-            list.add(VampireActions.BAT);
-            list.add(VampireActions.INFECT);
-        }
-    });
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> NIGHT_VISION = SKILLS.registerSkill("night_vision", props -> new VampireSkill(props.cost(2).withDescription().onEnable(ModConsumer.ENABLE_AND_ACTIVATE_VAMPIRE_NIGHT_VISION).onDisable(ModConsumer.DISABLE_VAMPIRE_NIGHT_VISION)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_REGENERATION = SKILLS.registerSkill("vampire_regeneration", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.REGEN)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FLEDGLING = SKILLS.registerSkill("fledgling", props -> new VampireSkill(props.cost(2).withDescription().unlocks(VampireActions.BAT).unlocks(VampireActions.INFECT)));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_RAGE = SKILLS.register("vampire_rage", () -> new ActionSkill<>(VampireActions.VAMPIRE_RAGE, Trees.LEVEL, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.register("advanced_biter", () -> new VampirismSkill.SimpleVampireSkill(1, false).setToggleActions(player -> ((VampirePlayer) player).getSkillProperties().advanced_biter = true, player -> ((VampirePlayer) player).getSkillProperties().advanced_biter = false).setHasDefaultDescription());
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> SWORD_FINISHER = SKILLS.register("sword_finisher", () -> new VampirismSkill.SimpleVampireSkill(2, true).setDescription(() -> Component.translatable("skill.vampirism.sword_finisher.desc", (int) (ModConfig.balance().vsSwordFinisherMaxHealth.get() * 100))));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DARK_BLOOD_PROJECTILE = SKILLS.register("dark_blood_projectile", () -> new ActionSkill<>(VampireActions.DARK_BLOOD_PROJECTILE, Trees.LEVEL, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> BLOOD_CHARGE = SKILLS.register("blood_charge", () -> new VampirismSkill.SimpleVampireSkill(1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> FREEZE = SKILLS.register("freeze", () -> new ActionSkill<>(VampireActions.FREEZE, Trees.LEVEL, 2, true));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_RAGE = SKILLS.registerSkill("vampire_rage", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.VAMPIRE_RAGE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.registerSkill("advanced_biter", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_ADVANCED_BITER).onDisable(ModConsumer.DISABLE_VAMPIRE_ADVANCED_BITER)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SWORD_FINISHER = SKILLS.registerSkill("sword_finisher", props -> new VampireSkill(props.cost(2).withDescription(Component.translatable("skill.vampirism.sword_finisher.desc", (int) (ModConfig.balance().vsSwordFinisherMaxHealth.getDefault() * 100)))));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DARK_BLOOD_PROJECTILE = SKILLS.registerSkill("dark_blood_projectile", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DARK_BLOOD_PROJECTILE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_CHARGE = SKILLS.registerSkill("blood_charge", props -> new VampireSkill(props.cost(1).withDescription()));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FREEZE = SKILLS.registerSkill("freeze", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.FREEZE)));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> SUNSCREEN = SKILLS.register("sunscreen", () -> new ActionSkill<>(VampireActions.SUNSCREEN, Trees.LEVEL, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_ATTACK_SPEED = SKILLS.register("vampire_attack_speed", () -> new VampirismSkill.SimpleVampireSkill(2, true).registerAttributeModifier(Attributes.ATTACK_SPEED, () -> ModConfig.balance().vsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_SPEED = SKILLS.register("vampire_speed", () -> new VampirismSkill.SimpleVampireSkill(2, true).registerAttributeModifier(Attributes.MOVEMENT_SPEED, () -> ModConfig.balance().vsSpeedBoost.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> BLOOD_VISION = SKILLS.register("blood_vision", () -> new VampirismSkill.SimpleVampireSkill(2, true).setToggleActions(player -> player.unlockVision(VampirismVampireVisions.BLOOD_VISION.getKey()), player -> player.unUnlockVision(VampirismVampireVisions.BLOOD_VISION.getKey())));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> BLOOD_VISION_GARLIC = SKILLS.register("blood_vision_garlic", () -> new VampirismSkill.SimpleVampireSkill(1, true).setToggleActions(player -> ((VampirePlayer) player).getSkillProperties().blood_vision_garlic = true, player -> ((VampirePlayer) player).getSkillProperties().blood_vision_garlic = false));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_ATTACK_DAMAGE = SKILLS.register("vampire_attack_damage", () -> new VampirismSkill.SimpleVampireSkill(2, true)
-            .registerAttributeModifier(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().vsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_VALUE)
-            .registerAttributeModifier(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().vsSmallAttackDamageMultiplier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_JUMP = SKILLS.register("vampire_jump", () -> new ActionSkill<>(VampireActions.JUMP_BOOST,Trees.LEVEL, 2, false));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> NEONATAL_DECREASE = SKILLS.register("neonatal_decrease", () -> new VampirismSkill.SimpleVampireSkill(2, true).registerAttributeModifier(ModAttributes.NEONATAL_DURATION, () -> ModConfig.balance().vsNeonatalReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DBNO_DURATION = SKILLS.register("dbno_duration", () -> new VampirismSkill.SimpleVampireSkill(2, true).registerAttributeModifier(ModAttributes.DBNO_DURATION, () -> ModConfig.balance().vsDbnoReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> TELEPORT = SKILLS.register("teleport", () -> new ActionSkill<>(VampireActions.TELEPORT, Trees.LEVEL, 3, true));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SUNSCREEN = SKILLS.registerSkill("sunscreen", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.SUNSCREEN)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_ATTACK_SPEED = SKILLS.registerSkill("vampire_attack_speed", props -> new VampireSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_SPEED, () -> ModConfig.balance().vsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_SPEED = SKILLS.registerSkill("vampire_speed", props -> new VampireSkill(props.cost(2).withDescription().attribute(Attributes.MOVEMENT_SPEED, () -> ModConfig.balance().vsSpeedBoost.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_VISION = SKILLS.registerSkill("blood_vision", props -> new VampireSkill(props.cost(2).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_BLOOD_VISION).onDisable(ModConsumer.DISABLE_VAMPIRE_BLOOD_VISION)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_VISION_GARLIC = SKILLS.registerSkill("blood_vision_garlic", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_GARLIC_VISION).onDisable(ModConsumer.DISABLE_VAMPIRE_GARLIC_VISION)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_ATTACK_DAMAGE = SKILLS.registerSkill("vampire_attack_damage", props -> new VampireSkill(props.cost(2).withDescription()
+            .attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().vsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_VALUE)
+            .attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().vsSmallAttackDamageMultiplier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_JUMP = SKILLS.registerSkill("vampire_jump", props -> new VampireSkill(props.cost(2).actionSkill(VampireActions.JUMP_BOOST)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> NEONATAL_DECREASE = SKILLS.registerSkill("neonatal_decrease", props -> new VampireSkill(props.cost(2).withDescription().attribute(ModAttributes.NEONATAL_DURATION, () -> ModConfig.balance().vsNeonatalReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DBNO_DURATION = SKILLS.registerSkill("dbno_duration", props -> new VampireSkill(props.cost(2).withDescription().attribute(ModAttributes.DBNO_DURATION, () -> ModConfig.balance().vsDbnoReduction.get() - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> TELEPORT = SKILLS.registerSkill("teleport", props -> new VampireSkill(props.cost(3).withDescription().actionSkill(VampireActions.TELEPORT)));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> SUMMON_BATS = SKILLS.register("summon_bats", () -> new ActionSkill<>(VampireActions.SUMMON_BAT, Trees.LEVEL, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LESS_SUNDAMAGE = SKILLS.register("less_sundamage", () -> new VampirismSkill.SimpleVampireSkill(3, true).registerAttributeModifier(ModAttributes.SUNDAMAGE, () -> ModConfig.balance().vsSundamageReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> WATER_RESISTANCE = SKILLS.register("water_resistance", () -> new VampirismSkill.SimpleVampireSkill(2, true).setToggleActions(player -> ((VampirePlayer) player).getSkillProperties().waterResistance = true, player -> ((VampirePlayer) player).getSkillProperties().waterResistance = false));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LESS_BLOOD_THIRST = SKILLS.register("less_blood_thirst", () -> new VampirismSkill.SimpleVampireSkill(1, true).registerAttributeModifier(ModAttributes.BLOOD_EXHAUSTION, () -> ModConfig.balance().vsBloodThirstReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_DISGUISE = SKILLS.register("vampire_disguise", () -> new ActionSkill<>(VampireActions.DISGUISE_VAMPIRE, Trees.LEVEL, 1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> HALF_INVULNERABLE = SKILLS.register("half_invulnerable", () -> new ActionSkill<>(VampireActions.HALF_INVULNERABLE, Trees.LEVEL, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> VAMPIRE_INVISIBILITY = SKILLS.register("vampire_invisibility", () -> new ActionSkill<>(VampireActions.VAMPIRE_INVISIBILITY, Trees.LEVEL, 3, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DARK_STALKER = SKILLS.register("dark_stalker", () -> new ActionSkill<>(VampireActions.DARK_STALKER, Trees.LEVEL, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> HISSING = SKILLS.register("hissing", () -> new ActionSkill<>(VampireActions.HISSING, Trees.LEVEL, 1, true));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SUMMON_BATS = SKILLS.registerSkill("summon_bats", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.SUMMON_BAT)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LESS_SUNDAMAGE = SKILLS.registerSkill("less_sundamage", props -> new VampireSkill(props.cost(3).withDescription().attribute(ModAttributes.SUNDAMAGE, () -> ModConfig.balance().vsSundamageReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> WATER_RESISTANCE = SKILLS.registerSkill("water_resistance", props -> new VampireSkill(props.cost(2).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_WATER_RESISTANCE).onDisable(ModConsumer.DISABLE_VAMPIRE_WATER_RESISTANCE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LESS_BLOOD_THIRST = SKILLS.registerSkill("less_blood_thirst", props -> new VampireSkill(props.cost(1).withDescription().attribute(ModAttributes.BLOOD_EXHAUSTION, () -> ModConfig.balance().vsBloodThirstReduction1.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_DISGUISE = SKILLS.registerSkill("vampire_disguise", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.DISGUISE_VAMPIRE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> HALF_INVULNERABLE = SKILLS.registerSkill("half_invulnerable", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.HALF_INVULNERABLE)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_INVISIBILITY = SKILLS.registerSkill("vampire_invisibility", props -> new VampireSkill(props.cost(3).withDescription().actionSkill(VampireActions.VAMPIRE_INVISIBILITY)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DARK_STALKER = SKILLS.registerSkill("dark_stalker", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DARK_STALKER)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> HISSING = SKILLS.registerSkill("hissing", props -> new VampireSkill(props.cost(1).withDescription().actionSkill(VampireActions.HISSING)));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> LORD_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, false));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> LORD_ROOT = SKILLS.registerSkill(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_lord").getPath(), VampireLordSkill::new);
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.register("vampire_minion_stats_increase", () -> new VampirismSkill.SimpleVampireSkill(3, true).setToggleActions(vampire -> vampire.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(true)), vampire -> vampire.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(false))));
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> MINION_COLLECT = SKILLS.register("vampire_minion_collect", () -> new VampirismSkill.SimpleVampireSkill(2, true));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> MINION_STATS_INCREASE = SKILLS.registerSkill("vampire_minion_stats_increase", props -> new VampireLordSkill(props.cost(3).withDescription().onEnable(FactionConsumer.ENABLE_MINION_INCREASED_STATS).onDisable(FactionConsumer.DISABLE_MINION_INCREASED_STATS)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> MINION_COLLECT = SKILLS.registerSkill("vampire_minion_collect", props -> new VampireLordSkill(props.cost(2).withDescription()));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> DRACULA_ROOT = SKILLS.register(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_dracula").getPath(), () -> new VampirismSkill.SimpleVampireSkill(0, true));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DRACULA_ROOT = SKILLS.registerSkill(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_dracula").getPath(), props -> new DraculaSkill(props.withDescription()));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IVampirePlayer>> WANDER_THE_SUN = SKILLS.register("wander_the_sun", () -> new VampirismSkill.DraculaSkill(1, true));
-    public static final DeferredHolder<ISkill<?>, ActionSkill<IVampirePlayer>> BLINDING = SKILLS.register("blinding", () -> new ActionSkill<>(VampireActions.BLINDING, ModSkillTreeTags.DRACULA, 1, true));
-    public static final DeferredHolder<ISkill<?>, ActionSkill<IVampirePlayer>> MIST_FORM = SKILLS.register("mist_form", () -> new ActionSkill<>(VampireActions.MIST_FORM, ModSkillTreeTags.DRACULA, 1, true));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> WANDER_THE_SUN = SKILLS.registerSkill("wander_the_sun", props -> new DraculaSkill(props.cost(1).withDescription()));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLINDING = SKILLS.registerSkill("blinding", props -> new DraculaSkill(props.cost(1).withDescription().actionSkill(VampireActions.BLINDING)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> MIST_FORM = SKILLS.registerSkill("mist_form", props -> new DraculaSkill(props.cost(1).withDescription().actionSkill(VampireActions.MIST_FORM)));
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {
@@ -184,7 +167,7 @@ public class VampireSkills {
             context.register(LORD_SKILL2, new SkillNode(MINION_STATS_INCREASE));
             context.register(LORD_SKILL3, new SkillNode(LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED));
             context.register(LORD_SKILL4, new SkillNode(MINION_COLLECT));
-            context.register(LORD_SKILL5, new SkillNode(LordSkills.MINION_RECOVERY));
+            context.register(LORD_SKILL5, new SkillNode(FactionSkills.MINION_RECOVERY));
 
             context.register(DRACULA_ROOT, new SkillNode(VampireSkills.DRACULA_ROOT));
             context.register(DRACULA_1, new SkillNode(BLINDING));

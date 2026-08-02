@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.data.provider.tags;
 
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
-import de.teamlapen.faction.common.tags.FactionSkillTreeTags;
+import de.teamlapen.faction.api.tags.FactionSkillTreeTags;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;

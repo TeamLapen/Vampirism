@@ -30,7 +30,7 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 import java.util.HashMap;
 
 public class ModRegistries {
-    public static final Registry<ISkill<?>> SKILLS = new RegistryBuilder<>(FactionRegistries.Keys.SKILL).callback(new SkillCallbacks()).sync(true).create();
+    public static final Registry<ISkill<?>> SKILLS = new RegistryBuilder<>(FactionRegistries.Keys.SKILL).sync(true).withIntrusiveHolders().create();
     public static final Registry<IAction<?>> ACTIONS = new RegistryBuilder<>(FactionRegistries.Keys.ACTION).sync(true).create();
     public static final Registry<IMinionTask<?, ?>> MINION_TASKS = new RegistryBuilder<>(FactionRegistries.Keys.MINION_TASK).sync(true).create();
     public static final Registry<IRefinement> REFINEMENTS = new RegistryBuilder<>(FactionRegistries.Keys.REFINEMENT).sync(true).create();

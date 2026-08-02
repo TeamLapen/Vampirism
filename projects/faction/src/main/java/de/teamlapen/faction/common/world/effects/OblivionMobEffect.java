@@ -36,9 +36,9 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
         return FactionPlayerHandler.get(player).<T>getSkillHandler().map(handler -> {
             var nodeOPT = ((SkillHandler<?>) handler).anyLastNode();
             if (nodeOPT.isPresent()) {
-                for (Holder<ISkill<?>> element : nodeOPT.get().getValue().skills()) {
+                for (Holder<? extends ISkill<?>> element : nodeOPT.get().getValue().skills()) {
                     //noinspection unchecked
-                    handler.disableSkill((Holder<ISkill<T>>) (Object) element, nodeOPT.get().getKey());
+                    handler.disableSkill((Holder<? extends ISkill<T>>) element, nodeOPT.get().getKey());
                     player.awardStat(FactionStats.SKILL_FORGOTTEN.get().get(element.value()));
                 }
                 return true;

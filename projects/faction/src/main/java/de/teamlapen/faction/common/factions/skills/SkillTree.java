@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
-import de.teamlapen.faction.common.tags.FactionSkillTreeTags;
+import de.teamlapen.faction.api.tags.FactionSkillTreeTags;
 import de.teamlapen.faction.common.util.ModCodecs;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.Holder;
@@ -13,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 
 import java.util.Optional;

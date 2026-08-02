@@ -78,8 +78,8 @@ public abstract class CommonSkillTreeData implements ISkillTreeData {
     }
 
     @Override
-    public Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Holder<ISkillTree> skillTree, Holder<ISkill<?>> skill) {
-        if (skill.value().allowedSkillTrees().map(skillTree::is, skillTree::is)) {
+    public Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Holder<ISkillTree> skillTree, Holder<? extends ISkill<?>> skill) {
+        if (skill.value().allowedSkillTrees().is(skillTree)) {
             return getConfiguration(skillTree).getNode(skill);
         }
         return Optional.empty();
@@ -112,7 +112,7 @@ public abstract class CommonSkillTreeData implements ISkillTreeData {
     }
 
     @Override
-    public Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Collection<Holder<ISkillTree>> availableTrees, Holder<ISkill<?>> skill) {
-        return availableTrees.stream().filter(tree -> skill.value().allowedSkillTrees().map(tree::is, tree::is)).map(this::getConfiguration).flatMap(x -> x.getNode(skill).stream()).findAny();
+    public Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Collection<Holder<ISkillTree>> availableTrees, Holder<? extends ISkill<?>> skill) {
+        return availableTrees.stream().filter(tree -> skill.value().allowedSkillTrees().is(tree)).map(this::getConfiguration).flatMap(x -> x.getNode(skill).stream()).findAny();
     }
 }

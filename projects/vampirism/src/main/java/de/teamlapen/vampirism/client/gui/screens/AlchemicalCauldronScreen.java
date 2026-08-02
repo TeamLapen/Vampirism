@@ -63,7 +63,7 @@ public class AlchemicalCauldronScreen extends AbstractContainerScreen<Alchemical
         int j = (this.height - this.imageHeight) / 2;
         if (mouseX > i + 77 && mouseX < i + 77 + 28 && mouseY > j + 32 && mouseY < j + 32 + 21) {
             this.menu.checkRecipeNoSkills().ifPresent(holder -> {
-                List<Holder<ISkill<?>>> missingSkills = holder.value().getRequiredSkills().stream().filter(s -> !HunterPlayer.get(this.minecraft.player).getSkillHandler().isSkillEnabled(s)).toList();
+                List<Holder<? extends ISkill<?>>> missingSkills = holder.value().getRequiredSkills().stream().filter(s -> !HunterPlayer.get(this.minecraft.player).getSkillHandler().isSkillEnabled(s)).toList();
                 if (!missingSkills.isEmpty()) {
                     List<Component> components = Stream.concat(Stream.of(Component.translatable("gui.vampirism.alchemical_cauldron.missing_skills").withStyle(ChatFormatting.RED)), missingSkills.stream().map(skill -> Component.literal("p- ").append(skill.value().getName()).withStyle(ChatFormatting.RED))).collect(Collectors.toUnmodifiableList());
                     graphics.setComponentTooltipForNextFrame(getFont(), components, i + 77, j + 23);
