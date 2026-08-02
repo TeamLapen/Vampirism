@@ -122,6 +122,8 @@ public abstract class MinionData extends PropertySync implements IMinionData, IA
         return 9;
     }
 
+    public abstract void setIncreasedStats(boolean hasIncreasedStats);
+
     @Override
     public @NotNull MutableComponent getFormattedName() {
         return Component.literal(name);

@@ -1,12 +1,15 @@
 package de.teamlapen.faction.common.factions;
 
 import com.mojang.logging.LogUtils;
+import de.teamlapen.faction.api.factions.FactionExtensionType;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.world.entities.IPlayerEventListener;
 import de.teamlapen.sync.AttachmentSync;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.Optional;
 
 public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> extends AttachmentSync implements IFactionPlayer<T>, IPlayerEventListener {
 
@@ -45,5 +48,11 @@ public abstract class FactionBasePlayer<T extends IFactionPlayer<T>> extends Att
             this.factionHandler = FactionPlayerHandler.get(this.player);
         }
         return this.factionHandler;
+    }
+
+    @Override
+    public <TInterface> Optional<TInterface> getExtension(Class<TInterface> type) {
+        FactionExtensionType<TInterface> extension = getFaction().value().extension(type);
+        return extension == null ? Optional.empty() : Optional.of(extension.get(player));
     }
 }

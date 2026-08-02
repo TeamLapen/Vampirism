@@ -22,6 +22,7 @@ public class ModItemTags {
 
     public static final TagKey<Item> PURE_BLOOD = tag("pure_blood");
     public static final TagKey<Item> GARLIC = common("crops/garlic");
+    public static final TagKey<Item> PURIFIED_GARLIC = common("crops/garlic/purified");
     public static final TagKey<Item> HEART = tag("heart");
 
     public static final TagKey<Item> CREEPER_REPELLENT = tag("creeper_repellent");

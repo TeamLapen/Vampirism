@@ -8,6 +8,7 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionHelper;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
+import de.teamlapen.faction.api.factions.village.TotemPair;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
 import de.teamlapen.faction.api.world.ITotem;
 import de.teamlapen.faction.api.world.entities.ICaptureIgnore;
@@ -486,7 +487,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
                 this.spawnTaskMaster();
             }
             int defenderNumMax = Math.min(6, this.village.size() / 5);
-            TagKey<EntityType<?>> villageGuardTypes = this.controllingFaction.value().getVillageData().getVillageGuardTypes();
+            TagKey<EntityType<?>> villageGuardTypes = this.controllingFaction.components().get(FactionDataComponents.VILLAGE_GUARDS);
             if (villageGuardTypes != null) {
                 List<Entity> guards = this.level.getEntities((Entity) null, this.getVillageArea(), x -> x.typeHolder().is(villageGuardTypes));
                 if (defenderNumMax > guards.size()) {
@@ -924,7 +925,7 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
             BlockState oldBlockState = this.getBlockState();
             Block b = oldBlockState.getBlock();
             boolean crafted = b instanceof TotemTopBlock totem && totem.isCrafted();
-            BlockState newBlockState = (IFaction.isNeutral(faction) ? crafted ? FactionBlocks.TOTEM_TOP_CRAFTED.get() : FactionBlocks.TOTEM_TOP.get() : faction.value().getVillageData().getTotemTopBlock(crafted)).defaultBlockState();
+            BlockState newBlockState = faction.components().getOrDefault(FactionDataComponents.VILLAGE_TOTEM, TotemPair.DEFAULT).get(crafted).value().defaultBlockState();
             try { //https://github.com/TeamLapen/Vampirism/issues/793 no idea what might cause this
                 this.level.setBlock(this.worldPosition, newBlockState, 55);
             } catch (IllegalStateException e) {
@@ -982,11 +983,11 @@ public class TotemBlockEntity extends NetworkedBlockEntity implements ITotem {
     private void spawnTaskMaster() {
         assert level instanceof ServerLevel;
         assert this.controllingFaction != null;
-        EntityType<? extends ITaskMasterEntity> entity = this.controllingFaction.value().getVillageData().getTaskMasterEntity();
-        if (entity != null) {
-            ITaskMasterEntity newEntity = entity.create(this.level, EntitySpawnReason.EVENT);
-            newEntity.setHome(this.getVillageAreaReduced());
-            SpawnUtil.spawnEntityInWorld((ServerLevel) this.level, this.getVillageAreaReduced(), (Entity) newEntity, 25, Lists.newArrayList(), EntitySpawnReason.EVENT);
+        Holder<EntityType<?>> type = this.controllingFaction.components().get(FactionDataComponents.TASK_MASTER);
+        Entity entity = type == null ? null : type.value().create(this.level, EntitySpawnReason.EVENT);
+        if (entity instanceof ITaskMasterEntity taskMaster) {
+            taskMaster.setHome(this.getVillageAreaReduced());
+            SpawnUtil.spawnEntityInWorld((ServerLevel) this.level, this.getVillageAreaReduced(), entity, 25, Lists.newArrayList(), EntitySpawnReason.EVENT);
         }
     }
 

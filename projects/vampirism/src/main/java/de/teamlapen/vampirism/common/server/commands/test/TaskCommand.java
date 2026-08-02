@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.server.commands.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.tasks.ITaskManager;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
@@ -67,8 +68,7 @@ public class TaskCommand extends BasicCommand {
     @SuppressWarnings("SameReturnValue")
     private static int resetLordTasks(@NotNull Collection<ServerPlayer> players) {
         for (ServerPlayer player : players) {
-            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            handler.resetLordTasks();
+            FactionPlayerHandler.get(player).getPlayerLord().ifPresent(ILordPlayer::resetLordTasks);
         }
         return 0;
     }

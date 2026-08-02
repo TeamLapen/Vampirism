@@ -14,7 +14,9 @@ import de.maxanier.guideapi.api.util.BookHelper;
 import de.maxanier.guideapi.api.util.PageHelper;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.lord.ILordTitleProvider;
+import de.teamlapen.faction.api.factions.lord.LordTitles;
 import de.teamlapen.faction.common.core.FactionBlocks;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionKeys;
 import de.teamlapen.faction.common.util.Color;
@@ -257,16 +259,15 @@ public class GuideBook implements IGuideBook {
         entries.put(VIdentifier.mod(base + "dbno"), new EntryText(dbnoPages, translateComponent(base + "dbno")));
 
         List<IPage> lordPages = new ArrayList<>();
-        ILordTitleProvider titles = ModFactions.VAMPIRE.value().lordTitles();
-        assert titles != null;
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_VAMPIRE.get().getDescription(), titles.getLordTitle(1, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE), titles.getLordTitle(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.MALE), titles.getLordTitle(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.FEMALE))), VIdentifier.mod(("guide.vampirism.entity.taskmaster"))));
+        var titles = ModFactions.VAMPIRE.components().getOrDefault(FactionDataComponents.LORD_TITLES, LordTitles.EMPTY);
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_VAMPIRE.get().getDescription(), titles.get(1, IPlayableFaction.TitleGender.MALE), titles.get(1, IPlayableFaction.TitleGender.FEMALE), titles.get(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.MALE), titles.get(ModFactions.VAMPIRE.value().getHighestLordLevel(), IPlayableFaction.TitleGender.FEMALE))), VIdentifier.mod(("guide.vampirism.entity.taskmaster"))));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(3).setHeadline(translateComponent(base + "lord.titles"));
         lordTitleBuilder.addLine(Component.translatable("gui.factionapi.level"), Component.translatable("gui.factionapi.title"), Component.translatable("gui.factionapi.title"));
-        lordTitleBuilder.addLine(1, titles.getLordTitle(1, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(1, IPlayableFaction.TitleGender.FEMALE));
-        lordTitleBuilder.addLine(2, titles.getLordTitle(2, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(2, IPlayableFaction.TitleGender.FEMALE));
-        lordTitleBuilder.addLine(3, titles.getLordTitle(3, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(3, IPlayableFaction.TitleGender.FEMALE));
-        lordTitleBuilder.addLine(4, titles.getLordTitle(4, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(4, IPlayableFaction.TitleGender.FEMALE));
-        lordTitleBuilder.addLine(5, titles.getLordTitle(5, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(5, IPlayableFaction.TitleGender.FEMALE));
+        lordTitleBuilder.addLine(1, titles.get(1, IPlayableFaction.TitleGender.MALE), titles.get(1, IPlayableFaction.TitleGender.FEMALE));
+        lordTitleBuilder.addLine(2, titles.get(2, IPlayableFaction.TitleGender.MALE), titles.get(2, IPlayableFaction.TitleGender.FEMALE));
+        lordTitleBuilder.addLine(3, titles.get(3, IPlayableFaction.TitleGender.MALE), titles.get(3, IPlayableFaction.TitleGender.FEMALE));
+        lordTitleBuilder.addLine(4, titles.get(4, IPlayableFaction.TitleGender.MALE), titles.get(4, IPlayableFaction.TitleGender.FEMALE));
+        lordTitleBuilder.addLine(5, titles.get(5, IPlayableFaction.TitleGender.MALE), titles.get(5, IPlayableFaction.TitleGender.FEMALE));
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.VAMPIRE_MINION_BINDING.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_SIMPLE.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_ENHANCED.get()), loc(ModItems.VAMPIRE_MINION_UPGRADE_SPECIAL.get()))), VIdentifier.mod("guide.vampirism.items.vampire_minion_binding")));
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", FactionKeys.MINION.getTranslatedKeyMessage(), translate("minion_task.factionapi.call_single"), translate("minion_task.factionapi.respawn")))));
@@ -355,17 +356,16 @@ public class GuideBook implements IGuideBook {
         entries.put(VIdentifier.mod(base + "vamp_slayer"), new EntryText(vampSlayerPages, translateComponent(base + "vamp_slayer")));
 
         List<IPage> lordPages = new ArrayList<>();
-        ILordTitleProvider titles = ModFactions.HUNTER.value().lordTitles();
-        assert titles != null;
-        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_HUNTER.get().getDescription(), titles.getLordTitle(1, IPlayableFaction.TitleGender.MALE), titles.getLordTitle(ModFactions.HUNTER.value().getHighestLordLevel(), IPlayableFaction.TitleGender.MALE))), VIdentifier.mod("guide.vampirism.entity.taskmaster")));
+        var titles = ModFactions.HUNTER.components().getOrDefault(FactionDataComponents.LORD_TITLES, LordTitles.EMPTY);
+        lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.text", ModEntities.TASK_MASTER_HUNTER.get().getDescription(), titles.get(1, IPlayableFaction.TitleGender.MALE), titles.get(ModFactions.HUNTER.value().getHighestLordLevel(), IPlayableFaction.TitleGender.MALE))), VIdentifier.mod("guide.vampirism.entity.taskmaster")));
         PageTable.Builder lordTitleBuilder = new PageTable.Builder(2);
         lordTitleBuilder.setHeadline(translateComponent(base + "lord.titles"));
         lordTitleBuilder.addLine(Component.translatable("gui.factionapi.level"), Component.translatable("gui.factionapi.title"));
-        lordTitleBuilder.addLine(1, titles.getLordTitle(1, IPlayableFaction.TitleGender.MALE));
-        lordTitleBuilder.addLine(2, titles.getLordTitle(2, IPlayableFaction.TitleGender.MALE));
-        lordTitleBuilder.addLine(3, titles.getLordTitle(3, IPlayableFaction.TitleGender.MALE));
-        lordTitleBuilder.addLine(4, titles.getLordTitle(4, IPlayableFaction.TitleGender.MALE));
-        lordTitleBuilder.addLine(5, titles.getLordTitle(5, IPlayableFaction.TitleGender.MALE));
+        lordTitleBuilder.addLine(1, titles.get(1, IPlayableFaction.TitleGender.MALE));
+        lordTitleBuilder.addLine(2, titles.get(2, IPlayableFaction.TitleGender.MALE));
+        lordTitleBuilder.addLine(3, titles.get(3, IPlayableFaction.TitleGender.MALE));
+        lordTitleBuilder.addLine(4, titles.get(4, IPlayableFaction.TitleGender.MALE));
+        lordTitleBuilder.addLine(5, titles.get(5, IPlayableFaction.TitleGender.MALE));
         lordPages.add(lordTitleBuilder.build());
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent(base + "lord.minion", loc(ModItems.HUNTER_MINION_EQUIPMENT.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SIMPLE.get()), loc(ModItems.HUNTER_MINION_UPGRADE_ENHANCED.get()), loc(ModItems.HUNTER_MINION_UPGRADE_SPECIAL.get()))), VIdentifier.mod("guide.vampirism.items.hunter_minion_equipment")));
         lordPages.addAll(helper.addLinks(PageHelper.pagesForLongText(translateComponent("guide.vampirism.common.minion_control", FactionKeys.MINION.getTranslatedKeyMessage(), translate("minion_task.factionapi.call_single"), translate("minion_task.factionapi.respawn")))));
@@ -520,7 +520,7 @@ public class GuideBook implements IGuideBook {
         helper.infoBlocks(ModBlocks.ALCHEMICAL_CAULDRON.get()).recipes("alchemical_cauldron").build(entries);
         int cn = ModConfig.balance().hsGarlicDiffuserNormalDist.get() * 2 + 1;
         int ce = ModConfig.balance().hsGarlicDiffuserEnhancedDist.get() * 2 + 1;
-        helper.infoBlocks(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), ModBlocks.GARLIC_DIFFUSER_WEAK.get(), ModBlocks.GARLIC_DIFFUSER_WEAK.get()).setFormats(cn, cn, ce, ce, loc(ModItems.PURIFIED_GARLIC.get())).useCustomEntryName().setKeyName("garlic_diffuser").setLinks(VIdentifier.mod("guide.vampirism.blocks.garlic"), VIdentifier.mod("guide.vampirism.items.purified_garlic"), VIdentifier.mod("guide.vampirism.items.holy_water_bottle")).recipes("garlic_diffuser_normal", "garlic_diffuser_improved", "garlic_diffuser_core", "garlic_diffuser_core_improved").build(entries);
+        helper.infoBlocks(ModBlocks.GARLIC_DIFFUSER_NORMAL.get(), ModBlocks.GARLIC_DIFFUSER_STRONG.get(), ModBlocks.GARLIC_DIFFUSER_LONG.get()).setFormats(cn, cn, ce, ce, loc(ModItems.PURIFIED_GARLIC.get())).useCustomEntryName().setKeyName("garlic_diffuser").setLinks(VIdentifier.mod("guide.vampirism.blocks.garlic"), VIdentifier.mod("guide.vampirism.items.purified_garlic"), VIdentifier.mod("guide.vampirism.items.holy_water_bottle")).recipes("garlic_diffuser_normal", "garlic_diffuser_improved", "garlic_diffuser_core", "garlic_diffuser_core_strong", "garlic_diffuser_core_long").build(entries);
         helper.infoBlocks(ModBlocks.BLOOD_PEDESTAL.get()).recipes("blood_pedestal").build(entries);
         helper.infoBlocks(ModBlocks.BLOOD_GRINDER.get()).recipes("blood_grinder").setFormats(loc(ModItems.HUMAN_HEART.get()), loc(Items.BEEF), loc(ModBlocks.BLOOD_SIEVE.get())).build(entries);
         helper.infoBlocks(ModBlocks.BLOOD_SIEVE.get()).recipes("blood_sieve").setFormats(ModFluids.BLOOD_TYPE.get().getDescription(), loc(ModBlocks.BLOOD_GRINDER.get())).setLinks(VIdentifier.mod("guide.vampirism.blocks.blood_grinder")).build(entries); //TODO update blood

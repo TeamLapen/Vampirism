@@ -46,7 +46,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         Player player = vampire.asEntity();
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);
-        vampire.closeWings(true);
+        IDraculaPlayer.get(player).ifPresent(d -> d.closeWings(true));
         return IActionResult.SUCCESS;
     }
 

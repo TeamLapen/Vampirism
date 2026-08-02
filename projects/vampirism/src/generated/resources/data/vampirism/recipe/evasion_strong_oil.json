@@ -1,0 +1,22 @@
+{
+  "type": "vampirism:alchemical_table",
+  "common_info": {},
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:dracula_blood"
+      }
+    },
+    "items": "vampirism:oil_bottle"
+  },
+  "input": "minecraft:honey_bottle",
+  "result": {
+    "components": {
+      "vampirism:oil_contents": {
+        "oil": "vampirism:evasion_strong"
+      }
+    },
+    "id": "vampirism:oil_bottle"
+  }
+}

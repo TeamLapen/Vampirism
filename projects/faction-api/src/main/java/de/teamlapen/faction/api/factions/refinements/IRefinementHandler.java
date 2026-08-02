@@ -9,10 +9,10 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public interface IRefinementHandler<T extends IRefinementPlayer<T>> {
+public interface IRefinementHandler extends IRefinementAccess {
 
-    static <T extends IRefinementPlayer<T>> Optional<IRefinementHandler<T>> get(Player player) {
-        return FactionsApi.factionPlayerHandler(player).getRefinementHandler();
+    static Optional<IRefinementHandler> get(Player player) {
+        return FactionsApi.factionPlayerHandler(player).getExtension(IRefinementHandler.class);
     }
 
     NonNullList<ItemStack> getRefinementItems();
@@ -29,8 +29,6 @@ public interface IRefinementHandler<T extends IRefinementPlayer<T>> {
 
     void removeRefinement(IRefinementItem.AccessorySlotType slot);
 
-    boolean isRefinementEquipped(Holder<IRefinement> refinement);
-
     void updateItems();
     /**
      * remove all equipped refinements
@@ -41,4 +39,9 @@ public interface IRefinementHandler<T extends IRefinementPlayer<T>> {
      * Reset all skills but reactivate the root skill of the faction
      */
     void reset();
+
+    @Override
+    default Optional<IRefinementHandler> asHandler() {
+        return Optional.of(this);
+    }
 }

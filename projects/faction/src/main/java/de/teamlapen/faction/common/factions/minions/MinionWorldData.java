@@ -100,7 +100,7 @@ public class MinionWorldData extends SavedData implements ValueIOSerializable {
     }
 
     @NotNull
-    public PlayerMinionController getOrCreateController(@NotNull ILordPlayer<?> lord) {
+    public PlayerMinionController getOrCreateController(@NotNull ILordPlayer lord) {
         UUID id = lord.asEntity().getUUID();
         if (controllers.containsKey(id)) {
             return controllers.get(id);

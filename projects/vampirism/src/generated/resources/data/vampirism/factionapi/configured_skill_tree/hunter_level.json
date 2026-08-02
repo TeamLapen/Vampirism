@@ -9,27 +9,36 @@
                 {
                   "children": [
                     {
+                      "node": "vampirism:hunter/alchemy2"
+                    },
+                    {
                       "children": [
                         {
                           "children": [
+                            {
+                              "node": "vampirism:hunter/alchemy5"
+                            },
                             {
                               "children": [
                                 {
                                   "children": [
                                     {
-                                      "node": "vampirism:hunter/alchemy6"
+                                      "node": "vampirism:hunter/alchemy8"
+                                    },
+                                    {
+                                      "node": "vampirism:hunter/alchemy9"
                                     }
                                   ],
-                                  "node": "vampirism:hunter/alchemy5"
+                                  "node": "vampirism:hunter/alchemy7"
                                 }
                               ],
-                              "node": "vampirism:hunter/alchemy4"
+                              "node": "vampirism:hunter/alchemy6"
                             }
                           ],
-                          "node": "vampirism:hunter/alchemy3"
+                          "node": "vampirism:hunter/alchemy4"
                         }
                       ],
-                      "node": "vampirism:hunter/alchemy2"
+                      "node": "vampirism:hunter/alchemy3"
                     }
                   ],
                   "node": "vampirism:hunter/alchemy1"
@@ -65,35 +74,39 @@
                 {
                   "children": [
                     {
+                      "node": "vampirism:hunter/weapon2"
+                    },
+                    {
                       "children": [
                         {
+                          "node": "vampirism:hunter/weapon4"
+                        },
+                        {
                           "children": [
+                            {
+                              "node": "vampirism:hunter/weapon6"
+                            },
                             {
                               "children": [
                                 {
                                   "children": [
                                     {
-                                      "children": [
-                                        {
-                                          "node": "vampirism:hunter/technique3"
-                                        }
-                                      ],
-                                      "node": "vampirism:hunter/technique2"
+                                      "node": "vampirism:hunter/weapon9"
+                                    },
+                                    {
+                                      "node": "vampirism:hunter/weapon10"
                                     }
                                   ],
-                                  "node": "vampirism:hunter/technique1"
-                                },
-                                {
-                                  "node": "vampirism:hunter/crafting1"
+                                  "node": "vampirism:hunter/weapon8"
                                 }
                               ],
-                              "node": "vampirism:hunter/weapon4"
+                              "node": "vampirism:hunter/weapon7"
                             }
                           ],
-                          "node": "vampirism:hunter/weapon3"
+                          "node": "vampirism:hunter/weapon5"
                         }
                       ],
-                      "node": "vampirism:hunter/weapon2"
+                      "node": "vampirism:hunter/weapon3"
                     }
                   ],
                   "node": "vampirism:hunter/weapon1"

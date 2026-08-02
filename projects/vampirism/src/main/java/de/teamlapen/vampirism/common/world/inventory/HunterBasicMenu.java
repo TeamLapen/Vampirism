@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.inventory;
 
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
@@ -57,7 +57,7 @@ public class HunterBasicMenu extends ItemCombinerMenu {
         HunterLeveling.getBasicHunterRequirement(targetLevel).ifPresent(req -> {
             int required = req.vampireBloodAmount();
             getSlot(0).remove(required);
-            FactionPlayerHandler.get(player).setFaction(LevelingChange.builder().faction(ModFactions.HUNTER).level(targetLevel));
+            FactionPlayerHandler.get(player).setFaction(FactionUpdate.builder().faction(ModFactions.HUNTER).level(targetLevel));
             if (player instanceof ServerPlayer serverPlayer) {
                 FactionSounds.playLevelUpSoundServer(serverPlayer);
             }

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.server.commands.dev;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
 import de.teamlapen.vampirism.common.core.ModFactions;
@@ -23,7 +23,7 @@ public class DevFactionCommand extends BasicCommand {
     }
 
     public static int setLevel(Holder<? extends IPlayableFaction<?>> faction, final int level, final int lord, ServerPlayer player) {
-        FactionPlayerHandler.get(player).setFaction(LevelingChange.builder().faction(faction).level(level).lordLevel(5).build());
+        FactionPlayerHandler.get(player).setFaction(FactionUpdate.builder().faction(faction).level(level).lordLevel(5).build());
         return 0;
     }
 }

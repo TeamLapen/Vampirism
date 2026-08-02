@@ -3,11 +3,10 @@
   "criteria": {
     "level": {
       "conditions": {
-        "type": "lord",
         "faction": "vampirism:vampire",
         "level": 5
       },
-      "trigger": "factionapi:faction"
+      "trigger": "factionapi:lord"
     }
   },
   "display": {

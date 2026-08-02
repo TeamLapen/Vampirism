@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.common.server.commands.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.village.VillageBanner;
+import de.teamlapen.faction.common.core.FactionDataComponents;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
 import de.teamlapen.faction.common.server.commands.arguments.FactionArgument;
 import net.minecraft.commands.CommandBuildContext;
@@ -23,7 +25,10 @@ public class GiveBannerCommand extends BasicCommand {
 
     @SuppressWarnings("SameReturnValue")
     private static int giveBannerItem(@NotNull Holder<IFaction<?>> faction, @NotNull ServerPlayer player) {
-        player.addItem(faction.value().getVillageData().createBanner(player.registryAccess()));
+        VillageBanner villageBanner = faction.components().get(FactionDataComponents.VILLAGE_BANNER);
+        if (villageBanner != null) {
+            player.addItem(villageBanner.createBanner(player.registryAccess()));
+        }
         return 0;
     }
 }

@@ -57,7 +57,7 @@ public class MigrationData {
         mapping.remap("vampirism:vampire_clothing_head", "vampirism:vampire_clothing_crown");
         mapping.remap("vampirism:vampire_clothing_feet", "vampirism:vampire_clothing_boots");
         mapping.remap("vampirism:garlic_beacon_core", "vampirism:garlic_diffuser_core");
-        mapping.remap("vampirism:garlic_beacon_core_improved", "vampirism:garlic_diffuser_core_improved");
+        mapping.remap("vampirism:garlic_beacon_core_improved", "vampirism:garlic_diffuser_core_strong");
         mapping.remap("vampirism:garlic_beacon_normal", "vampirism:garlic_diffuser_normal");
         mapping.remap("vampirism:garlic_beacon_weak", "vampirism:garlic_diffuser_weak");
         mapping.remap("vampirism:garlic_beacon_improved", "vampirism:garlic_diffuser_improved");
@@ -99,6 +99,7 @@ public class MigrationData {
         mapping.remap("vampirism:crossbow_arrow_teleport", "vampirism:quarrel_teleport");
         mapping.remap("vampirism:crossbow_arrow_bleeding", "vampirism:quarrel_bleeding");
         mapping.remap("vampirism:tech_crossbow_ammo_package", "vampirism:quarrel_pouch");
+        mapping.remap("vampirism:garlic_diffuser_core_improved", "vampirism:garlic_diffuser_core_strong");
     }
 
     private static void fixBlocks(@NotNull Mapping mapping) {
@@ -139,6 +140,8 @@ public class MigrationData {
         mapping.remap("vampirism:tombstone2", "vampirism:tombstone_medium");
         mapping.remap("vampirism:tombstone3", "vampirism:tombstone_cross");
         mapping.remap("vampirism:fire_place", "minecraft:campfire");
+        mapping.remap("vampirism:garlic_diffuser_core_improved", "vampirism:garlic_diffuser_core_strong");
+        mapping.remap("vampirism:garlic_diffuser_core_weak", "vampirism:garlic_diffuser_core_long");
     }
 
     private static void fixEntityTypes(@NotNull Mapping mapping) {

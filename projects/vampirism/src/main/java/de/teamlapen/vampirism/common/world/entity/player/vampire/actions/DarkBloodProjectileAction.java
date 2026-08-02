@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire.actions;
 
 import de.teamlapen.faction.api.factions.actions.IActionResult;
-import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
+import de.teamlapen.faction.api.factions.refinements.IRefinementAccess;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModRefinements;
@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.common.world.entity.DarkBloodProjectileEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class DarkBloodProjectileAction extends DefaultVampireAction {
 
@@ -19,7 +18,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
-    public int getCooldown(@NotNull IVampirePlayer player) {
+    public int getCooldown(IVampirePlayer player) {
         int cooldown = ModConfig.balance().vaDarkBloodProjectileCooldown.get() * 20;
         if (player.getRefinementHandler().isRefinementEquipped(ModRefinements.DARK_BLOOD_PROJECTILE_AOE)) {
             cooldown *= ModConfig.balance().vrDarkBloodProjectileAOECooldownMod.get();
@@ -38,9 +37,9 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
-    protected IActionResult activate(@NotNull IVampirePlayer player, ActivationContext context) {
+    protected IActionResult activate(IVampirePlayer player, ActivationContext context) {
         Player shooter = player.asEntity();
-        IRefinementHandler<IVampirePlayer> skillHandler = player.getRefinementHandler();
+        IRefinementAccess skillHandler = player.getRefinementHandler();
 
         float directDamage = ModConfig.balance().vaDarkBloodProjectileDamage.get().floatValue();
         float indirectDamage = directDamage * 0.5f;
@@ -76,7 +75,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         return IActionResult.SUCCESS;
     }
 
-    private @NotNull DarkBloodProjectileEntity createProjectile(@NotNull Player shooter, @NotNull Vec3 position, double height, @NotNull Vec3 direction, boolean goThrough, float directDamage, float indirectDamage, float speed) {
+    private DarkBloodProjectileEntity createProjectile(Player shooter, Vec3 position, double height, Vec3 direction, boolean goThrough, float directDamage, float indirectDamage, float speed) {
         DarkBloodProjectileEntity entity = new DarkBloodProjectileEntity(shooter.level(), position.x + direction.x, position.y + height, position.z + direction.z, direction);
         entity.setMotionFactor(speed);
         entity.setOwner(shooter);
@@ -88,7 +87,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         return entity;
     }
 
-    private @NotNull Vec3 getRotationVector(float pitch, float yaw) {
+    private Vec3 getRotationVector(float pitch, float yaw) {
         float f = pitch * ((float) Math.PI / 180F);
         float f1 = -yaw * ((float) Math.PI / 180F);
         float f2 = Mth.cos(f1);
@@ -97,7 +96,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
         return new Vec3(f3 * f4, 0, f2 * f4);
     }
 
-    private @NotNull Vec3 getVectorForRotation(float pitch, float yaw) {
+    private Vec3 getVectorForRotation(float pitch, float yaw) {
         float f = pitch * ((float) Math.PI / 180F);
         float f1 = -yaw * ((float) Math.PI / 180F);
         float f2 = Mth.cos(f1);

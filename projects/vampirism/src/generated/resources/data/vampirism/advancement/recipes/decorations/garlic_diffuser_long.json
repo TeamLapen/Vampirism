@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_garlic_diffuser": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:garlic_diffuser_core_long"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:garlic_diffuser_long"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_garlic_diffuser"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:garlic_diffuser_long"
+    ]
+  }
+}

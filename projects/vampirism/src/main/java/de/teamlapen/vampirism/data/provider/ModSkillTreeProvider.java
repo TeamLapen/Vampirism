@@ -1,5 +1,9 @@
 package de.teamlapen.vampirism.data.provider;
 
+import de.teamlapen.faction.api.FactionRegistries;
+import de.teamlapen.faction.api.factions.skills.ISkillNode;
+import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.common.factions.skills.SkillTreeConfiguration;
 import de.teamlapen.faction.data.provider.base.SkillTreeProvider;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
@@ -21,11 +25,14 @@ public class ModSkillTreeProvider extends SkillTreeProvider {
                         .addNode(node(HunterSkills.Nodes.SKILL3)
                                 .addNode(node(HunterSkills.Nodes.SKILL4)
                                         .addNode(node(HunterSkills.Nodes.ALCHEMY1)
-                                                .addNode(node(HunterSkills.Nodes.ALCHEMY2)
-                                                        .addNode(node(HunterSkills.Nodes.ALCHEMY3)
-                                                                .addNode(node(HunterSkills.Nodes.ALCHEMY4)
-                                                                        .addNode(node(HunterSkills.Nodes.ALCHEMY5)
-                                                                                .addNode(node(HunterSkills.Nodes.ALCHEMY6))
+                                                .addNode(node(HunterSkills.Nodes.ALCHEMY2))
+                                                .addNode(node(HunterSkills.Nodes.ALCHEMY3)
+                                                        .addNode(node(HunterSkills.Nodes.ALCHEMY4)
+                                                                .addNode(node(HunterSkills.Nodes.ALCHEMY5))
+                                                                .addNode(node(HunterSkills.Nodes.ALCHEMY6)
+                                                                        .addNode(node(HunterSkills.Nodes.ALCHEMY7)
+                                                                                .addNode(node(HunterSkills.Nodes.ALCHEMY8))
+                                                                                .addNode(node(HunterSkills.Nodes.ALCHEMY9))
                                                                         )
                                                                 )
                                                         )
@@ -43,15 +50,16 @@ public class ModSkillTreeProvider extends SkillTreeProvider {
                                                 )
                                         )
                                         .addNode(node(HunterSkills.Nodes.WEAPON1)
-                                                .addNode(node(HunterSkills.Nodes.WEAPON2)
-                                                        .addNode(node(HunterSkills.Nodes.WEAPON3)
-                                                                .addNode(node(HunterSkills.Nodes.WEAPON4)
-                                                                        .addNode(node(HunterSkills.Nodes.TECHNIQUE1)
-                                                                                .addNode(node(HunterSkills.Nodes.TECHNIQUE2)
-                                                                                        .addNode(node(HunterSkills.Nodes.TECHNIQUE3))
-                                                                                )
+                                                .addNode(node(HunterSkills.Nodes.WEAPON2))
+                                                .addNode(node(HunterSkills.Nodes.WEAPON3)
+                                                        .addNode(node(HunterSkills.Nodes.WEAPON4))
+                                                        .addNode(node(HunterSkills.Nodes.WEAPON5)
+                                                                .addNode(node(HunterSkills.Nodes.WEAPON6))
+                                                                .addNode(node(HunterSkills.Nodes.WEAPON7)
+                                                                        .addNode(node(HunterSkills.Nodes.WEAPON8)
+                                                                                .addNode(node(HunterSkills.Nodes.WEAPON9))
+                                                                                .addNode(node(HunterSkills.Nodes.WEAPON10))
                                                                         )
-                                                                        .addNode(node(HunterSkills.Nodes.CRAFTING1))
                                                                 )
                                                         )
                                                 )
@@ -69,6 +77,12 @@ public class ModSkillTreeProvider extends SkillTreeProvider {
                 .addNode(node(HunterSkills.Nodes.LORD_5))
                 .addAfter(HunterSkills.Trees.LEVEL)
                 .build(output, modId("hunter_lord"));
+
+        tree(HunterSkills.Trees.MARSHALL, HunterSkills.Nodes.MARSHALL_ROOT)
+                .addNode(node(HunterSkills.Nodes.MARSHALL_2))
+                .addNode(node(HunterSkills.Nodes.MARSHALL_3))
+                .addAfter(HunterSkills.Trees.LORD)
+                .build(output, modId("hunter_marshall"));
     }
 
     protected void buildVampire(HolderLookup.Provider provider, SkillTreeOutput output) {

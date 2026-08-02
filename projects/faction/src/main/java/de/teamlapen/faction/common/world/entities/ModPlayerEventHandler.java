@@ -11,6 +11,7 @@ import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.util.RegUtil;
 import de.teamlapen.faction.common.util.TotemHelper;
 import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,13 +46,18 @@ public class ModPlayerEventHandler {
         if (FactionConfig.server().factionColorInChat.get() && (!(event.getEntity() instanceof ServerPlayer serverPlayer) || serverPlayer.connection != null)) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(event.getEntity());
             Holder<? extends IFaction<?>> f = handler.factionPlayer().getDisguise().getViewedFaction(Optional.ofNullable(FactionsMod.proxy.getClientPlayer()).map(FactionPlayerHandler::get).map(FactionPlayerHandler::getFaction).orElse(null));
-            if (!IFaction.is(f, de.teamlapen.faction.api.tags.FactionTags.IS_NEUTRAL)) {
-                MutableComponent displayName;
-                displayName = handler.getLordPlayer().filter(h -> h.getLordLevel() > 0).filter(x -> FactionConfig.server().factionLordPrefixInChat.get()).map(ILordPlayer::getLordTitle)
-                        .map(x -> Component.literal("[").append(x).append("] ").append(event.getDisplayname()))
-                        .orElseGet(() -> event.getDisplayname().copy());
-                event.setDisplayname(displayName.withStyle(style -> style.withColor((f.value().getChatColor()))));
+
+            var title = handler.factionPlayer().getChatDisplay();
+
+            MutableComponent name;
+
+            if (title != null) {
+                name = Component.literal("").append(Component.literal("[").withStyle(ChatFormatting.GRAY)).append(title).append(Component.literal("] ").withStyle(ChatFormatting.GRAY)).append(event.getDisplayname());
+            } else {
+                name = event.getDisplayname().copy();
             }
+
+            event.setDisplayname(name.withStyle(style -> style.withColor((f.value().getChatColor()))));
         }
     }
 

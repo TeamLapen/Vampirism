@@ -2,8 +2,11 @@ package de.teamlapen.vampirism.common.world.items;
 
 
 import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
+import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.sounds.ISoundHandler;
+import de.teamlapen.vampirism.api.world.items.IBlessableItem;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModSounds;
@@ -12,6 +15,7 @@ import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterSkillProperties;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -26,29 +30,36 @@ import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class BlessableItem extends Item {
+public class BlessableItem extends Item implements IBlessableItem {
 
+    @Nullable
     private final Supplier<? extends Item> blessedItem;
     @Nullable
-    private final Supplier<? extends Item> enhancedBlessedItem;
+    private final Holder<ISkill<?>> requiredSkill;
 
-    public BlessableItem(Properties properties, Supplier<? extends Item> blessedItem, @Nullable Supplier<? extends Item> enhancedBlessedItem) {
-        super(properties);
-        this.blessedItem = blessedItem;
-        this.enhancedBlessedItem = enhancedBlessedItem;
+    public BlessableItem(Properties properties, Supplier<? extends Item> blessedItem) {
+        this(properties, blessedItem, null);
     }
 
-    public Item getBlessedItem() {
-        return this. blessedItem.get();
+    public BlessableItem(Properties properties, @Nullable Supplier<? extends Item> blessedItem, @Nullable Holder<ISkill<?>> requiredSkill) {
+        super(properties);
+        this.blessedItem = blessedItem;
+        this.requiredSkill = requiredSkill;
     }
 
     @Nullable
-    public Item getEnhancedBlessedItem() {
-        return this.enhancedBlessedItem == null ? null : this.enhancedBlessedItem.get();
+    @Override
+    public Item getBlessedItem() {
+        return this.blessedItem == null ? null : this.blessedItem.get();
+    }
+
+    @Override
+    public @Nullable Holder<ISkill<?>> requiredSkill() {
+        return this.requiredSkill;
     }
 
     @Override
@@ -63,8 +74,9 @@ public class BlessableItem extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (context.getLevel().getBlockState(context.getClickedPos()).getBlock() == ModBlocks.ALTAR_CLEANSING.get() && context.getPlayer() != null) {
+        if (this.blessedItem != null && context.getLevel().getBlockState(context.getClickedPos()).getBlock() == ModBlocks.ALTAR_CLEANSING.get() && context.getPlayer() != null) {
             if (!Helper.isHunter(context.getPlayer())) return InteractionResult.PASS;
+            if (this.requiredSkill != null && !ISkillPlayer.get(context.getPlayer()).map(x -> x.getSkillHandler().isSkillEnabled(this.requiredSkill)).orElse(false)) return InteractionResult.PASS;
             context.getPlayer().startUsingItem(context.getHand());
             context.getPlayer().addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 2));
             context.getPlayer().addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 2));
@@ -99,11 +111,6 @@ public class BlessableItem extends Item {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
-        if (enhancedBlessedItem != null && livingEntity instanceof Player player) {
-            IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            boolean enhanced = handler.isInFaction(ModFactions.HUNTER) && handler.getSkillHandler().map(s -> s.isSkillEnabled(HunterSkills.ENHANCED_BLESSING)).orElse(false);
-            return new ItemStack(enhanced ? enhancedBlessedItem.get() : blessedItem.get(), stack.getCount());
-        }
         return new ItemStack(blessedItem.get(), stack.getCount());
     }
 

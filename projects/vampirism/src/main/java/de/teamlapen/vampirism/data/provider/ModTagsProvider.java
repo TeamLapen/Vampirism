@@ -32,5 +32,6 @@ public class ModTagsProvider {
         generator.addProvider(true, new ModDataComponentTagsProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModVillageTradesTagProvider(output, lookupProviderFuture));
         generator.addProvider(true, new ModTimelineTagProvider(output, lookupProviderFuture));
+        generator.addProvider(true, new ModOilTagsProvider(output, lookupProviderFuture));
     }
 }

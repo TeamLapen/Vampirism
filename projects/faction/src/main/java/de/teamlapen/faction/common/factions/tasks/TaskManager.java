@@ -5,65 +5,78 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFactionSpecificTags;
-import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.tasks.*;
 import de.teamlapen.faction.api.util.FIdentifier;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.faction.common.core.FactionAttachments;
 import de.teamlapen.faction.common.core.FactionStats;
+import de.teamlapen.faction.common.factions.FactionExtension;
 import de.teamlapen.faction.common.factions.tasks.requirements.ItemRequirement;
 import de.teamlapen.faction.common.network.packets.client.ClientboundTaskPacket;
 import de.teamlapen.faction.common.network.packets.client.ClientboundTaskStatusPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundTaskActionPacket;
 import de.teamlapen.faction.common.tags.FactionTaskTags;
 import de.teamlapen.faction.common.util.collections.CollectionUtil;
-import de.teamlapen.faction.common.world.inventory.FactionMenu;
+import de.teamlapen.faction.common.world.entities.IPlayerEventListener;
 import de.teamlapen.faction.common.world.inventory.ITaskMenu;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
 import de.teamlapen.faction.common.world.inventory.TaskBoardMenu;
-import de.teamlapen.sync.PropertySync;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
+import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implements ITaskManager {
+public class TaskManager extends FactionExtension implements ITaskManager, IPlayerEventListener {
     private static final UUID UNIQUE_TASKS = UUID.fromString("e2c6068a-8f0e-4d5b-822a-38ad6ecf98c9");
     private static final Codec<Map<UUID, TaskWrapper>> TASK_WRAPPER_CODEC = Codec.unboundedMap(UUIDUtil.STRING_CODEC, TaskWrapper.CODEC);
 
-    private final Holder<? extends IPlayableFaction<?>> faction;
-    private final ServerPlayer player;
-    @NotNull
-    private final T factionPlayer;
     private final Set<ResourceKey<Task>> completedTasks = new HashSet<>();
     private final Map<UUID, TaskWrapper> taskWrapperMap = new HashMap<>();
 
     private final Registry<Task> registry;
 
-    public TaskManager(ServerPlayer player, @NotNull T factionPlayer, Holder<? extends IPlayableFaction<?>> faction) {
-        this.faction = faction;
-        this.player = player;
-        this.factionPlayer = factionPlayer;
+
+    public TaskManager(ServerPlayer player) {
+        super(player);
         this.registry = player.level().registryAccess().lookupOrThrow(FactionRegistries.Keys.TASK);
+    }
+
+    private IFactionPlayer<?> factionPlayer() {
+        return handler().factionPlayer();
+    }
+
+    private ServerPlayer player() {
+        return (ServerPlayer) this.player;
+    }
+
+    @Override
+    public AttachmentType<?> getType() {
+        return FactionAttachments.TASK_MANAGER.get();
     }
 
     @Override
     public void sync() {
-        this.factionPlayer.sync();
+
     }
 
     // interface -------------------------------------------------------------------------------------------------------
@@ -96,7 +109,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
      * applies the reward of the given taskInstance
      */
     public void applyRewards(ITaskInstance taskInstance) {
-        taskInstance.getReward().applyReward(this.factionPlayer);
+        taskInstance.getReward().applyReward(this.factionPlayer());
     }
 
     /**
@@ -172,7 +185,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     public boolean isTaskUnlocked(ResourceKey<Task> task) {
         if (!matchesFaction(task)) return false;
         for (TaskUnlocker taskUnlocker : getTask(task).unlocker()) {
-            if (!taskUnlocker.isUnlocked(this.factionPlayer)) {
+            if (!taskUnlocker.isUnlocked(this, this.factionPlayer())) {
                 return false;
             }
         }
@@ -182,7 +195,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     public boolean isTaskUnlocked(Holder<Task> task) {
         if (!matchesFaction(task)) return false;
         for (TaskUnlocker taskUnlocker : task.value().unlocker()) {
-            if (!taskUnlocker.isUnlocked(this.factionPlayer)) {
+            if (!taskUnlocker.isUnlocked(this, this.factionPlayer())) {
                 return false;
             }
         }
@@ -193,7 +206,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     public void openTaskBoardScreen(UUID taskBoardId) {
         if (player.containerMenu instanceof TaskBoardMenu) {
             TaskWrapper wrapper = this.taskWrapperMap.computeIfAbsent(taskBoardId, TaskWrapper::new);
-            player.connection.send(createTaskBoardPacket(taskBoardId));
+            this.player().connection.send(createTaskBoardPacket(taskBoardId));
             wrapper.lastSeenPos = this.player.blockPosition();
         }
     }
@@ -220,11 +233,9 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     }
 
     @Override
-    public void openFactionMenu() {
-        if (!player.isAlive()) return;
-        player.openMenu(new SimpleMenuProvider((i, inventory, player) -> new FactionMenu(i, inventory), Component.empty()));
+    public void initializeFactionMenu() {
         if (player.containerMenu instanceof ITaskMenu) {
-            player.connection.send(createFactionMenuPacket());
+            this.player().connection.send(createFactionMenuPacket());
         }
     }
 
@@ -241,7 +252,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
      * remove the taskInstance's requirements from the player
      */
     public void removeRequirements(ITaskInstance taskInstance) {
-        getTask(taskInstance.getTask()).requirements().removeRequirement(this.factionPlayer);
+        getTask(taskInstance.getTask()).requirements().removeRequirement(this.factionPlayer());
     }
 
     @Override
@@ -251,6 +262,11 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
             wrapper.lessTasks = 0;
             wrapper.tasks.clear();
         });
+    }
+
+    @Override
+    public void onLeaveFaction(Player player) {
+        this.reset();
     }
 
     @Override
@@ -274,7 +290,8 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     /**
      * updates the task list once per day ({@link #updateTaskLists()}
      */
-    public void tick() {
+    @Override
+    public void onUpdate() {
         if (this.player.level().getGameTime() % 24000 == 0) {
             this.updateTaskLists();
         }
@@ -305,7 +322,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
      * @return if the requirement is completed
      */
     private boolean checkStat(ITaskInstance taskInstance, TaskRequirement.Requirement<?> requirement) {
-        return getStat(taskInstance, requirement) >= requirement.getAmount(this.factionPlayer);
+        return getStat(taskInstance, requirement) >= requirement.getAmount(this.factionPlayer());
     }
 
     /**
@@ -333,23 +350,24 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
     }
 
     private int getStat(ITaskInstance taskInstance, TaskRequirement.Requirement<?> requirement) {
+        IFactionPlayer<?> iFactionPlayer = this.factionPlayer();
         Map<Identifier, Integer> stats = taskInstance.getStats();
         if (!taskInstance.isAccepted()) return 0;
         int neededStat = 0;
         int actualStat = 0;
         switch (requirement.getType()) {
             case STATS -> {
-                actualStat = this.player.getStats().getValue(Stats.CUSTOM.get((Identifier) requirement.getStat(this.factionPlayer)));
-                neededStat = stats.get(requirement.id()) + requirement.getAmount(this.factionPlayer);
+                actualStat = this.player().getStats().getValue(Stats.CUSTOM.get((Identifier) requirement.getStat(iFactionPlayer)));
+                neededStat = stats.get(requirement.id()) + requirement.getAmount(iFactionPlayer);
             }
             case ENTITY -> {
-                actualStat = this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer)));
-                neededStat = stats.get(requirement.id()) + requirement.getAmount(this.factionPlayer);
+                actualStat = this.player().getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(iFactionPlayer)));
+                neededStat = stats.get(requirement.id()) + requirement.getAmount(iFactionPlayer);
             }
             case ENTITY_TAG -> {
                 //noinspection unchecked
-                actualStat += BuiltInRegistries.ENTITY_TYPE.get((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer)).stream().flatMap(HolderSet.ListBacked::stream).map(Holder::value).mapToInt(type -> this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type))).sum();
-                neededStat = stats.get(requirement.id()) + requirement.getAmount(this.factionPlayer);
+                actualStat += BuiltInRegistries.ENTITY_TYPE.get((TagKey<EntityType<?>>) requirement.getStat(iFactionPlayer)).stream().flatMap(HolderSet.ListBacked::stream).map(Holder::value).mapToInt(type -> this.player().getStats().getValue(Stats.ENTITY_KILLED.get(type))).sum();
+                neededStat = stats.get(requirement.id()) + requirement.getAmount(iFactionPlayer);
             }
             case ITEMS -> {
                 ItemStack stack = ((ItemRequirement) requirement).getItemStack();
@@ -357,11 +375,11 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
                 actualStat = InventoryHelper.countItemWithComponent(this.player.getInventory(), stack);
             }
             case BOOLEAN -> {
-                if (!(Boolean) requirement.getStat(this.factionPlayer)) return 0;
+                if (!(Boolean) requirement.getStat(iFactionPlayer)) return 0;
                 return 1;
             }
         }
-        return Math.min(requirement.getAmount(this.factionPlayer) - (neededStat - actualStat), requirement.getAmount(this.factionPlayer));
+        return Math.min(requirement.getAmount(iFactionPlayer) - (neededStat - actualStat), requirement.getAmount(iFactionPlayer));
     }
 
     /**
@@ -382,7 +400,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
         if (wrapper.tasks.size() < wrapper.taskAmount) {
             List<Holder.Reference<Task>> tasks = this.registry.listElements().collect(Collectors.toList());
             Collections.shuffle(tasks);
-            wrapper.tasks.putAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.is(FactionTaskTags.IS_UNIQUE)).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).map(task -> new TaskInstance(task, taskBoardId, this.factionPlayer, this.getTaskTimeConfig() * 1200L)).collect(Collectors.toMap(TaskInstance::getId, t -> t)));
+            wrapper.tasks.putAll(tasks.stream().filter(this::matchesFaction).filter(task -> !task.is(FactionTaskTags.IS_UNIQUE)).filter(this::isTaskUnlocked).limit(wrapper.taskAmount - wrapper.tasks.size()).map(task -> new TaskInstance(task, taskBoardId, this.factionPlayer(), this.getTaskTimeConfig() * 1200L)).collect(Collectors.toMap(TaskInstance::getId, t -> t)));
         }
         this.updateStats(wrapper.getTaskInstances());
         return wrapper.getTaskInstances();
@@ -402,7 +420,7 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
             this.removeLockedTasks(uniqueTasks.values());
         }
         Collection<ResourceKey<Task>> tasks = uniqueTasks.values().stream().map(ITaskInstance::getTask).collect(Collectors.toSet());
-        uniqueTasks.putAll(this.registry.listElements().filter(this::matchesFaction).filter(t -> t.is(FactionTaskTags.IS_UNIQUE)).filter(task -> !tasks.contains(task.key())).filter(task -> !this.completedTasks.contains(task.key())).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS, this.factionPlayer, 0)).collect(Collectors.toMap(TaskInstance::getId, a -> a)));
+        uniqueTasks.putAll(this.registry.listElements().filter(this::matchesFaction).filter(t -> t.is(FactionTaskTags.IS_UNIQUE)).filter(task -> !tasks.contains(task.key())).filter(task -> !this.completedTasks.contains(task.key())).filter(this::isTaskUnlocked).map(task -> new TaskInstance(task, UNIQUE_TASKS, this.factionPlayer(), 0)).collect(Collectors.toMap(TaskInstance::getId, a -> a)));
         wrapper.tasks.putAll(uniqueTasks);
         this.updateStats(uniqueTasks.values());
         return uniqueTasks.values();
@@ -417,14 +435,14 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
 
     /**
      * @param task the task that should be checked
-     * @return whether the task's faction is applicant to the taskManager's {@link #faction}
+     * @return whether the task's faction is applicant to the taskManager's {@link #factionPlayer()}
      */
     private boolean matchesFaction(ResourceKey<Task> task) {
         return this.registry.get(task).map(this::matchesFaction).orElse(false);
     }
 
     private boolean matchesFaction(Holder<Task> task) {
-        return !task.is(FactionTaskTags.HAS_FACTION) || IFactionSpecificTags.get().get(this.faction,FactionRegistries.Keys.TASK).map(task::is).orElse(false);
+        return !task.is(FactionTaskTags.HAS_FACTION) || IFactionSpecificTags.get().get(this.factionPlayer().getFaction(), FactionRegistries.Keys.TASK).map(task::is).orElse(false);
     }
 
     /**
@@ -466,11 +484,11 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
         Map<Identifier, Integer> reqStats = taskInstance.getStats();
         for (TaskRequirement.Requirement<?> requirement : task.requirements().getAll()) {
             switch (requirement.getType()) {
-                case STATS -> reqStats.putIfAbsent(requirement.id(), this.player.getStats().getValue(Stats.CUSTOM.get((Identifier) requirement.getStat(this.factionPlayer))));
-                case ENTITY -> reqStats.putIfAbsent(requirement.id(), this.player.getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer))));
+                case STATS -> reqStats.putIfAbsent(requirement.id(), this.player().getStats().getValue(Stats.CUSTOM.get((Identifier) requirement.getStat(this.factionPlayer()))));
+                case ENTITY -> reqStats.putIfAbsent(requirement.id(), this.player().getStats().getValue(Stats.ENTITY_KILLED.get((EntityType<?>) requirement.getStat(this.factionPlayer()))));
                 case ENTITY_TAG ->
                     //noinspection unchecked
-                        reqStats.putIfAbsent(requirement.id(), BuiltInRegistries.ENTITY_TYPE.get((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer)).stream().flatMap(HolderSet.ListBacked::stream).map(Holder::value).mapToInt(type -> this.player.getStats().getValue(Stats.ENTITY_KILLED.get(type))).sum());
+                        reqStats.putIfAbsent(requirement.id(), BuiltInRegistries.ENTITY_TYPE.get((TagKey<EntityType<?>>) requirement.getStat(this.factionPlayer())).stream().flatMap(HolderSet.ListBacked::stream).map(Holder::value).mapToInt(type -> this.player().getStats().getValue(Stats.ENTITY_KILLED.get(type))).sum());
                 default -> {
                 }
             }
@@ -555,6 +573,36 @@ public class TaskManager<T extends ITaskPlayer<T>> extends PropertySync implemen
             this.tasks.clear();
             this.lessTasks = 0;
             this.taskAmount = -1;
+        }
+    }
+
+    public static class Factory implements Function<IAttachmentHolder, TaskManager> {
+
+        @Override
+        public TaskManager apply(IAttachmentHolder holder) {
+            if (holder instanceof ServerPlayer player) {
+                return new TaskManager(player);
+            }
+            throw new IllegalArgumentException("Cannot create level damage for holder " + holder.getClass() + ". Expected server player");
+        }
+    }
+
+    public static class Serializer implements IAttachmentSerializer<TaskManager> {
+
+        @Override
+        public TaskManager read(IAttachmentHolder holder, ValueInput input) {
+            if (holder instanceof ServerPlayer player) {
+                TaskManager taskManager = new TaskManager(player);
+                taskManager.deserialize(input);
+                return taskManager;
+            }
+            throw new IllegalArgumentException("Cannot create level damage for holder " + holder.getClass() + ". Expected server player");
+        }
+
+        @Override
+        public boolean write(TaskManager attachment, ValueOutput output) {
+            attachment.serialize(output);
+            return true;
         }
     }
 

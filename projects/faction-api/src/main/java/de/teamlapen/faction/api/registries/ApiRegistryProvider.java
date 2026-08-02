@@ -9,6 +9,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -24,6 +25,10 @@ public interface ApiRegistryProvider {
 
     static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> retrieveDataComponent(Identifier key) {
         return DeferredHolder.create(ResourceKey.create(Registries.DATA_COMPONENT_TYPE, key));
+    }
+
+    static DeferredHolder<Block, Block> retrieveBlock(Identifier key) {
+        return DeferredHolder.create(ResourceKey.create(Registries.BLOCK, key));
     }
 
     static <T> DeferredHolder<AttachmentType<?>, AttachmentType<T>> retrieveAttachmentType(Identifier key) {

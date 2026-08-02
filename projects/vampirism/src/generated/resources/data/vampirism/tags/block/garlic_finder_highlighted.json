@@ -1,9 +1,9 @@
 {
   "values": [
     "vampirism:garlic_diffuser_normal",
-    "vampirism:garlic_diffuser_weak",
-    "vampirism:garlic_diffuser_improved",
+    "vampirism:garlic_diffuser_long",
+    "vampirism:garlic_diffuser_strong",
     "vampirism:garlic_diffuser_core",
-    "vampirism:garlic_diffuser_core_improved"
+    "vampirism:garlic_diffuser_core_strong"
   ]
 }

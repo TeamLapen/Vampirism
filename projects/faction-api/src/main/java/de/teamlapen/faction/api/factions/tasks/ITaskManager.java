@@ -60,7 +60,7 @@ public interface ITaskManager {
     /**
      * Open menu container and send task information to the vampirism container
      */
-    void openFactionMenu();
+    void initializeFactionMenu();
 
     /**
      * cleans the TaskManager from every trace of completed/active tasks

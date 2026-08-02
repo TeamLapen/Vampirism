@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "vampirism:pure_level": {
+          "level": 5
+        }
+      },
+      "items": "vampirism:blood_infused_iron_ingot"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "components": {
+      "vampirism:pure_level": {
+        "level": 5
+      }
+    },
+    "id": "vampirism:blood_infused_refined_iron_block"
+  }
+}

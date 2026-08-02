@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 
 public class AwarenessHunterAction extends DefaultHunterAction implements ILastingAction<IHunterPlayer> {
 
-    private final Predicate<Entity> vampirePredicate = IFactionPredicate.builder(ModFactions.HUNTER).targetFaction(VampirismTags.Factions.IS_VAMPIRE).build().forEntity();
+    private final Predicate<Entity> vampirePredicate = IFactionPredicate.builder(ModFactions.HUNTER).targetFaction(VampirismTags.Factions.IS_VAMPIRE).ignoreDisguise().build().forEntity();
 
     public AwarenessHunterAction() {
         super();

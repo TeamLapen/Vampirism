@@ -68,7 +68,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
     @Nullable
     private Holder<MobEffect> primaryPower;
     private int effectAmplifier;
-    private boolean isUpgraded;
+    private int isUpgraded;
     @Nullable
     private Component name;
     private LockCode lockKey = LockCode.NO_LOCK;
@@ -78,7 +78,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
                 case DATA_LEVELS -> VampireBeaconBlockEntity.this.levels;
                 case DATA_PRIMARY -> BeaconMenu.encodeEffect(VampireBeaconBlockEntity.this.primaryPower);
                 case DATA_AMPLIFIER -> VampireBeaconBlockEntity.this.effectAmplifier;
-                case DATA_UPGRADED -> VampireBeaconBlockEntity.this.isUpgraded ? 1 : 0;
+                case DATA_UPGRADED -> VampireBeaconBlockEntity.this.isUpgraded;
                 default -> 0;
             };
         }
@@ -93,7 +93,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
                     VampireBeaconBlockEntity.this.primaryPower = VampireBeaconBlockEntity.getValidEffectById(value);
                 }
                 case DATA_AMPLIFIER -> VampireBeaconBlockEntity.this.effectAmplifier = value;
-                case DATA_UPGRADED -> VampireBeaconBlockEntity.this.isUpgraded = value != 0;
+                case DATA_UPGRADED -> VampireBeaconBlockEntity.this.isUpgraded = value;
             }
 
         }
@@ -159,13 +159,13 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
         int k1 = pBlockEntity.levels;
         if (pLevel.getGameTime() % 80L == 0L) {
             if (!pBlockEntity.beamSections.isEmpty()) {
-                Pair<Integer, Boolean> integerBooleanPair = updateBase(pLevel, i, j, k);
+                Pair<Integer, Integer> integerBooleanPair = updateBase(pLevel, i, j, k);
                 pBlockEntity.levels = integerBooleanPair.getLeft();
                 pBlockEntity.isUpgraded = integerBooleanPair.getRight();
             }
 
             if (pBlockEntity.levels > 0 && !pBlockEntity.beamSections.isEmpty()) {
-                pBlockEntity.applyEffects(pLevel, pPos, pBlockEntity.levels, pBlockEntity.primaryPower, pBlockEntity.isUpgraded ? pBlockEntity.effectAmplifier + 1 : pBlockEntity.effectAmplifier);
+                pBlockEntity.applyEffects(pLevel, pPos, pBlockEntity.levels, pBlockEntity.primaryPower, pBlockEntity.effectAmplifier + pBlockEntity.isUpgraded);
                 playSound(pLevel, pPos, SoundEvents.BEACON_AMBIENT);
             }
         }
@@ -204,9 +204,9 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
         }
     }
 
-    private static Pair<Integer, Boolean> updateBase(Level pLevel, int pX, int pY, int pZ) {
+    private static Pair<Integer, Integer> updateBase(Level pLevel, int pX, int pY, int pZ) {
         int i = 0;
-        Optional<Boolean> upgradeFlag = Optional.empty();
+        Optional<Integer> upgradeFlag = Optional.empty();
 
         for (int j = 1; j <= MAX_LEVELS; i = j++) {
             int k = pY - j;
@@ -215,7 +215,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
             }
 
             boolean flag = true;
-            boolean upgradeFlagLevel = upgradeFlag.orElse(true);
+            int upgradeFlagLevel = upgradeFlag.orElse(2);
 
             for (int l = pX - j; l <= pX + j && flag; ++l) {
                 for (int i1 = pZ - j; i1 <= pZ + j; ++i1) {
@@ -223,8 +223,10 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
                     if (!blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_BLOCKS)) {
                         flag = false;
                         break;
-                    } else if (upgradeFlagLevel) {
-                        upgradeFlagLevel = blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS);
+                    } else if (upgradeFlagLevel == 2) {
+                        upgradeFlagLevel = blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_REFINED_BLOCKS) ? 2 : blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS) ?1 :0;
+                    } else if (upgradeFlagLevel == 1) {
+                        upgradeFlagLevel = blockState.is(ModBlockTags.VAMPIRE_BEACON_BASE_ENHANCED_BLOCKS) ? 1 : 0;
                     }
                 }
             }
@@ -232,10 +234,10 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
             if (!flag) {
                 break;
             }
-            upgradeFlag = Optional.of(upgradeFlag.orElse(true) && upgradeFlagLevel);
+            upgradeFlag = Optional.of(Math.min(upgradeFlag.orElse(2), upgradeFlagLevel));
         }
 
-        return Pair.of(i, upgradeFlag.orElse(false));
+        return Pair.of(i, upgradeFlag.orElse(2));
     }
 
     @Override
@@ -262,7 +264,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
         this.effectAmplifier = input.getIntOr("Amplifier", 0);
 
         this.lockKey = LockCode.fromTag(input);
-        this.isUpgraded = input.getBooleanOr("Upgraded", false);
+        this.isUpgraded = input.getIntOr("Upgraded", 0);
     }
 
     @Override
@@ -278,7 +280,7 @@ public class VampireBeaconBlockEntity extends NetworkedBlockEntity implements Me
         output.putInt("Amplifier", this.effectAmplifier);
 
         this.lockKey.addToTag(output);
-        output.putBoolean("Upgraded", this.isUpgraded);
+        output.putInt("Upgraded", this.isUpgraded);
     }
 
     public void setCustomName(@Nullable Component pName) {

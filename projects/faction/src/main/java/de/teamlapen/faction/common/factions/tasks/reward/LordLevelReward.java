@@ -3,7 +3,8 @@ package de.teamlapen.faction.common.factions.tasks.reward;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.tasks.ITaskRewardInstance;
 import de.teamlapen.faction.api.factions.tasks.TaskReward;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
@@ -40,8 +41,8 @@ public class LordLevelReward implements TaskReward, ITaskRewardInstance {
     @Override
     public void applyReward(IFactionPlayer<?> p) {
         FactionPlayerHandler fph = FactionPlayerHandler.get(p.asEntity());
-        if (fph.getLordLevel() == targetLevel - 1) {
-            fph.setFaction(LevelingChange.builder().lordLevel(targetLevel).build());
+        if (fph.getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) == targetLevel - 1) {
+            fph.setFaction(FactionUpdate.builder().lordLevel(targetLevel).build());
         }
     }
 

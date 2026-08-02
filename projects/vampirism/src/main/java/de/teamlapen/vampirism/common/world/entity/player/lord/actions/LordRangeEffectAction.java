@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.entity.player.lord.actions;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionHelper;
 import de.teamlapen.faction.api.factions.actions.IActionResult;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.tags.FactionTags;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
@@ -30,10 +31,10 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T> & ISkill
 
     @Override
     protected @NotNull IActionResult activate(@NotNull T player, @NotNull ActivationContext context) {
-        int lordLevel = FactionPlayerHandler.get(player.asEntity()).getLordLevel();
+        int lordLevel = FactionPlayerHandler.get(player.asEntity()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0);
         List<LivingEntity> entitiesOfClass = player.asEntity().level().getEntitiesOfClass(LivingEntity.class, new AABB(player.asEntity().blockPosition()).inflate(10, 10, 10), e -> IFaction.is(player.getFaction(), IFactionHelper.get().getFaction(e)));
         for (LivingEntity entity : entitiesOfClass) {
-            if (entity instanceof Player && FactionPlayerHandler.get(((Player) entity)).getLordLevel() >= lordLevel) {
+            if (entity instanceof Player && FactionPlayerHandler.get(((Player) entity)).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) >= lordLevel) {
                 continue;
             }
             entity.addEffect(new MobEffectInstance(effect, getEffectDuration(player), getEffectAmplifier(player)));
@@ -53,7 +54,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T> & ISkill
     }
 
     protected int getEffectAmplifier(@NotNull T player) {
-        return FactionPlayerHandler.get(player.asEntity()).getLordLevel() - 1;
+        return FactionPlayerHandler.get(player.asEntity()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0) - 1;
     }
 
     @Override

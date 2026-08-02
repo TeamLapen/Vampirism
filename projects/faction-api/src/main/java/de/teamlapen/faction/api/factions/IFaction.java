@@ -11,6 +11,8 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 /**
  * Represents an entity faction (e.g. Vampires)
  */
@@ -55,6 +57,18 @@ public interface IFaction<T extends IFactionEntity> {
     }
 
     /**
+     * @return the extension registered for the given interface, or {@code null} if none was registered for this faction
+     * @see FactionProperties#extension(Class, Holder)
+     */
+    @Nullable
+    <TInterface> FactionExtensionType<TInterface> extension(Class<TInterface> clazz);
+
+    /**
+     * @return all extensions registered for this faction, keyed by their interface class
+     */
+    Map<Class<?>, FactionExtensionType<?>> getExtensions();
+
+    /**
      * If not set returns white
      */
     TextColor getChatColor();
@@ -75,29 +89,9 @@ public interface IFaction<T extends IFactionEntity> {
 
     String getDescriptionId();
 
-    /**
-     * @return The singular name of the faction
-     */
-    default MutableComponent getNameSingular() {
-        return Component.translatable(getDescriptionIdSingular());
-    }
+    Component getNameSingular();
 
-    String getDescriptionIdSingular();
+    Component getNamePlural();
 
-    /**
-     * @return The plural name of the faction
-     */
-    default MutableComponent getNamePlural() {
-        return Component.translatable(getDescriptionIdPlural());
-    }
-
-    String getDescriptionIdPlural();
-
-    /**
-     * Gets Village Totem related utility class
-     *
-     * @return the village data class
-     */
-    IFactionVillage getVillageData();
 
 }

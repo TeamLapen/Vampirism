@@ -3,8 +3,10 @@ package de.teamlapen.faction.common.factions.tasks.unlock;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
+import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.tasks.ITaskManager;
 import de.teamlapen.faction.api.factions.tasks.TaskUnlocker;
+import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.FactionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import net.minecraft.network.chat.Component;
@@ -28,8 +30,8 @@ public record LordLvlUnlocker(int reqLordLevel, boolean exact) implements TaskUn
     }
 
     @Override
-    public <T extends ITaskPlayer<T>> boolean isUnlocked(T playerEntity) {
-        int aL = FactionPlayerHandler.get(playerEntity.asEntity()).getLordLevel();
+    public boolean isUnlocked(ITaskManager taskManager, IFactionPlayer<?> factionPlayer) {
+        int aL = FactionPlayerHandler.get(factionPlayer.asEntity()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0);
         return exact ? aL == reqLordLevel : aL >= reqLordLevel;
     }
 

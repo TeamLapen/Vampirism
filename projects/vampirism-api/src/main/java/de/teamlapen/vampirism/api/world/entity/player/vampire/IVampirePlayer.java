@@ -3,9 +3,7 @@ package de.teamlapen.vampirism.api.world.entity.player.vampire;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
-import de.teamlapen.faction.api.factions.refinements.IRefinementPlayer;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.api.factions.tasks.ITaskPlayer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.VampirismFactions;
 import de.teamlapen.vampirism.api.world.entity.IBiteableEntity;
@@ -19,7 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
  * Interface for the player vampire data.
  * Attached to all players as capability
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, ITaskPlayer<IVampirePlayer>, IRefinementPlayer<IVampirePlayer>, ILordPlayer<IVampirePlayer>, IVampireVisionUser, IDraculaPlayer {
+public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IBiteableEntity, ISkillPlayer<IVampirePlayer>, IVampireVisionUser {
 
     /**
      * Increases exhaustion level by supplied amount
@@ -76,11 +74,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @return Whether death event should be canceled
      */
     boolean onDeadlyHit(DamageSource source);
-
-    /**
-     * updates attributes of all minions
-     */
-    void updateMinionAttributes(boolean increasedStats);
 
     enum BITE_TYPE implements StringRepresentable {
         SUCK_BLOOD_CREATURE("suck_blood_creature"),

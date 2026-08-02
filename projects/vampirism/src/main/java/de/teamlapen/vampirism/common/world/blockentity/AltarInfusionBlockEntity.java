@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.blockentity.NetworkedContainerBlockEntity;
@@ -305,7 +305,7 @@ public class AltarInfusionBlockEntity extends NetworkedContainerBlockEntity {
             return;
         }
 
-        handler.setFaction(LevelingChange.builder().faction(ModFactions.VAMPIRE).level(this.targetLevel));
+        handler.setFaction(FactionUpdate.builder().faction(ModFactions.VAMPIRE).level(this.targetLevel));
         consumeItems();
         VampirePlayer.get(this.player).drinkBlood(Integer.MAX_VALUE, 0, false, DrinkBloodContext.none());
 

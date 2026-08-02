@@ -2,7 +2,7 @@ package de.teamlapen.faction.api.event;
 
 import de.teamlapen.faction.api.factions.IFactionPlayerHandler;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
-import de.teamlapen.faction.api.factions.LevelingChange;
+import de.teamlapen.faction.api.factions.level.FactionUpdate;
 import net.minecraft.core.Holder;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
@@ -114,14 +114,14 @@ public class PlayerFactionEvent extends Event {
 
     public static class LevelChanged extends PlayerFactionEvent {
 
-        private final LevelingChange change;
+        private final FactionUpdate change;
 
-        public LevelChanged(IFactionPlayerHandler player, LevelingChange change) {
-            super(player, change.getNewFaction());
+        public LevelChanged(IFactionPlayerHandler player, FactionUpdate change) {
+            super(player, change.getFaction());
             this.change = change;
         }
 
-        public LevelingChange getChange() {
+        public FactionUpdate getChange() {
             return this.change;
         }
     }

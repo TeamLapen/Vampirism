@@ -52,6 +52,7 @@ public class ModDataMapProvider extends DataMapProvider {
         builder.add(ModItems.PURE_BLOOD_3, 0x7e0e0e, false);
         builder.add(ModItems.PURE_BLOOD_4, 0x8e0000, false);
         builder.add(ModItemTags.GARLIC, 0xBBBBBB, false);
+        builder.add(ModItemTags.PURIFIED_GARLIC, 0xBBBBBB, false);
     }
 
     private void gatherFogDiffuserFuel(Builder<IFogDiffuserFuel, Item> builder) {

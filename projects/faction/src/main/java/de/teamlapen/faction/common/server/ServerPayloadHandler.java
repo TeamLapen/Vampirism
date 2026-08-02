@@ -50,7 +50,7 @@ public class ServerPayloadHandler {
 
     public static void handleSelectMinionTaskPacket(ServerboundSelectMinionTaskPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-            FactionPlayerHandler.get(context.player()).getLordPlayer().ifPresent(player -> {
+            FactionPlayerHandler.get(context.player()).getPlayerLord().ifPresent(player -> {
                 PlayerMinionController controller = MinionWorldData.getData(context.player().level()).get().getOrCreateController(player);
                 if (RECALL.equals(msg.taskID())) {
                     if (msg.minionID() < 0) {
@@ -101,7 +101,7 @@ public class ServerPayloadHandler {
                     handler.getCurrentSkillPlayer().ifPresent(OblivionPotionItem::applyEffect);
                 }
                 case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(a -> player.connection.send(a));
-                case FACTION_MENU -> handler.getTaskManager().ifPresent(ITaskManager::openFactionMenu);
+                case FACTION_MENU -> handler.openFactionMenu();
             }
         });
     }
@@ -109,7 +109,7 @@ public class ServerPayloadHandler {
     public static void handleTaskActionPacket(ServerboundTaskActionPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             FactionPlayerHandler.get(context.player()).getTaskManager().ifPresent(m -> {
-                ((TaskManager<?>) m).handleTaskActionMessage(msg);
+                ((TaskManager) m).handleTaskActionMessage(msg);
                 CustomPacketPayload updatePacket = m.getUpdatePacket(msg.entityId());
                 if (updatePacket != null) {
                     context.reply(updatePacket);
@@ -150,7 +150,7 @@ public class ServerPayloadHandler {
 
     public static void handleToggleMinionTaskLock(ServerboundToggleMinionTaskLock msg, IPayloadContext context) {
         context.enqueueWork(() -> {
-            FactionPlayerHandler.get(context.player()).getLordPlayer().flatMap(x -> MinionWorldData.getData(context.player().level()).map(y -> y.getOrCreateController(x))).ifPresent(controller -> {
+            FactionPlayerHandler.get(context.player()).getPlayerLord().flatMap(x -> MinionWorldData.getData(context.player().level()).map(y -> y.getOrCreateController(x))).ifPresent(controller -> {
                 controller.contactMinionData(msg.minionID(), data -> data.setTaskLocked(!data.isTaskLocked()));
                 controller.contactMinion(msg.minionID(), MinionEntity::onTaskChanged);
             });

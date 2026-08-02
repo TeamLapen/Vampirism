@@ -27,5 +27,6 @@ public class ModSkillTreeTagsProvider extends KeyTagProvider<ISkillTree> {
         this.tag(FactionSkillTreeTags.LEVEL).add(HunterSkills.Trees.LEVEL, VampireSkills.Trees.LEVEL);
         this.tag(FactionSkillTreeTags.LORD).add(HunterSkills.Trees.LORD, VampireSkills.Trees.LORD);
         this.tag(ModSkillTreeTags.DRACULA).add(VampireSkills.Trees.DRACULA);
+        this.tag(ModSkillTreeTags.MARSHALL).add(HunterSkills.Trees.MARSHALL);
     }
 }
