@@ -74,6 +74,7 @@ public class HunterSkills {
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.register("double_it", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DUAL_WIELDING = SKILLS.register("dual_wielding", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.register("master_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(2, true));
+    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DESTRUCTION_DEFERMENT = SKILLS.register("destruction_deferment", () -> new VampirismSkill.SimpleHunterSkill(2, false).setDescription(() -> Component.translatable("skill.vampirism.destruction_deferment.desc", ModConfig.balance().hsDestructionDefermentDuration.get())));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> STAKE2 = SKILLS.register("stake2", () -> new VampirismSkill.SimpleHunterSkill(2, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> AXE2 = SKILLS.register("axe2", () -> new VampirismSkill.SimpleHunterSkill(3, true));
     public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ARTISAN_CRAFTSMANSHIP = SKILLS.register("artisan_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(3, true));
@@ -125,6 +126,7 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> WEAPON8 = node("weapon8");
         public static final ResourceKey<ISkillNode> WEAPON9 = node("weapon9");
         public static final ResourceKey<ISkillNode> WEAPON10 = node("weapon10");
+        public static final ResourceKey<ISkillNode> WEAPON11 = node("weapon11");
 
         public static final ResourceKey<ISkillNode> LORD_ROOT = node("lord_root");
         public static final ResourceKey<ISkillNode> LORD_2 = node("lord_2");
@@ -171,9 +173,10 @@ public class HunterSkills {
             context.register(WEAPON5, new SkillNode(CROSSBOW_TECHNIQUE));
             context.register(WEAPON6, new SkillNode(DOUBLE_IT, DUAL_WIELDING));
             context.register(WEAPON7, new SkillNode(MASTER_CRAFTSMANSHIP));
-            context.register(WEAPON8, new SkillNode(AXE2));
-            context.register(WEAPON9, new SkillNode(STAKE2));
-            context.register(WEAPON10, new SkillNode(ARTISAN_CRAFTSMANSHIP));
+            context.register(WEAPON8, new SkillNode(DESTRUCTION_DEFERMENT));
+            context.register(WEAPON9, new SkillNode(AXE2));
+            context.register(WEAPON10, new SkillNode(STAKE2));
+            context.register(WEAPON11, new SkillNode(ARTISAN_CRAFTSMANSHIP));
 
             context.register(LORD_ROOT, new SkillNode(HunterSkills.LORD_ROOT));
             context.register(LORD_2, new SkillNode(MINION_STATS_INCREASE));

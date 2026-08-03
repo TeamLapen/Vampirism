@@ -636,6 +636,8 @@
   "skill.vampirism.armor_jump.desc": "Jump higher when wearing a full set of hunter armor",
   "skill.vampirism.master_craftsmanship": "Master Craftsmanship",
   "skill.vampirism.master_craftsmanship.desc": "Craft and equip enhanced weapons and armor",
+  "skill.vampirism.destruction_deferment": "Destruction Deferment",
+  "skill.vampirism.destruction_deferment.desc": "Delay the destruction of your worn armor for %s seconds after nearly breaking. Reusable after the armor is repaired",
   "skill.vampirism.double_it": "Double It",
   "skill.vampirism.double_it.desc": "Craft and use double crossbows",
   "skill.vampirism.dual_wielding": "Dual Wielding",
@@ -1602,6 +1604,8 @@
   "vampirism.configuration.garlicDiffuserEnhancedDist.tooltip": "Chunk radius affected by an enhanced garlic diffuser. A value of 0 results in a single-chunk area. Only affects newly placed blocks.",
   "vampirism.configuration.garlicDiffuserWeakDist": "Garlic Diffuser Weak Distance",
   "vampirism.configuration.garlicDiffuserWeakDist.tooltip": "Chunk radius affected by a weak garlic diffuser. A value of 0 results in a single-chunk area. Only affects newly placed blocks.",
+  "vampirism.configuration.destructionDefermentDuration": "Destruction Deferment Duration",
+  "vampirism.configuration.destructionDefermentDuration.tooltip": "The duration of armor being indestructible after nearly breaking because of the destruction deferment skill (in seconds).",
 
   "vampirism.configuration.sundamageReduction1": "Sun Damage Reduction",
   "vampirism.configuration.sundamageReduction1.tooltip": "Sun damage multiplier reduction from the first sun damage skill. Final sun damage = base * (1 + value).",

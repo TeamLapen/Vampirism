@@ -49,5 +49,6 @@ public class VampirismDataComponents {
         public static final Identifier CONTAINED_PROJECTILES = VIdentifier.mod("contained_projectiles");
         public static final Identifier ENCHANTMENT_OVERRIDE = VIdentifier.mod("enchantment_override");
         public static final Identifier MARKER = VIdentifier.mod("marker");
+        public static final Identifier DESTRUCTION_DEFERRED_UNTIL = VIdentifier.mod("destruction_deferred_until");
     }
 }

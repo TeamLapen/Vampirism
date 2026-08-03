@@ -14,7 +14,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.bus.api.IEventBus;
@@ -46,6 +45,7 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> CHARGED_RITUAL_KNIFE = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.CHARGED_RITUAL_KNIFE.getPath(), builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemStackTemplate>> CONTAINED_PROJECTILES = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.CONTAINED_PROJECTILES.getPath(), builder -> builder.persistent(ItemStackTemplate.CODEC).networkSynchronized(ItemStackTemplate.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<EnchantmentOverride>> ENCHANTMENT_OVERRIDE = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.ENCHANTMENT_OVERRIDE.getPath(), builder -> builder.persistent(EnchantmentOverride.CODEC).networkSynchronized(EnchantmentOverride.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> DESTRUCTION_DEFERRED_UNTIL = ITEM_DATA_COMPONENTS.registerComponentType(VampirismDataComponents.Keys.DESTRUCTION_DEFERRED_UNTIL.getPath(), builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.LONG));
 
     public static final DeferredHolder<DataComponentPredicate.Type<?>, DataComponentPredicate.Type<VampireBookPredicate>> VAMPIRE_BOOK_PREDICATE = ITEM_DATA_COMPONENTS_PREDICATES.register("vampire_book", () -> new DataComponentPredicate.ConcreteType<>(VampireBookPredicate.CODEC));
     public static final DeferredHolder<DataComponentPredicate.Type<?>, DataComponentPredicate.Type<ChargedRitualKnifePredicate>> CHARGED_RITUAL_KNIFE_PREDICATE = ITEM_DATA_COMPONENTS_PREDICATES.register("charged_ritual_knife", () -> new DataComponentPredicate.ConcreteType<>(ChargedRitualKnifePredicate.CODEC));

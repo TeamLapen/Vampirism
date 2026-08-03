@@ -64,6 +64,7 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue hsGarlicDiffuserNormalDist;
     public final ModConfigSpec.IntValue hsGarlicDiffuserEnhancedDist;
     public final ModConfigSpec.IntValue hsGarlicDiffuserWeakDist;
+    public final ModConfigSpec.IntValue hsDestructionDefermentDuration;
 
     // Vampire Skills
     public final ModConfigSpec.DoubleValue vsSundamageReduction1;
@@ -332,6 +333,9 @@ public class BalanceConfig {
         hsGarlicDiffuserWeakDist = builder
                 .comment("Chunk radius affected by a weak garlic diffuser. A value of 0 results in a single-chunk area. Only affects newly placed blocks.")
                 .defineInRange("garlicDiffuserWeakDist", 2, 0, 5);
+        hsDestructionDefermentDuration = builder
+                .comment("The duration of armor being indestructible after nearly breaking because of the destruction deferment skill (in seconds).")
+                .defineInRange("destructionDefermentDuration", 60, 0, Integer.MAX_VALUE);
 
         builder.category("vampireSkills", "vs");
 

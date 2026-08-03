@@ -89,15 +89,18 @@
                             {
                               "children": [
                                 {
+                                  "node": "vampirism:hunter/weapon8"
+                                },
+                                {
                                   "children": [
                                     {
-                                      "node": "vampirism:hunter/weapon9"
+                                      "node": "vampirism:hunter/weapon10"
                                     },
                                     {
-                                      "node": "vampirism:hunter/weapon10"
+                                      "node": "vampirism:hunter/weapon11"
                                     }
                                   ],
-                                  "node": "vampirism:hunter/weapon8"
+                                  "node": "vampirism:hunter/weapon9"
                                 }
                               ],
                               "node": "vampirism:hunter/weapon7"

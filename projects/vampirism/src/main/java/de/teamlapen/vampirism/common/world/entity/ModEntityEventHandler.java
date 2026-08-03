@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity;
 
+import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.util.TotemHelper;
 import de.teamlapen.faction.common.world.blockentity.TotemBlockEntity;
@@ -9,10 +10,7 @@ import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.world.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.world.items.oil.IWeaponOil;
 import de.teamlapen.vampirism.common.config.ModConfig;
-import de.teamlapen.vampirism.common.core.ModEffects;
-import de.teamlapen.vampirism.common.core.ModFactions;
-import de.teamlapen.vampirism.common.core.ModItems;
-import de.teamlapen.vampirism.common.core.ModVillage;
+import de.teamlapen.vampirism.common.core.*;
 import de.teamlapen.vampirism.common.tags.ModBlockTags;
 import de.teamlapen.vampirism.common.tags.ModDamageTypeTags;
 import de.teamlapen.vampirism.common.util.DifficultyCalculator;
@@ -325,6 +323,36 @@ public class ModEntityEventHandler {
         if (exposed != null) {
             float multiplier = 1.0f + (float) ModConfig.balance().efExposedPerLevelMultiplier.getAsDouble() * (exposed.getAmplifier() + 1);
             event.setAmount(event.getAmount() * multiplier);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onArmorBreak(ArmorHurtEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (!FactionPlayerHandler.get(player).getSkillHandler().map(handler -> handler.isSkillEnabled(HunterSkills.DESTRUCTION_DEFERMENT)).orElse(false)) return;
+
+        for (var entry : event.getArmorMap().entrySet()) {
+            ItemStack stack = entry.getValue().armorItemStack;
+            int safeDamage = stack.getMaxDamage() - 1 - stack.getDamageValue();
+            if ((int) entry.getValue().newDamage <= safeDamage) continue;
+
+            long time = player.level().getGameTime();
+            Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
+            if (deadline != null && time > deadline) continue;
+
+            event.setNewDamage(entry.getKey(), Math.max(0, safeDamage));
+            if (!stack.has(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL)) {
+                stack.set(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL, player.level().getGameTime() + ModConfig.balance().hsDestructionDefermentDuration.get() * 20);
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onEquipmentChange(LivingEquipmentChangeEvent event) {
+        ItemStack stack = event.getTo();
+        Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
+        if (deadline != null && stack.getMaxDamage() - stack.getDamageValue() > 1) {
+            stack.remove(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
         }
     }
 }

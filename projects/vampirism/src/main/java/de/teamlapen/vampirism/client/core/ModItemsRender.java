@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.client.color.item.QuarrelTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
@@ -11,24 +10,20 @@ import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
 import de.teamlapen.vampirism.client.models.items.properties.HasName;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowCharging;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowPull;
-import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
-import net.minecraft.network.chat.Component;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3x2fStack;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
  * Handles item render registration
  */
 public class ModItemsRender {
-
 
     public static void registerColors(RegisterColorHandlersEvent.@NotNull ItemTintSources event) {
         event.register(QuarrelTint.ID, QuarrelTint.CODEC);
@@ -47,19 +42,10 @@ public class ModItemsRender {
     }
 
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {
-        Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW, ModItems.BASIC_TECH_CROSSBOW, ModItems.ENHANCED_TECH_CROSSBOW).forEach(item -> {
-            event.register(item.get(), (graphics, font, stack, xOffset, yOffset) -> {
-                ((IHunterCrossbow) stack.getItem()).getAmmunition(stack).ifPresent(ammo -> {
-                    Matrix3x2fStack posestack = graphics.pose();
-                    posestack.pushMatrix();
-                    posestack.translate(xOffset, yOffset + 8);
-                    posestack.scale(0.5f);
-                    graphics.item(ammo.getDefaultInstance(), 0, 0);
-                    posestack.popMatrix();
-                });
-                return false;
-            });
-        });
+        Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW, ModItems.BASIC_TECH_CROSSBOW, ModItems.ENHANCED_TECH_CROSSBOW)
+                .forEach(item -> event.register(item, ModItemDecorators.CROSSBOW_AMMUNITION));
+        // There's no longer a general ArmorItem class and data components don't seem to be registered at this point, so this seems to be the only reasonable way of doing this
+        BuiltInRegistries.ITEM.forEach(item -> event.register(item, ModItemDecorators.DESTRUCTION_DEFERMENT));
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
