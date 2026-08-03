@@ -1,4 +1,5 @@
 {
+  "effects": "burning",
   "exhaustion": 0.1,
   "message_id": "vampirism.sun",
   "scaling": "when_caused_by_living_non_player"

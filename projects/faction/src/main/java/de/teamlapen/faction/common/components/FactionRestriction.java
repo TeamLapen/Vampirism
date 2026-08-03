@@ -294,6 +294,11 @@ public record FactionRestriction(HolderSet<IFaction<?>> factions, Optional<Holde
             return this;
         }
 
+        public Builder skill(List<Holder<? extends ISkill<?>>> skills) {
+            this.skillHolder.addAll(skills);
+            return this;
+        }
+
         public Builder minLevel(int minLevel) {
             this.minLevel = Optional.of(minLevel);
             return this;

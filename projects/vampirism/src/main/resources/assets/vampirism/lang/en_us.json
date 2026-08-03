@@ -489,6 +489,7 @@
   "effect.vampirism.crucifix_suppression": "Crucifix Suppression",
   "effect.vampirism.exposed": "Exposed",
   "effect.vampirism.whispers_of_the_veil": "Whispers of The Veil",
+  "effect.vampirism.sun_sensitivity": "Sun Sensitivity",
   "effect.vampirism.duration.unknown": "?",
 
   "attribute.vampirism.sundamage": "Sun Damage",
@@ -853,6 +854,8 @@
   "key.vampirism.toggle_vision": "Toggle Vampire Vision",
   "key.vampirism.select_ammo": "Select Quarrel Type",
 
+  "options.vampirism.sunBlindnessIntensity": "Sun Blindness Intensity",
+
   "oil.vampirism.empty": "Uncraftable Oil",
   "oil.vampirism.plant": "Plant Oil",
   "oil.vampirism.vampire_blood": "Activated Oil",
@@ -1066,6 +1069,7 @@
   "gui.vampirism.minion_appearance.name": "Name",
   "gui.vampirism.minion.stats.inventory_level": "Inventory Size",
   "gui.vampirism.minion.stats.resource_level": "Resource Efficiency",
+  "gui.vampirism.faction_menu.passive_leveling.desc": "Use the Altar of Inspiration to level up.\n\nBut no one stays a fledgling forever: drink from the living and you grow on your own, up to level 3, though slower and at the cost of more blood. Beyond that, only the altar can make you a mature vampire.\n\nCurrent progress: %1$s%%",
   "gui.vampirism.appearance": "Change Your Appearance",
   "gui.vampirism.appearance.fang": "Fang Type",
   "gui.vampirism.appearance.eye": "Eye Type",
@@ -1489,6 +1493,10 @@
   "vampirism.configuration.showVampireRageHUDOverlay.tooltip": "When enabled, shows the vampire rage indicator in the HUD.",
   "vampirism.configuration.showSunHUDOverlay": "Sun Damage HUD Warning",
   "vampirism.configuration.showSunHUDOverlay.tooltip": "When enabled, shows the sun damage warning in the HUD.",
+  "vampirism.configuration.showSunBlindOverlay": "Sun Blinding Overlay",
+  "vampirism.configuration.showSunBlindOverlay.tooltip": "When enabled, washes the screen white when a vampire looks directly at the sun.",
+  "vampirism.configuration.showSunBlindOverlayWithShaders": "Sun Blinding Overlay With Shaders",
+  "vampirism.configuration.showSunBlindOverlayWithShaders.tooltip": "When enabled, keeps the sun blinding overlay while an Iris shader pack is active. Shader packs usually apply their own sun glare, so the overlay is hidden by default in that case.",
 
   "vampirism.configuration.enforceRenderForestFog": "Enforce Forest Fog on Clients",
   "vampirism.configuration.enforceRenderForestFog.tooltip": "When enabled, prevents clients from disabling the vampire forest fog.",
@@ -1658,6 +1666,8 @@
   "vampirism.configuration.immortalFromDamageSources.tooltip": "List of damage source types that will not immediately kill a vampire player. Use damage type IDs e.g. [\"minecraft:fell_out_of_world\"].",
   "vampirism.configuration.dbnoDuration": "DBNO Duration",
   "vampirism.configuration.dbnoDuration.tooltip": "Base duration a downed vampire must wait before being able to resurrect, in seconds.",
+  "vampirism.configuration.dbnoMinLevel": "DBNO Min Level",
+  "vampirism.configuration.dbnoMinLevel.tooltip": "Minimum vampire level required to go down instead of dying. Lower level vampires die normally.",
   "vampirism.configuration.neonatalDuration": "Neonatal Duration",
   "vampirism.configuration.neonatalDuration.tooltip": "Base duration of the neonatal debuff applied after a vampire resurrects, in seconds.",
   "vampirism.configuration.naturalArmorRegenDuration": "Natural Armor Regen Duration",
@@ -1674,6 +1684,10 @@
   "vampirism.configuration.nightVisionDisabled.tooltip": "When enabled, disables the passive night vision effect for vampire players.",
   "vampirism.configuration.bloodVisionDisabled": "Blood Vision Disabled",
   "vampirism.configuration.bloodVisionDisabled.tooltip": "When enabled, disables the blood vision ability for vampire players.",
+  "vampirism.configuration.passiveLevelingEnabled": "Passive Leveling",
+  "vampirism.configuration.passiveLevelingEnabled.tooltip": "When enabled, vampires are able to level up by drinking blood without using an altar up to level 3.",
+  "vampirism.configuration.passiveLevelingBloodFactor": "Passive Leveling Blood Factor",
+  "vampirism.configuration.passiveLevelingBloodFactor.tooltip": "Multiplier applied to the amount of blood a vampire player must drink from bitten creatures to gain one level from levels 1 to 3. The base requirement is 80 blood for level 2 and 90 blood for level 3.",
 
   "vampirism.configuration.freezeEnabled": "Freeze Enabled",
   "vampirism.configuration.freezeEnabled.tooltip": "When enabled, vampires can use the freeze action.",

@@ -43,6 +43,7 @@ public class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> CRUCIFIX_SUPPRESSION = EFFECTS.register("crucifix_suppression", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0x8B0000));
     public static final DeferredHolder<MobEffect, MobEffect> EXPOSED = EFFECTS.register("exposed", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0x762D45));
     public static final DeferredHolder<MobEffect, MobEffect> WHISPERS_OF_THE_VEIL = EFFECTS.register("whispers_of_the_veil", WhispersOfTheVeilMobEffect::new);
+    public static final DeferredHolder<MobEffect, MobEffect> SUN_SENSITIVITY = EFFECTS.register("sun_sensitivity", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0xFFF2B3));
 
     static void register(IEventBus bus) {
         EFFECTS.register(bus);
