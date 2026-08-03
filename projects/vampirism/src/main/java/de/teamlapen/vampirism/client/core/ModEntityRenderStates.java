@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.resources.Identifier;
@@ -53,6 +54,7 @@ public class ModEntityRenderStates {
     public static final ContextKey<Bat> VAMPIRE_BAT = create("vampire/bat");
     public static final ContextKey<Boolean> VAMPIRE_DBNO = create("vampire/dbno");
     public static final ContextKey<Boolean> VAMPIRE_SLEEPING_IN_COFFIN = create("vampire/sleeping_in_coffin");
+    public static final ContextKey<Boolean> VAMPIRE_BURNING_IN_SUN = create("vampire/burning_in_sun");
     public static final ContextKey<DualSplitBipedRenderer.RenderPart> SPLIT_RENDER_PART = create("split_render_part");
     public static final ContextKey<IWingsEntity.WingsState> DRACULA_WINGS_STATE = create("dracula/wings_state");
     public static final ContextKey<AnimationState> DRACULA_WINGS_FLY = create("dracula/wings_fly");
@@ -71,6 +73,7 @@ public class ModEntityRenderStates {
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), ModEntityRenderStates::extractHunterPlayer);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), ModEntityRenderStates::extractVampirePlayer);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractCoffinSleepPosition);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractSunBurning);
         event.registerEntityModifier(VampireBaronRenderer.class, ModEntityRenderStates::extractWings);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends AggressiveVillagerEntity, ? extends VillagerRenderState>>>cast(HunterVillagerRenderer.class), ModEntityRenderStates::extractHunterVillager);
     }
@@ -138,6 +141,17 @@ public class ModEntityRenderStates {
                 state.setRenderData(DRACULA_WINGS_TEXTURE, vampire.getCustomization().wingsTexture());
             });
         }
+    }
+
+    private static void extractSunBurning(LivingEntity entity, LivingEntityRenderState renderState) {
+        if (Helper.isBurningInSun(entity)) {
+            markSunBurning(renderState);
+        }
+    }
+
+    public static void markSunBurning(EntityRenderState renderState) {
+        renderState.displayFireAnimation = true;
+        renderState.setRenderData(VAMPIRE_BURNING_IN_SUN, true);
     }
 
     private static void extractCoffinSleepPosition(LivingEntity entity, LivingEntityRenderState renderState) {

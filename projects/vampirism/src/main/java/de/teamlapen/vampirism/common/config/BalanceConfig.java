@@ -101,6 +101,7 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue vpMaxYellowBorderPercentage;
     public final ModConfigSpec.ConfigValue<List<? extends String>> vpImmortalFromDamageSources;
     public final ModConfigSpec.IntValue vpDbnoDuration;
+    public final ModConfigSpec.IntValue vpDbnoMinLevel;
     public final ModConfigSpec.IntValue vpNeonatalDuration;
     public final ModConfigSpec.IntValue vpNaturalArmorRegenDuration;
     public final ModConfigSpec.IntValue vpNaturalArmorBaseValue;
@@ -109,6 +110,8 @@ public class BalanceConfig {
     public final ModConfigSpec.BooleanValue vpArmorPenalty;
     public final ModConfigSpec.BooleanValue vpNightVisionDisabled;
     public final ModConfigSpec.BooleanValue vpBloodVisionDisabled;
+    public final ModConfigSpec.BooleanValue vpPassiveLevelingEnabled;
+    public final ModConfigSpec.DoubleValue vpPassiveLevelingBloodFactor;
 
     // Vampire Actions
     public final ModConfigSpec.IntValue vaFreezeCooldown;
@@ -437,6 +440,9 @@ public class BalanceConfig {
         vpDbnoDuration = builder
                 .comment("Base duration a downed vampire must wait before being able to resurrect, in seconds.")
                 .defineInRange("dbnoDuration", 60, 1, 1000);
+        vpDbnoMinLevel = builder
+                .comment("Minimum vampire level required to go down instead of dying. Lower level vampires die normally.")
+                .defineInRange("dbnoMinLevel", 4, 1, Integer.MAX_VALUE);
         vpNeonatalDuration = builder
                 .comment("Base duration of the neonatal debuff applied after a vampire resurrects, in seconds.")
                 .defineInRange("neonatalDuration", 120, 1, Integer.MAX_VALUE);
@@ -461,6 +467,12 @@ public class BalanceConfig {
         vpBloodVisionDisabled = builder
                 .comment("When enabled, disables the blood vision ability for vampire players.")
                 .define("bloodVisionDisabled", false);
+        vpPassiveLevelingEnabled = builder
+                .comment("When enabled, vampires are able to level up by drinking blood without using an altar up to level 3.")
+                .define("passiveLevelingEnabled", true);
+        vpPassiveLevelingBloodFactor = builder
+                .comment("Multiplier applied to the amount of blood a vampire player must drink from bitten creatures to gain one level from levels 1 to 3. The base requirement is 80 blood for level 2 and 90 blood for level 3.")
+                .defineInRange("passiveLevelingBloodFactor", 1.0, 0.01, 100.0);
 
         builder.category("vampireActions", "va");
 

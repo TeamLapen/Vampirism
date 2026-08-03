@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -26,12 +28,20 @@ public class HunterArmorItem extends ModArmorItem {
 
     public static final Component MASSAGE_RESTRICTION_HUNTER_CLOTHING = Component.translatable("message.vampirism.restriction.hunter_clothing");
 
-    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props) {
-        super(materialIn, type, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HUNTER_CLOTHING).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")));
+    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, @Nullable Holder<ISkill<?>> skill, Properties props) {
+        super(materialIn, type, formRestriction(props, skill));
     }
 
-    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, Properties props, ItemAttributeModifiers attributeModifiers) {
-        super(materialIn, type, FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HUNTER_CLOTHING).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")), attributeModifiers);
+    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, @Nullable Holder<ISkill<?>> skill, Properties props, ItemAttributeModifiers attributeModifiers) {
+        super(materialIn, type, formRestriction(props, skill), attributeModifiers);
+    }
+
+    private static Properties formRestriction(Properties props, @Nullable Holder<ISkill<?>> skill) {
+        FactionRestriction.Builder builder = FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HUNTER_CLOTHING);
+        if (skill != null) {
+            builder.skill(skill);
+        }
+        return builder.apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate"));
     }
 
     @Override

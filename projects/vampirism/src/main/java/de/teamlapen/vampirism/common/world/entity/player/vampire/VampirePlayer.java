@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.entity.player.vampire;
 import de.teamlapen.faction.api.factions.IDisguise;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.level.FactionUpdate;
+import de.teamlapen.faction.common.core.FactionSounds;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
@@ -103,6 +104,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private static final Identifier LEVEL_DAMAGE_UUID = VIdentifier.mod("level_damage");
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int FEED_TIMER = 20;
+    private static final int SAFE_SUN_TICKS = 100;
 
     public static VampirePlayer get(Player player) {
         return player.getData(ModAttachments.VAMPIRE_PLAYER);
@@ -118,6 +120,8 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     private @Nullable BITE_TYPE feed_victim_bite_type;
     private int feedBiteTickCounter = 0;
     private boolean forceNaturalArmorUpdate;
+    private int passiveLevelBlood = 0;
+    private float sunBlindIntensity = 0f;
 
     //<editor-fold desc="Special Attributes">
 
@@ -357,6 +361,19 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
             handleSpareBlood(remainingBlood);
         }
         this.player.awardStat(ModStats.BLOOD_DRUNK.get(), amt * VReference.FOOD_TO_FLUID_BLOOD);
+        if (event.getBloodSource().getEntity().isPresent()) {
+            progressPassiveLeveling(event.getAmount() - remainingBlood);
+        }
+    }
+
+    private void progressPassiveLeveling(int blood) {
+        if (isRemote() || blood <= 0) return;
+        int level = getLevel();
+        if (!VampireLeveling.canLevelPassively(level)) return;
+        this.passiveLevelBlood += blood;
+        if (this.passiveLevelBlood >= VampireLeveling.getPassiveLevelingBlood(level + 1)) {
+            levelUpPassively(level + 1);
+        }
     }
 
     /**
@@ -469,6 +486,14 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         return ticksInSun;
     }
 
+    public int getPassiveLevelBlood() {
+        return this.passiveLevelBlood;
+    }
+
+    public float getSunBlindIntensity() {
+        return this.sunBlindIntensity;
+    }
+
     @Override
     public boolean isAdvancedBiter() {
         return getSkillProperties().advanced_biter;
@@ -503,6 +528,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean isIgnoringSundamage() {
         return false;
+    }
+
+     public boolean isBurningInSun() {
+        return ticksInSun >= SAFE_SUN_TICKS && !player.getAbilities().instabuild && !player.getAbilities().invulnerable && getLevel() >= ModConfig.balance().vpSundamageMinLevel.get() && isGettingSundamage(player.level());
     }
 
     @Override
@@ -561,7 +590,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
 
     @Override
     public boolean onDeadlyHit(DamageSource source) {
-        if (getLevel() > 0 && !this.player.hasEffect(ModEffects.NEONATAL) && !Helper.canKillVampires(source)) {
+        if (getLevel() >= ModConfig.balance().vpDbnoMinLevel.get() && !this.player.hasEffect(ModEffects.NEONATAL) && !Helper.canKillVampires(source)) {
             int timePreviouslySpentInPlayerRevive = PlayerReviveHelper.getPreviousDownTime(this.player);
             int dbnoTime = Math.max(1, getDbnoDuration() - timePreviouslySpentInPlayerRevive);
             this.setDBNOTimer(dbnoTime);
@@ -668,9 +697,18 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         super.leaveFaction();
     }
 
+    private void levelUpPassively(int targetLevel) {
+        this.passiveLevelBlood = 0;
+        boolean leveled = FactionPlayerHandler.get(this.player).setFaction(FactionUpdate.builder().faction(ModFactions.VAMPIRE).level(targetLevel));
+        if (leveled && this.player instanceof ServerPlayer serverPlayer) {
+            FactionSounds.playLevelUpSoundServer(serverPlayer);
+        }
+    }
+
     @Override
     public void levelChanged(FactionUpdate changes) {
         this.applyEntityAttributes();
+        this.passiveLevelBlood = 0;
         var newLevel = changes.getLevel();
 
         int maxBlood = 20;
@@ -803,7 +841,6 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                     updateNaturalArmor(getLevel());
                     forceNaturalArmorUpdate = false;
                 }
-
             } else {
                 ticksInSun = 0;
             }
@@ -864,7 +901,16 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
                     event.getEntity().level().addParticle(new GenericParticleOptions(VIdentifier.mc("drip_hang"),20,9145227, 0.2f), event.getEntity().getRandomX(0.5), event.getEntity().getRandomY(), event.getEntity().getRandomZ(0.5), 0, -3, 0);
                 }
             }
+
+            if (event.getEntity().level().isClientSide()) {
+                float target = isSensitiveToSun() ? SunBlindUtil.computeTarget(player) * SunBlindUtil.levelIntensity(getLevel()) : 0f;
+                this.sunBlindIntensity = SunBlindUtil.update(this.sunBlindIntensity, target);
+            }
         }
+    }
+
+    private boolean isSensitiveToSun() {
+        return getLevel() > 0 && !getSkillHandler().isSkillEnabled(VampireSkills.WANDER_THE_SUN);
     }
 
     /**
@@ -1050,6 +1096,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.registerProperty(VIdentifier.mod("vision")).subProperty(() -> this.vision).register();
         this.registerProperty(VIdentifier.mod("disguise")).subProperty(() -> this.disguise).register();
         this.registerProperty(VIdentifier.mod("customization")).subProperty(() -> this.customization).register();
+        this.registerProperty(VIdentifier.mod("passive_level_blood")).simple(0, () -> this.passiveLevelBlood, x -> this.passiveLevelBlood = x);
     }
 
     private void applyEntityAttributes() {
@@ -1184,7 +1231,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         BalanceConfig config = ModConfig.balance();
         MobEffectInstance potionEffect = player.getEffect(ModEffects.SUNSCREEN);
         int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
-        if (ticksInSun < 100) {
+        if (ticksInSun < SAFE_SUN_TICKS) {
             ticksInSun++;
         }
         if (ticksInSun > 50 && (sunscreen >= 4 || (config.vpSunscreenBuff.get() && sunscreen >= 0))) {
@@ -1192,7 +1239,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         }
         if (!player.isAlive() || isRemote || player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
 
-        if (ticksInSun == 100 && config.vpSundamageInstantDeath.get()) {
+        if (ticksInSun == SAFE_SUN_TICKS && config.vpSundamageInstantDeath.get()) {
             DamageHandler.kill(((ServerLevel) asEntity().level()), player, 100000);
             turnToAsh();
         }
@@ -1203,7 +1250,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (getLevel() >= config.vpSundamageWeaknessMinLevel.get() && player.tickCount % 150 == 3 && sunscreen < 5) {
             player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 152, 0));
         }
-        if (getLevel() >= config.vpSundamageMinLevel.get() && ticksInSun >= 100 && player.tickCount % 40 == 5) {
+        if (getLevel() >= config.vpSundamageMinLevel.get() && ticksInSun >= SAFE_SUN_TICKS && player.tickCount % 40 == 5) {
             float damage = (float) (player.getAttribute(ModAttributes.SUNDAMAGE).getValue());
             damage *= player.level().environmentAttributes().getValue(ModEnvironmentAttributes.SUN_INTENSITY.get(), player.position());
             if (damage > 0) {

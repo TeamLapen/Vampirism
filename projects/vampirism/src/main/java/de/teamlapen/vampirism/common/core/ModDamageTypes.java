@@ -29,7 +29,7 @@ public class ModDamageTypes {
     }
 
     static void createDamageTypes(BootstrapContext<DamageType> context) {
-        context.register(SUN_DAMAGE, new DamageType(mod("sun"), 0.1F));
+        context.register(SUN_DAMAGE, new DamageType(mod("sun"), 0.1F, DamageEffects.BURNING));
         context.register(VAMPIRE_ON_FIRE, new DamageType(mod("vampire_on_fire"), 0.1F, DamageEffects.BURNING));
         context.register(VAMPIRE_IN_FIRE, new DamageType(mod("vampire_in_fire"), 0.1F, DamageEffects.BURNING));
         context.register(HOLY_WATER, new DamageType(mod("holy_water"), 0.1F));

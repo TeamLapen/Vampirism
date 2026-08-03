@@ -107,5 +107,8 @@
   ],
   "net/minecraft/client/model/geom/ModelPart": [
     "de/teamlapen/vampirism/misc/injection/client/IModelPartVampirismMock"
+  ],
+  "net/minecraft/client/Options": [
+    "de/teamlapen/vampirism/misc/injection/client/IOptionsVampirismMock"
   ]
 }
