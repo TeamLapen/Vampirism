@@ -30,17 +30,22 @@ public class ModItemDecorators {
 
     public static final IItemDecorator DESTRUCTION_DEFERMENT = (graphics, font, stack, xOffset, yOffset) -> {
         Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
-        if (deadline == null || deadline == -1) return false;
+        if (deadline == null) return false;
 
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) return false;
 
-        int seconds = (int) Math.ceil((deadline - level.getGameTime()) / 20.0);
-        if (seconds <= 0) return false;
+        String sprite;
 
-        float progress = 1.0f - seconds / (float) ModConfig.balance().hsDestructionDefermentDuration.get();
-        int spriteId = Math.round(progress * DURABILITY_TIMER_MAX_SPRITE_INDEX);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, VIdentifier.mod("textures/gui/sprites/widget/durability_timer/durability_timer_" + spriteId + ".png"), xOffset + 16 - DURABILITY_TIMER_SIZE, yOffset + 16 - DURABILITY_TIMER_SIZE, 0, 0, DURABILITY_TIMER_SIZE, DURABILITY_TIMER_SIZE, DURABILITY_TIMER_SIZE, DURABILITY_TIMER_SIZE);
+        int seconds = (int) Math.ceil((deadline - level.getGameTime()) / 20.0);
+        if (seconds > 0) {
+            float progress = 1.0f - seconds / (float) ModConfig.balance().hsDestructionDefermentDuration.get();
+            sprite = String.valueOf(Math.round(progress * DURABILITY_TIMER_MAX_SPRITE_INDEX));
+        } else {
+            sprite = "over";
+        }
+
+        graphics.blit(RenderPipelines.GUI_TEXTURED, VIdentifier.mod("textures/gui/sprites/widget/durability_timer/durability_timer_" + sprite + ".png"), xOffset + 16 - DURABILITY_TIMER_SIZE, yOffset + 16 - DURABILITY_TIMER_SIZE, 0, 0, DURABILITY_TIMER_SIZE, DURABILITY_TIMER_SIZE, DURABILITY_TIMER_SIZE, DURABILITY_TIMER_SIZE);
 
         return false;
     };
