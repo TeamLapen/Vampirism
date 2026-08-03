@@ -25,7 +25,6 @@ import net.minecraft.world.item.equipment.Equippable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTier {
@@ -40,8 +39,8 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
         };
     }
 
-    public ArmorOfSwiftnessItem(ArmorMaterial material, ArmorType type, Tier tier, List<Holder<ISkill<?>>> skills, Properties properties) {
-        super(material, type, skills, properties, ItemAttributeModifiers.builder().add(Attributes.MOVEMENT_SPEED, new AttributeModifier(VIdentifier.mod("armor_modifier_" + type.getSerializedName()), getSpeedReduction(tier), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), EquipmentSlotGroup.bySlot(type.getSlot())).build());
+    public ArmorOfSwiftnessItem(ArmorMaterial material, ArmorType type, Tier tier, Holder<ISkill<?>> skill, Properties properties) {
+        super(material, type, skill, properties, ItemAttributeModifiers.builder().add(Attributes.MOVEMENT_SPEED, new AttributeModifier(VIdentifier.mod("armor_modifier_" + type.getSerializedName()), getSpeedReduction(tier), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), EquipmentSlotGroup.bySlot(type.getSlot())).build());
         this.tier = tier;
     }
 

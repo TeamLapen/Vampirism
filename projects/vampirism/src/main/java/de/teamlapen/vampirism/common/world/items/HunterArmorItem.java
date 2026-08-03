@@ -21,8 +21,6 @@ import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * Base class for all hunter only armor tileInventory
  */
@@ -30,18 +28,18 @@ public class HunterArmorItem extends ModArmorItem {
 
     public static final Component MASSAGE_RESTRICTION_HUNTER_CLOTHING = Component.translatable("message.vampirism.restriction.hunter_clothing");
 
-    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, List<Holder<ISkill<?>>> skills, Properties props) {
-        super(materialIn, type, formRestriction(props, skills));
+    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, @Nullable Holder<ISkill<?>> skill, Properties props) {
+        super(materialIn, type, formRestriction(props, skill));
     }
 
-    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, List<Holder<ISkill<?>>> skills, Properties props, ItemAttributeModifiers attributeModifiers) {
-        super(materialIn, type, formRestriction(props, skills), attributeModifiers);
+    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, @Nullable Holder<ISkill<?>> skill, Properties props, ItemAttributeModifiers attributeModifiers) {
+        super(materialIn, type, formRestriction(props, skill), attributeModifiers);
     }
 
-    private static Properties formRestriction(Properties props, List<Holder<ISkill<?>>> skills) {
+    private static Properties formRestriction(Properties props, @Nullable Holder<ISkill<?>> skill) {
         FactionRestriction.Builder builder = FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HUNTER_CLOTHING);
-        if (!skills.isEmpty()) {
-            builder.skill(skills);
+        if (skill != null) {
+            builder.skill(skill);
         }
         return builder.apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate"));
     }

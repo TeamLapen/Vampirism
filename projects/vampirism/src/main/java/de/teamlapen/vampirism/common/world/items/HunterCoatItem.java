@@ -15,15 +15,14 @@ import net.minecraft.world.item.equipment.ArmorType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
 
     private final Tier tier;
 
-    public HunterCoatItem(ArmorMaterial material, ArmorType type, Tier tier, List<Holder<ISkill<?>>> skills, Properties properties) {
-        super(material, type, skills, properties);
+    public HunterCoatItem(ArmorMaterial material, ArmorType type, Tier tier, Holder<ISkill<?>> skill, Properties properties) {
+        super(material, type, skill, properties);
         this.tier = tier;
     }
 
