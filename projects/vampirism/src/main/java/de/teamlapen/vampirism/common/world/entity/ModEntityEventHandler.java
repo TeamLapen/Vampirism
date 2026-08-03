@@ -350,14 +350,15 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEquipmentChange(LivingEquipmentChangeEvent event) {
+        if (!event.getSlot().isArmor()) return;
+
         ItemStack stack = event.getTo();
-        Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
-        if (deadline != null && stack.getMaxDamage() - stack.getDamageValue() > 1) {
+        if (stack.has(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL) && stack.getMaxDamage() - stack.getDamageValue() > 1) {
             stack.remove(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onArmorAttributes(ItemAttributeModifierEvent event) {
         Long deadline = event.getItemStack().get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
         if (deadline == null || deadline != -1) return;

@@ -173,7 +173,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
 
     private void tickDeferredArmor() {
         long time = player.level().getGameTime();
-        for (EquipmentSlot slot : EquipmentSlot.values()) {
+        for (EquipmentSlot slot : EquipmentSlot.VALUES) {
             if (slot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR) continue;
 
             ItemStack stack = player.getItemBySlot(slot);
