@@ -30,7 +30,7 @@ public class ModItemDecorators {
 
     public static final IItemDecorator DESTRUCTION_DEFERMENT = (graphics, font, stack, xOffset, yOffset) -> {
         Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
-        if (deadline == null) return false;
+        if (deadline == null || deadline == -1) return false;
 
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) return false;

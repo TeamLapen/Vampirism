@@ -637,7 +637,7 @@
   "skill.vampirism.master_craftsmanship": "Master Craftsmanship",
   "skill.vampirism.master_craftsmanship.desc": "Craft and equip enhanced weapons and armor",
   "skill.vampirism.destruction_deferment": "Destruction Deferment",
-  "skill.vampirism.destruction_deferment.desc": "Delay the destruction of your worn armor for %s seconds after nearly breaking. Reusable after the armor is repaired",
+  "skill.vampirism.destruction_deferment.desc": "Delay the destruction of worn armor by %s seconds, after which it offers no protection until repaired",
   "skill.vampirism.double_it": "Double It",
   "skill.vampirism.double_it.desc": "Craft and use double crossbows",
   "skill.vampirism.dual_wielding": "Dual Wielding",

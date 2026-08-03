@@ -1,26 +1,22 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter;
 
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
-import de.teamlapen.faction.common.factions.minions.MinionWorldData;
-import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
 import de.teamlapen.faction.misc.extensions.IEffectInstanceWithSource;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IMarshallPlayer;
-import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.common.advancements.critereon.VampireActionCriterionTrigger;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModAttachments;
+import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.OilUtils;
 import de.teamlapen.vampirism.common.util.ScoreboardUtil;
-import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
@@ -36,6 +32,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import org.jetbrains.annotations.Nullable;
 
@@ -125,6 +122,9 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     @Override
     public void onUpdate() {
         super.onUpdate();
+        if (!isRemote() && player.level().getGameTime() % 5 == 0) {
+            tickDeferredArmor();
+        }
         int level = getLevel();
         if (level > 0) {
             if (!isRemote()) {
@@ -169,6 +169,21 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
         }
         getSpecialAttributes().fullHunterCoat = level > 0 ? HunterCoatItem.isFullyEquipped(player) : null;
 
+    }
+
+    private void tickDeferredArmor() {
+        long time = player.level().getGameTime();
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (slot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR) continue;
+
+            ItemStack stack = player.getItemBySlot(slot);
+            Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
+            if (deadline == null) continue;
+
+            if (time >= deadline) {
+                stack.set(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL, (long) -1);
+            }
+        }
     }
 
     @Override

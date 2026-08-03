@@ -36,6 +36,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
@@ -57,6 +58,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -336,9 +338,8 @@ public class ModEntityEventHandler {
             int safeDamage = stack.getMaxDamage() - 1 - stack.getDamageValue();
             if ((int) entry.getValue().newDamage <= safeDamage) continue;
 
-            long time = player.level().getGameTime();
             Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
-            if (deadline != null && time > deadline) continue;
+            if (deadline != null && deadline == -1) continue;
 
             event.setNewDamage(entry.getKey(), Math.max(0, safeDamage));
             if (!stack.has(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL)) {
@@ -354,5 +355,13 @@ public class ModEntityEventHandler {
         if (deadline != null && stack.getMaxDamage() - stack.getDamageValue() > 1) {
             stack.remove(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
         }
+    }
+
+    @SubscribeEvent
+    public void onArmorAttributes(ItemAttributeModifierEvent event) {
+        Long deadline = event.getItemStack().get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
+        if (deadline == null || deadline != -1) return;
+
+        event.clearModifiers();
     }
 }
