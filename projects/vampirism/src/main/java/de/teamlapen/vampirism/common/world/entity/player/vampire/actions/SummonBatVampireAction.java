@@ -23,7 +23,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public IActionResult activate(@NotNull IVampirePlayer player, ActivationContext context) {
+    public IActionResult activateServer(@NotNull IVampirePlayer player, ActivationContext context) {
         Player entityPlayer = player.asEntity();
         boolean refined = player.getRefinementHandler().isRefinementEquipped(ModRefinements.SUMMON_BATS);
         int amount = ModConfig.balance().vaSummonBatsCount.get();

@@ -42,7 +42,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    public void onReActivated(@NotNull IVampirePlayer player) {
+    public void onReActivatedServer(@NotNull IVampirePlayer player) {
         ((VampirePlayer) player).getSkillProperties().half_invulnerable = true;
 
     }
@@ -56,7 +56,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    protected IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    protected IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
         ((VampirePlayer) vampire).getSkillProperties().half_invulnerable = true;
         applyEffect(vampire);
         return IActionResult.SUCCESS;

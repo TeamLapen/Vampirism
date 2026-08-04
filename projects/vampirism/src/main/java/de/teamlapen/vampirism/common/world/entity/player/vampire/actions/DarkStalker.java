@@ -19,7 +19,7 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
     }
 
     @Override
-    protected IActionResult activate(IVampirePlayer player, ActivationContext context) {
+    protected IActionResult activateServer(IVampirePlayer player, ActivationContext context) {
         ((VampirePlayer) player).getSkillProperties().darkStalker = true;
         applyEffect(player);
         return IActionResult.SUCCESS;
@@ -42,7 +42,7 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
     }
 
     @Override
-    public void onReActivated(IVampirePlayer player) {
+    public void onReActivatedServer(IVampirePlayer player) {
         ((VampirePlayer) player).getSkillProperties().darkStalker = true;
     }
 

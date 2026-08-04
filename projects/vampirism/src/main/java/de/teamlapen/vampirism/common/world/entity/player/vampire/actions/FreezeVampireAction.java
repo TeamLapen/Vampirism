@@ -30,7 +30,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public IActionResult activate(final IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activateServer(final IVampirePlayer vampire, ActivationContext context) {
         if (vampire.asEntity().level().environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, vampire.asEntity().position())) {
             return IActionResult.SUCCESS;
         }

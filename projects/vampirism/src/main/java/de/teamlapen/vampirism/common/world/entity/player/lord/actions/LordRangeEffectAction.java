@@ -30,7 +30,7 @@ public abstract class LordRangeEffectAction<T extends IFactionPlayer<T> & ISkill
     }
 
     @Override
-    protected @NotNull IActionResult activate(@NotNull T player, @NotNull ActivationContext context) {
+    protected @NotNull IActionResult activateServer(@NotNull T player, @NotNull ActivationContext context) {
         int lordLevel = FactionPlayerHandler.get(player.asEntity()).getPlayerLord().map(ILordPlayer::getLordLevel).orElse(0);
         List<LivingEntity> entitiesOfClass = player.asEntity().level().getEntitiesOfClass(LivingEntity.class, new AABB(player.asEntity().blockPosition()).inflate(10, 10, 10), e -> IFaction.is(player.getFaction(), IFactionHelper.get().getFaction(e)));
         for (LivingEntity entity : entitiesOfClass) {

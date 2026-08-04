@@ -115,7 +115,7 @@ public class ModPlayerEventHandler {
     public void onAttackEntity(AttackEntityEvent event) {
         Player player = event.getEntity();
         if (player.isAlive()) {
-            if (VampirePlayer.get(player).getSkillProperties().bat) {
+            if (VampirePlayer.get(player).getSkillProperties().hasForm()) {
                 event.setCanceled(true);
             }
             HunterPlayer.get(player).breakDisguise();
@@ -271,6 +271,10 @@ public class ModPlayerEventHandler {
             VampirePlayer vampire = VampirePlayer.get(player);
             float mod = (float) (0.2 * (float)vampire.getLevel()/ (float)vampire.getMaxLevel());
             d.setNewDamage(d.getNewDamage() * (1 - mod));
+
+            if (vampire.getSkillProperties().mist) {
+                d.setNewDamage(0);
+            }
         }
 
         if (event.getEntity() instanceof Player player && Helper.isHunter(player)) {

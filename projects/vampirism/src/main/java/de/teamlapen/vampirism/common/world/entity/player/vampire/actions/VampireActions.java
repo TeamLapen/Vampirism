@@ -33,8 +33,8 @@ public class VampireActions {
     public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, HissingAction> HISSING = ACTIONS.registerAction("hissing", HissingAction::new);
     public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer>, DarkStalker> DARK_STALKER = ACTIONS.registerAction("dark_stalker", DarkStalker::new);
     public static final DeferredAction<IVampirePlayer, ILastingAction<IVampirePlayer> ,JumpBoostAction> JUMP_BOOST = ACTIONS.registerAction("jump_boost", JumpBoostAction::new);
-    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, BlindingAction> BLINDING = ACTIONS.registerAction("blinding", BlindingAction::new);
-    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, BlindingAction> MIST_FORM = ACTIONS.registerAction("mist_form", BlindingAction::new);
+    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, MistAction> MIST_FORM = ACTIONS.registerAction("mist_form", MistAction::new);
+    public static final DeferredAction<IVampirePlayer, IAction<IVampirePlayer>, AuraOfDarknessAction> AURA_OF_DARKNESS = ACTIONS.registerAction("aura_of_darkness", AuraOfDarknessAction::new);
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {

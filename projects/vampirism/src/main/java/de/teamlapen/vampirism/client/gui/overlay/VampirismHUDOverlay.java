@@ -129,7 +129,7 @@ public class VampirismHUDOverlay implements IMinecraftAccessor {
 
     private boolean tryRenderVampireCrosshair(GuiGraphicsExtractor graphics, LocalPlayer player, Entity target, int width, int height) {
         VampirePlayer vampire = VampirePlayer.get(player);
-        if (vampire.getLevel() == 0 || player.isSpectator() || vampire.getSkillProperties().bat) return false;
+        if (vampire.getLevel() == 0 || player.isSpectator() || vampire.getSkillProperties().hasForm()) return false;
 
         return SyringeItem.getBiteable(target)
                 .filter(b -> b.canBeBitten(vampire))

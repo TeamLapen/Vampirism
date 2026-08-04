@@ -23,6 +23,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.jetbrains.annotations.Nullable;
@@ -99,6 +100,11 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
         }
         this.activeTimers.clear();
         sync();
+    }
+
+    public void deactivateActions(TagKey<IAction<?>> key) {
+        //noinspection unchecked,rawtypes
+        this.activeTimers.keySet().stream().filter(x -> x.is((TagKey) key)).toList().forEach(this::deactivateAction);
     }
 
     @Override
@@ -182,7 +188,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
     public void onActionsReactivated() {
         if (!player.isRemote()) {
             for (Holder<? extends ILastingAction<T>> holder : activeTimers.keySet()) {
-                holder.value().onReActivated(player);
+                holder.value().onReActivatedServer(player);
             }
         }
     }
@@ -208,7 +214,7 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
         this.registerProperty(FIdentifier.mod("duration_timer")).simple(SafeCast.<Codec<Map<Holder<? extends ILastingAction<T>>, Integer>>>cast(LASTING_ACTION_TIME_CODEC))
                 .defaultValue(HashMap::new)
                 .provider(() -> this.activeTimers)
-                .serverLoader(x -> CollectionUtil.updateCollection(this.activeTimers, x,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onReActivated(this.player)))
+                .serverLoader(x -> CollectionUtil.updateCollection(this.activeTimers, x,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onReActivatedServer(this.player)))
                 .clientLoader(x -> CollectionUtil.updateCollection(this.activeTimers, x,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onActivatedClient(this.player)))
                 .register();
         this.registerProperty(FIdentifier.mod("expected_cooldown_timer")).simple(SafeCast.<Codec<Map<Holder<? extends IAction<T>>, Integer>>>cast(ACTION_TIME_CODEC))
@@ -284,9 +290,13 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
 
             IActionResult r = checkDefaultToggleConditions(action);
             if (r.successful()) {
-                /*
-                 * Only lasting actions have a duration, so regular actions will return a duration of -1.
-                 */
+
+                var mutualExclusiveActions = action.value().mutualExclusiveActionTag();
+                if (mutualExclusiveActions != null) {
+                    deactivateActions(mutualExclusiveActions);
+                }
+
+                /* Only lasting actions have a duration, so regular actions will return a duration of -1. */
                 int duration = action.value() instanceof ILastingAction<T> lasting ? lasting.getDuration(player) : -1;
                 ActionEvent.ActionActivatedEvent<T> activationEvent = FactionEventFactory.fireActionActivatedEvent(player, action, action.value().getCooldown(player), duration);
                 if (activationEvent.isCanceled()) return IActionResult.fail(activationEvent.getCancelMessage());

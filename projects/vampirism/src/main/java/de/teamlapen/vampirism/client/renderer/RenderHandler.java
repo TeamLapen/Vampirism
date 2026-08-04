@@ -118,7 +118,7 @@ public class RenderHandler implements IMinecraftAccessor {
     @SubscribeEvent
     public void onRenderHand(@NotNull RenderHandEvent event) {
         //noinspection ConstantValue
-        if (player() != null && player().isAlive() && VampirePlayer.get(player()).getSkillProperties().bat) {
+        if (player() != null && player().isAlive() && VampirePlayer.get(player()).getSkillProperties().hasForm()) {
             event.setCanceled(true);
         }
     }

@@ -17,7 +17,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     }
 
     @Override
-    public IActionResult activate(IVampirePlayer player, ActivationContext context) {
+    public IActionResult activateServer(IVampirePlayer player, ActivationContext context) {
         activate(player);
         return IActionResult.SUCCESS;
     }
@@ -52,7 +52,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     }
 
     @Override
-    public void onReActivated(IVampirePlayer player) {
+    public void onReActivatedServer(IVampirePlayer player) {
         activate(player);
     }
 

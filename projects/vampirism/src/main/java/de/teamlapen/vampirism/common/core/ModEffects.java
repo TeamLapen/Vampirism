@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.core;
 
+import de.teamlapen.faction.api.registries.skills.DeferredSkill;
 import de.teamlapen.faction.common.world.effects.FactionBadOmenMobEffect;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.common.world.effects.*;
@@ -44,6 +45,7 @@ public class ModEffects {
     public static final DeferredHolder<MobEffect, MobEffect> EXPOSED = EFFECTS.register("exposed", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0x762D45));
     public static final DeferredHolder<MobEffect, MobEffect> WHISPERS_OF_THE_VEIL = EFFECTS.register("whispers_of_the_veil", WhispersOfTheVeilMobEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> SUN_SENSITIVITY = EFFECTS.register("sun_sensitivity", () -> new SimpleMobEffect(MobEffectCategory.HARMFUL, 0xFFF2B3));
+    public static final DeferredHolder<MobEffect, MobEffect> AURA_OF_DARKNESS = EFFECTS.register("aura_of_darkness", () -> new SimpleMobEffect(MobEffectCategory.BENEFICIAL, 0x333333));
 
     static void register(IEventBus bus) {
         EFFECTS.register(bus);

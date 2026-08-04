@@ -42,7 +42,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public IActionResult activate(IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activateServer(IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
         setModifier(player, true);
         updatePlayer((VampirePlayer) vampire, true);
@@ -113,7 +113,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public void onReActivated(IVampirePlayer vampire) {
+    public void onReActivatedServer(IVampirePlayer vampire) {
         setModifier(vampire.asEntity(), true);
         if (!((VampirePlayer) vampire).getSkillProperties().bat) {
             updatePlayer((VampirePlayer) vampire, true);
