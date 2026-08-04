@@ -203,45 +203,27 @@ public class ActionHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extend
         this.registerProperty(FIdentifier.mod("cooldown_timer")).simple(SafeCast.<Codec<Map<Holder<? extends IAction<T>>, Integer>>>cast(ACTION_TIME_CODEC))
                 .defaultValue(HashMap::new)
                 .provider(() -> this.cooldownTimers)
-                .commonLoader(x -> {
-                    CollectionUtil.updateCollection(this.cooldownTimers, x);
-                    return true;
-                })
+                .commonLoader(x -> CollectionUtil.updateCollection(this.cooldownTimers, x))
                 .register();
         this.registerProperty(FIdentifier.mod("duration_timer")).simple(SafeCast.<Codec<Map<Holder<? extends ILastingAction<T>>, Integer>>>cast(LASTING_ACTION_TIME_CODEC))
                 .defaultValue(HashMap::new)
                 .provider(() -> this.activeTimers)
-                .serverLoader(x -> {
-                    CollectionUtil.updateCollection(this.activeTimers, x,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onReActivated(this.player));
-                })
-                .clientLoader(x -> {
-                    CollectionUtil.updateCollection(this.activeTimers, x,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onActivatedClient(this.player));
-                    return true;
-                })
+                .serverLoader(x -> CollectionUtil.updateCollection(this.activeTimers, x,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onReActivated(this.player)))
+                .clientLoader(x -> CollectionUtil.updateCollection(this.activeTimers, x,(action, duration) -> deactivateAction(action), (action, timer) -> action.value().onActivatedClient(this.player)))
                 .register();
         this.registerProperty(FIdentifier.mod("expected_cooldown_timer")).simple(SafeCast.<Codec<Map<Holder<? extends IAction<T>>, Integer>>>cast(ACTION_TIME_CODEC))
                 .defaultValue(HashMap::new)
                 .provider(() -> this.expectedCooldownTimes)
-                .commonLoader(x -> {
-                    CollectionUtil.updateCollection(this.expectedCooldownTimes, x);
-                    return true;
-                })
+                .commonLoader(x -> CollectionUtil.updateCollection(this.expectedCooldownTimes, x))
                 .register();
         this.registerProperty(FIdentifier.mod("expected_duration_timer")).simple(SafeCast.<Codec<Map<Holder<? extends IAction<T>>, Integer>>>cast(ACTION_TIME_CODEC))
                 .defaultValue(HashMap::new)
                 .provider(() -> this.expectedDurations)
-                .commonLoader(x -> {
-                    CollectionUtil.updateCollection(this.expectedDurations, x);
-                    return true;
-                })
+                .commonLoader(x -> CollectionUtil.updateCollection(this.expectedDurations, x))
                 .register();
         this.registerProperty(FIdentifier.mod("unlocked_actions")).list(SafeCast.<Codec<Holder<? extends IAction<T>>>>cast(IAction.CODEC))
                 .provider(() -> this.unlockedActions)
-                .commonLoader(x -> {
-                    this.unlockedActions.clear();
-                    this.unlockedActions.addAll(x);
-                    return true;
-                })
+                .commonLoader(x -> CollectionUtil.updateCollection(this.unlockedActions, x))
                 .register();
     }
 

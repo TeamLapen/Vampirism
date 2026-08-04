@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.util;
 
+import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.vampirism.REFERENCE;
@@ -16,6 +17,7 @@ import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.Vampire
 import de.teamlapen.vampirism.common.world.entity.vampire.VampireBaronEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -165,7 +167,8 @@ public class DamageHandler {
                 default -> null;
             };
             if (tag != null) {
-                actionHandler.getActiveActions().stream().filter(action -> IAction.is(action, tag)).forEach(actionHandler::deactivateAction);
+                //noinspection rawtypes,unchecked
+                actionHandler.getActiveActions().stream().filter(action -> action.is((TagKey) tag)).forEach(actionHandler::deactivateAction);
             }
         }
         if (vampire) {

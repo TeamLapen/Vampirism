@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter.skills;
 
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.faction.api.factions.skills.ISkillNode;
-import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.api.factions.skills.*;
+import de.teamlapen.faction.api.registries.skills.DeferredSkill;
+import de.teamlapen.faction.api.registries.skills.DeferredSkillRegister;
+import de.teamlapen.faction.api.tags.FactionSkillTreeTags;
 import de.teamlapen.faction.common.advancements.criterion.PlayerFactionSubPredicate;
+import de.teamlapen.faction.common.core.FactionConsumer;
+import de.teamlapen.faction.common.core.FactionSkills;
 import de.teamlapen.faction.common.factions.skills.SkillNode;
 import de.teamlapen.faction.common.factions.skills.SkillTree;
 import de.teamlapen.vampirism.REFERENCE;
@@ -17,8 +20,6 @@ import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
-import de.teamlapen.vampirism.common.world.entity.player.skills.ActionSkill;
-import de.teamlapen.vampirism.common.world.entity.player.skills.VampirismSkill;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -28,8 +29,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
@@ -39,55 +38,55 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 public class HunterSkills {
-    public static final DeferredRegister<ISkill<?>> SKILLS = DeferredRegister.create(FactionRegistries.Keys.SKILL, REFERENCE.MODID);
+    public static final DeferredSkillRegister SKILLS = DeferredSkillRegister.create(REFERENCE.MODID);
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LEVEL_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().identifier().getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> LEVEL_ROOT = SKILLS.registerSkill(ModFactions.HUNTER.getKey().identifier().getPath(), HunterSkill::new);
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> STAKE1 = SKILLS.register("stake1", () -> new VampirismSkill.SimpleHunterSkill(2, false).setDescription(() -> Component.translatable(ModConfig.balance().hsInstantKill1FromBehind.get() ? "skill.vampirism.stake1.desc" : "skill.vampirism.stake1.desc.behind", (int) (ModConfig.balance().hsInstantKill1MaxHealth.get() * 100))));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_DISGUISE = SKILLS.register("hunter_disguise", () -> new ActionSkill<>(HunterActions.DISGUISE_HUNTER, Trees.LEVEL, 1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> WEAPON_TABLE = SKILLS.register("weapon_table", () -> new VampirismSkill.SimpleHunterSkill(2, true));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE1 = SKILLS.registerSkill("stake1", props -> new HunterSkill(props.cost(2).withDescription(Component.translatable(ModConfig.balance().hsInstantKill1FromBehind.getDefault() ? "skill.vampirism.stake1.desc" : "skill.vampirism.stake1.desc.behind", (int) (ModConfig.balance().hsInstantKill1MaxHealth.getDefault() * 100)))));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_DISGUISE = SKILLS.registerSkill("hunter_disguise", props -> new HunterSkill(props.cost(1).actionSkill(HunterActions.DISGUISE_HUNTER).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> WEAPON_TABLE = SKILLS.registerSkill("weapon_table", props -> new HunterSkill(props.cost(2).withDescription()));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> BASIC_ALCHEMY = SKILLS.register("basic_alchemy", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CRUCIFIX_WIELDER = SKILLS.register("crucifix_wielder", () -> new VampirismSkill.SimpleHunterSkill(1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> GARLIC_DIFFUSER = SKILLS.register("garlic_diffuser", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> PURIFIED_GARLIC = SKILLS.register("purified_garlic", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> GARLIC_DIFFUSER_IMPROVED = SKILLS.register("garlic_diffuser_improved", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ENHANCED_BLESSING = SKILLS.register("enhanced_blessing", () -> new VampirismSkill.SimpleHunterSkill(3, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ULTIMATE_CRUCIFIX = SKILLS.register("ultimate_crucifix", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_AWARENESS = SKILLS.register("hunter_awareness", () -> new ActionSkill<>(HunterActions.AWARENESS_HUNTER, ModSkillTreeTags.HUNTER, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CRUCIFIX_REPEL = SKILLS.register("crucifix_repel", () -> new VampirismSkill.SimpleHunterSkill(2, true));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> BASIC_ALCHEMY = SKILLS.registerSkill("basic_alchemy", props -> new HunterSkill(props.cost(1).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CRUCIFIX_WIELDER = SKILLS.registerSkill("crucifix_wielder", props -> new HunterSkill(props.cost(1).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> GARLIC_DIFFUSER = SKILLS.registerSkill("garlic_diffuser", props -> new HunterSkill(props.cost(1).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> PURIFIED_GARLIC = SKILLS.registerSkill("purified_garlic", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> GARLIC_DIFFUSER_IMPROVED = SKILLS.registerSkill("garlic_diffuser_improved", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ENHANCED_BLESSING = SKILLS.registerSkill("enhanced_blessing", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ULTIMATE_CRUCIFIX = SKILLS.registerSkill("ultimate_crucifix", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_AWARENESS = SKILLS.registerSkill("hunter_awareness", props -> new HunterSkill(props.cost(2).withDescription().actionSkill(HunterActions.AWARENESS_HUNTER)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CRUCIFIX_REPEL = SKILLS.registerSkill("crucifix_repel", props -> new HunterSkill(props.cost(2).withDescription()));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MULTITASK_BREWING = SKILLS.register("multitask_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DURABLE_BREWING = SKILLS.register("durable_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CONCENTRATED_BREWING = SKILLS.register("concentrated_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> SWIFT_BREWING = SKILLS.register("swift_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> EFFICIENT_BREWING = SKILLS.register("efficient_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_BREWER = SKILLS.register("master_brewer", () -> new VampirismSkill.SimpleHunterSkill(3, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.register("potion_resistance", () -> new ActionSkill<>(HunterActions.POTION_RESISTANCE_HUNTER, ModSkillTreeTags.HUNTER, 2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CONCENTRATED_DURABLE_BREWING = SKILLS.register("concentrated_durable_brewing", () -> new VampirismSkill.SimpleHunterSkill(2, true));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MULTITASK_BREWING = SKILLS.registerSkill("multitask_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DURABLE_BREWING = SKILLS.registerSkill("durable_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CONCENTRATED_BREWING = SKILLS.registerSkill("concentrated_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> SWIFT_BREWING = SKILLS.registerSkill("swift_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> EFFICIENT_BREWING = SKILLS.registerSkill("efficient_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_BREWER = SKILLS.registerSkill("master_brewer", props -> new HunterSkill(props.cost(3).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.registerSkill("potion_resistance", props -> new HunterSkill(props.cost(2).withDescription().actionSkill(HunterActions.POTION_RESISTANCE_HUNTER)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CONCENTRATED_DURABLE_BREWING = SKILLS.registerSkill("concentrated_durable_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.register("hunter_attack_speed", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_SPEED, () -> ModConfig.balance().hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> HUNTER_ATTACK_DAMAGE = SKILLS.register("hunter_attack_damage", () -> new VampirismSkill.SimpleHunterSkill(2, true).registerAttributeModifier(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ARMOR_SPEED = SKILLS.register("armor_speed", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ARMOR_JUMP = SKILLS.register("armor_jump", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> CROSSBOW_TECHNIQUE = SKILLS.register("crossbow_technique", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.register("double_it", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DUAL_WIELDING = SKILLS.register("dual_wielding", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.register("master_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> DESTRUCTION_DEFERMENT = SKILLS.register("destruction_deferment", () -> new VampirismSkill.SimpleHunterSkill(2, false).setDescription(() -> Component.translatable("skill.vampirism.destruction_deferment.desc", ModConfig.balance().hsDestructionDefermentDuration.get())));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> STAKE2 = SKILLS.register("stake2", () -> new VampirismSkill.SimpleHunterSkill(2, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> AXE2 = SKILLS.register("axe2", () -> new VampirismSkill.SimpleHunterSkill(3, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ARTISAN_CRAFTSMANSHIP = SKILLS.register("artisan_craftsmanship", () -> new VampirismSkill.SimpleHunterSkill(3, true));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.registerSkill("hunter_attack_speed", props -> new HunterSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_SPEED, () -> ModConfig.balance().hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_ATTACK_DAMAGE = SKILLS.registerSkill("hunter_attack_damage", props -> new HunterSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_SPEED = SKILLS.registerSkill("armor_speed", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_JUMP = SKILLS.registerSkill("armor_jump", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CROSSBOW_TECHNIQUE = SKILLS.registerSkill("crossbow_technique", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.registerSkill("double_it", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DUAL_WIELDING = SKILLS.registerSkill("dual_wielding", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.registerSkill("master_craftsmanship", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DESTRUCTION_DEFERMENT = SKILLS.registerSkill("destruction_deferment", props -> new HunterSkill(props.cost(2).withDescription(Component.translatable("skill.vampirism.destruction_deferment.desc", ModConfig.balance().hsDestructionDefermentDuration.getDefault()))));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE2 = SKILLS.registerSkill("stake2", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> AXE2 = SKILLS.registerSkill("axe2", props -> new HunterSkill(props.cost(3).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARTISAN_CRAFTSMANSHIP = SKILLS.registerSkill("artisan_craftsmanship", props -> new HunterSkill(props.cost(3).withDescription()));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> LORD_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().identifier().withSuffix("_lord").getPath(), () -> new VampirismSkill.SimpleHunterSkill(0, false));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> LORD_ROOT = SKILLS.registerSkill(ModFactions.HUNTER.getKey().identifier().withSuffix("_lord").getPath(), props -> new HunterSkill(props.tree(FactionSkillTreeTags.LORD)));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.register("hunter_minion_stats_increase", () -> new VampirismSkill.SimpleHunterSkill(3, true).setToggleActions(hunter -> hunter.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(true)), hunter -> hunter.getPlayerLord().ifPresent(x -> x.updateMinionAttributes(false))));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_TECH_CROSSBOWS = SKILLS.register("minion_tech_crossbows", () -> new VampirismSkill.SimpleHunterSkill(1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MINION_COLLECT = SKILLS.register("hunter_minion_collect", () -> new VampirismSkill.SimpleHunterSkill(2, true));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MINION_STATS_INCREASE = SKILLS.registerSkill("hunter_minion_stats_increase", props -> new HunterSkill(props.cost(3).withDescription().tree(FactionSkillTreeTags.LORD).onEnable(FactionConsumer.ENABLE_MINION_INCREASED_STATS).onDisable(FactionConsumer.DISABLE_MINION_INCREASED_STATS)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MINION_TECH_CROSSBOWS = SKILLS.registerSkill("minion_tech_crossbows", props -> new HunterSkill(props.cost(1).withDescription().tree(FactionSkillTreeTags.LORD)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MINION_COLLECT = SKILLS.registerSkill("hunter_minion_collect", props -> new HunterSkill(props.cost(2).withDescription().tree(FactionSkillTreeTags.LORD)));
 
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MARSHALL_ROOT = SKILLS.register(ModFactions.HUNTER.getKey().identifier().withSuffix("_marshall").getPath(), () -> new VampirismSkill.MarshallSkill(1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> MASTER_ALCHEMIST = SKILLS.register("master_alchemist", () -> new VampirismSkill.MarshallSkill(1, true));
-    public static final DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> ULTIMATE_BREWER = SKILLS.register("ultimate_brewer", () -> new VampirismSkill.MarshallSkill(1, true));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MARSHALL_ROOT = SKILLS.registerSkill(ModFactions.HUNTER.getKey().identifier().withSuffix("_marshall").getPath(), props -> new HunterSkill(props.withDescription().tree(ModSkillTreeTags.MARSHALL)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_ALCHEMIST = SKILLS.registerSkill("master_alchemist", props -> new HunterSkill(props.cost(1).withDescription().tree(ModSkillTreeTags.MARSHALL)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ULTIMATE_BREWER = SKILLS.registerSkill("ultimate_brewer", props -> new HunterSkill(props.cost(1).withDescription().tree(ModSkillTreeTags.MARSHALL)));
 
 
     @ApiStatus.Internal
@@ -182,7 +181,7 @@ public class HunterSkills {
             context.register(LORD_2, new SkillNode(MINION_STATS_INCREASE));
             context.register(LORD_3, new SkillNode(LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED));
             context.register(LORD_4, new SkillNode(MINION_COLLECT));
-            context.register(LORD_5, new SkillNode(LordSkills.MINION_RECOVERY));
+            context.register(LORD_5, new SkillNode(FactionSkills.MINION_RECOVERY));
             context.register(LORD_6, new SkillNode(MINION_TECH_CROSSBOWS));
 
             context.register(MARSHALL_ROOT, new SkillNode(HunterSkills.MARSHALL_ROOT));

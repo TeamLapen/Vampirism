@@ -1,6 +1,5 @@
 package de.teamlapen.faction.client.gui.components;
 
-import de.teamlapen.faction.api.factions.skills.IActionSkill;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -30,13 +29,16 @@ public class SkillDisplayWidget extends AbstractWidget {
         this.tooltip = tooltip;
     }
 
-    @SuppressWarnings({"DataFlowIssue", "SwitchStatementWithTooFewBranches"})
+    @SuppressWarnings({"DataFlowIssue"})
     @Override
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor GuiGraphicsExtractor, int mouseX, int mouseY, float partialTick) {
-        Identifier texture = switch (this.skill.value()) {
-            case IActionSkill<?> actionSkill -> actionSkill.actionHolder().getKey().identifier().withPath(path -> "textures/actions/" + path + ".png");
-            default -> this.skill.getKey().identifier().withPath(path -> "textures/skills/" + path + ".png");
-        };
+        var action = this.skill.value().getAction();
+        Identifier texture;
+        if (action != null) {
+            texture = action.getKey().identifier().withPath(path -> "textures/actions/" + path + ".png");
+        } else {
+            texture = this.skill.getKey().identifier().withPath(path -> "textures/skills/" + path + ".png");
+        }
         GuiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, texture, this.getX() + this.xOffset, this.getY() + this.yOffset, 0, 0, 16, 16, 16, 16);
 
         if (this.isFocused()) {

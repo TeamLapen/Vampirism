@@ -6,12 +6,14 @@ import de.teamlapen.faction.api.factions.actions.ILastingAction;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.common.config.FactionConfig;
+import de.teamlapen.faction.common.tags.FactionActionTags;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.ARGB;
 
 import java.util.Optional;
@@ -35,7 +37,8 @@ public class ActionDurationOverlay<T extends ISkillPlayer<T>> extends BaseOverla
                 int y = this.mc.getWindow().getGuiScaledHeight() - 27;
 
                 for (Holder<? extends ILastingAction<T>> action : factionPlayer.getActionHandler().getActiveActions()) {
-                    if (!(action.value().showHudDuration(this.player()))) continue;
+                    //noinspection rawtypes,unchecked
+                    if (!(action.is((TagKey)FactionActionTags.SHOW_DURATION_IN_HUD))) continue;
                     if (!actionHandler.isActionActive(action)) continue;
                     Optional<Identifier> texture = action.unwrapKey().map(ResourceKey::identifier).map(key -> key.withPath("textures/actions/" + key.getPath() + ".png"));
                     if (texture.isPresent()) {

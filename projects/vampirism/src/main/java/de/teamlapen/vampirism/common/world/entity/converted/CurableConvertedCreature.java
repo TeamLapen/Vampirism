@@ -139,7 +139,18 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
     }
 
     /**
-     * call in {@link PathfinderMob#aiStep()}
+     * Call in {@link PathfinderMob#aiStep()} on both sides.
+     * The client needs the sun damage state as well to render the burning effect.
+     */
+    default void aiStepCommonC() {
+        PathfinderMob entity = ((PathfinderMob) this);
+        if (entity.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
+            isGettingSundamage(entity.level(), true);
+        }
+    }
+
+    /**
+     * Call in {@link PathfinderMob#aiStep()}
      */
     default void aiStepC(ServerLevel level) {
         PathfinderMob entity = ((PathfinderMob) this);
@@ -151,9 +162,6 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         }
         if (entity.tickCount % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
             isGettingGarlicDamage(entity.level(), true);
-        }
-        if (entity.tickCount % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
-            isGettingSundamage(entity.level(), true);
         }
             if (isGettingSundamage(entity.level()) && entity.tickCount % 40 == 11) {
                 double dmg = entity.getAttribute(ModAttributes.SUNDAMAGE).getValue();

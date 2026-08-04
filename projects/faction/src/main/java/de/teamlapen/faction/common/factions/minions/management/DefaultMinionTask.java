@@ -21,7 +21,7 @@ import java.util.Optional;
 
 public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>, Q extends IMinionData> implements IMinionTask<T, Q> {
 
-    private final @Nullable Holder<ISkill<?>> requiredSkill;
+    private final @Nullable Holder<? extends ISkill<?>> requiredSkill;
     @Nullable
     private String descriptionId;
 
@@ -29,7 +29,7 @@ public abstract class DefaultMinionTask<T extends IMinionTask.IMinionTaskDesc<Q>
         this(null);
     }
 
-    public DefaultMinionTask(@Nullable Holder<ISkill<?>> requiredSkill) {
+    public DefaultMinionTask(@Nullable Holder<? extends ISkill<?>> requiredSkill) {
         this.requiredSkill = requiredSkill;
     }
 

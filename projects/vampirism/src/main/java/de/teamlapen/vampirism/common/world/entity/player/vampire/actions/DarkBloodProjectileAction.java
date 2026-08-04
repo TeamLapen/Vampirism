@@ -32,11 +32,6 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
-
-    @Override
     protected IActionResult activate(IVampirePlayer player, ActivationContext context) {
         Player shooter = player.asEntity();
         IRefinementAccess skillHandler = player.getRefinementHandler();

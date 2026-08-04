@@ -4,15 +4,16 @@ import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.refinements.IRefinementAccess;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.items.IBloodChargeable;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
-import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModParticles;
 import de.teamlapen.vampirism.common.core.ModRefinements;
 import de.teamlapen.vampirism.common.particles.GenericParticleOptions;
@@ -54,15 +55,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class VampireSwordItem extends VampirismSwordItem implements IBloodChargeable {
+public abstract class VampireSwordItem extends VampirismSwordItem implements IItemWithTier, IBloodChargeable {
 
+    private final IItemWithTier.Tier tier;
     /**
      * Speed modifier on max training
      */
     private final float trainedAttackSpeedIncrease;
 
-    public VampireSwordItem(ToolMaterial material, int attackDamage, float trainSpeedIncrease, Item.Properties prop) {
-        super(material, attackDamage, material.speed(), prop.factions$restrictFaction(ModFactions.VAMPIRE).component(ModDataComponents.BLOOD_CHARGED, new BloodCharged(0)));
+    public VampireSwordItem(ToolMaterial material, IItemWithTier.Tier tier, int attackDamage, float trainSpeedIncrease, Item.Properties prop) {
+        super(material, attackDamage, material.speed(), FactionRestriction.builder(VampirismTags.Factions.IS_VAMPIRE).minLevel(getMinLevel(tier)).apply(prop).component(ModDataComponents.BLOOD_CHARGED, new BloodCharged(0)));
+        this.tier = tier;
         this.trainedAttackSpeedIncrease = trainSpeedIncrease;
     }
 
@@ -74,6 +77,11 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
         float trained = getTrained(stack, FactionsMod.proxy.getClientPlayer());
         tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
         tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
+    }
+
+    @Override
+    public IItemWithTier.Tier getVampirismTier() {
+        return tier;
     }
 
     @Override
@@ -348,6 +356,14 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IBl
             case 3 -> 1.6f;
             case 4 -> 2f;
             default -> 2.5f;
+        };
+    }
+
+    private static int getMinLevel(Tier tier) {
+        return switch (tier) {
+            case ULTIMATE -> 14;
+            case ENHANCED -> 9;
+            default -> 4;
         };
     }
 }

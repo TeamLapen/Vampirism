@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter;
 
+import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
@@ -23,6 +24,7 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterAc
 import de.teamlapen.vampirism.common.world.entity.player.hunter.properties.HunterDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.HunterCoatItem;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;

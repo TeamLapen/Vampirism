@@ -39,13 +39,13 @@ public class BlessableItem extends Item implements IBlessableItem {
     @Nullable
     private final Supplier<? extends Item> blessedItem;
     @Nullable
-    private final Holder<ISkill<?>> requiredSkill;
+    private final Holder<? extends ISkill<?>> requiredSkill;
 
     public BlessableItem(Properties properties, Supplier<? extends Item> blessedItem) {
         this(properties, blessedItem, null);
     }
 
-    public BlessableItem(Properties properties, @Nullable Supplier<? extends Item> blessedItem, @Nullable Holder<ISkill<?>> requiredSkill) {
+    public BlessableItem(Properties properties, @Nullable Supplier<? extends Item> blessedItem, @Nullable Holder<? extends ISkill<?>> requiredSkill) {
         super(properties);
         this.blessedItem = blessedItem;
         this.requiredSkill = requiredSkill;
@@ -58,7 +58,7 @@ public class BlessableItem extends Item implements IBlessableItem {
     }
 
     @Override
-    public @Nullable Holder<ISkill<?>> requiredSkill() {
+    public @Nullable Holder<? extends ISkill<?>> requiredSkill() {
         return this.requiredSkill;
     }
 

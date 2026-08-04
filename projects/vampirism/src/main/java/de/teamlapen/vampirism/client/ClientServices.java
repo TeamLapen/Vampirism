@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.client.extensions.ItemExtensions;
 import de.teamlapen.vampirism.client.gui.ScreenEventHandler;
 import de.teamlapen.vampirism.client.gui.overlay.DraculaEventOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;
+import de.teamlapen.vampirism.client.gui.overlay.SunBlindOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.renderer.bloodvision.BloodVisionRenderer;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
@@ -30,6 +31,7 @@ public class ClientServices extends Services {
     private final PlayerSkinHelper playerSkinHelper = new PlayerSkinHelper();
     private final ClientTooltips clientTooltips = new ClientTooltips();
     private final FullScreenOverlay fullScreenOverlay = new FullScreenOverlay();
+    private final SunBlindOverlay sunBlindOverlay = new SunBlindOverlay();
     private final DraculaEventOverlay draculaEventOverlay = new DraculaEventOverlay();
     private final VelmorraCollapseHandler velmorraCollapseHandler = new VelmorraCollapseHandler();
 
@@ -47,6 +49,10 @@ public class ClientServices extends Services {
 
     public FullScreenOverlay fullScreenOverlay() {
         return this.fullScreenOverlay;
+    }
+
+    public SunBlindOverlay sunBlindOverlay() {
+        return this.sunBlindOverlay;
     }
 
     public RenderHandler renderHandler() {
@@ -107,6 +113,7 @@ public class ClientServices extends Services {
         bus.addListener(ModItemsRender::registerConditional);
         bus.addListener(ModParticleFactories::registerFactories);
         bus.addListener(ClientEventHandler::onModelRegistry);
+        bus.addListener(ModDebugEntries::registerDebugEntries);
         bus.addListener(ModItemsRender::registerItemDecorator);
         bus.addListener(ModClientEffects::registerClientExtensions);
         bus.addListener(ModBlocksRender::registerClientExtensions);
@@ -130,7 +137,10 @@ public class ClientServices extends Services {
         bus.register(this.clientEventHandler);
         bus.register(this.playerSkinHelper);
         bus.register(this.clientTooltips);
-        bus.addListener(ClientTickEvent.Pre.class, event -> this.fullScreenOverlay.update());
+        bus.addListener(ClientTickEvent.Pre.class, _ -> {
+            this.fullScreenOverlay.update();
+            this.sunBlindOverlay.update();
+        });
     }
 
     //</editor-fold>

@@ -1,4 +1,4 @@
-package de.teamlapen.faction.common.tags;
+package de.teamlapen.faction.api.tags;
 
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;

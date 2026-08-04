@@ -19,9 +19,9 @@ public interface ISkillTreeData {
         return EffectiveSide.get() == LogicalSide.SERVER ? ServerSkillTreeData.instance() : ClientSkillTreeData.instance(level);
     }
 
-    Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Collection<Holder<ISkillTree>> availableTrees, Holder<ISkill<?>> skill);
+    Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Collection<Holder<ISkillTree>> availableTrees, Holder<? extends ISkill<?>> skill);
 
-    Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Holder<ISkillTree> skillTree, Holder<ISkill<?>> skill);
+    Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> getNodeForSkill(Holder<ISkillTree> skillTree, Holder<? extends ISkill<?>> skill);
 
     Optional<Holder<ISkillNode>> getParent(SkillTreeConfiguration.SkillTreeNodeConfiguration node);
 

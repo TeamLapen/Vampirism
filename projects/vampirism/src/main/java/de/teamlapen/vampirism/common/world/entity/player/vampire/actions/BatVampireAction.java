@@ -197,9 +197,4 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         }
     }
 
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
-
 }

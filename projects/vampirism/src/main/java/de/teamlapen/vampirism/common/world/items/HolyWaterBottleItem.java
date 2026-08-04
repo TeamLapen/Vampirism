@@ -35,7 +35,7 @@ public class HolyWaterBottleItem extends BlessableItem implements IItemWithTier 
         this(tier, props, null, null);
     }
 
-    public HolyWaterBottleItem(Tier tier, Properties props, @Nullable Supplier<Item> blessedItem, @Nullable Holder<ISkill<?>> requiredBlessingSkill) {
+    public HolyWaterBottleItem(Tier tier, Properties props, @Nullable Supplier<Item> blessedItem, @Nullable Holder<? extends ISkill<?>> requiredBlessingSkill) {
         super(FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HOLY).apply(props.factions$descriptionWithout("_normal|_enhanced|_ultimate")), blessedItem, requiredBlessingSkill);
         this.tier = tier;
     }

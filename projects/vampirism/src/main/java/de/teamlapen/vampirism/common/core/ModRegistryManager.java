@@ -71,6 +71,7 @@ public class ModRegistryManager {
         ModActivities.register(eventBus);
         ModMemoryTypes.register(eventBus);
         ModSensors.register(eventBus);
+        ModConsumer.register(eventBus);
     }
 
     @SubscribeEvent

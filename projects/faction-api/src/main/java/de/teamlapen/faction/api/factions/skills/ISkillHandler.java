@@ -18,14 +18,14 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
         return FactionsApi.factionPlayerHandler(player).getSkillHandler();
     }
 
-    static boolean isSkillEnabled(Player player, Holder<ISkill<?>> skill) {
+    static boolean isSkillEnabled(Player player, Holder<? extends ISkill<?>> skill) {
         return get(player).map(handler -> handler.isSkillEnabled(skill)).orElse(false);
     }
 
     /**
      * @return Returns false if the skill already is unlocked or the parent node is not unlocked or the skill is not found
      */
-    Result canSkillBeEnabled(Holder<ISkill<?>> skill, Holder<ISkillTree> skillTree);
+    Result canSkillBeEnabled(Holder<? extends ISkill<?>> skill, Holder<ISkillTree> skillTree);
 
     /**
      * Only use this if you have no access to the skill tree.
@@ -35,12 +35,12 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
      * @deprecated Use {@link #canSkillBeEnabled(Holder, Holder)} instead
      */
     @ApiStatus.Internal
-    Result canSkillBeEnabled(Holder<ISkill<?>> skill);
+    Result canSkillBeEnabled(Holder<? extends ISkill<?>> skill);
 
     /**
      * Disables the given skill
      */
-    void disableSkill(Holder<ISkill<T>> skill, Holder<ISkillTree> skillTree);
+    void disableSkill(Holder<? extends ISkill<T>> skill, Holder<ISkillTree> skillTree);
 
     /**
      * Only use this if you have no access to the skill tree.
@@ -50,12 +50,12 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
      * @deprecated Use {@link #disableSkill(Holder, Holder)} instead
      */
     @ApiStatus.Internal
-    void disableSkill(Holder<ISkill<T>> skill);
+    void disableSkill(Holder<? extends ISkill<T>> skill);
 
     /**
      * Enable the given skill. Check canSkillBeEnabled first
      */
-    default void enableSkill(Holder<ISkill<T>> skill, Holder<ISkillTree> skillTree) {
+    default void enableSkill(Holder<? extends ISkill<T>> skill, Holder<ISkillTree> skillTree) {
         enableSkill(skill, skillTree, false);
     }
 
@@ -67,18 +67,18 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
      * @deprecated Use {@link #enableSkill(Holder, Holder)} instead
      */
     @ApiStatus.Internal
-    void enableSkill(Holder<ISkill<T>> skill);
+    void enableSkill(Holder<? extends ISkill<T>> skill);
 
-    void enableSkill(Holder<ISkill<T>> skill, Holder<ISkillTree> skillTree, boolean fromLoading);
+    void enableSkill(Holder<? extends ISkill<T>> skill, Holder<ISkillTree> skillTree, boolean fromLoading);
 
     /**
      * @return The count of additional skills that can be currently unlocked
      */
     int getLeftSkillPoints(Holder<ISkillTree> tree);
 
-    boolean areSkillsEnabled(Collection<Holder<ISkill<?>>> skill);
+    boolean areSkillsEnabled(Collection<Holder<? extends ISkill<?>>> skill);
 
-    boolean isSkillEnabled(Holder<ISkill<?>> skill);
+    boolean isSkillEnabled(Holder<? extends ISkill<?>> skill);
 
     void reset();
 

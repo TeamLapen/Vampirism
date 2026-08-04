@@ -8,7 +8,7 @@ import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.faction.common.tags.FactionSkillTreeTags;
+import de.teamlapen.faction.api.tags.FactionSkillTreeTags;
 import net.minecraft.core.Holder;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;

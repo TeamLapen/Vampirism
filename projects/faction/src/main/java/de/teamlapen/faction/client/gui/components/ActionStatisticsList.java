@@ -1,7 +1,6 @@
 package de.teamlapen.faction.client.gui.components;
 
 import de.teamlapen.faction.api.factions.actions.IAction;
-import de.teamlapen.faction.api.factions.skills.IActionSkill;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.api.util.SafeCast;
@@ -247,8 +246,9 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
 
             for (int i1 = 0; i1 < actionStatisticsList.actionColumns.size(); i1++) {
                 Stat<IAction<?>> stat;
-                if (this.skill instanceof IActionSkill<?> actionSkill) {
-                    stat = actionStatisticsList.actionColumns.get(i1).get(actionSkill.action());
+                var action = this.skill.getAction();
+                if (action != null) {
+                    stat = actionStatisticsList.actionColumns.get(i1).get(action.value());
                 } else {
                     stat = null;
                 }
@@ -305,8 +305,10 @@ public class ActionStatisticsList extends ContainerObjectSelectionList<ActionSta
                 j = 0;
             } else if (actionColumns.contains(sortColumn)) {
                 StatType<IAction<?>> stattype1 = SafeCast.cast(ActionStatisticsList.this.sortColumn);
-                i = item instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.action()) : -1;
-                j = item1 instanceof IActionSkill<?> actionSkill ? screen.getStats().getValue(stattype1, actionSkill.action()) : -1;
+                var actions = item.getAction();
+                var actions1 = item1.getAction();
+                i = actions != null ? screen.getStats().getValue(stattype1, actions.value()) : -1;
+                j = actions1 != null ? screen.getStats().getValue(stattype1, actions1.value()) : -1;
             } else {
                 StatType<ISkill<?>> stattype1 = SafeCast.cast(ActionStatisticsList.this.sortColumn);
                 i = screen.getStats().getValue(stattype1, item);

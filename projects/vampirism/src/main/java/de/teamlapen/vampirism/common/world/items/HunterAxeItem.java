@@ -81,8 +81,8 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
 
     private static int getMinLevel(Tier tier) {
         return switch (tier) {
-            case ULTIMATE -> 8;
-            case ENHANCED -> 6;
+            case ULTIMATE -> 14;
+            case ENHANCED -> 9;
             default -> 4;
         };
     }

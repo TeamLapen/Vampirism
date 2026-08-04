@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.faction.common.core.ModRegistries;
+import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.util.serialization.StreamCodecExtension;
@@ -35,13 +35,13 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
     private final List<Ingredient> ingredients;
     private final ItemStackTemplate recipeOutput;
     private final int requiredLevel;
-    private final List<Holder<ISkill<?>>> requiredSkills;
+    private final List<Holder<? extends ISkill<?>>> requiredSkills;
     private final int requiredLava;
     private final boolean isSimple;
     @Nullable
     private PlacementInfo placementInfo;
 
-    public ShapelessWeaponTableRecipe(CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo category, List<Ingredient> ingredients, ItemStackTemplate result, int requiredLevel, int requiredLava, List<Holder<ISkill<?>>> requiredSkills) {
+    public ShapelessWeaponTableRecipe(CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo category, List<Ingredient> ingredients, ItemStackTemplate result, int requiredLevel, int requiredLava, List<Holder<? extends ISkill<?>>> requiredSkills) {
         this.category = category;
         this.commonInfo = commonInfo;
         this.ingredients = ingredients;
@@ -72,7 +72,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
     }
 
     @Override
-    public List<Holder<ISkill<?>>> getRequiredSkills() {
+    public List<Holder<? extends ISkill<?>>> getRequiredSkills() {
         return requiredSkills;
     }
 
@@ -135,7 +135,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
                 ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.recipeOutput),
                 Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
                 Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava),
-                ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+                ISkill.CODEC.listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
         ).apply(inst, ShapelessWeaponTableRecipe::new);
     });
 
@@ -146,7 +146,7 @@ public class ShapelessWeaponTableRecipe implements IWeaponTableRecipe {
             ItemStackTemplate.STREAM_CODEC, s -> s.recipeOutput,
             ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
             ByteBufCodecs.VAR_INT, s -> s.requiredLava,
-            ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+            SafeCast.<StreamCodec<RegistryFriendlyByteBuf, Holder<? extends ISkill<?>>>>cast(ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL)).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
             ShapelessWeaponTableRecipe::new
     );
 }

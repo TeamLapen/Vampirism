@@ -69,22 +69,13 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
     }
 
     public void removePotionEffect(T player, Holder<MobEffect> effect) {
-        MobEffectInstance ins = player.asEntity().getEffect(effect);
-        while (ins != null) {
-            IEffectInstanceWithSource insM = ins;
-            if (insM.factions$hasProperties()) {
-                if (insM.factions$hasProperty(FactionRegistries.ACTION.get().getKey(this))) {
-                    insM.factions$removeEffect();
-                    break;
-                }
-            }
-            ins = insM.factions$getHiddenEffect();
-        }
+        //noinspection DataFlowIssue
+        IEffectInstanceWithSource.removePotionEffect(player.asEntity(), effect, FactionRegistries.ACTION.get().getKey(this));
     }
 
     @Override
     public ISkill<T> asSkill() {
-        return SkillCallbacks.<T>getActionSkillMap().get(this);
+        return SkillCallbacks.getActionSkillMap(this);
     }
 
     /**

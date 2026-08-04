@@ -66,13 +66,4 @@ public class DarkStalker extends DefaultVampireAction implements ILastingAction<
         addEffectInstance(vampire, new MobEffectInstance(MobEffects.SLOWNESS, 22, 1, false, false));
     }
 
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
 }

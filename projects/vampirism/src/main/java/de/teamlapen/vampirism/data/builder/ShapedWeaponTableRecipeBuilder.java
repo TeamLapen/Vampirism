@@ -43,7 +43,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     private int lava = 1;
-    private final List<Holder<ISkill<?>>> skills = new LinkedList<>();
+    private final List<Holder<? extends ISkill<?>>> skills = new LinkedList<>();
     private int level = 1;
 
     public ShapedWeaponTableRecipeBuilder(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemLike item, int count) {
@@ -107,7 +107,7 @@ public class ShapedWeaponTableRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     @SafeVarargs
-    public final @NotNull ShapedWeaponTableRecipeBuilder skills(@NotNull Holder<ISkill<?>>... skills) {
+    public final @NotNull ShapedWeaponTableRecipeBuilder skills(@NotNull Holder<? extends ISkill<?>>... skills) {
         this.skills.addAll(Arrays.asList(skills));
         return this;
     }

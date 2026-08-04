@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.common.world.entity.player.vampire.vision;
 
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampireVision;
-import de.teamlapen.vampirism.client.OptifineHandler;
+import de.teamlapen.vampirism.client.ShaderHandler;
 import de.teamlapen.vampirism.common.config.CommonConfig;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -23,7 +23,7 @@ public class BloodVision implements IVampireVision {
     public void onActivated(@NotNull IVampirePlayer player) {
         ((VampirePlayer) player).getSkillProperties().blood_vision = true;
         Player entity = player.asEntity();
-        if (entity.level().isClientSide() && OptifineHandler.isShaders()) {
+        if (entity.level().isClientSide() && ShaderHandler.areOptifineShadersActive()) {
             CommonConfig config = ModConfig.common();
             if (!config.optifineBloodVisionWarning.get()) {
                 config.optifineBloodVisionWarning.set(true);

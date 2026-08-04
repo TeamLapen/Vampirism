@@ -99,6 +99,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
 
     @Override
     public void aiStep() {
+        aiStepCommonC();
         if (this.level() instanceof ServerLevel serverLevel) {
             aiStepC(serverLevel);
         }

@@ -38,7 +38,12 @@ public class ModParticleDescriptionProvider extends ParticleDescriptionProvider 
                 VIdentifier.mc("drip_hang")
         );
         this.spriteSet(ModParticles.SANGUINARE.get(),
-                VIdentifier.mod("sanguinare")
+                VIdentifier.mod("sanguinare_0"),
+                VIdentifier.mod("sanguinare_1"),
+                VIdentifier.mod("sanguinare_2"),
+                VIdentifier.mod("sanguinare_2"),
+                VIdentifier.mod("sanguinare_3"),
+                VIdentifier.mod("sanguinare_3")
         );
         this.spriteSet(ModParticles.DARK_SPRUCE_OAK_LEAVES.get(),
                 VIdentifier.mod("dark_needle"),
@@ -47,8 +52,11 @@ public class ModParticleDescriptionProvider extends ParticleDescriptionProvider 
         );
         this.spriteSet(ModParticles.BLOOD_SHRED.get(),
                 VIdentifier.mod("shred"),
-                4,false);
+                4,
+                false
+        );
         this.spriteSet(ModParticles.WHISPERS_OF_THE_VEIL.get(),
-                VIdentifier.mod("whispers_of_the_veil"));
+                VIdentifier.mod("whispers_of_the_veil")
+        );
     }
 }

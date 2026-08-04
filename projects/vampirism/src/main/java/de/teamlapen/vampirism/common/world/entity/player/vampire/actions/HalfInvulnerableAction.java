@@ -62,16 +62,6 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
         return IActionResult.SUCCESS;
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
-
     protected void applyEffect(IVampirePlayer vampire) {
         addEffectInstance(vampire, new MobEffectInstance(MobEffects.SLOWNESS, 22, 1, false, false));
     }

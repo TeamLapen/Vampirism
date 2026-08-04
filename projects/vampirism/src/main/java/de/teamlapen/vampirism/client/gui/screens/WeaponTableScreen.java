@@ -50,7 +50,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, MISSING_LAVA_SPRITE, i + 152, j + 69, 28, 32);
         }
 
-        List<Holder<ISkill<?>>> missingSkills = this.menu.missingSkills().orElse(List.of());
+        List<Holder<? extends ISkill<?>>> missingSkills = this.menu.missingSkills().orElse(List.of());
         if (!missingSkills.isEmpty()) {
             graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ERROR_SPRITE, i + 110, j + 43, 28, 21);
         }
@@ -60,7 +60,7 @@ public class WeaponTableScreen extends AbstractContainerScreen<WeaponTableMenu> 
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        List<Holder<ISkill<?>>> missingSkills = this.menu.missingSkills().orElse(List.of());
+        List<Holder<? extends ISkill<?>>> missingSkills = this.menu.missingSkills().orElse(List.of());
         if (mouseX > i + 110 && mouseX < i + 110 + 28 && mouseY > j + 43 && mouseY < j + 43 + 21 && !missingSkills.isEmpty()) {
             List<Component> components = Stream.concat(Stream.of(Component.translatable("gui.vampirism.weapon_table.missing_skills").withStyle(ChatFormatting.RED)), missingSkills.stream().map(skill -> Component.literal("- ").append(skill.value().getName()).withStyle(ChatFormatting.RED))).collect(Collectors.toUnmodifiableList());
             graphics.setComponentTooltipForNextFrame(this.font, components, i + 110, j + 43);

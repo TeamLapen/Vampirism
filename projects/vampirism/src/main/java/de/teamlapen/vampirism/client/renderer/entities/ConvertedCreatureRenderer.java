@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.teamlapen.vampirism.client.core.ModEntityRenderStates;
+import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.entity.converted.ConvertedCreatureEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -37,6 +39,10 @@ public class ConvertedCreatureRenderer extends EntityRenderer<ConvertedCreatureE
             var renderer = this.entityRenderDispatcher.getRenderer(pathfinderMob);
             return renderer.createRenderState(pathfinderMob, p_362204_);
         }).orElse(null);
+        // The unconverted entity is not a vampire, so the sun burning state seems not to be applied automatically
+        if (state.renderState != null && Helper.isBurningInSun(entity)) {
+            ModEntityRenderStates.markSunBurning(state.renderState);
+        }
     }
 
     @Override

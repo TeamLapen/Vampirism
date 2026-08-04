@@ -1,87 +1,33 @@
 package de.teamlapen.faction.common.factions.skills;
 
-import com.mojang.datafixers.util.Either;
-import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.actions.IAction;
-import de.teamlapen.faction.api.factions.skills.IActionSkill;
-import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.api.factions.skills.ISkillTree;
-import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
+import de.teamlapen.faction.api.factions.skills.*;
+import de.teamlapen.faction.common.core.FactionDataComponents;
+import de.teamlapen.faction.common.core.ModRegistries;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
-import net.neoforged.neoforge.registries.callback.AddCallback;
-import net.neoforged.neoforge.registries.callback.ClearCallback;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.component.DataComponentType;
+import net.neoforged.neoforge.event.DefaultDataComponentsBoundEvent;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class SkillCallbacks implements AddCallback<ISkill<?>>, ClearCallback<ISkill<?>> {
+public class SkillCallbacks {
 
+    private static Map<IAction<?>, ISkill<?>> actionToSkillMap = Map.of();
 
-    private static final Map<Holder<? extends IAction<?>>, ISkill<?>> ACTION_TO_SKILL_MAP = new HashMap<>();
-    private static final Map<Holder<? extends IAction<?>>, ISkill<?>> ACTION_TO_SKILL_MAP_READ_ONLY = Collections.unmodifiableMap(ACTION_TO_SKILL_MAP);
-
-    @Override
-    public void onAdd(@NotNull Registry<ISkill<?>> registry, int id, @NotNull ResourceKey<ISkill<?>> key, @NotNull ISkill<?> value) {
-        if (value instanceof IActionSkill<?> actionSkill) {
-            ACTION_TO_SKILL_MAP.put(actionSkill.actionHolder(), actionSkill);
-        } else if (value instanceof DefaultSkill<?> defaultSkill) {
-            defaultSkill.getActionHolder().forEach(action -> ACTION_TO_SKILL_MAP.put(action, new EmptyActionSkill<>(action)));
-        }
+    public static <T extends ISkillPlayer<T>> ISkill<T> getActionSkillMap(IAction<T> action) {
+        //noinspection unchecked
+        return (ISkill<T>) actionToSkillMap.get(action);
     }
 
-    @Override
-    public void onClear(@NotNull Registry<ISkill<?>> registry, boolean full) {
-        if (full) {
-            ACTION_TO_SKILL_MAP.clear();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> Map<IAction<T>, ISkill<T>> getActionSkillMap() {
-        return (Map<IAction<T>, ISkill<T>>) (Object) ACTION_TO_SKILL_MAP_READ_ONLY;
-    }
-
-    public record EmptyActionSkill<T extends IFactionPlayer<T> & ISkillPlayer<T>>(Holder<? extends IAction<T>> actionHolder) implements IActionSkill<T> {
-        private static final TagKey<ISkillTree> key = TagKey.create(FactionRegistries.Keys.SKILL_TREE, FIdentifier.mod("empty"));
-
-        @Override
-        public @Nullable Component getDescription() {
-            return null;
-        }
-
-        @Override
-        public TagKey<? extends IFaction<?>> factions() {
-            return this.actionHolder.value().factions();
-        }
-
-        @Override
-        public String getDescriptionId() {
-            return this.actionHolder.value().getDescriptionId();
-        }
-
-        @Override
-        public void onDisable(T player) {
-
-        }
-
-        @Override
-        public void onEnable(T player) {
-
-        }
-
-        @Override
-        public Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> allowedSkillTrees() {
-            return Either.right(key);
-        }
+    public static void onBound(DefaultDataComponentsBoundEvent event) {
+        //noinspection unchecked
+        actionToSkillMap = ModRegistries.SKILLS.listElements()
+                .filter(x -> x.components().has(FactionDataComponents.SKILL_ACTIONS))
+                .flatMap(x -> x.components().getOrDefault((DataComponentType<List<Holder<IAction<?>>>>) (Object) FactionDataComponents.SKILL_ACTIONS.get(), List.<Holder<IAction<?>>>of())
+                        .stream().map(y -> (IAction<?>) y.value()).map(a -> Pair.of(a, x.value())))
+                .collect(Collectors.toMap(Pair::getKey, Pair::getValue, (x, a) -> x));
     }
 }

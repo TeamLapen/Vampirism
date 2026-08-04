@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.common.world.entity.player.vampire;
 
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.common.config.ModConfig;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
@@ -24,6 +25,8 @@ public class VampireLeveling {
     private static final AltarInfusionRequirements LEVEL_14 = new AltarInfusionRequirements(14, 4, 2, 25, 1);
 
     private static final @Nullable VampireLevelRequirement[] LEVEL_REQUIREMENTS = {null, null, LEVEL_2, LEVEL_3, LEVEL_4, LEVEL_5, LEVEL_6, LEVEL_7, LEVEL_8, LEVEL_9, LEVEL_10, LEVEL_11, LEVEL_12, LEVEL_13, LEVEL_14};
+
+    private static final int[] PASSIVE_LEVELING_BLOOD = {0, 0, 100, 175};
 
     public static Optional<VampireLevelRequirement> getLevelRequirement(@Range(from = 0, to = REFERENCE.HIGHEST_HUNTER_LEVEL) int targetLevel) {
         //noinspection ConstantValue
@@ -54,6 +57,17 @@ public class VampireLeveling {
     public interface VampireLevelRequirement {
         @Range(from = 2, to = REFERENCE.HIGHEST_VAMPIRE_LEVEL)
         int targetLevel();
+    }
+
+    public static boolean canLevelPassively(int currentLevel) {
+        return currentLevel > 0 && currentLevel < 3 && ModConfig.balance().vpPassiveLevelingEnabled.get();
+    }
+
+    public static int getPassiveLevelingBlood(@Range(from = 0, to = REFERENCE.HIGHEST_VAMPIRE_LEVEL) int targetLevel) {
+        //noinspection ConstantValue
+        if (targetLevel < 0 || targetLevel >= PASSIVE_LEVELING_BLOOD.length) return 0;
+        int blood = PASSIVE_LEVELING_BLOOD[targetLevel];
+        return blood == 0 ? 0 : Math.max(1, (int) (blood * ModConfig.balance().vpPassiveLevelingBloodFactor.get()));
     }
 
     public record AltarInfusionRequirements(int targetLevel, int pureBloodLevel, int pureBloodQuantity, int humanHeartQuantity, int vampireBookQuantity) implements VampireLevelRequirement {
