@@ -37,6 +37,7 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
     @Nullable
     private ResourceKey<IAction<?>> action;
     private boolean addDefaultDescription;
+    private List<Supplier<?>> descriptionArgs = List.of();
 
 
     //<editor-fold desc="Value Getter">
@@ -55,6 +56,10 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
 
     public Map<Holder<Attribute>, SkillAttributeHolder> attributes() {
         return Objects.requireNonNullElseGet(this.attributeModifier, Map::of);
+    }
+
+    public List<Supplier<?>> descriptionArgs() {
+        return this.descriptionArgs;
     }
 
     //</editor-fold>
@@ -105,6 +110,11 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
 
     public SkillProperties<T> withDescription() {
         this.addDefaultDescription = true;
+        return this;
+    }
+
+    public SkillProperties<T> withDescription(Supplier<?>... args) {
+        this.descriptionArgs = List.of(args);
         return this;
     }
 
@@ -165,7 +175,7 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
                     if (!builder.has(FactionDataComponents.SKILL_TREE_REQUIREMENT)) {
                         builder.set(FactionDataComponents.SKILL_TREE_REQUIREMENT, new SkillTreeRequirement(FactionSkillTreeTags.DEFAULT));
                     }
-                    if (!builder.has(FactionDataComponents.SKILL_DESCRIPTION) && builder.has(FactionDataComponents.SKILL_ACTION)) {
+                    if (!builder.has(FactionDataComponents.SKILL_DESCRIPTION) && this.descriptionArgs.isEmpty() && builder.has(FactionDataComponents.SKILL_ACTION)) {
                         builder.set(FactionDataComponents.SKILL_DESCRIPTION, Component.translatable("gui.factionapi.skills.unlocks_action"));
                     }
                     builder.set(FactionDataComponents.SKILL_NAME, name);

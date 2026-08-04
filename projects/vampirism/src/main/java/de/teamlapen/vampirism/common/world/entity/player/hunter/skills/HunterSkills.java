@@ -73,7 +73,7 @@ public class HunterSkills {
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.registerSkill("double_it", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DUAL_WIELDING = SKILLS.registerSkill("dual_wielding", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.registerSkill("master_craftsmanship", props -> new HunterSkill(props.cost(2).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DESTRUCTION_DEFERMENT = SKILLS.registerSkill("destruction_deferment", props -> new HunterSkill(props.cost(2).withDescription(Component.translatable("skill.vampirism.destruction_deferment.desc", ModConfig.balance().hsDestructionDefermentDuration.getDefault()))));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DESTRUCTION_DEFERMENT = SKILLS.registerSkill("destruction_deferment", props -> new HunterSkill(props.cost(2).withDescription(ModConfig.balance().hsDestructionDefermentDuration)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE2 = SKILLS.registerSkill("stake2", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> AXE2 = SKILLS.registerSkill("axe2", props -> new HunterSkill(props.cost(3).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARTISAN_CRAFTSMANSHIP = SKILLS.registerSkill("artisan_craftsmanship", props -> new HunterSkill(props.cost(3).withDescription()));
