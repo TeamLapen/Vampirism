@@ -203,9 +203,9 @@ public class SkillsTabComponent {
     }
 
     @Nullable
-    public Holder<ISkill<?>> getSelected(int mouseX, int mouseY) {
+    public Holder<? extends ISkill<?>> getSelected(int mouseX, int mouseY) {
         for (SkillNodeComponent screen : this.nodes.values()) {
-            Holder<ISkill<?>> selected = screen.getSelectedSkill(getScaledMouseX(mouseX), getScaledMouseY(mouseY), 0, 0);
+            Holder<? extends ISkill<?>> selected = screen.getSelectedSkill(getScaledMouseX(mouseX), getScaledMouseY(mouseY), 0, 0);
             if (selected != null) {
                 return selected;
             }

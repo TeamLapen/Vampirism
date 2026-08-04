@@ -157,7 +157,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
         return stillValid(this.worldPos, playerIn, ModBlocks.WEAPON_TABLE.get());
     }
 
-    public Optional<List<Holder<ISkill<?>>>> missingSkills() {
+    public Optional<List<Holder<? extends ISkill<?>>>> missingSkills() {
         return this.worldPos.evaluate((world, pos) -> {
             CraftingInput input = CraftingInput.of(this.craftMatrix.getWidth(), this.craftMatrix.getHeight(), this.craftMatrix.getItems());
             Optional<RecipeHolder<IWeaponTableRecipe>> recipe;
@@ -185,7 +185,7 @@ public class WeaponTableMenu extends AbstractContainerMenu {
             craftResultIn.setItem(0, ItemStack.EMPTY);
             if (optional.isPresent()) {
                 RecipeHolder<IWeaponTableRecipe> recipe = optional.get();
-                if ((craftResultIn.setRecipeUsed(serverPlayer, recipe) || ModList.get().isLoaded("fastbench")) && recipe.value().getRequiredLevel() <= hunter.getLevel() && Helper.areSkillsEnabled(hunter.getSkillHandler(), recipe.value().getRequiredSkills())) {
+                if ((craftResultIn.setRecipeUsed(serverPlayer, recipe) || ModList.get().isLoaded("fastbench")) && recipe.value().getRequiredLevel() <= hunter.getLevel() && hunter.getSkillHandler().areSkillsEnabled(recipe.value().getRequiredSkills())) {
                     this.worldPos.execute((world, pos) -> {
                         if (world.getBlockState(pos).getValue(WeaponTableBlock.LAVA) >= recipe.value().getRequiredLavaUnits()) {
                             craftResultIn.setItem(0, recipe.value().assemble(craftMatrixIn));

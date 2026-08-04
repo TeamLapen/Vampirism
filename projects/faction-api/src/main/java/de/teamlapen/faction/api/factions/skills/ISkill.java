@@ -4,20 +4,28 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
+import de.teamlapen.faction.api.factions.actions.IAction;
+import de.teamlapen.faction.api.util.SafeCast;
 import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Skill that tha unlocks abilities for a player.
  */
 public interface ISkill<T extends ISkillPlayer<T>> extends ISkillLike<T> {
 
-    Codec<Holder<ISkill<?>>> CODEC = FactionRegistries.SKILL.get().holderByNameCodec();
+    Codec<Holder<? extends ISkill<?>>> CODEC = SafeCast.cast(FactionRegistries.SKILL.get().holderByNameCodec());
 
     /**
      * The description for this skill or null if there is no description.
@@ -32,9 +40,7 @@ public interface ISkill<T extends ISkillPlayer<T>> extends ISkillLike<T> {
      */
     TagKey<? extends IFaction<?>> factions();
 
-    default MutableComponent getName() {
-        return Component.translatable(getDescriptionId());
-    }
+    Component getName();
 
     String getDescriptionId();
 
@@ -57,17 +63,26 @@ public interface ISkill<T extends ISkillPlayer<T>> extends ISkillLike<T> {
      *
      * @return The cost of the skill
      */
-    @Range(from = 0, to = 9)
-    default int getSkillPointCost() {
-        return 1;
-    }
+    int getSkillPointCost();
+
+    /**
+     * In case this is an action skill, this will return the one skill
+     */
+    @Nullable
+    Holder<? extends IAction<T>> getAction();
+
+    /**
+     * This contains all skills that will be enabled by this skill
+     */
+    List<Holder<? extends IAction<T>>> getActions();
+
 
     /**
      * Skill can only be added to skill trees defined by the return value.
      *
      * @return A key of the allowed skill tree or a tag of skill trees
      */
-    Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> allowedSkillTrees();
+    SkillTreeRequirement allowedSkillTrees();
 
     @Override
     default ISkill<T> asSkill() {

@@ -21,26 +21,9 @@ import java.util.Optional;
 /**
  * Interface for player actions
  */
-@SuppressWarnings("unused")
 public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
 
     Codec<Holder<IAction<?>>> CODEC = FactionRegistries.ACTION.get().holderByNameCodec();
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    static boolean is(@Nullable Holder<? extends IAction<?>> action, @Nullable TagKey<? extends IAction<?>> tag) {
-        if (action == null) {
-            return false;
-        }
-        return tag != null && action.is((TagKey) tag);
-    }
-
-    @SuppressWarnings({"deprecation", "unchecked", "rawtypes"})
-    static boolean is(@Nullable Holder<? extends IAction<?>> first, @Nullable Holder<? extends IAction<?>> second) {
-        if (first == null) {
-            return second == null;
-        }
-        return second != null && first.is((Holder) second);
-    }
 
     /**
      * Checks if the player can use this action
@@ -75,26 +58,8 @@ public interface IAction<T extends ISkillPlayer<T>> extends ISkillLike<T> {
     IActionResult onActivated(T player, ActivationContext context);
 
     /**
-     * @param faction The faction to test
-     * @return of the action can be used by the given faction
-     */
-    default boolean matchesFaction(@Nullable Holder<? extends IPlayableFaction<?>> faction) {
-        return IFaction.is(faction, factions());
-    }
-
-    /**
-     * @return if the action's cooldown should be rendered in the HUD
-     */
-    default boolean showHudCooldown(Player player) {
-        return false;
-    }
-
-    ISkill<T> asSkill();
-
-    /**
      * Provide some context of the activation instant sent from the client
      */
-    @SuppressWarnings("unused")
     interface ActivationContext {
         /**
          * @return The block the player is looking at, if any

@@ -39,7 +39,7 @@ public class ArmorOfSwiftnessItem extends HunterArmorItem implements IItemWithTi
         };
     }
 
-    public ArmorOfSwiftnessItem(ArmorMaterial material, ArmorType type, Tier tier, Holder<ISkill<?>> skill, Properties properties) {
+    public ArmorOfSwiftnessItem(ArmorMaterial material, ArmorType type, Tier tier, Holder<? extends ISkill<?>> skill, Properties properties) {
         super(material, type, skill, properties, ItemAttributeModifiers.builder().add(Attributes.MOVEMENT_SPEED, new AttributeModifier(VIdentifier.mod("armor_modifier_" + type.getSerializedName()), getSpeedReduction(tier), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), EquipmentSlotGroup.bySlot(type.getSlot())).build());
         this.tier = tier;
     }

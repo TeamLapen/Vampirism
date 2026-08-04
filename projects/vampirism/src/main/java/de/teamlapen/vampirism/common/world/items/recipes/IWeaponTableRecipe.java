@@ -41,7 +41,7 @@ public interface IWeaponTableRecipe extends Recipe<CraftingInput> {
     /**
      * @return The skills that have to be unlocked to craft this. Can be empty
      */
-    List<Holder<ISkill<?>>> getRequiredSkills();
+    List<Holder<? extends ISkill<?>>> getRequiredSkills();
 
     List<Ingredient> getIngredients();
 }

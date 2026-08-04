@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModRecipes;
@@ -36,12 +37,12 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe {
     private final ShapedRecipePattern pattern;
     private final ItemStackTemplate recipeOutput;
     private final int requiredLevel;
-    private final List<Holder<ISkill<?>>> requiredSkills;
+    private final List<Holder<? extends ISkill<?>>> requiredSkills;
     private final int requiredLava;
     @Nullable
     private PlacementInfo placementInfo;
 
-    public ShapedWeaponTableRecipe(CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo category, ShapedRecipePattern pattern, ItemStackTemplate recipeOutputIn, int requiredLevel, List<Holder<ISkill<?>>> requiredSkills, int requiredLava) {
+    public ShapedWeaponTableRecipe(CommonInfo commonInfo, CraftingRecipe.CraftingBookInfo category, ShapedRecipePattern pattern, ItemStackTemplate recipeOutputIn, int requiredLevel, List<Holder<? extends ISkill<?>>> requiredSkills, int requiredLava) {
         this.category = category;
         this.commonInfo = commonInfo;
         this.pattern = pattern;
@@ -62,7 +63,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe {
     }
 
     @Override
-    public List<Holder<ISkill<?>>> getRequiredSkills() {
+    public List<Holder<? extends ISkill<?>>> getRequiredSkills() {
         return requiredSkills;
     }
 
@@ -134,7 +135,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe {
                 ShapedRecipePattern.MAP_CODEC.forGetter(p_311733_ -> p_311733_.pattern),
                 ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_311730_ -> p_311730_.recipeOutput),
                 Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.requiredLevel),
-                ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills),
+                ISkill.CODEC.listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills),
                 Codec.INT.optionalFieldOf("lava", 0).forGetter(p -> p.requiredLava)
         ).apply(inst, ShapedWeaponTableRecipe::new);
     });
@@ -145,7 +146,7 @@ public class ShapedWeaponTableRecipe implements IWeaponTableRecipe {
             ShapedRecipePattern.STREAM_CODEC, s -> s.pattern,
             ItemStackTemplate.STREAM_CODEC, s -> s.recipeOutput,
             ByteBufCodecs.VAR_INT, s -> s.requiredLevel,
-            ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+            SafeCast.<StreamCodec<RegistryFriendlyByteBuf, Holder<? extends ISkill<?>>>>cast(ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL)).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
             ByteBufCodecs.VAR_INT, s -> s.requiredLava,
             ShapedWeaponTableRecipe::new
     );

@@ -58,6 +58,9 @@
   "task_requirement.factionapi.level.range": "Level %1$s to %2$s",
   "task_requirement.factionapi.parent": "Complete %s first",
 
+  "skill.factionapi.minion_recovery": "Minion Recovery",
+  "skill.factionapi.minion_recovery.desc": "Speeds up the time your minions need to recover",
+
   "gui.factionapi.faction_menu.appearance_menu": "Appearance Menu",
   "gui.factionapi.faction_menu.locate_taskmaster": "Last Known Position",
   "gui.factionapi.faction_menu.distance": " (%s blocks away)",

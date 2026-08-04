@@ -34,7 +34,6 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NullMarked;
 
@@ -263,10 +262,11 @@ public class SkillsScreen extends Screen {
 
 
     private void unlockSkill(double mouseX, double mouseY) {
-        Holder<ISkill<?>> selected = selectedTab != null ? selectedTab.getSelected((int) (mouseX - guiLeft - 9), (int) (mouseY - guiTop - 18)) : null;
+        Holder<? extends ISkill<?>> selected = selectedTab != null ? selectedTab.getSelected((int) (mouseX - guiLeft - 9), (int) (mouseY - guiTop - 18)) : null;
         if (selected != null) {
             if (this.factionPlayer.getSkillHandler().canSkillBeEnabled(selected, this.selectedTab.getSkillTree()) == ISkillHandler.Result.OK) {
-                FactionsMod.proxy.sendToServer(new ServerboundUnlockSkillPacket(selected, this.selectedTab.getSkillTree()));
+                //noinspection unchecked
+                FactionsMod.proxy.sendToServer(new ServerboundUnlockSkillPacket((Holder<ISkill<?>>) selected, this.selectedTab.getSkillTree()));
                 playSoundEffect(FactionSounds.UNLOCK_SKILLS.get(), 0.7F);
             } else {
                 playSoundEffect(SoundEvents.NOTE_BLOCK_BASS.value(), 0.5F);
@@ -274,7 +274,7 @@ public class SkillsScreen extends Screen {
         }
     }
 
-    private void playSoundEffect(@NotNull SoundEvent event, float pitch) {
+    private void playSoundEffect(SoundEvent event, float pitch) {
         this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(event, pitch));
     }
 }

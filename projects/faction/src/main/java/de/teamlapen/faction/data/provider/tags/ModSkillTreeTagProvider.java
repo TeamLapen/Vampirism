@@ -3,7 +3,7 @@ package de.teamlapen.faction.data.provider.tags;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.util.REFERENCE;
-import de.teamlapen.faction.common.tags.FactionSkillTreeTags;
+import de.teamlapen.faction.api.tags.FactionSkillTreeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.KeyTagProvider;

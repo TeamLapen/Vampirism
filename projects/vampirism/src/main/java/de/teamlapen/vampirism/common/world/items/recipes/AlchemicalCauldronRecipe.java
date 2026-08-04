@@ -7,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.common.core.ModRegistries;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.common.core.ModRecipes;
@@ -36,7 +37,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     private final Either<Ingredient, FluidStackTemplate> fluid;
     protected final Ingredient ingredient;
     protected final ItemStackTemplate result;
-    private final List<Holder<ISkill<?>>> skills;
+    private final List<Holder<? extends ISkill<?>>> skills;
     private final int reqLevel;
     protected final float experience;
     protected final int cookingTime;
@@ -44,7 +45,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
     private PlacementInfo placementInfo;
     private final CommonInfo info;
 
-    public AlchemicalCauldronRecipe(CommonInfo info, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStackTemplate> fluidIn, ItemStackTemplate resultIn, List<Holder<ISkill<?>>> skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
+    public AlchemicalCauldronRecipe(CommonInfo info, String groupIn, Ingredient ingredientIn, Either<Ingredient, FluidStackTemplate> fluidIn, ItemStackTemplate resultIn, List<Holder<? extends ISkill<?>>> skillsIn, int reqLevelIn, int cookTimeIn, float exp) {
         this.info = info;
         this.group = groupIn;
         this.ingredient = ingredientIn;
@@ -63,7 +64,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
 
     public boolean canBeCooked(int level, ISkillHandler<IHunterPlayer> skillHandler) {
         if (level < reqLevel) return false;
-        return Helper.areSkillsEnabled(skillHandler, skills);
+        return skillHandler.areSkillsEnabled(skills);
     }
 
     @Override
@@ -109,7 +110,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
         return reqLevel;
     }
 
-    public List<Holder<ISkill<?>>> getRequiredSkills() {
+    public List<Holder<? extends ISkill<?>>> getRequiredSkills() {
         return skills;
     }
 
@@ -152,7 +153,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
                     Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300833_ -> p_300833_.ingredient),
                     Codec.either(Ingredient.CODEC, FluidStackTemplate.CODEC).fieldOf("fluid").forGetter(s -> s.fluid),
                     ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_300827_ -> p_300827_.result),
-                    ModRegistries.SKILLS.holderByNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.skills),
+                    ISkill.CODEC.listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.skills),
                     Codec.INT.optionalFieldOf("level", 1).forGetter(p -> p.reqLevel),
                     Codec.INT.optionalFieldOf("cookTime", 200).forGetter(p -> p.cookingTime),
                     Codec.FLOAT.optionalFieldOf("experience", 0.2F).forGetter(p -> p.experience)
@@ -164,7 +165,7 @@ public class AlchemicalCauldronRecipe implements Recipe<AlchemicalCauldronRecipe
             Ingredient.CONTENTS_STREAM_CODEC, AlchemicalCauldronRecipe::getIngredient,
             ByteBufCodecs.either(Ingredient.CONTENTS_STREAM_CODEC, FluidStackTemplate.STREAM_CODEC), AlchemicalCauldronRecipe::getFluid,
             ItemStackTemplate.STREAM_CODEC, AlchemicalCauldronRecipe::result,
-            ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), AlchemicalCauldronRecipe::getRequiredSkills,
+            SafeCast.<StreamCodec<RegistryFriendlyByteBuf, Holder<? extends ISkill<?>>>>cast(ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL)).apply(ByteBufCodecs.list()), AlchemicalCauldronRecipe::getRequiredSkills,
             ByteBufCodecs.INT, AlchemicalCauldronRecipe::getRequiredLevel,
             ByteBufCodecs.INT, AlchemicalCauldronRecipe::getCookingTime,
             ByteBufCodecs.FLOAT, AlchemicalCauldronRecipe::getExperience,

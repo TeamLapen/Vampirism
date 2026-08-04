@@ -63,13 +63,4 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
         return IActionResult.SUCCESS;
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
 }

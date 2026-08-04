@@ -67,16 +67,6 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
         return false;
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
-
     protected void applyEffects(IVampirePlayer vampire) {
         addEffectInstance(vampire, new MobEffectInstance(MobEffects.SPEED, 22, 2, false, false));
         addEffectInstance(vampire, new MobEffectInstance(MobEffects.STRENGTH, 22, 0, false, false));

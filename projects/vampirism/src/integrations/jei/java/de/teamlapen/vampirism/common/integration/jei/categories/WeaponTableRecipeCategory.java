@@ -71,11 +71,11 @@ public class WeaponTableRecipeCategory implements IRecipeCategory<RecipeHolder<I
             graphics.text(minecraft.font, level, x, y, Color.GRAY.getRGB(), false);
             y += minecraft.font.lineHeight + 2;
         }
-        List<Holder<ISkill<?>>> requiredSkills = recipe.getRequiredSkills();
+        List<Holder<? extends ISkill<?>>> requiredSkills = recipe.getRequiredSkills();
         if (!requiredSkills.isEmpty()) {
             MutableComponent skillText = Component.translatable("gui.vampirism.skill_required", " ");
 
-            for (Holder<ISkill<?>> skill : recipe.getRequiredSkills()) {
+            for (Holder<? extends ISkill<?>> skill : recipe.getRequiredSkills()) {
                 skillText.append(skill.value().getName()).append(" ");
 
             }

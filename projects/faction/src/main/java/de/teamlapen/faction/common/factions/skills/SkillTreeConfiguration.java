@@ -41,7 +41,7 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
         return new RootBuilder(skillTree, root);
     }
 
-    public Optional<SkillTreeNodeConfiguration> getNode(Holder<ISkill<?>> skill) {
+    public Optional<SkillTreeNodeConfiguration> getNode(Holder<? extends ISkill<?>> skill) {
         for (SkillTreeNodeConfiguration child : children) {
             var result = child.getNode(skill);
             if (result.isPresent()) {
@@ -83,7 +83,7 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
             return node.value().skills().size();
         }
 
-        public List<Holder<ISkill<?>>> elements() {
+        public List<Holder<? extends ISkill<?>>> elements() {
             return node.value().skills();
         }
 
@@ -112,7 +112,7 @@ public record SkillTreeConfiguration(Holder<ISkillTree> skillTree, Holder<ISkill
             return treeConfig;
         }
 
-        public Optional<SkillTreeNodeConfiguration> getNode(Holder<ISkill<?>> skill) {
+        public Optional<SkillTreeNodeConfiguration> getNode(Holder<? extends ISkill<?>> skill) {
             if (node().value().containsSkill(skill)) {
                 return Optional.of(this);
             }

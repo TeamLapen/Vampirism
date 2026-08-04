@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.common.integration.jei.categories;
 
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.api.registries.skills.DeferredSkill;
 import de.teamlapen.faction.common.util.Color;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
@@ -27,6 +28,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
@@ -138,8 +140,8 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
         return skillLines;
     }
 
-    private void addSkillLine(DeferredHolder<ISkill<?>, ISkill<IHunterPlayer>> skill, List<Component> skillLines, @Nullable ISkillHandler<IHunterPlayer> skills) {
-        skillLines.add(skill.get().getName().withStyle(skills != null && skills.isSkillEnabled(skill) ? ChatFormatting.GREEN : ChatFormatting.RED));
+    private void addSkillLine(Holder<? extends ISkill<IHunterPlayer>> skill, List<Component> skillLines, @Nullable ISkillHandler<IHunterPlayer> skills) {
+        skillLines.add(skill.value().getName().copy().withStyle(skills != null && skills.isSkillEnabled(skill) ? ChatFormatting.GREEN : ChatFormatting.RED));
     }
 
     @Override

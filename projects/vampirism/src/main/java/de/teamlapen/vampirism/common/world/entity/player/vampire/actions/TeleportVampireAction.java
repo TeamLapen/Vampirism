@@ -101,8 +101,4 @@ public class TeleportVampireAction extends DefaultVampireAction {
         return ModConfig.balance().vaTeleportEnabled.get();
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
 }

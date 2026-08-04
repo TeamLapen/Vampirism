@@ -36,8 +36,9 @@ public class ActionCriterionTrigger extends SimpleCriterionTrigger<ActionCriteri
                 }
         );
 
+        @SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
         public boolean matches(Holder<? extends IAction<?>> action) {
-            return IAction.is(this.action, action);
+            return this.action.is((Holder)action);
         }
 
         public static Criterion<TriggerInstance> of(Holder<? extends IAction<?>> action) {

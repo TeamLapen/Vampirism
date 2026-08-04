@@ -7,5 +7,5 @@ import net.minecraft.world.item.Item;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public record BlessableRecipe(@NonNull IBlessableItem item, @NonNull Item output, @Nullable Holder<ISkill<?>> requiredSkill) {
+public record BlessableRecipe(@NonNull IBlessableItem item, @NonNull Item output, @Nullable Holder<? extends ISkill<?>> requiredSkill) {
 }

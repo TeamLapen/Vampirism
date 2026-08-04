@@ -27,6 +27,7 @@ public class ModRegistryManager {
         FactionAttachments.register(bus);
         FactionSkills.register(bus);
         FactionSkillPointProvider.register(bus);
+        FactionConsumer.register(bus);
 
         registerModEventHandler(bus);
     }

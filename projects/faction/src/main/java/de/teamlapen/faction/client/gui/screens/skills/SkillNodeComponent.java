@@ -1,7 +1,6 @@
 package de.teamlapen.faction.client.gui.screens.skills;
 
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.skills.IActionSkill;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillNode;
 import de.teamlapen.faction.api.util.FIdentifier;
@@ -115,7 +114,7 @@ public class SkillNodeComponent {
         }
     }
 
-    private List<Holder<ISkill<?>>> getLockingSkills(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
+    private List<Holder<? extends ISkill<?>>> getLockingSkills(SkillTreeConfiguration.SkillTreeNodeConfiguration node) {
         Registry<ISkillNode> nodes = minecraft.level.registryAccess().lookupOrThrow(FactionRegistries.Keys.SKILL_NODE);
         return node.node().value().lockingNodes().stream().flatMap(x -> nodes.getOptional(x).stream()).flatMap(x -> x.skills().stream()).collect(Collectors.toList());
     }
@@ -229,7 +228,7 @@ public class SkillNodeComponent {
             Holder<ISkill<?>> hoveredSkill = elements[hoveredSkillIndex];
             int x = getNodeStart() + (26 + 10) * hoveredSkillIndex;
 
-            Collection<Holder<ISkill<?>>> lockingSkills = this.getLockingSkills(this.skillNode);
+            Collection<Holder<? extends ISkill<?>>> lockingSkills = this.getLockingSkills(this.skillNode);
             //draw blocked
             if (state == SkillNodeState.LOCKED || state == SkillNodeState.VISIBLE) {
                 List<Component> text = new ArrayList<>();
@@ -296,8 +295,9 @@ public class SkillNodeComponent {
     }
 
     private Identifier getSkillIconLocation(ISkill<?> skill) {
-        if (skill instanceof IActionSkill<?> actionSkill) {
-            Identifier location = actionSkill.actionHolder().getKey().identifier();
+        var action = skill.getAction();
+        if (action != null) {
+            Identifier location = action.unwrapKey().orElseThrow().identifier();
             return location.withPath(x -> "textures/actions/" + x + ".png");
         } else {
             Identifier id = RegUtil.id(skill);
@@ -316,7 +316,7 @@ public class SkillNodeComponent {
     }
 
     @Nullable
-    public Holder<ISkill<?>> getSelectedSkill(double mouseX, double mouseY, int scrollX, int scrollY) {
+    public Holder<? extends ISkill<?>> getSelectedSkill(double mouseX, double mouseY, int scrollX, int scrollY) {
         if (!isMouseOver(mouseX, mouseY, scrollX, scrollY)) return null;
         int nodeWidth = getNodeWidth();
         for (int i = 0; i < this.skillNode.elementCount(); i++) {

@@ -41,7 +41,7 @@ public class ShapelessWeaponTableRecipeBuilder extends ShapelessRecipeBuilder {
     }
 
     private int lava = 1;
-    private final List<Holder<ISkill<?>>> skills = new LinkedList<>();
+    private final List<Holder<? extends ISkill<?>>> skills = new LinkedList<>();
     private int level = 1;
 
     public ShapelessWeaponTableRecipeBuilder(HolderGetter<Item> holderGetter, @NotNull RecipeCategory category, @NotNull ItemStackTemplate result) {

@@ -62,16 +62,6 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
         return false;
     }
 
-    @Override
-    public boolean showHudCooldown(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean showHudDuration(Player player) {
-        return true;
-    }
-
     protected void applyEffect(IVampirePlayer vampire) {
         addEffectInstance(vampire, new MobEffectInstance(ModEffects.SUNSCREEN, 22, 3, false, false));
     }
