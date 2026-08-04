@@ -28,15 +28,15 @@ public class HunterArmorItem extends ModArmorItem {
 
     public static final Component MASSAGE_RESTRICTION_HUNTER_CLOTHING = Component.translatable("message.vampirism.restriction.hunter_clothing");
 
-    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, @Nullable Holder<ISkill<?>> skill, Properties props) {
+    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, @Nullable Holder<? extends ISkill<?>> skill, Properties props) {
         super(materialIn, type, formRestriction(props, skill));
     }
 
-    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, @Nullable Holder<ISkill<?>> skill, Properties props, ItemAttributeModifiers attributeModifiers) {
+    public HunterArmorItem(ArmorMaterial materialIn, ArmorType type, @Nullable Holder<? extends ISkill<?>> skill, Properties props, ItemAttributeModifiers attributeModifiers) {
         super(materialIn, type, formRestriction(props, skill), attributeModifiers);
     }
 
-    private static Properties formRestriction(Properties props, @Nullable Holder<ISkill<?>> skill) {
+    private static Properties formRestriction(Properties props, @Nullable Holder<? extends ISkill<?>> skill) {
         FactionRestriction.Builder builder = FactionRestriction.builder(VampirismTags.Factions.IS_HUNTER).message(MASSAGE_RESTRICTION_HUNTER_CLOTHING);
         if (skill != null) {
             builder.skill(skill);

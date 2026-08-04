@@ -21,7 +21,7 @@ public class HunterCoatItem extends HunterArmorItem implements IItemWithTier {
 
     private final Tier tier;
 
-    public HunterCoatItem(ArmorMaterial material, ArmorType type, Tier tier, Holder<ISkill<?>> skill, Properties properties) {
+    public HunterCoatItem(ArmorMaterial material, ArmorType type, Tier tier, Holder<? extends ISkill<?>> skill, Properties properties) {
         super(material, type, skill, properties);
         this.tier = tier;
     }
