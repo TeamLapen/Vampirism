@@ -999,6 +999,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
 
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL)
                 .lava(1)
+                .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("XZZX")
                 .pattern("XXXX")
                 .pattern("XYYX")
@@ -1039,6 +1040,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL)
                 .lava(1)
+                .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("XZZX")
                 .pattern("XYYX")
                 .pattern("XXXX")
@@ -1076,6 +1078,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL)
                 .lava(1)
+                .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XZZX")
@@ -1113,6 +1116,8 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .unlockedBy("has_diamond", has(DIAMOND))
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL)
+                .lava(1)
+                .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("XXXX")
                 .pattern("XYYX")
                 .pattern("XZZX")
@@ -1158,6 +1163,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
 
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_CHEST_NORMAL)
                 .lava(2)
+                .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("XWWX")
                 .pattern("XZZX")
                 .pattern("XZZX")
@@ -1200,6 +1206,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_LEGS_NORMAL)
                 .lava(2)
+                .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("XYYX")
                 .pattern("XZZX")
                 .pattern("XZZX")
@@ -1239,6 +1246,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_HEAD_NORMAL)
                 .lava(2)
+                .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("XYYX")
                 .pattern("XZZX")
                 .pattern("XZZX")
@@ -1278,6 +1286,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.HUNTER_COAT_FEET_NORMAL)
                 .lava(2)
+                .skills(HunterSkills.WEAPON_TABLE)
                 .pattern("    ")
                 .pattern("X  X")
                 .pattern("XZZX")

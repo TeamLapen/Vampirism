@@ -15,5 +15,8 @@
   ],
   "result": {
     "id": "vampirism:hunter_coat_head_normal"
-  }
+  },
+  "skill": [
+    "vampirism:weapon_table"
+  ]
 }
