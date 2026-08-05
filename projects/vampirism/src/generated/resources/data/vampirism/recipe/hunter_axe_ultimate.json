@@ -16,11 +16,6 @@
     "  Z "
   ],
   "result": {
-    "components": {
-      "minecraft:enchantments": {
-        "minecraft:knockback": 3
-      }
-    },
     "id": "vampirism:hunter_axe_ultimate"
   }
 }

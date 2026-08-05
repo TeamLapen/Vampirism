@@ -315,9 +315,9 @@ public class ModCreativeTabs {
         }
 
         private void addWeapons() {
-            addItemGen(HUNTER_AXE_NORMAL);
-            addItemGen(HUNTER_AXE_ENHANCED);
-            addItemGen(HUNTER_AXE_ULTIMATE);
+            add(HUNTER_AXE_NORMAL);
+            add(HUNTER_AXE_ENHANCED);
+            add(HUNTER_AXE_ULTIMATE);
 
             add(BASIC_CROSSBOW);
             add(BASIC_DOUBLE_CROSSBOW);

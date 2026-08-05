@@ -78,19 +78,19 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
 
     public @NotNull AlchemyTableRecipeBuilder oilIngredient(@NotNull Holder<IOil> oil) {
         this.ingredient = DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(oil), ModItems.OIL_BOTTLE.get());
-        return this;
+        return unlockedBy("has_bottles", has(this.itemLookup, ModItems.OIL_BOTTLE.get()));
     }
 
     public AlchemyTableRecipeBuilder plantOilIngredient() {
-        return ingredient(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.PLANT), ModItems.OIL_BOTTLE.get())).unlockedBy("has_bottles", has(this.itemLookup, ModItems.OIL_BOTTLE.get()));
+        return oilIngredient(ModOils.PLANT);
     }
 
     public AlchemyTableRecipeBuilder bloodOilIngredient() {
-        return ingredient(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.VAMPIRE_BLOOD), ModItems.OIL_BOTTLE.get())).unlockedBy("has_bottles", has(this.itemLookup, ModItems.OIL_BOTTLE.get()));
+        return oilIngredient(ModOils.VAMPIRE_BLOOD);
     }
 
     public AlchemyTableRecipeBuilder draculaOilIngredient() {
-        return ingredient(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(ModOils.DRACULA_BLOOD), ModItems.OIL_BOTTLE.get())).unlockedBy("has_bottles", has(this.itemLookup, ModItems.OIL_BOTTLE.get()));
+        return oilIngredient(ModOils.DRACULA_BLOOD);
     }
 
     public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input) {

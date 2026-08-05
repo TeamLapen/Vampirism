@@ -283,7 +283,6 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
      */
     protected void quarrelRecipe(ItemLike quarrel, Holder<IOil> oil, int quantity) {
         shapelessWeaponTable(RecipeCategory.COMBAT, quarrel, quantity)
-                .lava(1)
                 .requires(ModItems.QUARREL_NORMAL, quantity)
                 .requires(DataComponentIngredient.of(false, ModDataComponents.OIL, new OilContent(oil), ModItems.OIL_BOTTLE))
                 .unlockedBy("has_quarrel_normal", has(ModItems.QUARREL_NORMAL))
