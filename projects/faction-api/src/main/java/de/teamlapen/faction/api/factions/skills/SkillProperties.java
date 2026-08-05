@@ -169,6 +169,9 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
                     if (!builder.has(FactionDataComponents.SKILL_FACTIONS)) {
                         throw new IllegalStateException("Skill factions are not set for: " + key);
                     }
+                    if (!this.descriptionArgs.isEmpty() && (this.addDefaultDescription || builder.has(FactionDataComponents.SKILL_DESCRIPTION))) {
+                        throw new IllegalStateException("Skill description is set both directly and via arguments for: " + key);
+                    }
                     if (this.addDefaultDescription) {
                         builder.set(FactionDataComponents.SKILL_DESCRIPTION, Component.translatable(effectiveNameId() + ".desc"));
                     }

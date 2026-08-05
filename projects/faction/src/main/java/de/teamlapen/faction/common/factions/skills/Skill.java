@@ -6,14 +6,12 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.skills.*;
 import de.teamlapen.faction.api.tags.FactionTags;
-import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.ModRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -34,13 +32,14 @@ public class Skill<T extends IFactionPlayer<T> & ISkillPlayer<T>> implements ISk
     private final Holder.Reference<ISkill<?>> builtInRegistryHolder;
 
     private final Map<Holder<Attribute>, SkillAttributeHolder> attributeModifierMap;
-    private final List<Supplier<?>> descriptionArgs;
+    private final Supplier<@Nullable Component> description;
 
     public Skill(SkillProperties<T> properties) {
         this.builtInRegistryHolder = ModRegistries.SKILLS.createIntrusiveHolder(this);
         this.descriptionId = properties.effectiveNameId();
         this.attributeModifierMap = properties.attributes();
-        this.descriptionArgs = properties.descriptionArgs();
+        List<Supplier<?>> descriptionArgs = properties.descriptionArgs();
+        this.description = descriptionArgs.isEmpty() ? () -> this.components().get(FactionDataComponents.SKILL_DESCRIPTION) : () -> Component.translatable(this.descriptionId + ".desc", descriptionArgs.stream().map(Supplier::get).toArray());
 
         //noinspection unchecked
         BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.add((ResourceKey<ISkill<T>>) (Object) properties.skillIdOrThrow(), properties.finalizeInitializer(Component.translatable(properties.effectiveNameId())));
@@ -57,10 +56,7 @@ public class Skill<T extends IFactionPlayer<T> & ISkillPlayer<T>> implements ISk
 
     @Override
     public @Nullable Component getDescription() {
-        if (!this.descriptionArgs.isEmpty()) {
-            return Component.translatable(this.descriptionId + ".desc", this.descriptionArgs.stream().map(Supplier::get).toArray());
-        }
-        return this.components().get(FactionDataComponents.SKILL_DESCRIPTION);
+        return this.description.get();
     }
 
     @Override
