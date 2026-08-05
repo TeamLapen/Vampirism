@@ -2,7 +2,6 @@ package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.config.VampirismConfig;
-import de.teamlapen.vampirism.core.ModAttachments;
 import de.teamlapen.vampirism.core.ModLootTables;
 import de.teamlapen.vampirism.data.ServerSkillTreeData;
 import de.teamlapen.vampirism.network.ClientboundSkillTreePacket;
@@ -55,6 +54,7 @@ public class GeneralEventHandler {
                     player.sendSystemMessage(Component.translatable("text.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.GUIDEAPI_LINK)).withUnderlined(true)));
 
                     VampirismConfig.SERVER.infoAboutGuideAPI.set(false);
+                    VampirismConfig.SERVER.infoAboutGuideAPI.save();
                 }
             }
         }

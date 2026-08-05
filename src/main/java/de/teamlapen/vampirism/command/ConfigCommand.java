@@ -144,12 +144,13 @@ public class ConfigCommand extends BasicCommand {
         if (!list.contains(id.toString())) {
             //noinspection unchecked
             ((List<String>) list).add(id.toString());
-            player.displayClientMessage(Component.translatable(blacklist, id), false);
+            player.displayClientMessage(Component.translatable(blacklist, id.toString()), false);
         } else {
             list.remove(id.toString());
-            player.displayClientMessage(Component.translatable(not_blacklist, id), false);
+            player.displayClientMessage(Component.translatable(not_blacklist, id.toString()), false);
         }
         configList.set(list);
+        configList.save();
         return 0;
     }
 

@@ -60,6 +60,7 @@ public class IntegrationsNotifier {
         }
         Collections.addAll(missing, previous);
         VampirismConfig.COMMON.integrationsNotifier.set(StringUtils.join(missing, ":"));
+        VampirismConfig.COMMON.integrationsNotifier.save();
         return false;
     }
 }
