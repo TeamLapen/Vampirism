@@ -1,5 +1,6 @@
 {
   "effect.factionapi.oblivion": "Oblivion",
+  "skill.factionapi.minion_recovery.desc": "Accélérer le temps de récupération de vos serviteurs",
   "gui.factionapi.faction_menu.appearance_menu": "Menu d'apparence",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Inconnu",
   "gui.factionapi.faction_menu.last_known_pos": "Dernière position connue : ",
