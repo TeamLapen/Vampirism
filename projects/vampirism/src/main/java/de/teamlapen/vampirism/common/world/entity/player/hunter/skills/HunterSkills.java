@@ -73,7 +73,7 @@ public class HunterSkills {
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.registerSkill("double_it", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DUAL_WIELDING = SKILLS.registerSkill("dual_wielding", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.registerSkill("master_craftsmanship", props -> new HunterSkill(props.cost(2).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DESTRUCTION_DEFERMENT = SKILLS.registerSkill("destruction_deferment", props -> new HunterSkill(props.cost(2).withDescription(ModConfig.balance().hsDestructionDefermentDuration)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DETRITION_DEFERMENT = SKILLS.registerSkill("detrition_deferment", props -> new HunterSkill(props.cost(2).withDescription(ModConfig.balance().hsDetritionDefermentDuration)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE2 = SKILLS.registerSkill("stake2", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> AXE2 = SKILLS.registerSkill("axe2", props -> new HunterSkill(props.cost(3).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARTISAN_CRAFTSMANSHIP = SKILLS.registerSkill("artisan_craftsmanship", props -> new HunterSkill(props.cost(3).withDescription()));
@@ -172,7 +172,7 @@ public class HunterSkills {
             context.register(WEAPON5, new SkillNode(CROSSBOW_TECHNIQUE));
             context.register(WEAPON6, new SkillNode(DOUBLE_IT, DUAL_WIELDING));
             context.register(WEAPON7, new SkillNode(MASTER_CRAFTSMANSHIP));
-            context.register(WEAPON8, new SkillNode(DESTRUCTION_DEFERMENT));
+            context.register(WEAPON8, new SkillNode(DETRITION_DEFERMENT));
             context.register(WEAPON9, new SkillNode(AXE2));
             context.register(WEAPON10, new SkillNode(STAKE2));
             context.register(WEAPON11, new SkillNode(ARTISAN_CRAFTSMANSHIP));

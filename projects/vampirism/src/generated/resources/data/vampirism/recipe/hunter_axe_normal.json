@@ -6,7 +6,8 @@
     "Y": "#c:crops/garlic",
     "Z": "#c:rods/wooden"
   },
-  "lava": 5,
+  "lava": 1,
+  "level": 4,
   "pattern": [
     "XXZY",
     "XXZY",

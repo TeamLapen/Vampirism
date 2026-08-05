@@ -8,6 +8,7 @@
     "Z": "#c:rods/wooden"
   },
   "lava": 5,
+  "level": 14,
   "pattern": [
     "XWZY",
     "XWZY",
@@ -21,8 +22,5 @@
       }
     },
     "id": "vampirism:hunter_axe_ultimate"
-  },
-  "skill": [
-    "vampirism:artisan_craftsmanship"
-  ]
+  }
 }

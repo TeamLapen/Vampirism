@@ -7,7 +7,8 @@
     "Y": "#c:crops/garlic",
     "Z": "#c:rods/wooden"
   },
-  "lava": 5,
+  "lava": 3,
+  "level": 9,
   "pattern": [
     "XWZY",
     "XWZY",
@@ -21,8 +22,5 @@
       }
     },
     "id": "vampirism:hunter_axe_enhanced"
-  },
-  "skill": [
-    "vampirism:master_craftsmanship"
-  ]
+  }
 }

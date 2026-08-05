@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter;
 
-import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.common.factions.actions.ActionHandler;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.util.AttachmentSynchronization;
@@ -24,7 +23,6 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterAc
 import de.teamlapen.vampirism.common.world.entity.player.hunter.properties.HunterDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.HunterCoatItem;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -179,11 +177,11 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
             if (slot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR) continue;
 
             ItemStack stack = player.getItemBySlot(slot);
-            Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
+            Long deadline = stack.get(ModDataComponents.DETRITION_DEFERRED_UNTIL);
             if (deadline == null) continue;
 
             if (time >= deadline) {
-                stack.set(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL, (long) -1);
+                stack.set(ModDataComponents.DETRITION_DEFERRED_UNTIL, (long) -1);
             }
         }
     }

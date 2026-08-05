@@ -36,7 +36,6 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
@@ -331,19 +330,16 @@ public class ModEntityEventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onArmorBreak(ArmorHurtEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
-        if (!FactionPlayerHandler.get(player).getSkillHandler().map(handler -> handler.isSkillEnabled(HunterSkills.DESTRUCTION_DEFERMENT)).orElse(false)) return;
+        if (!FactionPlayerHandler.get(player).getSkillHandler().map(handler -> handler.isSkillEnabled(HunterSkills.DETRITION_DEFERMENT)).orElse(false)) return;
 
         for (var entry : event.getArmorMap().entrySet()) {
             ItemStack stack = entry.getValue().armorItemStack;
             int safeDamage = stack.getMaxDamage() - 1 - stack.getDamageValue();
             if ((int) entry.getValue().newDamage <= safeDamage) continue;
 
-            Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
-            if (deadline != null && deadline == -1) continue;
-
             event.setNewDamage(entry.getKey(), Math.max(0, safeDamage));
-            if (!stack.has(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL)) {
-                stack.set(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL, player.level().getGameTime() + ModConfig.balance().hsDestructionDefermentDuration.get() * 20);
+            if (!stack.has(ModDataComponents.DETRITION_DEFERRED_UNTIL)) {
+                stack.set(ModDataComponents.DETRITION_DEFERRED_UNTIL, player.level().getGameTime() + ModConfig.balance().hsDetritionDefermentDuration.get() * 20);
             }
         }
     }
@@ -353,14 +349,14 @@ public class ModEntityEventHandler {
         if (!event.getSlot().isArmor()) return;
 
         ItemStack stack = event.getTo();
-        if (stack.has(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL) && stack.getMaxDamage() - stack.getDamageValue() > 1) {
-            stack.remove(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
+        if (stack.has(ModDataComponents.DETRITION_DEFERRED_UNTIL) && stack.getMaxDamage() - stack.getDamageValue() > 1) {
+            stack.remove(ModDataComponents.DETRITION_DEFERRED_UNTIL);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onArmorAttributes(ItemAttributeModifierEvent event) {
-        Long deadline = event.getItemStack().get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
+        Long deadline = event.getItemStack().get(ModDataComponents.DETRITION_DEFERRED_UNTIL);
         if (deadline == null || deadline != -1) return;
 
         event.clearModifiers();

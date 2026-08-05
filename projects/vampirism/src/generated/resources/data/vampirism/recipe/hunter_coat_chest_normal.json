@@ -7,7 +7,7 @@
     "Y": "#c:leathers",
     "Z": "#c:crops/garlic"
   },
-  "lava": 2,
+  "lava": 1,
   "pattern": [
     "XWWX",
     "XZZX",

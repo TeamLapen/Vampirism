@@ -37,7 +37,7 @@ public class ModItemDecorators {
     };
 
     public static final IItemDecorator DESTRUCTION_DEFERMENT = (graphics, font, stack, xOffset, yOffset) -> {
-        Long deadline = stack.get(ModDataComponents.DESTRUCTION_DEFERRED_UNTIL);
+        Long deadline = stack.get(ModDataComponents.DETRITION_DEFERRED_UNTIL);
         if (deadline == null) return false;
 
         ClientLevel level = Minecraft.getInstance().level;
@@ -47,7 +47,7 @@ public class ModItemDecorators {
 
         int seconds = (int) Math.ceil((deadline - level.getGameTime()) / 20.0);
         if (seconds > 0) {
-            float progress = 1.0f - seconds / (float) ModConfig.balance().hsDestructionDefermentDuration.get();
+            float progress = 1.0f - seconds / (float) ModConfig.balance().hsDetritionDefermentDuration.get();
             sprite = DURABILITY_TIMER_SPRITES[Mth.clamp(Math.round(progress * DURABILITY_TIMER_MAX_SPRITE_INDEX), 0, DURABILITY_TIMER_MAX_SPRITE_INDEX)];
         } else {
             sprite = DURABILITY_TIMER_OVER;
