@@ -32,6 +32,7 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -332,6 +333,7 @@ public class ModEntityEventHandler {
         if (!(event.getEntity() instanceof Player player)) return;
         if (!FactionPlayerHandler.get(player).getSkillHandler().map(handler -> handler.isSkillEnabled(HunterSkills.DETRITION_DEFERMENT)).orElse(false)) return;
 
+        boolean deferred = false;
         for (var entry : event.getArmorMap().entrySet()) {
             ItemStack stack = entry.getValue().armorItemStack;
             int safeDamage = stack.getMaxDamage() - 1 - stack.getDamageValue();
@@ -340,7 +342,12 @@ public class ModEntityEventHandler {
             event.setNewDamage(entry.getKey(), Math.max(0, safeDamage));
             if (!stack.has(ModDataComponents.DETRITION_DEFERRED_UNTIL)) {
                 stack.set(ModDataComponents.DETRITION_DEFERRED_UNTIL, player.level().getGameTime() + ModConfig.balance().hsDetritionDefermentDuration.get() * 20);
+                deferred = true;
             }
+        }
+
+        if (deferred) {
+            Helper.playSoundToPlayer(player, ModSounds.STOPWATCH_START.get(), SoundSource.PLAYERS, 7.5f, 1f);
         }
     }
 

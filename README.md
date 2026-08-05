@@ -110,19 +110,24 @@ All textures and models included in the mod are licensed under the [Vampirism As
 ##### Sounds
 The sounds used in this mod are individually licensed and may only be used outside Vampirism under the respective licensing terms noted below.
 
-| Sound                     | Creator               | Link                                                                           | License        |
-|---------------------------|-----------------------|--------------------------------------------------------------------------------|----------------|
-| DST-VampireMonk.mp3       | Striderjapan          | [freesound](http://www.freesound.org/people/Striderjapan/sounds/141368/)       | CC Attribution |
-| vampire bites             | Bernuy                | [freesound](http://www.freesound.org/people/Bernuy/sounds/268501/)             | CC Attribution |
-| bow02.ogg                 | Erdie                 | [freesound](https://www.freesound.org/people/Erdie/sounds/65734/)              | CC Attribution |
-| the swarm v31m3           | Setuniman             | [freesound](https://www.freesound.org/people/Setuniman/sounds/130695/)         | CC Attribution |
-| Boiling Towel             | unfa                  | [freesound](https://www.freesound.org/people/unfa/sounds/174499/)              | CC Attribution |
-| Pepper mill grinds pepper | Black_River_Phonogram | [freesound](https://freesound.org/people/Black_River_Phonogram/sounds/424605/) | CC0            |
-| Slimey                    | Nebulasnails          | [freesound](https://freesound.org/people/nebulasnails/sounds/495116/)          | CC0            |
-| blood_sucker              | Bernuy                | [freesound](https://freesound.org/people/Bernuy/sounds/268499/)                | CC Attribution |
-| Organ Ambience, Calm, A   | InspectorJ            | [freesound](https://freesound.org/people/InspectorJ/sounds/411991/)            | CC Attribution |
-| two drops.WAV             | Millavsb              | [freesound](https://freesound.org/people/Millavsb/sounds/197900/)              | CC0            |
-| Dark Choir 01             | Exsomniel             | [freesound](https://freesound.org/people/Exsomniel/sounds/207809/)             | CC0            |
+| Sound                                                                         | Creator                 | Link                                                                             | License          |
+|-------------------------------------------------------------------------------|-------------------------|----------------------------------------------------------------------------------|------------------|
+| Sound                                                                         | Creator                 | Link                                                                             | License          |
+| ---------------------------                                                   | ----------------------- | -------------------------------------------------------------------------------- | ---------------- |
+| DST-VampireMonk.mp3                                                           | Striderjapan            | [freesound](http://www.freesound.org/people/Striderjapan/sounds/141368/)         | CC Attribution   |
+| vampire bites                                                                 | Bernuy                  | [freesound](http://www.freesound.org/people/Bernuy/sounds/268501/)               | CC Attribution   |
+| bow02.ogg                                                                     | Erdie                   | [freesound](https://www.freesound.org/people/Erdie/sounds/65734/)                | CC Attribution   |
+| the swarm v31m3                                                               | Setuniman               | [freesound](https://www.freesound.org/people/Setuniman/sounds/130695/)           | CC Attribution   |
+| Boiling Towel                                                                 | unfa                    | [freesound](https://www.freesound.org/people/unfa/sounds/174499/)                | CC Attribution   |
+| Pepper mill grinds pepper                                                     | Black_River_Phonogram   | [freesound](https://freesound.org/people/Black_River_Phonogram/sounds/424605/)   | CC0              |
+| Slimey                                                                        | Nebulasnails            | [freesound](https://freesound.org/people/nebulasnails/sounds/495116/)            | CC0              |
+| blood_sucker                                                                  | Bernuy                  | [freesound](https://freesound.org/people/Bernuy/sounds/268499/)                  | CC Attribution   |
+| Organ Ambience, Calm, A                                                       | InspectorJ              | [freesound](https://freesound.org/people/InspectorJ/sounds/411991/)              | CC Attribution   |
+| two drops.WAV                                                                 | Millavsb                | [freesound](https://freesound.org/people/Millavsb/sounds/197900/)                | CC0              |
+| Dark Choir 01                                                                 | Exsomniel               | [freesound](https://freesound.org/people/Exsomniel/sounds/207809/)               | CC0              |
+| Orange Hard Squeeze                                                           | minituffy               | [freesound](https://freesound.org/people/minituffy/sounds/385964/)               | CC0              |
+| Ambience, Creepy Wind, A.wav                                                  | InspectorJ              | [freesound](https://freesound.org/people/InspectorJ/sounds/413549/)              | CC BY 4.0        |
+| Sekuntikello, sekundaattori, tikitys / Stopwatch, start, tick, stop, interior | YleArkisto              | [freesound](https://freesound.org/people/YleArkisto/sounds/332620/)              | Attribution 4.0  |
 
 ##### Sit functionality - `sit` package
 

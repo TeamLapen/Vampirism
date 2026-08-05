@@ -1192,13 +1192,6 @@
   "message.vampirism.village_raid.vampire": "Vampire Raid",
   "message.vampirism.village_raid.hunter": "Hunter Raid",
 
-  "subtitles.vampirism.entity.dracula.ambient": "Dracula murmurs",
-  "subtitles.vampirism.entity.dracula.hurt": "Dracula hurts",
-  "subtitles.vampirism.entity.dracula.death": "Dracula dies",
-  "subtitles.vampirism.entity.dracula.teleport": "Dracula teleports",
-  "subtitles.vampirism.entity.dracula.transform": "Dracula transforms",
-  "subtitles.vampirism.entity.dracula.siphon": "Dracula siphons blood",
-
   "message.vampirism.velmorra.crumblin": "Without its master, the realm of Velmorra rejects its own existence",
   "message.vampirism.velmorra.crumblin2": "Velmorra consumes itself. Leave now, or be lost to the void",
   "message.vampirism.velmorra.collapse.5min": "The void gnaws at the edges of Velmorra. Five minutes remain",
@@ -1328,6 +1321,14 @@
   "subtitles.vampirism.remains_defender.hit": "Ancient Crystal cracks",
   "subtitles.vampirism.remains.death": "Ancient Remains crumbles",
   "subtitles.vampirism.remains.hurt": "Ancient Remains trembles",
+  "subtitles.vampirism.stopwatch.start": "Stopwatch is started",
+  "subtitles.vampirism.stopwatch.end": "Stopwatch is stopped",
+  "subtitles.vampirism.entity.dracula.ambient": "Dracula murmurs",
+  "subtitles.vampirism.entity.dracula.hurt": "Dracula hurts",
+  "subtitles.vampirism.entity.dracula.death": "Dracula dies",
+  "subtitles.vampirism.entity.dracula.teleport": "Dracula teleports",
+  "subtitles.vampirism.entity.dracula.transform": "Dracula transforms",
+  "subtitles.vampirism.entity.dracula.siphon": "Dracula siphons blood",
 
   "death.attack.vampirism.sun": "%1$s did not like the sun",
   "death.attack.vampirism.sun.player": "%1$s was pushed into the sun by %2$s",

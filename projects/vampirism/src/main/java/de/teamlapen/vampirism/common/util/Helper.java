@@ -24,12 +24,16 @@ import de.teamlapen.vampirism.common.world.items.StakeItem;
 import de.teamlapen.vampirism.common.world.items.crossbow.behavior.VampireKillerBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Containers;
 import net.minecraft.world.attribute.EnvironmentAttributes;
@@ -297,5 +301,14 @@ public class Helper {
             }
         }
         return stack;
+    }
+
+    /**
+     * Plays a sound at the player's position, but only for that player
+     */
+    public static void playSoundToPlayer(@NotNull Player player, @NotNull SoundEvent sound, @NotNull SoundSource source, float volume, float pitch) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound), source, player.getX(), player.getY(), player.getZ(), volume, pitch, player.getRandom().nextLong()));
+        }
     }
 }

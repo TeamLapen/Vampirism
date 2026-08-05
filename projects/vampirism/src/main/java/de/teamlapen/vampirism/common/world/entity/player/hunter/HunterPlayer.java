@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.common.core.ModAdvancements;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModEffects;
+import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.util.OilUtils;
@@ -25,6 +26,7 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSki
 import de.teamlapen.vampirism.common.world.items.HunterCoatItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -42,6 +44,9 @@ import java.util.Arrays;
  * Main class for hunter players
  */
 public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements IHunterPlayer {
+
+    private static final int DEFERRED_ARMOR_TICK_INTERVAL = 5;
+    private static final int STOPWATCH_END_CLICK = (int) (3.65 * 20);
 
     public static HunterPlayer get(Player player) {
         return player.getData(ModAttachments.HUNTER_PLAYER);
@@ -122,7 +127,7 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (!isRemote() && player.level().getGameTime() % 5 == 0) {
+        if (!isRemote() && player.level().getGameTime() % DEFERRED_ARMOR_TICK_INTERVAL == 0) {
             tickDeferredArmor();
         }
         int level = getLevel();
@@ -173,16 +178,24 @@ public class HunterPlayer extends CommonFactionPlayer<IHunterPlayer> implements 
 
     private void tickDeferredArmor() {
         long time = player.level().getGameTime();
+        boolean expiring = false;
         for (EquipmentSlot slot : EquipmentSlot.VALUES) {
             if (slot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR) continue;
 
             ItemStack stack = player.getItemBySlot(slot);
             Long deadline = stack.get(ModDataComponents.DETRITION_DEFERRED_UNTIL);
-            if (deadline == null) continue;
+            if (deadline == null || deadline == -1) continue;
 
-            if (time >= deadline) {
+            long remaining = deadline - time;
+            if (remaining <= 0) {
                 stack.set(ModDataComponents.DETRITION_DEFERRED_UNTIL, (long) -1);
+            } else if (remaining <= STOPWATCH_END_CLICK && remaining > STOPWATCH_END_CLICK - DEFERRED_ARMOR_TICK_INTERVAL) {
+                expiring = true;
             }
+        }
+
+        if (expiring) {
+            Helper.playSoundToPlayer(player, ModSounds.STOPWATCH_END.get(), SoundSource.PLAYERS, 7.5f, 1f);
         }
     }
 
