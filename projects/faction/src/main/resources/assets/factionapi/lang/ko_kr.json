@@ -9,6 +9,8 @@
   "minion_task.factionapi.call_single": "한 명 부르기",
   "minion_task.factionapi.call_all": "모두 부르기",
   "minion_task.factionapi.respawn": "부하 리스폰",
+  "skill.factionapi.minion_recovery": "부하 회복 개선",
+  "skill.factionapi.minion_recovery.desc": "부하들이 치명적인 부상에서 회복하는데 필요한 시간을 단축시킵니다",
   "gui.factionapi.faction_menu.appearance_menu": "외형 메뉴",
   "gui.factionapi.faction_menu.distance": " (%s 블록 떨어짐)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "알 수 없음",
