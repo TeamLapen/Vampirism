@@ -42,7 +42,7 @@ public class VersionUpdater {
             skillPointsPerLevel *= 2;
         }
         VampirismConfig.BALANCE.skillPointsPerLevel.set(skillPointsPerLevel);
-        VampirismConfig.BALANCE.skillPointsPerLevel.set(skillPointsPerLevel);
+        VampirismConfig.BALANCE.skillPointsPerLevel.save();
         double skillPointsPerLordLevel = VampirismConfig.BALANCE.skillPointsPerLordLevel.get();
         if (skillPointsPerLordLevel == 1) {
             skillPointsPerLordLevel = VampirismConfig.BALANCE.skillPointsPerLordLevel.getDefault();
