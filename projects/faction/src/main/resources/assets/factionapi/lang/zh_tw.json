@@ -17,6 +17,8 @@
   "minion_task.factionapi.respawn": "復活陣亡小兵",
   "task_reward.factionapi.lord_level": "領主等級 %s",
   "task_requirement.factionapi.lord_level.exact": "領主等級 %s",
+  "skill.factionapi.minion_recovery": "小兵恢復",
+  "skill.factionapi.minion_recovery.desc": "加快你的小兵恢復所需時間",
   "gui.factionapi.faction_menu.appearance_menu": "外觀畫面",
   "gui.factionapi.faction_menu.distance": " (%s 格距離)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "未知",
