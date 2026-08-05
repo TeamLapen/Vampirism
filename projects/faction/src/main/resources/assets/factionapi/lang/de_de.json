@@ -48,6 +48,8 @@
   "task_requirement.factionapi.level.min": "Level %s oder höher",
   "task_requirement.factionapi.level.range": "Level %1$s bis %2$s",
   "task_requirement.factionapi.parent": "Schließe zuerst %s ab",
+  "skill.factionapi.minion_recovery": "Untergebene Erholung",
+  "skill.factionapi.minion_recovery.desc": "Beschleunigt die Zeit, die deine Lakaien zur Erholung brauchen",
   "gui.factionapi.faction_menu.appearance_menu": "Erscheinungsmenü",
   "gui.factionapi.faction_menu.locate_taskmaster": "Letzte bekannte Position",
   "gui.factionapi.faction_menu.distance": " (%s Blöcke entfernt)",
