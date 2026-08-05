@@ -17,6 +17,8 @@
   "minion_task.factionapi.respawn": "Revivir muertos",
   "task_reward.factionapi.lord_level": "Señor Nivel %s",
   "task_requirement.factionapi.lord_level.exact": "Señor Nivel %s",
+  "skill.factionapi.minion_recovery": "Recuperación de Secuaz",
+  "skill.factionapi.minion_recovery.desc": "Reduce el tiempo de recuperación de tus secuaces",
   "gui.factionapi.faction_menu.appearance_menu": "Menú de Apariencia",
   "gui.factionapi.faction_menu.distance": " (a %s bloques de distancia)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Desconocido",
