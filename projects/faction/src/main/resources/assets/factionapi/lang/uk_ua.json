@@ -16,6 +16,8 @@
   "minion_task.factionapi.respawn": "Відродження",
   "task_reward.factionapi.lord_level": "%s рівень володаря",
   "task_requirement.factionapi.lord_level.exact": "%s рівень володаря",
+  "skill.factionapi.minion_recovery": "Відновлення посіпак",
+  "skill.factionapi.minion_recovery.desc": "Прискорює час, який потрібен посіпакам для відновлення",
   "gui.factionapi.faction_menu.appearance_menu": "Зовнішній вигляд",
   "gui.factionapi.faction_menu.distance": " (%s блоків звідси)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Невідомо",
