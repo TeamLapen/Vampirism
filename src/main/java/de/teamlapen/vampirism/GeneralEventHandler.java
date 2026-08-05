@@ -61,6 +61,7 @@ public class GeneralEventHandler {
                     player.sendSystemMessage(Component.translatable("text.vampirism.guideapi_available.download").withStyle(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, REFERENCE.GUIDEAPI_LINK)).withUnderlined(true)));
 
                     VampirismConfig.SERVER.infoAboutGuideAPI.set(false);
+                    VampirismConfig.SERVER.infoAboutGuideAPI.save();
                 }
             }
         }

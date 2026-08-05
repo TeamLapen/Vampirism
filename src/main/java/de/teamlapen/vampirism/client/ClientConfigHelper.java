@@ -23,7 +23,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 import java.io.IOException;
 import java.util.*;
@@ -67,7 +66,7 @@ public class ClientConfigHelper {
                 String string = VampirismConfig.CLIENT.actionOrder.get();
                 ACTION_ORDER = Objects.requireNonNullElseGet(GSON.fromJson(string, ACTION_TOKEN), HashMap::new);
             } catch (JsonSyntaxException | IllegalArgumentException e) {
-                VampirismConfig.LOGGER.error("Failed to parse action order config", e);
+                VampirismConfig.LOGGER.error("Failed to parse action order config", e); //Probably never occurs because ConfigSpec tests #testActions first
                 VampirismConfig.CLIENT.actionOrder.set(VampirismConfig.CLIENT.actionOrder.getDefault());
                 ACTION_ORDER = new HashMap<>();
             }
@@ -180,6 +179,7 @@ public class ClientConfigHelper {
         try {
             String object = GSON.toJson(ACTION_ORDER, ACTION_TOKEN.getType());
             VampirismConfig.CLIENT.actionOrder.set(object);
+            VampirismConfig.CLIENT.actionOrder.save();
         } catch (JsonParseException e) {
             VampirismConfig.LOGGER.error("Failed to save action order", e);
         }
@@ -196,6 +196,7 @@ public class ClientConfigHelper {
         try {
             String object = GSON.toJson(MINION_TASK_ORDER, MINION_TASK_TOKEN.getType());
             VampirismConfig.CLIENT.minionTaskOrder.set(object);
+            VampirismConfig.CLIENT.minionTaskOrder.save();
         } catch (JsonParseException e) {
             VampirismConfig.LOGGER.error("Failed to save minion task order", e);
         }
