@@ -16,6 +16,8 @@
   "minion_task.factionapi.respawn": "死而复生",
   "task_reward.factionapi.lord_level": "领主等级 %s",
   "task_requirement.factionapi.lord_level.exact": "领主等级 %s",
+  "skill.factionapi.minion_recovery": "随从恢复",
+  "skill.factionapi.minion_recovery.desc": "加快您的随从恢复所需的时间",
   "gui.factionapi.faction_menu.appearance_menu": "外观面板",
   "gui.factionapi.faction_menu.distance": " (%s 格远)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "未知",
