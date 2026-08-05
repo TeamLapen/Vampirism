@@ -48,6 +48,8 @@
   "task_requirement.factionapi.level.min": "Уровень %s или выше",
   "task_requirement.factionapi.level.range": "Уровень от %1$s до %2$s",
   "task_requirement.factionapi.parent": "Сначала выполните %s",
+  "skill.factionapi.minion_recovery": "Восстановление подручных",
+  "skill.factionapi.minion_recovery.desc": "Ускорьте восстановление своих подручных",
   "gui.factionapi.faction_menu.appearance_menu": "Меню внешнего вида",
   "gui.factionapi.faction_menu.locate_taskmaster": "Последнее известное местоположение",
   "gui.factionapi.faction_menu.distance": " (в %s блоках отсюда)",
