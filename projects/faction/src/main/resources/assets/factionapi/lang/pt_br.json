@@ -8,6 +8,8 @@
   "minion_task.factionapi.respawn": "Renascer os mortos",
   "task_reward.factionapi.lord_level": "Nível Lorde %s",
   "task_requirement.factionapi.lord_level.exact": "Nível Lorde %s",
+  "skill.factionapi.minion_recovery": "Recuperando Servos",
+  "skill.factionapi.minion_recovery.desc": "Acelera o tempo que os seus lacaios precisam para se recuperar",
   "gui.factionapi.faction_menu.appearance_menu": "Menu de Aparência",
   "gui.factionapi.faction_menu.distance": " (%s blocos de distância)",
   "gui.factionapi.faction_menu.last_known_pos.unknown": "Desconhecido",
