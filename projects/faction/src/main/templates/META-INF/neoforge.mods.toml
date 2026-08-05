@@ -24,7 +24,6 @@ logoFile = "logo.png" #optional
 
 # A text field displayed in the mod UI
 credits = '''\n
-    - Grid (logo/code)
     - zozozrob (textures/models)'''
 
 # A text field displayed in the mod UI
