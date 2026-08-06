@@ -1,41 +1,28 @@
 package de.teamlapen.vampirism.client.renderer;
 
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
-import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.client.config.ClientConfig;
 import de.teamlapen.vampirism.client.core.ModRenderPipelines;
 import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.DynamicUniforms;
+import net.minecraft.server.level.ParticleStatus;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.joml.Matrix4f;
-import org.joml.Matrix4fc;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.OptionalInt;
 
 /**
  * Renders the volumetric cloud shown instead of the model while an entity is in mist form.
  * <p>
- * Entity renderers cannot draw it themselves: the shader needs the scene depth texture bound as a sampler so it
- * can fade the volume into geometry, and neither {@code RenderSetup} nor a {@code SubmitNodeCollector} can bind a
- * render target's depth view. So renderers only {@linkplain #submitMistCloud submit} their clouds during the
- * normal entity pass, and all of them are drawn together afterwards in {@link #onRenderLevelAfterWeather} through
- * a custom render pass that binds no depth attachment - leaving depth free to sample.
+ * Renderers only {@linkplain #submitMistCloud submit} their clouds during the normal entity pass; all of them are
+ * drawn together afterwards in {@link #onRenderLevelAfterWeather} through {@link VolumetricBillboards}, which
+ * explains why the draw cannot happen in the entity pass itself.
  */
 public class MistRenderer {
 
@@ -63,11 +50,7 @@ public class MistRenderer {
      */
     private static final float BOUND_MARGIN = 1.5f;
 
-    private static final Vector4f NO_COLOR_MODULATION = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
-    private static final Vector3f NO_MODEL_OFFSET = new Vector3f();
-
     private static final List<MistInstance> INSTANCES = new ArrayList<>();
-    private static @Nullable GpuBuffer quadBuffer;
 
     /**
      * Records one mist cloud to be drawn at the end of the level render.
@@ -117,74 +100,17 @@ public class MistRenderer {
             return;
         }
         try {
-            RenderPipeline pipeline = ModRenderPipelines.mist(ModConfig.client().volumetricMistQuality.get());
-            if (pipeline == null) {
-                return;
-            }
-
-            // Under fabulous graphics this stage draws into the separate weather target, as WorldBorderRenderer
-            // does right after us; anywhere else it is the main target.
-            RenderTarget weather = Minecraft.getInstance().levelRenderer.getWeatherTarget();
-            RenderTarget target = weather != null ? weather : Minecraft.getInstance().getMainRenderTarget();
-            GpuTextureView color = target.getColorTextureView();
-            GpuTextureView depth = target.getDepthTextureView();
-            if (color == null || depth == null) {
-                return;
-            }
+            ParticleStatus particleStatus = Minecraft.getInstance().options.particles().get();
+            RenderPipeline pipeline = ModRenderPipelines.mist(ModRenderPipelines.VolumetricQuality.of(particleStatus));
 
             // Farthest first, so overlapping clouds blend in the right order - there is no depth write to sort
             // them for us.
             INSTANCES.sort(Comparator.comparingDouble((MistInstance mist) -> mist.center().lengthSqr()).reversed());
 
-            GpuBuffer quad = quadBuffer();
-            RenderSystem.AutoStorageIndexBuffer indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
-            GpuBuffer indexBuffer = indices.getBuffer(6);
-
-            // Every instance's uniforms are written up front, before the pass is opened - the ring buffer they
-            // land in must not be written to while a pass is recording. The per-instance parameters ride in the
-            // texture matrix slot of the standard per-draw uniform, so this pass needs no GPU buffer of its own.
-            // See rendertype_mist.fsh for the layout.
-            Matrix4fc modelView = event.getModelViewMatrix();
-            DynamicUniforms.Transform[] transforms = INSTANCES.stream()
-                    .map(mist -> new DynamicUniforms.Transform(modelView, NO_COLOR_MODULATION, NO_MODEL_OFFSET, mist.pack()))
-                    .toArray(DynamicUniforms.Transform[]::new);
-            GpuBufferSlice[] uniforms = RenderSystem.getDynamicUniforms().writeTransforms(transforms);
-
-            try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(() -> "Vampirism mist", color, OptionalInt.empty())) {
-                pass.setPipeline(pipeline);
-                RenderSystem.bindDefaultUniforms(pass);
-                pass.bindTexture("DepthSampler", depth, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST));
-                pass.setVertexBuffer(0, quad);
-                pass.setIndexBuffer(indexBuffer, indices.type());
-
-                for (GpuBufferSlice uniform : uniforms) {
-                    pass.setUniform("DynamicTransforms", uniform);
-                    pass.drawIndexed(0, 0, 6, 1);
-                }
-            }
+            VolumetricBillboards.draw("Vampirism mist", pipeline, event.getModelViewMatrix(), INSTANCES.stream().map(MistInstance::pack).toList());
         } finally {
             INSTANCES.clear();
         }
-    }
-
-    /**
-     * A unit quad spanning -1 to 1; the vertex shader scales and orients it per instance.
-     */
-    private static GpuBuffer quadBuffer() {
-        if (quadBuffer == null) {
-            VertexFormat format = DefaultVertexFormat.POSITION_TEX;
-            try (ByteBufferBuilder allocator = ByteBufferBuilder.exactlySized(format.getVertexSize() * 4)) {
-                BufferBuilder builder = new BufferBuilder(allocator, VertexFormat.Mode.QUADS, format);
-                builder.addVertex(-1.0f, -1.0f, 0.0f).setUv(0.0f, 0.0f);
-                builder.addVertex(1.0f, -1.0f, 0.0f).setUv(1.0f, 0.0f);
-                builder.addVertex(1.0f, 1.0f, 0.0f).setUv(1.0f, 1.0f);
-                builder.addVertex(-1.0f, 1.0f, 0.0f).setUv(0.0f, 1.0f);
-                try (MeshData mesh = builder.buildOrThrow()) {
-                    quadBuffer = RenderSystem.getDevice().createBuffer(() -> "Vampirism mist quad", GpuBuffer.USAGE_VERTEX, mesh.vertexBuffer());
-                }
-            }
-        }
-        return quadBuffer;
     }
 
     private record MistInstance(Vec3 center, Vec3 flow, float radiusXZ, float radiusY, float boundRadius,
@@ -202,12 +128,5 @@ public class MistRenderer {
                     this.fade, this.trailStretch, 0.0f, 0.0f
             );
         }
-    }
-
-    /**
-     * @return whether mist should be rendered at all; when disabled, callers hide the entity instead.
-     */
-    public static boolean isEnabled() {
-        return ModConfig.client().volumetricMistQuality.get() != ClientConfig.MistQuality.OFF;
     }
 }

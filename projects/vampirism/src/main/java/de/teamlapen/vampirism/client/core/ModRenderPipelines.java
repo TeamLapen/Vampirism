@@ -13,8 +13,9 @@ import de.teamlapen.vampirism.client.config.ClientConfig;
 import de.teamlapen.vampirism.client.renderer.blockentity.VelmorraPortalRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.*;
+import net.minecraft.server.level.ParticleStatus;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Locale;
 import java.util.function.Supplier;
@@ -84,6 +85,9 @@ public class ModRenderPipelines {
         event.registerPipeline(MIST_LOW);
         event.registerPipeline(MIST_MEDIUM);
         event.registerPipeline(MIST_HIGH);
+        event.registerPipeline(AURA_OF_DARKNESS_LOW);
+        event.registerPipeline(AURA_OF_DARKNESS_MEDIUM);
+        event.registerPipeline(AURA_OF_DARKNESS_HIGH);
     }
 
     public static final RenderPipeline.Snippet VELMORRA_PORTAL_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
@@ -128,16 +132,31 @@ public class ModRenderPipelines {
      * resolved in the shader against {@code DepthSampler} instead, which is what gives the soft edge.
      * <p>
      * The raymarch step count is a compile-time define, so each quality level gets its own pipeline and
-     * {@link #mist(ClientConfig.MistQuality)} picks between them at draw time.
+     * {@link #mist(VolumetricQuality)} picks between them at draw time.
      */
-    public static final RenderPipeline MIST_LOW = mistPipeline(ClientConfig.MistQuality.LOW);
-    public static final RenderPipeline MIST_MEDIUM = mistPipeline(ClientConfig.MistQuality.MEDIUM);
-    public static final RenderPipeline MIST_HIGH = mistPipeline(ClientConfig.MistQuality.HIGH);
+    public static final RenderPipeline MIST_LOW = volumetricPipeline("mist", VolumetricQuality.LOW);
+    public static final RenderPipeline MIST_MEDIUM = volumetricPipeline("mist", VolumetricQuality.MEDIUM);
+    public static final RenderPipeline MIST_HIGH = volumetricPipeline("mist", VolumetricQuality.HIGH);
 
-    private static RenderPipeline mistPipeline(ClientConfig.MistQuality quality) {
+    /**
+     * Thin raymarched shell drawn around entities carrying the aura of darkness effect. Shares everything but
+     * see {@link de.teamlapen.vampirism.client.renderer.VolumetricBillboards}.
+     */
+    public static final RenderPipeline AURA_OF_DARKNESS_LOW = volumetricPipeline("aura_of_darkness", VolumetricQuality.LOW);
+    public static final RenderPipeline AURA_OF_DARKNESS_MEDIUM = volumetricPipeline("aura_of_darkness", VolumetricQuality.MEDIUM);
+    public static final RenderPipeline AURA_OF_DARKNESS_HIGH = volumetricPipeline("aura_of_darkness", VolumetricQuality.HIGH);
+
+    /**
+     * Builds a pipeline for a volume raymarched on a camera-facing billboard: a shared vertex shader expanding
+     * the unit quad, the effect's own fragment shader, and the scene depth bound as a sampler.
+     *
+     * @param name    the effect's fragment shader, {@code core/rendertype_<name>}, and the pipeline's location
+     * @param quality the raymarch step count, which is a compile-time define and so fixed per pipeline
+     */
+    private static RenderPipeline volumetricPipeline(String name, VolumetricQuality quality) {
         return RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
-                .withVertexShader(VIdentifier.mod("core/rendertype_mist"))
-                .withFragmentShader(VIdentifier.mod("core/rendertype_mist"))
+                .withVertexShader(VIdentifier.mod("core/volumetric_billboard"))
+                .withFragmentShader(VIdentifier.mod("core/rendertype_" + name))
                 .withSampler("DepthSampler")
                 .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
                 // Deliberately no depth stencil state: RenderPipeline#wantsDepthTexture is simply "has a depth
@@ -146,20 +165,59 @@ public class ModRenderPipelines {
                 .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
                 .withCull(false)
                 .withShaderDefine("STEPS", quality.steps())
-                .withLocation(VIdentifier.mod("pipeline/mist_" + quality.name().toLowerCase(Locale.ROOT)))
+                .withLocation(VIdentifier.mod("pipeline/" + name + "_" + quality.name().toLowerCase(Locale.ROOT)))
                 .build();
     }
 
     /**
      * @return the mist pipeline for the given quality, or null when mist rendering is disabled.
      */
-    public static @Nullable RenderPipeline mist(ClientConfig.MistQuality quality) {
+    public static @NonNull RenderPipeline mist(VolumetricQuality quality) {
         return switch (quality) {
-            case OFF -> null;
             case LOW -> MIST_LOW;
             case MEDIUM -> MIST_MEDIUM;
             case HIGH -> MIST_HIGH;
         };
+    }
+
+    /**
+     * @return the aura of darkness pipeline for the given quality, or null when the aura is disabled.
+     */
+    public static @NonNull RenderPipeline auraOfDarkness(VolumetricQuality quality) {
+        return switch (quality) {
+            case LOW -> AURA_OF_DARKNESS_LOW;
+            case MEDIUM -> AURA_OF_DARKNESS_MEDIUM;
+            case HIGH -> AURA_OF_DARKNESS_HIGH;
+        };
+    }
+
+    /**
+     * Number of raymarch steps a volumetric shader takes. Each level is backed by its own pre-built pipeline,
+     * since the step count is a compile-time shader define. Shared by every raymarched effect in the mod, which
+     * is why the levels are named for quality rather than for any one of them.
+     */
+    public enum VolumetricQuality {
+        LOW(12),
+        MEDIUM(24),
+        HIGH(40);
+
+        private final int steps;
+
+        VolumetricQuality(int steps) {
+            this.steps = steps;
+        }
+
+        public int steps() {
+            return this.steps;
+        }
+
+        public static VolumetricQuality of(ParticleStatus status) {
+            return switch (status) {
+                case MINIMAL ->  VolumetricQuality.LOW;
+                case DECREASED ->   VolumetricQuality.MEDIUM;
+                default ->  VolumetricQuality.HIGH;
+            };
+        }
     }
 
 }

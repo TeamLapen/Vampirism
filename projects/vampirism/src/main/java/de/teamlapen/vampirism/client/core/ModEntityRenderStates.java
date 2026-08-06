@@ -59,6 +59,9 @@ public class ModEntityRenderStates {
     public static final ContextKey<Vec3> MIST_VELOCITY = create("mist/velocity");
     public static final ContextKey<Vec3> MIST_FLOW = create("mist/flow");
     public static final ContextKey<Float> MIST_FADE = create("mist/fade");
+    public static final ContextKey<Boolean> AURA_OF_DARKNESS = create("aura_of_darkness");
+    public static final ContextKey<Float> AURA_OF_DARKNESS_FADE = create("aura_of_darkness/fade");
+    public static final ContextKey<Integer> AURA_OF_DARKNESS_PHASE = create("aura_of_darkness/phase");
     public static final ContextKey<Boolean> VAMPIRE_DBNO = create("vampire/dbno");
     public static final ContextKey<Boolean> VAMPIRE_SLEEPING_IN_COFFIN = create("vampire/sleeping_in_coffin");
     public static final ContextKey<Boolean> VAMPIRE_BURNING_IN_SUN = create("vampire/burning_in_sun");
@@ -81,6 +84,7 @@ public class ModEntityRenderStates {
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends Avatar, ? extends AvatarRenderState>>>cast(AvatarRenderer.class), ModEntityRenderStates::extractVampirePlayer);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractCoffinSleepPosition);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractSunBurning);
+        event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends LivingEntity, ? extends LivingEntityRenderState>>>cast(LivingEntityRenderer.class), ModEntityRenderStates::extractAuraOfDarkness);
         event.registerEntityModifier(VampireBaronRenderer.class, ModEntityRenderStates::extractWings);
         event.registerEntityModifier(SafeCast.<Class<? extends EntityRenderer<? extends AggressiveVillagerEntity, ? extends VillagerRenderState>>>cast(HunterVillagerRenderer.class), ModEntityRenderStates::extractHunterVillager);
     }
@@ -159,6 +163,23 @@ public class ModEntityRenderStates {
                 state.setRenderData(DRACULA_WINGS_FLY, dracula.flyAnimationState());
                 state.setRenderData(DRACULA_WINGS_TEXTURE, vampire.getCustomization().wingsTexture());
             });
+        }
+    }
+
+    /**
+     * Registered against {@link LivingEntityRenderer} rather than any one renderer, so it reaches players and
+     * mobs alike - the effect is handed out to every vampire near the caster, whatever they are.
+     */
+    private static void extractAuraOfDarkness(LivingEntity entity, LivingEntityRenderState renderState) {
+        // The envelope comes from the tracker rather than the effect instance, which cannot ramp in; see
+        // AuraOfDarknessStateTracker.
+        float fade = VampirismModClient.services().auraOfDarknessStateTracker().getFade(entity, renderState.partialTick);
+        if (fade > 0.0f) {
+            renderState.setRenderData(AURA_OF_DARKNESS, true);
+            renderState.setRenderData(AURA_OF_DARKNESS_FADE, fade);
+            // Render states are pooled and reused across entities, so the entity's own id is the only stable
+            // per-entity value the renderer can key the aura's animation phase off.
+            renderState.setRenderData(AURA_OF_DARKNESS_PHASE, entity.getId());
         }
     }
 

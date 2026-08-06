@@ -13,12 +13,14 @@ out float sphericalVertexDistance;
 out float cylindricalVertexDistance;
 
 /**
- * Expands a static unit quad (corners at +-1) into a camera-facing square centered on the mist, large enough to
- * bound it. The per-instance parameters ride in TextureMat - see the fragment shader for the layout.
+ * Expands a static unit quad (corners at +-1) into a camera-facing square centered on a volume, large enough to
+ * bound it. Shared by every raymarched volume in the mod - rendertype_mist and rendertype_aura_of_darkness - all
+ * of which bound themselves to a sphere at TextureMat[0].xyz with radius TextureMat[0].w. The remaining
+ * per-instance parameters also ride in TextureMat; see each fragment shader for its own layout.
  *
  * The quad's axes are derived here rather than passed in: building them perpendicular to the view ray towards
  * the center is what lets the fragment shader solve the ray-sphere intersection from a fragment's radial offset
- * alone, and deriving them frees those matrix slots for the flow offset.
+ * alone, and deriving them frees those matrix slots for the fragment shader's own parameters.
  */
 void main() {
     vec3 center = TextureMat[0].xyz;

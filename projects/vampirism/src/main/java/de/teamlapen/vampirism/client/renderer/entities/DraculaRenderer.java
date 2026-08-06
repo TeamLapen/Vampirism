@@ -54,9 +54,7 @@ public class DraculaRenderer extends LivingEntityRenderer<Dracula, DraculaRender
     @Override
     public void submit(DraculaRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
         if (renderState.draculaState == DraculaState.MIST) {
-            if (MistRenderer.isEnabled()) {
-                MistRenderer.submitMistCloud(mistFadeFactor(renderState), renderState.boundingBoxWidth, renderState.boundingBoxHeight, renderState.velocity, renderState.mistFlow, poseStack);
-            }
+            MistRenderer.submitMistCloud(mistFadeFactor(renderState), renderState.boundingBoxWidth, renderState.boundingBoxHeight, renderState.velocity, renderState.mistFlow, poseStack);
             return;
         }
         this.model = switch (renderState.state) {

@@ -136,6 +136,29 @@ public class RenderHandler implements IMinecraftAccessor {
         }
     }
 
+    /**
+     * Submits the aura of darkness for any living entity carrying the effect.
+     * <p>
+     * Hooked here rather than added as a {@link net.minecraft.client.renderer.entity.layers.RenderLayer} because
+     * the draw needs the scene depth bound as a sampler, which a layer cannot do - see {@link
+     * VolumetricBillboards}. {@code AvatarRenderer#submit} delegates to {@code LivingEntityRenderer#submit}, so
+     * this one handler covers players as well as mobs. It does not fire for the forms cancelled in
+     * {@link #onRenderPlayerPreHigh} - invisibility, bat and mist - which is what we want: an invisible player
+     * should not be given away by a halo.
+     */
+    @SubscribeEvent
+    public void onRenderLivingPost(RenderLivingEvent.@NotNull Post<LivingEntity, LivingEntityRenderState, EntityModel<LivingEntityRenderState>> event) {
+        LivingEntityRenderState renderState = event.getRenderState();
+        if (Boolean.TRUE.equals(renderState.getRenderData(ModEntityRenderStates.AURA_OF_DARKNESS))) {
+            AuraOfDarknessRenderer.submitAura(
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.AURA_OF_DARKNESS_FADE, 1f),
+                    renderState.boundingBoxWidth,
+                    renderState.boundingBoxHeight,
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.AURA_OF_DARKNESS_PHASE, 0),
+                    event.getPoseStack());
+        }
+    }
+
     @SubscribeEvent
     public void onRenderFirstPersonHand(@NotNull RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -195,15 +218,14 @@ public class RenderHandler implements IMinecraftAccessor {
             EntityRenderState batRenderState = renderer.createRenderState(bat, partialTicks);
             mc().getEntityRenderDispatcher().submit(batRenderState, new CameraRenderState(), 0, 0, 0, event.getPoseStack(), event.getSubmitNodeCollector());
         } else if (Boolean.TRUE.equals(renderState.getRenderData(ModEntityRenderStates.MIST))) {
-            // Hidden for the whole fade envelope, not just while the form is active, so the model does not
-            // reappear inside a cloud that is still dissipating.
             event.setCanceled(true);
-            if (MistRenderer.isEnabled()) {
-                Vec3 velocity = renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_VELOCITY, Vec3.ZERO);
-                Vec3 flow = renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_FLOW, Vec3.ZERO);
-                float fade = renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_FADE, 1f);
-                MistRenderer.submitMistCloud(fade, renderState.boundingBoxWidth, renderState.boundingBoxHeight, velocity, flow, event.getPoseStack());
-            }
+            MistRenderer.submitMistCloud(
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_FADE, 1f),
+                    renderState.boundingBoxWidth,
+                    renderState.boundingBoxHeight,
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_VELOCITY, Vec3.ZERO),
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_FLOW, Vec3.ZERO),
+                    event.getPoseStack());
         }
     }
 

@@ -11,7 +11,6 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue correctVampireFOV;
     public final ModConfigSpec.BooleanValue renderBloodVision;
     public final ModConfigSpec.BooleanValue renderVampireSwordParticles;
-    public final ModConfigSpec.EnumValue<MistQuality> volumetricMistQuality;
     public final ColorConfigValue garlicFinderAuraColor;
 
     // Overlays
@@ -43,9 +42,6 @@ public class ClientConfig {
         this.renderVampireSwordParticles = builder
                 .comment("When enabled, renders particles when holding a charged vampire sword.")
                 .define("renderVampireSwordParticles", true);
-        this.volumetricMistQuality = builder
-                .comment("Quality of the raymarched volumetric fog rendered while a player or Dracula is in mist form. Lower it on low-end GPUs; OFF hides the entity instead of rendering mist.")
-                .defineEnum("volumetricMistQuality", MistQuality.MEDIUM);
         this.garlicFinderAuraColor = ColorConfigValue.define(builder,
                 "garlicFinderAuraColor", "#e0b74f",
                 "The color used by the garlic finder to highlight blocks.");
@@ -76,26 +72,5 @@ public class ClientConfig {
                 .comment("When enabled, shows the nearby vampire warning in the HUD.")
                 .define("showNearbyVampireOverlay", true);
         builder.pop();
-    }
-
-    /**
-     * Number of raymarch steps the volumetric mist shader takes. Each level is backed by its own pre-built
-     * pipeline, since the step count is a compile-time shader define.
-     */
-    public enum MistQuality {
-        OFF(0),
-        LOW(12),
-        MEDIUM(24),
-        HIGH(40);
-
-        private final int steps;
-
-        MistQuality(int steps) {
-            this.steps = steps;
-        }
-
-        public int steps() {
-            return this.steps;
-        }
     }
 }
