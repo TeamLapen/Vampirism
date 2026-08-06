@@ -147,7 +147,7 @@ public class Skill<T extends IFactionPlayer<T> & ISkillPlayer<T>> implements ISk
 
     @Override
     public int getSkillPointCost() {
-        return this.components().getOrDefault(FactionDataComponents.SKILL_COST, 1);
+        return this.components().getOrDefault(FactionDataComponents.SKILL_COST, 0);
     }
 
     @Override

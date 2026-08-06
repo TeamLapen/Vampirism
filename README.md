@@ -6,13 +6,13 @@ Vampirism for Minecraft 26.1 – Dev branch
 
 ## Mod Description
 
-Vampires are fast, strong, and bloodthirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
+Vampires are fast, strong, and bloodthirsty entities, which do not like the sun but don't fear the night, and the best thing is: You can become one!
 
 This mod allows you to become a vampire with all its benefits and drawbacks.
 
-After being bitten by a vampire or manually injecting some vampire blood you get an effect called "Sanguinare Vampiris" which eventually turns you into a vampire.
+After being bitten by a vampire or manually injecting some vampire blood, you get an effect called "Sanguinare Vampiris" which eventually turns you into a vampire.
 
-For a more detailed description head over to the Minecraft Forum or the Curseforge page.
+For a more detailed description, head over to the Minecraft Forum or the Curseforge page.
 ## Links
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire/files)
 [![](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/vampirism/versions)
@@ -39,6 +39,7 @@ The following labeling scheme is used:
 ## People
 - [maxanier](https://maxanier.de)
 - [Cheaterpaul](https://paube.de)
+- [Grid](https://github.com/TheGridExpert)
 - [lunofe](https://github.com/lunofe) _Triage/Support/Community/Official Server/Art_
 - [Piklach](https://twitter.com/Piklach) _Community/Official Server_
 - [Mike](https://github.com/supermike1999) _Balancing/Ideas_
@@ -58,7 +59,7 @@ The following labeling scheme is used:
 - Slippingchip400 _Models_
 - Йода _Textures_
 - XxKidDowdallxX _Textures_
-- F_Spade _Textures_
+- F_Spade _Textures/Models/Ideas/Structures_
 - Matheo _Lore_
 - special_krab _Lore_
 - cournualllama2 _Lore_
@@ -67,10 +68,10 @@ The following labeling scheme is used:
 - BugraaK _Textures/Models_
 - MrVityaTrash _Textures_
 - FrostedOver _Textures_
-- Grid _Code/Textures/Models/Structures/Lore_
 - T_Corvus _Textures_
 - Zeyke _Textures_
 - zozozrob _Textures/Models_
+- Bitul _Structures_
 
 ## Datapacks
 Vampirism uses datapacks to configure blood values and other settings.
@@ -110,24 +111,22 @@ All textures and models included in the mod are licensed under the [Vampirism As
 ##### Sounds
 The sounds used in this mod are individually licensed and may only be used outside Vampirism under the respective licensing terms noted below.
 
-| Sound                                                                         | Creator                 | Link                                                                             | License          |
-|-------------------------------------------------------------------------------|-------------------------|----------------------------------------------------------------------------------|------------------|
-| Sound                                                                         | Creator                 | Link                                                                             | License          |
-| ---------------------------                                                   | ----------------------- | -------------------------------------------------------------------------------- | ---------------- |
-| DST-VampireMonk.mp3                                                           | Striderjapan            | [freesound](http://www.freesound.org/people/Striderjapan/sounds/141368/)         | CC Attribution   |
-| vampire bites                                                                 | Bernuy                  | [freesound](http://www.freesound.org/people/Bernuy/sounds/268501/)               | CC Attribution   |
-| bow02.ogg                                                                     | Erdie                   | [freesound](https://www.freesound.org/people/Erdie/sounds/65734/)                | CC Attribution   |
-| the swarm v31m3                                                               | Setuniman               | [freesound](https://www.freesound.org/people/Setuniman/sounds/130695/)           | CC Attribution   |
-| Boiling Towel                                                                 | unfa                    | [freesound](https://www.freesound.org/people/unfa/sounds/174499/)                | CC Attribution   |
-| Pepper mill grinds pepper                                                     | Black_River_Phonogram   | [freesound](https://freesound.org/people/Black_River_Phonogram/sounds/424605/)   | CC0              |
-| Slimey                                                                        | Nebulasnails            | [freesound](https://freesound.org/people/nebulasnails/sounds/495116/)            | CC0              |
-| blood_sucker                                                                  | Bernuy                  | [freesound](https://freesound.org/people/Bernuy/sounds/268499/)                  | CC Attribution   |
-| Organ Ambience, Calm, A                                                       | InspectorJ              | [freesound](https://freesound.org/people/InspectorJ/sounds/411991/)              | CC Attribution   |
-| two drops.WAV                                                                 | Millavsb                | [freesound](https://freesound.org/people/Millavsb/sounds/197900/)                | CC0              |
-| Dark Choir 01                                                                 | Exsomniel               | [freesound](https://freesound.org/people/Exsomniel/sounds/207809/)               | CC0              |
-| Orange Hard Squeeze                                                           | minituffy               | [freesound](https://freesound.org/people/minituffy/sounds/385964/)               | CC0              |
-| Ambience, Creepy Wind, A.wav                                                  | InspectorJ              | [freesound](https://freesound.org/people/InspectorJ/sounds/413549/)              | CC BY 4.0        |
-| Sekuntikello, sekundaattori, tikitys / Stopwatch, start, tick, stop, interior | YleArkisto              | [freesound](https://freesound.org/people/YleArkisto/sounds/332620/)              | Attribution 4.0  |
+| Sound                                                                         | Creator               | Link                                                                           | License         |
+|-------------------------------------------------------------------------------|-----------------------|--------------------------------------------------------------------------------|-----------------|
+| DST-VampireMonk.mp3                                                           | Striderjapan          | [freesound](https://www.freesound.org/people/Striderjapan/sounds/141368/)      | CC Attribution  |
+| vampire bites                                                                 | Bernuy                | [freesound](https://www.freesound.org/people/Bernuy/sounds/268501/)            | CC Attribution  |
+| bow02.ogg                                                                     | Erdie                 | [freesound](https://www.freesound.org/people/Erdie/sounds/65734/)              | CC Attribution  |
+| the swarm v31m3                                                               | Setuniman             | [freesound](https://www.freesound.org/people/Setuniman/sounds/130695/)         | CC Attribution  |
+| Boiling Towel                                                                 | unfa                  | [freesound](https://www.freesound.org/people/unfa/sounds/174499/)              | CC Attribution  |
+| Pepper mill grinds pepper                                                     | Black_River_Phonogram | [freesound](https://freesound.org/people/Black_River_Phonogram/sounds/424605/) | CC0             |
+| Slimey                                                                        | Nebulasnails          | [freesound](https://freesound.org/people/nebulasnails/sounds/495116/)          | CC0             |
+| blood_sucker                                                                  | Bernuy                | [freesound](https://freesound.org/people/Bernuy/sounds/268499/)                | CC Attribution  |
+| Organ Ambience, Calm, A                                                       | InspectorJ            | [freesound](https://freesound.org/people/InspectorJ/sounds/411991/)            | CC Attribution  |
+| two drops.WAV                                                                 | Millavsb              | [freesound](https://freesound.org/people/Millavsb/sounds/197900/)              | CC0             |
+| Dark Choir 01                                                                 | Exsomniel             | [freesound](https://freesound.org/people/Exsomniel/sounds/207809/)             | CC0             |
+| Orange Hard Squeeze                                                           | minituffy             | [freesound](https://freesound.org/people/minituffy/sounds/385964/)             | CC0             |
+| Ambience, Creepy Wind, A.wav                                                  | InspectorJ            | [freesound](https://freesound.org/people/InspectorJ/sounds/413549/)            | CC BY 4.0       |
+| Sekuntikello, sekundaattori, tikitys / Stopwatch, start, tick, stop, interior | YleArkisto            | [freesound](https://freesound.org/people/YleArkisto/sounds/332620/)            | Attribution 4.0 |
 
 ##### Sit functionality - `sit` package
 
