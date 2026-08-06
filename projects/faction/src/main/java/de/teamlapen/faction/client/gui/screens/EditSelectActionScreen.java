@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
@@ -65,7 +66,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
     }
 
     private static <T extends IFactionPlayer<T>> void saveOrdering(T player, ItemOrdering<Holder<? extends IAction<?>>> ordering) {
-        FactionConfig.preferences().actionOrder().update(player.getFaction(), ordering.getOrdering());
+        FactionConfig.preferences().actionOrder().update(player.getFaction(), ordering.getOrdering(), ordering.getExcluded());
     }
 
     private KeyBindingList keyBindingList;
@@ -74,6 +75,11 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         super(getOrdering(player), action -> action.value().getName().plainCopy(), EditSelectActionScreen::drawActionPart, (ordering) -> saveOrdering(player, ordering), (item) -> EditSelectActionScreen.isEnabled(player, item));
     }
 
+    @Override
+    protected void init() {
+        super.init();
+        this.keyBindingList.updateContent();
+    }
 
     @Override
     protected void setupGrid() {
@@ -109,7 +115,7 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
         rowHelper.addChild(new StringWidget(Component.translatable("controls.keybinds.title"), Minecraft.getInstance().font), rowHelper.newCellSettings().alignHorizontallyCenter().paddingVertical(1));
         this.keyBindingList = rowHelper.addChild(new KeyBindingList(excludesWidth - 8, this.height - 55 - 11));
         this.repositionCallback.add((width1, height1) -> keyBindingList.setHeight(height1 - 55 - 11));
-        rowHelper.addChild(new ResetButton(0, 0, excludesWidth - 30, 20, (context) -> this.resetKeyBindings()), rowHelper.newCellSettings().paddingHorizontal(1));
+        rowHelper.addChild(new ResetButton(0, 0, excludesWidth - 30, 20, (context) -> this.resetKeyBindings(), Component.translatable("gui.factionapi.clear")), rowHelper.newCellSettings().paddingHorizontal(1));
         rowHelper.addChild(new ExtendedButton(0, 0, excludesWidth - 30, 20, Component.translatable("gui.factionapi.edit_action.open_keybinding_settings"), (context) -> Minecraft.getInstance().setScreen(new KeyBindsScreen(this, getMinecraft().options))), rowHelper.newCellSettings().paddingHorizontal(1));
 
         this.layout.addChild(excludesWrapper,0,2);
@@ -133,6 +139,9 @@ public class EditSelectActionScreen<T extends ISkillPlayer<T>> extends Reorderin
 
         public KeyBindingList(int pWidth, int pHeight) {
             super(Minecraft.getInstance(), pWidth, pHeight, 0, 20);
+        }
+
+        public void updateContent() {
             FactionPlayerHandler handler = FactionPlayerHandler.get(Minecraft.getInstance().player);
             ActionBindings actionBindings = FactionConfig.preferences().actionBindings();
             replaceEntries(FactionKeys.ACTION_KEYS.entrySet().stream().map(pair -> new KeyBindingSetting(pair.getKey(), pair.getValue(), actionBindings.getOrder(handler.getFaction(), pair.getKey()))).sorted(Comparator.comparingInt((KeyBindingSetting o) -> o.actionKey.ordinal())).toList());

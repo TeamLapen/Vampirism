@@ -20,6 +20,13 @@ public abstract class PreferenceValue<T> {
         this.serializer = new FileSerializer<>(path, registryAccess, codec, defaultValue);
         this.serializer.initialize();
         this.value = this.serializer.load();
+        if (checkValues(this.value, registryAccess)) {
+            save();
+        }
+    }
+
+    protected boolean checkValues(T value, RegistryAccess registryAccess) {
+        return false;
     }
 
     protected T getValue(){

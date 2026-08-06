@@ -127,6 +127,7 @@
   "gui.factionapi.reordering.excluded": "Excluded",
   "gui.factionapi.reset": "Reset",
   "gui.factionapi.reset_question": "Are you sure?",
+  "gui.factionapi.clear": "Clear",
   "gui.factionapi.level": "Level",
   "gui.factionapi.level_short": "Lvl.",
   "gui.factionapi.title": "Title",

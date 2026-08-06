@@ -32,10 +32,16 @@ public class ItemOrdering<T> {
         return Collections.unmodifiableList(excluded);
     }
 
-    public void reset() {
+    public void clear() {
         this.ordering.clear();
         this.excluded.clear();
         this.excluded.addAll(this.allItems.get());
+    }
+
+    public void reset() {
+        this.ordering.clear();
+        this.excluded.clear();
+        this.ordering.addAll(this.allItems.get());
     }
 
     public void applyOrdering(List<T> list) {
