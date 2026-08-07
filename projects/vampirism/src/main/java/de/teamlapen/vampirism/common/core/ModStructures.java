@@ -85,7 +85,7 @@ public class ModStructures {
     public static final DeferredHolder<StructurePieceType, StructurePieceType> VAMPIRE_ALTAR_PIECE = STRUCTURE_PIECES.register("vampire_altar", () -> (StructurePieceType.StructureTemplateType) VampireAltarPieces.VampireAltarPiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> MOTHER_PIECE = STRUCTURE_PIECES.register("mother", () -> (StructurePieceType.ContextlessType) MotherPiece::new);
     public static final DeferredHolder<StructurePieceType, StructurePieceType> CRYPT_PIECE = STRUCTURE_PIECES.register("crypt", () -> CryptPiece::new);
-    public static final DeferredHolder<StructurePieceType, StructurePieceType> DRACULA_CASTLE_PIECE = STRUCTURE_PIECES.register("dracula_castle", () -> (StructurePieceType.StructureTemplateType) DraculaCastlePieces.CastlePiece::new);
+    public static final DeferredHolder<StructurePieceType, StructurePieceType> DRACULA_CASTLE_PIECE = STRUCTURE_PIECES.register("dracula_castle", () -> (StructurePieceType.StructureTemplateType) DraculaCastlePieces.DraculaCastlePiece::new);
 
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<RandomStructureProcessor>> RANDOM_SELECTOR = STRUCTURE_PROCESSOR_TYPES.register("random_selector", () -> () -> RandomStructureProcessor.CODEC);
     public static final DeferredHolder<StructureProcessorType<?>, StructureProcessorType<BiomeTopBlockProcessor>> BIOME_BASED = STRUCTURE_PROCESSOR_TYPES.register("biome_based", () -> () -> BiomeTopBlockProcessor.CODEC);
