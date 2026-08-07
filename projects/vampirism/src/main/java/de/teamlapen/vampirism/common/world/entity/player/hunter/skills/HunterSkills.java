@@ -10,6 +10,7 @@ import de.teamlapen.faction.common.core.FactionConsumer;
 import de.teamlapen.faction.common.core.FactionSkills;
 import de.teamlapen.faction.common.factions.skills.SkillNode;
 import de.teamlapen.faction.common.factions.skills.SkillTree;
+import de.teamlapen.faction.common.util.ConfigComponent;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.hunter.IHunterPlayer;
@@ -42,7 +43,7 @@ public class HunterSkills {
 
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> LEVEL_ROOT = SKILLS.registerSkill(ModFactions.HUNTER.getKey().identifier().getPath(), HunterSkill::new);
 
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE1 = SKILLS.registerSkill("stake1", props -> new HunterSkill(props.cost(2).withDescription(Component.translatable(ModConfig.balance().hsInstantKill1FromBehind.getDefault() ? "skill.vampirism.stake1.desc" : "skill.vampirism.stake1.desc.behind", (int) (ModConfig.balance().hsInstantKill1MaxHealth.getDefault() * 100)))));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE1 = SKILLS.registerSkill("stake1", props -> new HunterSkill(props.cost(2).withDescription(ConfigComponent.config(ModConfig.balance().hsInstantKill1FromBehind, Component.translatable("skill.vampirism.stake1.desc", ConfigComponent.calculateDouble(ModConfig.balance().hsInstantKill1MaxHealth, 100, ConfigComponent.Operator.MULTIPLY)), Component.translatable("skill.vampirism.stake1.desc.behind", ConfigComponent.calculateDouble(ModConfig.balance().hsInstantKill1MaxHealth, 100, ConfigComponent.Operator.MULTIPLY))))));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_DISGUISE = SKILLS.registerSkill("hunter_disguise", props -> new HunterSkill(props.cost(1).actionSkill(HunterActions.DISGUISE_HUNTER).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> WEAPON_TABLE = SKILLS.registerSkill("weapon_table", props -> new HunterSkill(props.cost(2).withDescription()));
 
