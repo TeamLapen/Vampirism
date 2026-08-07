@@ -181,6 +181,11 @@ public class Dracula extends PathfinderMob implements IDraculaAnimations, IEntit
         DraculaFightData.getOpt(this.level()).ifPresent(x -> x.getEvent().addPlayer(player));
     }
 
+    @Override
+    protected boolean canRide(Entity vehicle) {
+        return false;
+    }
+
     //<editor-fold desc="Data">
 
     private boolean isTransforming() {
