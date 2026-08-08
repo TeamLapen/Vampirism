@@ -1274,8 +1274,6 @@
   "death.attack.vampirism.bleeding": "%1$s истёк кровью",
   "death.attack.vampirism.bleeding.player": "%1$s истёк кровью, пока боролся с %2$s",
   "death.attack.vampirism.leave_faction": "%1$s отрёкся от своей природы и погиб",
-  "death.attack.vampirism.flying_needles": "%1$s был пронзён насквозь",
-  "death.attack.vampirism.flying_needles.player": "%1$s был пронзён насквозь, пока боролся с %2$s",
   "death.attack.vampirism.flying_swords": "%1$s был располовинен",
   "death.attack.vampirism.flying_swords.player": "%1$s был располовинен, пока боролся с %2$s",
   "command.vampirism.failed_to_execute": "Не удалось выполнить команду. Внутренняя ошибка",
