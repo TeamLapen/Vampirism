@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.factions.refinements.IRefinementAccess;
-import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.vampirism.VampirismMod;
@@ -76,7 +75,9 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
         float charged = getChargePercentage(stack);
         float trained = getTrained(stack, FactionsMod.proxy.getClientPlayer());
         tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
-        tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
+        if (trained < 1) {
+            tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_trained").append(Component.literal(" " + ((int) Math.ceil(trained * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));
+        }
     }
 
     @Override
@@ -269,7 +270,18 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
     }
 
     protected float getAttackDamageModifier(ItemStack stack) {
-        return getChargePercentage(stack) > 0 ? 0.8f : 0;
+        if (getChargePercentage(stack) > 0) {
+            var base = 0.8f;
+            base += switch (stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level()) {
+                case 2 -> 0.25f;
+                case 3 -> 0.5f;
+                case 4 -> 1f;
+                case 5 -> 1.5f;
+                default -> 0;
+            };
+            return base;
+        }
+        return 0;
     }
 
     protected float getSpeedModifier(ItemStack stack) {
@@ -281,18 +293,32 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
      */
     protected abstract float getChargeUsage(ItemStack stack);
 
-    protected float getPurityArmorToughnessModifier(ItemStack stack) {
+    protected float getPurityKnockbackResistanceModifier(ItemStack stack) {
         return switch (stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level()) {
-            case 0 -> 0;
-            case 1 -> 0.035f;
-            case 2 -> 0.06f;
-            case 3 -> 0.1f;
-            default -> 0.15f;
+            case 1 -> 0.05f;
+            case 2 -> 0.1f;
+            case 3 -> 0.15f;
+            case 4 -> 0.2f;
+            case 5 -> 0.25f;
+            default -> 0;
         };
     }
 
     protected float getPurityInteractionRangeModifier(ItemStack stack) {
-        return Math.clamp((stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level()/4f) * 0.5f, 0f, 0.5f);
+        return switch (stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level()) {
+            case 4 -> 0.25f;
+            case 5 -> 0.5f;
+            default -> 0;
+        };
+    }
+
+    protected float getSweepingDamageModifier(ItemStack stack) {
+        return switch (stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level()) {
+            case 3 -> 0.0625f;
+            case 4 -> 0.125f;
+            case 5 -> 0.25f;
+            default -> 0;
+        };
     }
 
     /**

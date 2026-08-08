@@ -294,6 +294,15 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('G', GOLD_INGOT)
                 .unlockedBy("has_gold_ingot", has(GOLD_INGOT))
                 .save(output);
+        shaped(RecipeCategory.MISC, ModItems.INFUSER)
+                .pattern("G G")
+                .pattern("GGG")
+                .pattern("OOO")
+                .define('G', GOLD_INGOT)
+                .define('O', Items.GILDED_BLACKSTONE)
+                .unlockedBy("has_blackstone", has(Items.GILDED_BLACKSTONE))
+                .unlockedBy("has_gold_ingot", has(GOLD_INGOT))
+                .save(output);
     }
 
     private void recipesDecorationalBlocks() {
