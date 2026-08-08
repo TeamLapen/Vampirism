@@ -1537,8 +1537,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
 
     private void recipesInfuser() {
         fiveTieredMetalInfusionRecipe(Items.RAW_IRON, ModItems.BLOOD_INFUSED_RAW_IRON);
+        extraTieredMetalInfusionRecipe(Items.RAW_IRON, ModItems.BLOOD_INFUSED_RAW_IRON);
         fiveTieredMetalInfusionRecipe(Items.RAW_GOLD, ModItems.BLOOD_INFUSED_RAW_GOLD);
+        extraTieredMetalInfusionRecipe(Items.RAW_GOLD, ModItems.BLOOD_INFUSED_RAW_GOLD);
         fiveTieredMetalInfusionRecipe(DIAMOND, ModItems.BLOOD_INFUSED_DIAMOND);
+        extraTieredMetalInfusionRecipe(DIAMOND, ModItems.BLOOD_INFUSED_DIAMOND);
 
         sixTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_IRON, ModItems.BLOOD_INFUSED_IRON_INGOT);
         sixTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_GOLD, ModItems.BLOOD_INFUSED_GOLD_INGOT);

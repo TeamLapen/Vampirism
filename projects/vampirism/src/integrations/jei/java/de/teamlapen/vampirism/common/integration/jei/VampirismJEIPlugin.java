@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.common.world.inventory.AlchemicalCauldronMenu;
 import de.teamlapen.vampirism.common.world.inventory.WeaponTableMenu;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemyTableRecipe;
+import de.teamlapen.vampirism.common.world.items.recipes.InfuserRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -50,6 +51,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     public static final IRecipeType<FogDiffuserRecipe> FOG_DIFFUSER = IRecipeType.create(REFERENCE.MODID, "fog_diffuser", FogDiffuserRecipe.class);
     public static final IRecipeType<GrinderRecipe> GRINDER_RECIPE = IRecipeType.create(REFERENCE.MODID, "grinder", GrinderRecipe.class);
     public static final IRecipeType<BloodSieveRecipe> BLOOD_SIEVE_CONVERSION = IRecipeType.create(REFERENCE.MODID, "blood_sieve", BloodSieveRecipe.class);
+    public static final IRecipeType<RecipeHolder<InfuserRecipe>> INFUSER = createFromModded(ModRecipes.INFUSER_TYPE);
 
     @Override
     public Identifier getPluginUid() {
@@ -73,7 +75,8 @@ public class VampirismJEIPlugin implements IModPlugin {
                 new GarlicDiffuserRecipeCategory(helper),
                 new FogDiffuserRecipeCategory(helper),
                 new GrinderRecipeCategory(helper),
-                new BloodSieveRecipeCategory(helper));
+                new BloodSieveRecipeCategory(helper),
+                new InfuserRecipeCategory(helper));
     }
 
     @Override
@@ -86,6 +89,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipeClickArea(GarlicDiffuserScreen.class, 45, 55, 14, 14, GARLIC_DIFFUSER);
         registration.addRecipeClickArea(FogDiffuserScreen.class, 45, 55, 14, 14, FOG_DIFFUSER);
         registration.addRecipeClickArea(BloodGrinderScreen.class, 80, 55, 16, 16, GRINDER_RECIPE);
+        registration.addRecipeClickArea(InfuserScreen.class, 117, 41, 24, 16, INFUSER);
     }
 
     @Override
@@ -124,6 +128,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(FOG_DIFFUSER, FogDiffuserRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(GRINDER_RECIPE, GrinderRecipeMaker.getRecipes(registration.getIngredientManager()));
         registration.addRecipes(BLOOD_SIEVE_CONVERSION, BloodSieveRecipeMaker.getRecipes(registration.getIngredientManager()));
+        registration.addRecipes(INFUSER, recipes.byType(ModRecipes.INFUSER_TYPE.get()).stream().toList());
     }
 
     @Override
