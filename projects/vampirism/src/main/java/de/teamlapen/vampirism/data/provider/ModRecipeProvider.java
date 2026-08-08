@@ -1354,7 +1354,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.BASIC_TECH_CROSSBOW)
                 .lava(4)
-                .skills(HunterSkills.WEAPON_TABLE)
+                .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
                 .pattern("YXXY")
                 .pattern("XZZX")
                 .pattern(" XX ")
@@ -1389,7 +1389,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .save(output);
         shapedWeaponTable(RecipeCategory.COMBAT, ModItems.ENHANCED_TECH_CROSSBOW)
                 .lava(5)
-                .skills(HunterSkills.MASTER_CRAFTSMANSHIP)
+                .skills(HunterSkills.ARTISAN_CRAFTSMANSHIP)
                 .pattern("YXXY")
                 .pattern("XZZX")
                 .pattern("XZZX")

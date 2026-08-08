@@ -360,18 +360,6 @@
       "vampirism:reserved/fx/stake"
     ]
   },
-  "fx.stopwatch_end": {
-    "sounds": [
-      "vampirism:cc/fx/stopwatch_end"
-    ],
-    "subtitle": "subtitles.vampirism.stopwatch.end"
-  },
-  "fx.stopwatch_start": {
-    "sounds": [
-      "vampirism:cc/fx/stopwatch_start"
-    ],
-    "subtitle": "subtitles.vampirism.stopwatch.start"
-  },
   "fx.teleport_away": {
     "sounds": [
       "vampirism:reserved/fx/teleport1"

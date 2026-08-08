@@ -50,8 +50,6 @@ public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
         this.add(ModSounds.REMAINS_DEATH, definition().subtitle("subtitles.vampirism.remains.death").with(sound(mod("reserved/block/remains_destroyed"))));
         this.add(ModSounds.REMAINS_HURT, definition().subtitle("subtitles.vampirism.remains.hurt").with(sound(mc("block/rooted_dirt/step1")).volume(0.8), sound(mc("block/rooted_dirt/step2")).volume(0.8), sound(mc("block/rooted_dirt/step3")).volume(0.8), sound(mc("block/rooted_dirt/step4")).volume(0.8), sound(mc("block/rooted_dirt/step5")).volume(0.8), sound(mc("block/rooted_dirt/step6")).volume(0.8)));
         this.add(ModSounds.BUBBLES, definition().with(sound(mod("reserved/block/bubbles_1")), sound(mod("reserved/block/bubbles_2")), sound(mod("reserved/block/bubbles_3"))));
-        this.add(ModSounds.STOPWATCH_START, definition().subtitle("subtitles.vampirism.stopwatch.start").with(sound(mod("cc/fx/stopwatch_start"))));
-        this.add(ModSounds.STOPWATCH_END, definition().subtitle("subtitles.vampirism.stopwatch.end").with(sound(mod("cc/fx/stopwatch_end"))));
         // dracula fight sounds; currently placeholders until dedicated sound files are available
         this.add(ModSounds.DRACULA_AMBIENT, definition().subtitle("subtitles.vampirism.entity.dracula.ambient").with(sound(mod("cc/entity/vampire_scream")).volume(0.5).pitch(0.6)));
         this.add(ModSounds.DRACULA_HURT, definition().subtitle("subtitles.vampirism.entity.dracula.hurt").with(sound(mc("mob/endermen/hit1")).pitch(0.6), sound(mc("mob/endermen/hit2")).pitch(0.6), sound(mc("mob/endermen/hit3")).pitch(0.6), sound(mc("mob/endermen/hit4")).pitch(0.6)));

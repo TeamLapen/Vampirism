@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.vampirism.common.core.ModItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 
 public class ItemEventHandler {
@@ -19,5 +21,21 @@ public class ItemEventHandler {
             event.addModifier(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(BuiltInRegistries.ITEM.getKey(sword).withSuffix("_purity"), sword.getPurityArmorToughnessModifier(stack) , AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
             event.addModifier(Attributes.ENTITY_INTERACTION_RANGE, new AttributeModifier(BuiltInRegistries.ITEM.getKey(sword).withSuffix("_purity"), sword.getPurityInteractionRangeModifier(stack) , AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
         }
+    }
+
+    @SubscribeEvent
+    public void onAnvilUpdate(AnvilUpdateEvent event) {
+        ItemStack shattered = event.getLeft();
+        if (!shattered.is(ModItems.SHATTERED_ARMOR)) return;
+
+        ItemStack armor = ShatteredArmorItem.contained(shattered);
+        if (armor.isEmpty() || !ShatteredArmorItem.getValidRecoveryItems(shattered).contains(event.getRight().getItem())) return;
+
+        ItemStack repaired = ShatteredArmorItem.repair(shattered);
+        if (repaired.isEmpty()) return;
+
+        event.setOutput(repaired);
+        event.setMaterialCost(1);
+        event.setXpCost(1);
     }
 }

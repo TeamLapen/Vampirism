@@ -126,7 +126,6 @@ The sounds used in this mod are individually licensed and may only be used outsi
 | Dark Choir 01                                                                 | Exsomniel             | [freesound](https://freesound.org/people/Exsomniel/sounds/207809/)             | CC0             |
 | Orange Hard Squeeze                                                           | minituffy             | [freesound](https://freesound.org/people/minituffy/sounds/385964/)             | CC0             |
 | Ambience, Creepy Wind, A.wav                                                  | InspectorJ            | [freesound](https://freesound.org/people/InspectorJ/sounds/413549/)            | CC BY 4.0       |
-| Sekuntikello, sekundaattori, tikitys / Stopwatch, start, tick, stop, interior | YleArkisto            | [freesound](https://freesound.org/people/YleArkisto/sounds/332620/)            | Attribution 4.0 |
 
 ##### Sit functionality - `sit` package
 

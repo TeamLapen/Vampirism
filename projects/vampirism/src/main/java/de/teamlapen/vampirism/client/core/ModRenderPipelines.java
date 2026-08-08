@@ -6,12 +6,15 @@ import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.CompareOp;
+import com.mojang.blaze3d.platform.DestFactor;
+import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.renderer.blockentity.VelmorraPortalRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.*;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
 import java.util.function.Supplier;
@@ -57,6 +60,7 @@ public class ModRenderPipelines {
     }
 
     private static final RenderType ENTITY_TRANSPARENCY = RenderType.create(VIdentifier.modString("solid_transparency_entity"), SOLID);
+
     private static final RenderType BLOCK_AURA = RenderType.create(VIdentifier.modString("block_aura"), RenderSetup.builder(RenderPipelines.DEBUG_FILLED_BOX)
             .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
             .setOutputTarget(OutputTarget.OUTLINE_TARGET)
@@ -79,6 +83,7 @@ public class ModRenderPipelines {
         event.registerPipeline(VELMORRA_PORTAL_PIPELINE);
         event.registerPipeline(DRACULA_MIST_PIPELINE);
         event.registerPipeline(BLOOD_SIPHON_PIPELINE);
+        event.registerPipeline(ITEM_CRUMBLING_PIPELINE);
     }
 
     public static final RenderPipeline.Snippet VELMORRA_PORTAL_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
@@ -130,4 +135,30 @@ public class ModRenderPipelines {
                     .createRenderSetup()
     );
 
+    /**
+     * Vanilla's crumbling pipeline with the block breaking depth state swapped for the glint one: {@link CompareOp#EQUAL}
+     * without depth only draws over the pixels the item itself has already drawn on, which masks the overlay to the
+     * item shape so that it looks like the item is broken without a need to do that manually.
+     */
+    public static final RenderPipeline ITEM_CRUMBLING_PIPELINE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+            .withLocation(VIdentifier.mod("pipeline/item_crumbling"))
+            .withVertexShader("core/rendertype_crumbling")
+            .withFragmentShader("core/rendertype_crumbling")
+            .withSampler("Sampler0")
+            .withCull(false)
+            .withColorTargetState(new ColorTargetState(new BlendFunction(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO)))
+            .withVertexFormat(DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS)
+            .withDepthStencilState(new DepthStencilState(CompareOp.EQUAL, false))
+            .build();
+    private static final RenderType ITEM_CRUMBLING_RENDER_TYPE = RenderType.create(
+            VIdentifier.modString("item_crumbling"),
+            RenderSetup.builder(ITEM_CRUMBLING_PIPELINE)
+                    .withTexture("Sampler0", ModelBakery.BREAKING_LOCATIONS.getLast())
+                    .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+                    .createRenderSetup()
+    );
+
+    public static RenderType itemCrumbling() {
+        return ITEM_CRUMBLING_RENDER_TYPE;
+    }
 }

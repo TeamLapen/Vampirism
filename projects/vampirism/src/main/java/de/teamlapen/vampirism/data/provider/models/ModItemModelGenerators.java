@@ -4,6 +4,7 @@ import de.teamlapen.faction.client.color.tint.RefinementTint;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.color.item.QuarrelTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
+import de.teamlapen.vampirism.client.models.items.ShatteredArmorModel;
 import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowCharging;
@@ -54,6 +55,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
         createDefaultModels();
         createAlchemicalFire();
         createRitualKnife();
+        createShatteredArmor();
     }
 
     protected void createDefaultModels() {
@@ -210,6 +212,10 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ItemModelUtils.plainModel(ModModelTemplates.FLAT_ITEM.create(ModelLocationUtils.getModelLocation(ModItems.RITUAL_KNIFE.asItem(), "_charged"), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/ritual_knife_heart"))), this.modelOutput)),
                 ItemModelUtils.plainModel(ModModelTemplates.FLAT_ITEM.create(ModItems.RITUAL_KNIFE.asItem(), new TextureMapping().put(TextureSlot.LAYER0, new Material(VIdentifier.mod("item/ritual_knife"))), this.modelOutput)));
         this.itemModelOutput.accept(ModItems.RITUAL_KNIFE.get(), model);
+    }
+
+    protected void createShatteredArmor() {
+        this.itemModelOutput.accept(ModItems.SHATTERED_ARMOR.get(), new ShatteredArmorModel.Unbaked());
     }
 
     protected Stream<Item> getFlatItems() {

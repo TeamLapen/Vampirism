@@ -9,15 +9,23 @@ import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
 import de.teamlapen.vampirism.client.models.items.properties.HasName;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowCharging;
+import de.teamlapen.vampirism.client.models.items.ShatteredArmorModel;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowPull;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
-import net.minecraft.core.registries.BuiltInRegistries;
+import de.teamlapen.vampirism.misc.extension.client.IRegisterRenderBuffersEvent;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.SequencedMap;
 import java.util.stream.Stream;
 
 /**
@@ -41,11 +49,38 @@ public class ModItemsRender {
         event.register(HunterCrossbowCharging.ID, HunterCrossbowCharging.CODEC);
     }
 
+    public static void registerItemModels(RegisterItemModelsEvent event) {
+        event.register(ShatteredArmorModel.Unbaked.ID, ShatteredArmorModel.Unbaked.CODEC);
+    }
+
+    /**
+     * This is made like this due to buffers being drawn in registration order, while the event can only append. The
+     * crumbling overlay looks weird over the enchantment glint, so it makes sense to render it below the latter one.
+     * <p>
+     * {@link Sheets#translucentItemSheet()} is used as it's the last buffer of those that render the item itself, and
+     * only then comes the glint. The order can be seen in {@link RenderBuffers}'s init.
+     */
+    public static void registerRenderBuffers(RegisterRenderBuffersEvent event) {
+        RenderType crumbling = ModRenderPipelines.itemCrumbling();
+        SequencedMap<RenderType, ByteBufferBuilder> buffers = ((IRegisterRenderBuffersEvent) event).vampirism$renderBuffers();
+        Map<RenderType, ByteBufferBuilder> previous = new LinkedHashMap<>(buffers);
+        if (!previous.containsKey(Sheets.translucentItemSheet())) {
+            event.registerRenderBuffer(crumbling);
+            return;
+        }
+
+        buffers.clear();
+        previous.forEach((type, buffer) -> {
+            buffers.put(type, buffer);
+            if (type == Sheets.translucentItemSheet()) {
+                buffers.put(crumbling, new ByteBufferBuilder(crumbling.bufferSize()));
+            }
+        });
+    }
+
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {
         Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW, ModItems.BASIC_TECH_CROSSBOW, ModItems.ENHANCED_TECH_CROSSBOW)
                 .forEach(item -> event.register(item, ModItemDecorators.CROSSBOW_AMMUNITION));
-        // There's no longer a general ArmorItem class and data components don't seem to be registered at this point, so this seems to be the only reasonable way of doing this
-        BuiltInRegistries.ITEM.forEach(item -> event.register(item, ModItemDecorators.DESTRUCTION_DEFERMENT));
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {

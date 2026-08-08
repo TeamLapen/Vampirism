@@ -75,8 +75,10 @@
     "client.StatsScreenMixin",
     "client.accessor.FeatureRenderDispatcherAccessor",
     "client.accessor.ItemInHandRendererAccessor",
+    "client.accessor.ItemStackRenderStateAccessor",
     "client.accessor.LevelRendererAccessor",
-    "client.accessor.ModelPartAccessor"
+    "client.accessor.ModelPartAccessor",
+    "client.accessor.RegisterRenderBuffersEventAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
