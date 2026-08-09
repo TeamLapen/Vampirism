@@ -6,26 +6,33 @@
 #moj_import <minecraft:projection.glsl>
 
 uniform sampler2D DepthSampler;
+uniform sampler2D NoiseSampler;
 
 /**
  * Per-instance mist parameters, written by MistRenderer into the TextureMat slot of the DynamicTransforms
  * uniform. Riding along in that existing per-draw uniform means this pass needs no hand-managed GPU buffer of
  * its own - it reuses the same ring buffer vanilla uses for every other draw.
  *
- * column 0   xyz = camera-relative center of the cloud, w = bounding sphere radius (also the billboard half-size)
- * column 1   xyz = accumulated flow offset in blocks, w = horizontal radius (world x and z)
- * column 2   xy  = smoothed horizontal heading (unit), z = smoothed speed in blocks/tick, w = vertical radius
- *            Horizontal radius > vertical is what gives the flattened, wider-than-tall puff. Both are world-axis
- *            aligned; the billboard axes are derived in the vertex shader and never used here.
- * column 3   x = fade envelope, y = trailing stretch. The stretch is computed on the Java side rather than here
- *            so the bounding radius it feeds into stays in sync with the quad the vertex shader builds.
+ * column 0   xyz = camera-relative center of the cloud, w = horizontal semi-axis of the support ellipsoid
+ * column 1   xyz = accumulated flow offset in blocks, w = vertical semi-axis of the support ellipsoid
+ * column 2   xy  = smoothed horizontal heading (unit), z = smoothed speed in blocks/tick, w = horizontal radius
+ * column 3   x = fade envelope, y = trailing stretch, z = vertical radius, w = pass resolution scale
+ *
+ * The support ellipsoid in columns 0 and 1 is the shared contract with volumetric_billboard.vsh: the region
+ * outside it is provably empty, so it is both what the quad is fitted to and what the march is clipped to. It
+ * is the shape radii scaled by MAX_LOCAL below and by the trailing stretch. The shape radii themselves stay
+ * separate because the density field is expressed in units of them. Horizontal radius > vertical is what gives
+ * the flattened, wider-than-tall puff; both are world-axis aligned.
+ *
+ * The trailing stretch is computed on the Java side rather than here so the support radii it feeds into stay in
+ * sync with the quad the vertex shader builds. The resolution scale turns gl_FragCoord into a screen UV when
+ * this pass is rendered at reduced resolution; it is 1 when it is not.
  */
 #define Center TextureMat[0]
 #define Flow TextureMat[1]
 #define Motion TextureMat[2]
 #define Shape TextureMat[3]
 
-in vec2 texCoord0;
 in vec3 vPosition;
 in float sphericalVertexDistance;
 in float cylindricalVertexDistance;
@@ -53,39 +60,46 @@ const float TURBULENCE_SPEED_CAP = 0.4;
 // Distance in blocks over which density tapers out as the raymarch approaches solid geometry.
 const float DEPTH_SOFTNESS = 0.5;
 
-float hash(vec3 p) {
-    p = fract(p * vec3(0.1031, 0.1030, 0.0973));
-    p += dot(p, p.yzx + 33.33);
-    return fract((p.x + p.y) * p.z);
-}
+/**
+ * The largest distToCenter that can carry any density: the noise-perturbed localRadius peaks at 1.15 and its
+ * falloff band ends at 1.15 times that. Beyond it the cloud is empty whatever the noise does, which is what
+ * makes both the support ellipsoid and the per-step rejection below exact rather than approximate.
+ */
+const float MAX_LOCAL = 1.3225;
 
-// Trilinear value noise.
-float valueNoise(vec3 p) {
+const float NOISE_SIZE = 256.0;
+const vec2 NOISE_SLICE_STEP = vec2(37.0, 17.0);
+
+/**
+ * Two independent 3D value noise fields, one texture fetch.
+ *
+ * The sheet holds a white-noise lattice laid out so that one filtered fetch returns the x/y interpolation of
+ * both slices bracketing p.z at once - see VolumetricNoise for how it is packed. Smoothstepping the fractional
+ * part before the fetch is what turns the texture unit's linear filter into the smooth interpolation value
+ * noise wants, leaving only the blend along z to do here.
+ */
+vec2 valueNoise2(vec3 p) {
     vec3 i = floor(p);
     vec3 f = fract(p);
-    vec3 u = f * f * (3.0 - 2.0 * f);
-
-    float n000 = hash(i + vec3(0.0, 0.0, 0.0));
-    float n100 = hash(i + vec3(1.0, 0.0, 0.0));
-    float n010 = hash(i + vec3(0.0, 1.0, 0.0));
-    float n110 = hash(i + vec3(1.0, 1.0, 0.0));
-    float n001 = hash(i + vec3(0.0, 0.0, 1.0));
-    float n101 = hash(i + vec3(1.0, 0.0, 1.0));
-    float n011 = hash(i + vec3(0.0, 1.0, 1.0));
-    float n111 = hash(i + vec3(1.0, 1.0, 1.0));
-
-    float nx00 = mix(n000, n100, u.x);
-    float nx10 = mix(n010, n110, u.x);
-    float nx01 = mix(n001, n101, u.x);
-    float nx11 = mix(n011, n111, u.x);
-
-    return mix(mix(nx00, nx10, u.y), mix(nx01, nx11, u.y), u.z);
+    f = f * f * (3.0 - 2.0 * f);
+    vec2 uv = i.xy + NOISE_SLICE_STEP * i.z + f.xy + 0.5;
+    vec4 texel = texture(NoiseSampler, uv / NOISE_SIZE);
+    return mix(texel.ga, texel.rb, f.z);
 }
 
+float valueNoise(vec3 p) {
+    return valueNoise2(p).x;
+}
+
+/**
+ * Three octaves. A fourth would land at a period of about an eighth of a block - finer than the march resolves
+ * at any quality level - so it only ever contributed aliasing. The starting amplitude is picked so the total
+ * still sums to what the density thresholds below were tuned against.
+ */
 float fbm(vec3 p) {
     float value = 0.0;
-    float amplitude = 0.55;
-    for (int i = 0; i < 4; i++) {
+    float amplitude = 0.589;
+    for (int i = 0; i < 3; i++) {
         value += amplitude * valueNoise(p);
         p = p * 2.02 + vec3(11.1, 5.3, 7.7);
         amplitude *= 0.5;
@@ -115,51 +129,44 @@ float sceneDistance(vec2 screenUV, vec3 rayDir) {
 }
 
 void main() {
-    float boundR = Center.w;
-    float radiusXZ = Flow.w;
-    float radiusY = Motion.w;
+    vec3 semi = vec3(Center.w, Flow.w, Center.w);
+    float radiusXZ = Motion.w;
+    float radiusY = Shape.z;
     float fade = Shape.x;
-    if (boundR <= 0.001 || fade <= 0.0) {
+    if (semi.x <= 0.001 || fade <= 0.0) {
         discard;
     }
 
-    // The billboard is a square bounding a sphere, so the corners fall outside it and are rejected before any
-    // raymarching happens.
-    vec2 centeredUV = texCoord0 * 2.0 - 1.0;
-    float radialDist = length(centeredUV) * boundR;
-    if (radialDist > boundR) {
-        discard;
+    vec3 viewDir = normalize(vPosition);
+
+    // Ray against the support ellipsoid, solved in the space where dividing by the semi-axes turns it into a
+    // unit sphere. Clipping the march to the ellipsoid rather than to a sphere around it is what keeps the
+    // samples inside the cloud: the sphere the old bound used held nearly twice the volume, and every step
+    // landing in that padding cost a full set of noise lookups to produce nothing.
+    vec3 rayOrigin = -Center.xyz / semi;
+    vec3 rayStep = viewDir / semi;
+    float a = dot(rayStep, rayStep);
+    float b = dot(rayOrigin, rayStep);
+    float c = dot(rayOrigin, rayOrigin) - 1.0;
+    float disc = b * b - a * c;
+    if (disc <= 0.0) {
+        discard; // ray misses the volume entirely - the quad's corners, mostly
     }
+    float rootDisc = sqrt(disc);
+    float tStart = max((-b - rootDisc) / a, 0.0);
+    float tEnd = (-b + rootDisc) / a;
 
-    float q = sphericalVertexDistance;
-    if (q < 0.001) {
-        discard;
-    }
-
-    // Because Right/Up are perpendicular to the direction of Center, the fragment's radial offset and its
-    // distance from the camera are enough for an exact ray-sphere intersection: trueDist is the perpendicular
-    // distance from this camera ray to the center, t0 the ray parameter of the closest approach.
-    float trueDist = radialDist * sqrt(max(q * q - radialDist * radialDist, 0.0)) / q;
-    if (trueDist > boundR) {
-        discard;
-    }
-    float t0 = q - (radialDist * radialDist) / q;
-    float halfChord = sqrt(max(boundR * boundR - trueDist * trueDist, 0.0));
-
-    vec3 viewDir = vPosition / q;
-
-    float tStart = max(t0 - halfChord, 0.0);
-    float tEnd = t0 + halfChord;
     // Never march past solid geometry, so the cloud cannot bleed through a wall it is standing behind.
-    float sceneDist = sceneDistance(gl_FragCoord.xy / ScreenSize, viewDir);
+    float sceneDist = sceneDistance(gl_FragCoord.xy * Shape.w / ScreenSize, viewDir);
     tEnd = min(tEnd, sceneDist);
     if (tEnd <= tStart) {
         discard;
     }
 
     float stepSize = (tEnd - tStart) / float(STEPS);
-    // Per-pixel dither on the ray start hides the banding the step size would otherwise make visible.
-    tStart += hash(vec3(gl_FragCoord.xy, 0.0)) * stepSize;
+    // Per-pixel dither on the ray start hides the banding the step size would otherwise make visible. Sampling
+    // the noise sheet at texel centres gives a white-noise value per pixel for the price of one fetch.
+    tStart += texture(NoiseSampler, gl_FragCoord.xy / NOISE_SIZE).g * stepSize;
 
     vec2 velDir = Motion.xy;
     float speed = Motion.z;
@@ -195,6 +202,13 @@ void main() {
         float trailProj = dot(vec2(local.x, local.z), velDir);
         float localTrail = 1.0 + (trailFactor - 1.0) * clamp(-trailProj, 0.0, 1.0);
         float distToCenter = length(local) / localTrail;
+        // Out here the density is zero whatever the noise says, so reject before paying for any of it. This
+        // costs a handful of arithmetic and is the difference between an empty sample being free and it
+        // costing the full warp, shape and body lookups - which is what it used to cost, the old rejection
+        // sitting below all of them.
+        if (distToCenter >= MAX_LOCAL) {
+            continue;
+        }
 
         // Movement animation, part one: the noise field is sampled offset by the accumulated flow, so it streams
         // backwards through the volume as the entity travels. Because the offset is integrated over time on the
@@ -203,30 +217,31 @@ void main() {
         //
         // Everything below samples relative to the cloud - never at the camera-relative samplePos. Sampling at
         // samplePos would drag the noise field through the volume whenever the camera moved, making the interior
-        // boil under camera motion alone. Staying cloud-local also keeps the coordinates small, which the value
-        // noise is much better conditioned for.
+        // boil under camera motion alone.
         vec3 flowPos = rel + Flow.xyz;
 
         // Domain warp: displace the sample before evaluating the shape, so puffs curl and drift instead of the
-        // boundary just breathing in and out radially. This is what turns a lumpy ellipsoid into a billowy cloud.
+        // boundary just breathing in and out radially. This is what turns a lumpy ellipsoid into a billowy
+        // cloud. Two of the three offsets come from one fetch, the sheet carrying two uncorrelated fields.
         vec3 warp = vec3(
-            valueNoise(flowPos * 0.09 + vec3(4.0, 90.0, 2.0)),
-            valueNoise(flowPos * 0.09 + vec3(30.0, 1.0, 50.0)),
-            valueNoise(flowPos * 0.09 + vec3(70.0, 40.0, 8.0))
+            valueNoise2(flowPos * 0.09 + vec3(4.0, 90.0, 2.0)),
+            valueNoise(flowPos * 0.09 + vec3(30.0, 1.0, 50.0))
         ) - 0.5;
         vec3 warpedPos = flowPos + warp * (WARP_STRENGTH * radiusXZ);
 
         // Two-octave shape noise perturbs the boundary radius per direction, so the silhouette is a loose,
         // uneven puff. The falloff band is wide on purpose: it is measured in radius-normalized units, so on the
         // flattened vertical axis a narrow band would collapse to a few centimetres of world-space falloff and
-        // read as a hard edge.
+        // read as a hard edge. It reaches zero at MAX_LOCAL, which is why the support ellipsoid can be exactly
+        // that and still never show its own silhouette.
         float shapeNoise = 0.65 * valueNoise(warpedPos * 0.22 + vec3(19.0, 7.0, 31.0))
                          + 0.35 * valueNoise(warpedPos * 0.11 + vec3(-8.0, 44.0, 3.0));
         float localRadius = mix(0.75, 1.15, shapeNoise);
         float edge = 1.0 - smoothstep(localRadius * 0.25, localRadius * 1.15, distToCenter);
-        // Guaranteed fade to zero before the bounding sphere the march actually reaches, whatever the noise did,
-        // so the padded quad's silhouette can never show as a hard cut.
-        edge *= 1.0 - smoothstep(0.85, 1.0, length(rel) / boundR);
+        // Second cheap rejection, now that the boundary is known but before the body noise is paid for.
+        if (edge <= 0.0) {
+            continue;
+        }
 
         // Base cloud shape eroded by a finer detail pass, the classic two-layer cloud-noise trick.
         float base = fbm(warpedPos * NOISE_SCALE + driftOffset);
@@ -267,5 +282,9 @@ void main() {
         discard;
     }
 
-    fragColor = apply_fog(vec4(accumColor, alpha), sphericalVertexDistance, cylindricalVertexDistance, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd, FogColor);
+    vec4 fogged = apply_fog(vec4(accumColor, alpha), sphericalVertexDistance, cylindricalVertexDistance, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd, FogColor);
+    // The pipeline blends premultiplied, both so the accumulation above - which is already premultiplied, being
+    // a front-to-back march - stays correct through an offscreen target, and so the result is unchanged from
+    // when it was blended straight: the multiply here is exactly what the straight-alpha blend was applying.
+    fragColor = vec4(fogged.rgb * alpha, alpha);
 }

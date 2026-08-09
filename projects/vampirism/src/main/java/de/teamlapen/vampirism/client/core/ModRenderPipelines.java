@@ -88,6 +88,7 @@ public class ModRenderPipelines {
         event.registerPipeline(AURA_OF_DARKNESS_LOW);
         event.registerPipeline(AURA_OF_DARKNESS_MEDIUM);
         event.registerPipeline(AURA_OF_DARKNESS_HIGH);
+        event.registerPipeline(VOLUMETRIC_COMPOSITE);
     }
 
     public static final RenderPipeline.Snippet VELMORRA_PORTAL_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
@@ -158,16 +159,30 @@ public class ModRenderPipelines {
                 .withVertexShader(VIdentifier.mod("core/volumetric_billboard"))
                 .withFragmentShader(VIdentifier.mod("core/rendertype_" + name))
                 .withSampler("DepthSampler")
-                .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+                .withSampler("NoiseSampler")
+                .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                 // Deliberately no depth stencil state: RenderPipeline#wantsDepthTexture is simply "has a depth
                 // stencil state", so setting one - even a never-testing, never-writing one - makes the command
                 // encoder warn about the missing depth attachment this pass intentionally does not bind.
-                .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                //
+                // Premultiplied rather than straight alpha: a front-to-back raymarch accumulates premultiplied
+                // colour already, so this is what it was always producing, and it is what lets the result be
+                // rendered into an offscreen target and composited back unchanged.
+                .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA))
                 .withCull(false)
                 .withShaderDefine("STEPS", quality.steps())
                 .withLocation(VIdentifier.mod("pipeline/" + name + "_" + quality.name().toLowerCase(Locale.ROOT)))
                 .build();
     }
+
+    public static final RenderPipeline VOLUMETRIC_COMPOSITE = RenderPipeline.builder()
+            .withLocation(VIdentifier.mod("pipeline/volumetric_composite"))
+            .withVertexShader("core/screenquad")
+            .withFragmentShader("core/blit_screen")
+            .withSampler("InSampler")
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA))
+            .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
+            .build();
 
     /**
      * @return the mist pipeline for the given quality, or null when mist rendering is disabled.
@@ -195,11 +210,16 @@ public class ModRenderPipelines {
      * Number of raymarch steps a volumetric shader takes. Each level is backed by its own pre-built pipeline,
      * since the step count is a compile-time shader define. Shared by every raymarched effect in the mod, which
      * is why the levels are named for quality rather than for any one of them.
+     * <p>
+     * These are lower than they look. The march is clipped to the volume's own ellipsoid rather than to a sphere
+     * around it, so every step lands somewhere that can carry density - where the padded bound used to spend a
+     * good fraction of them outside the shape entirely. Sample spacing along a ray through the middle of a cloud
+     * is what actually sets the quality, and at these counts it comes out where the old, larger ones did.
      */
     public enum VolumetricQuality {
-        LOW(12),
-        MEDIUM(24),
-        HIGH(40);
+        LOW(10),
+        MEDIUM(18),
+        HIGH(28);
 
         private final int steps;
 
