@@ -36,6 +36,8 @@ public class ShatteredArmorModel implements ItemModel {
 
     @Override
     public void update(ItemStackRenderState output, ItemStack item, ItemModelResolver resolver, ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable ItemOwner owner, int seed) {
+        if (displayContext == ItemDisplayContext.HEAD) return;
+        
         output.appendModelIdentityElement(this);
         ItemStack armor = ShatteredArmorItem.contained(item);
         if (armor.isEmpty()) {
