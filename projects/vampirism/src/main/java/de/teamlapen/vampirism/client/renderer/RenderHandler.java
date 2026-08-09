@@ -28,6 +28,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ambient.Bat;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
@@ -118,7 +119,7 @@ public class RenderHandler implements IMinecraftAccessor {
     @SubscribeEvent
     public void onRenderHand(@NotNull RenderHandEvent event) {
         //noinspection ConstantValue
-        if (player() != null && player().isAlive() && VampirePlayer.get(player()).getSkillProperties().bat) {
+        if (player() != null && player().isAlive() && VampirePlayer.get(player()).getSkillProperties().hasForm()) {
             event.setCanceled(true);
         }
     }
@@ -132,6 +133,29 @@ public class RenderHandler implements IMinecraftAccessor {
             } else if (dist > 16 && event.getRenderState().getRenderDataOrDefault(ModEntityRenderStates.HUNTER_FULL_COAT, false)) {
                 event.setCanceled(true);
             }
+        }
+    }
+
+    /**
+     * Submits the aura of darkness for any living entity carrying the effect.
+     * <p>
+     * Hooked here rather than added as a {@link net.minecraft.client.renderer.entity.layers.RenderLayer} because
+     * the draw needs the scene depth bound as a sampler, which a layer cannot do - see {@link
+     * VolumetricBillboards}. {@code AvatarRenderer#submit} delegates to {@code LivingEntityRenderer#submit}, so
+     * this one handler covers players as well as mobs. It does not fire for the forms cancelled in
+     * {@link #onRenderPlayerPreHigh} - invisibility, bat and mist - which is what we want: an invisible player
+     * should not be given away by a halo.
+     */
+    @SubscribeEvent
+    public void onRenderLivingPost(RenderLivingEvent.@NotNull Post<LivingEntity, LivingEntityRenderState, EntityModel<LivingEntityRenderState>> event) {
+        LivingEntityRenderState renderState = event.getRenderState();
+        if (Boolean.TRUE.equals(renderState.getRenderData(ModEntityRenderStates.AURA_OF_DARKNESS))) {
+            AuraOfDarknessRenderer.submitAura(
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.AURA_OF_DARKNESS_FADE, 1f),
+                    renderState.boundingBoxWidth,
+                    renderState.boundingBoxHeight,
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.AURA_OF_DARKNESS_PHASE, 0),
+                    event.getPoseStack());
         }
     }
 
@@ -172,6 +196,13 @@ public class RenderHandler implements IMinecraftAccessor {
         this.insideFog = false;
     }
 
+    @SubscribeEvent
+    public void onPreFrame(ExtractLevelRenderStateEvent event) {
+        if (VampirePlayer.get(player()).getSkillProperties().mist) {
+            mc().gameRenderer.getGameRenderState().optionsRenderState.bobView = false;
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onRenderPlayerPreHigh(RenderPlayerEvent.@NotNull Pre<AbstractClientPlayer> event) {
         var renderState = event.getRenderState();
@@ -186,6 +217,15 @@ public class RenderHandler implements IMinecraftAccessor {
             EntityRenderer<? super Bat, ?> renderer = mc().getEntityRenderDispatcher().getRenderer(bat);
             EntityRenderState batRenderState = renderer.createRenderState(bat, partialTicks);
             mc().getEntityRenderDispatcher().submit(batRenderState, new CameraRenderState(), 0, 0, 0, event.getPoseStack(), event.getSubmitNodeCollector());
+        } else if (Boolean.TRUE.equals(renderState.getRenderData(ModEntityRenderStates.MIST))) {
+            event.setCanceled(true);
+            MistRenderer.submitMistCloud(
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_FADE, 1f),
+                    renderState.boundingBoxWidth,
+                    renderState.boundingBoxHeight,
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_VELOCITY, Vec3.ZERO),
+                    renderState.getRenderDataOrDefault(ModEntityRenderStates.MIST_FLOW, Vec3.ZERO),
+                    event.getPoseStack());
         }
     }
 

@@ -1,0 +1,27 @@
+{
+  "type": "vampirism:infuser",
+  "commoninfo": {},
+  "cookingtime": 700,
+  "ingredient1": "vampirism:draculas_blood",
+  "ingredient2": "vampirism:draculas_blood",
+  "ingredient3": "vampirism:draculas_blood",
+  "ingredient4": "vampirism:draculas_blood",
+  "item": "minecraft:raw_iron",
+  "result": {
+    "components": {
+      "vampirism:pure_level": {
+        "level": 5
+      }
+    },
+    "id": "vampirism:blood_infused_raw_iron"
+  },
+  "result1": {
+    "id": "vampirism:pure_blood_4"
+  },
+  "result2": {
+    "id": "vampirism:pure_blood_4"
+  },
+  "result3": {
+    "id": "vampirism:pure_blood_4"
+  }
+}

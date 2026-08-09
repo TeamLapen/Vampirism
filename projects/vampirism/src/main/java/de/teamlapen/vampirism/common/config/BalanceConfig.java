@@ -164,6 +164,12 @@ public class BalanceConfig {
     public final ModConfigSpec.IntValue vaDarkStalkerCooldown;
     public final ModConfigSpec.IntValue vaDarkStalkerDuration;
     public final ModConfigSpec.DoubleValue vaDarkStalkerBloodConsumption;
+    public final ModConfigSpec.BooleanValue vaAuraOfDarknessEnabled;
+    public final ModConfigSpec.IntValue vaAuraOfDarknessCooldown;
+    public final ModConfigSpec.IntValue vaAuraOfDarknessDuration;
+    public final ModConfigSpec.BooleanValue vaMistEnabled;
+    public final ModConfigSpec.IntValue vaMistCooldown;
+    public final ModConfigSpec.IntValue vaMistDuration;
 
     // Minions
     public final ModConfigSpec.IntValue miResourceCooldown;
@@ -625,6 +631,24 @@ public class BalanceConfig {
         vaDarkStalkerBloodConsumption = builder
                 .comment("Blood consumed per tick while the dark stalker action is active, in mB.")
                 .defineInRange("darkStalkerBloodConsumption", 1, 0.0, 1000);
+        vaAuraOfDarknessEnabled = builder
+                .comment("When enabled, vampires can use the aura of darkness action.")
+                .define("auraOfDarknessEnabled", true);
+        vaAuraOfDarknessCooldown = builder
+                .comment("Cooldown for the vampire aura of darkness action, in ticks.")
+                .defineInRange("auraOfDarknessCooldown", 1200, 1, Integer.MAX_VALUE);
+        vaAuraOfDarknessDuration = builder
+                .comment("Duration of the vampire aura of darkness action, in ticks.")
+                .defineInRange("auraOfDarknessDuration", 600, 1, Integer.MAX_VALUE);
+        vaMistEnabled = builder
+                .comment("When enabled, vampires can use the mist action.")
+                .define("mistEnabled", true);
+        vaMistCooldown = builder
+                .comment("Cooldown for the vampire mist action, in ticks.")
+                .defineInRange("mistCooldown", 1200, 1, Integer.MAX_VALUE);
+        vaMistDuration = builder
+                .comment("Duration of the vampire mist action, in ticks.")
+                .defineInRange("mistDuration", 600, 1, Integer.MAX_VALUE);
 
         builder.category("minions", "mi");
 

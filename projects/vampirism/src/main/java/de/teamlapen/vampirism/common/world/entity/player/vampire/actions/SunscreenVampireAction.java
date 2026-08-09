@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class SunscreenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
-    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
         applyEffect(vampire);
         return IActionResult.SUCCESS;
     }
@@ -49,7 +49,7 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     }
 
     @Override
-    public void onReActivated(IVampirePlayer vampire) {
+    public void onReActivatedServer(IVampirePlayer vampire) {
 
     }
 

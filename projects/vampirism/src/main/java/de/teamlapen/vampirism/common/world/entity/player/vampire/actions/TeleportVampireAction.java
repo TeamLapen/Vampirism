@@ -28,7 +28,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
     }
 
     @Override
-    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
         int dist = ModConfig.balance().vaTeleportMaxDistance.get();
         if (vampire.getRefinementHandler().isRefinementEquipped(ModRefinements.TELEPORT_DISTANCE)) {

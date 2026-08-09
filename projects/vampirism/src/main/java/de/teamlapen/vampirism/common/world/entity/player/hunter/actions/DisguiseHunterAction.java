@@ -18,7 +18,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public IActionResult activate(IHunterPlayer player, ActivationContext context) {
+    public IActionResult activateServer(IHunterPlayer player, ActivationContext context) {
         ((HunterPlayer) player).getSpecialAttributes().activateConcealment();
         return IActionResult.SUCCESS;
     }
@@ -56,7 +56,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
-    public void onReActivated(IHunterPlayer player) {
+    public void onReActivatedServer(IHunterPlayer player) {
         ((HunterPlayer) player).getSpecialAttributes().activateConcealment();
 
     }

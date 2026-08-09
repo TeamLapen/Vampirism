@@ -15,7 +15,7 @@ public class JumpBoostAction extends DefaultVampireAction implements ILastingAct
     }
 
     @Override
-    protected IActionResult activate(IVampirePlayer player, ActivationContext context) {
+    protected IActionResult activateServer(IVampirePlayer player, ActivationContext context) {
         applyEffect(player);
         return IActionResult.SUCCESS;
     }
@@ -39,7 +39,7 @@ public class JumpBoostAction extends DefaultVampireAction implements ILastingAct
     }
 
     @Override
-    public void onReActivated(IVampirePlayer player) {
+    public void onReActivatedServer(IVampirePlayer player) {
         applyEffect(player);
     }
 

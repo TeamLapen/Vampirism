@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "#c:ingots/gold",
+    "O": "minecraft:gilded_blackstone"
+  },
+  "pattern": [
+    "G G",
+    "GGG",
+    "OOO"
+  ],
+  "result": {
+    "id": "vampirism:blood_infuser"
+  }
+}

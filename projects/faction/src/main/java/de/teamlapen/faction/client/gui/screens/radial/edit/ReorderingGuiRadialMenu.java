@@ -15,6 +15,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.EqualSpacingLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.input.InputWithModifiers;
@@ -94,7 +95,9 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
         this.excludedList = rowHelper.addChild(new ExcludedItemList(excludesWidth - 8, this.height - 55 - 11));
         this.repositionCallback.add((width1, height1) -> excludedList.setHeight(height1 - 55 - 11));
-        rowHelper.addChild(new ResetButton(0, 0, excludesWidth - 30, 20, (context) -> this.reset()), rowHelper.newCellSettings().paddingHorizontal(1));
+        EqualSpacingLayout reset = rowHelper.addChild(new EqualSpacingLayout(excludesWidth - 10, 20, EqualSpacingLayout.Orientation.HORIZONTAL));
+        reset.addChild(new ResetButton(0, 0, (excludesWidth - 20) / 2, 20, _ -> this.clear(), Component.translatable("gui.factionapi.clear")), rowHelper.newCellSettings().paddingHorizontal(1));
+        reset.addChild(new ResetButton(0, 0, (excludesWidth - 20) / 2, 20, _ -> this.reset()), rowHelper.newCellSettings().paddingHorizontal(1));
         rowHelper.addChild(new ExtendedButton(0, 0, excludesWidth - 30, 20, Component.translatable("gui.done"), (context) -> this.onClose()), rowHelper.newCellSettings().paddingHorizontal(1));
 
         this.layout.addChild(excludesWrapper,0,0);
@@ -103,6 +106,8 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
     @Override
     protected void repositionElements() {
         this.repositionCallback.forEach(x -> x.repositionElements(this.width, this.height));
+        this.layout.arrangeElements();
+        this.excludedList.updateScroller();
         this.layout.arrangeElements();
     }
 
@@ -123,12 +128,25 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         this.excludedList.updateContent(ordering.getExcluded(), nameFunction);
     }
 
-    public void reset() {
-        this.ordering.reset();
+    public void clear() {
+        this.ordering.clear();
         this.updateExcludedList();
         this.radialMenuSlots.clear();
         this.checkEmpty();
         this.movingItem = null;
+    }
+
+    public void reset() {
+        this.ordering.reset();
+        this.updateExcludedList();
+        this.radialMenuSlots.clear();
+        this.movingItem = null;
+        for (int i = 0; i < this.ordering.getOrdering().size(); i++) {
+            NoItemRadialMenuSlot<T> tNoItemRadialMenuSlot = new NoItemRadialMenuSlot<>(this.nameFunction, new ItemWrapper<>(), this.isEnabled);
+            this.radialMenuSlots.add(i,tNoItemRadialMenuSlot);
+            tNoItemRadialMenuSlot.primarySlotIcon().selectItem(this.ordering.getOrdering().get(i));
+        }
+        this.checkEmpty();
     }
 
     private void addDummyMenuItems() {
@@ -211,7 +229,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-//        this.excludedList.mouseDragged(event, dragX, dragY);
+        this.excludedList.mouseDragged(event, dragX, dragY);
         return super.mouseDragged(event, dragX, dragY);
     }
 
@@ -265,12 +283,19 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
     public class ExcludedItemList extends ContainerObjectSelectionList<ExcludedEntry<T>> {
 
+        private boolean scrollable;
         public ExcludedItemList(int pWidth, int pHeight) {
             super(Minecraft.getInstance(), pWidth, pHeight, 0, 20);
         }
 
         public void updateContent(List<T> newItems, Function<T, MutableComponent> nameFunction) {
             this.replaceEntries(newItems.stream().map(s -> new ExcludedEntry<>(s, nameFunction.apply(s), () -> selectItem(s))).toList());
+            repositionElements();
+        }
+
+        public void updateScroller() {
+            this.scrollable = this.scrollable();
+            this.repositionEntries();
         }
 
         private void selectItem(T selected) {
@@ -287,8 +312,24 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
                     ReorderingGuiRadialMenu.this.excludeItem();
                     return true;
                 }
+                return super.mouseClicked(event, doubleCLick);
             }
-            return super.mouseClicked(event, doubleCLick);
+            return false;
+        }
+
+        @Override
+        public int getRowWidth() {
+            return this.width + (this.scrollable ? -6 : 0);
+        }
+
+        @Override
+        public int getRowLeft() {
+            return super.getRowLeft() + 1 + (this.scrollable ? -3 : 0);
+        }
+
+        @Override
+        protected int scrollBarX() {
+            return this.getRight() - 6;
         }
 
         @Override
@@ -374,7 +415,11 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
         private boolean isClicked = false;
 
         public ResetButton(int xPos, int yPos, int width, int height, OnPress handler) {
-            super(xPos, yPos, width, height, DESCRIPTION, handler);
+            this(xPos, yPos, width, height, handler, DESCRIPTION);
+        }
+
+        public ResetButton(int xPos, int yPos, int width, int height, OnPress handler, Component text) {
+            super(xPos, yPos, width, height, text, handler);
         }
 
         @Override
@@ -398,7 +443,7 @@ public class ReorderingGuiRadialMenu<T> extends GuiRadialMenu<ItemWrapper<T>> {
 
         @Override
         public @NotNull Component getMessage() {
-            return this.isClicked ? DESCRIPTION_CONFIRM : DESCRIPTION;
+            return this.isClicked ? DESCRIPTION_CONFIRM : super.getMessage();
         }
 
         @Override

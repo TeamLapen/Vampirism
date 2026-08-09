@@ -34,7 +34,7 @@ public class InfectAction extends DefaultVampireAction {
     }
 
     @Override
-    protected IActionResult activate(IVampirePlayer vampire, ActivationContext context) {
+    protected IActionResult activateServer(IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
         Entity creature = context.targetEntity().orElse(null);
         if (creature instanceof LivingEntity target) {

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 
 public class VampirePlayerSkillProperties {
     public boolean bat = false;
+    public boolean mist = false;
     public boolean blood_vision = false;
     public boolean half_invulnerable = false;
     public boolean waterResistance;
@@ -28,6 +29,10 @@ public class VampirePlayerSkillProperties {
     }
 
     public boolean isCannotInteract() {
-        return isDBNO || (bat && !ModConfig.balance().vaBatAllowInteraction.get());
+        return isDBNO || (bat && !ModConfig.balance().vaBatAllowInteraction.get()) || mist;
+    }
+
+    public boolean hasForm() {
+        return bat || mist;
     }
 }

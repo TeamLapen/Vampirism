@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "X": {
+      "neoforge:ingredient_type": "neoforge:components",
+      "components": {
+        "vampirism:pure_level": {
+          "level": 5
+        }
+      },
+      "items": "vampirism:blood_infused_netherite_ingot"
+    },
+    "Y": "#c:rods/wooden"
+  },
+  "pattern": [
+    "X",
+    "X",
+    "Y"
+  ],
+  "result": {
+    "components": {
+      "vampirism:pure_level": {
+        "level": 5
+      }
+    },
+    "id": "vampirism:netherite_heart_seeker"
+  }
+}

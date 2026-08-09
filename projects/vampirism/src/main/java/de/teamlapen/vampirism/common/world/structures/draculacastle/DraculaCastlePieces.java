@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.RandomizableContainer;
@@ -17,25 +16,23 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Marker;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
-import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
+import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.world.PieceBeardifierModifier;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -52,32 +49,41 @@ public class DraculaCastlePieces {
 
         for (int x = 0; x < 6; x++) {
             for (int z = 0; z < 6; z++) {
-                for (int y = 0; y < 2; y++) {
-                    pieces.addPiece(new CastlePiece(structureTemplateManager, pos, x, y, z));
+                for (int y = -1; y < 2; y++) {
+                    pieces.addPiece(new DraculaCastlePiece(structureTemplateManager, pos, x, y, z, y == -1 ? TerrainAdjustment.BURY : TerrainAdjustment.BEARD_BOX));
                 }
             }
         }
     }
 
-    public static class CastlePiece extends Piece {
+    public static class DraculaCastlePiece extends TemplateStructurePiece implements PieceBeardifierModifier {
 
-        public CastlePiece(StructureTemplateManager structureTemplateManager, BlockPos position, int xIndex, int yIndex, int zIndex) {
-            super(ModStructures.DRACULA_CASTLE_PIECE.get(), structureTemplateManager, VIdentifier.mod("dracula_castle/" + xIndex + "_" + zIndex + "_" + yIndex), position.offset(zIndex * 48, yIndex * 48, xIndex * 48));
+        private final TerrainAdjustment terrainAdjustment;
+
+        public DraculaCastlePiece(StructureTemplateManager structureTemplateManager, BlockPos position, int xIndex, int yIndex, int zIndex, TerrainAdjustment terrainAdjustment) {
+            var id = VIdentifier.mod("dracula_castle/" + xIndex + "_" + zIndex + "_" + yIndex);
+            super(ModStructures.DRACULA_CASTLE_PIECE.get(), 0, structureTemplateManager, id, id.toString(), makeSettings(), position.offset(zIndex * 48, yIndex * 48, xIndex * 48));
+            this.terrainAdjustment = terrainAdjustment;
         }
 
-        public CastlePiece(StructureTemplateManager structureTemplateManager, CompoundTag tag) {
-            super(ModStructures.DRACULA_CASTLE_PIECE.get(), structureTemplateManager, tag);
-        }
-    }
-
-    private static class Piece extends TemplateStructurePiece {
-
-        public Piece(StructurePieceType type, StructureTemplateManager structureTemplateManager, Identifier pieceId, BlockPos position) {
-            super(type, 0, structureTemplateManager, pieceId, pieceId.toString(), makeSettings(), position);
+        public DraculaCastlePiece(StructureTemplateManager structureTemplateManager, CompoundTag tag) {
+            super(ModStructures.DRACULA_CASTLE_PIECE.get(), tag, structureTemplateManager, _ -> makeSettings());
+            this.terrainAdjustment = TerrainAdjustment.valueOf(tag.getStringOr("terrain_adjustment", TerrainAdjustment.BEARD_BOX.name()));
         }
 
-        public Piece(StructurePieceType type, StructureTemplateManager structureTemplateManager, CompoundTag tag) {
-            super(type, tag, structureTemplateManager, (id) -> makeSettings());
+        @Override
+        public BoundingBox getBeardifierBox() {
+            return getBoundingBox();
+        }
+
+        @Override
+        public TerrainAdjustment getTerrainAdjustment() {
+            return this.terrainAdjustment;
+        }
+
+        @Override
+        public int getGroundLevelDelta() {
+            return 0;
         }
 
         private static StructurePlaceSettings makeSettings() {
@@ -87,6 +93,12 @@ public class DraculaCastlePieces {
                     .addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK)
                     .setLiquidSettings(LiquidSettings.IGNORE_WATERLOGGING)
                     ;
+        }
+
+        @Override
+        protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
+            super.addAdditionalSaveData(context, tag);
+            tag.putString("terrain_adjustment", this.terrainAdjustment.name());
         }
 
         @Override

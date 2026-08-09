@@ -3,61 +3,51 @@ package de.teamlapen.faction.api.factions.actions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import net.minecraft.core.Holder;
-import net.minecraft.world.entity.player.Player;
 
 /**
  * Action with a duration which is updated every tick
  */
-public interface ILastingAction<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends IAction<T> {
+public interface ILastingAction<TFactionPlayer extends ISkillPlayer<TFactionPlayer>> extends IAction<TFactionPlayer> {
 
     @SuppressWarnings("unchecked")
     Codec<Holder<ILastingAction<?>>> CODEC = IAction.CODEC.flatXmap(x -> {
         if (x.value() instanceof ILastingAction) return DataResult.success((Holder<ILastingAction<?>>) (Object) x);
         return DataResult.error(() -> "Action is not a lasting action");
     }, x -> DataResult.success((Holder<IAction<?>>) (Object) x));
+
     /**
      * @return Skill duration in ticks
      */
-    int getDuration(T player);
+    int getDuration(TFactionPlayer player);
 
     /**
-     * Called on the server after the action was activated on the server side.
-     * This means it is also called when the server reactivated the action, e.g., on world join
+     * Called on the client after the action was activated on the server side.
      */
-    void onActivatedClient(T player);
+    void onActivatedClient(TFactionPlayer player);
 
     /**
      * Called when the action is deactivated
      * Client and server side
      */
-    void onDeactivated(T player);
+    void onDeactivated(TFactionPlayer player);
 
     /**
      * Called when the action is activated after a world reload.
-     * Called SERVER SIDE ONLY.
-     * For client side check {@link ILastingAction#onActivatedClient(IFactionPlayer)}}
      */
-    void onReActivated(T player);
+    void onReActivatedServer(TFactionPlayer player);
 
     /**
      * Called every LivingUpdate for each entity that has this action activated Calls on the client side might be wrong due to sync
      *
      * @return if true, the lasting action is canceled
      */
-    default boolean onUpdate(T player) {
+    default boolean onUpdate(TFactionPlayer player) {
         return false;
     }
 
-    default boolean onUpdate(T player, int duration, int expectedDuration) {
+    default boolean onUpdate(TFactionPlayer player, int duration, int expectedDuration) {
         return onUpdate(player);
     }
 
-    /**
-     * @return if the action's duration should be rendered in the HUD
-     */
-    default boolean showHudDuration(Player player) {
-        return false;
-    }
 }

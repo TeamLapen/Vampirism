@@ -22,6 +22,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -209,7 +210,13 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
 
     @Override
     public boolean isSkillEnabled(Holder<? extends ISkill<?>> skill) {
-        return skills.contains(skill);
+        return this.skills.contains(skill);
+    }
+
+    @SuppressWarnings("SuspiciousMethodCalls")
+    @SafeVarargs
+    public final boolean isAnySkillEnabled(Holder<? extends ISkill<?>>... skill) {
+        return Arrays.stream(skill).anyMatch(skills::contains);
     }
 
     public boolean isSkillNodeLocked(ISkillNode nodeIn) {

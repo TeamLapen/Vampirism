@@ -11,6 +11,7 @@ import de.teamlapen.faction.common.core.FactionConsumer;
 import de.teamlapen.faction.common.core.FactionSkills;
 import de.teamlapen.faction.common.factions.skills.SkillNode;
 import de.teamlapen.faction.common.factions.skills.SkillTree;
+import de.teamlapen.faction.common.util.ConfigComponent;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
@@ -51,7 +52,7 @@ public class VampireSkills {
 
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> VAMPIRE_RAGE = SKILLS.registerSkill("vampire_rage", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.VAMPIRE_RAGE)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> ADVANCED_BITER = SKILLS.registerSkill("advanced_biter", props -> new VampireSkill(props.cost(1).withDescription().onEnable(ModConsumer.ENABLE_VAMPIRE_ADVANCED_BITER).onDisable(ModConsumer.DISABLE_VAMPIRE_ADVANCED_BITER)));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SWORD_FINISHER = SKILLS.registerSkill("sword_finisher", props -> new VampireSkill(props.cost(2).withDescription(Component.translatable("skill.vampirism.sword_finisher.desc", (int) (ModConfig.balance().vsSwordFinisherMaxHealth.getDefault() * 100)))));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> SWORD_FINISHER = SKILLS.registerSkill("sword_finisher", props -> new VampireSkill(props.cost(2).withDescription(Component.translatable("skill.vampirism.sword_finisher.desc", ConfigComponent.calculateDouble(ModConfig.balance().vsSwordFinisherMaxHealth, 100, ConfigComponent.Operator.MULTIPLY)))));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DARK_BLOOD_PROJECTILE = SKILLS.registerSkill("dark_blood_projectile", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.DARK_BLOOD_PROJECTILE)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLOOD_CHARGE = SKILLS.registerSkill("blood_charge", props -> new VampireSkill(props.cost(1).withDescription()));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> FREEZE = SKILLS.registerSkill("freeze", props -> new VampireSkill(props.cost(2).withDescription().actionSkill(VampireActions.FREEZE)));
@@ -86,9 +87,8 @@ public class VampireSkills {
 
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> DRACULA_ROOT = SKILLS.registerSkill(ModFactions.VAMPIRE.getKey().identifier().withSuffix("_dracula").getPath(), props -> new DraculaSkill(props.withDescription()));
 
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> WANDER_THE_SUN = SKILLS.registerSkill("wander_the_sun", props -> new DraculaSkill(props.cost(1).withDescription()));
-    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> BLINDING = SKILLS.registerSkill("blinding", props -> new DraculaSkill(props.cost(1).withDescription().actionSkill(VampireActions.BLINDING)));
     public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> MIST_FORM = SKILLS.registerSkill("mist_form", props -> new DraculaSkill(props.cost(1).withDescription().actionSkill(VampireActions.MIST_FORM)));
+    public static final DeferredSkill<IVampirePlayer, ISkill<IVampirePlayer>> AURA_OF_DARKNESS = SKILLS.registerSkill("aura_of_darkness", props -> new DraculaSkill(props.cost(1).withDescription().actionSkill(VampireActions.AURA_OF_DARKNESS)));
 
     @ApiStatus.Internal
     public static void register(IEventBus bus) {
@@ -170,8 +170,8 @@ public class VampireSkills {
             context.register(LORD_SKILL5, new SkillNode(FactionSkills.MINION_RECOVERY));
 
             context.register(DRACULA_ROOT, new SkillNode(VampireSkills.DRACULA_ROOT));
-            context.register(DRACULA_1, new SkillNode(BLINDING));
-            context.register(DRACULA_2, new SkillNode(WANDER_THE_SUN));
+            context.register(DRACULA_1, new SkillNode(MIST_FORM));
+            context.register(DRACULA_2, new SkillNode(AURA_OF_DARKNESS));
         }
     }
 

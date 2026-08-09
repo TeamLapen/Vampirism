@@ -62,6 +62,7 @@ public class Helper {
      */
     public static boolean gettingSunDamage(LivingEntity entity, LevelAccessor world) {
         if (entity instanceof Player && entity.isSpectator()) return false;
+        if (entity.hasEffect(ModEffects.AURA_OF_DARKNESS)) return false;
         return world instanceof Level level && hasLevelSunDamage(level, entity.blockPosition()) && !entity.isInRain() && VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition());
     }
 

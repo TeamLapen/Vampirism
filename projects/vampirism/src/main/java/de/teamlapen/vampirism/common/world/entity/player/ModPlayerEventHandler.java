@@ -70,6 +70,7 @@ import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.common.util.ClockAdjustment;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -115,7 +116,7 @@ public class ModPlayerEventHandler {
     public void onAttackEntity(AttackEntityEvent event) {
         Player player = event.getEntity();
         if (player.isAlive()) {
-            if (VampirePlayer.get(player).getSkillProperties().bat) {
+            if (VampirePlayer.get(player).getSkillProperties().hasForm()) {
                 event.setCanceled(true);
             }
             HunterPlayer.get(player).breakDisguise();
@@ -254,6 +255,13 @@ public class ModPlayerEventHandler {
     public void onLivingFall(LivingFallEvent event) {
         if (event.getEntity() instanceof Player player) {
             event.setDistance(event.getDistance() - VampirePlayer.get(player).getSkillProperties().getJumpBoost());
+        }
+    }
+
+    @SubscribeEvent
+    public void isEntityInvulnerable(EntityInvulnerabilityCheckEvent event) {
+        if (event.getEntity() instanceof Player player && VampirePlayer.get(player).getSkillProperties().mist) {
+            event.setInvulnerable(true);
         }
     }
 

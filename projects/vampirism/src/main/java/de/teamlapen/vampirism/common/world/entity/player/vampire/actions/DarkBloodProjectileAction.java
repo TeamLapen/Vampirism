@@ -32,7 +32,7 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
-    protected IActionResult activate(IVampirePlayer player, ActivationContext context) {
+    protected IActionResult activateServer(IVampirePlayer player, ActivationContext context) {
         Player shooter = player.asEntity();
         IRefinementAccess skillHandler = player.getRefinementHandler();
 

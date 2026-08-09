@@ -136,7 +136,7 @@ public class SkillProperties<T extends ISkillPlayer<T>> {
      * add action to be unlocked by the skill
      */
     public SkillProperties<T> unlocks(Holder<? extends IAction<T>> action) {
-        this.componentInitializer.andThen((builder,_,_) -> {
+        this.componentInitializer = this.componentInitializer.andThen((builder,_,_) -> {
             List<Holder<? extends IAction<?>>> actions = builder.get(FactionDataComponents.SKILL_ACTIONS);
             if (actions == null) {
                 actions = List.of();

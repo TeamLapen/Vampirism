@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "diamond": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:gems/diamond"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_pure_blood": {
+      "conditions": {
+        "items": [
+          {
+            "items": "vampirism:draculas_blood"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "vampirism:diamond_pure_5"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "diamond",
+      "has_pure_blood"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "vampirism:diamond_pure_5"
+    ]
+  }
+}

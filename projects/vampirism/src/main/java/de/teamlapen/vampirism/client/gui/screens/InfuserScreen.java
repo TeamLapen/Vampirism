@@ -13,8 +13,8 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class InfuserScreen extends AbstractContainerScreen<InfuserMenu> {
 
-    private static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/infuser.png");
-    private static final Identifier BURN_PROGRESS_SPRITE = VIdentifier.mc("container/furnace/burn_progress");
+    public static final Identifier BACKGROUND = VIdentifier.mod("textures/gui/container/infuser.png");
+    public static final Identifier BURN_PROGRESS_SPRITE = VIdentifier.mc("container/furnace/burn_progress");
 
     public InfuserScreen(InfuserMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title, 176, 181);

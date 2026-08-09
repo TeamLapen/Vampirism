@@ -247,7 +247,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
      * Y - Stick.
      */
     protected void fiveTieredInfusedSwordCrafting(Holder<Item> result, ItemLike metalIngredient, String pattern) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             infusedSwordCrafting(result, metalIngredient, pattern, i);
         }
     }

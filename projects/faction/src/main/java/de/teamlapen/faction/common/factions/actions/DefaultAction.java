@@ -62,7 +62,7 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
     @Override
     public IActionResult onActivated(T player, ActivationContext context) {
         if (IFaction.is(player.getFaction(), this.factions())) {
-            return activate(player, context);
+            return activateServer(player, context);
         } else {
             throw new IllegalArgumentException("Faction player is not allowed to use action");
         }
@@ -83,6 +83,6 @@ public abstract class DefaultAction<T extends ISkillPlayer<T>> implements IActio
      *
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
-    protected abstract IActionResult activate(T player, ActivationContext context);
+    protected abstract IActionResult activateServer(T player, ActivationContext context);
 
 }

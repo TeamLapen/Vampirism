@@ -15,7 +15,7 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     @Override
-    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
         activate(vampire);
         return IActionResult.SUCCESS;
     }
@@ -51,7 +51,7 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     @Override
-    public void onReActivated(@NotNull IVampirePlayer vampire) {
+    public void onReActivatedServer(@NotNull IVampirePlayer vampire) {
         activate(vampire);
     }
 

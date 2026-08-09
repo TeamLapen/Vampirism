@@ -40,7 +40,7 @@ public class FactionProperties {
 
     private static final DependantName<IFaction<?>, String> DESCRIPTION_ID = (id) -> Util.makeDescriptionId("faction", id.identifier());
     private static final DependantName<IFaction<?>, String> DESCRIPTION_ID_SINGULAR = (id) -> Util.makeDescriptionId("faction", id.identifier().withSuffix("/singular"));
-    private static final DependantName<IFaction<?>, String> DESCRIPTION_ID_PLURAL = (id) -> Util.makeDescriptionId("faction", id.identifier().withPrefix("/plural"));
+    private static final DependantName<IFaction<?>, String> DESCRIPTION_ID_PLURAL = (id) -> Util.makeDescriptionId("faction", id.identifier().withSuffix("/plural"));
     private DataComponentInitializers.Initializer<IFaction<?>> componentInitializer = (builder, context, id) -> {};
     private @Nullable ResourceKey<IFaction<?>> id;
 

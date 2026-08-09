@@ -24,7 +24,7 @@ public class HissingAction extends DefaultVampireAction {
     }
 
     @Override
-    protected IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    protected IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
         Player player = vampire.asEntity();
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.ENTITY_VAMPIRE_SCREAM.get(), SoundSource.PLAYERS, 1, 1);
         player.level().getEntitiesOfClass(Mob.class, new AABB(player.blockPosition()).inflate(10, 10, 10)).forEach(e -> {

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class RegenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     @Override
-    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
         applyEffect(vampire);
         return IActionResult.SUCCESS;
     }
@@ -45,7 +45,7 @@ public class RegenVampireAction extends DefaultVampireAction implements ILasting
     }
 
     @Override
-    public void onReActivated(IVampirePlayer player) {
+    public void onReActivatedServer(IVampirePlayer player) {
 
     }
 

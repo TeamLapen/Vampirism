@@ -9,6 +9,10 @@ import de.teamlapen.vampirism.client.gui.overlay.FullScreenOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.SunBlindOverlay;
 import de.teamlapen.vampirism.client.gui.overlay.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.renderer.bloodvision.BloodVisionRenderer;
+import de.teamlapen.vampirism.client.renderer.AuraOfDarknessRenderer;
+import de.teamlapen.vampirism.client.renderer.AuraOfDarknessStateTracker;
+import de.teamlapen.vampirism.client.renderer.MistStateTracker;
+import de.teamlapen.vampirism.client.renderer.MistRenderer;
 import de.teamlapen.vampirism.client.renderer.RenderHandler;
 import de.teamlapen.vampirism.client.renderer.VelmorraCollapseHandler;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
@@ -34,6 +38,10 @@ public class ClientServices extends Services {
     private final SunBlindOverlay sunBlindOverlay = new SunBlindOverlay();
     private final DraculaEventOverlay draculaEventOverlay = new DraculaEventOverlay();
     private final VelmorraCollapseHandler velmorraCollapseHandler = new VelmorraCollapseHandler();
+    private final MistRenderer mistRenderer = new MistRenderer();
+    private final MistStateTracker mistStateTracker = new MistStateTracker();
+    private final AuraOfDarknessRenderer auraOfDarknessRenderer = new AuraOfDarknessRenderer();
+    private final AuraOfDarknessStateTracker auraOfDarknessStateTracker = new AuraOfDarknessStateTracker();
 
     //</editor-fold>
 
@@ -61,6 +69,14 @@ public class ClientServices extends Services {
 
     public BloodVisionRenderer bloodVisionRenderer() {
         return this.bloodVisionRenderer;
+    }
+
+    public MistStateTracker mistStateTracker() {
+        return this.mistStateTracker;
+    }
+
+    public AuraOfDarknessStateTracker auraOfDarknessStateTracker() {
+        return this.auraOfDarknessStateTracker;
     }
 
     public VampireBooks vampireBooks() {
@@ -134,6 +150,12 @@ public class ClientServices extends Services {
         bus.register(this.renderHandler);
         bus.register(this.velmorraCollapseHandler);
         bus.register(this.bloodVisionRenderer);
+        bus.register(this.mistRenderer);
+        bus.register(this.mistStateTracker);
+        // After the mist renderer on purpose: both draw at the same level stage in registration order, and
+        // neither writes depth, so drawing the aura second keeps overlaps blending in a sensible order.
+        bus.register(this.auraOfDarknessRenderer);
+        bus.register(this.auraOfDarknessStateTracker);
         bus.register(this.modKeys);
         bus.register(this.screenEventHandler);
         bus.register(this.clientEventHandler);

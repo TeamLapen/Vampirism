@@ -80,6 +80,9 @@ public interface ISkillHandler<T extends ISkillPlayer<T>> {
 
     boolean isSkillEnabled(Holder<? extends ISkill<?>> skill);
 
+    @SuppressWarnings("unchecked")
+    boolean isAnySkillEnabled(Holder<? extends ISkill<?>>... skill);
+
     void reset();
 
     void disableAllSkills();

@@ -9,6 +9,9 @@ import de.teamlapen.vampirism.client.models.entities.dracula.DraculaModel;
 import de.teamlapen.vampirism.client.models.entities.dracula.DraculaPhase1Model;
 import de.teamlapen.vampirism.client.models.entities.dracula.DraculaPhase2Model;
 import de.teamlapen.vampirism.client.models.entities.dracula.DraculaPhase3Model;
+import de.teamlapen.vampirism.client.VampirismModClient;
+import de.teamlapen.vampirism.client.renderer.MistRenderer;
+import de.teamlapen.vampirism.client.renderer.MistStateTracker;
 import de.teamlapen.vampirism.client.renderer.entities.layers.DraculaItemInHandLayer;
 import de.teamlapen.vampirism.common.world.entity.dracula.Dracula;
 import de.teamlapen.vampirism.common.world.entity.dracula.FightStage;
@@ -25,6 +28,7 @@ import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +54,7 @@ public class DraculaRenderer extends LivingEntityRenderer<Dracula, DraculaRender
     @Override
     public void submit(DraculaRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
         if (renderState.draculaState == DraculaState.MIST) {
-            submitMistCloud(poseStack, nodeCollector);
+            MistRenderer.submitMistCloud(mistFadeFactor(renderState), renderState.boundingBoxWidth, renderState.boundingBoxHeight, renderState.velocity, renderState.mistFlow, poseStack);
             return;
         }
         this.model = switch (renderState.state) {
@@ -64,29 +68,25 @@ public class DraculaRenderer extends LivingEntityRenderer<Dracula, DraculaRender
         }
     }
 
+    private static final float MIST_FADE_MS = 300.0f;
+
     /**
-     * Renders the procedural black mist cloud (crossed quads + horizontal cap) instead of the model while in mist form.
+     * 0 before/after mist form; ramps 0-1 over the first {@link #MIST_FADE_MS}, holds at 1, then ramps back down
+     * over the last {@link #MIST_FADE_MS} before {@link Dracula#MIST_DURATION} elapses.
      */
-    private void submitMistCloud(PoseStack poseStack, SubmitNodeCollector nodeCollector) {
-        nodeCollector.submitCustomGeometry(poseStack, ModRenderPipelines.DRACULA_MIST_RENDER_TYPE, (pose, consumer) -> {
-            Matrix4f matrix = pose.pose();
-            float radius = 2.2f;
-            float height = 3.2f;
-            for (int i = 0; i < 3; i++) {
-                float angle = (float) (i * Math.PI / 3);
-                float dx = Mth.cos(angle) * radius;
-                float dz = Mth.sin(angle) * radius;
-                consumer.addVertex(matrix, -dx, 0.0f, -dz).setUv(0, 0);
-                consumer.addVertex(matrix, dx, 0.0f, dz).setUv(1, 0);
-                consumer.addVertex(matrix, dx, height, dz).setUv(1, 1);
-                consumer.addVertex(matrix, -dx, height, dz).setUv(0, 1);
-            }
-            float capY = height * 0.5f;
-            consumer.addVertex(matrix, -radius, capY, -radius).setUv(0, 0);
-            consumer.addVertex(matrix, radius, capY, -radius).setUv(1, 0);
-            consumer.addVertex(matrix, radius, capY, radius).setUv(1, 1);
-            consumer.addVertex(matrix, -radius, capY, radius).setUv(0, 1);
-        });
+    private static float mistFadeFactor(DraculaRenderState renderState) {
+        if (!renderState.mistAnimation.isStarted()) {
+            return 0.0f;
+        }
+        float elapsedMs = renderState.mistAnimation.getTimeInMillis(renderState.ageInTicks);
+        if (elapsedMs < 0.0f) {
+            return 0.0f;
+        }
+        float totalMs = Dracula.MIST_DURATION * 50.0f;
+        float remainingMs = totalMs - elapsedMs;
+        float fadeIn = Mth.clamp(elapsedMs / MIST_FADE_MS, 0.0f, 1.0f);
+        float fadeOut = Mth.clamp(remainingMs / MIST_FADE_MS, 0.0f, 1.0f);
+        return Math.min(fadeIn, fadeOut);
     }
 
     /**
@@ -147,8 +147,13 @@ public class DraculaRenderer extends LivingEntityRenderer<Dracula, DraculaRender
         renderState.state = dracula.getStage();
         renderState.draculaState = dracula.getState();
         renderState.speedValue = (float) dracula.getDeltaMovement().lengthSqr();
+        // From the tracker rather than getDeltaMovement(), which reads as roughly zero for a server-driven mob.
+        MistStateTracker mistTracker = VampirismModClient.services().mistStateTracker();
+        renderState.velocity = mistTracker.getVelocity(dracula);
+        renderState.mistFlow = mistTracker.getFlow(dracula);
         dracula.copyAttackAnimationTo(renderState.attackAnimation);
         dracula.copyTransformationAnimationTo(renderState.transformationAnimation);
+        dracula.copyMistAnimationTo(renderState.mistAnimation);
         renderState.attackAnimationType = dracula.getAttackAnimationType();
         renderState.siphonTargets.clear();
         for (int targetId : dracula.getSiphonTargets()) {
@@ -162,12 +167,16 @@ public class DraculaRenderer extends LivingEntityRenderer<Dracula, DraculaRender
 
     public static class DraculaRenderState extends ArmedEntityRenderState {
         public float speedValue = 1.0F;
+        public Vec3 velocity = Vec3.ZERO;
+        /** Accumulated drift of the mist noise field; see MistStateTracker. */
+        public Vec3 mistFlow = Vec3.ZERO;
 
         public FightStage state = FightStage.NONE;
         public DraculaState draculaState = DraculaState.DEFAULT;
         public IDraculaAnimations.Animation attackAnimationType = IDraculaAnimations.Animation.NONE;
         public final AnimationState attackAnimation = new AnimationState();
         public final AnimationState transformationAnimation = new AnimationState();
+        public final AnimationState mistAnimation = new AnimationState();
         /** Offsets from Dracula to each blood siphon victim; empty while not channeling. */
         public final List<Vec3> siphonTargets = new ArrayList<>();
     }

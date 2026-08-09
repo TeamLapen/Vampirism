@@ -16,7 +16,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public IActionResult activate(@NotNull IVampirePlayer vampire, ActivationContext context) {
+    public IActionResult activateServer(@NotNull IVampirePlayer vampire, ActivationContext context) {
         applyEffects(vampire);
         return IActionResult.SUCCESS;
     }
@@ -54,7 +54,7 @@ public class RageVampireAction extends DefaultVampireAction implements ILastingA
     }
 
     @Override
-    public void onReActivated(IVampirePlayer vampire) {
+    public void onReActivatedServer(IVampirePlayer vampire) {
 
     }
 

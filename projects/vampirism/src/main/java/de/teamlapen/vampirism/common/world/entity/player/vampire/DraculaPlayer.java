@@ -78,7 +78,7 @@ public class DraculaPlayer extends FactionExtension implements IDraculaPlayer, I
     @Override
     public boolean openWings() {
         if (this.isDracula) {
-            if (VampirePlayer.get(this.player).getSkillProperties().bat) {
+            if (VampirePlayer.get(this.player).getSkillProperties().hasForm()) {
                 return false;
             }
             switchState(IWingsEntity.WingsState.OPENING);

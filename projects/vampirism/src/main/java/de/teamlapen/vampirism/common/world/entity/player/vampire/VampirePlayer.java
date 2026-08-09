@@ -520,7 +520,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sunDamageCache = !getSkillHandler().isSkillEnabled(VampireSkills.WANDER_THE_SUN) && Helper.gettingSunDamage(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
+            sunDamageCache = !getSkillProperties().mist && Helper.gettingSunDamage(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
         }
         return sunDamageCache;
     }
@@ -910,7 +910,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     }
 
     private boolean isSensitiveToSun() {
-        return getLevel() > 0 && !getSkillHandler().isSkillEnabled(VampireSkills.WANDER_THE_SUN);
+        return getLevel() > 0 && !skillProperties.mist;
     }
 
     /**

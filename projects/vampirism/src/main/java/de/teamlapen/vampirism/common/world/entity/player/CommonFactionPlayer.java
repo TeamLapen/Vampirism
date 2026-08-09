@@ -11,6 +11,7 @@ import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;

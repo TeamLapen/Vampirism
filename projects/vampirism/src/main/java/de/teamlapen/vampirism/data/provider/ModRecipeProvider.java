@@ -292,6 +292,15 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .define('G', GOLD_INGOT)
                 .unlockedBy("has_gold_ingot", has(GOLD_INGOT))
                 .save(output);
+        shaped(RecipeCategory.MISC, ModItems.INFUSER)
+                .pattern("G G")
+                .pattern("GGG")
+                .pattern("OOO")
+                .define('G', GOLD_INGOT)
+                .define('O', Items.GILDED_BLACKSTONE)
+                .unlockedBy("has_blackstone", has(Items.GILDED_BLACKSTONE))
+                .unlockedBy("has_gold_ingot", has(GOLD_INGOT))
+                .save(output);
     }
 
     private void recipesDecorationalBlocks() {
@@ -1551,8 +1560,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
 
     private void recipesInfuser() {
         fiveTieredMetalInfusionRecipe(Items.RAW_IRON, ModItems.BLOOD_INFUSED_RAW_IRON);
+        extraTieredMetalInfusionRecipe(Items.RAW_IRON, ModItems.BLOOD_INFUSED_RAW_IRON);
         fiveTieredMetalInfusionRecipe(Items.RAW_GOLD, ModItems.BLOOD_INFUSED_RAW_GOLD);
+        extraTieredMetalInfusionRecipe(Items.RAW_GOLD, ModItems.BLOOD_INFUSED_RAW_GOLD);
         fiveTieredMetalInfusionRecipe(DIAMOND, ModItems.BLOOD_INFUSED_DIAMOND);
+        extraTieredMetalInfusionRecipe(DIAMOND, ModItems.BLOOD_INFUSED_DIAMOND);
 
         sixTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_IRON, ModItems.BLOOD_INFUSED_IRON_INGOT);
         sixTieredInfusedMetalSmeltingRecipe(ModItems.BLOOD_INFUSED_RAW_GOLD, ModItems.BLOOD_INFUSED_GOLD_INGOT);

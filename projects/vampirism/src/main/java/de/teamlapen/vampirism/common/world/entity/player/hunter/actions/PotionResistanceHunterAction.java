@@ -44,7 +44,7 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     }
 
     @Override
-    public void onReActivated(IHunterPlayer player) {
+    public void onReActivatedServer(IHunterPlayer player) {
         onUpdate(player);
     }
 
@@ -58,7 +58,7 @@ public class PotionResistanceHunterAction extends DefaultHunterAction implements
     }
 
     @Override
-    protected IActionResult activate(IHunterPlayer player, ActivationContext context) {
+    protected IActionResult activateServer(IHunterPlayer player, ActivationContext context) {
         onUpdate(player);
         return IActionResult.SUCCESS;
     }

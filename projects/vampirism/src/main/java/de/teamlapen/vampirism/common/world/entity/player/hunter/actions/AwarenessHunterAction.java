@@ -63,12 +63,12 @@ public class AwarenessHunterAction extends DefaultHunterAction implements ILasti
     }
 
     @Override
-    public void onReActivated(IHunterPlayer player) {
+    public void onReActivatedServer(IHunterPlayer player) {
         onUpdate(player);
     }
 
     @Override
-    protected IActionResult activate(IHunterPlayer player, ActivationContext context) {
+    protected IActionResult activateServer(IHunterPlayer player, ActivationContext context) {
         return IActionResult.SUCCESS;
     }
 

@@ -62,5 +62,9 @@ public class ModActionTagsProvider extends KeyTagProvider<IAction<?>> {
                 .add(VampireActions.REGEN.getKey())
                 .add(VampireActions.SUNSCREEN.getKey())
                 ;
+        tag(ModActionTags.VAMPIRE_FORM_ACTIONS)
+                .add((ResourceKey) VampireActions.BAT.getKey())
+                .add(VampireActions.MIST_FORM.getKey())
+                ;
     }
 }
