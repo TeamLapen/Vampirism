@@ -37,10 +37,11 @@ public class AuraOfDarknessRenderer {
     private static final float HEIGHT_SCALE = 0.62f;
     private static final float CENTER_HEIGHT_SCALE = 0.5f;
     /**
-     * Margin between the ellipsoid the shader carves out and the sphere the raymarch bounds itself to. The
-     * shader's density has to reach zero inside this, or its silhouette would show up as a hard circle.
+     * How far past the radii the shell reaches, and so the ellipsoid both the billboard and the raymarch are
+     * fitted to. Not a margin: the band's outer falloff ends at exactly this, so fitting to it neither clips the
+     * halo nor pads it. Kept in sync with SHELL_OUTER in rendertype_aura_of_darkness.fsh.
      */
-    private static final float BOUND_MARGIN = 1.25f;
+    private static final float SUPPORT_SCALE = 1.02f;
 
     /**
      * The effect lands on every vampire in a 10 block radius at once, so a crowded fight could ask for dozens of
@@ -70,21 +71,20 @@ public class AuraOfDarknessRenderer {
         Vec3 center = new Vec3(transformed.x, transformed.y, transformed.z);
         double distanceSq = center.lengthSqr();
         if (distanceSq < 1.0e-8 || distanceSq > MAX_DISTANCE_SQ) {
-            // Too far to be worth marching, or the camera is inside the shell and the billboard has no
-            // meaningful orientation.
+            // Too far to be worth marching, or the camera is exactly on the center, where the billboard has no
+            // orientation at all to derive.
             return;
         }
 
         // Semi-axes of the world-aligned ellipsoid the shader carves out, centered at the entity's mid-height.
         float radiusXZ = entityWidth * WIDTH_SCALE;
         float radiusY = entityHeight * HEIGHT_SCALE;
-        float boundRadius = Math.max(radiusXZ, radiusY) * BOUND_MARGIN;
 
         // Spread the seed over a minute of animation; the exact mapping does not matter, only that two entities
         // rarely land on the same phase.
         float phase = (Math.abs(phaseSeed) % 997) * 0.061f;
 
-        INSTANCES.add(new AuraInstance(center, radiusXZ, radiusY, boundRadius, phase, fade));
+        INSTANCES.add(new AuraInstance(center, radiusXZ, radiusY, radiusXZ * SUPPORT_SCALE, radiusY * SUPPORT_SCALE, phase, fade));
     }
 
     /**
@@ -111,18 +111,18 @@ public class AuraOfDarknessRenderer {
         }
     }
 
-    private record AuraInstance(Vec3 center, float radiusXZ, float radiusY, float boundRadius, float phase,
-                                float fade) {
+    private record AuraInstance(Vec3 center, float radiusXZ, float radiusY, float supportXZ, float supportY, float phase, float fade) {
 
         /**
          * Packs the instance into a matrix, one parameter group per column, matching the layout documented in
-         * rendertype_aura_of_darkness.fsh. The last two columns are unused.
+         * rendertype_aura_of_darkness.fsh. The last slot is left for VolumetricBillboards to fill in with the
+         * resolution the pass ends up drawn at.
          */
         private Matrix4f pack() {
             return new Matrix4f(
-                    (float) this.center.x, (float) this.center.y, (float) this.center.z, this.boundRadius,
-                    this.radiusXZ, this.radiusY, this.phase, this.fade,
-                    0.0f, 0.0f, 0.0f, 0.0f,
+                    (float) this.center.x, (float) this.center.y, (float) this.center.z, this.supportXZ,
+                    this.radiusXZ, this.radiusY, this.phase, this.supportY,
+                    this.fade, 0.0f, 0.0f, 0.0f,
                     0.0f, 0.0f, 0.0f, 0.0f
             );
         }
