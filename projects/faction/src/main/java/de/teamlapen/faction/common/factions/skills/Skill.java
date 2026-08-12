@@ -21,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 /**
  * Default implementation of ISkill. Handles entity modifiers and actions
@@ -32,14 +31,11 @@ public class Skill<T extends IFactionPlayer<T> & ISkillPlayer<T>> implements ISk
     private final Holder.Reference<ISkill<?>> builtInRegistryHolder;
 
     private final Map<Holder<Attribute>, SkillAttributeHolder> attributeModifierMap;
-    private final Supplier<@Nullable Component> description;
 
     public Skill(SkillProperties<T> properties) {
         this.builtInRegistryHolder = ModRegistries.SKILLS.createIntrusiveHolder(this);
         this.descriptionId = properties.effectiveNameId();
         this.attributeModifierMap = properties.attributes();
-        List<Supplier<?>> descriptionArgs = properties.descriptionArgs();
-        this.description = descriptionArgs.isEmpty() ? () -> this.components().get(FactionDataComponents.SKILL_DESCRIPTION) : () -> Component.translatable(this.descriptionId + ".desc", descriptionArgs.stream().map(Supplier::get).toArray());
 
         //noinspection unchecked
         BuiltInRegistries.DATA_COMPONENT_INITIALIZERS.add((ResourceKey<ISkill<T>>) (Object) properties.skillIdOrThrow(), properties.finalizeInitializer(Component.translatable(properties.effectiveNameId())));
@@ -56,7 +52,7 @@ public class Skill<T extends IFactionPlayer<T> & ISkillPlayer<T>> implements ISk
 
     @Override
     public @Nullable Component getDescription() {
-        return this.description.get();
+        return this.components().get(FactionDataComponents.SKILL_DESCRIPTION);
     }
 
     @Override
