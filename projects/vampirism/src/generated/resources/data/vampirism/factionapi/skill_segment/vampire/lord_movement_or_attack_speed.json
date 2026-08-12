@@ -1,0 +1,11 @@
+{
+  "parents": [
+    "vampirism:vampire/lord_root"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:lord_speed",
+    "vampirism:lord_attack_speed"
+  ],
+  "tree": "vampirism:vampire/lord"
+}

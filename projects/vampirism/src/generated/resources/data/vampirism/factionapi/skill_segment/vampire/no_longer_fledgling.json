@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/regeneration"
+  ],
+  "skills": [
+    "vampirism:fledgling"
+  ],
+  "tree": "vampirism:vampire/level"
+}

@@ -8,6 +8,9 @@
     "translate": "gui.vampirism.skills.dracula"
   },
   "name_suffix": "vampirism:dracula",
+  "order_after": [
+    "vampirism:vampire/lord"
+  ],
   "unlock_predicate": {
     "type_specific": {
       "type": "vampirism:dracula"

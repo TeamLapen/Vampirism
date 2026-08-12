@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/disguise"
+  ],
+  "skills": [
+    "vampirism:weapon_table"
+  ],
+  "tree": "vampirism:hunter/level"
+}

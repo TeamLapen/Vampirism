@@ -1,0 +1,11 @@
+{
+  "parents": [
+    "vampirism:vampire/blood_vision"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:vampire_attack_damage",
+    "vampirism:vampire_jump"
+  ],
+  "tree": "vampirism:vampire/level"
+}

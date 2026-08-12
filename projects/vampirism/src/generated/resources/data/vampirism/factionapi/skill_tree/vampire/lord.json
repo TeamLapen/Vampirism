@@ -7,6 +7,9 @@
   "name": {
     "translate": "gui.vampirism.skills.lord"
   },
+  "order_after": [
+    "vampirism:vampire/level"
+  ],
   "unlock_predicate": {
     "type_specific": {
       "type": "factionapi:player_faction",

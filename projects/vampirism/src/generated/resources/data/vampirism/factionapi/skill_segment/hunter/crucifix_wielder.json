@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/basic_alchemy"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:crucifix_wielder"
+  ],
+  "tree": "vampirism:hunter/level"
+}

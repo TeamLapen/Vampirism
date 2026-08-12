@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/attack_or_movement_speed"
+  ],
+  "skills": [
+    "vampirism:blood_vision"
+  ],
+  "tree": "vampirism:vampire/level"
+}

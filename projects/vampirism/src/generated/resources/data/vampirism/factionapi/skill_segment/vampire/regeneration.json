@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/night_vision"
+  ],
+  "skills": [
+    "vampirism:vampire_regeneration"
+  ],
+  "tree": "vampirism:vampire/level"
+}

@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/level_root"
+  ],
+  "skills": [
+    "vampirism:night_vision"
+  ],
+  "tree": "vampirism:vampire/level"
+}

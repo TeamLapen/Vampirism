@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/lord_root"
+  ],
+  "priority": 3,
+  "skills": [
+    "factionapi:minion_recovery"
+  ],
+  "tree": "vampirism:hunter/lord"
+}

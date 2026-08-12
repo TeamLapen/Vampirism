@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/attack_damage"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:armor_speed"
+  ],
+  "tree": "vampirism:hunter/level"
+}

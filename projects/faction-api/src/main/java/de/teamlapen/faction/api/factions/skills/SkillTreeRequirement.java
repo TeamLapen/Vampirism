@@ -4,12 +4,10 @@ import com.mojang.datafixers.util.Either;
 import de.teamlapen.faction.api.FactionRegistries;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public record SkillTreeRequirement(Either<ResourceKey<ISkillTree>, TagKey<ISkillTree>> skillTree) {
 

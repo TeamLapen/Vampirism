@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/dark_blood_projectile"
+  ],
+  "skills": [
+    "vampirism:blood_charge"
+  ],
+  "tree": "vampirism:vampire/level"
+}

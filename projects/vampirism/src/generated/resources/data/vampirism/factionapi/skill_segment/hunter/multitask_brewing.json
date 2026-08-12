@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/basic_technology"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:multitask_brewing"
+  ],
+  "tree": "vampirism:hunter/level"
+}

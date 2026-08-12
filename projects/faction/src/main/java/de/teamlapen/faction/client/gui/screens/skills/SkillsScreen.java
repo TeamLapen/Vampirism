@@ -11,7 +11,7 @@ import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.core.FactionEffects;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionSounds;
-import de.teamlapen.faction.common.factions.skills.ClientSkillTreeData;
+import de.teamlapen.faction.common.factions.skills.SkillTreeGraphs;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.faction.common.network.packets.server.ServerboundUnlockSkillPacket;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * Gui screen which displays the skills available to the player and allows them to unlock some.
  * Inspired by Minecraft's new AchievementScreen but vertical
  * <p>
- * relevant classes {@link SkillsScreen} {@link SkillsTabComponent} {@link SkillNodeComponent}
+ * relevant classes {@link SkillsScreen} {@link SkillsTabComponent} {@link SkillSegmentComponent}
  */
 @NullMarked
 public class SkillsScreen extends Screen {
@@ -82,20 +82,20 @@ public class SkillsScreen extends Screen {
         return false;
     }
 
-    protected List<Holder<ISkillTree>> getOrderedTrees(ClientSkillTreeData treeData, ISkillHandler<?> skillHandler) {
+    protected List<Holder<ISkillTree>> getOrderedTrees(ISkillHandler<?> skillHandler) {
 
-        var allTrees = skillHandler.unlockedSkillTrees().stream().map(x -> Pair.of(treeData.getConfiguration(x), x)).collect(Collectors.toList());
-        var allTreeKeys = allTrees.stream().map(x -> x.key().skillTree().getKey()).collect(Collectors.toSet());
+        var allTrees = new ArrayList<>(skillHandler.unlockedSkillTrees());
+        var allTreeKeys = allTrees.stream().flatMap(x -> x.unwrapKey().stream()).collect(Collectors.toSet());
         var sortedTrees = new ArrayList<Holder<ISkillTree>>();
 
         while (!allTrees.isEmpty()) {
-            var newTrees = allTrees.stream().filter(x -> x.key().orderAfter().isEmpty() || x.key().orderAfter().stream().allMatch(y -> sortedTrees.stream().anyMatch(z -> z.is(y)) || !allTreeKeys.contains(y))).toList();
+            var newTrees = allTrees.stream().filter(x -> x.value().orderAfter().isEmpty() || x.value().orderAfter().stream().allMatch(y -> sortedTrees.stream().anyMatch(z -> z.is(y)) || !allTreeKeys.contains(y))).toList();
             if (newTrees.isEmpty()) {
-                LOGGER.warn("Could not order skill trees: {}", allTrees.stream().map(x -> x.key().skillTree().getKey().toString()).collect(Collectors.joining(", ")) );
-                sortedTrees.addAll(allTrees.stream().map(Pair::value).toList());
+                LOGGER.warn("Could not order skill trees: {}", allTrees.stream().map(x -> x.getRegisteredName()).collect(Collectors.joining(", ")) );
+                sortedTrees.addAll(allTrees);
                 break;
             }
-            sortedTrees.addAll(newTrees.stream().map(Pair::value).toList());
+            sortedTrees.addAll(newTrees);
             allTrees.removeAll(newTrees);
         }
 
@@ -108,12 +108,17 @@ public class SkillsScreen extends Screen {
         this.guiLeft = (this.width - SCREEN_WIDTH) / 2;
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
-        var treeData = ClientSkillTreeData.instance(factionPlayer.asEntity().level());
+        var graph = SkillTreeGraphs.get(factionPlayer.asEntity().level());
         var skillHandler = this.factionPlayer.getSkillHandler();
 
         int index = 0;
-        for (Holder<ISkillTree> unlockedSkillTree : getOrderedTrees(treeData, skillHandler)) {
-            this.tabs.add(new SkillsTabComponent(this.minecraft, this, index++, unlockedSkillTree, skillHandler, treeData));
+        for (Holder<ISkillTree> unlockedSkillTree : getOrderedTrees(skillHandler)) {
+            var tree = graph.tree(unlockedSkillTree);
+            if (tree.isEmpty()) {
+                LOGGER.warn("No skill segments for tree {}", unlockedSkillTree.getRegisteredName());
+                continue;
+            }
+            this.tabs.add(new SkillsTabComponent(this.minecraft, index++, unlockedSkillTree, skillHandler, graph, tree.get()));
         }
 
         if (!this.tabs.isEmpty()) {

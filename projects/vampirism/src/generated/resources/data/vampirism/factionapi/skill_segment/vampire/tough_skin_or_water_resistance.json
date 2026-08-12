@@ -1,0 +1,11 @@
+{
+  "parents": [
+    "vampirism:vampire/summon_bats"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:less_sundamage",
+    "vampirism:water_resistance"
+  ],
+  "tree": "vampirism:vampire/level"
+}

@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/garlic_diffuser"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:garlic_diffuser_improved"
+  ],
+  "tree": "vampirism:hunter/level"
+}

@@ -15,14 +15,12 @@ import de.teamlapen.faction.common.util.collections.CollectionUtil;
 import de.teamlapen.faction.common.util.collections.LiveMap;
 import de.teamlapen.sync.PropertySync;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,11 +31,9 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
     private final T player;
     private final SkillPoints skillPoints = new SkillPoints();
     private final Set<Holder<ISkillTree>> unlockedTrees = new LinkedHashSet<>();
-    private final ISkillTreeData treeData;
 
     public SkillHandler(T player) {
         this.player = player;
-        this.treeData = ISkillTreeData.getData(player.asEntity().level());
     }
 
     @Override
@@ -45,12 +41,13 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
         this.player.sync();
     }
 
-    public Optional<Pair<Holder<ISkillTree>, ISkillNode>> anyLastNode() {
-        return unlockedTrees.stream().flatMap(s -> this.treeData.getAnyLastNode(s, l -> isNodeEnabled(s, l)).map(x -> Pair.of(s, x)).stream()).findAny();
+    public SkillTreeGraph graph() {
+        return SkillTreeGraphs.get(this.player.asEntity().level());
     }
 
-    public ISkillTreeData getTreeData() {
-        return this.treeData;
+    public Optional<Pair<Holder<ISkillTree>, SkillTreeGraph.Entry>> anyLastSegment() {
+        SkillTreeGraph graph = graph();
+        return unlockedTrees.stream().flatMap(s -> graph.tree(s).flatMap(x -> x.anyLeaf(this::isSegmentEnabled)).map(x -> Pair.of(s, x)).stream()).findAny();
     }
 
     @Override
@@ -66,14 +63,17 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
         if (isSkillEnabled(skill)) {
             return Result.ALREADY_ENABLED;
         }
-        Optional<SkillTreeConfiguration.SkillTreeNodeConfiguration> node = unlockedTrees.stream().flatMap(x -> treeData.getNodeForSkill(skillTree, skill).stream()).findFirst();
-        if (node.isPresent()) {
-            if (isSkillNodeLocked(node.get().node().value())) {
+        if (!this.unlockedTrees.contains(skillTree)) {
+            return Result.NOT_FOUND;
+        }
+        Optional<SkillTreeGraph.Entry> segment = graph().tree(skillTree).flatMap(x -> x.entryForSkill(skill));
+        if (segment.isPresent()) {
+            if (isSegmentLocked(segment.get())) {
                 return Result.LOCKED_BY_OTHER_NODE;
             }
-            if (this.treeData.isRoot(this.unlockedTrees, node.get()) || this.treeData.getParent(node.get()).stream().anyMatch(x -> isNodeEnabled(skillTree, x.value()))) {
+            if (segment.get().isRoot() || segment.get().parents().stream().anyMatch(this::isSegmentEnabled)) {
                 if (getLeftSkillPoints(skillTree) >= skill.value().getSkillPointCost()) {
-                    return isNodeEnabled(skillTree, node.get().node().value()) ? Result.OTHER_NODE_SKILL : Result.OK;//If another skill in that node is already enabled this one cannot be enabled
+                    return isSegmentEnabled(segment.get()) ? Result.OTHER_NODE_SKILL : Result.OK;//If another skill in that segment is already enabled this one cannot be enabled
                 } else {
                     return Result.NO_POINTS;
                 }
@@ -82,24 +82,28 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
                 return Result.PARENT_NOT_ENABLED;
             }
         } else {
-            LOGGER.warn("Node for skill {} could not be found", skill);
+            LOGGER.warn("Segment for skill {} could not be found", skill);
             return Result.NOT_FOUND;
         }
     }
 
     @Override
     public Result canSkillBeEnabled(Holder<? extends ISkill<?>> skill) {
-        return this.treeData.getNodeForSkill(unlockedTrees, skill).map(s -> canSkillBeEnabled(skill, s.getTreeConfig().skillTree())).orElse(Result.NOT_FOUND);
+        return treeForSkill(skill).map(s -> canSkillBeEnabled(skill, s)).orElse(Result.NOT_FOUND);
     }
 
     @Override
     public void disableSkill(Holder<? extends ISkill<T>> skill) {
-        this.treeData.getNodeForSkill(unlockedTrees, SafeCast.cast(skill)).ifPresent(a  -> disableSkill(skill, a.getTreeConfig().skillTree()));
+        treeForSkill(SafeCast.cast(skill)).ifPresent(tree -> disableSkill(skill, tree));
     }
 
     @Override
     public void enableSkill(Holder<? extends ISkill<T>> skill) {
-        this.treeData.getNodeForSkill(unlockedTrees, SafeCast.cast(skill)).ifPresent(a  -> enableSkill(skill, a.getTreeConfig().skillTree()));
+        treeForSkill(SafeCast.cast(skill)).ifPresent(tree -> enableSkill(skill, tree));
+    }
+
+    private Optional<Holder<ISkillTree>> treeForSkill(Holder<? extends ISkill<?>> skill) {
+        return graph().entryForSkill(this.unlockedTrees, skill).map(x -> x.segment().value().tree());
     }
 
     public void disableAllSkills() {
@@ -110,10 +114,13 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
             }
         }
         for (var entry : enabledSkills.entrySet()) {
-            var root = this.treeData.root(entry.getKey());
-            Set<Holder<? extends ISkill<?>>> rootSkills = new HashSet<>(root.elements());
+            Set<Holder<? extends ISkill<?>>> rootSkills = new HashSet<>(rootSkills(entry.getKey()));
             entry.getValue().removeIf(x -> !rootSkills.contains(x));
         }
+    }
+
+    private List<Holder<? extends ISkill<?>>> rootSkills(Holder<ISkillTree> tree) {
+        return graph().tree(tree).stream().flatMap(x -> x.roots().stream()).flatMap(x -> x.skills().stream()).toList();
     }
 
     @Override
@@ -153,8 +160,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
 
     private void unlockSkillTree(Holder<ISkillTree> tree) {
         this.unlockedTrees.add(tree);
-        SkillTreeConfiguration.SkillTreeNodeConfiguration root = this.treeData.root(tree);
-        root.elements().forEach(x -> enableSkill(SafeCast.cast(x), tree,true));
+        rootSkills(tree).forEach(x -> enableSkill(SafeCast.cast(x), tree, true));
     }
 
     private void lockSkillTree(Holder<ISkillTree> tree) {
@@ -189,17 +195,17 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
     }
 
     public boolean noSkillEnabled() {
-        var defaultSkills = this.unlockedTrees.stream().collect(Collectors.toMap(x -> x, x -> this.treeData.root(x).elements()));
+        var defaultSkills = this.unlockedTrees.stream().collect(Collectors.toMap(x -> x, this::rootSkills));
         //noinspection SuspiciousMethodCalls
         return this.enabledSkills.isEmpty() || this.enabledSkills.entrySet().stream().allMatch(x -> defaultSkills.containsKey(x.getKey()) && new HashSet<>(defaultSkills.get(x.getKey())).containsAll(x.getValue()));
     }
 
-    @SuppressWarnings("unchecked")
-    public boolean isNodeEnabled(Holder<ISkillTree> skillTree, ISkillNode node) {
-        for (Holder<? extends ISkill<T>> s : enabledSkills.getOrDefault(skillTree, Collections.emptyList())) {
-            if (node.containsSkill((Holder<ISkill<?>>) (Object) s)) return true;
-        }
-        return false;
+    public boolean isSegmentEnabled(SkillTreeGraph.Entry segment) {
+        return segment.skills().stream().anyMatch(this::isSkillEnabled);
+    }
+
+    public boolean isSegmentLocked(SkillTreeGraph.Entry segment) {
+        return graph().lockingSegments(segment).stream().flatMap(x -> x.skills().stream()).anyMatch(this::isSkillEnabled);
     }
 
     @SuppressWarnings("SuspiciousMethodCalls")
@@ -217,11 +223,6 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
     @SafeVarargs
     public final boolean isAnySkillEnabled(Holder<? extends ISkill<?>>... skill) {
         return Arrays.stream(skill).anyMatch(skills::contains);
-    }
-
-    public boolean isSkillNodeLocked(ISkillNode nodeIn) {
-        Registry<ISkillNode> nodes = player.asEntity().level().registryAccess().lookupOrThrow(FactionRegistries.Keys.SKILL_NODE);
-        return nodeIn.lockingNodes().stream().flatMap(s -> nodes.getOptional(s).stream()).flatMap(s -> s.skills().stream()).anyMatch(this::isSkillEnabled);
     }
 
     private static final Codec<Map<Holder<ISkillTree>, List<Holder<? extends ISkill<?>>>>> ENABLED_SKILLS_CODEC = Codec.simpleMap(ISkillTree.CODEC, ISkill.CODEC.listOf().xmap(x -> (List<Holder<? extends ISkill<?>>>)new ArrayList<>(x), x -> x), ModRegistries.SKILLS).codec();

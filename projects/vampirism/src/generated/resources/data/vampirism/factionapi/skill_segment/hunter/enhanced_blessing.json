@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/ultimate_crucifix"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:enhanced_blessing"
+  ],
+  "tree": "vampirism:hunter/level"
+}

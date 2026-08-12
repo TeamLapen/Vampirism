@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/frugal_vampire"
+  ],
+  "skills": [
+    "vampirism:vampire_disguise"
+  ],
+  "tree": "vampirism:vampire/level"
+}

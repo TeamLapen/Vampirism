@@ -37,7 +37,7 @@ public class ModRegistries {
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, VampirismFeatures::createBiomeModifier)
             .add(Registries.DAMAGE_TYPE, ModDamageTypes::createDamageTypes)
             .add(FactionRegistries.Keys.TASK, ModTasks::createTasks)
-            .add(FactionRegistries.Keys.SKILL_NODE, ModSkills::createSkillNodes)
+            .add(FactionRegistries.Keys.SKILL_SEGMENT, ModSkills::createSkillSegments)
             .add(FactionRegistries.Keys.SKILL_TREE, ModSkills::createSkillTrees)
             .add(VAMPIRE_BOOK, ModVampireBooks::createVampireBooks)
             .add(Registries.ENCHANTMENT, ModEnchantments::createEnchantments)

@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/marshall_root"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:ultimate_brewer"
+  ],
+  "tree": "vampirism:hunter/marshall"
+}

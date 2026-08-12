@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/crossbow_technique"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:master_craftsmanship"
+  ],
+  "tree": "vampirism:hunter/level"
+}

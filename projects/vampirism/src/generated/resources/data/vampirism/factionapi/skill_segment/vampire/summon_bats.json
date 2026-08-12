@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:vampire/no_longer_fledgling"
+  ],
+  "priority": 2,
+  "skills": [
+    "vampirism:summon_bats"
+  ],
+  "tree": "vampirism:vampire/level"
+}

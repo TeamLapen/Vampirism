@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/tough_skin_or_water_resistance"
+  ],
+  "skills": [
+    "vampirism:less_blood_thirst"
+  ],
+  "tree": "vampirism:vampire/level"
+}

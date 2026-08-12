@@ -16,8 +16,6 @@ import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
-import de.teamlapen.faction.common.factions.skills.ClientboundSkillTreePacket;
-import de.teamlapen.faction.common.factions.skills.ServerSkillTreeData;
 import de.teamlapen.faction.common.factions.tasks.TaskManager;
 import de.teamlapen.faction.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.faction.common.network.packets.server.*;
@@ -155,10 +153,6 @@ public class ServerPayloadHandler {
                 controller.contactMinion(msg.minionID(), MinionEntity::onTaskChanged);
             });
         });
-    }
-
-    public static void handleRequestSkillTreePacket(ServerboundRequestSkillTreePacket msg, IPayloadContext context) {
-        context.reply(ClientboundSkillTreePacket.of(ServerSkillTreeData.instance().getConfigurations()));
     }
 
     public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void handleUnlockSkillPacket(ServerboundUnlockSkillPacket msg, IPayloadContext context) {

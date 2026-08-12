@@ -5,10 +5,7 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.actions.IAction;
 import de.teamlapen.faction.api.factions.refinements.IRefinement;
 import de.teamlapen.faction.api.factions.refinements.IRefinementSet;
-import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.faction.api.factions.skills.ISkillNode;
-import de.teamlapen.faction.api.factions.skills.ISkillPointProvider;
-import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.api.factions.skills.*;
 import de.teamlapen.faction.api.factions.tasks.*;
 import de.teamlapen.faction.api.registries.RegistryProvider;
 import de.teamlapen.faction.api.util.FIdentifier;
@@ -71,7 +68,7 @@ public class FactionRegistries {
 
         // Data-Gen registries
         public static final ResourceKey<Registry<Task>> TASK = registryKey(FIdentifier.mod("tasks"));
-        public static final ResourceKey<Registry<ISkillNode>> SKILL_NODE = registryKey(FIdentifier.mod("skill_node"));
+        public static final ResourceKey<Registry<ISkillSegment>> SKILL_SEGMENT = registryKey(FIdentifier.mod("skill_segment"));
         public static final ResourceKey<Registry<ISkillTree>> SKILL_TREE = registryKey(FIdentifier.mod("skill_tree"));
     }
 }

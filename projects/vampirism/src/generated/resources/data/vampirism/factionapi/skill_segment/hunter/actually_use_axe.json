@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/master_craftsmanship"
+  ],
+  "skills": [
+    "vampirism:axe2"
+  ],
+  "tree": "vampirism:hunter/level"
+}

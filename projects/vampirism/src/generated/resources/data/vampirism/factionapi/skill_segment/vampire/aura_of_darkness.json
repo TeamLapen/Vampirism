@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:vampire/dracula_root"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:aura_of_darkness"
+  ],
+  "tree": "vampirism:vampire/dracula"
+}

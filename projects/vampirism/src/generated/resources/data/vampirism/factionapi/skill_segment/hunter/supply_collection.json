@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/lord_root"
+  ],
+  "priority": 2,
+  "skills": [
+    "vampirism:hunter_minion_collect"
+  ],
+  "tree": "vampirism:hunter/lord"
+}

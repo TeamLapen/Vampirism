@@ -34,7 +34,7 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
 
         entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, getTickDuration(amplifier), 5, false, false, false, null));
         return FactionPlayerHandler.get(player).<T>getSkillHandler().map(handler -> {
-            var nodeOPT = ((SkillHandler<?>) handler).anyLastNode();
+            var nodeOPT = ((SkillHandler<?>) handler).anyLastSegment();
             if (nodeOPT.isPresent()) {
                 for (Holder<? extends ISkill<?>> element : nodeOPT.get().getValue().skills()) {
                     //noinspection unchecked

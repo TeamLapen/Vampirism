@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/actually_use_axe"
+  ],
+  "priority": 1,
+  "skills": [
+    "vampirism:artisan_craftsmanship"
+  ],
+  "tree": "vampirism:hunter/level"
+}

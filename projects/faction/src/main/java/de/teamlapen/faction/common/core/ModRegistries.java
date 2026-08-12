@@ -17,17 +17,14 @@ import de.teamlapen.faction.api.world.entities.player.FactionPlayerBooleanSuppli
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
 import de.teamlapen.faction.api.world.items.consume.IFactionFoodBehavior;
 import de.teamlapen.faction.common.factions.minions.MinionEntryCallbacks;
-import de.teamlapen.faction.common.factions.skills.SkillCallbacks;
-import de.teamlapen.faction.common.factions.skills.SkillNode;
 import de.teamlapen.faction.common.factions.skills.SkillTree;
+import de.teamlapen.faction.common.factions.skills.SkillSegment;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
-
-import java.util.HashMap;
 
 public class ModRegistries {
     public static final Registry<ISkill<?>> SKILLS = new RegistryBuilder<>(FactionRegistries.Keys.SKILL).sync(true).withIntrusiveHolders().create();
@@ -51,7 +48,7 @@ public class ModRegistries {
 
     public static final RegistrySetBuilder DATA_BUILDER = new RegistrySetBuilder()
             .add(FactionRegistries.Keys.TASK, FactionTasks::createTasks)
-            .add(FactionRegistries.Keys.SKILL_NODE, FactionSkillNodes::createSkillNodes)
+            .add(FactionRegistries.Keys.SKILL_SEGMENT, FactionSkillSegments::createSkillSegments)
             .add(FactionRegistries.Keys.SKILL_TREE, FactionSkillTrees::createSkillTrees)
             .add(Registries.DAMAGE_TYPE, FactionDamageTypes::createDamageTypes);
 
@@ -76,7 +73,7 @@ public class ModRegistries {
     static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(FactionRegistries.Keys.TASK, Task.CODEC, Task.CODEC);
         event.dataPackRegistry(FactionRegistries.Keys.SKILL_TREE, SkillTree.CODEC, SkillTree.CODEC);
-        event.dataPackRegistry(FactionRegistries.Keys.SKILL_NODE, SkillNode.CODEC, SkillNode.CODEC);
+        event.dataPackRegistry(FactionRegistries.Keys.SKILL_SEGMENT, SkillSegment.CODEC, SkillSegment.CODEC);
     }
 
     static {

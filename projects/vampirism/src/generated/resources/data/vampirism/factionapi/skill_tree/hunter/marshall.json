@@ -8,6 +8,9 @@
     "translate": "gui.vampirism.skills.marshall"
   },
   "name_suffix": "vampirism:marshall",
+  "order_after": [
+    "vampirism:hunter/lord"
+  ],
   "unlock_predicate": {
     "type_specific": {
       "type": "vampirism:marshall"
