@@ -116,6 +116,7 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> POTION4 = node("potion4");
         public static final ResourceKey<ISkillNode> POTION5 = node("potion5");
         public static final ResourceKey<ISkillNode> POTION6 = node("potion6");
+
         public static final ResourceKey<ISkillNode> WEAPON1 = node("weapon1");
         public static final ResourceKey<ISkillNode> WEAPON2 = node("weapon2");
         public static final ResourceKey<ISkillNode> WEAPON3 = node("weapon3");
@@ -166,14 +167,14 @@ public class HunterSkills {
             context.register(POTION5, new SkillNode(POTION_RESISTANCE));
             context.register(POTION6, new SkillNode(CONCENTRATED_DURABLE_BREWING));
 
-            context.register(WEAPON1, new SkillNode(HUNTER_ATTACK_DAMAGE));
-            context.register(WEAPON2, new SkillNode(HUNTER_ATTACK_SPEED));
-            context.register(WEAPON3, new SkillNode(ARMOR_SPEED));
-            context.register(WEAPON4, new SkillNode(ARMOR_JUMP));
-            context.register(WEAPON5, new SkillNode(CROSSBOW_TECHNIQUE));
-            context.register(WEAPON6, new SkillNode(DOUBLE_IT, DUAL_WIELDING));
-            context.register(WEAPON7, new SkillNode(MASTER_CRAFTSMANSHIP));
-            context.register(WEAPON8, new SkillNode(NEAR_BREACH_REFORGING));
+            context.register(WEAPON1, new SkillNode(NEAR_BREACH_REFORGING));
+            context.register(WEAPON2, new SkillNode(HUNTER_ATTACK_DAMAGE));
+            context.register(WEAPON3, new SkillNode(HUNTER_ATTACK_SPEED));
+            context.register(WEAPON4, new SkillNode(ARMOR_SPEED));
+            context.register(WEAPON5, new SkillNode(ARMOR_JUMP));
+            context.register(WEAPON6, new SkillNode(CROSSBOW_TECHNIQUE));
+            context.register(WEAPON7, new SkillNode(DOUBLE_IT, DUAL_WIELDING));
+            context.register(WEAPON8, new SkillNode(MASTER_CRAFTSMANSHIP));
             context.register(WEAPON9, new SkillNode(AXE2));
             context.register(WEAPON10, new SkillNode(STAKE2));
             context.register(WEAPON11, new SkillNode(ARTISAN_CRAFTSMANSHIP));
