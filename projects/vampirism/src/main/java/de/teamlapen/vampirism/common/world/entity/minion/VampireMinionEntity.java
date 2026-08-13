@@ -5,6 +5,7 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.common.core.FactionDataComponents;
@@ -341,7 +342,7 @@ public class VampireMinionEntity extends MinionEntity<VampireMinionEntity.Vampir
         }
 
         public VampireMinionData(ILordPlayer player, ICustomizationHolder customizationHolder) {
-            boolean skillEnabled = FactionPlayerHandler.get(player.asEntity()).getSkillHandler().map(x -> x.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+            boolean skillEnabled = ISkillHandler.isSkillEnabled(player.asEntity(), HunterSkills.MINION_STATS_INCREASE);
             this("Minion", customizationHolder.getEntityTextureType(),false, skillEnabled);
         }
 

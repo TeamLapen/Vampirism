@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.items;
 
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
@@ -40,7 +41,7 @@ public class ShatteredArmorItem extends Item {
 
         Equippable equippable = armor.get(DataComponents.EQUIPPABLE);
         if (equippable == null || equippable.slot().getType() != EquipmentSlot.Type.HUMANOID_ARMOR) return false;
-        if (!FactionPlayerHandler.get(player).getSkillHandler().map(handler -> handler.isSkillEnabled(HunterSkills.NEAR_BREACH_REFORGING)).orElse(false)) return false;
+        if (!ISkillHandler.isSkillEnabled(player, HunterSkills.NEAR_BREACH_REFORGING)) return false;
 
         return replace(player, armor, shatter(armor));
     }

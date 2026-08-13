@@ -463,7 +463,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onPlayerGameMode(PlayerEvent.PlayerChangeGameModeEvent event) {
         if (event.getNewGameMode() == GameType.SPECTATOR) {
-            FactionPlayerHandler.get(event.getEntity()).getActionHandler().ifPresent(IActionHandler::deactivateAllActions);
+            IActionHandler.get(event.getEntity()).ifPresent(IActionHandler::deactivateAllActions);
         }
     }
 

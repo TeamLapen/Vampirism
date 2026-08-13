@@ -1,10 +1,12 @@
 package de.teamlapen.faction.common.world.effects;
 
 import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.FactionStats;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
+import de.teamlapen.faction.common.factions.skills.Skill;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.util.LogUtil;
 import de.teamlapen.faction.server.FactionLogger;
@@ -33,12 +35,12 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
         if (!(entity instanceof Player player)) return true;
 
         entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, getTickDuration(amplifier), 5, false, false, false, null));
-        return FactionPlayerHandler.get(player).<T>getSkillHandler().map(handler -> {
+        return ISkillHandler.get(player).map(handler -> {
             var nodeOPT = ((SkillHandler<?>) handler).anyLastNode();
             if (nodeOPT.isPresent()) {
-                for (Holder<? extends ISkill<?>> element : nodeOPT.get().getValue().skills()) {
-                    //noinspection unchecked
-                    handler.disableSkill((Holder<? extends ISkill<T>>) element, nodeOPT.get().getKey());
+                for (var element : nodeOPT.get().getValue().skills()) {
+                    //noinspection unchecked,rawtypes
+                    handler.disableSkill((Holder) element, nodeOPT.get().getKey());
                     player.awardStat(FactionStats.SKILL_FORGOTTEN.get().get(element.value()));
                 }
                 return true;

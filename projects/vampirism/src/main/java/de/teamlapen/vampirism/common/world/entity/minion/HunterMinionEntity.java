@@ -5,6 +5,7 @@ import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.IFactionEntity;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
@@ -212,7 +213,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
 
     @Override
     public boolean canUseCrossbow(ItemStack stack) {
-        return stack.getItem() instanceof TechCrossbowItem ? getLordOpt().flatMap(x -> FactionPlayerHandler.get(x.asEntity()).getSkillHandler()).map(x -> x.isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false) : true;
+        return !(stack.getItem() instanceof TechCrossbowItem) || getLordOpt().map(x -> ISkillHandler.isSkillEnabled(x.asEntity(), HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false);
     }
 
     @Override
@@ -237,7 +238,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
     public @NotNull Predicate<ItemStack> getEquipmentPredicate(EquipmentSlot slotType) {
         Predicate<ItemStack> predicate = super.getEquipmentPredicate(slotType);
         if (slotType == EquipmentSlot.MAINHAND) {
-            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || getLord().flatMap(x -> FactionPlayerHandler.get(x.asEntity()).getSkillHandler()).map(s -> s.isSkillEnabled(HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false));
+            predicate = predicate.and(stack -> !(stack.getItem() instanceof TechCrossbowItem) || getLord().map(x -> ISkillHandler.isSkillEnabled(x.asEntity(), HunterSkills.MINION_TECH_CROSSBOWS)).orElse(false));
         }
         return predicate;
     }
@@ -307,7 +308,7 @@ public class HunterMinionEntity extends MinionEntity<HunterMinionEntity.HunterMi
         }
 
         public HunterMinionData(ILordPlayer player, ICustomizationHolder customizationHolder) {
-            boolean skillEnabled = FactionPlayerHandler.get(player.asEntity()).getSkillHandler().map(x -> x.isSkillEnabled(HunterSkills.MINION_STATS_INCREASE)).orElse(false);
+            boolean skillEnabled = ISkillHandler.isSkillEnabled(player.asEntity(), HunterSkills.MINION_STATS_INCREASE);
             this("Minion", customizationHolder.getEntityTextureType(), false, skillEnabled);
         }
 
