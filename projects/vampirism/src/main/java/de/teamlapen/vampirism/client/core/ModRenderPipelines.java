@@ -6,13 +6,15 @@ import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.CompareOp;
+import com.mojang.blaze3d.platform.DestFactor;
+import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import de.teamlapen.vampirism.api.util.VIdentifier;
-import de.teamlapen.vampirism.client.config.ClientConfig;
 import de.teamlapen.vampirism.client.renderer.blockentity.VelmorraPortalRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.*;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.server.level.ParticleStatus;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 import org.jspecify.annotations.NonNull;
@@ -61,6 +63,7 @@ public class ModRenderPipelines {
     }
 
     private static final RenderType ENTITY_TRANSPARENCY = RenderType.create(VIdentifier.modString("solid_transparency_entity"), SOLID);
+
     private static final RenderType BLOCK_AURA = RenderType.create(VIdentifier.modString("block_aura"), RenderSetup.builder(RenderPipelines.DEBUG_FILLED_BOX)
             .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
             .setOutputTarget(OutputTarget.OUTLINE_TARGET)
@@ -80,6 +83,7 @@ public class ModRenderPipelines {
         event.registerPipeline(GUI_TEXTURED_BLEND);
         event.registerPipeline(SOLID_TRANSPARENCY_ENTITY);
         event.registerPipeline(CUTOUT_NO_DEPTH);
+        event.registerPipeline(ITEM_CRUMBLING_PIPELINE);
         event.registerPipeline(VELMORRA_PORTAL_PIPELINE);
         event.registerPipeline(BLOOD_SIPHON_PIPELINE);
         event.registerPipeline(MIST_LOW);
@@ -88,6 +92,34 @@ public class ModRenderPipelines {
         event.registerPipeline(AURA_OF_DARKNESS_LOW);
         event.registerPipeline(AURA_OF_DARKNESS_MEDIUM);
         event.registerPipeline(AURA_OF_DARKNESS_HIGH);
+        event.registerPipeline(VOLUMETRIC_COMPOSITE);
+    }
+
+    /**
+     * Vanilla's crumbling pipeline with the block breaking depth state swapped for the glint one: {@link CompareOp#EQUAL}
+     * without depth only draws over the pixels the item itself has already drawn on, which masks the overlay to the
+     * item shape so that it looks like the item is broken without a need to do that manually.
+     */
+    public static final RenderPipeline ITEM_CRUMBLING_PIPELINE = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+            .withLocation(VIdentifier.mod("pipeline/item_crumbling"))
+            .withVertexShader("core/rendertype_crumbling")
+            .withFragmentShader("core/rendertype_crumbling")
+            .withSampler("Sampler0")
+            .withCull(false)
+            .withColorTargetState(new ColorTargetState(new BlendFunction(SourceFactor.DST_COLOR, DestFactor.SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO)))
+            .withVertexFormat(DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS)
+            .withDepthStencilState(new DepthStencilState(CompareOp.EQUAL, false))
+            .build();
+    private static final RenderType ITEM_CRUMBLING_RENDER_TYPE = RenderType.create(
+            VIdentifier.modString("item_crumbling"),
+            RenderSetup.builder(ITEM_CRUMBLING_PIPELINE)
+                    .withTexture("Sampler0", ModelBakery.BREAKING_LOCATIONS.getLast())
+                    .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+                    .createRenderSetup()
+    );
+
+    public static RenderType itemCrumbling() {
+        return ITEM_CRUMBLING_RENDER_TYPE;
     }
 
     public static final RenderPipeline.Snippet VELMORRA_PORTAL_SNIPPET = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
@@ -158,16 +190,30 @@ public class ModRenderPipelines {
                 .withVertexShader(VIdentifier.mod("core/volumetric_billboard"))
                 .withFragmentShader(VIdentifier.mod("core/rendertype_" + name))
                 .withSampler("DepthSampler")
-                .withVertexFormat(DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS)
+                .withSampler("NoiseSampler")
+                .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                 // Deliberately no depth stencil state: RenderPipeline#wantsDepthTexture is simply "has a depth
                 // stencil state", so setting one - even a never-testing, never-writing one - makes the command
                 // encoder warn about the missing depth attachment this pass intentionally does not bind.
-                .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                //
+                // Premultiplied rather than straight alpha: a front-to-back raymarch accumulates premultiplied
+                // colour already, so this is what it was always producing, and it is what lets the result be
+                // rendered into an offscreen target and composited back unchanged.
+                .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA))
                 .withCull(false)
                 .withShaderDefine("STEPS", quality.steps())
                 .withLocation(VIdentifier.mod("pipeline/" + name + "_" + quality.name().toLowerCase(Locale.ROOT)))
                 .build();
     }
+
+    public static final RenderPipeline VOLUMETRIC_COMPOSITE = RenderPipeline.builder()
+            .withLocation(VIdentifier.mod("pipeline/volumetric_composite"))
+            .withVertexShader("core/screenquad")
+            .withFragmentShader("core/blit_screen")
+            .withSampler("InSampler")
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA))
+            .withVertexFormat(DefaultVertexFormat.EMPTY, VertexFormat.Mode.TRIANGLES)
+            .build();
 
     /**
      * @return the mist pipeline for the given quality, or null when mist rendering is disabled.
@@ -195,11 +241,16 @@ public class ModRenderPipelines {
      * Number of raymarch steps a volumetric shader takes. Each level is backed by its own pre-built pipeline,
      * since the step count is a compile-time shader define. Shared by every raymarched effect in the mod, which
      * is why the levels are named for quality rather than for any one of them.
+     * <p>
+     * These are lower than they look. The march is clipped to the volume's own ellipsoid rather than to a sphere
+     * around it, so every step lands somewhere that can carry density - where the padded bound used to spend a
+     * good fraction of them outside the shape entirely. Sample spacing along a ray through the middle of a cloud
+     * is what actually sets the quality, and at these counts it comes out where the old, larger ones did.
      */
     public enum VolumetricQuality {
-        LOW(12),
-        MEDIUM(24),
-        HIGH(40);
+        LOW(10),
+        MEDIUM(18),
+        HIGH(28);
 
         private final int steps;
 

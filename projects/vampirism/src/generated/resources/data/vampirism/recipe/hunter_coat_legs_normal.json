@@ -6,7 +6,7 @@
     "Y": "#c:leathers",
     "Z": "#c:crops/garlic"
   },
-  "lava": 2,
+  "lava": 1,
   "pattern": [
     "XYYX",
     "XZZX",
@@ -15,5 +15,8 @@
   ],
   "result": {
     "id": "vampirism:hunter_coat_legs_normal"
-  }
+  },
+  "skill": [
+    "vampirism:weapon_table"
+  ]
 }

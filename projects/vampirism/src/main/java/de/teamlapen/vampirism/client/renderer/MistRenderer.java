@@ -2,9 +2,7 @@ package de.teamlapen.vampirism.client.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.client.config.ClientConfig;
 import de.teamlapen.vampirism.client.core.ModRenderPipelines;
-import de.teamlapen.vampirism.common.config.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ParticleStatus;
 import net.minecraft.world.phys.Vec3;
@@ -45,10 +43,11 @@ public class MistRenderer {
     private static final float TRAIL_STRETCH = 0.4f;
     private static final float TRAIL_SPEED_CAP = 0.6f;
     /**
-     * Margin between the ellipsoid the shader carves out and the sphere the raymarch bounds itself to. The
-     * shader's density has to reach zero inside this, or its silhouette would show up as a hard circle.
+     * How far past the shape radii the cloud's density can reach, and so the ellipsoid both the billboard and
+     * the raymarch are fitted to. Not a margin: the shader's falloff provably reaches zero at exactly this, so
+     * fitting to it neither clips the silhouette nor pads it. Kept in sync with MAX_LOCAL in rendertype_mist.fsh.
      */
-    private static final float BOUND_MARGIN = 1.5f;
+    private static final float SUPPORT_SCALE = 1.15f * 1.15f;
 
     private static final List<MistInstance> INSTANCES = new ArrayList<>();
 
@@ -73,9 +72,8 @@ public class MistRenderer {
 
         Vector4f transformed = poseStack.last().pose().transform(new Vector4f(0.0f, entityHeight * CENTER_HEIGHT_SCALE, 0.0f, 1.0f));
         Vec3 center = new Vec3(transformed.x, transformed.y, transformed.z);
-        double distance = center.length();
-        if (distance < 1.0e-4) {
-            return; // camera is inside the cloud; the billboard has no meaningful orientation
+        if (center.lengthSqr() < 1.0e-8) {
+            return; // camera exactly on the center, where the billboard has no orientation at all to derive
         }
 
         // Horizontal heading only, in world axes. Vertical motion is deliberately ignored: it would otherwise
@@ -85,9 +83,10 @@ public class MistRenderer {
         float headingZ = speed > 1.0e-4f ? (float) (velocity.z / speed) : 0.0f;
         float trailStretch = TRAIL_STRETCH * Math.min(speed / TRAIL_SPEED_CAP, 1.0f);
 
-        float boundRadius = Math.max(radiusXZ, radiusY) * BOUND_MARGIN * (1.0f + trailStretch);
+        float supportXZ = radiusXZ * SUPPORT_SCALE * (1.0f + trailStretch);
+        float supportY = radiusY * SUPPORT_SCALE * (1.0f + trailStretch);
 
-        INSTANCES.add(new MistInstance(center, flow, radiusXZ, radiusY, boundRadius, headingX, headingZ, speed, fade, trailStretch));
+        INSTANCES.add(new MistInstance(center, flow, radiusXZ, radiusY, supportXZ, supportY, headingX, headingZ, speed, fade, trailStretch));
     }
 
     /**
@@ -113,19 +112,21 @@ public class MistRenderer {
         }
     }
 
-    private record MistInstance(Vec3 center, Vec3 flow, float radiusXZ, float radiusY, float boundRadius,
-                                float headingX, float headingZ, float speed, float fade, float trailStretch) {
+    private record MistInstance(Vec3 center, Vec3 flow, float radiusXZ, float radiusY, float supportXZ,
+                                float supportY, float headingX, float headingZ, float speed, float fade,
+                                float trailStretch) {
 
         /**
          * Packs the instance into a matrix, one parameter group per column, matching the layout documented in
-         * rendertype_mist.fsh.
+         * rendertype_mist.fsh. The last slot is left for VolumetricBillboards to fill in with the resolution the
+         * pass ends up drawn at.
          */
         private Matrix4f pack() {
             return new Matrix4f(
-                    (float) this.center.x, (float) this.center.y, (float) this.center.z, this.boundRadius,
-                    (float) this.flow.x, (float) this.flow.y, (float) this.flow.z, this.radiusXZ,
-                    this.headingX, this.headingZ, this.speed, this.radiusY,
-                    this.fade, this.trailStretch, 0.0f, 0.0f
+                    (float) this.center.x, (float) this.center.y, (float) this.center.z, this.supportXZ,
+                    (float) this.flow.x, (float) this.flow.y, (float) this.flow.z, this.supportY,
+                    this.headingX, this.headingZ, this.speed, this.radiusXZ,
+                    this.fade, this.trailStretch, this.radiusY, 0.0f
             );
         }
     }

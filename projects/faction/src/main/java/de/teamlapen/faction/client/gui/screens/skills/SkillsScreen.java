@@ -15,7 +15,6 @@ import de.teamlapen.faction.common.factions.skills.SkillTreeGraphs;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.faction.common.network.packets.server.ServerboundUnlockSkillPacket;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
-import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -91,7 +90,7 @@ public class SkillsScreen extends Screen {
         while (!allTrees.isEmpty()) {
             var newTrees = allTrees.stream().filter(x -> x.value().orderAfter().isEmpty() || x.value().orderAfter().stream().allMatch(y -> sortedTrees.stream().anyMatch(z -> z.is(y)) || !allTreeKeys.contains(y))).toList();
             if (newTrees.isEmpty()) {
-                LOGGER.warn("Could not order skill trees: {}", allTrees.stream().map(x -> x.getRegisteredName()).collect(Collectors.joining(", ")) );
+                LOGGER.warn("Could not order skill trees: {}", allTrees.stream().map(Holder::getRegisteredName).collect(Collectors.joining(", ")) );
                 sortedTrees.addAll(allTrees);
                 break;
             }

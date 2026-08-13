@@ -6,7 +6,7 @@
     "Y": "#c:strings",
     "Z": "#minecraft:planks"
   },
-  "lava": 1,
+  "lava": 2,
   "pattern": [
     "YXXY",
     "YXXY",
@@ -17,6 +17,7 @@
     "id": "vampirism:basic_double_crossbow"
   },
   "skill": [
-    "vampirism:weapon_table"
+    "vampirism:weapon_table",
+    "vampirism:double_it"
   ]
 }

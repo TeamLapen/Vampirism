@@ -4,7 +4,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class CommonConfig {
 
-    public final ModConfigSpec.BooleanValue collectData;
     public final ModConfigSpec.BooleanValue autoConvertGlassBottles;
     public final ModConfigSpec.BooleanValue enableUmbrella;
 
@@ -21,10 +20,6 @@ public class CommonConfig {
     public final ModConfigSpec.BooleanValue optifineBloodVisionWarning;
 
     CommonConfig(ModConfigSpec.Builder builder) {
-        this.collectData = builder
-                .comment("Send the mod version, the MC version and the mod count to the mod authors. This allows us to identify the high-priority versions players play the most.")
-                .gameRestart()
-                .define("collectData", true);
         this.autoConvertGlassBottles = builder
                 .comment("When enabled, automatically converts glass bottles to blood bottles when needed.")
                 .define("autoConvertGlassBottles", true);

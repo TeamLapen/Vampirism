@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IEntityQuarrel;
 import de.teamlapen.vampirism.api.world.items.IVampirismQuarrel;
 import de.teamlapen.vampirism.api.world.items.QuarrelProperties;
-import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.world.entity.QuarrelEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -60,7 +59,7 @@ public class QuarrelItem extends ArrowItem implements IVampirismQuarrel<QuarrelE
         boolean intangible = stack.has(DataComponents.INTANGIBLE_PROJECTILE);
         QuarrelProperties properties = this.behavior.properties();
         QuarrelEntity arrowEntity = new QuarrelEntity(level, position.x(), position.y(), position.z(), stack, weapon);
-        arrowEntity.setBaseDamage(properties.baseDamage() * properties.damageMultiplier() * ModConfig.balance().crossbowDamageMult.get());
+        arrowEntity.setBaseDamage(QuarrelEntity.launchBaseDamage(properties));
         this.behavior.modifyArrow(level, stack, shooter, arrowEntity);
         if (shooter instanceof Player || shooter == null) {
             arrowEntity.pickup = intangible ? AbstractArrow.Pickup.CREATIVE_ONLY : properties.pickupBehavior();

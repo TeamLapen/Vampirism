@@ -2,6 +2,7 @@ package de.teamlapen.faction.common.server.commands.actions;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.builder.ArgumentBuilder;
+import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
 import net.minecraft.commands.CommandSourceStack;
@@ -26,7 +27,7 @@ public class ResetActionsCommand extends BasicCommand {
     private static int resetActions(CommandSourceStack commandSource, List<ServerPlayer> players) {
         for (ServerPlayer player : players) {
             if (!player.isAlive()) continue;
-            FactionPlayerHandler.get(player).getActionHandler().ifPresent(handler -> {
+            IActionHandler.get(player).ifPresent(handler -> {
                 handler.resetTimers();
                 commandSource.sendSuccess(() -> Component.translatable("command.factionapi.test.resetactions"), false);
             });

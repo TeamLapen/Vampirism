@@ -75,7 +75,9 @@ public class HunterSkills {
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_JUMP = SKILLS.registerSkill("armor_jump", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CROSSBOW_TECHNIQUE = SKILLS.registerSkill("crossbow_technique", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.registerSkill("double_it", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DUAL_WIELDING = SKILLS.registerSkill("dual_wielding", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.registerSkill("master_craftsmanship", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> NEAR_BREACH_REFORGING = SKILLS.registerSkill("near_breach_reforging", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE2 = SKILLS.registerSkill("stake2", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> AXE2 = SKILLS.registerSkill("axe2", props -> new HunterSkill(props.cost(3).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARTISAN_CRAFTSMANSHIP = SKILLS.registerSkill("artisan_craftsmanship", props -> new HunterSkill(props.cost(3).withDescription()));
@@ -121,12 +123,13 @@ public class HunterSkills {
         public static final ResourceKey<ISkillSegment> KEY_POTION_RESISTANCE = segment("potion_resistance");
         public static final ResourceKey<ISkillSegment> KEY_CONCENTRATED_AND_DURABLE_BREWING = segment("concentrated_and_durable_brewing");
 
+        public static final ResourceKey<ISkillSegment> KEY_NEAR_BREACH_REFORGING = segment("near_breach_reforging");
         public static final ResourceKey<ISkillSegment> KEY_ATTACK_DAMAGE = segment("attack_damage");
         public static final ResourceKey<ISkillSegment> KEY_ATTACK_SPEED = segment("attack_speed");
         public static final ResourceKey<ISkillSegment> KEY_ARMOR_BOUND_SPEED = segment("armor_bound_speed");
         public static final ResourceKey<ISkillSegment> KEY_ARMOR_BOUND_JUMP = segment("armor_bound_jump");
         public static final ResourceKey<ISkillSegment> KEY_CROSSBOW_TECHNIQUE = segment("crossbow_technique");
-        public static final ResourceKey<ISkillSegment> KEY_DOUBLE_IT = segment("double_it");
+        public static final ResourceKey<ISkillSegment> KEY_DOUBLE_IT_OR_DUAL_WIELDING = segment("double_it_or_dual_wielding");
         public static final ResourceKey<ISkillSegment> KEY_MASTER_CRAFTSMANSHIP = segment("master_craftsmanship");
         public static final ResourceKey<ISkillSegment> KEY_ACTUALLY_USE_AXE = segment("actually_use_axe");
         public static final ResourceKey<ISkillSegment> KEY_ACTUALLY_USE_STAKE = segment("actually_use_stake");
@@ -217,26 +220,30 @@ public class HunterSkills {
                     .parents(KEY_POTION_RESISTANCE)
                     .register(context);
 
-            level(KEY_ATTACK_DAMAGE, HUNTER_ATTACK_DAMAGE)
+            level(KEY_NEAR_BREACH_REFORGING, NEAR_BREACH_REFORGING)
                     .parents(KEY_BASIC_TECHNOLOGY)
                     .priority(2)
                     .register(context);
-            level(KEY_ATTACK_SPEED, HUNTER_ATTACK_SPEED)
-                    .parents(KEY_ATTACK_DAMAGE)
+            level(KEY_ATTACK_DAMAGE, HUNTER_ATTACK_DAMAGE)
+                    .parents(KEY_NEAR_BREACH_REFORGING)
                     .priority(0)
                     .register(context);
-            level(KEY_ARMOR_BOUND_SPEED, ARMOR_SPEED)
-                    .parents(KEY_ATTACK_DAMAGE)
+            level(KEY_ATTACK_SPEED, HUNTER_ATTACK_SPEED)
+                    .parents(KEY_NEAR_BREACH_REFORGING)
                     .priority(1)
                     .register(context);
+            level(KEY_ARMOR_BOUND_SPEED, ARMOR_SPEED)
+                    .parents(KEY_ATTACK_DAMAGE, KEY_ATTACK_SPEED)
+                    .priority(0)
+                    .register(context);
             level(KEY_ARMOR_BOUND_JUMP, ARMOR_JUMP)
-                    .parents(KEY_ATTACK_DAMAGE)
-                    .priority(2)
+                    .parents(KEY_ATTACK_DAMAGE, KEY_ATTACK_SPEED)
+                    .priority(1)
                     .register(context);
             level(KEY_CROSSBOW_TECHNIQUE, CROSSBOW_TECHNIQUE)
                     .parents(KEY_ARMOR_BOUND_SPEED, KEY_ARMOR_BOUND_JUMP)
                     .register(context);
-            level(KEY_DOUBLE_IT, DOUBLE_IT)
+            level(KEY_DOUBLE_IT_OR_DUAL_WIELDING, DOUBLE_IT, DUAL_WIELDING)
                     .parents(KEY_CROSSBOW_TECHNIQUE)
                     .priority(0)
                     .register(context);

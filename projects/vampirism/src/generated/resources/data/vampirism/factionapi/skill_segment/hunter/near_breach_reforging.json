@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/basic_technology"
+  ],
+  "priority": 2,
+  "skills": [
+    "vampirism:near_breach_reforging"
+  ],
+  "tree": "vampirism:hunter/level"
+}

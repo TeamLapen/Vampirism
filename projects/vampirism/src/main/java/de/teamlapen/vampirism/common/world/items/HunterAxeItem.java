@@ -8,23 +8,18 @@ import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Unit;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.function.Consumer;
 
-public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, BaseDisplayItemGenerator.CreativeTabItemProvider {
+public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier {
 
     public static final Component MASSAGE_RESTRICTION_HEAVY = Component.translatable("message.vampirism.restriction.heavy");
 
@@ -47,21 +42,6 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     }
 
     @Override
-    public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        HolderLookup.RegistryLookup<Enchantment> enchantments = parameters.holders().lookupOrThrow(Registries.ENCHANTMENT);
-        output.accept(getEnchantedStack(enchantments));
-    }
-
-    /**
-     * @return An {@link ItemStack} with the correct knockback enchantment applied
-     */
-    public ItemStack getEnchantedStack(HolderLookup.RegistryLookup<Enchantment> enchantments) {
-        ItemStack stack = new ItemStack(this);
-        stack.enchant(enchantments.getOrThrow(Enchantments.KNOCKBACK), getKnockback());
-        return stack;
-    }
-
-    @Override
     public Tier getVampirismTier() {
         return tier;
     }
@@ -69,14 +49,6 @@ public class HunterAxeItem extends VampirismSwordItem implements IItemWithTier, 
     @Override
     public boolean isFoil(ItemStack stack) {
         return false;
-    }
-
-    private int getKnockback() {
-        return switch (tier) {
-            case ULTIMATE -> 4;
-            case ENHANCED -> 3;
-            default -> 2;
-        };
     }
 
     private static int getMinLevel(Tier tier) {

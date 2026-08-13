@@ -6,7 +6,7 @@
     "Y": "#c:strings",
     "Z": "#c:gems/diamond"
   },
-  "lava": 5,
+  "lava": 4,
   "pattern": [
     "YXXY",
     "XZZX",
@@ -17,6 +17,6 @@
     "id": "vampirism:basic_tech_crossbow"
   },
   "skill": [
-    "vampirism:weapon_table"
+    "vampirism:master_craftsmanship"
   ]
 }

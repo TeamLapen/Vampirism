@@ -7,7 +7,8 @@
     "Y": "#c:crops/garlic",
     "Z": "#c:rods/wooden"
   },
-  "lava": 5,
+  "lava": 3,
+  "level": 9,
   "pattern": [
     "XWZY",
     "XWZY",
@@ -15,14 +16,6 @@
     "  Z "
   ],
   "result": {
-    "components": {
-      "minecraft:enchantments": {
-        "minecraft:knockback": 2
-      }
-    },
     "id": "vampirism:hunter_axe_enhanced"
-  },
-  "skill": [
-    "vampirism:master_craftsmanship"
-  ]
+  }
 }

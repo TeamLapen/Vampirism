@@ -18,10 +18,12 @@
   "pattern": [
     "XXXX",
     "XYYX",
-    "XZZX",
-    "    "
+    "XZZX"
   ],
   "result": {
     "id": "vampirism:armor_of_swiftness_head_normal"
-  }
+  },
+  "skill": [
+    "vampirism:weapon_table"
+  ]
 }

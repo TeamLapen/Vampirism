@@ -1,6 +1,7 @@
 package de.teamlapen.faction.common.server;
 
 import de.teamlapen.faction.api.factions.actions.IAction;
+import de.teamlapen.faction.api.factions.actions.IActionHandler;
 import de.teamlapen.faction.api.factions.actions.IActionResult;
 import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.skills.ISkill;
@@ -119,7 +120,7 @@ public class ServerPayloadHandler {
     public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void handleToggleActionPacket(ServerboundToggleActionPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player();
-            FactionPlayerHandler.get(player).<T>getActionHandler().ifPresent(handler -> {
+            IActionHandler.<T>get(player).ifPresent(handler -> {
                 IAction.ActivationContext activationContext = msg.target() != null ? msg.target().map(entityId -> {
                     Entity e = player.level().getEntity(entityId);
                     if (e == null) {

@@ -7,8 +7,12 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -66,7 +70,7 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public @NotNull RecipeBuilder unlockedBy(@NotNull String name, @NotNull Criterion<?> criterion) {
+    public @NotNull AlchemicalCauldronRecipeBuilder unlockedBy(@NotNull String name, @NotNull Criterion<?> criterion) {
         this.criteria.put(name, criterion);
         return this;
     }
@@ -93,7 +97,7 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
 
     public @NotNull AlchemicalCauldronRecipeBuilder withFluid(@NotNull TagKey<Item> tag) {
         this.fluid = Either.left(Ingredient.of(this.itemLookup.getOrThrow(tag)));
-        return this;
+        return unlockedBy("has_fluid", has(this.itemLookup, tag));
     }
 
     public @NotNull AlchemicalCauldronRecipeBuilder withFluid(@NotNull FluidStackTemplate fluid) {
@@ -103,17 +107,17 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
 
     public @NotNull AlchemicalCauldronRecipeBuilder withFluid(@NotNull ItemLike... item) {
         this.fluid = Either.left(Ingredient.of(item));
-        return this;
+        return unlockedBy("has_fluid", has(this.itemLookup, item));
     }
 
     public @NotNull AlchemicalCauldronRecipeBuilder withIngredient(@NotNull ItemLike... items) {
         this.ingredient = Ingredient.of(items);
-        return this;
+        return unlockedBy("has_ingredient", has(this.itemLookup, items));
     }
 
     public @NotNull AlchemicalCauldronRecipeBuilder withIngredient(@NotNull TagKey<Item> tag) {
         this.ingredient = Ingredient.of(this.itemLookup.getOrThrow(tag));
-        return this;
+        return unlockedBy("has_ingredient", has(this.itemLookup, tag));
     }
 
     @SafeVarargs
@@ -122,4 +126,15 @@ public class AlchemicalCauldronRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(HolderGetter<Item> holderGetter, ItemLike... items) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(holderGetter, items));
+    }
+
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(HolderGetter<Item> holderGetter, TagKey<Item> tag) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(holderGetter, tag));
+    }
+
+    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate.Builder... builders) {
+        return CriteriaTriggers.INVENTORY_CHANGED.createCriterion(new InventoryChangeTrigger.TriggerInstance(Optional.empty(), InventoryChangeTrigger.TriggerInstance.Slots.ANY, Arrays.stream(builders).map(ItemPredicate.Builder::build).toList()));
+    }
 }

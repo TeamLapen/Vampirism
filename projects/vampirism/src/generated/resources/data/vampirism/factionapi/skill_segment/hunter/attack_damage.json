@@ -1,8 +1,7 @@
 {
   "parents": [
-    "vampirism:hunter/basic_technology"
+    "vampirism:hunter/near_breach_reforging"
   ],
-  "priority": 2,
   "skills": [
     "vampirism:hunter_attack_damage"
   ],

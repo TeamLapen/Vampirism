@@ -35,7 +35,6 @@ public class SettingsProvider implements ISettingsProvider {
 
     private final HttpClient client;
     private final String baseUrl;
-    private final Map<String, String> settingValues = new HashMap<>();
 
     public SettingsProvider(String baseUrl) {
         this.baseUrl = baseUrl;
@@ -43,39 +42,8 @@ public class SettingsProvider implements ISettingsProvider {
     }
 
     @Override
-    public void syncSettingsCache() {
-        retrieveSettingValuesAsync().handleAsync(this::checkSettings).thenAccept(newValues -> {
-            this.settingValues.clear();
-            newValues.ifPresent(this.settingValues::putAll);
-        });
-    }
-
-    @Override
-    public @NotNull Optional<String> getSettingsValue(@NotNull String key) {
-        return Optional.ofNullable(this.settingValues.get(key));
-    }
-
-    @Override
-    public boolean isSettingTrue(@NotNull String key) {
-        return "true".equals(this.settingValues.get(key));
-    }
-
-    @Override
     public @NotNull CompletableFuture<Optional<Collection<Supporter>>> getSupportersAsync() {
         return retrieveSupportersAsync().handleAsync(this::checkSupporter);
-    }
-
-    @Nullable
-    public CompletableFuture<String> getSettingValueAsync(String key) {
-        return get("config/get?configId=" + key);
-    }
-
-    public CompletableFuture<Map<String, String>> retrieveSettingValuesAsync() {
-        return get("config/list").thenApply(x -> GSON.fromJson(x, TypeToken.getParameterized(Map.class, String.class, String.class).getType()));
-    }
-
-    public CompletableFuture<Map<String, String>> retrieveSettingValuesAsync(String modid) {
-        return get("config/list?modid=" + modid).thenApply(x -> GSON.fromJson(x, TypeToken.getParameterized(Map.class, String.class, String.class).getType()));
     }
 
     public CompletableFuture<Collection<Supporter>> retrieveSupportersAsync() {
@@ -93,23 +61,6 @@ public class SettingsProvider implements ISettingsProvider {
         } catch (URISyntaxException e) {
             return CompletableFuture.failedFuture(e);
         }
-    }
-
-    private Optional<Map<String, String>> checkSettings(Map<String, String> settings, Throwable error) {
-        if (error != null) {
-            LOGGER.error("Failed to retrieve settings from server", error);
-        }
-        if (VampirismMod.inDev || settings == null) {
-            InputStream inputStream = VampirismMod.class.getResourceAsStream("/default_remote_config.json");
-            if (inputStream != null) {
-                try {
-                    return Optional.of(GSON.fromJson(new JsonReader(new InputStreamReader(inputStream)), TypeToken.getParameterized(Map.class, String.class, String.class).getType()));
-                } catch (JsonSyntaxException ex) {
-                    LOGGER.error("Failed to retrieve settings from file", ex);
-                }
-            }
-        }
-        return Optional.ofNullable(settings);
     }
 
     private Optional<Collection<Supporter>> checkSupporter(Collection<Supporter> file, Throwable error) {

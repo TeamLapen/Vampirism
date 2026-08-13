@@ -1,6 +1,5 @@
 package de.teamlapen.faction.common.world.effects;
 
-import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.FactionStats;
@@ -36,9 +35,9 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
         return FactionPlayerHandler.get(player).<T>getSkillHandler().map(handler -> {
             var nodeOPT = ((SkillHandler<?>) handler).anyLastSegment();
             if (nodeOPT.isPresent()) {
-                for (Holder<? extends ISkill<?>> element : nodeOPT.get().getValue().skills()) {
-                    //noinspection unchecked
-                    handler.disableSkill((Holder<? extends ISkill<T>>) element, nodeOPT.get().getKey());
+                for (var element : nodeOPT.get().getValue().skills()) {
+                    //noinspection unchecked,rawtypes
+                    handler.disableSkill((Holder) element, nodeOPT.get().getKey());
                     player.awardStat(FactionStats.SKILL_FORGOTTEN.get().get(element.value()));
                 }
                 return true;

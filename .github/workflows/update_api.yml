@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - '**/src/main/resources/supporters.json'
-      - '**/src/main/resources/default_remote_config.json'
   workflow_dispatch:
 
 jobs:
@@ -18,12 +17,5 @@ jobs:
           API_URL: https://api.vampirism.dev/api/v2/supporter/vampirism
           API_KEY: ${{ secrets.VAMPIRISM_API }}
           JSON_FILE: projects/vampirism/src/main/resources/supporters.json
-        run: |
-          curl -X 'PUT' "$API_URL" -H 'Authorization: Bearer $API_KEY' -H 'Content-Type: application/json' --upload-file $JSON_FILE
-      - name: Upload settings
-        env:
-          API_URL: https://api.vampirism.dev/api/v2/config/vampirism
-          API_KEY: ${{ secrets.VAMPIRISM_API }}
-          JSON_FILE: projects/vampirism/src/main/resources/default_remote_config.json
         run: |
           curl -X 'PUT' "$API_URL" -H 'Authorization: Bearer $API_KEY' -H 'Content-Type: application/json' --upload-file $JSON_FILE

@@ -6,22 +6,28 @@
 #moj_import <minecraft:projection.glsl>
 
 uniform sampler2D DepthSampler;
+uniform sampler2D NoiseSampler;
 
 /**
  * Per-instance aura parameters, written by AuraOfDarknessRenderer into the TextureMat slot of the
  * DynamicTransforms uniform - the same trick rendertype_mist uses, so this pass needs no GPU buffer of its own.
  *
- * column 0   xyz = camera-relative center of the aura, w = bounding sphere radius (also the billboard half-size)
+ * column 0   xyz = camera-relative center of the aura, w = horizontal semi-axis of the support ellipsoid
  * column 1   x = horizontal radius (world x and z), y = vertical radius, z = per-entity phase offset in seconds,
- *            w = fade envelope
+ *            w = vertical semi-axis of the support ellipsoid
+ * column 2   x = fade envelope
+ * column 3   w = pass resolution scale
  *
- * The remaining columns are unused. Unlike mist this volume is pinned to its entity, so it needs no velocity,
- * heading or accumulated flow.
+ * The support ellipsoid in the w slots of columns 0 and 1 is the shared contract with volumetric_billboard.vsh:
+ * the shell is empty outside it, so it is both what the quad is fitted to and what the march is clipped to. It
+ * is simply the radii scaled by SHELL_OUTER. Unlike mist this volume is pinned to its entity, so it needs no
+ * velocity, heading or accumulated flow.
  */
 #define Center TextureMat[0]
 #define Shape TextureMat[1]
+#define Envelope TextureMat[2]
+#define Pass TextureMat[3]
 
-in vec2 texCoord0;
 in vec3 vPosition;
 in float sphericalVertexDistance;
 in float cylindricalVertexDistance;
@@ -58,33 +64,23 @@ const vec3 WISP_COLOR = vec3(0.11, 0.07, 0.18);
 /** Distance in blocks over which density tapers out as the raymarch approaches solid geometry. */
 const float DEPTH_SOFTNESS = 0.4;
 
-float hash(vec3 p) {
-    p = fract(p * vec3(0.1031, 0.1030, 0.0973));
-    p += dot(p, p.yzx + 33.33);
-    return fract((p.x + p.y) * p.z);
-}
+const float NOISE_SIZE = 256.0;
+const vec2 NOISE_SLICE_STEP = vec2(37.0, 17.0);
 
-// Trilinear value noise.
+/**
+ * 3D value noise from one texture fetch. The sheet holds a white-noise lattice laid out so that a single
+ * filtered fetch returns the x/y interpolation of both slices bracketing p.z at once - see VolumetricNoise for
+ * how it is packed, and rendertype_mist for the variant that pulls two uncorrelated fields out of it.
+ * Smoothstepping the fractional part before the fetch is what turns the texture unit's linear filter into the
+ * smooth interpolation value noise wants, leaving only the blend along z to do here.
+ */
 float valueNoise(vec3 p) {
     vec3 i = floor(p);
     vec3 f = fract(p);
-    vec3 u = f * f * (3.0 - 2.0 * f);
-
-    float n000 = hash(i + vec3(0.0, 0.0, 0.0));
-    float n100 = hash(i + vec3(1.0, 0.0, 0.0));
-    float n010 = hash(i + vec3(0.0, 1.0, 0.0));
-    float n110 = hash(i + vec3(1.0, 1.0, 0.0));
-    float n001 = hash(i + vec3(0.0, 0.0, 1.0));
-    float n101 = hash(i + vec3(1.0, 0.0, 1.0));
-    float n011 = hash(i + vec3(0.0, 1.0, 1.0));
-    float n111 = hash(i + vec3(1.0, 1.0, 1.0));
-
-    float nx00 = mix(n000, n100, u.x);
-    float nx10 = mix(n010, n110, u.x);
-    float nx01 = mix(n001, n101, u.x);
-    float nx11 = mix(n011, n111, u.x);
-
-    return mix(mix(nx00, nx10, u.y), mix(nx01, nx11, u.y), u.z);
+    f = f * f * (3.0 - 2.0 * f);
+    vec2 uv = i.xy + NOISE_SLICE_STEP * i.z + f.xy + 0.5;
+    vec4 texel = texture(NoiseSampler, uv / NOISE_SIZE);
+    return mix(texel.g, texel.r, f.z);
 }
 
 // Three octaves is enough here: the shell is thin, so finer detail would not survive the band's own falloff.
@@ -122,52 +118,45 @@ float sceneDistance(vec2 screenUV, vec3 rayDir) {
 }
 
 void main() {
-    float boundR = Center.w;
+    vec3 semi = vec3(Center.w, Shape.w, Center.w);
     float radiusXZ = Shape.x;
     float radiusY = Shape.y;
-    float fade = Shape.w;
-    if (boundR <= 0.001 || fade <= 0.0) {
+    float fade = Envelope.x;
+    if (semi.x <= 0.001 || fade <= 0.0) {
         discard;
     }
 
-    // The billboard is a square bounding a sphere, so the corners fall outside it and are rejected before any
-    // raymarching happens.
-    vec2 centeredUV = texCoord0 * 2.0 - 1.0;
-    float radialDist = length(centeredUV) * boundR;
-    if (radialDist > boundR) {
-        discard;
+    vec3 viewDir = normalize(vPosition);
+
+    // Ray against the support ellipsoid, solved in the space where dividing by the semi-axes turns it into a
+    // unit sphere. Clipping the march to the ellipsoid rather than to a sphere around it keeps the steps inside
+    // the shell, which matters more here than for mist: the shell is thin, so a padded bound spends most of its
+    // samples in space that can never contribute.
+    vec3 rayOrigin = -Center.xyz / semi;
+    vec3 rayStep = viewDir / semi;
+    float a = dot(rayStep, rayStep);
+    float b = dot(rayOrigin, rayStep);
+    float c = dot(rayOrigin, rayOrigin) - 1.0;
+    float disc = b * b - a * c;
+    if (disc <= 0.0) {
+        discard; // ray misses the volume entirely - the quad's corners, mostly
     }
+    float rootDisc = sqrt(disc);
+    float tStart = max((-b - rootDisc) / a, 0.0);
+    float tEnd = (-b + rootDisc) / a;
 
-    float q = sphericalVertexDistance;
-    if (q < 0.001) {
-        discard;
-    }
-
-    // Because Right/Up are perpendicular to the direction of Center, the fragment's radial offset and its
-    // distance from the camera are enough for an exact ray-sphere intersection: trueDist is the perpendicular
-    // distance from this camera ray to the center, t0 the ray parameter of the closest approach.
-    float trueDist = radialDist * sqrt(max(q * q - radialDist * radialDist, 0.0)) / q;
-    if (trueDist > boundR) {
-        discard;
-    }
-    float t0 = q - (radialDist * radialDist) / q;
-    float halfChord = sqrt(max(boundR * boundR - trueDist * trueDist, 0.0));
-
-    vec3 viewDir = vPosition / q;
-
-    float tStart = max(t0 - halfChord, 0.0);
-    float tEnd = t0 + halfChord;
     // Never march past solid geometry - including the entity the aura surrounds, which is what keeps the far
     // half of the shell from showing through it.
-    float sceneDist = sceneDistance(gl_FragCoord.xy / ScreenSize, viewDir);
+    float sceneDist = sceneDistance(gl_FragCoord.xy * Pass.w / ScreenSize, viewDir);
     tEnd = min(tEnd, sceneDist);
     if (tEnd <= tStart) {
         discard;
     }
 
     float stepSize = (tEnd - tStart) / float(STEPS);
-    // Per-pixel dither on the ray start hides the banding the step size would otherwise make visible.
-    tStart += hash(vec3(gl_FragCoord.xy, 0.0)) * stepSize;
+    // Per-pixel dither on the ray start hides the banding the step size would otherwise make visible. Sampling
+    // the noise sheet at texel centres gives a white-noise value per pixel for the price of one fetch.
+    tStart += texture(NoiseSampler, gl_FragCoord.xy / NOISE_SIZE).g * stepSize;
 
     // GameTime is a fraction of the 24000-tick day, so this is simply elapsed seconds. The per-instance phase
     // keeps nearby auras from swirling in lockstep.
@@ -190,13 +179,13 @@ void main() {
         vec3 local = vec3(rel.x / radiusXZ, rel.y / radiusY, rel.z / radiusXZ);
         float d = length(local);
 
+        // Reaches zero exactly at SHELL_OUTER, which is why the support ellipsoid can be that and still never
+        // show its own silhouette. Rejecting here, before the noise, is what makes the hollow interior the
+        // march crosses nearly free.
         float shell = smoothstep(SHELL_INNER, SHELL_PEAK, d) * (1.0 - smoothstep(SHELL_PEAK, SHELL_OUTER, d));
         if (shell <= 0.0) {
             continue;
         }
-        // Guaranteed fade to zero before the bounding sphere the march actually reaches, whatever the noise did,
-        // so the padded quad's silhouette can never show as a hard cut.
-        shell *= 1.0 - smoothstep(0.85, 1.0, length(rel) / boundR);
 
         // The noise is sampled in aura-local space, slowly turning about world up and drifting downwards through
         // the volume, so the wisps creep around the entity. Sampling relative to the aura rather than at the
@@ -234,5 +223,8 @@ void main() {
     vec3 color = accumColor / coverage;
     float alpha = min(coverage, MAX_ALPHA * fade);
 
-    fragColor = apply_fog(vec4(color, alpha), sphericalVertexDistance, cylindricalVertexDistance, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd, FogColor);
+    vec4 fogged = apply_fog(vec4(color, alpha), sphericalVertexDistance, cylindricalVertexDistance, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd, FogColor);
+    // Premultiplied on the way out, so the result survives being accumulated into an offscreen target and
+    // composited back. Identical to what the straight-alpha blend produced.
+    fragColor = vec4(fogged.rgb * alpha, alpha);
 }
