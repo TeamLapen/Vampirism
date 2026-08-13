@@ -10,11 +10,17 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 public record SelectedAmmunition(@Nullable Item item) implements ISelectedAmmunition {
 
-    public static final SelectedAmmunition EMPTY = new SelectedAmmunition(null);
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private SelectedAmmunition(Optional<Item> item) {
+        this(item.orElse(null));
+    }
+    public static final SelectedAmmunition EMPTY = new SelectedAmmunition((Item) null);
 
-    public static final Codec<SelectedAmmunition> CODEC = BuiltInRegistries.ITEM.byNameCodec().xmap(SelectedAmmunition::new, SelectedAmmunition::item);
-    public static final StreamCodec<RegistryFriendlyByteBuf, SelectedAmmunition> STREAM_CODEC = ByteBufCodecs.registry(Registries.ITEM).map(SelectedAmmunition::new, SelectedAmmunition::item);
+    public static final Codec<SelectedAmmunition> CODEC = BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("ammo").codec().xmap(SelectedAmmunition::new, x -> Optional.ofNullable(x.item()));
+    public static final StreamCodec<RegistryFriendlyByteBuf, SelectedAmmunition> STREAM_CODEC = ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.ITEM)).map(SelectedAmmunition::new, x -> Optional.ofNullable(x.item()));
 
 }
