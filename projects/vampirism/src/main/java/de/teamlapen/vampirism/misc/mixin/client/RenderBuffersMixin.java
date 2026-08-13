@@ -24,12 +24,10 @@ public class RenderBuffersMixin {
      * Buffers are drawn in insertion order and the crumbling overlay looks weird over the enchantment glint, so it has
      * to be inserted below the latter one. {@link net.neoforged.neoforge.client.event.RegisterRenderBuffersEvent} can
      * only append, hence the injection.
-     * <p>
-     * Ordinal 1 is the {@link Sheets#translucentItemSheet()} put: the last buffer of those that render the item itself,
-     * with only the glints following it.
      */
-    @Inject(method = "lambda$new$0(Lit/unimi/dsi/fastutil/objects/Object2ObjectLinkedOpenHashMap;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderBuffers;put(Lit/unimi/dsi/fastutil/objects/Object2ObjectLinkedOpenHashMap;Lnet/minecraft/client/renderer/rendertype/RenderType;)V", ordinal = 1, shift = At.Shift.AFTER))
-    private void addItemCrumblingBuffer(Object2ObjectLinkedOpenHashMap<RenderType, ByteBufferBuilder> map, CallbackInfo ci) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Inject(method = "lambda$new$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/rendertype/RenderTypes;armorEntityGlint()Lnet/minecraft/client/renderer/rendertype/RenderType;"))
+    private void addItemCrumblingBeforeGlint(Object2ObjectLinkedOpenHashMap map, CallbackInfo ci) {
         put(map, ModRenderPipelines.itemCrumbling());
     }
 }
