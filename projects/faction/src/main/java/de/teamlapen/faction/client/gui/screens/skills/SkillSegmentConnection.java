@@ -27,15 +27,8 @@ public record SkillSegmentConnection(List<SkillSegmentComponent> parents, List<S
         int trunkX = (int) Math.round(this.parents.stream().mapToInt(x -> x.getPlacement().x()).average().orElse(0));
         int sharedColor = sharedState(visibleChildren).pathColor(outerLine);
 
-        for (SkillSegmentComponent parent : this.parents) {
-            verticalLine(graphics, parent.getPlacement().x(), parent.getPlacement().y() + SkillTreeLayout.SKILL_SIZE - 1, upperY, sharedColor, outerLine);
-        }
-
-        int barLeft = Math.min(trunkX, min(this.parents));
-        int barRight = Math.max(trunkX, max(this.parents));
-        if (barLeft != barRight) {
-            horizontalLine(graphics, barLeft, barRight, upperY, sharedColor, outerLine);
-        }
+        drawStems(graphics, this.parents.stream().filter(x -> x.getState() != SkillSegmentComponent.SkillSegmentState.UNLOCKED).toList(), trunkX, upperY, SkillSegmentComponent.SkillSegmentState.VISIBLE.pathColor(outerLine), outerLine);
+        drawStems(graphics, this.parents.stream().filter(x -> x.getState() == SkillSegmentComponent.SkillSegmentState.UNLOCKED).toList(), trunkX, upperY, sharedColor, outerLine);
 
         verticalLine(graphics, trunkX, upperY, lowerY, sharedColor, outerLine);
 
@@ -46,6 +39,24 @@ public record SkillSegmentConnection(List<SkillSegmentComponent> parents, List<S
                 horizontalLine(graphics, Math.min(trunkX, childX), Math.max(trunkX, childX), lowerY, color, outerLine);
             }
             verticalLine(graphics, childX, lowerY, childY, color, outerLine);
+        }
+    }
+
+    /**
+     * Draws the stems of the given parents down to the junction bar. Only unlocked parents carry the shared color, so
+     * the part of the bar leading to a parent that is not unlocked stays unlit.
+     */
+    private static void drawStems(GuiGraphicsExtractor graphics, List<SkillSegmentComponent> parents, int trunkX, int upperY, int color, boolean outerLine) {
+        if (parents.isEmpty()) return;
+
+        for (SkillSegmentComponent parent : parents) {
+            verticalLine(graphics, parent.getPlacement().x(), parent.getPlacement().y() + SkillTreeLayout.SKILL_SIZE - 1, upperY, color, outerLine);
+        }
+
+        int barLeft = Math.min(trunkX, min(parents));
+        int barRight = Math.max(trunkX, max(parents));
+        if (barLeft != barRight) {
+            horizontalLine(graphics, barLeft, barRight, upperY, color, outerLine);
         }
     }
 
