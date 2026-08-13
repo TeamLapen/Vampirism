@@ -117,7 +117,6 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.addListener(FMLCommonSetupEvent.class, e -> e.enqueueWork(ModEntitySelectors::registerSelectors));
         bus.addListener(FMLLoadCompleteEvent.class, e -> e.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe));
         bus.addListener(FMLCommonSetupEvent.class, _ -> this.supporterManager.init());
-        bus.addListener(FMLCommonSetupEvent.class, _ -> this.settingsProvider.syncSettingsCache());
         bus.addListener(InterModProcessEvent.class, _ -> QuarrelHandler.collectQuarrels());
         bus.addListener(AddFactionTagEvent.class, ModFactions::registerFactionTags);
         bus.addListener(ModCreativeTabs::addToExistingCreativeTabs);

@@ -12,27 +12,8 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface ISettingsProvider {
 
-    /**
-     * @param key settings key
-     * @return true if the settings value exists and the value is {@code true}
-     */
-    @Contract(pure = true)
-    boolean isSettingTrue(@NotNull String key);
-
-    /**
-     * @param key settings key
-     * @return settings value for the given key
-     */
-    @NotNull
-    @Contract(pure = true)
-    Optional<String> getSettingsValue(@NotNull String key);
 
     @NotNull
     CompletableFuture<Optional<Collection<Supporter>>> getSupportersAsync();
-
-    /**
-     * updates the cache of the settings
-     */
-    void syncSettingsCache();
 
 }
