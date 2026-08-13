@@ -127,6 +127,7 @@ public class ClientServices extends Services {
         bus.addListener(ModItemsRender::registerColors);
         bus.addListener(ModItemsRender::registerRangeSelector);
         bus.addListener(ModItemsRender::registerConditional);
+        bus.addListener(ModItemsRender::registerItemModels);
         bus.addListener(ModParticleFactories::registerFactories);
         bus.addListener(ClientEventHandler::onModelRegistry);
         bus.addListener(ModDebugEntries::registerDebugEntries);

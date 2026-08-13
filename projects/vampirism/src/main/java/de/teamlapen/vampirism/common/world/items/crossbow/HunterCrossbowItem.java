@@ -103,7 +103,7 @@ public abstract class HunterCrossbowItem extends CrossbowItem implements IHunter
     }
 
     public boolean canUseDoubleCrossbow(LivingEntity entity) {
-        return entity instanceof Player player && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.DOUBLE_IT);
+        return entity instanceof Player player && HunterPlayer.get(player).getSkillHandler().isSkillEnabled(HunterSkills.DUAL_WIELDING);
     }
 
     public int getCombinedUseDuration(ItemStack stack, LivingEntity entity, InteractionHand hand) {

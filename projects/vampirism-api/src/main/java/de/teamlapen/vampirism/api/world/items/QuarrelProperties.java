@@ -7,9 +7,10 @@ import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
  * A class containing static properties of a quarrel.
  */
 public record QuarrelProperties(int color, Component effectDescription, AbstractArrow.Pickup pickupBehavior,
-                                float baseDamage, float damageMultiplier, float knockbackMultiplier,
-                                float velocityFactor, float gravityFactor, float inaccuracyFactor,
-                                int extraPierceLevel, float chargeMultiplier, boolean forcesChunkLoading) {
+                                float baseDamage, float damageMultiplier, float ballistaMultiplier,
+                                float knockbackMultiplier, float velocityFactor, float gravityFactor,
+                                float inaccuracyFactor, int extraPierceLevel, float chargeMultiplier,
+                                boolean forcesChunkLoading) {
 
     public static final QuarrelProperties DEFAULT = of(0xFFFFFFFF).build();
 
@@ -24,6 +25,7 @@ public record QuarrelProperties(int color, Component effectDescription, Abstract
         private AbstractArrow.Pickup pickupBehavior = AbstractArrow.Pickup.CREATIVE_ONLY;
         private float baseDamage = 0f;
         private float damageMultiplier = 1f;
+        private float ballistaMultiplier = 1f;
         private float knockbackMultiplier = 1f;
         private float velocityFactor = 1f;
         private float gravityFactor = 1f;
@@ -65,6 +67,17 @@ public record QuarrelProperties(int color, Component effectDescription, Abstract
          */
         public Builder damageMultiplier(float multiplier) {
             this.damageMultiplier = multiplier;
+            return this;
+        }
+
+        /**
+         * Multiplier applied on top of {@link #damageMultiplier(float)} when the quarrel is loosed on a full ballistic
+         * arc, faded in as the shot climbs closer to the highest arc it could physically reach. Only the climb that is
+         * paid for by the launch itself counts, so falling onto a target from a height grants nothing.
+         * 1 = no scaling; defaults to 1.
+         */
+        public Builder ballistaMultiplier(float multiplier) {
+            this.ballistaMultiplier = multiplier;
             return this;
         }
 
@@ -129,7 +142,7 @@ public record QuarrelProperties(int color, Component effectDescription, Abstract
         }
 
         public QuarrelProperties build() {
-            return new QuarrelProperties(color, effectDescription, pickupBehavior, baseDamage, damageMultiplier, knockbackMultiplier, velocityFactor, gravityFactor, inaccuracyFactor, extraPierceLevel, chargeMultiplier, forcesChunkLoading);
+            return new QuarrelProperties(color, effectDescription, pickupBehavior, baseDamage, damageMultiplier, ballistaMultiplier, knockbackMultiplier, velocityFactor, gravityFactor, inaccuracyFactor, extraPierceLevel, chargeMultiplier, forcesChunkLoading);
         }
     }
 }

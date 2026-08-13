@@ -72,7 +72,9 @@ public class HunterSkills {
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_JUMP = SKILLS.registerSkill("armor_jump", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CROSSBOW_TECHNIQUE = SKILLS.registerSkill("crossbow_technique", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.registerSkill("double_it", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DUAL_WIELDING = SKILLS.registerSkill("dual_wielding", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.registerSkill("master_craftsmanship", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> NEAR_BREACH_REFORGING = SKILLS.registerSkill("near_breach_reforging", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE2 = SKILLS.registerSkill("stake2", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> AXE2 = SKILLS.registerSkill("axe2", props -> new HunterSkill(props.cost(3).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARTISAN_CRAFTSMANSHIP = SKILLS.registerSkill("artisan_craftsmanship", props -> new HunterSkill(props.cost(3).withDescription()));
@@ -114,6 +116,7 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> POTION4 = node("potion4");
         public static final ResourceKey<ISkillNode> POTION5 = node("potion5");
         public static final ResourceKey<ISkillNode> POTION6 = node("potion6");
+
         public static final ResourceKey<ISkillNode> WEAPON1 = node("weapon1");
         public static final ResourceKey<ISkillNode> WEAPON2 = node("weapon2");
         public static final ResourceKey<ISkillNode> WEAPON3 = node("weapon3");
@@ -124,6 +127,7 @@ public class HunterSkills {
         public static final ResourceKey<ISkillNode> WEAPON8 = node("weapon8");
         public static final ResourceKey<ISkillNode> WEAPON9 = node("weapon9");
         public static final ResourceKey<ISkillNode> WEAPON10 = node("weapon10");
+        public static final ResourceKey<ISkillNode> WEAPON11 = node("weapon11");
 
         public static final ResourceKey<ISkillNode> LORD_ROOT = node("lord_root");
         public static final ResourceKey<ISkillNode> LORD_2 = node("lord_2");
@@ -163,16 +167,17 @@ public class HunterSkills {
             context.register(POTION5, new SkillNode(POTION_RESISTANCE));
             context.register(POTION6, new SkillNode(CONCENTRATED_DURABLE_BREWING));
 
-            context.register(WEAPON1, new SkillNode(HUNTER_ATTACK_DAMAGE));
+            context.register(WEAPON1, new SkillNode(HUNTER_ATTACK_DAMAGE ));
             context.register(WEAPON2, new SkillNode(HUNTER_ATTACK_SPEED));
             context.register(WEAPON3, new SkillNode(ARMOR_SPEED));
-            context.register(WEAPON4, new SkillNode(ARMOR_JUMP));
-            context.register(WEAPON5, new SkillNode(CROSSBOW_TECHNIQUE));
-            context.register(WEAPON6, new SkillNode(DOUBLE_IT));
-            context.register(WEAPON7, new SkillNode(MASTER_CRAFTSMANSHIP));
-            context.register(WEAPON8, new SkillNode(AXE2));
-            context.register(WEAPON9, new SkillNode(STAKE2));
-            context.register(WEAPON10, new SkillNode(ARTISAN_CRAFTSMANSHIP));
+            context.register(WEAPON4, new SkillNode(NEAR_BREACH_REFORGING));
+            context.register(WEAPON5, new SkillNode(ARMOR_JUMP));
+            context.register(WEAPON6, new SkillNode(CROSSBOW_TECHNIQUE));
+            context.register(WEAPON7, new SkillNode(DOUBLE_IT, DUAL_WIELDING));
+            context.register(WEAPON8, new SkillNode(MASTER_CRAFTSMANSHIP));
+            context.register(WEAPON9, new SkillNode(AXE2));
+            context.register(WEAPON10, new SkillNode(STAKE2));
+            context.register(WEAPON11, new SkillNode(ARTISAN_CRAFTSMANSHIP));
 
             context.register(LORD_ROOT, new SkillNode(HunterSkills.LORD_ROOT));
             context.register(LORD_2, new SkillNode(MINION_STATS_INCREASE));

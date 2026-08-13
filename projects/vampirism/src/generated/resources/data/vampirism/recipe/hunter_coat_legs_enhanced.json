@@ -6,7 +6,7 @@
     "Y": "#c:gems/diamond",
     "Z": "#c:crops/garlic"
   },
-  "lava": 5,
+  "lava": 3,
   "pattern": [
     "XYYX",
     "XZZX",
