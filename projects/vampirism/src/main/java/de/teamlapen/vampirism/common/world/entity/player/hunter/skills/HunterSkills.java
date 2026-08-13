@@ -167,10 +167,10 @@ public class HunterSkills {
             context.register(POTION5, new SkillNode(POTION_RESISTANCE));
             context.register(POTION6, new SkillNode(CONCENTRATED_DURABLE_BREWING));
 
-            context.register(WEAPON1, new SkillNode(NEAR_BREACH_REFORGING));
-            context.register(WEAPON2, new SkillNode(HUNTER_ATTACK_DAMAGE));
-            context.register(WEAPON3, new SkillNode(HUNTER_ATTACK_SPEED));
-            context.register(WEAPON4, new SkillNode(ARMOR_SPEED));
+            context.register(WEAPON1, new SkillNode(HUNTER_ATTACK_DAMAGE ));
+            context.register(WEAPON2, new SkillNode(HUNTER_ATTACK_SPEED));
+            context.register(WEAPON3, new SkillNode(ARMOR_SPEED));
+            context.register(WEAPON4, new SkillNode(NEAR_BREACH_REFORGING));
             context.register(WEAPON5, new SkillNode(ARMOR_JUMP));
             context.register(WEAPON6, new SkillNode(CROSSBOW_TECHNIQUE));
             context.register(WEAPON7, new SkillNode(DOUBLE_IT, DUAL_WIELDING));
