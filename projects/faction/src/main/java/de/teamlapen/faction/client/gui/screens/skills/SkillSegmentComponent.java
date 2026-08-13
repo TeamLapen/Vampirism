@@ -57,7 +57,7 @@ public class SkillSegmentComponent {
         this.width = new int[skills.size()];
         int length = 29 + 27;
         for (int i = 0; i < skills.size(); i++) {
-            this.titles[i] = Language.getInstance().getVisualOrder(minecraft.font.substrByWidth(skills.get(i).value().getName(), 163));
+            this.titles[i] = Language.getInstance().getVisualOrder(skills.get(i).value().getName());
             int size = Math.max(length + minecraft.font.width(titles[i]), 120);
             this.descriptions[i] = Language.getInstance().getVisualOrder(this.findOptimalLines(ComponentUtils.mergeStyles(Optional.ofNullable(skills.get(i).value().getDescription()).orElse(Component.empty()).copy(), Style.EMPTY.withColor(ChatFormatting.GRAY)), size - 30));
             this.width[i] = size;
