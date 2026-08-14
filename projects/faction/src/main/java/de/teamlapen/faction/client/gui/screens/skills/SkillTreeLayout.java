@@ -1,5 +1,6 @@
-package de.teamlapen.faction.common.factions.skills;
+package de.teamlapen.faction.client.gui.screens.skills;
 
+import de.teamlapen.faction.common.factions.skills.SkillTreeGraph;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;

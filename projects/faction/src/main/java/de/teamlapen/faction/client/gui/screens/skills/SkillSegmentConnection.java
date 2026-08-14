@@ -1,6 +1,5 @@
 package de.teamlapen.faction.client.gui.screens.skills;
 
-import de.teamlapen.faction.common.factions.skills.SkillTreeLayout;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.*;

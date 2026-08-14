@@ -9,7 +9,6 @@ import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.common.core.FactionEffects;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.factions.skills.SkillTreeGraph;
-import de.teamlapen.faction.common.factions.skills.SkillTreeLayout;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
