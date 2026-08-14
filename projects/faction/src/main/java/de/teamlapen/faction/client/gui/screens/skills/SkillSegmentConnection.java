@@ -32,7 +32,7 @@ public record SkillSegmentConnection(List<SkillSegmentComponent> parents, List<S
 
         verticalLine(graphics, trunkX, upperY, lowerY, sharedColor, outerLine);
 
-        for (SkillSegmentComponent child : visibleChildren) {
+        for (SkillSegmentComponent child : visibleChildren.stream().sorted(Comparator.comparingInt(x -> pathPriority(x.getState()))).toList()) {
             int childX = child.getPlacement().x();
             int color = child.getState().pathColor(outerLine);
             if (childX != trunkX) {
@@ -61,10 +61,20 @@ public record SkillSegmentConnection(List<SkillSegmentComponent> parents, List<S
     }
 
     private SkillSegmentComponent.SkillSegmentState sharedState(List<SkillSegmentComponent> visibleChildren) {
-        if (visibleChildren.stream().anyMatch(x -> x.getState() == SkillSegmentComponent.SkillSegmentState.UNLOCKED)) {
-            return SkillSegmentComponent.SkillSegmentState.UNLOCKED;
-        }
-        return visibleChildren.getFirst().getState();
+        return visibleChildren.stream().map(SkillSegmentComponent::getState).max(Comparator.comparingInt(SkillSegmentConnection::pathPriority)).orElseThrow();
+    }
+
+    /**
+     * Ranks how strongly a state claims a piece of the path. Children share the part of the lower bar between the trunk
+     * and the inner one, so the branches are drawn in this order and the strongest claim ends up on top.
+     */
+    private static int pathPriority(SkillSegmentComponent.SkillSegmentState state) {
+        return switch (state) {
+            case UNLOCKED -> 3;
+            case AVAILABLE -> 2;
+            case LOCKED -> 1;
+            default -> 0;
+        };
     }
 
     private static int min(List<SkillSegmentComponent> components) {
