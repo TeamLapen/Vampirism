@@ -109,6 +109,7 @@
   "gui.factionapi.reordering.excluded": "Исключено",
   "gui.factionapi.reset": "Сбросить",
   "gui.factionapi.reset_question": "Вы уверены?",
+  "gui.factionapi.clear": "Очистить",
   "gui.factionapi.level": "Уровень",
   "gui.factionapi.level_short": "Ур.",
   "gui.factionapi.title": "Титул",
