@@ -5,6 +5,8 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -12,18 +14,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class EyeCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("eye")
-                .then(Commands.argument("type", IntegerArgumentType.integer(0, REFERENCE.EYE_TYPE_COUNT - 1))
+                .then(Commands.argument("type", IntegerArgumentType.integer(0, 16))
                         .executes(context -> setEye(context, context.getSource().getPlayerOrException(), IntegerArgumentType.getInteger(context, "type"))));
     }
 
     private static int setEye(@NotNull CommandContext<CommandSourceStack> context, @NotNull Player player, int type) {
-        if (VampirePlayer.get(player).setEyeType(type)) {
-            context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.eye.success", type), false);
-        }
+        VampirePlayer.get(player).setEyeType(VIdentifier.mod("eye"+type));
+        context.getSource().sendSuccess(() -> Component.translatable("command.vampirism.base.eye.success", type), false);
         return type;
     }
 

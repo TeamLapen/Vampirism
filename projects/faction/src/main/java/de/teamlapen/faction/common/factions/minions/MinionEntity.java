@@ -308,15 +308,6 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     @Override
-    public @NotNull Optional<PlayerSkinRenderCache.RenderInfo> getPlayerOverlay() {
-        //noinspection OptionalAssignedToNull
-        if (this.skinProfile == null) {
-            PlayerSkinHelper.getPlayerRenderInfo(getLordID().orElse(null), x -> this.skinProfile = x);
-        }
-        return this.skinProfile;
-    }
-
-    @Override
     protected float sanitizeScale(float scale) {
         return 0.8f + convertCounter / (float) CONVERT_DURATION * 0.2f;
     }

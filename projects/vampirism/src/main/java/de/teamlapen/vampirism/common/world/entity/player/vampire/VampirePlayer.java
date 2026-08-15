@@ -444,14 +444,14 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     /**
      * @return Eyetype for rendering
      */
-    public int getEyeType() {
+    public Identifier getEyeType() {
         return this.customization.eyeType();
     }
 
     /**
      * @return Fangtype for rendering
      */
-    public int getFangType() {
+    public Identifier getFangType() {
         return this.customization.fangType();
     }
 
@@ -920,28 +920,16 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         this.forceNaturalArmorUpdate = true;
     }
 
-    /**
-     * Sets the eyeType as long as it is valid.
-     * Also sends a sync packet if on server
-     *
-     * @return Whether the type is valid or not
-     */
-    public boolean setEyeType(int eyeType) {
-        return this.customization.setEyeType(eyeType);
+    public void setEyeType(Identifier eyeType) {
+        this.customization.setEyeType(eyeType);
     }
 
-    /**
-     * Sets the fangType as long as it is valid.
-     * Also sends a sync packet if on server
-     *
-     * @return Whether the type is valid or not
-     */
-    public boolean setFangType(int fangType) {
-        return this.customization.setFangType(fangType);
+    public void setFangType(Identifier fangType) {
+        this.customization.setFangType(fangType);
     }
 
-    public static final AppearanceKey<Integer> FangType = AppearancePacket.register(VIdentifier.mod("fang_type"), ByteBufCodecs.VAR_INT);
-    public static final AppearanceKey<Integer> EyeType = AppearancePacket.register(VIdentifier.mod("eye_type"), ByteBufCodecs.VAR_INT);
+    public static final AppearanceKey<Identifier> FangType = AppearancePacket.register(VIdentifier.mod("fang_type"), Identifier.STREAM_CODEC);
+    public static final AppearanceKey<Identifier> EyeType = AppearancePacket.register(VIdentifier.mod("eye_type"), Identifier.STREAM_CODEC);
     public static final AppearanceKey<Boolean> GlowingEye = AppearancePacket.register(VIdentifier.mod("glowing_eye"), ByteBufCodecs.BOOL);
     public static final AppearanceKey<IPlayableFaction.TitleGender> TitleGenderType = AppearancePacket.register(VIdentifier.mod("title_gender_type"), NeoForgeStreamCodecs.enumCodec(IPlayableFaction.TitleGender.class));
     public static final AppearanceKey<IWingsEntity.Texture> WingsTexture = AppearancePacket.register(VIdentifier.mod("wings_texure"), NeoForgeStreamCodecs.enumCodec(IWingsEntity.Texture.class));
@@ -950,9 +938,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public <T> void setAppearanceData(AppearanceKey<T> id, T data) {
         if (id.equals(FangType)) {
-            setFangType((Integer) data);
+            setFangType((Identifier) data);
         } else if (id.equals(EyeType)) {
-            setEyeType((Integer) data);
+            setEyeType((Identifier) data);
         } else if (id.equals(GlowingEye)) {
             setGlowingEyes((Boolean) data);
         } else if (id.equals(TitleGenderType)) {

@@ -50,8 +50,8 @@ public class ModEntityRenderStates {
     public static final ContextKey<Boolean> HUNTER_FULL_COAT = create("hunter/full_coat");
     public static final ContextKey<Boolean> VAMPIRE_DISGUISE = create("vampire/disguise");
     public static final ContextKey<Integer> VAMPIRE_LEVEL = create("vampire/level");
-    public static final ContextKey<Integer> VAMPIRE_EYE_TYPE = create("vampire/eye_type");
-    public static final ContextKey<Integer> VAMPIRE_FANG_TYPE = create("vampire/fang_type");
+    public static final ContextKey<Identifier> VAMPIRE_EYE_TYPE = create("vampire/eye_type");
+    public static final ContextKey<Identifier> VAMPIRE_FANG_TYPE = create("vampire/fang_type");
     public static final ContextKey<Boolean> VAMPIRE_GLOWING_EYES = create("vampire/glowing_eyes");
     public static final ContextKey<Boolean> VAMPIRE_INVISIBLE = create("vampire/invisible");
     public static final ContextKey<Bat> VAMPIRE_BAT = create("vampire/bat");

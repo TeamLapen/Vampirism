@@ -5,15 +5,19 @@ import de.teamlapen.faction.api.world.ICaptureAttributes;
 import de.teamlapen.faction.common.world.entities.IPlayerOverlay;
 import de.teamlapen.faction.common.world.entities.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.settings.Supporter;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.world.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.world.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
+import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.common.util.UtilLib;
+import de.teamlapen.vampirism.common.util.supporter.Supporter;
+import de.teamlapen.vampirism.common.world.entity.ISupporterAppearanceConsumer;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.*;
 import de.teamlapen.vampirism.common.world.entity.hunter.HunterBaseEntity;
 import net.minecraft.client.renderer.PlayerSkinRenderCache;
@@ -21,6 +25,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.world.DifficultyInstance;
@@ -55,11 +60,8 @@ import java.util.Optional;
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
-public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, VampireBookLootProvider {
+public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, VampireBookLootProvider, ISupporterAppearanceConsumer {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.STRING);
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
         return VampireBaseEntity.getAttributeBuilder()
@@ -79,11 +81,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @UnknownNullability
     private Optional<PlayerSkinRenderCache.RenderInfo> skinProfile;
-    /**
-     * If set, the vampire book with this id should be dropped
-     */
-    @Nullable
-    private String lootBookId;
     //Village stuff ----------------------------------------------------------------------------------------------------
     @Nullable
     private ICaptureAttributes villageAttributes;
@@ -101,13 +98,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     public void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putInt("level", getEntityLevel());
-        output.putInt("type", getEyeType());
-        output.putString("texture", getEntityData().get(TEXTURE));
-        output.putString("name", getEntityData().get(NAME));
         output.putBoolean("attack", this.attack);
-        if (lootBookId != null) {
-            output.putString("lootBookId", lootBookId);
-        }
     }
 
     @Override
@@ -129,18 +120,13 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Override
     public Optional<String> getBookLootId() {
-        return Optional.ofNullable(lootBookId);
+        return getData(ModAttachments.SUPPORTER).bookId();
     }
 
     @Nullable
     @Override
     public ICaptureAttributes getCaptureInfo() {
         return villageAttributes;
-    }
-
-    @Override
-    public int getVampireType() {
-        return getEntityData().get(TYPE);
     }
 
     @Override
@@ -174,31 +160,10 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
         return MAX_LEVEL;
     }
 
-    @Override
-    public Component getName() {
-        String senderName = this.getEntityData().get(NAME);
-        return "none".equals(senderName) ? super.getName() : Component.literal(senderName);
-    }
-
-    @SuppressWarnings("OptionalAssignedToNull")
-    @Override
-    public Optional<PlayerSkinRenderCache.RenderInfo> getPlayerOverlay() {
-        if (this.skinProfile == null) {
-            PlayerSkinHelper.getPlayerRenderInfo(getTextureName(), x -> this.skinProfile = x);
-        }
-        return this.skinProfile;
-    }
-
     @Nullable
     @Override
     public AABB getTargetVillageArea() {
         return villageAttributes == null ? null : villageAttributes.getVillageArea();
-    }
-
-    @Nullable
-    public String getTextureName() {
-        String texture = this.getEntityData().get(TEXTURE);
-        return "none".equals(texture) ? null : texture;
     }
 
     @Override
@@ -233,11 +198,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     public void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
         input.getInt("level").ifPresent(this::setEntityLevel);
-        getEntityData().set(TYPE, input.getIntOr("type", 0));
-        getEntityData().set(NAME, input.getStringOr("name", "none"));
-        getEntityData().set(TEXTURE, input.getStringOr("texture", "none"));
         this.attack = input.getBooleanOr("attack", false);
-        input.getString("lootBookId").ifPresent(x -> lootBookId = x);
     }
 
     @Override
@@ -269,35 +230,15 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(LEVEL, -1);
-        builder.define(TYPE, 0);
-        builder.define(NAME, "none");
-        builder.define(TEXTURE, "none");
     }
 
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pReason, @Nullable SpawnGroupData pSpawnData) {
         Supporter supporter = VampirismMod.services().supporterManager().getRandomVampire(random);
-        lootBookId = supporter.bookId();
-        this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
-        this.getEntityData().set(NAME, supporter.name());
-        this.getEntityData().set(TEXTURE, supporter.texture());
+        setData(ModAttachments.SUPPORTER, supporter);
+        applySupporter(this, supporter);
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
-    }
-
-    private static int createCustomisationFlag(Supporter supporter) {
-        Map<String, String> appearance = supporter.appearance();
-        int type = supporter.name().hashCode();
-        if (appearance.containsKey("eye")) {
-            type = (type & ~0b111111) | Integer.parseInt(appearance.get("eye")) & 0b111111;
-        }
-        if (appearance.containsKey("fang")) {
-            type = (type & ~(0b111111 << 6)) | ((Integer.parseInt(appearance.get("fang")) & 0b111111 << 6));
-        }
-        if (appearance.containsKey("body")) {
-            type = (type & ~(0b11111111 << 12)) | ((Integer.parseInt(appearance.get("body")) & 0b11111111 << 12));
-        }
-        return type;
     }
 
     @Override

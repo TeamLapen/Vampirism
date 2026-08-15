@@ -28,6 +28,7 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ambient.Bat;
 import net.minecraft.world.entity.vehicle.boat.Boat;
@@ -134,6 +135,7 @@ public class ModEntities {
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<IDraculaAnimations.Animation>> DRACULA_ANIMATION = DATA_SERIALIZER.register("dracula_animation", () -> (EntityDataSerializer.ForValueType<IDraculaAnimations.Animation>) (() -> IDraculaAnimations.Animation.STREAM_CODEC));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<List<Integer>>> INT_LIST = DATA_SERIALIZER.register("int_list", () -> (EntityDataSerializer.ForValueType<List<Integer>>) (() -> ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list())));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<IWingsEntity.WingsState>> WINGS_STATE = DATA_SERIALIZER.register("wings_state", () -> (EntityDataSerializer.ForValueType<IWingsEntity.WingsState>) (() -> NeoForgeStreamCodecs.enumCodec(IWingsEntity.WingsState.class)));
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Identifier>> IDENTIFIER = DATA_SERIALIZER.register("identifier", () -> (EntityDataSerializer.ForValueType<Identifier>) (() -> Identifier.STREAM_CODEC));
 
     static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);

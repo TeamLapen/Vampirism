@@ -6,18 +6,20 @@ import de.teamlapen.faction.api.world.ICaptureAttributes;
 import de.teamlapen.faction.common.world.entities.IPlayerOverlay;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.settings.Supporter;
 import de.teamlapen.vampirism.api.world.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.world.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.world.entity.hunter.IVampirismCrossbowUser;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.config.BalanceMobProps;
+import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.util.PlayerModelType;
 import de.teamlapen.vampirism.common.util.PlayerSkinHelper;
 import de.teamlapen.vampirism.common.util.UtilLib;
+import de.teamlapen.vampirism.common.util.supporter.Supporter;
+import de.teamlapen.vampirism.common.world.entity.ISupporterAppearanceConsumer;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.*;
 import de.teamlapen.vampirism.common.world.entity.ai.navigation.HunterPathNavigation;
@@ -68,11 +70,8 @@ import java.util.Optional;
 /**
  * Advanced hunter. Is strong. Represents supporters
  */
-public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, VampireBookLootProvider, IVampirismCrossbowUser {
+public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, VampireBookLootProvider, IVampirismCrossbowUser, ISupporterAppearanceConsumer {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<String> NAME = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Holder<Item>> SPECIAL_ARROW = SynchedEntityData.defineId(AdvancedHunterEntity.class, ModEntities.ITEM_HOLDER.get());
 
@@ -86,20 +85,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
                 .add(Attributes.MOVEMENT_SPEED, BalanceMobProps.mobProps.ADVANCED_HUNTER_SPEED);
     }
 
-    /**
-     * Overlay player texture and if slim (true)
-     */
-    @Nullable
-    private Pair<Identifier, PlayerModelType> skinDetails;
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @Nullable
-    private Optional<PlayerSkinRenderCache.RenderInfo> skinProfile;
-    /**
-     * If set, the vampire book with this id should be dropped
-     */
-    @Nullable
-    private String lootBookId;
-    //Village capture --------------------------------------------------------------------------------------------------
     private boolean attack;
     @Nullable
     private ICaptureAttributes villageAttributes;
@@ -118,13 +103,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     public void addAdditionalSaveData(@NotNull ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putInt("level", getEntityLevel());
-        output.putInt("type", getHunterType());
-        output.putString("texture", getEntityData().get(TEXTURE));
-        output.putString("name", getEntityData().get(NAME));
         output.putBoolean("attack", attack);
-        if (lootBookId != null) {
-            output.putString("lootBookId", lootBookId);
-        }
         output.store("specialArrow", BuiltInRegistries.ITEM.holderByNameCodec(), getEntityData().get(SPECIAL_ARROW));
     }
 
@@ -151,18 +130,13 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     @Override
     public @NotNull Optional<String> getBookLootId() {
-        return Optional.ofNullable(lootBookId);
+        return getData(ModAttachments.SUPPORTER).bookId();
     }
 
     @Nullable
     @Override
     public ICaptureAttributes getCaptureInfo() {
         return this.villageAttributes;
-    }
-
-    @Override
-    public int getHunterType() {
-        return this.getEntityData().get(TYPE);
     }
 
     @Override
@@ -187,33 +161,10 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
         return MAX_LEVEL;
     }
 
-    @NotNull
-    @Override
-    public Component getName() {
-        String senderName = this.getEntityData().get(NAME);
-        return "none".equals(senderName) ? super.getName() : Component.literal(senderName);
-    }
-
-    @Override
-    public @NotNull Optional<PlayerSkinRenderCache.RenderInfo> getPlayerOverlay() {
-        //noinspection OptionalAssignedToNull
-        if (this.skinProfile == null) {
-            PlayerSkinHelper.getPlayerRenderInfo(getTextureName(), x -> this.skinProfile = x);
-        }
-        return this.skinProfile;
-    }
-
     @Nullable
     @Override
     public AABB getTargetVillageArea() {
         return villageAttributes == null ? null : villageAttributes.getVillageArea();
-    }
-
-    @Nullable
-    @Override
-    public String getTextureName() {
-        String texture = this.getEntityData().get(TEXTURE);
-        return "none".equals(texture) ? null : texture;
     }
 
     @Override
@@ -235,11 +186,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     public void readAdditionalSaveData(@NotNull ValueInput input) {
         super.readAdditionalSaveData(input);
         input.getInt("level").ifPresent(this::setEntityLevel);
-        input.getInt("type").ifPresent(x -> getEntityData().set(TYPE, x));
-        input.getString("name").ifPresent(x -> getEntityData().set(NAME, x));
-        input.getString("texture").ifPresent(x -> getEntityData().set(TEXTURE, x));
         this.attack = input.getBooleanOr("attack", false);
-        input.getString("lootBookId").ifPresent(x -> this.lootBookId = x);
         input.read("specialArrow", BuiltInRegistries.ITEM.holderByNameCodec()).ifPresent(x -> this.getEntityData().set(SPECIAL_ARROW, x));
     }
 
@@ -278,9 +225,6 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(LEVEL, -1);
-        builder.define(TYPE, 0);
-        builder.define(NAME, "none");
-        builder.define(TEXTURE, "none");
         builder.define(IS_CHARGING_CROSSBOW, false);
         builder.define(SPECIAL_ARROW, ModItems.QUARREL_NORMAL);
     }
@@ -288,63 +232,10 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pReason, @Nullable SpawnGroupData pSpawnData) {
-        Supporter supporter = VampirismMod.services().supporterManager().getRandomHunter(random);
-        this.getEntityData().set(TYPE, createCustomisationFlag(supporter));
-        this.getEntityData().set(NAME, supporter.name());
-        this.getEntityData().set(TEXTURE, supporter.texture());
-        List<Holder<Item>> contents = BuiltInRegistries.ITEM.getOrThrow(ModItemTags.ADVANCED_HUNTER_USABLE_QUARRELS).stream().toList();
-        this.getEntityData().set(SPECIAL_ARROW, UtilLib.getRandomElementOr(contents, () -> ModItems.QUARREL_NORMAL));
-        this.lootBookId = supporter.bookId();
-        applyCustomisationItems(supporter);
+        Supporter randomHunter = VampirismMod.services().supporterManager().getRandomHunter(random);
+        setData(ModAttachments.SUPPORTER, randomHunter);
+        applySupporter(this, randomHunter);
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
-    }
-
-
-    private void applyCustomisationItems(Supporter supporter) {
-        Map<String, String> appearance = supporter.appearance();
-        EquipmentType equipment = Optional.ofNullable(appearance.get("equipment")).map(EquipmentType::get).orElseGet(() -> {
-            EquipmentType[] types = EquipmentType.values();
-            return types[Math.floorMod(supporter.name().hashCode(), types.length)];
-        });
-        this.setLeftHanded(false);
-        this.setItemSlot(EquipmentSlot.MAINHAND, equipment.getMainHand());
-        this.setItemSlot(EquipmentSlot.OFFHAND, equipment.getOffHand());
-
-        String headwear = appearance.get("headwear");
-        Item headwearItem = null;
-
-        if (headwear != null) {
-            Identifier headWearId = Identifier.tryParse(headwear);
-            if (headWearId == null) {
-                LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear, the location is incorrect", headwear, supporter.name());
-            } else {
-                headwearItem = BuiltInRegistries.ITEM.getValue(ResourceKey.create(Registries.ITEM, headWearId));
-                if (headwearItem == null) {
-                    LogUtils.getLogger().warn("Failed to parse the id \"{}\" of advanced hunter {}'s headwear, the item does not exist", headwear, supporter.name());
-                }
-            }
-        }
-
-        if (headwearItem == null) {
-            HatType[] types = HatType.values();
-            headwearItem = types[Math.floorMod(supporter.name().hashCode(), types.length)].getHeadItem().getItem();
-        }
-
-        this.setItemSlot(EquipmentSlot.HEAD, headwearItem.getDefaultInstance());
-
-        this.setDontDropEquipment();
-    }
-
-    private static int createCustomisationFlag(Supporter supporter) {
-        Map<String, String> appearance = supporter.appearance();
-        int type = supporter.name().hashCode();
-        if (appearance.containsKey("hasCloak")) {
-            type = (type & ~0b1) | (Boolean.parseBoolean(appearance.get("eye")) ? 1 : 0) & 0b1;
-        }
-        if (appearance.containsKey("body")) {
-            type = (type & ~(0b11111111 << 1)) | ((Integer.parseInt(appearance.get("body")) & 0b11111111 << 1));
-        }
-        return type;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api;
 
 import de.teamlapen.vampirism.api.general.IBloodConversionRegistry;
-import de.teamlapen.vampirism.api.settings.ISettingsProvider;
 import de.teamlapen.vampirism.api.world.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.world.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.world.items.IExtendedBrewingRecipeRegistry;
@@ -13,8 +12,6 @@ public interface IVampirismServices {
     IVampirismEntityRegistry entityRegistry();
 
     IExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry();
-
-    ISettingsProvider settings();
 
     IBloodConversionRegistry bloodConversionRegistry();
 }

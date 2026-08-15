@@ -18,6 +18,4 @@ public interface IPlayerOverlay {
      */
     Pair<Identifier, PlayerModelType> PENDING_PROP = Pair.of(DefaultPlayerSkin.getDefaultTexture(), PlayerModelType.WIDE);
 
-    @NotNull
-    Optional<PlayerSkinRenderCache.RenderInfo> getPlayerOverlay();
 }
