@@ -54,32 +54,32 @@ public class HunterSkills {
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CRUCIFIX_WIELDER = SKILLS.registerSkill("crucifix_wielder", props -> new HunterSkill(props.cost(1).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> GARLIC_DIFFUSER = SKILLS.registerSkill("garlic_diffuser", props -> new HunterSkill(props.cost(1).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> PURIFIED_GARLIC = SKILLS.registerSkill("purified_garlic", props -> new HunterSkill(props.cost(2).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> GARLIC_DIFFUSER_IMPROVED = SKILLS.registerSkill("garlic_diffuser_improved", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> GARLIC_DIFFUSER_IMPROVED = SKILLS.registerSkill("garlic_diffuser_improved", props -> new HunterSkill(props.cost(1).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ENHANCED_BLESSING = SKILLS.registerSkill("enhanced_blessing", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ULTIMATE_CRUCIFIX = SKILLS.registerSkill("ultimate_crucifix", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_AWARENESS = SKILLS.registerSkill("hunter_awareness", props -> new HunterSkill(props.cost(2).withDescription().actionSkill(HunterActions.AWARENESS_HUNTER)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CRUCIFIX_REPEL = SKILLS.registerSkill("crucifix_repel", props -> new HunterSkill(props.cost(2).withDescription()));
 
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MULTITASK_BREWING = SKILLS.registerSkill("multitask_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MULTITASK_BREWING = SKILLS.registerSkill("multitask_brewing", props -> new HunterSkill(props.cost(1).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DURABLE_BREWING = SKILLS.registerSkill("durable_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CONCENTRATED_BREWING = SKILLS.registerSkill("concentrated_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> SWIFT_BREWING = SKILLS.registerSkill("swift_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> EFFICIENT_BREWING = SKILLS.registerSkill("efficient_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_BREWER = SKILLS.registerSkill("master_brewer", props -> new HunterSkill(props.cost(3).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.registerSkill("potion_resistance", props -> new HunterSkill(props.cost(2).withDescription().actionSkill(HunterActions.POTION_RESISTANCE_HUNTER)));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_BREWER = SKILLS.registerSkill("master_brewer", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> POTION_RESISTANCE = SKILLS.registerSkill("potion_resistance", props -> new HunterSkill(props.cost(1).withDescription().actionSkill(HunterActions.POTION_RESISTANCE_HUNTER)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CONCENTRATED_DURABLE_BREWING = SKILLS.registerSkill("concentrated_durable_brewing", props -> new HunterSkill(props.cost(2).withDescription()));
 
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_ATTACK_SPEED = SKILLS.registerSkill("hunter_attack_speed", props -> new HunterSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_SPEED, () -> ModConfig.balance().hsSmallAttackSpeedModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> HUNTER_ATTACK_DAMAGE = SKILLS.registerSkill("hunter_attack_damage", props -> new HunterSkill(props.cost(2).withDescription().attribute(Attributes.ATTACK_DAMAGE, () -> ModConfig.balance().hsSmallAttackDamageModifier.get(), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_SPEED = SKILLS.registerSkill("armor_speed", props -> new HunterSkill(props.cost(2).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_JUMP = SKILLS.registerSkill("armor_jump", props -> new HunterSkill(props.cost(2).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_SPEED = SKILLS.registerSkill("armor_speed", props -> new HunterSkill(props.cost(1).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARMOR_JUMP = SKILLS.registerSkill("armor_jump", props -> new HunterSkill(props.cost(1).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> CROSSBOW_TECHNIQUE = SKILLS.registerSkill("crossbow_technique", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DOUBLE_IT = SKILLS.registerSkill("double_it", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> DUAL_WIELDING = SKILLS.registerSkill("dual_wielding", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> MASTER_CRAFTSMANSHIP = SKILLS.registerSkill("master_craftsmanship", props -> new HunterSkill(props.cost(2).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> NEAR_BREACH_REFORGING = SKILLS.registerSkill("near_breach_reforging", props -> new HunterSkill(props.cost(2).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE2 = SKILLS.registerSkill("stake2", props -> new HunterSkill(props.cost(2).withDescription()));
-    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> AXE2 = SKILLS.registerSkill("axe2", props -> new HunterSkill(props.cost(3).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> NEAR_BREACH_REFORGING = SKILLS.registerSkill("near_breach_reforging", props -> new HunterSkill(props.cost(1).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> STAKE2 = SKILLS.registerSkill("stake2", props -> new HunterSkill(props.cost(1).withDescription()));
+    public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> AXE2 = SKILLS.registerSkill("axe2", props -> new HunterSkill(props.cost(2).withDescription()));
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> ARTISAN_CRAFTSMANSHIP = SKILLS.registerSkill("artisan_craftsmanship", props -> new HunterSkill(props.cost(3).withDescription()));
 
     public static final DeferredSkill<IHunterPlayer, ISkill<IHunterPlayer>> LORD_ROOT = SKILLS.registerSkill(ModFactions.HUNTER.getKey().identifier().withSuffix("_lord").getPath(), props -> new HunterSkill(props.tree(FactionSkillTreeTags.LORD)));
