@@ -14,6 +14,10 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * Organizes individual skill segments into skill trees. A tree is a directed acyclic graph rather than a strict tree,
+ * as a segment can have several parents. The build runs once per registry set, cached in {@link SkillTreeGraphs}.
+ */
 public class SkillTreeGraph {
 
     private static final Logger LOGGER = LogManager.getLogger();
@@ -30,8 +34,9 @@ public class SkillTreeGraph {
         Map<ResourceKey<ISkillSegment>, Entry> entriesByKey = new LinkedHashMap<>();
 
         for (Holder.Reference<ISkillSegment> reference : lookup.listElements().toList()) {
-            // noinspection ConstantConditions
-            entriesByKey.put(reference.getKey(), new Entry(reference.getKey(), reference));
+            ResourceKey<ISkillSegment> key = reference.getKey();
+            if (key == null) continue;
+            entriesByKey.put(key, new Entry(key, reference));
         }
 
         List<Entry> entries = prune(entriesByKey, linkEntries(entriesByKey));
@@ -46,6 +51,9 @@ public class SkillTreeGraph {
         return new SkillTreeGraph(Map.copyOf(entriesByKey), Map.copyOf(treesByKey));
     }
 
+    /**
+     * Links parents and children. Returns the segments that declare parents that cannot be resolved properly.
+     */
     private static Set<Entry> linkEntries(Map<ResourceKey<ISkillSegment>, Entry> entriesByKey) {
         Set<Entry> unresolvable = new HashSet<>();
 
@@ -82,6 +90,10 @@ public class SkillTreeGraph {
         return unresolvable;
     }
 
+    /**
+     * Removes segments whose declared parents could not be resolved, and everything below them. Keeping children with no
+     * parents would turn them into roots, so it's better to just drop them out and send an error into log.
+     */
     private static List<Entry> prune(Map<ResourceKey<ISkillSegment>, Entry> entriesByKey, Set<Entry> unresolvable) {
         Deque<Entry> queue = new ArrayDeque<>(unresolvable);
         Set<Entry> removed = new HashSet<>(unresolvable);
@@ -119,6 +131,10 @@ public class SkillTreeGraph {
         }
     }
 
+    /**
+     * Assigns each segment the length of the longest path from a root, so it always ends up below all of its parents,
+     * then orders by depth, priority and key. Segments forming a cycle are specifically dropped out.
+     */
     private static List<Entry> sortByDepth(Collection<Entry> entries) {
         Map<Entry, Integer> remainingParents = new HashMap<>();
         Deque<Entry> queue = new ArrayDeque<>();
@@ -158,11 +174,11 @@ public class SkillTreeGraph {
     }
 
     public Optional<Tree> tree(Holder<ISkillTree> tree) {
-        return Optional.of(treesByKey.get(tree));
+        return Optional.ofNullable(treesByKey.get(tree));
     }
 
     public Optional<Entry> entry(ResourceKey<ISkillSegment> key) {
-        return Optional.of(entriesByKey.get(key));
+        return Optional.ofNullable(entriesByKey.get(key));
     }
 
     public Optional<Entry> entryForSkill(Collection<Holder<ISkillTree>> trees, Holder<? extends ISkill<?>> skill) {
@@ -267,7 +283,10 @@ public class SkillTreeGraph {
             return entries.stream().filter(entry -> entry.skills().contains(skill)).findFirst();
         }
 
-        public Optional<Entry> anyLeaf(Predicate<Entry> isEnabled) {
+        /**
+         * Finds any enabled segment that has no enabled children.
+         */
+        public Optional<Entry> anyLastSegment(Predicate<Entry> isEnabled) {
             if (roots.stream().noneMatch(isEnabled)) {
                 return Optional.empty();
             }

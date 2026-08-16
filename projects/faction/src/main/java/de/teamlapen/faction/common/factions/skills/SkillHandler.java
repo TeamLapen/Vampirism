@@ -47,7 +47,7 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
 
     public Optional<Pair<Holder<ISkillTree>, SkillTreeGraph.Entry>> anyLastSegment() {
         SkillTreeGraph graph = graph();
-        return unlockedTrees.stream().flatMap(s -> graph.tree(s).flatMap(x -> x.anyLeaf(this::isSegmentEnabled)).map(x -> Pair.of(s, x)).stream()).findAny();
+        return unlockedTrees.stream().flatMap(s -> graph.tree(s).flatMap(x -> x.anyLastSegment(this::isSegmentEnabled)).map(x -> Pair.of(s, x)).stream()).findAny();
     }
 
     @Override

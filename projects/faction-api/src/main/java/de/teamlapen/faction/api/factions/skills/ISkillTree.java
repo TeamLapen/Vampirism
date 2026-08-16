@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Represents a skill tree such as a skill tree for basic leveling as well as a lord level skill tree. Each faction needs to have their own skill tree.
+ * Represents a skill tree such as a skill tree for basic leveling as well as a lord level skill tree. Each faction needs
+ * to have their own skill tree.
  */
 public interface ISkillTree {
 

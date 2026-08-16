@@ -5,6 +5,9 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Renders the connections between segment groups (parents and their children) in a skill tree.
+ */
 public record SkillSegmentConnection(List<SkillSegmentComponent> parents, List<SkillSegmentComponent> children) {
 
     private static final int ROW_GAP = SkillTreeLayout.ROW_HEIGHT - SkillTreeLayout.SKILL_SIZE;
@@ -64,8 +67,9 @@ public record SkillSegmentConnection(List<SkillSegmentComponent> parents, List<S
     }
 
     /**
-     * Ranks how strongly a state claims a piece of the path. Children share the part of the lower bar between the trunk
-     * and the inner one, so the branches are drawn in this order and the strongest claim ends up on top.
+     * Ranks how strongly a state claims a piece of the path. This is vital to distinguish what parts of the path should be
+     * lit so that the unlocked ones get rendered over the rest, especially in cases where one part is common for more than
+     * one segment.
      */
     private static int pathPriority(SkillSegmentComponent.SkillSegmentState state) {
         return switch (state) {

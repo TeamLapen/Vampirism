@@ -16,6 +16,7 @@ public class ClientConnectionEventHandler {
     @SubscribeEvent
     public void onClientStart(ClientPlayerNetworkEvent.LoggingOut event) {
         UserPreferences.clear();
-        SkillTreeGraphs.invalidate();
+        var player = event.getPlayer();
+        SkillTreeGraphs.invalidate(player == null ? null : player.registryAccess());
     }
 }

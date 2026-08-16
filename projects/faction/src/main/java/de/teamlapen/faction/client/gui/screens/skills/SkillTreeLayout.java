@@ -7,6 +7,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Calculates and stores the layout of a skill tree. This is individual for each tree.
+ */
 public class SkillTreeLayout {
 
     public static final int SKILL_SIZE = 26;
@@ -62,8 +65,10 @@ public class SkillTreeLayout {
     }
 
     /**
-     * Evenly spreads the children of the first segment that branches, so the branches leaving a straight stem are
-     * symmetric around it. The widest gap the relaxation produced is reused for every child.
+     * The children of the first segment that branches in a tree get spread evenly to make the tree look more balanced.
+     * The stem ends up being symmetric around it. The widest gap is reusing for each other gap, so other segments don't
+     * overlay each other, though it might end up in unnaturally huge gaps if one branch is straight while the other one
+     * splits into a few.
      */
     private static Map<SkillTreeGraph.Entry, Integer> spreadFirstBranches(SkillTreeGraph.Tree tree, Map<SkillTreeGraph.Entry, Placement> placements) {
         Map<SkillTreeGraph.Entry, Integer> pinned = new LinkedHashMap<>();
@@ -195,8 +200,6 @@ public class SkillTreeLayout {
         return sorted.getLast().value();
     }
 
-    private record Target(double value, double weight) {}
-
     private static int primaryParentX(SkillTreeGraph.Entry entry, Map<SkillTreeGraph.Entry, Placement> placements) {
         return entry.parents().stream().min(Comparator.comparingInt(parent -> parent.segment().value().priority())).map(placements::get).map(Placement::x).orElse(0);
     }
@@ -238,6 +241,8 @@ public class SkillTreeLayout {
     public int height() {
         return this.height;
     }
+
+    private record Target(double value, double weight) {}
 
     public record Placement(SkillTreeGraph.Entry entry, int x, int y, int width) {}
 }

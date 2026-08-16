@@ -25,12 +25,6 @@ public record SkillSegment(Holder<ISkillTree> tree, List<Holder<? extends ISkill
             Codec.INT.optionalFieldOf("priority", 0).forGetter(ISkillSegment::priority)
     ).apply(instance, SkillSegment::new)));
 
-    @Override
-    @SuppressWarnings({"unchecked", "deprecation", "rawtypes"})
-    public boolean containsSkill(Holder<? extends ISkill<?>> skill) {
-        return skills.stream().anyMatch(holder -> skill.is((Holder) holder));
-    }
-
     public static class Builder {
 
         private final ResourceKey<ISkillTree> tree;
