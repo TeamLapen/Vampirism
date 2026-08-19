@@ -183,12 +183,18 @@ public class SkillTreeGraph {
 
     public Optional<Entry> entryForSkill(Collection<Holder<ISkillTree>> trees, Holder<? extends ISkill<?>> skill) {
         for (Holder<ISkillTree> tree : trees) {
-            Optional<Tree> optTree = tree(tree);
-            if (optTree.isPresent()) {
-                List<Entry> entriesContaining = optTree.get().entries().stream().filter(e -> e.segment().value().skills().contains(skill)).toList();
-                if (!entriesContaining.isEmpty()) {
-                    return Optional.of(entriesContaining.getFirst());
-                }
+            entryForSkill(tree, skill);
+        }
+
+        return Optional.empty();
+    }
+
+    public Optional<Entry> entryForSkill(Holder<ISkillTree> tree, Holder<? extends ISkill<?>> skill) {
+        Optional<Tree> optTree = tree(tree);
+        if (optTree.isPresent()) {
+            List<Entry> entriesContaining = optTree.get().entries().stream().filter(e -> e.segment().value().skills().contains(skill)).toList();
+            if (!entriesContaining.isEmpty()) {
+                return Optional.of(entriesContaining.getFirst());
             }
         }
 

@@ -17,6 +17,8 @@ import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
+import de.teamlapen.faction.common.factions.skills.SkillTreeGraph;
+import de.teamlapen.faction.common.factions.skills.SkillTreeGraphs;
 import de.teamlapen.faction.common.factions.tasks.TaskManager;
 import de.teamlapen.faction.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.faction.common.network.packets.server.*;
@@ -27,6 +29,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -172,6 +175,33 @@ public class ServerPayloadHandler {
                     } else {
                         LOGGER.warn("Skill {} cannot be activated for {} ({})", skill, player, result);
                     }
+                }
+            });
+        });
+    }
+
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void handleForgetSkillPacket(ServerboundForgetSkillPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            if (!player.isCreative()) {
+                LOGGER.warn("Player {} cannot forget skills, they're not in creative mode", player);
+                return;
+            }
+
+            Optional<T> factionPlayerOpt = FactionPlayerHandler.get(player).getCurrentSkillPlayer();
+            factionPlayerOpt.ifPresent(factionPlayer -> {
+                Holder<ISkill<?>> skill = msg.skill();
+                if (skill != null) {
+                    ISkillHandler<T> skillHandler = factionPlayer.getSkillHandler();
+                    Optional<SkillTreeGraph.Entry> entryOpt = SkillTreeGraphs.get(player.level()).entryForSkill(msg.skillTree(), skill);
+                    boolean isLastActive = entryOpt.map(entry -> entry.children().stream().noneMatch(child -> child.skills().stream().anyMatch(skillHandler::isSkillEnabled))).orElse(false);
+                    if (!isLastActive) {
+                        LOGGER.warn("Skill {} is not the last active, so it cannot be forgotten", skill);
+                        return;
+                    }
+
+                    //noinspection unchecked
+                    skillHandler.disableSkill((Holder<ISkill<T>>) (Object) skill, msg.skillTree());
                 }
             });
         });
