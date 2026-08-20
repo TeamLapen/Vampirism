@@ -149,7 +149,7 @@ public class SkillsTabComponent {
         graphics.disableScissor();
     }
 
-    public void drawTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, @Nullable Holder<? extends ISkill<?>> heldSkill, float holdingProgress) {
+    public void drawTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, @Nullable Holder<? extends ISkill<?>> heldSkill, float holdingProgress, SkillsScreen.Holding holding) {
         var pose = graphics.pose();
         pose.pushMatrix();
         graphics.fill(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
@@ -163,7 +163,7 @@ public class SkillsTabComponent {
                     pose.pushMatrix();
                     pose.translate((float) (SCREEN_WIDTH / 2d + centerX), (float) (20 + centerY));
                     pose.scale((float) this.zoom, (float) this.zoom);
-                    segment.drawHover(graphics, scaledMouseX, scaledMouseY, this.fade, 0, 0, heldSkill, holdingProgress);
+                    segment.drawHover(graphics, scaledMouseX, scaledMouseY, this.fade, 0, 0, heldSkill, holdingProgress, holding);
                     pose.popMatrix();
                     break;
                 }

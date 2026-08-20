@@ -26,6 +26,8 @@ public class SkillSegmentComponent {
     
     private static final Identifier SKILL_BACKGROUND_SPRITE = FIdentifier.mod("skills_screen/node");
     private static final Identifier START_SKILL_BACKGROUND_SPRITE = FIdentifier.mod("skills_screen/start_node");
+    private static final Identifier SKILL_UNLOCK_BACKGROUND_SPRITE = FIdentifier.mod("skills_screen/node_unlock");
+    private static final Identifier START_SKILL_UNLOCK_BACKGROUND_SPRITE = FIdentifier.mod("skills_screen/start_node_unlock");
     private static final Identifier SKILL_RESET_BACKGROUND_SPRITE = FIdentifier.mod("skills_screen/node_reset");
     private static final Identifier START_SKILL_RESET_BACKGROUND_SPRITE = FIdentifier.mod("skills_screen/start_node_reset");
     private static final Identifier TITLE_RED_SPRITE = FIdentifier.mod("skills_screen/title_red");
@@ -131,7 +133,7 @@ public class SkillSegmentComponent {
         pose.popMatrix();
     }
 
-    public void drawHover(GuiGraphicsExtractor graphics, double mouseX, double mouseY, float fade, int scrollX, int scrollY, @Nullable Holder<? extends ISkill<?>> heldSkill, float holdingProgress) {
+    public void drawHover(GuiGraphicsExtractor graphics, double mouseX, double mouseY, float fade, int scrollX, int scrollY, @Nullable Holder<? extends ISkill<?>> heldSkill, float holdingProgress, SkillsScreen.Holding holding) {
         SkillSegmentState state = getState();
         if (state == SkillSegmentState.HIDDEN) return;
         List<Holder<? extends ISkill<?>>> skills = this.entry.skills();
@@ -215,7 +217,8 @@ public class SkillSegmentComponent {
 
             if (heldSkill != null && heldSkill.equals(hoveredSkill)) {
                 int fill = Mth.ceil(SkillTreeLayout.SKILL_SIZE * holdingProgress);
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, this.entry.isRoot() ? START_SKILL_RESET_BACKGROUND_SPRITE : SKILL_RESET_BACKGROUND_SPRITE, SkillTreeLayout.SKILL_SIZE, SkillTreeLayout.SKILL_SIZE, 0, 0, scrollX + x, scrollY + this.placement.y(), fill, SkillTreeLayout.SKILL_SIZE);
+                Identifier overlayTexture = holding == SkillsScreen.Holding.LEFT ? (this.entry.isRoot() ? START_SKILL_UNLOCK_BACKGROUND_SPRITE : SKILL_UNLOCK_BACKGROUND_SPRITE) : (this.entry.isRoot() ? START_SKILL_RESET_BACKGROUND_SPRITE : SKILL_RESET_BACKGROUND_SPRITE);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, overlayTexture, SkillTreeLayout.SKILL_SIZE, SkillTreeLayout.SKILL_SIZE, 0, 0, scrollX + x, scrollY + this.placement.y(), fill, SkillTreeLayout.SKILL_SIZE);
             }
         }
     }

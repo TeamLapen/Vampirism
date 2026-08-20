@@ -62,7 +62,8 @@ public class SkillsScreen extends Screen {
     private static final Component NO_TABS_LABEL = Component.translatable("gui.factionapi.skills.no_tab");
     private static final Component TITLE = Component.translatable("gui.factionapi.faction_menu.skill_screen");
 
-    private static final int RESET_HOLD_TICKS = 15;
+    private static final int UNLOCK_HOLD_TICKS = 8;
+    private static final int RESET_HOLD_TICKS = 16;
 
     private final ISkillPlayer<?> factionPlayer;
     private final List<SkillsTabComponent> tabs = new ArrayList<>();
@@ -74,11 +75,8 @@ public class SkillsScreen extends Screen {
     private int guiLeft;
     private int guiTop;
     private boolean scrolling;
-    @Nullable
-    private Vec3 mousePos;
-    private boolean clicked;
 
-    private boolean holdingRight;
+    private Holding holdingMouse = Holding.NONE;
     private @Nullable Holder<? extends ISkill<?>> heldSkill;
     private int holdingTicks;
     private double lastMouseX;
@@ -215,7 +213,7 @@ public class SkillsScreen extends Screen {
             var pose = graphics.pose();
             pose.pushMatrix();
             pose.translate((float) (guiLeft + 9), (float) (guiTop + 18));
-            selectedTab.drawTooltips(graphics, mouseX - guiLeft - 9, mouseY - guiTop - 18, heldSkill, (float) holdingTicks / RESET_HOLD_TICKS);
+            selectedTab.drawTooltips(graphics, mouseX - guiLeft - 9, mouseY - guiTop - 18, heldSkill, (float) holdingTicks / (holdingMouse == Holding.LEFT ? UNLOCK_HOLD_TICKS : RESET_HOLD_TICKS), holdingMouse);
             pose.popMatrix();
         }
 
@@ -233,19 +231,21 @@ public class SkillsScreen extends Screen {
         if (scrolling) {
             scrolling = false;
         }
+
         if (event.button() == 0) {
-            clicked = true;
-            mousePos = new Vec3(event.x(), event.y(), 0);
-            for (SkillsTabComponent tab : tabs) {
-                if (tab != selectedTab && tab.isMouseOverTabItem(guiLeft, guiTop, event.x(), event.y())) {
-                    selectedTab = tab;
-                    break;
-                }
-            }
+            holdingMouse = Holding.LEFT;
         }
         if (event.button() == 1) {
-            holdingRight = true;
+            holdingMouse = Holding.RIGHT;
         }
+
+        for (SkillsTabComponent tab : tabs) {
+            if (tab != selectedTab && tab.isMouseOverTabItem(guiLeft, guiTop, event.x(), event.y())) {
+                selectedTab = tab;
+                break;
+            }
+        }
+
         return super.mouseClicked(event, doubleClick);
     }
 
@@ -263,15 +263,6 @@ public class SkillsScreen extends Screen {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
-        if (event.button() == 0) {
-            if (clicked) {
-                if (!scrolling || (mousePos != null && mousePos.distanceTo(new Vec3(event.x(), event.y(), 0)) < 5)) {
-                    unlockSkill(event.x(), event.y());
-                }
-            }
-            clicked = false;
-        }
-
         cancelHolding();
 
         return super.mouseReleased(event);
@@ -290,13 +281,15 @@ public class SkillsScreen extends Screen {
     public void tick() {
         super.tick();
 
-        if (!holdingRight || selectedTab == null || (minecraft.player != null && minecraft.player.getEffect(FactionEffects.OBLIVION) != null) || !isMouseOverContent(lastMouseX, lastMouseY)) {
+        if (holdingMouse == Holding.NONE || selectedTab == null || minecraft.player == null || minecraft.player.getEffect(FactionEffects.OBLIVION) != null || !isMouseOverContent(lastMouseX, lastMouseY)) {
             cancelHolding();
             return;
         }
 
         var hovered = getSkillMouseOver(lastMouseX, lastMouseY);
-        if (hovered == null || !factionPlayer.getSkillHandler().isSkillEnabled(hovered) || !isSkillLastActive(hovered)) {
+        if (hovered == null
+                || holdingMouse == Holding.LEFT && factionPlayer.getSkillHandler().canSkillBeEnabled(hovered, selectedTab.getSkillTree()) != ISkillHandler.Result.OK
+                || holdingMouse == Holding.RIGHT && (!factionPlayer.getSkillHandler().isSkillEnabled(hovered) || !isSkillLastActive(hovered) || !minecraft.player.isCreative())) {
             cancelHolding();
             return;
         }
@@ -306,7 +299,11 @@ public class SkillsScreen extends Screen {
             holdingTicks = 0;
         }
 
-        if (holdingTicks >= RESET_HOLD_TICKS) {
+        if (holdingMouse == Holding.LEFT && holdingTicks >= UNLOCK_HOLD_TICKS) {
+            unlockSkill(hovered);
+            cancelHolding();
+        }
+        if (holdingMouse == Holding.RIGHT && holdingTicks >= RESET_HOLD_TICKS) {
             resetSkill(hovered);
             cancelHolding();
         }
@@ -317,7 +314,7 @@ public class SkillsScreen extends Screen {
     private void cancelHolding() {
         heldSkill = null;
         holdingTicks = 0;
-        holdingRight = false;
+        holdingMouse = Holding.NONE;
     }
 
     private boolean isSkillLastActive(Holder<? extends ISkill<?>> skill) {
@@ -331,16 +328,15 @@ public class SkillsScreen extends Screen {
         return false;
     }
 
-    private void unlockSkill(double mouseX, double mouseY) {
-        Holder<? extends ISkill<?>> selected = getSkillMouseOver(mouseX, mouseY);
-        if (selected != null) {
-            if (factionPlayer.getSkillHandler().canSkillBeEnabled(selected, selectedTab.getSkillTree()) == ISkillHandler.Result.OK) {
-                //noinspection unchecked
-                FactionsMod.proxy.sendToServer(new ServerboundUnlockSkillPacket((Holder<ISkill<?>>) selected, selectedTab.getSkillTree()));
-                playSoundEffect(FactionSounds.UNLOCK_SKILLS.get(), 0.7F);
-            } else {
-                playSoundEffect(SoundEvents.NOTE_BLOCK_BASS.value(), 0.5F);
-            }
+    private void unlockSkill(Holder<? extends ISkill<?>> skill) {
+        if (selectedTab == null) return;
+
+        if (factionPlayer.getSkillHandler().canSkillBeEnabled(skill, selectedTab.getSkillTree()) == ISkillHandler.Result.OK) {
+            //noinspection unchecked
+            FactionsMod.proxy.sendToServer(new ServerboundUnlockSkillPacket((Holder<ISkill<?>>) skill, selectedTab.getSkillTree()));
+            playSoundEffect(FactionSounds.UNLOCK_SKILLS.get(), 0.7F);
+        } else {
+            playSoundEffect(SoundEvents.NOTE_BLOCK_BASS.value(), 0.5F);
         }
     }
 
@@ -357,5 +353,11 @@ public class SkillsScreen extends Screen {
 
     private void playSoundEffect(SoundEvent event, float pitch) {
         minecraft.getSoundManager().play(SimpleSoundInstance.forUI(event, pitch));
+    }
+
+    public enum Holding {
+        LEFT,
+        RIGHT,
+        NONE
     }
 }
