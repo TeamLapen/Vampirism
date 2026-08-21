@@ -17,7 +17,7 @@ public record WingsSetting(IWingsEntity.Texture texture, List<Player> players) {
 
     public record Player(UUID id, String name) {
         public static final Codec<Player> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                UUIDUtil.STRING_CODEC.fieldOf("userId").forGetter(Player::id),
+                UUIDUtil.STRING_CODEC.fieldOf("id").forGetter(Player::id),
                 Codec.STRING.fieldOf("name").forGetter(Player::name)
         ).apply(inst, Player::new));
     }
