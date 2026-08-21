@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.util.StrictJsonParser;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Player;
@@ -24,15 +25,15 @@ import java.util.stream.Stream;
 public class WingsManager {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Codec<List<Wings>> WINGS_LIST_CODEC = Wings.CODEC.listOf();
+    private static final Codec<List<WingsSetting>> WINGS_LIST_CODEC = WingsSetting.CODEC.listOf();
 
-    private volatile Map<UUID, Wings> wingsMap = Map.of();
+    private volatile Map<UUID, PlayerWings> wingsMap = Map.of();
 
-    public Optional<Wings> getWings(UUID userId) {
+    public Optional<PlayerWings> getWings(UUID userId) {
         return Optional.ofNullable(wingsMap.get(userId));
     }
 
-    public Optional<Wings> getWings(Player player) {
+    public Optional<PlayerWings> getWings(Player player) {
         return getWings(player.nameAndId().id());
     }
 
@@ -40,10 +41,10 @@ public class WingsManager {
         if (!FMLEnvironment.isProduction()) {
             return Stream.of(IWingsEntity.Texture.values());
         }
-        return getWings(player).map(Wings::textures).map(Collection::stream).orElseGet(() -> Stream.of(IWingsEntity.Texture.DEFAULT));
+        return Stream.concat(Stream.of(IWingsEntity.Texture.DEFAULT), getWings(player).map(PlayerWings::textures).stream().flatMap(Collection::stream)).distinct();
     }
 
-    private CompletableFuture<Map<UUID, Wings>> loadFromFile() {
+    private CompletableFuture<Map<UUID, PlayerWings>> loadFromFile() {
         return CompletableFuture.supplyAsync(() -> {
             try (InputStream inputStream = VampirismMod.class.getResourceAsStream("/wings.json")) {
                 if (inputStream == null) {
@@ -52,12 +53,14 @@ public class WingsManager {
                 }
                 var string = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 var result = WINGS_LIST_CODEC.decode(JsonOps.INSTANCE, StrictJsonParser.parse(string));
-                List<Wings> wingsList = result.getPartialOrThrow().getFirst();
+                List<WingsSetting> wingsList = result.getPartialOrThrow().getFirst();
                 result.ifError(error -> {
                     LOGGER.warn("Failed to parse wings file: {}", error.message());
                     LOGGER.warn("{}", string);
                 });
-                return wingsList.stream().collect(Collectors.toUnmodifiableMap(Wings::userId, Function.identity()));
+                return wingsList.stream()
+                        .flatMap(wingsSetting -> wingsSetting.players().stream().map(player -> Pair.of(player.id(), wingsSetting.texture())))
+                        .collect(Collectors.groupingBy(Pair::first, Collectors.mapping(Pair::second, Collectors.collectingAndThen(Collectors.toSet(), PlayerWings::new))));
             } catch (Exception e) {
                 throw new RuntimeException("Failed to load wings file", e);
             }

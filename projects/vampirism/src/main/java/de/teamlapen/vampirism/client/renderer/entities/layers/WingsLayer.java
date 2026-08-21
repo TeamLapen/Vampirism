@@ -26,11 +26,6 @@ public class WingsLayer<T extends LivingEntity, S extends LivingEntityRenderStat
     private final WingsModel model;
     private final BiConsumer<S, PoseStack> attachmentPointModifier;
 
-    private static final Map<IWingsEntity.Texture, Identifier> TEXTURE_MAP = Util.makeEnumMap(IWingsEntity.Texture.class, x -> switch (x) {
-        case DEV -> VIdentifier.mod("textures/entity/wings/wings_dev.png");
-        default -> VIdentifier.mod("textures/entity/wings/wings.png");
-    });
-
     public WingsLayer(RenderLayerParent<S, Q> renderer, EntityModelSet modelSet, BiConsumer<S, PoseStack> attachmentPointModifier) {
         super(renderer);
         this.model = new WingsModel(modelSet.bakeLayer(ModEntitiesRender.WINGS));
@@ -51,7 +46,7 @@ public class WingsLayer<T extends LivingEntity, S extends LivingEntityRenderStat
         poseStack.pushPose();
         this.attachmentPointModifier.accept(renderState, poseStack);
         poseStack.scale(s, s, s);
-        nodeCollector.submitModel(this.model, state, poseStack, RenderTypes.entityCutout(TEXTURE_MAP.get(renderState.getRenderDataOrDefault(ModEntityRenderStates.DRACULA_WINGS_TEXTURE, IWingsEntity.Texture.DEFAULT))), packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0), -1, null, 0, null);
+        nodeCollector.submitModel(this.model, state, poseStack, RenderTypes.entityCutout(renderState.getRenderDataOrDefault(ModEntityRenderStates.DRACULA_WINGS_TEXTURE, IWingsEntity.Texture.DEFAULT).texture), packedLight, LivingEntityRenderer.getOverlayCoords(renderState, 0), -1, null, 0, null);
         poseStack.popPose();
     }
 }

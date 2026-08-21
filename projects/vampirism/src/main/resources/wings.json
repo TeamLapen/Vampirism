@@ -1,7 +1,26 @@
 [
   {
-    "name": "Dev",
-    "userId": "380df991-f603-344c-a090-369bad2a924a",
-    "textures": ["dev", "default"]
+    "texture": "dev",
+    "players": [
+      { "name": "maxanier", "id": "a5405ebf-9ff2-43bf-a260-075d2a2160cc" },
+      { "name": "cheaterpaul", "id": "aa08a4a9-50a9-443f-9e4f-0b26fe6ed771" },
+      { "name": "GridExpert", "id": "052ef844-4947-452c-867d-902c8fa1cd94" }
+    ]
+  },
+  {
+    "texture": "castle_contest",
+    "players": [
+      { "name": "Spade", "id": "a4041e31-7601-4b26-abf3-4f3e35bdc350" },
+      { "name": "Bitul", "id": "52173eb5-0af6-48ef-b796-5e4725c4471a" },
+      { "name": "Volqonah", "id": "945989ba-96c9-45db-b92d-b83007fbc924" },
+      { "name": "Mike", "id": "aa7ac607-8b88-48f2-aa32-c65c9f74debe" },
+      { "name": "CrowFe4ther", "id": "c94fafa6-1050-4f26-b66d-e8fe006ac483" },
+      { "name": "M4KSIMM1NIC26", "id": "f3288664-b188-46f1-90bc-9645378919a5" },
+      { "name": "soL_Ezran", "id": "b650a9a0-1480-4625-a5b7-63da2e8c1b98" },
+      { "name": "Pambulina", "id": "c4423125-6e14-4d8e-822f-9152e8b3519e" },
+      { "name": "2003wise", "id": "1786f4c9-145e-412f-9b8b-0d6297069efc" },
+      { "name": "Great_Bear_Baron", "id": "432d95c5-8d53-4b48-9169-025a40284061" },
+      { "name": "PNXYanGamers", "id": "d6d65ed8-1bda-461f-b204-e83009624d19" }
+    ]
   }
 ]
