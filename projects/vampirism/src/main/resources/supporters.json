@@ -216,8 +216,8 @@
     "playerId": "052ef844-4947-452c-867d-902c8fa1cd94",
     "player": "gridexpert",
     "faction": "vampirism:hunter",
-    "name": "Marcus Grid",
-    "status": "Dev",
+    "name": "Dual-Wielding Grid",
+    "status": "Contributor",
     "appearance": {
       "hat": "hat_1",
       "hasCloak": "true",
@@ -226,7 +226,7 @@
       "type": "1",
       "main_hand": "vampirism:hunter_axe_normal",
       "off_hand": "vampirism:hunter_axe_normal",
-      "head": "vampirism:hunter_hat_broad"
+      "head": "vampirism:hunter_hat_tall"
     }
   },
   {
