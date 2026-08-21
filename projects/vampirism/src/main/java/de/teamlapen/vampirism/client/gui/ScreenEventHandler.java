@@ -66,7 +66,7 @@ public class ScreenEventHandler {
         int mouseY = event.getMouseY();
         if (mouseX >= backgroundX && mouseX <= backgroundX + LEVELING_BACKGROUND_WIDTH && mouseY >= backgroundY && mouseY <= backgroundY + LEVELING_BACKGROUND_HEIGHT) {
             String rawText = I18n.get("gui.vampirism.faction_menu.passive_leveling.desc", (int) (progress * 100));
-            List<ClientTooltipComponent> lines = DescriptionUtil.normalizeTextWidth(rawText, 40).stream().map(line -> ClientTooltipComponent.create(FormattedCharSequence.forward(line, Style.EMPTY.withColor(ChatFormatting.GRAY)))).toList();
+            List<ClientTooltipComponent> lines = DescriptionUtil.normalizeTextWidth(rawText).stream().map(line -> ClientTooltipComponent.create(FormattedCharSequence.forward(line, Style.EMPTY.withColor(ChatFormatting.GRAY)))).toList();
             graphics.tooltip(screen.font, lines, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
         }
     }

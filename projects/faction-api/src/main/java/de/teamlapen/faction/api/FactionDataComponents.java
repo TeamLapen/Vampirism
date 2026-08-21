@@ -7,9 +7,7 @@ import de.teamlapen.faction.api.factions.skills.SkillTreeRequirement;
 import de.teamlapen.faction.api.factions.village.TotemPair;
 import de.teamlapen.faction.api.factions.village.VillageBanner;
 import de.teamlapen.faction.api.util.FIdentifier;
-import de.teamlapen.faction.api.world.entities.ITaskMasterEntity;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
-import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.api.world.items.components.IEffectiveRefinementSet;
 import de.teamlapen.faction.api.world.items.components.IFactionRestriction;
@@ -19,13 +17,10 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -116,6 +111,6 @@ public class FactionDataComponents {
         public static final Identifier SHIFT_DESCRIPTION = FIdentifier.mod("shift_description");
         public static final Identifier BLOCK_DESCRIPTION = FIdentifier.mod("block_description");
         public static final Identifier FACTION_FOOD = FIdentifier.mod("faction_food");
-        public static final Identifier OBLIVION_CHARGES = FIdentifier.mod("oblivion_charges");
+        public static final Identifier OBLIVION_PORTIONS = FIdentifier.mod("oblivion_portions");
     }
 }

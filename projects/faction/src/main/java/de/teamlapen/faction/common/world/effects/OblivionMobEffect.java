@@ -36,6 +36,9 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
             var nodeOPT = ((SkillHandler<?>) handler).anyLastSegment();
             if (nodeOPT.isPresent()) {
                 for (var element : nodeOPT.get().getValue().skills()) {
+                    if (!handler.isSkillEnabled(element)) {
+                        continue;
+                    }
                     //noinspection unchecked,rawtypes
                     handler.disableSkill((Holder) element, nodeOPT.get().getKey());
                     player.awardStat(FactionStats.SKILL_FORGOTTEN.get().get(element.value()));
@@ -55,7 +58,7 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
         return duration % getTickDuration(amplifier) == 0;
     }
 
-    private int getTickDuration(int amplifier) {
+    public static int getTickDuration(int amplifier) {
         return (1000 / (amplifier + 1));
     }
 }

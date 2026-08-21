@@ -191,7 +191,8 @@
   "tooltip.factionapi.faction_specifics": "Faction Specifics:",
   "tooltip.factionapi.required_skills": "Required Skills:",
   "tooltip.factionapi.required_level": "Required Level: %s",
-  "tooltip.factionapi.oblivion_potion.desc": "Resets skills on consume",
+  "tooltip.factionapi.oblivion_potion.portion": "%s/%s portions",
+  "tooltip.factionapi.oblivion_potion.desc": "One portion to forget a skill, or drink to spend them all",
 
   "command.factionapi.base.level.successful": "%1$s is now a %2$s level %3$s",
   "command.factionapi.base.get_level.successful": "%1$s is a %2$s level %3$s and lord level %4$s",

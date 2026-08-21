@@ -97,8 +97,10 @@ public class ServerPayloadHandler {
             //Try to keep this simple
             switch (msg.event()) {
                 case RESET_SKILLS -> {
+                    ItemStack potion = InventoryHelper.getFirst(player.getInventory(), FactionItems.OBLIVION_POTION.get());
+                    int portions = potion == null ? 0 : OblivionPotionItem.portionsOf(potion);
                     InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack((FactionItems.OBLIVION_POTION).get()));
-                    handler.getCurrentSkillPlayer().ifPresent(OblivionPotionItem::applyEffect);
+                    handler.getCurrentSkillPlayer().ifPresent(skillPlayer -> OblivionPotionItem.applyEffect(skillPlayer, portions));
                 }
                 case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(a -> player.connection.send(a));
                 case FACTION_MENU -> handler.openFactionMenu();
@@ -194,8 +196,8 @@ public class ServerPayloadHandler {
                 }
 
                 boolean free = player.isCreative();
-                if (!free && OblivionPotionItem.countCharges(player) < cascade.size()) {
-                    LOGGER.warn("Player {} has too few oblivion potion charges to forget {} skill(s)", player, cascade.size());
+                if (!free && OblivionPotionItem.countPortions(player) < cascade.size()) {
+                    LOGGER.warn("Player {} has too few oblivion potion portions to forget {} skill(s)", player, cascade.size());
                     return;
                 }
 
@@ -205,7 +207,7 @@ public class ServerPayloadHandler {
                 }
 
                 if (!free) {
-                    OblivionPotionItem.consumeCharges(player, cascade.size());
+                    OblivionPotionItem.consumePortions(player, cascade.size());
                 }
             });
         });

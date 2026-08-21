@@ -80,7 +80,7 @@ public class SkillsScreen extends Screen {
     private double lastMouseX;
     private double lastMouseY;
 
-    private int oblivionCharges = 0;
+    private int oblivionPortions = 0;
     private int forgetCost = 0;
 
     public SkillsScreen(ISkillPlayer<?> factionPlayer, @Nullable ILastScreenProvider backScreen) {
@@ -283,7 +283,7 @@ public class SkillsScreen extends Screen {
         super.tick();
 
         if (minecraft.player != null) {
-            oblivionCharges = OblivionPotionItem.countCharges(minecraft.player);
+            oblivionPortions = OblivionPotionItem.countPortions(minecraft.player);
         }
 
         if (holdingMouse == Holding.NONE || selectedTab == null || minecraft.player == null || minecraft.player.getEffect(FactionEffects.OBLIVION) != null || !isMouseOverContent(lastMouseX, lastMouseY)) {
@@ -324,7 +324,7 @@ public class SkillsScreen extends Screen {
 
     private boolean canForget(Holder<? extends ISkill<?>> skill) {
         forgetCost = forgetCascade(skill).size();
-        return forgetCost > 0 && (minecraft.player != null && minecraft.player.isCreative() || oblivionCharges >= forgetCost);
+        return forgetCost > 0 && (minecraft.player != null && minecraft.player.isCreative() || oblivionPortions >= forgetCost);
     }
 
     private List<Holder<? extends ISkill<?>>> forgetCascade(Holder<? extends ISkill<?>> skill) {
