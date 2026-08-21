@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui.screens;
 
+import com.google.common.collect.Streams;
 import de.teamlapen.faction.api.factions.IPlayableFaction;
 import de.teamlapen.faction.api.factions.lord.ILordPlayer;
 import de.teamlapen.faction.common.world.entities.appearance.AppearanceKey;
@@ -9,10 +10,10 @@ import de.teamlapen.gui.components.IRenderLast;
 import de.teamlapen.faction.client.gui.screens.AppearanceScreen;
 import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
+import de.teamlapen.vampirism.client.renderer.TextureLoader;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundAppearancePacket;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.client.Minecraft;
@@ -22,26 +23,36 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.List;
+import java.util.SequencedMap;
 import java.util.stream.IntStream;
 
 public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
 
     private static final Component NAME = Component.translatable("gui.vampirism.appearance");
 
-    private int fangType;
-    private int eyeType;
+    @UnknownNullability
+    private Identifier fangType;
+    @UnknownNullability
+    private Identifier eyeType;
     private boolean glowingEyes;
     private boolean titleGender;
     private IWingsEntity.Texture wingsTexture = IWingsEntity.Texture.DEFAULT;
     private List<IWingsEntity.Texture> availableWingsTextures = List.of();
+    private final SequencedMap<Identifier, Identifier> fangTextures;
+    private final SequencedMap<Identifier, Identifier> eyeTextures;
 
 
     public VampirePlayerAppearanceScreen(@Nullable ILastScreenProvider backScreen) {
         super(NAME, Minecraft.getInstance().player, backScreen);
+        this.fangTextures = TextureLoader.mapTexturesInById("textures/entity/fangs");
+        this.eyeTextures = TextureLoader.mapTexturesInById("textures/entity/eyes");
     }
 
     @Override
@@ -87,38 +98,36 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         LinearLayout vertical = LinearLayout.vertical();
         vertical.spacing(4);
 
-        vertical.addChild(DropdownWidget.builder(0,0)
+        vertical.addChild(DropdownWidget.<Identifier>builder(0,0)
                         .width(120)
                         .itemHeight(20)
                         .maxVisibleItems(5)
                         .initialSelection(this.eyeType)
                         .onSelect(this::eye)
                         .onHover(this::hoverEye)
-                .items(IntStream.range(0, REFERENCE.EYE_TYPE_COUNT)
-                        .mapToObj(type -> (Component) Component.translatable("gui.vampirism.appearance.eye").append(" " + (type + 1)))
+                .items(Streams.mapWithIndex(this.eyeTextures.sequencedEntrySet().stream(), (from, index) -> new DropdownWidget.Value<>(from.getKey(), Component.translatable("gui.vampirism.appearance.eye").append(" " + (index + 1))))
                         .toList())
                         .build());
 
-        vertical.addChild(DropdownWidget.builder(0,0)
+        vertical.addChild(DropdownWidget.<Identifier>builder(0,0)
                         .width(120)
                         .itemHeight(20)
                         .maxVisibleItems(5)
                         .initialSelection(this.fangType)
                         .onSelect(this::fang)
                         .onHover(this::hoverFang)
-                .items(IntStream.range(0, REFERENCE.FANG_TYPE_COUNT)
-                        .mapToObj(type -> (Component) Component.translatable("gui.vampirism.appearance.fang").append(" " + (type + 1)))
+                .items(Streams.mapWithIndex(this.fangTextures.sequencedEntrySet().stream(), (from, index) -> new DropdownWidget.Value<>(from.getKey(), Component.translatable("gui.vampirism.appearance.fang").append(" " + (index + 1))))
                         .toList())
                         .build());
 
         if (this.availableWingsTextures.size() > 1) {
-            vertical.addChild(DropdownWidget.builder(0,0)
+            vertical.addChild(DropdownWidget.simple(0,0)
                     .width(120)
                     .itemHeight(20)
                     .maxVisibleItems(5)
                     .initialSelection(this.wingsTexture.ordinal())
                     .onSelect(this::wingsTexture)
-                    .items(availableWingsTextures.stream().map(x -> x.name).toList())
+                    .simpleItems(availableWingsTextures.stream().map(x -> x.name).toList())
                     .build());
         }
 
@@ -136,7 +145,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         return vertical;
     }
 
-    private void eye(int eyeType) {
+    private void eye(Identifier eyeType) {
         VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
         vampire.setEyeType(this.eyeType = eyeType);
     }
@@ -146,12 +155,12 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         vampire.getCustomization().setWingsTexture(this.wingsTexture = availableWingsTextures.get(wingsTexture));
     }
 
-    private void fang(int fangType) {
+    private void fang(Identifier fangType) {
         VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
         vampire.setFangType(this.fangType = fangType);
     }
 
-    private void hoverEye(int eyeType, boolean hovered) {
+    private void hoverEye(Identifier eyeType, boolean hovered) {
         VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
         if (hovered) {
             vampire.setEyeType(eyeType);
@@ -162,7 +171,7 @@ public class VampirePlayerAppearanceScreen extends AppearanceScreen<Player> {
         }
     }
 
-    private void hoverFang(int fangType, boolean hovered) {
+    private void hoverFang(Identifier fangType, boolean hovered) {
         VampirePlayer vampire = VampirePlayer.get(this.minecraft.player);
         if (hovered) {
             vampire.setFangType(fangType);

@@ -9,8 +9,10 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated
 public class GlowingEyeCommand extends BasicCommand {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register() {

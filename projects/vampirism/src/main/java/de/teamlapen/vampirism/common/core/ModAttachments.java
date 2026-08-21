@@ -7,6 +7,7 @@ import de.teamlapen.sync.PropertySync;
 import de.teamlapen.sync.api.IAttachmentSync;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.VampirismAttachments;
+import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import de.teamlapen.vampirism.common.world.attachments.LevelDamage;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
 import de.teamlapen.vampirism.common.world.attachments.LevelGarlic;
@@ -58,6 +59,7 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Identifier>> MARKER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.MARKER.getPath(), () -> AttachmentType.builder(() -> Identifier.withDefaultNamespace("none")).serialize(Identifier.CODEC.fieldOf("key")).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<DraculaPlayer>> DRACULA_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.DRACULA_PLAYER.getPath(), () -> playerAttachment(DraculaPlayer::new).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<MarshallPlayer>> MARSHALL_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.MARSHALL_PLAYER.getPath(), () -> playerAttachment(MarshallPlayer::new).copyOnDeath().build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Supporter>> SUPPORTER = ATTACHMENT_TYPES.register("supporter", () -> AttachmentType.<Supporter>builder(Supporter::defaultSupplier).sync(Supporter.STREAM_CODEC).serialize(Supporter.CODEC).build());
 
     //Blocks Attachments
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<NearestVillage>> NEAREST_VILLAGE = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.NEAREST_VILLAGE.getPath(), () -> AttachmentType.builder(new NearestVillage.Factory()).build());

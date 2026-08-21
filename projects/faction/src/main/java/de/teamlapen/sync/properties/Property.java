@@ -188,6 +188,14 @@ public abstract class Property implements IProperty {
             }).register();
         }
 
+        public void simple(Identifier defaultValue, Supplier<Identifier> valueProvider, Consumer<Identifier> valueSetter) {
+            simple(Identifier.CODEC).defaultValue(defaultValue).provider(valueProvider).commonLoader(x -> {
+                var old = valueProvider.get();
+                valueSetter.accept(x);
+                return Objects.equals(old, x);
+            }).register();
+        }
+
         public void register(Function<Identifier,Property> property) {
             this.propertySync.registerProperty(property.apply(this.key));
         }

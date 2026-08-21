@@ -63,7 +63,7 @@ public class MinionScreen extends AbstractContainerScreen<MinionContainer> {
         var availableTasks = List.of(menu.getAvailableTasks());
         var taskNames = availableTasks.stream().map(x -> (Component) x.getName()).toList();
 
-        this.taskList = this.addRenderableWidget(DropdownWidget.builder(this.leftPos + 120, this.topPos + 20).width(88).itemHeight(18).maxVisibleItems(4).onSelect(this::setActiveTask).items(taskNames).build().setSelectedIndex(availableTasks.indexOf(menu.getSelectedTask())));
+        this.taskList = this.addRenderableWidget(DropdownWidget.simple(this.leftPos + 120, this.topPos + 20).width(88).itemHeight(18).maxVisibleItems(4).onSelect(this::setActiveTask).simpleItems(taskNames).build().setSelectedIndex(availableTasks.indexOf(menu.getSelectedTask())));
     }
 
     @Override
