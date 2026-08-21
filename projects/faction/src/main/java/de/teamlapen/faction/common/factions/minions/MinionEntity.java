@@ -18,7 +18,6 @@ import de.teamlapen.faction.common.world.entities.goals.*;
 import de.teamlapen.faction.common.world.inventory.MinionContainer;
 import de.teamlapen.sync.PropertySync;
 import de.teamlapen.sync.api.ISyncable;
-import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
@@ -28,7 +27,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
@@ -44,7 +42,6 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.PlayerModelType;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
@@ -59,7 +56,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -69,14 +65,10 @@ import org.jspecify.annotations.NonNull;
 import java.util.*;
 import java.util.function.Predicate;
 
-public abstract class MinionEntity<T extends MinionData> extends PathfinderMob implements IPlayerOverlay, ValueIOSerializable, ForceLookEntityGoal.TaskOwner, IMinionEntity, IEntityWithComplexSpawn, EntitySyncHolder.ISyncHolder<T> {
-    /**
-     * Store the uuid of the lord. Should not be null when joining the world
-     */
-    private static final String NBT_KEY = "minion_data";
+public abstract class MinionEntity<T extends MinionData> extends PathfinderMob implements ValueIOSerializable, ForceLookEntityGoal.TaskOwner, IMinionEntity, IEntityWithComplexSpawn, EntitySyncHolder.ISyncHolder<T> {
+
     protected static final EntityDataAccessor<Optional<UUID>> LORD_ID = SynchedEntityData.defineId(MinionEntity.class, FactionEntities.OPTIONAL_UUID.get());
     private final static Logger LOGGER = LogManager.getLogger();
-    private final static NonNullList<ItemStack> EMPTY_LIST = NonNullList.create();
     private final static int CONVERT_DURATION = 20;
     /**
      * Predicate that checks that the target is not affiliated with the lord
@@ -96,13 +88,6 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
      * Only valid and nonnull if playerMinionController !=null
      */
     protected @Nullable T minionData;
-
-    @Nullable
-    private Pair<Identifier, PlayerModelType> skinDetails;
-
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @Nullable
-    private Optional<PlayerSkinRenderCache.RenderInfo> skinProfile;
     /**
      * Only valid if playerMinionController !=null
      */
@@ -248,7 +233,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     @Override
-    protected boolean considersEntityAsAlly(Entity pEntity) {
+    protected boolean considersEntityAsAlly(@NonNull Entity pEntity) {
         return getLordOpt().map(s -> s.asEntity() == pEntity).orElseGet(() -> super.considersEntityAsAlly(pEntity));
     }
 
@@ -311,7 +296,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     @Override
-    protected @NotNull EntityDimensions getDefaultDimensions(Pose pose) {
+    protected @NotNull EntityDimensions getDefaultDimensions(@NonNull Pose pose) {
         return super.getDefaultDimensions(pose).scale(getScale());
     }
 
@@ -483,7 +468,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NonNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(LORD_ID, Optional.empty());
     }
@@ -524,7 +509,7 @@ public abstract class MinionEntity<T extends MinionData> extends PathfinderMob i
     protected InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (isLord(player)) {
             if (player instanceof ServerPlayer) {
-                player.openMenu(new SimpleMenuProvider((id, playerInventory, playerIn) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
+                player.openMenu(new SimpleMenuProvider((id, playerInventory, _) -> MinionContainer.create(id, playerInventory, this, getLord().orElseThrow()).orElse(null), Component.translatable("gui.factionapi.minion.name").append(this.getMinionData().map(MinionData::getFormattedName).orElse(Component.literal("Minion")))), buf -> buf.writeVarInt(this.getId()));
             }
             return InteractionResult.SUCCESS;
         }

@@ -127,15 +127,10 @@ public class ModEntities {
     @SuppressWarnings("unused")
     public static final DeferredHolder<MapCodec<? extends ICondition>, MapCodec<? extends ICondition>> ENTITY_EXISTS = CONDITIONS.register("entity_exists", () -> EntityExistsCondition.CODEC);
 
-    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Item>> ITEM_DATA = DATA_SERIALIZER.register("item", () -> (EntityDataSerializer.ForValueType<Item>) (() -> ByteBufCodecs.registry(Registries.ITEM)));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Holder<Item>>> ITEM_HOLDER = DATA_SERIALIZER.register("item_holder", () -> (EntityDataSerializer.ForValueType<Holder<Item>>) (() -> ByteBufCodecs.holderRegistry(Registries.ITEM)));
-    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Optional<UUID>>> OPTIONAL_UUID = DATA_SERIALIZER.register("optional_uuid", () -> (EntityDataSerializer.ForValueType<Optional<UUID>>) (() -> ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC)));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<DraculaState>> DRACULA_STATE = DATA_SERIALIZER.register("dracula_state", () -> (EntityDataSerializer.ForValueType<DraculaState>) (() -> DraculaState.STREAM_CODEC));
-    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<AnimationState>> ANIMATION_STATE = DATA_SERIALIZER.register("animation_state", () -> (EntityDataSerializer.ForValueType<AnimationState>) (() -> ModStreamCodecs.ANIMATION_STATE));
-    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<IDraculaAnimations.Animation>> DRACULA_ANIMATION = DATA_SERIALIZER.register("dracula_animation", () -> (EntityDataSerializer.ForValueType<IDraculaAnimations.Animation>) (() -> IDraculaAnimations.Animation.STREAM_CODEC));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<List<Integer>>> INT_LIST = DATA_SERIALIZER.register("int_list", () -> (EntityDataSerializer.ForValueType<List<Integer>>) (() -> ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list())));
     public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<IWingsEntity.WingsState>> WINGS_STATE = DATA_SERIALIZER.register("wings_state", () -> (EntityDataSerializer.ForValueType<IWingsEntity.WingsState>) (() -> NeoForgeStreamCodecs.enumCodec(IWingsEntity.WingsState.class)));
-    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<Identifier>> IDENTIFIER = DATA_SERIALIZER.register("identifier", () -> (EntityDataSerializer.ForValueType<Identifier>) (() -> Identifier.STREAM_CODEC));
 
     static void register(IEventBus bus) {
         ENTITY_TYPES.register(bus);
