@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.world.entity.vampire;
 
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
-import de.teamlapen.faction.common.world.entities.IPlayerOverlay;
 import de.teamlapen.faction.common.world.entities.goals.LookAtClosestVisibleGoal;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;

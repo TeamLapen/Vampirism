@@ -14,7 +14,6 @@ import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.world.attachments.LevelDamage;
 import de.teamlapen.faction.common.world.entities.EntitySyncHolder;
 import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;
-import de.teamlapen.faction.common.world.entities.IPlayerOverlay;
 import de.teamlapen.faction.common.world.entities.goals.*;
 import de.teamlapen.faction.common.world.inventory.MinionContainer;
 import de.teamlapen.sync.PropertySync;

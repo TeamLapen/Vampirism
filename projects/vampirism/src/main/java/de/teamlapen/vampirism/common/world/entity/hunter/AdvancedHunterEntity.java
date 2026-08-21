@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.world.entity.hunter;
 
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.faction.api.world.ICaptureAttributes;
-import de.teamlapen.faction.common.world.entities.IPlayerOverlay;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.world.entity.VampireBookLootProvider;
