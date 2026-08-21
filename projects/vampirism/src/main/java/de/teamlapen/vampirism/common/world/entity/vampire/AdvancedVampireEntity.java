@@ -53,7 +53,7 @@ import java.util.Optional;
 /**
  * Advanced vampire. Is strong. Represents supporters
  */
-public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, IPlayerOverlay, VampireBookLootProvider, ISupporterAppearanceConsumer {
+public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvancedVampire, VampireBookLootProvider, ISupporterAppearanceConsumer {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedVampireEntity.class, EntityDataSerializers.INT);
 
     public static AttributeSupplier.Builder getAttributeBuilder() {
@@ -71,9 +71,6 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
      */
     private int followingEntities = 0;
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    @UnknownNullability
-    private Optional<PlayerSkinRenderCache.RenderInfo> skinProfile;
     //Village stuff ----------------------------------------------------------------------------------------------------
     @Nullable
     private ICaptureAttributes villageAttributes;
@@ -228,9 +225,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pReason, @Nullable SpawnGroupData pSpawnData) {
-        Supporter supporter = VampirismMod.services().supporterManager().getRandomVampire(random);
-        setData(ModAttachments.SUPPORTER, supporter);
-        applySupporter(this, supporter);
+        applySupporter(this, VampirismMod.services().supporterManager().getRandomVampire(random));
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
     }
 

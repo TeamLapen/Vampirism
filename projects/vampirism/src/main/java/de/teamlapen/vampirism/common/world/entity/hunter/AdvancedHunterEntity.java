@@ -57,7 +57,7 @@ import java.util.Optional;
 /**
  * Advanced hunter. Is strong. Represents supporters
  */
-public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, IPlayerOverlay, VampireBookLootProvider, IVampirismCrossbowUser, ISupporterAppearanceConsumer {
+public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedHunter, VampireBookLootProvider, IVampirismCrossbowUser, ISupporterAppearanceConsumer {
     private static final EntityDataAccessor<Integer> LEVEL = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_CHARGING_CROSSBOW = SynchedEntityData.defineId(AdvancedHunterEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Holder<Item>> SPECIAL_ARROW = SynchedEntityData.defineId(AdvancedHunterEntity.class, ModEntities.ITEM_HOLDER.get());
@@ -219,9 +219,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
     @Nullable
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, EntitySpawnReason pReason, @Nullable SpawnGroupData pSpawnData) {
-        Supporter randomHunter = VampirismMod.services().supporterManager().getRandomHunter(random);
-        setData(ModAttachments.SUPPORTER, randomHunter);
-        applySupporter(this, randomHunter);
+        applySupporter(this, VampirismMod.services().supporterManager().getRandomHunter(random));
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
     }
 
