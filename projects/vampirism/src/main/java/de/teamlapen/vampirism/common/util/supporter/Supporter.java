@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.Factions;
+import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public record Supporter(Identifier faction, Component name, String player, Map<String, String> appearance, Optional<String> bookId) {
+public record Supporter(Identifier faction, Component name, String player, Map<String, String> appearance, Optional<Holder<IVampireBook>> bookId) {
 
     public static final Supporter FALLBACK = new Supporter(Factions.Keys.NEUTRAL, Component.empty(), "", Map.of(), Optional.empty());
 
@@ -25,7 +27,7 @@ public record Supporter(Identifier faction, Component name, String player, Map<S
             ComponentSerialization.CODEC.fieldOf("name").forGetter(Supporter::name),
             Codec.STRING.fieldOf("player").forGetter(Supporter::player),
             Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("appearance").forGetter(Supporter::appearance),
-            Codec.STRING.optionalFieldOf("bookId").forGetter(Supporter::bookId)
+            IVampireBook.HOLDER_CODEC.optionalFieldOf("bookId").orElse(Optional.empty()).forGetter(Supporter::bookId)
     ).apply(inst, Supporter::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Supporter> STREAM_CODEC = StreamCodec.composite(
@@ -33,7 +35,7 @@ public record Supporter(Identifier faction, Component name, String player, Map<S
             ComponentSerialization.STREAM_CODEC, Supporter::name,
             ByteBufCodecs.STRING_UTF8, Supporter::player,
             ByteBufCodecs.map(HashMap::new, ByteBufCodecs.STRING_UTF8, ByteBufCodecs.STRING_UTF8), Supporter::appearance,
-            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), Supporter::bookId,
+            ByteBufCodecs.optional(IVampireBook.HOLDER_STREAM_CODEC), Supporter::bookId,
             Supporter::new
     );
 
