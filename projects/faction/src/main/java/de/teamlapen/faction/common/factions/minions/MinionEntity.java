@@ -11,7 +11,6 @@ import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.core.FactionEntities;
 import de.teamlapen.faction.common.core.FactionMinionTasks;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.faction.common.util.PlayerSkinHelper;
 import de.teamlapen.faction.common.world.attachments.LevelDamage;
 import de.teamlapen.faction.common.world.entities.EntitySyncHolder;
 import de.teamlapen.faction.common.world.entities.ForceLookEntityGoal;

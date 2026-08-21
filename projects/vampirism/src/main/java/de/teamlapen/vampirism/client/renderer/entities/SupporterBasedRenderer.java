@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.client.renderer.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.REFERENCE;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.client.models.entities.ClothedModel;
 import de.teamlapen.vampirism.client.renderer.entities.state.AvatarLikeRenderState;
 import de.teamlapen.vampirism.common.core.ModAttachments;
@@ -29,14 +31,14 @@ public abstract class SupporterBasedRenderer<TEntity extends Mob, TRenderState e
     private final Map<String, PlayerSkin> textures;
     private final PlayerSkin fallback;
 
-    public SupporterBasedRenderer(EntityRendererProvider.Context context, String fallback) {
+    public SupporterBasedRenderer(EntityRendererProvider.Context context, PlayerSkin fallback) {
         super(context,new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER), false),new ClothedModel<>(context.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
         this.addLayer(new ArmorLayer<HumanoidModel<TRenderState>>(this,
                 ArmorModelSet.bake(ModelLayers.PLAYER_SLIM_ARMOR, context.getModelSet(), x -> new ClothedModel<>(x, true)),
                 ArmorModelSet.bake(ModelLayers.PLAYER_ARMOR, context.getModelSet(), x -> new ClothedModel<>(x, false)),
                 context.getEquipmentRenderer()));
-        this.textures = getSkins();
-        this.fallback = Objects.requireNonNull(this.textures.get(fallback), "Fallback texture is not present");
+        this.textures = VampirismModClient.services().playerSkinHelper().getSkins();
+        this.fallback = fallback;
     }
 
     @Override
@@ -55,19 +57,6 @@ public abstract class SupporterBasedRenderer<TEntity extends Mob, TRenderState e
     @MustBeInvokedByOverriders
     protected void extractSupporter(TEntity entity, TRenderState state, Supporter supporter) {
         state.skin = this.textures.getOrDefault(supporter.player(), this.fallback);
-    }
-
-    protected Map<String, PlayerSkin> getSkins() {
-        return Minecraft.getInstance().getResourceManager().listResources("textures/entity/advanced", s -> s.getPath().endsWith(".png")).keySet().stream()
-                .filter(x -> x.getNamespace().equals(REFERENCE.MODID))
-                .map(texturePath -> {
-                    String[] pathSegments = texturePath.getPath().split("/");
-                    String fileName = pathSegments[pathSegments.length - 1];
-                    PlayerModelType b = fileName.endsWith("_slim.png") ? PlayerModelType.SLIM : PlayerModelType.WIDE;
-                    String id = fileName.substring(0, fileName.length() - (fileName.endsWith("_slim.png") ? 9 : 4));
-                    return new PlayerSkin(new ClientAsset.ResourceTexture(VIdentifier.mc(id), texturePath), null, null, b, false);
-                })
-                .collect(Collectors.toMap(x -> x.body().id().getPath(), x -> x));
     }
 
 }
