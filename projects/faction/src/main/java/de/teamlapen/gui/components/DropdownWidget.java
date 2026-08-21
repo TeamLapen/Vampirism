@@ -1,5 +1,6 @@
 package de.teamlapen.gui.components;
 
+import com.google.common.collect.Streams;
 import de.teamlapen.faction.api.util.FIdentifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -10,15 +11,15 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullUnmarked;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class DropdownWidget extends AbstractWidget implements IRenderLast {
+public class DropdownWidget<TData> extends AbstractWidget implements IRenderLast {
 
     private static final WidgetSprites BUTTON_SPRITES = new WidgetSprites(
             FIdentifier.mc("widget/button"),
@@ -26,11 +27,13 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
             FIdentifier.mc("widget/button_highlighted")
     );
 
-    private final List<DropdownEntry> entries = new ArrayList<>();
+    private final List<DropdownEntry<TData>> entries = new ArrayList<>();
     private final int itemHeight;
     private final int maxVisibleItems;
-    private final Consumer<Integer> onSelect;
-    private final BiConsumer<Integer, Boolean> onHover;
+    @Nullable
+    private final Consumer<TData> onSelect;
+    @Nullable
+    private final BiConsumer<TData, Boolean> onHover;
 
     private boolean expanded = false;
     private int selectedIndex = 0;
@@ -38,17 +41,24 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
     private int scrollOffset = 0;
 
     public DropdownWidget(int x, int y, int width, int itemHeight, int maxVisibleItems,
-                          List<Component> items, int initialSelection,
-                          Consumer<Integer> onSelect, BiConsumer<Integer, Boolean> onHover) {
-        super(x, y, width, itemHeight, items.isEmpty() ? Component.empty() : items.get(initialSelection));
+                          List<Value<TData>> items, @Nullable TData initialSelection,
+                          @Nullable Consumer<TData> onSelect, @Nullable BiConsumer<TData, Boolean> onHover) {
+        int initialIndex = 0;
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).data().equals(initialSelection)) {
+                initialIndex = i;
+                break;
+            }
+        }
+        super(x, y, width, itemHeight, items.isEmpty() ? Component.empty() : items.get(initialIndex).text());
         this.itemHeight = itemHeight;
         this.maxVisibleItems = maxVisibleItems;
         this.onSelect = onSelect;
         this.onHover = onHover;
-        this.selectedIndex = initialSelection;
+        this.selectedIndex = initialIndex;
 
         for (int i = 0; i < items.size(); i++) {
-            this.entries.add(new DropdownEntry(items.get(i), i));
+            this.entries.add(new DropdownEntry<>(items.get(i), i));
         }
 
         updateMessage();
@@ -120,7 +130,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
             int entryIndex = i + scrollOffset;
             if (entryIndex >= entries.size()) break;
 
-            DropdownEntry entry = entries.get(entryIndex);
+            DropdownEntry<TData> entry = entries.get(entryIndex);
             int entryY = listY + i * itemHeight;
 
             boolean isHovered = mouseX >= this.getX() && mouseX < this.getX() + this.getWidth()
@@ -136,17 +146,17 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
 
             // Render entry text
             int textColor = isHovered ? 0xFFFFFFFF : 0xFFE0E0E0;
-            graphics.centeredText(Minecraft.getInstance().font, entry.text, this.getX() + this.getWidth() / 2, entryY + (itemHeight - 8) / 2, textColor);
+            graphics.centeredText(Minecraft.getInstance().font, entry.value.text(), this.getX() + this.getWidth() / 2, entryY + (itemHeight - 8) / 2, textColor);
         }
 
         // Handle hover callbacks
         if (newHoveredIndex != hoveredIndex) {
             if (hoveredIndex >= 0 && onHover != null) {
-                onHover.accept(hoveredIndex, false);
+                onHover.accept(this.entries.get(hoveredIndex).value().data(), false);
             }
             hoveredIndex = newHoveredIndex;
             if (hoveredIndex >= 0 && onHover != null) {
-                onHover.accept(hoveredIndex, true);
+                onHover.accept(this.entries.get(hoveredIndex).value().data(), true);
             }
         }
 
@@ -241,21 +251,21 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
             selectedIndex = index;
             updateMessage();
             if (onSelect != null) {
-                onSelect.accept(index);
+                onSelect.accept(this.entries.get(index).value().data());
             }
         }
     }
 
     private void clearHover() {
         if (hoveredIndex >= 0 && onHover != null) {
-            onHover.accept(hoveredIndex, false);
+            onHover.accept(this.entries.get(hoveredIndex).value().data(), false);
         }
         hoveredIndex = -1;
     }
 
     private void updateMessage() {
         if (selectedIndex >= 0 && selectedIndex < entries.size()) {
-            this.setMessage(entries.get(selectedIndex).text);
+            this.setMessage(entries.get(selectedIndex).value().text());
         }
     }
 
@@ -274,7 +284,7 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
         return selectedIndex;
     }
 
-    public DropdownWidget setSelectedIndex(int index) {
+    public DropdownWidget<TData> setSelectedIndex(int index) {
         this.selectedIndex = index;
         updateMessage();
 
@@ -297,68 +307,126 @@ public class DropdownWidget extends AbstractWidget implements IRenderLast {
     /**
      * Builder for creating DropdownWidget instances.
      */
-    public static class Builder {
+    public static class Builder<TData> {
         private final int x;
         private final int y;
         private int width = 100;
         private int itemHeight = 20;
         private int maxVisibleItems = 5;
-        private List<Component> items = new ArrayList<>();
-        private int initialSelection = 0;
+        protected List<Value<TData>> items = new ArrayList<>();
         @Nullable
-        private Consumer<Integer> onSelect;
+        private TData initialSelection;
         @Nullable
-        private BiConsumer<Integer, Boolean> onHover;
+        private Consumer<TData> onSelect;
+        @Nullable
+        private BiConsumer<TData, Boolean> onHover;
 
         public Builder(int x, int y) {
             this.x = x;
             this.y = y;
         }
 
-        public Builder width(int width) {
+        public Builder<TData> width(int width) {
             this.width = width;
             return this;
         }
 
-        public Builder itemHeight(int itemHeight) {
+        public Builder<TData> itemHeight(int itemHeight) {
             this.itemHeight = itemHeight;
             return this;
         }
 
-        public Builder maxVisibleItems(int maxVisibleItems) {
+        public Builder<TData> maxVisibleItems(int maxVisibleItems) {
             this.maxVisibleItems = maxVisibleItems;
             return this;
         }
 
-        public Builder items(List<Component> items) {
+        public Builder<TData> items(List<Value<TData>> items) {
             this.items = items;
             return this;
         }
 
-        public Builder initialSelection(int index) {
+        public Builder<TData> initialSelection(TData index) {
             this.initialSelection = index;
             return this;
         }
 
-        public Builder onSelect(Consumer<Integer> onSelect) {
+        public Builder<TData> onSelect(Consumer<TData> onSelect) {
             this.onSelect = onSelect;
             return this;
         }
 
-        public Builder onHover(BiConsumer<Integer, Boolean> onHover) {
+        public Builder<TData> onHover(BiConsumer<TData, Boolean> onHover) {
             this.onHover = onHover;
             return this;
         }
 
-        public DropdownWidget build() {
-            return new DropdownWidget(x, y, width, itemHeight, maxVisibleItems, items, initialSelection, onSelect, onHover);
+        public DropdownWidget<TData> build() {
+            return new DropdownWidget<>(x, y, width, itemHeight, maxVisibleItems, items, initialSelection, onSelect, onHover);
         }
     }
 
-    public static Builder builder(int x, int y) {
-        return new Builder(x, y);
+    public static class SimpleBuilder extends Builder<Integer> {
+
+        private int initialIndex;
+
+        private SimpleBuilder(int x, int y) {
+            super(x, y);
+        }
+
+        public SimpleBuilder simpleItems(List<Component> items) {
+            super.items(Streams.mapWithIndex(items.stream(), (from, index) -> new Value<>((int) index, from)).toList());
+            return this;
+        }
+
+        public SimpleBuilder initialSelection(int index) {
+            this.initialIndex = index;
+            return this;
+        }
+
+        public SimpleBuilder width(int width) {
+            return (SimpleBuilder) super.width(width);
+        }
+
+        public SimpleBuilder itemHeight(int itemHeight) {
+            return (SimpleBuilder) super.itemHeight(itemHeight);
+        }
+
+        public SimpleBuilder maxVisibleItems(int maxVisibleItems) {
+            return (SimpleBuilder) super.maxVisibleItems(maxVisibleItems);
+        }
+
+        public SimpleBuilder initialSelection(Integer index) {
+            return (SimpleBuilder) super.initialSelection(index);
+        }
+
+        public SimpleBuilder onSelect(Consumer<Integer> onSelect) {
+            return (SimpleBuilder) super.onSelect(onSelect);
+        }
+
+        @Override
+        public SimpleBuilder onHover(BiConsumer<Integer, Boolean> onHover) {
+            return (SimpleBuilder) super.onHover(onHover);
+        }
+
+        @Override
+        public DropdownWidget<Integer> build() {
+            Value<Integer> integerValue = this.items.get(this.initialIndex);
+            initialSelection(integerValue.data);
+            return super.build();
+        }
     }
 
-    private record DropdownEntry(Component text, int index) {
+    public static <TData> Builder<TData> builder(int x, int y) {
+        return new Builder<>(x, y);
     }
+
+    public static SimpleBuilder simple(int x, int y) {
+        return new SimpleBuilder(x, y);
+    }
+
+    private record DropdownEntry<TData>(Value<TData> value, int index) {
+    }
+
+    public record Value<TData>(TData data, Component text) {}
 }

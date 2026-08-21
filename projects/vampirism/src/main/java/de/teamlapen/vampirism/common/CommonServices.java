@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common;
 
 import de.teamlapen.faction.Services;
 import de.teamlapen.faction.api.event.AddFactionTagEvent;
-import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.IVampirismServices;
 import de.teamlapen.vampirism.api.world.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.common.core.ModCreativeTabs;
@@ -27,7 +26,6 @@ import de.teamlapen.vampirism.common.world.items.recipes.ExtendedBrewingRecipeRe
 import de.teamlapen.vampirism.common.world.items.recipes.RecipesSync;
 import de.teamlapen.vampirism.data.BloodConversionRegistry;
 import de.teamlapen.vampirism.data.reloadlistener.ModReloadListeners;
-import de.teamlapen.vampirism.data.remote.SettingsProvider;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -47,7 +45,6 @@ public class CommonServices extends Services implements IVampirismServices {
     private final ModReloadListeners reloadListeners = new ModReloadListeners();
     private final SundamageRegistry sundamageRegistry = new SundamageRegistry();
     private final ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry = new ExtendedBrewingRecipeRegistry();
-    private final SettingsProvider settingsProvider = new SettingsProvider(REFERENCE.SETTINGS_API);
     private final BloodConversionRegistry bloodConversionRegistry = new BloodConversionRegistry();
     private final InterModHandler interModCommunicationHandler = new InterModHandler();
     private final IVampirismEntityRegistry entityRegistry = new VampirismEntityRegistry();
@@ -84,11 +81,6 @@ public class CommonServices extends Services implements IVampirismServices {
     @Override
     public ExtendedBrewingRecipeRegistry extendedBrewingRecipeRegistry() {
         return this.extendedBrewingRecipeRegistry;
-    }
-
-    @Override
-    public SettingsProvider settings() {
-        return this.settingsProvider;
     }
 
     @Override

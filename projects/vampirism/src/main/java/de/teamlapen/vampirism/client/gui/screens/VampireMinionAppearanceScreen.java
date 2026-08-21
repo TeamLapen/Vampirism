@@ -65,7 +65,7 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
     }
 
     @Override
-    protected @NotNull LayoutElement createLayout() {
+    protected LayoutElement createLayout() {
         LinearLayout vertical = LinearLayout.vertical()
                 .spacing(4);
 
@@ -77,14 +77,14 @@ public class VampireMinionAppearanceScreen extends AppearanceScreen<VampireMinio
         name.setResponder(this::onNameChanged);
         vertical.addChild(name);
 
-        vertical.addChild(DropdownWidget.builder(0,0)
+        vertical.addChild(DropdownWidget.simple(0,0)
                 .width(99)
                 .itemHeight(20)
                 .maxVisibleItems(5)
                 .initialSelection(this.skinType)
                 .onSelect(this::skin)
                 .onHover(this::previewSkin)
-                .items(IntStream.range(0, this.normalSkinCount + this.minionSkinCount)
+                .simpleItems(IntStream.range(0, this.normalSkinCount + this.minionSkinCount)
                         .mapToObj(type -> (Component) Component.translatable("gui.vampirism.minion_appearance.skin").append(" " + (type + 1)))
                         .toList())
                 .build());

@@ -1,14 +1,20 @@
 package de.teamlapen.vampirism.common.util;
 
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonReader;
+import com.mojang.serialization.JsonOps;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismApi;
-import de.teamlapen.vampirism.api.settings.Supporter;
+import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +34,7 @@ public class SupporterManager {
         if (!hunters.isEmpty()) {
             return hunters.get(rnd.nextInt(hunters.size()));
         }
-        return new Supporter(VReference.HUNTER_FACTION_ID, "none", "none", null, new HashMap<>());
+        return Supporter.FALLBACK;
     }
 
     /**
@@ -39,18 +45,19 @@ public class SupporterManager {
         if (!vampires.isEmpty()) {
             return vampires.get(rnd.nextInt(vampires.size()));
         }
-        return new Supporter(VReference.VAMPIRE_FACTION_ID, "none", "none", null, new HashMap<>());
+        return Supporter.FALLBACK;
     }
 
     public void init() {
-        VampirismApi.services().settings().getSupportersAsync().thenAccept(optional -> {
-            if (optional.isPresent()) {
-                this.supporters = optional.get().stream().collect(Collectors.groupingBy(Supporter::faction));
-                LOGGER.debug("Loaded {} supporter for {} factions", optional.get().size(), this.supporters.size());
-            } else {
-                LOGGER.warn("Failed to retrieve supporters");
+        InputStream inputStream = VampirismMod.class.getResourceAsStream("/supporters.json");
+        if (inputStream != null) {
+            try {
+                JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream));
+                this.supporters = Supporter.CODEC.codec().listOf().parse(JsonOps.INSTANCE, JsonParser.parseReader(jsonReader)).getPartialOrThrow().stream().collect(Collectors.groupingBy(Supporter::faction));
+            } catch (JsonSyntaxException ex) {
+                LOGGER.error("Failed to retrieve supporter from file", ex);
             }
-        });
+        }
     }
 
     public Stream<Supporter> getSupporter() {

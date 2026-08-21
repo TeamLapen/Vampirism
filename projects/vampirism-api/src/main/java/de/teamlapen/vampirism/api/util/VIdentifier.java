@@ -5,6 +5,8 @@ import net.minecraft.resources.Identifier;
 
 public class VIdentifier {
 
+    public static final Identifier EMPTY = mc("empty");
+
     public static Identifier loc(String namespace, String path) {
         return Identifier.fromNamespaceAndPath(namespace, path);
     }
