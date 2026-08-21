@@ -1,5 +1,6 @@
 package de.teamlapen.faction.common.core;
 
+import com.mojang.serialization.Codec;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.IFaction;
 import de.teamlapen.faction.api.factions.actions.IAction;
@@ -54,6 +55,7 @@ public class FactionDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ShiftDescription>> SHIFT_DESCRIPTION = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.SHIFT_DESCRIPTION.getPath(), builder -> builder.persistent(ShiftDescription.CODEC).networkSynchronized(ShiftDescription.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockDescription>> BLOCK_DESCRIPTION = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.BLOCK_DESCRIPTION.getPath(), builder -> builder.persistent(BlockDescription.CODEC).networkSynchronized(BlockDescription.STREAM_CODEC));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<FactionFoodList>> FACTION_FOOD = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.FACTION_FOOD.getPath(), builder -> builder.persistent(FactionFoodList.CODEC).networkSynchronized(FactionFoodList.STREAM_CODEC));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> OBLIVION_CHARGES = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.OBLIVION_CHARGES.getPath(), builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> FACTION_COLOR = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.FACTION_COLOR.getPath(), builder -> builder.networkSynchronized(ByteBufCodecs.VAR_INT));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<TextColor>> CHAT_COLOR = ITEM_DATA_COMPONENTS.registerComponentType(de.teamlapen.faction.api.FactionDataComponents.Keys.CHAT_COLOR.getPath(), builder -> builder.networkSynchronized(ByteBufCodecs.VAR_INT.map(TextColor::fromRgb, TextColor::getValue)));

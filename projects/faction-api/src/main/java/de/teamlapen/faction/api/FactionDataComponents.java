@@ -116,5 +116,6 @@ public class FactionDataComponents {
         public static final Identifier SHIFT_DESCRIPTION = FIdentifier.mod("shift_description");
         public static final Identifier BLOCK_DESCRIPTION = FIdentifier.mod("block_description");
         public static final Identifier FACTION_FOOD = FIdentifier.mod("faction_food");
+        public static final Identifier OBLIVION_CHARGES = FIdentifier.mod("oblivion_charges");
     }
 }

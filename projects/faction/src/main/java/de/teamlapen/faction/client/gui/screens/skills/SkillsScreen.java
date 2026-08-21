@@ -11,12 +11,12 @@ import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.faction.common.core.FactionEffects;
 import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.faction.common.core.FactionSounds;
-import de.teamlapen.faction.common.factions.skills.SkillTreeGraph;
 import de.teamlapen.faction.common.factions.skills.SkillTreeGraphs;
 import de.teamlapen.faction.common.network.packets.server.ServerboundForgetSkillPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.faction.common.network.packets.server.ServerboundUnlockSkillPacket;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
+import de.teamlapen.faction.common.world.items.OblivionPotionItem;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -30,7 +30,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +39,6 @@ import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -81,6 +79,9 @@ public class SkillsScreen extends Screen {
     private int holdingTicks;
     private double lastMouseX;
     private double lastMouseY;
+
+    private int oblivionCharges = 0;
+    private int forgetCost = 0;
 
     public SkillsScreen(ISkillPlayer<?> factionPlayer, @Nullable ILastScreenProvider backScreen) {
         super(GameNarrator.NO_TITLE);
@@ -213,7 +214,7 @@ public class SkillsScreen extends Screen {
             var pose = graphics.pose();
             pose.pushMatrix();
             pose.translate((float) (guiLeft + 9), (float) (guiTop + 18));
-            selectedTab.drawTooltips(graphics, mouseX - guiLeft - 9, mouseY - guiTop - 18, heldSkill, (float) holdingTicks / (holdingMouse == Holding.LEFT ? UNLOCK_HOLD_TICKS : RESET_HOLD_TICKS), holdingMouse);
+            selectedTab.drawTooltips(graphics, mouseX - guiLeft - 9, mouseY - guiTop - 18, heldSkill, (float) holdingTicks / (holdingMouse == Holding.LEFT ? UNLOCK_HOLD_TICKS : getTotalResetDuration()), holdingMouse);
             pose.popMatrix();
         }
 
@@ -281,6 +282,10 @@ public class SkillsScreen extends Screen {
     public void tick() {
         super.tick();
 
+        if (minecraft.player != null) {
+            oblivionCharges = OblivionPotionItem.countCharges(minecraft.player);
+        }
+
         if (holdingMouse == Holding.NONE || selectedTab == null || minecraft.player == null || minecraft.player.getEffect(FactionEffects.OBLIVION) != null || !isMouseOverContent(lastMouseX, lastMouseY)) {
             cancelHolding();
             return;
@@ -289,7 +294,7 @@ public class SkillsScreen extends Screen {
         var hovered = getSkillMouseOver(lastMouseX, lastMouseY);
         if (hovered == null
                 || holdingMouse == Holding.LEFT && factionPlayer.getSkillHandler().canSkillBeEnabled(hovered, selectedTab.getSkillTree()) != ISkillHandler.Result.OK
-                || holdingMouse == Holding.RIGHT && (!factionPlayer.getSkillHandler().isSkillEnabled(hovered) || !isSkillLastActive(hovered) || !minecraft.player.isCreative())) {
+                || holdingMouse == Holding.RIGHT && !canForget(hovered)) {
             cancelHolding();
             return;
         }
@@ -303,7 +308,7 @@ public class SkillsScreen extends Screen {
             unlockSkill(hovered);
             cancelHolding();
         }
-        if (holdingMouse == Holding.RIGHT && holdingTicks >= RESET_HOLD_TICKS) {
+        if (holdingMouse == Holding.RIGHT && holdingTicks >= getTotalResetDuration()) {
             resetSkill(hovered);
             cancelHolding();
         }
@@ -317,15 +322,17 @@ public class SkillsScreen extends Screen {
         holdingMouse = Holding.NONE;
     }
 
-    private boolean isSkillLastActive(Holder<? extends ISkill<?>> skill) {
-        if (minecraft.level != null && selectedTab != null) {
-            Optional<SkillTreeGraph.Entry> entryOpt = SkillTreeGraphs.get(minecraft.level).entryForSkill(selectedTab.getSkillTree(), skill);
-            if (entryOpt.isPresent()) {
-                return entryOpt.get().children().stream().noneMatch(child -> child.skills().stream().anyMatch(s -> factionPlayer.getSkillHandler().isSkillEnabled(s)));
-            }
+    private boolean canForget(Holder<? extends ISkill<?>> skill) {
+        forgetCost = forgetCascade(skill).size();
+        return forgetCost > 0 && (minecraft.player != null && minecraft.player.isCreative() || oblivionCharges >= forgetCost);
+    }
+
+    private List<Holder<? extends ISkill<?>>> forgetCascade(Holder<? extends ISkill<?>> skill) {
+        if (minecraft.level == null || selectedTab == null) {
+            return List.of();
         }
 
-        return false;
+        return SkillTreeGraphs.get(minecraft.level).forgetCascade(selectedTab.getSkillTree(), skill, factionPlayer.getSkillHandler()::isSkillEnabled);
     }
 
     private void unlockSkill(Holder<? extends ISkill<?>> skill) {
@@ -345,6 +352,10 @@ public class SkillsScreen extends Screen {
 
         //noinspection unchecked
         FactionsMod.proxy.sendToServer(new ServerboundForgetSkillPacket((Holder<ISkill<?>>) skill, selectedTab.getSkillTree()));
+    }
+
+    private int getTotalResetDuration() {
+        return (int) (RESET_HOLD_TICKS * (2 - 1 / (Math.pow(2, forgetCost - 1))));
     }
 
     private @Nullable Holder<? extends ISkill<?>> getSkillMouseOver(double mouseX, double mouseY) {

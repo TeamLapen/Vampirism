@@ -183,7 +183,10 @@ public class SkillTreeGraph {
 
     public Optional<Entry> entryForSkill(Collection<Holder<ISkillTree>> trees, Holder<? extends ISkill<?>> skill) {
         for (Holder<ISkillTree> tree : trees) {
-            entryForSkill(tree, skill);
+            Optional<Entry> entry = entryForSkill(tree, skill);
+            if (entry.isPresent()) {
+                return entry;
+            }
         }
 
         return Optional.empty();
@@ -199,6 +202,43 @@ public class SkillTreeGraph {
         }
 
         return Optional.empty();
+    }
+
+    public List<Holder<? extends ISkill<?>>> forgetCascade(Holder<ISkillTree> treeHolder, Holder<? extends ISkill<?>> skill, Predicate<Holder<? extends ISkill<?>>> isEnabled) {
+        Optional<Tree> optTree = tree(treeHolder);
+        if (optTree.isEmpty() || !isEnabled.test(skill)) {
+            return List.of();
+        }
+
+        Tree tree = optTree.get();
+        Optional<Entry> optTarget = tree.entryForSkill(skill);
+        if (optTarget.isEmpty() || optTarget.get().isRoot()) {
+            return List.of();
+        }
+        Entry target = optTarget.get();
+
+        Predicate<Entry> before = entry -> entry.skills().stream().anyMatch(isEnabled);
+        Predicate<Entry> after = entry -> entry.skills().stream().anyMatch(s -> !s.equals(skill) && isEnabled.test(s));
+
+        Set<Entry> orphaned = new HashSet<>(tree.orphanedBy(before, after));
+
+        List<Entry> ordered = new ArrayList<>(orphaned);
+        if (!orphaned.contains(target)) {
+            ordered.add(target);
+        }
+        ordered.sort(Comparator.comparingInt(Entry::depth).reversed());
+
+        List<Holder<? extends ISkill<?>>> cascade = new ArrayList<>();
+        for (Entry entry : ordered) {
+            boolean isOrphan = orphaned.contains(entry);
+            for (Holder<? extends ISkill<?>> candidate : entry.skills()) {
+                if (candidate.equals(skill) || isOrphan && isEnabled.test(candidate)) {
+                    cascade.add(candidate);
+                }
+            }
+        }
+
+        return cascade;
     }
 
     public List<Entry> lockingSegments(Entry entry) {
@@ -287,6 +327,22 @@ public class SkillTreeGraph {
 
         public Optional<Entry> entryForSkill(Holder<? extends ISkill<?>> skill) {
             return entries.stream().filter(entry -> entry.skills().contains(skill)).findFirst();
+        }
+
+        public List<Entry> orphanedBy(Predicate<Entry> enabledBefore, Predicate<Entry> enabledAfter) {
+            Set<Entry> reachable = new HashSet<>();
+            Deque<Entry> queue = new ArrayDeque<>();
+            roots.stream().filter(enabledAfter).forEach(queue::add);
+
+            while (!queue.isEmpty()) {
+                Entry entry = queue.poll();
+                if (!reachable.add(entry)) {
+                    continue;
+                }
+                entry.children().stream().filter(enabledAfter).filter(child -> !reachable.contains(child)).forEach(queue::add);
+            }
+
+            return entries.stream().filter(enabledBefore).filter(entry -> !reachable.contains(entry)).toList();
         }
 
         /**
