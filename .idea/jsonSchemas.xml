@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JsonSchemaMappingsProjectConfiguration">
+    <state>
+      <map>
+        <entry key="Vampirism Supporters">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="Vampirism Supporters" />
+              <option name="relativePathToSchema" value="schemas/supporters.schema.json" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="projects/vampirism/src/main/resources/supporters.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="Vampirism Wings">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="Vampirism Wings" />
+              <option name="relativePathToSchema" value="schemas/wings.schema.json" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="projects/vampirism/src/main/resources/wings.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+      </map>
+    </state>
+  </component>
+</project>

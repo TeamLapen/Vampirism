@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/supporters.schema.json",
+  "title": "Vampirism Supporters",
+  "description": "List of Vampirism supporters/contributors and the in-game appearance/faction assigned to them. Loaded by SupporterManager (faction, name, player, appearance, book); playerId/status/bookId are not read by the mod itself and only exist for the external supporters website.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["playerId", "player", "faction", "name", "status", "appearance"],
+    "properties": {
+      "playerId": {
+        "type": "string",
+        "description": "Minecraft account UUID of the supporter. Not read by the mod; In case the username changes the id stays the same",
+
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "player": {
+        "type": "string",
+        "description": "Minecraft username, used to resolve the player's skin at runtime.",
+        "minLength": 1
+      },
+      "faction": {
+        "type": "string",
+        "description": "Faction the supporter's in-game entity belongs to. Only vampirism:hunter and vampirism:vampire are recognized by SupporterManager's lookups.",
+        "enum": ["vampirism:hunter", "vampirism:vampire"]
+      },
+      "name": {
+        "type": "string",
+        "description": "Display name shown in-game for this supporter's entity.",
+        "minLength": 1
+      },
+      "status": {
+        "type": "string",
+        "description": "Supporter category, used by the external supporters website. Not validated/consumed by the mod.",
+        "enum": ["Contributor", "Dev", "Temporary"]
+      },
+      "bookId": {
+        "type": ["string", "null"],
+        "description": "Legacy id. Identifier used by the external supporters website to link this supporter to their book. Not read by the mod."
+      },
+      "book": {
+        "type": "string",
+        "description": "Registered vampire book id (VampirismRegistries VAMPIRE_BOOK) granted to this supporter, e.g. vampirism:pyromaniacs_diary.",
+        "pattern": "^[a-z0-9_.-]+:[a-z0-9_./-]+$"
+      },
+      "appearance": {
+        "type": "object",
+        "description": "Free-form string map describing the supporter entity's appearance. Only main_hand/off_hand/head/eyes are currently read by the renderer; other keys (hat, type, body, eye, hasCloak, equipment) are legacy/website-only and unused by the mod.",
+        "properties": {
+          "hat": {
+            "type": "string",
+            "description": "Legacy. Hunter hat overlay variant. Not currently read by the mod.",
+            "enum": ["none", "hat_0", "hat_1"]
+          },
+          "head": {
+            "type": "string",
+            "description": "Item id equipped in the head slot, e.g. vampirism:hunter_hat_broad.",
+            "pattern": "^[a-z0-9_.-]+:[a-z0-9_./-]+$"
+          },
+          "main_hand": {
+            "type": "string",
+            "description": "Item id held in the main hand, e.g. vampirism:hunter_axe_normal.",
+            "pattern": "^[a-z0-9_.-]+:[a-z0-9_./-]+$"
+          },
+          "off_hand": {
+            "type": "string",
+            "description": "Item id held in the off hand.",
+            "pattern": "^[a-z0-9_.-]+:[a-z0-9_./-]+$"
+          },
+          "equipment": {
+            "type": "string",
+            "description": "Legacy equipment variant tag (e.g. axe, axe_stake, crossbow, double_axe). Not currently read by the mod."
+          },
+          "type": {
+            "type": "string",
+            "description": "Legacy. Body/skin variant index. Not currently read by the mod.",
+            "pattern": "^[0-9]+$"
+          },
+          "body": {
+            "type": "string",
+            "description": "Legacy. Body texture variant index. Not currently read by the mod.",
+            "pattern": "^[0-9]+$"
+          },
+          "eye": {
+            "type": "string",
+            "description": "Legacy. Eye color variant index. Not currently read by the mod.",
+            "pattern": "^[0-9]+$"
+          },
+          "eyes": {
+            "type": "string",
+            "description": "Eye texture variant index, appended to 'eyes' to form the texture id (e.g. vampirism:eyes17).",
+            "pattern": "^[0-9]+$"
+          },
+          "hasCloak": {
+            "type": "string",
+            "description": "Legacy. Whether the vampire's cloak is rendered. Not currently read by the mod.",
+            "enum": ["true", "false"]
+          }
+        },
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

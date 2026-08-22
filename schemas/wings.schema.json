@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/wings.schema.json",
+  "title": "Vampirism Wing Textures",
+  "description": "Assigns vampire wing textures to players. Loaded by WingsManager/WingsSetting (IWingsEntity.Texture enum + player UUID list). The same player id may legitimately appear under multiple texture blocks; each occurrence grants that texture in addition to the others.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["texture", "players"],
+    "additionalProperties": false,
+    "properties": {
+      "texture": {
+        "type": "string",
+        "description": "Wing texture variant, matched against the IWingsEntity.Texture enum (serialized as lowercase enum name). A value outside this set fails to parse and the whole entry is dropped with a warning.",
+        "enum": ["default", "dev", "castle_contest"]
+      },
+      "players": {
+        "type": "array",
+        "description": "Players granted this wing texture. May be empty.",
+        "items": {
+          "type": "object",
+          "required": ["name", "id"],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Human-readable label only; not read anywhere else in the code, not used for matching.",
+              "minLength": 1
+            },
+            "id": {
+              "type": "string",
+              "description": "Minecraft account UUID. This is the only field used to match a player at runtime.",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            }
+          }
+        }
+      }
+    }
+  }
+}
