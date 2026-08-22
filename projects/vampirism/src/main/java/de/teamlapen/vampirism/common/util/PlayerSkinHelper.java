@@ -14,7 +14,9 @@ import net.minecraft.world.item.component.ResolvableProfile;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientResourceLoadFinishedEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
+import org.jetbrains.annotations.UnmodifiableView;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -26,10 +28,9 @@ public class PlayerSkinHelper {
     private final Map<String, PlayerSkin> skinsReadonly = Collections.unmodifiableMap(skins);
     private final Map<String, PlayerSkin> remoteSkins = new HashMap<>();
 
-    @SubscribeEvent
-    public void onLoadLevel(LevelEvent.Load event) {
-    }
-
+    /**
+     * Load required resources when resources changes
+     */
     @SubscribeEvent
     public void onResourcesLoad(ClientResourceLoadFinishedEvent event) {
         var skins = loadBuiltInSkins();
@@ -38,6 +39,15 @@ public class PlayerSkinHelper {
         this.skins.putAll(skins);
     }
 
+    /**
+     * Reload missing textures after supporters are loaded
+     */
+    @SubscribeEvent
+    public void onLevelLoad(LevelEvent.Load event) {
+        checkMissingSkins(skins);
+    }
+
+    @UnmodifiableView
     public Map<String, PlayerSkin> getSkins() {
         return this.skinsReadonly;
     }

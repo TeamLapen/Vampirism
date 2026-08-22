@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.UtilLib;
-import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import de.teamlapen.vampirism.common.world.entity.ISupporterAppearanceConsumer;
 import de.teamlapen.vampirism.common.world.entity.VampirismEntity;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.*;
@@ -118,7 +117,7 @@ public class AdvancedHunterEntity extends HunterBaseEntity implements IAdvancedH
 
     @Override
     public @NotNull Optional<Holder<IVampireBook>> getBookLootId() {
-        return getData(ModAttachments.SUPPORTER).bookId();
+        return getData(ModAttachments.SUPPORTER).book();
     }
 
     @Nullable

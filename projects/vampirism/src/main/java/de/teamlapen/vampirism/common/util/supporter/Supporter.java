@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public record Supporter(Identifier faction, Component name, String player, Map<String, String> appearance, Optional<Holder<IVampireBook>> bookId) {
+public record Supporter(Identifier faction, Component name, String player, Map<String, String> appearance, Optional<Holder<IVampireBook>> book) {
 
     public static final Supporter FALLBACK = new Supporter(Factions.Keys.NEUTRAL, Component.empty(), "", Map.of(), Optional.empty());
 
@@ -27,7 +27,7 @@ public record Supporter(Identifier faction, Component name, String player, Map<S
             ComponentSerialization.CODEC.fieldOf("name").forGetter(Supporter::name),
             Codec.STRING.fieldOf("player").forGetter(Supporter::player),
             Codec.unboundedMap(Codec.STRING, Codec.STRING).fieldOf("appearance").forGetter(Supporter::appearance),
-            IVampireBook.HOLDER_CODEC.optionalFieldOf("bookId").orElse(Optional.empty()).forGetter(Supporter::bookId)
+            IVampireBook.HOLDER_CODEC.optionalFieldOf("book").orElse(Optional.empty()).forGetter(Supporter::book)
     ).apply(inst, Supporter::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Supporter> STREAM_CODEC = StreamCodec.composite(
@@ -35,7 +35,7 @@ public record Supporter(Identifier faction, Component name, String player, Map<S
             ComponentSerialization.STREAM_CODEC, Supporter::name,
             ByteBufCodecs.STRING_UTF8, Supporter::player,
             ByteBufCodecs.map(HashMap::new, ByteBufCodecs.STRING_UTF8, ByteBufCodecs.STRING_UTF8), Supporter::appearance,
-            ByteBufCodecs.optional(IVampireBook.HOLDER_STREAM_CODEC), Supporter::bookId,
+            ByteBufCodecs.optional(IVampireBook.HOLDER_STREAM_CODEC), Supporter::book,
             Supporter::new
     );
 

@@ -108,7 +108,6 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.addListener(this.versionUpdater::catchModVersionMismatch);
         bus.addListener(FMLCommonSetupEvent.class, e -> e.enqueueWork(ModEntitySelectors::registerSelectors));
         bus.addListener(FMLLoadCompleteEvent.class, e -> e.enqueueWork(OverworldModifications::addBiomesToOverworldUnsafe));
-        bus.addListener(FMLCommonSetupEvent.class, _ -> this.supporterManager.init());
         bus.addListener(InterModProcessEvent.class, _ -> QuarrelHandler.collectQuarrels());
         bus.addListener(AddFactionTagEvent.class, ModFactions::registerFactionTags);
         bus.addListener(ModCreativeTabs::addToExistingCreativeTabs);
@@ -129,6 +128,7 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.register(this.villageEventHandler);
         bus.addListener(Permissions::registerNodes);
         bus.register(this.itemEventHandler);
+        bus.register(this.supporterManager);
         bus.addListener(DefaultDataComponentsBoundEvent.class, _ -> QuarrelHandler.collectClips());
         bus.register(this.levelEventHandler);
     }

@@ -13,12 +13,9 @@ import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModEntities;
 import de.teamlapen.vampirism.common.util.UtilLib;
-import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import de.teamlapen.vampirism.common.world.entity.ISupporterAppearanceConsumer;
 import de.teamlapen.vampirism.common.world.entity.ai.goals.*;
 import de.teamlapen.vampirism.common.world.entity.hunter.HunterBaseEntity;
-import net.minecraft.client.player.inventory.Hotbar;
-import net.minecraft.client.renderer.PlayerSkinRenderCache;
 import net.minecraft.core.Holder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -48,7 +45,6 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -113,7 +109,7 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
 
     @Override
     public Optional<Holder<IVampireBook>> getBookLootId() {
-        return getData(ModAttachments.SUPPORTER).bookId();
+        return getData(ModAttachments.SUPPORTER).book();
     }
 
     @Nullable
