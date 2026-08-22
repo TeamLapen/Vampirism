@@ -1137,6 +1137,8 @@
   "gui.vampirism.skills.skill_points.marshall": "%d research points",
   "gui.vampirism.skills.skill_points.marshall.single": "%d research point",
 
+  "gui.vampirism.wings": "Wings Type %s",
+
   "message.vampirism.restriction.faction.vampire": "How do those vampires even use this thing...",
   "message.vampirism.restriction.faction.hunter": "How do those hunters even use this thing...",
   "message.vampirism.restriction.vampire_clothing": "Something is resonating inside this... I'm not wearing it",
@@ -1422,8 +1424,7 @@
 
   "wings.vampirism.default": "Default",
   "wings.vampirism.dev": "Dev",
-  "wings.vampirism.contributor": "Contributor",
-  "wings.vampirism.special": "Special",
+  "wings.vampirism.castle_contest": "Contest",
 
   "vampirism.configuration.title": "Vampirism Configuration",
 
