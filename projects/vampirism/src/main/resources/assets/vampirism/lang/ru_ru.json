@@ -1349,8 +1349,6 @@
   "notification.vampirism.warning_optifine_blood_vision": "Похоже, у вас запущен Optifine с шейдерами. Кровавое чутьё с ним не работает, поэтому используется замещающий эффект свечения. Однако не все шейдеры действительно отображают эффект свечения.",
   "wings.vampirism.default": "По-умолчанию",
   "wings.vampirism.dev": "Разработчик",
-  "wings.vampirism.contributor": "Помощник",
-  "wings.vampirism.special": "Особые",
   "vampirism.configuration.title": "Настройки Вампиризма",
   "vampirism.configuration.section.vampirism.client.toml": "Настройки клиента",
   "vampirism.configuration.section.vampirism.client.toml.title": "Настройки клиента",
