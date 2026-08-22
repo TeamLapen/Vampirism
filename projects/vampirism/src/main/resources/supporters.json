@@ -66,6 +66,7 @@
     "name": "Pyromaniac Pik",
     "status": "Contributor",
     "bookId": "piklach",
+    "book": "vampirism:pyromaniacs_diary",
     "appearance": {
       "hat": "hat_0",
       "main_hand": "vampirism:stake",
@@ -107,6 +108,7 @@
     "name": "Sinister Solace",
     "status": "Contributor",
     "bookId": "s_olace",
+    "book": "vampirism:sinister_intentions",
     "appearance": {
       "eye": "15",
       "type": "15",
@@ -193,6 +195,7 @@
     "name": "Valorous Vol",
     "status": "Temporary",
     "bookId": "volqonah",
+    "book": "vampirism:valorous_tale",
     "appearance": {
       "eye": "15",
       "type": "15",
@@ -216,8 +219,8 @@
     "playerId": "052ef844-4947-452c-867d-902c8fa1cd94",
     "player": "gridexpert",
     "faction": "vampirism:hunter",
-    "name": "Dual-Wielding Grid",
-    "status": "Contributor",
+    "name": "Marcus Grid",
+    "status": "Dev",
     "appearance": {
       "hat": "hat_1",
       "hasCloak": "true",

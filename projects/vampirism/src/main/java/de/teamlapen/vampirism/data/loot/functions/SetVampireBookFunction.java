@@ -60,20 +60,12 @@ public class SetVampireBookFunction extends LootItemConditionalFunction {
 
     @Override
     protected @NotNull ItemStack run(@NotNull ItemStack stack, @NotNull LootContext lootContext) {
-        RegistryAccess registryAccess = lootContext.getLevel().registryAccess();
         IVampireBook vampireBook = VampireBook.getRandomBook(tag, lootContext);
 
         Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);
         if (entity instanceof VampireBookLootProvider provider) {
             if (provider.getBookLootId().isPresent()) {
-                Identifier id = Identifier.parse(provider.getBookLootId().get());
-                Optional<IVampireBook> possibleBook = registryAccess.lookupOrThrow(VampirismRegistries.Keys.VAMPIRE_BOOK).getOptional(id);
-
-                if (possibleBook.isPresent()) {
-                    vampireBook = possibleBook.get();
-                } else {
-                    LOGGER.warn("Vampire Book \"{}\" does not exist, cannot add it to a loot table", id.getPath());
-                }
+                vampireBook = provider.getBookLootId().get().value();
             } else {
                 var tag = IFactionSpecificTags.get().get(IFactionHelper.get().getFaction(entity), VampirismRegistries.Keys.VAMPIRE_BOOK).orElse(ModVampireBookTags.IS_GENERAL);
                 vampireBook = VampireBook.getRandomBook(tag, lootContext);
