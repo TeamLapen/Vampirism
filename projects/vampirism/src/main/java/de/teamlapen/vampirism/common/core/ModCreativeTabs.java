@@ -198,6 +198,7 @@ public class ModCreativeTabs {
 
             add(BLOOD_INFUSED_IRON_BLOCK);
             add(BLOOD_INFUSED_ENHANCED_IRON_BLOCK);
+            add(BLOOD_INFUSED_REFINED_IRON_BLOCK);
         }
 
         private void addDecorativeBlocks() {
