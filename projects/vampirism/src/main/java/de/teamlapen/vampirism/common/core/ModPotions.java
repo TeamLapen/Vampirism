@@ -25,7 +25,6 @@ import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -257,7 +256,7 @@ public class ModPotions {
     private static void splashItemBottle(Item item, Item resultSplashItem, PotionBrewing.Builder builder) {
         builder.addRecipe(new BrewingRecipe(Ingredient.of(item), Ingredient.of(Items.GUNPOWDER), new ItemStack(resultSplashItem)) {
             @Override
-            public boolean isInput(@NotNull ItemStack stack) {
+            public boolean isInput(ItemStack stack) {
                 return item.equals(stack.getItem());
             }
         });

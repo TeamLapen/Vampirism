@@ -7,10 +7,12 @@ import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.items.BaseDisplayItemGenerator;
 import de.teamlapen.vampirism.common.world.items.SerumInjectionItem;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Unit;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
@@ -23,7 +25,10 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static de.teamlapen.vampirism.common.core.ModItems.*;
 
@@ -454,11 +459,49 @@ public class ModCreativeTabs {
             insert(GHOST_SPAWN_EGG, event);
         } else if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
             insertAfter(BLOOD_BUCKET, Items.MILK_BUCKET, event);
-        } else if (event.getTabKey().equals(CreativeModeTabs.FOOD_AND_DRINKS)) {
+        } else if (event.getTabKey().equals(CreativeModeTabs.COMBAT)) {
             event.getParameters().holders().lookup(Registries.POTION).ifPresent(registry ->
-                    insertPotionTypes(event, registry, SERUM_INJECTION.get(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, event.getParameters().enabledFeatures())
+                    sortPotionsAfterVanilla(event, registry, Items.TIPPED_ARROW)
             );
+        } else if (event.getTabKey().equals(CreativeModeTabs.FOOD_AND_DRINKS)) {
+            event.getParameters().holders().lookup(Registries.POTION).ifPresent(registry -> {
+                sortPotionsAfterVanilla(event, registry, Items.POTION);
+                sortPotionsAfterVanilla(event, registry, Items.SPLASH_POTION);
+                sortPotionsAfterVanilla(event, registry, Items.LINGERING_POTION);
+                insertPotionTypes(event, registry, SERUM_INJECTION.get(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, event.getParameters().enabledFeatures());
+            });
         }
+    }
+
+    private static void sortPotionsAfterVanilla(BuildCreativeModeTabContentsEvent event, HolderLookup<Potion> potions, Item item) {
+        FeatureFlagSet enabledFeatures = event.getParameters().enabledFeatures();
+        Map<String, ItemStack> anchors = new HashMap<>();
+        List<Holder.Reference<Potion>> toInsert = new ArrayList<>();
+
+        potions.listElements().filter(potion -> potion.value().isEnabled(enabledFeatures)).forEach(potion -> {
+            String modId = potion.key().identifier().getNamespace();
+            if (modId.equals(REFERENCE.MODID)) {
+                toInsert.add(potion);
+            } else if (modId.equals(Identifier.DEFAULT_NAMESPACE)) {
+                anchors.put(potion.value().name(), PotionContents.createItemStack(item, potion));
+            }
+        });
+
+        for (Holder.Reference<Potion> potion : toInsert) {
+            ItemStack anchor = anchors.get(potion.value().name());
+            if (anchor == null || isAbsent(event, anchor)) continue;
+
+            ItemStack stack = PotionContents.createItemStack(item, potion);
+            if (isAbsent(event, stack)) continue;
+
+            event.remove(stack, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            event.insertAfter(anchor, stack, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            anchors.put(potion.value().name(), stack);
+        }
+    }
+
+    private static boolean isAbsent(BuildCreativeModeTabContentsEvent event, ItemStack stack) {
+        return !event.getParentEntries().contains(stack) || !event.getSearchEntries().contains(stack);
     }
 
     private static void insertPotionTypes(BuildCreativeModeTabContentsEvent event, HolderLookup<Potion> potions, Item item, CreativeModeTab.TabVisibility tabVisibility, FeatureFlagSet requiredFeatures) {
