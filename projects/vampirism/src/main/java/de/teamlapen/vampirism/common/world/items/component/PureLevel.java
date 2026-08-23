@@ -2,10 +2,14 @@ package de.teamlapen.vampirism.common.world.items.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
@@ -50,5 +54,13 @@ public record PureLevel(int level) {
 
     public static ItemStack pureBlood(ItemLike item, int level) {
         return pureBlood(item.asItem().getDefaultInstance(), level);
+    }
+
+    public MutableComponent getPurityTooltip() {
+        return formatByPurity(Component.translatable("tooltip.vampirism.purity", level() + 1));
+    }
+
+    public MutableComponent formatByPurity(MutableComponent component) {
+        return level == 5 ? component.withStyle(VEnums.SOVEREIGN_STYLE) : component.withStyle(ChatFormatting.DARK_RED);
     }
 }
