@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModOils;
-import de.teamlapen.vampirism.common.util.OilUtils;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemyTableRecipe;
 import net.minecraft.advancements.*;
@@ -89,8 +88,8 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
         return oilIngredient(ModOils.VAMPIRE_BLOOD);
     }
 
-    public AlchemyTableRecipeBuilder draculaOilIngredient() {
-        return oilIngredient(ModOils.DRACULA_BLOOD);
+    public AlchemyTableRecipeBuilder sovereignOilIngredient() {
+        return oilIngredient(ModOils.SOVEREIGN_BLOOD);
     }
 
     public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input) {

@@ -177,17 +177,17 @@ public class ModPotions {
         veryDurable(Potions.LONG_INVISIBILITY, VERY_LONG_INVISIBILITY, VERY_LONG_INVISIBILITY_EXTENDED);
         veryDurable(Potions.LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION_EXTENDED);
         master(NAUSEA, () -> Ingredient.of(registryAccess.lookupOrThrow(Registries.ITEM).getOrThrow(Tags.Items.MUSHROOMS)), 8, 4);
-        masterDracula(NAUSEA_EXTENDED, () -> Ingredient.of(registryAccess.lookupOrThrow(Registries.ITEM).getOrThrow(Tags.Items.MUSHROOMS)), 8, 4);
+        masterSovereign(NAUSEA_EXTENDED, () -> Ingredient.of(registryAccess.lookupOrThrow(Registries.ITEM).getOrThrow(Tags.Items.MUSHROOMS)), 8, 4);
         durable(NAUSEA, LONG_NAUSEA, LONG_NAUSEA_EXTENDED);
         veryDurable(LONG_NAUSEA, VERY_LONG_NAUSEA, VERY_LONG_NAUSEA_EXTENDED);
         veryDurableDracula(LONG_NAUSEA_EXTENDED, VERY_LONG_NAUSEA_EXTENDED);
         master(BLINDNESS, () -> Ingredient.of(Items.INK_SAC), 12, 6);
-        masterDracula(BLINDNESS_EXTENDED, () -> Ingredient.of(Items.INK_SAC), 12, 6);
+        masterSovereign(BLINDNESS_EXTENDED, () -> Ingredient.of(Items.INK_SAC), 12, 6);
         durable(BLINDNESS, LONG_BLINDNESS, LONG_BLINDNESS_EXTENDED);
         veryDurable(LONG_BLINDNESS, VERY_LONG_BLINDNESS, VERY_LONG_BLINDNESS_EXTENDED);
         veryDurableDracula(LONG_BLINDNESS_EXTENDED, VERY_LONG_BLINDNESS_EXTENDED);
         master(HEALTH_BOOST, () -> Ingredient.of(Items.APPLE), 16, 8);
-        masterDracula(HEALTH_BOOST_EXTENDED, () -> Ingredient.of(Items.APPLE), 16, 8);
+        masterSovereign(HEALTH_BOOST_EXTENDED, () -> Ingredient.of(Items.APPLE), 16, 8);
         durable(HEALTH_BOOST, LONG_HEALTH_BOOST, LONG_HEALTH_BOOST_EXTENDED);
         strong(HEALTH_BOOST, STRONG_HEALTH_BOOST, STRONG_HEALTH_BOOST_EXTENDED);
         veryDurable(LONG_HEALTH_BOOST, VERY_LONG_HEALTH_BOOST, VERY_LONG_HEALTH_BOOST_EXTENDED);
@@ -206,7 +206,7 @@ public class ModPotions {
 
     private static void durable(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         durable(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE), 1).draculaBlood().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE), 1).sovereignBlood().build());
     }
 
     private static void strong(Holder<Potion> in, Holder<Potion> out) {
@@ -215,7 +215,7 @@ public class ModPotions {
 
     private static void strong(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         strong(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE_DUST), 1).draculaBlood().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE_DUST), 1).sovereignBlood().build());
     }
 
     private static void veryDurable(Holder<Potion> in, Holder<Potion> out) {
@@ -223,12 +223,12 @@ public class ModPotions {
     }
 
     private static void veryDurableDracula(Holder<Potion> in, Holder<Potion> out) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).draculaBlood().durable().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).sovereignBlood().durable().build());
     }
 
     private static void veryDurable(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         veryDurable(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).draculaBlood().durable().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).sovereignBlood().durable().build());
     }
 
     private static void veryStrong(Holder<Potion> in, Holder<Potion> out) {
@@ -236,20 +236,20 @@ public class ModPotions {
     }
 
     private static void veryStrongDracula(Holder<Potion> in, Holder<Potion> out) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).draculaBlood().concentrated().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).sovereignBlood().concentrated().build());
     }
 
     private static void veryStrong(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         veryStrong(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).draculaBlood().concentrated().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).sovereignBlood().concentrated().build());
     }
 
     private static void master(Holder<Potion> out, Supplier<Ingredient> in, int count, int countReduced) {
         VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).blood().build());
     }
 
-    private static void masterDracula(Holder<Potion> out, Supplier<Ingredient> in, int count, int countReduced) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).draculaBlood().build());
+    private static void masterSovereign(Holder<Potion> out, Supplier<Ingredient> in, int count, int countReduced) {
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).sovereignBlood().build());
     }
 
 

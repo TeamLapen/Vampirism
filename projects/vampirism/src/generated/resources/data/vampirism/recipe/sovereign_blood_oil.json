@@ -10,11 +10,11 @@
     },
     "items": "vampirism:oil_bottle"
   },
-  "input": "vampirism:draculas_blood",
+  "input": "vampirism:sovereign_blood",
   "result": {
     "components": {
       "vampirism:oil_contents": {
-        "oil": "vampirism:dracula_blood"
+        "oil": "vampirism:sovereign_blood"
       }
     },
     "id": "vampirism:oil_bottle"

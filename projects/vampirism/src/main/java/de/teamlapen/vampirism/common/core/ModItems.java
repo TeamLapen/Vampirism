@@ -200,6 +200,8 @@ public class ModItems {
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_3 = ITEMS.registerItem("pure_blood_3",  props -> new PureBloodItem(3, props));
     public static final DeferredItem<PureBloodItem> PURE_BLOOD_4 = ITEMS.registerItem("pure_blood_4",  props -> new PureBloodItem(4, props));
 
+    public static final DeferredItem<Item> SOVEREIGN_BLOOD = ITEMS.registerItem("sovereign_blood", Item::new);
+
     public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.factions$factionFood(ModFoods.GARLIC_BREAD, ModConsumables.GARLIC)));
     public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.factions$factionFood(ModFoods.HUMAN_HEART, ModConsumables.NASTY_NON_VAMPIRES)));
     public static final DeferredItem<Item> WEAK_HUMAN_HEART = ITEMS.registerItem("weak_human_heart",  props -> new Item(props.factions$factionFood(ModFoods.WEAK_HUMAN_HEART, ModConsumables.NASTY_NON_VAMPIRES)));
@@ -448,7 +450,6 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CHANDELIER_BLACK = fromChandelier(ModBlocks.CHANDELIER_BLACK);
     public static final DeferredItem<BlockItem> VELMORRA_ALTAR = fromBlock(ModBlocks.VELMORRA_ALTAR);
     public static final DeferredItem<BlockItem> CHALICE = fromBlock(ModBlocks.CHALICE);
-    public static final DeferredItem<Item> DRACULAS_BLOOD = ITEMS.registerItem("draculas_blood", Item::new);
 
 
     @SuppressWarnings("unchecked")

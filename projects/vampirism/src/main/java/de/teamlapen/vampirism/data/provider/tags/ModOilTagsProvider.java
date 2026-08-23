@@ -22,7 +22,7 @@ public class ModOilTagsProvider extends KeyTagProvider<IOil> {
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
         this.tag(ModOilTags.NON_TREASURE);
         this.tag(ModOilTags.STRONG)
-                .add(ModOils.DRACULA_BLOOD.getKey())
+                .add(ModOils.SOVEREIGN_BLOOD.getKey())
                 .add(ModOils.POISON_STRONG.getKey())
                 .add(ModOils.WEAKNESS_STRONG.getKey())
                 .add(ModOils.SLOWNESS_STRONG.getKey())

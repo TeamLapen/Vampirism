@@ -767,9 +767,9 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(Ingredient.of(ModItems.VAMPIRE_BLOOD_BOTTLE))
                 .unlockedBy("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE))
                 .save(output);
-        alchemyTable(ModOils.DRACULA_BLOOD)
+        alchemyTable(ModOils.SOVEREIGN_BLOOD)
                 .plantOilIngredient()
-                .input(Ingredient.of(ModItems.DRACULAS_BLOOD))
+                .input(Ingredient.of(ModItems.SOVEREIGN_BLOOD))
                 .unlockedBy("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE))
                 .save(output);
         alchemyTable(ModOils.HEALING)
@@ -777,7 +777,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.HEALING, Potions.STRONG_HEALING))
                 .save(output);
         alchemyTable(ModOils.HEALING_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.HEALING, Potions.STRONG_HEALING))
                 .save(output);
         alchemyTable(ModOils.POISON)
@@ -785,7 +785,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON))
                 .save(output);
         alchemyTable(ModOils.POISON_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.POISON, Potions.LONG_POISON, Potions.STRONG_POISON))
                 .save(output);
         alchemyTable(ModOils.WEAKNESS)
@@ -793,7 +793,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.WEAKNESS, Potions.LONG_WEAKNESS))
                 .save(output);
         alchemyTable(ModOils.WEAKNESS_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.WEAKNESS, Potions.LONG_WEAKNESS))
                 .save(output);
         alchemyTable(ModOils.SLOWNESS)
@@ -801,7 +801,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.SLOWNESS, Potions.STRONG_SLOWNESS, Potions.LONG_SLOWNESS))
                 .save(output);
         alchemyTable(ModOils.SLOWNESS_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.SLOWNESS, Potions.STRONG_SLOWNESS, Potions.LONG_SLOWNESS))
                 .save(output);
         alchemyTable(ModOils.FIRE_RESISTANCE)
@@ -809,7 +809,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.FIRE_RESISTANCE, Potions.LONG_FIRE_RESISTANCE))
                 .save(output);
         alchemyTable(ModOils.FIRE_RESISTANCE_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.FIRE_RESISTANCE, Potions.LONG_FIRE_RESISTANCE))
                 .save(output);
         alchemyTable(ModOils.SWIFTNESS)
@@ -817,7 +817,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.SWIFTNESS, Potions.LONG_SWIFTNESS, Potions.STRONG_SWIFTNESS))
                 .save(output);
         alchemyTable(ModOils.SWIFTNESS_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.SWIFTNESS, Potions.LONG_SWIFTNESS, Potions.STRONG_SWIFTNESS))
                 .save(output);
         alchemyTable(ModOils.REGENERATION)
@@ -825,7 +825,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.REGENERATION, Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION))
                 .save(output);
         alchemyTable(ModOils.REGENERATION_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.REGENERATION, Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION))
                 .save(output);
         alchemyTable(ModOils.NIGHT_VISION)
@@ -833,7 +833,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.NIGHT_VISION, Potions.LONG_NIGHT_VISION))
                 .save(output);
         alchemyTable(ModOils.NIGHT_VISION_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.NIGHT_VISION, Potions.LONG_NIGHT_VISION))
                 .save(output);
         alchemyTable(ModOils.STRENGTH)
@@ -841,7 +841,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.STRENGTH, Potions.STRONG_STRENGTH, Potions.LONG_STRENGTH))
                 .save(output);
         alchemyTable(ModOils.STRENGTH_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.STRENGTH, Potions.STRONG_STRENGTH, Potions.LONG_STRENGTH))
                 .save(output);
         alchemyTable(ModOils.JUMP)
@@ -849,7 +849,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING))
                 .save(output);
         alchemyTable(ModOils.JUMP_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.LEAPING, Potions.LONG_LEAPING, Potions.STRONG_LEAPING))
                 .save(output);
         alchemyTable(ModOils.WATER_BREATHING)
@@ -857,7 +857,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.WATER_BREATHING, Potions.LONG_WATER_BREATHING))
                 .save(output);
         alchemyTable(ModOils.WATER_BREATHING_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.WATER_BREATHING, Potions.LONG_WATER_BREATHING))
                 .save(output);
         alchemyTable(ModOils.INVISIBILITY)
@@ -865,7 +865,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.INVISIBILITY, Potions.LONG_INVISIBILITY))
                 .save(output);
         alchemyTable(ModOils.INVISIBILITY_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.INVISIBILITY, Potions.LONG_INVISIBILITY))
                 .save(output);
         alchemyTable(ModOils.SLOW_FALLING)
@@ -873,7 +873,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.SLOW_FALLING, Potions.LONG_SLOW_FALLING))
                 .save(output);
         alchemyTable(ModOils.SLOW_FALLING_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.SLOW_FALLING, Potions.LONG_SLOW_FALLING))
                 .save(output);
         alchemyTable(ModOils.LUCK)
@@ -881,7 +881,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(potion(Potions.LUCK))
                 .save(output);
         alchemyTable(ModOils.LUCK_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(potion(Potions.LUCK))
                 .save(output);
         alchemyTable(ModOils.SMELT)
@@ -889,7 +889,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(Ingredient.of(ModItems.ALCHEMICAL_FIRE))
                 .save(output);
         alchemyTable(ModOils.SMELT_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(Ingredient.of(ModItems.ALCHEMICAL_FIRE))
                 .save(output);
         alchemyTable(ModOils.TELEPORT)
@@ -901,7 +901,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .input(Ingredient.of(Items.HONEY_BOTTLE))
                 .save(output);
         alchemyTable(ModOils.EVASION_STRONG)
-                .draculaOilIngredient()
+                .sovereignOilIngredient()
                 .input(Ingredient.of(Items.HONEY_BOTTLE))
                 .save(output);
         alchemyTable(ModOils.GARLIC)
@@ -994,11 +994,11 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
                 .experience(0.3f)
                 .save(output, modString("blood_infused_enhanced_iron_ingot_from_pure_blood_4"));
         cauldronRecipe(ModItems.BLOOD_INFUSED_REFINED_IRON_BLOCK)
-                .withFluid(ModItems.DRACULAS_BLOOD)
+                .withFluid(ModItems.SOVEREIGN_BLOOD)
                 .withIngredient(Items.IRON_BLOCK)
                 .cookTime(450)
                 .experience(1f)
-                .save(output, modString("blood_infused_refined_iron_ingot_from_dracula_blood"));
+                .save(output, modString("blood_infused_refined_iron_ingot_from_sovereign_blood"));
     }
 
     private void recipesWeaponTable() {

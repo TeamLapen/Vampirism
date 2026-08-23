@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:dracula_blood_oil"
+        "recipe": "vampirism:sovereign_blood_oil"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -37,7 +37,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:dracula_blood_oil"
+      "vampirism:sovereign_blood_oil"
     ]
   }
 }

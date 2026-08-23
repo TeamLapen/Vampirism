@@ -102,7 +102,7 @@ public class ModEntityLootTableProvider extends EntityLootSubProvider {
         this.add(ADVANCED_HUNTER_IMOB.get(), advancedHunter);
         this.add(DRACULA.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool()
-                        .add(LootItem.lootTableItem(ModItems.DRACULAS_BLOOD).apply(SetItemCountFunction.setCount(UniformGenerator.between(15, 48))))
+                        .add(LootItem.lootTableItem(ModItems.SOVEREIGN_BLOOD).apply(SetItemCountFunction.setCount(UniformGenerator.between(15, 48))))
                 ));
 
         // No loot table
