@@ -17,23 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin implements IItemStack {
-
-    @Shadow
-    @Nullable
-    public abstract <T> T set(DataComponentType<T> type, @org.jetbrains.annotations.Nullable T value);
-
-    @Override
-    public <T> ItemStack vampirism$with(DataComponentType<T> type, T value) {
-        set(type, value);
-        return (ItemStack) (Object) this;
-    }
-
-    @Override
-    public <T> ItemStack vampirism$with(Supplier<DataComponentType<T>> type, T value) {
-        set(type.get(), value);
-        return (ItemStack) (Object) this;
-    }
+public abstract class ItemStackMixin {
 
     @Inject(method = "applyDamage(ILnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
     private void vampirism$shatterInsteadOfBreaking(int newDamage, LivingEntity player, Consumer<Item> onBreak, CallbackInfo ci) {

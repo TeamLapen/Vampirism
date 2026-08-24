@@ -136,8 +136,8 @@ public class ModCreativeTabs {
 
             add(CURSED_SPRUCE_LOG);
             add(CURSED_SPRUCE_WOOD);
-            add(CURSED_SPRUCE_LOG.toStack().vampirism$with(ModDataComponents.ACTIVE, Unit.INSTANCE));
-            add(CURSED_SPRUCE_WOOD.toStack().vampirism$with(ModDataComponents.ACTIVE, Unit.INSTANCE));
+            add(new ItemStack(CURSED_SPRUCE_LOG, 1, DataComponentPatch.builder().set(ModDataComponents.ACTIVE.get(), Unit.INSTANCE).build()));
+            add(new ItemStack(CURSED_SPRUCE_WOOD, 1, DataComponentPatch.builder().set(ModDataComponents.ACTIVE.get(), Unit.INSTANCE).build()));
             add(STRIPPED_CURSED_SPRUCE_LOG);
             add(STRIPPED_CURSED_SPRUCE_WOOD);
             add(CURSED_SPRUCE_PLANKS);

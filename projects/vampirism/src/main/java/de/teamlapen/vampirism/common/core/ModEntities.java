@@ -7,7 +7,6 @@ import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VampirismRegistries;
 import de.teamlapen.vampirism.api.world.entity.convertible.Converter;
 import de.teamlapen.vampirism.common.advancements.critereon.MarshallCriterion;
-import de.teamlapen.vampirism.common.util.serialization.ModStreamCodecs;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IWingsEntity;
 import de.teamlapen.vampirism.common.advancements.critereon.DraculaCriterion;
 import de.teamlapen.vampirism.common.util.serialization.conditions.EntityExistsCondition;
