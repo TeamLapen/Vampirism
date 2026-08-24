@@ -17,8 +17,8 @@ public class ModOils {
 
     public static final DeferredHolder<IOil, IOil> EMPTY = OILS.register("empty", () -> new Oil(16253176));
     public static final DeferredHolder<IOil, IOil> PLANT = OILS.register("plant", () -> new Oil(0x7e6d27));
-    public static final DeferredHolder<IOil, IOil> VAMPIRE_BLOOD = OILS.register("vampire_blood", () -> new Oil(0x922847));
-    public static final DeferredHolder<IOil, IOil> SOVEREIGN_BLOOD = OILS.register("sovereign_blood", () -> new Oil(0xb90a5f));
+    public static final DeferredHolder<IOil, IOil> VAMPIRE_BLOOD = OILS.register("vampire_blood", () -> new Oil(0xb1096b));
+    public static final DeferredHolder<IOil, IOil> SOVEREIGN_BLOOD = OILS.register("sovereign_blood", () -> new Oil(0xff1785));
     public static final DeferredHolder<IOil, EffectWeaponOil> POISON = OILS.register("poison", () -> new EffectWeaponOil(MobEffects.POISON, 50, 15));
     public static final DeferredHolder<IOil, EffectWeaponOil> POISON_STRONG = OILS.register("poison_strong", () -> new EffectWeaponOil(MobEffects.POISON, 50, 15, 1));
     public static final DeferredHolder<IOil, EffectWeaponOil> WEAKNESS = OILS.register("weakness", () -> new EffectWeaponOil(MobEffects.WEAKNESS, 50, 15));

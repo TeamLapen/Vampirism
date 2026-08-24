@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.client.models.items.properties.HasName;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowCharging;
 import de.teamlapen.vampirism.client.models.items.ShatteredArmorModel;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowPull;
+import de.teamlapen.vampirism.client.models.items.properties.StrongOil;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
 import net.minecraft.world.item.Item;
@@ -39,6 +40,7 @@ public class ModItemsRender {
     public static void registerConditional(RegisterConditionalItemModelPropertyEvent event) {
         event.register(HasName.ID, HasName.CODEC);
         event.register(HunterCrossbowCharging.ID, HunterCrossbowCharging.CODEC);
+        event.register(StrongOil.ID, StrongOil.CODEC);
     }
 
     public static void registerItemModels(RegisterItemModelsEvent event) {
