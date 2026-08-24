@@ -16,8 +16,15 @@ import java.util.function.Consumer;
 
 public class EvasionOil extends ApplicableOil implements IArmorOil {
 
-    public EvasionOil(int color, int maxDuration) {
+    private final int amplifier;
+
+    public EvasionOil(int color, int maxDuration, int amplifier) {
         super(color, maxDuration);
+        this.amplifier = amplifier;
+    }
+
+    public EvasionOil(int color, int maxDuration) {
+        this(color, maxDuration, 0);
     }
 
     @Override
@@ -47,6 +54,6 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
      * the evasion chance per hit her armor item
      */
     public float evasionChance() {
-        return 0.01f;
+        return 0.01f * (amplifier + 1);
     }
 }

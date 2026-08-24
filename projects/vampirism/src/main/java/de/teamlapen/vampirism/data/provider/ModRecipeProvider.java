@@ -765,12 +765,12 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         alchemyTable(ModOils.VAMPIRE_BLOOD)
                 .plantOilIngredient()
                 .input(Ingredient.of(ModItems.VAMPIRE_BLOOD_BOTTLE))
-                .unlockedBy("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE))
+                .unlockedBy("has_vampire_blood", has(ModItems.VAMPIRE_BLOOD_BOTTLE))
                 .save(output);
         alchemyTable(ModOils.SOVEREIGN_BLOOD)
                 .plantOilIngredient()
                 .input(Ingredient.of(ModItems.SOVEREIGN_BLOOD))
-                .unlockedBy("has_wheat_seeds", has(ModItems.VAMPIRE_BLOOD_BOTTLE))
+                .unlockedBy("has_sovereign_blood", has(ModItems.SOVEREIGN_BLOOD))
                 .save(output);
         alchemyTable(ModOils.HEALING)
                 .bloodOilIngredient()

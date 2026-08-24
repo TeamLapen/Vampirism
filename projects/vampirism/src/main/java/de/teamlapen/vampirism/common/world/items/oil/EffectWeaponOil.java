@@ -22,15 +22,25 @@ public class EffectWeaponOil extends WeaponOil {
 
     private final Holder<MobEffect> effect;
     private final Supplier<Integer> effectDuration;
+    private final int amplifier;
 
-    public EffectWeaponOil(Holder<MobEffect> effect, Supplier<Integer> effectDuration, int maxDuration) {
+    public EffectWeaponOil(Holder<MobEffect> effect, Supplier<Integer> effectDuration, int maxDuration, int amplifier) {
         super(0, maxDuration);
         this.effect = Objects.requireNonNull(effect);
         this.effectDuration = Objects.requireNonNull(effectDuration);
+        this.amplifier = amplifier;
+    }
+
+    public EffectWeaponOil(Holder<MobEffect> effect, Supplier<Integer> effectDuration, int maxDuration) {
+        this(effect, effectDuration, maxDuration, 0);
+    }
+
+    public EffectWeaponOil(Holder<MobEffect> effect, int effectDuration, int maxDuration, int amplifier) {
+        this(effect, () -> effectDuration, maxDuration, amplifier);
     }
 
     public EffectWeaponOil(Holder<MobEffect> effect, int effectDuration, int maxDuration) {
-        this(effect, () -> effectDuration, maxDuration);
+        this(effect, () -> effectDuration, maxDuration, 0);
     }
 
     @Override
@@ -43,7 +53,7 @@ public class EffectWeaponOil extends WeaponOil {
     }
 
     public MobEffectInstance getEffectInstance() {
-        return new MobEffectInstance(this.effect, this.effectDuration.get());
+        return new MobEffectInstance(this.effect, this.effectDuration.get(), this.amplifier);
     }
 
     @Override

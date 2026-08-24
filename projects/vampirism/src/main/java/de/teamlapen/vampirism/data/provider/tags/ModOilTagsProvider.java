@@ -20,7 +20,11 @@ public class ModOilTagsProvider extends KeyTagProvider<IOil> {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
-        this.tag(ModOilTags.NON_TREASURE);
+        this.tag(ModOilTags.NON_TREASURE)
+                .add(ModOils.EMPTY.getKey())
+                .add(ModOils.HARM.getKey())
+                .add(ModOils.HARM_STRONG.getKey())
+                ;
         this.tag(ModOilTags.STRONG)
                 .add(ModOils.SOVEREIGN_BLOOD.getKey())
                 .add(ModOils.POISON_STRONG.getKey())
