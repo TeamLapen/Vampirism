@@ -36,12 +36,8 @@ public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO crea
     }
 
     @Override
-    public int getDurationReduction() {
-        return 1;
-    }
-
-    @Override
     public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
+        super.getDescription(stack, context, display, tooltips);
         tooltips.accept(Component.empty());
         tooltips.accept(Component.translatable("tooltip.vampirism.oil.on_pickaxe").withStyle(ChatFormatting.DARK_PURPLE));
         tooltips.accept(Component.literal("- ").append(Component.translatable("tooltip.vampirism.oil.auto_smelting")).withStyle(ChatFormatting.GRAY));

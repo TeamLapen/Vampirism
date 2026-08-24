@@ -45,7 +45,9 @@ public interface IApplicableOil extends IOil {
      *
      * @return duration reduction
      */
-    int getDurationReduction();
+    default int getDurationReduction() {
+        return 1;
+    }
 
     /**
      * creates an optional tooltip entry for an item which has this oil applied to

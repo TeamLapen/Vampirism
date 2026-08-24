@@ -1260,6 +1260,7 @@
   "tooltip.vampirism.oil.on_pickaxe": "On Pickaxe:",
   "tooltip.vampirism.oil.auto_smelting": "Automatically smelt destroyed blocks",
   "tooltip.vampirism.oil.wetting": "Wetting",
+  "tooltip.vampirism.oil.lasts": "Washes away after %s uses",
   "tooltip.vampirism.refinement.when_equipped": "When equipped:",
   "tooltip.vampirism.no_entity_spawn": "No entity can spawn on this",
   "tooltip.vampirism.only_vampire_spawn": "Only Vampires can spawn on this",

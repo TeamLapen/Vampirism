@@ -27,9 +27,4 @@ public class WeaponOil extends ApplicableOil implements IWeaponOil {
     public float onDamage(ItemStack stack, float amount, IWeaponOil oil, LivingEntity target, LivingEntity source) {
         return 0;
     }
-
-    @Override
-    public int getDurationReduction() {
-        return 1;
-    }
 }

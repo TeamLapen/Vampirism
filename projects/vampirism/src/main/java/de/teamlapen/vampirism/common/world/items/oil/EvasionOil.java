@@ -39,12 +39,8 @@ public class EvasionOil extends ApplicableOil implements IArmorOil {
     }
 
     @Override
-    public int getDurationReduction() {
-        return 1;
-    }
-
-    @Override
     public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
+        super.getDescription(stack, context, display, tooltips);
         tooltips.accept(Component.empty());
         tooltips.accept(Component.translatable("tooltip.vampirism.oil.on_armor").withStyle(ChatFormatting.DARK_PURPLE));
         tooltips.accept(Component.literal("- ").append(Component.translatable("tooltip.vampirism.oil.evasion_chance")).withStyle(ChatFormatting.GRAY));
