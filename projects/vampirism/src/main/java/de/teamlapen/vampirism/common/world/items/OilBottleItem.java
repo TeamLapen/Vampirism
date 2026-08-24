@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.api.world.items.IOilItem;
 import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModRegistries;
-import de.teamlapen.vampirism.common.tags.ModOilTags;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import net.minecraft.core.Holder;
@@ -33,11 +32,6 @@ public class OilBottleItem extends Item implements IOilItem, BaseDisplayItemGene
     @Override
     public ItemStack withOil(Holder<IOil> oil) {
         return ItemDataUtils.createOil(this, oil);
-    }
-
-    @Override
-    public boolean isFoil(ItemStack itemStack) {
-        return super.isFoil(itemStack) || getOil(itemStack).is(ModOilTags.STRONG);
     }
 
     @Override
