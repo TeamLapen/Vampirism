@@ -67,10 +67,10 @@ public class EffectWeaponOil extends WeaponOil {
         super.getDescription(stack, context, display, tooltips);
         tooltips.accept(Component.empty());
         tooltips.accept(Component.translatable("tooltip.vampirism.oil.weapon_effect_on_hit").withStyle(ChatFormatting.DARK_PURPLE));
-        tooltips.accept(getEffectDescriptionWithDash(getEffectInstance(), context));
+        tooltips.accept(getEffectDescriptionWithSpace(getEffectInstance(), context));
     }
 
-    private Component getEffectDescriptionWithDash(MobEffectInstance instance, @Nullable Item.TooltipContext context) {
+    private Component getEffectDescriptionWithSpace(MobEffectInstance instance, @Nullable Item.TooltipContext context) {
         MutableComponent component = Component.translatable(instance.getDescriptionId());
         if (instance.getAmplifier() > 0) {
             component = Component.translatable("potion.withAmplifier", component, Component.translatable("potion.potency." + instance.getAmplifier()));
@@ -79,6 +79,6 @@ public class EffectWeaponOil extends WeaponOil {
         if (instance.getDuration() > 20 && context != null) {
             component = Component.translatable("potion.withDuration", component, MobEffectUtil.formatDuration(instance, 1.0f, context.tickRate()));
         }
-        return Component.literal("- ").append(component).withStyle(getEffect().getCategory().getTooltipFormatting());
+        return Component.literal(" ").append(component).withStyle(getEffect().getCategory().getTooltipFormatting());
     }
 }
