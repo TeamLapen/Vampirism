@@ -229,7 +229,10 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         for (int i = 0; i < 2; i++) {
             if (this.items.get(i + 2).isEmpty()) {
                 ItemStack stack = getOutput(level, itemstack, this.items.get(i));
-                this.items.set(i, ItemStack.EMPTY);
+                if (stack.isEmpty()) {
+                    continue;
+                }
+                this.items.get(i).shrink(1);
                 this.items.set(i + 2, stack);
             }
         }
@@ -241,17 +244,13 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         level.levelEvent(1035, blockpos, 0);
     }
 
-    public boolean canPlaceItem(int p_94041_1_, @NotNull ItemStack stack) {
-        if (p_94041_1_ == 3) {
-            return isValidIngredient(this.level, stack);
-        } else {
-            Item item = stack.getItem();
-            if (p_94041_1_ == 4) {
-                return item == Items.BLAZE_POWDER;
-            } else {
-                return isValidInput(this.level, stack) && this.getItem(p_94041_1_).isEmpty();
-            }
-        }
+    public boolean canPlaceItem(int slot, @NotNull ItemStack stack) {
+        return switch (slot) {
+            case AlchemyTableMenu.OIL_SLOT_1, AlchemyTableMenu.OIL_SLOT_2 -> isValidIngredient(this.level, stack) && this.getItem(slot).isEmpty();
+            case AlchemyTableMenu.INGREDIENT_SLOT -> isValidInput(this.level, stack);
+            case AlchemyTableMenu.FUEL_SLOT -> stack.getItem() == Items.BLAZE_POWDER;
+            default -> false;
+        };
     }
 
     private boolean hasRecipe(@NotNull Level level, ItemStack input, @NotNull ItemStack ingredient) {
