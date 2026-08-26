@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 
-public class WeaponOil extends ApplicableOil implements IWeaponOil {
+public abstract class WeaponOil extends ApplicableOil implements IWeaponOil {
 
     public WeaponOil(int color, int maxDuration) {
         super(color, maxDuration);

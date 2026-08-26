@@ -51,7 +51,7 @@ public class ClientEventHandler {
         List<Component> tooltip = event.getToolTip();
         Player player = event.getEntity();
 
-        AppliedOilContent.addTooltipIfExist(player, stack, tooltip, event.getFlags());
+        AppliedOilContent.addTooltipIfExist(player, stack, event.getContext(), tooltip, event.getFlags());
 
         ItemStackTemplate containedProjectiles = stack.get(ModDataComponents.CONTAINED_PROJECTILES.get());
         if (containedProjectiles != null) {

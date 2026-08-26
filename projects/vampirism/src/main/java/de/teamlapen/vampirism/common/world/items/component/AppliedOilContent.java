@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.world.items.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.api.world.items.components.IFactionRestriction;
 import de.teamlapen.faction.common.components.FactionRestriction;
 import de.teamlapen.faction.common.components.IFactionRestrictionProvider;
@@ -19,11 +18,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
@@ -72,32 +70,23 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
 
     //<editor-fold desc="Tooltip>
 
-    public static void addTooltipIfExist(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
-        addTooltipIfExist(FactionsMod.proxy.getClientPlayer(), stack, tooltip, flag);
-    }
-
-    public static void addTooltipIfExist(@Nullable Player player, ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
+    public static void addTooltipIfExist(@Nullable Player player, ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         AppliedOilContent appliedOilContent = stack.get(ModDataComponents.APPLIED_OIL);
         if (appliedOilContent != null) {
-            appliedOilContent.addTooltip(stack, tooltip, flag);
+            appliedOilContent.addTooltip(stack, context, tooltip, flag);
         }
     }
 
-    @SuppressWarnings("DataFlowIssue")
-    public void addTooltip(ItemStack stack, List<Component> tooltip, TooltipFlag flag) {
-        Identifier id = oil().getKey().identifier();
-        MutableComponent component = Component.translatable(String.format("oil.%s.%s", id.getNamespace(), id.getPath())).withStyle(ChatFormatting.LIGHT_PURPLE);
-        if (oil().value().hasDuration()) {
-            int maxDuration = oil().value().getMaxDuration(stack);
-            float perc = duration / (float) maxDuration;
-            ChatFormatting status = perc > 0.5 ? ChatFormatting.GREEN : perc > 0.25 ? ChatFormatting.GOLD : ChatFormatting.RED;
-            if (flag.isAdvanced()) {
-                component.append(" ").append(Component.literal("%s/%s".formatted(duration, maxDuration)).withStyle(status));
-            } else {
-                component.append(" ").append(Component.translatable("tooltip.vampirism.oil.wetting").withStyle(status));
+    public void addTooltip(ItemStack stack, @Nullable Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        List<Component> effectDescription = oil().value().getEffectDescription(context);
+        if (!effectDescription.isEmpty()) {
+            tooltip.add(Component.empty());
+            tooltip.add(Component.translatable("tooltip.vampirism.oil.applied").withStyle(ChatFormatting.GRAY));
+            tooltip.addAll(effectDescription);
+            if (oil().value().hasDuration()) {
+                tooltip.add(Component.literal(" ").append(Component.translatable("tooltip.vampirism.oil.applied_left", duration).withStyle(ChatFormatting.BLUE)));
             }
         }
-        tooltip.add(component);
     }
 
     //</editor-fold>
