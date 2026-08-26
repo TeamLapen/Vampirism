@@ -16,7 +16,6 @@ import de.teamlapen.faction.common.network.packets.server.ServerboundForgetSkill
 import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.faction.common.network.packets.server.ServerboundUnlockSkillPacket;
 import de.teamlapen.faction.common.world.inventory.InventoryHelper;
-import de.teamlapen.faction.common.world.items.OblivionPotionItem;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -80,7 +79,6 @@ public class SkillsScreen extends Screen {
     private double lastMouseX;
     private double lastMouseY;
 
-    private int oblivionPortions = 0;
     private int forgetCost = 0;
 
     public SkillsScreen(ISkillPlayer<?> factionPlayer, @Nullable ILastScreenProvider backScreen) {
@@ -282,10 +280,6 @@ public class SkillsScreen extends Screen {
     public void tick() {
         super.tick();
 
-        if (minecraft.player != null) {
-            oblivionPortions = OblivionPotionItem.countPortions(minecraft.player);
-        }
-
         if (holdingMouse == Holding.NONE || selectedTab == null || minecraft.player == null || minecraft.player.getEffect(FactionEffects.OBLIVION) != null || !isMouseOverContent(lastMouseX, lastMouseY)) {
             cancelHolding();
             return;
@@ -323,8 +317,13 @@ public class SkillsScreen extends Screen {
     }
 
     private boolean canForget(Holder<? extends ISkill<?>> skill) {
+        if (minecraft.player == null || !minecraft.player.isCreative()) {
+            return false;
+        }
+
         forgetCost = forgetCascade(skill).size();
-        return forgetCost > 0 && (minecraft.player != null && minecraft.player.isCreative() || oblivionPortions >= forgetCost);
+
+        return forgetCost > 0;
     }
 
     private List<Holder<? extends ISkill<?>>> forgetCascade(Holder<? extends ISkill<?>> skill) {

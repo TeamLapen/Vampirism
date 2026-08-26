@@ -27,8 +27,7 @@ public class OblivionEffect implements ConsumeEffect {
     @Override
     public boolean apply(Level level, ItemStack itemstack, LivingEntity livingEntity) {
         if (livingEntity instanceof Player player) {
-            int portions = OblivionPotionItem.portionsOf(itemstack);
-            FactionPlayerHandler.get(player).getCurrentSkillPlayer().ifPresent(skillPlayer -> OblivionPotionItem.applyEffect(skillPlayer, portions));
+            FactionPlayerHandler.get(player).getCurrentSkillPlayer().ifPresent(OblivionPotionItem::applyEffect);
         }
         if (livingEntity instanceof MinionEntity<?> minion) {
             minion.getMinionData().ifPresent(d -> d.resetStats(minion));

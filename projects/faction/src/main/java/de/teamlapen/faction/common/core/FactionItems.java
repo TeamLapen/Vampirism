@@ -26,7 +26,7 @@ public class FactionItems {
     public static final DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<PlayerFactionConsumeEffect>> PLAYER_FACTION_BASED = CONSUME_EFFECTS.register("player_faction_based", () -> new ConsumeEffect.Type<>(PlayerFactionConsumeEffect.CODEC, PlayerFactionConsumeEffect.STREAM_CODEC));
 
 
-    public static final DeferredItem<OblivionPotionItem> OBLIVION_POTION = ITEMS.registerItem("oblivion_potion", props -> new OblivionPotionItem(props.stacksTo(1).rarity(Rarity.UNCOMMON).component(DataComponents.CONSUMABLE, Consumables.defaultDrink().onConsume(new OblivionEffect()).build()).component(FactionDataComponents.OBLIVION_PORTIONS, OblivionPotionItem.MAX_PORTIONS)));
+    public static final DeferredItem<OblivionPotionItem> OBLIVION_POTION = ITEMS.registerItem("oblivion_potion", props -> new OblivionPotionItem(props.stacksTo(1).rarity(Rarity.UNCOMMON).component(DataComponents.CONSUMABLE, Consumables.defaultDrink().onConsume(new OblivionEffect()).build())));
     public static final DeferredItem<BlockItem> TOTEM_BASE = ITEMS.registerSimpleBlockItem(FactionBlocks.TOTEM_BASE);
     public static final DeferredItem<BlockItem> TOTEM_TOP = ITEMS.registerSimpleBlockItem(FactionBlocks.TOTEM_TOP);
     public static final DeferredItem<BlockItem> TOTEM_TOP_CRAFTED = ITEMS.registerSimpleBlockItem(FactionBlocks.TOTEM_TOP_CRAFTED);

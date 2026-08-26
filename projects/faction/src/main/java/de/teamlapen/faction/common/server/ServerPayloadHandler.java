@@ -97,10 +97,8 @@ public class ServerPayloadHandler {
             //Try to keep this simple
             switch (msg.event()) {
                 case RESET_SKILLS -> {
-                    ItemStack potion = InventoryHelper.getFirst(player.getInventory(), FactionItems.OBLIVION_POTION.get());
-                    int portions = potion == null ? 0 : OblivionPotionItem.portionsOf(potion);
                     InventoryHelper.removeItemFromInventory(player.getInventory(), new ItemStack((FactionItems.OBLIVION_POTION).get()));
-                    handler.getCurrentSkillPlayer().ifPresent(skillPlayer -> OblivionPotionItem.applyEffect(skillPlayer, portions));
+                    handler.getCurrentSkillPlayer().ifPresent(OblivionPotionItem::applyEffect);
                 }
                 case SHOW_MINION_CALL_SELECTION -> ClientboundRequestMinionSelectPacket.createRequestForPlayer(player, ClientboundRequestMinionSelectPacket.Action.CALL).ifPresent(a -> player.connection.send(a));
                 case FACTION_MENU -> handler.openFactionMenu();
@@ -183,6 +181,10 @@ public class ServerPayloadHandler {
     public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void handleForgetSkillPacket(ServerboundForgetSkillPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player();
+            if (!player.isCreative()) {
+                LOGGER.warn("Player {} cannot forget skills, they're not in creative mode", player);
+                return;
+            }
 
             Optional<T> factionPlayerOpt = FactionPlayerHandler.get(player).getCurrentSkillPlayer();
             factionPlayerOpt.ifPresent(factionPlayer -> {
@@ -195,19 +197,9 @@ public class ServerPayloadHandler {
                     return;
                 }
 
-                boolean free = player.isCreative();
-                if (!free && OblivionPotionItem.countPortions(player) < cascade.size()) {
-                    LOGGER.warn("Player {} has too few oblivion potion portions to forget {} skill(s)", player, cascade.size());
-                    return;
-                }
-
                 for (Holder<? extends ISkill<?>> forgotten : cascade) {
                     //noinspection unchecked
                     skillHandler.disableSkill((Holder<ISkill<T>>) forgotten, msg.skillTree());
-                }
-
-                if (!free) {
-                    OblivionPotionItem.consumePortions(player, cascade.size());
                 }
             });
         });
