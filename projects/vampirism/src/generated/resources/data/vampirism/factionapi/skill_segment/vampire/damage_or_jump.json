@@ -2,7 +2,10 @@
   "parents": [
     "vampirism:vampire/blood_vision"
   ],
-  "priority": 1,
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/garlic_blood_vision"
+  },
   "skills": [
     "vampirism:vampire_attack_damage",
     "vampirism:vampire_jump"

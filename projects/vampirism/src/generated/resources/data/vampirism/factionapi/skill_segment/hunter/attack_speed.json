@@ -2,7 +2,10 @@
   "parents": [
     "vampirism:hunter/near_breach_reforging"
   ],
-  "priority": 1,
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/attack_damage"
+  },
   "skills": [
     "vampirism:hunter_attack_speed"
   ],

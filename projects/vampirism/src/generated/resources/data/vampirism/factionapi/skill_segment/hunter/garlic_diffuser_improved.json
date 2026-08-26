@@ -2,7 +2,10 @@
   "parents": [
     "vampirism:hunter/garlic_diffuser"
   ],
-  "priority": 1,
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/purified_garlic"
+  },
   "skills": [
     "vampirism:garlic_diffuser_improved"
   ],

@@ -2,7 +2,10 @@
   "parents": [
     "vampirism:hunter/lord_root"
   ],
-  "priority": 1,
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/better_minions"
+  },
   "skills": [
     "vampirism:lord_speed",
     "vampirism:lord_attack_speed"

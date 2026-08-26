@@ -37,8 +37,11 @@ public class SkillTreeLayout {
         Map<SkillTreeGraph.Entry, Placement> placements = new LinkedHashMap<>();
         SortedMap<Integer, List<SkillTreeGraph.Entry>> rows = tree.entries().stream().collect(Collectors.groupingBy(SkillTreeGraph.Entry::depth, TreeMap::new, Collectors.toList()));
 
-        for (List<SkillTreeGraph.Entry> row : rows.values()) {
-            row.sort(Comparator.comparingInt((SkillTreeGraph.Entry entry) -> primaryParentX(entry, placements)).thenComparingInt(entry -> entry.segment().value().priority()).thenComparing(entry -> entry.key().identifier()));
+        for (Map.Entry<Integer, List<SkillTreeGraph.Entry>> rowEntry : rows.entrySet()) {
+            List<SkillTreeGraph.Entry> row = rowEntry.getValue();
+            row.sort(Comparator.comparingInt((SkillTreeGraph.Entry entry) -> primaryParentX(entry, placements)).thenComparing(entry -> entry.key().identifier()));
+            row = SkillTreeGraph.orderByPlacement(row);
+            rowEntry.setValue(row);
 
             int cursor = -rowWidth(row) / 2;
 
@@ -201,7 +204,7 @@ public class SkillTreeLayout {
     }
 
     private static int primaryParentX(SkillTreeGraph.Entry entry, Map<SkillTreeGraph.Entry, Placement> placements) {
-        return entry.parents().stream().min(Comparator.comparingInt(parent -> parent.segment().value().priority())).map(placements::get).map(Placement::x).orElse(0);
+        return entry.parents().stream().map(placements::get).filter(Objects::nonNull).mapToInt(Placement::x).min().orElse(0);
     }
 
     private static int spacing(SkillTreeGraph.Entry left, SkillTreeGraph.Entry right) {

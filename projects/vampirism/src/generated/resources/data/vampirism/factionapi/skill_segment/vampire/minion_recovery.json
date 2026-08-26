@@ -2,7 +2,10 @@
   "parents": [
     "vampirism:vampire/lord_root"
   ],
-  "priority": 3,
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/blood_collection"
+  },
   "skills": [
     "factionapi:minion_recovery"
   ],

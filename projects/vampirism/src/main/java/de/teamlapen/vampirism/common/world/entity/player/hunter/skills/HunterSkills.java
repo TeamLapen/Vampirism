@@ -167,23 +167,20 @@ public class HunterSkills {
 
             level(KEY_BASIC_ALCHEMY, BASIC_ALCHEMY)
                     .parents(KEY_BASIC_TECHNOLOGY)
-                    .priority(0)
                     .register(context);
             level(KEY_GARLIC_DIFFUSER, GARLIC_DIFFUSER)
                     .parents(KEY_BASIC_ALCHEMY)
-                    .priority(0)
                     .register(context);
             level(KEY_PURIFIED_GARLIC, PURIFIED_GARLIC)
                     .parents(KEY_GARLIC_DIFFUSER)
-                    .priority(0)
                     .register(context);
             level(KEY_GARLIC_DIFFUSER_IMPROVED, GARLIC_DIFFUSER_IMPROVED)
                     .parents(KEY_GARLIC_DIFFUSER)
-                    .priority(1)
+                    .after(KEY_PURIFIED_GARLIC)
                     .register(context);
             level(KEY_CRUCIFIX_WIELDER, CRUCIFIX_WIELDER)
                     .parents(KEY_BASIC_ALCHEMY)
-                    .priority(1)
+                    .after(KEY_GARLIC_DIFFUSER)
                     .register(context);
             level(KEY_HUNTER_AWARENESS, HUNTER_AWARENESS)
                     .parents(KEY_CRUCIFIX_WIELDER)
@@ -193,16 +190,15 @@ public class HunterSkills {
                     .register(context);
             level(KEY_CRUCIFIX_REPEL, CRUCIFIX_REPEL)
                     .parents(KEY_ULTIMATE_CRUCIFIX)
-                    .priority(0)
                     .register(context);
             level(KEY_ENHANCED_BLESSING, ENHANCED_BLESSING)
                     .parents(KEY_ULTIMATE_CRUCIFIX)
-                    .priority(1)
+                    .after(KEY_CRUCIFIX_REPEL)
                     .register(context);
 
             level(KEY_MULTITASK_BREWING, MULTITASK_BREWING)
                     .parents(KEY_BASIC_TECHNOLOGY)
-                    .priority(1)
+                    .after(KEY_BASIC_ALCHEMY)
                     .register(context);
             level(KEY_CONCENTRATED_OR_DURABLE_BREWING, CONCENTRATED_BREWING, DURABLE_BREWING)
                     .parents(KEY_MULTITASK_BREWING)
@@ -222,78 +218,72 @@ public class HunterSkills {
 
             level(KEY_NEAR_BREACH_REFORGING, NEAR_BREACH_REFORGING)
                     .parents(KEY_BASIC_TECHNOLOGY)
-                    .priority(2)
+                    .after(KEY_MULTITASK_BREWING)
                     .register(context);
             level(KEY_ATTACK_DAMAGE, HUNTER_ATTACK_DAMAGE)
                     .parents(KEY_NEAR_BREACH_REFORGING)
-                    .priority(0)
                     .register(context);
             level(KEY_ATTACK_SPEED, HUNTER_ATTACK_SPEED)
                     .parents(KEY_NEAR_BREACH_REFORGING)
-                    .priority(1)
+                    .after(KEY_ATTACK_DAMAGE)
                     .register(context);
             level(KEY_ARMOR_BOUND_SPEED, ARMOR_SPEED)
                     .parents(KEY_ATTACK_DAMAGE, KEY_ATTACK_SPEED)
-                    .priority(0)
                     .register(context);
             level(KEY_ARMOR_BOUND_JUMP, ARMOR_JUMP)
                     .parents(KEY_ATTACK_DAMAGE, KEY_ATTACK_SPEED)
-                    .priority(1)
+                    .after(KEY_ARMOR_BOUND_SPEED)
                     .register(context);
             level(KEY_CROSSBOW_TECHNIQUE, CROSSBOW_TECHNIQUE)
                     .parents(KEY_ARMOR_BOUND_SPEED, KEY_ARMOR_BOUND_JUMP)
                     .register(context);
             level(KEY_DOUBLE_IT_OR_DUAL_WIELDING, DOUBLE_IT, DUAL_WIELDING)
                     .parents(KEY_CROSSBOW_TECHNIQUE)
-                    .priority(0)
                     .register(context);
             level(KEY_MASTER_CRAFTSMANSHIP, MASTER_CRAFTSMANSHIP)
                     .parents(KEY_CROSSBOW_TECHNIQUE)
-                    .priority(1)
+                    .after(KEY_DOUBLE_IT_OR_DUAL_WIELDING)
                     .register(context);
             level(KEY_ACTUALLY_USE_AXE, AXE2)
                     .parents(KEY_MASTER_CRAFTSMANSHIP)
                     .register(context);
             level(KEY_ACTUALLY_USE_STAKE, STAKE2)
                     .parents(KEY_ACTUALLY_USE_AXE)
-                    .priority(0)
                     .register(context);
             level(KEY_ARTISAN_CRAFTSMANSHIP, ARTISAN_CRAFTSMANSHIP)
                     .parents(KEY_ACTUALLY_USE_AXE)
-                    .priority(1)
+                    .after(KEY_ACTUALLY_USE_STAKE)
                     .register(context);
 
             lord(KEY_LORD_ROOT, LORD_ROOT)
                     .register(context);
             lord(KEY_BETTER_MINIONS, MINION_STATS_INCREASE)
                     .parents(KEY_LORD_ROOT)
-                    .priority(0)
                     .register(context);
             lord(KEY_MINION_TECHNOLOGY, MINION_TECH_CROSSBOWS)
                     .parents(KEY_BETTER_MINIONS)
                     .register(context);
             lord(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED, LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED)
                     .parents(KEY_LORD_ROOT)
-                    .priority(1)
+                    .after(KEY_BETTER_MINIONS)
                     .register(context);
             lord(KEY_SUPPLY_COLLECTION, MINION_COLLECT)
                     .parents(KEY_LORD_ROOT)
-                    .priority(2)
+                    .after(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED)
                     .register(context);
             lord(KEY_MINION_RECOVERY, FactionSkills.MINION_RECOVERY)
                     .parents(KEY_LORD_ROOT)
-                    .priority(3)
+                    .after(KEY_SUPPLY_COLLECTION)
                     .register(context);
 
             marshall(KEY_MARSHALL_ROOT, MARSHALL_ROOT)
                     .register(context);
             marshall(KEY_MASTER_ALCHEMIST, MASTER_ALCHEMIST)
                     .parents(KEY_MARSHALL_ROOT)
-                    .priority(0)
                     .register(context);
             marshall(KEY_ULTIMATE_BREWER, ULTIMATE_BREWER)
                     .parents(KEY_MARSHALL_ROOT)
-                    .priority(1)
+                    .after(KEY_MASTER_ALCHEMIST)
                     .register(context);
         }
 

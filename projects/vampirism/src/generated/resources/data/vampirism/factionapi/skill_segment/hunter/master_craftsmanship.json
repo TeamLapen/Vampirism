@@ -2,7 +2,10 @@
   "parents": [
     "vampirism:hunter/crossbow_technique"
   ],
-  "priority": 1,
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/double_it_or_dual_wielding"
+  },
   "skills": [
     "vampirism:master_craftsmanship"
   ],

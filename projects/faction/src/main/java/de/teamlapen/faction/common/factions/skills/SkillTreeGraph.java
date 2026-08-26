@@ -3,6 +3,7 @@ package de.teamlapen.faction.common.factions.skills;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillSegment;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
+import de.teamlapen.faction.api.factions.skills.SegmentPlacement;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -133,7 +135,8 @@ public class SkillTreeGraph {
 
     /**
      * Assigns each segment the length of the longest path from a root, so it always ends up below all of its parents,
-     * then orders by depth, priority and key. Segments forming a cycle are specifically dropped out.
+     * then orders by depth and key, before the placements of each row are applied. Segments forming a cycle are
+     * specifically dropped out.
      */
     private static List<Entry> sortByDepth(Collection<Entry> entries) {
         Map<Entry, Integer> remainingParents = new HashMap<>();
@@ -164,9 +167,77 @@ public class SkillTreeGraph {
             LOGGER.error("Skill segments form a cycle and are ignored: {}", entries.stream().filter(entry -> !resolved.contains(entry)).map(entry -> entry.key().identifier().toString()).collect(Collectors.joining(", ")));
         }
 
-        sorted.sort(Comparator.comparingInt(Entry::depth).thenComparingInt(entry -> entry.segment().value().priority()).thenComparing(entry -> entry.key().identifier()));
+        sorted.sort(Comparator.comparingInt(Entry::depth).thenComparing(entry -> entry.key().identifier()));
 
-        return sorted;
+        return sorted.stream().collect(Collectors.groupingBy(Entry::depth, TreeMap::new, Collectors.toList())).values().stream().map(SkillTreeGraph::orderByPlacement).flatMap(List::stream).toList();
+    }
+
+    public static List<Entry> orderByPlacement(List<Entry> row) {
+        if (row.size() < 2) {
+            return row;
+        }
+
+        Map<ResourceKey<ISkillSegment>, Entry> byKey = row.stream().collect(Collectors.toMap(Entry::key, Function.identity()));
+        Map<Entry, Integer> indices = new HashMap<>();
+        Map<Entry, List<Entry>> successors = new HashMap<>();
+        Map<Entry, Integer> predecessors = new HashMap<>();
+
+        for (Entry entry : row) {
+            indices.put(entry, indices.size());
+            predecessors.put(entry, 0);
+        }
+
+        for (Entry entry : row) {
+            SegmentPlacement placement = entry.segment().value().placement().orElse(null);
+            if (placement == null) {
+                continue;
+            }
+            Entry relative = byKey.get(placement.segment());
+            if (relative == null || relative == entry) {
+                LOGGER.warn("Skill segment {} is placed {} a segment that is not part of its row", entry.key().identifier(), placement.type().getSerializedName());
+                continue;
+            }
+            Entry first = switch (placement.type()) {
+                case BEFORE -> entry;
+                case AFTER -> relative;
+                default -> null; // the placement is an extendable enum, leave the default one here
+            };
+            if (first == null) {
+                continue;
+            }
+            Entry second = first == entry ? relative : entry;
+            successors.computeIfAbsent(first, key -> new ArrayList<>()).add(second);
+            predecessors.merge(second, 1, Integer::sum);
+        }
+
+        if (successors.isEmpty()) {
+            return row;
+        }
+
+        PriorityQueue<Entry> queue = new PriorityQueue<>(Comparator.comparingInt(indices::get));
+        predecessors.forEach((entry, count) -> {
+            if (count == 0) {
+                queue.add(entry);
+            }
+        });
+
+        List<Entry> ordered = new ArrayList<>(row.size());
+        while (!queue.isEmpty()) {
+            Entry entry = queue.poll();
+            ordered.add(entry);
+            for (Entry successor : successors.getOrDefault(entry, List.of())) {
+                if (predecessors.merge(successor, -1, Integer::sum) == 0) {
+                    queue.add(successor);
+                }
+            }
+        }
+
+        if (ordered.size() != row.size()) {
+            LOGGER.error("Skill segment placements form a cycle and are ignored: {}", row.stream().filter(entry -> !ordered.contains(entry)).map(entry -> entry.key().identifier().toString()).collect(Collectors.joining(", ")));
+            return row;
+        }
+
+        return ordered;
     }
 
     public Collection<Tree> trees() {

@@ -2,7 +2,10 @@
   "parents": [
     "vampirism:hunter/basic_alchemy"
   ],
-  "priority": 1,
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/garlic_diffuser"
+  },
   "skills": [
     "vampirism:crucifix_wielder"
   ],

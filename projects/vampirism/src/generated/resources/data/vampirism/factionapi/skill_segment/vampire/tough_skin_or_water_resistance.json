@@ -2,7 +2,10 @@
   "parents": [
     "vampirism:vampire/summon_bats"
   ],
-  "priority": 1,
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/hissing"
+  },
   "skills": [
     "vampirism:less_sundamage",
     "vampirism:water_resistance"

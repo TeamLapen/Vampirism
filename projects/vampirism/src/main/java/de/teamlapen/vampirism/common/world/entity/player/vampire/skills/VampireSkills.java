@@ -158,7 +158,6 @@ public class VampireSkills {
 
             level(KEY_VAMPIRE_RAGE, VAMPIRE_RAGE)
                     .parents(KEY_NO_LONGER_FLEDGLING)
-                    .priority(0)
                     .register(context);
             level(KEY_ADVANCED_BITER, ADVANCED_BITER)
                     .parents(KEY_VAMPIRE_RAGE)
@@ -178,7 +177,7 @@ public class VampireSkills {
 
             level(KEY_SUNSCREEN, SUNSCREEN)
                     .parents(KEY_NO_LONGER_FLEDGLING)
-                    .priority(1)
+                    .after(KEY_VAMPIRE_RAGE)
                     .register(context);
             level(KEY_ATTACK_OR_MOVEMENT_SPEED, VAMPIRE_ATTACK_SPEED, VAMPIRE_SPEED)
                     .parents(KEY_SUNSCREEN)
@@ -188,11 +187,10 @@ public class VampireSkills {
                     .register(context);
             level(KEY_GARLIC_BLOOD_VISION, BLOOD_VISION_GARLIC)
                     .parents(KEY_BLOOD_VISION)
-                    .priority(0)
                     .register(context);
             level(KEY_DAMAGE_OR_JUMP, VAMPIRE_ATTACK_DAMAGE, VAMPIRE_JUMP)
                     .parents(KEY_BLOOD_VISION)
-                    .priority(1)
+                    .after(KEY_GARLIC_BLOOD_VISION)
                     .register(context);
             level(KEY_FAST_RECOVERY_OR_RESURRECTION, NEONATAL_DECREASE, DBNO_DURATION)
                     .parents(KEY_DAMAGE_OR_JUMP)
@@ -203,15 +201,14 @@ public class VampireSkills {
 
             level(KEY_SUMMON_BATS, SUMMON_BATS)
                     .parents(KEY_NO_LONGER_FLEDGLING)
-                    .priority(2)
+                    .after(KEY_SUNSCREEN)
                     .register(context);
             level(KEY_HISSING, HISSING)
                     .parents(KEY_SUMMON_BATS)
-                    .priority(0)
                     .register(context);
             level(KEY_TOUGH_SKIN_OR_WATER_RESISTANCE, LESS_SUNDAMAGE, WATER_RESISTANCE)
                     .parents(KEY_SUMMON_BATS)
-                    .priority(1)
+                    .after(KEY_HISSING)
                     .register(context);
             level(KEY_FRUGAL_VAMPIRE, LESS_BLOOD_THIRST)
                     .parents(KEY_TOUGH_SKIN_OR_WATER_RESISTANCE)
@@ -230,30 +227,28 @@ public class VampireSkills {
                     .register(context);
             lord(KEY_BETTER_MINIONS, MINION_STATS_INCREASE)
                     .parents(KEY_LORD_ROOT)
-                    .priority(0)
                     .register(context);
             lord(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED, LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED)
                     .parents(KEY_LORD_ROOT)
-                    .priority(1)
+                    .after(KEY_BETTER_MINIONS)
                     .register(context);
             lord(KEY_BLOOD_COLLECTION, MINION_COLLECT)
                     .parents(KEY_LORD_ROOT)
-                    .priority(2)
+                    .after(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED)
                     .register(context);
             lord(KEY_MINION_RECOVERY, FactionSkills.MINION_RECOVERY)
                     .parents(KEY_LORD_ROOT)
-                    .priority(3)
+                    .after(KEY_BLOOD_COLLECTION)
                     .register(context);
 
             dracula(KEY_DRACULA_ROOT, DRACULA_ROOT)
                     .register(context);
             dracula(KEY_MIST_FORM, MIST_FORM)
                     .parents(KEY_DRACULA_ROOT)
-                    .priority(0)
                     .register(context);
             dracula(KEY_AURA_OF_DARKNESS, AURA_OF_DARKNESS)
                     .parents(KEY_DRACULA_ROOT)
-                    .priority(1)
+                    .after(KEY_MIST_FORM)
                     .register(context);
         }
 

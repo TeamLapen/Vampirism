@@ -2,7 +2,10 @@
   "parents": [
     "vampirism:hunter/ultimate_crucifix"
   ],
-  "priority": 1,
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/crucifix_repel"
+  },
   "skills": [
     "vampirism:enhanced_blessing"
   ],
