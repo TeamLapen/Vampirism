@@ -12,6 +12,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ExtraCodecs;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +35,7 @@ public record SkillSegment(Holder<ISkillTree> tree, List<Holder<? extends ISkill
         private final List<Holder<? extends ISkill<?>>> skills;
         private List<ResourceKey<ISkillSegment>> parents = List.of();
         private List<ResourceKey<ISkillSegment>> lockingSegments = List.of();
-        private Optional<SegmentPlacement> placement = Optional.empty();
+        private @Nullable SegmentPlacement placement = null;
 
         @SafeVarargs
         public Builder(ResourceKey<ISkillTree> tree, ResourceKey<ISkillSegment> key, Holder<? extends ISkill<?>>... skills) {
@@ -69,12 +70,12 @@ public record SkillSegment(Holder<ISkillTree> tree, List<Holder<? extends ISkill
         }
 
         public final Builder placement(SegmentPlacement placement) {
-            this.placement = Optional.of(placement);
+            this.placement = placement;
             return this;
         }
 
         public void register(BootstrapContext<ISkillSegment> context) {
-            context.register(key, new SkillSegment(context.lookup(FactionRegistries.Keys.SKILL_TREE).getOrThrow(tree), skills, parents, lockingSegments, placement));
+            context.register(key, new SkillSegment(context.lookup(FactionRegistries.Keys.SKILL_TREE).getOrThrow(tree), skills, parents, lockingSegments, Optional.ofNullable(placement)));
         }
     }
 }
