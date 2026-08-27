@@ -11,6 +11,8 @@ import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
@@ -18,6 +20,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -39,98 +42,100 @@ public class RepairRecipeMaker {
 
 
     private static Stream<RepairData> getRepairData() {
-        return Stream.of(
-            Stream.of(
-                new RepairData(ItemTags.IRON_TOOL_MATERIALS,
-                    ModItems.HUNTER_AXE_NORMAL.toStack(),
-                    ModItems.HUNTER_AXE_ENHANCED.toStack(),
-                    ModItems.HUNTER_AXE_ULTIMATE.toStack(),
-                    ModItems.BASIC_TECH_CROSSBOW.toStack(),
-                    ModItems.ENHANCED_TECH_CROSSBOW.toStack(),
-                    ModItems.HUNTER_COAT_HEAD_NORMAL.toStack(),
-                    ModItems.HUNTER_COAT_HEAD_ENHANCED.toStack(),
-                    ModItems.HUNTER_COAT_HEAD_ULTIMATE.toStack(),
-                    ModItems.HUNTER_COAT_CHEST_NORMAL.toStack(),
-                    ModItems.HUNTER_COAT_CHEST_ENHANCED.toStack(),
-                    ModItems.HUNTER_COAT_CHEST_ULTIMATE.toStack(),
-                        ModItems.HUNTER_COAT_LEGS_NORMAL.toStack(),
-                        ModItems.HUNTER_COAT_LEGS_ENHANCED.toStack(),
-                        ModItems.HUNTER_COAT_LEGS_ULTIMATE.toStack(),
-                        ModItems.HUNTER_COAT_FEET_NORMAL.toStack(),
-                        ModItems.HUNTER_COAT_FEET_ENHANCED.toStack(),
-                        ModItems.HUNTER_COAT_FEET_ULTIMATE.toStack()),
-                new RepairData(Tags.Items.STRINGS,
-                        ModItems.BASIC_CROSSBOW.toStack(),
-                        ModItems.BASIC_DOUBLE_CROSSBOW.toStack(),
-                        ModItems.ENHANCED_CROSSBOW.toStack(),
-                        ModItems.ENHANCED_DOUBLE_CROSSBOW.toStack()),
-                new RepairData(Tags.Items.LEATHERS,
-                        ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED.toStack(),
-                        ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE.toStack()),
-            new RepairData(ModItemTags.HEART,
-                    ModItems.VAMPIRE_CLOTHING_CROWN.toStack(),
-                    ModItems.VAMPIRE_CLOTHING_HAT.toStack(),
-                    ModItems.VAMPIRE_CLOTHING_LEGS.toStack(),
-                    ModItems.VAMPIRE_CLOAK_WHITE.toStack(),
-                    ModItems.VAMPIRE_CLOAK_ORANGE.toStack(),
-                    ModItems.VAMPIRE_CLOAK_LIGHT_BLUE.toStack(),
-                    ModItems.VAMPIRE_CLOAK_YELLOW.toStack(),
-                    ModItems.VAMPIRE_CLOAK_LIME.toStack(),
-                    ModItems.VAMPIRE_CLOAK_PINK.toStack(),
-                    ModItems.VAMPIRE_CLOAK_GRAY.toStack(),
-                    ModItems.VAMPIRE_CLOAK_LIGHT_GRAY.toStack(),
-                    ModItems.VAMPIRE_CLOAK_CYAN.toStack(),
-                    ModItems.VAMPIRE_CLOAK_PURPLE.toStack(),
-                    ModItems.VAMPIRE_CLOAK_BLUE.toStack(),
-                    ModItems.VAMPIRE_CLOAK_BROWN.toStack(),
-                    ModItems.VAMPIRE_CLOAK_GREEN.toStack(),
-                    ModItems.VAMPIRE_CLOAK_RED.toStack(),
-                    ModItems.VAMPIRE_CLOAK_BLACK.toStack())),
-                IntStream.of(0,1,2,3,4).mapToObj(PureLevel::new).flatMap(x-> Stream.of(
-                        new RepairData(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, x, ModItems.BLOOD_INFUSED_IRON_INGOT).display(),
-                                ModItems.HEART_SEEKER_NORMAL.toStack().vampirism$with(ModDataComponents.PURE_LEVEL, x),
-                                ModItems.HEART_STRIKER_NORMAL.toStack().vampirism$with(ModDataComponents.PURE_LEVEL, x)),
-                        new RepairData(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, x, ModItems.BLOOD_INFUSED_DIAMOND).display(),
-                                ModItems.HEART_SEEKER_ENHANCED.toStack().vampirism$with(ModDataComponents.PURE_LEVEL, x),
-                                ModItems.HEART_STRIKER_ENHANCED.toStack().vampirism$with(ModDataComponents.PURE_LEVEL, x)),
-                        new RepairData(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, x, ModItems.BLOOD_INFUSED_NETHERITE_INGOT).display(),
-                                ModItems.HEART_SEEKER_ULTIMATE.toStack().vampirism$with(ModDataComponents.PURE_LEVEL, x),
-                                ModItems.HEART_STRIKER_ULTIMATE.toStack().vampirism$with(ModDataComponents.PURE_LEVEL, x))
+        return Stream.concat(
+                Stream.of(
+                        new RepairData(ItemTags.IRON_TOOL_MATERIALS,
+                                ModItems.HUNTER_AXE_NORMAL,
+                                ModItems.HUNTER_AXE_ENHANCED,
+                                ModItems.HUNTER_AXE_ULTIMATE,
+                                ModItems.BASIC_TECH_CROSSBOW,
+                                ModItems.ENHANCED_TECH_CROSSBOW,
+                                ModItems.HUNTER_COAT_HEAD_NORMAL,
+                                ModItems.HUNTER_COAT_HEAD_ENHANCED,
+                                ModItems.HUNTER_COAT_HEAD_ULTIMATE,
+                                ModItems.HUNTER_COAT_CHEST_NORMAL,
+                                ModItems.HUNTER_COAT_CHEST_ENHANCED,
+                                ModItems.HUNTER_COAT_CHEST_ULTIMATE,
+                                ModItems.HUNTER_COAT_LEGS_NORMAL,
+                                ModItems.HUNTER_COAT_LEGS_ENHANCED,
+                                ModItems.HUNTER_COAT_LEGS_ULTIMATE,
+                                ModItems.HUNTER_COAT_FEET_NORMAL,
+                                ModItems.HUNTER_COAT_FEET_ENHANCED,
+                                ModItems.HUNTER_COAT_FEET_ULTIMATE),
+                        new RepairData(Tags.Items.STRINGS,
+                                ModItems.BASIC_CROSSBOW,
+                                ModItems.BASIC_DOUBLE_CROSSBOW,
+                                ModItems.ENHANCED_CROSSBOW,
+                                ModItems.ENHANCED_DOUBLE_CROSSBOW),
+                        new RepairData(Tags.Items.LEATHERS,
+                                ModItems.ARMOR_OF_SWIFTNESS_HEAD_NORMAL,
+                                ModItems.ARMOR_OF_SWIFTNESS_HEAD_ENHANCED,
+                                ModItems.ARMOR_OF_SWIFTNESS_HEAD_ULTIMATE,
+                                ModItems.ARMOR_OF_SWIFTNESS_CHEST_NORMAL,
+                                ModItems.ARMOR_OF_SWIFTNESS_CHEST_ENHANCED,
+                                ModItems.ARMOR_OF_SWIFTNESS_CHEST_ULTIMATE,
+                                ModItems.ARMOR_OF_SWIFTNESS_LEGS_NORMAL,
+                                ModItems.ARMOR_OF_SWIFTNESS_LEGS_ENHANCED,
+                                ModItems.ARMOR_OF_SWIFTNESS_LEGS_ULTIMATE,
+                                ModItems.ARMOR_OF_SWIFTNESS_FEET_NORMAL,
+                                ModItems.ARMOR_OF_SWIFTNESS_FEET_ENHANCED,
+                                ModItems.ARMOR_OF_SWIFTNESS_FEET_ULTIMATE),
+                        new RepairData(ModItemTags.HEART,
+                                ModItems.VAMPIRE_CLOTHING_CROWN,
+                                ModItems.VAMPIRE_CLOTHING_HAT,
+                                ModItems.VAMPIRE_CLOTHING_LEGS,
+                                ModItems.VAMPIRE_CLOAK_WHITE,
+                                ModItems.VAMPIRE_CLOAK_ORANGE,
+                                ModItems.VAMPIRE_CLOAK_LIGHT_BLUE,
+                                ModItems.VAMPIRE_CLOAK_YELLOW,
+                                ModItems.VAMPIRE_CLOAK_LIME,
+                                ModItems.VAMPIRE_CLOAK_PINK,
+                                ModItems.VAMPIRE_CLOAK_GRAY,
+                                ModItems.VAMPIRE_CLOAK_LIGHT_GRAY,
+                                ModItems.VAMPIRE_CLOAK_CYAN,
+                                ModItems.VAMPIRE_CLOAK_PURPLE,
+                                ModItems.VAMPIRE_CLOAK_BLUE,
+                                ModItems.VAMPIRE_CLOAK_BROWN,
+                                ModItems.VAMPIRE_CLOAK_GREEN,
+                                ModItems.VAMPIRE_CLOAK_RED,
+                                ModItems.VAMPIRE_CLOAK_BLACK)),
+                IntStream.of(0, 1, 2, 3, 4).mapToObj(PureLevel::new).flatMap(x -> Stream.of(
+                        of(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, x, ModItems.BLOOD_INFUSED_IRON_INGOT).display(),
+                                new ItemStackTemplate(ModItems.HEART_SEEKER_NORMAL, DataComponentPatch.builder().set(ModDataComponents.PURE_LEVEL.get(), x).build()),
+                                new ItemStackTemplate(ModItems.HEART_STRIKER_NORMAL, DataComponentPatch.builder().set(ModDataComponents.PURE_LEVEL.get(), x).build())),
+                        of(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, x, ModItems.BLOOD_INFUSED_DIAMOND).display(),
+                                new ItemStackTemplate(ModItems.HEART_SEEKER_ENHANCED, DataComponentPatch.builder().set(ModDataComponents.PURE_LEVEL.get(), x).build()),
+                                new ItemStackTemplate(ModItems.HEART_STRIKER_ENHANCED, DataComponentPatch.builder().set(ModDataComponents.PURE_LEVEL.get(), x).build())),
+                        of(DataComponentIngredient.of(false, ModDataComponents.PURE_LEVEL, x, ModItems.BLOOD_INFUSED_NETHERITE_INGOT).display(),
+                                new ItemStackTemplate(ModItems.HEART_SEEKER_ULTIMATE, DataComponentPatch.builder().set(ModDataComponents.PURE_LEVEL.get(), x).build()),
+                                new ItemStackTemplate(ModItems.HEART_STRIKER_ULTIMATE, DataComponentPatch.builder().set(ModDataComponents.PURE_LEVEL.get(), x).build()))
 
                 ))
-        ).reduce(Stream.of(), Stream::concat);
+        );
     }
 
-    private static class  RepairData {
-        private final SlotDisplay repairIngredient;
-        private final List<ItemStack> repairables;
 
-        public RepairData(TagKey<Item> repairTag, ItemStack... repairables) {
-            this.repairIngredient = new SlotDisplay.TagSlotDisplay(repairTag);
-            this.repairables = List.of(repairables);
+    private static RepairData of(SlotDisplay repairTag, ItemStackTemplate... templates) {
+        return new RepairData(repairTag, Arrays.stream(templates).toList());
+    }
+
+    private record RepairData(SlotDisplay repairIngredient, List<ItemStackTemplate> repairable) {
+
+        @SafeVarargs
+        public RepairData(TagKey<Item> repairTag, Holder<Item>... itemStacks) {
+            this(new SlotDisplay.TagSlotDisplay(repairTag), Arrays.stream(itemStacks).map(ItemStackTemplate::new).toList());
         }
 
-        public RepairData(SlotDisplay repairIngredient, ItemStack... repairables) {
-            this.repairIngredient = repairIngredient;
-            this.repairables = List.of(repairables);
+        public RepairData(SlotDisplay repairTag, ItemStackTemplate... templates) {
+            this(repairTag, Arrays.stream(templates).toList());
         }
 
         public SlotDisplay getRepairIngredient() {
             return repairIngredient;
         }
 
-        public List<ItemStack> getRepairables() {
-            return repairables;
+        public List<ItemStackTemplate> getRepairable() {
+            return repairable;
         }
     }
 
@@ -144,22 +149,21 @@ public class RepairRecipeMaker {
             IIngredientHelper<ItemStack> ingredientHelper
     ) {
         SlotDisplay repairIngredient = repairData.getRepairIngredient();
-        List<ItemStack> repairables = repairData.getRepairables();
+        List<ItemStackTemplate> repairables = repairData.getRepairable();
 
         Minecraft minecraft = Minecraft.getInstance();
         ContextMap contextmap = SlotDisplayContext.fromLevel(Objects.requireNonNull(minecraft.level));
         List<ItemStack> repairMaterials = repairIngredient.resolveForStacks(contextmap);
 
         return repairables.stream()
-                .mapMulti((itemStack, consumer) -> {
+                .mapMulti((template, consumer) -> {
+                    ItemStack itemStack = template.create();
                     String uid = getStringName(itemStack);
                     String ingredientIdPath = sanitizePath(uid);
-                    String itemModId = itemStack.typeHolder().unwrapKey().orElseThrow().identifier().getNamespace();
+                    String itemModId = template.typeHolder().unwrapKey().orElseThrow().identifier().getNamespace();
 
-                    ItemStack damagedThreeQuarters = itemStack.copy();
-                    damagedThreeQuarters.setDamageValue(damagedThreeQuarters.getMaxDamage() * 3 / 4);
-                    ItemStack damagedHalf = itemStack.copy();
-                    damagedHalf.setDamageValue(damagedHalf.getMaxDamage() / 2);
+                    var damagedThreeQuarters = template.apply(DataComponentPatch.builder().set(DataComponents.DAMAGE, itemStack.getMaxDamage() * 3 / 4).build());
+                    var damagedHalf = template.apply(DataComponentPatch.builder().set(DataComponents.DAMAGE, itemStack.getMaxDamage() / 2).build());
 
                     var damagedThreeQuartersSingletonList = List.of(damagedThreeQuarters);
 
@@ -172,8 +176,7 @@ public class RepairRecipeMaker {
                     consumer.accept(repairWithSame);
 
                     if (!repairMaterials.isEmpty()) {
-                        ItemStack damagedFully = itemStack.copy();
-                        damagedFully.setDamageValue(damagedFully.getMaxDamage());
+                        ItemStack damagedFully = template.apply(DataComponentPatch.builder().set(DataComponents.DAMAGE, itemStack.getMaxDamage()).build());
                         IJeiAnvilRecipe repairWithMaterial = vanillaRecipeFactory.createAnvilRecipe(
                                 List.of(damagedFully),
                                 repairMaterials,

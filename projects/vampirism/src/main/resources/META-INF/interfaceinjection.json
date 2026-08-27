@@ -66,9 +66,6 @@
   "net/minecraft/client/gui/GuiGraphicsExtractor": [
     "de/teamlapen/vampirism/misc/injection/client/IGuiGraphicsExtractorVampirismMock"
   ],
-  "net/minecraft/world/item/ItemStack": [
-    "de/teamlapen/vampirism/misc/injection/IItemStackVampirismMock"
-  ],
   "net/minecraft/client/particle/ParticleResources$MutableSpriteSet": [
     "de/teamlapen/vampirism/misc/injection/client/IListBasedSpriteSetVampirismMock"
   ],
