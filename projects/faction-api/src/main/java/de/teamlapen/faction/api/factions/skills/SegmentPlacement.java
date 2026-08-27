@@ -5,8 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
-import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
-import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
 
 /**
  * Places a skill segment on either side of another segment of the same row.
@@ -26,7 +24,7 @@ public record SegmentPlacement(Type type, ResourceKey<ISkillSegment> segment) {
         return new SegmentPlacement(Type.AFTER, segment);
     }
 
-    public enum Type implements StringRepresentable, IExtensibleEnum {
+    public enum Type implements StringRepresentable {
         /**
          * Positions the segment left of the one it refers to.
          */
@@ -42,10 +40,6 @@ public record SegmentPlacement(Type type, ResourceKey<ISkillSegment> segment) {
 
         Type(String name) {
             this.name = name;
-        }
-
-        public static ExtensionInfo getExtensionInfo() {
-            return ExtensionInfo.nonExtended(Type.class);
         }
 
         @Override

@@ -200,13 +200,9 @@ public class SkillTreeGraph {
             Entry first = switch (placement.type()) {
                 case BEFORE -> entry;
                 case AFTER -> relative;
-                default -> null; // the placement is an extendable enum, leave the default one here
             };
-            if (first == null) {
-                continue;
-            }
             Entry second = first == entry ? relative : entry;
-            successors.computeIfAbsent(first, key -> new ArrayList<>()).add(second);
+            successors.computeIfAbsent(first, _ -> new ArrayList<>()).add(second);
             predecessors.merge(second, 1, Integer::sum);
         }
 
