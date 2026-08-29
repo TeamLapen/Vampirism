@@ -110,7 +110,9 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
                 submitEntities(poseStack, event.getLevelRenderState(), List.of(entry.renderState()), this.nodeCollector, levelRenderer.vampirism$entityRenderDispatcher());
 
                 for (SubmitNodeCollection value : this.nodeCollector.getSubmitsPerOrder().values()) {
+                    parts.renderSolid(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
                     parts.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
+                    models.renderSolid(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
                     models.renderTranslucent(value, this.bloodVisionBuffer, this.noOp, this.bloodVisionBuffer);
                 }
 
@@ -134,6 +136,15 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
         double d2 = vec3.z();
 
         for (EntityRenderState entityrenderstate : states) {
+            // Blood vision should reveal entities regardless of invisibility, so temporarily clear the flags
+            // that would otherwise make the entity renderer skip the model or draw it near-transparent.
+            boolean wasInvisible = entityrenderstate.isInvisible;
+            boolean wasInvisibleToPlayer = entityrenderstate instanceof LivingEntityRenderState living && living.isInvisibleToPlayer;
+            entityrenderstate.isInvisible = false;
+            if (entityrenderstate instanceof LivingEntityRenderState living) {
+                living.isInvisibleToPlayer = false;
+            }
+
             dispatcher
                     .submit(
                             entityrenderstate,
@@ -144,6 +155,10 @@ public class BloodVisionRenderer implements IMinecraftAccessor {
                             poseStack,
                             nodeCollector
                     );
+            entityrenderstate.isInvisible = wasInvisible;
+            if (entityrenderstate instanceof LivingEntityRenderState living) {
+                living.isInvisibleToPlayer = wasInvisibleToPlayer;
+            }
         }
     }
 
