@@ -160,7 +160,6 @@
   "tooltip.factionapi.faction_specifics": "Fraktionsspezifiken:",
   "tooltip.factionapi.required_skills": "Erforderliche Fähigkeiten:",
   "tooltip.factionapi.required_level": "Benötigtes Level: %s",
-  "tooltip.factionapi.oblivion_potion.desc": "Setzt Fähigkeiten beim Verbrauch zurück",
   "command.factionapi.base.level.successful": "%s ist jetzt ein Level %s %s",
   "command.factionapi.base.get_level.successful": "%1$s ist ein %2$s Level %3$s und Lord Level %4$s",
   "command.factionapi.base.bind_action.success": "Erfolgreich Aktion %s auf Aktions Taste %s gebunden",
