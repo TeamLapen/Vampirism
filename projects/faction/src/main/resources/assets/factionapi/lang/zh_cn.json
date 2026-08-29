@@ -83,7 +83,6 @@
   "message.factionapi.minion_task.could_not_activate": "无法激活命令",
   "dialogue.factionapi.minion.died_on_task": "亲王，对不起，未能完成您的嘱托",
   "subtitles.factionapi.task_complete": "任务完成",
-  "tooltip.factionapi.oblivion_potion.desc": "消耗它重置技能",
   "command.factionapi.base.level.successful": "%s现在是%s级别%s",
   "command.factionapi.base.bind_action.success": "成功绑定行动 %s 到行动按键 %s",
   "command.factionapi.base.bind_action.not_existing": "给予的行动 %s 不存在。",
