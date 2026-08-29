@@ -65,7 +65,6 @@
   "message.factionapi.minion.still_recovering": "%s이(가) 회복하는 중입니다",
   "message.factionapi.minion.minions_recovering": "%s명의 부하들이 회복하는 중입니다",
   "dialogue.factionapi.minion.died_on_task": "주인님, 죄송하지만 맡기신 일을 하던 중 죽었습니다",
-  "tooltip.factionapi.oblivion_potion.desc": "소모해서 스킬을 초기화 할 수 있습니다",
   "command.factionapi.base.level.successful": "%s은(는) 이제 %s %s레벨입니다",
   "command.factionapi.base.bind_action.success": "성공적으로 %s 액션을 %s 키에 지정했습니다",
   "command.factionapi.base.bind_action.not_existing": "%s 액션이 존재하지 않습니다",
