@@ -52,7 +52,6 @@
   "message.factionapi.minion.minions_recovering": "%s dalkavukları hala iyileşiyor",
   "dialogue.factionapi.minion.died_on_task": "Lordum, üzgünüm ama görevinizi yerine getirirken öldüm",
   "tooltip.factionapi.required_level": "Gereken seviye: %s",
-  "tooltip.factionapi.oblivion_potion.desc": "Kullanıldığında yetenekleri sıfırlar",
   "command.factionapi.base.level.successful": "%s şimdi %s seviye %s",
   "command.factionapi.base.bind_action.success": "%s aksiyonu başarıyla %s tuşuna bağlandı",
   "command.factionapi.base.bind_action.not_existing": "Belirtilen %s aksiyonu yok",
