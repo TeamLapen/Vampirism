@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:vampire/damage_or_jump"
+  ],
+  "skills": [
+    "vampirism:neonatal_decrease",
+    "vampirism:dbno_duration"
+  ],
+  "tree": "vampirism:vampire/level"
+}

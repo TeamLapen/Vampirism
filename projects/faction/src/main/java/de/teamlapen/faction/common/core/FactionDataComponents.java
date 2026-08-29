@@ -10,7 +10,6 @@ import de.teamlapen.faction.api.factions.village.VillageBanner;
 import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.faction.api.world.entities.player.FactionPlayerConsumer;
-import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.api.world.items.RefinementItems;
 import de.teamlapen.faction.common.components.EffectiveRefinementSet;
 import de.teamlapen.faction.common.components.FactionRestriction;
@@ -20,7 +19,6 @@ import de.teamlapen.faction.common.util.ShiftDescription;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -32,7 +30,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -40,8 +37,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.List;
-
-import static de.teamlapen.faction.api.registries.ApiRegistryProvider.retrieveDataComponent;
 
 public class FactionDataComponents {
 

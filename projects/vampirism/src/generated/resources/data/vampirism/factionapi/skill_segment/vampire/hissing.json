@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/summon_bats"
+  ],
+  "skills": [
+    "vampirism:hissing"
+  ],
+  "tree": "vampirism:vampire/level"
+}

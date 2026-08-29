@@ -24,13 +24,17 @@ public class DescriptionUtil {
         boolean isHeld = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), keyCode);
 
         if (isHeld) {
-            List<String> lines = normalizeTextWidth(component.getString(), 40);
+            List<String> lines = normalizeTextWidth(component.getString());
 
             tooltipComponents.add(Component.empty());
             for (String line : lines) {
                 tooltipComponents.add(Component.literal(line).withStyle(ChatFormatting.GRAY));
             }
         }
+    }
+
+    public static List<String> normalizeTextWidth(String text) {
+        return normalizeTextWidth(text, 40);
     }
 
     public static List<String> normalizeTextWidth(String text, int maxLength) {

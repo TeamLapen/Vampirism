@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/attack_damage",
+    "vampirism:hunter/attack_speed"
+  ],
+  "skills": [
+    "vampirism:armor_speed"
+  ],
+  "tree": "vampirism:hunter/level"
+}

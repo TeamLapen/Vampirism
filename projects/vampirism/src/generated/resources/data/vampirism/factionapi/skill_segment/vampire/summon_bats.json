@@ -1,0 +1,13 @@
+{
+  "parents": [
+    "vampirism:vampire/no_longer_fledgling"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/sunscreen"
+  },
+  "skills": [
+    "vampirism:summon_bats"
+  ],
+  "tree": "vampirism:vampire/level"
+}

@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/fast_recovery_or_resurrection"
+  ],
+  "skills": [
+    "vampirism:teleport"
+  ],
+  "tree": "vampirism:vampire/level"
+}

@@ -1,12 +1,9 @@
 package de.teamlapen.faction.common.world.effects;
 
-import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.FactionStats;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.faction.common.factions.skills.Skill;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
 import de.teamlapen.faction.common.util.LogUtil;
 import de.teamlapen.faction.server.FactionLogger;
@@ -35,10 +32,13 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
         if (!(entity instanceof Player player)) return true;
 
         entity.addEffect(new MobEffectInstance(MobEffects.NAUSEA, getTickDuration(amplifier), 5, false, false, false, null));
-        return ISkillHandler.get(player).map(handler -> {
-            var nodeOPT = ((SkillHandler<?>) handler).anyLastNode();
+        return FactionPlayerHandler.get(player).<T>getSkillHandler().map(handler -> {
+            var nodeOPT = ((SkillHandler<?>) handler).anyLastSegment();
             if (nodeOPT.isPresent()) {
                 for (var element : nodeOPT.get().getValue().skills()) {
+                    if (!handler.isSkillEnabled(element)) {
+                        continue;
+                    }
                     //noinspection unchecked,rawtypes
                     handler.disableSkill((Holder) element, nodeOPT.get().getKey());
                     player.awardStat(FactionStats.SKILL_FORGOTTEN.get().get(element.value()));
@@ -58,7 +58,7 @@ public class OblivionMobEffect<T extends IFactionPlayer<T> & ISkillPlayer<T>> ex
         return duration % getTickDuration(amplifier) == 0;
     }
 
-    private int getTickDuration(int amplifier) {
+    public static int getTickDuration(int amplifier) {
         return (1000 / (amplifier + 1));
     }
 }

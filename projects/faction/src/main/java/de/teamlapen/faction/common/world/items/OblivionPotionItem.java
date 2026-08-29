@@ -33,8 +33,8 @@ public class OblivionPotionItem extends Item {
         factionPlayer.sync();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
+    @SuppressWarnings("deprecation")
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.accept(Component.translatable("tooltip.factionapi.oblivion_potion.desc").withStyle(ChatFormatting.GRAY));
     }

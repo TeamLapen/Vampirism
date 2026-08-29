@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/lord_root"
+  ],
+  "skills": [
+    "vampirism:hunter_minion_stats_increase"
+  ],
+  "tree": "vampirism:hunter/lord"
+}

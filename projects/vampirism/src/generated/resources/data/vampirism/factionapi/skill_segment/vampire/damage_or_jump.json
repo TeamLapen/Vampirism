@@ -1,0 +1,14 @@
+{
+  "parents": [
+    "vampirism:vampire/blood_vision"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/garlic_blood_vision"
+  },
+  "skills": [
+    "vampirism:vampire_attack_damage",
+    "vampirism:vampire_jump"
+  ],
+  "tree": "vampirism:vampire/level"
+}

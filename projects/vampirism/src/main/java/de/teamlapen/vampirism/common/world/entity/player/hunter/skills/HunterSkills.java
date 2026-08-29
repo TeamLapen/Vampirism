@@ -1,14 +1,16 @@
 package de.teamlapen.vampirism.common.world.entity.player.hunter.skills;
 
 import de.teamlapen.faction.api.FactionRegistries;
-import de.teamlapen.faction.api.factions.skills.*;
+import de.teamlapen.faction.api.factions.skills.ISkill;
+import de.teamlapen.faction.api.factions.skills.ISkillSegment;
+import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.registries.skills.DeferredSkill;
 import de.teamlapen.faction.api.registries.skills.DeferredSkillRegister;
 import de.teamlapen.faction.api.tags.FactionSkillTreeTags;
 import de.teamlapen.faction.common.advancements.criterion.PlayerFactionSubPredicate;
 import de.teamlapen.faction.common.core.FactionConsumer;
 import de.teamlapen.faction.common.core.FactionSkills;
-import de.teamlapen.faction.common.factions.skills.SkillNode;
+import de.teamlapen.faction.common.factions.skills.SkillSegment;
 import de.teamlapen.faction.common.factions.skills.SkillTree;
 import de.teamlapen.faction.common.util.ConfigComponent;
 import de.teamlapen.vampirism.REFERENCE;
@@ -22,7 +24,7 @@ import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
 import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -32,6 +34,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.bus.api.IEventBus;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -95,104 +98,213 @@ public class HunterSkills {
         SKILLS.register(bus);
     }
 
-    public static class Nodes {
+    public static class Segments {
 
-        public static final ResourceKey<ISkillNode> LEVEL_ROOT = node("level_root");
-        public static final ResourceKey<ISkillNode> SKILL2 = node("skill2");
-        public static final ResourceKey<ISkillNode> SKILL3 = node("skill3");
-        public static final ResourceKey<ISkillNode> SKILL4 = node("skill4");
-        public static final ResourceKey<ISkillNode> ALCHEMY1 = node("alchemy1");
-        public static final ResourceKey<ISkillNode> ALCHEMY2 = node("alchemy2");
-        public static final ResourceKey<ISkillNode> ALCHEMY3 = node("alchemy3");
-        public static final ResourceKey<ISkillNode> ALCHEMY4 = node("alchemy4");
-        public static final ResourceKey<ISkillNode> ALCHEMY5 = node("alchemy5");
-        public static final ResourceKey<ISkillNode> ALCHEMY6 = node("alchemy6");
-        public static final ResourceKey<ISkillNode> ALCHEMY7 = node("alchemy7");
-        public static final ResourceKey<ISkillNode> ALCHEMY8 = node("alchemy8");
-        public static final ResourceKey<ISkillNode> ALCHEMY9 = node("alchemy9");
-        public static final ResourceKey<ISkillNode> POTION1 = node("potion1");
-        public static final ResourceKey<ISkillNode> POTION2 = node("potion2");
-        public static final ResourceKey<ISkillNode> POTION3 = node("potion3");
-        public static final ResourceKey<ISkillNode> POTION4 = node("potion4");
-        public static final ResourceKey<ISkillNode> POTION5 = node("potion5");
-        public static final ResourceKey<ISkillNode> POTION6 = node("potion6");
+        // Level
+        public static final ResourceKey<ISkillSegment> KEY_LEVEL_ROOT = segment("level_root");
+        public static final ResourceKey<ISkillSegment> KEY_STAKE = segment("stake");
+        public static final ResourceKey<ISkillSegment> KEY_DISGUISE = segment("disguise");
+        public static final ResourceKey<ISkillSegment> KEY_BASIC_TECHNOLOGY = segment("basic_technology");
 
-        public static final ResourceKey<ISkillNode> WEAPON1 = node("weapon1");
-        public static final ResourceKey<ISkillNode> WEAPON2 = node("weapon2");
-        public static final ResourceKey<ISkillNode> WEAPON3 = node("weapon3");
-        public static final ResourceKey<ISkillNode> WEAPON4 = node("weapon4");
-        public static final ResourceKey<ISkillNode> WEAPON5 = node("weapon5");
-        public static final ResourceKey<ISkillNode> WEAPON6 = node("weapon6");
-        public static final ResourceKey<ISkillNode> WEAPON7 = node("weapon7");
-        public static final ResourceKey<ISkillNode> WEAPON8 = node("weapon8");
-        public static final ResourceKey<ISkillNode> WEAPON9 = node("weapon9");
-        public static final ResourceKey<ISkillNode> WEAPON10 = node("weapon10");
-        public static final ResourceKey<ISkillNode> WEAPON11 = node("weapon11");
+        public static final ResourceKey<ISkillSegment> KEY_BASIC_ALCHEMY = segment("basic_alchemy");
+        public static final ResourceKey<ISkillSegment> KEY_GARLIC_DIFFUSER = segment("garlic_diffuser");
+        public static final ResourceKey<ISkillSegment> KEY_PURIFIED_GARLIC = segment("purified_garlic");
+        public static final ResourceKey<ISkillSegment> KEY_GARLIC_DIFFUSER_IMPROVED = segment("garlic_diffuser_improved");
+        public static final ResourceKey<ISkillSegment> KEY_CRUCIFIX_WIELDER = segment("crucifix_wielder");
+        public static final ResourceKey<ISkillSegment> KEY_HUNTER_AWARENESS = segment("hunter_awareness");
+        public static final ResourceKey<ISkillSegment> KEY_ULTIMATE_CRUCIFIX = segment("ultimate_crucifix");
+        public static final ResourceKey<ISkillSegment> KEY_CRUCIFIX_REPEL = segment("crucifix_repel");
+        public static final ResourceKey<ISkillSegment> KEY_ENHANCED_BLESSING = segment("enhanced_blessing");
 
-        public static final ResourceKey<ISkillNode> LORD_ROOT = node("lord_root");
-        public static final ResourceKey<ISkillNode> LORD_2 = node("lord_2");
-        public static final ResourceKey<ISkillNode> LORD_3 = node("lord_3");
-        public static final ResourceKey<ISkillNode> LORD_4 = node("lord_4");
-        public static final ResourceKey<ISkillNode> LORD_5 = node("lord_5");
-        public static final ResourceKey<ISkillNode> LORD_6 = node("lord_6");
+        public static final ResourceKey<ISkillSegment> KEY_MULTITASK_BREWING = segment("multitask_brewing");
+        public static final ResourceKey<ISkillSegment> KEY_CONCENTRATED_OR_DURABLE_BREWING = segment("concentrated_or_durable_brewing");
+        public static final ResourceKey<ISkillSegment> KEY_SWIFT_OR_EFFICIENT_BREWING = segment("swift_or_efficient_brewing");
+        public static final ResourceKey<ISkillSegment> KEY_MASTER_BREWER = segment("master_brewer");
+        public static final ResourceKey<ISkillSegment> KEY_POTION_RESISTANCE = segment("potion_resistance");
+        public static final ResourceKey<ISkillSegment> KEY_CONCENTRATED_AND_DURABLE_BREWING = segment("concentrated_and_durable_brewing");
 
-        public static final ResourceKey<ISkillNode> MARSHALL_ROOT = node("marshall_root");
-        public static final ResourceKey<ISkillNode> MARSHALL_2 = node("marshall_2");
-        public static final ResourceKey<ISkillNode> MARSHALL_3 = node("marshall_3");
+        public static final ResourceKey<ISkillSegment> KEY_NEAR_BREACH_REFORGING = segment("near_breach_reforging");
+        public static final ResourceKey<ISkillSegment> KEY_ATTACK_DAMAGE = segment("attack_damage");
+        public static final ResourceKey<ISkillSegment> KEY_ATTACK_SPEED = segment("attack_speed");
+        public static final ResourceKey<ISkillSegment> KEY_ARMOR_BOUND_SPEED = segment("armor_bound_speed");
+        public static final ResourceKey<ISkillSegment> KEY_ARMOR_BOUND_JUMP = segment("armor_bound_jump");
+        public static final ResourceKey<ISkillSegment> KEY_CROSSBOW_TECHNIQUE = segment("crossbow_technique");
+        public static final ResourceKey<ISkillSegment> KEY_DOUBLE_IT_OR_DUAL_WIELDING = segment("double_it_or_dual_wielding");
+        public static final ResourceKey<ISkillSegment> KEY_MASTER_CRAFTSMANSHIP = segment("master_craftsmanship");
+        public static final ResourceKey<ISkillSegment> KEY_ACTUALLY_USE_AXE = segment("actually_use_axe");
+        public static final ResourceKey<ISkillSegment> KEY_ACTUALLY_USE_STAKE = segment("actually_use_stake");
+        public static final ResourceKey<ISkillSegment> KEY_ARTISAN_CRAFTSMANSHIP = segment("artisan_craftsmanship");
 
-        private static ResourceKey<ISkillNode> node(String path) {
-            return ResourceKey.create(FactionRegistries.Keys.SKILL_NODE, VIdentifier.mod("hunter/" + path));
+        // Lord
+        public static final ResourceKey<ISkillSegment> KEY_LORD_ROOT = segment("lord_root");
+        public static final ResourceKey<ISkillSegment> KEY_BETTER_MINIONS = segment("better_minions");
+        public static final ResourceKey<ISkillSegment> KEY_MINION_TECHNOLOGY = segment("minion_technology");
+        public static final ResourceKey<ISkillSegment> KEY_LORD_MOVEMENT_OR_ATTACK_SPEED = segment("lord_movement_or_attack_speed");
+        public static final ResourceKey<ISkillSegment> KEY_SUPPLY_COLLECTION = segment("supply_collection");
+        public static final ResourceKey<ISkillSegment> KEY_MINION_RECOVERY = segment("minion_recovery");
+
+        // Marshall
+        public static final ResourceKey<ISkillSegment> KEY_MARSHALL_ROOT = segment("marshall_root");
+        public static final ResourceKey<ISkillSegment> KEY_MASTER_ALCHEMIST = segment("master_alchemist");
+        public static final ResourceKey<ISkillSegment> KEY_ULTIMATE_BREWER = segment("ultimate_brewer");
+
+        private static ResourceKey<ISkillSegment> segment(String path) {
+            return ResourceKey.create(FactionRegistries.Keys.SKILL_SEGMENT, VIdentifier.mod("hunter/" + path));
         }
 
-        public static void createSkillNodes(BootstrapContext<ISkillNode> context) {
-            context.register(LEVEL_ROOT, new SkillNode(HunterSkills.LEVEL_ROOT));
-            context.register(SKILL2, new SkillNode(STAKE1));
-            context.register(SKILL3, new SkillNode(HUNTER_DISGUISE));
-            context.register(SKILL4, new SkillNode(WEAPON_TABLE));
+        public static void createSkillSegments(BootstrapContext<ISkillSegment> context) {
+            level(KEY_LEVEL_ROOT, LEVEL_ROOT)
+                    .register(context);
+            level(KEY_STAKE, STAKE1)
+                    .parents(KEY_LEVEL_ROOT)
+                    .register(context);
+            level(KEY_DISGUISE, HUNTER_DISGUISE)
+                    .parents(KEY_STAKE)
+                    .register(context);
 
-            context.register(ALCHEMY1, new SkillNode(BASIC_ALCHEMY));
-            context.register(ALCHEMY2, new SkillNode(PURIFIED_GARLIC));
-            context.register(ALCHEMY3, new SkillNode(CRUCIFIX_WIELDER));
-            context.register(ALCHEMY4, new SkillNode(GARLIC_DIFFUSER));
-            context.register(ALCHEMY5, new SkillNode(GARLIC_DIFFUSER_IMPROVED));
-            context.register(ALCHEMY6, new SkillNode(HUNTER_AWARENESS));
-            context.register(ALCHEMY7, new SkillNode(ULTIMATE_CRUCIFIX));
-            context.register(ALCHEMY8, new SkillNode(CRUCIFIX_REPEL));
-            context.register(ALCHEMY9, new SkillNode(ENHANCED_BLESSING));
+            level(KEY_BASIC_ALCHEMY, BASIC_ALCHEMY)
+                    .parents(KEY_DISGUISE)
+                    .register(context);
+            level(KEY_GARLIC_DIFFUSER, GARLIC_DIFFUSER)
+                    .parents(KEY_BASIC_ALCHEMY)
+                    .register(context);
+            level(KEY_PURIFIED_GARLIC, PURIFIED_GARLIC)
+                    .parents(KEY_GARLIC_DIFFUSER)
+                    .register(context);
+            level(KEY_GARLIC_DIFFUSER_IMPROVED, GARLIC_DIFFUSER_IMPROVED)
+                    .parents(KEY_GARLIC_DIFFUSER)
+                    .after(KEY_PURIFIED_GARLIC)
+                    .register(context);
+            level(KEY_CRUCIFIX_WIELDER, CRUCIFIX_WIELDER)
+                    .parents(KEY_BASIC_ALCHEMY)
+                    .after(KEY_GARLIC_DIFFUSER)
+                    .register(context);
+            level(KEY_HUNTER_AWARENESS, HUNTER_AWARENESS)
+                    .parents(KEY_CRUCIFIX_WIELDER)
+                    .register(context);
+            level(KEY_ULTIMATE_CRUCIFIX, ULTIMATE_CRUCIFIX)
+                    .parents(KEY_HUNTER_AWARENESS)
+                    .register(context);
+            level(KEY_CRUCIFIX_REPEL, CRUCIFIX_REPEL)
+                    .parents(KEY_ULTIMATE_CRUCIFIX)
+                    .register(context);
+            level(KEY_ENHANCED_BLESSING, ENHANCED_BLESSING)
+                    .parents(KEY_ULTIMATE_CRUCIFIX)
+                    .after(KEY_CRUCIFIX_REPEL)
+                    .register(context);
 
-            context.register(POTION1, new SkillNode(MULTITASK_BREWING));
-            context.register(POTION2, new SkillNode(DURABLE_BREWING, CONCENTRATED_BREWING));
-            context.register(POTION3, new SkillNode(SWIFT_BREWING, EFFICIENT_BREWING));
-            context.register(POTION4, new SkillNode(MASTER_BREWER));
-            context.register(POTION5, new SkillNode(POTION_RESISTANCE));
-            context.register(POTION6, new SkillNode(CONCENTRATED_DURABLE_BREWING));
+            level(KEY_MULTITASK_BREWING, MULTITASK_BREWING)
+                    .parents(KEY_DISGUISE)
+                    .after(KEY_BASIC_ALCHEMY)
+                    .register(context);
+            level(KEY_CONCENTRATED_OR_DURABLE_BREWING, CONCENTRATED_BREWING, DURABLE_BREWING)
+                    .parents(KEY_MULTITASK_BREWING)
+                    .register(context);
+            level(KEY_SWIFT_OR_EFFICIENT_BREWING, SWIFT_BREWING, EFFICIENT_BREWING)
+                    .parents(KEY_CONCENTRATED_OR_DURABLE_BREWING)
+                    .register(context);
+            level(KEY_MASTER_BREWER, MASTER_BREWER)
+                    .parents(KEY_SWIFT_OR_EFFICIENT_BREWING)
+                    .register(context);
+            level(KEY_POTION_RESISTANCE, POTION_RESISTANCE)
+                    .parents(KEY_MASTER_BREWER)
+                    .register(context);
+            level(KEY_CONCENTRATED_AND_DURABLE_BREWING, CONCENTRATED_DURABLE_BREWING)
+                    .parents(KEY_POTION_RESISTANCE)
+                    .register(context);
 
-            context.register(WEAPON1, new SkillNode(HUNTER_ATTACK_DAMAGE ));
-            context.register(WEAPON2, new SkillNode(HUNTER_ATTACK_SPEED));
-            context.register(WEAPON3, new SkillNode(ARMOR_SPEED));
-            context.register(WEAPON4, new SkillNode(NEAR_BREACH_REFORGING));
-            context.register(WEAPON5, new SkillNode(ARMOR_JUMP));
-            context.register(WEAPON6, new SkillNode(CROSSBOW_TECHNIQUE));
-            context.register(WEAPON7, new SkillNode(DOUBLE_IT, DUAL_WIELDING));
-            context.register(WEAPON8, new SkillNode(MASTER_CRAFTSMANSHIP));
-            context.register(WEAPON9, new SkillNode(AXE2));
-            context.register(WEAPON10, new SkillNode(STAKE2));
-            context.register(WEAPON11, new SkillNode(ARTISAN_CRAFTSMANSHIP));
+            level(KEY_BASIC_TECHNOLOGY, WEAPON_TABLE)
+                    .parents(KEY_DISGUISE)
+                    .register(context);
+            level(KEY_NEAR_BREACH_REFORGING, NEAR_BREACH_REFORGING)
+                    .parents(KEY_BASIC_TECHNOLOGY)
+                    .after(KEY_ATTACK_DAMAGE)
+                    .register(context);
+            level(KEY_ATTACK_DAMAGE, HUNTER_ATTACK_DAMAGE)
+                    .parents(KEY_BASIC_TECHNOLOGY)
+                    .register(context);
+            level(KEY_ATTACK_SPEED, HUNTER_ATTACK_SPEED)
+                    .parents(KEY_BASIC_TECHNOLOGY)
+                    .after(KEY_NEAR_BREACH_REFORGING)
+                    .register(context);
+            level(KEY_ARMOR_BOUND_SPEED, ARMOR_SPEED)
+                    .parents(KEY_ATTACK_DAMAGE, KEY_ATTACK_SPEED)
+                    .register(context);
+            level(KEY_ARMOR_BOUND_JUMP, ARMOR_JUMP)
+                    .parents(KEY_ATTACK_DAMAGE, KEY_ATTACK_SPEED)
+                    .after(KEY_ARMOR_BOUND_SPEED)
+                    .register(context);
+            level(KEY_CROSSBOW_TECHNIQUE, CROSSBOW_TECHNIQUE)
+                    .parents(KEY_ARMOR_BOUND_SPEED, KEY_ARMOR_BOUND_JUMP)
+                    .register(context);
+            level(KEY_DOUBLE_IT_OR_DUAL_WIELDING, DOUBLE_IT, DUAL_WIELDING)
+                    .parents(KEY_CROSSBOW_TECHNIQUE)
+                    .register(context);
+            level(KEY_MASTER_CRAFTSMANSHIP, MASTER_CRAFTSMANSHIP)
+                    .parents(KEY_CROSSBOW_TECHNIQUE)
+                    .after(KEY_DOUBLE_IT_OR_DUAL_WIELDING)
+                    .register(context);
+            level(KEY_ACTUALLY_USE_AXE, AXE2)
+                    .parents(KEY_MASTER_CRAFTSMANSHIP)
+                    .register(context);
+            level(KEY_ACTUALLY_USE_STAKE, STAKE2)
+                    .parents(KEY_ACTUALLY_USE_AXE)
+                    .register(context);
+            level(KEY_ARTISAN_CRAFTSMANSHIP, ARTISAN_CRAFTSMANSHIP)
+                    .parents(KEY_ACTUALLY_USE_AXE)
+                    .after(KEY_ACTUALLY_USE_STAKE)
+                    .register(context);
 
-            context.register(LORD_ROOT, new SkillNode(HunterSkills.LORD_ROOT));
-            context.register(LORD_2, new SkillNode(MINION_STATS_INCREASE));
-            context.register(LORD_3, new SkillNode(LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED));
-            context.register(LORD_4, new SkillNode(MINION_COLLECT));
-            context.register(LORD_5, new SkillNode(FactionSkills.MINION_RECOVERY));
-            context.register(LORD_6, new SkillNode(MINION_TECH_CROSSBOWS));
+            lord(KEY_LORD_ROOT, LORD_ROOT)
+                    .register(context);
+            lord(KEY_BETTER_MINIONS, MINION_STATS_INCREASE)
+                    .parents(KEY_LORD_ROOT)
+                    .register(context);
+            lord(KEY_MINION_TECHNOLOGY, MINION_TECH_CROSSBOWS)
+                    .parents(KEY_BETTER_MINIONS)
+                    .register(context);
+            lord(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED, LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED)
+                    .parents(KEY_LORD_ROOT)
+                    .after(KEY_BETTER_MINIONS)
+                    .register(context);
+            lord(KEY_SUPPLY_COLLECTION, MINION_COLLECT)
+                    .parents(KEY_LORD_ROOT)
+                    .after(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED)
+                    .register(context);
+            lord(KEY_MINION_RECOVERY, FactionSkills.MINION_RECOVERY)
+                    .parents(KEY_LORD_ROOT)
+                    .after(KEY_SUPPLY_COLLECTION)
+                    .register(context);
 
-            context.register(MARSHALL_ROOT, new SkillNode(HunterSkills.MARSHALL_ROOT));
-            context.register(MARSHALL_2, new SkillNode(MASTER_ALCHEMIST));
-            context.register(MARSHALL_3, new SkillNode(ULTIMATE_BREWER));
+            marshall(KEY_MARSHALL_ROOT, MARSHALL_ROOT)
+                    .register(context);
+            marshall(KEY_MASTER_ALCHEMIST, MASTER_ALCHEMIST)
+                    .parents(KEY_MARSHALL_ROOT)
+                    .register(context);
+            marshall(KEY_ULTIMATE_BREWER, ULTIMATE_BREWER)
+                    .parents(KEY_MARSHALL_ROOT)
+                    .after(KEY_MASTER_ALCHEMIST)
+                    .register(context);
+        }
+
+        @SafeVarargs
+        public static SkillSegment.Builder level(ResourceKey<ISkillSegment> key, Holder<? extends ISkill<?>>... skills) {
+            return SkillSegment.Builder.of(Trees.LEVEL, key, skills);
+        }
+
+        @SafeVarargs
+        public static SkillSegment.Builder lord(ResourceKey<ISkillSegment> key, Holder<? extends ISkill<?>>... skills) {
+            return SkillSegment.Builder.of(Trees.LORD, key, skills);
+        }
+
+        @SafeVarargs
+        public static SkillSegment.Builder marshall(ResourceKey<ISkillSegment> key, Holder<? extends ISkill<?>>... skills) {
+            return SkillSegment.Builder.of(Trees.MARSHALL, key, skills);
         }
     }
 
     public static class Trees {
+
         public static final ResourceKey<ISkillTree> LEVEL = tree("level");
         public static final ResourceKey<ISkillTree> LORD = tree("lord");
         public static final ResourceKey<ISkillTree> MARSHALL = tree("marshall");
@@ -202,12 +314,9 @@ public class HunterSkills {
         }
 
         public static void createSkillTrees(BootstrapContext<ISkillTree> context) {
-            HolderGetter<ISkillNode> lookup = context.lookup(FactionRegistries.Keys.SKILL_NODE);
             context.register(LEVEL, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.faction(ModFactions.HUNTER)).build(), new ItemStackTemplate(ModItems.VAMPIRE_BOOK), Component.translatable("gui.vampirism.skills.level"), Optional.of(VIdentifier.mc("block/spruce_planks"))));
-            context.register(LORD, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.HUNTER)).build(), new ItemStackTemplate(ModItems.HUNTER_MINION_EQUIPMENT), Component.translatable("gui.vampirism.skills.lord"), Optional.of(VIdentifier.mc("block/spruce_planks"))));
-            context.register(MARSHALL, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(MarshallCriterion.INSTANCE).build(), new ItemStackTemplate(ModItems.STAKE), Component.translatable("gui.vampirism.skills.marshall"), Optional.of(VIdentifier.mc("block/spruce_planks")), ModSkillTreeTags.MARSHALL));
+            context.register(LORD, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.HUNTER)).build(), new ItemStackTemplate(ModItems.HUNTER_MINION_EQUIPMENT), Component.translatable("gui.vampirism.skills.lord"), Optional.of(VIdentifier.mc("block/spruce_planks")), List.of(LEVEL)));
+            context.register(MARSHALL, new SkillTree(ModFactions.HUNTER, EntityPredicate.Builder.entity().subPredicate(MarshallCriterion.INSTANCE).build(), new ItemStackTemplate(ModItems.STAKE), Component.translatable("gui.vampirism.skills.marshall"), Optional.of(VIdentifier.mc("block/spruce_planks")), ModSkillTreeTags.MARSHALL, List.of(LORD)));
         }
-
     }
-
 }

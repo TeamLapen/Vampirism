@@ -2,14 +2,14 @@ package de.teamlapen.vampirism.common.world.entity.player.vampire.skills;
 
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.faction.api.factions.skills.ISkillNode;
+import de.teamlapen.faction.api.factions.skills.ISkillSegment;
 import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.registries.skills.DeferredSkill;
 import de.teamlapen.faction.api.registries.skills.DeferredSkillRegister;
 import de.teamlapen.faction.common.advancements.criterion.PlayerFactionSubPredicate;
 import de.teamlapen.faction.common.core.FactionConsumer;
 import de.teamlapen.faction.common.core.FactionSkills;
-import de.teamlapen.faction.common.factions.skills.SkillNode;
+import de.teamlapen.faction.common.factions.skills.SkillSegment;
 import de.teamlapen.faction.common.factions.skills.SkillTree;
 import de.teamlapen.faction.common.util.ConfigComponent;
 import de.teamlapen.vampirism.REFERENCE;
@@ -25,7 +25,7 @@ import de.teamlapen.vampirism.common.tags.ModSkillTreeTags;
 import de.teamlapen.vampirism.common.world.entity.player.lord.skills.LordSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
 import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -35,6 +35,7 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.neoforged.bus.api.IEventBus;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -95,87 +96,180 @@ public class VampireSkills {
         SKILLS.register(bus);
     }
 
-    public static class Nodes {
-        public static final ResourceKey<ISkillNode> LEVEL_ROOT = node("level_root");
-        public static final ResourceKey<ISkillNode> SKILL2 = node("skill2");
-        public static final ResourceKey<ISkillNode> SKILL3 = node("skill3");
-        public static final ResourceKey<ISkillNode> SKILL4 = node("skill4");
-        public static final ResourceKey<ISkillNode> DEFENSIVE1 = node("defensive1");
-        public static final ResourceKey<ISkillNode> DEFENSIVE2 = node("defensive2");
-        public static final ResourceKey<ISkillNode> DEFENSIVE3 = node("defensive3");
-        public static final ResourceKey<ISkillNode> DEFENSIVE4 = node("defensive4");
-        public static final ResourceKey<ISkillNode> DEFENSIVE5 = node("defensive5");
-        public static final ResourceKey<ISkillNode> DEFENSIVE6 = node("defensive6");
-        public static final ResourceKey<ISkillNode> DEFENSIVE7 = node("defensive7");
-        public static final ResourceKey<ISkillNode> OFFENSIVE1 = node("offensive1");
-        public static final ResourceKey<ISkillNode> OFFENSIVE2 = node("offensive2");
-        public static final ResourceKey<ISkillNode> OFFENSIVE3 = node("offensive3");
-        public static final ResourceKey<ISkillNode> OFFENSIVE4 = node("offensive4");
-        public static final ResourceKey<ISkillNode> OFFENSIVE5 = node("offensive5");
-        public static final ResourceKey<ISkillNode> OFFENSIVE6 = node("offensive6");
-        public static final ResourceKey<ISkillNode> UTIL1 = node("util1");
-        public static final ResourceKey<ISkillNode> UTIL2 = node("util2");
-        public static final ResourceKey<ISkillNode> UTIL3 = node("util3");
-        public static final ResourceKey<ISkillNode> UTIL4 = node("util4");
-        public static final ResourceKey<ISkillNode> UTIL5 = node("util5");
-        public static final ResourceKey<ISkillNode> UTIL6 = node("util6");
-        public static final ResourceKey<ISkillNode> UTIL15 = node("util15");
+    public static class Segments {
 
-        public static final ResourceKey<ISkillNode> LORD_ROOT = node("lord_root");
-        public static final ResourceKey<ISkillNode> LORD_SKILL2 = node("lord_skill2");
-        public static final ResourceKey<ISkillNode> LORD_SKILL3 = node("lord_skill3");
-        public static final ResourceKey<ISkillNode> LORD_SKILL4 = node("lord_skill4");
-        public static final ResourceKey<ISkillNode> LORD_SKILL5 = node("lord_skill5");
+        // Level
+        public static final ResourceKey<ISkillSegment> KEY_LEVEL_ROOT = segment("level_root");
+        public static final ResourceKey<ISkillSegment> KEY_NIGHT_VISION = segment("night_vision");
+        public static final ResourceKey<ISkillSegment> KEY_REGENERATION = segment("regeneration");
+        public static final ResourceKey<ISkillSegment> KEY_NO_LONGER_FLEDGLING = segment("no_longer_fledgling");
 
-        public static final ResourceKey<ISkillNode> DRACULA_ROOT = node("dracula_root");
-        public static final ResourceKey<ISkillNode> DRACULA_1 = node("dracula_1");
-        public static final ResourceKey<ISkillNode> DRACULA_2 = node("dracula_2");
+        public static final ResourceKey<ISkillSegment> KEY_VAMPIRE_RAGE = segment("vampire_rage");
+        public static final ResourceKey<ISkillSegment> KEY_ADVANCED_BITER = segment("advanced_biter");
+        public static final ResourceKey<ISkillSegment> KEY_FINISHER = segment("finisher");
+        public static final ResourceKey<ISkillSegment> KEY_DARK_BLOOD_PROJECTILE = segment("dark_blood_projectile");
+        public static final ResourceKey<ISkillSegment> KEY_BLOOD_CHARGE = segment("blood_charge");
+        public static final ResourceKey<ISkillSegment> KEY_FREEZE = segment("freeze");
 
+        public static final ResourceKey<ISkillSegment> KEY_SUNSCREEN = segment("sunscreen");
+        public static final ResourceKey<ISkillSegment> KEY_ATTACK_OR_MOVEMENT_SPEED = segment("attack_or_movement_speed");
+        public static final ResourceKey<ISkillSegment> KEY_BLOOD_VISION = segment("blood_vision");
+        public static final ResourceKey<ISkillSegment> KEY_GARLIC_BLOOD_VISION = segment("garlic_blood_vision");
+        public static final ResourceKey<ISkillSegment> KEY_DAMAGE_OR_JUMP = segment("damage_or_jump");
+        public static final ResourceKey<ISkillSegment> KEY_FAST_RECOVERY_OR_RESURRECTION = segment("fast_recovery_or_resurrection");
+        public static final ResourceKey<ISkillSegment> KEY_TELEPORT = segment("teleport");
 
+        public static final ResourceKey<ISkillSegment> KEY_SUMMON_BATS = segment("summon_bats");
+        public static final ResourceKey<ISkillSegment> KEY_HISSING = segment("hissing");
+        public static final ResourceKey<ISkillSegment> KEY_TOUGH_SKIN_OR_WATER_RESISTANCE = segment("tough_skin_or_water_resistance");
+        public static final ResourceKey<ISkillSegment> KEY_FRUGAL_VAMPIRE = segment("frugal_vampire");
+        public static final ResourceKey<ISkillSegment> KEY_HUMAN_DISGUISE = segment("human_disguise");
+        public static final ResourceKey<ISkillSegment> KEY_DAMAGE_LIMITER = segment("damage_limiter");
+        public static final ResourceKey<ISkillSegment> KEY_INVISIBILITY_OR_DARK_STALKER = segment("invisibility_or_dark_stalker");
 
-        private static ResourceKey<ISkillNode> node(String path) {
-            return ResourceKey.create(FactionRegistries.Keys.SKILL_NODE, VIdentifier.mod("vampire/" + path));
+        // Lord
+        public static final ResourceKey<ISkillSegment> KEY_LORD_ROOT = segment("lord_root");
+        public static final ResourceKey<ISkillSegment> KEY_BETTER_MINIONS = segment("better_minions");
+        public static final ResourceKey<ISkillSegment> KEY_LORD_MOVEMENT_OR_ATTACK_SPEED = segment("lord_movement_or_attack_speed");
+        public static final ResourceKey<ISkillSegment> KEY_BLOOD_COLLECTION = segment("blood_collection");
+        public static final ResourceKey<ISkillSegment> KEY_MINION_RECOVERY = segment("minion_recovery");
+
+        // Dracula
+        public static final ResourceKey<ISkillSegment> KEY_DRACULA_ROOT = segment("dracula_root");
+        public static final ResourceKey<ISkillSegment> KEY_MIST_FORM = segment("mist_form");
+        public static final ResourceKey<ISkillSegment> KEY_AURA_OF_DARKNESS = segment("aura_of_darkness");
+
+        private static ResourceKey<ISkillSegment> segment(String path) {
+            return ResourceKey.create(FactionRegistries.Keys.SKILL_SEGMENT, VIdentifier.mod("vampire/" + path));
         }
 
-        public static void createSkillNodes(BootstrapContext<ISkillNode> context) {
-            context.register(LEVEL_ROOT, new SkillNode(VampireSkills.LEVEL_ROOT));
-            context.register(SKILL2, new SkillNode(NIGHT_VISION));
-            context.register(SKILL3, new SkillNode(VAMPIRE_REGENERATION));
-            context.register(SKILL4, new SkillNode(FLEDGLING));
-            context.register(DEFENSIVE1, new SkillNode(SUNSCREEN));
-            context.register(DEFENSIVE2, new SkillNode(VAMPIRE_ATTACK_SPEED, VAMPIRE_SPEED));
-            context.register(DEFENSIVE3, new SkillNode(BLOOD_VISION));
-            context.register(DEFENSIVE4, new SkillNode(BLOOD_VISION_GARLIC));
-            context.register(DEFENSIVE5, new SkillNode(VAMPIRE_ATTACK_DAMAGE, VAMPIRE_JUMP));
-            context.register(DEFENSIVE6, new SkillNode(NEONATAL_DECREASE, DBNO_DURATION));
-            context.register(DEFENSIVE7, new SkillNode(TELEPORT));
-            context.register(OFFENSIVE1, new SkillNode(VAMPIRE_RAGE));
-            context.register(OFFENSIVE2, new SkillNode(ADVANCED_BITER));
-            context.register(OFFENSIVE3, new SkillNode(SWORD_FINISHER));
-            context.register(OFFENSIVE4, new SkillNode(DARK_BLOOD_PROJECTILE));
-            context.register(OFFENSIVE5, new SkillNode(BLOOD_CHARGE));
-            context.register(OFFENSIVE6, new SkillNode(FREEZE));
-            context.register(UTIL1, new SkillNode(SUMMON_BATS));
-            context.register(UTIL2, new SkillNode(LESS_SUNDAMAGE, WATER_RESISTANCE));
-            context.register(UTIL3, new SkillNode(LESS_BLOOD_THIRST));
-            context.register(UTIL4, new SkillNode(VAMPIRE_DISGUISE));
-            context.register(UTIL5, new SkillNode(HALF_INVULNERABLE));
-            context.register(UTIL6, new SkillNode(VAMPIRE_INVISIBILITY, DARK_STALKER));
-            context.register(UTIL15, new SkillNode(HISSING));
+        public static void createSkillSegments(BootstrapContext<ISkillSegment> context) {
+            level(KEY_LEVEL_ROOT, LEVEL_ROOT)
+                    .register(context);
+            level(KEY_NIGHT_VISION, NIGHT_VISION)
+                    .parents(KEY_LEVEL_ROOT)
+                    .register(context);
+            level(KEY_REGENERATION, VAMPIRE_REGENERATION)
+                    .parents(KEY_NIGHT_VISION)
+                    .register(context);
+            level(KEY_NO_LONGER_FLEDGLING, FLEDGLING)
+                    .parents(KEY_REGENERATION)
+                    .register(context);
 
-            context.register(LORD_ROOT, new SkillNode(VampireSkills.LORD_ROOT));
-            context.register(LORD_SKILL2, new SkillNode(MINION_STATS_INCREASE));
-            context.register(LORD_SKILL3, new SkillNode(LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED));
-            context.register(LORD_SKILL4, new SkillNode(MINION_COLLECT));
-            context.register(LORD_SKILL5, new SkillNode(FactionSkills.MINION_RECOVERY));
+            level(KEY_VAMPIRE_RAGE, VAMPIRE_RAGE)
+                    .parents(KEY_NO_LONGER_FLEDGLING)
+                    .register(context);
+            level(KEY_ADVANCED_BITER, ADVANCED_BITER)
+                    .parents(KEY_VAMPIRE_RAGE)
+                    .register(context);
+            level(KEY_FINISHER, SWORD_FINISHER)
+                    .parents(KEY_ADVANCED_BITER)
+                    .register(context);
+            level(KEY_DARK_BLOOD_PROJECTILE, DARK_BLOOD_PROJECTILE)
+                    .parents(KEY_FINISHER)
+                    .register(context);
+            level(KEY_BLOOD_CHARGE, BLOOD_CHARGE)
+                    .parents(KEY_DARK_BLOOD_PROJECTILE)
+                    .register(context);
+            level(KEY_FREEZE, FREEZE)
+                    .parents(KEY_BLOOD_CHARGE)
+                    .register(context);
 
-            context.register(DRACULA_ROOT, new SkillNode(VampireSkills.DRACULA_ROOT));
-            context.register(DRACULA_1, new SkillNode(MIST_FORM));
-            context.register(DRACULA_2, new SkillNode(AURA_OF_DARKNESS));
+            level(KEY_SUNSCREEN, SUNSCREEN)
+                    .parents(KEY_NO_LONGER_FLEDGLING)
+                    .after(KEY_VAMPIRE_RAGE)
+                    .register(context);
+            level(KEY_ATTACK_OR_MOVEMENT_SPEED, VAMPIRE_ATTACK_SPEED, VAMPIRE_SPEED)
+                    .parents(KEY_SUNSCREEN)
+                    .register(context);
+            level(KEY_BLOOD_VISION, BLOOD_VISION)
+                    .parents(KEY_ATTACK_OR_MOVEMENT_SPEED)
+                    .register(context);
+            level(KEY_GARLIC_BLOOD_VISION, BLOOD_VISION_GARLIC)
+                    .parents(KEY_BLOOD_VISION)
+                    .register(context);
+            level(KEY_DAMAGE_OR_JUMP, VAMPIRE_ATTACK_DAMAGE, VAMPIRE_JUMP)
+                    .parents(KEY_BLOOD_VISION)
+                    .after(KEY_GARLIC_BLOOD_VISION)
+                    .register(context);
+            level(KEY_FAST_RECOVERY_OR_RESURRECTION, NEONATAL_DECREASE, DBNO_DURATION)
+                    .parents(KEY_DAMAGE_OR_JUMP)
+                    .register(context);
+            level(KEY_TELEPORT, TELEPORT)
+                    .parents(KEY_FAST_RECOVERY_OR_RESURRECTION)
+                    .register(context);
+
+            level(KEY_SUMMON_BATS, SUMMON_BATS)
+                    .parents(KEY_NO_LONGER_FLEDGLING)
+                    .after(KEY_SUNSCREEN)
+                    .register(context);
+            level(KEY_HISSING, HISSING)
+                    .parents(KEY_SUMMON_BATS)
+                    .register(context);
+            level(KEY_TOUGH_SKIN_OR_WATER_RESISTANCE, LESS_SUNDAMAGE, WATER_RESISTANCE)
+                    .parents(KEY_SUMMON_BATS)
+                    .after(KEY_HISSING)
+                    .register(context);
+            level(KEY_FRUGAL_VAMPIRE, LESS_BLOOD_THIRST)
+                    .parents(KEY_TOUGH_SKIN_OR_WATER_RESISTANCE)
+                    .register(context);
+            level(KEY_HUMAN_DISGUISE, VAMPIRE_DISGUISE)
+                    .parents(KEY_FRUGAL_VAMPIRE)
+                    .register(context);
+            level(KEY_DAMAGE_LIMITER, HALF_INVULNERABLE)
+                    .parents(KEY_HUMAN_DISGUISE)
+                    .register(context);
+            level(KEY_INVISIBILITY_OR_DARK_STALKER, VAMPIRE_INVISIBILITY, DARK_STALKER)
+                    .parents(KEY_DAMAGE_LIMITER)
+                    .register(context);
+
+            lord(KEY_LORD_ROOT, LORD_ROOT)
+                    .register(context);
+            lord(KEY_BETTER_MINIONS, MINION_STATS_INCREASE)
+                    .parents(KEY_LORD_ROOT)
+                    .register(context);
+            lord(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED, LordSkills.LORD_SPEED, LordSkills.LORD_ATTACK_SPEED)
+                    .parents(KEY_LORD_ROOT)
+                    .after(KEY_BETTER_MINIONS)
+                    .register(context);
+            lord(KEY_BLOOD_COLLECTION, MINION_COLLECT)
+                    .parents(KEY_LORD_ROOT)
+                    .after(KEY_LORD_MOVEMENT_OR_ATTACK_SPEED)
+                    .register(context);
+            lord(KEY_MINION_RECOVERY, FactionSkills.MINION_RECOVERY)
+                    .parents(KEY_LORD_ROOT)
+                    .after(KEY_BLOOD_COLLECTION)
+                    .register(context);
+
+            dracula(KEY_DRACULA_ROOT, DRACULA_ROOT)
+                    .register(context);
+            dracula(KEY_MIST_FORM, MIST_FORM)
+                    .parents(KEY_DRACULA_ROOT)
+                    .register(context);
+            dracula(KEY_AURA_OF_DARKNESS, AURA_OF_DARKNESS)
+                    .parents(KEY_DRACULA_ROOT)
+                    .after(KEY_MIST_FORM)
+                    .register(context);
+        }
+
+        @SafeVarargs
+        public static SkillSegment.Builder level(ResourceKey<ISkillSegment> key, Holder<? extends ISkill<?>>... skills) {
+            return SkillSegment.Builder.of(Trees.LEVEL, key, skills);
+        }
+
+        @SafeVarargs
+        public static SkillSegment.Builder lord(ResourceKey<ISkillSegment> key, Holder<? extends ISkill<?>>... skills) {
+            return SkillSegment.Builder.of(Trees.LORD, key, skills);
+        }
+
+        @SafeVarargs
+        public static SkillSegment.Builder dracula(ResourceKey<ISkillSegment> key, Holder<? extends ISkill<?>>... skills) {
+            return SkillSegment.Builder.of(Trees.DRACULA, key, skills);
         }
     }
 
     public static class Trees {
+
         public static final ResourceKey<ISkillTree> LEVEL = tree("level");
         public static final ResourceKey<ISkillTree> LORD = tree("lord");
         public static final ResourceKey<ISkillTree> DRACULA = tree("dracula");
@@ -185,11 +279,9 @@ public class VampireSkills {
         }
 
         public static void createSkillTrees(BootstrapContext<ISkillTree> context) {
-            HolderGetter<ISkillNode> lookup = context.lookup(FactionRegistries.Keys.SKILL_NODE);
-
             context.register(LEVEL, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.faction(ModFactions.VAMPIRE)).build(), new ItemStackTemplate(ModItems.VAMPIRE_BOOK.get()), Component.translatable("gui.vampirism.skills.level"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
-            context.register(LORD, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.VAMPIRE)).build(), new ItemStackTemplate(ModItems.VAMPIRE_MINION_BINDING.get()), Component.translatable("gui.vampirism.skills.lord"), Optional.of(VIdentifier.mod("block/dark_stone_bricks"))));
-            context.register(DRACULA, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(DraculaCriterion.INSTANCE).build(), new ItemStackTemplate(ModItems.VAMPIRE_CLOTHING_HAT), Component.translatable("gui.vampirism.skills.dracula"), Optional.of(VIdentifier.mod("block/dark_stone_bricks")), ModSkillTreeTags.DRACULA));
+            context.register(LORD, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(PlayerFactionSubPredicate.lord(ModFactions.VAMPIRE)).build(), new ItemStackTemplate(ModItems.VAMPIRE_MINION_BINDING.get()), Component.translatable("gui.vampirism.skills.lord"), Optional.of(VIdentifier.mod("block/dark_stone_bricks")), List.of(LEVEL)));
+            context.register(DRACULA, new SkillTree(ModFactions.VAMPIRE, EntityPredicate.Builder.entity().subPredicate(DraculaCriterion.INSTANCE).build(), new ItemStackTemplate(ModItems.VAMPIRE_CLOTHING_HAT), Component.translatable("gui.vampirism.skills.dracula"), Optional.of(VIdentifier.mod("block/dark_stone_bricks")), ModSkillTreeTags.DRACULA, List.of(LORD)));
         }
     }
 }

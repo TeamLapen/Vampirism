@@ -1,0 +1,14 @@
+{
+  "parents": [
+    "vampirism:vampire/summon_bats"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/hissing"
+  },
+  "skills": [
+    "vampirism:less_sundamage",
+    "vampirism:water_resistance"
+  ],
+  "tree": "vampirism:vampire/level"
+}

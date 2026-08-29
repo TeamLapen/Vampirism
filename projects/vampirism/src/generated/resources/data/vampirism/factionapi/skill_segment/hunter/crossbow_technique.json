@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/armor_bound_speed",
+    "vampirism:hunter/armor_bound_jump"
+  ],
+  "skills": [
+    "vampirism:crossbow_technique"
+  ],
+  "tree": "vampirism:hunter/level"
+}

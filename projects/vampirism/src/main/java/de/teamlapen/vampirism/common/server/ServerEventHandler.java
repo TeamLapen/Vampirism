@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.common.server;
 
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
-import de.teamlapen.faction.common.factions.skills.ClientboundSkillTreePacket;
-import de.teamlapen.faction.common.factions.skills.ServerSkillTreeData;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.config.ModConfig;
@@ -18,7 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
@@ -69,20 +66,6 @@ public class ServerEventHandler {
     public void onServerTick(ServerTickEvent.Pre event) {
         if (ServerLifecycleHooks.getCurrentServer() != null) {
             MinionWorldData.getData(ServerLifecycleHooks.getCurrentServer()).tick();
-        }
-    }
-
-    @SubscribeEvent
-    public void onDatapackSync(OnDatapackSyncEvent event) {
-        sendSkillTree(event);
-    }
-
-    private void sendSkillTree(OnDatapackSyncEvent event) {
-        ClientboundSkillTreePacket skillTrees = ClientboundSkillTreePacket.of(ServerSkillTreeData.instance().getConfigurations());
-        if (event.getPlayer() != null) {
-            event.getPlayer().connection.send(skillTrees);
-        } else {
-            event.getPlayerList().getPlayers().forEach(p -> p.connection.send(skillTrees));
         }
     }
 

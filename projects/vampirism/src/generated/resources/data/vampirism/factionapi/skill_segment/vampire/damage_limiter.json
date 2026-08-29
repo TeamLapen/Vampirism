@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/human_disguise"
+  ],
+  "skills": [
+    "vampirism:half_invulnerable"
+  ],
+  "tree": "vampirism:vampire/level"
+}
