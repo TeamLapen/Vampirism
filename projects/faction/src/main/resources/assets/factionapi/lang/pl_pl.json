@@ -59,7 +59,6 @@
   "message.factionapi.minion.still_recovering": "%s nadal odpoczywa",
   "message.factionapi.minion.minions_recovering": "%s sług nadal odpoczywa",
   "dialogue.factionapi.minion.died_on_task": "Mój panie, wybacz mi, ale zginąłem podczas wypełniania twoich rozkazów",
-  "tooltip.factionapi.oblivion_potion.desc": "Resetuje umiejętności przy konsumpcji",
   "command.factionapi.base.level.successful": "%s jest teraz na %s poziomie %s",
   "command.factionapi.base.bind_action.success": "Pomyślnie przypięto akcje %s do przycisku %s",
   "command.factionapi.base.bind_action.not_existing": "Podana akcja %s nie istnieje",
