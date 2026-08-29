@@ -84,7 +84,6 @@
   "dialogue.factionapi.minion.died_on_task": "Володаре, вибачте, але я загинув, виконуючи ваше завдання",
   "subtitles.factionapi.task_complete": "Завдання виконано",
   "tooltip.factionapi.required_level": "Необхідний рівень: %s",
-  "tooltip.factionapi.oblivion_potion.desc": "Скидає навички при споживанні",
   "command.factionapi.base.level.successful": "%s тепер має %s рівень %s",
   "command.factionapi.base.bind_action.success": "Успішно прив’язано дію %s до клавіші %s",
   "command.factionapi.base.bind_action.not_existing": "Дана дія %s не існує",
