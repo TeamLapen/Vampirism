@@ -1,0 +1,13 @@
+{
+  "parents": [
+    "vampirism:vampire/no_longer_fledgling"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/vampire_rage"
+  },
+  "skills": [
+    "vampirism:sunscreen"
+  ],
+  "tree": "vampirism:vampire/level"
+}

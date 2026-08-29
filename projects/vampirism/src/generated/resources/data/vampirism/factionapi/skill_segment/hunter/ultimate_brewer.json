@@ -1,0 +1,13 @@
+{
+  "parents": [
+    "vampirism:hunter/marshall_root"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/master_alchemist"
+  },
+  "skills": [
+    "vampirism:ultimate_brewer"
+  ],
+  "tree": "vampirism:hunter/marshall"
+}

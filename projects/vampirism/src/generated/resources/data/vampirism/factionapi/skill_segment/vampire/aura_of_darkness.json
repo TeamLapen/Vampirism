@@ -1,0 +1,13 @@
+{
+  "parents": [
+    "vampirism:vampire/dracula_root"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/mist_form"
+  },
+  "skills": [
+    "vampirism:aura_of_darkness"
+  ],
+  "tree": "vampirism:vampire/dracula"
+}

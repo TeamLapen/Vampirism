@@ -4,8 +4,6 @@ import de.teamlapen.faction.FactionsMod;
 import de.teamlapen.faction.client.FactionsClientMod;
 import de.teamlapen.faction.common.config.FactionConfig;
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
-import de.teamlapen.faction.common.factions.skills.ClientSkillTreeData;
-import de.teamlapen.faction.common.factions.skills.ClientboundSkillTreePacket;
 import de.teamlapen.faction.common.network.packets.client.*;
 import de.teamlapen.faction.common.network.packets.server.ClientboundActionBindingPacket;
 import de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket;
@@ -32,10 +30,6 @@ public class FactionClientPayloadHandler {
                 ((TaskBoardMenu) container).init(msg.available(), msg.completableTasks(), msg.completedRequirements(), msg.taskBoardId());
             }
         });
-    }
-
-    public static void handleSkillTreePacket(ClientboundSkillTreePacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> ClientSkillTreeData.init(msg.skillTrees()));
     }
 
     public static void handleRequestMinionSelectPacket(ClientboundRequestMinionSelectPacket msg, IPayloadContext context) {

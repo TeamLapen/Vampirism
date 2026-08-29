@@ -1,0 +1,13 @@
+{
+  "parents": [
+    "vampirism:vampire/lord_root"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:vampire/lord_movement_or_attack_speed"
+  },
+  "skills": [
+    "vampirism:vampire_minion_collect"
+  ],
+  "tree": "vampirism:vampire/lord"
+}

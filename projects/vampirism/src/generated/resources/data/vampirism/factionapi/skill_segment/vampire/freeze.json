@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:vampire/blood_charge"
+  ],
+  "skills": [
+    "vampirism:freeze"
+  ],
+  "tree": "vampirism:vampire/level"
+}

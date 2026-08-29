@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/concentrated_or_durable_brewing"
+  ],
+  "skills": [
+    "vampirism:swift_brewing",
+    "vampirism:efficient_brewing"
+  ],
+  "tree": "vampirism:hunter/level"
+}

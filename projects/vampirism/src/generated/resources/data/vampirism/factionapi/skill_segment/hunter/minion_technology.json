@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/better_minions"
+  ],
+  "skills": [
+    "vampirism:minion_tech_crossbows"
+  ],
+  "tree": "vampirism:hunter/lord"
+}

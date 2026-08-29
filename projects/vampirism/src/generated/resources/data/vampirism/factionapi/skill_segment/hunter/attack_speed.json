@@ -1,0 +1,13 @@
+{
+  "parents": [
+    "vampirism:hunter/basic_technology"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/near_breach_reforging"
+  },
+  "skills": [
+    "vampirism:hunter_attack_speed"
+  ],
+  "tree": "vampirism:hunter/level"
+}

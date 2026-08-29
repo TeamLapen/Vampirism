@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/marshall_root"
+  ],
+  "skills": [
+    "vampirism:master_alchemist"
+  ],
+  "tree": "vampirism:hunter/marshall"
+}

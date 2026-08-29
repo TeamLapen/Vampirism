@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:vampire/sunscreen"
+  ],
+  "skills": [
+    "vampirism:vampire_attack_speed",
+    "vampirism:vampire_speed"
+  ],
+  "tree": "vampirism:vampire/level"
+}

@@ -1,0 +1,14 @@
+{
+  "parents": [
+    "vampirism:hunter/attack_damage",
+    "vampirism:hunter/attack_speed"
+  ],
+  "placement": {
+    "type": "after",
+    "segment": "vampirism:hunter/armor_bound_speed"
+  },
+  "skills": [
+    "vampirism:armor_jump"
+  ],
+  "tree": "vampirism:hunter/level"
+}

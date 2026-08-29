@@ -61,7 +61,6 @@ public class ModEntityRenderStates {
     public static final ContextKey<Float> MIST_FADE = create("mist/fade");
     public static final ContextKey<Boolean> AURA_OF_DARKNESS = create("aura_of_darkness");
     public static final ContextKey<Float> AURA_OF_DARKNESS_FADE = create("aura_of_darkness/fade");
-    public static final ContextKey<Integer> AURA_OF_DARKNESS_PHASE = create("aura_of_darkness/phase");
     public static final ContextKey<Boolean> VAMPIRE_DBNO = create("vampire/dbno");
     public static final ContextKey<Boolean> VAMPIRE_SLEEPING_IN_COFFIN = create("vampire/sleeping_in_coffin");
     public static final ContextKey<Boolean> VAMPIRE_BURNING_IN_SUN = create("vampire/burning_in_sun");
@@ -177,9 +176,6 @@ public class ModEntityRenderStates {
         if (fade > 0.0f) {
             renderState.setRenderData(AURA_OF_DARKNESS, true);
             renderState.setRenderData(AURA_OF_DARKNESS_FADE, fade);
-            // Render states are pooled and reused across entities, so the entity's own id is the only stable
-            // per-entity value the renderer can key the aura's animation phase off.
-            renderState.setRenderData(AURA_OF_DARKNESS_PHASE, entity.getId());
         }
     }
 

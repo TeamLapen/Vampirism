@@ -7,9 +7,8 @@ import de.teamlapen.faction.api.factions.skills.ISkillTree;
 import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.common.core.FactionEffects;
-import de.teamlapen.faction.common.factions.skills.ClientSkillTreeData;
 import de.teamlapen.faction.common.factions.skills.SkillHandler;
-import de.teamlapen.faction.common.factions.skills.SkillTreeConfiguration;
+import de.teamlapen.faction.common.factions.skills.SkillTreeGraph;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -24,8 +23,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class SkillsTabComponent {
 
@@ -37,9 +38,10 @@ public class SkillsTabComponent {
     private final ISkillHandler<?> skillHandler;
     private final ItemStack icon;
     private final Component title;
-    private final Map<SkillTreeConfiguration.SkillTreeNodeConfiguration, SkillNodeComponent> nodes = new HashMap<>();
+    private final Map<SkillTreeGraph.Entry, SkillSegmentComponent> segments = new LinkedHashMap<>();
+    private List<SkillSegmentConnection> connections = List.of();
     private final AdvancementTabType position;
-    private final SkillNodeComponent root;
+    private final SkillTreeLayout layout;
     private final int treeWidth;
     private final int treeHeight;
     private final Identifier background;
@@ -56,20 +58,25 @@ public class SkillsTabComponent {
     private static final double minZoom = 0.25;
 
 
-    public SkillsTabComponent(Minecraft minecraft, SkillsScreen screen, int index, Holder<ISkillTree> skillTree, ISkillHandler<?> skillHandler, ClientSkillTreeData skillTreeData) {
+    public SkillsTabComponent(Minecraft minecraft, int index, Holder<ISkillTree> skillTree, ISkillHandler<?> skillHandler, SkillTreeGraph graph, SkillTreeGraph.Tree tree) {
         this.minecraft = minecraft;
         this.skillTree = skillTree;
         this.skillHandler = skillHandler;
-        ISkillTree tree = skillTree.value();
+        ISkillTree treeValue = skillTree.value();
         this.index = index;
-        this.icon = tree.display().create();
-        this.title = tree.name();
+        this.icon = treeValue.display().create();
+        this.title = treeValue.name();
         this.position = AdvancementTabType.LEFT;
-        this.treeWidth = skillTreeData.getTreeWidth(skillTree);
-        this.treeHeight = skillTreeData.getTreeHeight(skillTree);
-        this.root = new SkillNodeComponent(minecraft, screen, this, skillTreeData.root(skillTree), skillTreeData, ((SkillHandler<?>) skillHandler));
-        this.background = tree.background().map(x -> x.withPath(path -> "textures/" + path + ".png")).orElse(FIdentifier.mod("textures/gui/skills/backgrounds/level.png"));
-        addNode(this.root);
+        this.layout = SkillTreeLayout.of(tree);
+        this.treeWidth = this.layout.width();
+        this.treeHeight = this.layout.height();
+        this.background = treeValue.background().map(x -> x.withPath(path -> "textures/" + path + ".png")).orElse(FIdentifier.mod("textures/gui/skills/backgrounds/level.png"));
+
+        for (SkillTreeLayout.Placement placement : this.layout.placements()) {
+            this.segments.put(placement.entry(), new SkillSegmentComponent(minecraft, placement, graph, (SkillHandler<?>) skillHandler));
+        }
+        this.segments.forEach((entry, component) -> component.bindParents(entry.parents().stream().map(this.segments::get).filter(Objects::nonNull).toList()));
+        this.connections = SkillSegmentConnection.of(this.segments.values());
 
         recalculateBorders();
     }
@@ -78,17 +85,10 @@ public class SkillsTabComponent {
         this.minY = -(this.treeHeight + 16);
         this.maxY = 20;
 
-        this.minX = -SCREEN_WIDTH / 2d;
-        this.maxX = this.treeWidth - SCREEN_WIDTH / 2d;
+        this.minX = this.layout.minX() - SCREEN_WIDTH / 2d;
+        this.maxX = this.layout.maxX() + SCREEN_WIDTH / 2d;
         this.centerX = 0;
         this.centerY = 0;
-    }
-
-    private void addNode(SkillNodeComponent screen) {
-        this.nodes.put(screen.getSkillNode(), screen);
-        for (SkillNodeComponent child : screen.getChildren()) {
-            addNode(child);
-        }
     }
 
     public int getIndex() {
@@ -128,9 +128,15 @@ public class SkillsTabComponent {
             }
         }
 
-        this.root.drawConnectivity(graphics, 0, 0, true);
-        this.root.drawConnectivity(graphics, 0, 0, false);
-        this.root.draw(graphics, 0, 0);
+        for (SkillSegmentConnection connection : this.connections) {
+            connection.draw(graphics, true);
+        }
+        for (SkillSegmentConnection connection : this.connections) {
+            connection.draw(graphics, false);
+        }
+        for (SkillSegmentComponent segment : this.segments.values()) {
+            segment.draw(graphics, 0, 0);
+        }
         pose.popMatrix();
 
         if (this.minecraft.player.getEffect(FactionEffects.OBLIVION) != null) {
@@ -143,7 +149,7 @@ public class SkillsTabComponent {
         graphics.disableScissor();
     }
 
-    public void drawTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    public void drawTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, @Nullable Holder<? extends ISkill<?>> heldSkill, float holdingProgress, SkillsScreen.Holding holding) {
         var pose = graphics.pose();
         pose.pushMatrix();
         graphics.fill(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Mth.floor(this.fade * 255.0F) << 24);
@@ -151,13 +157,13 @@ public class SkillsTabComponent {
         if (mouseX >= 0 && mouseX < SCREEN_WIDTH && mouseY >= 0 && mouseY < SCREEN_HEIGHT) {
             double scaledMouseX = getScaledMouseX(mouseX);
             double scaledMouseY = getScaledMouseY(mouseY);
-            for (SkillNodeComponent nodeScreen : this.nodes.values()) {
-                if (nodeScreen.isMouseOver(scaledMouseX, scaledMouseY, 0, 0)) {
+            for (SkillSegmentComponent segment : this.segments.values()) {
+                if (segment.isMouseOver(scaledMouseX, scaledMouseY, 0, 0)) {
                     flag = true;
                     pose.pushMatrix();
                     pose.translate((float) (SCREEN_WIDTH / 2d + centerX), (float) (20 + centerY));
                     pose.scale((float) this.zoom, (float) this.zoom);
-                    nodeScreen.drawHover(graphics, scaledMouseX, scaledMouseY, this.fade, 0, 0);
+                    segment.drawHover(graphics, scaledMouseX, scaledMouseY, this.fade, 0, 0, heldSkill, holdingProgress, holding);
                     pose.popMatrix();
                     break;
                 }
@@ -204,8 +210,8 @@ public class SkillsTabComponent {
 
     @Nullable
     public Holder<? extends ISkill<?>> getSelected(int mouseX, int mouseY) {
-        for (SkillNodeComponent screen : this.nodes.values()) {
-            Holder<? extends ISkill<?>> selected = screen.getSelectedSkill(getScaledMouseX(mouseX), getScaledMouseY(mouseY), 0, 0);
+        for (SkillSegmentComponent segment : this.segments.values()) {
+            Holder<? extends ISkill<?>> selected = segment.getSelectedSkill(getScaledMouseX(mouseX), getScaledMouseY(mouseY), 0, 0);
             if (selected != null) {
                 return selected;
             }

@@ -8,13 +8,16 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStackTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
- * Represents a skill tree such as a skill tree for basic leveling as well as a lord level skill tree. Each faction needs to have their own skill tree.
+ * Represents a skill tree such as a skill tree for basic leveling as well as a lord level skill tree. Each faction needs
+ * to have their own skill tree.
  */
 public interface ISkillTree {
 
@@ -43,5 +46,10 @@ public interface ISkillTree {
     Optional<Identifier> background();
 
     TagKey<ISkillTree> skillPointTag();
+
+    /**
+     * Skill trees this one is displayed after in the skill screen
+     */
+    List<ResourceKey<ISkillTree>> orderAfter();
 
 }

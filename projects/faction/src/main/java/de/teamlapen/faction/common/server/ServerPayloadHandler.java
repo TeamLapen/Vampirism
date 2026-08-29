@@ -7,7 +7,6 @@ import de.teamlapen.faction.api.factions.refinements.IRefinementHandler;
 import de.teamlapen.faction.api.factions.skills.ISkill;
 import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.faction.api.factions.skills.ISkillPlayer;
-import de.teamlapen.faction.api.factions.tasks.ITaskManager;
 import de.teamlapen.faction.api.world.entities.minion.IMinionTask;
 import de.teamlapen.faction.api.world.entities.player.IFactionPlayer;
 import de.teamlapen.faction.common.core.FactionItems;
@@ -17,8 +16,7 @@ import de.teamlapen.faction.common.factions.minions.MinionData;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.faction.common.factions.minions.MinionWorldData;
 import de.teamlapen.faction.common.factions.minions.PlayerMinionController;
-import de.teamlapen.faction.common.factions.skills.ClientboundSkillTreePacket;
-import de.teamlapen.faction.common.factions.skills.ServerSkillTreeData;
+import de.teamlapen.faction.common.factions.skills.SkillTreeGraphs;
 import de.teamlapen.faction.common.factions.tasks.TaskManager;
 import de.teamlapen.faction.common.network.packets.client.ClientboundRequestMinionSelectPacket;
 import de.teamlapen.faction.common.network.packets.server.*;
@@ -37,6 +35,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static de.teamlapen.faction.common.network.packets.server.ServerboundSelectMinionTaskPacket.*;
@@ -158,10 +157,6 @@ public class ServerPayloadHandler {
         });
     }
 
-    public static void handleRequestSkillTreePacket(ServerboundRequestSkillTreePacket msg, IPayloadContext context) {
-        context.reply(ClientboundSkillTreePacket.of(ServerSkillTreeData.instance().getConfigurations()));
-    }
-
     public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void handleUnlockSkillPacket(ServerboundUnlockSkillPacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player();
@@ -178,6 +173,33 @@ public class ServerPayloadHandler {
                     } else {
                         LOGGER.warn("Skill {} cannot be activated for {} ({})", skill, player, result);
                     }
+                }
+            });
+        });
+    }
+
+    public static <T extends IFactionPlayer<T> & ISkillPlayer<T>> void handleForgetSkillPacket(ServerboundForgetSkillPacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            if (!player.isCreative()) {
+                LOGGER.warn("Player {} cannot forget skills, they're not in creative mode", player);
+                return;
+            }
+
+            Optional<T> factionPlayerOpt = FactionPlayerHandler.get(player).getCurrentSkillPlayer();
+            factionPlayerOpt.ifPresent(factionPlayer -> {
+                Holder<ISkill<?>> skill = msg.skill();
+                ISkillHandler<T> skillHandler = factionPlayer.getSkillHandler();
+                List<Holder<? extends ISkill<?>>> cascade = SkillTreeGraphs.get(player.level()).forgetCascade(msg.skillTree(), skill, skillHandler::isSkillEnabled);
+
+                if (cascade.isEmpty()) {
+                    LOGGER.warn("Skill {} cannot be forgotten by {} in skill tree {}", skill, player, msg.skillTree());
+                    return;
+                }
+
+                for (Holder<? extends ISkill<?>> forgotten : cascade) {
+                    //noinspection unchecked
+                    skillHandler.disableSkill((Holder<ISkill<T>>) forgotten, msg.skillTree());
                 }
             });
         });

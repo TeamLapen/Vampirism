@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:vampire/damage_limiter"
+  ],
+  "skills": [
+    "vampirism:vampire_invisibility",
+    "vampirism:dark_stalker"
+  ],
+  "tree": "vampirism:vampire/level"
+}

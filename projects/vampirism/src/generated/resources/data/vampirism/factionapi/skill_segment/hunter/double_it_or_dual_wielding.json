@@ -1,0 +1,10 @@
+{
+  "parents": [
+    "vampirism:hunter/crossbow_technique"
+  ],
+  "skills": [
+    "vampirism:double_it",
+    "vampirism:dual_wielding"
+  ],
+  "tree": "vampirism:hunter/level"
+}

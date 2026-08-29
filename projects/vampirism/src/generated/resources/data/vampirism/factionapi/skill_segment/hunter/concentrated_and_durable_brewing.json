@@ -1,0 +1,9 @@
+{
+  "parents": [
+    "vampirism:hunter/potion_resistance"
+  ],
+  "skills": [
+    "vampirism:concentrated_durable_brewing"
+  ],
+  "tree": "vampirism:hunter/level"
+}

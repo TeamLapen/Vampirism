@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.data.reloadlistener;
 
-import de.teamlapen.faction.data.listener.SkillTreeReloadListener;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 
@@ -10,6 +9,5 @@ public class ModReloadListeners {
     public void onAddReloadListenerEvent(AddServerReloadListenersEvent event) {
         event.addListener(SingleJigsawReloadListener.SINGLE_JIGSAW_ID, new SingleJigsawReloadListener());
         event.addListener(SundamageReloadListener.SUNDAMAGE_ID, new SundamageReloadListener());
-        event.addListener(SkillTreeReloadListener.SKILL_TREE_ID, new SkillTreeReloadListener());
     }
 }
