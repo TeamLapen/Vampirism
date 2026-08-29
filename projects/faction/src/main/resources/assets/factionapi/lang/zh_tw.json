@@ -86,7 +86,6 @@
   "dialogue.factionapi.minion.died_on_task": "對不起，我很抱歉，但是我在嘗試完成您的任務時死去了",
   "subtitles.factionapi.task_complete": "任務完成",
   "tooltip.factionapi.required_level": "需求等級： %s",
-  "tooltip.factionapi.oblivion_potion.desc": "消耗時重置技能",
   "command.factionapi.base.level.successful": "%s 現在是 %s 等級 %s",
   "command.factionapi.base.bind_action.success": "成功綁定招式 %s 到招式鍵 %s",
   "command.factionapi.base.bind_action.not_existing": "特定的招式 %s 不存在",
