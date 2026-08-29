@@ -154,7 +154,6 @@ public class RenderHandler implements IMinecraftAccessor {
                     renderState.getRenderDataOrDefault(ModEntityRenderStates.AURA_OF_DARKNESS_FADE, 1f),
                     renderState.boundingBoxWidth,
                     renderState.boundingBoxHeight,
-                    renderState.getRenderDataOrDefault(ModEntityRenderStates.AURA_OF_DARKNESS_PHASE, 0),
                     event.getPoseStack());
         }
     }

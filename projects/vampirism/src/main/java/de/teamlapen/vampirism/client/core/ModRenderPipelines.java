@@ -89,9 +89,7 @@ public class ModRenderPipelines {
         event.registerPipeline(MIST_LOW);
         event.registerPipeline(MIST_MEDIUM);
         event.registerPipeline(MIST_HIGH);
-        event.registerPipeline(AURA_OF_DARKNESS_LOW);
-        event.registerPipeline(AURA_OF_DARKNESS_MEDIUM);
-        event.registerPipeline(AURA_OF_DARKNESS_HIGH);
+        event.registerPipeline(AURA_OF_DARKNESS);
         event.registerPipeline(VOLUMETRIC_COMPOSITE);
     }
 
@@ -171,12 +169,23 @@ public class ModRenderPipelines {
     public static final RenderPipeline MIST_HIGH = volumetricPipeline("mist", VolumetricQuality.HIGH);
 
     /**
-     * Thin raymarched shell drawn around entities carrying the aura of darkness effect. Shares everything but
-     * see {@link de.teamlapen.vampirism.client.renderer.VolumetricBillboards}.
+     * Thin flat-colored border billboard drawn around entities carrying the aura of darkness effect. Unlike mist
+     * this is a single ring evaluation per fragment rather than a raymarch, so there is no per-quality step count
+     * and only one pipeline - see {@link de.teamlapen.vampirism.client.renderer.AuraOfDarknessRenderer}.
      */
-    public static final RenderPipeline AURA_OF_DARKNESS_LOW = volumetricPipeline("aura_of_darkness", VolumetricQuality.LOW);
-    public static final RenderPipeline AURA_OF_DARKNESS_MEDIUM = volumetricPipeline("aura_of_darkness", VolumetricQuality.MEDIUM);
-    public static final RenderPipeline AURA_OF_DARKNESS_HIGH = volumetricPipeline("aura_of_darkness", VolumetricQuality.HIGH);
+    public static final RenderPipeline AURA_OF_DARKNESS = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET, RenderPipelines.FOG_SNIPPET, RenderPipelines.GLOBALS_SNIPPET)
+            .withLocation(VIdentifier.mod("pipeline/aura_of_darkness"))
+            .withVertexShader(VIdentifier.mod("core/volumetric_billboard"))
+            .withFragmentShader(VIdentifier.mod("core/rendertype_aura_of_darkness"))
+            .withSampler("DepthSampler")
+            // Unused by the flat-ring shader itself, but VolumetricBillboards#draw binds it unconditionally for
+            // every volumetric pipeline it draws, mist included, so the pipeline still has to declare it.
+            .withSampler("NoiseSampler")
+            .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+            // See volumetricPipeline: deliberately no depth stencil state, for the same reason.
+            .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT_PREMULTIPLIED_ALPHA))
+            .withCull(false)
+            .build();
 
     /**
      * Builds a pipeline for a volume raymarched on a camera-facing billboard: a shared vertex shader expanding
@@ -227,20 +236,8 @@ public class ModRenderPipelines {
     }
 
     /**
-     * @return the aura of darkness pipeline for the given quality, or null when the aura is disabled.
-     */
-    public static @NonNull RenderPipeline auraOfDarkness(VolumetricQuality quality) {
-        return switch (quality) {
-            case LOW -> AURA_OF_DARKNESS_LOW;
-            case MEDIUM -> AURA_OF_DARKNESS_MEDIUM;
-            case HIGH -> AURA_OF_DARKNESS_HIGH;
-        };
-    }
-
-    /**
-     * Number of raymarch steps a volumetric shader takes. Each level is backed by its own pre-built pipeline,
-     * since the step count is a compile-time shader define. Shared by every raymarched effect in the mod, which
-     * is why the levels are named for quality rather than for any one of them.
+     * Number of raymarch steps mist's volumetric shader takes. Each level is backed by its own pre-built
+     * pipeline, since the step count is a compile-time shader define.
      * <p>
      * These are lower than they look. The march is clipped to the volume's own ellipsoid rather than to a sphere
      * around it, so every step lands somewhere that can carry density - where the padded bound used to spend a

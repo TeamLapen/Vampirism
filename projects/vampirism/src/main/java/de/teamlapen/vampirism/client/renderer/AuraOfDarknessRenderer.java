@@ -1,12 +1,7 @@
 package de.teamlapen.vampirism.client.renderer;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.teamlapen.vampirism.client.config.ClientConfig;
 import de.teamlapen.vampirism.client.core.ModRenderPipelines;
-import de.teamlapen.vampirism.common.config.ModConfig;
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.level.ParticleStatus;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
@@ -18,18 +13,20 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Renders the thin shell of darkness around entities carrying the aura of darkness effect.
+ * Renders a flat-colored fill over entities carrying the aura of darkness effect, with a more solid border
+ * hugging the silhouette's edge.
  * <p>
  * Works the same way as {@link MistRenderer}: renderers {@linkplain #submitAura submit} their auras during the
  * normal entity pass and they are all drawn together afterwards through {@link VolumetricBillboards}, which is
- * where the reason for the split is explained. Unlike mist, the entity itself is still rendered - the aura is a
- * shell around it, and the raymarch stops at the scene depth, so only the part of the shell in front of the
- * entity is drawn.
+ * where the reason for the split is explained. Unlike mist, the entity itself is still rendered - the aura covers
+ * its silhouette, occluded by scene depth so only the part of it in front of the entity is drawn. Unlike a
+ * raymarched volume, each fragment is a single evaluation against the entity's bounding ellipsoid - there is
+ * nothing to march.
  */
 public class AuraOfDarknessRenderer {
 
     /**
-     * Semi-axes of the shell relative to the entity's bounding box, and where along its height it is centered.
+     * Semi-axes of the ring relative to the entity's bounding box, and where along its height it is centered.
      * Deliberately tight: this is a halo hugging the silhouette, not a cloud. For a 0.6 x 1.8 player it comes
      * out 1.3 wide and 2.2 tall, centered at the waist.
      */
@@ -37,16 +34,16 @@ public class AuraOfDarknessRenderer {
     private static final float HEIGHT_SCALE = 0.62f;
     private static final float CENTER_HEIGHT_SCALE = 0.5f;
     /**
-     * How far past the radii the shell reaches, and so the ellipsoid both the billboard and the raymarch are
-     * fitted to. Not a margin: the band's outer falloff ends at exactly this, so fitting to it neither clips the
-     * halo nor pads it. Kept in sync with SHELL_OUTER in rendertype_aura_of_darkness.fsh.
+     * How far past the radii the ring's outer edge reaches, and so the ellipsoid both the billboard and the
+     * ring band are fitted to. Not a margin: the band's outer falloff ends at exactly this, so fitting to it
+     * neither clips the border nor pads it. Kept in sync with RING_OUTER in rendertype_aura_of_darkness.fsh.
      */
-    private static final float SUPPORT_SCALE = 1.02f;
+    private static final float SUPPORT_SCALE = 1.15f;
 
     /**
      * The effect lands on every vampire in a 10 block radius at once, so a crowded fight could ask for dozens of
-     * raymarched volumes in a frame. Past this distance the aura is a few pixels wide and not worth a full march,
-     * and beyond this count only the nearest are drawn - both keep the worst case bounded.
+     * borders in a frame. Past this distance the border is a few pixels wide and not worth drawing, and beyond
+     * this count only the nearest are drawn - both keep the worst case bounded.
      */
     private static final double MAX_DISTANCE_SQ = 32.0 * 32.0;
     private static final int MAX_INSTANCES = 12;
@@ -54,15 +51,14 @@ public class AuraOfDarknessRenderer {
     private static final List<AuraInstance> INSTANCES = new ArrayList<>();
 
     /**
-     * Records one aura to be drawn at the end of the level render.
+     * Records one aura border to be drawn at the end of the level render.
      *
-     * @param fade         0-1 envelope; the shell thins out rather than popping in and out
-     * @param entityWidth  bounding box width, scaled to the shell's horizontal semi-axis
-     * @param entityHeight bounding box height, scaled to the shell's vertical semi-axis
-     * @param phaseSeed    per-entity value offsetting the swirl, so neighbouring auras do not move in lockstep
+     * @param fade         0-1 envelope; the border thins out rather than popping in and out
+     * @param entityWidth  bounding box width, scaled to the border's horizontal semi-axis
+     * @param entityHeight bounding box height, scaled to the border's vertical semi-axis
      * @param poseStack    the entity's pose, i.e. camera-relative with world axes
      */
-    public static void submitAura(float fade, float entityWidth, float entityHeight, int phaseSeed, PoseStack poseStack) {
+    public static void submitAura(float fade, float entityWidth, float entityHeight, PoseStack poseStack) {
         if (fade <= 0.0f || entityWidth <= 0.0f || entityHeight <= 0.0f) {
             return;
         }
@@ -71,25 +67,22 @@ public class AuraOfDarknessRenderer {
         Vec3 center = new Vec3(transformed.x, transformed.y, transformed.z);
         double distanceSq = center.lengthSqr();
         if (distanceSq < 1.0e-8 || distanceSq > MAX_DISTANCE_SQ) {
-            // Too far to be worth marching, or the camera is exactly on the center, where the billboard has no
+            // Too far to be worth drawing, or the camera is exactly on the center, where the billboard has no
             // orientation at all to derive.
             return;
         }
 
-        // Semi-axes of the world-aligned ellipsoid the shader carves out, centered at the entity's mid-height.
+        // Semi-axes of the world-aligned ellipsoid the shader carves the ring out of, centered at the entity's
+        // mid-height.
         float radiusXZ = entityWidth * WIDTH_SCALE;
         float radiusY = entityHeight * HEIGHT_SCALE;
 
-        // Spread the seed over a minute of animation; the exact mapping does not matter, only that two entities
-        // rarely land on the same phase.
-        float phase = (Math.abs(phaseSeed) % 997) * 0.061f;
-
-        INSTANCES.add(new AuraInstance(center, radiusXZ, radiusY, radiusXZ * SUPPORT_SCALE, radiusY * SUPPORT_SCALE, phase, fade));
+        INSTANCES.add(new AuraInstance(center, radiusXZ, radiusY, radiusXZ * SUPPORT_SCALE, radiusY * SUPPORT_SCALE, fade));
     }
 
     /**
-     * Draws every aura submitted this frame. Runs after weather so the depth buffer is complete, which is what
-     * the shader tests against.
+     * Draws every aura border submitted this frame. Runs after weather so the depth buffer is complete, which is
+     * what the shader tests against.
      */
     @SubscribeEvent
     public void onRenderLevelAfterWeather(RenderLevelStageEvent.AfterWeather event) {
@@ -97,21 +90,18 @@ public class AuraOfDarknessRenderer {
             return;
         }
         try {
-            ParticleStatus particleStatus = Minecraft.getInstance().options.particles().get();
-            RenderPipeline pipeline = ModRenderPipelines.auraOfDarkness(ModRenderPipelines.VolumetricQuality.of(particleStatus));
-
-            // Farthest first, so overlapping auras blend in the right order - there is no depth write to sort
+            // Farthest first, so overlapping borders blend in the right order - there is no depth write to sort
             // them for us. Which also means the nearest, the ones worth keeping under the cap, are last.
             INSTANCES.sort(Comparator.comparingDouble((AuraInstance aura) -> aura.center().lengthSqr()).reversed());
             List<AuraInstance> drawn = INSTANCES.size() > MAX_INSTANCES ? INSTANCES.subList(INSTANCES.size() - MAX_INSTANCES, INSTANCES.size()) : INSTANCES;
 
-            VolumetricBillboards.draw("Vampirism aura of darkness", pipeline, event.getModelViewMatrix(), drawn.stream().map(AuraInstance::pack).toList());
+            VolumetricBillboards.draw("Vampirism aura of darkness", ModRenderPipelines.AURA_OF_DARKNESS, event.getModelViewMatrix(), drawn.stream().map(AuraInstance::pack).toList());
         } finally {
             INSTANCES.clear();
         }
     }
 
-    private record AuraInstance(Vec3 center, float radiusXZ, float radiusY, float supportXZ, float supportY, float phase, float fade) {
+    private record AuraInstance(Vec3 center, float radiusXZ, float radiusY, float supportXZ, float supportY, float fade) {
 
         /**
          * Packs the instance into a matrix, one parameter group per column, matching the layout documented in
@@ -121,7 +111,7 @@ public class AuraOfDarknessRenderer {
         private Matrix4f pack() {
             return new Matrix4f(
                     (float) this.center.x, (float) this.center.y, (float) this.center.z, this.supportXZ,
-                    this.radiusXZ, this.radiusY, this.phase, this.supportY,
+                    this.radiusXZ, this.radiusY, 0.0f, this.supportY,
                     this.fade, 0.0f, 0.0f, 0.0f,
                     0.0f, 0.0f, 0.0f, 0.0f
             );
