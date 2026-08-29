@@ -4,7 +4,7 @@
   ],
   "placement": {
     "type": "after",
-    "segment": "vampirism:hunter/multitask_brewing"
+    "segment": "vampirism:hunter/attack_damage"
   },
   "skills": [
     "vampirism:near_breach_reforging"

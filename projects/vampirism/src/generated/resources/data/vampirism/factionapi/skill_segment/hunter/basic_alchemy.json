@@ -1,6 +1,6 @@
 {
   "parents": [
-    "vampirism:hunter/basic_technology"
+    "vampirism:hunter/disguise"
   ],
   "skills": [
     "vampirism:basic_alchemy"

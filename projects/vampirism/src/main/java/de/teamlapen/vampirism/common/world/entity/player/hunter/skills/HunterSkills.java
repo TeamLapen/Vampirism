@@ -161,12 +161,9 @@ public class HunterSkills {
             level(KEY_DISGUISE, HUNTER_DISGUISE)
                     .parents(KEY_STAKE)
                     .register(context);
-            level(KEY_BASIC_TECHNOLOGY, WEAPON_TABLE)
-                    .parents(KEY_DISGUISE)
-                    .register(context);
 
             level(KEY_BASIC_ALCHEMY, BASIC_ALCHEMY)
-                    .parents(KEY_BASIC_TECHNOLOGY)
+                    .parents(KEY_DISGUISE)
                     .register(context);
             level(KEY_GARLIC_DIFFUSER, GARLIC_DIFFUSER)
                     .parents(KEY_BASIC_ALCHEMY)
@@ -197,7 +194,7 @@ public class HunterSkills {
                     .register(context);
 
             level(KEY_MULTITASK_BREWING, MULTITASK_BREWING)
-                    .parents(KEY_BASIC_TECHNOLOGY)
+                    .parents(KEY_DISGUISE)
                     .after(KEY_BASIC_ALCHEMY)
                     .register(context);
             level(KEY_CONCENTRATED_OR_DURABLE_BREWING, CONCENTRATED_BREWING, DURABLE_BREWING)
@@ -216,16 +213,19 @@ public class HunterSkills {
                     .parents(KEY_POTION_RESISTANCE)
                     .register(context);
 
+            level(KEY_BASIC_TECHNOLOGY, WEAPON_TABLE)
+                    .parents(KEY_DISGUISE)
+                    .register(context);
             level(KEY_NEAR_BREACH_REFORGING, NEAR_BREACH_REFORGING)
                     .parents(KEY_BASIC_TECHNOLOGY)
-                    .after(KEY_MULTITASK_BREWING)
+                    .after(KEY_ATTACK_DAMAGE)
                     .register(context);
             level(KEY_ATTACK_DAMAGE, HUNTER_ATTACK_DAMAGE)
-                    .parents(KEY_NEAR_BREACH_REFORGING)
+                    .parents(KEY_BASIC_TECHNOLOGY)
                     .register(context);
             level(KEY_ATTACK_SPEED, HUNTER_ATTACK_SPEED)
-                    .parents(KEY_NEAR_BREACH_REFORGING)
-                    .after(KEY_ATTACK_DAMAGE)
+                    .parents(KEY_BASIC_TECHNOLOGY)
+                    .after(KEY_NEAR_BREACH_REFORGING)
                     .register(context);
             level(KEY_ARMOR_BOUND_SPEED, ARMOR_SPEED)
                     .parents(KEY_ATTACK_DAMAGE, KEY_ATTACK_SPEED)
