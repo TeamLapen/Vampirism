@@ -86,7 +86,6 @@
   "dialogue.factionapi.minion.died_on_task": "Lo siento, mi señor, pero he muerto cumpliendo tu orden",
   "subtitles.factionapi.task_complete": "Tarea completada",
   "tooltip.factionapi.required_level": "Nivel Requerido: %s",
-  "tooltip.factionapi.oblivion_potion.desc": "Resetea habilidades al consumir",
   "command.factionapi.base.level.successful": "%s ahora es un %s nivel %s",
   "command.factionapi.base.bind_action.success": "Acción vinculada correctamente %s a la tecla %s",
   "command.factionapi.base.bind_action.not_existing": "La acción %s no existe",
