@@ -75,7 +75,6 @@
   "message.factionapi.minion_task.could_not_activate": "Comando não pode ser ativado",
   "dialogue.factionapi.minion.died_on_task": "Meu senhor, me desculpe, mas eu morri enquanto cumpria sua tarefa",
   "tooltip.factionapi.required_level": "Nível necessário: %s",
-  "tooltip.factionapi.oblivion_potion.desc": "Redefine habilidades ao consumir",
   "command.factionapi.base.level.successful": "%s agora é um %s nível %s",
   "command.factionapi.base.bind_action.success": "Ação vinculada com sucesso %s para a ação da tecla %s",
   "command.factionapi.base.bind_action.not_existing": "A ação dada %s não existe",
