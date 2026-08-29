@@ -69,7 +69,6 @@
   "message.factionapi.minion.minions_recovering": "%s thuộc hạ vẫn đang hồi phục",
   "dialogue.factionapi.minion.died_on_task": "Thưa chúa tể, tôi rất xin lỗi vì đã chết trong khi thi hành mệnh lệnh của ngài",
   "tooltip.factionapi.required_level": "Cấp độ yêu cầu: %s",
-  "tooltip.factionapi.oblivion_potion.desc": "Làm mới bảng kĩ năng khi tiêu thụ",
   "command.factionapi.base.level.successful": "%s bây giờ là một %s cấp độ %s",
   "command.factionapi.base.bind_action.help": "Bạn có thể liên kết hành động (vd : chế độ dơi) vào hai phím hành động sẵn có (xem keybindings).",
   "command.factionapi.base.gender.success": "Thiết lập giới tính của danh hiệu chúa tể thành công",
