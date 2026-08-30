@@ -53,6 +53,9 @@ dependencies {
     if (include_jade.toBoolean()) {
         runtimeOnly fg.deobf("curse.maven:jade-324717:" + project.jade_version)
     }
+//  For testing Lithostiched worldgen modifier
+//    runtimeOnly fg.deobf("curse.maven:lithostitched-936015:6742615")
+
 }
 
 minecraft {

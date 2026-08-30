@@ -15,6 +15,8 @@ import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
+import net.minecraftforge.fml.ModList;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -23,13 +25,19 @@ import java.util.function.Function;
 /**
  * Vanilla structures are modified in the following ways:
  * 1) Village structures are modified to include totem and hunter trainer house. Furthermore, some temples are replaced with custom versions. This is done during common setup.
- * 2) Explicitely specified structture pieces are limit to once per structure  via {@link de.teamlapen.vampirism.mixin.MixinJigsawPlacer}.
+ * 2) Explicitly specified structure pieces are limit to once per structure  via {@link de.teamlapen.vampirism.mixin.MixinJigsawPlacer}.
+ *
+ *  If Lithostitched is installed, some of this is done using Litostitched and data files instead (`resources/data/vampirism/lithostitched`)
  */
 public class VanillaStructureModifications {
 
     public static void addVillageStructures(@NotNull RegistryAccess dynamicRegistries) {
-        addHunterTrainerHouse(dynamicRegistries, getDefaultPools());
-        addTotem(dynamicRegistries, getDefaultPools());
+        if (ModList.get().isLoaded("lithostitched")) {
+            LogManager.getLogger().info("Lithostitched is loaded, skipping manual totem/hunter trainer addition");
+        } else {
+            addHunterTrainerHouse(dynamicRegistries, getDefaultPools());
+            addTotem(dynamicRegistries, getDefaultPools());
+        }
         replaceTemples(dynamicRegistries, getTempleReplacements(dynamicRegistries.lookupOrThrow(Registries.PROCESSOR_LIST)));
     }
 
@@ -61,7 +69,7 @@ public class VanillaStructureModifications {
     }
 
     /**
-     * replaces half of the temples with temples with church altar
+     * replaces half of the temples with church altar
      */
     private static void replaceTemples(@NotNull RegistryAccess dynamicRegistries, @NotNull Map<ResourceLocation, Map<String, StructurePoolElement>> patternReplacements) {
         // return if temples should not be modified
