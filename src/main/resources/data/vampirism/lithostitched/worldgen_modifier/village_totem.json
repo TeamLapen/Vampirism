@@ -1,0 +1,25 @@
+{
+  "type": "lithostitched:add_template_pool_elements",
+  "template_pools": [
+    "minecraft:village/plains/houses",
+    "minecraft:village/desert/houses",
+    "minecraft:village/savanna/houses",
+    "minecraft:village/taiga/houses",
+    "minecraft:village/snowy/houses"
+  ],
+  "elements": [
+    {
+      "weight": 20,
+      "element": {
+        "element_type": "lithostitched:limited",
+        "delegate": {
+          "element_type": "minecraft:single_pool_element",
+          "projection": "terrain_matching",
+          "location": "vampirism:village/totem",
+          "processors": "vampirism:totem_faction"
+        },
+        "limit": 1
+      }
+    }
+  ]
+}
