@@ -15,13 +15,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -45,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static net.minecraft.world.level.block.BedBlock.OCCUPIED;
@@ -380,4 +380,36 @@ public class TentBlock extends VampirismBlock {
         builder.add(FACING, POSITION, BlockStateProperties.OCCUPIED);
     }
 
+    /**
+     * Given the main tent block pos and its facing, find the preferred stand-up/respawn position.
+     * Go around the tent, prefer the entrance
+     *
+     * @return Stand-up position, if found
+     */
+    public static Optional<Vec3> findStandUpPosition(EntityType<?> pEntityType, CollisionGetter pCollisionGetter, BlockPos pPos, Direction tentDirection) {
+        //Assume this is already the main block. Go around the tent, starting with the front and test positions
+
+        Direction[] move = {tentDirection, tentDirection.getClockWise(), tentDirection.getClockWise(), tentDirection.getOpposite(), tentDirection.getOpposite(), tentDirection.getOpposite(), tentDirection.getCounterClockWise(), tentDirection.getCounterClockWise(), tentDirection.getCounterClockWise(), tentDirection, tentDirection, tentDirection};
+
+        Vec3 result;
+        BlockPos.MutableBlockPos mutable = pPos.mutable();
+        for (Direction direction : move) {
+            mutable.move(direction);
+            result = DismountHelper.findSafeDismountLocation(pEntityType, pCollisionGetter, mutable, true);
+            if (result != null) return Optional.of(result);
+        }
+        mutable = pPos.mutable();
+        for (Direction direction : move) {
+            mutable.move(direction);
+            result = DismountHelper.findSafeDismountLocation(pEntityType, pCollisionGetter, mutable, false);
+            if (result != null) return Optional.of(result);
+        }
+        return Optional.empty();
+    }
+
+    @NotNull
+    @Override
+    public Optional<Vec3> getRespawnPosition(BlockState state, EntityType<?> type, LevelReader levelReader, BlockPos pos, float orientation, @Nullable LivingEntity entity) {
+        return findStandUpPosition(type, levelReader, pos, state.getValue(FACING));
+    }
 }
