@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.world.items.oil.IOil;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.core.ModOils;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import de.teamlapen.vampirism.common.world.items.recipes.AlchemyTableRecipe;
 import net.minecraft.advancements.*;
@@ -47,7 +48,7 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
     protected Ingredient ingredient;
     protected final @NotNull IOil ingredientOil = ModOils.EMPTY.get();
     protected Ingredient input;
-    protected final List<ISkill<?>> skills = new LinkedList<>();
+    protected final List<Holder<? extends ISkill<?>>> skills = new LinkedList<>();
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
     public AlchemyTableRecipeBuilder(HolderLookup.RegistryLookup<Item> itemLookup, @NotNull ItemStackTemplate result) {
@@ -89,7 +90,7 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
     }
 
     public AlchemyTableRecipeBuilder sovereignOilIngredient() {
-        return oilIngredient(ModOils.SOVEREIGN_BLOOD);
+        return oilIngredient(ModOils.SOVEREIGN_BLOOD).withSkills(HunterSkills.MASTER_ALCHEMIST);
     }
 
     public @NotNull AlchemyTableRecipeBuilder input(@NotNull Ingredient input) {
@@ -97,7 +98,8 @@ public class AlchemyTableRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public @NotNull AlchemyTableRecipeBuilder withSkills(@NotNull ISkill<?>... skills) {
+    @SafeVarargs
+    public final @NotNull AlchemyTableRecipeBuilder withSkills(@NotNull Holder<? extends ISkill<?>>... skills) {
         this.skills.addAll(Arrays.asList(skills));
         return this;
     }

@@ -49,5 +49,8 @@
       }
     },
     "id": "vampirism:oil_bottle"
-  }
+  },
+  "skill": [
+    "vampirism:master_alchemist"
+  ]
 }

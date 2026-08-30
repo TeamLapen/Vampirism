@@ -19,6 +19,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -34,14 +35,14 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
 
     private static final Identifier location = VIdentifier.mod("textures/gui/container/alchemy_table.png");
 
-    private final @NotNull Component localizedName;
-    private final @NotNull IDrawable icon;
-    private final @NotNull IDrawable background;
-    private final @NotNull IDrawableStatic blazeHeat;
-    private final @NotNull IDrawableAnimated arrow;
-    private final @NotNull IDrawableAnimated pool;
+    private final Component localizedName;
+    private final IDrawable icon;
+    private final IDrawable background;
+    private final IDrawableStatic blazeHeat;
+    private final IDrawableAnimated arrow;
+    private final IDrawableAnimated pool;
 
-    public AlchemyTableRecipeCategory(@NotNull IGuiHelper helper) {
+    public AlchemyTableRecipeCategory(IGuiHelper helper) {
         this.localizedName = ModBlocks.ALCHEMY_TABLE.get().getName();
         this.background = helper.drawableBuilder(location, 11, 12, 149, 80).addPadding(0, 30, 0, 0).build();
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.ALCHEMY_TABLE.get()));
@@ -51,7 +52,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
     }
 
     @Override
-    public @NotNull IRecipeType<RecipeHolder<AlchemyTableRecipe>> getRecipeType() {
+    public IRecipeType<RecipeHolder<AlchemyTableRecipe>> getRecipeType() {
         return VampirismJEIPlugin.ALCHEMY_TABLE;
     }
 
@@ -78,7 +79,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull RecipeHolder<AlchemyTableRecipe> holder, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlchemyTableRecipe> holder, IFocusGroup focuses) {
         AlchemyTableRecipe recipe = holder.value();
         builder.addSlot(RecipeIngredientRole.INPUT, 4, 13).add(recipe.getInput());
         builder.addSlot(RecipeIngredientRole.INPUT, 44, 4).add(recipe.getIngredient());
@@ -89,7 +90,7 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
     }
 
     @Override
-    public void draw(@NotNull RecipeHolder<AlchemyTableRecipe> holder, IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<AlchemyTableRecipe> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         this.background.draw(graphics);
         graphics.pose().pushMatrix();
         AlchemyTableRecipe recipe = holder.value();
@@ -102,12 +103,12 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
         int y = 80;
         Minecraft minecraft = Minecraft.getInstance();
 
-        List<ISkill<?>> requiredSkills = recipe.getRequiredSkills();
+        List<Holder<? extends ISkill<?>>> requiredSkills = recipe.getRequiredSkills();
         if (!requiredSkills.isEmpty()) {
             MutableComponent skillText = Component.translatable("gui.vampirism.skill_required", " ");
 
-            for (ISkill<?> skill : recipe.getRequiredSkills()) {
-                skillText.append(skill.getName()).append(" ");
+            for (Holder<? extends ISkill<?>> skill : requiredSkills) {
+                skillText.append(skill.value().getName()).append(" ");
 
             }
             y += UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.gray.getRGB());

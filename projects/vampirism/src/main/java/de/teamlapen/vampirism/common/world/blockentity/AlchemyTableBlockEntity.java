@@ -1,14 +1,17 @@
 package de.teamlapen.vampirism.common.world.blockentity;
 
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.common.core.ModBlockEntities;
 import de.teamlapen.vampirism.common.core.ModRecipes;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blocks.AlchemyTableBlock;
+import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.inventory.AlchemyTableMenu;
 import de.teamlapen.vampirism.common.world.items.component.OilContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,10 +30,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
 
+    public static final String KEY_USER = "user";
+
     private NonNullList<ItemStack> items = NonNullList.withSize(6, ItemStack.EMPTY);
+    private @Nullable UUID userID;
     private int brewTime;
     private boolean @Nullable [] lastOilCount;
     private Item ingredient;
@@ -84,6 +91,24 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     @Override
     protected AbstractContainerMenu createMenu(int menuId, @NotNull Inventory playerInventory) {
         return new AlchemyTableMenu(menuId, this.level, playerInventory, this, this.dataAccess);
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int menuId, @NotNull Inventory playerInventory, @NotNull Player player) {
+        if (!canOpen(player)) return null;
+        if (Helper.isHunter(player) && !player.getUUID().equals(this.userID)) {
+            this.userID = player.getUUID();
+            this.setChanged();
+        }
+        return createMenu(menuId, playerInventory);
+    }
+
+    @Nullable
+    private ISkillHandler<?> getUserSkillHandler() {
+        if (this.level == null || this.userID == null) return null;
+        Player user = this.level.getPlayerByUUID(this.userID);
+        return user == null ? null : HunterPlayer.get(user).getSkillHandler();
     }
 
     @Override
@@ -182,7 +207,8 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
             --blockEntity.fuel;
             blockEntity.brewTime = 600;
             blockEntity.ingredient = itemstack1.getItem();
-            blockEntity.productColor = VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().isInput(blockEntity.items.get(4)) && (recipe.value().isIngredient(blockEntity.items.getFirst()) || recipe.value().isIngredient(blockEntity.items.get(1)))).map(recipe -> recipe.value().getResultItem()).map(s -> OilContent.getOil(s).value().getColor()).findAny().orElse(0xffffff);
+            ISkillHandler<?> skills = blockEntity.getUserSkillHandler();
+            blockEntity.productColor = VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().isInput(blockEntity.items.get(4)) && (recipe.value().isIngredient(blockEntity.items.getFirst()) || recipe.value().isIngredient(blockEntity.items.get(1))) && recipe.value().canBeBrewed(skills)).map(recipe -> recipe.value().getResultItem()).map(s -> OilContent.getOil(s).value().getColor()).findAny().orElse(0xffffff);
             blockEntity.setChanged();
         }
 
@@ -254,7 +280,8 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     private boolean hasRecipe(@NotNull Level level, ItemStack input, @NotNull ItemStack ingredient) {
-        return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(input) && recipe.value().isIngredient(ingredient));
+        ISkillHandler<?> skills = getUserSkillHandler();
+        return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().anyMatch(recipe -> recipe.value().isInput(input) && recipe.value().isIngredient(ingredient) && recipe.value().canBeBrewed(skills));
     }
 
     public boolean isValidIngredient(@NotNull Level level, @NotNull ItemStack stack) {
@@ -266,7 +293,8 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
     }
 
     public @NotNull ItemStack getOutput(@NotNull Level level, @NotNull ItemStack input, @NotNull ItemStack ingredient) {
-        return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().map(recipe -> recipe.value().getResult(input, ingredient)).filter(a -> !a.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
+        ISkillHandler<?> skills = getUserSkillHandler();
+        return VampirismMod.services().recipes().getRecipes().byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().filter(recipe -> recipe.value().canBeBrewed(skills)).map(recipe -> recipe.value().getResult(input, ingredient)).filter(a -> !a.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
     }
 
     @Override
@@ -276,6 +304,7 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         ContainerHelper.loadAllItems(input.childOrEmpty("items"), this.items);
         this.brewTime = input.getShortOr("BrewTime", (short) 0);
         this.fuel = input.getByteOr("Fuel", (byte) 0);
+        this.userID = input.read(KEY_USER, UUIDUtil.CODEC).orElse(null);
     }
 
     @Override
@@ -284,5 +313,8 @@ public class AlchemyTableBlockEntity extends BaseContainerBlockEntity {
         output.putShort("BrewTime", (short) this.brewTime);
         ContainerHelper.saveAllItems(output.child("items"), this.items);
         output.putByte("Fuel", (byte) this.fuel);
+        if (this.userID != null) {
+            output.store(KEY_USER, UUIDUtil.CODEC, this.userID);
+        }
     }
 }

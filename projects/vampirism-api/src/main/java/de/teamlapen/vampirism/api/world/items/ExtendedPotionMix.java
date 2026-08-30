@@ -20,8 +20,9 @@ public class ExtendedPotionMix {
     public final boolean concentrated;
     public final boolean master;
     public final boolean efficient;
+    public final boolean sovereign;
 
-    private ExtendedPotionMix(Holder<Potion> inputIn, Supplier<Ingredient> reagentIn1, int count1, Supplier<Ingredient> reagentIn2, int count2, Holder<Potion> outputIn, boolean durable, boolean concentrated, boolean master, boolean efficient) {
+    private ExtendedPotionMix(Holder<Potion> inputIn, Supplier<Ingredient> reagentIn1, int count1, Supplier<Ingredient> reagentIn2, int count2, Holder<Potion> outputIn, boolean durable, boolean concentrated, boolean master, boolean efficient, boolean sovereign) {
         this.input = inputIn;
         this.reagent1 = reagentIn1;
         this.reagent1Count = count1;
@@ -32,10 +33,11 @@ public class ExtendedPotionMix {
         this.concentrated = concentrated;
         this.master = master;
         this.efficient = efficient;
+        this.sovereign = sovereign;
     }
 
     public boolean canBrew(IExtendedBrewingRecipeRegistry.@NotNull IExtendedBrewingCapabilities cap) {
-        return (!master || cap.hasMasterBrewing()) && (!durable || cap.hasDurableBrewing()) && (!concentrated || cap.hasConcentratedBrewing()) && (!efficient || cap.hasEfficientBrewing());
+        return (!master || cap.hasMasterBrewing()) && (!durable || cap.hasDurableBrewing()) && (!concentrated || cap.hasConcentratedBrewing()) && (!efficient || cap.hasEfficientBrewing()) && (!sovereign || cap.hasUltimateBrewing());
     }
 
 
@@ -54,6 +56,7 @@ public class ExtendedPotionMix {
         private boolean durable = false;
         private boolean concentrated = false;
         private boolean master = false;
+        private boolean sovereign = false;
 
         public Builder(Holder<Potion> input, Holder<Potion> output) {
             this.input = input;
@@ -65,15 +68,16 @@ public class ExtendedPotionMix {
         }
 
         public Builder sovereignBlood() {
+            this.sovereign = true;
             return this.extraIngredient(SOVEREIGN_BLOOD);
         }
 
         public ExtendedPotionMix @NotNull [] build() {
             boolean efficient = reagent1CountReduced != -1 || reagent2CountReduced != -1;
             ExtendedPotionMix[] result = new ExtendedPotionMix[efficient ? 2 : 1];
-            result[0] = new ExtendedPotionMix(input, reagent1Count == 0 ? EMPTY_SUPPLIER : reagent1, reagent1Count, reagent2Count == 0 ? EMPTY_SUPPLIER : reagent2, reagent2Count, output, durable, concentrated, master, false);
+            result[0] = new ExtendedPotionMix(input, reagent1Count == 0 ? EMPTY_SUPPLIER : reagent1, reagent1Count, reagent2Count == 0 ? EMPTY_SUPPLIER : reagent2, reagent2Count, output, durable, concentrated, master, false, sovereign);
             if (efficient) {
-                result[1] = new ExtendedPotionMix(input, reagent1Count == 0 || reagent1CountReduced == 0 ? EMPTY_SUPPLIER : reagent1, reagent1CountReduced != -1 ? reagent1CountReduced : reagent1Count, reagent2Count == 0 || reagent2CountReduced == 0 ? EMPTY_SUPPLIER : reagent2, reagent2CountReduced != -1 ? reagent2CountReduced : reagent2Count, output, durable, concentrated, master, true);
+                result[1] = new ExtendedPotionMix(input, reagent1Count == 0 || reagent1CountReduced == 0 ? EMPTY_SUPPLIER : reagent1, reagent1CountReduced != -1 ? reagent1CountReduced : reagent1Count, reagent2Count == 0 || reagent2CountReduced == 0 ? EMPTY_SUPPLIER : reagent2, reagent2CountReduced != -1 ? reagent2CountReduced : reagent2Count, output, durable, concentrated, master, true, sovereign);
             }
             return result;
         }

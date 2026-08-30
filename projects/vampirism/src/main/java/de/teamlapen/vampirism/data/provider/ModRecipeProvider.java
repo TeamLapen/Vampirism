@@ -770,6 +770,7 @@ public class ModRecipeProvider extends VampirismRecipeProvider {
         alchemyTable(ModOils.SOVEREIGN_BLOOD)
                 .plantOilIngredient()
                 .input(Ingredient.of(ModItems.SOVEREIGN_BLOOD))
+                .withSkills(HunterSkills.MASTER_ALCHEMIST)
                 .unlockedBy("has_sovereign_blood", has(ModItems.SOVEREIGN_BLOOD))
                 .save(output);
         alchemyTable(ModOils.HEALING)
