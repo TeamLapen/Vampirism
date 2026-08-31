@@ -40,8 +40,8 @@ public class ServerConfig {
                 .comment("Set to false to prevent vampire fangs from being usable to infect oneself.")
                 .define("fangInfection", true);
         this.mobBiteInfection = builder
-                .comment("Set to true to prevent vampire mobs from infecting players on attack.")
-                .define("mobBiteInfection", false);
+                .comment("Set to false to prevent vampire mobs from infecting players on attack.")
+                .define("mobBiteInfection", true);
         this.batDimensionBlacklist = builder
                 .comment("A list of dimensions where vampire players cannot transform into a bat. Use dimension IDs e.g. [\"minecraft:the_end\"].")
                 .defineList("batDimensionBlacklist", Collections.singletonList(Level.END.identifier().toString()), () -> "", obj -> UtilLib.checkRegistryObjectExistence(Registries.DIMENSION, obj));
