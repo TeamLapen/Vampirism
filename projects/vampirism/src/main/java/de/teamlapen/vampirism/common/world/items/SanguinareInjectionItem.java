@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.core.ModEffects;
 import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
+import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
+import de.teamlapen.vampirism.common.world.heritage.HeritageOrigin;
 import de.teamlapen.vampirism.common.world.inventory.RevertBackMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -41,6 +43,7 @@ public class SanguinareInjectionItem extends InjectionItem {
                 if (!ModConfig.server().fangInfection.get()) {
                     player.sendOverlayMessage(Component.translatable("message.vampirism.infection_disabled_server"));
                 } else {
+                    HeritageManager.prepareForSelfConversion(player, HeritageOrigin.SANGUINARE_INJECTION);
                     SanguinareMobEffect.addRandom(player, true, true);
                     player.addEffect(new MobEffectInstance(ModEffects.TOXICANT, 60));
                     return true;

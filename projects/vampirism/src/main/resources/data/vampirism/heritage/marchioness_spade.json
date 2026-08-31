@@ -1,0 +1,10 @@
+{
+  "npc": "spade",
+  "anchor": "marchioness_spade",
+  "members": [
+    {
+      "id": "marchioness_spade",
+      "name": "Marchioness Spade"
+    }
+  ]
+}

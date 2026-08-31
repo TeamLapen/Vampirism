@@ -57,6 +57,7 @@ public class ModCommands {
                             .then(VampireSwordCommand.register())
                             .then(Commands.literal("test")
                                     .then(InfoEntitiesCommand.register())
+                                    .then(HeritageDebugCommand.register())
                                     .then(MarkerCommand.register())
                                     .then(EntityCommand.register())
                                     .then(InfoEntityCommand.register())

@@ -1,0 +1,10 @@
+{
+  "npc": "supermike",
+  "anchor": "merciless_mike",
+  "members": [
+    {
+      "id": "merciless_mike",
+      "name": "Merciless Mike"
+    }
+  ]
+}

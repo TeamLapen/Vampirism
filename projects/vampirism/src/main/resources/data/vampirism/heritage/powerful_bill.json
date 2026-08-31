@@ -1,0 +1,10 @@
+{
+  "npc": "wildbill",
+  "anchor": "powerful_bill",
+  "members": [
+    {
+      "id": "powerful_bill",
+      "name": "The powerful Bill"
+    }
+  ]
+}

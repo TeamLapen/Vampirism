@@ -40,6 +40,7 @@ import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
 import de.teamlapen.vampirism.common.world.entity.player.CommonFactionPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.Customization;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VampireDisguise;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.properties.VisionStatus;
@@ -542,6 +543,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean tryInfect(IVampire vampire) {
         if (canBeInfected(vampire)) {
+            HeritageManager.prepareForVampireConversion(player, vampire);
             SanguinareMobEffect.addRandom(player, true);
             return true;
         }
@@ -762,6 +764,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
         if (Helper.canBecomeVampire(player) && !isRemote() && player.isAlive()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.joinFaction(getFaction());
+            if (player instanceof ServerPlayer serverPlayer && getLevel() > 0) {
+                HeritageManager.finishConversion(serverPlayer);
+            }
             player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 300));
             player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 300));
         }

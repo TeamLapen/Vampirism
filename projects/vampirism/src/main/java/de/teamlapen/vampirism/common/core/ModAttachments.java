@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.MarshallPlayer;
+import de.teamlapen.vampirism.common.world.heritage.HeritageData;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.DraculaPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.InfectionStatus;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireBat;
@@ -52,6 +53,7 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<VampirePlayer>> VAMPIRE_PLAYER = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_PLAYER.getPath(), () -> syncAttachment(new VampirePlayer.AttachmentOptions()).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Bat>> VAMPIRE_BAT = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_BAT.getPath(), () -> AttachmentType.builder(new VampireBat.Factory()).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<InfectionStatus>> INFECTION_STATUS = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.INFECTION_STATUS.getPath(), () -> AttachmentType.builder(new InfectionStatus.Factory()).serialize(new InfectionStatus.Serializer()).sync(new InfectionStatus.Sync()).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<HeritageData>> HERITAGE = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.HERITAGE.getPath(), () -> AttachmentType.builder(new HeritageData.Factory()).serialize(new HeritageData.Serializer()).sync(new HeritageData.Sync()).copyOnDeath().build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<QuarrelEntity.HurtBypassTracker>> QUARREL_HURT_BYPASS = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.QUARREL_HURT_BYPASS.getPath(), () -> AttachmentType.builder(QuarrelEntity.HurtBypassTracker::new).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<EntitySyncHolder<VampireMinionEntity, VampireMinionEntity.VampireMinionData>>> VAMPIRE_MINION_DATA = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.VAMPIRE_MINION_DATA.getPath(), () -> syncHolder(new EntitySyncHolder.Factory<>(VampireMinionEntity.class)).build());
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<EntitySyncHolder<HunterMinionEntity, HunterMinionEntity.HunterMinionData>>> HUNTER_MINION_DATA = ATTACHMENT_TYPES.register(VampirismAttachments.Keys.HUNTER_MINION_DATA.getPath(), () -> syncHolder(new EntitySyncHolder.Factory<>(HunterMinionEntity.class)).build());

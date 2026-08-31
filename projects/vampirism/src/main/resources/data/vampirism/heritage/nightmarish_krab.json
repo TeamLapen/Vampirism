@@ -1,0 +1,10 @@
+{
+  "npc": "special_krab",
+  "anchor": "nightmarish_krab",
+  "members": [
+    {
+      "id": "nightmarish_krab",
+      "name": "The nightmarish Krab"
+    }
+  ]
+}

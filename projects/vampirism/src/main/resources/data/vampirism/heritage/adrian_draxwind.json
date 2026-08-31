@@ -1,0 +1,10 @@
+{
+  "npc": "bronzeshadow",
+  "anchor": "adrian_draxwind",
+  "members": [
+    {
+      "id": "adrian_draxwind",
+      "name": "Adrian DraxWind"
+    }
+  ]
+}

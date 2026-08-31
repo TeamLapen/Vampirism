@@ -1,0 +1,10 @@
+{
+  "npc": "volqonah",
+  "anchor": "valorous_vol",
+  "members": [
+    {
+      "id": "valorous_vol",
+      "name": "Valorous Vol"
+    }
+  ]
+}

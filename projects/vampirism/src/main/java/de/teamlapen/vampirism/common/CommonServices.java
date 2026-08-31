@@ -26,12 +26,15 @@ import de.teamlapen.vampirism.common.world.items.recipes.ExtendedBrewingRecipeRe
 import de.teamlapen.vampirism.common.world.items.recipes.RecipesSync;
 import de.teamlapen.vampirism.data.BloodConversionRegistry;
 import de.teamlapen.vampirism.data.reloadlistener.ModReloadListeners;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.event.lifecycle.InterModProcessEvent;
 import net.neoforged.neoforge.event.DefaultDataComponentsBoundEvent;
+
+import java.util.Optional;
 
 public class CommonServices extends Services implements IVampirismServices {
 
@@ -66,6 +69,10 @@ public class CommonServices extends Services implements IVampirismServices {
 
     public SupporterManager supporterManager() {
         return this.supporterManager;
+    }
+
+    public Optional<Identifier> heritageDefinitionId(String namedNpc) {
+        return this.reloadListeners.getHeritageDefinitionId(namedNpc);
     }
 
     @Override

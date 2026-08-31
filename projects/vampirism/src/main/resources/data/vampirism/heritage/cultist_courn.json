@@ -1,0 +1,10 @@
+{
+  "npc": "cournbread",
+  "anchor": "cultist_courn",
+  "members": [
+    {
+      "id": "cultist_courn",
+      "name": "Cultist Courn"
+    }
+  ]
+}

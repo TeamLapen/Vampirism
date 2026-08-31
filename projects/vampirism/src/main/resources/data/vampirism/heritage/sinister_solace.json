@@ -1,0 +1,10 @@
+{
+  "npc": "s_olace",
+  "anchor": "sinister_solace",
+  "members": [
+    {
+      "id": "sinister_solace",
+      "name": "Sinister Solace"
+    }
+  ]
+}

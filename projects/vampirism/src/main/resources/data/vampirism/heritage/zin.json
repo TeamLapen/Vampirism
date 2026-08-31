@@ -1,0 +1,10 @@
+{
+  "npc": "zinny",
+  "anchor": "zin",
+  "members": [
+    {
+      "id": "zin",
+      "name": "Zin"
+    }
+  ]
+}
