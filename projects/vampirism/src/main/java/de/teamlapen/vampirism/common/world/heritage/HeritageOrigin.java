@@ -1,17 +1,14 @@
 package de.teamlapen.vampirism.common.world.heritage;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import net.minecraft.util.StringRepresentable;
 
 public enum HeritageOrigin implements StringRepresentable {
-    VAMPIRE_FANG("vampire_fang"),
-    SANGUINARE_INJECTION("sanguinare_injection"),
-    VAMPIRE_PLAYER("vampire_player"),
-    ORDINARY_NPC("ordinary_npc"),
-    NAMED_NPC("named_npc"),
-    UNKNOWN("unknown");
+    INDEPENDENT("independent"),
+    INHERITED("inherited");
 
-    public static final Codec<HeritageOrigin> CODEC = StringRepresentable.fromEnum(HeritageOrigin::values);
+    public static final Codec<HeritageOrigin> CODEC = Codec.STRING.comapFlatMap(HeritageOrigin::fromSerializedName, HeritageOrigin::getSerializedName);
 
     private final String name;
 
@@ -22,5 +19,13 @@ public enum HeritageOrigin implements StringRepresentable {
     @Override
     public String getSerializedName() {
         return this.name;
+    }
+
+    private static DataResult<HeritageOrigin> fromSerializedName(String name) {
+        return switch (name) {
+            case "independent", "vampire_fang", "sanguinare_injection", "ordinary_npc", "unknown" -> DataResult.success(INDEPENDENT);
+            case "inherited", "vampire_player", "named_npc" -> DataResult.success(INHERITED);
+            default -> DataResult.error(() -> "Unknown heritage origin " + name);
+        };
     }
 }

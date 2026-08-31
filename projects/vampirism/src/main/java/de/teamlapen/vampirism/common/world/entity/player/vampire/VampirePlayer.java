@@ -711,6 +711,9 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public void levelChanged(FactionUpdate changes) {
         this.applyEntityAttributes();
         this.passiveLevelBlood = 0;
+        if (this.player instanceof ServerPlayer serverPlayer && this.getLevel() > 0) {
+            HeritageManager.completeVampireTransition(serverPlayer);
+        }
         var newLevel = changes.getLevel();
 
         int maxBlood = 20;
@@ -763,10 +766,10 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     public void onSanguinareFinished() {
         if (Helper.canBecomeVampire(player) && !isRemote() && player.isAlive()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            handler.joinFaction(getFaction());
-            if (player instanceof ServerPlayer serverPlayer && getLevel() > 0) {
-                HeritageManager.finishConversion(serverPlayer);
+            if (player instanceof ServerPlayer serverPlayer) {
+                HeritageManager.beginSanguinareCompletion(serverPlayer);
             }
+            handler.joinFaction(getFaction());
             player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 300));
             player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 300));
         }

@@ -24,6 +24,7 @@ public final class HeritageData {
     private final Player player;
     private @Nullable HeritageMembership membership;
     private @Nullable PendingHeritage pending;
+    private boolean completingPendingTransition;
 
     public HeritageData(Player player) {
         this.player = player;
@@ -43,25 +44,40 @@ public final class HeritageData {
 
     void ensureIndependentMembership(ServerPlayer player) {
         if (this.membership == null) {
-            this.membership = PendingHeritage.independent(HeritageOrigin.UNKNOWN).toMembership();
+            this.membership = PendingHeritage.independent().toMembership();
         }
         HeritageWorldData.getData(player.level().getServer()).record(player, this.membership);
         synchronize();
     }
 
-    void finish(ServerPlayer player) {
-        PendingHeritage source = this.pending;
-        if (source == null) {
-            source = PendingHeritage.independent(HeritageOrigin.UNKNOWN);
+    void beginPendingTransition() {
+        this.completingPendingTransition = true;
+    }
+
+    void completeVampireTransition(ServerPlayer player) {
+        if (this.completingPendingTransition && this.pending != null) {
+            this.membership = this.pending.toMembership();
+        } else if (this.membership == null) {
+            this.membership = PendingHeritage.independent().toMembership();
         }
-        this.membership = source.toMembership();
         this.pending = null;
+        this.completingPendingTransition = false;
         HeritageWorldData.getData(player.level().getServer()).record(player, this.membership);
+        synchronize();
+    }
+
+    void cancelPendingTransition() {
+        if (this.pending == null && !this.completingPendingTransition) {
+            return;
+        }
+        this.pending = null;
+        this.completingPendingTransition = false;
         synchronize();
     }
 
     void prepare(PendingHeritage source) {
         this.pending = source;
+        this.completingPendingTransition = false;
         synchronize();
     }
 
@@ -77,7 +93,7 @@ public final class HeritageData {
     private static @Nullable HeritageMembership readMembership(ValueInput input) {
         return input.read("id", UUIDUtil.CODEC).map(id -> new HeritageMembership(
                 id,
-                input.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.UNKNOWN),
+                input.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.INDEPENDENT),
                 input.read("parent", UUIDUtil.CODEC).orElse(null),
                 input.getString("named_npc").orElse(null),
                 input.read("definition", Identifier.CODEC).orElse(null)
@@ -174,16 +190,16 @@ public final class HeritageData {
             return new PendingHeritage(membership);
         }
 
-        static PendingHeritage independent(HeritageOrigin origin) {
-            return new PendingHeritage(new HeritageMembership(UUID.randomUUID(), origin, null, null, null));
+        static PendingHeritage independent() {
+            return new PendingHeritage(new HeritageMembership(UUID.randomUUID(), HeritageOrigin.INDEPENDENT, null, null, null));
         }
 
         static PendingHeritage named(String namedNpc, @Nullable Identifier definitionId) {
-            return new PendingHeritage(new HeritageMembership(HeritageWorldData.idForNamedNpc(namedNpc), HeritageOrigin.NAMED_NPC, null, namedNpc, definitionId));
+            return new PendingHeritage(new HeritageMembership(HeritageWorldData.idForNamedNpc(namedNpc), HeritageOrigin.INHERITED, null, namedNpc, definitionId));
         }
 
         static PendingHeritage player(HeritageMembership parent, UUID parentPlayerId) {
-            return new PendingHeritage(new HeritageMembership(parent.heritageId(), HeritageOrigin.VAMPIRE_PLAYER, parentPlayerId, parent.namedNpc(), parent.definitionId()));
+            return new PendingHeritage(new HeritageMembership(parent.heritageId(), HeritageOrigin.INHERITED, parentPlayerId, parent.namedNpc(), parent.definitionId()));
         }
 
         HeritageMembership toMembership() {

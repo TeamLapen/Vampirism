@@ -116,7 +116,7 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
                             id,
                             memberInput.getString("name").orElse(""),
                             memberInput.read("parent", UUIDUtil.CODEC).orElse(null),
-                            memberInput.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.UNKNOWN)
+                            memberInput.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.INDEPENDENT)
                     )))
             );
         }

@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.effects.SanguinareMobEffect;
 import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
-import de.teamlapen.vampirism.common.world.heritage.HeritageOrigin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -28,7 +27,7 @@ public class VampireFangItem extends Item {
                 player.sendOverlayMessage(Component.translatable("message.vampirism.infection_disabled_server"));
             } else {
                 if (Helper.canBecomeVampire(player)) {
-                    HeritageManager.prepareForSelfConversion(player, HeritageOrigin.VAMPIRE_FANG);
+                    HeritageManager.prepareForIndependentConversion(player);
                     SanguinareMobEffect.addRandom(player, true);
                     player.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
                 } else {

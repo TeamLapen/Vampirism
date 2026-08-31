@@ -26,6 +26,7 @@ import de.teamlapen.vampirism.common.world.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.common.world.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.actions.BatVampireAction;
+import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
 import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import de.teamlapen.vampirism.common.world.items.crossbow.HunterCrossbowItem;
 import de.teamlapen.vampirism.common.world.potions.BasePotion;
@@ -109,6 +110,13 @@ public class ModPlayerEventHandler {
     public void onTryMount(EntityMountEvent event) {
         if (event.getEntity() instanceof Player player && VampirePlayer.get(player).getSkillProperties().isCannotInteract()) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onSanguinareRemoved(MobEffectEvent.Remove event) {
+        if (event.getEffect().is(ModEffects.SANGUINARE) && event.getEntity() instanceof ServerPlayer player && !Helper.isVampire(player)) {
+            HeritageManager.cancelPendingTransition(player);
         }
     }
 

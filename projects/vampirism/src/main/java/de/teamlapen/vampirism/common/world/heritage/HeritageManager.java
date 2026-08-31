@@ -19,13 +19,21 @@ public final class HeritageManager {
     private HeritageManager() {
     }
 
-    public static void finishConversion(ServerPlayer player) {
-        HeritageData.get(player).finish(player);
+    public static void beginSanguinareCompletion(ServerPlayer player) {
+        HeritageData.get(player).beginPendingTransition();
     }
 
-    public static void prepareForSelfConversion(Player player, HeritageOrigin origin) {
+    public static void cancelPendingTransition(ServerPlayer player) {
+        HeritageData.get(player).cancelPendingTransition();
+    }
+
+    public static void completeVampireTransition(ServerPlayer player) {
+        HeritageData.get(player).completeVampireTransition(player);
+    }
+
+    public static void prepareForIndependentConversion(Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.independent(origin));
+            HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.independent());
         }
     }
 
@@ -50,7 +58,7 @@ public final class HeritageManager {
                 return;
             }
         }
-        HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.independent(HeritageOrigin.ORDINARY_NPC));
+        HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.independent());
     }
 
     private static @Nullable String getNamedNpc(AdvancedVampireEntity vampire) {
