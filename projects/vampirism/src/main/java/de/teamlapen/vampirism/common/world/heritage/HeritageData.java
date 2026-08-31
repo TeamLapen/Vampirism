@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 /**
- * Player-owned heritage data. A pending assignment survives the conversion effect and is resolved once the faction change succeeds.
+ * Player-owned heritage data. A completed heritage is historical and is never replaced automatically.
  */
 public final class HeritageData {
     private final Player player;
@@ -51,14 +51,14 @@ public final class HeritageData {
     }
 
     void beginPendingTransition() {
-        this.completingPendingTransition = true;
+        this.completingPendingTransition = this.pending != null;
     }
 
     void completeVampireTransition(ServerPlayer player) {
-        if (this.completingPendingTransition && this.pending != null) {
-            this.membership = this.pending.toMembership();
-        } else if (this.membership == null) {
-            this.membership = PendingHeritage.independent().toMembership();
+        if (this.membership == null) {
+            this.membership = this.completingPendingTransition && this.pending != null
+                    ? this.pending.toMembership()
+                    : PendingHeritage.independent().toMembership();
         }
         this.pending = null;
         this.completingPendingTransition = false;
@@ -76,6 +76,9 @@ public final class HeritageData {
     }
 
     void prepare(PendingHeritage source) {
+        if (this.membership != null) {
+            return;
+        }
         this.pending = source;
         this.completingPendingTransition = false;
         synchronize();

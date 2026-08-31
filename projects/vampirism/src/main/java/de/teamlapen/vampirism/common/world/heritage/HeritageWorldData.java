@@ -52,11 +52,6 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
 
     void record(ServerPlayer player, HeritageMembership membership) {
         UUID playerId = player.getUUID();
-        this.records.forEach((heritageId, record) -> {
-            if (!heritageId.equals(membership.heritageId())) {
-                record.members.remove(playerId);
-            }
-        });
         HeritageRecord record = this.records.computeIfAbsent(membership.heritageId(), _ -> new HeritageRecord(membership.namedNpc()));
         record.members.put(playerId, new HeritageMember(playerId, player.getGameProfile().name(), membership.parentPlayerId(), membership.origin()));
         setDirty();
