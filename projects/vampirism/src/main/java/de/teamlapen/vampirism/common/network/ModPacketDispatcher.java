@@ -10,7 +10,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class ModPacketDispatcher {
 
-    private static final String PROTOCOL_VERSION = Integer.toString(1);
+    private static final String PROTOCOL_VERSION = Integer.toString(2);
 
     public static void registerHandler(RegisterPayloadHandlersEvent event) {
         registerPackets(event.registrar(REFERENCE.MODID).versioned(PROTOCOL_VERSION));
@@ -31,6 +31,7 @@ public class ModPacketDispatcher {
         registrar.playToClient(ClientboundUpdateDimensionsPacket.TYPE, ClientboundUpdateDimensionsPacket.STREAM_CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateDimensionPacket(msg, context));
         registrar.playToClient(ClientboundDraculaEventPacket.TYPE, ClientboundDraculaEventPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleDraculaEventPacket(msg, context));
         registrar.playToClient(ClientboundVelmorraCollapsePacket.TYPE, ClientboundVelmorraCollapsePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleVelmorraCollapsePacket(msg, context));
+        registrar.playToClient(ClientboundHeritagePacket.TYPE, ClientboundHeritagePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleHeritagePacket(msg, context));
 
         registrar.playToServer(ServerboundAppearancePacket.TYPE, ServerboundAppearancePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleAppearancePacket(msg, context));
         registrar.playToServer(ServerboundStartFeedingPacket.TYPE, ServerboundStartFeedingPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleStartFeedingPacket(msg, context));
@@ -38,6 +39,7 @@ public class ModPacketDispatcher {
         registrar.playToServer(ServerboundSelectAmmoTypePacket.TYPE, ServerboundSelectAmmoTypePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSelectAmmoTypePacket(msg, context));
         registrar.playToServer(ServerboundSetVampireBeaconPacket.TYPE, ServerboundSetVampireBeaconPacket.CODEC, (msg, context) -> ServerPayloadHandler.handleSetVampireBeaconPacket(msg, context));
         registrar.playToServer(ServerboundSimpleInputEvent.TYPE, ServerboundSimpleInputEvent.CODEC, (msg, context) -> ServerPayloadHandler.handleSimpleInputEvent(msg, context));
+        registrar.playToServer(ServerboundRequestHeritagePacket.TYPE, ServerboundRequestHeritagePacket.CODEC, (msg, context) -> ServerPayloadHandler.handleRequestHeritagePacket(msg, context));
 
         registrar.playBidirectional(PlayerOwnedBlockEntityLockPacket.TYPE, PlayerOwnedBlockEntityLockPacket.CODEC, (msg, context) -> CommonPayloadHandler.handlePlayerOwnedBlockEntityLockPacket(msg, context), (msg, context) -> CommonPayloadHandler.handlePlayerOwnedBlockEntityLockPacket(msg, context));
 

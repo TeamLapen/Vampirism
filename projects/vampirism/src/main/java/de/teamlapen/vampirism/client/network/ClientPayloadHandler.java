@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.network;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.VampirismModClient;
+import de.teamlapen.vampirism.client.gui.screens.HeritageScreen;
 import de.teamlapen.vampirism.client.gui.screens.VampireBookScreen;
 import de.teamlapen.vampirism.common.network.packets.client.*;
 import de.teamlapen.vampirism.common.world.attachments.LevelFog;
@@ -92,5 +93,13 @@ public class ClientPayloadHandler {
 
     public static void handleVelmorraCollapsePacket(ClientboundVelmorraCollapsePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> VampirismModClient.services().velmorraCollapseHandler().setProgress(msg.progress()));
+    }
+
+    public static void handleHeritagePacket(ClientboundHeritagePacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (Minecraft.getInstance().screen instanceof HeritageScreen screen) {
+                screen.setHeritage(msg);
+            }
+        });
     }
 }

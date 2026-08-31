@@ -1,17 +1,25 @@
 package de.teamlapen.vampirism.client.gui;
 
+import de.teamlapen.faction.FactionsMod;
+import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.gui.screens.FactionMenuScreen;
 import de.teamlapen.faction.common.util.DescriptionUtil;
 import de.teamlapen.vampirism.api.util.VIdentifier;
+import de.teamlapen.vampirism.client.gui.screens.HeritageScreen;
+import de.teamlapen.faction.common.network.packets.server.ServerboundSimpleInputEvent;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.blocks.TentBlock;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampireLeveling;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.InBedChatScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -35,6 +43,7 @@ public class ScreenEventHandler {
     private static final int LEVELING_BACKGROUND_HEIGHT = 63;
     private static final int BAR_WIDTH = 5;
     private static final int BAR_HEIGHT = 51;
+    private static final WidgetSprites HERITAGE = new WidgetSprites(FIdentifier.mod("widget/skills"), FIdentifier.mod("widget/skills_highlighted"));
 
     @SubscribeEvent
     public void onRenderFactionMenu(ScreenEvent.Render.Post event) {
@@ -76,6 +85,14 @@ public class ScreenEventHandler {
      */
     @SubscribeEvent
     public void onInitGuiEventPost(ScreenEvent.Init.Post event) {
+        if (event.getScreen() instanceof FactionMenuScreen screen) {
+            ImageButton heritageButton = new ImageButton(screen.getLeftPos() + 51, screen.getTopPos() + 90, 20, 20, HERITAGE, button ->
+                    Minecraft.getInstance().setScreen(new HeritageScreen(() -> FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU))))
+            );
+            heritageButton.setTooltip(Tooltip.create(Component.translatable("gui.vampirism.faction_menu.heritage")));
+            event.addListener(heritageButton);
+        }
+
         if (event.getScreen() instanceof InBedChatScreen) {
             Player p = event.getScreen().getMinecraft().player;
             if (p != null && p.isSleeping()) {

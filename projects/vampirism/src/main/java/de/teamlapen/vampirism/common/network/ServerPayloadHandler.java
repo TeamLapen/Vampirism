@@ -4,7 +4,10 @@ import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
+import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
+import de.teamlapen.vampirism.common.world.heritage.HeritageData;
+import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.common.world.inventory.HunterTrainerMenu;
@@ -116,6 +119,18 @@ public class ServerPayloadHandler {
             VampirePlayer vampire = VampirePlayer.get(context.player());
             msg.target().ifLeft(vampire::biteEntity);
             msg.target().ifRight(blockContact -> vampire.biteBlock(blockContact.pos(), blockContact.side()));
+        });
+    }
+
+    public static void handleRequestHeritagePacket(ServerboundRequestHeritagePacket msg, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            ServerPlayer player = (ServerPlayer) context.player();
+            HeritageData.get(player).getMembership().ifPresentOrElse(membership -> {
+                var members = HeritageWorldData.getData(player.level().getServer()).getMembers(membership.heritageId()).values().stream()
+                        .map(member -> new ClientboundHeritagePacket.Member(member.playerId(), member.playerName(), member.parentPlayerId()))
+                        .toList();
+                player.connection.send(new ClientboundHeritagePacket(membership.namedNpc(), members));
+            }, () -> player.connection.send(new ClientboundHeritagePacket(null, java.util.List.of())));
         });
     }
 
