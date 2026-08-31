@@ -10,6 +10,8 @@ import de.teamlapen.vampirism.common.network.packets.server.*;
 import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import de.teamlapen.vampirism.common.world.heritage.HeritageData;
 import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
+import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
+import de.teamlapen.faction.common.core.FactionItems;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.common.world.inventory.HunterBasicMenu;
 import de.teamlapen.vampirism.common.world.inventory.HunterTrainerMenu;
@@ -20,6 +22,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -93,6 +97,20 @@ public class ServerPayloadHandler {
                         menu.consume(player);
                     }
                     handler.leaveFaction(!player.level().getServer().isHardcore());
+                }
+                case RUN_AWAY_FROM_HERITAGE -> {
+                    ItemStack potion = player.getMainHandItem();
+                    if (!potion.is(FactionItems.OBLIVION_POTION.get())) {
+                        potion = player.getOffhandItem();
+                    }
+                    if (potion.is(FactionItems.OBLIVION_POTION.get()) && HeritageData.get(player).getMembership().isPresent()) {
+                        if (!player.getAbilities().instabuild) {
+                            potion.shrink(1);
+                        }
+                        HeritageManager.runAwayFromHeritage(player);
+                        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100));
+                        player.sendOverlayMessage(Component.translatable("message.vampirism.heritage_run_away.success"));
+                    }
                 }
                 case TOGGLE_VAMPIRE_VISION -> {
                     vampirePlayer.switchVision();

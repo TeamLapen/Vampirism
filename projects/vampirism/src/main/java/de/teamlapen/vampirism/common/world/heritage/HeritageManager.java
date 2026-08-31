@@ -36,6 +36,10 @@ public final class HeritageManager {
         }
     }
 
+    public static void runAwayFromHeritage(ServerPlayer player) {
+        HeritageData.get(player).runAwayFromHeritage(player);
+    }
+
     public static void prepareForVampireConversion(Player player, IVampire vampire) {
         if (!(player instanceof ServerPlayer serverPlayer)) {
             return;

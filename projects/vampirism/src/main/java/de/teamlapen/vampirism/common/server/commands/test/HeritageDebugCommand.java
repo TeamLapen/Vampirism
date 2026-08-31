@@ -4,6 +4,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
 import de.teamlapen.vampirism.common.world.heritage.HeritageData;
 import de.teamlapen.vampirism.common.world.heritage.HeritageMembership;
+import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
 import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -19,7 +20,10 @@ public final class HeritageDebugCommand extends BasicCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register() {
         return Commands.literal("heritage")
                 .requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
-                .executes(context -> show(context.getSource(), context.getSource().getPlayerOrException()));
+                .then(Commands.literal("status")
+                        .executes(context -> show(context.getSource(), context.getSource().getPlayerOrException())))
+                .then(Commands.literal("run_away")
+                        .executes(context -> runAway(context.getSource(), context.getSource().getPlayerOrException())));
     }
 
     private static int show(CommandSourceStack source, ServerPlayer player) {
@@ -35,6 +39,16 @@ public final class HeritageDebugCommand extends BasicCommand {
             int members = HeritageWorldData.getData(player.level().getServer()).getMembers(membership.heritageId()).size();
             source.sendSuccess(() -> describe("Stored", membership, members), false);
         });
+        return 1;
+    }
+
+    private static int runAway(CommandSourceStack source, ServerPlayer player) {
+        if (HeritageData.get(player).getMembership().isEmpty()) {
+            source.sendFailure(Component.literal("No stored heritage exists for you."));
+            return 0;
+        }
+        HeritageManager.runAwayFromHeritage(player);
+        source.sendSuccess(() -> Component.literal("You ran away from your heritage and received a new independent heritage."), false);
         return 1;
     }
 

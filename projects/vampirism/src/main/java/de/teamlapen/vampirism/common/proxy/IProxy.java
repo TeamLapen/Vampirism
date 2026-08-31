@@ -31,6 +31,9 @@ public interface IProxy {
     default void displayRevertBackScreen() {
     }
 
+    default void displayHeritageRunAwayScreen() {
+    }
+
     @Nullable
     Entity getMouseOverEntity();
 

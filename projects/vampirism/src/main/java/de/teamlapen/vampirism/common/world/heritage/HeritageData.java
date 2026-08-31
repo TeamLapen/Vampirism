@@ -74,6 +74,14 @@ public final class HeritageData {
         synchronize();
     }
 
+    void runAwayFromHeritage(ServerPlayer player) {
+        this.membership = PendingHeritage.independent().toMembership();
+        this.pending = null;
+        this.completingPendingTransition = false;
+        HeritageWorldData.getData(player.level().getServer()).record(player, this.membership);
+        synchronize();
+    }
+
     void prepare(PendingHeritage source) {
         if (this.membership != null) {
             return;
