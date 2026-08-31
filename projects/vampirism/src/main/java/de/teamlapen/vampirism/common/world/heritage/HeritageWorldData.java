@@ -53,7 +53,7 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
     void record(ServerPlayer player, HeritageMembership membership) {
         UUID playerId = player.getUUID();
         HeritageRecord record = this.records.computeIfAbsent(membership.heritageId(), _ -> new HeritageRecord(membership.namedNpc()));
-        record.members.put(playerId, new HeritageMember(playerId, player.getGameProfile().name(), membership.parentPlayerId(), membership.origin()));
+        record.members.put(playerId, new HeritageMember(playerId, player.getGameProfile().name(), membership.parentPlayerId(), membership.parentNpcId(), membership.origin()));
         setDirty();
     }
 
@@ -94,7 +94,7 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
         });
     }
 
-    public record HeritageMember(UUID playerId, String playerName, @Nullable UUID parentPlayerId, HeritageOrigin origin) {
+    public record HeritageMember(UUID playerId, String playerName, @Nullable UUID parentPlayerId, @Nullable String parentNpcId, HeritageOrigin origin) {
     }
 
     private static final class HeritageRecord {
@@ -111,6 +111,7 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
                             id,
                             memberInput.getString("name").orElse(""),
                             memberInput.read("parent", UUIDUtil.CODEC).orElse(null),
+                            memberInput.getString("parent_npc").orElse(null),
                             memberInput.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.INDEPENDENT)
                     )))
             );
@@ -126,6 +127,9 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
                 memberOutput.store("id", UUIDUtil.CODEC, id);
                 memberOutput.putString("name", member.playerName());
                 memberOutput.storeNullable("parent", UUIDUtil.CODEC, member.parentPlayerId());
+                if (member.parentNpcId() != null) {
+                    memberOutput.putString("parent_npc", member.parentNpcId());
+                }
                 memberOutput.store("origin", HeritageOrigin.CODEC, member.origin());
             });
         }

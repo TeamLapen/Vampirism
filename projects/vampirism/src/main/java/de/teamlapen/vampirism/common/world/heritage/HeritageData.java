@@ -97,7 +97,8 @@ public final class HeritageData {
                 id,
                 input.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.INDEPENDENT),
                 input.read("parent", UUIDUtil.CODEC).orElse(null),
-                input.getString("named_npc").orElse(null)
+                input.getString("named_npc").orElse(null),
+                input.getString("parent_npc").orElse(null)
         )).orElse(null);
     }
 
@@ -121,6 +122,9 @@ public final class HeritageData {
         if (membership.namedNpc() != null) {
             output.putString("named_npc", membership.namedNpc());
         }
+        if (membership.parentNpcId() != null) {
+            output.putString("parent_npc", membership.parentNpcId());
+        }
     }
 
     private void synchronize() {
@@ -138,6 +142,7 @@ public final class HeritageData {
         buffer.writeEnum(this.membership.origin());
         writeNullableUuid(buffer, this.membership.parentPlayerId());
         writeNullableString(buffer, this.membership.namedNpc());
+        writeNullableString(buffer, this.membership.parentNpcId());
     }
 
     private void readNetwork(RegistryFriendlyByteBuf buffer) {
@@ -149,7 +154,8 @@ public final class HeritageData {
         HeritageOrigin origin = buffer.readEnum(HeritageOrigin.class);
         UUID parent = readNullableUuid(buffer);
         String namedNpc = readNullableString(buffer);
-        this.membership = new HeritageMembership(heritageId, origin, parent, namedNpc);
+        String parentNpc = readNullableString(buffer);
+        this.membership = new HeritageMembership(heritageId, origin, parent, namedNpc, parentNpc);
     }
 
     private static void writeNullableUuid(RegistryFriendlyByteBuf buffer, @Nullable UUID value) {
@@ -186,15 +192,15 @@ public final class HeritageData {
         }
 
         static PendingHeritage independent() {
-            return new PendingHeritage(new HeritageMembership(UUID.randomUUID(), HeritageOrigin.INDEPENDENT, null, null));
+            return new PendingHeritage(new HeritageMembership(UUID.randomUUID(), HeritageOrigin.INDEPENDENT, null, null, null));
         }
 
-        static PendingHeritage named(String namedNpc) {
-            return new PendingHeritage(new HeritageMembership(HeritageWorldData.idForNamedNpc(namedNpc), HeritageOrigin.INHERITED, null, namedNpc));
+        static PendingHeritage named(String namedNpc, @Nullable String parentNpcId) {
+            return new PendingHeritage(new HeritageMembership(HeritageWorldData.idForNamedNpc(namedNpc), HeritageOrigin.INHERITED, null, namedNpc, parentNpcId));
         }
 
         static PendingHeritage player(HeritageMembership parent, UUID parentPlayerId) {
-            return new PendingHeritage(new HeritageMembership(parent.heritageId(), HeritageOrigin.INHERITED, parentPlayerId, parent.namedNpc()));
+            return new PendingHeritage(new HeritageMembership(parent.heritageId(), HeritageOrigin.INHERITED, parentPlayerId, parent.namedNpc(), null));
         }
 
         HeritageMembership toMembership() {

@@ -214,15 +214,32 @@ public class HeritageScreen extends Screen {
     }
 
     private void rebuildTree() {
-        Map<UUID, Node> nodesById = new HashMap<>();
+        Map<String, Node> staticNodesById = new HashMap<>();
+        this.heritage.staticMembers().stream()
+                .sorted(Comparator.comparing(ClientboundHeritagePacket.StaticMember::name, String.CASE_INSENSITIVE_ORDER)
+                        .thenComparing(ClientboundHeritagePacket.StaticMember::id))
+                .forEach(member -> staticNodesById.put(member.id(), new Node(null, member.id(), member.name(), null, member.parentId())));
+
+        Map<UUID, Node> playerNodesById = new HashMap<>();
         this.heritage.members().stream()
                 .sorted(Comparator.comparing(ClientboundHeritagePacket.Member::playerName, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(ClientboundHeritagePacket.Member::playerId))
-                .forEach(member -> nodesById.put(member.playerId(), new Node(member.playerId(), member.playerName(), member.parentPlayerId())));
+                .forEach(member -> playerNodesById.put(member.playerId(), new Node(member.playerId(), null, member.playerName(), member.parentPlayerId(), member.parentNpcId())));
 
         List<Node> roots = new ArrayList<>();
-        for (Node node : nodesById.values()) {
-            node.parent = nodesById.get(node.parentPlayerId);
+        for (Node node : staticNodesById.values()) {
+            node.parent = staticNodesById.get(node.parentStaticId);
+            if (node.parent == null) {
+                roots.add(node);
+            } else {
+                node.parent.children.add(node);
+            }
+        }
+        for (Node node : playerNodesById.values()) {
+            node.parent = playerNodesById.get(node.parentPlayerId);
+            if (node.parent == null) {
+                node.parent = staticNodesById.get(node.parentStaticId);
+            }
             if (node.parent == null) {
                 roots.add(node);
             } else {
@@ -230,13 +247,17 @@ public class HeritageScreen extends Screen {
             }
         }
         roots.sort(Node.ORDER);
-        for (Node node : nodesById.values()) {
+        for (Node node : staticNodesById.values()) {
+            node.children.sort(Node.ORDER);
+        }
+        for (Node node : playerNodesById.values()) {
             node.children.sort(Node.ORDER);
         }
 
-        List<Node> graphicalNodes = new ArrayList<>(nodesById.values());
+        List<Node> graphicalNodes = new ArrayList<>(staticNodesById.values());
+        graphicalNodes.addAll(playerNodesById.values());
         if (this.heritage.founderName() != null && !roots.isEmpty()) {
-            Node founder = new Node(null, this.heritage.founderName(), null);
+            Node founder = new Node(null, null, this.heritage.founderName(), null, null);
             for (Node root : roots) {
                 root.parent = founder;
                 founder.children.add(root);
@@ -299,24 +320,38 @@ public class HeritageScreen extends Screen {
 
     private static final class Node {
         private static final Comparator<Node> ORDER = Comparator.comparing(Node::name, String.CASE_INSENSITIVE_ORDER)
-                .thenComparing(node -> node.playerId, Comparator.nullsFirst(Comparator.naturalOrder()));
+                .thenComparing(Node::key);
 
         private final @Nullable UUID playerId;
+        private final @Nullable String staticId;
         private final String name;
         private final @Nullable UUID parentPlayerId;
+        private final @Nullable String parentStaticId;
         private final List<Node> children = new ArrayList<>();
         private @Nullable Node parent;
         private int x;
         private int y;
 
-        private Node(@Nullable UUID playerId, String name, @Nullable UUID parentPlayerId) {
+        private Node(@Nullable UUID playerId, @Nullable String staticId, String name, @Nullable UUID parentPlayerId, @Nullable String parentStaticId) {
             this.playerId = playerId;
+            this.staticId = staticId;
             this.name = name;
             this.parentPlayerId = parentPlayerId;
+            this.parentStaticId = parentStaticId;
         }
 
         private String name() {
             return this.name;
+        }
+
+        private String key() {
+            if (this.playerId != null) {
+                return "player:" + this.playerId;
+            }
+            if (this.staticId != null) {
+                return "static:" + this.staticId;
+            }
+            return "founder:" + this.name;
         }
     }
 }

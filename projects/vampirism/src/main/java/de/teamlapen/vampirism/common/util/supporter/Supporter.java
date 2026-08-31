@@ -50,8 +50,8 @@ public record Supporter(Identifier faction, Component name, String player, Map<S
     }
 
     /**
-     * Predefined lineage information for a supporter. The supporter is the implicit root; members without a parent are
-     * direct descendants of that root.
+     * Predefined lineage information for a supporter. The supporter that owns the definition must be one of its
+     * members, while members without a parent are roots of the lineage.
      */
     public record Heritage(List<Component> lore, List<Member> members) {
         public static final Codec<Heritage> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -96,15 +96,15 @@ public record Supporter(Identifier faction, Component name, String player, Map<S
         }
     }
 
-    public record Member(String id, Component name, Optional<String> parent) {
+    public record Member(String id, Optional<Component> name, Optional<String> parent) {
         public static final Codec<Member> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.STRING.fieldOf("id").forGetter(Member::id),
-                ComponentSerialization.CODEC.fieldOf("name").forGetter(Member::name),
+                ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(Member::name),
                 Codec.STRING.optionalFieldOf("parent").forGetter(Member::parent)
         ).apply(instance, Member::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, Member> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, Member::id,
-                ComponentSerialization.STREAM_CODEC, Member::name,
+                ByteBufCodecs.optional(ComponentSerialization.STREAM_CODEC), Member::name,
                 ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), Member::parent,
                 Member::new
         );

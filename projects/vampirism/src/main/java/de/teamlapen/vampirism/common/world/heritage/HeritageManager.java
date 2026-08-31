@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.world.heritage;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.core.ModAttachments;
@@ -49,9 +50,17 @@ public final class HeritageManager {
 
         Entity entity = vampire.asEntity();
         if (entity instanceof AdvancedVampireEntity advancedVampire) {
+            Supporter supporter = advancedVampire.getData(ModAttachments.SUPPORTER);
+            if (!supporter.player().isBlank()) {
+                var heritage = VampirismMod.services().supporterManager().getPredefinedHeritage(supporter.player());
+                if (heritage.isPresent()) {
+                    HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.named(heritage.get().id(), supporter.player()));
+                    return;
+                }
+            }
             String namedNpc = getNamedNpc(advancedVampire);
             if (namedNpc != null) {
-                HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.named(namedNpc));
+                HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.named(namedNpc, null));
                 return;
             }
         }

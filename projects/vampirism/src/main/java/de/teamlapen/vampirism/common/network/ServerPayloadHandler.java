@@ -128,18 +128,34 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             ServerPlayer player = (ServerPlayer) context.player();
             HeritageData.get(player).getMembership().ifPresentOrElse(membership -> {
+                String namedNpc = membership.namedNpc();
+                var supporterManager = VampirismMod.services().supporterManager();
+                var predefinedHeritage = namedNpc == null
+                        ? java.util.Optional.<de.teamlapen.vampirism.common.util.SupporterManager.PredefinedHeritage>empty()
+                        : supporterManager.getPredefinedHeritageById(namedNpc).or(() -> supporterManager.getPredefinedHeritage(namedNpc));
                 var members = HeritageWorldData.getData(player.level().getServer()).getMembers(membership.heritageId()).values().stream()
-                        .map(member -> new ClientboundHeritagePacket.Member(member.playerId(), member.playerName(), member.parentPlayerId()))
+                        .map(member -> {
+                            String parentNpcId = member.parentNpcId();
+                            if (parentNpcId == null && member.parentPlayerId() == null && namedNpc != null && predefinedHeritage.isPresent()
+                                    && predefinedHeritage.get().members().stream().anyMatch(staticMember -> staticMember.id().equals(namedNpc))) {
+                                parentNpcId = namedNpc;
+                            }
+                            return new ClientboundHeritagePacket.Member(member.playerId(), member.playerName(), member.parentPlayerId(), parentNpcId);
+                        })
                         .toList();
-                String founderName = membership.namedNpc();
+                var staticMembers = predefinedHeritage.stream()
+                        .flatMap(heritage -> heritage.members().stream())
+                        .map(member -> new ClientboundHeritagePacket.StaticMember(member.id(), member.name(), member.parentId()))
+                        .toList();
+                String founderName = predefinedHeritage.isPresent() ? null : namedNpc;
                 if (founderName != null) {
-                    founderName = VampirismMod.services().supporterManager().getSupporter(founderName)
+                    founderName = supporterManager.getSupporter(founderName)
                             .map(Supporter::name)
                             .map(Component::getString)
                             .orElse(founderName);
                 }
-                player.connection.send(new ClientboundHeritagePacket(founderName, members));
-            }, () -> player.connection.send(new ClientboundHeritagePacket(null, java.util.List.of())));
+                player.connection.send(new ClientboundHeritagePacket(founderName, staticMembers, members));
+            }, () -> player.connection.send(new ClientboundHeritagePacket(null, java.util.List.of(), java.util.List.of())));
         });
     }
 
