@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.common.world.heritage;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.world.entity.vampire.IVampire;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import de.teamlapen.vampirism.common.world.entity.vampire.AdvancedVampireEntity;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -53,8 +51,7 @@ public final class HeritageManager {
         if (entity instanceof AdvancedVampireEntity advancedVampire) {
             String namedNpc = getNamedNpc(advancedVampire);
             if (namedNpc != null) {
-                @Nullable Identifier definitionId = VampirismMod.services().heritageDefinitionId(namedNpc).orElse(null);
-                HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.named(namedNpc, definitionId));
+                HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.named(namedNpc));
                 return;
             }
         }
@@ -63,7 +60,7 @@ public final class HeritageManager {
 
     private static @Nullable String getNamedNpc(AdvancedVampireEntity vampire) {
         Supporter supporter = vampire.getData(ModAttachments.SUPPORTER);
-        if (!supporter.player().isBlank()) {
+        if (supporter.heritage().isPresent() && !supporter.player().isBlank()) {
             return supporter.player();
         }
         if (vampire.hasCustomName() && !vampire.getCustomName().getString().isBlank()) {

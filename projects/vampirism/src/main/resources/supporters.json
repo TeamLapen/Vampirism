@@ -95,6 +95,7 @@
     "faction": "vampirism:vampire",
     "name": "Adrian DraxWind",
     "status": "Contributor",
+    "heritage": {},
     "appearance": {
       "eye": "13",
       "type": "15",
@@ -109,6 +110,7 @@
     "status": "Contributor",
     "bookId": "s_olace",
     "book": "vampirism:sinister_intentions",
+    "heritage": {},
     "appearance": {
       "eye": "15",
       "type": "15",
@@ -121,6 +123,7 @@
     "faction": "vampirism:vampire",
     "name": "Cultist Courn",
     "status": "Contributor",
+    "heritage": {},
     "appearance": {
       "eye": "15",
       "type": "15",
@@ -133,6 +136,7 @@
     "faction": "vampirism:vampire",
     "name": "Marchioness Spade",
     "status": "Contributor",
+    "heritage": {},
     "appearance": {
       "eye": "15",
       "type": "15",
@@ -145,6 +149,7 @@
     "faction": "vampirism:vampire",
     "name": "Mazdallier",
     "status": "Contributor",
+    "heritage": {},
     "appearance": {
       "eye": "1",
       "eyes": "1"
@@ -156,6 +161,7 @@
     "faction": "vampirism:vampire",
     "name": "Merciless Mike",
     "status": "Contributor",
+    "heritage": {},
     "appearance": {
       "eye": "13",
       "type": "13",
@@ -169,6 +175,7 @@
     "name": "The nightmarish Krab",
     "status": "Contributor",
     "bookId": null,
+    "heritage": {},
     "appearance": {
       "eye": "13",
       "type": "13",
@@ -182,6 +189,7 @@
     "name": "The powerful Bill",
     "status": "Dev",
     "bookId": null,
+    "heritage": {},
     "appearance": {
       "eye": "15",
       "type": "15",
@@ -196,6 +204,7 @@
     "status": "Temporary",
     "bookId": "volqonah",
     "book": "vampirism:valorous_tale",
+    "heritage": {},
     "appearance": {
       "eye": "15",
       "type": "15",
@@ -209,6 +218,7 @@
     "name": "Zin",
     "status": "Contributor",
     "bookId": null,
+    "heritage": {},
     "appearance": {
       "eye": "16",
       "type": "15",

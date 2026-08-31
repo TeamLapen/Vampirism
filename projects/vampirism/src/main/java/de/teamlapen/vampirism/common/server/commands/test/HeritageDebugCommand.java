@@ -41,8 +41,7 @@ public final class HeritageDebugCommand extends BasicCommand {
     private static Component describe(String state, HeritageMembership membership, int members) {
         String parent = membership.parentPlayerId() == null ? "none" : membership.parentPlayerId().toString();
         String namedNpc = membership.namedNpc() == null ? "none" : membership.namedNpc();
-        String definition = membership.definitionId() == null ? "none" : membership.definitionId().toString();
-        return Component.literal("%s heritage: origin=%s, id=%s, parent=%s, named_npc=%s, definition=%s, members=%d"
-                .formatted(state, membership.origin().getSerializedName(), membership.heritageId(), parent, namedNpc, definition, members));
+        return Component.literal("%s heritage: origin=%s, id=%s, parent=%s, named_npc=%s, members=%d"
+                .formatted(state, membership.origin().getSerializedName(), membership.heritageId(), parent, namedNpc, members));
     }
 }

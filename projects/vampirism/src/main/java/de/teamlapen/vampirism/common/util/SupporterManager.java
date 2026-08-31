@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,6 +33,7 @@ public class SupporterManager {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private Map<Identifier, List<Supporter>> supporters = new HashMap<>();
+    private Map<String, Supporter> supportersByPlayer = Map.of();
 
     /**
      * Returns a randomly picked hunter
@@ -69,7 +71,15 @@ public class SupporterManager {
             JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream));
             try (jsonReader) {
                 var ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
-                this.supporters = Supporter.CODEC.codec().listOf().parse(ops, JsonParser.parseReader(jsonReader)).getPartialOrThrow().stream().collect(Collectors.groupingBy(Supporter::faction));
+                List<Supporter> loadedSupporters = Supporter.CODEC.codec().listOf().parse(ops, JsonParser.parseReader(jsonReader)).getPartialOrThrow();
+                Map<String, Supporter> supportersByPlayer = new HashMap<>();
+                for (Supporter supporter : loadedSupporters) {
+                    if (!supporter.player().isBlank() && supportersByPlayer.putIfAbsent(supporter.player(), supporter) != null) {
+                        throw new IllegalStateException("Duplicate supporter player name " + supporter.player());
+                    }
+                }
+                this.supporters = loadedSupporters.stream().collect(Collectors.groupingBy(Supporter::faction));
+                this.supportersByPlayer = Map.copyOf(supportersByPlayer);
             } catch (JsonSyntaxException | IOException ex) {
                 LOGGER.error("Failed to retrieve supporter from file", ex);
             }
@@ -78,6 +88,10 @@ public class SupporterManager {
 
     public Stream<Supporter> getSupporter() {
         return supporters.values().stream().flatMap(List::stream);
+    }
+
+    public Optional<Supporter> getSupporter(String player) {
+        return Optional.ofNullable(this.supportersByPlayer.get(player));
     }
 
 }

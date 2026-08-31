@@ -2,10 +2,12 @@ package de.teamlapen.vampirism.common.network;
 
 import de.teamlapen.faction.common.factions.FactionPlayerHandler;
 import de.teamlapen.faction.common.factions.minions.MinionEntity;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IDraculaPlayer;
 import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
+import de.teamlapen.vampirism.common.util.supporter.Supporter;
 import de.teamlapen.vampirism.common.world.heritage.HeritageData;
 import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
 import de.teamlapen.vampirism.common.world.entity.player.vampire.VampirePlayer;
@@ -129,7 +131,14 @@ public class ServerPayloadHandler {
                 var members = HeritageWorldData.getData(player.level().getServer()).getMembers(membership.heritageId()).values().stream()
                         .map(member -> new ClientboundHeritagePacket.Member(member.playerId(), member.playerName(), member.parentPlayerId()))
                         .toList();
-                player.connection.send(new ClientboundHeritagePacket(membership.namedNpc(), members));
+                String founderName = membership.namedNpc();
+                if (founderName != null) {
+                    founderName = VampirismMod.services().supporterManager().getSupporter(founderName)
+                            .map(Supporter::name)
+                            .map(Component::getString)
+                            .orElse(founderName);
+                }
+                player.connection.send(new ClientboundHeritagePacket(founderName, members));
             }, () -> player.connection.send(new ClientboundHeritagePacket(null, java.util.List.of())));
         });
     }

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.common.world.heritage;
 import de.teamlapen.vampirism.common.core.ModAttachments;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueInput;
@@ -98,8 +97,7 @@ public final class HeritageData {
                 id,
                 input.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.INDEPENDENT),
                 input.read("parent", UUIDUtil.CODEC).orElse(null),
-                input.getString("named_npc").orElse(null),
-                input.read("definition", Identifier.CODEC).orElse(null)
+                input.getString("named_npc").orElse(null)
         )).orElse(null);
     }
 
@@ -123,7 +121,6 @@ public final class HeritageData {
         if (membership.namedNpc() != null) {
             output.putString("named_npc", membership.namedNpc());
         }
-        output.storeNullable("definition", Identifier.CODEC, membership.definitionId());
     }
 
     private void synchronize() {
@@ -141,10 +138,6 @@ public final class HeritageData {
         buffer.writeEnum(this.membership.origin());
         writeNullableUuid(buffer, this.membership.parentPlayerId());
         writeNullableString(buffer, this.membership.namedNpc());
-        buffer.writeBoolean(this.membership.definitionId() != null);
-        if (this.membership.definitionId() != null) {
-            Identifier.STREAM_CODEC.encode(buffer, this.membership.definitionId());
-        }
     }
 
     private void readNetwork(RegistryFriendlyByteBuf buffer) {
@@ -156,8 +149,7 @@ public final class HeritageData {
         HeritageOrigin origin = buffer.readEnum(HeritageOrigin.class);
         UUID parent = readNullableUuid(buffer);
         String namedNpc = readNullableString(buffer);
-        Identifier definition = buffer.readBoolean() ? Identifier.STREAM_CODEC.decode(buffer) : null;
-        this.membership = new HeritageMembership(heritageId, origin, parent, namedNpc, definition);
+        this.membership = new HeritageMembership(heritageId, origin, parent, namedNpc);
     }
 
     private static void writeNullableUuid(RegistryFriendlyByteBuf buffer, @Nullable UUID value) {
@@ -194,15 +186,15 @@ public final class HeritageData {
         }
 
         static PendingHeritage independent() {
-            return new PendingHeritage(new HeritageMembership(UUID.randomUUID(), HeritageOrigin.INDEPENDENT, null, null, null));
+            return new PendingHeritage(new HeritageMembership(UUID.randomUUID(), HeritageOrigin.INDEPENDENT, null, null));
         }
 
-        static PendingHeritage named(String namedNpc, @Nullable Identifier definitionId) {
-            return new PendingHeritage(new HeritageMembership(HeritageWorldData.idForNamedNpc(namedNpc), HeritageOrigin.INHERITED, null, namedNpc, definitionId));
+        static PendingHeritage named(String namedNpc) {
+            return new PendingHeritage(new HeritageMembership(HeritageWorldData.idForNamedNpc(namedNpc), HeritageOrigin.INHERITED, null, namedNpc));
         }
 
         static PendingHeritage player(HeritageMembership parent, UUID parentPlayerId) {
-            return new PendingHeritage(new HeritageMembership(parent.heritageId(), HeritageOrigin.INHERITED, parentPlayerId, parent.namedNpc(), parent.definitionId()));
+            return new PendingHeritage(new HeritageMembership(parent.heritageId(), HeritageOrigin.INHERITED, parentPlayerId, parent.namedNpc()));
         }
 
         HeritageMembership toMembership() {
