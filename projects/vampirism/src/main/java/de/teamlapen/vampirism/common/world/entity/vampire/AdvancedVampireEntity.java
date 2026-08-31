@@ -175,6 +175,11 @@ public class AdvancedVampireEntity extends VampireBaseEntity implements IAdvance
     }
 
     @Override
+    public boolean wantsBlood() {
+        return true;
+    }
+
+    @Override
     public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
         boolean flag = super.hurtServer(level, damageSource, amount);
         if (flag && damageSource.getEntity() instanceof Player && this.random.nextInt(4) == 0) {
