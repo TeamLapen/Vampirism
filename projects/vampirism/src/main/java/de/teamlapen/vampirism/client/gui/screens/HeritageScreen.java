@@ -4,23 +4,30 @@ import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundRequestHeritagePacket;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.PlayerSkin;
+import net.minecraft.world.item.component.ResolvableProfile;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class HeritageScreen extends Screen {
@@ -30,10 +37,9 @@ public class HeritageScreen extends Screen {
     private static final int CONTENT_WIDTH = SCREEN_WIDTH - 18;
     private static final int CONTENT_HEIGHT = SCREEN_HEIGHT - 46;
     private static final int CONTENT_TOP_PADDING = 20;
-    private static final int NODE_WIDTH = 94;
-    private static final int NODE_HEIGHT = 20;
-    private static final int NODE_GAP = 18;
-    private static final int ROW_HEIGHT = 52;
+    private static final int NODE_SIZE = 26;
+    private static final int NODE_GAP = 10;
+    private static final int ROW_HEIGHT = 60;
     private static final double MIN_ZOOM = 0.25;
     private static final double MAX_ZOOM = 2;
 
@@ -53,6 +59,8 @@ public class HeritageScreen extends Screen {
     private double centerY;
     private double zoom = 1;
     private @Nullable Node hoveredNode;
+    private final Map<UUID, PlayerSkin> remotePlayerSkins = new HashMap<>();
+    private final Set<UUID> requestedPlayerSkins = new HashSet<>();
 
     public HeritageScreen(ILastScreenProvider backScreen) {
         super(GameNarrator.NO_TITLE);
@@ -136,35 +144,76 @@ public class HeritageScreen extends Screen {
                 continue;
             }
 
-            int branchY = node.parent.y + NODE_HEIGHT + (node.y - node.parent.y - NODE_HEIGHT) / 2;
-            graphics.verticalLine(node.parent.x, node.parent.y + NODE_HEIGHT, branchY, 0xff3d111f);
+            int branchY = node.parent.y + NODE_SIZE + (node.y - node.parent.y - NODE_SIZE) / 2;
+            graphics.verticalLine(node.parent.x, node.parent.y + NODE_SIZE, branchY, 0xff3d111f);
             graphics.horizontalLine(Math.min(node.parent.x, node.x), Math.max(node.parent.x, node.x), branchY, 0xff3d111f);
             graphics.verticalLine(node.x, branchY, node.y, 0xff3d111f);
-            graphics.verticalLine(node.parent.x, node.parent.y + NODE_HEIGHT, branchY, 0xff9d314a);
+            graphics.verticalLine(node.parent.x, node.parent.y + NODE_SIZE, branchY, 0xff9d314a);
             graphics.horizontalLine(Math.min(node.parent.x, node.x), Math.max(node.parent.x, node.x), branchY, 0xff9d314a);
             graphics.verticalLine(node.x, branchY, node.y, 0xff9d314a);
         }
     }
 
     private void drawNode(GuiGraphicsExtractor graphics, Node node) {
-        int left = node.x - NODE_WIDTH / 2;
-        int right = left + NODE_WIDTH;
+        int left = node.x - NODE_SIZE / 2;
+        int right = left + NODE_SIZE;
         boolean currentPlayer = this.minecraft.player != null && node.playerId != null && node.playerId.equals(this.minecraft.player.getUUID());
         boolean hovered = node == this.hoveredNode;
         int border = hovered ? 0xfff4c2d0 : currentPlayer ? 0xffc14b75 : 0xff6c2038;
-        int background = currentPlayer ? 0xff551b32 : 0xff30101f;
+        @Nullable Identifier skinTexture = this.getSkinTexture(node);
+        int background = skinTexture == null ? 0xff000000 : currentPlayer ? 0xff551b32 : 0xff30101f;
 
-        graphics.fill(left - 1, node.y - 1, right + 1, node.y + NODE_HEIGHT + 1, border);
-        graphics.fill(left, node.y, right, node.y + NODE_HEIGHT, background);
-        graphics.centeredText(this.font, Component.literal(this.abbreviate(node.name)), node.x, node.y + 6, 0xffffffff);
+        graphics.fill(left - 1, node.y - 1, right + 1, node.y + NODE_SIZE + 1, border);
+        graphics.fill(left, node.y, right, node.y + NODE_SIZE, background);
+        if (skinTexture == null) {
+            graphics.centeredText(this.font, Component.literal("?"), node.x, node.y + 9, 0xffaaaaaa);
+        } else {
+            this.drawFace(graphics, skinTexture, left + 5, node.y + 5);
+        }
     }
 
-    private String abbreviate(String name) {
-        int width = NODE_WIDTH - 8;
-        if (this.font.width(name) <= width) {
-            return name;
+    private void drawFace(GuiGraphicsExtractor graphics, Identifier skinTexture, int x, int y) {
+        var pose = graphics.pose();
+        pose.pushMatrix();
+        pose.translate(x, y);
+        pose.scale(2, 2);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, skinTexture, 0, 0, 8, 8, 8, 8, 64, 64);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, skinTexture, 0, 0, 40, 8, 8, 8, 64, 64);
+        pose.popMatrix();
+    }
+
+    @Nullable
+    private Identifier getSkinTexture(Node node) {
+        if (node.playerId != null) {
+            if (this.minecraft.getConnection() != null) {
+                PlayerInfo playerInfo = this.minecraft.getConnection().getPlayerInfo(node.playerId);
+                if (playerInfo != null) {
+                    return playerInfo.getSkin().body().texturePath();
+                }
+            }
+            PlayerSkin playerSkin = this.remotePlayerSkins.get(node.playerId);
+            if (playerSkin != null) {
+                return playerSkin.body().texturePath();
+            }
+            this.requestPlayerSkin(node);
+            return null;
         }
-        return this.font.plainSubstrByWidth(name, width - this.font.width("...")) + "...";
+        if (node.staticId != null) {
+            PlayerSkin supporterSkin = VampirismModClient.services().playerSkinHelper().getSkins().get(node.staticId);
+            if (supporterSkin != null) {
+                return supporterSkin.body().texturePath();
+            }
+        }
+        return null;
+    }
+
+    private void requestPlayerSkin(Node node) {
+        if (node.playerId == null || !this.requestedPlayerSkins.add(node.playerId)) {
+            return;
+        }
+        this.minecraft.playerSkinRenderCache().lookup(ResolvableProfile.createUnresolved(node.name)).thenAccept(profile ->
+                this.minecraft.execute(() -> profile.ifPresent(resolved -> this.remotePlayerSkins.put(node.playerId, resolved.playerSkin())))
+        );
     }
 
     @Nullable
@@ -176,7 +225,7 @@ public class HeritageScreen extends Screen {
         double scaledX = (mouseX - (this.guiLeft + 9 + CONTENT_WIDTH / 2d) - this.centerX) / this.zoom;
         double scaledY = (mouseY - (this.guiTop + 18 + CONTENT_TOP_PADDING) - this.centerY) / this.zoom;
         for (Node node : this.nodes) {
-            if (scaledX >= node.x - NODE_WIDTH / 2d && scaledX < node.x + NODE_WIDTH / 2d && scaledY >= node.y && scaledY < node.y + NODE_HEIGHT) {
+            if (scaledX >= node.x - NODE_SIZE / 2d && scaledX < node.x + NODE_SIZE / 2d && scaledY >= node.y && scaledY < node.y + NODE_SIZE) {
                 return node;
             }
         }
@@ -277,22 +326,22 @@ public class HeritageScreen extends Screen {
             return;
         }
 
-        double treeCenter = (this.nodes.stream().mapToInt(node -> node.x - NODE_WIDTH / 2).min().orElse(0)
-                + this.nodes.stream().mapToInt(node -> node.x + NODE_WIDTH / 2).max().orElse(0)) / 2d;
+        double treeCenter = (this.nodes.stream().mapToInt(node -> node.x - NODE_SIZE / 2).min().orElse(0)
+                + this.nodes.stream().mapToInt(node -> node.x + NODE_SIZE / 2).max().orElse(0)) / 2d;
         for (Node node : this.nodes) {
             node.x -= (int) treeCenter;
         }
-        this.minX = this.nodes.stream().mapToInt(node -> node.x - NODE_WIDTH / 2).min().orElse(0);
-        this.maxX = this.nodes.stream().mapToInt(node -> node.x + NODE_WIDTH / 2).max().orElse(0);
-        this.maxY = this.nodes.stream().mapToInt(node -> node.y + NODE_HEIGHT).max().orElse(0);
+        this.minX = this.nodes.stream().mapToInt(node -> node.x - NODE_SIZE / 2).min().orElse(0);
+        this.maxX = this.nodes.stream().mapToInt(node -> node.x + NODE_SIZE / 2).max().orElse(0);
+        this.maxY = this.nodes.stream().mapToInt(node -> node.y + NODE_SIZE).max().orElse(0);
         this.center(0, 0);
     }
 
     private int layout(Node node, int depth, int cursor) {
         node.y = depth * ROW_HEIGHT;
         if (node.children.isEmpty()) {
-            node.x = cursor + NODE_WIDTH / 2;
-            return cursor + NODE_WIDTH + NODE_GAP;
+            node.x = cursor + NODE_SIZE / 2;
+            return cursor + NODE_SIZE + NODE_GAP;
         }
 
         int firstChildLeft = cursor;
