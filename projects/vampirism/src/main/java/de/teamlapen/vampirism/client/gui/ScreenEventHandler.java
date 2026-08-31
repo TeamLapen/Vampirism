@@ -86,6 +86,9 @@ public class ScreenEventHandler {
     @SubscribeEvent
     public void onInitGuiEventPost(ScreenEvent.Init.Post event) {
         if (event.getScreen() instanceof FactionMenuScreen screen) {
+            Player player = screen.getMinecraft().player;
+            if (player == null || !Helper.isVampire(player)) return;
+
             ImageButton heritageButton = new ImageButton(screen.getLeftPos() + 51, screen.getTopPos() + 90, 20, 20, HERITAGE, button ->
                     Minecraft.getInstance().setScreen(new HeritageScreen(() -> FactionsMod.proxy.sendToServer(new ServerboundSimpleInputEvent(ServerboundSimpleInputEvent.Event.FACTION_MENU))))
             );
