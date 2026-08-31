@@ -43,7 +43,7 @@ public class ScreenEventHandler {
     private static final int LEVELING_BACKGROUND_HEIGHT = 63;
     private static final int BAR_WIDTH = 5;
     private static final int BAR_HEIGHT = 51;
-    private static final WidgetSprites HERITAGE = new WidgetSprites(FIdentifier.mod("widget/skills"), FIdentifier.mod("widget/skills_highlighted"));
+    private static final WidgetSprites HERITAGE = new WidgetSprites(VIdentifier.mod("widget/heritage"), VIdentifier.mod("widget/heritage_highlighted"));
 
     @SubscribeEvent
     public void onRenderFactionMenu(ScreenEvent.Render.Post event) {
