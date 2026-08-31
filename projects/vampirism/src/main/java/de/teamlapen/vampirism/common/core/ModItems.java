@@ -458,6 +458,7 @@ public class ModItems {
 
     static void register(IEventBus bus) {
         ITEMS.register(bus);
+        SLOT_DISPLAYS.register(bus);
 
         if (VampirismMod.inDataGen) {
             DeferredRegister.Items GUIDEAPI_ITEMS = DeferredRegister.createItems(REFERENCE.GUIDEAPI_MODID);

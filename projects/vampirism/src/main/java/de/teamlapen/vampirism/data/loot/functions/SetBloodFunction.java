@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.util.List;
@@ -25,11 +24,11 @@ public class SetBloodFunction extends LootItemConditionalFunction {
                     .apply(inst, SetBloodFunction::new)
     );
 
-    public static @NotNull Builder<?> builder(@Range(from = 0, to = IBottleBlood.MAX_VALUE) int minBlood, @Range(from = 0, to = IBottleBlood.MAX_VALUE) int maxBlood) {
+    public static Builder<?> builder(@Range(from = 0, to = IBottleBlood.MAX_VALUE) int minBlood, @Range(from = 0, to = IBottleBlood.MAX_VALUE) int maxBlood) {
         return simpleBuilder(conditions -> new SetBloodFunction(conditions, minBlood, maxBlood));
     }
 
-    public static @NotNull Builder<?> builder(@Range(from = 0, to = IBottleBlood.MAX_VALUE) int blood) {
+    public static Builder<?> builder(@Range(from = 0, to = IBottleBlood.MAX_VALUE) int blood) {
         return simpleBuilder(conditions -> new SetBloodFunction(conditions, blood, blood));
     }
 
@@ -48,7 +47,7 @@ public class SetBloodFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    protected @NotNull ItemStack run(@NotNull ItemStack stack, @NotNull LootContext context) {
+    protected ItemStack run(ItemStack stack, LootContext context) {
         stack.set(ModDataComponents.BOTTLE_BLOOD.get(), new BottleBlood(new Random().nextInt(minBlood, maxBlood + 1)));
         return stack;
     }

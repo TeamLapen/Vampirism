@@ -43,5 +43,12 @@ repositories {
             includeGroupAndSubgroups "squeek"
         }
     }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven/"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
     mavenLocal()
 }
