@@ -1,0 +1,289 @@
+---
+sidebar_position: 2
+title: Blocks
+---
+import {Block, Blocks, CreativeOnly, Decorative} from "@site/src/components/Blocks.mdx";
+
+import {
+    alchemicalCauldronImages,
+    altarInfusionImage,
+    altarInspirationImage,
+    altarPillarImages,
+    altarTipImage,
+    bloodContainerImages,
+    bloodGrinderImage,
+    bloodPedestralImage,
+    bloodSieveImages,
+    candelabraImages,
+    chandelierImage,
+    churchAltarImage,
+    coffinImages,
+    crossImage,
+    cursedDirtImage,
+    cursedGrassImages,
+    spruceSaplingImages,
+    firePlaceImage,
+    garlicDiffuserImages,
+    garlicImages,
+    hunterTableImages,
+    injectionChairImage,
+    potionTableImage,
+    spruceLeavesImage,
+    sunscreenBeaconImage,
+    totemImages,
+    vampireOrchidImage,
+    weaponTableImages,
+    throneImage,
+    vampireRackImage,
+    tombstoneImages,
+    graveCageImage,
+    blockImage,
+    darkSpruceWoodItems,
+    cursedSpruceWoodItems,
+    darkStoneImages,
+    darkStoneBricksImages,
+    cobbledDarkStoneImages,
+    polishedDarkStoneImages,
+    darkStoneTilesImages,
+    purpleStoneBricksImages,
+    bloodInfusedIronBlockImages,
+    batCageImage,
+    cursedGrassPathImage,
+    fogDiffuserImage,
+    vampireBeaconImage,
+    ancientBeaconGuiImage,
+    ancientBeaconPreviewImage,
+    candleImages
+} from "../assets/blocks/_blocks.mdx";
+import {
+    alchemicalTableRecipes,
+    altarOfCleansingRecipes,
+    altarOfInfusionRecipes,
+    altarOfInspirationRecipes,
+    altarPillarRecipes,
+    altarTipRecipes,
+    bloodContainerRecipes,
+    bloodGrinderRecipes,
+    bloodPedestalRecipes,
+    bloodSieveRecipes,
+    spruceSaplingRecipes,
+    candelabraRecipes,
+    chandelierRecipes,
+    coffinRecipes,
+    crossRecipes,
+    cursedEarthRecipes,
+    cursedGrassRecipes,
+    cursedGrassPathRecipes,
+    firePlaceRecipes,
+    garlicBlockRecipes,
+    garlicDiffuserRecipes,
+    hunterTableRecipes,
+    injectionChairRecipes,
+    potionTableRecipes,
+    spruceLeavesRecipes,
+    vampireOrchidRecipes,
+    villageTotemRecipes,
+    weaponTableRecipes,
+    alchemyTableRecipes,
+    tombstoneRecipes,
+    cageRecipes,
+    vampireRackRecipes,
+    throneRecipes,
+    fogDiffuserRecipes,
+    ancientBeaconRecipes, bloodInfusedIronBlockRecipes, batCageRecipes, candleStickRecipes
+} from "./_recipes.mdx";
+
+import alchemyTable from "../assets/blocks/alchemy_table.png";
+
+<Blocks img={alchemicalCauldronImages} title="Alchemical Cauldron" source={alchemicalTableRecipes}>
+    The Alchemical Cauldron is a processing block in which hunter can brew with the help of a fire source. It requires some sort of fluid (depending on the recipe) to process items.
+</Blocks>
+<Block img={churchAltarImage} title="Altar of Cleansing" source={altarOfCleansingRecipes}>
+    The Altar of Cleansing is used for two purposes: Leaving the Vampire faction and creating holy water.
+</Block>
+<Block img={altarInfusionImage} title="Altar of Infusion" source={altarOfInfusionRecipes}>
+    The main leveling block for vampire for level 4 to 14
+</Block>
+<Block img={altarInspirationImage} title="Altar of Inspiration" source={altarOfInspirationRecipes}>
+    The leveling block for vampires until level 4
+</Block>
+<Blocks img={altarPillarImages} title="Altar Pillar"source={altarPillarRecipes}>
+    Structure block for the Infusion Altar. To insert a block right click the Altar Pillar with the block you want to insert or right with an empty hand to extract the block.
+</Blocks>
+<Block img={altarTipImage} title="Altar Tip" source={altarTipRecipes}>
+    Structure block for the Infusion Altar. The Tip must be placed on top of the Altar Pillars.
+</Block>
+<Blocks img={bloodContainerImages} title="Blood Container" source={bloodContainerRecipes}>
+    Blood Container can be used to store blood.
+    Use Blood Bottles to fill or empty the container. Or drink directly from the container.
+</Blocks>
+<Block img={bloodGrinderImage} title="Blood Grinder" source={bloodGrinderRecipes} >
+    Blood Grinder extract Impure Blood from items. Combine The Grinder with a Blood Sieve to create drinkable Blood.
+</Block>
+<Block img={bloodPedestralImage} title="Blood Pedestal" source={bloodPedestalRecipes}>
+
+With the Pedestal you can charge Vampire Swords with blood if placed on top of a Blood Container.
+</Block>
+<Blocks img={bloodSieveImages} title="Blood Sieve" source={bloodSieveRecipes} >
+
+The Blood Sieve produces drinkable Blood from Impure Blood.
+</Blocks>
+<Blocks img={spruceSaplingImages} title="Spruce Saplings" source={spruceSaplingRecipes}>
+
+Sapling for the [Dark Spruce Tree](./biomes#dark-spruce-tree) and [Cursed Spruce Tree](./biomes#cursed-spruce-tree).
+
+The Dark Spruce Sapling has a chance to grow into a [Cursed Spruce Tree](./biomes#cursed-spruce-tree) when planted on [Cursed Grass](#cursed-grass).
+
+</Blocks>
+<Blocks img={candelabraImages} title="Candelabra" source={candelabraRecipes} >
+    <Decorative></Decorative>
+</Blocks>
+<Block img={chandelierImage} title="Chandelier" source={chandelierRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Blocks img={coffinImages} title="Coffin" source={coffinRecipes}>
+
+Coffins are the a sleeping place for vampires. They act as a spawn point and allow vampires to sleep during the day.
+</Blocks>
+<Block img={crossImage} title="Cross" source={crossRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Block img={cursedDirtImage} title="Cursed Dirt" source={cursedEarthRecipes}>
+
+Found in the [Vampirism Forest](../content/biomes#vampire-forest)
+</Block>
+
+<Blocks img={cursedGrassImages} title="Cursed Grass" source={cursedGrassRecipes}>
+
+Found in the [Vampirism Forest](../content/biomes#vampire-forest)
+</Blocks>
+<Block img={cursedGrassPathImage} title="Cursed Grass Path" source={cursedGrassPathRecipes}>
+
+Path block for [Cursed Grass](#cursed-grass)
+</Block>
+<Block img={firePlaceImage} title="Fire Place" source={firePlaceRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Blocks img={garlicImages} title="Garlic" source={garlicBlockRecipes}>
+
+Farming block for [Garlic](../content/items.mdx#garlic)
+</Blocks>
+<Blocks img={garlicDiffuserImages} title="Garlic Diffuser" source={garlicDiffuserRecipes}>
+
+Placed Garlic Diffuser provide a garlic aura that effects nearby vampires with the [Garlic](../content/effects.mdx#garlic) effect.
+
+The normal diffuser has a range of 1x1 chunks and the improved diffuser has a range of 3x3 chunks.
+</Blocks>
+<Blocks img={hunterTableImages} title="Hunter Table" source={hunterTableRecipes}>
+
+The Hunter Table is use to craft [Hunter Intel](../content/items.mdx#hunter-intel) from items. That can be used for [hunter leveling](../factions/hunter/leveling.md)
+</Blocks>
+<Block img={injectionChairImage} title="Injection Chair" source={injectionChairRecipes}>
+
+At an Injection Chair you can use [Injections](../content/items.mdx#injections).
+</Block>
+<Block img={spruceLeavesImage} title="Dark Spruce Leaves" source={spruceLeavesRecipes}>
+
+Leaves for the dark spruce trees and the cursed spruce trees.
+</Block>
+<Block img={potionTableImage} title="Potion Table" source={potionTableRecipes}></Block>
+<Block img={sunscreenBeaconImage} title="Sunscreen Beacon">
+<CreativeOnly></CreativeOnly>
+
+A Sunscreen Beacon protects vampires in a 32x32 block area from the sun.
+</Block>
+<Block img={vampireOrchidImage} title="Vampire Orchid" source={vampireOrchidRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Blocks img={totemImages} title="Village Totem Top/Base" source={villageTotemRecipes}>
+
+Totems are used to control villages for a faction. See [Faction Raids](../factions/village/controlling) for a more detailed description.
+</Blocks>
+<Blocks img={weaponTableImages} title="Weapon Table" source={weaponTableRecipes}>
+    Weapon Tables are extended Crafting Tables that are abe to craft advanced weapons, but require Lava to work.
+</Blocks>
+<Block img={alchemyTable} title="Alchemy Table" source={alchemyTableRecipes}>
+    The Alchemy Table is used in the creation of weapon oils.
+</Block>
+<Blocks title="Tombstones" img={tombstoneImages} source={tombstoneRecipes}>
+    <Decorative></Decorative>
+</Blocks>
+<Block title="Grave Cage" img={graveCageImage} source={cageRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Block title="Vampire Rack" img={vampireRackImage} source={vampireRackRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Block title="Throne" img={throneImage} source={throneRecipes}>
+    <Decorative></Decorative>
+</Block>
+<Blocks title="Dark Spruce Wood" img={darkSpruceWoodItems}>
+
+Dark Spruce wood for all wood blocks
+</Blocks>
+<Blocks title="Cursed Spruce Wood" img={cursedSpruceWoodItems}>
+
+Cursed Spruce wood for all wood blocks.
+
+Cursed Spruce Logs and Wood will ge gradually covered with Cursed Bark, which will suck blood from nearby entities.
+</Blocks>
+
+<Block title="Cursed Roots" img={blockImage("cursed_roots.png")}></Block>
+<Block title="Cursed Hanging Roots" img={blockImage("cursed_hanging_roots.png")}></Block>
+<Block title="Fog Diffuser" img={fogDiffuserImage} source={fogDiffuserRecipes}>
+
+The Fog Diffuser emits a fog area for 2.5x2.5 chunks. The fog will allow vampire player to walk in the sun without taking damage.
+</Block>
+<Block title="Ancient Beacon" img={vampireBeaconImage} source={ancientBeaconRecipes}>
+
+The Ancient Beacon is a _hunter only_ beacon the applies different effects to nearby hunter players. Like the vanilla Beacon it requires a pyramid structure to work. The Ancient Beacon requires [Blood-Infuser Iron Block](#blood-infused-iron-blocks) or [Blood-Infused Enhanced Iron Block](#blood-infused-iron-blocks) to work. Using only [Blood-Infused Enhanced Iron Block](#blood-infused-iron-blocks) will increase the amplifier of the effects.
+<details>
+<summary>Gui</summary>
+
+<img src={ancientBeaconGuiImage} alt={"gui"} style={{height: 400, imageRendering: "pixelated"}} />
+</details>
+
+<details>
+<summary>Beacon Structure</summary>
+
+<img src={ancientBeaconPreviewImage} alt={"preview"} style={{height: 400, imageRendering: "pixelated"}} />
+</details>
+</Block>
+<Blocks title="Dark Stone" img={darkStoneImages}></Blocks>
+<Blocks title="Dark Stone Bricks" img={darkStoneBricksImages}>
+
+
+Only Vampire can spawn on these bricks.
+</Blocks>
+<Blocks title="Cobbled Dark Stone" img={cobbledDarkStoneImages}>
+
+
+Only Vampire can spawn on these blocks.
+</Blocks>
+<Blocks title="Polished Dark Stone" img={polishedDarkStoneImages}>
+
+
+Only Vampire can spawn on these bricks.
+</Blocks>
+<Blocks title="Dark Stone Tiles" img={darkStoneTilesImages}>
+
+
+Only Vampire can spawn on these bricks, except for the Dark Stone where no entity can spawn.
+</Blocks>
+<Blocks title="Purple Stone Bricks" img={purpleStoneBricksImages}>
+
+
+Only Vampire can spawn on these bricks, except for the Dark Stone where no entity can spawn.
+</Blocks>
+<Blocks title="Blood-Infused Iron Blocks" img={bloodInfusedIronBlockImages} source={bloodInfusedIronBlockRecipes}>
+
+Storage block for [Blood-Infused Iron Ingot](items#blood-infused-iron-ingot)
+</Blocks>
+<Block title="Bat Cage" img={batCageImage} source={batCageRecipes}>
+    <Decorative></Decorative>
+
+</Block>
+<Blocks title="Candle Stick" img={candleImages} source={candleStickRecipes}>
+
+Wall mountable candle stick with switchable candles. Set it on fire with Flint and Steel.
+</Blocks>

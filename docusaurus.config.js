@@ -13,7 +13,7 @@ const config = {
   favicon: 'img/favicon.ico',
   organizationName: 'TeamLapen',
   projectName: 'Vampirism',
-  deploymentBranch: 'gh-pages',
+  deploymentBranch: 'pages/stable',
   trailingSlash: false,
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -36,7 +36,7 @@ const config = {
           versions: {
             current: {
               /** this value must be changed if a new version is released */
-              label: '1.10 NeoForge',
+              label: '2.x',
             }
           },
         },
