@@ -1,36 +1,48 @@
 ---
 sidebar_position: 1
-title: Wiki Intro
+title: What is FactionApi?
 ---
 
-![vampirism title](/img/vampirism-title.svg)
+**FactionApi** (mod id `factionapi`) is a standalone NeoForge library mod that provides a complete
+faction framework for Minecraft: joinable factions, per-faction player levels and *lord* levels,
+skill trees and activatable actions, a task/quest system, accessory "refinements", minions and
+faction-controlled villages.
 
-Welcome to the official wiki for the Vampirism Mod, an exciting addition to the world of Minecraft! Whether you seek to embrace the darkness as a powerful vampire or take up arms as a skilled vampire hunter, this mod offers a thrilling and immersive experience. This wiki provides you with detailed information about the mod's features, mechanics, and everything you need to know to enhance your gameplay.
+It is developed and maintained by the Vampirism team (maxanier, cheaterpaul, gridexpert) as part of
+the [Vampirism monorepo](https://github.com/TeamLapen/Vampirism) (`projects/faction-api` and
+`projects/faction`), and is licensed under **LGPL-3.0**.
 
-## Mod Overview
+## What it gives you
 
-The Vampire and Vampire Hunter Mod introduces a captivating dynamic to your Minecraft adventures, introducing two distinct roles: the formidable vampire and the relentless vampire hunter. Immerse yourself in a world of darkness, mystery, and intense battles as you navigate the challenges and opportunities unique to each role.
+| System              | Summary                                                                                            |
+|---------------------|--------------------------------------------------------------------------------------------------|
+| Factions            | A shared registry of factions plus a built-in `NEUTRAL` faction. Any entity resolves to a faction. |
+| Player progression  | Each playable faction has its own level track and an optional *lord* level track with titles.       |
+| Skills & actions    | Data-driven skill trees, skill segments and cooldown/duration based player actions.                 |
+| Tasks               | A quest board system with data-pack-defined requirements, rewards and unlock conditions.            |
+| Refinements         | Rollable accessory items that grant attribute modifiers, grouped into rarity-tiered sets.           |
+| Minions             | Per-faction minion entities with assignable tasks and a `/minion` command.                          |
+| Villages            | Faction capture mechanics, totems, guards, banners and bad-omen raids.                              |
+| Cross-mod glue      | Faction tags, faction-aware targeting predicates and item data components (slayer, restriction).    |
 
-## Features
+## Relationship to Vampirism
 
-- **Vampires**: Become a Vampire, harnessing dark powers, enhanced senses, and immortality. Feed on the blood of villagers and other creatures to maintain your strength and satisfy your hunger. Unlock unique vampire abilities such as superhuman speed, night vision, and the power to transform into a bat, granting you unparalleled mobility.
-- **Vampire Hunters**: Assume the role of a courageous vampire hunter, equipped with specialized weapons and tools to track down and eliminate these bloodthirsty creatures. Master vampire hunting techniques, such as crafting powerful anti-vampire weapons and tools to weaken and defeat vampires. Strengthen yourself and protect innocent villagers from their relentless hunger.
-- **New Biome and Structures**: Explore a new biome, tainted by the presence of vampires. Encounter eerie vampire lords hidden deep in the forest.
-- **Lore**: Uncover the mystery about the vampires in diaries or books
-- **Customization**: Customize your character's appearance, abilities, and equipment to suit your playstyle. Unlock new vampire powers and hunter skills as you level up, enhancing your capabilities and making you an even more formidable force.
+Vampirism's vampire/hunter gameplay is built **entirely on top of FactionApi** – the two factions,
+their skill trees, tasks and lord titles are just FactionApi content shipped by Vampirism. Because of
+that, Vampirism declares `factionapi` as a **required dependency**: installing Vampirism means you
+must also install FactionApi (see [Installation](./installation)).
 
-## Getting Started
+Another mod can use the same framework to add its own factions without pulling in any of Vampirism's
+content.
 
-To embark on your journey as a vampire or a vampire hunter, follow these steps:
+## Where to get it
 
-1. **Install Forge**: Download and install [Minecraft Forge](https://files.minecraftforge.net/net/minecraftforge/forge/) onto your Minecraft instance
-2. **Install the Mod**: Download and install the Vampirism Mod onto your Minecraft instance from [Curseforge](https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire) or [Modrinth](https://modrinth.com/mod/vampirism)
-3. **Create a New World**: Launch Minecraft and create a new world, enabling the mod within the game settings.
-4. **Choose Your Path**: Decide whether you want to become a vampire or a vampire hunter. Each path offers unique gameplay mechanics and challenges. And find out how you can become either of them.
-5. **Learn the Basics**: Familiarize yourself with the mod's mechanics, controls, and user interface. Take the time to understand the intricacies of the vampire or vampire hunter role to maximize your effectiveness.
-6. **Expand Your Abilities**: As you gain experience, unlock new vampire powers or hunter skills. Experiment with different playstyles and strategies to become a true master of your chosen role.
-7. **Share and Connect**: Engage with the Vampirism Mod community. Share your experiences, strategies, and creations with fellow players on our dedicated [Discord server](https://discord.gg/wuamm4P).
+* **Players / modpacks:** download from Modrinth (project `factionapi`). See
+  [Installation](./installation).
+* **Mod developers:** add it as a Gradle dependency. See [Depending on FactionApi](./gradle-setup),
+  then the [API documentation](../api/intro) and [data pack documentation](../data/intro).
 
-## Wiki
+## Links
 
-The wiki is a work in progress. Some features might be missing or are not updated to the latest changes. If you find something please let us know.
+* [Source & issues](https://github.com/TeamLapen/Vampirism)
+* [Discord](https://discord.gg/wuamm4P)
