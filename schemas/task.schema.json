@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/task.schema.json",
+  "title": "Faction API Task",
+  "description": "A task handed out to faction players. Loaded by the dynamic registry `factionapi:tasks` from `data/<namespace>/factionapi/tasks/<path>.json` (de.teamlapen.faction.api.factions.tasks.Task#CODEC). Built-in requirement, reward and unlocker types live in the `factionapi` namespace; add-on mods may register additional types, so unknown `type` values are not rejected.",
+  "type": "object",
+  "required": ["title", "requirements", "reward"],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "$ref": "#/$defs/component",
+      "description": "Display name of the task."
+    },
+    "description": {
+      "$ref": "#/$defs/component",
+      "description": "Optional longer description shown in the task screen tooltip."
+    },
+    "requirements": {
+      "type": "array",
+      "description": "The requirements. Dispatched on the `type` field.",
+      "items": { "$ref": "#/$defs/requirement" }
+    },
+    "reward": {
+      "$ref": "#/$defs/reward",
+      "description": "The single reward granted when the task is completed. Note: the field is singular and holds one object, not a list."
+    },
+    "unlocker": {
+      "type": "array",
+      "description": "Conditions that must all be met for the task to be offered to the player. Defaults to an empty list (always available).",
+      "items": { "$ref": "#/$defs/unlocker" }
+    }
+  },
+  "$defs": {
+    "resourceLocation": {
+      "type": "string",
+      "description": "A namespaced id, e.g. `minecraft:stone` or `mymod:thing`.",
+      "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$"
+    },
+    "idOrTag": {
+      "type": "string",
+      "description": "A namespaced id, or a tag reference prefixed with `#`.",
+      "pattern": "^#?([a-z0-9_.-]+:)?[a-z0-9_./-]+$"
+    },
+    "component": {
+      "description": "A Minecraft raw JSON text component (string, object or array form).",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "object" },
+        { "type": "array" }
+      ]
+    },
+    "itemStack": {
+      "description": "Vanilla item-stack-template format (net.minecraft.world.item.ItemStackTemplate). A bare item id string is also accepted.",
+      "oneOf": [
+        { "$ref": "#/$defs/resourceLocation" },
+        {
+          "type": "object",
+          "required": ["id"],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/resourceLocation",
+              "description": "Item id."
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99,
+              "default": 1,
+              "description": "Stack size."
+            },
+            "components": {
+              "type": "object",
+              "description": "Data component patch applied to the stack."
+            }
+          }
+        }
+      ]
+    },
+    "requirement": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/resourceLocation",
+          "description": "Registered requirement type (`factionapi:task_requirement` registry)."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:entity" } } },
+          "then": {
+            "description": "Killed `amount` entities of the exact given entity type (vanilla `minecraft:killed` statistic).",
+            "required": ["type", "entityType", "amount", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:entity" },
+              "entityType": { "$ref": "#/$defs/resourceLocation", "description": "Entity type that has to be killed." },
+              "amount": { "type": "integer", "minimum": 0, "description": "Number of kills required." },
+              "description": { "$ref": "#/$defs/component" },
+              "id": { "$ref": "#/$defs/resourceLocation", "description": "Progress key. Defaults to `entityType`." }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:entity_type" } } },
+          "then": {
+            "description": "Killed `amount` entities contained in the given entity type tag.",
+            "required": ["type", "entityType", "amount", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:entity_type" },
+              "entityType": { "$ref": "#/$defs/resourceLocation", "description": "Entity type tag id, without the leading `#`." },
+              "amount": { "type": "integer", "minimum": 0, "description": "Number of kills required." },
+              "description": { "$ref": "#/$defs/component" },
+              "id": { "$ref": "#/$defs/resourceLocation", "description": "Progress key. Defaults to the tag id." }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:item" } } },
+          "then": {
+            "description": "Player has the described item stack (item and components) in their inventory; it is consumed on hand-in. The required amount is the stack `count`.",
+            "required": ["type", "item", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:item" },
+              "item": { "$ref": "#/$defs/itemStack" },
+              "description": { "$ref": "#/$defs/component" },
+              "id": { "$ref": "#/$defs/resourceLocation", "description": "Progress key. Defaults to the item id." }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:stat" } } },
+          "then": {
+            "description": "A registered custom statistic increased by `amount` since the task was accepted.",
+            "required": ["type", "stat", "amount", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:stat" },
+              "stat": { "$ref": "#/$defs/resourceLocation", "description": "Id of a registered custom stat (`minecraft:custom_stat` registry)." },
+              "amount": { "type": "integer", "minimum": 0, "description": "Required increase of the stat." },
+              "description": { "$ref": "#/$defs/component" },
+              "id": { "$ref": "#/$defs/resourceLocation", "description": "Progress key. Defaults to `stat`." }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:boolean" } } },
+          "then": {
+            "description": "A registered boolean supplier (`factionapi:faction_player_boolean_supplier` registry) returns true for the player. Cannot be defined purely in a datapack.",
+            "required": ["type", "function", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:boolean" },
+              "function": { "$ref": "#/$defs/resourceLocation", "description": "Id of the registered boolean supplier. Also used as the progress key." },
+              "description": { "$ref": "#/$defs/component" }
+            }
+          }
+        }
+      ]
+    },
+    "reward": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/resourceLocation",
+          "description": "Registered reward type (`factionapi:task_reward` registry)."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:item" } } },
+          "then": {
+            "description": "Gives the player a fixed item stack.",
+            "required": ["type", "item"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:item" },
+              "item": { "$ref": "#/$defs/itemStack" }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:refinement" } } },
+          "then": {
+            "description": "Gives an accessory (refinement) item. Omitted parameters are rolled randomly.",
+            "required": ["type", "faction"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:refinement" },
+              "faction": {
+                "description": "One faction id, a list of faction ids, or a faction tag (`#namespace:tag`). Pool of factions the accessory can belong to.",
+                "oneOf": [
+                  { "$ref": "#/$defs/idOrTag" },
+                  { "type": "array", "items": { "$ref": "#/$defs/resourceLocation" } }
+                ]
+              },
+              "item": { "$ref": "#/$defs/itemStack", "description": "Force a specific accessory item instead of rolling one." },
+              "rarity": {
+                "type": "string",
+                "description": "Minimum refinement rarity.",
+                "enum": ["common", "uncommon", "rare", "epic", "legendary"]
+              }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:lord_level" } } },
+          "then": {
+            "description": "Raises the player's lord level to `targetLevel` (only if they are currently exactly one level below).",
+            "required": ["type", "targetLevel", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:lord_level" },
+              "targetLevel": { "type": "integer", "description": "Lord level to grant." },
+              "description": { "$ref": "#/$defs/component" }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:consumer" } } },
+          "then": {
+            "description": "Runs a registered player consumer (`factionapi:faction_player_consumer` registry) on the player.",
+            "required": ["type", "consumer", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:consumer" },
+              "consumer": { "$ref": "#/$defs/resourceLocation", "description": "Id of the registered player consumer." },
+              "description": { "$ref": "#/$defs/component" }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:map" } } },
+          "then": {
+            "description": "Gives a filled map pointing to the nearest structure of a structure tag.",
+            "required": ["type", "destination", "displayName", "decorationType"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:map" },
+              "destination": { "$ref": "#/$defs/resourceLocation", "description": "Structure tag id, without the leading `#`." },
+              "displayName": { "type": "string", "description": "Translation key used as the map's item name." },
+              "decorationType": { "$ref": "#/$defs/resourceLocation", "description": "Id of a `minecraft:map_decoration_type` used as the map marker." }
+            }
+          }
+        }
+      ]
+    },
+    "unlocker": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/resourceLocation",
+          "description": "Registered unlocker type (`factionapi:task_unlocker` registry)."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:level" } } },
+          "then": {
+            "description": "Requires the player's faction level to be within [reqLevel, maxLevel].",
+            "required": ["type", "reqLevel"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:level" },
+              "reqLevel": { "type": "integer", "description": "Minimum faction level required." },
+              "maxLevel": { "type": "integer", "default": -1, "description": "Maximum faction level that still allows the task. -1 (default) disables the upper bound." }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:lord_level" } } },
+          "then": {
+            "description": "Requires a certain lord level.",
+            "required": ["type", "reqLordLevel", "exact"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:lord_level" },
+              "reqLordLevel": { "type": "integer", "description": "Lord level to compare against." },
+              "exact": { "type": "boolean", "description": "true: lord level must equal reqLordLevel. false: it must be at least reqLordLevel." }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "factionapi:parent" } } },
+          "then": {
+            "description": "Requires another task to be completed first.",
+            "required": ["type", "parent"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "factionapi:parent" },
+              "parent": { "$ref": "#/$defs/resourceLocation", "description": "Id of the task that has to be completed before this one is offered." }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

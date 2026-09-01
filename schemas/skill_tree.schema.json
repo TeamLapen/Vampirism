@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/skill_tree.schema.json",
+  "title": "Faction API Skill Tree",
+  "description": "A skill tree shown as a tab in the faction skill screen. Loaded by the dynamic registry `factionapi:skill_tree` from `data/<namespace>/factionapi/skill_tree/<path>.json` (de.teamlapen.faction.common.factions.skills.SkillTree#CODEC).",
+  "type": "object",
+  "required": ["faction", "unlock_predicate", "display", "name"],
+  "additionalProperties": false,
+  "properties": {
+    "faction": {
+      "$ref": "#/$defs/resourceLocation",
+      "description": "Id of the playable faction this tree belongs to, e.g. `vampirism:vampire`."
+    },
+    "unlock_predicate": {
+      "type": "object",
+      "description": "Vanilla entity predicate checked against the player to decide whether the tree is unlocked. Re-evaluated when the faction / lord level changes. An empty object always matches. Faction API registers the `type_specific` sub-predicates `factionapi:player_faction` and `factionapi:faction` (fields: optional `faction` id, optional int `level`, optional int `lord_level`)."
+    },
+    "display": {
+      "$ref": "#/$defs/itemStack",
+      "description": "Icon shown for the tree tab (vanilla item-stack-template format; a bare item id string is also accepted)."
+    },
+    "name": {
+      "$ref": "#/$defs/component",
+      "description": "Title of the tree."
+    },
+    "background": {
+      "$ref": "#/$defs/resourceLocation",
+      "description": "Background sprite id, resolved to `<namespace>:textures/<path>.png`. Defaults to the built-in level background."
+    },
+    "skill_point_tag": {
+      "$ref": "#/$defs/resourceLocation",
+      "description": "Skill tree tag id (without the leading `#`) identifying the skill-point pool the tree spends from (ISkillTree#skillPointTag). Defaults to `factionapi:default`."
+    },
+    "order_after": {
+      "type": "array",
+      "description": "Skill tree ids after which this tree is displayed in the skill screen. Defaults to an empty list.",
+      "items": { "$ref": "#/$defs/resourceLocation" }
+    }
+  },
+  "$defs": {
+    "resourceLocation": {
+      "type": "string",
+      "description": "A namespaced id, e.g. `minecraft:stone` or `mymod:thing`.",
+      "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$"
+    },
+    "component": {
+      "description": "A Minecraft raw JSON text component (string, object or array form).",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "boolean" },
+        { "type": "number" },
+        { "type": "object" },
+        { "type": "array" }
+      ]
+    },
+    "itemStack": {
+      "description": "Vanilla item-stack-template format (net.minecraft.world.item.ItemStackTemplate). A bare item id string is also accepted.",
+      "oneOf": [
+        { "$ref": "#/$defs/resourceLocation" },
+        {
+          "type": "object",
+          "required": ["id"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "$ref": "#/$defs/resourceLocation", "description": "Item id." },
+            "count": { "type": "integer", "minimum": 1, "maximum": 99, "default": 1, "description": "Stack size." },
+            "components": { "type": "object", "description": "Data component patch applied to the stack." }
+          }
+        }
+      ]
+    }
+  }
+}

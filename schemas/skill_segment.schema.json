@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/skill_segment.schema.json",
+  "title": "Faction API Skill Segment",
+  "description": "A single node of a faction skill tree. Loaded by the dynamic registry `factionapi:skill_segment` from `data/<namespace>/factionapi/skill_segment/<path>.json` (de.teamlapen.faction.common.factions.skills.SkillSegment#CODEC). A segment with no parents is a root: placed at the top, granted for free once the tree is unlocked and kept on skill reset.",
+  "type": "object",
+  "required": ["tree", "skills"],
+  "additionalProperties": false,
+  "properties": {
+    "tree": {
+      "$ref": "#/$defs/resourceLocation",
+      "description": "Id of the skill tree this segment belongs to, e.g. `vampirism:vampire/level`."
+    },
+    "skills": {
+      "type": "array",
+      "description": "Skills contained in the segment. Self-exclusive: the player picks exactly one. Use separate segments to allow multiple choices.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/resourceLocation",
+        "description": "Id of a registered skill (`factionapi:skill` registry)."
+      }
+    },
+    "parents": {
+      "type": "array",
+      "description": "Skill segment ids this one descends from. Unlockable as soon as any parent is unlocked. An empty list (the default) makes this segment a root.",
+      "items": { "$ref": "#/$defs/resourceLocation" }
+    },
+    "locking_segments": {
+      "type": "array",
+      "description": "Skill segment ids that lock this one out: once a skill in any of them is unlocked, this segment can no longer be unlocked. Stored one way only, so a mutual exclusion must be declared on both segments. Defaults to an empty list.",
+      "items": { "$ref": "#/$defs/resourceLocation" }
+    },
+    "placement": {
+      "type": "object",
+      "description": "Layout hint positioning this segment on one side of another segment of the same row. Omit to leave positioning to the layout.",
+      "required": ["type", "segment"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["before", "after"],
+          "description": "`before` places this segment left of the referenced one, `after` places it right."
+        },
+        "segment": {
+          "$ref": "#/$defs/resourceLocation",
+          "description": "Id of the skill segment to position next to."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "resourceLocation": {
+      "type": "string",
+      "description": "A namespaced id, e.g. `minecraft:stone` or `mymod:thing`.",
+      "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$"
+    }
+  }
+}
