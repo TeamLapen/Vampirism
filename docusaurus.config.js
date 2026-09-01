@@ -31,7 +31,7 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/TeamLapen/Vampirism/tree/gh-pages/',
+          editUrl: 'https://github.com/TeamLapen/Vampirism/tree/pages/dev/',
           lastVersion: 'current',
           versions: {
             current: {
@@ -70,6 +70,20 @@ const config = {
         }
       },
     ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'factionapi',
+        path: 'factionapi',
+        routeBasePath: 'factionapi',
+        sidebarPath: './sidebarsFactionapi.js',
+        versions: {
+          current: {
+            label: '1.x',
+          }
+        }
+      },
+    ],
   ],
 
   themeConfig:
@@ -83,27 +97,51 @@ const config = {
         },
         items: [
           {
-            href: 'https://vampirism.dev',
-            label: 'Website',
+            type: 'dropdown',
+            label: 'Vampirism',
             position: 'left',
+            items: [
+              {
+                type: 'doc',
+                docId: 'wiki/intro',
+                label: 'Wiki',
+              },
+              {
+                type: 'doc',
+                docId: 'api/intro',
+                label: 'API',
+              },
+              {
+                type: 'doc',
+                docId: 'data/intro',
+                label: 'Data Packs',
+              },
+            ]
           },
           {
-            type: 'doc',
-            docId: 'wiki/intro',
+            type: 'dropdown',
+            label: 'FactionApi',
             position: 'left',
-            label: 'Wiki',
-          },
-          {
-            type: 'doc',
-            docId: 'api/intro',
-            position: 'left',
-            label: 'API',
-          },
-          {
-            type: 'doc',
-            docId: 'data/intro',
-            position: 'left',
-            label: 'Data Packs',
+            items: [
+              {
+                type: 'doc',
+                docId: 'wiki/intro',
+                docsPluginId: 'factionapi',
+                label: 'Wiki',
+              },
+              {
+                type: 'doc',
+                docId: 'api/intro',
+                docsPluginId: 'factionapi',
+                label: 'API',
+              },
+              {
+                type: 'doc',
+                docId: 'data/intro',
+                docsPluginId: 'factionapi',
+                label: 'Data Packs',
+              },
+            ]
           },
           {
             type: 'doc',
@@ -114,6 +152,11 @@ const config = {
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
+            href: 'https://vampirism.dev',
+            label: 'Website',
+            position: 'left',
+          },
+          {
             type: 'docsVersionDropdown',
             position: 'right',
             dropdownItemsAfter: [
@@ -121,6 +164,12 @@ const config = {
               { to: 'https://github.com/TeamLapen/Vampirism/wiki', label: 'For MC 1.12' },
             ],
             dropdownActiveClassDisabled: true,
+          },
+          {
+            type: 'docsVersionDropdown',
+            position: 'right',
+            dropdownActiveClassDisabled: false,
+            docsPluginId: 'factionapi',
           },
           {
             type: 'docsVersionDropdown',
@@ -142,7 +191,7 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Vampirism',
             items: [
               {
                 label: 'Wiki',
@@ -159,15 +208,28 @@ const config = {
             ],
           },
           {
+            title: 'FactionApi',
+            items: [
+              {
+                label: 'Wiki',
+                to: '/factionapi/wiki/intro',
+              },
+              {
+                label: 'API',
+                to: '/factionapi/api/intro',
+              },
+              {
+                label: 'Data Pack',
+                to: '/factionapi/data/intro',
+              },
+            ],
+          },
+          {
             title: 'Community',
             items: [
               {
                 label: 'Discord',
                 href: 'https://discord.gg/wuamm4P',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/Maxanier',
               },
             ],
           },
