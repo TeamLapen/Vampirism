@@ -10,7 +10,6 @@ const config = {
   url: 'https://wiki.vampirism.dev',
   baseUrl: '/',
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'TeamLapen',
   projectName: 'Vampirism',
@@ -47,6 +46,7 @@ const config = {
           blogTitle: 'Vampirism Blog',
           blogSidebarCount: 'ALL',
           blogSidebarTitle: 'All posts',
+          onUntruncatedBlogPosts: 'ignore'
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
