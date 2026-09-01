@@ -1,48 +1,46 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:stat",
-        "amount": 6,
-        "description": {
-          "translate": "stat.factionapi.capture_village"
-        },
-        "id": "factionapi:capture_village",
-        "stat": "factionapi:capture_village"
+  "requirements": [
+    {
+      "type": "factionapi:stat",
+      "amount": 6,
+      "description": {
+        "translate": "stat.factionapi.capture_village"
       },
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.minecraft.gold_ingot"
-        },
-        "id": "minecraft:gold_ingot",
-        "item": {
-          "count": 64,
-          "id": "minecraft:gold_ingot"
-        }
+      "id": "factionapi:capture_village",
+      "stat": "factionapi:capture_village"
+    },
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.minecraft.gold_ingot"
       },
-      {
-        "type": "factionapi:stat",
-        "amount": 50,
-        "description": {
-          "translate": "stat.vampirism.infected_creatures"
-        },
-        "id": "vampirism:infected_creatures",
-        "stat": "vampirism:infected_creatures"
-      },
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.vampirism.pure_blood_4"
-        },
-        "id": "vampirism:pure_blood_4",
-        "item": {
-          "count": 20,
-          "id": "vampirism:pure_blood_4"
-        }
+      "id": "minecraft:gold_ingot",
+      "item": {
+        "count": 64,
+        "id": "minecraft:gold_ingot"
       }
-    ]
-  },
+    },
+    {
+      "type": "factionapi:stat",
+      "amount": 50,
+      "description": {
+        "translate": "stat.vampirism.infected_creatures"
+      },
+      "id": "vampirism:infected_creatures",
+      "stat": "vampirism:infected_creatures"
+    },
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.vampirism.pure_blood_4"
+      },
+      "id": "vampirism:pure_blood_4",
+      "item": {
+        "count": 20,
+        "id": "vampirism:pure_blood_4"
+      }
+    }
+  ],
   "reward": {
     "type": "factionapi:lord_level",
     "description": {

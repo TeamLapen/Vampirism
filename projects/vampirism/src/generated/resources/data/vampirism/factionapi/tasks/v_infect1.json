@@ -1,17 +1,15 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:stat",
-        "amount": 20,
-        "description": {
-          "translate": "stat.vampirism.infected_creatures"
-        },
-        "id": "vampirism:infected_creatures",
-        "stat": "vampirism:infected_creatures"
-      }
-    ]
-  },
+  "requirements": [
+    {
+      "type": "factionapi:stat",
+      "amount": 20,
+      "description": {
+        "translate": "stat.vampirism.infected_creatures"
+      },
+      "id": "vampirism:infected_creatures",
+      "stat": "vampirism:infected_creatures"
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

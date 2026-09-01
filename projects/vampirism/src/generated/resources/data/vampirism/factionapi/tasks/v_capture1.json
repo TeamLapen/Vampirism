@@ -1,17 +1,15 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:stat",
-        "amount": 1,
-        "description": {
-          "translate": "stat.factionapi.capture_village"
-        },
-        "id": "factionapi:capture_village",
-        "stat": "factionapi:capture_village"
-      }
-    ]
-  },
+  "requirements": [
+    {
+      "type": "factionapi:stat",
+      "amount": 1,
+      "description": {
+        "translate": "stat.factionapi.capture_village"
+      },
+      "id": "factionapi:capture_village",
+      "stat": "factionapi:capture_village"
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

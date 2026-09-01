@@ -1,49 +1,47 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.minecraft.diamond_block"
-        },
-        "id": "minecraft:diamond_block",
-        "item": {
-          "count": 3,
-          "id": "minecraft:diamond_block"
-        }
+  "requirements": [
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.minecraft.diamond_block"
       },
-      {
-        "type": "factionapi:entity",
-        "amount": 10,
-        "description": {
-          "translate": "entity.vampirism.vampire_baron"
-        },
-        "entityType": "vampirism:vampire_baron",
-        "id": "vampirism:vampire_baron"
-      },
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.vampirism.vampire_blood_bottle"
-        },
-        "id": "vampirism:vampire_blood_bottle",
-        "item": {
-          "count": 16,
-          "id": "vampirism:vampire_blood_bottle"
-        }
-      },
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.vampirism.vampire_book"
-        },
-        "id": "vampirism:vampire_book",
-        "item": {
-          "id": "vampirism:vampire_book"
-        }
+      "id": "minecraft:diamond_block",
+      "item": {
+        "count": 3,
+        "id": "minecraft:diamond_block"
       }
-    ]
-  },
+    },
+    {
+      "type": "factionapi:entity",
+      "amount": 10,
+      "description": {
+        "translate": "entity.vampirism.vampire_baron"
+      },
+      "entityType": "vampirism:vampire_baron",
+      "id": "vampirism:vampire_baron"
+    },
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.vampirism.vampire_blood_bottle"
+      },
+      "id": "vampirism:vampire_blood_bottle",
+      "item": {
+        "count": 16,
+        "id": "vampirism:vampire_blood_bottle"
+      }
+    },
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.vampirism.vampire_book"
+      },
+      "id": "vampirism:vampire_book",
+      "item": {
+        "id": "vampirism:vampire_book"
+      }
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

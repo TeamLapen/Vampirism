@@ -1,37 +1,35 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.minecraft.gold_ingot"
-        },
-        "id": "minecraft:gold_ingot",
-        "item": {
-          "count": 32,
-          "id": "minecraft:gold_ingot"
-        }
+  "requirements": [
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.minecraft.gold_ingot"
       },
-      {
-        "type": "factionapi:entity_type",
-        "amount": 50,
-        "description": {
-          "translate": "task_tag.vampirism.vampire"
-        },
-        "entityType": "vampirism:vampire",
-        "id": "vampirism:vampire"
-      },
-      {
-        "type": "factionapi:stat",
-        "amount": 3,
-        "description": {
-          "translate": "stat.factionapi.win_village_capture"
-        },
-        "id": "factionapi:win_village_capture",
-        "stat": "factionapi:win_village_capture"
+      "id": "minecraft:gold_ingot",
+      "item": {
+        "count": 32,
+        "id": "minecraft:gold_ingot"
       }
-    ]
-  },
+    },
+    {
+      "type": "factionapi:entity_type",
+      "amount": 50,
+      "description": {
+        "translate": "task_tag.vampirism.vampire"
+      },
+      "entityType": "vampirism:vampire",
+      "id": "vampirism:vampire"
+    },
+    {
+      "type": "factionapi:stat",
+      "amount": 3,
+      "description": {
+        "translate": "stat.factionapi.win_village_capture"
+      },
+      "id": "factionapi:win_village_capture",
+      "stat": "factionapi:win_village_capture"
+    }
+  ],
   "reward": {
     "type": "factionapi:lord_level",
     "description": {

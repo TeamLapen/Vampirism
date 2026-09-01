@@ -16,9 +16,7 @@ import java.util.stream.Collectors;
 
 public class TaskRequirement {
 
-    public static final Codec<TaskRequirement> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            Requirement.CODEC.listOf().fieldOf("requirements").forGetter(i -> i.requirements.values().stream().flatMap(Collection::stream).sorted(Comparator.comparing(Requirement::id)).toList())
-    ).apply(inst, TaskRequirement::new));
+    public static final Codec<TaskRequirement> CODEC = Requirement.CODEC.listOf().xmap(TaskRequirement::new, x -> x.requirements.values().stream().flatMap(Collection::stream).sorted(Comparator.comparing(Requirement::id)).toList());
 
     private final Map<Type, List<Requirement<?>>> requirements;
     private final int size;

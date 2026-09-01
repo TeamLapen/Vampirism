@@ -1,17 +1,15 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:entity",
-        "amount": 20,
-        "description": {
-          "translate": "entity.minecraft.skeleton"
-        },
-        "entityType": "minecraft:skeleton",
-        "id": "minecraft:skeleton"
-      }
-    ]
-  },
+  "requirements": [
+    {
+      "type": "factionapi:entity",
+      "amount": 20,
+      "description": {
+        "translate": "entity.minecraft.skeleton"
+      },
+      "entityType": "minecraft:skeleton",
+      "id": "minecraft:skeleton"
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

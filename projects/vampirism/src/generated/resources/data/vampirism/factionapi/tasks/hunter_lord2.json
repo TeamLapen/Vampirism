@@ -1,28 +1,26 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.minecraft.gold_ingot"
-        },
-        "id": "minecraft:gold_ingot",
-        "item": {
-          "count": 32,
-          "id": "minecraft:gold_ingot"
-        }
+  "requirements": [
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.minecraft.gold_ingot"
       },
-      {
-        "type": "factionapi:entity_type",
-        "amount": 50,
-        "description": {
-          "translate": "task_tag.vampirism.vampire"
-        },
-        "entityType": "vampirism:vampire",
-        "id": "vampirism:vampire"
+      "id": "minecraft:gold_ingot",
+      "item": {
+        "count": 32,
+        "id": "minecraft:gold_ingot"
       }
-    ]
-  },
+    },
+    {
+      "type": "factionapi:entity_type",
+      "amount": 50,
+      "description": {
+        "translate": "task_tag.vampirism.vampire"
+      },
+      "entityType": "vampirism:vampire",
+      "id": "vampirism:vampire"
+    }
+  ],
   "reward": {
     "type": "factionapi:lord_level",
     "description": {
