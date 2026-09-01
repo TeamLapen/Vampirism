@@ -3,27 +3,47 @@ sidebar_position: 1
 title: Data Packs
 ---
 
-Vampirism uses data packs for vanilla related content as well as for some custom content. This allows users and content creators to further customized their Vampirism experience or even built new challenges.  
-Have a look at the mod data
-directory [main](https://github.com/TeamLapen/Vampirism/tree/dev/projects/vampirism/src/main/resources/data/vampirism)
-and [generated](https://github.com/TeamLapen/Vampirism/tree/dev/projects/vampirism/src/generated/resources/data). Or at
-the incomplete and outdated example repository [here](https://github.com/TeamLapen/VampirismDatapackExamples)
+The Faction API drives most of its faction content through **dynamic registries**, which are just
+data pack files. This lets pack makers, mod packs and addon mods add, override or remove faction
+content without writing any code.
 
-## How it works
-Checkout the Minecraft Wiki to see how [datapacks](https://minecraft.gamepedia.com/Data_pack) work.  
-[Installing them](https://minecraft.gamepedia.com/Tutorials/Installing_a_data_pack)  
-[Creating them](https://minecraft.gamepedia.com/Tutorials/Creating_a_data_pack)  
+Vampirism itself is a consumer of the Faction API: all of the content below is
+[data generated](https://github.com/TeamLapen/Vampirism/tree/dev/projects/vampirism/src/generated/resources/data/vampirism/factionapi)
+in the mod and shipped as an internal data pack. Those generated files are the best reference when
+building your own.
 
-Also make sure you are familiar with the namespace concept. If you want to modify/override Vampirism's own definition you have to use `vampirism` for everything else use your own.
+## How data packs work
 
-## Things that are customizable
-Besides the already mentioned vanilla contents you can also customize:
-- Player Skill Trees
-- Blood Values
-- Recipes
-  - Alchemical Cauldron Recipes (+ Craft Tweaker support)
-  - Weapon Table Recipes (+ Craft Tweaker support)
-  - Alchemy Table Recipes
-- Mob spawns
-- Advancements
-- Much more
+Check the Minecraft Wiki for the basics:
+[Data packs](https://minecraft.wiki/w/Data_pack) ·
+[Installing them](https://minecraft.wiki/w/Tutorial:Installing_a_data_pack) ·
+[Creating them](https://minecraft.wiki/w/Tutorial:Creating_a_data_pack)
+
+Make sure you are comfortable with the **namespace** concept:
+
+* Use **your own** namespace for new content.
+* Use `vampirism` (or `factionapi`) to override or replace one of the built-in entries.
+
+Every entry's id is derived from its file location, e.g.
+`data/mypack/factionapi/skill_tree/vampire/level.json` has the id `mypack:vampire/level`.
+
+## Registries
+
+| Content                                      | Registry                   | Folder                                       |
+|----------------------------------------------|----------------------------|----------------------------------------------|
+| [Tasks](./tasks)                             | `factionapi:tasks`         | `data/<namespace>/factionapi/tasks/`         |
+| [Skill Trees](./skilltrees)                  | `factionapi:skill_tree`    | `data/<namespace>/factionapi/skill_tree/`    |
+| [Skill Segments](./skilltrees#skill-segment) | `factionapi:skill_segment` | `data/<namespace>/factionapi/skill_segment/` |
+
+* **Tasks** – objectives handed out to faction players by a Faction Representative, with requirements,
+  a reward and optional unlock conditions.
+* **Skill Trees** – the tabs shown in the faction skill screen: which faction they belong to, how they
+  are unlocked, their icon and title.
+* **Skill Segments** – the individual nodes that make up a skill tree and the graph that connects them.
+
+JSON schemas for editor validation are linked at the top of each page.
+
+## Other customization
+
+The Faction API also reuses a number of vanilla data pack systems (tags, loot,
+advancements, the `minecraft:custom_stat` registry used by task stat requirements, …).
