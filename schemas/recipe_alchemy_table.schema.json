@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/recipe_alchemy_table.schema.json",
+  "title": "Vampirism Alchemy Table recipe",
+  "description": "Recipe type vampirism:alchemical_table (de.teamlapen.vampirism.common.world.items.recipes.AlchemyTableRecipe). File location: data/<namespace>/recipe/<name>.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "ingredient", "input", "result"],
+  "properties": {
+    "type": { "const": "vampirism:alchemical_table" },
+    "ingredient": { "$ref": "#/$defs/ingredient" },
+    "input": { "$ref": "#/$defs/ingredient" },
+    "result": { "$ref": "#/$defs/itemStackTemplate" },
+    "common_info": { "$ref": "#/$defs/commonInfo" },
+    "group": { "type": "string" },
+    "skill": { "$ref": "#/$defs/skillList" }
+  },
+  "$defs": {
+    "resourceLocation": { "type": "string", "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "idOrTag": { "type": "string", "pattern": "^#?([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "commonInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "show_notification": { "type": "boolean", "default": true } }
+    },
+    "skillList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/resourceLocation" }
+    },
+    "ingredient": {
+      "oneOf": [
+        { "$ref": "#/$defs/idOrTag" },
+        { "type": "object" },
+        { "type": "array", "items": { "oneOf": [ { "$ref": "#/$defs/idOrTag" }, { "type": "object" } ] } }
+      ]
+    },
+    "itemStackTemplate": {
+      "oneOf": [
+        { "$ref": "#/$defs/resourceLocation" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "id": { "$ref": "#/$defs/resourceLocation" },
+            "count": { "type": "integer", "minimum": 1, "maximum": 99, "default": 1 },
+            "components": { "type": "object" }
+          }
+        }
+      ]
+    }
+  }
+}

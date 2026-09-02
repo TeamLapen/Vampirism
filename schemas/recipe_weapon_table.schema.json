@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/recipe_weapon_table.schema.json",
+  "title": "Vampirism Weapon Table recipe",
+  "description": "Shaped/shapeless crafting recipe for the Vampirism Weapon Table (4x4). Serializers vampirism:shaped_crafting_weapontable / vampirism:shapeless_crafting_weapontable (de.teamlapen.vampirism.common.world.items.recipes.ShapedWeaponTableRecipe / ShapelessWeaponTableRecipe). File location: data/<namespace>/recipe/<name>.json.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "pattern", "key", "result"],
+      "properties": {
+        "type": { "const": "vampirism:shaped_crafting_weapontable" },
+        "pattern": {
+          "type": "array",
+          "description": "Up to 4 rows, up to 4 characters each.",
+          "items": { "type": "string", "minLength": 1, "maxLength": 4 },
+          "minItems": 1,
+          "maxItems": 4
+        },
+        "key": {
+          "type": "object",
+          "description": "Maps each pattern character to an ingredient.",
+          "propertyNames": { "type": "string", "minLength": 1, "maxLength": 1 },
+          "additionalProperties": { "$ref": "#/$defs/ingredient" }
+        },
+        "result": { "$ref": "#/$defs/itemStackTemplate" },
+        "category": { "$ref": "#/$defs/craftingCategory" },
+        "group": { "type": "string" },
+        "lava": { "type": "integer", "minimum": 0, "default": 0 },
+        "level": { "type": "integer", "default": 1 },
+        "skill": { "$ref": "#/$defs/skillList" },
+        "show_notification": { "type": "boolean", "default": true }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "ingredients", "result"],
+      "properties": {
+        "type": { "const": "vampirism:shapeless_crafting_weapontable" },
+        "ingredients": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/ingredient" },
+          "minItems": 1,
+          "maxItems": 16
+        },
+        "result": { "$ref": "#/$defs/itemStackTemplate" },
+        "category": { "$ref": "#/$defs/craftingCategory" },
+        "group": { "type": "string" },
+        "lava": { "type": "integer", "minimum": 0, "default": 0 },
+        "level": { "type": "integer", "default": 1 },
+        "skill": { "$ref": "#/$defs/skillList" },
+        "show_notification": { "type": "boolean", "default": true }
+      }
+    }
+  ],
+  "$defs": {
+    "resourceLocation": { "type": "string", "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "idOrTag": { "type": "string", "pattern": "^#?([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "craftingCategory": { "enum": ["equipment", "building", "redstone", "misc"] },
+    "skillList": {
+      "type": "array",
+      "description": "Skill ids (factionapi:skills registry) that must be unlocked.",
+      "items": { "$ref": "#/$defs/resourceLocation" }
+    },
+    "ingredient": {
+      "description": "A vanilla/NeoForge ingredient: item id, #tag, an ingredient object, or a list.",
+      "oneOf": [
+        { "$ref": "#/$defs/idOrTag" },
+        { "type": "object" },
+        { "type": "array", "items": { "oneOf": [ { "$ref": "#/$defs/idOrTag" }, { "type": "object" } ] } }
+      ]
+    },
+    "itemStackTemplate": {
+      "oneOf": [
+        { "$ref": "#/$defs/resourceLocation" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "id": { "$ref": "#/$defs/resourceLocation" },
+            "count": { "type": "integer", "minimum": 1, "maximum": 99, "default": 1 },
+            "components": { "type": "object" }
+          }
+        }
+      ]
+    }
+  }
+}

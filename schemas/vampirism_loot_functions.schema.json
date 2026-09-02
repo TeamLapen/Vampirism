@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/vampirism_loot_functions.schema.json",
+  "title": "Vampirism loot functions",
+  "description": "Validates a single Vampirism loot function object (Registries.LOOT_FUNCTION_TYPE entries registered by de.teamlapen.vampirism.common.core.ModLoot). All extend LootItemConditionalFunction, so `conditions` is always allowed.",
+  "type": "object",
+  "required": ["function"],
+  "properties": {
+    "function": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["function"], "properties": { "function": { "const": "vampirism:set_vampire_book" } } },
+      "then": {
+        "additionalProperties": false,
+        "required": ["function", "tag"],
+        "properties": {
+          "function": { "const": "vampirism:set_vampire_book" },
+          "tag": { "$ref": "#/$defs/resourceLocation" },
+          "conditions": { "$ref": "#/$defs/conditions" }
+        }
+      }
+    },
+    {
+      "if": { "required": ["function"], "properties": { "function": { "const": "vampirism:set_item_blood_charge" } } },
+      "then": {
+        "additionalProperties": false,
+        "required": ["function", "charge"],
+        "properties": {
+          "function": { "const": "vampirism:set_item_blood_charge" },
+          "charge": { "$ref": "#/$defs/numberProvider" },
+          "conditions": { "$ref": "#/$defs/conditions" }
+        }
+      }
+    },
+    {
+      "if": { "required": ["function"], "properties": { "function": { "const": "vampirism:add_refinement_set" } } },
+      "then": {
+        "additionalProperties": false,
+        "required": ["function", "faction"],
+        "properties": {
+          "function": { "const": "vampirism:add_refinement_set" },
+          "faction": { "$ref": "#/$defs/resourceLocation" },
+          "conditions": { "$ref": "#/$defs/conditions" }
+        }
+      }
+    },
+    {
+      "if": { "required": ["function"], "properties": { "function": { "const": "vampirism:set_oil" } } },
+      "then": {
+        "additionalProperties": false,
+        "required": ["function"],
+        "properties": {
+          "function": { "const": "vampirism:set_oil" },
+          "oil": { "$ref": "#/$defs/resourceLocation" },
+          "conditions": { "$ref": "#/$defs/conditions" }
+        }
+      }
+    },
+    {
+      "if": { "required": ["function"], "properties": { "function": { "const": "vampirism:set_blood" } } },
+      "then": {
+        "additionalProperties": false,
+        "required": ["function", "minBlood", "maxBlood"],
+        "properties": {
+          "function": { "const": "vampirism:set_blood" },
+          "minBlood": { "type": "integer" },
+          "maxBlood": { "type": "integer" },
+          "conditions": { "$ref": "#/$defs/conditions" }
+        }
+      }
+    },
+    {
+      "if": { "required": ["function"], "properties": { "function": { "const": "vampirism:biome_map" } } },
+      "then": {
+        "additionalProperties": false,
+        "required": ["function"],
+        "properties": {
+          "function": { "const": "vampirism:biome_map" },
+          "destination": { "$ref": "#/$defs/idOrTag" },
+          "decoration": { "$ref": "#/$defs/resourceLocation" },
+          "zoom": { "type": "integer" },
+          "search_radius": { "type": "integer" },
+          "skip_existing_chunks": { "type": "boolean" },
+          "conditions": { "$ref": "#/$defs/conditions" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "resourceLocation": { "type": "string", "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "idOrTag": { "type": "string", "pattern": "^#?([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "conditions": { "type": "array", "description": "Vanilla loot conditions." },
+    "numberProvider": {
+      "description": "A vanilla number provider: a bare number, or an object with a `type`.",
+      "oneOf": [
+        { "type": "number" },
+        { "type": "object" }
+      ]
+    }
+  }
+}

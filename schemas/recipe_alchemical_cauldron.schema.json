@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/recipe_alchemical_cauldron.schema.json",
+  "title": "Vampirism Alchemical Cauldron recipe",
+  "description": "Recipe type vampirism:alchemical_cauldron (de.teamlapen.vampirism.common.world.items.recipes.AlchemicalCauldronRecipe). File location: data/<namespace>/recipe/<name>.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "ingredient", "fluid", "result"],
+  "properties": {
+    "type": { "const": "vampirism:alchemical_cauldron" },
+    "ingredient": { "$ref": "#/$defs/ingredient" },
+    "fluid": {
+      "description": "Either a fluid-carrying item (Ingredient) or a raw fluid amount (fluid stack template).",
+      "anyOf": [
+        { "$ref": "#/$defs/ingredient" },
+        { "$ref": "#/$defs/fluidStackTemplate" }
+      ]
+    },
+    "result": { "$ref": "#/$defs/itemStackTemplate" },
+    "info": { "$ref": "#/$defs/commonInfo" },
+    "group": { "type": "string" },
+    "cookTime": { "type": "integer", "minimum": 0, "default": 200 },
+    "experience": { "type": "number", "default": 0.2 },
+    "level": { "type": "integer", "default": 1 },
+    "skill": { "$ref": "#/$defs/skillList" }
+  },
+  "$defs": {
+    "resourceLocation": { "type": "string", "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "idOrTag": { "type": "string", "pattern": "^#?([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "commonInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "show_notification": { "type": "boolean", "default": true } }
+    },
+    "skillList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/resourceLocation" }
+    },
+    "ingredient": {
+      "oneOf": [
+        { "$ref": "#/$defs/idOrTag" },
+        { "type": "object" },
+        { "type": "array", "items": { "oneOf": [ { "$ref": "#/$defs/idOrTag" }, { "type": "object" } ] } }
+      ]
+    },
+    "itemStackTemplate": {
+      "oneOf": [
+        { "$ref": "#/$defs/resourceLocation" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "id": { "$ref": "#/$defs/resourceLocation" },
+            "count": { "type": "integer", "minimum": 1, "maximum": 99, "default": 1 },
+            "components": { "type": "object" }
+          }
+        }
+      ]
+    },
+    "fluidStackTemplate": {
+      "oneOf": [
+        { "$ref": "#/$defs/resourceLocation" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "amount"],
+          "properties": {
+            "id": { "$ref": "#/$defs/resourceLocation" },
+            "amount": { "type": "integer", "minimum": 1 },
+            "components": { "type": "object" }
+          }
+        }
+      ]
+    }
+  }
+}

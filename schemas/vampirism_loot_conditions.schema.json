@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/vampirism_loot_conditions.schema.json",
+  "title": "Vampirism loot conditions",
+  "description": "Validates a single Vampirism loot condition object (Registries.LOOT_CONDITION_TYPE entries registered by de.teamlapen.vampirism.common.core.ModLoot). Use it against any node with a `condition` key of `vampirism:*`.",
+  "type": "object",
+  "required": ["condition"],
+  "properties": {
+    "condition": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "condition": { "const": "vampirism:faction" } }, "required": ["condition"] },
+      "then": {
+        "additionalProperties": false,
+        "required": ["condition", "type"],
+        "properties": {
+          "condition": { "const": "vampirism:faction" },
+          "type": { "enum": ["no_faction", "any_faction", "faction"] },
+          "faction": { "$ref": "#/$defs/resourceLocation" },
+          "min_level": { "type": "integer" },
+          "max_level": { "type": "integer" }
+        },
+        "if": { "properties": { "type": { "const": "faction" } } },
+        "then": { "required": ["condition", "type", "faction"] }
+      }
+    },
+    {
+      "if": { "properties": { "condition": { "const": "vampirism:with_oil_item" } }, "required": ["condition"] },
+      "then": {
+        "additionalProperties": false,
+        "required": ["condition", "oil"],
+        "properties": {
+          "condition": { "const": "vampirism:with_oil_item" },
+          "oil": { "$ref": "#/$defs/resourceLocation" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "condition": { "const": "vampirism:with_stake" } }, "required": ["condition"] },
+      "then": {
+        "additionalProperties": false,
+        "required": ["condition", "target"],
+        "properties": {
+          "condition": { "const": "vampirism:with_stake" },
+          "target": { "$ref": "#/$defs/entityTarget" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "condition": { "const": "vampirism:adjustable_level" } }, "required": ["condition"] },
+      "then": {
+        "additionalProperties": false,
+        "required": ["condition", "level", "target"],
+        "properties": {
+          "condition": { "const": "vampirism:adjustable_level" },
+          "level": { "type": "integer" },
+          "target": { "$ref": "#/$defs/entityTarget" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "condition": { "const": "vampirism:is_tent_spawner" } }, "required": ["condition"] },
+      "then": {
+        "additionalProperties": false,
+        "required": ["condition"],
+        "properties": {
+          "condition": { "const": "vampirism:is_tent_spawner" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "resourceLocation": { "type": "string", "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "entityTarget": {
+      "enum": ["this", "attacker", "direct_attacker", "attacking_player", "target_entity", "interacting_entity"]
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/no_sun_damage.schema.json",
+  "title": "Vampirism No Sun Damage file",
+  "description": "Exempts biomes, dimension types and dimensions from vampire sun damage. Loaded by de.teamlapen.vampirism.data.reloadlistener.SundamageReloadListener (RawFile#CODEC) from every data/<namespace>/vampirism/**/no_sun_damage.json; all packs stack.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "replace": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, clears the biome/dimension/no_damage entries collected so far before applying this file. `damage` entries are not cleared."
+    },
+    "biomes": {
+      "type": "array",
+      "description": "Biome ids or `#biome_tags` with no vampire sun damage.",
+      "items": { "$ref": "#/$defs/idOrTag" }
+    },
+    "dimensions": {
+      "type": "array",
+      "description": "Dimension type ids or `#dimension_type_tags` with no vampire sun damage.",
+      "items": { "$ref": "#/$defs/idOrTag" }
+    },
+    "levels": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Per-dimension (level) overrides.",
+      "properties": {
+        "no_damage": {
+          "type": "array",
+          "description": "Dimension (level) ids with no sun damage. Ids only, no tags.",
+          "items": { "$ref": "#/$defs/resourceLocation" }
+        },
+        "damage": {
+          "type": "array",
+          "description": "Dimension (level) ids that always have sun damage, overriding everything else. Ids only, no tags.",
+          "items": { "$ref": "#/$defs/resourceLocation" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "resourceLocation": {
+      "type": "string",
+      "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$"
+    },
+    "idOrTag": {
+      "type": "string",
+      "description": "A namespaced id, or a tag reference prefixed with `#`.",
+      "pattern": "^#?([a-z0-9_.-]+:)?[a-z0-9_./-]+$"
+    }
+  }
+}
