@@ -1,22 +1,16 @@
 ---
-sidebar_position: 4
-title: Adjustable Level Entity
+sidebar_position: 5
+title: Adjustable Level
 ---
 
-This condition will check involved entities for their level. This works only for Entities which implements the `IAdjustableLevel` interface (Basic Vampire and Hunters for example).
-
-### 
-
-This will match if the specified entity parameter has the exact level
+`vampirism:adjustable_level` matches when the targeted entity implements `IAdjustableLevel` (basic
+vampires, basic hunters, barons, …) and its level **exactly equals** `level`.
 
 ```json
-{
-  "condition": "vampirism:adjustable_level",
-  "predicate": {
-    "level": "<level>",
-    "entity": "<entity target>"
-  }
-}
+{ "condition": "vampirism:adjustable_level", "level": 2, "target": "this" }
 ```
-- `level` The exact level of the entity
-- `entity` The type of entity target. Can be `this`, `killer`, `direct_killer` or `killer_player` from the vanilla types.
+
+| Field    | Required | Type                                | Description                                                   |
+|----------|----------|-----------------------------------|---------------------------------------------------------|
+| `level`  | yes      | int                               | The exact entity level to match. `-1` never matches.         |
+| `target` | yes      | [Entity target](./intro#entity-targets) | Which entity to check.                                 |

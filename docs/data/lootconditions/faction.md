@@ -1,57 +1,23 @@
 ---
-sidebar_position: 1
-title: Factions
+sidebar_position: 2
+title: Faction
 ---
 
-The faction condition will check the `this_entity` loot parameter. It will check if the entity is a player and if the player is a member of the specified faction.
-
-### Restrict to faction
-
-This will match if the player is in the given faction.
-If min or max level are supplied they will be matched against the players level
-```json
-{
-  "condition": "vampirism:faction",
-  "predicate": {
-    "type": "FACTION",
-    "faction": "<faction-id>",
-    "min_level": int,
-    "max_level": int
-  }
-}
-```
-- `faction-id`: is the id of the faction
-- `min_level`: is the minimum level of the faction. *Optional*
-- `max_level`: is the maximum level of the faction. *Optional*
-
-### No faction
-
-This will only match if the player is not in a faction
+`vampirism:faction` checks the `this_entity` loot parameter: it matches when that entity is a player
+whose faction state satisfies `type`.
 
 ```json
-{
-  "condition": "vampirism:faction",
-  "predicate": {
-    "type": "NO_FACTION"
-  }
-}
+{ "condition": "vampirism:faction", "type": "faction", "faction": "vampirism:hunter", "min_level": 3 }
 ```
 
-### Any faction
+| Field       | Required                    | Type                                                            | Description                                                       |
+|-------------|-----------------------------|-------------------------------------------------------------|-----------------------------------------------------------|
+| `type`      | yes                         | `no_faction` \| `any_faction` \| `faction`                   | Which check to run.                                              |
+| `faction`   | when `type` = `faction`     | [Resource location](https://minecraft.wiki/w/Resource_location) | Faction id the player must be in.                            |
+| `min_level` | no                          | int                                                         | Player's faction level must be ≥ this. Ignored for `no_faction`. |
+| `max_level` | no                          | int                                                         | Player's faction level must be ≤ this. Ignored for `no_faction`. |
 
-This will match if the player is in any faction
-If min or max level are supplied they will be matched against the players level
-
-```json
-{
-  "condition": "vampirism:faction",
-  "predicate": {
-    "type": "ANY_FACTION",
-    "min_level": int,
-    "max_level": int
-  }
-}
-```
-
-- `min_level`: is the minimum level of the faction. *Optional*
-- `max_level`: is the maximum level of the faction. *Optional*
+* `no_faction` – matches only if the player is factionless (neutral). `faction` / `min_level` /
+  `max_level` are ignored.
+* `any_faction` – matches if the player is in **any** faction (and within the level range if given).
+* `faction` – matches if the player is in the given `faction` (and within the level range if given).

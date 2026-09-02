@@ -1,69 +1,52 @@
 ---
-sidebar_position: 2
-title: Alchemical Cauldron Recipes
+sidebar_position: 3
+title: Alchemical Cauldron
 ---
+
+Recipes for the [Alchemical Cauldron](../../wiki/content/blocks#alchemical-cauldron). A recipe consumes
+one **item** ingredient plus one **fluid or fluid-item** input and cooks a result over time.
+
 :::info
-
-The Alchemical Cauldron can only be used by Hunter Player that have unlocked the Basic Alchemy skill.
-
+The Alchemical Cauldron can only be used by a Hunter that unlocked the *Basic Alchemy* skill.
 :::
 
-Recipes can be made for the [Alchemical Cauldron](../../wiki/content/blocks.mdx#alchemical-cauldron).
+:::tip JSON Schema
+[`schemas/recipe_alchemical_cauldron.schema.json`](https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/recipe_alchemical_cauldron.schema.json)
+:::
 
-## Recipe
-You can take a look at the default recipes [here](https://github.com/TeamLapen/Vampirism/blob/7a90925e3859acd964f0ef948c1f914791494dfa/src/generated/resources/data/vampirism/recipes/alchemical_cauldron).
-
-```json title="cauldron.json"
+```json title="data/vampirism/recipe/example.json"
 {
   "type": "vampirism:alchemical_cauldron",
-  "result": {
-    "item": "",
-    "count": int,
-    "nbt:": {},
-  },
-  "ingredient": {},
-  "fluidItem": {},
-  "fluid": {
-    "fluid": ""
-  },
-  "skill": [],
-  "cookTime": int,
-  "experience": float,
-  "reqLevel": int
+  "info": {},
+  "ingredient": "minecraft:iron_block",
+  "fluid": "vampirism:pure_blood_1",
+  "result": { "id": "vampirism:blood_infused_iron_block" },
+  "cookTime": 180,
+  "experience": 0.15,
+  "level": 1,
+  "skill": []
 }
 ```
 
-`fluidItem` and `fluid` are mutual exclusive.
-- `type`: The type of recipe is `vampirism:alchemical_cauldron` for alchemical cauldron recipes.
-- `result`: The result item of the recipe.
-- `ingredient`: The input ingredient of the recipe.
-- `fluidItem`: Fluid ingredient of the recipe.
-- `fluid`: The fluid input of the recipe.
-- `skill`: The skills the recipe requires. String array of skill registry ids.
-- `cookTime`: The cooking time of the recipe. Default is 200.
-- `experience`: The experience gained by the recipe. Default is 0.2.
-- `reqLevel`: The faction level the recipe requires. Default is 1.
+| Field         | Required | Type                                                                              | Description                                                                                   |
+|---------------|----------|--------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| `ingredient`  | yes      | [Ingredient](https://minecraft.wiki/w/Recipe#Ingredients)                        | The solid input.                                                                             |
+| `fluid`       | yes      | [Ingredient](https://minecraft.wiki/w/Recipe#Ingredients) **or** [Fluid stack template](#fluid-stack-template) | The fluid input – **either** a fluid-carrying item (Ingredient) **or** a raw fluid amount. |
+| `result`      | yes      | [Item stack template](./intro#result)                                            | Cooked output.                                                                              |
+| `info`        | no       | object `{ "show_notification": bool }`                                            | Vanilla `CommonInfo`. Defaults to `{}` → `show_notification: true`.                          |
+| `group`       | no       | string                                                                          | Recipe-book grouping.                                                                       |
+| `cookTime`    | no       | int (default `200`)                                                             | Ticks to finish.                                                                            |
+| `experience`  | no       | float (default `0.2`)                                                           | XP awarded on completion.                                                                    |
+| `level`       | no       | int (default `1`)                                                              | Minimum hunter level.                                                                       |
+| `skill`       | no       | [Skill](./intro#skill-and-level) id[]                                            | Required unlocked skills.                                                                    |
 
+### Fluid stack template
 
-## Craft Tweaker
+When `fluid` is a raw fluid rather than an item:
 
-Alchemical Cauldron recipes can be added or changed using Craft Tweaker. But this requires [Vampirism Integration](https://www.curseforge.com/minecraft/mc-mods/vampirism-integrations) to be installed.
-
-The recipe type id is `alchemical_cauldron`
-
-### Adding Recipes
-```zenscript
-<recipetype:vampirism:alchemical_cauldron>.addRecipe(<recipe-path>, <result-item> , <ingredient>, <item-input>, <required-level>, <cooktime>, <exp>, <required skills>);
-
-<recipetype:vampirism:alchemical_cauldron>.addRecipe(<recipe-path>, <result-item> , <ingredient>, <fluid-input>, <required-level>, <cooktime>, <exp>, <required skills>);
+```json
+{ "id": "vampirism:blood", "amount": 500, "components": { /* optional */ } }
 ```
 
-- `recipe-path`: String
-- `result-item`: ItemStack
-- `ingredient`: Ingredient
-- `item-input`: Ingredient
-- `fluid-input`: FluidStack
-- `required-level`: int
-- `cooktime`: int
-- `exp`: int
-- `required skills`: Skill Bracket array
+`amount` is in mB and is **required**. A bare fluid id string is also accepted and defaults to one
+bucket (`1000` mB).

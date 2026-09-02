@@ -1,24 +1,28 @@
 ---
+sidebar_position: 9
 title: Reference
 ---
 
-## Faction
-```json
-{
-  "id": "<faction-id>"
-}
-```
+Shared values referenced by the other data pack pages.
 
-| Field      | Type             | Description                                    |
-|------------|------------------|------------------------------------------------|
-| faction-id | ResourceLocation | The id of the faction. e.g `vampirism:vampire` |
+## Faction id
 
-## Refinement Rarity
+A plain [resource location](https://minecraft.wiki/w/Resource_location) naming a registered faction:
 
-| Type      | String Representation |
-|-----------|-----------------------|
-| COMMON    | common                |
-| UNCOMMON  | uncommon              |
-| RARE      | rare                  |
-| EPIC      | epic                  |
-| LEGENDARY | legendary             |
+| Faction | Id                    |
+|---------|-----------------------|
+| Vampire | `vampirism:vampire`   |
+| Hunter  | `vampirism:hunter`    |
+| Neutral | `factionapi:neutral`  |
+
+## Refinement rarity
+
+Used by refinement sets (`IRefinementSet.Rarity`), serialized lowercase:
+
+| Enum        | JSON value  |
+|-------------|-------------|
+| `COMMON`    | `common`    |
+| `UNCOMMON`  | `uncommon`  |
+| `RARE`      | `rare`      |
+| `EPIC`      | `epic`      |
+| `LEGENDARY` | `legendary` |

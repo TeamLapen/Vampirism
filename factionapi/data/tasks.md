@@ -34,6 +34,21 @@ The id of a task is derived from the file location, exactly like advancements or
 The id is used for translations and for referencing a task as the parent of another task
 (see [Parent Unlocker](#parent-unlocker)).
 
+## Task assignment
+
+Which board a task shows up on, and for which faction, is controlled by **task tags**
+(`data/<namespace>/tags/factionapi/tasks/<tag>.json`).
+
+| Tag                         | Effect                                                                                                                                     |
+|-----------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| *(none)*                    | A task in **no** tag is a normal task, offered to **every** faction on the regular task boards.                                          |
+| `factionapi:has_faction`    | Restricts the task to specific factions. It is then only offered to a faction that also lists the task in **its own** faction task tag (registered through `AddFactionTagEvent` / resolved via `IFactionSpecificTags`). |
+| `factionapi:is_unique`      | The task is offered once, on the dedicated *unique* board. It never expires and stays completed permanently (unless reset).               |
+| `factionapi:awards_lord_level` | Marks lord-progression tasks. Implies `is_unique`, and the task is made available again each time the player's lord level changes.     |
+
+Regular (non-unique) tasks are drawn at random onto a Faction Representative's board, up to a
+per-board limit, and expire after a configurable time. Unique tasks persist until completed.
+
 ## Structure
 
 ```json title="data/<namespace>/factionapi/tasks/<name>.json"
