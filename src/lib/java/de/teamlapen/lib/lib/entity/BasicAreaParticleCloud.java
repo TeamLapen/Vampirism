@@ -24,7 +24,6 @@ public class BasicAreaParticleCloud extends Entity {
     private static final EntityDataAccessor<ParticleOptions> PARTICLE = SynchedEntityData.defineId(BasicAreaParticleCloud.class, EntityDataSerializers.PARTICLE);
     private static final EntityDataAccessor<Float> SPAWN_RATE = SynchedEntityData.defineId(BasicAreaParticleCloud.class, EntityDataSerializers.FLOAT);
 
-    private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(BasicAreaParticleCloud.class, EntityDataSerializers.INT);
     private int duration;
     private int waitTime;
     private float radiusPerTick;
@@ -36,14 +35,6 @@ public class BasicAreaParticleCloud extends Entity {
         this.radiusPerTick = 0F;
         this.noPhysics = true;
         this.setRadius(3);
-    }
-
-    public int getColor() {
-        return this.getEntityData().get(COLOR);
-    }
-
-    public void setColor(int colorIn) {
-        this.getEntityData().set(COLOR, colorIn);
     }
 
     public int getDuration() {
@@ -135,16 +126,7 @@ public class BasicAreaParticleCloud extends Entity {
                 float dz = Mth.sin(phi) * r;
                 float dy = this.random.nextFloat() * getBbHeight();
 
-
-                if (particle.getType() == ParticleTypes.ENTITY_EFFECT) {
-                    int rgb = this.getColor();
-                    int cr = rgb >> 16 & 255;
-                    int cg = rgb >> 8 & 255;
-                    int cb = rgb & 255;
-                    this.level().addParticle(particle, this.getX() + (double) dx, this.getY() + dy, this.getZ() + (double) dz, (float) cr / 255.0F, (float) cg / 255.0F, (float) cb / 255.0F);
-                } else {
-                    this.level().addParticle(particle, this.getX() + (double) dx, this.getY() + dy, this.getZ() + (double) dz, (0.5D - this.random.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.random.nextDouble()) * 0.15D);
-                }
+                this.level().addParticle(particle, this.getX() + (double) dx, this.getY() + dy, this.getZ() + (double) dz, (0.5D - this.random.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.random.nextDouble()) * 0.15D);
             }
         } else {
             if (this.tickCount >= this.waitTime + this.duration) {
@@ -173,7 +155,6 @@ public class BasicAreaParticleCloud extends Entity {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(COLOR, 0);
         builder.define(RADIUS, 0.5F);
         builder.define(HEIGHT, 0.5F);
         builder.define(PARTICLE, ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, -1));
