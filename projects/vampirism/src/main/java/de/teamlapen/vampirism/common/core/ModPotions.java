@@ -31,10 +31,10 @@ import java.util.function.Supplier;
 public class ModPotions {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, REFERENCE.MODID);
 
-    private static final int VERY_DURABLE_COUNT = 12;
-    private static final int VERY_DURABLE_COUNT_EFFICIENT = 6;
-    private static final int VERY_STRONG_COUNT = 16;
-    private static final int VERY_STRONG_COUNT_EFFICIENT = 8;
+    private static final int VERY_DURABLE_COUNT = 16;
+    private static final int VERY_DURABLE_COUNT_EFFICIENT = 8;
+    private static final int VERY_STRONG_COUNT = 32;
+    private static final int VERY_STRONG_COUNT_EFFICIENT = 16;
 
     //Hunter
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SLOW_FALLING = POTIONS.register("very_long_slow_falling", () -> new HunterPotion("slow_falling", new MobEffectInstance(MobEffects.SLOW_FALLING, 48000)));
