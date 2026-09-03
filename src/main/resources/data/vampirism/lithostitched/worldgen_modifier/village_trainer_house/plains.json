@@ -1,0 +1,21 @@
+{
+  "type": "lithostitched:add_template_pool_elements",
+  "template_pools": [
+    "minecraft:village/plains/houses"
+  ],
+  "elements": [
+    {
+      "weight": 50,
+      "element": {
+        "element_type": "lithostitched:limited",
+        "delegate": {
+          "element_type": "minecraft:single_pool_element",
+          "projection": "rigid",
+          "location": "vampirism:village/plains/houses/hunter_trainer",
+          "processors": "minecraft:empty"
+        },
+        "limit": 1
+      }
+    }
+  ]
+}

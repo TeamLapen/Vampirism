@@ -60,6 +60,8 @@ dependencies {
     if (include_jade.toBoolean()) {
         runtimeOnly "curse.maven:jade-324717:" + project.jade_version
     }
+
+//    runtimeOnly "curse.maven:lithostitched-936015:8378498"
 }
 
 minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
