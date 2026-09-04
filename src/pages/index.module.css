@@ -35,7 +35,10 @@
 .heroTitle {
   width: min(560px, 80vw);
   height: auto;
-  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.85))
+    drop-shadow(0 0 14px rgba(255, 255, 255, 0.5))
+    drop-shadow(0 0 32px rgba(255, 255, 255, 0.3))
+    drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6));
 }
 
 .heroSubtitle {
