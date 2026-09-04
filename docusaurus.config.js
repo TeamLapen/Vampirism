@@ -6,7 +6,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Vampirism',
-  tagline: 'Wiki',
+  tagline: 'The official wiki for the Vampirism Minecraft mod — become a vampire or a vampire hunter.',
   url: 'https://wiki.vampirism.dev',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -23,6 +23,13 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+
+  stylesheets: [
+    {
+      href: 'https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&display=swap',
+      type: 'text/css',
+    },
+  ],
 
   presets: [
     [
@@ -86,9 +93,27 @@ const config = {
     ],
   ],
 
+  themes: [
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      /** @type {import('@easyops-cn/docusaurus-search-local').PluginOptions} */
+      ({
+        hashed: true,
+        indexBlog: true,
+        docsRouteBasePath: ['/docs', '/factionapi', '/integrations'],
+        docsDir: ['docs', 'factionapi', 'integrations'],
+        highlightSearchTermsOnTargetPage: true,
+        searchResultLimits: 8,
+      }),
+    ],
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      colorMode: {
+        respectPrefersColorScheme: true,
+      },
       navbar: {
         title: 'Vampirism',
         logo: {
@@ -160,8 +185,7 @@ const config = {
             type: 'docsVersionDropdown',
             position: 'right',
             dropdownItemsAfter: [
-              { to: 'https://github.com/TeamLapen/Vampirism/wiki', label: 'For MC 1.7.10' },
-              { to: 'https://github.com/TeamLapen/Vampirism/wiki', label: 'For MC 1.12' },
+              { to: 'https://github.com/TeamLapen/Vampirism/wiki', label: 'For MC 1.12 and older' },
             ],
             dropdownActiveClassDisabled: true,
           },
@@ -182,8 +206,9 @@ const config = {
           },
           {
             href: 'https://github.com/Teamlapen/Vampirism',
-            label: 'GitHub',
             position: 'right',
+            className: 'header-github-link',
+            'aria-label': 'GitHub repository',
           },
         ],
       },
@@ -225,20 +250,32 @@ const config = {
             ],
           },
           {
+            title: 'Download',
+            items: [
+              {
+                label: 'CurseForge',
+                href: 'https://www.curseforge.com/minecraft/mc-mods/vampirism-become-a-vampire',
+              },
+              {
+                label: 'Modrinth',
+                href: 'https://modrinth.com/mod/vampirism',
+              },
+            ],
+          },
+          {
             title: 'Community',
             items: [
               {
                 label: 'Discord',
                 href: 'https://discord.gg/wuamm4P',
               },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
               {
                 label: 'Blog',
                 to: '/blog',
+              },
+              {
+                label: 'Website',
+                href: 'https://vampirism.dev',
               },
               {
                 label: 'GitHub',
@@ -254,10 +291,12 @@ const config = {
         darkTheme: prismThemes.dracula,
       },
       metadata: [
-        { name: 'keywords', content: 'minecraft, vampirism, forge, wiki' },
-        { name: 'twitter:card', content: 'summary' }
+        { name: 'keywords', content: 'minecraft, vampirism, mod, wiki, vampire, hunter, neoforge, forge' },
+        { name: 'description', content: 'Official wiki for the Vampirism Minecraft mod: gameplay guides, content reference, modding API and data pack documentation.' },
+        { name: 'og:description', content: 'Official wiki for the Vampirism Minecraft mod: gameplay guides, content reference, modding API and data pack documentation.' },
+        { name: 'twitter:card', content: 'summary_large_image' },
       ],
-      image: 'img/fang.png',
+      image: 'img/social-card.jpg',
     }),
 };
 
