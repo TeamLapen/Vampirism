@@ -20,7 +20,6 @@ public class ModPacketDispatcher {
     public static void registerPackets(PayloadRegistrar registrar) {
         registrar.playToClient(ClientboundOpenVampireBookPacket.TYPE, ClientboundOpenVampireBookPacket.CODEC, (p, l) -> ClientPayloadHandler.handleVampireBookPacket(p, l));
         registrar.playToClient(ClientboundPlayEventPacket.TYPE, ClientboundPlayEventPacket.CODEC, (msg, context) -> ClientPayloadHandler.handlePlayEventPacket(msg, context));
-        registrar.playToClient(ClientboundSundamagePacket.TYPE, ClientboundSundamagePacket.CODEC, (msg, context) -> ClientPayloadHandler.handleSundamageData(msg, context));
         registrar.playToClient(ClientboundBossEventSoundPacket.TYPE, ClientboundBossEventSoundPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleBossEventSound(msg, context));
         registrar.playToClient(ClientboundUpdateGarlicEmitterPacket.TYPE, ClientboundUpdateGarlicEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleUpdateGarlicEmitterPacket(msg, context));
         registrar.playToClient(ClientboundAddGarlicEmitterPacket.TYPE, ClientboundAddGarlicEmitterPacket.CODEC, (msg, context) -> ClientPayloadHandler.handleAddGarlicEmitterPacket(msg, context));

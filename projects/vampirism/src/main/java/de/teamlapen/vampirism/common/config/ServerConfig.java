@@ -23,7 +23,6 @@ public class ServerConfig {
     public final ModConfigSpec.ConfigValue<List<? extends String>> batDimensionBlacklist;
 
     public final ModConfigSpec.BooleanValue sundamageInUnknownDimensions;
-    public final ModConfigSpec.ConfigValue<List<? extends String>> enforceSundamageDimensions;
     public final ModConfigSpec.ConfigValue<List<? extends String>> noSundamageDimensions;
     public final ModConfigSpec.ConfigValue<List<? extends String>> noSundamageBiomes;
 
@@ -65,9 +64,6 @@ public class ServerConfig {
         this.sundamageInUnknownDimensions = builder
                 .comment("When enabled, vampires receive sun damage in dimensions not explicitly configured.")
                 .define("sundamageInUnknownDimensions", false);
-        this.enforceSundamageDimensions = builder
-                .comment("Dimensions to always apply sun damage in, regardless of other settings. Use dimension IDs from /vampirism currentDimension.")
-                .defineList("enforceSundamageDimensions", Collections.emptyList(), () -> "", obj -> UtilLib.checkRegistryObjectExistence(Registries.DIMENSION, obj));
         this.noSundamageDimensions = builder
                 .comment("Dimensions to never apply sun damage in, regardless of other settings. Use dimension IDs from /vampirism currentDimension.")
                 .defineList("noSundamageDimensions", Collections.emptyList(), () -> "", obj -> UtilLib.checkRegistryObjectExistence(Registries.DIMENSION, obj));

@@ -12,54 +12,28 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Manages sundamage for biomes and dimensions
  */
+@SuppressWarnings("unchecked")
 public interface ISundamageRegistry {
 
 
     /**
-     * Register a biome by instance in which no sundamage applies to vampires.
+     * Register a biome in which no sundamage applies to vampires.
      * <p>
-     * Use this or a datapack.
+     * Use this or {@link de.teamlapen.vampirism.api.VampirismTags.Biomes#HAS_NO_SUNDAMAGE}.
      */
-    @SuppressWarnings("unchecked")
     void addNoSundamageBiomes(ResourceKey<Biome>... biomes);
 
     /**
-     * Specifies if vampires should get sundamage in this dimension.
+     * Register a dimension type in which no sundamage applies to vampires.
      * <p>
-     * use this or a datapack.
+     * Use this or {@link de.teamlapen.vampirism.api.VampirismTags.DimensionTypes#HAS_NO_SUNDAMAGE}
      */
-    void specifySundamageForDim(ResourceKey<Level> dimension, boolean sundamage);
+    void addNoSundamageDimensionTypes(ResourceKey<DimensionType>... dimensionTypes);
 
     /**
-     * Register a dimension as one in which no sundamage applies to vampires.
-     *
-     * @param dimensionType The resource key of the dimension type
+     * Register a dimension in which no sundamage applies to vampires.
      */
-    void addNoSundamageDimensionType(ResourceKey<DimensionType> dimensionType);
-
-    /**
-     * Check if vampires can get sundamage in that biome
-     *
-     * @param biome the resource key of the biome
-     * @return Whether vampires can get sundamage in that biome
-     */
-    boolean hasBiomeSundamage(ResourceKey<Biome> biome);
-
-    /**
-     * Check if vampires can get sundamage in that dimension type
-     *
-     * @param dimensionType the resource key of the dimension type
-     * @return Whether vampires can get sundamage in that dimension
-     */
-    boolean hasDimensionTypeSundamage(ResourceKey<DimensionType> dimensionType);
-
-    /**
-     * Check if vampires can get sundamage in that dimension
-     *
-     * @param dim the resource key of the dimension
-     * @return Whether vampires can get sundamage in that dimension
-     */
-    boolean getSundamageInDim(ResourceKey<Level> dim);
+    void addNoSundamageDimension(ResourceKey<Level>... dimensionTypes);
 
     /**
      * Checks if the given entity could receive sun damage at its current position.
@@ -74,4 +48,5 @@ public interface ISundamageRegistry {
      */
     boolean hasSunDamage(@NotNull LevelAccessor levelAccessor, @NotNull BlockPos pos);
 
+    void reload();
 }

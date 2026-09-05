@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.entity.converted;
 import de.teamlapen.faction.api.world.entities.ICaptureStrengthProvider;
 import de.teamlapen.faction.common.util.TotemHelper;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
@@ -207,7 +208,7 @@ public class ConvertedVillagerEntity extends VampirismVillagerEntity implements 
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSunDamage(this, iWorld));
+        return (sundamageCache = VampirismApi.services().sunDamageRegistry().isGettingSundamage(this, iWorld));
     }
 
     @Override

@@ -72,11 +72,5 @@ public class ServerEventHandler {
     @SubscribeEvent
     private void onServerStarting(ServerAboutToStartEvent event) {
         VanillaStructureModifications.addVillageStructures(event.getServer().registryAccess());
-        VampirismMod.services().sunDamageRegistry().initServer(event.getServer().registryAccess());
-    }
-
-    @SubscribeEvent
-    private void onServerStopped(ServerStoppedEvent event) {
-        VampirismMod.services().sunDamageRegistry().removeServer();
     }
 }

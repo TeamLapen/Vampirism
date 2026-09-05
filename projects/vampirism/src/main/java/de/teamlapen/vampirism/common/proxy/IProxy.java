@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.HunterMinionEntity;
 import de.teamlapen.vampirism.common.world.entity.minion.VampireMinionEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
@@ -88,4 +89,6 @@ public interface IProxy {
     default String getActiveLanguageName(){
         return "English";
     }
+
+    RegistryAccess registryAccess();
 }

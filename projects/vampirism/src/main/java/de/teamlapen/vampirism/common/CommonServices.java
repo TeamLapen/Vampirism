@@ -131,5 +131,6 @@ public class CommonServices extends Services implements IVampirismServices {
         bus.register(this.supporterManager);
         bus.addListener(DefaultDataComponentsBoundEvent.class, _ -> QuarrelHandler.collectClips());
         bus.register(this.levelEventHandler);
+        bus.register(this.sundamageRegistry);
     }
 }

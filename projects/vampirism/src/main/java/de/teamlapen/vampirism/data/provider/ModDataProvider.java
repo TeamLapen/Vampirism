@@ -41,7 +41,6 @@ public class ModDataProvider {
         generator.addProvider(true, new ModRecipeProvider.Runner(packOutput, lookupProviderFuture));
         generator.addProvider(true, new ModModelProvider(packOutput));
         generator.addProvider(true, new ModSingleJigsawPiecesProvider(packOutput, REFERENCE.MODID));
-        generator.addProvider(true, new ModSundamageProvider(packOutput, REFERENCE.MODID));
         generator.addProvider(true, new ModDataMapProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new ModLootModifierProvider(packOutput, lookupProviderFuture));
         generator.addProvider(true, new ModSoundDefinitionsProvider(packOutput));

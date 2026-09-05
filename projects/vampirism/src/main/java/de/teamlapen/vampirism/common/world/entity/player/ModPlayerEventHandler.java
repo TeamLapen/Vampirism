@@ -481,15 +481,6 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent
-    private void onDataPackSyncEvent(OnDatapackSyncEvent event) {
-        if (event.getPlayer() != null) {
-            VampirismMod.services().sunDamageRegistry().updateClient(event.getPlayer());
-        } else {
-            event.getPlayerList().getPlayers().forEach(player -> VampirismMod.services().sunDamageRegistry().updateClient(player));
-        }
-    }
-
-    @SubscribeEvent
     public void gilderEquipped(LivingEquipmentChangeEvent event) {
         if (event.getEntity() instanceof Player player && event.getSlot() == EquipmentSlot.CHEST && event.getTo().has(DataComponents.GLIDER)) {
             IDraculaPlayer.getPresentDracula(player).ifPresent(IDraculaPlayer::closeWings);

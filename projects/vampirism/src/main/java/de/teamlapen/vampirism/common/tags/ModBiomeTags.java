@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.common.tags;
 
+import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -40,6 +41,8 @@ public class ModBiomeTags {
         public static final TagKey<Biome> HUNTER = tag("no_spawn/hunter");
         public static final TagKey<Biome> ADVANCED_HUNTER = tag("no_spawn/advanced_hunter");
     }
+
+    public static final TagKey<Biome> HAS_NO_SUNDAMAGE = VampirismTags.Biomes.HAS_NO_SUNDAMAGE;
 
     private static TagKey<Biome> tag(String name) {
         return TagKey.create(Registries.BIOME, VIdentifier.mod(name));

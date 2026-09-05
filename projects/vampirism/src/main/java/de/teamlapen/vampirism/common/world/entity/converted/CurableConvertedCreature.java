@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.entity.converted;
 import de.teamlapen.faction.api.factions.IFactionPredicate;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.convertible.ICurableConvertedCreature;
@@ -130,7 +131,7 @@ public interface CurableConvertedCreature<T extends PathfinderMob, Z extends Pat
         if (!forceRefresh) {
             return data().sundamageCache;
         }
-        return (data().sundamageCache = Helper.gettingSunDamage(((PathfinderMob) this), iWorld));
+        return (data().sundamageCache = VampirismApi.services().sunDamageRegistry().isGettingSundamage(((PathfinderMob) this), iWorld));
     }
 
     @Override
