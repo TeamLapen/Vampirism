@@ -117,7 +117,7 @@ public class BloodStats implements IBloodStats, ISyncableSaveData {
                 this.addExhaustion(betterHeal ? 6F : 3F);
                 this.bloodTimer = 0;
             }
-        } else if (this.bloodLevel <= 0) {
+        } else if (this.bloodLevel <= 0 && (!player.isCreative() && !player.isSpectator())) {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {
