@@ -27,7 +27,7 @@ Killing a Vampire NPC with a Stake is the traditional method of getting Vampire 
 This happens if you wear hunter armor as a vampire or the other way around
 
 #### How do I become human ("un-vampire"/"un-hunter")
-As a vampire look for an [Altar of Cleansing](content/blocks.mdx#altar-of-cleansing) (or craft one), as a hunter use a [Sanguinare Injection](content/items#sanguinare-injection) at a [Med Chair](content/blocks.mdx#injection-chair).
+As a vampire look for an Altar of Cleansing (or craft one), as a hunter use a Sanguinare Injection at a Med Chair.
 
 #### How do I get vampire books
 Vampire books can be found around the world (e.g. in mineshafts or vampire dungeons). They have cryptic names and content.
