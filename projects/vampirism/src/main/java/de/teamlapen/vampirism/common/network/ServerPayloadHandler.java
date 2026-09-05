@@ -163,7 +163,7 @@ public class ServerPayloadHandler {
                         .toList();
                 var staticMembers = predefinedHeritage.stream()
                         .flatMap(heritage -> heritage.members().stream())
-                        .map(member -> new ClientboundHeritagePacket.StaticMember(member.id(), member.name(), member.parentId()))
+                        .map(member -> new ClientboundHeritagePacket.StaticMember(member.id(), member.name(), member.parentId(), member.lostHistory()))
                         .toList();
                 String founderName = predefinedHeritage.isPresent() ? null : namedNpc;
                 if (founderName != null) {

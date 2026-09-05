@@ -96,16 +96,18 @@ public record Supporter(Identifier faction, Component name, String player, Map<S
         }
     }
 
-    public record Member(String id, Optional<Component> name, Optional<String> parent) {
+    public record Member(String id, Optional<Component> name, Optional<String> parent, boolean lostHistory) {
         public static final Codec<Member> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.STRING.fieldOf("id").forGetter(Member::id),
                 ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(Member::name),
-                Codec.STRING.optionalFieldOf("parent").forGetter(Member::parent)
+                Codec.STRING.optionalFieldOf("parent").forGetter(Member::parent),
+                Codec.BOOL.optionalFieldOf("lost_history", false).forGetter(Member::lostHistory)
         ).apply(instance, Member::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, Member> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.STRING_UTF8, Member::id,
                 ByteBufCodecs.optional(ComponentSerialization.STREAM_CODEC), Member::name,
                 ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), Member::parent,
+                ByteBufCodecs.BOOL, Member::lostHistory,
                 Member::new
         );
 

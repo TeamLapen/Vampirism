@@ -98,7 +98,7 @@ public class SupporterManager {
                     }
 
                     List<PredefinedHeritageMember> members = heritage.members().stream()
-                            .map(member -> new PredefinedHeritageMember(member.id(), resolveHeritageMemberName(member, supportersByPlayer), member.parent().orElse(null)))
+                            .map(member -> new PredefinedHeritageMember(member.id(), resolveHeritageMemberName(member, supportersByPlayer), member.parent().orElse(null), member.lostHistory()))
                             .toList();
                     PredefinedHeritage predefinedHeritage = new PredefinedHeritage(supporter.player(), heritage.lore(), members);
                     heritagesById.put(supporter.player(), predefinedHeritage);
@@ -156,7 +156,7 @@ public class SupporterManager {
         }
     }
 
-    public record PredefinedHeritageMember(String id, String name, @Nullable String parentId) {
+    public record PredefinedHeritageMember(String id, String name, @Nullable String parentId, boolean lostHistory) {
     }
 
 }

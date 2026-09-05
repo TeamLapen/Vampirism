@@ -4,18 +4,22 @@ import de.teamlapen.faction.api.util.FIdentifier;
 import de.teamlapen.faction.client.gui.GuiRenderer;
 import de.teamlapen.faction.client.gui.screens.ILastScreenProvider;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.VampirismModClient;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.ServerboundRequestHeritagePacket;
+import de.teamlapen.vampirism.misc.extension.client.IGuiGraphicsExtractor;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.item.component.ResolvableProfile;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
@@ -40,11 +44,26 @@ public class HeritageScreen extends Screen {
     private static final int NODE_SIZE = 26;
     private static final int NODE_GAP = 10;
     private static final int ROW_HEIGHT = 60;
+    private static final int LOST_HISTORY_HEIGHT = 32;
     private static final double MIN_ZOOM = 0.25;
     private static final double MAX_ZOOM = 2;
 
     private static final Identifier WINDOW_LOCATION = FIdentifier.mod("textures/gui/skills/window.png");
-    private static final Identifier BACKGROUND = FIdentifier.mod("textures/gui/skills/backgrounds/level.png");
+    private static final List<PageTexture> PAGE_TEXTURES = List.of(
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_clean.png"), 85),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_small.png"), 10),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_big.png"), 2),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_hole.png"), 1),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_lines.png"), 1)
+    );
+    private static final int PAGE_TEXTURE_WEIGHT = PAGE_TEXTURES.stream().mapToInt(PageTexture::weight).sum();
+    private static final Identifier LOST_HISTORY_TEXTURE = VIdentifier.mod("textures/gui/sprites/container/heritage_screen/rip.png");
+    private static final List<Identifier> HERITAGE_FRAMES = List.of(
+            VIdentifier.mod("container/heritage_screen/heritage_frame_dark_oak"),
+            VIdentifier.mod("container/heritage_screen/heritage_frame_oak"),
+            VIdentifier.mod("container/heritage_screen/heritage_frame_spruce")
+    );
+    private static final RandomSource RANDOM = RandomSource.create();
     private static final Component TITLE = Component.translatable("gui.vampirism.heritage.title");
 
     private final ILastScreenProvider backScreen;
@@ -58,6 +77,7 @@ public class HeritageScreen extends Screen {
     private double centerX;
     private double centerY;
     private double zoom = 1;
+    private List<Node> lostHistoryNodes = List.of();
     private @Nullable Node hoveredNode;
     private final Map<UUID, PlayerSkin> remotePlayerSkins = new HashMap<>();
     private final Set<UUID> requestedPlayerSkins = new HashSet<>();
@@ -122,6 +142,7 @@ public class HeritageScreen extends Screen {
             graphics.centeredText(this.font, Component.translatable("gui.vampirism.heritage.empty"), contentX + CONTENT_WIDTH / 2, contentY + CONTENT_HEIGHT / 2 - this.font.lineHeight / 2, 0xffffffff);
         } else {
             this.drawConnections(graphics);
+            this.drawLostHistorySections(graphics);
             for (Node node : this.nodes) {
                 this.drawNode(graphics, node);
             }
@@ -131,9 +152,35 @@ public class HeritageScreen extends Screen {
     }
 
     private void drawBackground(GuiGraphicsExtractor graphics) {
-        for (int x = -(int) ((CONTENT_WIDTH / 2f + this.centerX) / 16 / this.zoom) - 1; x <= (int) ((CONTENT_WIDTH / 2f - this.centerX) / 16 / this.zoom); ++x) {
-            for (int y = -(int) ((CONTENT_TOP_PADDING + this.centerY) / 16 / this.zoom) - 1; y <= (int) ((CONTENT_HEIGHT - this.centerY) / 16 / this.zoom); ++y) {
-                GuiRenderer.blit(graphics, BACKGROUND, 16 * x, 16 * y, 16, 16, 16, 16);
+        for (int x = -(int) ((CONTENT_WIDTH / 2f + this.centerX) / 64 / this.zoom) - 1; x <= (int) ((CONTENT_WIDTH / 2f - this.centerX) / 64 / this.zoom); ++x) {
+            for (int y = -(int) ((CONTENT_TOP_PADDING + this.centerY) / 64 / this.zoom) - 1; y <= (int) ((CONTENT_HEIGHT - this.centerY) / 64 / this.zoom); ++y) {
+                Identifier pageTexture = this.getPageTexture(x, y);
+                GuiRenderer.blit(graphics, pageTexture, 64 * x, 64 * y, 64, 64, 64, 64);
+            }
+        }
+    }
+
+    private Identifier getPageTexture(int x, int y) {
+        int selection = RandomSource.create(Mth.getSeed(new BlockPos(x, y, 0))).nextInt(PAGE_TEXTURE_WEIGHT);
+        for (PageTexture pageTexture : PAGE_TEXTURES) {
+            selection -= pageTexture.weight();
+            if (selection < 0) {
+                return pageTexture.texture();
+            }
+        }
+        throw new IllegalStateException("Page texture weights must sum to a positive value");
+    }
+
+    private void drawLostHistorySections(GuiGraphicsExtractor graphics) {
+        int firstTileX = -(int) ((CONTENT_WIDTH / 2f + this.centerX) / 32 / this.zoom) - 1;
+        int lastTileX = (int) ((CONTENT_WIDTH / 2f - this.centerX) / 32 / this.zoom);
+        for (Node node : this.lostHistoryNodes) {
+            int y = node.y;
+            for (int x = firstTileX; x <= lastTileX; ++x) {
+                for (int tileY = 0; tileY < LOST_HISTORY_HEIGHT; tileY += 32) {
+                    int tileHeight = Math.min(32, LOST_HISTORY_HEIGHT - tileY);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, LOST_HISTORY_TEXTURE, 32 * x, y + tileY, 0, 0, 32, tileHeight, 32, 32);
+                }
             }
         }
     }
@@ -144,29 +191,32 @@ public class HeritageScreen extends Screen {
                 continue;
             }
 
-            int branchY = node.parent.y + NODE_SIZE + (node.y - node.parent.y - NODE_SIZE) / 2;
-            graphics.verticalLine(node.parent.x, node.parent.y + NODE_SIZE, branchY, 0xff3d111f);
-            graphics.horizontalLine(Math.min(node.parent.x, node.x), Math.max(node.parent.x, node.x), branchY, 0xff3d111f);
-            graphics.verticalLine(node.x, branchY, node.y, 0xff3d111f);
-            graphics.verticalLine(node.parent.x, node.parent.y + NODE_SIZE, branchY, 0xff9d314a);
-            graphics.horizontalLine(Math.min(node.parent.x, node.x), Math.max(node.parent.x, node.x), branchY, 0xff9d314a);
+            Node parent = node.parent;
+            int parentBottom = parent.y + (parent.lostHistoryNode ? LOST_HISTORY_HEIGHT : NODE_SIZE) - 1;
+            if (node.lostHistoryNode) {
+                graphics.verticalLine(parent.x, parentBottom, node.y, 0xff9d314a);
+                continue;
+            }
+
+            int branchY = parent.lostHistoryNode
+                    ? parent.y + LOST_HISTORY_HEIGHT + getConnectionLength()
+                    : parent.y + NODE_SIZE + (node.y - parent.y - NODE_SIZE) / 2;
+            graphics.verticalLine(parent.x, parentBottom, branchY, 0xff9d314a);
+            graphics.horizontalLine(Math.min(parent.x, node.x), Math.max(parent.x, node.x), branchY, 0xff9d314a);
             graphics.verticalLine(node.x, branchY, node.y, 0xff9d314a);
         }
     }
 
     private void drawNode(GuiGraphicsExtractor graphics, Node node) {
+        if (node.lostHistoryNode) {
+            return;
+        }
         int left = node.x - NODE_SIZE / 2;
-        int right = left + NODE_SIZE;
-        boolean currentPlayer = this.minecraft.player != null && node.playerId != null && node.playerId.equals(this.minecraft.player.getUUID());
-        boolean hovered = node == this.hoveredNode;
-        int border = hovered ? 0xfff4c2d0 : currentPlayer ? 0xffc14b75 : 0xff6c2038;
         @Nullable Identifier skinTexture = this.getSkinTexture(node);
-        int background = skinTexture == null ? 0xff000000 : currentPlayer ? 0xff551b32 : 0xff30101f;
 
-        graphics.fill(left - 1, node.y - 1, right + 1, node.y + NODE_SIZE + 1, border);
-        graphics.fill(left, node.y, right, node.y + NODE_SIZE, background);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, node.frame, left, node.y, NODE_SIZE, NODE_SIZE);
         if (skinTexture == null) {
-            graphics.centeredText(this.font, Component.literal("?"), node.x, node.y + 9, 0xffaaaaaa);
+            ((IGuiGraphicsExtractor) graphics).vampirism$centeredText(this.font, Component.literal("?"), node.x, node.y + 9, 0xff000000, false);
         } else {
             this.drawFace(graphics, skinTexture, left + 5, node.y + 5);
         }
@@ -225,6 +275,9 @@ public class HeritageScreen extends Screen {
         double scaledX = (mouseX - (this.guiLeft + 9 + CONTENT_WIDTH / 2d) - this.centerX) / this.zoom;
         double scaledY = (mouseY - (this.guiTop + 18 + CONTENT_TOP_PADDING) - this.centerY) / this.zoom;
         for (Node node : this.nodes) {
+            if (node.lostHistoryNode) {
+                continue;
+            }
             if (scaledX >= node.x - NODE_SIZE / 2d && scaledX < node.x + NODE_SIZE / 2d && scaledY >= node.y && scaledY < node.y + NODE_SIZE) {
                 return node;
             }
@@ -267,13 +320,13 @@ public class HeritageScreen extends Screen {
         this.heritage.staticMembers().stream()
                 .sorted(Comparator.comparing(ClientboundHeritagePacket.StaticMember::name, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(ClientboundHeritagePacket.StaticMember::id))
-                .forEach(member -> staticNodesById.put(member.id(), new Node(null, member.id(), member.name(), null, member.parentId())));
+                .forEach(member -> staticNodesById.put(member.id(), new Node(null, member.id(), member.name(), null, member.parentId(), member.lostHistory())));
 
         Map<UUID, Node> playerNodesById = new HashMap<>();
         this.heritage.members().stream()
                 .sorted(Comparator.comparing(ClientboundHeritagePacket.Member::playerName, String.CASE_INSENSITIVE_ORDER)
                         .thenComparing(ClientboundHeritagePacket.Member::playerId))
-                .forEach(member -> playerNodesById.put(member.playerId(), new Node(member.playerId(), null, member.playerName(), member.parentPlayerId(), member.parentNpcId())));
+                .forEach(member -> playerNodesById.put(member.playerId(), new Node(member.playerId(), null, member.playerName(), member.parentPlayerId(), member.parentNpcId(), false)));
 
         List<Node> roots = new ArrayList<>();
         for (Node node : staticNodesById.values()) {
@@ -306,7 +359,7 @@ public class HeritageScreen extends Screen {
         List<Node> graphicalNodes = new ArrayList<>(staticNodesById.values());
         graphicalNodes.addAll(playerNodesById.values());
         if (this.heritage.founderName() != null && !roots.isEmpty()) {
-            Node founder = new Node(null, null, this.heritage.founderName(), null, null);
+            Node founder = new Node(null, null, this.heritage.founderName(), null, null, false);
             for (Node root : roots) {
                 root.parent = founder;
                 founder.children.add(root);
@@ -315,9 +368,16 @@ public class HeritageScreen extends Screen {
             roots = List.of(founder);
         }
 
+        List<Node> lostHistoryNodes = new ArrayList<>();
+        for (Node root : roots) {
+            this.insertLostHistoryNodes(root, lostHistoryNodes);
+        }
+        graphicalNodes.addAll(lostHistoryNodes);
+        this.lostHistoryNodes = List.copyOf(lostHistoryNodes);
+
         int cursor = 0;
         for (Node root : roots) {
-            cursor = this.layout(root, 0, cursor);
+            cursor = this.layout(root, cursor);
         }
         this.nodes = List.copyOf(graphicalNodes);
         if (this.nodes.isEmpty()) {
@@ -337,8 +397,33 @@ public class HeritageScreen extends Screen {
         this.center(0, 0);
     }
 
-    private int layout(Node node, int depth, int cursor) {
-        node.y = depth * ROW_HEIGHT;
+    private void insertLostHistoryNodes(Node node, List<Node> lostHistoryNodes) {
+        if (node.lostHistory) {
+            Node lostHistoryNode = Node.lostHistory();
+            lostHistoryNode.parent = node;
+            lostHistoryNode.children.addAll(node.children);
+            for (Node child : lostHistoryNode.children) {
+                child.parent = lostHistoryNode;
+            }
+            node.children.clear();
+            node.children.add(lostHistoryNode);
+            lostHistoryNodes.add(lostHistoryNode);
+        }
+        for (Node child : node.children) {
+            this.insertLostHistoryNodes(child, lostHistoryNodes);
+        }
+    }
+
+    private int layout(Node node, int cursor) {
+        if (node.parent == null) {
+            node.y = 0;
+        } else if (node.lostHistoryNode) {
+            node.y = node.parent.y + NODE_SIZE + getConnectionLength();
+        } else if (node.parent.lostHistoryNode) {
+            node.y = node.parent.y + LOST_HISTORY_HEIGHT + 2 * getConnectionLength();
+        } else {
+            node.y = node.parent.y + ROW_HEIGHT;
+        }
         if (node.children.isEmpty()) {
             node.x = cursor + NODE_SIZE / 2;
             return cursor + NODE_SIZE + NODE_GAP;
@@ -346,10 +431,14 @@ public class HeritageScreen extends Screen {
 
         int firstChildLeft = cursor;
         for (Node child : node.children) {
-            cursor = this.layout(child, depth + 1, cursor);
+            cursor = this.layout(child, cursor);
         }
         node.x = (firstChildLeft + cursor - NODE_GAP) / 2;
         return cursor;
+    }
+
+    private static int getConnectionLength() {
+        return (ROW_HEIGHT - NODE_SIZE) / 2;
     }
 
     private void center(double x, double y) {
@@ -376,17 +465,30 @@ public class HeritageScreen extends Screen {
         private final String name;
         private final @Nullable UUID parentPlayerId;
         private final @Nullable String parentStaticId;
+        private final boolean lostHistory;
+        private final boolean lostHistoryNode;
         private final List<Node> children = new ArrayList<>();
+        private final Identifier frame = HERITAGE_FRAMES.get(RANDOM.nextInt(HERITAGE_FRAMES.size()));
         private @Nullable Node parent;
         private int x;
         private int y;
 
-        private Node(@Nullable UUID playerId, @Nullable String staticId, String name, @Nullable UUID parentPlayerId, @Nullable String parentStaticId) {
+        private Node(@Nullable UUID playerId, @Nullable String staticId, String name, @Nullable UUID parentPlayerId, @Nullable String parentStaticId, boolean lostHistory) {
+            this(playerId, staticId, name, parentPlayerId, parentStaticId, lostHistory, false);
+        }
+
+        private Node(@Nullable UUID playerId, @Nullable String staticId, String name, @Nullable UUID parentPlayerId, @Nullable String parentStaticId, boolean lostHistory, boolean lostHistoryNode) {
             this.playerId = playerId;
             this.staticId = staticId;
             this.name = name;
             this.parentPlayerId = parentPlayerId;
             this.parentStaticId = parentStaticId;
+            this.lostHistory = lostHistory;
+            this.lostHistoryNode = lostHistoryNode;
+        }
+
+        private static Node lostHistory() {
+            return new Node(null, null, "", null, null, false, true);
         }
 
         private String name() {
@@ -402,5 +504,9 @@ public class HeritageScreen extends Screen {
             }
             return "founder:" + this.name;
         }
+
+    }
+
+    private record PageTexture(Identifier texture, int weight) {
     }
 }

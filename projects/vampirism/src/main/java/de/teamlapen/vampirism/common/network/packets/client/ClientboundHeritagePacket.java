@@ -21,7 +21,8 @@ public record ClientboundHeritagePacket(@Nullable String founderName, List<Stati
             ByteBufCodecs.STRING_UTF8, StaticMember::id,
             ByteBufCodecs.STRING_UTF8, StaticMember::name,
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), member -> Optional.ofNullable(member.parentId()),
-            (id, name, parentId) -> new StaticMember(id, name, parentId.orElse(null))
+            ByteBufCodecs.BOOL, StaticMember::lostHistory,
+            (id, name, parentId, lostHistory) -> new StaticMember(id, name, parentId.orElse(null), lostHistory)
     );
     private static final StreamCodec<RegistryFriendlyByteBuf, Member> MEMBER_CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC, Member::playerId,
@@ -47,7 +48,7 @@ public record ClientboundHeritagePacket(@Nullable String founderName, List<Stati
         return TYPE;
     }
 
-    public record StaticMember(String id, String name, @Nullable String parentId) {
+    public record StaticMember(String id, String name, @Nullable String parentId, boolean lostHistory) {
     }
 
     public record Member(UUID playerId, String playerName, @Nullable UUID parentPlayerId, @Nullable String parentNpcId) {
