@@ -3,7 +3,7 @@ plugins {
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id 'org.spongepowered.mixin' version '0.7.+'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id "com.modrinth.minotaur" version "2.4.5"
+    id "me.modmuss50.mod-publish-plugin" version "2.2.0"
     id 'de.undercouch.download' version '3.3.0'
     id 'idea'
     id 'eclipse'
