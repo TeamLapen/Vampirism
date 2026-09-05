@@ -8,14 +8,12 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModRefinements;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -34,49 +32,36 @@ public class TeleportVampireAction extends DefaultVampireAction {
             dist *= VampirismConfig.BALANCE.vrTeleportDistanceMod.get();
         }
         HitResult target = UtilLib.getPlayerLookingSpot(player, dist);
-        double ox = player.getX();
-        double oy = player.getY();
-        double oz = player.getZ();
         if (target.getType() == HitResult.Type.MISS) {
             player.playSound(SoundEvents.NOTE_BLOCK_BASS.get(), 1, 1);
             return false;
         }
-        BlockPos pos = null;
-        if (target.getType() == HitResult.Type.BLOCK) {
-            if (player.getCommandSenderWorld().getBlockState(((BlockHitResult) target).getBlockPos()).blocksMotion()) {
-                pos = ((BlockHitResult) target).getBlockPos().above();
-            }
-        } else {//TODO better solution / remove
-            if (player.getCommandSenderWorld().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).blocksMotion()) {
-                pos = ((EntityHitResult) target).getEntity().blockPosition();
-            }
-        }
-
-        if (pos != null) {
-            player.setPos(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (player.getCommandSenderWorld().containsAnyLiquid(player.getBoundingBox()) || !player.getCommandSenderWorld().isUnobstructed(player)) { //isEntityColliding
-                pos = null;
-            }
-        }
+        Vec3 oldPosition = player.position();
+        Vec3 hitLocation = target.getLocation();
+        Vec3 targetPosition = hitLocation.add(hitLocation.vectorTo(oldPosition).normalize().scale(0.5));
 
 
-        if (pos == null) {
-            player.setPos(ox, oy, oz);
+        player.setPos(targetPosition);
+        if (player.getCommandSenderWorld().containsAnyLiquid(player.getBoundingBox()) || !player.getCommandSenderWorld().isUnobstructed(player)) { //isEntityColliding
+            player.setPos(oldPosition);
             player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.get(), 1, 1);
             return false;
         }
+
         if (player instanceof ServerPlayer playerMp) {
             playerMp.removeVehicle();
-            playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
+            playerMp.teleportTo(targetPosition.x(), targetPosition.y(), targetPosition.z());
         }
+
         AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.PARTICLE_CLOUD.get(), player.getCommandSenderWorld());
-        particleCloud.setPos(ox, oy, oz);
+        particleCloud.setPos(oldPosition);
         particleCloud.setRadius(0.7F);
         particleCloud.setHeight(player.getBbHeight());
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
+        particleCloud.setColor(0xFFA00000);
         player.getCommandSenderWorld().addFreshEntity(particleCloud);
-        player.getCommandSenderWorld().playSound(null, ox,oy,oz, ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
+        player.getCommandSenderWorld().playSound(null, oldPosition.x(), oldPosition.y(), oldPosition.z(), ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
         player.getCommandSenderWorld().playSound(null, player.getX(), player.getY(), player.getZ(),ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
         return true;
     }

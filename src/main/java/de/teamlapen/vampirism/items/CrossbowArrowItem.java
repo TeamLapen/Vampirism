@@ -6,6 +6,9 @@ import de.teamlapen.vampirism.api.items.IEntityCrossbowArrow;
 import de.teamlapen.vampirism.api.items.IVampirismCrossbowArrow;
 import de.teamlapen.vampirism.config.VampirismConfig;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.entity.AreaParticleCloudEntity;
 import de.teamlapen.vampirism.entity.CrossbowArrowEntity;
 import de.teamlapen.vampirism.util.DamageHandler;
 import net.minecraft.ChatFormatting;
@@ -14,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
@@ -25,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -124,18 +129,30 @@ public class CrossbowArrowItem extends ArrowItem implements IVampirismCrossbowAr
                     if (!shootingEntity.level().isClientSide && shootingEntity.isAlive()) {
                         if (shootingEntity instanceof ServerPlayer player) {
                             if (player.connection.connection.isConnected() && player.level() == entity.level() && !player.isSleeping()) {
+                                Vec3 oldPosition = player.position();
 
                                 if (player.isPassenger()) {
-                                    player.stopRiding();
+                                    player.dismountTo(entity.getX(), entity.getY(), entity.getZ());
+                                } else {
+                                    player.teleportTo(entity.getX(), entity.getY(), entity.getZ());
                                 }
-
-                                player.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                                player.fallDistance = 0.0F;
+                                player.resetFallDistance();
                                 DamageHandler.hurtVanilla(player, DamageSources::fall, 1);
+
+                                AreaParticleCloudEntity particleCloud = new AreaParticleCloudEntity(ModEntities.PARTICLE_CLOUD.get(), player.getCommandSenderWorld());
+                                particleCloud.setPos(oldPosition);
+                                particleCloud.setRadius(0.7F);
+                                particleCloud.setHeight(player.getBbHeight());
+                                particleCloud.setDuration(5);
+                                particleCloud.setSpawnRate(15);
+                                particleCloud.setColor(0xFF000000);
+                                player.getCommandSenderWorld().addFreshEntity(particleCloud);
+                                player.getCommandSenderWorld().playSound(null, oldPosition.x(), oldPosition.y(), oldPosition.z(), ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
+                                player.getCommandSenderWorld().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
                             }
                         } else {
-                            shootingEntity.teleportTo(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                            shootingEntity.fallDistance = 0.0F;
+                            shootingEntity.teleportTo(entity.getX(), entity.getY(), entity.getZ());
+                            shootingEntity.resetFallDistance();
                         }
                     }
                 }

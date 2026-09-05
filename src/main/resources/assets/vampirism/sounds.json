@@ -110,7 +110,7 @@
   },
   "fx.teleport_away": {
     "sounds": [
-      "vampirism:reserved/fx/teleport1"
+      "vampirism:reserved/fx/teleport2"
     ],
     "subtitle": "subtitles.vampirism.teleport_away"
   },
