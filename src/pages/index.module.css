@@ -7,7 +7,7 @@
   position: relative;
   padding: 6rem 0;
   overflow: hidden;
-  background-color: #14060f;
+  background-color: #0d0d14;
   background-size: cover;
   background-position: center;
   color: #fff;
@@ -18,10 +18,20 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    180deg,
-    rgba(20, 6, 15, 0.55) 0%,
-    rgba(20, 6, 15, 0.78) 100%
-  );
+      180deg,
+      rgba(13, 13, 20, 0.55) 0%,
+      rgba(13, 13, 20, 0.78) 100%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 20% 50%,
+      rgba(98, 3, 133, 0.25) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 80% 50%,
+      rgba(139, 26, 26, 0.12) 0%,
+      transparent 70%
+    );
 }
 
 .heroInner {
@@ -44,6 +54,7 @@
 .heroSubtitle {
   max-width: 40rem;
   margin: 1.5rem 0 0;
+  font-family: 'Lora', serif;
   font-size: 1.2rem;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.9);
@@ -83,17 +94,17 @@
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
-  border: 1px solid var(--ifm-color-emphasis-200);
+  border: 1px solid var(--vampire-border, var(--ifm-color-emphasis-200));
   border-radius: var(--ifm-card-border-radius, 12px);
   background: var(--ifm-card-background-color, var(--ifm-background-surface-color));
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
   text-decoration: none;
-  border-color: var(--ifm-color-primary);
+  border-color: rgba(155, 18, 212, 0.7);
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 20px rgba(98, 3, 133, 0.25);
 }
 
 .cardTitle {
@@ -105,6 +116,7 @@
   flex: 1;
   margin: 0 0 1rem;
   color: var(--ifm-color-emphasis-700);
+  font-family: 'Lora', serif;
   font-size: 0.95rem;
   line-height: 1.5;
 }

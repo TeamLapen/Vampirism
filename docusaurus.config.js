@@ -24,6 +24,13 @@ const config = {
     locales: ['en'],
   },
 
+  stylesheets: [
+    {
+      href: 'https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,700;1,400&display=swap',
+      type: 'text/css',
+    },
+  ],
+
   presets: [
     [
       'classic',
