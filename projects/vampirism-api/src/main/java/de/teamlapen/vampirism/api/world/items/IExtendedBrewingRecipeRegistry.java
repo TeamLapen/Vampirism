@@ -77,6 +77,10 @@ public interface IExtendedBrewingRecipeRegistry {
         default boolean hasSwiftBrewing() {
             return false;
         }
+
+        default boolean hasUltimateBrewing() {
+            return false;
+        }
     }
 
 }

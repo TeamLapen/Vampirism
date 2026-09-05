@@ -134,6 +134,9 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
         if (recipe.getOriginal().master) {
             addSkillLine(HunterSkills.MASTER_BREWER, skillLines, skills);
         }
+        if (recipe.getOriginal().sovereign) {
+            addSkillLine(HunterSkills.ULTIMATE_BREWER, skillLines, skills);
+        }
         if (recipe.getOriginal().efficient) {
             addSkillLine(HunterSkills.EFFICIENT_BREWING, skillLines, skills);
         }

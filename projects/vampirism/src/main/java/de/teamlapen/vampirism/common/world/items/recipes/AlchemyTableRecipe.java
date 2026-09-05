@@ -5,8 +5,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.teamlapen.faction.api.FactionRegistries;
 import de.teamlapen.faction.api.factions.skills.ISkill;
-import de.teamlapen.faction.common.core.ModRegistries;
+import de.teamlapen.faction.api.factions.skills.ISkillHandler;
+import de.teamlapen.faction.api.util.SafeCast;
 import de.teamlapen.vampirism.common.core.ModRecipes;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -25,11 +27,11 @@ import java.util.Optional;
 
 public class AlchemyTableRecipe extends AbstractBrewingRecipe {
 
-    private final List<ISkill<?>> requiredSkills;
+    private final List<Holder<? extends ISkill<?>>> requiredSkills;
     @Nullable
     private PlacementInfo placementInfo;
 
-    public AlchemyTableRecipe(CommonInfo commonInfo, String group, Ingredient ingredient, Ingredient input, ItemStackTemplate result, List<ISkill<?>> skills) {
+    public AlchemyTableRecipe(CommonInfo commonInfo, String group, Ingredient ingredient, Ingredient input, ItemStackTemplate result, List<Holder<? extends ISkill<?>>> skills) {
         super(ModRecipes.ALCHEMICAL_TABLE_TYPE.get(), commonInfo, group, ingredient, input, result);
         this.requiredSkills = skills;
     }
@@ -60,8 +62,13 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
         return ModRecipes.ALCHEMICAL_TABLE_CATEGORY.get();
     }
 
-    public List<ISkill<?>> getRequiredSkills() {
+    public List<Holder<? extends ISkill<?>>> getRequiredSkills() {
         return requiredSkills;
+    }
+
+    public boolean canBeBrewed(@Nullable ISkillHandler<?> skillHandler) {
+        if (this.requiredSkills.isEmpty()) return true;
+        return skillHandler != null && skillHandler.areSkillsEnabled(this.requiredSkills);
     }
 
     @NotNull
@@ -76,7 +83,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
             Ingredient.CODEC.fieldOf("ingredient").forGetter(p_300831_ -> p_300831_.ingredient),
             Ingredient.CODEC.fieldOf("input").forGetter(p_300830_ -> p_300830_.input),
             ItemStackTemplate.CODEC.fieldOf("result").forGetter(p_300829_ -> p_300829_.result),
-            ModRegistries.SKILLS.byNameCodec().listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
+            ISkill.CODEC.listOf().optionalFieldOf("skill", Collections.emptyList()).forGetter(p -> p.requiredSkills)
     ).apply(inst, AlchemyTableRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AlchemyTableRecipe> STREAM_CODEC = StreamCodec.composite(
@@ -85,7 +92,7 @@ public class AlchemyTableRecipe extends AbstractBrewingRecipe {
             Ingredient.CONTENTS_STREAM_CODEC, s -> s.ingredient,
             Ingredient.CONTENTS_STREAM_CODEC, s -> s.input,
             ItemStackTemplate.STREAM_CODEC, s -> s.result,
-            ByteBufCodecs.registry(FactionRegistries.Keys.SKILL).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
+            SafeCast.<StreamCodec<RegistryFriendlyByteBuf, Holder<? extends ISkill<?>>>>cast(ByteBufCodecs.holderRegistry(FactionRegistries.Keys.SKILL)).apply(ByteBufCodecs.list()), s -> s.requiredSkills,
             AlchemyTableRecipe::new
     );
 }

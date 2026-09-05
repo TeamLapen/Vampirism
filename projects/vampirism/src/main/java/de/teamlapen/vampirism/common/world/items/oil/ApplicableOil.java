@@ -2,16 +2,15 @@ package de.teamlapen.vampirism.common.world.items.oil;
 
 import de.teamlapen.vampirism.api.world.items.oil.IApplicableOil;
 import de.teamlapen.vampirism.common.util.OilUtils;
-import de.teamlapen.vampirism.common.util.RegUtil;
 import de.teamlapen.vampirism.common.world.items.component.AppliedOilContent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+import java.util.function.Consumer;
 
 public abstract class ApplicableOil extends Oil implements IApplicableOil {
 
@@ -38,19 +37,11 @@ public abstract class ApplicableOil extends Oil implements IApplicableOil {
     }
 
     @Override
-    public Optional<Component> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration, TooltipFlag flag) {
-        Identifier id = RegUtil.id(oil);
-        MutableComponent component = Component.translatable(String.format("oil.%s.%s", id.getNamespace(), id.getPath())).withStyle(ChatFormatting.LIGHT_PURPLE);
-        if (oil.hasDuration()) {
-            int maxDuration = oil.getMaxDuration(stack);
-            float perc = duration / (float) maxDuration;
-            ChatFormatting status = perc > 0.5 ? ChatFormatting.GREEN : perc > 0.25 ? ChatFormatting.GOLD : ChatFormatting.RED;
-            if (flag.isAdvanced()) {
-                component.append(" ").append(Component.literal("%s/%s".formatted( duration, maxDuration)).withStyle(status));
-            } else {
-                component.append(" ").append(Component.translatable("tooltip.vampirism.oil.wetting").withStyle(status));
-            }
-        }
-        return Optional.of(component);
+    public void getDescription(ItemStack stack, Item.@Nullable TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
+        super.getDescription(stack, context, display, tooltips);
+        tooltips.accept(Component.translatable("tooltip.vampirism.oil.lasts", getMaxDuration(stack)).withStyle(ChatFormatting.GRAY));
+        tooltips.accept(Component.empty());
+        tooltips.accept(getDescriptionTitle().copy().withStyle(ChatFormatting.DARK_PURPLE));
+        getEffectDescription(context).forEach(tooltips);
     }
 }

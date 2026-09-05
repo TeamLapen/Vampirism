@@ -392,6 +392,7 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
         boolean masterBrewing;
         boolean efficientBrewing;
         boolean multiTaskBrewing;
+        boolean ultimateBrewing;
 
         public void deriveFromHunter(IHunterPlayer player) {
             ISkillHandler<IHunterPlayer> skills = player.getSkillHandler();
@@ -401,30 +402,33 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
             masterBrewing = skills.isSkillEnabled(HunterSkills.MASTER_BREWER);
             efficientBrewing = skills.isSkillEnabled(HunterSkills.EFFICIENT_BREWING);
             multiTaskBrewing = skills.isSkillEnabled(HunterSkills.MULTITASK_BREWING);
+            ultimateBrewing = skills.isSkillEnabled(HunterSkills.ULTIMATE_BREWER);
         }
 
         public void fromByte(byte d) {
-            durableBrewing = (d & 0b000001) != 0;
-            concentratedBrewing = (d & 0b000010) != 0;
-            swiftBrewing = (d & 0b000100) != 0;
-            masterBrewing = (d & 0b001000) != 0;
-            efficientBrewing = (d & 0b010000) != 0;
-            multiTaskBrewing = (d & 0b100000) != 0;
+            durableBrewing = (d & 0b0000001) != 0;
+            concentratedBrewing = (d & 0b0000010) != 0;
+            swiftBrewing = (d & 0b0000100) != 0;
+            masterBrewing = (d & 0b0001000) != 0;
+            efficientBrewing = (d & 0b0010000) != 0;
+            multiTaskBrewing = (d & 0b0100000) != 0;
+            ultimateBrewing = (d & 0b1000000) != 0;
         }
 
         public byte toByte() {
             byte d = 0;
-            if (durableBrewing) d |= 0b000001;
-            if (concentratedBrewing) d |= 0b000010;
-            if (swiftBrewing) d |= 0b000100;
-            if (masterBrewing) d |= 0b001000;
-            if (efficientBrewing) d |= 0b010000;
-            if (multiTaskBrewing) d |= 0b100000;
+            if (durableBrewing) d |= 0b0000001;
+            if (concentratedBrewing) d |= 0b0000010;
+            if (swiftBrewing) d |= 0b0000100;
+            if (masterBrewing) d |= 0b0001000;
+            if (efficientBrewing) d |= 0b0010000;
+            if (multiTaskBrewing) d |= 0b0100000;
+            if (ultimateBrewing) d |= 0b1000000;
             return d;
         }
 
         public void reset() {
-            durableBrewing = concentratedBrewing = swiftBrewing = masterBrewing  = efficientBrewing = multiTaskBrewing = false;
+            durableBrewing = concentratedBrewing = swiftBrewing = masterBrewing  = efficientBrewing = multiTaskBrewing = ultimateBrewing = false;
         }
 
         @Override
@@ -455,6 +459,11 @@ public class VaporStillBlockEntity extends BaseContainerBlockEntity implements W
         @Override
         public boolean hasSwiftBrewing() {
             return swiftBrewing;
+        }
+
+        @Override
+        public boolean hasUltimateBrewing() {
+            return ultimateBrewing;
         }
     }
 }

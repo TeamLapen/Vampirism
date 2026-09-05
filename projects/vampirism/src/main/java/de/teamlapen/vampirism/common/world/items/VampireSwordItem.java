@@ -70,8 +70,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        int level = stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.LOW).level();
-        tooltipComponents.accept(Component.translatable("tooltip.vampirism.purity", level + 1).withStyle(level == 5 ? ChatFormatting.DARK_PURPLE : ChatFormatting.DARK_RED));
+        tooltipComponents.accept(stack.getOrDefault(ModDataComponents.PURE_LEVEL, PureLevel.EMPTY).getPurityTooltip());
         float charged = getChargePercentage(stack);
         float trained = getTrained(stack, FactionsMod.proxy.getClientPlayer());
         tooltipComponents.accept(Component.translatable("tooltip.vampirism.sword_charged").append(Component.literal(" " + ((int) Math.ceil(charged * 100f)) + "%")).withStyle(ChatFormatting.DARK_AQUA));

@@ -25,12 +25,16 @@ import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
 public class ModPotions {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, REFERENCE.MODID);
+
+    private static final int VERY_DURABLE_COUNT = 16;
+    private static final int VERY_DURABLE_COUNT_EFFICIENT = 8;
+    private static final int VERY_STRONG_COUNT = 32;
+    private static final int VERY_STRONG_COUNT_EFFICIENT = 16;
 
     //Hunter
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SLOW_FALLING = POTIONS.register("very_long_slow_falling", () -> new HunterPotion("slow_falling", new MobEffectInstance(MobEffects.SLOW_FALLING, 48000)));
@@ -56,7 +60,7 @@ public class ModPotions {
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_POISON = POTIONS.register("very_long_poison", () -> new HunterPotion("poison", new MobEffectInstance(MobEffects.POISON, 18000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_POISON_EXTENDED = POTIONS.register("very_long_poison_extended", () -> new HunterPotion("poison", new MobEffectInstance(MobEffects.POISON, 27000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HEALING = POTIONS.register("very_strong_healing", () -> new HunterPotion("healing", new MobEffectInstance(MobEffects.INSTANT_HEALTH, 1, 2)));
-    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HEALING_EXTENDED = POTIONS.register("very_strong_healing_extended", () -> new HunterPotion("healing", new MobEffectInstance(MobEffects.INSTANT_HEALTH, 1, 2)));
+    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HEALING_EXTENDED = POTIONS.register("very_strong_healing_extended", () -> new HunterPotion("healing", new MobEffectInstance(MobEffects.INSTANT_HEALTH, 1, 3)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WATER_BREATHING = POTIONS.register("very_long_water_breathing", () -> new HunterPotion("water_breathing", new MobEffectInstance(MobEffects.WATER_BREATHING, 96000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WATER_BREATHING_EXTENDED = POTIONS.register("very_long_water_breathing_extended", () -> new HunterPotion("water_breathing", new MobEffectInstance(MobEffects.WATER_BREATHING, 144000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_SLOWNESS = POTIONS.register("very_strong_slowness", () -> new HunterPotion("slowness", new MobEffectInstance(MobEffects.SLOWNESS, 400, 5)));
@@ -65,8 +69,8 @@ public class ModPotions {
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SLOWNESS_EXTENDED = POTIONS.register("very_long_slowness_extended", () -> new HunterPotion("slowness", new MobEffectInstance(MobEffects.SLOWNESS, 72000)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_SLOWNESS = POTIONS.register("long_strong_slowness", () -> new HunterPotion("slowness", new MobEffectInstance(MobEffects.SLOWNESS, 4800, 3)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_SLOWNESS_EXTENDED = POTIONS.register("long_strong_slowness_extended", () -> new HunterPotion("slowness", new MobEffectInstance(MobEffects.SLOWNESS, 7200, 3)));
-    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_SWIFTNESS = POTIONS.register("very_strong_swiftness", () -> new HunterPotion("swiftness", new MobEffectInstance(MobEffects.SPEED, 1200, 2)));
-    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_SWIFTNESS_EXTENDED = POTIONS.register("very_strong_swiftness_extended", () -> new HunterPotion("swiftness", new MobEffectInstance(MobEffects.SPEED, 1800, 2)));
+    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_SWIFTNESS = POTIONS.register("very_strong_swiftness", () -> new HunterPotion("swiftness", new MobEffectInstance(MobEffects.SPEED, 1800, 2)));
+    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_SWIFTNESS_EXTENDED = POTIONS.register("very_strong_swiftness_extended", () -> new HunterPotion("swiftness", new MobEffectInstance(MobEffects.SPEED, 2700, 2)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SWIFTNESS = POTIONS.register("very_long_swiftness", () -> new HunterPotion("swiftness", new MobEffectInstance(MobEffects.SPEED, 48000)));
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SWIFTNESS_EXTENDED = POTIONS.register("very_long_swiftness_extended", () -> new HunterPotion("swiftness", new MobEffectInstance(MobEffects.SPEED, 72000)));
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_SWIFTNESS = POTIONS.register("long_strong_swiftness", () -> new HunterPotion("swiftness", new MobEffectInstance(MobEffects.SPEED, 4800, 1)));
@@ -144,7 +148,7 @@ public class ModPotions {
         veryStrong(VERY_LONG_REGENERATION, LONG_STRONG_REGENERATION, LONG_STRONG_REGENERATION_EXTENDED);
         veryStrongDracula(VERY_LONG_REGENERATION_EXTENDED, LONG_STRONG_REGENERATION_EXTENDED);
         veryDurable(Potions.LONG_POISON, VERY_LONG_POISON, VERY_LONG_POISON_EXTENDED);
-        veryStrong(Potions.STRONG_POISON, VERY_STRONG_POISON, VERY_LONG_STRENGTH_EXTENDED);
+        veryStrong(Potions.STRONG_POISON, VERY_STRONG_POISON, VERY_STRONG_POISON_EXTENDED);
         veryDurable(VERY_STRONG_POISON, LONG_STRONG_POISON, LONG_STRONG_POISON_EXTENDED);
         veryDurableDracula(VERY_STRONG_POISON_EXTENDED, LONG_STRONG_POISON_EXTENDED);
         veryStrong(VERY_LONG_POISON, LONG_STRONG_POISON, LONG_STRONG_POISON_EXTENDED);
@@ -172,18 +176,18 @@ public class ModPotions {
         veryStrongDracula(VERY_LONG_LEAPING_EXTENDED, LONG_STRONG_LEAPING_EXTENDED);
         veryDurable(Potions.LONG_INVISIBILITY, VERY_LONG_INVISIBILITY, VERY_LONG_INVISIBILITY_EXTENDED);
         veryDurable(Potions.LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION_EXTENDED);
-        master(NAUSEA, () -> Ingredient.of(registryAccess.lookupOrThrow(Registries.ITEM).getOrThrow(Tags.Items.MUSHROOMS)), 32, 16);
-        masterDracula(NAUSEA_EXTENDED, () -> Ingredient.of(registryAccess.lookupOrThrow(Registries.ITEM).getOrThrow(Tags.Items.MUSHROOMS)), 32, 16);
+        master(NAUSEA, () -> Ingredient.of(registryAccess.lookupOrThrow(Registries.ITEM).getOrThrow(Tags.Items.MUSHROOMS)), 8, 4);
+        masterSovereign(NAUSEA_EXTENDED, () -> Ingredient.of(registryAccess.lookupOrThrow(Registries.ITEM).getOrThrow(Tags.Items.MUSHROOMS)), 8, 4);
         durable(NAUSEA, LONG_NAUSEA, LONG_NAUSEA_EXTENDED);
         veryDurable(LONG_NAUSEA, VERY_LONG_NAUSEA, VERY_LONG_NAUSEA_EXTENDED);
         veryDurableDracula(LONG_NAUSEA_EXTENDED, VERY_LONG_NAUSEA_EXTENDED);
-        master(BLINDNESS, () -> Ingredient.of(Items.INK_SAC), 64, 32);
-        masterDracula(BLINDNESS_EXTENDED, () -> Ingredient.of(Items.INK_SAC), 64, 32);
+        master(BLINDNESS, () -> Ingredient.of(Items.INK_SAC), 12, 6);
+        masterSovereign(BLINDNESS_EXTENDED, () -> Ingredient.of(Items.INK_SAC), 12, 6);
         durable(BLINDNESS, LONG_BLINDNESS, LONG_BLINDNESS_EXTENDED);
         veryDurable(LONG_BLINDNESS, VERY_LONG_BLINDNESS, VERY_LONG_BLINDNESS_EXTENDED);
         veryDurableDracula(LONG_BLINDNESS_EXTENDED, VERY_LONG_BLINDNESS_EXTENDED);
-        master(HEALTH_BOOST, () -> Ingredient.of(Items.APPLE), 64, 32);
-        masterDracula(HEALTH_BOOST_EXTENDED, () -> Ingredient.of(Items.APPLE), 64, 32);
+        master(HEALTH_BOOST, () -> Ingredient.of(Items.APPLE), 16, 8);
+        masterSovereign(HEALTH_BOOST_EXTENDED, () -> Ingredient.of(Items.APPLE), 16, 8);
         durable(HEALTH_BOOST, LONG_HEALTH_BOOST, LONG_HEALTH_BOOST_EXTENDED);
         strong(HEALTH_BOOST, STRONG_HEALTH_BOOST, STRONG_HEALTH_BOOST_EXTENDED);
         veryDurable(LONG_HEALTH_BOOST, VERY_LONG_HEALTH_BOOST, VERY_LONG_HEALTH_BOOST_EXTENDED);
@@ -202,7 +206,7 @@ public class ModPotions {
 
     private static void durable(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         durable(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE), 1).draculaBlood().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE), 1).sovereignBlood().build());
     }
 
     private static void strong(Holder<Potion> in, Holder<Potion> out) {
@@ -211,48 +215,48 @@ public class ModPotions {
 
     private static void strong(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         strong(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE_DUST), 1).draculaBlood().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE_DUST), 1).sovereignBlood().build());
     }
 
     private static void veryDurable(Holder<Potion> in, Holder<Potion> out) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), 32, 16).blood().durable().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).blood().durable().build());
     }
 
     private static void veryDurableDracula(Holder<Potion> in, Holder<Potion> out) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), 32, 16).draculaBlood().durable().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).sovereignBlood().durable().build());
     }
 
     private static void veryDurable(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         veryDurable(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), 32, 16).draculaBlood().durable().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).sovereignBlood().durable().build());
     }
 
     private static void veryStrong(Holder<Potion> in, Holder<Potion> out) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), 64, 32).blood().concentrated().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).blood().concentrated().build());
     }
 
     private static void veryStrongDracula(Holder<Potion> in, Holder<Potion> out) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), 64, 32).draculaBlood().concentrated().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).sovereignBlood().concentrated().build());
     }
 
     private static void veryStrong(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         veryStrong(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE), 64, 32).draculaBlood().concentrated().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).sovereignBlood().concentrated().build());
     }
 
     private static void master(Holder<Potion> out, Supplier<Ingredient> in, int count, int countReduced) {
         VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).blood().build());
     }
 
-    private static void masterDracula(Holder<Potion> out, Supplier<Ingredient> in, int count, int countReduced) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).draculaBlood().build());
+    private static void masterSovereign(Holder<Potion> out, Supplier<Ingredient> in, int count, int countReduced) {
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(Potions.AWKWARD, out).master().ingredient(in, count, countReduced).sovereignBlood().build());
     }
 
 
     private static void splashItemBottle(Item item, Item resultSplashItem, PotionBrewing.Builder builder) {
         builder.addRecipe(new BrewingRecipe(Ingredient.of(item), Ingredient.of(Items.GUNPOWDER), new ItemStack(resultSplashItem)) {
             @Override
-            public boolean isInput(@NotNull ItemStack stack) {
+            public boolean isInput(ItemStack stack) {
                 return item.equals(stack.getItem());
             }
         });

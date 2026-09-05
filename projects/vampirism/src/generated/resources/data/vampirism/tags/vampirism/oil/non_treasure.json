@@ -1,3 +1,7 @@
 {
-  "values": []
+  "values": [
+    "vampirism:empty",
+    "vampirism:harm",
+    "vampirism:harm_strong"
+  ]
 }

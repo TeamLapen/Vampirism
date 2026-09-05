@@ -5,7 +5,7 @@
     "neoforge:ingredient_type": "neoforge:components",
     "components": {
       "vampirism:oil_contents": {
-        "oil": "vampirism:dracula_blood"
+        "oil": "vampirism:sovereign_blood"
       }
     },
     "items": "vampirism:oil_bottle"
@@ -49,5 +49,8 @@
       }
     },
     "id": "vampirism:oil_bottle"
-  }
+  },
+  "skill": [
+    "vampirism:master_alchemist"
+  ]
 }
