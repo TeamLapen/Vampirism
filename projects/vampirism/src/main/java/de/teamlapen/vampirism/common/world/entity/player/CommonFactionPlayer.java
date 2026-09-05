@@ -77,6 +77,20 @@ public abstract class CommonFactionPlayer<T extends IFactionPlayer<T> & ISkillPl
     @Override
     public void levelChanged(FactionUpdate changes) {
         onLevelChanged(changes.getLevel());
+        tryUnlockingSkill();
+    }
+
+    /**
+     * On level up, automatically enables a skill if - and only if - there is exactly one skill in the whole
+     * skill tree(s) that can currently be unlocked. If the choice is ambiguous the player picks it themselves.
+     */
+    private void tryUnlockingSkill() {
+        var unlockable = this.skillHandler.unlockableSkills();
+        if (unlockable.size() == 1) {
+            var skill = unlockable.getFirst();
+            this.skillHandler.enableSkill(skill.getValue(), skill.getKey());
+            tryUnlockingSkill();
+        }
     }
 
     protected void onLevelChanged(int newLevel) {

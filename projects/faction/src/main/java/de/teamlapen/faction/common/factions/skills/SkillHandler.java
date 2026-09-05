@@ -50,6 +50,28 @@ public class SkillHandler<T extends IFactionPlayer<T> & ISkillPlayer<T>> extends
         return unlockedTrees.stream().flatMap(s -> graph.tree(s).flatMap(x -> x.anyLastSegment(this::isSegmentEnabled)).map(x -> Pair.of(s, x)).stream()).findAny();
     }
 
+    /**
+     * Collects every skill that can currently be unlocked across all unlocked trees, i.e. every skill for which
+     * {@link #canSkillBeEnabled(Holder, Holder)} returns {@link Result#OK}.
+     */
+    public List<Pair<Holder<ISkillTree>, Holder<? extends ISkill<T>>>> unlockableSkills() {
+        SkillTreeGraph graph = graph();
+        List<Pair<Holder<ISkillTree>, Holder<? extends ISkill<T>>>> unlockable = new ArrayList<>();
+        for (Holder<ISkillTree> tree : this.unlockedTrees) {
+            graph.tree(tree).ifPresent(x -> {
+                for (SkillTreeGraph.Entry entry : x.entries()) {
+                    for (Holder<? extends ISkill<?>> skill : entry.skills()) {
+                        if (canSkillBeEnabled(skill, tree) == Result.OK) {
+                            Holder<? extends ISkill<T>> typed = SafeCast.cast(skill);
+                            unlockable.add(Pair.of(tree, typed));
+                        }
+                    }
+                }
+            });
+        }
+        return unlockable;
+    }
+
     @Override
     public Result canSkillBeEnabled(Holder<? extends ISkill<?>> skill, Holder<ISkillTree> skillTree) {
         var preResult = FactionEventFactory.fireSkillUnlockCheckEvent(this.player, skill);
