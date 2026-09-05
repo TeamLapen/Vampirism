@@ -1,18 +1,14 @@
+import useBrokenLinks from "@docusaurus/useBrokenLinks";
 
 export const BlockImg = ({src, alt}) => (
     <img src={src} alt={alt} style={{height: 100, imageRendering: "pixelated"}} />
 );
 
-export const Blocks = ({children, title, img, source = null, usage = null}) => (
-    <BlocksInternal children={children} title={title} img={img} source={source} usage={usage} />
-);
-
-export const Block = ({children , title, img, source = null, usage = null}) => (
-    <BlocksInternal children={children} title={title} img={[img]} source={source} usage={usage} />
-);
-
-export const BlocksInternal = ({children, title, img, source, usage}) => (
-        <div style={{marginBottom: '50px'}} id={title.toLowerCase().replaceAll(' ', '-').replaceAll('/', '-')}>
+export const BlocksInternal = ({children, title, img, source, usage}) => {
+    const id = title.toLowerCase().replaceAll(' ', '-').replaceAll('/', '-');
+    useBrokenLinks().collectAnchor(id);
+    return (
+        <div style={{marginBottom: '50px'}} id={id}>
             <div>
                 <h1 style={{fontSize: 'xx-large'}}>{title}</h1>
             </div>
@@ -92,6 +88,15 @@ export const BlocksInternal = ({children, title, img, source, usage}) => (
                 </div>}
             </div>
         </div>
+    );
+};
+
+export const Blocks = ({children, title, img, source = null, usage = null}) => (
+    <BlocksInternal children={children} title={title} img={img} source={source} usage={usage} />
+);
+
+export const Block = ({children , title, img, source = null, usage = null}) => (
+    <BlocksInternal children={children} title={title} img={[img]} source={source} usage={usage} />
 );
 
 export const Decorative = ({}) => (

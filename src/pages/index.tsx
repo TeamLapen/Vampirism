@@ -28,7 +28,7 @@ const SECTIONS: Section[] = [
     title: 'Content Reference',
     description:
       'Every block, item, oil, potion, effect, entity and structure Vampirism adds, with recipes.',
-    to: '/docs/wiki/content/items',
+    to: '/docs/1.10 NeoForge/wiki/content/items',
     cta: 'Browse content',
   },
   {

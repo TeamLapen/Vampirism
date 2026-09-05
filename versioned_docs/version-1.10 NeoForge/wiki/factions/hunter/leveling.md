@@ -24,7 +24,7 @@ These blocks are: [Weapon Table](../../content/blocks.mdx#weapon-table), [Potion
 For the highest tier you will need all three blocks placed adjacent to the hunter table.  
 
 #### Requirements
-| For Level | [Pure Blood](../../content/items#pure-blood) | [Vampire Fangs](../../content/items#vampire-fangs) |
+| For Level | [Pure Blood](../../content/items#pure-blood) | [Vampire Fangs](../../content/items#vampire-fang) |
 |-------|----------------------------------------------|----------------------------------------------------|
 | 5     | 0                                            | 5                                                  |
 | 6     | 1 Purity(1)                                  | 0                                                  |
@@ -42,7 +42,7 @@ With the ["Intel"](../../content/items.mdx#hunter-intel) you got visit a [Hunter
 
 ## Leaving the Faction
 
-If you want to leave the Hunter faction behind you can do so by crafting a [Sanguinare Injection](../../content/effects.mdx#sanguinare-injection) and inject it at an [Injection Chair](../../content/blocks.mdx#injection-chair).
+If you want to leave the Hunter faction behind you can do so by crafting a [Sanguinare Injection](../../content/items.mdx#injection) and inject it at an [Injection Chair](../../content/blocks.mdx#injection-chair).
 
 
 ## Tutorial video

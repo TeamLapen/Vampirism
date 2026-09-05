@@ -13,7 +13,7 @@ To use this one you have to fill it with blood (right-click with filled blood bo
 _Required blood amount 1:40,2:70,3:100_  
 
 ## Altar of Infusion (To reach level 5+)
-This altar requires a multi-block structure. First the main block (Altar of Infusion) this block and place it down, then you have to build [Altar Pillars](../../content/blocks#altar-pillar) around it and fill them with special blocks (right click it while holding them). The pillar filling type and height varies depending on the level, on top has to be an [Altar Tip](../../content/blocks#altar-tip) each. Make sure there are no other blocks (e.g. grass) in the area. After the structure is complete, put the required amount of items into the altar, sneak right click and wait for the magic to happen.  
+This altar requires a multi-block structure. First the main block (Altar of Infusion) this block and place it down, then you have to build Altar Pillars around it and fill them with special blocks (right click it while holding them). The pillar filling type and height varies depending on the level, on top has to be an Altar Tip each. Make sure there are no other blocks (e.g. grass) in the area. After the structure is complete, put the required amount of items into the altar, sneak right click and wait for the magic to happen.  
 
 #### Structure Points
 The required structure depends on the level, you need a specific amount of "structure points".

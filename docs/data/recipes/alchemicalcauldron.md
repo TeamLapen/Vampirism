@@ -3,7 +3,7 @@ sidebar_position: 3
 title: Alchemical Cauldron
 ---
 
-Recipes for the [Alchemical Cauldron](../../wiki/content/blocks#alchemical-cauldron). A recipe consumes
+Recipes for the Alchemical Cauldron. A recipe consumes
 one **item** ingredient plus one **fluid or fluid-item** input and cooks a result over time.
 
 :::info

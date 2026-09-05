@@ -12,9 +12,9 @@ data/<namespace>/recipe/<name>.json
 
 | Station                                          | `type`                                                                       | Page |
 |-------------------------------------------------|----------------------------------------------------------------------------|------|
-| [Weapon Table](../../wiki/content/blocks#weapon-table)             | `vampirism:shaped_crafting_weapontable`, `vampirism:shapeless_crafting_weapontable` | [Weapon Table](./weapontable) |
-| [Alchemical Cauldron](../../wiki/content/blocks#alchemical-cauldron) | `vampirism:alchemical_cauldron`                                              | [Alchemical Cauldron](./alchemicalcauldron) |
-| [Alchemy Table](../../wiki/content/blocks#alchemy-table)           | `vampirism:alchemical_table`                                                | [Alchemy Table](./alchemytable) |
+| Weapon Table                                     | `vampirism:shaped_crafting_weapontable`, `vampirism:shapeless_crafting_weapontable` | [Weapon Table](./weapontable) |
+| Alchemical Cauldron                              | `vampirism:alchemical_cauldron`                                              | [Alchemical Cauldron](./alchemicalcauldron) |
+| Alchemy Table                                    | `vampirism:alchemical_table`                                                | [Alchemy Table](./alchemytable) |
 | Blood Infuser                                    | `vampirism:infuser`                                                         | [Infuser](./infuser) |
 
 Default recipes:

@@ -3,7 +3,7 @@ sidebar_position: 2
 title: Weapon Table
 ---
 
-Shaped or shapeless recipes for the [Weapon Table](../../wiki/content/blocks#weapon-table). The Weapon
+Shaped or shapeless recipes for the Weapon Table. The Weapon
 Table has a **4×4** grid.
 
 :::info

@@ -3,7 +3,7 @@ sidebar_position: 3
 title: Convertibles
 ---
 
-The main article about vampiric creatures is [here](../wiki/content/entities/bitten_animal).
+The main article about vampiric creatures is in the vampiric creatures wiki page.
 
 By default only some vanilla animals can be turned into a vampiric version. You can make any other
 (vanilla or modded) creature convertible from a data pack by adding it to the

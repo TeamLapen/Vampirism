@@ -3,7 +3,7 @@ sidebar_position: 4
 title: Alchemy Table
 ---
 
-Brewing-style recipes for the [Alchemy Table](../../wiki/content/blocks#alchemy-table): a **base
+Brewing-style recipes for the Alchemy Table: a **base
 ingredient** is combined with an **input** item to produce a result.
 
 :::info

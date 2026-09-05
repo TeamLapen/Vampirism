@@ -11,7 +11,7 @@ title: Vampire Player
   * Vampires cannot starve, but they get severe de-buffs if they have no blood
 * Players can suck blood from an animal and add it to their own blood bar 
 * Mobs that were bitten and gave blood are converted to a vampire version or die
-* Blood can be stored in [Blood Bottles](../../content/items#blood-bottle) and [Blood Containers](../../content/blocks#blood-container) and be consumed later 
+* Blood can be stored in Blood Bottles and Blood Containers and be consumed later 
 * Eye and fang overlays are applied to the player texture
 * Receive damage from the sun
 
@@ -32,7 +32,7 @@ any blood that does not fit into the bar will be filled in those.
 You can drink that later.
 [Advanced blood management tricks video](https://youtu.be/N2v0kDbD0fc)
 Do not worry if you have meat lying around, they will not go to waste.
-You can grind them into blood using a [Blood Grinder](../../content/blocks#blood-grinder).
+You can grind them into blood using a Blood Grinder.
 
 ## Sun Damage
 There are three types of impact of the sun: Nausea, weakness and damage.  
@@ -54,7 +54,7 @@ Currently, there are the following visions available:
 
 ## Stop being a Vampire
 If you should choose to be no longer a vampire,
-you can search for an [Altar of Cleansing](../../content/blocks#altar-of-cleansing) in a temple or craft one.
+you can search for an Altar of Cleansing in a temple or craft one.
 There you can choose to leave your vampire life behind.
 Be aware that you will lose all your progress.
 If you want to become a Vampire again, you will need to start at level 1.

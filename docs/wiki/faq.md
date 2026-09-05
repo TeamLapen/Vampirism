@@ -33,7 +33,7 @@ As a vampire look for an Altar of Cleansing (or craft one), as a hunter use a Sa
 Vampire books can be found around the world (e.g. in mineshafts or vampire dungeons). They have cryptic names and content.
 
 #### You do not have the permission to do this action
-Vampirism uses Forge's permission system to allow / disallow certain actions. Take a look at [Permissions](./permissions.md#actions-etc-can-not-be-used-on-a-server-when-not-being-op) for detailed information.
+Vampirism uses Forge's permission system to allow / disallow certain actions. Take a look at [Permissions](./permissions.md#hybrid-server---actions-etc-can-not-be-used-on-a-server-when-not-being-op) for detailed information.
 
 ### I have another question
 1) Checkout this wiki  

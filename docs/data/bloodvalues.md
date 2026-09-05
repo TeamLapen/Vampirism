@@ -44,7 +44,7 @@ data/<namespace>/data_maps/item/item_blood.json
 ```
 
 Data map `vampirism:item_blood`. Sets how much **impure blood** (in mB) the
-[Blood Grinder](../wiki/content/blocks#grinder) produces from one of the item. `0` marks the item as
+Blood Grinder produces from one of the item. `0` marks the item as
 not grindable.
 
 If an item has no entry, Vampirism falls back to `nutrition × 10` for uncooked items in the
@@ -103,8 +103,8 @@ data/<namespace>/data_maps/fluid/fluid_blood_conversion.json
 ```
 
 Data map `vampirism:fluid_blood_conversion`. Sets the conversion ratio a
-[Blood Sieve](../wiki/content/blocks#blood-sieve) applies when turning a fluid into
-[Blood](../wiki/content/fluids#blood): `output_blood = conversionRate × input_amount`. `0` means the
+Blood Sieve applies when turning a fluid into
+Blood: `output_blood = conversionRate × input_amount`. `0` means the
 fluid cannot be converted.
 
 Vampirism ships this map empty; `vampirism:impure_blood` conversion is handled in code. Use it to make

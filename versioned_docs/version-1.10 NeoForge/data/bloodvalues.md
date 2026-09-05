@@ -8,7 +8,7 @@ Blood values can be configured for items, entities and fluids.
 Starting with NeoForge Vampirism uses the new data maps to assign blood values to items, fluids and entities. Take a look at the [official wiki](https://docs.neoforged.net/docs/datamaps/structure) for more information about data maps.
 
 ## Items
-Item blood values are used by the [Grinder](../wiki/content/blocks#grinder) to determine the amount of impure blood of an item when grinding it.
+Item blood values are used by the [Grinder](../wiki/content/blocks#blood-grinder) to determine the amount of impure blood of an item when grinding it.
 A configured value of `20` means that the grinder will produce 20mb impure blood when grinding the item.
 
 ### Schema

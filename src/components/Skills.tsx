@@ -1,4 +1,5 @@
 import React from "react";
+import useBrokenLinks from "@docusaurus/useBrokenLinks";
 
 export const SkillImg = ({src, alt}) => (
     <img src={src} alt={alt} style={{height: 70, imageRendering: "pixelated"}}/>
@@ -31,21 +32,25 @@ export const UnlocksVision = ({vision}) => (
     </span>
 );
 
-export const SkillOrAction = ({children, title, iconPath}) => (
-    <div style={{ marginTop: '15px'}} id={title.toLowerCase().replaceAll(' ','-')}>
-        <div className="container" style={{ display: 'flex', alignItems: 'center', marginLeft: '-20px'}}>
-            <div className="image">
-                <SkillImg src={iconPath} alt={title}/>
+export const SkillOrAction = ({children, title, iconPath}) => {
+    const id = title.toLowerCase().replaceAll(' ','-');
+    useBrokenLinks().collectAnchor(id);
+    return (
+        <div style={{ marginTop: '15px'}} id={id}>
+            <div className="container" style={{ display: 'flex', alignItems: 'center', marginLeft: '-20px'}}>
+                <div className="image">
+                    <SkillImg src={iconPath} alt={title}/>
+                </div>
+                <div className="text" style={{ marginLeft: '10px'}}>
+                    <h2>{title}</h2>
+                </div>
             </div>
-            <div className="text" style={{ marginLeft: '10px'}}>
-                <h2>{title}</h2>
-            </div>
+            <span >
+                {children}
+            </span>
         </div>
-        <span >
-            {children}
-        </span>
-    </div>
-);
+    );
+};
 
 export const SkillBranch = ({children, title}) =>(
     <div>

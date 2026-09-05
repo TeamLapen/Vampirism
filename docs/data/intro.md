@@ -36,7 +36,7 @@ top of each page) for editor auto-completion and validation.
 | [Recipes](./recipes/intro)          | Weapon Table, Alchemical Cauldron, Alchemy Table, Infuser.          |
 | [Loot Conditions](./lootconditions/intro) | `vampirism:*` loot conditions.                                |
 | [Loot Functions](./lootfunctions/intro)   | `vampirism:*` loot functions + the smelting loot modifier.    |
-| [Tasks](./tasks)                    | Provided by **FactionApi** – see [its docs](/factionapi/data/tasks).      |
+| Tasks                                | Provided by **FactionApi** – see [its docs](/factionapi/data/tasks).      |
 | Skill trees                         | Provided by **FactionApi** – see [its docs](/factionapi/data/skilltrees). |
 
 Plus everything vanilla data packs already let you change (loot tables, advancements, tags, worldgen,

@@ -4,11 +4,11 @@ title: Control
 ---
 
 Villages can be controlled by a faction to spread their control and have access to certain features.
-The [Totem](../../content/blocks#village-totem-top-base) is the controlling block for the village which can be interacted with by the faction members.
+The Totem is the controlling block for the village which can be interacted with by the faction members.
 
 ## Occurrence of villages
 
-Natural villages have a chance to spawn with a [Fragile Totem](../../content/blocks#village-totem-top-base) and therefore be initially controlled by a faction.
+Natural villages have a chance to spawn with a Fragile Totem and therefore be initially controlled by a faction.
 
 ## Raids
 
@@ -56,7 +56,7 @@ If the village is neutral the final phase will be skipped and the village will b
 
 ## Neutralize villages
 
-A village can only be neutralized by members of the faction that controls the village by destroying the [Totem](../../content/blocks#village-totem-top-base).
+A village can only be neutralized by members of the faction that controls the village by destroying the Totem.
 
 
 ## Additional notes

@@ -3,7 +3,7 @@ sidebar_position: 6
 title: Tasks
 ---
 
-Tasks are given to faction player to collect items or achieve certain goals. They are given by a [Faction Representative](/docs/wiki/content/entities/village_representative)
+Tasks are given to faction player to collect items or achieve certain goals. They are given by a [Faction Representative](../wiki/content/entities/village_representative)
 
 
 ## Location
