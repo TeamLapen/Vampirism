@@ -151,7 +151,7 @@ public class ModBlockModelGenerators extends BaseBlockModelGenerators {
         createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_STRONG.get(), strongModel);
 
         Identifier longModel = ModModelTemplates.GARLIC_DIFFUSER.create(ModBlocks.GARLIC_DIFFUSER_LONG.get(), new TextureMapping().put(ModTextureSlots.CORE, new Material(mod("block/garlic_diffuser_core_long"))), this.modelOutput);
-        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_LONG.get(), plainVariant(strongModel)));
+        this.blockStateOutput.accept(createSimpleBlock(ModBlocks.GARLIC_DIFFUSER_LONG.get(), plainVariant(longModel)));
         createDefaultBlockItem(ModBlocks.GARLIC_DIFFUSER_LONG.get(), longModel);
 
         createNonTemplateModelBlock(ModBlocks.GARLIC_DIFFUSER_CORE.get());
