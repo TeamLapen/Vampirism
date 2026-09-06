@@ -21,4 +21,8 @@ public record BottleBlood(int blood) implements IBottleBlood {
             throw new IllegalArgumentException("Blood amount must be between 0 and " + MAX_VALUE);
         }
     }
+
+    public boolean isFull() {
+        return this.blood == MAX_VALUE;
+    }
 }
