@@ -25,6 +25,9 @@ whitelist.json
 **/runs/
 Thumbs.db
 .directory
+
+# Image editor backup files
+*.png~
 ### Eclipse template
 
 .metadata
