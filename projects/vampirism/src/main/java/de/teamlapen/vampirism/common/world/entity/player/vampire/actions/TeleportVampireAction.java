@@ -8,16 +8,20 @@ import de.teamlapen.vampirism.common.core.ModRefinements;
 import de.teamlapen.vampirism.common.core.ModSounds;
 import de.teamlapen.vampirism.common.util.UtilLib;
 import de.teamlapen.vampirism.common.world.entity.AreaParticleCloud;
-import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 
 public class TeleportVampireAction extends DefaultVampireAction {
@@ -35,50 +39,35 @@ public class TeleportVampireAction extends DefaultVampireAction {
             dist *= ModConfig.balance().vrTeleportDistanceMod.get();
         }
         HitResult target = UtilLib.getPlayerLookingSpot(player, dist);
-        double ox = player.getX();
-        double oy = player.getY();
-        double oz = player.getZ();
         if (target.getType() == HitResult.Type.MISS) {
             player.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), 1, 1);
             return IActionResult.fail(Component.translatable("message.vampirism.action.teleport.no_target"));
         }
-        BlockPos pos = null;
-        if (target.getType() == HitResult.Type.BLOCK) {
-            if (player.level().getBlockState(((BlockHitResult) target).getBlockPos()).blocksMotion()) {
-                pos = ((BlockHitResult) target).getBlockPos().above();
-            }
-        } else {//TODO better solution / remove
-            if (player.level().getBlockState(((EntityHitResult) target).getEntity().blockPosition()).blocksMotion()) {
-                pos = ((EntityHitResult) target).getEntity().blockPosition();
-            }
+        if (!(player instanceof ServerPlayer serverPlayer)) {
+            return IActionResult.SUCCESS;
         }
 
-        if (pos != null) {
-            player.setPos(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-            if (player.level().containsAnyLiquid(player.getBoundingBox()) || !player.level().isUnobstructed(player)) { //isEntityColliding
-                pos = null;
-            }
-        }
+        // Teleport to slightly in front of the visual hit spot, towards the player. Executed similar to an ender pearl to reduce the risk of getting stuck.
+        Vec3 origin = serverPlayer.position();
+        Vec3 hitLocation = target.getLocation();
+        Vec3 destination = hitLocation.add(hitLocation.vectorTo(origin).normalize().scale(0.5));
 
+        if (serverPlayer.isPassenger()) {
+            serverPlayer.stopRiding();
+        }
+        serverPlayer.teleport(new TeleportTransition((ServerLevel) serverPlayer.level(), destination, Vec3.ZERO, serverPlayer.getYRot(), serverPlayer.getXRot(), Set.of(), TeleportTransition.DO_NOTHING));
+        serverPlayer.resetFallDistance();
 
-        if (pos == null) {
-            player.setPos(ox, oy, oz);
-            player.playSound(SoundEvents.NOTE_BLOCK_BASEDRUM.value(), 1, 1);
-            return IActionResult.fail(Component.translatable("message.vampirism.action.teleport.no_target"));
-        }
-        if (player instanceof ServerPlayer playerMp) {
-            playerMp.removeVehicle();
-            playerMp.teleportTo(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-        }
-        AreaParticleCloud particleCloud = new AreaParticleCloud(ModEntities.PARTICLE_CLOUD.get(), player.level());
-        particleCloud.setPos(ox, oy, oz);
+        AreaParticleCloud particleCloud = new AreaParticleCloud(ModEntities.PARTICLE_CLOUD.get(), serverPlayer.level());
+        particleCloud.setPos(origin.x(), origin.y(), origin.z());
         particleCloud.setRadius(0.7F);
-        particleCloud.setHeight(player.getBbHeight());
+        particleCloud.setHeight(serverPlayer.getBbHeight());
         particleCloud.setDuration(5);
         particleCloud.setSpawnRate(15);
-        player.level().addFreshEntity(particleCloud);
-        player.level().playSound(null, ox, oy, oz, ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
+        particleCloud.setParticle(ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0xFF500000));
+        serverPlayer.level().addFreshEntity(particleCloud);
+        serverPlayer.level().playSound(null, origin.x(), origin.y(), origin.z(), ModSounds.TELEPORT_AWAY.get(), SoundSource.PLAYERS, 1f, 1f);
+        serverPlayer.level().playSound(null, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), ModSounds.TELEPORT_HERE.get(), SoundSource.PLAYERS, 1f, 1f);
         return IActionResult.SUCCESS;
     }
 
