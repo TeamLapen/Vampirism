@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.client.models.items.ShatteredArmorModel;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowPull;
 import de.teamlapen.vampirism.common.core.ModItems;
 import de.teamlapen.vampirism.common.util.ColorListsUtil;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -52,12 +53,12 @@ public class ModItemsRender {
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.CLOAK, CloakModel::new), ColorListsUtil.VAMPIRE_CLOAKS.values().toArray(Item[]::new));
-        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.HUNTER_HAT_TALL, part -> new ClothedModel<>(part, false)), ModItems.HUNTER_HAT_TALL.get());
-        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.HUNTER_HAT_BROAD, part -> new ClothedModel<>(part, false)), ModItems.HUNTER_HAT_BROAD.get());
-        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.CLOTHING_CROWN, part -> new ClothedModel<>(part, false)), ModItems.VAMPIRE_CLOTHING_CROWN.get());
-        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.CLOTHING_HAT, part -> new ClothedModel<>(part, false)), ModItems.VAMPIRE_CLOTHING_HAT.get());
-        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.CLOTHING_PANTS, part -> new ClothedModel<>(part, false)), ModItems.VAMPIRE_CLOTHING_LEGS.get());
-        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.CLOTHING_BOOTS, (part) -> new ClothedModel<>(part, false)), ModItems.VAMPIRE_CLOTHING_BOOTS.get());
+        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.HUNTER_HAT_TALL, HumanoidModel::new), ModItems.HUNTER_HAT_TALL.get());
+        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.HUNTER_HAT_BROAD, HumanoidModel::new), ModItems.HUNTER_HAT_BROAD.get());
+        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.CLOTHING_CROWN, HumanoidModel::new), ModItems.VAMPIRE_CLOTHING_CROWN.get());
+        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.CLOTHING_HAT, HumanoidModel::new), ModItems.VAMPIRE_CLOTHING_HAT.get());
+        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.CLOTHING_PANTS, HumanoidModel::new), ModItems.VAMPIRE_CLOTHING_LEGS.get());
+        event.registerItem(new ItemExtensions.VampireArmorItemExtension(ModEntitiesRender.CLOTHING_BOOTS, HumanoidModel::new), ModItems.VAMPIRE_CLOTHING_BOOTS.get());
         event.registerItem(ItemExtensions.HUNTER_CROSSBOW, ModItems.BASIC_CROSSBOW.get(), ModItems.ENHANCED_CROSSBOW.get(), ModItems.BASIC_DOUBLE_CROSSBOW.get(), ModItems.ENHANCED_DOUBLE_CROSSBOW.get(), ModItems.BASIC_TECH_CROSSBOW.get(), ModItems.ENHANCED_TECH_CROSSBOW.get());
         event.registerItem(ItemExtensions.CRUCIFIX, ModItems.CRUCIFIX_NORMAL.get(), ModItems.CRUCIFIX_ENHANCED.get(), ModItems.CRUCIFIX_ULTIMATE.get());
         event.registerItem(ItemExtensions.SYRINGE, ModItems.SYRINGE_EMPTY);
