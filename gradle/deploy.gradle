@@ -98,15 +98,22 @@ publishMods {
     modrinth {
         accessToken = findProperty("MODRINTH_API") ?: "DUMMY"
         projectId = project.modrinth_id
-        minecraftVersions.add(project.minecraft_version)
+        minecraftVersionList("1.21.1, 1.21")
+        environment = CLIENT_AND_SERVER
+        optional("jei")
+        optional("guide-api")
+        optional("terrablender")
+        optional("lithostitched")
+        optional("repurposed-structures-forge")
     }
 
     curseforge {
         accessToken = findProperty("CURSEFORGE_API") ?: "DUMMY"
         projectId = project.curseforge_id
-        minecraftVersions.add(project.minecraft_version)
+        minecraftVersionList("1.21.1, 1.21")
         projectSlug = project.curseforge_slug
         client = true
         server = true
+        optional('jei', 'guide-api-village-and-pillage', 'lithostitched', 'terrablender-neoforge', 'repurposed-structures')
     }
 }
