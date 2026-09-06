@@ -101,8 +101,12 @@ publishMods {
         accessToken = findProperty("MODRINTH_API") ?: "DUMMY"
         projectId = 'jVZ0F1wn'
         minecraftVersions.add(project.minecraft_version)
-        optional("u6dRKJwZ") //jei
-        optional("w5L2PHJU") //guide-api-village-and-pillage
+        environment = CLIENT_AND_SERVER
+        optional("jei")
+        optional("guide-api")
+        optional("terrablender")
+        optional("lithostitched")
+        optional("repurposed-structures-forge")
     }
 
     curseforge {
@@ -112,6 +116,6 @@ publishMods {
         projectSlug = "vampirism-become-a-vampire"
         client = true
         server = true
-        optional('jei', 'guide-api-village-and-pillage')
+        optional('jei', 'guide-api-village-and-pillage', 'lithostitched', 'terrablender', 'repurposed-structures')
     }
 }
