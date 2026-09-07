@@ -53,8 +53,8 @@ public class BalanceBuilder {
     private String currentComment;
 
     BalanceBuilder() {
-        categoryConfigMap = new HashMap<>();
-        categoryPrefixMap = new HashMap<>();
+        categoryConfigMap = new LinkedHashMap<>();
+        categoryPrefixMap = new LinkedHashMap<>();
     }
 
     public void addBalanceModifier(@NotNull String key, @NotNull Consumer<? extends Conf> modifier) {
@@ -105,7 +105,7 @@ public class BalanceBuilder {
     }
 
     public @NotNull BalanceBuilder category(String name, String prefix) {
-        activeCategory = new HashMap<>();
+        activeCategory = new LinkedHashMap<>();
         categoryConfigMap.put(name, activeCategory);
         categoryPrefixMap.put(name, prefix);
         return this;
