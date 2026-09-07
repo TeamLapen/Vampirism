@@ -49,14 +49,23 @@ public class HeritageScreen extends Screen {
     private static final double MAX_ZOOM = 2;
 
     private static final Identifier WINDOW_LOCATION = FIdentifier.mod("textures/gui/skills/window.png");
-    private static final List<PageTexture> PAGE_TEXTURES = List.of(
+    private static final List<PageTexture> CURRENT_PAGE_TEXTURES = List.of(
             new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_clean.png"), 85),
-            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_small.png"), 10),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_small.png"), 13),
             new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_big.png"), 2),
-            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_hole.png"), 1),
             new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_lines.png"), 1)
     );
-    private static final int PAGE_TEXTURE_WEIGHT = PAGE_TEXTURES.stream().mapToInt(PageTexture::weight).sum();
+    private static final List<PageTexture> PREVIOUS_PAGE_TEXTURES = List.of(
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_clean.png"), 60),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_small.png"), 15),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_big.png"), 10),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_stain_lines.png"), 10),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_hole_big.png"), 1),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_hole_slash.png"), 2),
+            new PageTexture(VIdentifier.mod("textures/gui/sprites/container/heritage_screen/page_hole_small.png"), 2)
+    );
+    private static final int CURRENT_PAGE_TEXTURE_WEIGHT = CURRENT_PAGE_TEXTURES.stream().mapToInt(PageTexture::weight).sum();
+    private static final int PREVIOUS_PAGE_TEXTURE_WEIGHT = PREVIOUS_PAGE_TEXTURES.stream().mapToInt(PageTexture::weight).sum();
     private static final Identifier LOST_HISTORY_TEXTURE = VIdentifier.mod("textures/gui/sprites/container/heritage_screen/rip.png");
     private static final List<Identifier> HERITAGE_FRAMES = List.of(
             VIdentifier.mod("container/heritage_screen/heritage_frame_dark_oak"),
@@ -68,6 +77,7 @@ public class HeritageScreen extends Screen {
 
     private final ILastScreenProvider backScreen;
     private @Nullable ClientboundHeritagePacket heritage;
+    private List<UUID> availableHeritageIds = List.of();
     private List<Node> nodes = List.of();
     private int guiLeft;
     private int guiTop;
@@ -81,6 +91,8 @@ public class HeritageScreen extends Screen {
     private @Nullable Node hoveredNode;
     private final Map<UUID, PlayerSkin> remotePlayerSkins = new HashMap<>();
     private final Set<UUID> requestedPlayerSkins = new HashSet<>();
+    private ExtendedButton previousHeritageButton;
+    private ExtendedButton nextHeritageButton;
 
     public HeritageScreen(ILastScreenProvider backScreen) {
         super(GameNarrator.NO_TITLE);
@@ -98,16 +110,52 @@ public class HeritageScreen extends Screen {
         this.guiTop = (this.height - SCREEN_HEIGHT) / 2;
 
         this.addRenderableWidget(new ExtendedButton(this.guiLeft + 4, this.guiTop + 194, 80, 20, Component.translatable("gui.back"), button -> this.backScreen.returnToLastScreen()));
+        int heritageButtonsLeft = this.guiLeft + SCREEN_WIDTH / 2 - 20 - 4 / 2;
+        this.previousHeritageButton = this.addRenderableWidget(new ExtendedButton(heritageButtonsLeft, this.guiTop + 194, 20, 20, Component.literal("<"), button -> this.cycleHeritage(-1)));
+        this.nextHeritageButton = this.addRenderableWidget(new ExtendedButton(heritageButtonsLeft + 20 + 4, this.guiTop + 194, 20, 20, Component.literal(">"), button -> this.cycleHeritage(1)));
         this.addRenderableWidget(new ExtendedButton(this.guiLeft + 168, this.guiTop + 194, 80, 20, Component.translatable("gui.done"), button -> this.minecraft.setScreen(null)));
+        this.updateHeritageNavigation();
 
         if (this.heritage == null) {
-            VampirismMod.proxy.sendToServer(new ServerboundRequestHeritagePacket());
+            this.requestHeritage(null);
         }
     }
 
     public void setHeritage(ClientboundHeritagePacket heritage) {
         this.heritage = heritage;
+        this.availableHeritageIds = heritage.heritageIds();
+        this.updateHeritageNavigation();
         this.rebuildTree();
+    }
+
+    private void cycleHeritage(int direction) {
+        if (this.heritage == null || this.availableHeritageIds.size() < 2) {
+            return;
+        }
+        int currentIndex = this.availableHeritageIds.indexOf(this.heritage.heritageId());
+        if (currentIndex < 0) {
+            return;
+        }
+        int nextIndex = Math.floorMod(currentIndex + direction, this.availableHeritageIds.size());
+        this.requestHeritage(this.availableHeritageIds.get(nextIndex));
+    }
+
+    private void requestHeritage(@Nullable UUID heritageId) {
+        this.heritage = null;
+        this.nodes = List.of();
+        this.lostHistoryNodes = List.of();
+        this.updateHeritageNavigation();
+        VampirismMod.proxy.sendToServer(new ServerboundRequestHeritagePacket(heritageId));
+    }
+
+    private void updateHeritageNavigation() {
+        boolean visible = this.availableHeritageIds.size() > 1;
+        if (this.previousHeritageButton != null) {
+            this.previousHeritageButton.visible = visible;
+        }
+        if (this.nextHeritageButton != null) {
+            this.nextHeritageButton.visible = visible;
+        }
     }
 
     @Override
@@ -161,8 +209,14 @@ public class HeritageScreen extends Screen {
     }
 
     private Identifier getPageTexture(int x, int y) {
-        int selection = RandomSource.create(Mth.getSeed(new BlockPos(x, y, 0))).nextInt(PAGE_TEXTURE_WEIGHT);
-        for (PageTexture pageTexture : PAGE_TEXTURES) {
+        List<PageTexture> pageTextures = this.heritage != null && !this.heritage.currentHeritage()
+                ? PREVIOUS_PAGE_TEXTURES
+                : CURRENT_PAGE_TEXTURES;
+        int pageTextureWeight = this.heritage != null && !this.heritage.currentHeritage()
+                ? PREVIOUS_PAGE_TEXTURE_WEIGHT
+                : CURRENT_PAGE_TEXTURE_WEIGHT;
+        int selection = RandomSource.create(Mth.getSeed(new BlockPos(x, y, 0))).nextInt(pageTextureWeight);
+        for (PageTexture pageTexture : pageTextures) {
             selection -= pageTexture.weight();
             if (selection < 0) {
                 return pageTexture.texture();

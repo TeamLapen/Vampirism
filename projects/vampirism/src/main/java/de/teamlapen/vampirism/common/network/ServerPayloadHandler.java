@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
 import de.teamlapen.vampirism.common.util.supporter.Supporter;
+import de.teamlapen.vampirism.common.world.heritage.HeritageMembership;
 import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
 import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
 import de.teamlapen.faction.common.core.FactionItems;
@@ -27,6 +28,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class ServerPayloadHandler {
 
@@ -144,36 +150,60 @@ public class ServerPayloadHandler {
     public static void handleRequestHeritagePacket(ServerboundRequestHeritagePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             ServerPlayer player = (ServerPlayer) context.player();
-            HeritageManager.getMembership(player).ifPresentOrElse(membership -> {
-                String namedNpc = membership.namedNpc();
-                var supporterManager = VampirismMod.services().supporterManager();
-                var predefinedHeritage = namedNpc == null
-                        ? java.util.Optional.<de.teamlapen.vampirism.common.util.SupporterManager.PredefinedHeritage>empty()
-                        : supporterManager.getPredefinedHeritageById(namedNpc).or(() -> supporterManager.getPredefinedHeritage(namedNpc));
-                var members = HeritageWorldData.getData(player.level().getServer()).getMembers(membership.heritageId()).values().stream()
-                        .map(member -> {
-                            String parentNpcId = member.parentNpcId();
-                            if (parentNpcId == null && member.parentPlayerId() == null && namedNpc != null && predefinedHeritage.isPresent()
-                                    && predefinedHeritage.get().members().stream().anyMatch(staticMember -> staticMember.id().equals(namedNpc))) {
-                                parentNpcId = namedNpc;
-                            }
-                            return new ClientboundHeritagePacket.Member(member.playerId(), member.playerName(), member.parentPlayerId(), parentNpcId);
-                        })
-                        .toList();
-                var staticMembers = predefinedHeritage.stream()
-                        .flatMap(heritage -> heritage.members().stream())
-                        .map(member -> new ClientboundHeritagePacket.StaticMember(member.id(), member.name(), member.parentId(), member.lostHistory()))
-                        .toList();
-                String founderName = predefinedHeritage.isPresent() ? null : namedNpc;
-                if (founderName != null) {
-                    founderName = supporterManager.getSupporter(founderName)
-                            .map(Supporter::name)
-                            .map(Component::getString)
-                            .orElse(founderName);
-                }
-                player.connection.send(new ClientboundHeritagePacket(founderName, staticMembers, members));
-            }, () -> player.connection.send(new ClientboundHeritagePacket(null, java.util.List.of(), java.util.List.of())));
+            HeritageWorldData heritageData = HeritageWorldData.getData(player.level().getServer());
+            List<HeritageWorldData.HeritageHistory> history = heritageData.getHeritagesForPlayer(player.getUUID());
+            Optional<HeritageMembership> current = HeritageManager.getMembership(player);
+            List<UUID> heritageIds = new ArrayList<>();
+            current.map(HeritageMembership::heritageId).ifPresent(heritageIds::add);
+            history.stream()
+                    .map(HeritageWorldData.HeritageHistory::heritageId)
+                    .filter(heritageId -> !heritageIds.contains(heritageId))
+                    .sorted()
+                    .forEach(heritageIds::add);
+
+            Optional<HeritageMembership> selected = msg.heritageId() == null
+                    ? current
+                    : current.filter(membership -> msg.heritageId().equals(membership.heritageId()))
+                    .or(() -> history.stream()
+                            .filter(heritage -> heritage.heritageId().equals(msg.heritageId()))
+                            .map(HeritageWorldData.HeritageHistory::membership)
+                            .findFirst());
+            selected.ifPresentOrElse(
+                    membership -> sendHeritagePacket(player, heritageData, membership, heritageIds,
+                            current.map(currentMembership -> currentMembership.heritageId().equals(membership.heritageId())).orElse(false)),
+                    () -> player.connection.send(new ClientboundHeritagePacket(null, List.of(), List.of(), null, heritageIds, false))
+            );
         });
+    }
+
+    private static void sendHeritagePacket(ServerPlayer player, HeritageWorldData heritageData, HeritageMembership membership, List<UUID> heritageIds, boolean currentHeritage) {
+        String namedNpc = membership.namedNpc();
+        var supporterManager = VampirismMod.services().supporterManager();
+        var predefinedHeritage = namedNpc == null
+                ? Optional.<de.teamlapen.vampirism.common.util.SupporterManager.PredefinedHeritage>empty()
+                : supporterManager.getPredefinedHeritageById(namedNpc).or(() -> supporterManager.getPredefinedHeritage(namedNpc));
+        var members = heritageData.getMembers(membership.heritageId()).values().stream()
+                .map(member -> {
+                    String parentNpcId = member.parentNpcId();
+                    if (parentNpcId == null && member.parentPlayerId() == null && namedNpc != null && predefinedHeritage.isPresent()
+                            && predefinedHeritage.get().members().stream().anyMatch(staticMember -> staticMember.id().equals(namedNpc))) {
+                        parentNpcId = namedNpc;
+                    }
+                    return new ClientboundHeritagePacket.Member(member.playerId(), member.playerName(), member.parentPlayerId(), parentNpcId);
+                })
+                .toList();
+        var staticMembers = predefinedHeritage.stream()
+                .flatMap(heritage -> heritage.members().stream())
+                .map(member -> new ClientboundHeritagePacket.StaticMember(member.id(), member.name(), member.parentId(), member.lostHistory()))
+                .toList();
+        String founderName = predefinedHeritage.isPresent() ? null : namedNpc;
+        if (founderName != null) {
+            founderName = supporterManager.getSupporter(founderName)
+                    .map(Supporter::name)
+                    .map(Component::getString)
+                    .orElse(founderName);
+        }
+        player.connection.send(new ClientboundHeritagePacket(founderName, staticMembers, members, membership.heritageId(), heritageIds, currentHeritage));
     }
 
 }

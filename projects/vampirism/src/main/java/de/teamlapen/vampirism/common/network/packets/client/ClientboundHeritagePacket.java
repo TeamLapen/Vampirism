@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public record ClientboundHeritagePacket(@Nullable String founderName, List<StaticMember> staticMembers, List<Member> members) implements CustomPacketPayload {
+public record ClientboundHeritagePacket(@Nullable String founderName, List<StaticMember> staticMembers, List<Member> members, @Nullable UUID heritageId, List<UUID> heritageIds, boolean currentHeritage) implements CustomPacketPayload {
 
     public static final Type<ClientboundHeritagePacket> TYPE = new Type<>(VIdentifier.mod("heritage"));
     private static final StreamCodec<RegistryFriendlyByteBuf, StaticMember> STATIC_MEMBER_CODEC = StreamCodec.composite(
@@ -35,12 +35,24 @@ public record ClientboundHeritagePacket(@Nullable String founderName, List<Stati
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), packet -> Optional.ofNullable(packet.founderName()),
             STATIC_MEMBER_CODEC.apply(ByteBufCodecs.collection(ArrayList::new)), ClientboundHeritagePacket::staticMembers,
             MEMBER_CODEC.apply(ByteBufCodecs.collection(ArrayList::new)), ClientboundHeritagePacket::members,
-            (founderName, staticMembers, members) -> new ClientboundHeritagePacket(founderName.orElse(null), staticMembers, members)
+            ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), packet -> Optional.ofNullable(packet.heritageId()),
+            UUIDUtil.STREAM_CODEC.apply(ByteBufCodecs.collection(ArrayList::new)), ClientboundHeritagePacket::heritageIds,
+            ByteBufCodecs.BOOL, ClientboundHeritagePacket::currentHeritage,
+            (founderName, staticMembers, members, heritageId, heritageIds, currentHeritage) -> new ClientboundHeritagePacket(founderName.orElse(null), staticMembers, members, heritageId.orElse(null), heritageIds, currentHeritage)
     );
+
+    public ClientboundHeritagePacket(@Nullable String founderName, List<StaticMember> staticMembers, List<Member> members) {
+        this(founderName, staticMembers, members, null, List.of(), true);
+    }
+
+    public ClientboundHeritagePacket(@Nullable String founderName, List<StaticMember> staticMembers, List<Member> members, @Nullable UUID heritageId, List<UUID> heritageIds) {
+        this(founderName, staticMembers, members, heritageId, heritageIds, true);
+    }
 
     public ClientboundHeritagePacket {
         staticMembers = List.copyOf(staticMembers);
         members = List.copyOf(members);
+        heritageIds = List.copyOf(heritageIds);
     }
 
     @Override

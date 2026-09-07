@@ -45,7 +45,7 @@ public final class HeritageDebugCommand extends BasicCommand {
         history.stream()
                 .filter(heritage -> !heritage.heritageId().equals(currentId))
                 .sorted(Comparator.comparing(heritage -> heritage.heritageId().toString()))
-                .forEach(heritage -> source.sendSuccess(() -> describe("Previous", toMembership(heritage), heritageData.getMembers(heritage.heritageId()).size()), false));
+                .forEach(heritage -> source.sendSuccess(() -> describe("Previous", heritage.membership(), heritageData.getMembers(heritage.heritageId()).size()), false));
         return 1;
     }
 
@@ -66,8 +66,4 @@ public final class HeritageDebugCommand extends BasicCommand {
                 .formatted(state, membership.origin().getSerializedName(), membership.heritageId(), parent, namedNpc, members));
     }
 
-    private static HeritageMembership toMembership(HeritageWorldData.HeritageHistory history) {
-        HeritageWorldData.HeritageMember member = history.member();
-        return new HeritageMembership(history.heritageId(), member.origin(), member.parentPlayerId(), history.namedNpc(), member.parentNpcId());
-    }
 }

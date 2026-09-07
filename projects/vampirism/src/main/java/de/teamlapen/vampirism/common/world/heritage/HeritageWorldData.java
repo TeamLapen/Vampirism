@@ -237,6 +237,9 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
     }
 
     public record HeritageHistory(UUID heritageId, @Nullable String namedNpc, HeritageMember member) {
+        public HeritageMembership membership() {
+            return new HeritageMembership(this.heritageId, this.member.origin(), this.member.parentPlayerId(), this.namedNpc, this.member.parentNpcId());
+        }
     }
 
     private static final class PlayerHeritage {
