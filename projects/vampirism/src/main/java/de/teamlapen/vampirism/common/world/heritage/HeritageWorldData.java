@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,6 +51,14 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
     public Map<UUID, HeritageMember> getMembers(UUID heritageId) {
         HeritageRecord record = this.records.get(heritageId);
         return record == null ? Map.of() : Collections.unmodifiableMap(record.members);
+    }
+
+    public List<HeritageHistory> getHeritagesForPlayer(UUID playerId) {
+        return this.records.entrySet().stream()
+                .flatMap(entry -> Optional.ofNullable(entry.getValue().members.get(playerId))
+                        .stream()
+                        .map(member -> new HeritageHistory(entry.getKey(), entry.getValue().namedNpc, member)))
+                .toList();
     }
 
     Optional<HeritageMembership> getMembership(UUID playerId) {
@@ -225,6 +234,9 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
     }
 
     public record HeritageMember(UUID playerId, String playerName, @Nullable UUID parentPlayerId, @Nullable String parentNpcId, HeritageOrigin origin) {
+    }
+
+    public record HeritageHistory(UUID heritageId, @Nullable String namedNpc, HeritageMember member) {
     }
 
     private static final class PlayerHeritage {
