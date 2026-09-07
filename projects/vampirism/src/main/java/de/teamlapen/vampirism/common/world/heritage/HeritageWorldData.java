@@ -23,15 +23,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Server-wide heritage membership store. It keeps player nodes available when the players are offline.
+ * Server-wide heritage store. It keeps player state and heritage nodes available when players are offline.
  */
 public final class HeritageWorldData extends SavedData implements ValueIOSerializable {
     public static final SavedDataType<HeritageWorldData> TYPE = new SavedDataType<>(VIdentifier.mod("heritage"), HeritageWorldData::new, HeritageWorldData::makeCodec);
     private final MinecraftServer server;
     private final Map<UUID, HeritageRecord> records = new HashMap<>();
+    private final Map<UUID, PlayerHeritage> playerHeritages = new HashMap<>();
 
     public HeritageWorldData(ServerLevel level) {
         this.server = level.getServer();
@@ -50,6 +52,72 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
         return record == null ? Map.of() : Collections.unmodifiableMap(record.members);
     }
 
+    Optional<HeritageMembership> getMembership(UUID playerId) {
+        PlayerHeritage playerHeritage = this.playerHeritages.get(playerId);
+        return playerHeritage == null ? Optional.empty() : Optional.ofNullable(playerHeritage.membership);
+    }
+
+    Optional<HeritageMembership> getPendingMembership(UUID playerId) {
+        PlayerHeritage playerHeritage = this.playerHeritages.get(playerId);
+        return playerHeritage == null ? Optional.empty() : Optional.ofNullable(playerHeritage.pending);
+    }
+
+    void prepare(UUID playerId, HeritageMembership pending) {
+        PlayerHeritage playerHeritage = this.playerHeritages.computeIfAbsent(playerId, _ -> new PlayerHeritage());
+        if (playerHeritage.membership != null) {
+            return;
+        }
+        playerHeritage.pending = pending;
+        playerHeritage.completingPendingTransition = false;
+        setDirty();
+    }
+
+    void beginPendingTransition(UUID playerId) {
+        PlayerHeritage playerHeritage = this.playerHeritages.get(playerId);
+        if (playerHeritage != null) {
+            playerHeritage.completingPendingTransition = playerHeritage.pending != null;
+        }
+    }
+
+    void cancelPendingTransition(UUID playerId) {
+        PlayerHeritage playerHeritage = this.playerHeritages.get(playerId);
+        if (playerHeritage == null || (playerHeritage.pending == null && !playerHeritage.completingPendingTransition)) {
+            return;
+        }
+        playerHeritage.pending = null;
+        playerHeritage.completingPendingTransition = false;
+        removeIfEmpty(playerId, playerHeritage);
+        setDirty();
+    }
+
+    void ensureIndependentMembership(ServerPlayer player) {
+        PlayerHeritage playerHeritage = this.playerHeritages.computeIfAbsent(player.getUUID(), _ -> new PlayerHeritage());
+        if (playerHeritage.membership == null) {
+            playerHeritage.membership = independentMembership();
+        }
+        record(player, playerHeritage.membership);
+    }
+
+    void completeVampireTransition(ServerPlayer player) {
+        PlayerHeritage playerHeritage = this.playerHeritages.computeIfAbsent(player.getUUID(), _ -> new PlayerHeritage());
+        if (playerHeritage.membership == null) {
+            playerHeritage.membership = playerHeritage.completingPendingTransition && playerHeritage.pending != null
+                    ? playerHeritage.pending
+                    : independentMembership();
+        }
+        playerHeritage.pending = null;
+        playerHeritage.completingPendingTransition = false;
+        record(player, playerHeritage.membership);
+    }
+
+    void runAwayFromHeritage(ServerPlayer player) {
+        PlayerHeritage playerHeritage = this.playerHeritages.computeIfAbsent(player.getUUID(), _ -> new PlayerHeritage());
+        playerHeritage.membership = independentMembership();
+        playerHeritage.pending = null;
+        playerHeritage.completingPendingTransition = false;
+        record(player, playerHeritage.membership);
+    }
+
     void record(ServerPlayer player, HeritageMembership membership) {
         UUID playerId = player.getUUID();
         HeritageRecord record = this.records.computeIfAbsent(membership.heritageId(), _ -> new HeritageRecord(membership.namedNpc()));
@@ -60,11 +128,22 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
     @Override
     public void deserialize(ValueInput input) {
         this.records.clear();
+        this.playerHeritages.clear();
         input.childrenList("records").stream().flatMap(ValueInput.ValueInputList::stream).forEach(recordInput ->
                 recordInput.read("id", UUIDUtil.CODEC).ifPresent(id -> {
                     HeritageRecord record = new HeritageRecord(recordInput.getString("named_npc").orElse(null));
                     record.deserialize(recordInput);
                     this.records.put(id, record);
+                })
+        );
+        input.childrenList("players").stream().flatMap(ValueInput.ValueInputList::stream).forEach(playerInput ->
+                playerInput.read("id", UUIDUtil.CODEC).ifPresent(id -> {
+                    PlayerHeritage playerHeritage = new PlayerHeritage();
+                    playerHeritage.membership = readMembership(playerInput, "membership");
+                    playerHeritage.pending = readMembership(playerInput, "pending");
+                    if (playerHeritage.membership != null || playerHeritage.pending != null) {
+                        this.playerHeritages.put(id, playerHeritage);
+                    }
                 })
         );
     }
@@ -77,6 +156,57 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
             recordOutput.store("id", UUIDUtil.CODEC, id);
             record.serialize(recordOutput);
         });
+        var playersOutput = output.childrenList("players");
+        this.playerHeritages.forEach((id, playerHeritage) -> {
+            if (playerHeritage.membership == null && playerHeritage.pending == null) {
+                return;
+            }
+            ValueOutput playerOutput = playersOutput.addChild();
+            playerOutput.store("id", UUIDUtil.CODEC, id);
+            if (playerHeritage.membership != null) {
+                writeMembership(playerOutput, "membership", playerHeritage.membership);
+            }
+            if (playerHeritage.pending != null) {
+                writeMembership(playerOutput, "pending", playerHeritage.pending);
+            }
+        });
+    }
+
+    private static @Nullable HeritageMembership readMembership(ValueInput input, String key) {
+        return input.child(key).map(HeritageWorldData::readMembership).orElse(null);
+    }
+
+    private static @Nullable HeritageMembership readMembership(ValueInput input) {
+        return input.read("id", UUIDUtil.CODEC).map(id -> new HeritageMembership(
+                id,
+                input.read("origin", HeritageOrigin.CODEC).orElse(HeritageOrigin.INDEPENDENT),
+                input.read("parent", UUIDUtil.CODEC).orElse(null),
+                input.getString("named_npc").orElse(null),
+                input.getString("parent_npc").orElse(null)
+        )).orElse(null);
+    }
+
+    private static void writeMembership(ValueOutput output, String key, HeritageMembership membership) {
+        ValueOutput membershipOutput = output.child(key);
+        membershipOutput.store("id", UUIDUtil.CODEC, membership.heritageId());
+        membershipOutput.store("origin", HeritageOrigin.CODEC, membership.origin());
+        membershipOutput.storeNullable("parent", UUIDUtil.CODEC, membership.parentPlayerId());
+        if (membership.namedNpc() != null) {
+            membershipOutput.putString("named_npc", membership.namedNpc());
+        }
+        if (membership.parentNpcId() != null) {
+            membershipOutput.putString("parent_npc", membership.parentNpcId());
+        }
+    }
+
+    private static HeritageMembership independentMembership() {
+        return new HeritageMembership(UUID.randomUUID(), HeritageOrigin.INDEPENDENT, null, null, null);
+    }
+
+    private void removeIfEmpty(UUID playerId, PlayerHeritage playerHeritage) {
+        if (playerHeritage.membership == null && playerHeritage.pending == null) {
+            this.playerHeritages.remove(playerId);
+        }
     }
 
     private static Codec<HeritageWorldData> makeCodec(ServerLevel level) {
@@ -95,6 +225,12 @@ public final class HeritageWorldData extends SavedData implements ValueIOSeriali
     }
 
     public record HeritageMember(UUID playerId, String playerName, @Nullable UUID parentPlayerId, @Nullable String parentNpcId, HeritageOrigin origin) {
+    }
+
+    private static final class PlayerHeritage {
+        private @Nullable HeritageMembership membership;
+        private @Nullable HeritageMembership pending;
+        private boolean completingPendingTransition;
     }
 
     private static final class HeritageRecord {

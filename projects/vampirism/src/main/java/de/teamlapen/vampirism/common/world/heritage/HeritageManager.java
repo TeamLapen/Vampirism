@@ -11,33 +11,47 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+import java.util.UUID;
+
 /**
- * Associates a completed conversion with the actor that initiated it.
+ * Coordinates heritage state transitions and associates conversions with their source.
  */
 public final class HeritageManager {
     private HeritageManager() {
     }
 
+    public static Optional<HeritageMembership> getMembership(Player player) {
+        if (!(player instanceof ServerPlayer serverPlayer)) {
+            return Optional.empty();
+        }
+        return getData(serverPlayer).getMembership(serverPlayer.getUUID());
+    }
+
+    public static Optional<HeritageMembership> getPendingMembership(ServerPlayer player) {
+        return getData(player).getPendingMembership(player.getUUID());
+    }
+
     public static void beginSanguinareCompletion(ServerPlayer player) {
-        HeritageData.get(player).beginPendingTransition();
+        getData(player).beginPendingTransition(player.getUUID());
     }
 
     public static void cancelPendingTransition(ServerPlayer player) {
-        HeritageData.get(player).cancelPendingTransition();
+        getData(player).cancelPendingTransition(player.getUUID());
     }
 
     public static void completeVampireTransition(ServerPlayer player) {
-        HeritageData.get(player).completeVampireTransition(player);
+        getData(player).completeVampireTransition(player);
     }
 
     public static void prepareForIndependentConversion(Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.independent());
+            getData(serverPlayer).prepare(serverPlayer.getUUID(), independentMembership());
         }
     }
 
     public static void runAwayFromHeritage(ServerPlayer player) {
-        HeritageData.get(player).runAwayFromHeritage(player);
+        getData(player).runAwayFromHeritage(player);
     }
 
     public static void prepareForVampireConversion(Player player, IVampire vampire) {
@@ -45,10 +59,16 @@ public final class HeritageManager {
             return;
         }
         if (vampire instanceof IVampirePlayer vampirePlayer && vampirePlayer.asEntity() instanceof ServerPlayer parentPlayer) {
-            HeritageData parentData = HeritageData.get(parentPlayer);
+            HeritageWorldData parentData = getData(parentPlayer);
             parentData.ensureIndependentMembership(parentPlayer);
-            HeritageMembership parentMembership = parentData.getMembership().orElseThrow();
-            HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.player(parentMembership, parentPlayer.getUUID()));
+            HeritageMembership parentMembership = parentData.getMembership(parentPlayer.getUUID()).orElseThrow();
+            getData(serverPlayer).prepare(serverPlayer.getUUID(), new HeritageMembership(
+                    parentMembership.heritageId(),
+                    HeritageOrigin.INHERITED,
+                    parentPlayer.getUUID(),
+                    parentMembership.namedNpc(),
+                    null
+            ));
             return;
         }
 
@@ -58,17 +78,17 @@ public final class HeritageManager {
             if (!supporter.player().isBlank()) {
                 var heritage = VampirismMod.services().supporterManager().getPredefinedHeritage(supporter.player());
                 if (heritage.isPresent()) {
-                    HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.named(heritage.get().id(), supporter.player()));
+                    getData(serverPlayer).prepare(serverPlayer.getUUID(), namedMembership(heritage.get().id(), supporter.player()));
                     return;
                 }
             }
             String namedNpc = getNamedNpc(advancedVampire);
             if (namedNpc != null) {
-                HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.named(namedNpc, null));
+                getData(serverPlayer).prepare(serverPlayer.getUUID(), namedMembership(namedNpc, null));
                 return;
             }
         }
-        HeritageData.get(serverPlayer).prepare(HeritageData.PendingHeritage.independent());
+        getData(serverPlayer).prepare(serverPlayer.getUUID(), independentMembership());
     }
 
     private static @Nullable String getNamedNpc(AdvancedVampireEntity vampire) {
@@ -80,5 +100,17 @@ public final class HeritageManager {
             return vampire.getCustomName().getString();
         }
         return null;
+    }
+
+    private static HeritageWorldData getData(ServerPlayer player) {
+        return HeritageWorldData.getData(player.level().getServer());
+    }
+
+    private static HeritageMembership independentMembership() {
+        return new HeritageMembership(UUID.randomUUID(), HeritageOrigin.INDEPENDENT, null, null, null);
+    }
+
+    private static HeritageMembership namedMembership(String namedNpc, @Nullable String parentNpcId) {
+        return new HeritageMembership(HeritageWorldData.idForNamedNpc(namedNpc), HeritageOrigin.INHERITED, null, namedNpc, parentNpcId);
     }
 }

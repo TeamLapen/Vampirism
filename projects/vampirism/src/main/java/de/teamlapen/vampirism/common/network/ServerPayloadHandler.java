@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.world.items.IHunterCrossbow;
 import de.teamlapen.vampirism.common.network.packets.client.ClientboundHeritagePacket;
 import de.teamlapen.vampirism.common.network.packets.server.*;
 import de.teamlapen.vampirism.common.util.supporter.Supporter;
-import de.teamlapen.vampirism.common.world.heritage.HeritageData;
 import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
 import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
 import de.teamlapen.faction.common.core.FactionItems;
@@ -103,7 +102,7 @@ public class ServerPayloadHandler {
                     if (!potion.is(FactionItems.OBLIVION_POTION.get())) {
                         potion = player.getOffhandItem();
                     }
-                    if (potion.is(FactionItems.OBLIVION_POTION.get()) && HeritageData.get(player).getMembership().isPresent()) {
+                    if (potion.is(FactionItems.OBLIVION_POTION.get()) && HeritageManager.getMembership(player).isPresent()) {
                         if (!player.getAbilities().instabuild) {
                             potion.shrink(1);
                         }
@@ -145,7 +144,7 @@ public class ServerPayloadHandler {
     public static void handleRequestHeritagePacket(ServerboundRequestHeritagePacket msg, IPayloadContext context) {
         context.enqueueWork(() -> {
             ServerPlayer player = (ServerPlayer) context.player();
-            HeritageData.get(player).getMembership().ifPresentOrElse(membership -> {
+            HeritageManager.getMembership(player).ifPresentOrElse(membership -> {
                 String namedNpc = membership.namedNpc();
                 var supporterManager = VampirismMod.services().supporterManager();
                 var predefinedHeritage = namedNpc == null

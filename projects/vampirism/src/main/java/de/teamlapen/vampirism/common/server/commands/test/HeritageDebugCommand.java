@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.server.commands.test;
 
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import de.teamlapen.faction.common.server.commands.BasicCommand;
-import de.teamlapen.vampirism.common.world.heritage.HeritageData;
 import de.teamlapen.vampirism.common.world.heritage.HeritageMembership;
 import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
 import de.teamlapen.vampirism.common.world.heritage.HeritageWorldData;
@@ -27,9 +26,8 @@ public final class HeritageDebugCommand extends BasicCommand {
     }
 
     private static int show(CommandSourceStack source, ServerPlayer player) {
-        HeritageData data = HeritageData.get(player);
-        Optional<HeritageMembership> pending = data.getPendingMembership();
-        Optional<HeritageMembership> stored = data.getMembership();
+        Optional<HeritageMembership> pending = HeritageManager.getPendingMembership(player);
+        Optional<HeritageMembership> stored = HeritageManager.getMembership(player);
         if (pending.isEmpty() && stored.isEmpty()) {
             source.sendFailure(Component.literal("No heritage conversion has been detected for you."));
             return 0;
@@ -43,7 +41,7 @@ public final class HeritageDebugCommand extends BasicCommand {
     }
 
     private static int runAway(CommandSourceStack source, ServerPlayer player) {
-        if (HeritageData.get(player).getMembership().isEmpty()) {
+        if (HeritageManager.getMembership(player).isEmpty()) {
             source.sendFailure(Component.literal("No stored heritage exists for you."));
             return 0;
         }

@@ -10,7 +10,7 @@ import de.teamlapen.vampirism.common.core.ModFactions;
 import de.teamlapen.vampirism.common.core.ModStats;
 import de.teamlapen.vampirism.common.util.Helper;
 import de.teamlapen.vampirism.common.world.blockentity.AltarInfusionBlockEntity;
-import de.teamlapen.vampirism.common.world.heritage.HeritageData;
+import de.teamlapen.vampirism.common.world.heritage.HeritageManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -100,7 +100,7 @@ public class AltarInfusionBlock extends BaseContainerBlock implements SimpleWate
 
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.is(FactionItems.OBLIVION_POTION.get()) && HeritageData.get(player).getMembership().isPresent()) {
+        if (stack.is(FactionItems.OBLIVION_POTION.get()) && (level.isClientSide() || HeritageManager.getMembership(player).isPresent())) {
             if (level.isClientSide()) {
                 VampirismMod.proxy.displayHeritageRunAwayScreen();
             }
