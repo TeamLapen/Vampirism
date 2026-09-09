@@ -2,6 +2,7 @@ package de.teamlapen.faction.client;
 
 import de.teamlapen.faction.api.util.REFERENCE;
 import de.teamlapen.faction.client.config.ConfigFilter;
+import de.teamlapen.faction.client.config.ExtendedConfigSectionScreen;
 import de.teamlapen.faction.client.proxy.ClientProxy;
 import de.teamlapen.faction.common.proxy.IProxy;
 import net.neoforged.api.distmarker.Dist;
@@ -23,7 +24,7 @@ public class FactionsClientMod {
         SERVICES = new ClientServices(modContainer);
         SERVICES.register(modEventBus);
 
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ConfigFilter()));
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, (screen, type, config, title) -> new ExtendedConfigSectionScreen(screen, type, config, title, new ConfigFilter())));
     }
 
     public static ClientServices services() {

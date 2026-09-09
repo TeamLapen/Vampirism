@@ -43,7 +43,10 @@ public class ClientServices extends Services {
         bus.addListener(FactionScreens::registerScreenOverlays);
         bus.addListener(FactionItemRenderer::registerColors);
         bus.addListener(FactionBlockRenderer::registerBlockEntityRenderers);
-        bus.addListener(FMLClientSetupEvent.class, x -> FactionAppearanceScreens.init());
+        bus.addListener(FMLClientSetupEvent.class, _ -> {
+            FactionAppearanceScreens.init();
+            ItemBars.init();
+        });
         bus.addListener(FactionParticleFactories::registerFactories);
     }
 

@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.faction.client.core.ItemBars;
+import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.client.color.item.QuarrelTint;
 import de.teamlapen.vampirism.client.color.item.OilBottleTint;
 import de.teamlapen.vampirism.client.extensions.ItemExtensions;
@@ -50,6 +52,11 @@ public class ModItemsRender {
     public static void registerItemDecorator(RegisterItemDecorationsEvent event) {
         Stream.of(ModItems.BASIC_CROSSBOW, ModItems.ENHANCED_CROSSBOW, ModItems.BASIC_DOUBLE_CROSSBOW, ModItems.ENHANCED_DOUBLE_CROSSBOW, ModItems.BASIC_TECH_CROSSBOW, ModItems.ENHANCED_TECH_CROSSBOW)
                 .forEach(item -> event.register(item, ModItemDecorators.CROSSBOW_AMMUNITION));
+    }
+
+    public static void registerItemBars(ItemBars.RegisterItemBarsEvent event) {
+        event.register(VIdentifier.mod("applied_oil"), ModItemDecorators.APPLIED_OIL);
+        event.register(VIdentifier.mod("blood_charge"), ModItemDecorators.BLOOD_CHARGE);
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
