@@ -1,17 +1,15 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:entity_type",
-        "amount": 10,
-        "description": {
-          "translate": "task_tag.vampirism.hunter"
-        },
-        "entityType": "vampirism:hunter",
-        "id": "vampirism:hunter"
-      }
-    ]
-  },
+  "requirements": [
+    {
+      "type": "factionapi:entity_type",
+      "amount": 10,
+      "description": {
+        "translate": "task_tag.vampirism.hunter"
+      },
+      "entityType": "vampirism:hunter",
+      "id": "vampirism:hunter"
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

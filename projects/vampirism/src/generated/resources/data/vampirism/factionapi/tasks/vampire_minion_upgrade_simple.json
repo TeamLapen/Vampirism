@@ -1,28 +1,26 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:entity_type",
-        "amount": 8,
-        "description": {
-          "translate": "task_tag.vampirism.advanced_hunter"
-        },
-        "entityType": "vampirism:advanced_hunter",
-        "id": "vampirism:advanced_hunter"
+  "requirements": [
+    {
+      "type": "factionapi:entity_type",
+      "amount": 8,
+      "description": {
+        "translate": "task_tag.vampirism.advanced_hunter"
       },
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.minecraft.gold_block"
-        },
-        "id": "minecraft:gold_block",
-        "item": {
-          "count": 16,
-          "id": "minecraft:gold_block"
-        }
+      "entityType": "vampirism:advanced_hunter",
+      "id": "vampirism:advanced_hunter"
+    },
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.minecraft.gold_block"
+      },
+      "id": "minecraft:gold_block",
+      "item": {
+        "count": 16,
+        "id": "minecraft:gold_block"
       }
-    ]
-  },
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

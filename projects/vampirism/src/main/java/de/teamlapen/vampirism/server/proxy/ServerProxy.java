@@ -3,11 +3,17 @@ package de.teamlapen.vampirism.server.proxy;
 import de.teamlapen.vampirism.common.proxy.CommonProxy;
 import de.teamlapen.vampirism.common.world.blocks.CoffinBlock;
 import de.teamlapen.vampirism.common.world.blocks.TentBlock;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.javafmlmod.FMLJavaModLanguageProvider;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 import static de.teamlapen.vampirism.common.world.blocks.TentBlock.FACING;
 import static de.teamlapen.vampirism.common.world.blocks.TentBlock.POSITION;
@@ -36,5 +42,10 @@ public class ServerProxy extends CommonProxy {
                 }
             });
         }
+    }
+
+    @Override
+    public RegistryAccess registryAccess() {
+        return Objects.requireNonNull(ServerLifecycleHooks.getCurrentServer(), "No Server is running").registryAccess();
     }
 }

@@ -1,37 +1,35 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:entity_type",
-        "amount": 4,
-        "description": {
-          "translate": "task_tag.vampirism.advanced_vampire"
-        },
-        "entityType": "vampirism:advanced_vampire",
-        "id": "vampirism:advanced_vampire"
+  "requirements": [
+    {
+      "type": "factionapi:entity_type",
+      "amount": 4,
+      "description": {
+        "translate": "task_tag.vampirism.advanced_vampire"
       },
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.minecraft.gold_ingot"
-        },
-        "id": "minecraft:gold_ingot",
-        "item": {
-          "count": 32,
-          "id": "minecraft:gold_ingot"
-        }
+      "entityType": "vampirism:advanced_vampire",
+      "id": "vampirism:advanced_vampire"
+    },
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.minecraft.gold_ingot"
       },
-      {
-        "type": "factionapi:entity",
-        "amount": 5,
-        "description": {
-          "translate": "entity.vampirism.vampire_baron"
-        },
-        "entityType": "vampirism:vampire_baron",
-        "id": "vampirism:vampire_baron"
+      "id": "minecraft:gold_ingot",
+      "item": {
+        "count": 32,
+        "id": "minecraft:gold_ingot"
       }
-    ]
-  },
+    },
+    {
+      "type": "factionapi:entity",
+      "amount": 5,
+      "description": {
+        "translate": "entity.vampirism.vampire_baron"
+      },
+      "entityType": "vampirism:vampire_baron",
+      "id": "vampirism:vampire_baron"
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

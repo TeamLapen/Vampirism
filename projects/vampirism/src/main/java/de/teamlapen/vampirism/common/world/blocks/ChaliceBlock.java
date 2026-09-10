@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.common.world.blocks;
 
 import de.teamlapen.vampirism.common.core.ModItems;
+import de.teamlapen.vampirism.common.tags.ModItemTags;
 import de.teamlapen.vampirism.common.world.entity.dracula.DraculaFightData;
+import de.teamlapen.vampirism.common.world.items.BloodBottleItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -60,7 +63,7 @@ public class ChaliceBlock extends Block {
 
     @Override
     protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!state.getValue(FILLED) && itemStack.is(ModItems.VAMPIRE_BLOOD_BOTTLE)) {
+        if (!state.getValue(FILLED) && acceptedItem(itemStack)) {
             if (!player.getAbilities().instabuild) {
                 itemStack.shrink(1);
             }
@@ -69,6 +72,21 @@ public class ChaliceBlock extends Block {
             return InteractionResult.SUCCESS_SERVER;
         }
         return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);
+    }
+
+    private boolean acceptedItem(ItemStack stack) {
+        return stack.is(ModItems.VAMPIRE_BLOOD_BOTTLE)
+                || stack.is(ModItemTags.PURE_BLOOD)
+                || stack.is(ModItems.SOVEREIGN_BLOOD)
+                || (stack.is(ModItems.BLOOD_BOTTLE) && BloodBottleItem.getBloodContents(stack).isFull());
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (!state.getValue(FILLED)) {
+            player.sendOverlayMessage(Component.translatable("message.vampirism.chalice_empty"));
+        }
+        return InteractionResult.CONSUME;
     }
 
     @Override

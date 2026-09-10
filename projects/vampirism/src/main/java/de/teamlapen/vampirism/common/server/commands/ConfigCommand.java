@@ -73,12 +73,7 @@ public class ConfigCommand extends BasicCommand {
                                 .then(Commands.literal("dimension")
                                         .executes(context -> blacklistDimension(context.getSource().getPlayerOrException()))
                                         .then(Commands.argument("dimension", DimensionArgument.dimension())
-                                                .executes(context -> blacklistDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension"))))))
-                        .then(Commands.literal("enforce")
-                                .then(Commands.literal("dimension")
-                                        .executes(context -> enforceDimension(context.getSource().getPlayerOrException()))
-                                        .then(Commands.argument("dimension", DimensionArgument.dimension())
-                                                .executes(context -> enforceDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))))))
+                                                .executes(context -> blacklistDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))))))
                 .then(Commands.literal("bat-dimension-blacklist")
                         .then(Commands.argument("dimension", DimensionArgument.dimension())
                                 .executes(context -> batBlacklistDimension(context.getSource().getPlayerOrException(), DimensionArgument.getDimension(context, "dimension")))
@@ -123,14 +118,6 @@ public class ConfigCommand extends BasicCommand {
 
     private static int blacklistDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dimension) {
         return modifyList(player, dimension.dimension().identifier(), ModConfig.server().noSundamageDimensions, "command.vampirism.base.config.dimension.blacklisted", "command.vampirism.base.config.dimension.not_blacklisted");
-    }
-
-    private static int enforceDimension(@NotNull ServerPlayer player) {
-        return enforceDimension(player, player.level());
-    }
-
-    private static int enforceDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dimension) {
-        return modifyList(player, dimension.dimension().identifier(), ModConfig.server().enforceSundamageDimensions, "command.vampirism.base.config.dimension.enforced", "command.vampirism.base.config.dimension.not_enforced");
     }
 
     private static int batBlacklistDimension(@NotNull ServerPlayer player, @NotNull ServerLevel dim) {

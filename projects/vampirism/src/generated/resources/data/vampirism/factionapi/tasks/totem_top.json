@@ -1,38 +1,36 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.minecraft.diamond"
-        },
-        "id": "minecraft:diamond",
-        "item": {
-          "id": "minecraft:diamond"
-        }
+  "requirements": [
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.minecraft.diamond"
       },
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.minecraft.obsidian"
-        },
-        "id": "minecraft:obsidian",
-        "item": {
-          "count": 32,
-          "id": "minecraft:obsidian"
-        }
-      },
-      {
-        "type": "factionapi:entity_type",
-        "amount": 32,
-        "description": {
-          "translate": "task_tag.vampirism.zombies"
-        },
-        "entityType": "vampirism:zombies",
-        "id": "vampirism:zombies"
+      "id": "minecraft:diamond",
+      "item": {
+        "id": "minecraft:diamond"
       }
-    ]
-  },
+    },
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.minecraft.obsidian"
+      },
+      "id": "minecraft:obsidian",
+      "item": {
+        "count": 32,
+        "id": "minecraft:obsidian"
+      }
+    },
+    {
+      "type": "factionapi:entity_type",
+      "amount": 32,
+      "description": {
+        "translate": "task_tag.vampirism.zombies"
+      },
+      "entityType": "vampirism:zombies",
+      "id": "vampirism:zombies"
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

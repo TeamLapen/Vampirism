@@ -28,7 +28,7 @@ public record SkillTree(Holder<? extends IPlayableFaction<?>> faction, EntityPre
                     ItemStackTemplate.CODEC.fieldOf("display").forGetter(ISkillTree::display),
                     ComponentSerialization.CODEC.fieldOf("name").forGetter(ISkillTree::name),
                     Identifier.CODEC.optionalFieldOf("background").forGetter(ISkillTree::background),
-                    TagKey.codec(FactionRegistries.Keys.SKILL_TREE).optionalFieldOf("name_suffix", FactionSkillTreeTags.DEFAULT).forGetter(ISkillTree::skillPointTag),
+                    TagKey.codec(FactionRegistries.Keys.SKILL_TREE).optionalFieldOf("skill_point_tag", FactionSkillTreeTags.DEFAULT).forGetter(ISkillTree::skillPointTag),
                     ResourceKey.codec(FactionRegistries.Keys.SKILL_TREE).listOf().optionalFieldOf("order_after", List.of()).forGetter(ISkillTree::orderAfter)
             ).apply(inst, SkillTree::new)
     ));

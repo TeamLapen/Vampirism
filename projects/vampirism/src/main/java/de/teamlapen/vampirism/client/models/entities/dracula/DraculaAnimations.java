@@ -231,7 +231,6 @@ public class DraculaAnimations {
                 ))
                 .build();
 
-        // placeholder transformation animation until dedicated keyframes are authored
         public static final AnimationDefinition TRANSFORMATION = AnimationDefinition.Builder.withLength(5.0F)
                 .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,
                         new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 0.0F, 0.0F), AnimationChannel.Interpolations.CATMULLROM),
@@ -412,7 +411,6 @@ public class DraculaAnimations {
                 ))
                 .build();
 
-        // placeholder transformation animation (wings unfurl) until dedicated keyframes are authored
         public static final AnimationDefinition TRANSFORMATION = AnimationDefinition.Builder.withLength(5.0F)
                 .addAnimation("wings_left", new AnimationChannel(AnimationChannel.Targets.ROTATION,
                         new Keyframe(0.0F, KeyframeAnimations.degreeVec(0.0F, 60.0F, 40.0F), AnimationChannel.Interpolations.CATMULLROM),

@@ -17,6 +17,7 @@ import net.minecraft.client.particle.TerrainParticle;
 import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.client.resources.language.LanguageManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import static de.teamlapen.vampirism.common.world.blocks.TentBlock.FACING;
@@ -179,4 +181,8 @@ public class ClientProxy extends CommonProxy {
         return language != null ? language.name() : LanguageManager.DEFAULT_LANGUAGE.name();
     }
 
+    @Override
+    public RegistryAccess registryAccess() {
+        return Objects.requireNonNull(Minecraft.getInstance().level, "Level not loaded").registryAccess();
+    }
 }

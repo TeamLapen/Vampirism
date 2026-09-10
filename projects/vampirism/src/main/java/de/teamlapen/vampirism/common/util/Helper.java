@@ -57,18 +57,8 @@ public class Helper {
 
 
     /**
-     * Checks if the entity can get sundamage at its current position.
-     * It is recommended to cache the value for a few ticks.
-     */
-    public static boolean gettingSunDamage(LivingEntity entity, LevelAccessor world) {
-        if (entity instanceof Player && entity.isSpectator()) return false;
-        if (entity.hasEffect(ModEffects.AURA_OF_DARKNESS)) return false;
-        return world instanceof Level level && hasLevelSunDamage(level, entity.blockPosition()) && !entity.isInRain() && VampirismApi.services().sunDamageRegistry().hasSunDamage(world, entity.blockPosition());
-    }
-
-    /**
      * Checks if the entity is currently being burned by the sun.
-     * Unlike {@link #gettingSunDamage(LivingEntity, LevelAccessor)}, this uses the cached state of the vampire itself and
+     * Unlike {@link de.teamlapen.vampirism.common.world.entity.SundamageRegistry#isGettingSundamage(LivingEntity, LevelAccessor)}, this uses the cached state of the vampire itself and
      * respects the safe period players get before they start taking damage.
      */
     public static boolean isBurningInSun(LivingEntity entity) {

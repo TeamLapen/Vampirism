@@ -9,7 +9,6 @@ import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunct
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class SetItemBloodChargeFunction extends LootItemConditionalFunction {
                     .and(NumberProviders.CODEC.fieldOf("charge").forGetter(l -> l.charge))
                     .apply(inst, SetItemBloodChargeFunction::new));
 
-    public static @NotNull Builder<?> builder(NumberProvider p_215931_0_) {
+    public static Builder<?> builder(NumberProvider p_215931_0_) {
         return simpleBuilder((p_215930_1_) -> new SetItemBloodChargeFunction(p_215930_1_, p_215931_0_));
     }
 
@@ -35,7 +34,7 @@ public class SetItemBloodChargeFunction extends LootItemConditionalFunction {
     /**
      * Either charge or (minCharge and maxCharge) should be -1
      */
-    private SetItemBloodChargeFunction(@NotNull List<LootItemCondition> conditions, NumberProvider charge) {
+    private SetItemBloodChargeFunction(List<LootItemCondition> conditions, NumberProvider charge) {
         super(conditions);
         this.charge = charge;
     }
@@ -45,9 +44,8 @@ public class SetItemBloodChargeFunction extends LootItemConditionalFunction {
         return CODEC;
     }
 
-    @NotNull
     @Override
-    public ItemStack run(@NotNull ItemStack stack, @NotNull LootContext context) {
+    public ItemStack run(ItemStack stack, LootContext context) {
         ((IBloodChargeable) stack.getItem()).charge(stack, charge.getInt(context));
         return stack;
     }

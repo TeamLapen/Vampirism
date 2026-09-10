@@ -56,4 +56,8 @@ dependencies {
         localRuntime "curse.maven:jade-324717:" + project.jade_version
     }
 
+    if (include_jer.toBoolean()) {
+        localRuntime "maven.modrinth:uEfK2CXF:" + project.jer_version
+    }
+
 }

@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VIdentifier;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
@@ -520,7 +521,7 @@ public class VampirePlayer extends CommonFactionPlayer<IVampirePlayer> implement
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forcerefresh) {
         if (forcerefresh) {
-            sunDamageCache = !getSkillProperties().mist && Helper.gettingSunDamage(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
+            sunDamageCache = !getSkillProperties().mist && VampirismApi.services().sunDamageRegistry().isGettingSundamage(player, iWorld) && ModItems.UMBRELLA.get() != player.getMainHandItem().getItem();
         }
         return sunDamageCache;
     }

@@ -36,10 +36,6 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handleSundamageData(ClientboundSundamagePacket msg, IPayloadContext context) {
-        context.enqueueWork(() -> VampirismMod.services().sunDamageRegistry().applyNetworkData(msg));
-    }
-
     private static void openScreen(Screen screen) {
         Minecraft.getInstance().setScreen(screen);
     }

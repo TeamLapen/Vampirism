@@ -1,33 +1,31 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.minecraft.potion"
-        },
-        "id": "minecraft:potion",
-        "item": {
-          "components": {
-            "minecraft:potion_contents": {
-              "potion": "minecraft:poison"
-            }
-          },
-          "id": "minecraft:potion"
-        }
+  "requirements": [
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.minecraft.potion"
       },
-      {
-        "type": "factionapi:item",
-        "description": {
-          "translate": "item.vampirism.pure_blood_1"
+      "id": "minecraft:potion",
+      "item": {
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:poison"
+          }
         },
-        "id": "vampirism:pure_blood_1",
-        "item": {
-          "id": "vampirism:pure_blood_1"
-        }
+        "id": "minecraft:potion"
       }
-    ]
-  },
+    },
+    {
+      "type": "factionapi:item",
+      "description": {
+        "translate": "item.vampirism.pure_blood_1"
+      },
+      "id": "vampirism:pure_blood_1",
+      "item": {
+        "id": "vampirism:pure_blood_1"
+      }
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

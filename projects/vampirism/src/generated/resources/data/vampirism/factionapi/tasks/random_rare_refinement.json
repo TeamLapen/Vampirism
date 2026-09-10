@@ -1,17 +1,15 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:stat",
-        "amount": 1,
-        "description": {
-          "translate": "stat.minecraft.raid_win"
-        },
-        "id": "minecraft:raid_win",
-        "stat": "minecraft:raid_win"
-      }
-    ]
-  },
+  "requirements": [
+    {
+      "type": "factionapi:stat",
+      "amount": 1,
+      "description": {
+        "translate": "stat.minecraft.raid_win"
+      },
+      "id": "minecraft:raid_win",
+      "stat": "minecraft:raid_win"
+    }
+  ],
   "reward": {
     "type": "factionapi:refinement",
     "faction": "#vampirism:is_vampire",

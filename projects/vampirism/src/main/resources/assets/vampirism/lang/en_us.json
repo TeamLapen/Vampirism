@@ -1196,6 +1196,7 @@
   "message.vampirism.tent.occupied": "This tent is occupied",
   "message.vampirism.tent.cant_use": "You can't sleep in a tent",
   "message.vampirism.velmorra_altar.weak": "The portal seems unaffected. Your blood is not strong enough to interest the portal.",
+  "message.vampirism.chalice_empty": "The sound of an empty Chalice echoes loudly",
 
   "message.vampirism.village_raid.attacked.vampire": "%s attacked a nearby vampire village",
   "message.vampirism.village_raid.attacked.hunter": "%s attacked a nearby hunter village",

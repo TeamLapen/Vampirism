@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/entity_converter.schema.json",
+  "title": "Vampirism Entity Converter data map",
+  "description": "NeoForge data map `vampirism:entity_converter` (de.teamlapen.vampirism.common.datamaps.ConverterEntry). File location: data/<namespace>/data_maps/entity_type/entity_converter.json. Marks an entity type as convertible into a vampiric creature. Requires a matching `vampirism:entity_blood` value > 0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["values"],
+  "properties": {
+    "replace": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, clears all previously loaded entries before applying `values`."
+    },
+    "values": {
+      "type": "object",
+      "description": "Maps an entity type id (or a `#entity_type_tag`) to a converter entry.",
+      "propertyNames": { "$ref": "#/$defs/idOrTag" },
+      "additionalProperties": { "$ref": "#/$defs/entry" }
+    },
+    "remove": {
+      "type": "array",
+      "description": "Entity type ids (or `#entity_type_tags`) to remove from the merged map.",
+      "items": { "$ref": "#/$defs/idOrTag" }
+    }
+  },
+  "$defs": {
+    "resourceLocation": {
+      "type": "string",
+      "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$"
+    },
+    "idOrTag": {
+      "type": "string",
+      "description": "A namespaced id, or a tag reference prefixed with `#`.",
+      "pattern": "^#?([a-z0-9_.-]+:)?[a-z0-9_./-]+$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "handler": {
+          "$ref": "#/$defs/converter",
+          "description": "How the creature converts. Defaults to `vampirism:default`."
+        },
+        "neoforge:conditions": { "type": "array", "description": "Load conditions for this entry." }
+      }
+    },
+    "converter": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/resourceLocation",
+          "description": "Registered converter type (`vampirism:converting_handler` registry)."
+        }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "vampirism:default" } } },
+          "then": {
+            "additionalProperties": false,
+            "properties": {
+              "type": { "const": "vampirism:default" },
+              "attribute_helper": { "$ref": "#/$defs/attributeHelper" }
+            }
+          }
+        },
+        {
+          "if": { "required": ["type"], "properties": { "type": { "const": "vampirism:special" } } },
+          "then": {
+            "additionalProperties": false,
+            "required": ["type", "converted_type"],
+            "properties": {
+              "type": { "const": "vampirism:special" },
+              "converted_type": { "$ref": "#/$defs/resourceLocation", "description": "Entity type to spawn as the converted creature." },
+              "attribute_helper": { "$ref": "#/$defs/attributeHelper" }
+            }
+          }
+        }
+      ]
+    },
+    "attributeHelper": {
+      "type": "array",
+      "description": "Replaces the entire default attribute-multiplier list.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["attribute", "modifier"],
+        "properties": {
+          "attribute": { "$ref": "#/$defs/resourceLocation", "description": "The attribute to scale." },
+          "modifier": {
+            "description": "Multiplier applied to the base value. Bare number (constant) or a Minecraft float provider object.",
+            "oneOf": [
+              { "type": "number" },
+              { "type": "object", "required": ["type"] }
+            ]
+          },
+          "fallback_base": { "type": "number", "default": 1.0, "description": "Base value assumed when the entity type does not define the attribute." }
+        }
+      }
+    }
+  }
+}

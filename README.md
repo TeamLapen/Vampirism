@@ -39,7 +39,7 @@ The following labeling scheme is used:
 ## People
 - [maxanier](https://maxanier.de)
 - [Cheaterpaul](https://paube.de)
-- [Grid](https://github.com/TheGridExpert)
+- [GridExpert](https://github.com/TheGridExpert)
 - [lunofe](https://github.com/lunofe) _Triage/Support/Community/Official Server/Art_
 - [Piklach](https://twitter.com/Piklach) _Community/Official Server_
 - [Mike](https://github.com/supermike1999) _Balancing/Ideas_

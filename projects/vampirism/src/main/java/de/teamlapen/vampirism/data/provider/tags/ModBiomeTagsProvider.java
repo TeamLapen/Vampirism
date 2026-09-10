@@ -8,6 +8,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,5 +52,6 @@ public class ModBiomeTagsProvider extends BiomeTagsProvider {
         tag(ModBiomeTags.HasStructure.CRYPT).addTag(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
         tag(ModBiomeTags.HasStructure.DRACULA_CASTLE).add(ModBiomes.VELMORRA);
         tag(Tags.Biomes.NO_DEFAULT_MONSTERS).add(ModBiomes.VAMPIRE_FOREST);
+        tag(ModBiomeTags.HAS_NO_SUNDAMAGE).addTag(ModBiomeTags.HasFaction.IS_VAMPIRE_BIOME);
     }
 }

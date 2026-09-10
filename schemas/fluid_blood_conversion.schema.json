@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/fluid_blood_conversion.schema.json",
+  "title": "Vampirism Fluid Blood Conversion data map",
+  "description": "NeoForge data map `vampirism:fluid_blood_conversion` (de.teamlapen.vampirism.common.datamaps.FluidBloodConversion). File location: data/<namespace>/data_maps/fluid/fluid_blood_conversion.json. Sets the ratio the Blood Sieve uses to turn a fluid into blood: output = conversionRate * input_amount.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["values"],
+  "properties": {
+    "replace": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, clears all previously loaded entries before applying `values`."
+    },
+    "values": {
+      "type": "object",
+      "description": "Maps a fluid id (or a `#fluid_tag`) to a conversion entry.",
+      "propertyNames": { "$ref": "#/$defs/idOrTag" },
+      "additionalProperties": { "$ref": "#/$defs/entry" }
+    },
+    "remove": {
+      "type": "array",
+      "description": "Fluid ids (or `#fluid_tags`) to remove from the merged map.",
+      "items": { "$ref": "#/$defs/idOrTag" }
+    }
+  },
+  "$defs": {
+    "idOrTag": {
+      "type": "string",
+      "description": "A namespaced id, or a tag reference prefixed with `#`.",
+      "pattern": "^#?([a-z0-9_.-]+:)?[a-z0-9_./-]+$"
+    },
+    "entry": {
+      "description": "Fraction of the input fluid amount returned as blood. Bare number or an object.",
+      "oneOf": [
+        { "type": "number" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["conversionRate"],
+          "properties": {
+            "conversionRate": { "type": "number", "description": "Fraction of the input fluid amount returned as blood. 0 = no conversion." },
+            "neoforge:conditions": { "type": "array", "description": "Load conditions for this entry." }
+          }
+        }
+      ]
+    }
+  }
+}

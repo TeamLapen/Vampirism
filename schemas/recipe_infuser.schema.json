@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/recipe_infuser.schema.json",
+  "title": "Vampirism Infuser recipe",
+  "description": "Recipe type vampirism:infuser (de.teamlapen.vampirism.common.world.items.recipes.InfuserRecipe). File location: data/<namespace>/recipe/<name>.json. At least one of ingredient1..4 must be present.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "item"],
+  "anyOf": [
+    { "required": ["ingredient1"] },
+    { "required": ["ingredient2"] },
+    { "required": ["ingredient3"] },
+    { "required": ["ingredient4"] }
+  ],
+  "properties": {
+    "type": { "const": "vampirism:infuser" },
+    "item": { "$ref": "#/$defs/ingredient" },
+    "ingredient1": { "$ref": "#/$defs/ingredient" },
+    "ingredient2": { "$ref": "#/$defs/ingredient" },
+    "ingredient3": { "$ref": "#/$defs/ingredient" },
+    "ingredient4": { "$ref": "#/$defs/ingredient" },
+    "result": { "$ref": "#/$defs/itemStackTemplate" },
+    "result1": { "$ref": "#/$defs/itemStackTemplate" },
+    "result2": { "$ref": "#/$defs/itemStackTemplate" },
+    "result3": { "$ref": "#/$defs/itemStackTemplate" },
+    "commoninfo": { "$ref": "#/$defs/commonInfo" },
+    "group": { "type": "string" },
+    "cookingtime": { "type": "integer", "minimum": 0, "default": 200 }
+  },
+  "$defs": {
+    "resourceLocation": { "type": "string", "pattern": "^([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "idOrTag": { "type": "string", "pattern": "^#?([a-z0-9_.-]+:)?[a-z0-9_./-]+$" },
+    "commonInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "show_notification": { "type": "boolean", "default": true } }
+    },
+    "ingredient": {
+      "oneOf": [
+        { "$ref": "#/$defs/idOrTag" },
+        { "type": "object" },
+        { "type": "array", "items": { "oneOf": [ { "$ref": "#/$defs/idOrTag" }, { "type": "object" } ] } }
+      ]
+    },
+    "itemStackTemplate": {
+      "oneOf": [
+        { "$ref": "#/$defs/resourceLocation" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id"],
+          "properties": {
+            "id": { "$ref": "#/$defs/resourceLocation" },
+            "count": { "type": "integer", "minimum": 1, "maximum": 99, "default": 1 },
+            "components": { "type": "object" }
+          }
+        }
+      ]
+    }
+  }
+}

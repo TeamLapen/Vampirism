@@ -9,8 +9,6 @@ import de.teamlapen.vampirism.api.world.entity.VampireBookLootProvider;
 import de.teamlapen.vampirism.api.world.items.components.IVampireBook;
 import de.teamlapen.vampirism.common.tags.ModVampireBookTags;
 import de.teamlapen.vampirism.common.world.items.component.VampireBook;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -20,10 +18,8 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
 
 public class SetVampireBookFunction extends LootItemConditionalFunction {
 
@@ -59,7 +55,7 @@ public class SetVampireBookFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    protected @NotNull ItemStack run(@NotNull ItemStack stack, @NotNull LootContext lootContext) {
+    protected ItemStack run(ItemStack stack, LootContext lootContext) {
         IVampireBook vampireBook = VampireBook.getRandomBook(tag, lootContext);
 
         Entity entity = lootContext.getOptionalParameter(LootContextParams.THIS_ENTITY);

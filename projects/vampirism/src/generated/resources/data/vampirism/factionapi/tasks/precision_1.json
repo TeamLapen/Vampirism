@@ -1,17 +1,15 @@
 {
-  "requirements": {
-    "requirements": [
-      {
-        "type": "factionapi:stat",
-        "amount": 15,
-        "description": {
-          "translate": "stat.vampirism.vampire_killed_with_crossbow"
-        },
-        "id": "vampirism:vampire_killed_with_crossbow",
-        "stat": "vampirism:vampire_killed_with_crossbow"
-      }
-    ]
-  },
+  "requirements": [
+    {
+      "type": "factionapi:stat",
+      "amount": 15,
+      "description": {
+        "translate": "stat.vampirism.vampire_killed_with_crossbow"
+      },
+      "id": "vampirism:vampire_killed_with_crossbow",
+      "stat": "vampirism:vampire_killed_with_crossbow"
+    }
+  ],
   "reward": {
     "type": "factionapi:item",
     "item": {

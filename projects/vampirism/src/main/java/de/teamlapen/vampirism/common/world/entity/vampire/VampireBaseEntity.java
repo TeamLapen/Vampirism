@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.common.world.entity.vampire;
 import de.teamlapen.faction.common.util.StructureUtil;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VampirismApi;
 import de.teamlapen.vampirism.api.event.BloodDrinkEvent;
 import de.teamlapen.vampirism.api.util.VampirismEventFactory;
 import de.teamlapen.vampirism.api.world.entity.player.vampire.IBloodStats;
@@ -234,7 +235,7 @@ public abstract class VampireBaseEntity extends VampirismEntity implements IVamp
     @Override
     public boolean isGettingSundamage(LevelAccessor iWorld, boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
-        return (sundamageCache = Helper.gettingSunDamage(this, iWorld));
+        return (sundamageCache = VampirismApi.services().sunDamageRegistry().isGettingSundamage(this, iWorld));
     }
 
     @Override

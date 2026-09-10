@@ -131,7 +131,7 @@ public class ModConfig extends Services {
 
     public void onLoad(final ModConfigEvent.Loading configEvent) {
         if (configEvent.getConfig().getType() == Type.SERVER) {
-            VampirismMod.services().sunDamageRegistry().reloadConfiguration();
+            VampirismMod.services().sunDamageRegistry().reload();
         }
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);
@@ -140,7 +140,7 @@ public class ModConfig extends Services {
 
     public void onReload(final ModConfigEvent.Reloading configEvent) {
         if (configEvent.getConfig().getType() == Type.SERVER) {
-            VampirismMod.services().sunDamageRegistry().reloadConfiguration();
+            VampirismMod.services().sunDamageRegistry().reload();
         }
         if (configEvent.getConfig().getSpec() == balanceSpec) {
             helper.onBalanceConfigChanged(configEvent);

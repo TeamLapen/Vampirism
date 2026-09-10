@@ -104,7 +104,7 @@ public abstract class PropertySync implements ValueIOSerializable, ISyncable, IP
     public final void serializeFullUpdate(ValueOutput output) {
         for (Property property : this.properties) {
             if (property.hasClientSync()) {
-                property.storeValue(output, Property.StoreMode.FULL_UPDATE);
+                property.store(output, Property.StoreMode.FULL_UPDATE);
             }
         }
     }
