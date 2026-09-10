@@ -42,7 +42,7 @@ public class OilBottleItem extends Item implements IOilItem, BaseDisplayItemGene
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        OilContent.getOil(stack).value().getDescription(stack, context, tooltipDisplay, tooltipComponents);
+        OilContent.getOil(stack).value().getDescription(stack, context, tooltipDisplay, tooltipComponents, tooltipFlag);
     }
 
     @Override

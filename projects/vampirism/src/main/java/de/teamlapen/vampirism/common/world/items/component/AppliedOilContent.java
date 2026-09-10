@@ -83,7 +83,7 @@ public record AppliedOilContent(Holder<IApplicableOil> oil, int duration) implem
             tooltip.add(Component.empty());
             tooltip.add(Component.translatable("tooltip.vampirism.oil.applied").withStyle(ChatFormatting.GRAY));
             tooltip.addAll(effectDescription);
-            if (oil().value().hasDuration()) {
+            if (oil().value().hasDuration() && flag.isAdvanced()) {
                 tooltip.add(Component.literal(" ").append(Component.translatable("tooltip.vampirism.oil.applied_left", duration).withStyle(ChatFormatting.BLUE)));
             }
         }

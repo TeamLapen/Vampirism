@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,8 +38,8 @@ public abstract class ApplicableOil extends Oil implements IApplicableOil {
     }
 
     @Override
-    public void getDescription(ItemStack stack, Item.@Nullable TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
-        super.getDescription(stack, context, display, tooltips);
+    public void getDescription(ItemStack stack, Item.@Nullable TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips, TooltipFlag tooltipFlag) {
+        super.getDescription(stack, context, display, tooltips, tooltipFlag);
         tooltips.accept(Component.translatable("tooltip.vampirism.oil.lasts", getMaxDuration(stack)).withStyle(ChatFormatting.GRAY));
         tooltips.accept(Component.empty());
         tooltips.accept(getDescriptionTitle().copy().withStyle(ChatFormatting.DARK_PURPLE));
