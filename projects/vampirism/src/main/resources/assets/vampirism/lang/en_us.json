@@ -1120,6 +1120,7 @@
   "gui.vampirism.jei.category.blessing": "Blessing",
   "gui.vampirism.jei.requirements": "Req.",
   "gui.vampirism.jei.requirements.tooltip": "Skills required:",
+  "gui.vampirism.jei.reduced_cost.tooltip": "Reduced cost with:",
   "gui.vampirism.jei.task.reward": "Task reward",
   "gui.vampirism.jei.task.reward_obtain": "Can be obtained as a task reward from a %s",
   "gui.vampirism.jei.task.reward_obtain_all": "Can be obtained as a task reward",

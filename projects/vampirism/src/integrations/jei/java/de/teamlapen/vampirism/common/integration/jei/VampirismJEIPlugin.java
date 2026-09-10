@@ -36,8 +36,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 @JeiPlugin
 public class VampirismJEIPlugin implements IModPlugin {
@@ -119,7 +117,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(ALCHEMICAL_CAULDRON, recipes.byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).stream().toList());
         registration.addRecipes(WEAPON_TABLE, recipes.byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).stream().toList());
         registration.addRecipes(TASK, TaskUtil.getItemRewardTasks(level.registryAccess()));
-        registration.addRecipes(DISTILLING, VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
+        registration.addRecipes(DISTILLING, JEIPotionMix.createFromMixes(VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes()));
         registration.addRecipes(RecipeTypes.ANVIL, RepairRecipeMaker.getRecipes(registration.getVanillaRecipeFactory(), registration.getIngredientManager()));
         registration.addRecipes(ALCHEMY_TABLE, recipes.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().toList());
         registration.addRecipes(RecipeTypes.CRAFTING, SpecialRecipeMaker.getAllCraftingRecipes());
