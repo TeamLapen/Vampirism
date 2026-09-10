@@ -45,6 +45,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -52,6 +53,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class VampireSwordItem extends VampirismSwordItem implements IItemWithTier, IBloodChargeable {
@@ -94,7 +96,7 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
         float factor = getChargingFactor(stack);
         float charge = getChargePercentage(stack);
         float actual = Math.min(factor * amount, 1f - charge);
-        this.setCharged(stack, charge + actual);
+        setCharged(stack, charge + actual);
         return (int) (actual / factor);
     }
 
@@ -227,6 +229,17 @@ public abstract class VampireSwordItem extends VampirismSwordItem implements IIt
      */
     public void setTrained(ItemStack stack, LivingEntity player, float value) {
         stack.set(ModDataComponents.VAMPIRE_SWORD, stack.getOrDefault(ModDataComponents.VAMPIRE_SWORD, SwordTraining.EMPTY).addTraining(player.getUUID(), value));
+    }
+
+    public static ItemStack createTrainedAndChargedClient(ItemLike item, int purity) {
+        ItemStack stack = PureLevel.pureBlood(item, purity);
+        stack.set(ModDataComponents.BLOOD_CHARGED, new BloodCharged(1.0f));
+        Player player = FactionsMod.proxy.getClientPlayer();
+        if (player != null) {
+            stack.set(ModDataComponents.VAMPIRE_SWORD, new SwordTraining(Map.of(player.getUUID(), 1.0f)));
+        }
+
+        return stack;
     }
 
     /**
