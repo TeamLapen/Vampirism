@@ -135,9 +135,7 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
         ExtendedPotionMix mix = recipe.getOriginal();
         List<Holder<? extends ISkill<IHunterPlayer>>> required = new ArrayList<>();
 
-        if (mix.durable && mix.concentrated) {
-            required.add(HunterSkills.CONCENTRATED_DURABLE_BREWING);
-        } else if (mix.durable) {
+        if (mix.durable) {
             required.add(HunterSkills.DURABLE_BREWING);
         } else if (mix.concentrated) {
             required.add(HunterSkills.CONCENTRATED_BREWING);
@@ -153,7 +151,10 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
     }
 
     private boolean hasSkill(@Nullable ISkillHandler<IHunterPlayer> skills, Holder<? extends ISkill<IHunterPlayer>> skill) {
-        return skills != null && skills.isSkillEnabled(skill);
+        if (skills == null) return false;
+        if (skills.isSkillEnabled(skill)) return true;
+
+        return (Objects.equals(skill, HunterSkills.DURABLE_BREWING) || Objects.equals(skill, HunterSkills.CONCENTRATED_BREWING)) && skills.isSkillEnabled(HunterSkills.CONCENTRATED_DURABLE_BREWING);
     }
 
     private boolean showingReducedCost(JEIPotionMix recipe, IRecipeSlotsView recipeSlotsView) {
@@ -197,7 +198,7 @@ public class VaporStillRecipeCategory extends AbstractRecipeCategory<JEIPotionMi
     }
 
     private void addSkillLine(Holder<? extends ISkill<IHunterPlayer>> skill, List<Component> skillLines, @Nullable ISkillHandler<IHunterPlayer> skills) {
-        skillLines.add(skill.value().getName().copy().withStyle(skills != null && skills.isSkillEnabled(skill) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
+        skillLines.add(skill.value().getName().copy().withStyle(hasSkill(skills, skill) ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
     }
 
     @Override
