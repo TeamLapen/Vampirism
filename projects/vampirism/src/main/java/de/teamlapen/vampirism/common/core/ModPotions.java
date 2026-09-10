@@ -6,10 +6,10 @@ import de.teamlapen.vampirism.api.world.items.ExtendedPotionMix;
 import de.teamlapen.vampirism.common.util.ItemDataUtils;
 import de.teamlapen.vampirism.common.world.potions.BasePotion;
 import de.teamlapen.vampirism.common.world.potions.BasePotion.HunterPotion;
+import de.teamlapen.vampirism.common.world.potions.PotionFamily;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Item;
@@ -27,7 +27,6 @@ import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 public class ModPotions {
@@ -51,33 +50,24 @@ public class ModPotions {
             { Integer.MAX_VALUE, 18000 }
     };
 
-    private static final class Families {
-        private static final Family SLOW_FALLING = Family.single("slow_falling", MobEffects.SLOW_FALLING, 1800, 4800, 0, 0, 0, false);
-        private static final Family LUCK = Family.single("luck", MobEffects.LUCK, 6000, 16000, 0, 0, 0, false);
-        private static final Family WEAKNESS = Family.single("weakness", MobEffects.WEAKNESS, 1800, 4800, 0, 0, 0, false);
-        private static final Family STRENGTH = Family.single("strength", MobEffects.STRENGTH, 3600, 9600, 1800, 1, 1, false);
-        private static final Family REGENERATION = Family.single("regeneration", MobEffects.REGENERATION, 900, 1800, 450, 1, 1, false);
-        private static final Family POISON = Family.single("poison", MobEffects.POISON, 900, 1800, 432, 1, 1, false);
-        private static final Family WATER_BREATHING = Family.single("water_breathing", MobEffects.WATER_BREATHING, 3600, 9600, 0, 0, 0, false);
-        private static final Family SLOWNESS = Family.single("slowness", MobEffects.SLOWNESS, 1800, 4800, 400, 3, 2, false);
-        private static final Family SWIFTNESS = Family.single("swiftness", MobEffects.SPEED, 3600, 9600, 1800, 1, 1, false);
-        private static final Family FIRE_RESISTANCE = Family.single("fire_resistance", MobEffects.FIRE_RESISTANCE, 3600, 9600, 0, 0, 0, false);
-        private static final Family LEAPING = Family.single("leaping", MobEffects.JUMP_BOOST, 3600, 9600, 1800, 1, 1, false);
-        private static final Family INVISIBILITY = Family.single("invisibility", MobEffects.INVISIBILITY, 3600, 9600, 0, 0, 0, false);
-        private static final Family NIGHT_VISION = Family.single("night_vision", MobEffects.NIGHT_VISION, 3600, 9600, 0, 0, 0, false);
-        private static final Family HEALING = Family.single("healing", MobEffects.INSTANT_HEALTH, 1, 0, 1, 1, 1, true);
-        private static final Family NAUSEA = Family.single("nausea", MobEffects.NAUSEA, 1200, 2400, 0, 0, 0, false);
-        private static final Family BLINDNESS = Family.single("blindness", MobEffects.BLINDNESS, 1200, 4800, 0, 0, 0, false);
-        private static final Family HEALTH_BOOST = Family.single("health_boost", MobEffects.HEALTH_BOOST, 1200, 4800, 400, 1, 1, false);
-    }
-
-    private record Effect(Holder<MobEffect> effect, int base, int longDuration, int strongDuration, int baseAmplifier, int strongAmplifier, int amplifierStep, boolean instant) {}
-
-    private record Family(String name, List<Effect> effects) {
-
-        private static Family single(String name, Holder<MobEffect> effect, int base, int longDuration, int strongDuration, int strongAmplifier, int amplifierStep, boolean instant) {
-            return new Family(name, List.of(new Effect(effect, base, longDuration, strongDuration, 0, strongAmplifier, amplifierStep, instant)));
-        }
+    private static class Families {
+        private static final PotionFamily SLOW_FALLING = PotionFamily.single("slow_falling", MobEffects.SLOW_FALLING, 1800, 4800, 0, 0, 0, false);
+        private static final PotionFamily LUCK = PotionFamily.single("luck", MobEffects.LUCK, 6000, 16000, 0, 0, 0, false);
+        private static final PotionFamily WEAKNESS = PotionFamily.single("weakness", MobEffects.WEAKNESS, 1800, 4800, 0, 0, 0, false);
+        private static final PotionFamily STRENGTH = PotionFamily.single("strength", MobEffects.STRENGTH, 3600, 9600, 1800, 1, 1, false);
+        private static final PotionFamily REGENERATION = PotionFamily.single("regeneration", MobEffects.REGENERATION, 900, 1800, 450, 1, 1, false);
+        private static final PotionFamily POISON = PotionFamily.single("poison", MobEffects.POISON, 900, 1800, 432, 1, 1, false);
+        private static final PotionFamily WATER_BREATHING = PotionFamily.single("water_breathing", MobEffects.WATER_BREATHING, 3600, 9600, 0, 0, 0, false);
+        private static final PotionFamily SLOWNESS = PotionFamily.single("slowness", MobEffects.SLOWNESS, 1800, 4800, 400, 3, 2, false);
+        private static final PotionFamily SWIFTNESS = PotionFamily.single("swiftness", MobEffects.SPEED, 3600, 9600, 1800, 1, 1, false);
+        private static final PotionFamily FIRE_RESISTANCE = PotionFamily.single("fire_resistance", MobEffects.FIRE_RESISTANCE, 3600, 9600, 0, 0, 0, false);
+        private static final PotionFamily LEAPING = PotionFamily.single("leaping", MobEffects.JUMP_BOOST, 3600, 9600, 1800, 1, 1, false);
+        private static final PotionFamily INVISIBILITY = PotionFamily.single("invisibility", MobEffects.INVISIBILITY, 3600, 9600, 0, 0, 0, false);
+        private static final PotionFamily NIGHT_VISION = PotionFamily.single("night_vision", MobEffects.NIGHT_VISION, 3600, 9600, 0, 0, 0, false);
+        private static final PotionFamily HEALING = PotionFamily.single("healing", MobEffects.INSTANT_HEALTH, 1, 0, 1, 1, 1, true);
+        private static final PotionFamily NAUSEA = PotionFamily.single("nausea", MobEffects.NAUSEA, 1200, 2400, 0, 0, 0, false);
+        private static final PotionFamily BLINDNESS = PotionFamily.single("blindness", MobEffects.BLINDNESS, 1200, 4800, 0, 0, 0, false);
+        private static final PotionFamily HEALTH_BOOST = PotionFamily.single("health_boost", MobEffects.HEALTH_BOOST, 1200, 4800, 400, 1, 1, false);
     }
 
     // Hunter
@@ -227,19 +217,19 @@ public class ModPotions {
         veryDurableDracula(longCellExtended, veryLongCellExtended);
     }
 
-    private static DeferredHolder<Potion, HunterPotion> potion(String name, Family family, int durableSteps, int strongSteps) {
+    private static DeferredHolder<Potion, HunterPotion> potion(String name, PotionFamily family, int durableSteps, int strongSteps) {
         return register(name, family, durableSteps, strongSteps, false);
     }
 
-    private static DeferredHolder<Potion, HunterPotion> extended(String name, Family family, int durableSteps, int strongSteps) {
+    private static DeferredHolder<Potion, HunterPotion> extended(String name, PotionFamily family, int durableSteps, int strongSteps) {
         return register(name, family, durableSteps, strongSteps, true);
     }
 
-    private static DeferredHolder<Potion, HunterPotion> register(String name, Family family, int durableSteps, int strongSteps, boolean sovereign) {
+    private static DeferredHolder<Potion, HunterPotion> register(String name, PotionFamily family, int durableSteps, int strongSteps, boolean sovereign) {
         return POTIONS.register(name, () -> new HunterPotion(family.name(), family.effects().stream().map(effect -> new MobEffectInstance(effect.effect(), duration(effect, durableSteps, strongSteps, sovereign), amplifier(effect, strongSteps, sovereign))).toArray(MobEffectInstance[]::new)));
     }
 
-    private static int duration(Effect effect, int durableSteps, int strongSteps, boolean sovereign) {
+    private static int duration(PotionFamily.Effect effect, int durableSteps, int strongSteps, boolean sovereign) {
         if (effect.instant()) return 1;
 
         double duration = effect.base();
@@ -262,7 +252,7 @@ public class ModPotions {
         return Math.max(1, (int) Math.round(duration * factor));
     }
 
-    private static int amplifier(Effect effect, int strongSteps, boolean sovereign) {
+    private static int amplifier(PotionFamily.Effect effect, int strongSteps, boolean sovereign) {
         int amplifier = strongSteps == 0 ? effect.baseAmplifier() : strongSteps == 1 ? effect.strongAmplifier() : effect.strongAmplifier() + effect.amplifierStep();
         return effect.instant() && sovereign ? amplifier + 1 : amplifier;
     }
