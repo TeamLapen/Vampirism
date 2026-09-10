@@ -27,12 +27,14 @@ import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class ModPotions {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, REFERENCE.MODID);
 
     private static final double DURABLE_STEP = 4.0;
+    private static final double STRONG_STEP = 1.0;
     private static final double SOVEREIGN_FACTOR = 2.0;
 
     private static final int VERY_DURABLE_COUNT = 2;
@@ -50,26 +52,33 @@ public class ModPotions {
     };
 
     private static final class Families {
-        private static final Family SLOW_FALLING = new Family("slow_falling", MobEffects.SLOW_FALLING, 1800, 4800, 0, 0, 1.0, 0, false);
-        private static final Family LUCK = new Family("luck", MobEffects.LUCK, 6000, 16000, 0, 0, 1.0, 0, false);
-        private static final Family WEAKNESS = new Family("weakness", MobEffects.WEAKNESS, 1800, 4800, 0, 0, 1.0, 0, false);
-        private static final Family STRENGTH = new Family("strength", MobEffects.STRENGTH, 3600, 9600, 1800, 1, 1.0, 1, false);
-        private static final Family REGENERATION = new Family("regeneration", MobEffects.REGENERATION, 900, 1800, 450, 1, 1.0, 1, false);
-        private static final Family POISON = new Family("poison", MobEffects.POISON, 900, 1800, 432, 1, 1.0, 1, false);
-        private static final Family WATER_BREATHING = new Family("water_breathing", MobEffects.WATER_BREATHING, 3600, 9600, 0, 0, 1.0, 0, false);
-        private static final Family SLOWNESS = new Family("slowness", MobEffects.SLOWNESS, 1800, 4800, 400, 3, 1.0, 2, false);
-        private static final Family SWIFTNESS = new Family("swiftness", MobEffects.SPEED, 3600, 9600, 1800, 1, 1.0, 1, false);
-        private static final Family FIRE_RESISTANCE = new Family("fire_resistance", MobEffects.FIRE_RESISTANCE, 3600, 9600, 0, 0, 1.0, 0, false);
-        private static final Family LEAPING = new Family("leaping", MobEffects.JUMP_BOOST, 3600, 9600, 1800, 1, 1.0, 1, false);
-        private static final Family INVISIBILITY = new Family("invisibility", MobEffects.INVISIBILITY, 3600, 9600, 0, 0, 1.0, 0, false);
-        private static final Family NIGHT_VISION = new Family("night_vision", MobEffects.NIGHT_VISION, 3600, 9600, 0, 0, 1.0, 0, false);
-        private static final Family HEALING = new Family("healing", MobEffects.INSTANT_HEALTH, 1, 0, 1, 1, 1.0, 1, true);
-        private static final Family NAUSEA = new Family("nausea", MobEffects.NAUSEA, 1200, 2400, 0, 0, 1.0, 0, false);
-        private static final Family BLINDNESS = new Family("blindness", MobEffects.BLINDNESS, 1200, 4800, 0, 0, 1.0, 0, false);
-        private static final Family HEALTH_BOOST = new Family("health_boost", MobEffects.HEALTH_BOOST, 1200, 4800, 400, 1, 1.0, 1, false);
+        private static final Family SLOW_FALLING = Family.single("slow_falling", MobEffects.SLOW_FALLING, 1800, 4800, 0, 0, 0, false);
+        private static final Family LUCK = Family.single("luck", MobEffects.LUCK, 6000, 16000, 0, 0, 0, false);
+        private static final Family WEAKNESS = Family.single("weakness", MobEffects.WEAKNESS, 1800, 4800, 0, 0, 0, false);
+        private static final Family STRENGTH = Family.single("strength", MobEffects.STRENGTH, 3600, 9600, 1800, 1, 1, false);
+        private static final Family REGENERATION = Family.single("regeneration", MobEffects.REGENERATION, 900, 1800, 450, 1, 1, false);
+        private static final Family POISON = Family.single("poison", MobEffects.POISON, 900, 1800, 432, 1, 1, false);
+        private static final Family WATER_BREATHING = Family.single("water_breathing", MobEffects.WATER_BREATHING, 3600, 9600, 0, 0, 0, false);
+        private static final Family SLOWNESS = Family.single("slowness", MobEffects.SLOWNESS, 1800, 4800, 400, 3, 2, false);
+        private static final Family SWIFTNESS = Family.single("swiftness", MobEffects.SPEED, 3600, 9600, 1800, 1, 1, false);
+        private static final Family FIRE_RESISTANCE = Family.single("fire_resistance", MobEffects.FIRE_RESISTANCE, 3600, 9600, 0, 0, 0, false);
+        private static final Family LEAPING = Family.single("leaping", MobEffects.JUMP_BOOST, 3600, 9600, 1800, 1, 1, false);
+        private static final Family INVISIBILITY = Family.single("invisibility", MobEffects.INVISIBILITY, 3600, 9600, 0, 0, 0, false);
+        private static final Family NIGHT_VISION = Family.single("night_vision", MobEffects.NIGHT_VISION, 3600, 9600, 0, 0, 0, false);
+        private static final Family HEALING = Family.single("healing", MobEffects.INSTANT_HEALTH, 1, 0, 1, 1, 1, true);
+        private static final Family NAUSEA = Family.single("nausea", MobEffects.NAUSEA, 1200, 2400, 0, 0, 0, false);
+        private static final Family BLINDNESS = Family.single("blindness", MobEffects.BLINDNESS, 1200, 4800, 0, 0, 0, false);
+        private static final Family HEALTH_BOOST = Family.single("health_boost", MobEffects.HEALTH_BOOST, 1200, 4800, 400, 1, 1, false);
     }
 
-    private record Family(String name, Holder<MobEffect> effect, int base, int longDuration, int strongDuration, int strongAmplifier, double strongStep, int amplifierStep, boolean instant) {}
+    private record Effect(Holder<MobEffect> effect, int base, int longDuration, int strongDuration, int baseAmplifier, int strongAmplifier, int amplifierStep, boolean instant) {}
+
+    private record Family(String name, List<Effect> effects) {
+
+        private static Family single(String name, Holder<MobEffect> effect, int base, int longDuration, int strongDuration, int strongAmplifier, int amplifierStep, boolean instant) {
+            return new Family(name, List.of(new Effect(effect, base, longDuration, strongDuration, 0, strongAmplifier, amplifierStep, instant)));
+        }
+    }
 
     // Hunter
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SLOW_FALLING = potion("very_long_slow_falling", Families.SLOW_FALLING, 2, 0);
@@ -219,21 +228,25 @@ public class ModPotions {
     }
 
     private static DeferredHolder<Potion, HunterPotion> potion(String name, Family family, int durableSteps, int strongSteps) {
-        return POTIONS.register(name, () -> new HunterPotion(family.name(), new MobEffectInstance(family.effect(), duration(family, durableSteps, strongSteps, false), amplifier(family, strongSteps, false))));
+        return register(name, family, durableSteps, strongSteps, false);
     }
 
     private static DeferredHolder<Potion, HunterPotion> extended(String name, Family family, int durableSteps, int strongSteps) {
-        return POTIONS.register(name, () -> new HunterPotion(family.name(), new MobEffectInstance(family.effect(), duration(family, durableSteps, strongSteps, true), amplifier(family, strongSteps, true))));
+        return register(name, family, durableSteps, strongSteps, true);
     }
 
-    private static int duration(Family family, int durableSteps, int strongSteps, boolean sovereign) {
-        if (family.instant()) return 1;
+    private static DeferredHolder<Potion, HunterPotion> register(String name, Family family, int durableSteps, int strongSteps, boolean sovereign) {
+        return POTIONS.register(name, () -> new HunterPotion(family.name(), family.effects().stream().map(effect -> new MobEffectInstance(effect.effect(), duration(effect, durableSteps, strongSteps, sovereign), amplifier(effect, strongSteps, sovereign))).toArray(MobEffectInstance[]::new)));
+    }
 
-        double duration = family.base();
-        if (durableSteps > 0) duration = duration * family.longDuration() / family.base();
+    private static int duration(Effect effect, int durableSteps, int strongSteps, boolean sovereign) {
+        if (effect.instant()) return 1;
+
+        double duration = effect.base();
+        if (durableSteps > 0) duration = duration * effect.longDuration() / effect.base();
         if (durableSteps > 1) duration *= DURABLE_STEP;
-        if (strongSteps > 0) duration = duration * family.strongDuration() / family.base();
-        if (strongSteps > 1) duration *= family.strongStep();
+        if (strongSteps > 0) duration = duration * effect.strongDuration() / effect.base();
+        if (strongSteps > 1) duration *= STRONG_STEP;
 
         return snap(duration, sovereign ? SOVEREIGN_FACTOR : 1.0);
     }
@@ -249,9 +262,9 @@ public class ModPotions {
         return Math.max(1, (int) Math.round(duration * factor));
     }
 
-    private static int amplifier(Family family, int strongSteps, boolean sovereign) {
-        int amplifier = strongSteps == 0 ? 0 : strongSteps == 1 ? family.strongAmplifier() : family.strongAmplifier() + family.amplifierStep();
-        return family.instant() && sovereign ? amplifier + 1 : amplifier;
+    private static int amplifier(Effect effect, int strongSteps, boolean sovereign) {
+        int amplifier = strongSteps == 0 ? effect.baseAmplifier() : strongSteps == 1 ? effect.strongAmplifier() : effect.strongAmplifier() + effect.amplifierStep();
+        return effect.instant() && sovereign ? amplifier + 1 : amplifier;
     }
 
     private static void durable(Holder<Potion> in, Holder<Potion> out) {

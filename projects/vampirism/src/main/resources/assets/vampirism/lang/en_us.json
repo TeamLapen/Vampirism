@@ -494,6 +494,11 @@
   "effect.vampirism.aura_of_darkness": "Aura of Darkness",
   "effect.vampirism.duration.unknown": "?",
 
+  "potion.potency.6": "VII",
+  "potion.potency.7": "VIII",
+  "potion.potency.8": "IX",
+  "potion.potency.9": "X",
+
   "attribute.vampirism.sundamage": "Sun Damage",
   "attribute.vampirism.blood_exhaustion": "Blood Exhaustion",
   "attribute.vampirism.neonatal_duration": "Neonatal Duration",
