@@ -65,9 +65,13 @@ public class ModPotions {
         private static final PotionFamily INVISIBILITY = PotionFamily.single("invisibility", MobEffects.INVISIBILITY, 3600, 9600, 0, 0, 0, false);
         private static final PotionFamily NIGHT_VISION = PotionFamily.single("night_vision", MobEffects.NIGHT_VISION, 3600, 9600, 0, 0, 0, false);
         private static final PotionFamily HEALING = PotionFamily.single("healing", MobEffects.INSTANT_HEALTH, 1, 0, 1, 1, 1, true);
-        private static final PotionFamily NAUSEA = PotionFamily.single("nausea", MobEffects.NAUSEA, 1200, 2400, 0, 0, 0, false);
+        private static final PotionFamily NAUSEA = PotionFamily.single("nausea", MobEffects.NAUSEA, 1200, 4800, 0, 0, 0, false);
         private static final PotionFamily BLINDNESS = PotionFamily.single("blindness", MobEffects.BLINDNESS, 1200, 4800, 0, 0, 0, false);
         private static final PotionFamily HEALTH_BOOST = PotionFamily.single("health_boost", MobEffects.HEALTH_BOOST, 1200, 4800, 400, 1, 1, false);
+        private static final PotionFamily WIND_CHARGED = PotionFamily.single("wind_charged", MobEffects.WIND_CHARGED, 3600, 9600, 0, 0, 0, false);
+        private static final PotionFamily WEAVING = PotionFamily.single("weaving", MobEffects.WEAVING, 3600, 9600, 0, 0, 0, false);
+        private static final PotionFamily OOZING = PotionFamily.single("oozing", MobEffects.OOZING, 3600, 9600, 0, 0, 0, false);
+        private static final PotionFamily INFESTED = PotionFamily.single("infested", MobEffects.INFESTED, 3600, 9600, 0, 0, 0, false);
     }
 
     // Hunter
@@ -121,6 +125,18 @@ public class ModPotions {
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_INVISIBILITY_EXTENDED = extended("very_long_invisibility_extended", Families.INVISIBILITY, 2, 0);
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_NIGHT_VISION = potion("very_long_night_vision", Families.NIGHT_VISION, 2, 0);
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_NIGHT_VISION_EXTENDED = extended("very_long_night_vision_extended", Families.NIGHT_VISION, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> LONG_WIND_CHARGED = potion("long_wind_charged", Families.WIND_CHARGED, 1, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WIND_CHARGED = potion("very_long_wind_charged", Families.WIND_CHARGED, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WIND_CHARGED_EXTENDED = extended("very_long_wind_charged_extended", Families.WIND_CHARGED, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> LONG_WEAVING = potion("long_weaving", Families.WEAVING, 1, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WEAVING = potion("very_long_weaving", Families.WEAVING, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WEAVING_EXTENDED = extended("very_long_weaving_extended", Families.WEAVING, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> LONG_OOZING = potion("long_oozing", Families.OOZING, 1, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_OOZING = potion("very_long_oozing", Families.OOZING, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_OOZING_EXTENDED = extended("very_long_oozing_extended", Families.OOZING, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> LONG_INFESTED = potion("long_infested", Families.INFESTED, 1, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_INFESTED = potion("very_long_infested", Families.INFESTED, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_INFESTED_EXTENDED = extended("very_long_infested_extended", Families.INFESTED, 2, 0);
     public static final DeferredHolder<Potion, HunterPotion> NAUSEA = potion("nausea", Families.NAUSEA, 0, 0);
     public static final DeferredHolder<Potion, HunterPotion> NAUSEA_EXTENDED = extended("nausea_extended", Families.NAUSEA, 0, 0);
     public static final DeferredHolder<Potion, HunterPotion> LONG_NAUSEA = potion("long_nausea", Families.NAUSEA, 1, 0);
@@ -178,9 +194,18 @@ public class ModPotions {
         veryDurable(Potions.LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION_EXTENDED);
         veryStrong(Potions.STRONG_HEALING, VERY_STRONG_HEALING, VERY_STRONG_HEALING_EXTENDED);
 
+        durable(Potions.WIND_CHARGED, LONG_WIND_CHARGED);
+        durable(Potions.WEAVING, LONG_WEAVING);
+        durable(Potions.OOZING, LONG_OOZING);
+        durable(Potions.INFESTED, LONG_INFESTED);
+        veryDurable(LONG_WIND_CHARGED, VERY_LONG_WIND_CHARGED, VERY_LONG_WIND_CHARGED_EXTENDED);
+        veryDurable(LONG_WEAVING, VERY_LONG_WEAVING, VERY_LONG_WEAVING_EXTENDED);
+        veryDurable(LONG_OOZING, VERY_LONG_OOZING, VERY_LONG_OOZING_EXTENDED);
+        veryDurable(LONG_INFESTED, VERY_LONG_INFESTED, VERY_LONG_INFESTED_EXTENDED);
+
         veryDurable(Potions.LONG_STRENGTH, VERY_LONG_STRENGTH, VERY_LONG_STRENGTH_EXTENDED);
         veryStrong(VERY_LONG_STRENGTH, LONG_STRONG_STRENGTH, LONG_STRONG_STRENGTH_EXTENDED);
-        veryStrongDracula(VERY_LONG_STRENGTH_EXTENDED, LONG_STRONG_STRENGTH_EXTENDED);
+        veryStrongFromExtended(VERY_LONG_STRENGTH_EXTENDED, LONG_STRONG_STRENGTH_EXTENDED);
 
         extendedFamily(Potions.LONG_REGENERATION, Potions.STRONG_REGENERATION, VERY_LONG_REGENERATION, VERY_LONG_REGENERATION_EXTENDED, VERY_STRONG_REGENERATION, VERY_STRONG_REGENERATION_EXTENDED, LONG_STRONG_REGENERATION, LONG_STRONG_REGENERATION_EXTENDED);
         extendedFamily(Potions.LONG_POISON, Potions.STRONG_POISON, VERY_LONG_POISON, VERY_LONG_POISON_EXTENDED, VERY_STRONG_POISON, VERY_STRONG_POISON_EXTENDED, LONG_STRONG_POISON, LONG_STRONG_POISON_EXTENDED);
@@ -196,17 +221,17 @@ public class ModPotions {
         durable(HEALTH_BOOST, LONG_HEALTH_BOOST, LONG_HEALTH_BOOST_EXTENDED);
         strong(HEALTH_BOOST, STRONG_HEALTH_BOOST, STRONG_HEALTH_BOOST_EXTENDED);
         extendedFamily(LONG_HEALTH_BOOST, STRONG_HEALTH_BOOST, VERY_LONG_HEALTH_BOOST, VERY_LONG_HEALTH_BOOST_EXTENDED, VERY_STRONG_HEALTH_BOOST, VERY_STRONG_HEALTH_BOOST_EXTENDED, LONG_STRONG_HEALTH_BOOST, LONG_STRONG_HEALTH_BOOST_EXTENDED);
-        veryDurableDracula(LONG_HEALTH_BOOST_EXTENDED, VERY_LONG_HEALTH_BOOST_EXTENDED);
-        veryStrongDracula(STRONG_HEALTH_BOOST_EXTENDED, VERY_STRONG_HEALTH_BOOST_EXTENDED);
+        veryDurableFromExtended(LONG_HEALTH_BOOST_EXTENDED, VERY_LONG_HEALTH_BOOST_EXTENDED);
+        veryStrongFromExtended(STRONG_HEALTH_BOOST_EXTENDED, VERY_STRONG_HEALTH_BOOST_EXTENDED);
     }
 
     private static void extendedFamily(Holder<Potion> vanillaLong, Holder<Potion> vanillaStrong, Holder<Potion> longCell, Holder<Potion> longCellExtended, Holder<Potion> strongCell, Holder<Potion> strongCellExtended, Holder<Potion> capstone, Holder<Potion> capstoneExtended) {
         veryDurable(vanillaLong, longCell, longCellExtended);
         veryStrong(vanillaStrong, strongCell, strongCellExtended);
         veryStrong(longCell, capstone, capstoneExtended);
-        veryStrongDracula(longCellExtended, capstoneExtended);
+        veryStrongFromExtended(longCellExtended, capstoneExtended);
         veryDurable(strongCell, capstone, capstoneExtended);
-        veryDurableDracula(strongCellExtended, capstoneExtended);
+        veryDurableFromExtended(strongCellExtended, capstoneExtended);
     }
 
     private static void masterFamily(Supplier<Ingredient> ingredient, int count, int countReduced, Holder<Potion> base, Holder<Potion> baseExtended, Holder<Potion> longCell, Holder<Potion> longCellExtended, Holder<Potion> veryLongCell, Holder<Potion> veryLongCellExtended) {
@@ -214,7 +239,7 @@ public class ModPotions {
         masterSovereign(baseExtended, ingredient, count, countReduced);
         durable(base, longCell, longCellExtended);
         veryDurable(longCell, veryLongCell, veryLongCellExtended);
-        veryDurableDracula(longCellExtended, veryLongCellExtended);
+        veryDurableFromExtended(longCellExtended, veryLongCellExtended);
     }
 
     private static DeferredHolder<Potion, HunterPotion> potion(String name, PotionFamily family, int durableSteps, int strongSteps) {
@@ -279,8 +304,8 @@ public class ModPotions {
         VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).blood().durable().build());
     }
 
-    private static void veryDurableDracula(Holder<Potion> in, Holder<Potion> out) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).sovereignBlood().durable().build());
+    private static void veryDurableFromExtended(Holder<Potion> in, Holder<Potion> out) {
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).blood().durable().build());
     }
 
     private static void veryDurable(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
@@ -292,8 +317,8 @@ public class ModPotions {
         VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).blood().concentrated().build());
     }
 
-    private static void veryStrongDracula(Holder<Potion> in, Holder<Potion> out) {
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).sovereignBlood().concentrated().build());
+    private static void veryStrongFromExtended(Holder<Potion> in, Holder<Potion> out) {
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, out).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).blood().concentrated().build());
     }
 
     private static void veryStrong(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
