@@ -86,10 +86,11 @@ public final class DatagenGenerator {
                     .formatted(registrarClass, m.holderField(), i < models.size() - 1 ? "," : ""));
         }
 
-        // Entity-type tag entries for GeneratedConverterEntityTypeTagsProvider (generated creatures only)
+        // Entity-type tag entries for GeneratedConverterEntityTypeTagsProvider (generated creatures only).
+        // Writes its own tag file; ModEntityTypeTagsProvider folds it into CONVERTED_CREATURES.
         StringBuilder tagProviderEntries = new StringBuilder();
         for (CreatureModel m : models) {
-            tagProviderEntries.append("            this.tag(CONVERTED_CREATURES).add(%1$s.%2$s.get());\n"
+            tagProviderEntries.append("            this.tag(GENERATED_CONVERTED_CREATURES).add(%1$s.%2$s.get());\n"
                     .formatted(registrarClass, m.holderField()));
         }
 
@@ -98,7 +99,7 @@ public final class DatagenGenerator {
                 /**
                  * Generated datagen providers for converted entities. Registers three providers via
                  * {@link GatherDataEvent.Client}: entity-converter data map, empty entity loot tables,
-                 * and the {@code CONVERTED_CREATURES} entity-type tag.
+                 * and the {@code GENERATED_CONVERTED_CREATURES} entity-type tag.
                  */
                 @EventBusSubscriber(modid = "%6$s")
                 public final class %1$s {
@@ -171,7 +172,7 @@ public final class DatagenGenerator {
 
                     private static final class GeneratedConverterEntityTypeTagsProvider extends EntityTypeTagsProvider {
 
-                        private final TagKey<EntityType<?>> CONVERTED_CREATURES = ModEntityTags.CONVERTED_CREATURES;
+                        private final TagKey<EntityType<?>> GENERATED_CONVERTED_CREATURES = ModEntityTags.GENERATED_CONVERTED_CREATURES;
 
                         public GeneratedConverterEntityTypeTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, String modId) {
                             super(output, lookupProvider, modId);
