@@ -77,8 +77,9 @@ public class ModPotions {
     // Hunter
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SLOW_FALLING = potion("very_long_slow_falling", Families.SLOW_FALLING, 2, 0);
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_SLOW_FALLING_EXTENDED = extended("very_long_slow_falling_extended", Families.SLOW_FALLING, 2, 0);
-    public static final DeferredHolder<Potion, HunterPotion> LONG_LUCK = potion("long_luck", Families.LUCK, 2, 0);
-    public static final DeferredHolder<Potion, HunterPotion> LONG_LUCK_EXTENDED = extended("long_luck_extended", Families.LUCK, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> LONG_LUCK = potion("long_luck", Families.LUCK, 1, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_LUCK = potion("very_long_luck", Families.LUCK, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_LUCK_EXTENDED = extended("very_long_luck_extended", Families.LUCK, 2, 0);
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WEAKNESS = potion("very_long_weakness", Families.WEAKNESS, 2, 0);
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_WEAKNESS_EXTENDED = extended("very_long_weakness_extended", Families.WEAKNESS, 2, 0);
     public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_STRENGTH = potion("very_long_strength", Families.STRENGTH, 2, 0);
@@ -185,7 +186,6 @@ public class ModPotions {
     }
 
     private static void registerPotionMixes(RegistryAccess registryAccess) {
-        veryDurable(Potions.LUCK, LONG_LUCK, LONG_LUCK_EXTENDED);
         veryDurable(Potions.LONG_SLOW_FALLING, VERY_LONG_SLOW_FALLING, VERY_LONG_SLOW_FALLING_EXTENDED);
         veryDurable(Potions.LONG_WEAKNESS, VERY_LONG_WEAKNESS, VERY_LONG_WEAKNESS_EXTENDED);
         veryDurable(Potions.LONG_WATER_BREATHING, VERY_LONG_WATER_BREATHING, VERY_LONG_WATER_BREATHING_EXTENDED);
@@ -194,10 +194,12 @@ public class ModPotions {
         veryDurable(Potions.LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION, VERY_LONG_NIGHT_VISION_EXTENDED);
         veryStrong(Potions.STRONG_HEALING, VERY_STRONG_HEALING, VERY_STRONG_HEALING_EXTENDED);
 
+        durable(Potions.LUCK, LONG_LUCK);
         durable(Potions.WIND_CHARGED, LONG_WIND_CHARGED);
         durable(Potions.WEAVING, LONG_WEAVING);
         durable(Potions.OOZING, LONG_OOZING);
         durable(Potions.INFESTED, LONG_INFESTED);
+        veryDurable(LONG_LUCK, VERY_LONG_LUCK, VERY_LONG_LUCK_EXTENDED);
         veryDurable(LONG_WIND_CHARGED, VERY_LONG_WIND_CHARGED, VERY_LONG_WIND_CHARGED_EXTENDED);
         veryDurable(LONG_WEAVING, VERY_LONG_WEAVING, VERY_LONG_WEAVING_EXTENDED);
         veryDurable(LONG_OOZING, VERY_LONG_OOZING, VERY_LONG_OOZING_EXTENDED);
