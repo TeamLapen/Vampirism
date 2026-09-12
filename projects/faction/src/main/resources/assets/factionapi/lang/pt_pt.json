@@ -1,3 +1,4 @@
 {
-  "gui.factionapi.minion.active_task": "Tarefa atual"
+  "gui.factionapi.minion.active_task": "Tarefa atual",
+  "dialogue.factionapi.minion.died_on_task": "Meu senhor, me desculpe, mas eu morri enquanto cumprindo sua tarefa"
 }
