@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.api.world.items.oil;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface IApplicableOil extends IOil {
 
@@ -45,10 +46,11 @@ public interface IApplicableOil extends IOil {
      *
      * @return duration reduction
      */
-    int getDurationReduction();
+    default int getDurationReduction() {
+        return 1;
+    }
 
-    /**
-     * creates an optional tooltip entry for an item which has this oil applied to
-     */
-    Optional<Component> getToolTipLine(ItemStack stack, IApplicableOil oil, int duration, TooltipFlag flag);
+    Component getDescriptionTitle();
+
+    List<Component> getEffectDescription(@Nullable Item.TooltipContext context);
 }

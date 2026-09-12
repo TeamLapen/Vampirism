@@ -178,7 +178,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
     }
 
     protected void extraTieredMetalInfusionRecipe(ItemLike ingredientItem, Holder<Item> result) {
-        metalInfusionRecipe(ModItems.DRACULAS_BLOOD.get(), ingredientItem, result, 5);
+        metalInfusionRecipe(ModItems.SOVEREIGN_BLOOD.get(), ingredientItem, result, 5);
     }
 
     protected void fiveTieredMetalInfusionRecipe(TagKey<Item> ingredientTag, Holder<Item> result) {
@@ -188,7 +188,7 @@ public abstract class VampirismRecipeProvider extends RecipeProvider {
     }
 
     protected void extraTieredMetalInfusionRecipe(TagKey<Item> ingredientTag, Holder<Item> result) {
-        metalInfusionRecipe(ModItems.DRACULAS_BLOOD.get(), ingredientTag, result, 5);
+        metalInfusionRecipe(ModItems.SOVEREIGN_BLOOD.get(), ingredientTag, result, 5);
     }
 
 

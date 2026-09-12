@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.common.world.items;
 
 import de.teamlapen.vampirism.common.config.ModConfig;
 import de.teamlapen.vampirism.common.tags.ModItemTags;
-import de.teamlapen.vampirism.common.world.items.component.PureLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.CreativeModeTab;
@@ -50,9 +49,9 @@ public class HeartSeekerItem extends VampireSwordItem implements BaseDisplayItem
 
     @Override
     public void generateCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        output.accept(PureLevel.pureBlood(this, 0));
+        output.accept(VampireSwordItem.createTrainedAndChargedClient(this, 0));
         for (int i = 1; i < 6; i++) {
-            output.accept(PureLevel.pureBlood(this, i), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+            output.accept(VampireSwordItem.createTrainedAndChargedClient(this, i), CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
         }
     }
 }

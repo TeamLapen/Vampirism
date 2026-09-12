@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "vampirism:draculas_blood"
+            "items": "vampirism:sovereign_blood"
           }
         ]
       },
@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "vampirism:blood_infused_refined_iron_ingot_from_dracula_blood"
+        "recipe": "vampirism:blood_infused_refined_iron_ingot_from_sovereign_blood"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -37,7 +37,7 @@
   ],
   "rewards": {
     "recipes": [
-      "vampirism:blood_infused_refined_iron_ingot_from_dracula_blood"
+      "vampirism:blood_infused_refined_iron_ingot_from_sovereign_blood"
     ]
   }
 }

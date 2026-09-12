@@ -7,7 +7,7 @@
   "block.factionapi.totem_top": "Fragile Village Totem Top",
   "block.factionapi.totem_top_crafted": "Village Totem Top",
 
-  "item.factionapi.oblivion_potion": "Oblivion Potion",
+  "item.factionapi.oblivion_potion": "Potion of Oblivion",
 
   "effect.factionapi.oblivion": "Oblivion",
   "effect.factionapi.resurrection_fatigue": "Resurrection Fatigue",
@@ -325,7 +325,13 @@
   "factionapi.configuration.taskMasterMaxTasks.tooltip": "Maximum number of tasks shown at a taskmaster, excluding unique tasks.",
 
   "factionapi.configuration.entitiesIMob": "IMob Entities",
-  "factionapi.configuration.entitiesIMob.tooltip": "Controls whether faction entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199. Smart falls back to Never on servers.",
+  "factionapi.configuration.entitiesIMob.tooltip": "Controls whether faction entities are recognized as hostile by other mods. See https://github.com/TeamLapen/Vampirism/issues/199.",
+  "factionapi.configuration.entitiesIMob.always_imob": "Always",
+  "factionapi.configuration.entitiesIMob.always_imob.tooltip": "Faction entities are always recognized as hostile.",
+  "factionapi.configuration.entitiesIMob.never_imob": "Never",
+  "factionapi.configuration.entitiesIMob.never_imob.tooltip": "Faction entities are never recognized as hostile.",
+  "factionapi.configuration.entitiesIMob.smart": "Smart",
+  "factionapi.configuration.entitiesIMob.smart.tooltip": "Faction entities are only recognized as hostile while they are hostile towards your own faction. Falls back to Never on dedicated servers.",
   "factionapi.configuration.preventDebugBoundingBoxes": "Prevent Rendering Debug Bounding Boxes",
   "factionapi.configuration.preventDebugBoundingBoxes.tooltip": "When enabled, prevents players from enabling debug bounding box rendering, which can reveal disguised entities.",
   "factionapi.configuration.usePermissions": "Use Permissions",

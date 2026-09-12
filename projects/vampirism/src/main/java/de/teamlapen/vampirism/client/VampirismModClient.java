@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.client;
 
+import de.teamlapen.faction.client.config.ConfigFilter;
+import de.teamlapen.faction.client.config.ExtendedConfigSectionScreen;
 import de.teamlapen.vampirism.REFERENCE;
-import de.teamlapen.vampirism.client.config.ConfigFilter;
 import de.teamlapen.vampirism.client.renderer.items.BatCageSpecialRenderer;
 import de.teamlapen.vampirism.client.renderer.items.BloodContainerRenderer;
 import de.teamlapen.vampirism.client.renderer.items.MotherTrophyRenderer;
@@ -31,7 +32,7 @@ public class VampirismModClient {
         SERVICES = new ClientServices();
         SERVICES.register(modEventBus);
 
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, new ConfigFilter()));
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (container, parent) -> new ConfigurationScreen(container, parent, (screen, type, config, title) -> new ExtendedConfigSectionScreen(screen, type, config, title, new ConfigFilter())));
 
         modEventBus.register(this);
 

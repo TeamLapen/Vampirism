@@ -19,6 +19,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -99,12 +100,12 @@ public class AlchemyTableRecipeCategory implements IRecipeCategory<RecipeHolder<
         int y = 80;
         Minecraft minecraft = Minecraft.getInstance();
 
-        List<ISkill<?>> requiredSkills = recipe.getRequiredSkills();
+        List<Holder<? extends ISkill<?>>> requiredSkills = recipe.getRequiredSkills();
         if (!requiredSkills.isEmpty()) {
             MutableComponent skillText = Component.translatable("gui.vampirism.skill_required", " ");
 
-            for (ISkill<?> skill : recipe.getRequiredSkills()) {
-                skillText.append(skill.getName()).append(" ");
+            for (Holder<? extends ISkill<?>> skill : requiredSkills) {
+                skillText.append(skill.value().getName()).append(" ");
 
             }
             UtilLib.renderMultiLine(minecraft.font, graphics, skillText, 132, x, y, Color.gray.getRGB());

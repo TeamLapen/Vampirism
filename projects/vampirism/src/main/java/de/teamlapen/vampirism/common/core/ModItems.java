@@ -8,6 +8,7 @@ import de.teamlapen.faction.common.world.items.consume.FactionFoodEntry;
 import de.teamlapen.faction.common.world.items.consume.FactionFoodList;
 import de.teamlapen.vampirism.REFERENCE;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VEnums;
 import de.teamlapen.vampirism.api.VampirismTags;
 import de.teamlapen.vampirism.api.world.items.IItemWithTier;
 import de.teamlapen.vampirism.api.world.items.QuarrelProperties;
@@ -194,11 +195,13 @@ public class ModItems {
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_8 = ITEMS.registerItem("hunter_intel_8",  props -> new HunterIntelItem(8, props));
     public static final DeferredItem<HunterIntelItem> HUNTER_INTEL_9 = ITEMS.registerItem("hunter_intel_9",  props -> new HunterIntelItem(9, props));
 
-    public static final DeferredItem<PureBloodItem> PURE_BLOOD_0 = ITEMS.registerItem("pure_blood_0",  props -> new PureBloodItem(0, props));
-    public static final DeferredItem<PureBloodItem> PURE_BLOOD_1 = ITEMS.registerItem("pure_blood_1",  props -> new PureBloodItem(1, props));
-    public static final DeferredItem<PureBloodItem> PURE_BLOOD_2 = ITEMS.registerItem("pure_blood_2",  props -> new PureBloodItem(2, props));
-    public static final DeferredItem<PureBloodItem> PURE_BLOOD_3 = ITEMS.registerItem("pure_blood_3",  props -> new PureBloodItem(3, props));
-    public static final DeferredItem<PureBloodItem> PURE_BLOOD_4 = ITEMS.registerItem("pure_blood_4",  props -> new PureBloodItem(4, props));
+    public static final DeferredItem<PureBloodItem> PURE_BLOOD_0 = ITEMS.registerItem("pure_blood_0",  props -> new PureBloodItem(0, props.rarity(Rarity.UNCOMMON)));
+    public static final DeferredItem<PureBloodItem> PURE_BLOOD_1 = ITEMS.registerItem("pure_blood_1",  props -> new PureBloodItem(1, props.rarity(Rarity.UNCOMMON)));
+    public static final DeferredItem<PureBloodItem> PURE_BLOOD_2 = ITEMS.registerItem("pure_blood_2",  props -> new PureBloodItem(2, props.rarity(Rarity.UNCOMMON)));
+    public static final DeferredItem<PureBloodItem> PURE_BLOOD_3 = ITEMS.registerItem("pure_blood_3",  props -> new PureBloodItem(3, props.rarity(Rarity.UNCOMMON)));
+    public static final DeferredItem<PureBloodItem> PURE_BLOOD_4 = ITEMS.registerItem("pure_blood_4",  props -> new PureBloodItem(4, props.rarity(Rarity.UNCOMMON)));
+
+    public static final DeferredItem<Item> SOVEREIGN_BLOOD = ITEMS.registerItem("sovereign_blood", props -> new Item(props.rarity(VEnums.SOVEREIGN.getValue())));
 
     public static final DeferredItem<Item> GARLIC_BREAD = ITEMS.registerItem("garlic_bread", props -> new Item(props.factions$factionFood(ModFoods.GARLIC_BREAD, ModConsumables.GARLIC)));
     public static final DeferredItem<Item> HUMAN_HEART = ITEMS.registerItem("human_heart", props -> new Item(props.factions$factionFood(ModFoods.HUMAN_HEART, ModConsumables.NASTY_NON_VAMPIRES)));
@@ -239,7 +242,7 @@ public class ModItems {
     public static final DeferredItem<FeedingAdapterItem> FEEDING_ADAPTER = ITEMS.registerItem("feeding_adapter", FeedingAdapterItem::new, props -> props.stacksTo(1));
     public static final DeferredItem<Item> GARLIC_FINDER = ITEMS.registerItem("garlic_finder", x ->  new Item(x.factions$withShiftDescription()));
 
-    public static final DeferredItem<OilBottleItem> OIL_BOTTLE = ITEMS.registerItem("oil_bottle",  OilBottleItem::new, props -> props.stacksTo(1));
+    public static final DeferredItem<OilBottleItem> OIL_BOTTLE = ITEMS.registerItem("oil_bottle",  OilBottleItem::new, props -> props.stacksTo(16));
 
     public static final DeferredItem<BoatItem> DARK_SPRUCE_BOAT = ITEMS.registerItem("dark_spruce_boat",  props -> new BoatItem(ModEntities.DARK_SPRUCE_BOAT.get(), props.stacksTo(1)));
     public static final DeferredItem<BoatItem> CURSED_SPRUCE_BOAT = ITEMS.registerItem("cursed_spruce_boat",  props -> new BoatItem(ModEntities.CURSED_SPRUCE_BOAT.get(), props.stacksTo(1)));
@@ -448,7 +451,6 @@ public class ModItems {
     public static final DeferredItem<BlockItem> CHANDELIER_BLACK = fromChandelier(ModBlocks.CHANDELIER_BLACK);
     public static final DeferredItem<BlockItem> VELMORRA_ALTAR = fromBlock(ModBlocks.VELMORRA_ALTAR);
     public static final DeferredItem<BlockItem> CHALICE = fromBlock(ModBlocks.CHALICE);
-    public static final DeferredItem<Item> DRACULAS_BLOOD = ITEMS.registerItem("draculas_blood", Item::new);
 
 
     @SuppressWarnings("unchecked")

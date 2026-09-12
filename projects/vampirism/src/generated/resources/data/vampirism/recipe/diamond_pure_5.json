@@ -2,10 +2,10 @@
   "type": "vampirism:infuser",
   "commoninfo": {},
   "cookingtime": 700,
-  "ingredient1": "vampirism:draculas_blood",
-  "ingredient2": "vampirism:draculas_blood",
-  "ingredient3": "vampirism:draculas_blood",
-  "ingredient4": "vampirism:draculas_blood",
+  "ingredient1": "vampirism:sovereign_blood",
+  "ingredient2": "vampirism:sovereign_blood",
+  "ingredient3": "vampirism:sovereign_blood",
+  "ingredient4": "vampirism:sovereign_blood",
   "item": "#c:gems/diamond",
   "result": {
     "components": {

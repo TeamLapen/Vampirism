@@ -17,7 +17,7 @@
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "has_wheat_seeds": {
+    "has_vampire_blood": {
       "conditions": {
         "items": [
           {
@@ -32,7 +32,7 @@
     [
       "has_the_recipe",
       "has_bottles",
-      "has_wheat_seeds"
+      "has_vampire_blood"
     ]
   ],
   "rewards": {

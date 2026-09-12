@@ -36,8 +36,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 @JeiPlugin
 public class VampirismJEIPlugin implements IModPlugin {
@@ -83,7 +81,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addRecipeClickArea(AlchemicalCauldronScreen.class, 80, 34, 20, 15, ALCHEMICAL_CAULDRON);
         registration.addRecipeClickArea(WeaponTableScreen.class, 114, 46, 20, 15, WEAPON_TABLE);
-        registration.addRecipeClickArea(VaporStillScreen.class, 102, 16, 9, 29, DISTILLING);
+        registration.addRecipeClickArea(VaporStillScreen.class, 102, 16, 9, 29, DISTILLING, RecipeTypes.BREWING);
         registration.addRecipeClickArea(AlchemyTableScreen.class, 73, 57, 28, 8, ALCHEMY_TABLE);
         registration.addRecipeClickArea(AlchemyTableScreen.class, 104, 36, 32, 32, ALCHEMY_TABLE);
         registration.addRecipeClickArea(GarlicDiffuserScreen.class, 45, 55, 14, 14, GARLIC_DIFFUSER);
@@ -119,7 +117,7 @@ public class VampirismJEIPlugin implements IModPlugin {
         registration.addRecipes(ALCHEMICAL_CAULDRON, recipes.byType(ModRecipes.ALCHEMICAL_CAULDRON_TYPE.get()).stream().toList());
         registration.addRecipes(WEAPON_TABLE, recipes.byType(ModRecipes.WEAPONTABLE_CRAFTING_TYPE.get()).stream().toList());
         registration.addRecipes(TASK, TaskUtil.getItemRewardTasks(level.registryAccess()));
-        registration.addRecipes(DISTILLING, VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes().stream().map(JEIPotionMix::createFromMix).flatMap(Collection::stream).collect(Collectors.toList()));
+        registration.addRecipes(DISTILLING, JEIPotionMix.createFromMixes(VampirismApi.services().extendedBrewingRecipeRegistry().getPotionMixes()));
         registration.addRecipes(RecipeTypes.ANVIL, RepairRecipeMaker.getRecipes(registration.getVanillaRecipeFactory(), registration.getIngredientManager()));
         registration.addRecipes(ALCHEMY_TABLE, recipes.byType(ModRecipes.ALCHEMICAL_TABLE_TYPE.get()).stream().toList());
         registration.addRecipes(RecipeTypes.CRAFTING, SpecialRecipeMaker.getAllCraftingRecipes());
@@ -134,6 +132,7 @@ public class VampirismJEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addCraftingStation(DISTILLING, ModBlocks.VAPOR_STILL);
+        registration.addCraftingStation(RecipeTypes.BREWING, ModBlocks.VAPOR_STILL);
     }
 
     @Override

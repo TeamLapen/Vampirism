@@ -77,7 +77,7 @@ public class ChaliceBlock extends Block {
     private boolean acceptedItem(ItemStack stack) {
         return stack.is(ModItems.VAMPIRE_BLOOD_BOTTLE)
                 || stack.is(ModItemTags.PURE_BLOOD)
-                || stack.is(ModItems.DRACULAS_BLOOD)
+                || stack.is(ModItems.SOVEREIGN_BLOOD)
                 || (stack.is(ModItems.BLOOD_BOTTLE) && BloodBottleItem.getBloodContents(stack).isFull());
     }
 

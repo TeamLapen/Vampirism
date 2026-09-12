@@ -35,6 +35,15 @@
         "class": "de/teamlapen/vampirism/client/core/ModClientEnums",
         "field": "DOUBLE_CROSSBOW_HOLD"
       }
+    },
+    {
+      "enum": "net/minecraft/world/item/Rarity",
+      "name": "VAMPIRISM_SOVEREIGN",
+      "constructor": "(ILjava/lang/String;Ljava/util/function/UnaryOperator;)V",
+      "parameters": {
+        "class": "de/teamlapen/vampirism/api/VEnums",
+        "field": "SOVEREIGN"
+      }
     }
   ]
 }

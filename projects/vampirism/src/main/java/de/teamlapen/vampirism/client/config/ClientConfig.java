@@ -2,16 +2,23 @@ package de.teamlapen.vampirism.client.config;
 
 import de.teamlapen.faction.client.config.values.ColorConfigValue;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.TranslatableEnum;
 
 public class ClientConfig {
 
+    public final ColorConfigValue garlicFinderAuraColor;
+    public final ModConfigSpec.EnumValue<ChargeBarDisplay> chargeBarDisplayType;
+    public final ColorConfigValue appliedOilColor;
+    public final ColorConfigValue vampireSwordChargeColor;
+    public final ColorConfigValue vampireSwordTrainingColor;
+
+    // Rendering
     public final ModConfigSpec.BooleanValue renderAdvancedMobPlayerFaces;
     public final ModConfigSpec.BooleanValue renderVampireEyes;
     public final ModConfigSpec.BooleanValue renderVampireForestFog;
     public final ModConfigSpec.BooleanValue correctVampireFOV;
     public final ModConfigSpec.BooleanValue renderBloodVision;
     public final ModConfigSpec.BooleanValue renderVampireSwordParticles;
-    public final ColorConfigValue garlicFinderAuraColor;
 
     // Overlays
     public final ModConfigSpec.BooleanValue showFullScreenOverlay;
@@ -24,6 +31,23 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue showNearbyVampireOverlay;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
+        this.garlicFinderAuraColor = ColorConfigValue.define(builder,
+                "garlicFinderAuraColor", "#e0b74f",
+                "The color used by the garlic finder to highlight blocks.");
+        this.chargeBarDisplayType = builder
+                .comment("How the charge overlay of items (e.g. oiled weapons and vampire swords) should be displayed.")
+                .defineEnum("chargeBarDisplayType", ChargeBarDisplay.ITEM);
+        this.appliedOilColor = ColorConfigValue.define(builder,
+                "appliedOilColor", "#5555ff",
+                "The color of the weapon charge bar that displays the oil applied to the item (gets applied only when the display type is set to 'Item'");
+        this.vampireSwordChargeColor = ColorConfigValue.define(builder,
+                "vampireSwordChargeColor", "#d11b1f",
+                "The color of the vampire sword charge bar that displays its blood charging progress (gets applied only when the display type is set to 'Item'");
+        this.vampireSwordTrainingColor = ColorConfigValue.define(builder,
+                "vampireSwordTrainingColor", "#3c7c0c",
+                "The color of the vampire sword charge bar that displays its training progress (gets applied only when the display type is set to 'Item'");
+
+        builder.push("rendering");
         this.renderAdvancedMobPlayerFaces = builder
                 .comment("When enabled, renders player faces on advanced hunter and vampire mobs.")
                 .define("renderAdvancedMobPlayerFaces", true);
@@ -42,9 +66,7 @@ public class ClientConfig {
         this.renderVampireSwordParticles = builder
                 .comment("When enabled, renders particles when holding a charged vampire sword.")
                 .define("renderVampireSwordParticles", true);
-        this.garlicFinderAuraColor = ColorConfigValue.define(builder,
-                "garlicFinderAuraColor", "#e0b74f",
-                "The color used by the garlic finder to highlight blocks.");
+        builder.pop();
 
         builder.push("overlays");
         this.showFullScreenOverlay = builder
@@ -72,5 +94,9 @@ public class ClientConfig {
                 .comment("When enabled, shows the nearby vampire warning in the HUD.")
                 .define("showNearbyVampireOverlay", true);
         builder.pop();
+    }
+
+    public enum ChargeBarDisplay implements TranslatableEnum {
+        CORNER, ITEM
     }
 }

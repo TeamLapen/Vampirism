@@ -1,5 +1,9 @@
 {
   "values": [
+    {
+      "id": "#vampirism:generated_converted_creatures",
+      "required": false
+    },
     "vampirism:converted_creature",
     "vampirism:converted_creature_imob",
     "vampirism:villager_converted"

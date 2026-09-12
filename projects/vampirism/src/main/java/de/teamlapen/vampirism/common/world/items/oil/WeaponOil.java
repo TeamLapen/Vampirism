@@ -8,7 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 
-public class WeaponOil extends ApplicableOil implements IWeaponOil {
+public abstract class WeaponOil extends ApplicableOil implements IWeaponOil {
 
     public WeaponOil(int color, int maxDuration) {
         super(color, maxDuration);
@@ -26,10 +26,5 @@ public class WeaponOil extends ApplicableOil implements IWeaponOil {
     @Override
     public float onDamage(ItemStack stack, float amount, IWeaponOil oil, LivingEntity target, LivingEntity source) {
         return 0;
-    }
-
-    @Override
-    public int getDurationReduction() {
-        return 1;
     }
 }

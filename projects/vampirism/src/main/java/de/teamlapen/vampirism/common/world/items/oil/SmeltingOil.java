@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TooltipDisplay;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO create pickaxe/shovel/axe superclass if necessary
@@ -36,14 +37,12 @@ public class SmeltingOil extends ApplicableOil implements IToolOil { //TODO crea
     }
 
     @Override
-    public int getDurationReduction() {
-        return 1;
+    public Component getDescriptionTitle() {
+        return Component.translatable("tooltip.vampirism.oil.on_pickaxe");
     }
 
     @Override
-    public void getDescription(ItemStack stack, @Nullable Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltips) {
-        tooltips.accept(Component.empty());
-        tooltips.accept(Component.translatable("tooltip.vampirism.oil.on_pickaxe").withStyle(ChatFormatting.DARK_PURPLE));
-        tooltips.accept(Component.literal("- ").append(Component.translatable("tooltip.vampirism.oil.auto_smelting")).withStyle(ChatFormatting.GRAY));
+    public List<Component> getEffectDescription(Item.@Nullable TooltipContext context) {
+        return List.of(Component.literal(" ").append(Component.translatable("tooltip.vampirism.oil.auto_smelting").withStyle(ChatFormatting.GRAY)));
     }
 }

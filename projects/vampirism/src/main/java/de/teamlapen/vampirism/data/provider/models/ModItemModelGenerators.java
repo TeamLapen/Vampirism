@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.client.models.items.properties.BloodFilled;
 import de.teamlapen.vampirism.client.models.items.properties.ClipFilled;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowCharging;
 import de.teamlapen.vampirism.client.models.items.properties.HunterCrossbowPull;
+import de.teamlapen.vampirism.client.models.items.properties.StrongOil;
 import de.teamlapen.vampirism.common.components.predicates.ChargedRitualKnifePredicate;
 import de.teamlapen.vampirism.common.core.ModBlocks;
 import de.teamlapen.vampirism.common.core.ModDataComponents;
@@ -101,8 +102,9 @@ public class ModItemModelGenerators extends ItemModelGenerators {
     }
 
     protected void generateOilBottle() {
-        var bloodBottle = ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.OIL_BOTTLE.asItem(), TextureMapping.layered(new Material(mod("item/oil_bottle")), new Material(mod("item/oil_bottle_overlay"))), this.modelOutput);
-        this.itemModelOutput.accept(ModItems.OIL_BOTTLE.asItem(), ItemModelUtils.tintedModel(bloodBottle, BLANK_LAYER, new OilBottleTint()));
+        var oilBottle = ModModelTemplates.TWO_LAYERED_ITEM.create(ModItems.OIL_BOTTLE.asItem(), TextureMapping.layered(new Material(mod("item/oil_bottle")), new Material(mod("item/oil_bottle_overlay"))), this.modelOutput);
+        var strongOilBottle = ModModelTemplates.TWO_LAYERED_ITEM.create(ModelLocationUtils.getModelLocation(ModItems.OIL_BOTTLE.asItem(), "_strong"), TextureMapping.layered(new Material(mod("item/oil_bottle_strong")), new Material(mod("item/oil_bottle_strong_overlay"))), this.modelOutput);
+        this.itemModelOutput.accept(ModItems.OIL_BOTTLE.asItem(), ItemModelUtils.conditional(new StrongOil(), ItemModelUtils.tintedModel(strongOilBottle, BLANK_LAYER, new OilBottleTint()), ItemModelUtils.tintedModel(oilBottle, BLANK_LAYER, new OilBottleTint())));
     }
 
     public void generateSerumInjection() {
@@ -327,7 +329,7 @@ public class ModItemModelGenerators extends ItemModelGenerators {
                 ModItems.QUARREL_HEAVY,
                 ModItems.QUARREL_CLIP,
                 ModItems.HEAVY_QUARREL_CLIP,
-                ModItems.DRACULAS_BLOOD
+                ModItems.SOVEREIGN_BLOOD
                 ).map(DeferredItem::asItem);
     }
 
