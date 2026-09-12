@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Vampirism.lib.iml" filepath="$PROJECT_DIR$/.idea/modules/Vampirism.lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Vampirism.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Vampirism.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Vampirism.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Vampirism.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/VampirismWiki.iml" filepath="$PROJECT_DIR$/.idea/VampirismWiki.iml" />
     </modules>
   </component>
