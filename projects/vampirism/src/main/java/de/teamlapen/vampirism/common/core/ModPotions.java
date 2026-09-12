@@ -70,6 +70,7 @@ public class ModPotions {
         private static final PotionFamily NAUSEA = PotionFamily.single("nausea", MobEffects.NAUSEA, 1800, 4800, 0, 0, 0, false);
         private static final PotionFamily BLINDNESS = PotionFamily.single("blindness", MobEffects.BLINDNESS, 1800, 4800, 0, 0, 0, false);
         private static final PotionFamily HEALTH_BOOST = PotionFamily.single("health_boost", MobEffects.HEALTH_BOOST, 1800, 4800, 400, 1, 1, false);
+        private static final PotionFamily HASTE = PotionFamily.single("haste", MobEffects.HASTE, 3600, 9600, 1800, 1, 1, false);
         private static final PotionFamily WIND_CHARGED = PotionFamily.single("wind_charged", MobEffects.WIND_CHARGED, 3600, 9600, 0, 0, 0, false);
         private static final PotionFamily WEAVING = PotionFamily.single("weaving", MobEffects.WEAVING, 3600, 9600, 0, 0, 0, false);
         private static final PotionFamily OOZING = PotionFamily.single("oozing", MobEffects.OOZING, 3600, 9600, 0, 0, 0, false);
@@ -157,6 +158,15 @@ public class ModPotions {
     public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HEALTH_BOOST_EXTENDED = extended("very_strong_health_boost_extended", Families.HEALTH_BOOST, 0, 2);
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_HEALTH_BOOST = potion("long_strong_health_boost", Families.HEALTH_BOOST, 2, 2);
     public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_HEALTH_BOOST_EXTENDED = extended("long_strong_health_boost_extended", Families.HEALTH_BOOST, 2, 2);
+    public static final DeferredHolder<Potion, HunterPotion> HASTE = potion("haste", Families.HASTE, 0, 0);
+    public static final DeferredHolder<Potion, HunterPotion> LONG_HASTE = potion("long_haste", Families.HASTE, 1, 0);
+    public static final DeferredHolder<Potion, HunterPotion> STRONG_HASTE = potion("strong_haste", Families.HASTE, 0, 1);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_HASTE = potion("very_long_haste", Families.HASTE, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_LONG_HASTE_EXTENDED = extended("very_long_haste_extended", Families.HASTE, 2, 0);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HASTE = potion("very_strong_haste", Families.HASTE, 0, 2);
+    public static final DeferredHolder<Potion, HunterPotion> VERY_STRONG_HASTE_EXTENDED = extended("very_strong_haste_extended", Families.HASTE, 0, 2);
+    public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_HASTE = potion("long_strong_haste", Families.HASTE, 2, 2);
+    public static final DeferredHolder<Potion, HunterPotion> LONG_STRONG_HASTE_EXTENDED = extended("long_strong_haste_extended", Families.HASTE, 2, 2);
     public static final DeferredHolder<Potion, Potion> GARLIC = POTIONS.register("garlic", () -> new Potion("garlic", new MobEffectInstance(ModEffects.GARLIC, 1200)));
 
     // Vampire
@@ -217,6 +227,11 @@ public class ModPotions {
         durable(HEALTH_BOOST, LONG_HEALTH_BOOST);
         strong(HEALTH_BOOST, STRONG_HEALTH_BOOST);
         extendedFamily(LONG_HEALTH_BOOST, STRONG_HEALTH_BOOST, VERY_LONG_HEALTH_BOOST, VERY_LONG_HEALTH_BOOST_EXTENDED, VERY_STRONG_HEALTH_BOOST, VERY_STRONG_HEALTH_BOOST_EXTENDED, LONG_STRONG_HEALTH_BOOST, LONG_STRONG_HEALTH_BOOST_EXTENDED);
+
+        master(HASTE, () -> Ingredient.of(Items.GOLD_NUGGET), 32, 16);
+        durable(HASTE, LONG_HASTE);
+        strong(HASTE, STRONG_HASTE);
+        extendedFamily(LONG_HASTE, STRONG_HASTE, VERY_LONG_HASTE, VERY_LONG_HASTE_EXTENDED, VERY_STRONG_HASTE, VERY_STRONG_HASTE_EXTENDED, LONG_STRONG_HASTE, LONG_STRONG_HASTE_EXTENDED);
     }
 
     private static void extendedFamily(Holder<Potion> vanillaLong, Holder<Potion> vanillaStrong, Holder<Potion> longCell, Holder<Potion> longCellExtended, Holder<Potion> strongCell, Holder<Potion> strongCellExtended, Holder<Potion> capstone, Holder<Potion> capstoneExtended) {
