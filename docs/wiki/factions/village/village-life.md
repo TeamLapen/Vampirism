@@ -11,7 +11,7 @@ Once a village is controlled by a faction, all workstations and beds will be cla
 
 ### Villager Professions
 
-Each faction has a new Profession that has trades relevant for the respective faction. As workstation for these professions acts the [Totem Top](../../content/blocks#village-totem-top-base) when it is controlled by the faction.
+Each faction has a new Profession that has trades relevant for the respective faction. As workstation for these professions acts the Totem Top when it is controlled by the faction.
 
 ### Faction Specifics
 #### Vampire Village
@@ -25,7 +25,7 @@ Vampire Villager will change their day/night cycle to be active during the night
 In a Hunter Village, all villager are protected against vampire bites by poisonous blood. In a raid some will take up arms and fight with pitchforks.
 ## Faction Representative
 
-In a controlled village a [Faction Representative](../../content/entities/village_representative) will eventually spawn. The representative is not a Villager, but a task giver for interested faction player.
+In a controlled village a Faction Representative will eventually spawn. The representative is not a Villager, but a task giver for interested faction player.
 He gives out tasks that require the player to complete different actions or collect items. The representative is also relevant in becoming a [Lord](../vampire-hunter-lord-and-minions).
 
 

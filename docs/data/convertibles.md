@@ -1,95 +1,135 @@
 ---
-sidebar_position: 4
+sidebar_position: 3
 title: Convertibles
 ---
 
-The Main article about Vampiric Creatures can be found [here](../wiki/content/entities/bitten_animal).
+The main article about vampiric creatures is in the vampiric creatures wiki page.
 
-By default, only vanilla animals can be converted to a vampiric version, and Vampirism Integrations add support for some other mods.
-But if you want to make your own modded creatures convertible, or you are a modpack creator who wants more compatibility, you can easily create a simple vampiric version of other creatures.
+By default only some vanilla animals can be turned into a vampiric version. You can make any other
+(vanilla or modded) creature convertible from a data pack by adding it to the
+`vampirism:entity_converter` [data map](https://docs.neoforged.net/docs/datamaps/structure).
 
-## Prerequisites
-A convertible handler is registered alongside [blood values](./bloodvalues#entities). The entity must have a blood value greater than 0 to be convertible.
+:::tip JSON Schema
+[`schemas/entity_converter.schema.json`](https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/entity_converter.schema.json)
+:::
 
-The convertible handler is added like this:
+## Requirements
+
+A creature is only convertible when **both** of these are set for its entity type:
+
+1. an [entity blood](./bloodvalues#entity-blood) value greater than `0`, and
+2. an `entity_converter` entry (this page).
+
+## Location
+
+```
+data/<namespace>/data_maps/entity_type/entity_converter.json
+```
+
+Data map `vampirism:entity_converter`, synced to the client. Uses the standard NeoForge data map
+wrapper (`replace` / `values` / `remove`); `values` maps an entity type id (or `#tag`) to an entry.
+
 ```json title="data/vampirism/data_maps/entity_type/entity_converter.json"
 {
   "values": {
-    "<entity-id>": {
-      "handler": {
-        "type": "vampirism:default"
-      },
-      "overlay": "<path-to-overlay-texture>"
+    "minecraft:cow": {
+      "handler": { "type": "vampirism:special", "converted_type": "vampirism:converted_cow" }
+    },
+    "examplemod:deer": {
+      "handler": { "type": "vampirism:default" }
     }
   }
 }
 ```
 
+| Field     | Required | Type                      | Description                                                              |
+|-----------|----------|---------------------------|--------------------------------------------------------------------|
+| `handler` | no       | [Converter](#converters)  | How this creature converts. Defaults to `vampirism:default` with the default attribute modifiers. |
 
-## Different converter
-There are two build-in converters available. Other mods can add different converters.
+:::note Migration
+Older versions accepted an `overlay` field on the entry. It has been removed – the overlay texture is
+now resolved by convention (see [Overlay texture](#overlay-texture)).
+:::
 
-### Default Converter
-The default converter can be used for any entity. It will create a vampiric version of the entity. The problem with this variant is that the converted entity acts as dummy entity, which does not support the interactions of the source entity.
-What this means is that if you convert a horse with this converter, you will no longer be able to ride it, access the inventory, etc ...
+## Converters
 
-```json
-{
-  "handler": {
-    "type": "vampirism:default"
-  }
-}
-```
+`handler` is a typed object dispatched on `type`, registered in the `vampirism:converting_handler`
+registry. Add-on mods can register more types.
 
-### Special Converter
-The special converter is used to convert an entity into a specific vampiric entity. This is used, for example, to convert a horse into a vampire horse with full functionality. But this requires a custom converted entity to be registered.
-```json
-{
-  "handler": {
-    "type": "vampirism:special",
-    "converted_type": "<converted-entity-id>"
-  }
-}
-```
+### `vampirism:default`
 
-## Overlays
-
-Additionally, a converted entity requires an overlay texture to distinguish it from the original entity. This overlay texture is applied to the original entities texture and can be specified with the `overlay` property.
+Wraps the original creature in a generic converted-creature entity. The original model is reused with
+a vampire overlay layer, so source-entity interactions (riding, inventories, breeding, …) are **not**
+available on the converted creature.
 
 ```json
 {
-  "handler": {...},
-  "overlay": "<path-to-overlay-texture>"
+  "type": "vampirism:default",
+  "attribute_helper": [ /* optional, see below */ ]
 }
 ```
+
+| Field              | Required | Type                                        | Description                                    |
+|--------------------|----------|---------------------------------------------|--------------------------------------------|
+| `attribute_helper` | no       | [Attribute modifier](#attribute-modifiers)[] | Overrides the default attribute scaling.     |
+
+### `vampirism:special`
+
+Converts the creature into a dedicated converted entity type that keeps full functionality (e.g. a
+vampire horse you can still ride). Requires that converted entity type to be registered by a mod.
+
+```json
+{
+  "type": "vampirism:special",
+  "converted_type": "vampirism:converted_horse",
+  "attribute_helper": [ /* optional */ ]
+}
+```
+
+| Field              | Required | Type                                                            | Description                                        |
+|--------------------|----------|--------------------------------------------------------------|------------------------------------------------|
+| `converted_type`   | yes      | [Resource location](https://minecraft.wiki/w/Resource_location) | Entity type to spawn as the converted creature.  |
+| `attribute_helper` | no       | [Attribute modifier](#attribute-modifiers)[]                   | Overrides the default attribute scaling.          |
 
 ## Attribute modifiers
-If no attribute modifier is defined, the following default modifiers will be applied to the converted entity:
 
-- Attack Damage: x1.3
-- Knockback Resistance: x1.3
-- Max Health: x1.5 
-- Movement Speed: x1.2
+When `attribute_helper` is omitted, the converted creature gets these multipliers:
 
-They can be configured with the `attribute_helper` property. The following example shows how to configure the attack damage modifier.
+| Attribute                        | Multiplier |
+|----------------------------------|-----------|
+| `minecraft:attack_damage`        | ×1.3       |
+| `minecraft:knockback_resistance` | ×1.3       |
+| `minecraft:max_health`           | ×1.5       |
+| `minecraft:movement_speed`       | ×1.2       |
+
+Providing `attribute_helper` replaces the **entire** default list, so re-declare any multiplier you
+want to keep. Each entry:
 
 ```json
 {
-  "handler": {
-    "type": ...,
-    "attribute_helper": [
-      {
-        "attribute": "minecraft:generic.attack_damage",
-        "fallback_base": 2.0,
-        "modifier": 1.3
-      }
-    ]
-  }
+  "attribute": "minecraft:attack_damage",
+  "modifier": 1.3,
+  "fallback_base": 2.0
 }
 ```
 
-| Field           | Type             | Description                                                                                                                                   |
-|-----------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| `attribute`     | ResourceLocation | The attribute to modify. See [here](https://minecraft.fandom.com/wiki/Attribute) for all vanilla attributes.                                  |
-| `modifier`      | float            | The modifier to apply to the attribute. The final value will be `base * modifier`.                                                            |
-| `fallback_base` | float            | The base value to use if the entity does not have the attribute. This is useful for modded entities which do not have the vanilla attributes. |
+| Field           | Required | Type                                                            | Description                                                                                   |
+|-----------------|----------|--------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| `attribute`     | yes      | [Resource location](https://minecraft.wiki/w/Resource_location) | The attribute to scale.                                                                     |
+| `modifier`      | yes      | [Float provider](https://minecraft.wiki/w/Float_provider_type) | Multiplier applied to the base value. A bare number is a constant; an object rolls a random value per conversion. |
+| `fallback_base` | no       | number (default `1.0`)                                        | Base value assumed when the source entity type does not define the attribute.                |
+
+The converted base value is `entity_type_base_value × modifier`.
+
+## Overlay texture
+
+For `vampirism:default` conversions, the vampire overlay is a client resource looked up by
+convention:
+
+```
+assets/<source_entity_namespace>/textures/entity/overlay/<source_entity_path>.png
+```
+
+e.g. `examplemod:deer` needs `assets/examplemod/textures/entity/overlay/deer.png`. Ship it in a
+resource pack (or your mod's assets). `vampirism:special` converters use their own entity's model and
+texture instead.

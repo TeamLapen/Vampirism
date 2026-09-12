@@ -21,7 +21,7 @@ The gender used is determined based on your skin type (steve -> male, alex -> fe
 
 ### Leveling
 
-To become a lord or to level up as lord you need to complete special tasks for [Village Representatives](../content/entities/village_representative).
+To become a lord or to level up as lord you need to complete special tasks for Village Representatives.
 ### Minions
 Minions have an inventory that can be used to store items but also to equip the minion with weapons and armor. 
 Furthermore, their appearance can be changed, and you can assign them a new name.

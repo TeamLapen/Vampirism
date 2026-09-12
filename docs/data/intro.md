@@ -3,27 +3,41 @@ sidebar_position: 1
 title: Data Packs
 ---
 
-Vampirism uses data packs for vanilla related content as well as for some custom content. This allows users and content creators to further customized their Vampirism experience or even built new challenges.  
-Have a look at the mod data
-directory [main](https://github.com/TeamLapen/Vampirism/tree/version/1.21/latest/src/main/resources/data/vampirism)
-and [generated](https://github.com/TeamLapen/Vampirism/tree/version/1.21/latest/src/generated/resources/data).
-Or at the incomplete and outdated example repository [here](https://github.com/TeamLapen/VampirismDatapackExamples)
+Vampirism exposes a lot of its content through data packs, so pack makers and mod-pack authors can
+tweak, extend or completely rework parts of the mod without any code.
 
-## How it works
-Checkout the Minecraft Wiki to see how [datapacks](https://minecraft.gamepedia.com/Data_pack) work.  
-[Installing them](https://minecraft.gamepedia.com/Tutorials/Installing_a_data_pack)  
-[Creating them](https://minecraft.gamepedia.com/Tutorials/Creating_a_data_pack)  
+Reference material:
 
-Also make sure you are familiar with the namespace concept. If you want to modify/override Vampirism's own definition you have to use `vampirism` for everything else use your own.
+* mod data – [`src/main/resources/data/vampirism`](https://github.com/TeamLapen/Vampirism/tree/dev/projects/vampirism/src/main/resources/data/vampirism)
+* generated data – [`src/generated/resources/data`](https://github.com/TeamLapen/Vampirism/tree/dev/projects/vampirism/src/generated/resources/data)
 
-## Things that are customizable
-Besides the already mentioned vanilla contents you can also customize:
-- Player Skill Trees
-- Blood Values
-- Recipes
-  - Alchemical Cauldron Recipes (+ Craft Tweaker support)
-  - Weapon Table Recipes (+ Craft Tweaker support)
-  - Alchemy Table Recipes
-- Mob spawns
-- Advancements
-- Much more
+## How data packs work
+
+See the Minecraft Wiki: [Data packs](https://minecraft.wiki/w/Data_pack) ·
+[Installing](https://minecraft.wiki/w/Tutorial:Installing_a_data_pack) ·
+[Creating](https://minecraft.wiki/w/Tutorial:Creating_a_data_pack).
+
+Mind the **namespace**: use `vampirism` to override one of Vampirism's own definitions, and your own
+namespace for anything new.
+
+## JSON schemas
+
+Every custom format on the following pages has a JSON schema under
+[`schemas/`](https://github.com/TeamLapen/Vampirism/tree/dev/schemas) in the repository (linked at the
+top of each page) for editor auto-completion and validation.
+
+## What you can customize
+
+| Area                                | Notes                                                                 |
+|-------------------------------------|-------------------------------------------------------------------|
+| [Blood Values](./bloodvalues)       | Item / entity / fluid blood via data maps.                          |
+| [Convertibles](./convertibles)      | Which creatures can be turned vampiric, and how.                    |
+| [Sun Damage](./sundamage)           | Biomes / dimensions exempt from vampire sun damage.                 |
+| [Recipes](./recipes/intro)          | Weapon Table, Alchemical Cauldron, Alchemy Table, Infuser.          |
+| [Loot Conditions](./lootconditions/intro) | `vampirism:*` loot conditions.                                |
+| [Loot Functions](./lootfunctions/intro)   | `vampirism:*` loot functions + the smelting loot modifier.    |
+| Tasks                                | Provided by **FactionApi** – see [its docs](/factionapi/data/tasks).      |
+| Skill trees                         | Provided by **FactionApi** – see [its docs](/factionapi/data/skilltrees). |
+
+Plus everything vanilla data packs already let you change (loot tables, advancements, tags, worldgen,
+recipes, …), and Vampirism's tags for mob spawns, village content and more.

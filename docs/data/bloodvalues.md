@@ -1,85 +1,125 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 title: Blood Values
 ---
 
-Blood values can be configured for items, entities and fluids.
+Vampirism assigns blood-related values to **items**, **entities** and **fluids** through three
+[NeoForge data maps](https://docs.neoforged.net/docs/datamaps/structure). Each is an ordinary data
+pack file, so any pack can add, override or remove entries.
 
-Starting with NeoForge Vampirism uses the new data maps to assign blood values to items, fluids and entities. Take a look at the [official wiki](https://docs.neoforged.net/docs/datamaps/structure) for more information about data maps.
+All three data maps are **synced to the client**.
 
-## Items
-Item blood values are used by the [Grinder](../wiki/content/blocks#grinder) to determine the amount of impure blood of an item when grinding it.
-A configured value of `20` means that the grinder will produce 20mb impure blood when grinding the item.
+:::tip JSON Schemas
+* Item blood – [`schemas/item_blood.schema.json`](https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/item_blood.schema.json)
+* Entity blood – [`schemas/entity_blood.schema.json`](https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/entity_blood.schema.json)
+* Fluid blood conversion – [`schemas/fluid_blood_conversion.schema.json`](https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/fluid_blood_conversion.schema.json)
+:::
 
-### Schema
+## Data map file format
+
+Every data map file uses the standard NeoForge wrapper:
+
+```json
+{
+  "replace": false,
+  "values": {
+    "<id-or-#tag>": { /* entry */ }
+  },
+  "remove": [ "<id-or-#tag>" ]
+}
+```
+
+| Field     | Type    | Description                                                                                  |
+|-----------|---------|------------------------------------------------------------------------------------------|
+| `replace` | bool    | `true` clears all previously loaded entries first. Defaults to `false` (merge).            |
+| `values`  | object  | Maps a registry id (or a `#tag`) to an entry. Later data packs override earlier ones.     |
+| `remove`  | array   | Ids (or `#tags`) to drop from the merged map. Optional.                                    |
+
+Entries also accept a `neoforge:conditions` array to load them only when another mod/item is present.
+
+## Item blood
+
+```
+data/<namespace>/data_maps/item/item_blood.json
+```
+
+Data map `vampirism:item_blood`. Sets how much **impure blood** (in mB) the
+Blood Grinder produces from one of the item. `0` marks the item as
+not grindable.
+
+If an item has no entry, Vampirism falls back to `nutrition × 10` for uncooked items in the
+`#minecraft:meat` tag, and `0` otherwise.
+
 ```json title="data/vampirism/data_maps/item/item_blood.json"
 {
-  "replace": false,
   "values": {
-    "<item-id>": {
-      "blood": <blood-amount>
-    },
-    "<item-id>": {
-      "blood": <blood-amount>
-    }
+    "minecraft:beef": { "blood": 200 },
+    "minecraft:mutton": 100,
+    "minecraft:cooked_beef": { "blood": 0 }
   }
 }
 ```
 
-| Field     | Type             | Description                                                                                                   |
-|-----------|------------------|---------------------------------------------------------------------------------------------------------------|
-| `replace` | bool             | If the values should replace the existing values. If `false` the values will be added to the existing values. |
-| `item-id` | ResourceLocation | The id of the item tha should be convertible to impure blood                                                  |
-| `blood`   | int              | The amount of blood the item will produce when grinding it. e.g. `20` for 20mb impure blood.                  |
+| Field   | Type            | Description                                                     |
+|---------|-----------------|-------------------------------------------------------------|
+| `blood` | int (>= 0)      | mB of impure blood produced per item. `0` = not grindable.   |
 
-## Entities
-Entity blood values are relevant for biting creatures as Vampire. It determines the amount of blood the creature has or if it has no blood at all.
-A configured value of `10` means that the creature can fill 10 half-blood / 5 blood in the blood bar.
-A value of `0` means that the creature cannot be bitten.
+The entry may be written as a bare integer (`"minecraft:mutton": 100`) instead of the object form.
 
-### Schema
+## Entity blood
+
+```
+data/<namespace>/data_maps/entity_type/entity_blood.json
+```
+
+Data map `vampirism:entity_blood`. Sets how much blood a creature holds when a vampire bites it, and
+gates whether the creature can be [converted](./convertibles) at all. `0` marks the entity as **not
+biteable** (and not convertible).
+
+If an entity has no entry and the `autoCalculateEntityBlood` server config is enabled, Vampirism
+derives a value from the creature's hitbox size (capped at `15`, and forced to `0` for creatures with
+more than 50 max health). A data map entry always wins over the auto-calculation.
+
 ```json title="data/vampirism/data_maps/entity_type/entity_blood.json"
 {
-  "replace": false,
   "values": {
-    "<entity-id>": {
-      "blood": 0  # no blood
-    },
-    "<entity-id>": {
-      "blood": <blood-amount>
-    }
+    "minecraft:cow": { "blood": 10 },
+    "minecraft:cat": { "blood": 3 },
+    "minecraft:chicken": { "blood": 0 }
   }
 }
 ```
 
-| Field             | Type             | Description                                                                                                   |
-|-------------------|------------------|---------------------------------------------------------------------------------------------------------------|
-| `replace`         | bool             | If the values should replace the existing values. If `false` the values will be added to the existing values. |
-| `entity-id`       | ResourceLocation | The id of the entity that should have blood or no blood                                                       |
-| `blood`           | int              | The amount of blood the entity will produce when bitten. e.g. `10` for 10 half-blood / 5 blood.               |
+| Field   | Type            | Description                                                                 |
+|---------|-----------------|-----------------------------------------------------------------------|
+| `blood` | int (>= 0)      | Blood units the creature holds. `0` = not biteable / not convertible.  |
 
-## Fluids
-Fluid blood values are conversion rates from other fluids to blood. It is used by the [Blood Sieve](../wiki/content/blocks#blood-sieve) to transform [Impure Blood](../wiki/content/fluids#impure-blood) into [Blood](../wiki/content/fluids#blood).
-But this also supports third party fluids if configured. A configured value of `0.75` means that 1 bucket of the fluid is converted to 0.75 buckets of blood.
+The entry must be the object form (`{ "blood": N }`).
 
-### Schema
+## Fluid blood conversion
 
-```json title="data/vampirism/data_maps/item/fluid_blood_conversion.json"
+```
+data/<namespace>/data_maps/fluid/fluid_blood_conversion.json
+```
+
+Data map `vampirism:fluid_blood_conversion`. Sets the conversion ratio a
+Blood Sieve applies when turning a fluid into
+Blood: `output_blood = conversionRate × input_amount`. `0` means the
+fluid cannot be converted.
+
+Vampirism ships this map empty; `vampirism:impure_blood` conversion is handled in code. Use it to make
+third-party fluids convertible.
+
+```json title="data/vampirism/data_maps/fluid/fluid_blood_conversion.json"
 {
-  "replace": false,
   "values": {
-    "<fluid-id>": {
-      "conversionRate": <conversion-rate>
-    },
-    "<fluid-id>": {
-      "conversionRate": <conversion-rate>
-    }
+    "examplemod:diluted_blood": { "conversionRate": 0.75 }
   }
 }
 ```
 
-| Field            | Type             | Description                                                                                                   |
-|------------------|------------------|---------------------------------------------------------------------------------------------------------------|
-| `replace`        | bool             | If the values should replace the existing values. If `false` the values will be added to the existing values. |
-| `fluid-id`       | ResourceLocation | The id of the fluid to convert to blood                                                                       |
-| `conversionRate` | float            | The conversion rate from the fluid to impure blood. e.g. `0.75` for 1 bucket to 0.75 buckets of blood.        |
+| Field            | Type   | Description                                                             |
+|------------------|--------|-------------------------------------------------------------------|
+| `conversionRate` | float  | Fraction of the input fluid amount returned as blood. `0` = no conversion. |
+
+The entry may be written as a bare number (`"examplemod:diluted_blood": 0.75`) instead of the object form.

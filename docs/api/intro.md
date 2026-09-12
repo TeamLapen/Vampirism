@@ -1,21 +1,51 @@
 ---
 sidebar_position: 1
-title: API
+title: Overview
 ---
 
-Vampirism has an API which allow the creation of addon mods as well as compatibility integration in other mods. 
-It is located in the `de.teamlapen.vampirism.api` package.  
-If some API functionality is missing, create an issue or contact us on discord.
+Vampirism ships an API for addon mods and cross-mod compatibility. It lives in the
+`de.teamlapen.vampirism.api` package (the `Vampirism-api` Gradle module).
 
-### Examples
-Checkout this example project: https://github.com/TeamLapen/VampirismAPIExample
+:::info Faction, skill, level and task APIs moved to FactionApi
+Vampirism is built on top of **[FactionApi](/factionapi/api/intro)**. Everything about factions,
+faction players, levels, lord levels, skills, actions, tasks, refinements and minions is FactionApi's
+API now – `IVampirePlayer` / `IHunterPlayer` simply extend FactionApi's `IFactionPlayer` and
+`ISkillPlayer`. This section only documents what is *Vampirism-specific* (blood, biting, sun damage,
+oils, garlic, fog, …).
+:::
 
-If you want to create an addon which access all of Vampirism's classes, not just the API, checkout this https://github.com/TeamLapen/VampirismAddonExample and consider contacting us.
+## Documentation map
 
-A real example is the VampirismIntegrations mod which is some kind of mixtures between the two kinds above:
-https://github.com/TeamLapen/VampirismIntegrations
+| Page                                           | Contents                                                                 |
+|------------------------------------------------|----------------------------------------------------------------------|
+| [Depending on Vampirism](./setup)              | Gradle repository, artifacts, mixins / access transformers.           |
+| [Registries](./registries)                     | Vampirism's own registries (oils, converters, visions, vampire books). |
+| [Players & world](./players-and-world)         | Player capabilities, world handlers and the API service registries.    |
+| [Items](./items)                               | Oils, blood-charged items, brewing, item data components.             |
+| [Events](./events)                             | The game-bus events the API fires.                                    |
+| [IMC messages](./imc)                          | Lightweight compatibility messages you can send to Vampirism.         |
+| [Reference](./reference)                       | `VReference`, attachments, tags, data maps, enums.                    |
 
+## Entry points
 
-## Need Help?
+```java
+// Global services
+IVampirismServices services = VampirismApi.services();
 
-If you consider writing a vampirism integration or a vampirism addon, consider contacting us on [Discord](https://discord.gg/wuamm4P) or [GitHub](https://github.com/TeamLapen/Vampirism).
+// Player capabilities (attached to every player)
+IVampirePlayer vampire = VampirismApi.vampirePlayer(player);
+IHunterPlayer  hunter  = VampirismApi.hunterPlayer(player);
+
+// World / creature capabilities
+IExtendedCreatureVampirism ext = VampirismApi.extendedCreatureVampirism(creature);
+IGarlicChunkHandler garlic = VampirismApi.garlicHandler(level);
+IFogHandler fog = VampirismApi.fogHandler(level);
+```
+
+`VampirismApi.services()` returns an [`IVampirismServices`](./players-and-world#services) with the
+sun-damage, entity, blood-conversion and extended-brewing registries.
+
+## Examples & help
+
+* [VampirismIntegrations](https://github.com/TeamLapen/VampirismIntegrations) – a real mixed example.
+* [Discord](https://discord.gg/wuamm4P) · [GitHub](https://github.com/TeamLapen/Vampirism)

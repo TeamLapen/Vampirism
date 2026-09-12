@@ -1,15 +1,15 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 title: Charge Blood
 ---
 
-This function will charge any `IBloodChargeable`, which are currently Blood Seeker and Blood Striker.
+`vampirism:set_item_blood_charge` charges an `IBloodChargeable` item (Blood Seeker, Blood Striker).
 
 ```json
-{
-  "function": "vampirism:set_item_blood_charge",
-  "charge": <number-provider>
-}
+{ "function": "vampirism:set_item_blood_charge", "charge": { "type": "minecraft:uniform", "min": 100, "max": 400 } }
 ```
 
-- `number-provider`: A number provider that will be used to charge the item. 
+| Field        | Required | Type                                                                | Description                                        |
+|--------------|----------|----------------------------------------------------------------|----------------------------------------------|
+| `charge`     | yes      | [Number provider](https://minecraft.wiki/w/Loot_table#Number_provider) | Blood charge in mB. A bare number is a constant. |
+| `conditions` | no       | [Loot condition](../lootconditions/intro)[]                    | Standard conditional-function conditions.          |

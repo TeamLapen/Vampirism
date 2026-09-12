@@ -1,5 +1,5 @@
 import React from "react";
-import {SkillOrAction} from "@site/src/components/Skills";
+import {SkillOrAction} from "../_components/Skills";
 
 export const baseUrl = 'https://raw.githubusercontent.com/TeamLapen/Vampirism/'
 export const baseCommit = '4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a'

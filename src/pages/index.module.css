@@ -4,29 +4,138 @@
  */
 
 .heroBanner {
-  padding: 4rem 0;
-  text-align: center;
   position: relative;
+  padding: 6rem 0;
   overflow: hidden;
+  background-color: #0d0d14;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
 }
 
-.heroBannerImage {
+.heroBanner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+      180deg,
+      rgba(13, 13, 20, 0.55) 0%,
+      rgba(13, 13, 20, 0.78) 100%
+    ),
+    radial-gradient(
+      ellipse 70% 60% at 20% 50%,
+      rgba(98, 3, 133, 0.25) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 80% 50%,
+      rgba(139, 26, 26, 0.12) 0%,
+      transparent 70%
+    );
+}
+
+.heroInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  position: center;
+}
+
+.heroTitle {
+  width: min(560px, 80vw);
+  height: auto;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.85))
+    drop-shadow(0 0 14px rgba(255, 255, 255, 0.5))
+    drop-shadow(0 0 32px rgba(255, 255, 255, 0.3))
+    drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6));
+}
+
+.heroSubtitle {
+  max-width: 40rem;
+  margin: 1.5rem 0 0;
+  font-family: 'Lora', serif;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.heroButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sections {
+  padding: 4rem 0;
+}
+
+.sectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid var(--vampire-border, var(--ifm-color-emphasis-200));
+  border-radius: var(--ifm-card-border-radius, 12px);
+  background: var(--ifm-card-background-color, var(--ifm-background-surface-color));
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  text-decoration: none;
+  border-color: rgba(155, 18, 212, 0.7);
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(98, 3, 133, 0.25);
+}
+
+.cardTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.cardDescription {
+  flex: 1;
+  margin: 0 0 1rem;
+  color: var(--ifm-color-emphasis-700);
+  font-family: 'Lora', serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.cardCta {
+  font-weight: 600;
+  color: var(--ifm-color-primary);
 }
 
 @media screen and (max-width: 996px) {
   .heroBanner {
-    padding: 2rem;
+    padding: 4rem 0;
   }
-  .heroBannerImage{
 
+  .heroSubtitle {
+    font-size: 1.05rem;
   }
-}
 
-.buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  .sections {
+    padding: 2.5rem 0;
+  }
 }

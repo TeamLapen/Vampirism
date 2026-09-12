@@ -2,29 +2,148 @@
  * Any CSS included here will be global. The classic template
  * bundles Infima by default. Infima is a CSS framework designed to
  * work well for content-centric websites.
+ *
+ * Colors, fonts and component styling here are kept in sync with the
+ * main site (vampirism.dev / VampirismWebsite) so the wiki reads as
+ * part of the same brand.
  */
+
+@font-face {
+  font-family: 'Vampirism';
+  src: url('/font/vampirism.woff') format('woff'),
+    url('/font/vampirism.ttf') format('truetype');
+  font-weight: 500 700;
+  font-display: swap;
+}
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #620384;
-  --ifm-color-primary-dark: #580377;
-  --ifm-color-primary-darker: #530370;
-  --ifm-color-primary-darkest: #45025c;
-  --ifm-color-primary-light: #6c0391;
-  --ifm-color-primary-lighter: #710398;
-  --ifm-color-primary-lightest: #7f04ac;
+  --ifm-color-primary: #620385;
+  --ifm-color-primary-dark: #3d0253;
+  --ifm-color-primary-darker: #2b013a;
+  --ifm-color-primary-darkest: #180121;
+  --ifm-color-primary-light: #8704b7;
+  --ifm-color-primary-lighter: #9905d0;
+  --ifm-color-primary-lightest: #ab05e9;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(98, 3, 133, 0.1);
+
+  --ifm-background-color: #f5f0fa;
+  --ifm-background-surface-color: #ede7f6;
+  --ifm-navbar-background-color: rgba(245, 240, 250, 0.9);
+  --ifm-footer-background-color: #ece6f3;
+  --ifm-card-background-color: #ede7f6;
+
+  --ifm-font-family-base: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+  --ifm-heading-font-family: 'Vampirism', 'Iowan Old Style', 'Palatino Linotype',
+    'Georgia', serif;
+  --ifm-heading-font-weight: 600;
+  --ifm-card-border-radius: 12px;
+  --ifm-navbar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  --ifm-button-border-radius: 8px;
+  --vampire-glow: rgba(155, 18, 212, 0.6);
+  --vampire-border: rgba(98, 3, 133, 0.35);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* Bright purple accent in dark mode, matching the main site's "vampire.bright". */
 [data-theme='dark'] {
-  --ifm-color-primary: #ffa348;
-  --ifm-color-primary-dark: #ff9327;
-  --ifm-color-primary-darker: #ff8a17;
-  --ifm-color-primary-darkest: #e57200;
-  --ifm-color-primary-light: #ffb369;
-  --ifm-color-primary-lighter: #ffbc79;
-  --ifm-color-primary-lightest: #ffd4aa;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #9b12d4;
+  --ifm-color-primary-dark: #790ea5;
+  --ifm-color-primary-darker: #670c8d;
+  --ifm-color-primary-darkest: #560a76;
+  --ifm-color-primary-light: #b42ced;
+  --ifm-color-primary-lighter: #bd43ef;
+  --ifm-color-primary-lightest: #c55bf1;
+  --docusaurus-highlighted-code-line-bg: rgba(155, 18, 212, 0.15);
+
+  --ifm-background-color: #0d0d14;
+  --ifm-background-surface-color: #12101a;
+  --ifm-navbar-background-color: rgba(13, 13, 20, 0.85);
+  --ifm-footer-background-color: #0a0912;
+  --ifm-card-background-color: #12101a;
+  --vampire-glow: rgba(155, 18, 212, 0.6);
+  --vampire-border: rgba(155, 18, 212, 0.3);
+}
+
+/* Markdown/blog body copy reads as serif (Lora), matching the main site;
+   UI chrome (nav, sidebar, buttons) stays on the sans Raleway base font. */
+.markdown {
+  font-family: 'Lora', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+}
+
+/* Headings: a little more presence, tighter tracking. */
+.markdown h1:first-child {
+  --ifm-h1-font-size: 2.6rem;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: 0.01em;
+}
+
+/* Buttons: gradient primary / outline secondary, matching the main site's btn-primary/btn-outline. */
+.button {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+.button--primary {
+  background: linear-gradient(135deg, var(--ifm-color-primary), #9b12d4);
+  border: 1px solid #9b12d4;
+}
+
+.button--primary:hover {
+  background: linear-gradient(135deg, var(--ifm-color-primary), #9b12d4);
+  box-shadow: 0 0 24px var(--vampire-glow);
+  transform: translateY(-2px);
+}
+
+.button.button--secondary {
+  background: transparent;
+  border: 1px solid rgba(155, 18, 212, 0.5);
+  color: #fff;
+}
+
+.button--secondary:hover {
+  border-color: #9b12d4;
+  box-shadow: 0 0 16px rgba(155, 18, 212, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Navbar / footer: subtle brand-purple hairline, matching the main site's chrome. */
+.navbar {
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--vampire-border);
+}
+
+.footer {
+  border-top: 1px solid var(--vampire-border);
+}
+
+/* Minecraft textures should never be smoothed when scaled. */
+.mc-icon,
+img.mc-icon {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+}
+
+/* GitHub icon link in the navbar (replaces the plain "GitHub" text link). */
+.header-github-link::before {
+  content: '';
+  display: flex;
+  width: 24px;
+  height: 24px;
+  background-color: var(--ifm-navbar-link-color);
+  transition: background-color var(--ifm-transition-fast);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.header-github-link:hover::before {
+  background-color: var(--ifm-navbar-link-hover-color);
 }

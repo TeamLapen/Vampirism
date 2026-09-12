@@ -9,5 +9,5 @@ title: CraftTweaker
 
 Custom recipes can be created / modified / removed by crafttweaker:
 
-- [Weapon Table Recipes](/docs/data/recipes/weapontable#craft-tweaker)
-- [Alchemical Cauldron Recipes](/docs/data/recipes/alchemicalcauldron#craft-tweaker)
+- [Weapon Table Recipes](/docs/data/recipes/weapontable)
+- [Alchemical Cauldron Recipes](/docs/data/recipes/alchemicalcauldron)

@@ -1,12 +1,13 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 title: Tent Spawner
 ---
 
-This condition will check if the `block_entity` parameter is an active tent spawner.
+`vampirism:is_tent_spawner` matches when the `block_entity` loot parameter is a hunter tent block
+entity that is currently an active spawner.
 
 ```json
-{
-  "condition": "vampirism:is_tent_spawner"
-}
+{ "condition": "vampirism:is_tent_spawner" }
 ```
+
+No fields.

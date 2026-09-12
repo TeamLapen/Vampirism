@@ -1,19 +1,16 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 title: Add Refinement Set
 ---
 
-This function will add a random refinement set to an accessory item (all `IRefinementItem` items).
-
-## For Faction
-
-only allows refinements sets for the given faction or any if no faction is provided.
+`vampirism:add_refinement_set` applies a random refinement set to an accessory item (any
+`IRefinementItem` – amulet, ring, obi belt). Non-accessory items pass through unchanged.
 
 ```json
-{
-  "function": "vampirism:add_refinement_set",
-  "faction": "<faction-id>"
-}
+{ "function": "vampirism:add_refinement_set", "faction": "vampirism:vampire" }
 ```
 
-- `faction-id`: is the id of the faction. *Optional*
+| Field        | Required | Type                                                            | Description                                                    |
+|--------------|----------|-----------------------------------------------------------|--------------------------------------------------------|
+| `faction`    | yes      | [Resource location](https://minecraft.wiki/w/Resource_location) | Faction id whose refinement sets are eligible.               |
+| `conditions` | no       | [Loot condition](../lootconditions/intro)[]                | Standard conditional-function conditions.                    |

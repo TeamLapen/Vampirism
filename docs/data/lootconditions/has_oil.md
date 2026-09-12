@@ -1,20 +1,15 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 title: Has Applied Oil
 ---
 
-This condition will check if the `tool` loot parameter is an item that has an applied oil.
-
-### Restrict to oil
-
-This will match if the item has this oil applied.
+`vampirism:with_oil_item` checks the `tool` loot parameter: it matches when that item has the given
+oil applied.
 
 ```json
-{
-  "condition": "vampirism:with_oil_item",
-  "predicate": {
-    "oil": "<oil-id>"
-  }
-}
+{ "condition": "vampirism:with_oil_item", "oil": "vampirism:smelt" }
 ```
-- `oil-id`: is the id of the oil
+
+| Field | Required | Type                                                            | Description                              |
+|-------|----------|-------------------------------------------------------------|--------------------------------------|
+| `oil` | yes      | [Resource location](https://minecraft.wiki/w/Resource_location) | Id of the oil (`vampirism:oils` registry). |

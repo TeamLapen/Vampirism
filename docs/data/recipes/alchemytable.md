@@ -1,36 +1,44 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 title: Alchemy Table
 ---
+
+Brewing-style recipes for the Alchemy Table: a **base
+ingredient** is combined with an **input** item to produce a result.
+
 :::info
-
-The Alchemy can only be used by Hunter Player
-
+The Alchemy Table can only be used by a Hunter.
 :::
 
-Recipes can be made for the [Alchemy Table](../../wiki/content/blocks#alchemy-table).
+:::tip JSON Schema
+[`schemas/recipe_alchemy_table.schema.json`](https://raw.githubusercontent.com/TeamLapen/Vampirism/refs/heads/dev/schemas/recipe_alchemy_table.schema.json)
+:::
 
-## Recipe
-You can take a look at the default recipes [here](https://github.com/TeamLapen/Vampirism/blob/7a90925e3859acd964f0ef948c1f914791494dfa/src/generated/resources/data/vampirism/recipes/alchemy_table).
-
-```json title="<recipe-name>.json"
+```json title="data/vampirism/recipe/example.json"
 {
   "type": "vampirism:alchemical_table",
-  "group": "",
-  "result": {
-    "item": "",
-    "count": int,
-    "nbt:": {},
+  "common_info": {},
+  "ingredient": {
+    "neoforge:ingredient_type": "neoforge:components",
+    "items": "vampirism:oil_bottle",
+    "components": { "vampirism:oil_contents": { "oil": "vampirism:plant" } }
   },
-  "input": {},
-  "ingredient": {},
-  "skill": [],
+  "input": "minecraft:amethyst_shard",
+  "result": {
+    "id": "vampirism:oil_bottle",
+    "components": { "vampirism:oil_contents": { "oil": "vampirism:bleeding" } }
+  },
+  "skill": []
 }
 ```
 
-- `type`: The type of recipe is `vampirism:alchemical_table` for Alchemy Table recipes.
-- `result`: The result item of the recipe.
-- `ingredient`: The base ingredient of the recipe.
-- `input`: The input ingredient of the recipe.
-- `skill`: The skills the recipe requires. String array of skill registry ids. *Optional*
-- `group`: The recipe group. *Optional*
+| Field         | Required | Type                                                       | Description                                                       |
+|---------------|----------|--------------------------------------------------------|-----------------------------------------------------------|
+| `ingredient`  | yes      | [Ingredient](https://minecraft.wiki/w/Recipe#Ingredients) | The base item (the one that is transformed).                     |
+| `input`       | yes      | [Ingredient](https://minecraft.wiki/w/Recipe#Ingredients) | The reagent consumed alongside it.                              |
+| `result`      | yes      | [Item stack template](./intro#result)                    | Output.                                                          |
+| `common_info` | no       | object `{ "show_notification": bool }`                    | Vanilla `CommonInfo`. Defaults to `{}` → `show_notification: true`. |
+| `group`       | no       | string                                                   | Recipe-book grouping.                                            |
+| `skill`       | no       | [Skill](./intro#skill-and-level) id[]                     | Required unlocked skills.                                        |
+
+The Alchemy Table has no `level` field.

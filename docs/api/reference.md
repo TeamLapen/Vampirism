@@ -1,43 +1,47 @@
 ---
-sidebar_position: 3
+sidebar_position: 8
 title: Reference
 ---
 
-Besides the several interfaces for almost all of Vampirism's functionality, there are some classes that can be used to access Vampirism's functionality.
+Static helper classes in `de.teamlapen.vampirism.api`.
 
-## [VampirismAPI](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/api/java/de/teamlapen/vampirism/api/VampirismAPI.java)
+## `VampirismApi`
 
-The VampirismAPI class is the central access point for all kind of registries.
+Central access point – `services()`, `vampirePlayer(player)`, `hunterPlayer(player)`,
+`extendedCreatureVampirism(mob)`, `garlicHandler(level)`, `fogHandler(level)`.
 
-## [VReference](https://github.com/TeamLapen/Vampirism/blob/2c54569508455543a62f7ba292e5f389f132f402/src/api/java/de/teamlapen/vampirism/api/VReference.java)
+## `VReference`
 
-Central location for all kind of static information/objects.
-this includes e.g. the faction objects of vampires and hunters, attributes, DamageSources, constants ...
+Static constants: `MODID`, `VAMPIRE_FACTION_ID` / `HUNTER_FACTION_ID`, `FOOD_TO_FLUID_BLOOD` (100),
+the `BLOOD` fluid supplier, and effect ids (`PERMANENT_INVISIBLE_MOB_EFFECT`,
+`VAMPIRE_NIGHT_VISION_EFFECT`).
 
-## [VIngameOverlays](https://github.com/TeamLapen/Vampirism/blob/4370ca18a1b32aae263aa202069e09c6e60cc93d/src/api/java/de/teamlapen/vampirism/api/client/VIngameOverlays.java)
+## `VampirismFactions`
 
-Contains all `IGuiOverlay`s that are used by Vampirism, which are filled during Mod construction. Or use the respective IDs of the overlays.
+`VAMPIRE` and `HUNTER` – `DeferredFaction` holders for the two playable factions
+(ids `vampirism:vampire`, `vampirism:hunter`).
 
-## Vampirism Forge Registries
+## `VampirismAttachments`
 
-#### Minecraft 1.19
+`AttachmentType` holders and `Keys`: `EXTENDED_CREATURE`, `VAMPIRE_PLAYER`, `HUNTER_PLAYER`,
+`GARLIC_HANDLER`, `FOG_HANDLER` (plus keys for `DRACULA_PLAYER`, `MARSHALL_PLAYER`,
+`INFECTION_STATUS`, `NEAREST_VILLAGE`, minion data, …).
 
-All custom registries are using the [VampirismRegistries](https://github.com/TeamLapen/Vampirism/blob/4ea422de4d01b52d07b6d9b8e0c536394ae5d515/src/api/java/de/teamlapen/vampirism/api/VampirismRegistries.java#L25) class
-to store the registry key and registry supplier.
+## `VampirismDataComponents` / `VampirismDataMaps` / `VampirismTags`
 
-### Registries
-The following registries are currently available:
+Component types + keys, data-map types + keys (see [Registries](./registries)), and faction tag keys
+(`VampirismTags.Factions.IS_VAMPIRE` / `IS_HUNTER`).
 
-| Name            | Resourcelocation           | Class                                                                                                                                                                                       |
-|-----------------|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Skills          | `vampirism:skills`         | [ISKill](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/api/java/de/teamlapen/vampirism/api/entity/player/skills/ISkill.java)                     |
-| Actions         | `vampirism:actions`        | [IAction](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/api/java/de/teamlapen/vampirism/api/entity/player/actions/IAction.java)                  |
-| Entity Actions  | `vampirism:entityactions`  | [IEntityAction](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/api/java/de/teamlapen/vampirism/api/entity/actions/IEntityAction.java)             |
-| Minion Tasks    | `vampirism:miniontasks`    | [IMinionTask](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/api/java/de/teamlapen/vampirism/api/entity/minion/IMinionTask.java)                  |
-| Refinements     | `vampirism:refinement`     | [IRefinement](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/api/java/de/teamlapen/vampirism/api/entity/player/refinement/IRefinement.java)       |
-| Refinement Sets | `vampirism:refinement_set` | [IRefinementSet](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/api/java/de/teamlapen/vampirism/api/entity/player/refinement/IRefinementSet.java) |
+## Enums
 
-### Data Registries
-| Name            | Resourcelocation           | Class                                                                                                                                                                                       |
-|-----------------|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Tasks           | `vampirism:tasks`          | [Task](https://github.com/TeamLapen/Vampirism/blob/4bf2c73fb860a23de225edbae9c0b1c1ead3dd1a/src/api/java/de/teamlapen/vampirism/api/entity/player/task/Task.java)                           |
+| Type          | Values                                                              |
+|---------------|-----------------------------------------------------------------|
+| `EnumStrength`| Garlic strength: `NONE` (0), `WEAK` (1), `MEDIUM` (2), `STRONG` (3); `getStrength()`, `isStrongerThan(...)`, `getFromStrength(int)`. |
+| `IItemWithTier.Tier` | `NORMAL`, `ENHANCED`, `ULTIMATE`.                            |
+| `VEnums`      | `EnumProxy` extensions: `HUNTER_CATEGORY` / `VAMPIRE_CATEGORY` (`MobCategory`), `PEDESTAL` (`ItemDisplayContext`). |
+
+## Utilities
+
+* `VIdentifier` – `mod(path)` etc. for `vampirism:`-namespaced ids.
+* `RegUtil` – registry lookup helpers.
+* `APIUtil`, `ThreadSafeAPI` – internal wiring.
