@@ -34,10 +34,14 @@ public class ModPotions {
 
     private static final double SOVEREIGN_FACTOR = 1.6;
 
-    private static final int VERY_DURABLE_COUNT = 2;
-    private static final int VERY_DURABLE_COUNT_EFFICIENT = 1;
-    private static final int VERY_STRONG_COUNT = 4;
-    private static final int VERY_STRONG_COUNT_EFFICIENT = 2;
+    private static final int VERY_DURABLE_COUNT = 4;
+    private static final int VERY_DURABLE_COUNT_EFFICIENT = 2;
+    private static final int VERY_DURABLE_COUNT_EXTENDED = 8;
+    private static final int VERY_DURABLE_COUNT_EFFICIENT_EXTENDED = 4;
+    private static final int VERY_STRONG_COUNT = 8;
+    private static final int VERY_STRONG_COUNT_EFFICIENT = 4;
+    private static final int VERY_STRONG_COUNT_EXTENDED = 16;
+    private static final int VERY_STRONG_COUNT_EFFICIENT_EXTENDED = 8;
 
     private static final int[][] ROUNDING = {
             { 1200, 1 },
@@ -288,7 +292,7 @@ public class ModPotions {
 
     private static void veryDurable(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         veryDurable(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT, VERY_DURABLE_COUNT_EFFICIENT).sovereignBlood().durable().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.REDSTONE_BLOCK), VERY_DURABLE_COUNT_EXTENDED, VERY_DURABLE_COUNT_EFFICIENT_EXTENDED).sovereignBlood().durable().build());
     }
 
     private static void veryStrong(Holder<Potion> in, Holder<Potion> out) {
@@ -301,7 +305,7 @@ public class ModPotions {
 
     private static void veryStrong(Holder<Potion> in, Holder<Potion> out, Holder<Potion> outExtended) {
         veryStrong(in, out);
-        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT, VERY_STRONG_COUNT_EFFICIENT).sovereignBlood().concentrated().build());
+        VampirismApi.services().extendedBrewingRecipeRegistry().addMix(new ExtendedPotionMix.Builder(in, outExtended).ingredient(() -> Ingredient.of(Items.GLOWSTONE), VERY_STRONG_COUNT_EXTENDED, VERY_STRONG_COUNT_EFFICIENT_EXTENDED).sovereignBlood().concentrated().build());
     }
 
     private static void master(Holder<Potion> out, Supplier<Ingredient> in, int count, int countReduced) {
