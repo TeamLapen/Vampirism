@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 public class ModPotions {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(Registries.POTION, REFERENCE.MODID);
 
-    private static final double SOVEREIGN_FACTOR = 2.0;
+    private static final double SOVEREIGN_FACTOR = 1.6;
 
     private static final int VERY_DURABLE_COUNT = 2;
     private static final int VERY_DURABLE_COUNT_EFFICIENT = 1;
@@ -253,14 +253,16 @@ public class ModPotions {
     }
 
     private static int snap(double duration, double factor) {
+        double scaled = duration * factor;
+
         for (int[] step : ROUNDING) {
-            if (duration < step[0]) {
+            if (scaled < step[0]) {
                 long granularity = step[1];
-                return (int) Math.max(1, Math.ceil(duration / granularity) * granularity * factor);
+                return (int) Math.max(1, Math.ceil(scaled / granularity) * granularity);
             }
         }
 
-        return Math.max(1, (int) Math.ceil(duration * factor));
+        return Math.max(1, (int) Math.ceil(scaled));
     }
 
     private static int amplifier(PotionFamily.Effect effect, int strongSteps, boolean sovereign) {
